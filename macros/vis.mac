@@ -1,0 +1,23 @@
+# Visualization Macro
+/control/verbose 1
+/run/verbose 1
+
+# Initialize kernel
+/run/initialize
+
+# Open visualization
+/vis/open OGL
+
+# Set drawing style
+/vis/drawVolume
+
+# Set view parameters
+/vis/viewer/set/viewpointThetaPhi 90 0 deg
+/vis/viewer/zoom 1.0
+
+# Add trajectories
+/vis/scene/add/trajectories smooth
+/vis/scene/add/hits
+
+# Run events
+/run/beamOn 10

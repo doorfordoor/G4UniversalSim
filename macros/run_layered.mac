@@ -1,0 +1,9 @@
+# Run Layered Device Simulation Macro
+/control/verbose 1
+/run/verbose 1
+
+# Initialize kernel
+/run/initialize
+
+# Set number of events
+/run/beamOn 1000
