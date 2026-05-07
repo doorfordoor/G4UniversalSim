@@ -37,7 +37,6 @@ public:
     bool HasIsotope(const std::string& name) const;
 
     G4Material* BuildNistMaterial(const std::string& name);
-
     G4Material* BuildCustomMaterial(const MaterialDefinition& desc);
 
     void RegisterMaterial(const std::string& name, G4Material* material);
@@ -71,6 +70,5 @@ private:
     std::map<std::string, G4Element*> elements_;
     std::map<std::string, G4Material*> materials_;
     std::set<std::string> buildingMaterials_;
-
     bool locked_ = false;
 };

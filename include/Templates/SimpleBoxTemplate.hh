@@ -1,11 +1,11 @@
-// SimpleBoxTemplate.hh
-#ifndef SIMPLE_BOX_TEMPLATE_HH
-#define SIMPLE_BOX_TEMPLATE_HH
+#pragma once
 
-class SimpleBoxTemplate {
+#include "Templates/GeometryTemplate.hh"
+
+class SimpleBoxTemplate : public GeometryTemplate {
 public:
-    SimpleBoxTemplate();
-    ~SimpleBoxTemplate();
+    std::string Name() const override;
+    VolumeNode BuildNodes(const ConfigManager& config) const override;
+    VolumeNode BuildNodesFromFile(const std::string& filename) const override;
+    void ValidateConfig(const ConfigManager& config) const override;
 };
-
-#endif

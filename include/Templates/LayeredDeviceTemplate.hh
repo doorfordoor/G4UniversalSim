@@ -1,11 +1,11 @@
-// LayeredDeviceTemplate.hh
-#ifndef LAYERED_DEVICE_TEMPLATE_HH
-#define LAYERED_DEVICE_TEMPLATE_HH
+#pragma once
 
-class LayeredDeviceTemplate {
+#include "Templates/GeometryTemplate.hh"
+
+class LayeredDeviceTemplate : public GeometryTemplate {
 public:
-    LayeredDeviceTemplate();
-    ~LayeredDeviceTemplate();
+    std::string Name() const override;
+    VolumeNode BuildNodes(const ConfigManager& config) const override;
+    VolumeNode BuildNodesFromFile(const std::string& filename) const override;
+    void ValidateConfig(const ConfigManager& config) const override;
 };
-
-#endif

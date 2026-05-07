@@ -4,6 +4,7 @@
 
 #include <functional>
 #include <memory>
+#include <string>
 
 class G4UIcmdWithABool;
 class G4UIcmdWithAString;
@@ -24,7 +25,6 @@ private:
     void ExecuteWithWarning(const std::string& commandText, const std::function<void()>& action);
 
     MaterialManager* manager_ = nullptr;
-
     std::unique_ptr<G4UIdirectory> materialDir_;
     std::unique_ptr<G4UIcmdWithAString> loadCmd_;
     std::unique_ptr<G4UIcmdWithoutParameter> printCmd_;

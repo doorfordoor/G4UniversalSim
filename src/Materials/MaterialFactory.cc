@@ -6,7 +6,6 @@
 #include "G4Isotope.hh"
 #include "G4Material.hh"
 #include "G4NistManager.hh"
-#include "G4State.hh"
 #include "G4SystemOfUnits.hh"
 
 #include <cmath>
@@ -24,13 +23,9 @@ G4State ParseState(const std::string& state)
     throw std::runtime_error("Unsupported material state: '" + state + "'");
 }
 
-G4Element* FindElement(
-    const std::string& name,
-    const std::map<std::string, G4Element*>& elements
-)
+G4Element* FindElement(const std::string& name, const std::map<std::string, G4Element*>& elements)
 {
-    const auto key = StringUtils::ToLower(StringUtils::Trim(name));
-    const auto it = elements.find(key);
+    const auto it = elements.find(StringUtils::ToLower(StringUtils::Trim(name)));
     if (it != elements.end()) return it->second;
 
     G4NistManager* nist = G4NistManager::Instance();
@@ -41,15 +36,10 @@ G4Element* FindElement(
     return element;
 }
 
-G4Material* FindMaterial(
-    const std::string& name,
-    const std::map<std::string, G4Material*>& materials
-)
+G4Material* FindMaterial(const std::string& name, const std::map<std::string, G4Material*>& materials)
 {
-    const auto key = StringUtils::ToLower(StringUtils::Trim(name));
-    const auto it = materials.find(key);
+    const auto it = materials.find(StringUtils::ToLower(StringUtils::Trim(name)));
     if (it != materials.end()) return it->second;
-
     return G4NistManager::Instance()->FindOrBuildMaterial(name, false);
 }
 
@@ -89,6 +79,16 @@ G4Element* MaterialFactory::BuildIsotopicElement(
     }
 
     auto* element = new G4Element(def.name, def.symbol, static_cast<G4int>(def.isotopes.size()));
+    double sum = 0.0;
+    for (const IsotopeComponent& component : def.isotopes) {
+        sum += component.abundance;
+    }
+    if (std::abs(sum - 1.0) > 1.0e-6) {
+        throw std::runtime_error(
+            "Element '" + def.name + "' isotope abundances must sum to 1.0; got "
+            + std::to_string(sum)
+        );
+    }
     for (const IsotopeComponent& component : def.isotopes) {
         const auto it = isotopes.find(Normalize(component.isotopeName));
         if (it == isotopes.end()) {
@@ -104,9 +104,7 @@ G4Element* MaterialFactory::BuildIsotopicElement(
 G4Material* MaterialFactory::BuildNistMaterial(const std::string& nistName)
 {
     G4Material* material = G4NistManager::Instance()->FindOrBuildMaterial(nistName, false);
-    if (!material) {
-        throw std::runtime_error("Unknown NIST material: '" + nistName + "'");
-    }
+    if (!material) throw std::runtime_error("Unknown NIST material: '" + nistName + "'");
     return material;
 }
 
@@ -116,12 +114,14 @@ G4Material* MaterialFactory::BuildCustomMaterial(
     const std::map<std::string, G4Material*>& materials
 )
 {
+    if (def.source == MaterialSourceType::Nist) {
+        return BuildNistMaterial(def.nistName.empty() ? def.name : def.nistName);
+    }
     if (def.name.empty() || def.density <= 0.0 || def.components.empty()) {
         throw std::runtime_error("Invalid material definition: '" + def.name + "'");
     }
 
     ValidateMassFractions(def);
-
     auto* material = new G4Material(
         def.name,
         def.density,
@@ -132,7 +132,6 @@ G4Material* MaterialFactory::BuildCustomMaterial(
     for (const MaterialComponent& component : def.components) {
         G4Element* element = FindElement(component.name, elements);
         G4Material* subMaterial = element ? nullptr : FindMaterial(component.name, materials);
-
         if (!element && !subMaterial) {
             throw std::runtime_error(
                 "Material '" + def.name + "' references unknown component '" + component.name + "'"
@@ -148,15 +147,10 @@ G4Material* MaterialFactory::BuildCustomMaterial(
             }
             material->AddElement(element, component.atomCount);
         } else if (component.mode == MaterialComponentMode::ByMassFraction) {
-            if (element) {
-                material->AddElement(element, component.fraction);
-            } else {
-                material->AddMaterial(subMaterial, component.fraction);
-            }
+            if (element) material->AddElement(element, component.fraction);
+            else material->AddMaterial(subMaterial, component.fraction);
         } else {
-            throw std::runtime_error(
-                "Material '" + def.name + "' volume_fraction mode is reserved but not implemented"
-            );
+            throw std::runtime_error("Material '" + def.name + "' volume_fraction mode is reserved but not implemented");
         }
     }
 
@@ -169,10 +163,9 @@ G4Material* MaterialFactory::BuildMaterial(
     const std::map<std::string, G4Material*>& materials
 )
 {
-    if (def.source == MaterialSourceType::Nist) {
-        return BuildNistMaterial(def.nistName.empty() ? def.name : def.nistName);
-    }
-    return BuildCustomMaterial(def, elements, materials);
+    return def.source == MaterialSourceType::Nist
+        ? BuildNistMaterial(def.nistName.empty() ? def.name : def.nistName)
+        : BuildCustomMaterial(def, elements, materials);
 }
 
 std::string MaterialFactory::Normalize(const std::string& name)
@@ -182,15 +175,16 @@ std::string MaterialFactory::Normalize(const std::string& name)
 
 void MaterialFactory::ValidateMassFractions(const MaterialDefinition& def)
 {
-    bool hasMassFraction = false;
+    bool allMass = true;
     double sum = 0.0;
     for (const MaterialComponent& component : def.components) {
-        if (component.mode == MaterialComponentMode::ByMassFraction) {
-            hasMassFraction = true;
-            sum += component.fraction;
+        if (component.mode != MaterialComponentMode::ByMassFraction) {
+            allMass = false;
+            break;
         }
+        sum += component.fraction;
     }
-    if (hasMassFraction && std::abs(sum - 1.0) > 1.0e-6) {
+    if (allMass && std::abs(sum - 1.0) > 1.0e-6) {
         throw std::runtime_error(
             "Material '" + def.name + "' mass fractions must sum to 1.0; got "
             + std::to_string(sum)

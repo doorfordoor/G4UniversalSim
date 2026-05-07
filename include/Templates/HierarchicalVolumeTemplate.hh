@@ -1,11 +1,11 @@
-// HierarchicalVolumeTemplate.hh
-#ifndef HIERARCHICAL_VOLUME_TEMPLATE_HH
-#define HIERARCHICAL_VOLUME_TEMPLATE_HH
+#pragma once
 
-class HierarchicalVolumeTemplate {
+#include "Templates/GeometryTemplate.hh"
+
+class HierarchicalVolumeTemplate : public GeometryTemplate {
 public:
-    HierarchicalVolumeTemplate();
-    ~HierarchicalVolumeTemplate();
+    std::string Name() const override;
+    VolumeNode BuildNodes(const ConfigManager& config) const override;
+    VolumeNode BuildNodesFromFile(const std::string& filename) const override;
+    void ValidateConfig(const ConfigManager& config) const override;
 };
-
-#endif

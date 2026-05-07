@@ -1,11 +1,23 @@
-// GeometryTemplate.hh
-#ifndef GEOMETRY_TEMPLATE_HH
-#define GEOMETRY_TEMPLATE_HH
+#pragma once
+
+#include "Geometry/VolumeNode.hh"
+
+#include <string>
+
+class ConfigManager;
+class GeometryConfig;
 
 class GeometryTemplate {
 public:
-    GeometryTemplate();
-    ~GeometryTemplate();
-};
+    virtual ~GeometryTemplate() = default;
 
-#endif
+    virtual std::string Name() const = 0;
+
+    virtual VolumeNode BuildNodes(const ConfigManager& config) const = 0;
+
+    virtual VolumeNode BuildNodesFromFile(const std::string& filename) const;
+
+    virtual VolumeNode BuildNodes(const GeometryConfig& geometryConfig) const;
+
+    virtual void ValidateConfig(const ConfigManager& config) const;
+};

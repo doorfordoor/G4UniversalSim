@@ -3,6 +3,7 @@
 #include "Materials/MaterialDefinition.hh"
 
 #include <map>
+#include <stdexcept>
 #include <string>
 #include <vector>
 

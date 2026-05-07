@@ -583,3 +583,424 @@
 说明：
 
 - `AppMessenger` 不启动 run，不构建几何，不修改 Detector/Physics/Scoring/Biasing。
+
+------
+
+## Materials 模块
+
+模块职责：统一管理 Geant4 同位素、元素、材料定义与对象缓存；支持 NIST 材料、自定义同位素元素、自定义复合材料，以及 `/AIHL/material/...` UI/macro 命令。
+
+依赖约束：
+
+- 可依赖 `Utils/StringUtils.hh`、`Utils/FileUtils.hh`。
+- 可依赖 Geant4 material 与 UI command 相关头文件。
+- 不依赖 Geometry、Templates、Detector、Physics、Source、Actions、Hits、Scoring、Biasing。
+
+重要约定：
+
+- 名称查找大小写不敏感，内部 map key 使用 `Trim + ToLower`；Geant4 对象名保留定义中的原始名称。
+- isotope abundance 内部使用 `0~1`，支持 `90%` 输入；总和必须接近 `1.0`，不自动归一化。
+- mass fraction 总和必须接近 `1.0`，不自动归一化。
+- `Clear()` 只清理 manager 内部定义和缓存，不 delete Geant4 已注册对象。
+- `SetLocked(true)` 后新增定义会抛出 `std::runtime_error`。
+- Materials UI 命令统一使用 `/AIHL/material/...`，应尽量在 `/run/initialize` 前调用。
+
+### MaterialDefinition
+
+位置：
+
+- 头文件：`include/Materials/MaterialDefinition.hh`
+
+主要类型：
+
+| 类型 | 基本作用 |
+|---|---|
+| `enum class MaterialComponentMode` | 组件模式：`ByMassFraction`、`ByAtomCount`、`ByVolumeFraction`。 |
+| `enum class MaterialSourceType` | 材料来源：`Nist`、`Custom`。 |
+| `struct IsotopeDefinition` | 保存同位素定义数据，不创建 `G4Isotope`。 |
+| `struct IsotopeComponent` | 保存同位素组成与丰度。 |
+| `struct ElementDefinition` | 保存普通元素或同位素组成元素定义，不创建 `G4Element`。 |
+| `struct MaterialComponent` | 保存材料组件名称、质量分数或原子数。 |
+| `struct MaterialDefinition` | 保存材料定义，不创建 `G4Material`。 |
+
+### MaterialCommandParser
+
+位置：
+
+- 头文件：`include/Materials/MaterialCommandParser.hh`
+- 源文件：`src/Materials/MaterialCommandParser.cc`
+
+类：`MaterialCommandParser`
+
+| 接口 | 基本作用 |
+|---|---|
+| `ParseKeyValueLine(const std::string& line)` | 解析 `key=value` 命令行，支持双引号 value。 |
+| `Require(...)` | 从解析结果中读取必需 key，缺失则抛异常。 |
+| `ParseDensity(const std::string& text)` | 解析 `g/cm3`、`g/cm^3`、`kg/m3`、`kg/m^3`、`mg/cm3`、`mg/cm^3`。 |
+| `ParseMolarMass(const std::string& text)` | 解析 `g/mole`、`g/mol`、`kg/mole`、`kg/mol`。 |
+| `ParseFraction(const std::string& text)` | 解析 `0~1` 或百分比，如 `90%`。 |
+| `ParseMode(const std::string& text)` | 解析 `atom`、`atom_count`、`mass`、`mass_fraction`、`volume_fraction`。 |
+| `ParseMaterialComponents(...)` | 解析 `A:1,B:2` 或 `A:0.7,B:0.3`。 |
+| `ParseIsotopeComponents(...)` | 解析 `B10:0.90,B11:0.10`。 |
+
+### MaterialIniReader
+
+位置：
+
+- 头文件：`include/Materials/MaterialIniReader.hh`
+- 源文件：`src/Materials/MaterialIniReader.cc`
+
+类：`MaterialIniReader`
+
+| 接口 | 基本作用 |
+|---|---|
+| `void Load(const std::string& filename)` | 解析 material.ini。 |
+| `bool HasIsotope/HasElement/HasMaterial(...) const` | 判断定义是否存在。 |
+| `GetIsotopeDefinition/GetElementDefinition/GetMaterialDefinition(...) const` | 获取定义；不存在则抛异常。 |
+| `GetIsotopeNames/GetElementNames/GetMaterialNames() const` | 获取定义名称列表。 |
+| `std::vector<std::string> GetNistMaterialNames() const` | 获取 `[NIST] materials` 列表。 |
+| `void Clear()` | 清空已解析定义。 |
+
+说明：
+
+- 支持 `[NIST]`、`[isotope.NAME]`、`[element.NAME]`、`[material.NAME]`。
+- 兼容旧式简化段落 `[Alias] material = G4_AIR`，会注册为 alias 指向 NIST 材料。
+
+### MaterialFactory
+
+位置：
+
+- 头文件：`include/Materials/MaterialFactory.hh`
+- 源文件：`src/Materials/MaterialFactory.cc`
+
+类：`MaterialFactory`
+
+| 接口 | 基本作用 |
+|---|---|
+| `G4Isotope* BuildIsotope(const IsotopeDefinition& def)` | 创建 `G4Isotope`。 |
+| `G4Element* BuildElement(...)` | 根据定义创建普通或同位素元素。 |
+| `G4Element* BuildSimpleElement(...)` | 用 `z/a` 创建 `G4Element`。 |
+| `G4Element* BuildIsotopicElement(...)` | 用 `AddIsotope` 创建同位素元素。 |
+| `G4Material* BuildNistMaterial(const std::string& nistName)` | 从 `G4NistManager` 获取 NIST 材料。 |
+| `G4Material* BuildCustomMaterial(...)` | 根据 density/components 创建自定义材料。 |
+| `G4Material* BuildMaterial(...)` | 根据 source 类型分派构建。 |
+
+### MaterialManager
+
+位置：
+
+- 头文件：`include/Materials/MaterialManager.hh`
+- 源文件：`src/Materials/MaterialManager.cc`
+
+类：`MaterialManager`
+
+| 接口 | 基本作用 |
+|---|---|
+| `void LoadMaterials(const std::string& filename)` | 解析并构建 material.ini。 |
+| `AddIsotopeDefinition/AddElementDefinition/AddMaterialDefinition(...)` | 添加定义。 |
+| `BuildIsotope/BuildElement/BuildMaterial(const std::string& name)` | 构建指定对象。 |
+| `void BuildAll()` | 构建所有 pending 定义，支持材料依赖多轮解析。 |
+| `GetMaterial/GetElement/GetIsotope(...) const` | 获取对象；不存在则抛异常。 |
+| `HasMaterial/HasElement/HasIsotope(...) const` | 判断对象或定义是否存在。 |
+| `G4Material* BuildNistMaterial(const std::string& name)` | 构建并缓存 NIST 材料。 |
+| `G4Material* BuildCustomMaterial(const MaterialDefinition& desc)` | 构建并缓存自定义材料。 |
+| `RegisterMaterial/RegisterElement/RegisterIsotope(...)` | 手动注册 Geant4 对象指针。 |
+| `GetMaterialNames/GetElementNames/GetIsotopeNames() const` | 获取当前缓存名称。 |
+| `PrintMaterials/PrintElements/PrintIsotopes/PrintAll() const` | 打印缓存内容。 |
+| `void Clear()` | 清理 manager 内部缓存和定义。 |
+| `void SetLocked(bool locked)` | 锁定或解锁定义修改。 |
+| `bool IsLocked() const` | 查询锁定状态。 |
+
+### MaterialMessenger
+
+位置：
+
+- 头文件：`include/Materials/MaterialMessenger.hh`
+- 源文件：`src/Materials/MaterialMessenger.cc`
+
+类：`MaterialMessenger : public G4UImessenger`
+
+| UI 命令 | 基本作用 |
+|---|---|
+| `/AIHL/material/load <filename>` | 调用 `MaterialManager::LoadMaterials()`。 |
+| `/AIHL/material/print` | 调用 `PrintAll()`。 |
+| `/AIHL/material/list` | 调用 `PrintAll()`。 |
+| `/AIHL/material/addNist name=<alias> nist=<G4_NAME>` | 构建 NIST 材料并可按 alias 注册。 |
+| `/AIHL/material/addIsotope ...` | 添加并构建同位素。 |
+| `/AIHL/material/addElement ...` | 添加并构建普通元素。 |
+| `/AIHL/material/addElementFromIsotopes ...` | 添加并构建同位素组成元素。 |
+| `/AIHL/material/addMaterial ...` | 添加并构建材料。 |
+| `/AIHL/material/buildAll` | 构建所有 pending 定义。 |
+| `/AIHL/material/setLocked true/false` | 设置锁定状态。 |
+| `/AIHL/material/clear` | 清空 manager 内部缓存和定义。 |
+
+------
+
+## Geometry 数据模块
+
+模块职责：描述几何数据、解析几何 ini、验证 volume 关系，并提供 Geant4 volume 指针注册表。该模块只是数据层，不创建 `G4Box`、`G4Tubs`、`G4LogicalVolume`、`G4PVPlacement` 或 `G4Region`。
+
+依赖约束：
+
+- `VolumeNode` / `GeometryConfig` / `GeometryUtils` 不依赖 Materials、Templates、VolumeBuilder、Detector、Physics、Scoring、Biasing。
+- `GeometryRegistry` 只前向引用并缓存 `G4LogicalVolume*`、`G4VPhysicalVolume*`，不拥有生命周期，不 delete Geant4 指针。
+- 允许依赖 Utils 与 Config。
+
+重要约定：
+
+- `Vec3` 保存 Geant4 内部长度单位；`Rotation3` 保存 Geant4 内部角度单位。
+- world volume 通过 `parentName.empty()` 判断。
+- `GeometryConfig` 允许 `sensitive` 和 `bias` 同时为 true。
+- `GeometryRegistry` 重复注册同名 logical/physical volume 时采用“后者覆盖前者”，便于 `/run/reinitializeGeometry` 后刷新 registry。
+
+### GeometryTypes
+
+位置：
+
+- 头文件：`include/Geometry/GeometryTypes.hh`
+
+主要类型：
+
+| 类型 | 基本作用 |
+|---|---|
+| `enum class VolumeShape` | 几何形状枚举：`Box`、`Tubs`、`Sphere`、`Orb`、`Cone`、`Trapezoid`、`Unknown`。 |
+| `enum class PlacementType` | placement 类型预留：`Normal`、`Replica`、`Parameterised`、`Assembly`。 |
+| `struct Vec3` | 三维长度向量。 |
+| `struct Rotation3` | 三维旋转角。 |
+| `struct ProductionCut` | gamma/electron/positron/proton production cut；小于 0 表示未设置。 |
+| `struct VisualAttributes` | 可视化属性预留，不创建 `G4VisAttributes`。 |
+
+### VolumeNode
+
+位置：
+
+- 头文件：`include/Geometry/VolumeNode.hh`
+- 源文件：`src/Geometry/VolumeNode.cc`
+
+类：`VolumeNode`
+
+| 接口/字段 | 基本作用 |
+|---|---|
+| `name`, `parentName` | volume 名称与父 volume 名称。 |
+| `shape`, `shapeName` | 解析后的形状与原始形状字符串。 |
+| `materialName` | 材料名称，后续由 `MaterialManager` 解析。 |
+| `size`, `position`, `rotation` | 基础尺寸、相对父 volume 的位置和旋转。 |
+| `parameters` | tubs/sphere/cone 等形状的额外参数。 |
+| `sensitive`, `bias` | 后续 SD 与 biasing 标记。 |
+| `regionName`, `productionCuts`, `hasProductionCuts` | region/cuts 数据预留。 |
+| `visual` | 可视化数据预留。 |
+| `children` | 树结构子节点。 |
+| `userProperties` | 未识别或模板扩展属性。 |
+| `IsWorld/HasParent/HasRegion/IsSensitive/IsBiasVolume()` | 状态查询。 |
+| `AddChild/HasChildren/GetChildren/GetChildrenMutable()` | 子节点管理。 |
+| `SetProperty/HasProperty/GetProperty()` | 扩展属性访问。 |
+| `ShapeAsString()` | shape 转字符串。 |
+| `ToString()` | 调试字符串。 |
+| `ValidateBasic()` | 数据级检查，不访问材料、不创建几何、不检查 overlap。 |
+
+### GeometryUtils
+
+位置：
+
+- 头文件：`include/Geometry/GeometryUtils.hh`
+- 源文件：`src/Geometry/GeometryUtils.cc`
+
+命名空间：`GeometryUtils`
+
+| 接口 | 基本作用 |
+|---|---|
+| `ParseShape / ShapeToString` | 解析和输出形状名。 |
+| `ParsePlacementType / PlacementTypeToString` | 解析和输出 placement 类型。 |
+| `ParseVec3(text, parseAsLength)` | 解析三维向量，支持逗号或空白分隔。 |
+| `ParseRotation3(text)` | 解析三维角度。 |
+| `ParseParameterList(text, parseWithUnits)` | 解析参数列表，支持单位。 |
+| `ParseProductionCuts(values)` | 解析 `cut.gamma`、`cut.e-`、`cut.e+`、`cut.proton`。 |
+| `IsValidVolumeName / NormalizeVolumeName / ValidateVolumeName` | volume 名称处理。 |
+| `ValidateBoxSize` | 检查 box x/y/z > 0。 |
+| `ValidateTubsParameters` | 检查 tubs 参数合法性。 |
+| `MakePath(parentPath, childName)` | 生成 `/world/child` 风格路径。 |
+
+### GeometryConfig
+
+位置：
+
+- 头文件：`include/Geometry/GeometryConfig.hh`
+- 源文件：`src/Geometry/GeometryConfig.cc`
+
+类：`GeometryConfig`
+
+| 接口 | 基本作用 |
+|---|---|
+| `void Load(const std::string& filename)` | 解析几何 ini 文件。 |
+| `void LoadFromConfigManager(const ConfigManager& config)` | 从 `[geometry] config` 读取路径并加载。 |
+| `void Clear()` | 清空 flat volume 和索引。 |
+| `bool HasVolume(const std::string& name) const` | 判断 volume 是否存在。 |
+| `GetVolume / GetVolumeMutable` | 获取 volume 数据。 |
+| `GetVolumeNames()` | 获取 flat volume 名称。 |
+| `GetSensitiveVolumeNames()` | 获取 sensitive volume 名称。 |
+| `GetBiasVolumeNames()` | 获取 bias volume 名称。 |
+| `GetRegionNames()` | 获取 region 名称集合。 |
+| `const std::vector<VolumeNode>& GetFlatVolumes() const` | 获取 flat volume 列表。 |
+| `VolumeNode BuildTree() const` | 将 flat list 转为 world 根节点树。 |
+| `void AddVolume(const VolumeNode& node)` | 手动添加 volume。 |
+| `void Validate() const` | 检查 world、parent、循环、shape、size、cuts 等。 |
+| `const std::string& GetFilename() const` | 获取配置文件路径。 |
+
+说明：
+
+- 支持 `[world]` 与 `[volume.NAME]`。
+- 未识别 key 会保存到 `VolumeNode::userProperties`。
+- 不检查材料存在性，不检查 overlap。
+
+### GeometryRegistry
+
+位置：
+
+- 头文件：`include/Geometry/GeometryRegistry.hh`
+- 源文件：`src/Geometry/GeometryRegistry.cc`
+
+类：`GeometryRegistry`
+
+| 接口 | 基本作用 |
+|---|---|
+| `Clear()` | 清理 registry。 |
+| `RegisterLogicalVolume / RegisterPhysicalVolume` | 注册 Geant4 volume 指针；空指针报错。 |
+| `HasLogicalVolume / HasPhysicalVolume` | 查询是否注册。 |
+| `GetLogicalVolume / GetPhysicalVolume` | 获取指针；不存在则抛异常。 |
+| `MarkSensitiveVolume / MarkBiasVolume` | 标记 sensitive/bias volume，可先于注册调用。 |
+| `IsSensitiveVolume / IsBiasVolume` | 查询标记。 |
+| `GetLogicalVolumeNames / GetPhysicalVolumeNames` | 获取注册名称。 |
+| `GetSensitiveVolumeNames / GetBiasVolumeNames` | 获取标记名称。 |
+| `GetSensitiveLogicalVolumes / GetBiasLogicalVolumes` | 获取已注册且被标记的 logical volumes。 |
+| `RegisterRegionName / HasRegionName / GetRegionName` | 记录 volume 到 regionName 的映射。 |
+| `PrintSummary()` | 打印 registry 数量摘要。 |
+
+------
+
+## Templates 模块
+
+模块职责：把模板配置转换为 `VolumeNode` 树，不创建任何 Geant4 solid、logical volume、physical volume 或 region。
+
+依赖约束：
+- 可依赖 `Utils`、`Config`、`Geometry` 数据模块。
+- 不依赖 Materials、GeometryManager、VolumeBuilder、Detector、Physics、Source、Actions、Hits、Scoring、Biasing。
+- 不直接 include `G4Box.hh`、`G4LogicalVolume.hh`、`G4PVPlacement.hh` 等几何构建头文件。
+
+重要约定：
+- 所有模板返回以 world 为根节点的 `VolumeNode` 树。
+- 模板只保存 `materialName` 字符串，不检查材料是否存在。
+- `sensitive`、`bias`、`regionName`、`productionCuts`、`visual` 会保留到 `VolumeNode`，供后续 SD、Biasing、Region/Cuts、Vis 模块使用。
+- `ArrayTemplate` 第一版生成普通 `VolumeNode`，不使用 replica 或 parameterisation。
+- `GDMLTemplate` 第一版只生成 placeholder 数据节点，不调用 `G4GDMLParser`。
+
+### GeometryTemplate
+
+位置：
+- 头文件：`include/Templates/GeometryTemplate.hh`
+- 源文件：`src/Templates/GeometryTemplate.cc`
+
+类：`GeometryTemplate`
+
+| 接口 | 基本作用 |
+|---|---|
+| `virtual std::string Name() const = 0` | 返回模板名称。 |
+| `virtual VolumeNode BuildNodes(const ConfigManager& config) const = 0` | 从已加载配置构建 world 根节点。 |
+| `virtual VolumeNode BuildNodesFromFile(const std::string& filename) const` | 从配置文件构建 world 根节点。 |
+| `virtual VolumeNode BuildNodes(const GeometryConfig& geometryConfig) const` | 从几何数据配置构建 world 根节点，默认调用 `BuildTree()`。 |
+| `virtual void ValidateConfig(const ConfigManager& config) const` | 模板级配置检查入口。 |
+
+### SimpleBoxTemplate
+
+位置：
+- 头文件：`include/Templates/SimpleBoxTemplate.hh`
+- 源文件：`src/Templates/SimpleBoxTemplate.cc`
+
+类：`SimpleBoxTemplate : public GeometryTemplate`
+
+基本作用：
+- 从 `[world]` 和 `[target]` 构建 `world -> Target`。
+- world 固定为 box；target 默认 box、默认 `sensitive=true`、默认 `bias=false`。
+- 支持 `region`、`cut.gamma`、`cut.e-`、`cut.e+`、`cut.proton` 和 `[visual.target]`。
+
+### LayeredDeviceTemplate
+
+位置：
+- 头文件：`include/Templates/LayeredDeviceTemplate.hh`
+- 源文件：`src/Templates/LayeredDeviceTemplate.cc`
+
+类：`LayeredDeviceTemplate : public GeometryTemplate`
+
+基本作用：
+- 从 `[layers]` 和 `[layer.NAME]` 构建多层器件结构。
+- 每层为 box，`size = xy.x, xy.y, thickness`。
+- 支持 `auto_stack=true` 沿 z 方向自动堆叠，默认整体居中；也支持 `z_start` 和 `gap`。
+- 保存每层 `material`、`sensitive`、`bias`、`region`、production cuts 和 visual 属性。
+
+### HierarchicalVolumeTemplate
+
+位置：
+- 头文件：`include/Templates/HierarchicalVolumeTemplate.hh`
+- 源文件：`src/Templates/HierarchicalVolumeTemplate.cc`
+
+类：`HierarchicalVolumeTemplate : public GeometryTemplate`
+
+基本作用：
+- 复用 `GeometryConfig` 解析 `[world]` 与 `[volume.NAME]`，返回通用 parent-child `VolumeNode` 树。
+- 用于非固定模板、显式层级配置场景。
+
+### ArrayTemplate
+
+位置：
+- 头文件：`include/Templates/ArrayTemplate.hh`
+- 源文件：`src/Templates/ArrayTemplate.cc`
+
+类：`ArrayTemplate : public GeometryTemplate`
+
+基本作用：
+- 从 `[array]` 构建规则阵列。
+- 生成 `name_i_j_k` 命名的普通子 `VolumeNode`，直接挂到 world。
+- 支持 `element_size`、`counts`、`pitch`、`center`、`sensitive`、`bias`、`region`。
+
+### ShieldingTemplate
+
+位置：
+- 头文件：`include/Templates/ShieldingTemplate.hh`
+- 源文件：`src/Templates/ShieldingTemplate.cc`
+
+类：`ShieldingTemplate : public GeometryTemplate`
+
+基本作用：
+- 从 `[shielding]`、`[shield.NAME]` 和可选 `[detector]` 构建简单屏蔽层模型。
+- 第一版支持 box 屏蔽层沿 z 方向堆叠。
+- 保存 shield 的 `material`、`bias`、`region`，保存 detector 的 `sensitive` 和 `region`。
+
+### GDMLTemplate
+
+位置：
+- 头文件：`include/Templates/GDMLTemplate.hh`
+- 源文件：`src/Templates/GDMLTemplate.cc`
+
+类：`GDMLTemplate : public GeometryTemplate`
+
+基本作用：
+- 从 `[gdml] file` 构建 placeholder world。
+- 在 `userProperties` 保存 `gdml_file`、`gdml_world_name`、`sensitive_volumes`、`bias_volumes`。
+- 不导入 GDML，不依赖 Xerces，不要求 Geant4 开启 GDML。
+
+### TemplateFactory
+
+位置：
+- 头文件：`include/Templates/TemplateFactory.hh`
+- 源文件：`src/Templates/TemplateFactory.cc`
+
+类：`TemplateFactory`
+
+| 接口 | 基本作用 |
+|---|---|
+| `static std::unique_ptr<GeometryTemplate> Create(const std::string& name)` | 按名称创建模板实例。 |
+| `static std::vector<std::string> AvailableTemplates()` | 返回可用模板名称。 |
+
+说明：
+- 模板名大小写不敏感。
+- 支持 `simple_box/simple`、`layered_device/layered`、`hierarchical`、`array`、`shielding`、`gdml`。
+- 未知模板名会抛出 `std::runtime_error`。

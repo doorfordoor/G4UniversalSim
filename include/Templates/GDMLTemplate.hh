@@ -1,11 +1,11 @@
-// GDMLTemplate.hh
-#ifndef GDML_TEMPLATE_HH
-#define GDML_TEMPLATE_HH
+#pragma once
 
-class GDMLTemplate {
+#include "Templates/GeometryTemplate.hh"
+
+class GDMLTemplate : public GeometryTemplate {
 public:
-    GDMLTemplate();
-    ~GDMLTemplate();
+    std::string Name() const override;
+    VolumeNode BuildNodes(const ConfigManager& config) const override;
+    VolumeNode BuildNodesFromFile(const std::string& filename) const override;
+    void ValidateConfig(const ConfigManager& config) const override;
 };
-
-#endif

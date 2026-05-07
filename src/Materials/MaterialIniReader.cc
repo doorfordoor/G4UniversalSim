@@ -4,8 +4,8 @@
 #include "Utils/FileUtils.hh"
 #include "Utils/StringUtils.hh"
 
-#include <cstdlib>
 #include <cmath>
+#include <cstdlib>
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
@@ -44,12 +44,10 @@ double ParseRequiredDouble(
     return parsed;
 }
 
-double SumIsotopeAbundance(const std::vector<IsotopeComponent>& isotopes)
+double SumAbundance(const std::vector<IsotopeComponent>& isotopes)
 {
     double sum = 0.0;
-    for (const auto& isotope : isotopes) {
-        sum += isotope.abundance;
-    }
+    for (const auto& isotope : isotopes) sum += isotope.abundance;
     return sum;
 }
 
@@ -70,15 +68,14 @@ void MaterialIniReader::Load(const std::string& filename)
     std::map<std::string, Section> sections;
     std::string currentSection = "global";
     sections[currentSection];
+
     std::string line;
     std::size_t lineNumber = 0;
-
     while (std::getline(input, line)) {
         ++lineNumber;
         const std::string clean = StringUtils::Trim(StringUtils::RemoveComment(line));
-        if (clean.empty()) {
-            continue;
-        }
+        if (clean.empty()) continue;
+
         if (clean.front() == '[') {
             if (clean.back() != ']') {
                 throw std::runtime_error(
@@ -136,27 +133,21 @@ bool MaterialIniReader::HasMaterial(const std::string& name) const
 const IsotopeDefinition& MaterialIniReader::GetIsotopeDefinition(const std::string& name) const
 {
     const auto it = isotopes_.find(Normalize(name));
-    if (it == isotopes_.end()) {
-        throw std::runtime_error("Unknown isotope definition: '" + name + "'");
-    }
+    if (it == isotopes_.end()) throw std::runtime_error("Unknown isotope definition: '" + name + "'");
     return it->second;
 }
 
 const ElementDefinition& MaterialIniReader::GetElementDefinition(const std::string& name) const
 {
     const auto it = elements_.find(Normalize(name));
-    if (it == elements_.end()) {
-        throw std::runtime_error("Unknown element definition: '" + name + "'");
-    }
+    if (it == elements_.end()) throw std::runtime_error("Unknown element definition: '" + name + "'");
     return it->second;
 }
 
 const MaterialDefinition& MaterialIniReader::GetMaterialDefinition(const std::string& name) const
 {
     const auto it = materials_.find(Normalize(name));
-    if (it == materials_.end()) {
-        throw std::runtime_error("Unknown material definition: '" + name + "'");
-    }
+    if (it == materials_.end()) throw std::runtime_error("Unknown material definition: '" + name + "'");
     return it->second;
 }
 
@@ -255,9 +246,7 @@ void MaterialIniReader::ParseSections(
             def.z = ParseRequiredInt(data, filename, section, "z");
             def.n = ParseRequiredInt(data, filename, section, "n");
             def.aText = Require(data, filename, section, "a");
-            if (def.z <= 0 || def.n <= 0) {
-                throw Error(filename, section, "z/n", "z and n must be positive");
-            }
+            if (def.z <= 0 || def.n <= 0) throw Error(filename, section, "z/n", "z and n must be positive");
             def.a = MaterialCommandParser::ParseMolarMass(def.aText);
             isotopes_[Normalize(def.name)] = def;
             continue;
@@ -268,18 +257,16 @@ void MaterialIniReader::ParseSections(
             ElementDefinition def;
             def.name = name;
             def.symbol = Require(data, filename, section, "symbol");
-            const auto isoIt = data.find("isotopes");
+            const bool hasIsotopes = data.find("isotopes") != data.end();
             const bool hasZA = data.find("z") != data.end() || data.find("a") != data.end();
-            if (isoIt != data.end() && hasZA) {
+            if (hasIsotopes && hasZA) {
                 throw Error(filename, section, "isotopes", "do not mix isotope element and z/a element definitions");
             }
-            if (isoIt != data.end()) {
+            if (hasIsotopes) {
                 def.useIsotopes = true;
-                def.isotopes = MaterialCommandParser::ParseIsotopeComponents(isoIt->second);
-                if (def.isotopes.empty()) {
-                    throw Error(filename, section, "isotopes", "isotope list is empty");
-                }
-                const double sum = SumIsotopeAbundance(def.isotopes);
+                def.isotopes = MaterialCommandParser::ParseIsotopeComponents(data.at("isotopes"));
+                if (def.isotopes.empty()) throw Error(filename, section, "isotopes", "isotope list is empty");
+                const double sum = SumAbundance(def.isotopes);
                 if (std::abs(sum - 1.0) > 1.0e-6) {
                     throw Error(filename, section, "isotopes", "abundance sum must be 1.0; got " + std::to_string(sum));
                 }
@@ -296,20 +283,31 @@ void MaterialIniReader::ParseSections(
             const std::string name = section.substr(std::string("material.").size());
             MaterialDefinition def;
             def.name = name;
-            def.source = MaterialSourceType::Custom;
             def.densityText = Require(data, filename, section, "density");
             def.density = MaterialCommandParser::ParseDensity(def.densityText);
             const std::string modeText = data.count("mode") ? data.at("mode") : "mass_fraction";
             const auto mode = MaterialCommandParser::ParseMode(modeText);
-            const std::string componentsText = Require(data, filename, section, "components");
-            def.components = MaterialCommandParser::ParseMaterialComponents(componentsText, mode);
-            if (def.components.empty()) {
-                throw Error(filename, section, "components", "component list is empty");
-            }
+            def.components = MaterialCommandParser::ParseMaterialComponents(
+                Require(data, filename, section, "components"),
+                mode
+            );
+            if (def.components.empty()) throw Error(filename, section, "components", "component list is empty");
             if (data.count("state")) def.state = data.at("state");
             if (data.count("temperature")) def.temperatureText = data.at("temperature");
             if (data.count("pressure")) def.pressureText = data.at("pressure");
             materials_[Normalize(def.name)] = def;
+            continue;
+        }
+
+        // Legacy convenience format: [Alias] material = G4_AIR
+        const auto materialIt = data.find("material");
+        if (materialIt != data.end()) {
+            MaterialDefinition def;
+            def.name = section;
+            def.source = MaterialSourceType::Nist;
+            def.nistName = materialIt->second;
+            materials_[Normalize(def.name)] = def;
+            nistMaterials_.push_back(materialIt->second);
         }
     }
 }

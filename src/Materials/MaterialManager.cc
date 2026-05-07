@@ -10,61 +10,43 @@
 #include "G4NistManager.hh"
 #include "G4ios.hh"
 
-#include <iostream>
 #include <set>
 #include <stdexcept>
 
 MaterialManager::MaterialManager() = default;
-
 MaterialManager::~MaterialManager() = default;
 
 void MaterialManager::LoadMaterials(const std::string& filename)
 {
     EnsureUnlocked("load materials");
-
     MaterialIniReader reader;
     reader.Load(filename);
 
-    for (const std::string& nistName : reader.GetNistMaterialNames()) {
-        nistMaterialDefinitions_.push_back(nistName);
-    }
-    for (const std::string& name : reader.GetIsotopeNames()) {
-        AddIsotopeDefinition(reader.GetIsotopeDefinition(name));
-    }
-    for (const std::string& name : reader.GetElementNames()) {
-        AddElementDefinition(reader.GetElementDefinition(name));
-    }
-    for (const std::string& name : reader.GetMaterialNames()) {
-        AddMaterialDefinition(reader.GetMaterialDefinition(name));
-    }
-
+    for (const std::string& nistName : reader.GetNistMaterialNames()) nistMaterialDefinitions_.push_back(nistName);
+    for (const std::string& name : reader.GetIsotopeNames()) AddIsotopeDefinition(reader.GetIsotopeDefinition(name));
+    for (const std::string& name : reader.GetElementNames()) AddElementDefinition(reader.GetElementDefinition(name));
+    for (const std::string& name : reader.GetMaterialNames()) AddMaterialDefinition(reader.GetMaterialDefinition(name));
     BuildAll();
 }
 
 void MaterialManager::AddIsotopeDefinition(const IsotopeDefinition& def)
 {
     EnsureUnlocked("add isotope definition");
-    if (def.name.empty()) {
-        throw std::runtime_error("Cannot add isotope definition with empty name");
-    }
+    if (def.name.empty()) throw std::runtime_error("Cannot add isotope definition with empty name");
     isotopeDefinitions_[Normalize(def.name)] = def;
 }
 
 void MaterialManager::AddElementDefinition(const ElementDefinition& def)
 {
     EnsureUnlocked("add element definition");
-    if (def.name.empty()) {
-        throw std::runtime_error("Cannot add element definition with empty name");
-    }
+    if (def.name.empty()) throw std::runtime_error("Cannot add element definition with empty name");
     elementDefinitions_[Normalize(def.name)] = def;
 }
 
 void MaterialManager::AddMaterialDefinition(const MaterialDefinition& def)
 {
     EnsureUnlocked("add material definition");
-    if (def.name.empty()) {
-        throw std::runtime_error("Cannot add material definition with empty name");
-    }
+    if (def.name.empty()) throw std::runtime_error("Cannot add material definition with empty name");
     materialDefinitions_[Normalize(def.name)] = def;
 }
 
@@ -73,11 +55,8 @@ G4Isotope* MaterialManager::BuildIsotope(const std::string& name)
     const std::string key = Normalize(name);
     const auto existing = isotopes_.find(key);
     if (existing != isotopes_.end()) return existing->second;
-
     const auto defIt = isotopeDefinitions_.find(key);
-    if (defIt == isotopeDefinitions_.end()) {
-        throw std::runtime_error("Unknown isotope definition: '" + name + "'");
-    }
+    if (defIt == isotopeDefinitions_.end()) throw std::runtime_error("Unknown isotope definition: '" + name + "'");
 
     MaterialFactory factory;
     G4Isotope* isotope = factory.BuildIsotope(defIt->second);
@@ -97,20 +76,15 @@ G4Element* MaterialManager::BuildElement(const std::string& name)
         if (!element && StringUtils::StartsWith(name, "G4_")) {
             element = G4NistManager::Instance()->FindOrBuildElement(name.substr(3), false);
         }
-        if (!element) {
-            throw std::runtime_error("Unknown element definition or NIST element: '" + name + "'");
-        }
+        if (!element) throw std::runtime_error("Unknown element definition or NIST element: '" + name + "'");
         RegisterElement(name, element);
         return element;
     }
 
     const ElementDefinition& def = defIt->second;
     if (def.useIsotopes) {
-        for (const IsotopeComponent& component : def.isotopes) {
-            BuildIsotope(component.isotopeName);
-        }
+        for (const IsotopeComponent& component : def.isotopes) BuildIsotope(component.isotopeName);
     }
-
     MaterialFactory factory;
     G4Element* element = factory.BuildElement(def, isotopes_);
     RegisterElement(def.name, element);
@@ -124,13 +98,9 @@ G4Material* MaterialManager::BuildMaterial(const std::string& name)
     if (existing != materials_.end()) return existing->second;
 
     const auto defIt = materialDefinitions_.find(key);
-    if (defIt == materialDefinitions_.end()) {
-        return BuildNistMaterial(name);
-    }
+    if (defIt == materialDefinitions_.end()) return BuildNistMaterial(name);
 
-    if (buildingMaterials_.count(key)) {
-        throw std::runtime_error("Material dependency cycle detected at '" + name + "'");
-    }
+    if (buildingMaterials_.count(key)) throw std::runtime_error("Material dependency cycle detected at '" + name + "'");
     buildingMaterials_.insert(key);
     try {
         G4Material* material = BuildCustomMaterial(defIt->second);
@@ -144,21 +114,12 @@ G4Material* MaterialManager::BuildMaterial(const std::string& name)
 
 void MaterialManager::BuildAll()
 {
-    for (const std::string& nistName : nistMaterialDefinitions_) {
-        BuildNistMaterial(nistName);
-    }
-    for (const auto& item : isotopeDefinitions_) {
-        BuildIsotope(item.second.name);
-    }
-    for (const auto& item : elementDefinitions_) {
-        BuildElement(item.second.name);
-    }
+    for (const std::string& nistName : nistMaterialDefinitions_) BuildNistMaterial(nistName);
+    for (const auto& item : isotopeDefinitions_) BuildIsotope(item.second.name);
+    for (const auto& item : elementDefinitions_) BuildElement(item.second.name);
 
     std::set<std::string> pending;
-    for (const auto& item : materialDefinitions_) {
-        pending.insert(item.first);
-    }
-
+    for (const auto& item : materialDefinitions_) pending.insert(item.first);
     while (!pending.empty()) {
         bool progress = false;
         for (auto it = pending.begin(); it != pending.end();) {
@@ -166,36 +127,30 @@ void MaterialManager::BuildAll()
                 BuildMaterial(materialDefinitions_.at(*it).name);
                 it = pending.erase(it);
                 progress = true;
-            } catch (const std::runtime_error&) {
+            } catch (const std::exception&) {
                 ++it;
             }
         }
         if (!progress) {
             std::string names;
-            for (const std::string& key : pending) {
+            for (const auto& key : pending) {
                 if (!names.empty()) names += ", ";
                 names += materialDefinitions_.at(key).name;
             }
-            throw std::runtime_error(
-                "Unable to resolve material dependencies, possible missing component or cycle: "
-                + names
-            );
+            throw std::runtime_error("Unable to resolve material dependencies: " + names);
         }
     }
 }
 
 G4Material* MaterialManager::GetMaterial(const std::string& name) const
 {
-    const std::string key = Normalize(name);
-    const auto it = materials_.find(key);
+    const auto it = materials_.find(Normalize(name));
     if (it != materials_.end()) return it->second;
-
     G4Material* nist = G4NistManager::Instance()->FindOrBuildMaterial(name, false);
     if (nist) {
         const_cast<MaterialManager*>(this)->RegisterMaterial(name, nist);
         return nist;
     }
-
     throw std::runtime_error("Material not found: '" + name + "'");
 }
 
@@ -215,21 +170,18 @@ G4Isotope* MaterialManager::GetIsotope(const std::string& name) const
 
 bool MaterialManager::HasMaterial(const std::string& name) const
 {
-    return materials_.find(Normalize(name)) != materials_.end()
-        || materialDefinitions_.find(Normalize(name)) != materialDefinitions_.end()
+    return materials_.count(Normalize(name)) || materialDefinitions_.count(Normalize(name))
         || G4NistManager::Instance()->FindOrBuildMaterial(name, false) != nullptr;
 }
 
 bool MaterialManager::HasElement(const std::string& name) const
 {
-    return elements_.find(Normalize(name)) != elements_.end()
-        || elementDefinitions_.find(Normalize(name)) != elementDefinitions_.end();
+    return elements_.count(Normalize(name)) || elementDefinitions_.count(Normalize(name));
 }
 
 bool MaterialManager::HasIsotope(const std::string& name) const
 {
-    return isotopes_.find(Normalize(name)) != isotopes_.end()
-        || isotopeDefinitions_.find(Normalize(name)) != isotopeDefinitions_.end();
+    return isotopes_.count(Normalize(name)) || isotopeDefinitions_.count(Normalize(name));
 }
 
 G4Material* MaterialManager::BuildNistMaterial(const std::string& name)
@@ -242,14 +194,15 @@ G4Material* MaterialManager::BuildNistMaterial(const std::string& name)
 
 G4Material* MaterialManager::BuildCustomMaterial(const MaterialDefinition& desc)
 {
-    for (const MaterialComponent& component : desc.components) {
-        if (elementDefinitions_.count(Normalize(component.name))) {
-            BuildElement(component.name);
-        } else if (materialDefinitions_.count(Normalize(component.name))) {
-            BuildMaterial(component.name);
-        }
+    if (desc.source == MaterialSourceType::Nist) {
+        G4Material* material = BuildNistMaterial(desc.nistName.empty() ? desc.name : desc.nistName);
+        RegisterMaterial(desc.name, material);
+        return material;
     }
-
+    for (const MaterialComponent& component : desc.components) {
+        if (elementDefinitions_.count(Normalize(component.name))) BuildElement(component.name);
+        else if (materialDefinitions_.count(Normalize(component.name))) BuildMaterial(component.name);
+    }
     MaterialFactory factory;
     G4Material* material = factory.BuildCustomMaterial(desc, elements_, materials_);
     RegisterMaterial(desc.name, material);
@@ -298,25 +251,19 @@ std::vector<std::string> MaterialManager::GetIsotopeNames() const
 void MaterialManager::PrintMaterials() const
 {
     G4cout << "[MaterialManager] Materials:" << G4endl;
-    for (const auto& item : materials_) {
-        G4cout << "  " << item.first << " -> " << item.second->GetName() << G4endl;
-    }
+    for (const auto& item : materials_) G4cout << "  " << item.first << " -> " << item.second->GetName() << G4endl;
 }
 
 void MaterialManager::PrintElements() const
 {
     G4cout << "[MaterialManager] Elements:" << G4endl;
-    for (const auto& item : elements_) {
-        G4cout << "  " << item.first << " -> " << item.second->GetName() << G4endl;
-    }
+    for (const auto& item : elements_) G4cout << "  " << item.first << " -> " << item.second->GetName() << G4endl;
 }
 
 void MaterialManager::PrintIsotopes() const
 {
     G4cout << "[MaterialManager] Isotopes:" << G4endl;
-    for (const auto& item : isotopes_) {
-        G4cout << "  " << item.first << " -> " << item.second->GetName() << G4endl;
-    }
+    for (const auto& item : isotopes_) G4cout << "  " << item.first << " -> " << item.second->GetName() << G4endl;
 }
 
 void MaterialManager::PrintAll() const
@@ -341,9 +288,7 @@ void MaterialManager::Clear()
 void MaterialManager::SetLocked(bool locked)
 {
     locked_ = locked;
-    if (locked_) {
-        G4cout << "[MaterialManager] Locked. New definitions will be rejected." << G4endl;
-    }
+    if (locked_) G4cout << "[MaterialManager] Locked. New definitions will be rejected." << G4endl;
 }
 
 bool MaterialManager::IsLocked() const

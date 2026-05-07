@@ -1,11 +1,11 @@
-// ShieldingTemplate.hh
-#ifndef SHIELDING_TEMPLATE_HH
-#define SHIELDING_TEMPLATE_HH
+#pragma once
 
-class ShieldingTemplate {
+#include "Templates/GeometryTemplate.hh"
+
+class ShieldingTemplate : public GeometryTemplate {
 public:
-    ShieldingTemplate();
-    ~ShieldingTemplate();
+    std::string Name() const override;
+    VolumeNode BuildNodes(const ConfigManager& config) const override;
+    VolumeNode BuildNodesFromFile(const std::string& filename) const override;
+    void ValidateConfig(const ConfigManager& config) const override;
 };
-
-#endif

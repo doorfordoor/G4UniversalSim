@@ -9,7 +9,6 @@
 class MaterialCommandParser {
 public:
     static std::map<std::string, std::string> ParseKeyValueLine(const std::string& line);
-
     static std::string Require(
         const std::map<std::string, std::string>& values,
         const std::string& key,
