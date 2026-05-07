@@ -12,32 +12,32 @@
 AppMessenger::AppMessenger(SimulationManager* manager)
     : manager_(manager)
 {
-    appDir_ = std::make_unique<G4UIdirectory>("/sim/app/");
+    appDir_ = std::make_unique<G4UIdirectory>("/AIHL/app/");
     appDir_->SetGuidance("Application-level commands for G4UniversalSim.");
 
-    setMainConfigCmd_ = std::make_unique<G4UIcmdWithAString>("/sim/app/setMainConfig", this);
+    setMainConfigCmd_ = std::make_unique<G4UIcmdWithAString>("/AIHL/app/setMainConfig", this);
     setMainConfigCmd_->SetGuidance("Set the main ini config file.");
 
-    setOutputDirCmd_ = std::make_unique<G4UIcmdWithAString>("/sim/app/setOutputDir", this);
+    setOutputDirCmd_ = std::make_unique<G4UIcmdWithAString>("/AIHL/app/setOutputDir", this);
     setOutputDirCmd_->SetGuidance("Set output directory.");
 
-    setNumThreadsCmd_ = std::make_unique<G4UIcmdWithAnInteger>("/sim/app/setNumThreads", this);
+    setNumThreadsCmd_ = std::make_unique<G4UIcmdWithAnInteger>("/AIHL/app/setNumThreads", this);
     setNumThreadsCmd_->SetGuidance("Set number of worker threads.");
     setNumThreadsCmd_->SetParameterName("threads", false);
     setNumThreadsCmd_->SetRange("threads > 0");
 
-    setSeedCmd_ = std::make_unique<G4UIcmdWithAnInteger>("/sim/app/setSeed", this);
+    setSeedCmd_ = std::make_unique<G4UIcmdWithAnInteger>("/AIHL/app/setSeed", this);
     setSeedCmd_->SetGuidance("Set random seed stored in SimulationContext.");
     setSeedCmd_->SetParameterName("seed", false);
     setSeedCmd_->SetRange("seed >= 0");
 
-    setVerboseCmd_ = std::make_unique<G4UIcmdWithAnInteger>("/sim/app/setVerbose", this);
+    setVerboseCmd_ = std::make_unique<G4UIcmdWithAnInteger>("/AIHL/app/setVerbose", this);
     setVerboseCmd_->SetGuidance("Set application verbose level.");
 
-    setCheckOverlapsCmd_ = std::make_unique<G4UIcmdWithABool>("/sim/app/setCheckOverlaps", this);
+    setCheckOverlapsCmd_ = std::make_unique<G4UIcmdWithABool>("/AIHL/app/setCheckOverlaps", this);
     setCheckOverlapsCmd_->SetGuidance("Enable or disable geometry overlap checks.");
 
-    printSummaryCmd_ = std::make_unique<G4UIcommand>("/sim/app/printSummary", this);
+    printSummaryCmd_ = std::make_unique<G4UIcommand>("/AIHL/app/printSummary", this);
     printSummaryCmd_->SetGuidance("Print current SimulationManager summary.");
 }
 

@@ -1147,3 +1147,110 @@
 - 命令参数 key 大小写不敏感，支持双引号 value，例如 `size="1 cm,1 cm,1 mm"`。
 - `preserveUserVolumesOnLoad` 默认 `true`；设为 `false` 后，后续 `loadConfig` 会清空用户添加体积。
 - 所有添加/删除命令成功后会标记 dirty，并提示使用 `/run/reinitializeGeometry`。
+
+------
+
+## Detector 模块
+
+模块职责：作为 Geant4 几何入口。`DetectorConstruction` 只在 `Construct()` 中调用 `GeometryManager::BuildWorld()`，在 `ConstructSDandField()` 中根据 `GeometryRegistry` 绑定后续 Hits 模块提供的 `G4VSensitiveDetector`。
+
+依赖约束：
+- 可依赖 `GeometryManager` 和 `GeometryRegistry`。
+- 可依赖 Geant4 detector construction、SD manager 和 UI command 基础类。
+- 不依赖 Materials、Templates、VolumeBuilder、Physics、Source、Actions、Hits、Scoring、Biasing。
+
+重要约定：
+- Detector 不保存 templateName、geometry config filename 或 root `VolumeNode`。
+- Detector 不解析 ini，不创建材料，不直接创建 `G4Box/G4Tubs/G4LogicalVolume/G4PVPlacement`。
+- Detector 不 attach biasing operator，不实现 scoring，不启动 run。
+- 几何命令仍归 `/AIHL/geometry/...`；DetectorMessenger 只管理 `/AIHL/detector/...`。
+
+### DetectorConstruction
+
+位置：
+- 头文件：`include/Detector/DetectorConstruction.hh`
+- 源文件：`src/Detector/DetectorConstruction.cc`
+
+类：`DetectorConstruction : public G4VUserDetectorConstruction`
+
+| 接口 | 基本作用 |
+|---|---|
+| `explicit DetectorConstruction(GeometryManager*)` | 绑定外部管理的 `GeometryManager`，不拥有其生命周期。 |
+| `G4VPhysicalVolume* Construct() override` | 调用 `GeometryManager::BuildWorld()` 并缓存 world pointer。 |
+| `void ConstructSDandField() override` | 根据 registry 中的 sensitive logical volumes 绑定 factory 创建的 SD。 |
+| `SetGeometryManager(...)` / `GetGeometryManager()` | 设置或获取 geometry manager。 |
+| `GetGeometryRegistry()` | 返回 `GeometryManager` 持有的 registry 指针。 |
+| `GetWorldVolume()` | 返回最近一次 `Construct()` 的 world physical volume。 |
+| `SetSensitiveDetectorEnabled(bool)` / `IsSensitiveDetectorEnabled()` | 控制是否执行 SD 绑定。 |
+| `SetSensitiveDetectorName(...)` / `GetSensitiveDetectorName()` | 设置预留 SD 名称，默认 `AIHLParticleSD`。 |
+| `SetVerboseLevel(int)` / `GetVerboseLevel()` | 设置 detector 输出详细程度。 |
+| `PrintRegistrySummary()` | 打印 registry 摘要。 |
+| `PrintSensitiveVolumes()` | 打印 sensitive volume 名称。 |
+| `PrintBiasVolumes()` | 打印 bias volume 名称。 |
+| `SetSensitiveDetectorFactory(std::function<G4VSensitiveDetector*()>)` | 后续 Hits 模块通过该 factory 接入真实 SD。 |
+
+说明：
+- factory 为空时，`ConstructSDandField()` 只输出 warning，不阻断几何构建。
+- factory 返回空指针时抛出 `std::runtime_error`。
+- sensitiveDetectorEnabled=false 时直接跳过 SD 绑定。
+
+### DetectorMessenger
+
+位置：
+- 头文件：`include/Detector/DetectorMessenger.hh`
+- 源文件：`src/Detector/DetectorMessenger.cc`
+
+类：`DetectorMessenger : public G4UImessenger`
+
+| UI 命令 | 基本作用 |
+|---|---|
+| `/AIHL/detector/enableSD <true|false>` | 调用 `SetSensitiveDetectorEnabled()`。 |
+| `/AIHL/detector/setSDName <name>` | 调用 `SetSensitiveDetectorName()`。 |
+| `/AIHL/detector/printRegistry` | 调用 `PrintRegistrySummary()`。 |
+| `/AIHL/detector/printSensitiveVolumes` | 调用 `PrintSensitiveVolumes()`。 |
+| `/AIHL/detector/printBiasVolumes` | 调用 `PrintBiasVolumes()`。 |
+| `/AIHL/detector/setVerbose <level>` | 调用 `SetVerboseLevel()`。 |
+| `/AIHL/detector/printWorld` | 打印最近一次 world 是否已构建。 |
+
+说明：
+- DetectorMessenger 不管理 `/AIHL/geometry/...`、`/AIHL/material/...`、`/run/...` 命令。
+
+### Core SimulationManager 集成更新
+
+位置：
+- 头文件：`include/Core/SimulationManager.hh`
+- 源文件：`src/Core/SimulationManager.cc`
+- App 命令源文件：`src/Core/AppMessenger.cc`
+
+新增职责：
+- `SimulationManager` 现在真正创建并持有 `MaterialManager`、`GeometryManager`。
+- `SimulationManager` 创建 `MaterialMessenger` 和 `GeometryMessenger`，分别暴露 `/AIHL/material/...` 与 `/AIHL/geometry/...` 命令。
+- `GeometryManager` 会通过 `SetMaterialManager(materialManager_.get())` 连接材料系统。
+- `SimulationManager` 不长期拥有 `DetectorConstruction`；通过 `CreateDetectorConstruction()` 创建并让调用方转移给 `G4RunManager`。
+
+新增/确认接口：
+
+| 接口 | 基本作用 |
+|---|---|
+| `std::unique_ptr<DetectorConstruction> CreateDetectorConstruction() const` | 创建 `DetectorConstruction(geometryManager_.get())`，供 main.cc `release()` 给 `G4RunManager`。 |
+| `MaterialManager* GetMaterialManager()` | 返回由 `SimulationManager` 持有的材料管理器。 |
+| `GeometryManager* GetGeometryManager()` | 返回由 `SimulationManager` 持有的几何管理器。 |
+
+配置读取：
+- `[materials] file` 非空时调用 `MaterialManager::LoadMaterials(file)`。
+- `[geometry] template` 非空时调用 `GeometryManager::SetTemplate(template)`。
+- `[geometry] config` 非空时调用 `GeometryManager::LoadGeometryConfig(config)`。
+- `[geometry] check_overlaps` 会同步到 `SimulationContext` 和 `GeometryManager`。
+- `[geometry] default_world_material` 非空时调用 `GeometryManager::SetDefaultWorldMaterial(...)`。
+
+初始化顺序：
+1. `BuildManagers()`
+2. 如设置 main config，则 `LoadConfig()`
+3. `Configure()`
+4. `OutputManager::Initialize()`
+5. 写入基础 `RunSummary`
+
+说明：
+- 没有 main config 时不强制失败，保留默认 context。
+- 没有 materials/geometry 配置时不强制失败，可后续通过 macro 命令加载。
+- AppMessenger 命令前缀已从 `/sim/app/...` 统一为 `/AIHL/app/...`。

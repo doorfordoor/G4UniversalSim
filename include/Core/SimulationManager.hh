@@ -8,7 +8,10 @@
 class ConfigManager;
 class OutputManager;
 class MaterialManager;
+class MaterialMessenger;
 class GeometryManager;
+class GeometryMessenger;
+class DetectorConstruction;
 class PhysicsManager;
 class SourceManager;
 class BiasingManager;
@@ -40,6 +43,8 @@ public:
     bool IsConfigured() const;
     bool IsInitialized() const;
 
+    std::unique_ptr<DetectorConstruction> CreateDetectorConstruction() const;
+
     ConfigManager* GetConfigManager();
     OutputManager* GetOutputManager();
 
@@ -63,20 +68,29 @@ public:
 private:
     void EnsureConfigManager();
     void EnsureOutputManager();
+    void EnsureMaterialManager();
+    void EnsureGeometryManager();
     void ConfigureOutputManager();
     void WriteBaseRunSummary();
 
     SimulationContext context_;
     std::unique_ptr<ConfigManager> configManager_;
     std::unique_ptr<OutputManager> outputManager_;
-
-    // These managers are intentionally reserved for later modules.
     std::unique_ptr<MaterialManager> materialManager_;
     std::unique_ptr<GeometryManager> geometryManager_;
+    std::unique_ptr<MaterialMessenger> materialMessenger_;
+    std::unique_ptr<GeometryMessenger> geometryMessenger_;
+
+    // These managers are intentionally reserved for later modules.
     std::unique_ptr<PhysicsManager> physicsManager_;
     std::unique_ptr<SourceManager> sourceManager_;
     std::unique_ptr<BiasingManager> biasingManager_;
     std::unique_ptr<ScoringManager> scoringManager_;
+
+    std::string materialsFile_;
+    std::string geometryTemplate_ = "simple_box";
+    std::string geometryConfigFile_;
+    std::string defaultWorldMaterial_ = "G4_AIR";
 
     bool configLoaded_ = false;
     bool configured_ = false;
