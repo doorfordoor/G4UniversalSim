@@ -1004,3 +1004,146 @@
 - 模板名大小写不敏感。
 - 支持 `simple_box/simple`、`layered_device/layered`、`hierarchical`、`array`、`shielding`、`gdml`。
 - 未知模板名会抛出 `std::runtime_error`。
+
+------
+
+## GeometryManager / VolumeBuilder / GeometryMessenger 模块
+
+模块职责：完成 Geant4 几何闭环。`GeometryManager` 管几何状态与 dirty 标志，`VolumeBuilder` 把 `VolumeNode` 树转换成真实 Geant4 几何对象，`GeometryMessenger` 只负责 `/AIHL/geometry/...` 命令转发。
+
+依赖约束：
+- 可依赖 Utils、Config、Materials、Geometry 数据模块、Templates 模块和 Geant4 geometry/UI 基础类。
+- 不依赖 Detector、Physics、Source、Actions、Hits、Scoring、Biasing。
+- 不实现 DetectorConstruction，不绑定 SensitiveDetector，不 attach biasing operator，不启动 run。
+
+重要约定：
+- 推荐工作流：用 `/AIHL/geometry/...` 修改 `GeometryManager` 状态，再用 Geant4 原生命令 `/run/reinitializeGeometry` 触发重新构建。
+- `GeometryManager::BuildWorld()` 应由后续 `DetectorConstruction::Construct()` 调用。
+- `GeometryRegistry` 在每次 `BuildWorld()` 前清空，构建后反映最新 logical/physical/sensitive/bias/region 状态。
+- `VolumeBuilder` 只通过 `MaterialManager::GetMaterial()` 取材料，不解析 material.ini。
+- GDML 当前只保留 placeholder；`VolumeBuilder` 遇到 GDML placeholder 会明确报错，真正导入留到高级扩展。
+
+### VolumeBuilder
+
+位置：
+- 头文件：`include/Geometry/VolumeBuilder.hh`
+- 源文件：`src/Geometry/VolumeBuilder.cc`
+
+类：`VolumeBuilder`
+
+| 接口 | 基本作用 |
+|---|---|
+| `SetMaterialManager(MaterialManager*)` | 设置材料管理器；构建前必须非空。 |
+| `SetRegistry(GeometryRegistry*)` | 设置几何注册表；构建前必须非空。 |
+| `SetCheckOverlaps(bool)` / `GetCheckOverlaps()` | 控制传给 `G4PVPlacement` 的 overlap 检查开关。 |
+| `SetDefaultWorldMaterial(...)` / `GetDefaultWorldMaterial()` | 设置 world material 缺省值，默认 `G4_AIR`。 |
+| `Clear()` | 清理 builder 持有的 rotation/vis 辅助对象缓存。 |
+| `BuildWorld(const VolumeNode& rootNode)` | 构建 world physical volume，并递归构建 children。 |
+| `BuildLogicalVolume(const VolumeNode& node)` | 创建 solid、material、logical volume，并注册 logical volume。 |
+| `BuildVolume(const VolumeNode& node, G4LogicalVolume* motherLogical)` | 构建并 placement 非 world volume。 |
+| `CreateSolid(...)` | 根据 `VolumeShape` 分发到具体 solid 创建函数。 |
+| `CreateBoxSolid/CreateTubsSolid/CreateSphereSolid/CreateOrbSolid/CreateConeSolid` | 创建对应 Geant4 solid。 |
+| `CreateRotation(const VolumeNode& node)` | 按 X/Y/Z 顺序创建旋转；零旋转返回 `nullptr`。 |
+| `CreateRegion(...)` | 创建/复用 `G4Region`，设置 production cuts，并向 registry 登记 region 名称。 |
+| `ApplyVisualAttributes(...)` | 应用可视化属性，支持基础颜色、alpha、wireframe、visible。 |
+| `GetRegistry()` | 返回当前 registry 指针。 |
+
+说明：
+- `Box` 的 `size.x/y/z` 按全长保存，创建 `G4Box` 时自动除以 2。
+- `Tubs` 支持 5 参数 `rMin,rMax,halfZ,startPhi,deltaPhi`；若没有参数但有正 `size`，按 cylinder shorthand 处理。
+- rotation 和 vis attributes 由 `VolumeBuilder` 持有，避免 logical/physical volume 引用悬空。
+
+### GeometryManager
+
+位置：
+- 头文件：`include/Geometry/GeometryManager.hh`
+- 源文件：`src/Geometry/GeometryManager.cc`
+
+类：`GeometryManager`
+
+| 接口 | 基本作用 |
+|---|---|
+| `SetMaterialManager(...)` / `GetMaterialManager()` | 设置并查询材料管理器，同时同步给 `VolumeBuilder`。 |
+| `SetTemplate(...)` / `GetTemplateName()` | 设置模板名称，支持 `TemplateFactory` 中的模板别名，并标记 dirty。 |
+| `LoadGeometryConfig(...)` / `GetGeometryConfigFile()` | 根据当前模板加载几何配置，保存 root node，并标记 dirty。 |
+| `SetCheckOverlaps(...)` / `GetCheckOverlaps()` | 设置 overlap 检查，并同步给 builder。 |
+| `SetDefaultWorldMaterial(...)` / `GetDefaultWorldMaterial()` | 设置 world 默认材料，并同步给 builder。 |
+| `SetRootNode(...)` / `GetRootNode()` / `HasRootNode()` | 直接设置或访问当前 root `VolumeNode`。 |
+| `MarkDirty()` / `ClearDirty()` / `IsDirty()` | 管理几何 dirty 状态。 |
+| `BuildWorld()` | 清 registry，调用 `VolumeBuilder::BuildWorld()`，成功后清 dirty。 |
+| `GetRegistry()` | 获取几何注册表。 |
+| `GetVolumeBuilder()` | 获取底层 builder。 |
+| `GetSensitiveVolumeNames()` / `GetBiasVolumeNames()` / `GetRegionNames()` | 获取当前几何标记信息。 |
+| `PrintSummary()` / `PrintTree()` | 打印当前状态与 volume tree。 |
+| `Clear()` | 清理当前 root/config/registry/builder 缓存，并标记 dirty。 |
+
+### GeometryMessenger
+
+位置：
+- 头文件：`include/Geometry/GeometryMessenger.hh`
+- 源文件：`src/Geometry/GeometryMessenger.cc`
+
+类：`GeometryMessenger : public G4UImessenger`
+
+| UI 命令 | 基本作用 |
+|---|---|
+| `/AIHL/geometry/setTemplate <templateName>` | 调用 `GeometryManager::SetTemplate()`。 |
+| `/AIHL/geometry/loadConfig <filename>` | 调用 `GeometryManager::LoadGeometryConfig()`。 |
+| `/AIHL/geometry/checkOverlaps <true|false>` | 调用 `GeometryManager::SetCheckOverlaps()`。 |
+| `/AIHL/geometry/setDefaultWorldMaterial <materialName>` | 调用 `GeometryManager::SetDefaultWorldMaterial()`。 |
+| `/AIHL/geometry/print` | 调用 `GeometryManager::PrintSummary()`。 |
+| `/AIHL/geometry/printTree` | 调用 `GeometryManager::PrintTree()`。 |
+| `/AIHL/geometry/clear` | 调用 `GeometryManager::Clear()`。 |
+| `/AIHL/geometry/markModified` | 调用 `G4RunManager::GeometryHasBeenModified()`，不 rebuild、不 beamOn。 |
+
+说明：
+- Messenger 不保存几何业务状态，不直接创建任何 Geant4 几何对象。
+- 改变几何状态的命令执行后会提示：如 run manager 已初始化，请在下一次 run 前使用 `/run/reinitializeGeometry`。
+
+### Geometry Dynamic User Volumes 增量
+
+位置：
+- 头文件：`include/Geometry/GeometryManager.hh`
+- 源文件：`src/Geometry/GeometryManager.cc`
+- 命令头文件：`include/Geometry/GeometryMessenger.hh`
+- 命令源文件：`src/Geometry/GeometryMessenger.cc`
+
+新增职责：
+- 支持通过 `/AIHL/geometry/...` 命令在当前 `VolumeNode` 树上追加用户体积。
+- 用户体积只修改数据树，不直接创建 `G4Box`、`G4Tubs`、`G4LogicalVolume` 或 `G4PVPlacement`。
+- 新增体积必须通过后续 `/run/reinitializeGeometry` 触发 `DetectorConstruction::Construct()`，再由 `GeometryManager::BuildWorld()` 真实构建。
+
+新增 `GeometryManager` 接口：
+
+| 接口 | 基本作用 |
+|---|---|
+| `AddVolume(const VolumeNode& node)` | 通用用户体积添加入口，验证后挂接到当前 root tree 并标记 dirty。 |
+| `AddBoxVolume(...)` | 构造 box `VolumeNode` 并调用 `AddVolume()`。 |
+| `AddTubsVolume(...)` | 构造 tubs `VolumeNode`，参数顺序为 `rMin,rMax,halfZ,startPhi,deltaPhi`。 |
+| `RemoveUserVolume(const std::string& name)` | 只删除用户添加体积；第一版删除整个子树。 |
+| `ClearUserAddedVolumes()` | 清空所有用户添加体积，并从当前树移除。 |
+| `GetUserAddedVolumes()` | 返回用户添加体积副本。 |
+| `GetUserAddedVolumeNames()` | 返回用户添加体积名称列表。 |
+| `SetPreserveUserVolumesOnLoad(bool)` | 设置 `loadConfig` 后是否保留并重新挂接用户体积。 |
+| `GetPreserveUserVolumesOnLoad()` | 查询保留策略。 |
+| `ApplyUserAddedVolumes()` | 将 `userAddedVolumes_` 重新挂接到当前 root tree。 |
+| `HasVolumeInCurrentTree(...)` | 查询当前最终树中是否存在 volume。 |
+| `HasUserAddedVolume(...)` | 查询用户体积列表中是否存在 volume。 |
+| `PrintUserAddedVolumes()` | 打印用户添加体积列表。 |
+
+新增 `/AIHL/geometry/...` 命令：
+
+| UI 命令 | 基本作用 |
+|---|---|
+| `/AIHL/geometry/addBox ...` | 解析 key=value，添加 box 用户体积。 |
+| `/AIHL/geometry/addTubs ...` | 解析 key=value，添加 tubs/cylinder 用户体积。 |
+| `/AIHL/geometry/addVolume ...` | 通用添加入口；第一版支持 `shape=box` 和 `shape=tubs`。 |
+| `/AIHL/geometry/removeUserVolume <name>` | 删除用户添加体积。 |
+| `/AIHL/geometry/clearUserVolumes` | 清空用户添加体积。 |
+| `/AIHL/geometry/listUserVolumes` | 打印用户添加体积列表。 |
+| `/AIHL/geometry/preserveUserVolumesOnLoad <true|false>` | 控制后续 `loadConfig` 是否保留用户添加体积。 |
+
+说明：
+- 命令参数 key 大小写不敏感，支持双引号 value，例如 `size="1 cm,1 cm,1 mm"`。
+- `preserveUserVolumesOnLoad` 默认 `true`；设为 `false` 后，后续 `loadConfig` 会清空用户添加体积。
+- 所有添加/删除命令成功后会标记 dirty，并提示使用 `/run/reinitializeGeometry`。
