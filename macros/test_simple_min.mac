@@ -1,0 +1,33 @@
+/control/verbose 1
+/run/verbose 1
+/event/verbose 0
+/tracking/verbose 0
+
+/AIHL/material/load D:/Geant4/G4UniversalSim/config/materials/material.ini
+/AIHL/material/print
+
+/AIHL/geometry/setTemplate simple_box
+/AIHL/geometry/loadConfig D:/Geant4/G4UniversalSim/config/geometry/simple_box.ini
+/AIHL/geometry/checkOverlaps true
+/AIHL/geometry/print
+/AIHL/geometry/printTree
+
+/AIHL/physics/setEM option4
+/AIHL/physics/addModule G4DecayPhysics
+/AIHL/physics/setDefaultCut 1 mm
+/AIHL/physics/print
+
+/AIHL/source/preset proton_beam
+/AIHL/source/print
+
+/AIHL/scoring/enable true
+/AIHL/scoring/hits true
+/AIHL/scoring/eventEdep true
+/AIHL/scoring/edep true
+/AIHL/scoring/autoCreateScorers true
+/AIHL/scoring/setEdepHistogram bins=100 min=0 eV max=10 MeV
+/AIHL/scoring/setWeightedEdepHistogram bins=100 min=0 eV max=10 MeV
+/AIHL/scoring/print
+
+/run/initialize
+/run/beamOn 10

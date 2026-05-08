@@ -1,4 +1,4 @@
-// main.cc - G4UniversalSim minimal test entry point
+﻿// main.cc - G4UniversalSim minimal test entry point
 //
 // 用途：
 // 1. 创建 SimulationManager
@@ -20,10 +20,15 @@
 #include <string>
 
 #include "Core/SimulationManager.hh"
+#include "Detector/DetectorConstruction.hh"
+#include "Actions/ActionInitialization.hh"
 
+#include "G4VUserDetectorConstruction.hh"
+#include "G4VUserPhysicsList.hh"
+#include "G4VUserActionInitialization.hh"
 #include "G4RunManager.hh"
 #include "G4UImanager.hh"
-
+#include "G4VModularPhysicsList.hh"
 #ifdef G4MULTITHREADED
 #include "G4MTRunManager.hh"
 #endif
@@ -169,9 +174,9 @@ int main(int argc, char** argv) {
         // 注意：
         //   SetUserInitialization() 接管裸指针生命周期；
         //   因此这里使用 unique_ptr::release()。
+// 先创建 Detector 和 Physics。
         auto detector = simManager.CreateDetectorConstruction();
         auto physics = simManager.CreatePhysicsList();
-        auto actions = simManager.CreateActionInitialization();
 
         if (!detector) {
             throw std::runtime_error("SimulationManager::CreateDetectorConstruction() returned null.");
@@ -179,13 +184,29 @@ int main(int argc, char** argv) {
         if (!physics) {
             throw std::runtime_error("SimulationManager::CreatePhysicsList() returned null.");
         }
+
+        // 先把 DetectorConstruction 和 PhysicsList 交给 RunManager。
+        // 关键点：PhysicsList 必须早于 PrimaryGeneratorAction / GPS / ParticleGun。
+        G4VUserDetectorConstruction* detectorRaw =
+            static_cast<G4VUserDetectorConstruction*>(detector.release());
+
+        G4VUserPhysicsList* physicsRaw =
+            static_cast<G4VUserPhysicsList*>(physics.release());
+
+        runManager->SetUserInitialization(detectorRaw);
+        runManager->SetUserInitialization(physicsRaw);
+
+        // 再创建并设置 ActionInitialization。
+        auto actions = simManager.CreateActionInitialization();
+
         if (!actions) {
             throw std::runtime_error("SimulationManager::CreateActionInitialization() returned null.");
         }
 
-        runManager->SetUserInitialization(detector.release());
-        runManager->SetUserInitialization(physics.release());
-        runManager->SetUserInitialization(actions.release());
+        G4VUserActionInitialization* actionsRaw =
+            static_cast<G4VUserActionInitialization*>(actions.release());
+
+        runManager->SetUserInitialization(actionsRaw);
 
         // 5. 执行 macro。
         //
@@ -209,7 +230,7 @@ int main(int argc, char** argv) {
             return 2;
         }
 
-        // 6. 主动销毁 RunManager，触发 Geant4 清理。
+        // 6. 主动销毁 RunManager，触发 Geant4 清理s
         runManager.reset();
 
         std::cout << "G4UniversalSim finished successfully." << std::endl;
