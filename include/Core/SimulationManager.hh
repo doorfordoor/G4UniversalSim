@@ -2,20 +2,31 @@
 
 #include "Core/SimulationContext.hh"
 
+#include <functional>
 #include <memory>
 #include <string>
 
 class ConfigManager;
+class ActionInitialization;
 class OutputManager;
 class MaterialManager;
 class MaterialMessenger;
 class GeometryManager;
 class GeometryMessenger;
+class GeometryRegistry;
 class DetectorConstruction;
+class G4VSensitiveDetector;
 class PhysicsManager;
+class PhysicsMessenger;
+class PhysicsList;
+class G4VModularPhysicsList;
 class SourceManager;
+class SourceMessenger;
+class PrimaryGeneratorAction;
 class BiasingManager;
+class BiasingMessenger;
 class ScoringManager;
+class ScoringMessenger;
 
 class SimulationManager {
 public:
@@ -44,6 +55,11 @@ public:
     bool IsInitialized() const;
 
     std::unique_ptr<DetectorConstruction> CreateDetectorConstruction() const;
+    std::unique_ptr<G4VModularPhysicsList> CreatePhysicsList() const;
+    std::unique_ptr<PrimaryGeneratorAction> CreatePrimaryGeneratorAction() const;
+    std::unique_ptr<ActionInitialization> CreateActionInitialization() const;
+    std::function<G4VSensitiveDetector*()> CreateSensitiveDetectorFactory() const;
+    std::function<void(const GeometryRegistry&)> CreateGeometryPostBuildCallback() const;
 
     ConfigManager* GetConfigManager();
     OutputManager* GetOutputManager();
@@ -70,6 +86,10 @@ private:
     void EnsureOutputManager();
     void EnsureMaterialManager();
     void EnsureGeometryManager();
+    void EnsurePhysicsManager();
+    void EnsureSourceManager();
+    void EnsureBiasingManager();
+    void EnsureScoringManager();
     void ConfigureOutputManager();
     void WriteBaseRunSummary();
 
@@ -80,6 +100,10 @@ private:
     std::unique_ptr<GeometryManager> geometryManager_;
     std::unique_ptr<MaterialMessenger> materialMessenger_;
     std::unique_ptr<GeometryMessenger> geometryMessenger_;
+    std::unique_ptr<PhysicsMessenger> physicsMessenger_;
+    std::unique_ptr<SourceMessenger> sourceMessenger_;
+    std::unique_ptr<BiasingMessenger> biasingMessenger_;
+    std::unique_ptr<ScoringMessenger> scoringMessenger_;
 
     // These managers are intentionally reserved for later modules.
     std::unique_ptr<PhysicsManager> physicsManager_;

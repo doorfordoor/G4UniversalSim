@@ -1,11 +1,25 @@
-// EventAction.hh
-#ifndef EVENT_ACTION_HH
-#define EVENT_ACTION_HH
+#pragma once
 
-class EventAction {
+#include "G4UserEventAction.hh"
+
+class G4Event;
+class ScoringManager;
+
+class EventAction : public G4UserEventAction {
 public:
-    EventAction();
-    ~EventAction();
-};
+    explicit EventAction(ScoringManager* scoringManager = nullptr);
+    ~EventAction() override;
 
-#endif
+    void BeginOfEventAction(const G4Event* event) override;
+    void EndOfEventAction(const G4Event* event) override;
+
+    void SetScoringManager(ScoringManager* scoringManager);
+    ScoringManager* GetScoringManager();
+
+    void SetVerboseLevel(int level);
+    int GetVerboseLevel() const;
+
+private:
+    ScoringManager* scoringManager_ = nullptr; // non-owning
+    int verboseLevel_ = 0;
+};

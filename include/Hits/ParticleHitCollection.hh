@@ -1,11 +1,12 @@
-// ParticleHitCollection.hh
-#ifndef PARTICLE_HIT_COLLECTION_HH
-#define PARTICLE_HIT_COLLECTION_HH
+#pragma once
 
-class ParticleHitCollection {
-public:
-    ParticleHitCollection();
-    ~ParticleHitCollection();
-};
+#include "G4THitsCollection.hh"
 
-#endif
+#include "Hits/ParticleHit.hh"
+#include "Output/OutputRecord.hh"
+
+#include <vector>
+
+using ParticleHitCollection = G4THitsCollection<ParticleHit>;
+
+std::vector<HitRecord> ConvertToHitRecords(const ParticleHitCollection* collection);

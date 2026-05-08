@@ -1,11 +1,32 @@
-// ScorerBase.hh
-#ifndef SCORER_BASE_HH
-#define SCORER_BASE_HH
+#pragma once
+
+#include "Output/OutputRecord.hh"
+
+#include <string>
+
+class OutputManager;
 
 class ScorerBase {
 public:
-    ScorerBase();
-    ~ScorerBase();
-};
+    explicit ScorerBase(std::string name);
+    virtual ~ScorerBase();
 
-#endif
+    const std::string& GetName() const;
+
+    void SetEnabled(bool enabled);
+    bool IsEnabled() const;
+
+    virtual void BeginRun(int runID);
+    virtual void EndRun(int runID);
+
+    virtual void BeginEvent(int eventID);
+    virtual void EndEvent(int eventID);
+
+    virtual void ScoreHit(const HitRecord& hit);
+    virtual void Write(OutputManager& output);
+    virtual void Reset();
+
+protected:
+    std::string name_;
+    bool enabled_ = true;
+};

@@ -1,4 +1,4 @@
-# G4UniversalSim Module API Index
+﻿# G4UniversalSim Module API Index
 
 本文档记录已经完成模块中可被后续模块调用的主要类、结构体、函数、文件位置与基本作用。后续每完成一个模块，应追加更新本文件，作为跨模块开发时的接口索引。
 
@@ -7,7 +7,15 @@
 - 路径均相对于项目根目录 `G4UniversalSim/`。
 - 本索引只记录稳定的对外接口，不记录内部 helper 函数。
 - 若接口行为存在重要约定，例如大小写、默认值、异常行为，应在“说明”中写明。
-
+- 全局命令前缀统一为 `/AIHL/`。
+- 除非特殊说明：
+    - Manager 持有业务状态；
+    - Messenger 只解析 UI 命令并转发给 Manager；
+    - DetectorConstruction 不保存材料、几何模板、biasing、scoring 业务状态；
+    - GeometryRegistry 是 geometry 与 SD / Biasing / Scoring 之间的唯一 volume 查询桥梁；
+    - OutputManager 不保证线程安全，多线程下应每个 worker 独立输出；
+    - 所有涉及 biasing 的 scoring 必须同时保留 raw value 和 weighted value；
+    - 所有模块不得直接 std::exit，错误应通过 exception 或 G4Exception 上抛。
 ------
 
 ## Utils 模块
@@ -471,15 +479,16 @@
 依赖约束：
 
 - `SimulationContext` 不依赖 Geant4。
-- `SimulationManager` 依赖 `ConfigManager` 与 `OutputManager`，只预留其他 Manager 指针，不实现材料、几何、物理、源、计分、偏置逻辑。
+- `SimulationManager` 依赖各业务 Manager 的 public 接口，负责创建、持有并连接 Config / Output / Materials / Geometry / Physics / Source / Biasing / Scoring 等 manager。
 - `AppMessenger` 依赖 Geant4 UI command，但只修改 `SimulationManager` / `SimulationContext`，不直接操作 Detector、Physics、Scoring、Biasing 或 run。
 
 重要约定：
 
 - `SimulationContext` 默认 `outputDir = "output"`、`numThreads = 1`、`interactive = false`、`checkOverlaps = true`、`dryRun = false`。
 - seed 为可选状态；调用 `GetSeed()` 前可用 `HasSeed()` 判断。
-- `SimulationManager::Initialize()` 执行 `LoadConfig()`、`Configure()`、`BuildManagers()`、初始化 `OutputManager`、写基础 `RunSummary`。
-- 尚未实现的 `MaterialManager`、`GeometryManager`、`PhysicsManager`、`SourceManager`、`BiasingManager`、`ScoringManager` 当前 getter 返回 `nullptr`。
+- `SimulationManager::Initialize()` 执行 `BuildManagers()`、`LoadConfig()`、`Configure()`、初始化 `OutputManager`、写基础 `RunSummary`。
+- `MaterialManager`、`GeometryManager`、`PhysicsManager`、`SourceManager`、`BiasingManager`、`ScoringManager` 由 `SimulationManager::BuildManagers()` 幂等创建。
+- `DetectorConstruction`、`PhysicsList`、`PrimaryGeneratorAction`、`ActionInitialization` 通过工厂函数创建并交给 Geant4 RunManager 生命周期管理，`SimulationManager` 不长期 owning 它们。
 
 ### SimulationContext
 
@@ -541,25 +550,31 @@
 | `void SetCheckOverlaps(bool enable)` | 设置 overlap 检查开关。 |
 | `void LoadConfig()` | 加载 `context.mainConfig` 到 ConfigManager。 |
 | `void Initialize()` | 执行核心初始化顺序并写出基础 run summary。 |
-| `void Configure()` | 从主配置读取 `[run]` 和 `[output]` 基础字段写入 context。 |
-| `void BuildManagers()` | 当前构建 ConfigManager / OutputManager，预留其他 manager 接入位置。 |
+| `void Configure()` | 从主配置读取 `[run]`、`[output]`、`[materials]`、`[geometry]`、`[physics]`、`[source]`、`[biasing]`、`[scoring]` 等配置并转发给对应 manager。 |
+| `void BuildManagers()` | 幂等创建并连接 ConfigManager / OutputManager / MaterialManager / GeometryManager / PhysicsManager / SourceManager / BiasingManager / ScoringManager 及已实现 messenger。 |
 | `void PrintSummary() const` | 向 `std::cout` 打印当前上下文和状态。 |
 | `bool IsConfigured() const` | 查询是否已配置。 |
 | `bool IsInitialized() const` | 查询是否已初始化。 |
 | `ConfigManager* GetConfigManager()` | 获取 ConfigManager。 |
 | `OutputManager* GetOutputManager()` | 获取 OutputManager。 |
-| `MaterialManager* GetMaterialManager()` | 预留材料 manager getter，当前可为 `nullptr`。 |
-| `GeometryManager* GetGeometryManager()` | 预留几何 manager getter，当前可为 `nullptr`。 |
-| `PhysicsManager* GetPhysicsManager()` | 预留物理 manager getter，当前可为 `nullptr`。 |
-| `SourceManager* GetSourceManager()` | 预留源 manager getter，当前可为 `nullptr`。 |
-| `BiasingManager* GetBiasingManager()` | 预留 biasing manager getter，当前可为 `nullptr`。 |
-| `ScoringManager* GetScoringManager()` | 预留 scoring manager getter，当前可为 `nullptr`。 |
+| `MaterialManager* GetMaterialManager()` | 获取 MaterialManager；`BuildManagers()` 后非空。 |
+| `GeometryManager* GetGeometryManager()` | 获取 GeometryManager；`BuildManagers()` 后非空。 |
+| `PhysicsManager* GetPhysicsManager()` | 获取 PhysicsManager；`BuildManagers()` 后非空。 |
+| `SourceManager* GetSourceManager()` | 获取 SourceManager；`BuildManagers()` 后非空。 |
+| `BiasingManager* GetBiasingManager()` | 获取 BiasingManager；`BuildManagers()` 后非空。 |
+| `ScoringManager* GetScoringManager()` | 获取 ScoringManager；`BuildManagers()` 后非空。 |
+| `std::unique_ptr<DetectorConstruction> CreateDetectorConstruction() const` | 创建使用当前 `GeometryManager*` 的 DetectorConstruction，调用方交给 RunManager。 |
+| `std::unique_ptr<G4VModularPhysicsList> CreatePhysicsList() const` | 按 PhysicsManager 当前模式创建 reference 或 manual physics list，调用方交给 RunManager。 |
+| `std::unique_ptr<PrimaryGeneratorAction> CreatePrimaryGeneratorAction() const` | 创建使用当前 `SourceManager*` 的 primary generator action。 |
+| `std::unique_ptr<ActionInitialization> CreateActionInitialization() const` | 创建连接 Source / Scoring / Output 的 ActionInitialization，调用方交给 RunManager。 |
+| `std::function<G4VSensitiveDetector*()> CreateSensitiveDetectorFactory() const` | 创建使用当前 `ScoringManager*` 的 SensitiveDetector factory，供 DetectorConstruction 绑定 SD。 |
+| `std::function<void(const GeometryRegistry&)> CreateGeometryPostBuildCallback() const` | 创建几何构建后回调，当前用于 biasing operator attach。 |
 
 说明：
 
-- `Configure()` 读取 `[run] threads`、`seed`、`interactive`、`macro`、`verbose`、`check_overlaps`、`run_name` 以及 `[output] dir`；缺失时使用 `SimulationContext` 默认值。
+- `Configure()` 读取 `[run] threads`、`seed`、`interactive`、`macro`、`verbose`、`check_overlaps`、`run_name`、`[output] dir`，并按已实现模块读取 materials / geometry / physics / source / biasing / scoring 配置；缺失时使用默认值或保持 manager 默认状态。
 - `Initialize()` 会创建输出目录并写出 `run_summary.txt`。
-- 当前不创建 `G4RunManager`，不注册 Detector、PhysicsList 或 ActionInitialization。
+- 当前不创建 `G4RunManager`，不直接调用 `SetUserInitialization()` / `SetUserAction()`；只提供安全创建入口。
 
 ### AppMessenger
 
@@ -1188,11 +1203,14 @@
 | `PrintSensitiveVolumes()` | 打印 sensitive volume 名称。 |
 | `PrintBiasVolumes()` | 打印 bias volume 名称。 |
 | `SetSensitiveDetectorFactory(std::function<G4VSensitiveDetector*()>)` | 后续 Hits 模块通过该 factory 接入真实 SD。 |
+| `SetGeometryPostBuildCallback(std::function<void(const GeometryRegistry&)>)` | 设置几何构建后通用回调；DetectorConstruction 不保存 biasing 业务状态。 |
 
 说明：
 - factory 为空时，`ConstructSDandField()` 只输出 warning，不阻断几何构建。
 - factory 返回空指针时抛出 `std::runtime_error`。
+- 同名 sensitive detector 已存在时会复用已有 SD，避免 geometry reinitialize 时重复注册。
 - sensitiveDetectorEnabled=false 时直接跳过 SD 绑定。
+- `Construct()` 在 `GeometryManager::BuildWorld()` 成功后执行 post-build callback；当前用于 `BiasingManager::AttachOperators(registry)`。
 
 ### DetectorMessenger
 
@@ -1254,3 +1272,858 @@
 - 没有 main config 时不强制失败，保留默认 context。
 - 没有 materials/geometry 配置时不强制失败，可后续通过 macro 命令加载。
 - AppMessenger 命令前缀已从 `/sim/app/...` 统一为 `/AIHL/app/...`。
+
+------
+
+## Biasing 模块真实 XS 实现
+
+模块职责：保存 biasing 配置，并实现 Geant4 cross-section biasing 的真实闭环。`BiasingMessenger` 只解析 `/AIHL/biasing/...` 命令并转发给 `BiasingManager`；`PhysicsList` / reference physics list 负责注册 `G4GenericBiasingPhysics` 并指定 biased particle/process；`BiasingManager::AttachOperators()` 在几何构建完成后通过 `GeometryRegistry` 把 `BiasingMultiParticleXS` attach 到目标 logical volume；实际截面变换由每个粒子的 `BiasingXS` 完成。
+
+依赖约束：
+- `BiasingConfig` 不依赖 Geant4 biasing classes。
+- `BiasingManager` 可依赖 `ConfigManager`、`GeometryRegistry`、`Utils/StringUtils` 和 `BiasingMultiParticleXS`。
+- `BiasingXS` / `BiasingMultiParticleXS` 可依赖 Geant4 biasing classes：`G4VBiasingOperator`、`G4BOptnChangeCrossSection`、`G4BiasingProcessInterface`。
+- Biasing 模块不依赖 DetectorConstruction、ScoringManager、OutputManager；也不直接注册 physics constructor。
+
+### BiasingConfig
+
+位置：
+- 头文件：`include/Biasing/BiasingConfig.hh`
+
+主要类型：
+| 类型 | 基本作用 |
+|---|---|
+| `enum class BiasingType` | 预留 biasing 类型：`None`、`CrossSection`、`Region`、`Importance`。 |
+| `struct XSBiasRule` | 保存单个粒子的截面偏置规则。 |
+| `struct BiasingConfig` | 保存 biasing enable 状态和 XS rule 列表。 |
+
+`XSBiasRule` 关键字段：
+- `particleName`
+- `processNames`
+- `factor`
+- `onlyPrimary`
+- `applyToSecondaries`
+- `minWeight`
+- `maxInteractions`
+- `volumeNames`
+- `enabled`
+
+`XSBiasRule` 接口：
+- `bool IsValid() const`
+- `void Validate() const`
+- `std::string ToString() const`
+
+`BiasingConfig` 接口：
+- `Clear()`
+- `HasRules()`
+- `GetEnabledXSRules()`
+- `Validate()`
+
+### BiasingManager
+
+位置：
+- 头文件：`include/Biasing/BiasingManager.hh`
+- 源文件：`src/Biasing/BiasingManager.cc`
+
+类：`BiasingManager`
+
+| 接口 | 基本作用 |
+|---|---|
+| `Enable(bool)` / `IsEnabled()` | 设置或查询 biasing 总开关。 |
+| `Clear()` | 清空配置和全局 bias volumes。 |
+| `AddXSBiasRule(...)` | 添加或替换 XS rule。 |
+| `CreateOrGetXSBiasRule(particleName)` | 按粒子名查找或创建 rule；查找大小写不敏感。 |
+| `AddXSBiasParticle(...)` | 创建粒子 rule。 |
+| `AddXSBiasProcess(particleName, processName)` | 给指定粒子 rule 添加 process。 |
+| `AddXSBiasProcess(processName)` | 简化接口；仅当当前只有一个 rule 时允许。 |
+| `SetXSBiasFactor(...)` | 设置截面偏置因子。 |
+| `SetOnlyPrimary(...)` / `SetApplyToSecondaries(...)` | 设置 primary/secondary 作用策略，并自动避免语义冲突。 |
+| `SetMinWeight(...)` | 设置最低权重限制。 |
+| `SetMaxInteractions(...)` | 设置最大 bias 相互作用次数。 |
+| `AddBiasVolume(...)` | 添加全局 bias volume。 |
+| `AddBiasVolumeForParticle(...)` | 添加粒子 rule 专属 volume。 |
+| `HasXSBiasRule(...)` / `GetXSBiasRule(...)` | 查询 rule。 |
+| `GetXSBiasRules()` / `GetEnabledXSBiasRules()` | 获取规则列表。 |
+| `GetBiasedParticles()` / `GetBiasedProcesses(...)` | 获取粒子和过程列表。 |
+| `GetBiasVolumes()` | 返回全局 volume 与各 rule volume 的去重并集。 |
+| `Validate()` | 校验所有 rule。 |
+| `PrintSummary()` | 打印配置与 operator attach 摘要。 |
+| `LoadFromConfig(const ConfigManager&)` | 从 `[biasing]` / `[biasing.xs]` 读取简化配置。 |
+| `AttachOperators(const GeometryRegistry&)` | 根据规则和 `GeometryRegistry` 真实创建并 attach `BiasingMultiParticleXS`。 |
+| `ClearOperators()` | 清空当前持有的 biasing operator；建议只在 geometry rebuild 前后使用。 |
+| `AreOperatorsAttached()` | 查询当前是否已有 operator attach。 |
+| `GetAttachedOperatorCount()` | 返回当前 manager 持有的 operator 数量。 |
+
+### BiasingXS
+
+位置：
+- 头文件：`include/Biasing/BiasingXS.hh`
+- 源文件：`src/Biasing/BiasingXS.cc`
+
+类：`BiasingXS : public G4VBiasingOperator`
+
+| 接口 | 基本作用 |
+|---|---|
+| `BiasingXS(const XSBiasRule&)` | 用单粒子 XS rule 创建 operator。 |
+| `SetRule/GetRule` | 替换或查询规则。 |
+| `SetXSBiasFactor/GetXSBiasFactor` | 设置或查询截面偏置因子。 |
+| `SetProcessNames/GetProcessNames` | 设置或查询需要偏置的 process 名称；为空表示允许所有 wrapped process。 |
+| `SetOnlyPrimary` / `SetApplyToSecondaries` | 控制 primary/secondary 作用策略。 |
+| `SetMinWeight` / `SetMaxInteractions` | 控制最低权重和每 track 最大偏置相互作用次数。 |
+| `StartRun()` | 校验粒子是否存在。 |
+| `StartTracking(track)` | 重置当前 track 的偏置计数。 |
+| `ProposeOccurenceBiasingOperation(...)` | 使用 wrapped process 的 current interaction length 计算 analog XS，并通过 `G4BOptnChangeCrossSection` 设置 biased XS。 |
+| `OperationApplied(...)` | 标记 operation interaction occurred，并累加当前 track 的偏置次数。 |
+
+说明：
+- `BiasingXS` 不访问 `GeometryRegistry`、`ScoringManager`、`OutputManager`。
+- 不手动修改 track weight；权重修正由 Geant4 biasing framework 和 `G4BOptnChangeCrossSection` 负责。
+
+### BiasingMultiParticleXS
+
+位置：
+- 头文件：`include/Biasing/BiasingMultiParticleXS.hh`
+- 源文件：`src/Biasing/BiasingMultiParticleXS.cc`
+
+类：`BiasingMultiParticleXS : public G4VBiasingOperator`
+
+| 接口 | 基本作用 |
+|---|---|
+| `AddParticle(const XSBiasRule&)` | 给当前 volume-level operator 添加一个粒子的 XS rule。 |
+| `HasParticle(particleName)` | 大小写不敏感查询粒子 operator。 |
+| `ClearParticles()` | 清空粒子 operator。 |
+| `AttachToVolume(G4LogicalVolume*)` | 调用 Geant4 `AttachTo()` 绑定 logical volume。 |
+| `StartRun()` | 转发到所有粒子 `BiasingXS`。 |
+| `StartTracking(track)` | 根据 track particle 选择当前 `BiasingXS`。 |
+| `ProposeOccurenceBiasingOperation(...)` / `OperationApplied(...)` | 转发到当前粒子的 `BiasingXS`。 |
+
+说明：
+- 一个 `BiasingMultiParticleXS` 对应一个 logical volume。
+- `currentOperator_` 是实例成员，不使用全局状态。
+
+### BiasingMessenger
+
+位置：
+- 头文件：`include/Biasing/BiasingMessenger.hh`
+- 源文件：`src/Biasing/BiasingMessenger.cc`
+
+命令前缀：`/AIHL/biasing/`
+
+| 命令 | 转发到 |
+|---|---|
+| `/AIHL/biasing/enable <true|false>` | `BiasingManager::Enable` |
+| `/AIHL/biasing/xs/addParticle <particle>` | `BiasingManager::AddXSBiasParticle` |
+| `/AIHL/biasing/xs/addProcess <process>` | `BiasingManager::AddXSBiasProcess(process)` |
+| `/AIHL/biasing/xs/addProcessForParticle <particle> <process>` | `BiasingManager::AddXSBiasProcess(particle, process)` |
+| `/AIHL/biasing/xs/setFactor <particle> <factor>` | `BiasingManager::SetXSBiasFactor` |
+| `/AIHL/biasing/xs/onlyPrimary <particle> <true|false>` | `BiasingManager::SetOnlyPrimary` |
+| `/AIHL/biasing/xs/applyToSecondaries <particle> <true|false>` | `BiasingManager::SetApplyToSecondaries` |
+| `/AIHL/biasing/xs/setMinWeight <particle> <value>` | `BiasingManager::SetMinWeight` |
+| `/AIHL/biasing/xs/setMaxInteractions <particle> <n>` | `BiasingManager::SetMaxInteractions` |
+| `/AIHL/biasing/xs/addVolume <volume>` | `BiasingManager::AddBiasVolume` |
+| `/AIHL/biasing/xs/addVolumeForParticle <particle> <volume>` | `BiasingManager::AddBiasVolumeForParticle` |
+| `/AIHL/biasing/validate` | `BiasingManager::Validate` |
+| `/AIHL/biasing/print` | `BiasingManager::PrintSummary` |
+| `/AIHL/biasing/clear` | `BiasingManager::Clear` |
+
+说明：
+- Messenger 不直接 new `BiasingXS`，不直接 attach logical volume，不操作 DetectorConstruction 或 PhysicsList。
+
+SimulationManager 集成：
+- `BuildManagers()` 会创建 `BiasingManager`。
+- `BuildManagers()` 会创建 `BiasingMessenger`，暴露 `/AIHL/biasing/...`。
+- `Configure()` 在 main config 已加载后调用 `biasingManager_->LoadFromConfig(*configManager_)`。
+- 若 `BiasingManager` enabled，`Configure()` 会启用 PhysicsManager 的 generic biasing hook。
+- `CreateDetectorConstruction()` 会设置 geometry post-build callback；几何构建完成后 callback 调用 `biasingManager_->AttachOperators(registry)`。
+- `RunSummary` 写入 `biasing_enabled`、`biasing_xs_rule_count`、`biasing_operators_attached`、`biasing_attached_operator_count`。
+
+与 Physics / Geometry / Scoring 的关系：
+- Physics 模块注册 `G4GenericBiasingPhysics` 并为 enabled rule 调用 `PhysicsBias(particle, processNames)`。
+- Geometry 构建完成后，`GeometryRegistry` 提供最新 logical volume 指针，BiasingManager 才能 attach operators。
+- Scoring 通过 `HitRecord.weight = track->GetWeight()` 自动获得加权统计；Biasing 模块不直接写 scoring。
+
+------
+
+## Scoring 模块第一版
+
+模块职责：提供 `ScorerBase` 抽象接口、`ScoringManager` 业务状态管理、`EdepScorer` 可用实现，以及 LET / Dose / Fluence 的轻量 stub。`SensitiveDetector` 将 `ParticleHit` 转为 `HitRecord` 后调用 `ScoringManager::ScoreHit()`；Scoring 只处理 `HitRecord`，不依赖 `ParticleHit` 或 `SensitiveDetector`。
+
+依赖约束：
+- 可依赖 `Output/OutputRecord.hh`、`Output/OutputManager.hh`、`Output/Histogram1D.hh`、`ConfigManager`、`Utils/StringUtils`、`Utils/UnitParser`。
+- `ScoringMessenger` 可依赖 Geant4 UI command。
+- 不依赖 DetectorConstruction、SensitiveDetector、ParticleHit、BiasingManager、ROOT、G4AnalysisManager。
+
+### ScorerBase
+
+位置：
+- 头文件：`include/Scoring/ScorerBase.hh`
+- 源文件：`src/Scoring/ScorerBase.cc`
+
+类：`ScorerBase`
+
+| 接口 | 基本作用 |
+|---|---|
+| `explicit ScorerBase(std::string name)` | 创建具名 scorer，名称不能为空。 |
+| `GetName()` | 返回 scorer 原始名称。 |
+| `SetEnabled(bool)` / `IsEnabled()` | 控制 scorer 是否参与生命周期分发。 |
+| `BeginRun/EndRun` | run 生命周期入口，默认 no-op。 |
+| `BeginEvent/EndEvent` | event 生命周期入口，默认 no-op。 |
+| `ScoreHit(const HitRecord&)` | hit scoring 入口，默认 no-op。 |
+| `Write(OutputManager&)` | 输出入口，默认 no-op。 |
+| `Reset()` | 清理 scorer 内部状态，默认 no-op。 |
+
+说明：
+- `ScorerBase` 不持有 `OutputManager` 指针，不访问 `GeometryRegistry`。
+
+### EdepScorer
+
+位置：
+- 头文件：`include/Scoring/EdepScorer.hh`
+- 源文件：`src/Scoring/EdepScorer.cc`
+
+类：`EdepScorer : public ScorerBase`
+
+| 接口 | 基本作用 |
+|---|---|
+| `EdepScorer("edep")` | 创建 event-level energy deposition scorer。 |
+| `BeginRun/EndRun` | run 级统计生命周期。 |
+| `BeginEvent/EndEvent` | event 级 raw / weighted edep 生命周期，并在 EndEvent 填 histogram。 |
+| `ScoreHit(const HitRecord&)` | 累积 `hit.edep` 与 `hit.edep * hit.weight`，并按 volume / particle 分类统计。 |
+| `Write(OutputManager&)` | 写 `hist_edep_raw_tN.csv`、`hist_edep_weighted_tN.csv`、`edep_volume_summary_tN.csv`、`edep_particle_summary_tN.csv`。 |
+| `EnableRawHistogram/EnableWeightedHistogram` | 控制 raw / weighted histogram。 |
+| `ConfigureRawHistogram/ConfigureWeightedHistogram` | 配置 histogram bins/min/max。 |
+| `EnableVolumeSummary/EnableParticleSummary` | 控制 volume / particle summary CSV。 |
+| `GetCurrentEventRawEdep/GetCurrentEventWeightedEdep` | 查询当前 event 统计。 |
+| `GetRunRawEdep/GetRunWeightedEdep` | 查询当前 run 统计。 |
+
+说明：
+- histogram 统计的是 event-level edep，不是 step-level edep。
+- `EdepScorer` 不写 hits CSV，也不写 event_edep CSV。
+- event_edep CSV 由 `ScoringManager` 统一写，避免与 EdepScorer 重复输出。
+
+### LET / Dose / Fluence Scorer
+
+位置：
+- `include/Scoring/LETScorer.hh` / `src/Scoring/LETScorer.cc`
+- `include/Scoring/DoseScorer.hh` / `src/Scoring/DoseScorer.cc`
+- `include/Scoring/FluenceScorer.hh` / `src/Scoring/FluenceScorer.cc`
+
+说明：
+- `LETScorer` 可读取 `HitRecord::LETcalc` 并在显式开启 histogram 时填充；第一版不自行计算 LET。
+- `DoseScorer` 第一版 no-op；真实 dose 需要 volume mass 或 geometry/material 数据。
+- `FluenceScorer` 第一版 no-op；真实 fluence 需要面积、面通量或 track-length 定义。
+- 三者都可被 `ScoringManager::RegisterScorer()` 注册。
+
+### ScoringManager
+
+位置：
+- 头文件：`include/Scoring/ScoringManager.hh`
+- 源文件：`src/Scoring/ScoringManager.cc`
+
+类：`ScoringManager`
+
+| 接口 | 基本作用 |
+|---|---|
+| `SetOutputManager(OutputManager*)` | 设置外部拥有的 output manager；不拥有生命周期。 |
+| `Enable(bool)` / `IsEnabled()` | scoring 总开关。 |
+| `EnableHitOutput(bool)` / `IsHitOutputEnabled()` | 控制是否写 hit CSV。 |
+| `EnableEventEdepOutput(bool)` / `IsEventEdepOutputEnabled()` | 控制是否写 event edep CSV。 |
+| `EnableEdepScoring(bool)` / `IsEdepScoringEnabled()` | 控制默认 EdepScorer。 |
+| `EnableLETScoring(bool)` / `IsLETScoringEnabled()` | 控制 LETScorer stub。 |
+| `EnableDoseScoring(bool)` / `IsDoseScoringEnabled()` | 控制 DoseScorer stub。 |
+| `EnableFluenceScoring(bool)` / `IsFluenceScoringEnabled()` | 控制 FluenceScorer stub。 |
+| `SetAutoCreateDefaultScorers(bool)` / `IsAutoCreateDefaultScorersEnabled()` | 控制 BeginRun 时是否自动创建默认 scorer。 |
+| `ConfigureEdepHistogram(...)` | 配置 raw event edep histogram。 |
+| `ConfigureWeightedEdepHistogram(...)` | 配置 weighted event edep histogram。 |
+| `SetVerboseLevel(int)` / `GetVerboseLevel()` | 设置 verbose level。 |
+| `RegisterScorer(std::unique_ptr<ScorerBase>)` | 注册 scorer；名称大小写不敏感去重。 |
+| `EnsureDefaultScorers()` | 根据 edep/let/dose/fluence 开关创建默认 scorer。 |
+| `HasScorer/GetScorer/GetScorerNames` | 查询 scorer。 |
+| `BeginRun/EndRun` | run 生命周期分发。 |
+| `BeginEvent/EndEvent` | event 生命周期分发，并在 EndEvent 写 `EventEdepRecord`。 |
+| `ScoreHit(const HitRecord&)` | 聚合 raw/weighted edep，写 hit，并分发给 scorer。 |
+| `GetCurrentEventRawEdep()` | 当前 event 原始 edep。 |
+| `GetCurrentEventWeightedEdep()` | 当前 event 加权 edep，即 `hit.edep * hit.weight` 累积。 |
+| `WriteAll()` | 调用所有 enabled scorer 的 `Write()`。 |
+| `LoadFromConfig(const ConfigManager&)` | 读取 `[scoring]` 与 `[scoring.edep]`。 |
+| `PrintSummary()` | 打印当前 scoring 状态。 |
+
+配置：
+- `[scoring] enabled/hits/event_edep/edep/let/dose/fluence/auto_create_default_scorers/verbose`
+- `[scoring.edep] raw_histogram/weighted_histogram/bins/min/max/volume_summary/particle_summary`
+
+### ScoringMessenger
+
+位置：
+- 头文件：`include/Scoring/ScoringMessenger.hh`
+- 源文件：`src/Scoring/ScoringMessenger.cc`
+
+命令前缀：`/AIHL/scoring/`
+
+| UI 命令 | 转发到 |
+|---|---|
+| `/AIHL/scoring/enable <true|false>` | `ScoringManager::Enable` |
+| `/AIHL/scoring/hits <true|false>` | `ScoringManager::EnableHitOutput` |
+| `/AIHL/scoring/eventEdep <true|false>` | `ScoringManager::EnableEventEdepOutput` |
+| `/AIHL/scoring/edep <true|false>` | `ScoringManager::EnableEdepScoring` |
+| `/AIHL/scoring/let <true|false>` | `ScoringManager::EnableLETScoring` |
+| `/AIHL/scoring/dose <true|false>` | `ScoringManager::EnableDoseScoring` |
+| `/AIHL/scoring/fluence <true|false>` | `ScoringManager::EnableFluenceScoring` |
+| `/AIHL/scoring/autoCreateScorers <true|false>` | `ScoringManager::SetAutoCreateDefaultScorers` |
+| `/AIHL/scoring/setEdepHistogram bins=200 min=0 eV max=10 MeV` | `ScoringManager::ConfigureEdepHistogram` |
+| `/AIHL/scoring/setWeightedEdepHistogram bins=200 min=0 eV max=10 MeV` | `ScoringManager::ConfigureWeightedEdepHistogram` |
+| `/AIHL/scoring/verbose <level>` | `ScoringManager::SetVerboseLevel` |
+| `/AIHL/scoring/print` | `ScoringManager::PrintSummary` |
+
+SimulationManager 集成：
+- `BuildManagers()` 会创建 `ScoringManager`。
+- `BuildManagers()` 会创建 `ScoringMessenger`，暴露 `/AIHL/scoring/...`。
+- `ScoringManager` 会连接 `OutputManager`。
+- `Configure()` 调用 `scoringManager_->LoadFromConfig(*configManager_)`。
+- `RunSummary` 写入 `scoring_enabled`、`scoring_hits_enabled`、`scoring_event_edep_enabled`、`scoring_edep_enabled`、`scoring_let_enabled`、`scoring_dose_enabled`、`scoring_fluence_enabled`、`scoring_auto_create_default_scorers`、`scoring_scorer_count`。
+------
+
+## Source 模块
+
+模块职责：封装 Geant4 `G4GeneralParticleSource`，为后续 `ActionInitialization` / run action 体系提供稳定的 primary generator 入口；保留原生 `/gps/...` 命令，同时提供轻量 `/AIHL/source/...` preset 与常用设置命令。
+
+依赖约束：
+- 依赖 Geant4 GPS / particle table / units。
+- 可依赖 `ConfigManager`、`Utils/StringUtils`、`Utils/UnitParser`。
+- 不依赖 DetectorConstruction、GeometryManager、PhysicsList、Actions、Hits、Scoring、Biasing。
+
+### PrimaryGeneratorAction
+
+位置：
+- 头文件：`include/Source/PrimaryGeneratorAction.hh`
+- 源文件：`src/Source/PrimaryGeneratorAction.cc`
+
+类：`PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction`
+
+| 接口 | 基本作用 |
+|---|---|
+| `PrimaryGeneratorAction(SourceManager*)` | 使用外部 `SourceManager`；若为空则使用内部 fallback GPS。 |
+| `GeneratePrimaries(G4Event*)` | 获取 GPS 并调用 `GeneratePrimaryVertex(event)`。 |
+| `SetSourceManager(SourceManager*)` | 切换外部 SourceManager；不拥有生命周期。 |
+| `GetSourceManager()` | 返回当前 SourceManager。 |
+| `GetGPS()` | 若 SourceManager 存在则返回其 GPS，否则返回 fallback GPS。 |
+
+说明：
+- 不解析 source.ini。
+- 不直接依赖 Detector / Geometry / Physics / Scoring / Biasing。
+- `PrimaryGeneratorAction` 不拥有 `SourceManager`。
+
+### SourceManager
+
+位置：
+- 头文件：`include/Source/SourceManager.hh`
+- 源文件：`src/Source/SourceManager.cc`
+
+类：`SourceManager`
+
+| 接口 | 基本作用 |
+|---|---|
+| `GetGPS()` | 返回内部 `G4GeneralParticleSource`。 |
+| `ResetGPS()` | 重建 GPS，并清空内部轻量状态。 |
+| `LoadFromConfig(const ConfigManager&)` | 从 `[source]` section 读取 preset / particle / energy / position / direction。 |
+| `ApplyPreset(name)` | 应用常用 preset。 |
+| `SetParticle(name)` | 通过 `G4ParticleTable` 查找并设置粒子。 |
+| `SetMonoEnergy(energy)` | 设置 mono 能量分布。 |
+| `SetPointPosition(x,y,z)` | 设置点源位置。 |
+| `SetDirection(x,y,z)` | 设置定向束流方向。 |
+| `SetIsotropic()` | 设置各向同性角分布。 |
+| `SetPlaneBeam(radius,z,direction)` | 设置平面圆形束斑。 |
+| `SetVerboseLevel/GetVerboseLevel` | 管理 SourceManager verbose。 |
+| `PrintSummary()` | 打印当前 source 轻量状态，并提示 `/gps/...` 仍可用。 |
+| `IsConfigured()` | 返回是否经由 manager/preset/config 配置过。 |
+| `GetParticleName()` / `GetMonoEnergy()` / `GetPresetName()` | 供 Core run summary 和状态输出使用。 |
+
+支持 preset：
+- `mono_proton`
+- `proton_beam`
+- `neutron_beam`
+- `gamma_beam`
+- `isotropic_neutron`
+- `plane_proton_beam`
+
+### SourceMessenger
+
+位置：
+- 头文件：`include/Source/SourceMessenger.hh`
+- 源文件：`src/Source/SourceMessenger.cc`
+
+类：`SourceMessenger : public G4UImessenger`
+
+命令前缀：`/AIHL/source/`
+
+| 命令 | 转发到 |
+|---|---|
+| `/AIHL/source/preset <name>` | `SourceManager::ApplyPreset` |
+| `/AIHL/source/particle <particleName>` | `SourceManager::SetParticle` |
+| `/AIHL/source/energy <value unit>` | `SourceManager::SetMonoEnergy` |
+| `/AIHL/source/point <x y z unit>` | `SourceManager::SetPointPosition` |
+| `/AIHL/source/direction <x y z>` | `SourceManager::SetDirection` |
+| `/AIHL/source/isotropic` | `SourceManager::SetIsotropic` |
+| `/AIHL/source/planeBeam ...` | `SourceManager::SetPlaneBeam` |
+| `/AIHL/source/print` | `SourceManager::PrintSummary` |
+| `/AIHL/source/reset` | `SourceManager::ResetGPS` |
+
+说明：
+- Messenger 只解析命令并转发，不保存 source 业务状态。
+- 原生 `/gps/...` 命令没有被屏蔽，仍可直接用于高级 GPS 配置。
+
+### SimulationManager 集成
+
+新增接口：
+- `SourceManager* GetSourceManager()`
+- `const SourceManager* GetSourceManager() const`
+- `std::unique_ptr<PrimaryGeneratorAction> CreatePrimaryGeneratorAction() const`
+
+生命周期：
+- `SimulationManager` 持有 `SourceManager` 和 `SourceMessenger`。
+- `CreatePrimaryGeneratorAction()` 返回新的 `PrimaryGeneratorAction(sourceManager_.get())`，供后续 `ActionInitialization` 或 `main.cc` 转交给 Geant4 生命周期。
+
+RunSummary 字段：
+- `source_configured`
+- `source_particle`
+- `source_energy`
+- `source_preset`
+
+------
+
+## Physics 模块
+
+模块职责：提供基础版 Geant4 physics 配置闭环。`PhysicsFactory` 统一处理别名和 constructor 创建；`PhysicsManager` 保存业务状态；`PhysicsList` 是 Geant4 正式物理入口；`PhysicsMessenger` 提供 `/AIHL/physics/...` 命令并只转发给 manager。
+
+依赖约束：
+- 可依赖 `ConfigManager`、`UnitParser`、`BiasingManager`。
+- 不依赖 DetectorConstruction、GeometryManager、SourceManager、ScoringManager。
+- 不直接创建几何，不绑定 SD，不启动 run。
+
+### PhysicsFactory
+
+位置：
+- 头文件：`include/Physics/PhysicsFactory.hh`
+- 源文件：`src/Physics/PhysicsFactory.cc`
+
+主要类型：
+- `enum class PhysicsCategory`
+- `class PhysicsFactory`
+
+| 接口 | 基本作用 |
+|---|---|
+| `NormalizeOptionName(option)` | 将用户别名归一化为 Geant4 constructor 名称。 |
+| `Classify(canonicalName)` | 返回 EM / Hadronic / Elastic / Ion / Decay / Stopping / Optical / Biasing 等分类。 |
+| `IsKnownOption(option)` | 判断 option 是否可识别。 |
+| `CreatePhysicsConstructor(option)` | 创建对应 `G4VPhysicsConstructor`。 |
+| `AvailableAliases()` | 返回可用别名列表。 |
+
+说明：
+- `AddHadronicOption`、`AddOtherOption` 不复制别名 if/else，统一走 `PhysicsFactory`。
+
+### PhysicsManager
+
+位置：
+- 头文件：`include/Physics/PhysicsManager.hh`
+- 源文件：`src/Physics/PhysicsManager.cc`
+
+类：`PhysicsManager`
+
+| 接口 | 基本作用 |
+|---|---|
+| `SetEMOption/GetEMOption` | 管理电磁物理选项，默认 `G4EmStandardPhysics_option4`。 |
+| `AddPhysicsModule/RemovePhysicsModule/ClearPhysicsModules` | 管理额外 physics module。 |
+| `AddHadronicOption/AddOtherOption` | 语义封装，内部仍统一走 `AddPhysicsModule`。 |
+| `GetPhysicsModules/HasPhysicsModule` | 查询 module 列表。 |
+| `SetDefaultCut/GetDefaultCut` | 管理全局 production cut，默认 1 mm。 |
+| `SetParticleCut/GetParticleCut/GetParticleCuts` | 按粒子管理 cut。 |
+| `SetRegionCut/GetRegionCuts/HasRegionCuts` | 保存 region cut 配置，第一版主要预留。 |
+| `SetBiasingManager/GetBiasingManager` | 接入轻量 BiasingManager 指针，不拥有生命周期。 |
+| `EnableBiasingPhysics/IsBiasingPhysicsEnabled` | 控制 generic biasing physics hook。 |
+| `LoadFromConfig(const ConfigManager&)` | 读取 `[physics]`、`[physics.cuts]`、`[physics.region.*]`。 |
+| `Validate()` | 校验 EM、modules、cut 合法性。 |
+| `PrintSummary()` | 打印 physics 配置摘要。 |
+
+### PhysicsList
+
+位置：
+- 头文件：`include/Physics/PhysicsList.hh`
+- 源文件：`src/Physics/PhysicsList.cc`
+
+类：`PhysicsList : public G4VModularPhysicsList`
+
+| 接口 | 基本作用 |
+|---|---|
+| `PhysicsList(PhysicsManager*)` | 使用外部 PhysicsManager；不拥有生命周期。 |
+| `ConfigureFromManager()` | 注册 EM、modules、biasing hook，一次性配置。 |
+| `ConfigureEMPhysics()` | 通过 `PhysicsFactory` 创建并注册 EM physics。 |
+| `ConfigureExtraPhysicsModules()` | 注册 manager 中的非 EM modules。 |
+| `ConfigureBiasingPhysics()` | 如果启用 biasing，则注册 `G4GenericBiasingPhysics` hook；真实 BiasingXS / MultiParticleXS 后续接入。 |
+| `ConstructParticle/ConstructProcess` | Geant4 生命周期入口。 |
+| `SetCuts()` | 应用 default cut 与 particle cuts。 |
+| `SetDefaultCutValue(cut)` | 校验并转发给 Geant4 基类。 |
+| `SetParticleCut(particleName, cut)` | 调用 Geant4 `SetCutValue`。 |
+
+说明：
+- Region-specific cuts 当前保存在 `PhysicsManager`；若 VolumeBuilder 已经为 `G4Region` 设置 `G4ProductionCuts`，PhysicsList 第一版不重复设置。
+
+### PhysicsMessenger
+
+位置：
+- 头文件：`include/Physics/PhysicsMessenger.hh`
+- 源文件：`src/Physics/PhysicsMessenger.cc`
+
+命令前缀：`/AIHL/physics/`
+
+| 命令 | 转发到 |
+|---|---|
+| `/AIHL/physics/setEM <option>` | `PhysicsManager::SetEMOption` |
+| `/AIHL/physics/addModule <option>` | `PhysicsManager::AddPhysicsModule` |
+| `/AIHL/physics/removeModule <option>` | `PhysicsManager::RemovePhysicsModule` |
+| `/AIHL/physics/clearModules` | `PhysicsManager::ClearPhysicsModules` |
+| `/AIHL/physics/addHadronic <option>` | `PhysicsManager::AddHadronicOption` |
+| `/AIHL/physics/addOther <option>` | `PhysicsManager::AddOtherOption` |
+| `/AIHL/physics/setDefaultCut <value unit>` | `PhysicsManager::SetDefaultCut` |
+| `/AIHL/physics/setCut <particle> <value unit>` | `PhysicsManager::SetParticleCut` |
+| `/AIHL/physics/setRegionCut <region> <particle> <value unit>` | `PhysicsManager::SetRegionCut` |
+| `/AIHL/physics/enableBiasing <true|false>` | `PhysicsManager::EnableBiasingPhysics` |
+| `/AIHL/physics/verbose <level>` | `PhysicsManager::SetVerboseLevel` |
+| `/AIHL/physics/print` | `PhysicsManager::PrintSummary` |
+
+### SimulationManager 集成
+
+新增接口：
+- `PhysicsManager* GetPhysicsManager()`
+- `const PhysicsManager* GetPhysicsManager() const`
+- `std::unique_ptr<G4VModularPhysicsList> CreatePhysicsList() const`
+
+生命周期：
+- `SimulationManager` 持有 `PhysicsManager` 和 `PhysicsMessenger`。
+- `PhysicsManager` 持有 `BiasingManager*` 非拥有指针。
+- Manual 模式下，`CreatePhysicsList()` 返回新的自定义 `PhysicsList(physicsManager_.get())`。
+- Reference 模式下，`CreatePhysicsList()` 通过 `PhysicsFactory::CreateReferencePhysicsList(referenceName)` 返回 Geant4 reference physics list，并追加 `extraModules`、generic biasing hook 和 cuts。
+- 返回对象供 main.cc 交给 Geant4 RunManager。
+
+RunSummary 字段：
+- `physics_mode`
+- `physics_reference`
+- `physics_extra_modules`
+- `physics_em`
+- `physics_modules`
+- `physics_default_cut`
+- `physics_biasing_enabled`
+
+### Physics 第二版补充
+
+模式：
+- Manual 模式：`referenceListName` 为空；使用 `emOption + modules` 手动组装 physics constructors。
+- Reference 模式：`referenceListName` 非空；通过 `G4PhysListFactory` 创建 Geant4 reference physics list，再追加 `extraModules`、cuts 和 generic biasing hook。
+
+PhysicsManager 新增接口：
+- `SetReferenceList(referenceName)`
+- `GetReferenceList()`
+- `HasReferenceList()`
+- `ClearReferenceList()`
+- `SetBaseReferenceList(baseName)`
+- `GetBaseReferenceList()`
+- `SetRequestedEMOption(option)`
+- `GetRequestedEMOption()`
+- `IsReferenceMode()`
+- `IsManualMode()`
+- `AddExtraModule(option)`
+- `RemoveExtraModule(option)`
+- `ClearExtraModules()`
+- `HasExtraModule(option)`
+- `GetExtraModules()`
+- `SetReferenceEMOption(emOption)`
+- `BuildReferenceNameWithEM(baseReference, emOption)`
+
+PhysicsFactory 新增接口：
+- `IsKnownReferenceList(referenceName)`
+- `AvailableReferenceLists()`
+- `AvailableReferenceListsEM()`
+- `CreateReferencePhysicsList(referenceName)`
+- `RegisterExtraModule(list, option)`
+- `RegisterExtraModules(list, options)`
+- `StripEMSuffix(referenceName)`
+- `ApplyEMSuffixToReference(baseReference, emOption)`
+- `NormalizeEMOptionForReference(emOption)`
+- `ApplyCuts(list, defaultCut, particleCuts)`
+
+PhysicsMessenger 新增命令：
+- `/AIHL/physics/setReferenceList <name>`
+- `/AIHL/physics/clearReferenceList`
+- `/AIHL/physics/setBaseReferenceList <name>`
+- `/AIHL/physics/addExtraModule <option>`
+- `/AIHL/physics/removeExtraModule <option>`
+- `/AIHL/physics/clearExtraModules`
+- `/AIHL/physics/listAvailableReferences`
+- `/AIHL/physics/listAvailableEMReferences`
+
+SimulationManager 更新：
+- `CreatePhysicsList()` 返回类型改为 `std::unique_ptr<G4VModularPhysicsList>`。
+- Reference 模式下调用 `PhysicsFactory::CreateReferencePhysicsList()`。
+- Manual 模式下仍返回自定义 `PhysicsList(PhysicsManager*)`。
+- RunSummary 新增 `physics_mode`、`physics_reference`、`physics_extra_modules`。
+
+EM reference suffix 映射：
+- `option1` / `emv` -> `_EMV`
+- `option2` / `emx` -> `_EMX`
+- `option3` / `emy` -> `_EMY`
+- `option4` / `emz` / `em4` -> `_EMZ`
+- `livermore` / `liv` -> `_LIV`
+- `penelope` / `pen` -> `_PEN`
+- `standard` / `default` -> 无后缀
+
+## Actions 模块
+
+位置：
+- 头文件：`include/Actions/`
+- 源文件：`src/Actions/`
+
+模块边界：
+- `Actions` 负责 Geant4 user action 生命周期入口。
+- 不实现 Hits / SensitiveDetector / ParticleHit。
+- 不实现 EdepScorer / LETScorer。
+- 不直接访问 DetectorConstruction / GeometryRegistry / PhysicsManager / BiasingManager。
+- `SteppingAction` 默认不主动 `ScoreHit()`，避免后续与 `SensitiveDetector` 重复记录。
+
+### ActionInitialization
+
+头文件：`include/Actions/ActionInitialization.hh`
+
+公开接口：
+- `ActionInitialization(SourceManager* sourceManager, ScoringManager* scoringManager, OutputManager* outputManager)`
+- `void BuildForMaster() const`
+- `void Build() const`
+- `void SetVerboseLevel(int level)`
+- `int GetVerboseLevel() const`
+
+生命周期连接：
+- `BuildForMaster()` 注册 master `RunAction`。
+- `Build()` 注册：
+  - `PrimaryGeneratorAction(sourceManager)`
+  - `RunAction(scoringManager, outputManager)`
+  - `EventAction(scoringManager)`
+  - `SteppingAction(scoringManager)`
+  - `TrackingAction()`
+
+### RunAction
+
+头文件：`include/Actions/RunAction.hh`
+
+公开接口：
+- `RunAction(ScoringManager* scoringManager = nullptr, OutputManager* outputManager = nullptr)`
+- `void BeginOfRunAction(const G4Run* run)`
+- `void EndOfRunAction(const G4Run* run)`
+- `void SetScoringManager(ScoringManager* scoringManager)`
+- `ScoringManager* GetScoringManager()`
+- `void SetOutputManager(OutputManager* outputManager)`
+- `OutputManager* GetOutputManager()`
+- `void SetVerboseLevel(int level)`
+- `int GetVerboseLevel() const`
+
+行为：
+- run begin 时调用 `OutputManager::Initialize()` 和 `ScoringManager::BeginRun(runID)`。
+- run end 时调用 `ScoringManager::EndRun(runID)`、`ScoringManager::WriteAll()`、`OutputManager::WriteAllHistograms()`、`OutputManager::WriteRunSummary()`、`OutputManager::Flush()`。
+
+### EventAction
+
+头文件：`include/Actions/EventAction.hh`
+
+公开接口：
+- `EventAction(ScoringManager* scoringManager = nullptr)`
+- `void BeginOfEventAction(const G4Event* event)`
+- `void EndOfEventAction(const G4Event* event)`
+- `void SetScoringManager(ScoringManager* scoringManager)`
+- `ScoringManager* GetScoringManager()`
+- `void SetVerboseLevel(int level)`
+- `int GetVerboseLevel() const`
+
+行为：
+- event begin 时调用 `ScoringManager::BeginEvent(eventID)`。
+- event end 时调用 `ScoringManager::EndEvent(eventID)`。
+
+### SteppingAction
+
+头文件：`include/Actions/SteppingAction.hh`
+
+公开接口：
+- `SteppingAction(ScoringManager* scoringManager = nullptr)`
+- `void UserSteppingAction(const G4Step* step)`
+- `void SetScoringManager(ScoringManager* scoringManager)`
+- `ScoringManager* GetScoringManager()`
+- `void SetVerboseLevel(int level)`
+- `int GetVerboseLevel() const`
+- `void EnableStepScoring(bool enable)`
+- `bool IsStepScoringEnabled() const`
+- `void AddKillVolume(const std::string& volumeName)`
+- `void ClearKillVolumes()`
+- `bool IsKillVolume(const std::string& volumeName) const`
+
+行为：
+- 支持按 pre-step physical volume name kill track。
+- `stepScoringEnabled=false` 为默认值。
+- 只有显式开启 step scoring 时才构造轻量 `HitRecord` 并调用 `ScoringManager::ScoreHit()`。
+
+### TrackingAction
+
+头文件：`include/Actions/TrackingAction.hh`
+
+公开接口：
+- `TrackingAction()`
+- `void PreUserTrackingAction(const G4Track* track)`
+- `void PostUserTrackingAction(const G4Track* track)`
+- `void SetVerboseLevel(int level)`
+- `int GetVerboseLevel() const`
+- `void EnableTrackLogging(bool enable)`
+- `bool IsTrackLoggingEnabled() const`
+
+行为：
+- 第一版只提供轻量 track logging hook。
+- 不创建或设置自定义 `TrackInformation`。
+
+### SimulationManager 集成
+
+新增接口：
+- `std::unique_ptr<ActionInitialization> CreateActionInitialization() const`
+
+所有权：
+- `SimulationManager` 不持有 `ActionInitialization`。
+- `CreateActionInitialization()` 返回新对象，后续由 main.cc / run setup `release()` 交给 `G4RunManager`。
+- `ActionInitialization` 使用 `SourceManager*`、`ScoringManager*`、`OutputManager*` 非拥有指针。
+
+------
+
+## Hits 模块
+
+位置：
+- 头文件：`include/Hits/`
+- 源文件：`src/Hits/`
+
+模块职责：
+- 定义 `ParticleHit`、`ParticleHitCollection`、`SensitiveDetector` 和 `TrackInformation`。
+- `SensitiveDetector` 是正式 hit scoring 入口：从 `G4Step` 创建 `ParticleHit`，转换为 `HitRecord`，再调用 `ScoringManager::ScoreHit()`。
+- `ParticleHit` 不直接访问 `OutputManager` 或 `ScoringManager`。
+- `SensitiveDetector` 不直接写 CSV；文件输出仍由 `ScoringManager` / `OutputManager` 管理。
+
+依赖约束：
+- 可依赖 Geant4 hit / SD / track 基础类。
+- 可依赖 `Output/OutputRecord.hh` 与 `Scoring/ScoringManager.hh`。
+- 不依赖 DetectorConstruction、GeometryManager、BiasingManager、OutputManager。
+
+### ParticleHit
+
+头文件：`include/Hits/ParticleHit.hh`
+
+类：`ParticleHit : public G4VHit`
+
+公开接口：
+- `ParticleHit()`
+- `ParticleHit(const ParticleHit& other)`
+- `ParticleHit& operator=(const ParticleHit& other)`
+- `void* operator new(std::size_t)`
+- `void operator delete(void* hit)`
+- `void Draw()`
+- `void Print()`
+- `Set/GetEventID`
+- `Set/GetTrackID`
+- `Set/GetParentID`
+- `Set/GetName`
+- `Set/GetEdep`
+- `Set/GetNdep`
+- `Set/GetStepLength`
+- `Set/GetFirstPos`
+- `Set/GetLastPos`
+- `Set/GetMomentumDirection`
+- `Set/GetEkin`
+- `Set/GetProcess`
+- `Set/GetVolume`
+- `Set/GetWeight`
+- `Set/GetLETcalc`
+- `Set/GetLETstep`
+- `Set/GetZ`
+- `Set/GetA`
+- `HitRecord ToHitRecord() const`
+- `static ParticleHit* FromStep(const G4Step* step, int eventID = -1)`
+
+说明：
+- 使用 `G4ThreadLocal G4Allocator<ParticleHit>`。
+- `weight` 默认 `1.0`，`FromStep()` 使用 `track->GetWeight()`。
+- `LETcalc` / `LETstep` 第一版保留为 0，供后续 LET scorer 填充。
+
+### ParticleHitCollection
+
+头文件：`include/Hits/ParticleHitCollection.hh`
+
+接口：
+- `using ParticleHitCollection = G4THitsCollection<ParticleHit>`
+- `std::vector<HitRecord> ConvertToHitRecords(const ParticleHitCollection* collection)`
+
+说明：
+- collection 为空时返回空 vector。
+- 不依赖 `SensitiveDetector` 或 `ScoringManager`。
+
+### SensitiveDetector
+
+头文件：`include/Hits/SensitiveDetector.hh`
+
+类：`SensitiveDetector : public G4VSensitiveDetector`
+
+公开接口：
+- `SensitiveDetector(const G4String& name, ScoringManager* scoringManager = nullptr)`
+- `void Initialize(G4HCofThisEvent* hce)`
+- `G4bool ProcessHits(G4Step* step, G4TouchableHistory* history)`
+- `void EndOfEvent(G4HCofThisEvent* hce)`
+- `Set/GetScoringManager`
+- `Set/GetVerboseLevel`
+- `EnableZeroEdepHits` / `IsZeroEdepHitsEnabled`
+- `EnableHitCollection` / `IsHitCollectionEnabled`
+- `EnableScoring` / `IsScoringEnabled`
+- `GetHitsThisEvent`
+- `GetRawEdepThisEvent`
+- `GetWeightedEdepThisEvent`
+- `GetCollectionName`
+- `GetCollectionID`
+
+行为：
+- 默认 collection 名称为 `ParticleHits`。
+- 默认跳过 zero-edep 且 zero-ndep hit。
+- 默认创建 Geant4 hit collection。
+- 默认启用 scoring；若 `ScoringManager*` 为空，则只收集 hit collection，不写输出。
+- `ProcessHits()` 不调用 `ScoringManager::EndEvent()`，event 生命周期仍由 `EventAction` 管理。
+
+### TrackInformation
+
+头文件：`include/Hits/TrackInformation.hh`
+
+类：`TrackInformation : public G4VUserTrackInformation`
+
+公开接口：
+- `TrackInformation()`
+- `TrackInformation(const G4Track* track)`
+- `void Print() const`
+- `Set/GetEventID`
+- `Set/GetOriginalTrackID`
+- `Set/GetAncestorTrackID`
+- `Set/GetParentID`
+- `Set/IsPrimary`
+- `Set/GetPrimaryParticleName`
+
+说明：
+- 第一版只保存 track 附加信息，不强制修改 `TrackingAction`。
+- 后续可由 `TrackingAction::PreUserTrackingAction()` attach 到 track，用于 ancestor grouping / ParticleAggregator。
+
+### SimulationManager 集成
+
+新增接口：
+- `std::function<G4VSensitiveDetector*()> CreateSensitiveDetectorFactory() const`
+
+行为：
+- factory 返回 `new SensitiveDetector("AIHLParticleSD", scoringManager_.get())`。
+- `SimulationManager::CreateDetectorConstruction()` 会自动给新建的 `DetectorConstruction` 设置该 factory。
+- factory 返回裸指针，由 Geant4 `G4SDManager` 管理 detector 生命周期。
+
+与 Actions 的关系：
+- 正式 hit scoring 由 `SensitiveDetector` 调用 `ScoringManager::ScoreHit()`。
+- `SteppingAction` 默认不做 step scoring，避免和 SD 重复计分。

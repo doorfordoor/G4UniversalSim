@@ -1,22 +1,33 @@
 #include "Core/SimulationManager.hh"
 
+#include "Actions/ActionInitialization.hh"
 #include "Config/ConfigManager.hh"
 #include "Detector/DetectorConstruction.hh"
 #include "Geometry/GeometryManager.hh"
 #include "Geometry/GeometryMessenger.hh"
+#include "Hits/SensitiveDetector.hh"
 #include "Materials/MaterialManager.hh"
 #include "Materials/MaterialMessenger.hh"
 #include "Output/OutputManager.hh"
 #include "Output/RunSummary.hh"
+#include "Physics/PhysicsFactory.hh"
+#include "Physics/PhysicsList.hh"
 #include "Physics/PhysicsManager.hh"
+#include "Physics/PhysicsMessenger.hh"
+#include "Source/PrimaryGeneratorAction.hh"
 #include "Source/SourceManager.hh"
+#include "Source/SourceMessenger.hh"
 #include "Biasing/BiasingManager.hh"
+#include "Biasing/BiasingMessenger.hh"
+#include "Scoring/ScoringMessenger.hh"
 #include "Scoring/ScoringManager.hh"
 #include "Utils/FileUtils.hh"
 #include "Utils/StringUtils.hh"
 
 #include <iostream>
+#include <map>
 #include <stdexcept>
+#include <vector>
 
 namespace {
 
@@ -28,6 +39,32 @@ std::string BoolText(bool value)
 bool HasNonEmptyKey(const ConfigManager& config, const std::string& section, const std::string& key)
 {
     return config.HasKey(section, key) && !StringUtils::Trim(config.GetString(section, key, "")).empty();
+}
+
+std::map<std::string, std::vector<std::string>> BuildBiasParticleProcessMap(
+    const BiasingManager* biasingManager)
+{
+    std::map<std::string, std::vector<std::string>> values;
+    if (!biasingManager) return values;
+    for (const XSBiasRule& rule : biasingManager->GetEnabledXSBiasRules()) {
+        if (!StringUtils::Trim(rule.particleName).empty()) {
+            values[rule.particleName] = rule.processNames;
+        }
+    }
+    return values;
+}
+
+std::vector<std::string> FilterOutGenericBiasingModules(const std::vector<std::string>& modules)
+{
+    std::vector<std::string> filtered;
+    for (const auto& module : modules) {
+        try {
+            if (PhysicsFactory::Classify(module) == PhysicsCategory::Biasing) continue;
+        } catch (...) {
+        }
+        filtered.push_back(module);
+    }
+    return filtered;
 }
 
 }  // namespace
@@ -182,6 +219,15 @@ void SimulationManager::Configure()
             }
             geometryManager_->LoadGeometryConfig(geometryConfigFile_);
         }
+
+        biasingManager_->LoadFromConfig(*configManager_);
+        physicsManager_->SetBiasingManager(biasingManager_.get());
+        physicsManager_->LoadFromConfig(*configManager_);
+        if (biasingManager_->IsEnabled()) {
+            physicsManager_->EnableBiasingPhysics(true);
+        }
+        sourceManager_->LoadFromConfig(*configManager_);
+        scoringManager_->LoadFromConfig(*configManager_);
     }
 
     outputManager_->SetOutputDir(context_.GetOutputDir());
@@ -198,16 +244,34 @@ void SimulationManager::BuildManagers()
     EnsureOutputManager();
     EnsureMaterialManager();
     EnsureGeometryManager();
+    EnsurePhysicsManager();
+    EnsureSourceManager();
+    EnsureBiasingManager();
+    EnsureScoringManager();
 
     geometryManager_->SetMaterialManager(materialManager_.get());
     geometryManager_->SetCheckOverlaps(context_.GetCheckOverlaps());
+    physicsManager_->SetBiasingManager(biasingManager_.get());
     outputManager_->SetOutputDir(context_.GetOutputDir());
+    scoringManager_->SetOutputManager(outputManager_.get());
 
     if (!materialMessenger_) {
         materialMessenger_ = std::make_unique<MaterialMessenger>(materialManager_.get());
     }
     if (!geometryMessenger_) {
         geometryMessenger_ = std::make_unique<GeometryMessenger>(geometryManager_.get());
+    }
+    if (!physicsMessenger_) {
+        physicsMessenger_ = std::make_unique<PhysicsMessenger>(physicsManager_.get());
+    }
+    if (!sourceMessenger_) {
+        sourceMessenger_ = std::make_unique<SourceMessenger>(sourceManager_.get());
+    }
+    if (!biasingMessenger_) {
+        biasingMessenger_ = std::make_unique<BiasingMessenger>(biasingManager_.get());
+    }
+    if (!scoringMessenger_) {
+        scoringMessenger_ = std::make_unique<ScoringMessenger>(scoringManager_.get());
     }
 }
 
@@ -226,6 +290,34 @@ void SimulationManager::PrintSummary() const
     std::cout << "  dry_run           : " << BoolText(context_.IsDryRun()) << '\n';
     std::cout << "  material_manager  : " << (materialManager_ ? "created" : "null") << '\n';
     std::cout << "  geometry_manager  : " << (geometryManager_ ? "created" : "null") << '\n';
+    std::cout << "  physics_manager   : " << (physicsManager_ ? "created" : "null") << '\n';
+    std::cout << "  physics_mode      : " << (physicsManager_ ? (physicsManager_->HasReferenceList() ? "reference" : "manual") : "") << '\n';
+    std::cout << "  physics_reference : " << (physicsManager_ ? physicsManager_->GetReferenceList() : "") << '\n';
+    std::cout << "  physics_extra     : " << (physicsManager_ ? StringUtils::Join(physicsManager_->GetExtraModules(), ", ") : "") << '\n';
+    std::cout << "  physics_em        : " << (physicsManager_ ? physicsManager_->GetEMOption() : "") << '\n';
+    std::cout << "  physics_modules   : " << (physicsManager_ ? StringUtils::Join(physicsManager_->GetPhysicsModules(), ", ") : "") << '\n';
+    std::cout << "  physics_cut       : " << (physicsManager_ ? physicsManager_->GetDefaultCut() : 0.0) << '\n';
+    std::cout << "  physics_biasing   : " << (physicsManager_ ? BoolText(physicsManager_->IsBiasingPhysicsEnabled()) : "false") << '\n';
+    std::cout << "  source_manager    : " << (sourceManager_ ? "created" : "null") << '\n';
+    std::cout << "  source_configured : " << (sourceManager_ ? BoolText(sourceManager_->IsConfigured()) : "false") << '\n';
+    std::cout << "  source_particle   : " << (sourceManager_ ? sourceManager_->GetParticleName() : "") << '\n';
+    std::cout << "  source_energy     : " << (sourceManager_ ? sourceManager_->GetMonoEnergy() : 0.0) << '\n';
+    std::cout << "  source_preset     : " << (sourceManager_ ? sourceManager_->GetPresetName() : "") << '\n';
+    std::cout << "  biasing_manager   : " << (biasingManager_ ? "created" : "null") << '\n';
+    std::cout << "  biasing_enabled   : " << (biasingManager_ ? BoolText(biasingManager_->IsEnabled()) : "false") << '\n';
+    std::cout << "  biasing_xs_rules  : " << (biasingManager_ ? biasingManager_->GetXSBiasRules().size() : 0) << '\n';
+    std::cout << "  biasing_attached  : " << (biasingManager_ ? BoolText(biasingManager_->AreOperatorsAttached()) : "false") << '\n';
+    std::cout << "  biasing_operators : " << (biasingManager_ ? biasingManager_->GetAttachedOperatorCount() : 0) << '\n';
+    std::cout << "  scoring_manager   : " << (scoringManager_ ? "created" : "null") << '\n';
+    std::cout << "  scoring_enabled   : " << (scoringManager_ ? BoolText(scoringManager_->IsEnabled()) : "false") << '\n';
+    std::cout << "  scoring_hits      : " << (scoringManager_ ? BoolText(scoringManager_->IsHitOutputEnabled()) : "false") << '\n';
+    std::cout << "  scoring_event_edep: " << (scoringManager_ ? BoolText(scoringManager_->IsEventEdepOutputEnabled()) : "false") << '\n';
+    std::cout << "  scoring_edep      : " << (scoringManager_ ? BoolText(scoringManager_->IsEdepScoringEnabled()) : "false") << '\n';
+    std::cout << "  scoring_let       : " << (scoringManager_ ? BoolText(scoringManager_->IsLETScoringEnabled()) : "false") << '\n';
+    std::cout << "  scoring_dose      : " << (scoringManager_ ? BoolText(scoringManager_->IsDoseScoringEnabled()) : "false") << '\n';
+    std::cout << "  scoring_fluence   : " << (scoringManager_ ? BoolText(scoringManager_->IsFluenceScoringEnabled()) : "false") << '\n';
+    std::cout << "  scoring_auto      : " << (scoringManager_ ? BoolText(scoringManager_->IsAutoCreateDefaultScorersEnabled()) : "false") << '\n';
+    std::cout << "  scoring_scorers   : " << (scoringManager_ ? scoringManager_->GetScorerNames().size() : 0) << '\n';
     std::cout << "  geometry_template : " << geometryTemplate_ << '\n';
     std::cout << "  geometry_config   : " << geometryConfigFile_ << '\n';
     std::cout << "  config_loaded     : " << BoolText(configLoaded_) << '\n';
@@ -248,7 +340,83 @@ std::unique_ptr<DetectorConstruction> SimulationManager::CreateDetectorConstruct
     if (!geometryManager_) {
         throw std::runtime_error("SimulationManager::CreateDetectorConstruction failed: GeometryManager is null");
     }
-    return std::make_unique<DetectorConstruction>(geometryManager_.get());
+    auto detector = std::make_unique<DetectorConstruction>(geometryManager_.get());
+    detector->SetSensitiveDetectorFactory(CreateSensitiveDetectorFactory());
+    detector->SetGeometryPostBuildCallback(CreateGeometryPostBuildCallback());
+    return detector;
+}
+
+std::unique_ptr<G4VModularPhysicsList> SimulationManager::CreatePhysicsList() const
+{
+    if (!physicsManager_) {
+        throw std::runtime_error("SimulationManager::CreatePhysicsList failed: PhysicsManager is null");
+    }
+
+    if (physicsManager_->HasReferenceList()) {
+        auto list = PhysicsFactory::CreateReferencePhysicsList(physicsManager_->GetReferenceList());
+        PhysicsFactory::RegisterExtraModules(
+            list.get(),
+            FilterOutGenericBiasingModules(physicsManager_->GetExtraModules()));
+
+        const auto* biasing = physicsManager_->GetBiasingManager();
+        const bool needsBiasing = physicsManager_->IsBiasingPhysicsEnabled() ||
+            (biasing && biasing->IsEnabled());
+        if (needsBiasing) {
+            const auto particleProcesses = BuildBiasParticleProcessMap(biasing);
+            if (particleProcesses.empty()) {
+                std::cout << "[SimulationManager] Biasing physics requested but no biased particles are configured; generic biasing physics is not registered." << '\n';
+            } else {
+                PhysicsFactory::RegisterGenericBiasingPhysics(list.get(), particleProcesses);
+            }
+        }
+
+        PhysicsFactory::ApplyCuts(
+            list.get(),
+            physicsManager_->GetDefaultCut(),
+            physicsManager_->GetParticleCuts());
+        return list;
+    }
+
+    return std::make_unique<PhysicsList>(physicsManager_.get());
+}
+
+std::unique_ptr<PrimaryGeneratorAction> SimulationManager::CreatePrimaryGeneratorAction() const
+{
+    if (!sourceManager_) {
+        throw std::runtime_error("SimulationManager::CreatePrimaryGeneratorAction failed: SourceManager is null");
+    }
+    return std::make_unique<PrimaryGeneratorAction>(sourceManager_.get());
+}
+
+std::unique_ptr<ActionInitialization> SimulationManager::CreateActionInitialization() const
+{
+    if (!sourceManager_) {
+        throw std::runtime_error("SimulationManager::CreateActionInitialization failed: SourceManager is null");
+    }
+    return std::make_unique<ActionInitialization>(
+        sourceManager_.get(),
+        scoringManager_.get(),
+        outputManager_.get());
+}
+
+std::function<G4VSensitiveDetector*()> SimulationManager::CreateSensitiveDetectorFactory() const
+{
+    if (!scoringManager_) {
+        throw std::runtime_error("SimulationManager::CreateSensitiveDetectorFactory failed: ScoringManager is null");
+    }
+
+    return [this]() -> G4VSensitiveDetector* {
+        return new SensitiveDetector("AIHLParticleSD", scoringManager_.get());
+    };
+}
+
+std::function<void(const GeometryRegistry&)> SimulationManager::CreateGeometryPostBuildCallback() const
+{
+    return [this](const GeometryRegistry& registry) {
+        if (biasingManager_ && biasingManager_->IsEnabled()) {
+            biasingManager_->AttachOperators(registry);
+        }
+    };
 }
 
 ConfigManager* SimulationManager::GetConfigManager()
@@ -351,12 +519,33 @@ void SimulationManager::EnsureGeometryManager()
     if (!geometryManager_) geometryManager_ = std::make_unique<GeometryManager>();
 }
 
+void SimulationManager::EnsurePhysicsManager()
+{
+    if (!physicsManager_) physicsManager_ = std::make_unique<PhysicsManager>();
+}
+
+void SimulationManager::EnsureSourceManager()
+{
+    if (!sourceManager_) sourceManager_ = std::make_unique<SourceManager>();
+}
+
+void SimulationManager::EnsureBiasingManager()
+{
+    if (!biasingManager_) biasingManager_ = std::make_unique<BiasingManager>();
+}
+
+void SimulationManager::EnsureScoringManager()
+{
+    if (!scoringManager_) scoringManager_ = std::make_unique<ScoringManager>();
+}
+
 void SimulationManager::ConfigureOutputManager()
 {
     EnsureOutputManager();
     outputManager_->SetOutputDir(context_.GetOutputDir());
     outputManager_->SetThreadId(0);
     outputManager_->EnableThreadSuffix(true);
+    if (scoringManager_) scoringManager_->SetOutputManager(outputManager_.get());
 }
 
 void SimulationManager::WriteBaseRunSummary()
@@ -376,6 +565,30 @@ void SimulationManager::WriteBaseRunSummary()
     summary.Set("materials_file", materialsFile_);
     summary.Set("geometry_template", geometryTemplate_);
     summary.Set("geometry_config", geometryConfigFile_);
+    summary.Set("physics_mode", physicsManager_ ? (physicsManager_->HasReferenceList() ? "reference" : "manual") : "");
+    summary.Set("physics_reference", physicsManager_ ? physicsManager_->GetReferenceList() : "");
+    summary.Set("physics_extra_modules", physicsManager_ ? StringUtils::Join(physicsManager_->GetExtraModules(), ",") : "");
+    summary.Set("physics_em", physicsManager_ ? physicsManager_->GetEMOption() : "");
+    summary.Set("physics_modules", physicsManager_ ? StringUtils::Join(physicsManager_->GetPhysicsModules(), ",") : "");
+    summary.Set("physics_default_cut", physicsManager_ ? physicsManager_->GetDefaultCut() : 0.0);
+    summary.SetBool("physics_biasing_enabled", physicsManager_ ? physicsManager_->IsBiasingPhysicsEnabled() : false);
+    summary.SetBool("source_configured", sourceManager_ ? sourceManager_->IsConfigured() : false);
+    summary.Set("source_particle", sourceManager_ ? sourceManager_->GetParticleName() : "");
+    summary.Set("source_energy", sourceManager_ ? sourceManager_->GetMonoEnergy() : 0.0);
+    summary.Set("source_preset", sourceManager_ ? sourceManager_->GetPresetName() : "");
+    summary.SetBool("biasing_enabled", biasingManager_ ? biasingManager_->IsEnabled() : false);
+    summary.Set("biasing_xs_rule_count", static_cast<int>(biasingManager_ ? biasingManager_->GetXSBiasRules().size() : 0));
+    summary.SetBool("biasing_operators_attached", biasingManager_ ? biasingManager_->AreOperatorsAttached() : false);
+    summary.Set("biasing_attached_operator_count", static_cast<int>(biasingManager_ ? biasingManager_->GetAttachedOperatorCount() : 0));
+    summary.SetBool("scoring_enabled", scoringManager_ ? scoringManager_->IsEnabled() : false);
+    summary.SetBool("scoring_hits_enabled", scoringManager_ ? scoringManager_->IsHitOutputEnabled() : false);
+    summary.SetBool("scoring_event_edep_enabled", scoringManager_ ? scoringManager_->IsEventEdepOutputEnabled() : false);
+    summary.SetBool("scoring_edep_enabled", scoringManager_ ? scoringManager_->IsEdepScoringEnabled() : false);
+    summary.SetBool("scoring_let_enabled", scoringManager_ ? scoringManager_->IsLETScoringEnabled() : false);
+    summary.SetBool("scoring_dose_enabled", scoringManager_ ? scoringManager_->IsDoseScoringEnabled() : false);
+    summary.SetBool("scoring_fluence_enabled", scoringManager_ ? scoringManager_->IsFluenceScoringEnabled() : false);
+    summary.SetBool("scoring_auto_create_default_scorers", scoringManager_ ? scoringManager_->IsAutoCreateDefaultScorersEnabled() : false);
+    summary.Set("scoring_scorer_count", static_cast<int>(scoringManager_ ? scoringManager_->GetScorerNames().size() : 0));
     summary.SetBool("initialized", initialized_);
     summary.AddMessage("Core initialization completed");
     outputManager_->WriteRunSummary();

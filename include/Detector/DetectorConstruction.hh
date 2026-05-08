@@ -12,6 +12,8 @@ class GeometryRegistry;
 
 class DetectorConstruction : public G4VUserDetectorConstruction {
 public:
+    using GeometryPostBuildCallback = std::function<void(const GeometryRegistry&)>;
+
     explicit DetectorConstruction(GeometryManager* geometryManager);
     ~DetectorConstruction() override;
 
@@ -40,6 +42,7 @@ public:
     void PrintBiasVolumes() const;
 
     void SetSensitiveDetectorFactory(std::function<G4VSensitiveDetector*()> factory);
+    void SetGeometryPostBuildCallback(GeometryPostBuildCallback callback);
 
 private:
     GeometryManager* geometryManager_ = nullptr;
@@ -48,4 +51,5 @@ private:
     std::string sensitiveDetectorName_ = "AIHLParticleSD";
     int verboseLevel_ = 1;
     std::function<G4VSensitiveDetector*()> sensitiveDetectorFactory_;
+    GeometryPostBuildCallback postBuildCallback_;
 };

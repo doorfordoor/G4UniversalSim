@@ -1,11 +1,22 @@
-// LETScorer.hh
-#ifndef LET_SCORER_HH
-#define LET_SCORER_HH
+#pragma once
 
-class LETScorer {
+#include "Output/Histogram1D.hh"
+#include "Scoring/ScorerBase.hh"
+
+class LETScorer : public ScorerBase {
 public:
-    LETScorer();
-    ~LETScorer();
-};
+    explicit LETScorer(const std::string& name = "let");
+    ~LETScorer() override;
 
-#endif
+    void ScoreHit(const HitRecord& hit) override;
+    void Write(OutputManager& output) override;
+    void Reset() override;
+
+    void EnableHistogram(bool enable);
+    bool IsHistogramEnabled() const;
+    void ConfigureHistogram(int bins, double min, double max);
+
+private:
+    bool histogramEnabled_ = false;
+    Histogram1D letHist_;
+};

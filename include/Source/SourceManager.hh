@@ -1,11 +1,53 @@
-// SourceManager.hh
-#ifndef SOURCE_MANAGER_HH
-#define SOURCE_MANAGER_HH
+#pragma once
+
+#include <memory>
+#include <string>
+#include <vector>
+
+class ConfigManager;
+class G4GeneralParticleSource;
 
 class SourceManager {
 public:
     SourceManager();
     ~SourceManager();
-};
 
-#endif
+    G4GeneralParticleSource* GetGPS();
+    const G4GeneralParticleSource* GetGPS() const;
+
+    void ResetGPS();
+    void LoadFromConfig(const ConfigManager& config);
+    void ApplyPreset(const std::string& presetName);
+
+    void SetParticle(const std::string& particleName);
+    std::string GetParticleName() const;
+
+    void SetMonoEnergy(double energy);
+    double GetMonoEnergy() const;
+
+    void SetPosition(const std::string& type, const std::string& shape, const std::vector<double>& params);
+    void SetPointPosition(double x, double y, double z);
+    void SetDirection(double x, double y, double z);
+    void SetIsotropic();
+    void SetPlaneBeam(double radius, double z, const std::string& direction = "-z");
+
+    void SetVerboseLevel(int level);
+    int GetVerboseLevel() const;
+
+    void PrintSummary() const;
+    bool IsConfigured() const;
+
+    const std::string& GetPresetName() const;
+
+private:
+    void EnsureGPS() const;
+    static std::vector<double> ParseDirectionVector(const std::string& text);
+    static std::string NormalizeDirectionToken(const std::string& direction);
+
+    mutable std::unique_ptr<G4GeneralParticleSource> gps_;
+    std::string particleName_;
+    double monoEnergy_ = 0.0;
+    std::string presetName_;
+    int verboseLevel_ = 0;
+    bool configured_ = false;
+};

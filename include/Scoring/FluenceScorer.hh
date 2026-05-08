@@ -1,11 +1,13 @@
-// FluenceScorer.hh
-#ifndef FLUENCE_SCORER_HH
-#define FLUENCE_SCORER_HH
+#pragma once
 
-class FluenceScorer {
+#include "Scoring/ScorerBase.hh"
+
+class FluenceScorer : public ScorerBase {
 public:
-    FluenceScorer();
-    ~FluenceScorer();
-};
+    explicit FluenceScorer(const std::string& name = "fluence");
+    ~FluenceScorer() override;
 
-#endif
+    void ScoreHit(const HitRecord& hit) override;
+    void Write(OutputManager& output) override;
+    void Reset() override;
+};

@@ -35,6 +35,10 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         throw std::runtime_error("DetectorConstruction::Construct failed: GeometryManager::BuildWorld returned null");
     }
 
+    if (postBuildCallback_) {
+        postBuildCallback_(geometryManager_->GetRegistry());
+    }
+
     if (verboseLevel_ > 0) {
         G4cout << "[DetectorConstruction] World volume constructed." << G4endl;
         PrintRegistrySummary();
@@ -74,17 +78,23 @@ void DetectorConstruction::ConstructSDandField()
         return;
     }
 
-    G4VSensitiveDetector* sd = sensitiveDetectorFactory_();
-    if (!sd) {
-        throw std::runtime_error("DetectorConstruction::ConstructSDandField failed: sensitiveDetectorFactory returned null");
-    }
-
     G4SDManager* sdManager = G4SDManager::GetSDMpointer();
     if (!sdManager) {
         throw std::runtime_error("DetectorConstruction::ConstructSDandField failed: G4SDManager is null");
     }
 
-    sdManager->AddNewDetector(sd);
+    G4VSensitiveDetector* sd = sdManager->FindSensitiveDetector(sensitiveDetectorName_, false);
+    if (!sd) {
+        sd = sensitiveDetectorFactory_();
+        if (!sd) {
+            throw std::runtime_error("DetectorConstruction::ConstructSDandField failed: sensitiveDetectorFactory returned null");
+        }
+        sdManager->AddNewDetector(sd);
+    } else if (verboseLevel_ > 0) {
+        G4cout << "[DetectorConstruction] Reusing existing sensitive detector '"
+               << sensitiveDetectorName_ << "'." << G4endl;
+    }
+
     for (G4LogicalVolume* logicalVolume : sensitiveLVs) {
         if (logicalVolume) logicalVolume->SetSensitiveDetector(sd);
     }
@@ -197,4 +207,9 @@ void DetectorConstruction::PrintBiasVolumes() const
 void DetectorConstruction::SetSensitiveDetectorFactory(std::function<G4VSensitiveDetector*()> factory)
 {
     sensitiveDetectorFactory_ = std::move(factory);
+}
+
+void DetectorConstruction::SetGeometryPostBuildCallback(GeometryPostBuildCallback callback)
+{
+    postBuildCallback_ = std::move(callback);
 }

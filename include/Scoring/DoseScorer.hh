@@ -1,11 +1,13 @@
-// DoseScorer.hh
-#ifndef DOSE_SCORER_HH
-#define DOSE_SCORER_HH
+#pragma once
 
-class DoseScorer {
+#include "Scoring/ScorerBase.hh"
+
+class DoseScorer : public ScorerBase {
 public:
-    DoseScorer();
-    ~DoseScorer();
-};
+    explicit DoseScorer(const std::string& name = "dose");
+    ~DoseScorer() override;
 
-#endif
+    void ScoreHit(const HitRecord& hit) override;
+    void Write(OutputManager& output) override;
+    void Reset() override;
+};
