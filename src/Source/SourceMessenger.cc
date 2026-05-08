@@ -1,6 +1,7 @@
 #include "Source/SourceMessenger.hh"
 
 #include "Source/SourceManager.hh"
+#include "Utils/CommandParser.hh"
 #include "Utils/StringUtils.hh"
 #include "Utils/UnitParser.hh"
 
@@ -10,8 +11,6 @@
 #include "G4UIdirectory.hh"
 #include "G4ios.hh"
 
-#include <cctype>
-#include <map>
 #include <sstream>
 #include <stdexcept>
 #include <string>
@@ -36,77 +35,6 @@ SourceManager* RequireManager(SourceManager* manager, const std::string& command
     return manager;
 }
 
-std::vector<std::string> SplitWhitespaceRespectQuotes(const std::string& text)
-{
-    std::vector<std::string> tokens;
-    std::string current;
-    bool inQuotes = false;
-
-    for (char ch : text) {
-        if (ch == '"') {
-            inQuotes = !inQuotes;
-            continue;
-        }
-        if (std::isspace(static_cast<unsigned char>(ch)) && !inQuotes) {
-            if (!current.empty()) {
-                tokens.push_back(current);
-                current.clear();
-            }
-        } else {
-            current.push_back(ch);
-        }
-    }
-
-    if (inQuotes) {
-        throw std::runtime_error("unclosed quote");
-    }
-    if (!current.empty()) {
-        tokens.push_back(current);
-    }
-    return tokens;
-}
-
-std::map<std::string, std::string> ParseKeyValueLine(const std::string& line)
-{
-    std::map<std::string, std::string> values;
-    for (const auto& token : SplitWhitespaceRespectQuotes(line)) {
-        const auto pos = token.find('=');
-        if (pos == std::string::npos || pos == 0) {
-            throw std::runtime_error("expected key=value token, got '" + token + "'");
-        }
-        auto key = StringUtils::ToLower(StringUtils::Trim(token.substr(0, pos)));
-        auto value = StringUtils::Trim(token.substr(pos + 1));
-        if (key.empty()) {
-            throw std::runtime_error("empty key in token '" + token + "'");
-        }
-        values[key] = value;
-    }
-    return values;
-}
-
-std::string GetRequired(const std::map<std::string, std::string>& values,
-                        const std::string& key,
-                        const std::string& command,
-                        const std::string& raw)
-{
-    const auto iter = values.find(key);
-    if (iter == values.end() || StringUtils::Trim(iter->second).empty()) {
-        ThrowCommandError(command, raw, "missing required key '" + key + "'");
-    }
-    return iter->second;
-}
-
-std::string GetOptional(const std::map<std::string, std::string>& values,
-                        const std::string& key,
-                        const std::string& defaultValue)
-{
-    const auto iter = values.find(key);
-    if (iter == values.end()) {
-        return defaultValue;
-    }
-    return iter->second;
-}
-
 std::vector<double> ParseLengthVec3(const std::string& text)
 {
     const auto trimmed = StringUtils::Trim(text);
@@ -122,7 +50,7 @@ std::vector<double> ParseLengthVec3(const std::string& text)
         return values;
     }
 
-    const auto tokens = SplitWhitespaceRespectQuotes(trimmed);
+    const auto tokens = CommandParser::SplitWhitespaceRespectQuotes(trimmed);
     std::vector<double> values;
     if (tokens.size() == 3) {
         for (const auto& token : tokens) {
@@ -146,7 +74,7 @@ std::vector<double> ParseDirectionVec3(const std::string& text)
 {
     auto parts = StringUtils::Contains(text, ",")
                      ? StringUtils::Split(text, ',')
-                     : SplitWhitespaceRespectQuotes(text);
+                     : CommandParser::SplitWhitespaceRespectQuotes(text);
     if (parts.size() != 3) {
         throw std::runtime_error("direction requires 3 numeric components");
     }
@@ -257,14 +185,17 @@ void SourceMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
             std::string direction = "+z";
 
             if (StringUtils::Contains(raw, "=")) {
-                const auto values = ParseKeyValueLine(raw);
+                const auto values = CommandParser::ParseKeyValueLine(
+                    raw,
+                    "radius=1 mm z=-1 mm direction=+z; radius=1*mm z=-1*mm direction=+z"
+                );
                 radius = UnitParser::ParseLength(
-                    GetRequired(values, "radius", "/AIHL/source/planeBeam", raw));
+                    CommandParser::RequiredValue(values, "radius", "/AIHL/source/planeBeam"));
                 z = UnitParser::ParseLength(
-                    GetRequired(values, "z", "/AIHL/source/planeBeam", raw));
-                direction = GetOptional(values, "direction", "+z");
+                    CommandParser::RequiredValue(values, "z", "/AIHL/source/planeBeam"));
+                direction = CommandParser::OptionalValue(values, "direction", "+z");
             } else {
-                const auto tokens = SplitWhitespaceRespectQuotes(raw);
+                const auto tokens = CommandParser::SplitWhitespaceRespectQuotes(raw);
                 if (tokens.size() == 3) {
                     radius = UnitParser::ParseLength(tokens[0]);
                     z = UnitParser::ParseLength(tokens[1]);

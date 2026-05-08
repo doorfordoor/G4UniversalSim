@@ -53,7 +53,10 @@ ParsedQuantity ParseQuantity(const std::string& text)
         throw std::runtime_error("Cannot parse numeric value from quantity: '" + text + "'");
     }
 
-    const std::string unit = StringUtils::Trim(std::string(end));
+    std::string unit = StringUtils::Trim(std::string(end));
+    if (!unit.empty() && unit.front() == '*') {
+        unit = StringUtils::Trim(unit.substr(1));
+    }
     if (unit.find_first_of(" \t\r\n") != std::string::npos) {
         throw std::runtime_error("Invalid unit text in quantity: '" + text + "'");
     }

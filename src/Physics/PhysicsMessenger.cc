@@ -2,6 +2,7 @@
 
 #include "Physics/PhysicsFactory.hh"
 #include "Physics/PhysicsManager.hh"
+#include "Utils/CommandParser.hh"
 #include "Utils/StringUtils.hh"
 #include "Utils/UnitParser.hh"
 
@@ -13,7 +14,6 @@
 #include "G4UIdirectory.hh"
 #include "G4ios.hh"
 
-#include <cctype>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -28,40 +28,17 @@ PhysicsManager* RequireManager(PhysicsManager* manager, const std::string& comma
     return manager;
 }
 
-std::vector<std::string> SplitWhitespaceRespectQuotes(const std::string& text)
-{
-    std::vector<std::string> tokens;
-    std::string current;
-    bool inQuotes = false;
-    for (char ch : text) {
-        if (ch == '"') {
-            inQuotes = !inQuotes;
-            continue;
-        }
-        if (std::isspace(static_cast<unsigned char>(ch)) && !inQuotes) {
-            if (!current.empty()) {
-                tokens.push_back(current);
-                current.clear();
-            }
-        } else {
-            current.push_back(ch);
-        }
-    }
-    if (inQuotes) throw std::runtime_error("unclosed quote");
-    if (!current.empty()) tokens.push_back(current);
-    return tokens;
-}
-
 void ReportFailure(const std::string& command, const std::string& raw, const std::exception& error)
 {
-    const auto message = "Physics command " + command + " failed for input '" + raw + "': " + error.what();
+    const auto message = "Physics command " + command + " failed for input '" + raw + "': " + error.what()
+        + ". Supported examples: /AIHL/physics/setDefaultCut 1 mm; /AIHL/physics/setCut proton 1 um; /AIHL/physics/setRegionCut SV e- 100 nm.";
     G4Exception("PhysicsMessenger::SetNewValue", "AIHL_PHYSICS_001",
                 FatalException, message.c_str());
 }
 
 std::pair<std::string, double> ParseParticleCutArgs(const std::string& raw)
 {
-    const auto tokens = SplitWhitespaceRespectQuotes(raw);
+    const auto tokens = CommandParser::SplitWhitespaceRespectQuotes(raw);
     if (tokens.size() < 2) {
         throw std::runtime_error("expected '<particle> <value unit>'");
     }
@@ -78,7 +55,7 @@ struct RegionCutArgs {
 
 RegionCutArgs ParseRegionCutArgs(const std::string& raw)
 {
-    const auto tokens = SplitWhitespaceRespectQuotes(raw);
+    const auto tokens = CommandParser::SplitWhitespaceRespectQuotes(raw);
     if (tokens.size() < 3) {
         throw std::runtime_error("expected '<region> <particle> <value unit>'");
     }

@@ -1,10 +1,10 @@
 #include "Materials/MaterialCommandParser.hh"
 
+#include "Utils/CommandParser.hh"
 #include "Utils/StringUtils.hh"
 
 #include "G4SystemOfUnits.hh"
 
-#include <cctype>
 #include <cstdlib>
 #include <stdexcept>
 
@@ -29,7 +29,11 @@ std::pair<double, std::string> ParseNumberUnit(const std::string& text)
     if (end == trimmed.c_str()) {
         throw std::runtime_error("Cannot parse number and unit from '" + text + "'");
     }
-    return {value, StringUtils::ToLower(StringUtils::Trim(std::string(end)))};
+    std::string unit = StringUtils::Trim(std::string(end));
+    if (!unit.empty() && unit.front() == '*') {
+        unit = StringUtils::Trim(unit.substr(1));
+    }
+    return {value, StringUtils::ToLower(unit)};
 }
 
 }  // namespace
@@ -38,44 +42,10 @@ std::map<std::string, std::string> MaterialCommandParser::ParseKeyValueLine(
     const std::string& line
 )
 {
-    std::map<std::string, std::string> result;
-    std::size_t i = 0;
-    while (i < line.size()) {
-        while (i < line.size() && std::isspace(static_cast<unsigned char>(line[i]))) ++i;
-        if (i >= line.size()) break;
-
-        const std::size_t keyStart = i;
-        while (i < line.size() && line[i] != '=' && !std::isspace(static_cast<unsigned char>(line[i]))) ++i;
-        std::string key = StringUtils::ToLower(StringUtils::Trim(line.substr(keyStart, i - keyStart)));
-        while (i < line.size() && std::isspace(static_cast<unsigned char>(line[i]))) ++i;
-        if (i >= line.size() || line[i] != '=') {
-            throw std::runtime_error("Expected key=value in material command: '" + line + "'");
-        }
-        ++i;
-        while (i < line.size() && std::isspace(static_cast<unsigned char>(line[i]))) ++i;
-
-        std::string value;
-        if (i < line.size() && line[i] == '"') {
-            ++i;
-            bool closed = false;
-            while (i < line.size()) {
-                if (line[i] == '"') {
-                    closed = true;
-                    ++i;
-                    break;
-                }
-                value.push_back(line[i++]);
-            }
-            if (!closed) throw std::runtime_error("Unclosed quote in material command: '" + line + "'");
-        } else {
-            const std::size_t valueStart = i;
-            while (i < line.size() && !std::isspace(static_cast<unsigned char>(line[i]))) ++i;
-            value = line.substr(valueStart, i - valueStart);
-        }
-        if (key.empty()) throw std::runtime_error("Empty key in material command: '" + line + "'");
-        result[key] = value;
-    }
-    return result;
+    return CommandParser::ParseKeyValueLine(
+        line,
+        "name=SiO2 density=2.2 g/cm3 components=\"Si:1,O:2\"; name=Al density=2.7*g/cm3"
+    );
 }
 
 std::string MaterialCommandParser::Require(

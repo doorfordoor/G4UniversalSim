@@ -1,6 +1,7 @@
 #include "Scoring/ScoringMessenger.hh"
 
 #include "Scoring/ScoringManager.hh"
+#include "Utils/CommandParser.hh"
 #include "Utils/StringUtils.hh"
 #include "Utils/UnitParser.hh"
 
@@ -12,7 +13,6 @@
 #include "G4UIdirectory.hh"
 
 #include <cctype>
-#include <map>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -27,56 +27,6 @@ ScoringManager* RequireManager(ScoringManager* manager, const std::string& comma
     return manager;
 }
 
-std::vector<std::string> SplitWhitespaceRespectQuotes(const std::string& text)
-{
-    std::vector<std::string> tokens;
-    std::string current;
-    bool inQuotes = false;
-    for (char ch : text) {
-        if (ch == '"') {
-            inQuotes = !inQuotes;
-            continue;
-        }
-        if (std::isspace(static_cast<unsigned char>(ch)) && !inQuotes) {
-            if (!current.empty()) {
-                tokens.push_back(current);
-                current.clear();
-            }
-        } else {
-            current.push_back(ch);
-        }
-    }
-    if (inQuotes) throw std::runtime_error("unclosed quote");
-    if (!current.empty()) tokens.push_back(current);
-    return tokens;
-}
-
-std::map<std::string, std::string> ParseKeyValueLine(const std::string& line)
-{
-    std::map<std::string, std::string> values;
-    for (const auto& token : SplitWhitespaceRespectQuotes(line)) {
-        const auto pos = token.find('=');
-        if (pos == std::string::npos || pos == 0) {
-            throw std::runtime_error("expected key=value token, got '" + token + "'");
-        }
-        auto key = StringUtils::ToLower(StringUtils::Trim(token.substr(0, pos)));
-        auto value = StringUtils::Trim(token.substr(pos + 1));
-        if (key.empty()) throw std::runtime_error("empty key in token '" + token + "'");
-        values[key] = value;
-    }
-    return values;
-}
-
-std::string RequiredValue(const std::map<std::string, std::string>& values,
-                          const std::string& key)
-{
-    const auto it = values.find(key);
-    if (it == values.end() || StringUtils::Trim(it->second).empty()) {
-        throw std::runtime_error("missing required key '" + key + "'");
-    }
-    return it->second;
-}
-
 struct HistogramArgs {
     int bins = 0;
     double min = 0.0;
@@ -86,15 +36,18 @@ struct HistogramArgs {
 HistogramArgs ParseHistogramArgs(const std::string& raw)
 {
     if (StringUtils::Contains(raw, "=")) {
-        const auto values = ParseKeyValueLine(raw);
+        const auto values = CommandParser::ParseKeyValueLine(
+            raw,
+            "bins=100 min=0 eV max=10 MeV; bins=100 min=0*eV max=10*MeV; bins=100 min=0eV max=10MeV"
+        );
         HistogramArgs args;
-        args.bins = std::stoi(RequiredValue(values, "bins"));
-        args.min = UnitParser::ParseEnergy(RequiredValue(values, "min"));
-        args.max = UnitParser::ParseEnergy(RequiredValue(values, "max"));
+        args.bins = CommandParser::ParseInt(CommandParser::RequiredValue(values, "bins", "histogram"), "bins");
+        args.min = UnitParser::ParseEnergy(CommandParser::RequiredValue(values, "min", "histogram"));
+        args.max = UnitParser::ParseEnergy(CommandParser::RequiredValue(values, "max", "histogram"));
         return args;
     }
 
-    const auto tokens = SplitWhitespaceRespectQuotes(raw);
+    const auto tokens = CommandParser::SplitWhitespaceRespectQuotes(raw);
     if (tokens.size() < 3) {
         throw std::runtime_error("expected '<bins> <min energy> <max energy>' or key=value form");
     }
@@ -133,7 +86,8 @@ HistogramArgs ParseHistogramArgs(const std::string& raw)
 
 void ReportFailure(const std::string& command, const std::string& raw, const std::exception& error)
 {
-    const auto message = "Scoring command " + command + " failed for input '" + raw + "': " + error.what();
+    const auto message = "Scoring command " + command + " failed for input '" + raw + "': " + error.what()
+        + ". Supported examples: bins=100 min=0 eV max=10 MeV; bins=100 min=0*eV max=10*MeV; bins=100 min=0eV max=10MeV; 100 0 eV 10 MeV";
     G4Exception("ScoringMessenger::SetNewValue", "AIHL_SCORING_001",
                 FatalException, message.c_str());
 }

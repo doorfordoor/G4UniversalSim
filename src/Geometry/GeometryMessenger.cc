@@ -2,6 +2,7 @@
 
 #include "Geometry/GeometryManager.hh"
 #include "Geometry/GeometryUtils.hh"
+#include "Utils/CommandParser.hh"
 #include "Utils/StringUtils.hh"
 #include "Utils/UnitParser.hh"
 
@@ -13,64 +14,19 @@
 #include "G4UIdirectory.hh"
 #include "G4ios.hh"
 
-#include <cctype>
 #include <exception>
 #include <map>
 #include <stdexcept>
 
 namespace {
 
-std::map<std::string, std::string> ParseKeyValueLine(const std::string& line)
-{
-    std::map<std::string, std::string> result;
-    std::size_t i = 0;
-    while (i < line.size()) {
-        while (i < line.size() && std::isspace(static_cast<unsigned char>(line[i]))) ++i;
-        if (i >= line.size()) break;
-
-        const std::size_t keyStart = i;
-        while (i < line.size() && line[i] != '=' && !std::isspace(static_cast<unsigned char>(line[i]))) ++i;
-        std::string key = line.substr(keyStart, i - keyStart);
-        key = StringUtils::ToLower(StringUtils::Trim(key));
-        while (i < line.size() && std::isspace(static_cast<unsigned char>(line[i]))) ++i;
-        if (i >= line.size() || line[i] != '=') {
-            throw std::runtime_error("Expected key=value token near '" + line.substr(keyStart) + "'");
-        }
-        ++i;
-        while (i < line.size() && std::isspace(static_cast<unsigned char>(line[i]))) ++i;
-
-        std::string value;
-        if (i < line.size() && line[i] == '"') {
-            ++i;
-            bool closed = false;
-            while (i < line.size()) {
-                if (line[i] == '"') {
-                    closed = true;
-                    ++i;
-                    break;
-                }
-                value.push_back(line[i++]);
-            }
-            if (!closed) throw std::runtime_error("Unclosed quote in command line: '" + line + "'");
-        } else {
-            const std::size_t valueStart = i;
-            while (i < line.size() && !std::isspace(static_cast<unsigned char>(line[i]))) ++i;
-            value = line.substr(valueStart, i - valueStart);
-        }
-
-        if (key.empty()) throw std::runtime_error("Empty key in command line: '" + line + "'");
-        result[key] = StringUtils::Trim(value);
-    }
-    return result;
-}
+const char* kGeometryKeyValueExamples =
+    "name=ExtraDetector parent=world material=G4_Si size=\"1 cm,1 cm,1 mm\" position=\"0 mm,0 mm,2 cm\"; "
+    "rMax=5 mm halfZ=10 mm deltaPhi=360 deg";
 
 std::string RequireValue(const std::map<std::string, std::string>& args, const std::string& key, const std::string& command)
 {
-    const auto it = args.find(StringUtils::ToLower(key));
-    if (it == args.end() || StringUtils::Trim(it->second).empty()) {
-        throw std::runtime_error(command + " missing required key '" + key + "'");
-    }
-    return it->second;
+    return CommandParser::RequiredValue(args, key, command);
 }
 
 std::string OptionalValue(
@@ -79,8 +35,7 @@ std::string OptionalValue(
     const std::string& defaultValue
 )
 {
-    const auto it = args.find(StringUtils::ToLower(key));
-    return it == args.end() ? defaultValue : it->second;
+    return CommandParser::OptionalValue(args, key, defaultValue);
 }
 
 bool OptionalBool(const std::map<std::string, std::string>& args, const std::string& key, bool defaultValue)
@@ -237,7 +192,7 @@ void GeometryMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
         }
         if (command == addBoxCmd_) {
             EnsureManager("/AIHL/geometry/addBox");
-            const auto args = ParseKeyValueLine(newValue);
+            const auto args = CommandParser::ParseKeyValueLine(newValue, kGeometryKeyValueExamples);
             VolumeNode node = MakeCommonNode(args, "/AIHL/geometry/addBox", VolumeShape::Box, "box");
             node.size = GeometryUtils::ParseVec3(RequireValue(args, "size", "/AIHL/geometry/addBox"));
             manager_->AddVolume(node);
@@ -246,7 +201,7 @@ void GeometryMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
         }
         if (command == addTubsCmd_) {
             EnsureManager("/AIHL/geometry/addTubs");
-            const auto args = ParseKeyValueLine(newValue);
+            const auto args = CommandParser::ParseKeyValueLine(newValue, kGeometryKeyValueExamples);
             VolumeNode node = MakeCommonNode(args, "/AIHL/geometry/addTubs", VolumeShape::Tubs, "tubs");
             node.parameters = {
                 UnitParser::ParseLength(OptionalValue(args, "rmin", "0 mm")),
@@ -261,7 +216,7 @@ void GeometryMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
         }
         if (command == addVolumeCmd_) {
             EnsureManager("/AIHL/geometry/addVolume");
-            const auto args = ParseKeyValueLine(newValue);
+            const auto args = CommandParser::ParseKeyValueLine(newValue, kGeometryKeyValueExamples);
             const std::string shapeText = RequireValue(args, "shape", "/AIHL/geometry/addVolume");
             const VolumeShape shape = GeometryUtils::ParseShape(shapeText);
             if (shape != VolumeShape::Box && shape != VolumeShape::Tubs) {

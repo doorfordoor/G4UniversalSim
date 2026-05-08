@@ -25,6 +25,43 @@ add_executable(G4UniversalSim main.cc ${SOURCES})
 # Link Geant4 libraries
 target_link_libraries(G4UniversalSim ${Geant4_LIBRARIES})
 
+# ------------------------------------------------------------
+# Copy runtime resource directories next to the executable
+# ------------------------------------------------------------
+
+set(G4USIM_RUNTIME_DIRS
+    config
+    macros
+  #  scripts
+)
+
+foreach(runtime_dir ${G4USIM_RUNTIME_DIRS})
+    if(EXISTS "${PROJECT_SOURCE_DIR}/${runtime_dir}")
+        add_custom_command(
+            TARGET G4UniversalSim
+            POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_directory
+                    "${PROJECT_SOURCE_DIR}/${runtime_dir}"
+                    "$<TARGET_FILE_DIR:G4UniversalSim>/${runtime_dir}"
+            COMMENT "Copying ${runtime_dir}/ to runtime output directory"
+        )
+    endif()
+endforeach()
+
+# Optional: also copy examples/scripts/tools if you want them beside exe
+# foreach(runtime_dir examples scripts tools)
+#     if(EXISTS "${PROJECT_SOURCE_DIR}/${runtime_dir}")
+#         add_custom_command(
+#             TARGET G4UniversalSim
+#             POST_BUILD
+#             COMMAND ${CMAKE_COMMAND} -E copy_directory
+#                     "${PROJECT_SOURCE_DIR}/${runtime_dir}"
+#                     "$<TARGET_FILE_DIR:G4UniversalSim>/${runtime_dir}"
+#             COMMENT "Copying ${runtime_dir}/ to runtime output directory"
+#         )
+#     endif()
+# endforeach()
+
 # Install targets
 install(TARGETS G4UniversalSim DESTINATION bin)
 install(DIRECTORY config/ DESTINATION config)
