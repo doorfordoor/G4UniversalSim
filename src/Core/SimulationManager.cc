@@ -186,6 +186,16 @@ void SimulationManager::SetCheckOverlaps(bool enable)
     if (geometryManager_) geometryManager_->SetCheckOverlaps(enable);
 }
 
+void SimulationManager::SetDryRun(bool enable)
+{
+    context_.SetDryRun(enable);
+}
+
+void SimulationManager::SetRunName(const std::string& name)
+{
+    context_.SetRunName(name);
+}
+
 void SimulationManager::LoadConfig()
 {
     EnsureConfigManager();
@@ -243,6 +253,7 @@ void SimulationManager::Configure()
 
         context_.SetInteractive(configManager_->GetBool("run", "interactive", context_.IsInteractive()));
         context_.SetMacroFile(configManager_->GetString("run", "macro", context_.GetMacroFile()));
+        context_.SetDryRun(GetBoolCompat(*configManager_, "run", {"dry_run", "dryRun"}, context_.IsDryRun()));
         context_.SetVerboseLevel(HasKeyCompat(*configManager_, "run", {"verbose"})
             ? configManager_->GetInt("run", "verbose", context_.GetVerboseLevel())
             : configManager_->GetInt("general", "verbose", context_.GetVerboseLevel()));

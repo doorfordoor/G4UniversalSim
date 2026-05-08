@@ -44,6 +44,8 @@ public:
     void SetInteractive(bool interactive);
     void SetVerboseLevel(int level);
     void SetCheckOverlaps(bool enable);
+    void SetDryRun(bool enable);
+    void SetRunName(const std::string& name);
 
     void LoadConfig();
     void Initialize();

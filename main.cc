@@ -26,7 +26,11 @@ namespace {
 struct CommandLineOptions {
   std::string configFile;
   std::string macroFile;
+  std::string outputDir;
+  std::string runName;
   bool interactive = false;
+  bool dryRun = false;
+  std::optional<bool> checkOverlaps;
   std::optional<int> threads;
   std::optional<unsigned long> seed;
   bool help = false;
@@ -43,15 +47,19 @@ void PrintUsage(const char* program) {
       << "  " << program
       << " --macro macros/run_simple.mac --threads 4 --seed 12345\n\n"
       << "Options:\n"
-      << "  --config <file>   Load main ini configuration through "
+      << "  --config, -c <file>  Load main ini configuration through "
          "SimulationManager.\n"
-      << "  --macro <file>    Execute a Geant4 macro after initialization "
+      << "  --macro, -m <file>   Execute a Geant4 macro after initialization "
          "setup.\n"
-      << "  --ui              Start an interactive Geant4 UI session.\n"
-      << "  --threads <N>     Set requested number of worker threads when MT "
+      << "  --output, -o <dir>   Override output directory.\n"
+      << "  --run-name <name>    Override run name in SimulationManager.\n"
+      << "  --ui                 Start an interactive Geant4 UI session.\n"
+      << "  --threads, -t <N>    Set requested number of worker threads when MT "
          "is available.\n"
-      << "  --seed <N>        Set random seed in SimulationManager and CLHEP.\n"
-      << "  --help, -h        Show this help.\n\n"
+      << "  --seed <N>           Set random seed in SimulationManager and CLHEP.\n"
+      << "  --check-overlaps <true|false>  Override geometry overlap checks.\n"
+      << "  --dry-run            Configure and register Geant4 objects but skip macro/UI execution.\n"
+      << "  --help, -h           Show this help.\n\n"
       << "If neither --macro nor --ui is supplied, no beamOn is run "
          "automatically.\n";
 }
@@ -85,6 +93,12 @@ unsigned long ParseSeed(const std::string& value) {
   return parsed;
 }
 
+bool ParseBoolOption(const std::string& value, const std::string& option) {
+  if (value == "true" || value == "1" || value == "on" || value == "yes") return true;
+  if (value == "false" || value == "0" || value == "off" || value == "no") return false;
+  throw std::runtime_error("Invalid value for " + option + ": '" + value + "'");
+}
+
 CommandLineOptions ParseCommandLine(int argc, char** argv) {
   CommandLineOptions options;
   for (int i = 1; i < argc; ++i) {
@@ -92,16 +106,24 @@ CommandLineOptions ParseCommandLine(int argc, char** argv) {
 
     if (arg == "--help" || arg == "-h") {
       options.help = true;
-    } else if (arg == "--config") {
+    } else if (arg == "--config" || arg == "-c") {
       options.configFile = RequireValue(i, argc, argv, arg);
-    } else if (arg == "--macro") {
+    } else if (arg == "--macro" || arg == "-m") {
       options.macroFile = RequireValue(i, argc, argv, arg);
+    } else if (arg == "--output" || arg == "-o") {
+      options.outputDir = RequireValue(i, argc, argv, arg);
+    } else if (arg == "--run-name") {
+      options.runName = RequireValue(i, argc, argv, arg);
     } else if (arg == "--ui") {
       options.interactive = true;
-    } else if (arg == "--threads") {
+    } else if (arg == "--threads" || arg == "-t") {
       options.threads = ParsePositiveInt(RequireValue(i, argc, argv, arg), arg);
     } else if (arg == "--seed") {
       options.seed = ParseSeed(RequireValue(i, argc, argv, arg));
+    } else if (arg == "--dry-run") {
+      options.dryRun = true;
+    } else if (arg == "--check-overlaps") {
+      options.checkOverlaps = ParseBoolOption(RequireValue(i, argc, argv, arg), arg);
     } else if (!arg.empty() && arg[0] == '-') {
       throw std::runtime_error("Unknown command line option: '" + arg + "'");
     } else {
@@ -140,9 +162,13 @@ int main(int argc, char** argv) {
     SimulationManager sim;
     if (!options.configFile.empty()) sim.SetMainConfig(options.configFile);
     if (!options.macroFile.empty()) sim.SetMacroFile(options.macroFile);
+    if (!options.outputDir.empty()) sim.SetOutputDir(options.outputDir);
+    if (!options.runName.empty()) sim.SetRunName(options.runName);
     sim.SetInteractive(options.interactive);
+    sim.SetDryRun(options.dryRun);
     if (options.threads) sim.SetNumThreads(*options.threads);
     if (options.seed) sim.SetSeed(*options.seed);
+    if (options.checkOverlaps) sim.SetCheckOverlaps(*options.checkOverlaps);
 
     sim.Initialize();
     if (sim.GetContext().HasSeed()) {
@@ -173,6 +199,11 @@ int main(int argc, char** argv) {
     G4UImanager* uiManager = G4UImanager::GetUIpointer();
     if (!uiManager) {
       throw std::runtime_error("G4UImanager::GetUIpointer returned null");
+    }
+
+    if (options.dryRun) {
+      std::cout << "G4UniversalSim dry-run completed: managers and Geant4 user initialization objects were created; macro/UI execution skipped.\n";
+      return EXIT_SUCCESS;
     }
 
     if (!options.macroFile.empty()) {

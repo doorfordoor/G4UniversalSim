@@ -1,9 +1,18 @@
-# Run Layered Device Simulation Macro
 /control/verbose 1
 /run/verbose 1
+/event/verbose 0
+/tracking/verbose 0
 
-# Initialize kernel
+/AIHL/material/load config/materials/material.ini
+/AIHL/geometry/setTemplate layered_device
+/AIHL/geometry/loadConfig config/geometry/layered_device.ini
+/AIHL/geometry/checkOverlaps true
+/AIHL/geometry/printTree
+/AIHL/physics/setReferenceList FTFP_BERT_EMZ
+/AIHL/physics/setDefaultCut 1 mm
+/AIHL/source/preset proton_beam
+/AIHL/scoring/enable true
+/AIHL/scoring/edep true
+
 /run/initialize
-
-# Set number of events
-/run/beamOn 1000
+/run/beamOn 100

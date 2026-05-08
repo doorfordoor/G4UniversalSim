@@ -14,8 +14,15 @@ VolumeNode GeometryTemplate::BuildNodesFromFile(const std::string& filename) con
 
     ConfigManager config;
     config.LoadMainConfig(filename);
-    ValidateConfig(config);
-    return BuildNodes(config);
+    try {
+        ValidateConfig(config);
+        return BuildNodes(config);
+    } catch (const std::exception& error) {
+        throw std::runtime_error(
+            "Template '" + Name() + "' failed to build geometry from file '"
+            + filename + "': " + error.what()
+        );
+    }
 }
 
 VolumeNode GeometryTemplate::BuildNodes(const GeometryConfig& geometryConfig) const

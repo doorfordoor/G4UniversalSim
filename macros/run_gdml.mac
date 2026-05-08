@@ -1,9 +1,11 @@
-# Run GDML Import Simulation Macro
 /control/verbose 1
 /run/verbose 1
 
-# Initialize kernel
-/run/initialize
+/AIHL/material/load config/materials/material.ini
+/AIHL/geometry/setTemplate gdml
+/AIHL/geometry/loadConfig config/geometry/gdml_import.ini
+/AIHL/geometry/print
+/AIHL/geometry/printTree
 
-# Set number of events
-/run/beamOn 1000
+# GDMLTemplate is currently a placeholder only. Do not call /run/initialize
+# for this macro until VolumeBuilder gains real GDML import support.

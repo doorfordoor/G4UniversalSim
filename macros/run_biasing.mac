@@ -1,9 +1,29 @@
-# Run Biasing Simulation Macro
 /control/verbose 1
 /run/verbose 1
+/event/verbose 0
+/tracking/verbose 0
 
-# Initialize kernel
+/AIHL/material/load config/materials/material.ini
+/AIHL/geometry/setTemplate simple_box
+/AIHL/geometry/loadConfig config/geometry/simple_box.ini
+/AIHL/geometry/checkOverlaps true
+
+/AIHL/biasing/enable true
+/AIHL/biasing/xs/addParticle proton
+/AIHL/biasing/xs/addProcessForParticle proton protonInelastic
+/AIHL/biasing/xs/setFactor proton 1000
+/AIHL/biasing/xs/onlyPrimary proton true
+/AIHL/biasing/xs/setMinWeight proton 0.05
+/AIHL/biasing/xs/setMaxInteractions proton 5
+/AIHL/biasing/xs/addVolume Target
+/AIHL/biasing/print
+
+/AIHL/physics/setReferenceList FTFP_BERT_EMZ
+/AIHL/physics/enableBiasing true
+/AIHL/physics/setDefaultCut 1 mm
+/AIHL/source/preset proton_beam
+/AIHL/scoring/enable true
+/AIHL/scoring/edep true
+
 /run/initialize
-
-# Set number of events
-/run/beamOn 1000
+/run/beamOn 100

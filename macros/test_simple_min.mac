@@ -3,17 +3,16 @@
 /event/verbose 0
 /tracking/verbose 0
 
-/AIHL/material/load D:/Geant4/G4UniversalSim/config/materials/material.ini
+/AIHL/material/load config/materials/material.ini
 /AIHL/material/print
 
 /AIHL/geometry/setTemplate simple_box
-/AIHL/geometry/loadConfig D:/Geant4/G4UniversalSim/config/geometry/simple_box.ini
+/AIHL/geometry/loadConfig config/geometry/simple_box.ini
 /AIHL/geometry/checkOverlaps true
 /AIHL/geometry/print
 /AIHL/geometry/printTree
 
-/AIHL/physics/setEM option4
-/AIHL/physics/addModule G4DecayPhysics
+/AIHL/physics/setReferenceList FTFP_BERT_EMZ
 /AIHL/physics/setDefaultCut 1 mm
 /AIHL/physics/print
 
