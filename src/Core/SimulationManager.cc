@@ -490,6 +490,13 @@ std::function<void(const GeometryRegistry&)> SimulationManager::CreateGeometryPo
     };
 }
 
+void SimulationManager::InitializeSourceAfterPhysicsListRegistered()
+{
+    if (sourceManager_) {
+        sourceManager_->InitializeAfterPhysicsListRegistered();
+    }
+}
+
 ConfigManager* SimulationManager::GetConfigManager()
 {
     return configManager_.get();

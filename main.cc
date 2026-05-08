@@ -187,6 +187,8 @@ int main(int argc, char** argv) {
     auto physics = sim.CreatePhysicsList();
     runManager->SetUserInitialization(physics.release());
 
+    sim.InitializeSourceAfterPhysicsListRegistered();
+
     auto actions = sim.CreateActionInitialization();
     runManager->SetUserInitialization(actions.release());
 

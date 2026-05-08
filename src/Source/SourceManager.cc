@@ -106,7 +106,6 @@ std::vector<double> ReadVector3Double(const ConfigManager& config, const std::st
 }  // namespace
 
 SourceManager::SourceManager()
-    : gps_(std::make_unique<G4GeneralParticleSource>())
 {
 }
 
@@ -115,21 +114,41 @@ SourceManager::~SourceManager() = default;
 G4GeneralParticleSource* SourceManager::GetGPS()
 {
     EnsureGPS();
+    ApplyCurrentConfigurationToGPS();
     return gps_.get();
 }
 
 const G4GeneralParticleSource* SourceManager::GetGPS() const
 {
     EnsureGPS();
+    ApplyCurrentConfigurationToGPS();
     return gps_.get();
+}
+
+bool SourceManager::HasGPS() const
+{
+    return gps_ != nullptr;
+}
+
+void SourceManager::InitializeAfterPhysicsListRegistered()
+{
+    GetGPS();
 }
 
 void SourceManager::ResetGPS()
 {
-    gps_ = std::make_unique<G4GeneralParticleSource>();
+    gps_.reset();
     particleName_.clear();
     monoEnergy_ = 0.0;
     presetName_.clear();
+    hasPosition_ = false;
+    positionType_.clear();
+    positionShape_.clear();
+    positionParams_.clear();
+    hasDirection_ = false;
+    direction_.clear();
+    isotropic_ = false;
+    MarkGPSConfigDirty();
     configured_ = false;
 }
 
@@ -232,10 +251,9 @@ void SourceManager::SetParticle(const std::string& particleName)
 {
     const std::string name = StringUtils::Trim(particleName);
     if (name.empty()) throw std::runtime_error("SourceManager::SetParticle requires non-empty particleName");
-    G4ParticleDefinition* particle = G4ParticleTable::GetParticleTable()->FindParticle(name);
-    if (!particle) throw std::runtime_error("SourceManager::SetParticle unknown particle: '" + name + "'");
-    GetGPS()->GetCurrentSource()->SetParticleDefinition(particle);
     particleName_ = name;
+    MarkGPSConfigDirty();
+    if (gps_) ApplyParticleToGPS();
     configured_ = true;
 }
 
@@ -247,10 +265,9 @@ std::string SourceManager::GetParticleName() const
 void SourceManager::SetMonoEnergy(double energy)
 {
     if (energy <= 0.0) throw std::runtime_error("SourceManager::SetMonoEnergy requires energy > 0");
-    auto* ene = GetGPS()->GetCurrentSource()->GetEneDist();
-    ene->SetEnergyDisType("Mono");
-    ene->SetMonoEnergy(energy);
     monoEnergy_ = energy;
+    MarkGPSConfigDirty();
+    if (gps_) ApplyMonoEnergyToGPS();
     configured_ = true;
 }
 
@@ -261,47 +278,47 @@ double SourceManager::GetMonoEnergy() const
 
 void SourceManager::SetPosition(const std::string& type, const std::string& shape, const std::vector<double>& params)
 {
-    auto* pos = GetGPS()->GetCurrentSource()->GetPosDist();
-    pos->SetPosDisType(type);
-    if (!shape.empty()) pos->SetPosDisShape(shape);
-    if (params.size() >= 3) pos->SetCentreCoords(G4ThreeVector(params[0], params[1], params[2]));
-    if (params.size() >= 4) pos->SetRadius(params[3]);
+    positionType_ = type;
+    positionShape_ = shape;
+    positionParams_ = params;
+    hasPosition_ = true;
+    MarkGPSConfigDirty();
+    if (gps_) ApplyPositionToGPS();
     configured_ = true;
 }
 
 void SourceManager::SetPointPosition(double x, double y, double z)
 {
-    auto* pos = GetGPS()->GetCurrentSource()->GetPosDist();
-    pos->SetPosDisType("Point");
-    pos->SetCentreCoords(G4ThreeVector(x, y, z));
-    configured_ = true;
+    SetPosition("Point", "", {x, y, z});
 }
 
 void SourceManager::SetDirection(double x, double y, double z)
 {
-    G4ThreeVector direction(x, y, z);
-    if (direction.mag2() <= 0.0) throw std::runtime_error("SourceManager::SetDirection requires non-zero direction vector");
-    direction = direction.unit();
-    auto* ang = GetGPS()->GetCurrentSource()->GetAngDist();
-    ang->SetAngDistType("beam1d");
-    ang->SetParticleMomentumDirection(direction);
+    const double mag2 = x * x + y * y + z * z;
+    if (mag2 <= 0.0) throw std::runtime_error("SourceManager::SetDirection requires non-zero direction vector");
+    const double invMag = 1.0 / std::sqrt(mag2);
+    direction_ = {x * invMag, y * invMag, z * invMag};
+    hasDirection_ = true;
+    isotropic_ = false;
+    MarkGPSConfigDirty();
+    if (gps_) ApplyAngularDistributionToGPS();
     configured_ = true;
 }
 
 void SourceManager::SetIsotropic()
 {
-    GetGPS()->GetCurrentSource()->GetAngDist()->SetAngDistType("iso");
+    isotropic_ = true;
+    hasDirection_ = false;
+    direction_.clear();
+    MarkGPSConfigDirty();
+    if (gps_) ApplyAngularDistributionToGPS();
     configured_ = true;
 }
 
 void SourceManager::SetPlaneBeam(double radius, double z, const std::string& direction)
 {
     if (radius <= 0.0) throw std::runtime_error("SourceManager::SetPlaneBeam requires radius > 0");
-    auto* pos = GetGPS()->GetCurrentSource()->GetPosDist();
-    pos->SetPosDisType("Plane");
-    pos->SetPosDisShape("Circle");
-    pos->SetRadius(radius);
-    pos->SetCentreCoords(G4ThreeVector(0.0, 0.0, z));
+    SetPosition("Plane", "Circle", {0.0, 0.0, z, radius});
     const auto d = ParseDirectionVector(NormalizeDirectionToken(direction));
     SetDirection(d[0], d[1], d[2]);
     configured_ = true;
@@ -325,7 +342,7 @@ void SourceManager::PrintSummary() const
            << ", monoEnergy=" << monoEnergy_
            << ", preset=" << (presetName_.empty() ? "<none>" : presetName_)
            << ", verbose=" << verboseLevel_
-           << ", gps=" << (gps_ ? "available" : "null")
+           << ", gps=" << (gps_ ? "available" : "lazy")
            << G4endl;
     G4cout << "[SourceManager] Geant4 native /gps/... commands remain available for advanced source tuning." << G4endl;
 }
@@ -342,7 +359,67 @@ const std::string& SourceManager::GetPresetName() const
 
 void SourceManager::EnsureGPS() const
 {
-    if (!gps_) gps_ = std::make_unique<G4GeneralParticleSource>();
+    if (!gps_) {
+        gps_ = std::make_unique<G4GeneralParticleSource>();
+        gpsConfigDirty_ = true;
+    }
+}
+
+void SourceManager::MarkGPSConfigDirty()
+{
+    gpsConfigDirty_ = true;
+}
+
+void SourceManager::ApplyCurrentConfigurationToGPS() const
+{
+    if (!gps_ || !gpsConfigDirty_) return;
+    ApplyParticleToGPS();
+    ApplyMonoEnergyToGPS();
+    ApplyPositionToGPS();
+    ApplyAngularDistributionToGPS();
+    gpsConfigDirty_ = false;
+}
+
+void SourceManager::ApplyParticleToGPS() const
+{
+    if (!gps_ || StringUtils::Trim(particleName_).empty()) return;
+    G4ParticleDefinition* particle = G4ParticleTable::GetParticleTable()->FindParticle(particleName_);
+    if (!particle) throw std::runtime_error("SourceManager::SetParticle unknown particle: '" + particleName_ + "'");
+    gps_->GetCurrentSource()->SetParticleDefinition(particle);
+}
+
+void SourceManager::ApplyMonoEnergyToGPS() const
+{
+    if (!gps_ || monoEnergy_ <= 0.0) return;
+    auto* ene = gps_->GetCurrentSource()->GetEneDist();
+    ene->SetEnergyDisType("Mono");
+    ene->SetMonoEnergy(monoEnergy_);
+}
+
+void SourceManager::ApplyPositionToGPS() const
+{
+    if (!gps_ || !hasPosition_) return;
+    auto* pos = gps_->GetCurrentSource()->GetPosDist();
+    pos->SetPosDisType(positionType_);
+    if (!positionShape_.empty()) pos->SetPosDisShape(positionShape_);
+    if (positionParams_.size() >= 3) {
+        pos->SetCentreCoords(G4ThreeVector(positionParams_[0], positionParams_[1], positionParams_[2]));
+    }
+    if (positionParams_.size() >= 4) pos->SetRadius(positionParams_[3]);
+}
+
+void SourceManager::ApplyAngularDistributionToGPS() const
+{
+    if (!gps_) return;
+    auto* ang = gps_->GetCurrentSource()->GetAngDist();
+    if (isotropic_) {
+        ang->SetAngDistType("iso");
+        return;
+    }
+    if (hasDirection_ && direction_.size() == 3) {
+        ang->SetAngDistType("beam1d");
+        ang->SetParticleMomentumDirection(G4ThreeVector(direction_[0], direction_[1], direction_[2]));
+    }
 }
 
 std::vector<double> SourceManager::ParseDirectionVector(const std::string& text)

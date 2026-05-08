@@ -10,8 +10,7 @@
 #include <stdexcept>
 
 PrimaryGeneratorAction::PrimaryGeneratorAction(SourceManager* sourceManager)
-    : sourceManager_(sourceManager),
-      ownedGPS_(std::make_unique<G4GeneralParticleSource>())
+    : sourceManager_(sourceManager)
 {
 }
 
@@ -53,6 +52,9 @@ G4GeneralParticleSource* PrimaryGeneratorAction::GetGPS()
     if (sourceManager_) {
         return sourceManager_->GetGPS();
     }
+    if (!ownedGPS_) {
+        ownedGPS_ = std::make_unique<G4GeneralParticleSource>();
+    }
     return ownedGPS_.get();
 }
 
@@ -60,6 +62,9 @@ const G4GeneralParticleSource* PrimaryGeneratorAction::GetGPS() const
 {
     if (sourceManager_) {
         return sourceManager_->GetGPS();
+    }
+    if (!ownedGPS_) {
+        ownedGPS_ = std::make_unique<G4GeneralParticleSource>();
     }
     return ownedGPS_.get();
 }

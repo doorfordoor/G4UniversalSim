@@ -14,6 +14,8 @@ public:
 
     G4GeneralParticleSource* GetGPS();
     const G4GeneralParticleSource* GetGPS() const;
+    bool HasGPS() const;
+    void InitializeAfterPhysicsListRegistered();
 
     void ResetGPS();
     void LoadFromConfig(const ConfigManager& config);
@@ -41,13 +43,27 @@ public:
 
 private:
     void EnsureGPS() const;
+    void MarkGPSConfigDirty();
+    void ApplyCurrentConfigurationToGPS() const;
+    void ApplyParticleToGPS() const;
+    void ApplyMonoEnergyToGPS() const;
+    void ApplyPositionToGPS() const;
+    void ApplyAngularDistributionToGPS() const;
     static std::vector<double> ParseDirectionVector(const std::string& text);
     static std::string NormalizeDirectionToken(const std::string& direction);
 
     mutable std::unique_ptr<G4GeneralParticleSource> gps_;
+    mutable bool gpsConfigDirty_ = true;
     std::string particleName_;
     double monoEnergy_ = 0.0;
     std::string presetName_;
     int verboseLevel_ = 0;
     bool configured_ = false;
+    bool hasPosition_ = false;
+    std::string positionType_;
+    std::string positionShape_;
+    std::vector<double> positionParams_;
+    bool hasDirection_ = false;
+    std::vector<double> direction_;
+    bool isotropic_ = false;
 };

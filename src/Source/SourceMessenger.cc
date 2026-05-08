@@ -212,7 +212,7 @@ SourceMessenger::SourceMessenger(SourceManager* manager)
     printCmd_->SetGuidance("Print current source summary.");
 
     resetCmd_ = new G4UIcmdWithoutParameter("/AIHL/source/reset", this);
-    resetCmd_->SetGuidance("Reset the owned G4GeneralParticleSource.");
+    resetCmd_->SetGuidance("Reset lazy GPS and cached source configuration.");
 }
 
 SourceMessenger::~SourceMessenger()

@@ -24,5 +24,5 @@ public:
 
 private:
     SourceManager* sourceManager_ = nullptr; // not owned
-    std::unique_ptr<G4GeneralParticleSource> ownedGPS_;
+    mutable std::unique_ptr<G4GeneralParticleSource> ownedGPS_;
 };

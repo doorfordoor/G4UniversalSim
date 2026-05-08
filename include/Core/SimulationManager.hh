@@ -62,6 +62,7 @@ public:
     std::unique_ptr<ActionInitialization> CreateActionInitialization() const;
     std::function<G4VSensitiveDetector*()> CreateSensitiveDetectorFactory() const;
     std::function<void(const GeometryRegistry&)> CreateGeometryPostBuildCallback() const;
+    void InitializeSourceAfterPhysicsListRegistered();
 
     ConfigManager* GetConfigManager();
     OutputManager* GetOutputManager();
