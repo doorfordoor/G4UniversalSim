@@ -41,6 +41,61 @@ bool HasNonEmptyKey(const ConfigManager& config, const std::string& section, con
     return config.HasKey(section, key) && !StringUtils::Trim(config.GetString(section, key, "")).empty();
 }
 
+bool HasNonEmptyKeyCompat(const ConfigManager& config,
+                          const std::string& section,
+                          const std::vector<std::string>& keys)
+{
+    for (const auto& key : keys) {
+        if (HasNonEmptyKey(config, section, key)) return true;
+    }
+    return false;
+}
+
+std::string GetStringCompat(const ConfigManager& config,
+                            const std::string& section,
+                            const std::vector<std::string>& keys,
+                            const std::string& defaultValue = "")
+{
+    for (const auto& key : keys) {
+        if (HasNonEmptyKey(config, section, key)) {
+            return config.GetString(section, key);
+        }
+    }
+    return defaultValue;
+}
+
+bool HasKeyCompat(const ConfigManager& config,
+                  const std::string& section,
+                  const std::vector<std::string>& keys)
+{
+    for (const auto& key : keys) {
+        if (config.HasKey(section, key)) return true;
+    }
+    return false;
+}
+
+int GetIntCompat(const ConfigManager& config,
+                 const std::string& section,
+                 const std::vector<std::string>& keys,
+                 int defaultValue)
+{
+    for (const auto& key : keys) {
+        if (config.HasKey(section, key)) return config.GetInt(section, key);
+    }
+    return defaultValue;
+}
+
+bool GetBoolCompat(const ConfigManager& config,
+                   const std::string& section,
+                   const std::vector<std::string>& keys,
+                   bool defaultValue)
+{
+    for (const auto& key : keys) {
+        if (config.HasKey(section, key)) return config.GetBool(section, key);
+    }
+    return defaultValue;
+}
+
 std::map<std::string, std::vector<std::string>> BuildBiasParticleProcessMap(
     const BiasingManager* biasingManager)
 {
@@ -177,57 +232,62 @@ void SimulationManager::Configure()
         const int threads = configManager_->GetInt("run", "threads", context_.GetNumThreads());
         context_.SetNumThreads(threads);
 
-        if (configManager_->HasKey("run", "seed")) {
-            const int seed = configManager_->GetInt("run", "seed");
+        if (HasKeyCompat(*configManager_, "run", {"seed", "randomSeed"}) ||
+            HasKeyCompat(*configManager_, "general", {"seed", "randomSeed"})) {
+            const int seed = HasKeyCompat(*configManager_, "run", {"seed", "randomSeed"})
+                ? GetIntCompat(*configManager_, "run", {"seed", "randomSeed"}, 0)
+                : GetIntCompat(*configManager_, "general", {"seed", "randomSeed"}, 0);
             if (seed < 0) throw std::runtime_error("Invalid config value run/seed: seed must be >= 0");
             context_.SetSeed(static_cast<unsigned long>(seed));
         }
 
         context_.SetInteractive(configManager_->GetBool("run", "interactive", context_.IsInteractive()));
         context_.SetMacroFile(configManager_->GetString("run", "macro", context_.GetMacroFile()));
-        context_.SetVerboseLevel(configManager_->GetInt("run", "verbose", context_.GetVerboseLevel()));
-        context_.SetCheckOverlaps(configManager_->GetBool("run", "check_overlaps", context_.GetCheckOverlaps()));
-        context_.SetRunName(configManager_->GetString("run", "run_name", context_.GetRunName()));
-        context_.SetOutputDir(configManager_->GetString("output", "dir", context_.GetOutputDir()));
+        context_.SetVerboseLevel(HasKeyCompat(*configManager_, "run", {"verbose"})
+            ? configManager_->GetInt("run", "verbose", context_.GetVerboseLevel())
+            : configManager_->GetInt("general", "verbose", context_.GetVerboseLevel()));
+        context_.SetCheckOverlaps(GetBoolCompat(*configManager_, "run", {"check_overlaps", "checkOverlaps"}, context_.GetCheckOverlaps()));
+        context_.SetRunName(GetStringCompat(*configManager_, "run", {"name", "run_name", "runName"}, context_.GetRunName()));
+        context_.SetOutputDir(GetStringCompat(*configManager_, "output", {"dir", "outputDir"}, context_.GetOutputDir()));
 
-        if (HasNonEmptyKey(*configManager_, "materials", "file")) {
-            materialsFile_ = configManager_->GetString("materials", "file");
+        if (HasNonEmptyKeyCompat(*configManager_, "materials", {"file", "materialFile", "config", "configFile"})) {
+            materialsFile_ = GetStringCompat(*configManager_, "materials", {"file", "materialFile", "config", "configFile"});
             if (!FileUtils::IsFile(materialsFile_)) {
                 throw std::runtime_error("Materials config file does not exist: '" + materialsFile_ + "'");
             }
             materialManager_->LoadMaterials(materialsFile_);
         }
 
-        if (HasNonEmptyKey(*configManager_, "geometry", "template")) {
-            geometryTemplate_ = configManager_->GetString("geometry", "template");
+        if (HasNonEmptyKeyCompat(*configManager_, "geometry", {"template", "templateName"})) {
+            geometryTemplate_ = GetStringCompat(*configManager_, "geometry", {"template", "templateName"});
             geometryManager_->SetTemplate(geometryTemplate_);
         }
 
-        if (configManager_->HasKey("geometry", "check_overlaps")) {
-            context_.SetCheckOverlaps(configManager_->GetBool("geometry", "check_overlaps", context_.GetCheckOverlaps()));
+        if (HasKeyCompat(*configManager_, "geometry", {"check_overlaps", "checkOverlaps"})) {
+            context_.SetCheckOverlaps(GetBoolCompat(*configManager_, "geometry", {"check_overlaps", "checkOverlaps"}, context_.GetCheckOverlaps()));
         }
 
-        if (HasNonEmptyKey(*configManager_, "geometry", "default_world_material")) {
-            defaultWorldMaterial_ = configManager_->GetString("geometry", "default_world_material");
+        if (HasNonEmptyKeyCompat(*configManager_, "geometry", {"default_world_material", "defaultWorldMaterial"})) {
+            defaultWorldMaterial_ = GetStringCompat(*configManager_, "geometry", {"default_world_material", "defaultWorldMaterial"});
             geometryManager_->SetDefaultWorldMaterial(defaultWorldMaterial_);
         }
 
-        if (HasNonEmptyKey(*configManager_, "geometry", "config")) {
-            geometryConfigFile_ = configManager_->GetString("geometry", "config");
+        if (HasNonEmptyKeyCompat(*configManager_, "geometry", {"config", "configFile"})) {
+            geometryConfigFile_ = GetStringCompat(*configManager_, "geometry", {"config", "configFile"});
             if (!FileUtils::IsFile(geometryConfigFile_)) {
                 throw std::runtime_error("Geometry config file does not exist: '" + geometryConfigFile_ + "'");
             }
             geometryManager_->LoadGeometryConfig(geometryConfigFile_);
         }
 
-        biasingManager_->LoadFromConfig(*configManager_);
         physicsManager_->SetBiasingManager(biasingManager_.get());
         physicsManager_->LoadFromConfig(*configManager_);
+        sourceManager_->LoadFromConfig(*configManager_);
+        scoringManager_->LoadFromConfig(*configManager_);
+        biasingManager_->LoadFromConfig(*configManager_);
         if (biasingManager_->IsEnabled()) {
             physicsManager_->EnableBiasingPhysics(true);
         }
-        sourceManager_->LoadFromConfig(*configManager_);
-        scoringManager_->LoadFromConfig(*configManager_);
     }
 
     outputManager_->SetOutputDir(context_.GetOutputDir());
