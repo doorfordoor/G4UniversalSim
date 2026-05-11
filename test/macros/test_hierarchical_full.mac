@@ -1,0 +1,73 @@
+/run/verbose 1
+/event/verbose 0
+/tracking/verbose 0
+
+# material
+/AIHL/material/load test/materials/test_materials.ini
+/AIHL/material/print
+
+# geometry
+/AIHL/geometry/setTemplate hierarchical
+/AIHL/geometry/loadConfig test/geometry/hierarchical_test.ini
+/AIHL/geometry/checkOverlaps true
+/AIHL/geometry/print
+/AIHL/geometry/printTree
+
+# physics
+/AIHL/physics/setReferenceList FTFP_BERT_EMZ
+/AIHL/physics/setDefaultCut 1 mm
+/AIHL/physics/setCut proton 10 um
+/AIHL/physics/setCut e- 100 nm
+/AIHL/physics/setRegionCut SV e- 100 nm
+/AIHL/physics/setRegionCut SV proton 10 um
+/AIHL/physics/enableBiasing true
+/AIHL/physics/verbose 1
+/AIHL/physics/print
+
+# source
+/AIHL/source/preset plane_proton_beam
+/AIHL/source/particle proton
+/AIHL/source/energy 15 MeV
+/AIHL/source/planeBeam radius=3 mm z=-30 mm direction=+z
+/AIHL/source/print
+
+# biasing
+/AIHL/biasing/clear
+/AIHL/biasing/enable true
+/AIHL/biasing/xs/addParticle proton
+/AIHL/biasing/xs/addProcessForParticle proton protonInelastic
+/AIHL/biasing/xs/setFactor proton 3.0
+/AIHL/biasing/xs/onlyPrimary proton false
+/AIHL/biasing/xs/applyToSecondaries proton true
+/AIHL/biasing/xs/setMinWeight proton 0.02
+/AIHL/biasing/xs/setMaxInteractions proton 8
+/AIHL/biasing/xs/addVolumeForParticle proton sensor_1
+/AIHL/biasing/xs/addVolumeForParticle proton shield
+/AIHL/biasing/xs/addParticle neutron
+/AIHL/biasing/xs/addProcessForParticle neutron neutronInelastic
+/AIHL/biasing/xs/setFactor neutron 3.0
+/AIHL/biasing/xs/onlyPrimary neutron false
+/AIHL/biasing/xs/applyToSecondaries neutron true
+/AIHL/biasing/xs/setMinWeight neutron 0.02
+/AIHL/biasing/xs/setMaxInteractions neutron 8
+/AIHL/biasing/xs/addVolumeForParticle neutron sensor_1
+/AIHL/biasing/xs/addVolumeForParticle neutron shield
+/AIHL/biasing/validate
+/AIHL/biasing/print
+
+# scoring
+/AIHL/scoring/enable true
+/AIHL/scoring/hits true
+/AIHL/scoring/eventEdep true
+/AIHL/scoring/edep true
+/AIHL/scoring/let true
+/AIHL/scoring/dose true
+/AIHL/scoring/fluence true
+/AIHL/scoring/autoCreateScorers true
+/AIHL/scoring/setEdepHistogram bins=120 min=0 eV max=15 MeV
+/AIHL/scoring/setWeightedEdepHistogram bins=120 min=0 eV max=15 MeV
+/AIHL/scoring/verbose 1
+/AIHL/scoring/print
+
+/run/initialize
+/run/beamOn 100
