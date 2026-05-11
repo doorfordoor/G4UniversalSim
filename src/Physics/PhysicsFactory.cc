@@ -1,5 +1,7 @@
 #include "Physics/PhysicsFactory.hh"
 
+#include "Physics/MicroElecPhysics.hh"
+#include "Physics/PhysicsManager.hh"
 #include "Utils/StringUtils.hh"
 
 #include "G4DecayPhysics.hh"
@@ -135,7 +137,12 @@ const std::map<std::string, std::string>& AliasMap()
         {"optical", "G4OpticalPhysics"},
 
         {"g4genericbiasingphysics", "G4GenericBiasingPhysics"},
-        {"generic_biasing", "G4GenericBiasingPhysics"}
+        {"generic_biasing", "G4GenericBiasingPhysics"},
+
+        {"microelec", "MicroElecPhysics"},
+        {"microelecphysics", "MicroElecPhysics"},
+        {"micro_elec", "MicroElecPhysics"},
+        {"electron_capture", "MicroElecPhysics"}
     };
     return aliases;
 }
@@ -173,6 +180,7 @@ PhysicsCategory PhysicsFactory::Classify(const std::string& canonicalName)
     if (name == "G4StoppingPhysics") return PhysicsCategory::Stopping;
     if (name == "G4OpticalPhysics") return PhysicsCategory::Optical;
     if (name == "G4GenericBiasingPhysics") return PhysicsCategory::Biasing;
+    if (name == "MicroElecPhysics") return PhysicsCategory::Other;
     return PhysicsCategory::Other;
 }
 
@@ -221,8 +229,20 @@ PhysicsFactory::CreatePhysicsConstructor(const std::string& option)
     if (name == "G4StoppingPhysics") return Make<G4StoppingPhysics>();
     if (name == "G4OpticalPhysics") return Make<G4OpticalPhysics>();
     if (name == "G4GenericBiasingPhysics") return Make<G4GenericBiasingPhysics>();
+    if (name == "MicroElecPhysics") return Make<MicroElecPhysics>();
 
     throw std::runtime_error("PhysicsFactory failed to create constructor for option: '" + option + "'");
+}
+
+std::unique_ptr<G4VPhysicsConstructor>
+PhysicsFactory::CreateMicroElecPhysics(const PhysicsManager& manager)
+{
+    auto physics = std::make_unique<MicroElecPhysics>(
+        manager.GetVerboseLevel(),
+        manager.GetMicroElecRegion());
+    physics->EnableElectronCapture(manager.IsElectronCaptureEnabled());
+    physics->SetElectronCaptureThreshold(manager.GetElectronCaptureThreshold());
+    return physics;
 }
 
 std::unique_ptr<G4VPhysicsConstructor>

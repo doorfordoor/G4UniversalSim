@@ -25,6 +25,11 @@ add_executable(G4UniversalSim main.cc ${SOURCES})
 # Link Geant4 libraries
 target_link_libraries(G4UniversalSim ${Geant4_LIBRARIES})
 
+# Standalone post-processing tool. This executable intentionally does not
+# include or link Geant4.
+add_executable(mergeHistograms tools/mergeHistograms.cc)
+target_compile_features(mergeHistograms PRIVATE cxx_std_17)
+
 # ------------------------------------------------------------
 # Copy runtime resource directories next to the executable
 # ------------------------------------------------------------
@@ -32,7 +37,7 @@ target_link_libraries(G4UniversalSim ${Geant4_LIBRARIES})
 set(G4USIM_RUNTIME_DIRS
     config
     macros
-  #  scripts
+    scripts
 )
 
 foreach(runtime_dir ${G4USIM_RUNTIME_DIRS})

@@ -115,6 +115,7 @@ std::vector<std::string> FilterOutGenericBiasingModules(const std::vector<std::s
     for (const auto& module : modules) {
         try {
             if (PhysicsFactory::Classify(module) == PhysicsCategory::Biasing) continue;
+            if (PhysicsFactory::NormalizeOptionName(module) == "MicroElecPhysics") continue;
         } catch (...) {
         }
         filtered.push_back(module);
@@ -369,6 +370,10 @@ void SimulationManager::PrintSummary() const
     std::cout << "  physics_modules   : " << (physicsManager_ ? StringUtils::Join(physicsManager_->GetPhysicsModules(), ", ") : "") << '\n';
     std::cout << "  physics_cut       : " << (physicsManager_ ? physicsManager_->GetDefaultCut() : 0.0) << '\n';
     std::cout << "  physics_biasing   : " << (physicsManager_ ? BoolText(physicsManager_->IsBiasingPhysicsEnabled()) : "false") << '\n';
+    std::cout << "  microelec         : " << (physicsManager_ ? BoolText(physicsManager_->IsMicroElecEnabled()) : "false") << '\n';
+    std::cout << "  microelec_region  : " << (physicsManager_ ? physicsManager_->GetMicroElecRegion() : "") << '\n';
+    std::cout << "  electron_capture  : " << (physicsManager_ ? BoolText(physicsManager_->IsElectronCaptureEnabled()) : "false") << '\n';
+    std::cout << "  ecap_threshold    : " << (physicsManager_ ? physicsManager_->GetElectronCaptureThreshold() : 0.0) << '\n';
     std::cout << "  source_manager    : " << (sourceManager_ ? "created" : "null") << '\n';
     std::cout << "  source_configured : " << (sourceManager_ ? BoolText(sourceManager_->IsConfigured()) : "false") << '\n';
     std::cout << "  source_particle   : " << (sourceManager_ ? sourceManager_->GetParticleName() : "") << '\n';
@@ -428,6 +433,12 @@ std::unique_ptr<G4VModularPhysicsList> SimulationManager::CreatePhysicsList() co
         PhysicsFactory::RegisterExtraModules(
             list.get(),
             FilterOutGenericBiasingModules(physicsManager_->GetExtraModules()));
+
+        if (physicsManager_->IsMicroElecEnabled() ||
+            physicsManager_->HasExtraModule("microelec")) {
+            auto microElec = PhysicsFactory::CreateMicroElecPhysics(*physicsManager_);
+            list->RegisterPhysics(microElec.release());
+        }
 
         const auto* biasing = physicsManager_->GetBiasingManager();
         const bool needsBiasing = physicsManager_->IsBiasingPhysicsEnabled() ||
@@ -650,6 +661,10 @@ void SimulationManager::WriteBaseRunSummary()
     summary.Set("physics_modules", physicsManager_ ? StringUtils::Join(physicsManager_->GetPhysicsModules(), ",") : "");
     summary.Set("physics_default_cut", physicsManager_ ? physicsManager_->GetDefaultCut() : 0.0);
     summary.SetBool("physics_biasing_enabled", physicsManager_ ? physicsManager_->IsBiasingPhysicsEnabled() : false);
+    summary.SetBool("physics_microelec_enabled", physicsManager_ ? physicsManager_->IsMicroElecEnabled() : false);
+    summary.Set("physics_microelec_region", physicsManager_ ? physicsManager_->GetMicroElecRegion() : "");
+    summary.SetBool("physics_electron_capture_enabled", physicsManager_ ? physicsManager_->IsElectronCaptureEnabled() : false);
+    summary.Set("physics_electron_capture_threshold", physicsManager_ ? physicsManager_->GetElectronCaptureThreshold() : 0.0);
     summary.SetBool("source_configured", sourceManager_ ? sourceManager_->IsConfigured() : false);
     summary.Set("source_particle", sourceManager_ ? sourceManager_->GetParticleName() : "");
     summary.Set("source_energy", sourceManager_ ? sourceManager_->GetMonoEnergy() : 0.0);

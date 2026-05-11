@@ -112,10 +112,21 @@ void PhysicsList::ConfigureExtraPhysicsModules()
         manager_ ? manager_->GetPhysicsModules()
                  : std::vector<std::string>{"G4DecayPhysics"};
 
+    bool microElecRegistered = false;
     for (const auto& module : modules) {
         if (PhysicsFactory::Classify(module) == PhysicsCategory::EM) continue;
         if (PhysicsFactory::Classify(module) == PhysicsCategory::Biasing) continue;
-        auto physics = PhysicsFactory::CreatePhysicsConstructor(module);
+        auto physics = (PhysicsFactory::NormalizeOptionName(module) == "MicroElecPhysics" && manager_)
+            ? PhysicsFactory::CreateMicroElecPhysics(*manager_)
+            : PhysicsFactory::CreatePhysicsConstructor(module);
+        if (PhysicsFactory::NormalizeOptionName(module) == "MicroElecPhysics") {
+            microElecRegistered = true;
+        }
+        RegisterPhysics(physics.release());
+    }
+
+    if (manager_ && manager_->IsMicroElecEnabled() && !microElecRegistered) {
+        auto physics = PhysicsFactory::CreateMicroElecPhysics(*manager_);
         RegisterPhysics(physics.release());
     }
 }

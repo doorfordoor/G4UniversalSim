@@ -26,6 +26,7 @@
 
 - `StringUtils` 不依赖 Geant4。
 - `FileUtils` 不依赖 Geant4。
+- `CommandParser` 不依赖 Geant4。
 - `UnitParser` 依赖 `G4SystemOfUnits.hh` 与 `G4UnitsTable.hh`。
 - `G4NameUtils` 不依赖项目内其他模块。
 
@@ -112,8 +113,37 @@
 
 - 返回值为 Geant4 内部单位体系下的 `double`。
 - `ParseLength()`、`ParseEnergy()`、`ParseTime()`、`ParseAngle()` 会检查单位类型；不支持的单位会抛出 `std::runtime_error`。
-- 无单位输入按纯数值返回，例如 `"10.5"` 返回 `10.5`。
+- 无单位输入按纯数值返回，例如 `"10.5"` 返回 `10.5`；调用方应按上下文解释默认单位，常见约定为长度 `mm`、能量 `MeV`、角度 `rad`。
+- 数字与单位支持无空格和 `*` 连接形式，例如 `10MeV`、`10 MeV`、`10*MeV`、`1mm`、`1 mm`、`1*mm`。
 - 解析失败时抛出 `std::runtime_error`，错误信息包含原始输入。
+
+### CommandParser
+
+位置：
+
+- 头文件：`include/Utils/CommandParser.hh`
+- 源文件：`src/Utils/CommandParser.cc`
+
+命名空间：`CommandParser`
+
+| 接口 | 基本作用 |
+|---|---|
+| `std::vector<std::string> SplitWhitespaceRespectQuotes(const std::string& text)` | 按空白拆分命令参数，同时保留双引号内空白。 |
+| `std::map<std::string, std::string> ParseKeyValueLine(const std::string& line, const std::string& examples = "")` | 解析 `key=value` 命令行，key 大小写不敏感。 |
+| `std::string RequiredValue(const std::map<std::string, std::string>& values, const std::string& key, const std::string& context = "")` | 获取必需 key，缺失或空值时报错。 |
+| `std::string OptionalValue(const std::map<std::string, std::string>& values, const std::string& key, const std::string& defaultValue)` | 获取可选 key，不存在时返回默认值。 |
+| `bool OptionalBool(const std::map<std::string, std::string>& values, const std::string& key, bool defaultValue)` | 获取可选 bool，不存在时返回默认值。 |
+| `int ParseInt(const std::string& text, const std::string& key = "")` | 严格解析整数。 |
+| `double ParseDouble(const std::string& text, const std::string& key = "")` | 严格解析无单位 double。 |
+
+命令格式约定：
+
+- 普通位置参数命令支持 `value unit`，例如 `/AIHL/physics/setDefaultCut 1 mm`。
+- `key=value` 参数命令支持 `key=value unit`，例如 `min=0 eV max=10 MeV`。
+- `key=value` 参数命令也支持 `key=value*unit` 和 `key=valueunit`，例如 `min=0*eV max=10*MeV`、`min=0eV max=10MeV`。
+- `ParseKeyValueLine()` 会把跟在当前 `key=value` 后、且不是新 `key=value` 的 token 合并到当前 value，直到遇到下一个 key。因此 `bins=100 min=0 eV max=10 MeV` 会解析为 `bins=100`、`min=0 eV`、`max=10 MeV`。
+- 双引号 value 仍受支持，例如 `size="1 cm,1 cm,1 mm"`。
+- 解析失败时应在调用方错误信息中附带命令名、原始输入和支持格式示例。
 
 ### G4NameUtils
 
@@ -569,12 +599,14 @@
 | `std::unique_ptr<ActionInitialization> CreateActionInitialization() const` | 创建连接 Source / Scoring / Output 的 ActionInitialization，调用方交给 RunManager。 |
 | `std::function<G4VSensitiveDetector*()> CreateSensitiveDetectorFactory() const` | 创建使用当前 `ScoringManager*` 的 SensitiveDetector factory，供 DetectorConstruction 绑定 SD。 |
 | `std::function<void(const GeometryRegistry&)> CreateGeometryPostBuildCallback() const` | 创建几何构建后回调，当前用于 biasing operator attach。 |
+| `void InitializeSourceAfterPhysicsListRegistered()` | 在 PhysicsList 已注册到 RunManager 后初始化 SourceManager 的 GPS，避免提前访问 `G4ParticleTable`。 |
 
 说明：
 
 - `Configure()` 读取 `[run] threads`、`seed`、`interactive`、`macro`、`verbose`、`check_overlaps`、`run_name`、`[output] dir`，并按已实现模块读取 materials / geometry / physics / source / biasing / scoring 配置；缺失时使用默认值或保持 manager 默认状态。
 - `Initialize()` 会创建输出目录并写出 `run_summary.txt`。
 - 当前不创建 `G4RunManager`，不直接调用 `SetUserInitialization()` / `SetUserAction()`；只提供安全创建入口。
+- 推荐 main 初始化顺序：创建 RunManager，注册 DetectorConstruction，注册 PhysicsList，调用 `InitializeSourceAfterPhysicsListRegistered()`，再注册 ActionInitialization，最后执行 macro/UI。
 
 ### AppMessenger
 
@@ -587,13 +619,13 @@
 
 | UI 命令 | 基本作用 |
 |---|---|
-| `/sim/app/setMainConfig` | 调用 `SimulationManager::SetMainConfig()`。 |
-| `/sim/app/setOutputDir` | 调用 `SimulationManager::SetOutputDir()`。 |
-| `/sim/app/setNumThreads` | 调用 `SimulationManager::SetNumThreads()`。 |
-| `/sim/app/setSeed` | 调用 `SimulationManager::SetSeed()`。 |
-| `/sim/app/setVerbose` | 调用 `SimulationManager::SetVerboseLevel()`。 |
-| `/sim/app/setCheckOverlaps` | 调用 `SimulationManager::SetCheckOverlaps()`。 |
-| `/sim/app/printSummary` | 调用 `SimulationManager::PrintSummary()`。 |
+| `/AIHL/app/setMainConfig` | 调用 `SimulationManager::SetMainConfig()`。 |
+| `/AIHL/app/setOutputDir` | 调用 `SimulationManager::SetOutputDir()`。 |
+| `/AIHL/app/setNumThreads` | 调用 `SimulationManager::SetNumThreads()`。 |
+| `/AIHL/app/setSeed` | 调用 `SimulationManager::SetSeed()`。 |
+| `/AIHL/app/setVerbose` | 调用 `SimulationManager::SetVerboseLevel()`。 |
+| `/AIHL/app/setCheckOverlaps` | 调用 `SimulationManager::SetCheckOverlaps()`。 |
+| `/AIHL/app/printSummary` | 调用 `SimulationManager::PrintSummary()`。 |
 
 说明：
 
@@ -607,7 +639,7 @@
 
 依赖约束：
 
-- 可依赖 `Utils/StringUtils.hh`、`Utils/FileUtils.hh`。
+- 可依赖 `Utils/StringUtils.hh`、`Utils/FileUtils.hh`、`Utils/CommandParser.hh`。
 - 可依赖 Geant4 material 与 UI command 相关头文件。
 - 不依赖 Geometry、Templates、Detector、Physics、Source、Actions、Hits、Scoring、Biasing。
 
@@ -657,6 +689,12 @@
 | `ParseMode(const std::string& text)` | 解析 `atom`、`atom_count`、`mass`、`mass_fraction`、`volume_fraction`。 |
 | `ParseMaterialComponents(...)` | 解析 `A:1,B:2` 或 `A:0.7,B:0.3`。 |
 | `ParseIsotopeComponents(...)` | 解析 `B10:0.90,B11:0.10`。 |
+
+说明：
+
+- `ParseKeyValueLine()` 内部复用 `Utils/CommandParser`，因此支持 `density=2.2 g/cm3`、`density=2.2*g/cm3` 以及带空格的 quoted value。
+- `MaterialCommandParser` 只解析材料命令参数，不负责创建 Geant4 材料对象。
+- 密度、摩尔质量解析返回 Geant4 内部单位。
 
 ### MaterialIniReader
 
@@ -1159,7 +1197,9 @@
 | `/AIHL/geometry/preserveUserVolumesOnLoad <true|false>` | 控制后续 `loadConfig` 是否保留用户添加体积。 |
 
 说明：
-- 命令参数 key 大小写不敏感，支持双引号 value，例如 `size="1 cm,1 cm,1 mm"`。
+- 命令参数 key 大小写不敏感，统一使用 `Utils/CommandParser` 解析。
+- 支持双引号 value，例如 `size="1 cm,1 cm,1 mm"`。
+- 对带单位的 key=value 参数，也支持未加引号的单位 token，例如 `rMax=5 mm halfZ=10 mm deltaPhi=360 deg`；解析结果会合并为 `rMax="5 mm"`、`halfZ="10 mm"`、`deltaPhi="360 deg"`。
 - `preserveUserVolumesOnLoad` 默认 `true`；设为 `false` 后，后续 `loadConfig` 会清空用户添加体积。
 - 所有添加/删除命令成功后会标记 dirty，并提示使用 `/run/reinitializeGeometry`。
 
@@ -1449,7 +1489,7 @@ SimulationManager 集成：
 模块职责：提供 `ScorerBase` 抽象接口、`ScoringManager` 业务状态管理、`EdepScorer` 可用实现，以及 LET / Dose / Fluence 的轻量 stub。`SensitiveDetector` 将 `ParticleHit` 转为 `HitRecord` 后调用 `ScoringManager::ScoreHit()`；Scoring 只处理 `HitRecord`，不依赖 `ParticleHit` 或 `SensitiveDetector`。
 
 依赖约束：
-- 可依赖 `Output/OutputRecord.hh`、`Output/OutputManager.hh`、`Output/Histogram1D.hh`、`ConfigManager`、`Utils/StringUtils`、`Utils/UnitParser`。
+- 可依赖 `Output/OutputRecord.hh`、`Output/OutputManager.hh`、`Output/Histogram1D.hh`、`ConfigManager`、`Utils/StringUtils`、`Utils/UnitParser`、`Utils/CommandParser`。
 - `ScoringMessenger` 可依赖 Geant4 UI command。
 - 不依赖 DetectorConstruction、SensitiveDetector、ParticleHit、BiasingManager、ROOT、G4AnalysisManager。
 
@@ -1575,6 +1615,14 @@ SimulationManager 集成：
 | `/AIHL/scoring/verbose <level>` | `ScoringManager::SetVerboseLevel` |
 | `/AIHL/scoring/print` | `ScoringManager::PrintSummary` |
 
+参数解析约定：
+
+- `setEdepHistogram` 与 `setWeightedEdepHistogram` 使用 `Utils/CommandParser` 解析 key=value 参数。
+- 支持 `bins=100 min=0 eV max=10 MeV`、`bins=100 min=0*eV max=10*MeV`、`bins=100 min=0eV max=10MeV`、`bins=100 min=0 max=10`。
+- 也支持位置参数形式：`/AIHL/scoring/setEdepHistogram 100 0 eV 10 MeV`。
+- `bins` 必须为整数；`min/max` 通过 `UnitParser::ParseEnergy()` 转为 Geant4 内部单位。无单位纯数字按 Geant4 内部能量单位数值处理。
+- 解析失败时通过 `G4Exception` 报告命令名、原始输入和支持格式示例。
+
 SimulationManager 集成：
 - `BuildManagers()` 会创建 `ScoringManager`。
 - `BuildManagers()` 会创建 `ScoringMessenger`，暴露 `/AIHL/scoring/...`。
@@ -1589,7 +1637,7 @@ SimulationManager 集成：
 
 依赖约束：
 - 依赖 Geant4 GPS / particle table / units。
-- 可依赖 `ConfigManager`、`Utils/StringUtils`、`Utils/UnitParser`。
+- 可依赖 `ConfigManager`、`Utils/StringUtils`、`Utils/UnitParser`、`Utils/CommandParser`。
 - 不依赖 DetectorConstruction、GeometryManager、PhysicsList、Actions、Hits、Scoring、Biasing。
 
 ### PrimaryGeneratorAction
@@ -1623,12 +1671,14 @@ SimulationManager 集成：
 
 | 接口 | 基本作用 |
 |---|---|
-| `GetGPS()` | 返回内部 `G4GeneralParticleSource`。 |
-| `ResetGPS()` | 重建 GPS，并清空内部轻量状态。 |
+| `GetGPS()` | 懒创建并返回内部 `G4GeneralParticleSource`，同时把缓存的 source 配置应用到 GPS。 |
+| `HasGPS()` | 判断 GPS 是否已经被创建。 |
+| `InitializeAfterPhysicsListRegistered()` | 在 PhysicsList 已注册到 RunManager 后创建 GPS，避免过早访问 `G4ParticleTable`。 |
+| `ResetGPS()` | 清空 GPS 与内部轻量状态；GPS 后续按需重新懒创建。 |
 | `LoadFromConfig(const ConfigManager&)` | 从 `[source]` section 读取 preset / particle / energy / position / direction。 |
 | `ApplyPreset(name)` | 应用常用 preset。 |
-| `SetParticle(name)` | 通过 `G4ParticleTable` 查找并设置粒子。 |
-| `SetMonoEnergy(energy)` | 设置 mono 能量分布。 |
+| `SetParticle(name)` | 缓存粒子名；GPS 存在时才通过 `G4ParticleTable` 应用粒子定义。 |
+| `SetMonoEnergy(energy)` | 缓存 mono 能量；GPS 存在时应用到 GPS 能量分布。 |
 | `SetPointPosition(x,y,z)` | 设置点源位置。 |
 | `SetDirection(x,y,z)` | 设置定向束流方向。 |
 | `SetIsotropic()` | 设置各向同性角分布。 |
@@ -1670,6 +1720,9 @@ SimulationManager 集成：
 
 说明：
 - Messenger 只解析命令并转发，不保存 source 业务状态。
+- 普通单位参数支持 `value unit`，例如 `/AIHL/source/energy 10 MeV`、`/AIHL/source/point 0 0 -1 mm`。
+- `planeBeam` 支持位置参数和 key=value 两种形式：`/AIHL/source/planeBeam 1 mm -1 mm +z` 或 `/AIHL/source/planeBeam radius=1 mm z=-1 mm direction=+z`。
+- key=value 形式通过 `Utils/CommandParser` 解析，因此也支持 `radius=1*mm z=-1*mm direction=+z`。
 - 原生 `/gps/...` 命令没有被屏蔽，仍可直接用于高级 GPS 配置。
 
 ### SimulationManager 集成
@@ -1696,7 +1749,7 @@ RunSummary 字段：
 模块职责：提供基础版 Geant4 physics 配置闭环。`PhysicsFactory` 统一处理别名和 constructor 创建；`PhysicsManager` 保存业务状态；`PhysicsList` 是 Geant4 正式物理入口；`PhysicsMessenger` 提供 `/AIHL/physics/...` 命令并只转发给 manager。
 
 依赖约束：
-- 可依赖 `ConfigManager`、`UnitParser`、`BiasingManager`。
+- 可依赖 `ConfigManager`、`UnitParser`、`CommandParser`、`BiasingManager`。
 - 不依赖 DetectorConstruction、GeometryManager、SourceManager、ScoringManager。
 - 不直接创建几何，不绑定 SD，不启动 run。
 
@@ -1789,6 +1842,12 @@ RunSummary 字段：
 | `/AIHL/physics/enableBiasing <true|false>` | `PhysicsManager::EnableBiasingPhysics` |
 | `/AIHL/physics/verbose <level>` | `PhysicsManager::SetVerboseLevel` |
 | `/AIHL/physics/print` | `PhysicsManager::PrintSummary` |
+
+说明：
+
+- 普通单位参数使用 `Utils/CommandParser::SplitWhitespaceRespectQuotes()` 拆分，支持 `value unit`，例如 `/AIHL/physics/setDefaultCut 1 mm`。
+- `/AIHL/physics/setCut` 支持 `<particle> <value unit>`，例如 `/AIHL/physics/setCut proton 1 um`。
+- `/AIHL/physics/setRegionCut` 支持 `<region> <particle> <value unit>`，例如 `/AIHL/physics/setRegionCut SV e- 100 nm`。
 
 ### SimulationManager 集成
 

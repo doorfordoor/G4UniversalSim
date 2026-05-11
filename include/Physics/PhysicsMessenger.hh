@@ -37,6 +37,10 @@ private:
     G4UIcmdWithAString* setCutCmd_ = nullptr;
     G4UIcmdWithAString* setRegionCutCmd_ = nullptr;
     G4UIcmdWithABool* enableBiasingCmd_ = nullptr;
+    G4UIcmdWithABool* enableMicroElecCmd_ = nullptr;
+    G4UIcmdWithAString* setMicroElecRegionCmd_ = nullptr;
+    G4UIcmdWithABool* enableElectronCaptureCmd_ = nullptr;
+    G4UIcmdWithAString* setElectronCaptureThresholdCmd_ = nullptr;
     G4UIcmdWithAnInteger* verboseCmd_ = nullptr;
     G4UIcmdWithoutParameter* printCmd_ = nullptr;
     G4UIcmdWithoutParameter* listAvailableReferencesCmd_ = nullptr;

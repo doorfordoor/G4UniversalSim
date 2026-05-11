@@ -7,6 +7,7 @@
 
 class G4VModularPhysicsList;
 class G4VPhysicsConstructor;
+class PhysicsManager;
 
 enum class PhysicsCategory {
     EM,
@@ -29,6 +30,8 @@ public:
 
     static std::unique_ptr<G4VPhysicsConstructor>
     CreatePhysicsConstructor(const std::string& option);
+    static std::unique_ptr<G4VPhysicsConstructor>
+    CreateMicroElecPhysics(const PhysicsManager& manager);
     static std::unique_ptr<G4VPhysicsConstructor>
     CreateGenericBiasingPhysics(const std::vector<std::string>& particleNames);
     static std::unique_ptr<G4VPhysicsConstructor>

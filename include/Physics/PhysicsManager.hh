@@ -73,6 +73,18 @@ public:
     void EnableBiasingPhysics(bool enable);
     bool IsBiasingPhysicsEnabled() const;
 
+    void EnableMicroElec(bool enable);
+    bool IsMicroElecEnabled() const;
+
+    void SetMicroElecRegion(const std::string& regionName);
+    const std::string& GetMicroElecRegion() const;
+
+    void EnableElectronCapture(bool enable);
+    bool IsElectronCaptureEnabled() const;
+
+    void SetElectronCaptureThreshold(double threshold);
+    double GetElectronCaptureThreshold() const;
+
     void LoadFromConfig(const ConfigManager& config);
 
     void Validate() const;
@@ -94,4 +106,8 @@ private:
     std::map<std::string, std::map<std::string, double>> regionCuts_;
     BiasingManager* biasingManager_ = nullptr; // not owned
     bool biasingPhysicsEnabled_ = false;
+    bool microElecEnabled_ = false;
+    std::string microElecRegionName_ = "SV";
+    bool electronCaptureEnabled_ = false;
+    double electronCaptureThreshold_ = 16.7; // initialized to 16.7 eV in .cc constructor
 };

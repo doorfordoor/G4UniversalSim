@@ -38,7 +38,8 @@ std::string Join(const std::vector<std::string>& values)
 } // namespace
 
 PhysicsManager::PhysicsManager()
-    : defaultCut_(1.0 * CLHEP::mm)
+    : defaultCut_(1.0 * CLHEP::mm),
+      electronCaptureThreshold_(16.7 * CLHEP::eV)
 {
     AddPhysicsModule("decay");
 }
@@ -359,13 +360,52 @@ bool PhysicsManager::IsBiasingPhysicsEnabled() const
     return biasingPhysicsEnabled_;
 }
 
+void PhysicsManager::EnableMicroElec(bool enable)
+{
+    microElecEnabled_ = enable;
+}
+
+bool PhysicsManager::IsMicroElecEnabled() const
+{
+    return microElecEnabled_;
+}
+
+void PhysicsManager::SetMicroElecRegion(const std::string& regionName)
+{
+    microElecRegionName_ = StringUtils::Trim(regionName);
+}
+
+const std::string& PhysicsManager::GetMicroElecRegion() const
+{
+    return microElecRegionName_;
+}
+
+void PhysicsManager::EnableElectronCapture(bool enable)
+{
+    electronCaptureEnabled_ = enable;
+}
+
+bool PhysicsManager::IsElectronCaptureEnabled() const
+{
+    return electronCaptureEnabled_;
+}
+
+void PhysicsManager::SetElectronCaptureThreshold(double threshold)
+{
+    if (threshold <= 0.0) {
+        throw std::runtime_error("PhysicsManager::SetElectronCaptureThreshold failed: threshold must be > 0");
+    }
+    electronCaptureThreshold_ = threshold;
+}
+
+double PhysicsManager::GetElectronCaptureThreshold() const
+{
+    return electronCaptureThreshold_;
+}
+
 void PhysicsManager::LoadFromConfig(const ConfigManager& config)
 {
-    if (!config.HasSection("physics")) {
-        return;
-    }
-
-    if (config.HasKey("physics", "reference")) {
+    if (config.HasSection("physics") && config.HasKey("physics", "reference")) {
         const auto reference = StringUtils::Trim(config.GetString("physics", "reference", ""));
         if (reference.empty()) {
             ClearReferenceList();
@@ -375,16 +415,16 @@ void PhysicsManager::LoadFromConfig(const ConfigManager& config)
     }
     const bool hasReference = HasReferenceList();
 
-    if (config.HasKey("physics", "em")) {
+    if (config.HasSection("physics") && config.HasKey("physics", "em")) {
         const auto option = StringUtils::Trim(config.GetString("physics", "em", ""));
         if (!option.empty()) SetEMOption(option);
-    } else if (config.HasKey("physics", "list")) {
+    } else if (config.HasSection("physics") && config.HasKey("physics", "list")) {
         const auto option = StringUtils::Trim(config.GetString("physics", "list", ""));
         if (!option.empty()) AddPhysicsModule(option);
     }
 
     bool referenceExtraCleared = false;
-    if (config.HasKey("physics", "modules")) {
+    if (config.HasSection("physics") && config.HasKey("physics", "modules")) {
         if (hasReference) {
             std::cerr << "PhysicsManager: reference mode treats [physics]/modules as extra_modules for compatibility.\n";
             ClearExtraModules();
@@ -397,7 +437,7 @@ void PhysicsManager::LoadFromConfig(const ConfigManager& config)
         }
     }
 
-    if (config.HasKey("physics", "extra_modules")) {
+    if (config.HasSection("physics") && config.HasKey("physics", "extra_modules")) {
         if (hasReference) {
             if (!referenceExtraCleared) {
                 ClearExtraModules();
@@ -414,14 +454,28 @@ void PhysicsManager::LoadFromConfig(const ConfigManager& config)
         }
     }
 
-    if (config.HasKey("physics", "default_cut")) {
+    if (config.HasSection("physics") && config.HasKey("physics", "default_cut")) {
         SetDefaultCut(UnitParser::ParseLength(config.GetString("physics", "default_cut")));
     }
-    if (config.HasKey("physics", "biasing")) {
+    if (config.HasSection("physics") && config.HasKey("physics", "biasing")) {
         EnableBiasingPhysics(config.GetBool("physics", "biasing", biasingPhysicsEnabled_));
     }
-    if (config.HasKey("physics", "verbose")) {
+    if (config.HasSection("physics") && config.HasKey("physics", "verbose")) {
         SetVerboseLevel(config.GetInt("physics", "verbose", verboseLevel_));
+    }
+
+    if (config.HasSection("physics.microelec")) {
+        EnableMicroElec(config.GetBool("physics.microelec", "enabled", microElecEnabled_));
+        if (config.HasKey("physics.microelec", "region")) {
+            SetMicroElecRegion(config.GetString("physics.microelec", "region", microElecRegionName_));
+        }
+        if (config.HasKey("physics.microelec", "electron_capture")) {
+            EnableElectronCapture(config.GetBool("physics.microelec", "electron_capture", electronCaptureEnabled_));
+        }
+        if (config.HasKey("physics.microelec", "electron_capture_threshold")) {
+            SetElectronCaptureThreshold(
+                UnitParser::ParseEnergy(config.GetString("physics.microelec", "electron_capture_threshold")));
+        }
     }
 
     if (config.HasSection("physics.cuts")) {
@@ -470,6 +524,9 @@ void PhysicsManager::Validate() const
     if (defaultCut_ <= 0.0) {
         throw std::runtime_error("PhysicsManager::Validate failed: default cut must be > 0");
     }
+    if (electronCaptureThreshold_ <= 0.0) {
+        throw std::runtime_error("PhysicsManager::Validate failed: electron capture threshold must be > 0");
+    }
 }
 
 void PhysicsManager::PrintSummary() const
@@ -494,6 +551,10 @@ void PhysicsManager::PrintSummary() const
     std::cout << "  region_cuts     : " << regionCuts_.size() << '\n';
     std::cout << "  biasing_physics : " << (biasingPhysicsEnabled_ ? "true" : "false") << '\n';
     std::cout << "  biasing_manager : " << (biasingManager_ ? "connected" : "null") << '\n';
+    std::cout << "  microelec       : " << (microElecEnabled_ ? "true" : "false") << '\n';
+    std::cout << "  microelec_region: " << microElecRegionName_ << '\n';
+    std::cout << "  electron_capture: " << (electronCaptureEnabled_ ? "true" : "false") << '\n';
+    std::cout << "  ecap_threshold  : " << electronCaptureThreshold_ << '\n';
 }
 
 std::string PhysicsManager::NormalizeParticleName(const std::string& particleName)

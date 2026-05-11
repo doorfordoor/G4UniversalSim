@@ -1,0 +1,21 @@
+/AIHL/material/load config/materials/material.ini
+
+/AIHL/geometry/setTemplate simple_box
+/AIHL/geometry/loadConfig config/geometry/simple_box.ini
+/AIHL/geometry/printTree
+
+/AIHL/physics/setReferenceList FTFP_BERT_EMZ
+/AIHL/physics/enableMicroElec true
+/AIHL/physics/setMicroElecRegion SV
+/AIHL/physics/enableElectronCapture true
+/AIHL/physics/setElectronCaptureThreshold 16.7 eV
+/AIHL/physics/print
+
+/AIHL/source/preset proton_beam
+
+/AIHL/scoring/enable true
+/AIHL/scoring/eventEdep true
+/AIHL/scoring/edep true
+
+/run/initialize
+/run/beamOn 100

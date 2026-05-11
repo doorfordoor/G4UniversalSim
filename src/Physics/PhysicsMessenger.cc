@@ -88,6 +88,10 @@ PhysicsMessenger::PhysicsMessenger(PhysicsManager* manager)
     setCutCmd_ = new G4UIcmdWithAString("/AIHL/physics/setCut", this);
     setRegionCutCmd_ = new G4UIcmdWithAString("/AIHL/physics/setRegionCut", this);
     enableBiasingCmd_ = new G4UIcmdWithABool("/AIHL/physics/enableBiasing", this);
+    enableMicroElecCmd_ = new G4UIcmdWithABool("/AIHL/physics/enableMicroElec", this);
+    setMicroElecRegionCmd_ = new G4UIcmdWithAString("/AIHL/physics/setMicroElecRegion", this);
+    enableElectronCaptureCmd_ = new G4UIcmdWithABool("/AIHL/physics/enableElectronCapture", this);
+    setElectronCaptureThresholdCmd_ = new G4UIcmdWithAString("/AIHL/physics/setElectronCaptureThreshold", this);
     verboseCmd_ = new G4UIcmdWithAnInteger("/AIHL/physics/verbose", this);
     printCmd_ = new G4UIcmdWithoutParameter("/AIHL/physics/print", this);
     listAvailableReferencesCmd_ = new G4UIcmdWithoutParameter("/AIHL/physics/listAvailableReferences", this);
@@ -109,6 +113,10 @@ PhysicsMessenger::PhysicsMessenger(PhysicsManager* manager)
     setCutCmd_->SetGuidance("Set particle cut: <particle> <value unit>.");
     setRegionCutCmd_->SetGuidance("Store region cut: <region> <particle> <value unit>.");
     enableBiasingCmd_->SetGuidance("Enable generic biasing physics hook.");
+    enableMicroElecCmd_->SetGuidance("Enable optional region-scoped MicroElec extension.");
+    setMicroElecRegionCmd_->SetGuidance("Set MicroElec target region name, e.g. SV.");
+    enableElectronCaptureCmd_->SetGuidance("Enable optional low-energy electron capture helper process.");
+    setElectronCaptureThresholdCmd_->SetGuidance("Set electron capture threshold, e.g. 16.7 eV.");
     verboseCmd_->SetGuidance("Set physics verbose level.");
     printCmd_->SetGuidance("Print physics configuration summary.");
     listAvailableReferencesCmd_->SetGuidance("List available Geant4 reference physics lists.");
@@ -121,6 +129,10 @@ PhysicsMessenger::~PhysicsMessenger()
     delete listAvailableReferencesCmd_;
     delete printCmd_;
     delete verboseCmd_;
+    delete setElectronCaptureThresholdCmd_;
+    delete enableElectronCaptureCmd_;
+    delete setMicroElecRegionCmd_;
+    delete enableMicroElecCmd_;
     delete enableBiasingCmd_;
     delete setRegionCutCmd_;
     delete setCutCmd_;
@@ -184,6 +196,14 @@ void PhysicsMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
             manager->SetRegionCut(parsed.region, parsed.particle, parsed.cut);
         } else if (command == enableBiasingCmd_) {
             manager->EnableBiasingPhysics(enableBiasingCmd_->GetNewBoolValue(newValue));
+        } else if (command == enableMicroElecCmd_) {
+            manager->EnableMicroElec(enableMicroElecCmd_->GetNewBoolValue(newValue));
+        } else if (command == setMicroElecRegionCmd_) {
+            manager->SetMicroElecRegion(raw);
+        } else if (command == enableElectronCaptureCmd_) {
+            manager->EnableElectronCapture(enableElectronCaptureCmd_->GetNewBoolValue(newValue));
+        } else if (command == setElectronCaptureThresholdCmd_) {
+            manager->SetElectronCaptureThreshold(UnitParser::ParseEnergy(raw));
         } else if (command == verboseCmd_) {
             manager->SetVerboseLevel(verboseCmd_->GetNewIntValue(newValue));
         } else if (command == printCmd_) {
