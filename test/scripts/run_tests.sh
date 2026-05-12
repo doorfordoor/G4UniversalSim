@@ -6,11 +6,15 @@ EXE="${1:-}"
 
 if [[ -z "$EXE" ]]; then
   for candidate in \
-    "$ROOT/build/G4UniversalSim" \
-    "$ROOT/build/Release/G4UniversalSim" \
-    "$ROOT/build/Debug/G4UniversalSim" \
-    "$ROOT/build_vs/Release/G4UniversalSim" \
-    "$ROOT/build_vs/Debug/G4UniversalSim"; do
+    "$ROOT/out/build/G4UniversalSim" \
+    "$ROOT/out/build/x64-Release/G4UniversalSim" \
+    "$ROOT/out/build/x64-Debug/G4UniversalSim" \
+    "$ROOT/out/build_vs/x64-Release/G4UniversalSim" \
+    "$ROOT/out/build_vs/x64-Debug/G4UniversalSim" \
+    "$ROOT/build_vs2026/Release/G4UniversalSim" \
+    "$ROOT/build_vs2026/Debug/G4UniversalSim" \
+    "$ROOT/build_vs2026/RelWithDebInfo/G4UniversalSim" \
+    "$ROOT/build_vs2026/MinSizeRel/G4UniversalSim"; do
     if [[ -x "$candidate" ]]; then
       EXE="$candidate"
       break

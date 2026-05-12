@@ -4,11 +4,15 @@ setlocal
 set "ROOT=%~dp0..\.."
 set "EXE=%~1"
 
-if "%EXE%"=="" if exist "%ROOT%\build\Release\G4UniversalSim.exe" set "EXE=%ROOT%\build\Release\G4UniversalSim.exe"
-if "%EXE%"=="" if exist "%ROOT%\build\Debug\G4UniversalSim.exe" set "EXE=%ROOT%\build\Debug\G4UniversalSim.exe"
+if "%EXE%"=="" if exist "%ROOT%\out\build\x64-Release\G4UniversalSim.exe" set "EXE=%ROOT%\out\build\x64-Release\G4UniversalSim.exe"
+if "%EXE%"=="" if exist "%ROOT%\out\build\x64-Debug\G4UniversalSim.exe" set "EXE=%ROOT%\out\build\x64-Debug\G4UniversalSim.exe"
 if "%EXE%"=="" if exist "%ROOT%\build\G4UniversalSim.exe" set "EXE=%ROOT%\build\G4UniversalSim.exe"
 if "%EXE%"=="" if exist "%ROOT%\build_vs\Release\G4UniversalSim.exe" set "EXE=%ROOT%\build_vs\Release\G4UniversalSim.exe"
 if "%EXE%"=="" if exist "%ROOT%\build_vs\Debug\G4UniversalSim.exe" set "EXE=%ROOT%\build_vs\Debug\G4UniversalSim.exe"
+if "%EXE%"=="" if exist "%ROOT%\build_vs2026\Release\G4UniversalSim.exe" set "EXE=%ROOT%\build_vs2026\Release\G4UniversalSim.exe"
+if "%EXE%"=="" if exist "%ROOT%\build_vs2026\Debug\G4UniversalSim.exe" set "EXE=%ROOT%\build_vs2026\Debug\G4UniversalSim.exe"
+if "%EXE%"=="" if exist "%ROOT%\build_vs2026\RelWithDebInfo\G4UniversalSim.exe" set "EXE=%ROOT%\build_vs2026\RelWithDebInfo\G4UniversalSim.exe"
+if "%EXE%"=="" if exist "%ROOT%\build_vs2026\MinSizeRel\G4UniversalSim.exe" set "EXE=%ROOT%\build_vs2026\MinSizeRel\G4UniversalSim.exe"
 
 if "%EXE%"=="" (
   echo G4UniversalSim executable not found. Pass it as the first argument.

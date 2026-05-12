@@ -7,11 +7,15 @@ $Root = Resolve-Path (Join-Path $PSScriptRoot "..\..")
 
 if ([string]::IsNullOrWhiteSpace($Executable)) {
     $candidates = @(
-        Join-Path $Root "build\Release\G4UniversalSim.exe"
-        Join-Path $Root "build\Debug\G4UniversalSim.exe"
-        Join-Path $Root "build\G4UniversalSim.exe"
-        Join-Path $Root "build_vs\Release\G4UniversalSim.exe"
-        Join-Path $Root "build_vs\Debug\G4UniversalSim.exe"
+        Join-Path $Root "out\build\x64-Release\G4UniversalSim.exe"
+        Join-Path $Root "out\build\x64-Debug\G4UniversalSim.exe"
+        Join-Path $Root "out\build\x64\G4UniversalSim.exe"
+        Join-Path $Root "out\build_vs\x64-Release\G4UniversalSim.exe"
+        Join-Path $Root "out\build_vs\x64-Debug\G4UniversalSim.exe"
+        Join-Path $Root "build_vs2026\Release\G4UniversalSim.exe"
+        Join-Path $Root "build_vs2026\Debug\G4UniversalSim.exe"
+        Join-Path $Root "build_vs2026\RelWithDebInfo\G4UniversalSim.exe"
+        Join-Path $Root "build_vs2026\MinSizeRel\G4UniversalSim.exe"
     )
     $Executable = ($candidates | Where-Object { Test-Path $_ } | Select-Object -First 1)
 }

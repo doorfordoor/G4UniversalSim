@@ -1,6 +1,6 @@
 # CMakeLists.txt for G4UniversalSim
 
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
 project(G4UniversalSim VERSION 1.0.0 LANGUAGES CXX)
 
 # Set C++ standard

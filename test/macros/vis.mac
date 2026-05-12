@@ -1,0 +1,26 @@
+# Qt/OpenGL visualization macro for the current test geometry.
+# Run with --ui so main.cc creates G4VisExecutive before these commands execute.
+
+/control/verbose 1
+/run/verbose 1
+/event/verbose 0
+/tracking/verbose 0
+
+/run/initialize
+
+# Prefer the Qt OpenGL stored driver. If unavailable in a local Geant4 build,
+# replace OGLSQt with OGL or another listed /vis driver.
+/vis/open OGLSQt 960x720+420+60
+/vis/viewer/set/background white
+/vis/viewer/set/style surface
+/vis/viewer/set/hiddenMarker true
+/vis/viewer/set/auxiliaryEdge true
+/vis/viewer/set/lineSegmentsPerCircle 96
+/vis/viewer/set/viewpointThetaPhi 65 35 deg
+/vis/viewer/set/upVector 0 1 0
+/vis/geometry/set/visibility world_LV 0 false
+/vis/viewer/zoom 3
+
+/vis/drawVolume
+/vis/scene/add/axes 0 0 0 10 mm
+/vis/viewer/flush

@@ -22,6 +22,12 @@ From the repository root:
 .\test\scripts\run_tests.ps1 -Executable .\build\Release\G4UniversalSim.exe
 ```
 
+If the Visual Studio 2026 preset is used, the script also auto-detects:
+
+```powershell
+.\build_vs2026\Release\G4UniversalSim.exe
+```
+
 or:
 
 ```cmd
