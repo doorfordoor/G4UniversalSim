@@ -2,15 +2,49 @@ Run Summary
 ===========
 
 [Values]
+biasing_attached_operator_count = 0
+biasing_enabled = false
+biasing_operators_attached = false
+biasing_xs_rule_count = 0
 check_overlaps = true
 dry_run = false
-interactive = false
+geometry_config = 
+geometry_template = simple_box
+initialized = true
+interactive = true
 macro_file = 
-main_config = config/main.ini
+main_config = 
+materials_file = 
 num_threads = 1
 output_dir = output
+physics_biasing_enabled = false
+physics_default_cut = 1
+physics_electron_capture_enabled = false
+physics_electron_capture_threshold = 1.67e-05
+physics_em = G4EmStandardPhysics_option4
+physics_extra_modules = 
+physics_microelec_enabled = false
+physics_microelec_region = SV
+physics_mode = manual
+physics_modules = G4DecayPhysics
+physics_reference = 
+run_id_begin = 0
+run_id_end = 0
 run_name = 
-seed = 
+scoring_auto_create_default_scorers = true
+scoring_dose_enabled = false
+scoring_edep_enabled = true
+scoring_enabled = true
+scoring_event_edep_enabled = true
+scoring_fluence_enabled = false
+scoring_hits_enabled = true
+scoring_let_enabled = false
+scoring_scorer_count = 0
+seed = unset
+source_configured = false
+source_energy = 0
+source_particle = 
+source_preset = 
 verbose_level = 0
 
 [Messages]
