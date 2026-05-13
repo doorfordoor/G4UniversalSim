@@ -1315,9 +1315,11 @@
 
 ------
 
-## Biasing 模块真实 XS 实现
+## Biasing 模块真实 XS 实现 v2
 
-模块职责：保存 biasing 配置，并实现 Geant4 cross-section biasing 的真实闭环。`BiasingMessenger` 只解析 `/AIHL/biasing/...` 命令并转发给 `BiasingManager`；`PhysicsList` / reference physics list 负责注册 `G4GenericBiasingPhysics` 并指定 biased particle/process；`BiasingManager::AttachOperators()` 在几何构建完成后通过 `GeometryRegistry` 把 `BiasingMultiParticleXS` attach 到目标 logical volume；实际截面变换由每个粒子的 `BiasingXS` 完成。
+模块职责：保存 biasing 配置，并实现 Geant4 cross-section biasing 的真实闭环。Biasing v2 的正式规则粒度是 `particle + process`，即每条 `XSProcessBiasRule` 只描述一个粒子在一个 Geant4 process 上的截面偏置参数。旧的粒子级 `[biasing.xs]` 与旧 macro 命令仍保留，但仅作为 legacy shorthand，会展开为多条 process-level rule 并输出 warning。
+
+`BiasingMessenger` 只解析 `/AIHL/biasing/...` 命令并转发给 `BiasingManager`；`PhysicsList` / reference physics list 负责注册 `G4GenericBiasingPhysics` 并指定 biased particle/process；`BiasingManager::AttachOperators()` 在几何构建完成后通过 `GeometryRegistry` 把 `BiasingMultiParticleXS` attach 到目标 logical volume；实际截面变换由每个粒子的 `BiasingXS` 按 process rule 完成。
 
 依赖约束：
 - `BiasingConfig` 不依赖 Geant4 biasing classes。
@@ -1334,8 +1336,37 @@
 | 类型 | 基本作用 |
 |---|---|
 | `enum class BiasingType` | 预留 biasing 类型：`None`、`CrossSection`、`Region`、`Importance`。 |
-| `struct XSBiasRule` | 保存单个粒子的截面偏置规则。 |
-| `struct BiasingConfig` | 保存 biasing enable 状态和 XS rule 列表。 |
+| `struct XSProcessBiasRule` | 正式 process-level XS rule：保存一个 `particle + process` 的截面偏置规则。 |
+| `struct XSBiasRule` | legacy particle-level XS rule；旧 ini / 旧 macro 仍使用它，再展开为 process-level rule。 |
+| `struct BiasingConfig` | 保存 biasing enable 状态、legacy rules 和 process-level rules。 |
+
+`XSProcessBiasRule` 关键字段：
+- `name`
+- `particleName`
+- `processName`
+- `factor`
+- `volumeNames`
+- `onlyPrimary`
+- `applyToSecondaries`
+- `minWeight`
+- `maxInteractions`
+- `enabled`
+- `legacyGenerated`
+
+`XSProcessBiasRule` 接口：
+- `bool IsValid() const`
+- `void Validate() const`
+- `std::string Key() const`
+- `std::string ToString() const`
+
+`XSProcessBiasRule` 语义：
+- `particleName` 与 `processName` 不允许为空。
+- `factor > 0`。
+- `minWeight >= 0`。
+- `maxInteractions == -1` 表示无限制，`>= 0` 表示限制次数。
+- `onlyPrimary=true` 与 `applyToSecondaries=true` 语义互斥；设置 secondary 时应关闭 only-primary。
+- `volumeNames` 为空时，由 global bias volumes 或 `GeometryRegistry` 中标记的 bias volumes 决定目标体。
+- `legacyGenerated=true` 表示规则由旧语法展开得到。
 
 `XSBiasRule` 关键字段：
 - `particleName`
@@ -1347,16 +1378,25 @@
 - `maxInteractions`
 - `volumeNames`
 - `enabled`
+- `legacy`
 
 `XSBiasRule` 接口：
 - `bool IsValid() const`
 - `void Validate() const`
 - `std::string ToString() const`
 
+说明：
+- `XSBiasRule` 是 legacy particle-level rule，不作为新配置的推荐接口。
+- legacy rule 在 `BiasingManager::GetEnabledXSProcessBiasRules()` / `Validate()` / `AttachOperators()` 前展开为多条 `XSProcessBiasRule`。
+- legacy 展开遵循 `particles x processes` 笛卡尔积；同一 `particle + process` 同时存在 explicit process rule 时，explicit rule 优先。
+
 `BiasingConfig` 接口：
 - `Clear()`
 - `HasRules()`
 - `GetEnabledXSRules()`
+- `AddProcessRule(const XSProcessBiasRule&)`
+- `std::vector<XSProcessBiasRule> GetEnabledXSProcessRules() const`
+- `ExpandLegacyRulesToProcessRules()`
 - `Validate()`
 
 ### BiasingManager
@@ -1371,28 +1411,45 @@
 |---|---|
 | `Enable(bool)` / `IsEnabled()` | 设置或查询 biasing 总开关。 |
 | `Clear()` | 清空配置和全局 bias volumes。 |
-| `AddXSBiasRule(...)` | 添加或替换 XS rule。 |
-| `CreateOrGetXSBiasRule(particleName)` | 按粒子名查找或创建 rule；查找大小写不敏感。 |
-| `AddXSBiasParticle(...)` | 创建粒子 rule。 |
-| `AddXSBiasProcess(particleName, processName)` | 给指定粒子 rule 添加 process。 |
-| `AddXSBiasProcess(processName)` | 简化接口；仅当当前只有一个 rule 时允许。 |
-| `SetXSBiasFactor(...)` | 设置截面偏置因子。 |
-| `SetOnlyPrimary(...)` / `SetApplyToSecondaries(...)` | 设置 primary/secondary 作用策略，并自动避免语义冲突。 |
-| `SetMinWeight(...)` | 设置最低权重限制。 |
-| `SetMaxInteractions(...)` | 设置最大 bias 相互作用次数。 |
+| `AddXSProcessBiasRule(const XSProcessBiasRule&)` | 添加或合并 process-level rule。 |
+| `CreateOrGetXSProcessBiasRule(particleName, processName)` | 查找或创建 `particle + process` rule；particle 查找大小写不敏感。 |
+| `HasXSProcessBiasRule(particleName, processName)` | 查询是否存在 process-level rule。 |
+| `GetXSProcessBiasRule(...)` / `GetXSProcessBiasRuleMutable(...)` | 获取 const / mutable process-level rule。 |
+| `GetXSProcessBiasRules()` / `GetEnabledXSProcessBiasRules()` | 获取 explicit + legacy expanded process-level rules。 |
+| `SetXSProcessBiasFactor(particle, process, factor)` | 设置某个 process-level rule 的 factor。 |
+| `AddXSProcessBiasVolume(particle, process, volume)` | 给某个 process-level rule 添加目标 volume。 |
+| `SetXSProcessOnlyPrimary(...)` / `SetXSProcessApplyToSecondaries(...)` | 设置某个 process-level rule 的 primary/secondary 策略。 |
+| `SetXSProcessMinWeight(...)` | 设置某个 process-level rule 的最低权重限制。 |
+| `SetXSProcessMaxInteractions(...)` | 设置某个 process-level rule 的最大 bias 相互作用次数。 |
+| `GetBiasedParticles()` / `GetBiasedProcesses(particle)` | 从 enabled process-level rules 去重得到需要传给 `G4GenericBiasingPhysics` 的粒子和 process 列表。 |
+| `AddXSBiasRule(...)` | legacy：添加或替换粒子级 XS rule。 |
+| `CreateOrGetXSBiasRule(particleName)` | legacy：按粒子名查找或创建粒子级 rule；查找大小写不敏感。 |
+| `AddXSBiasParticle(...)` | legacy：创建粒子级 rule。 |
+| `AddXSBiasProcess(particleName, processName)` | legacy：给指定粒子级 rule 添加 process。 |
+| `AddXSBiasProcess(processName)` | legacy：简化接口；仅当当前只有一个 rule 时允许。 |
+| `SetXSBiasFactor(...)` | legacy：设置粒子级共享 factor。 |
+| `SetOnlyPrimary(...)` / `SetApplyToSecondaries(...)` | legacy：设置粒子级 primary/secondary 策略。 |
+| `SetMinWeight(...)` | legacy：设置粒子级最低权重。 |
+| `SetMaxInteractions(...)` | legacy：设置粒子级最大 bias 相互作用次数。 |
 | `AddBiasVolume(...)` | 添加全局 bias volume。 |
-| `AddBiasVolumeForParticle(...)` | 添加粒子 rule 专属 volume。 |
-| `HasXSBiasRule(...)` / `GetXSBiasRule(...)` | 查询 rule。 |
-| `GetXSBiasRules()` / `GetEnabledXSBiasRules()` | 获取规则列表。 |
-| `GetBiasedParticles()` / `GetBiasedProcesses(...)` | 获取粒子和过程列表。 |
+| `AddBiasVolumeForParticle(...)` | legacy：添加粒子级 rule 专属 volume。 |
+| `HasXSBiasRule(...)` / `GetXSBiasRule(...)` | legacy：查询粒子级 rule。 |
+| `GetXSBiasRules()` / `GetEnabledXSBiasRules()` | legacy：获取粒子级 rule 列表。 |
 | `GetBiasVolumes()` | 返回全局 volume 与各 rule volume 的去重并集。 |
 | `Validate()` | 校验所有 rule。 |
 | `PrintSummary()` | 打印配置与 operator attach 摘要。 |
-| `LoadFromConfig(const ConfigManager&)` | 从 `[biasing]` / `[biasing.xs]` 读取简化配置。 |
-| `AttachOperators(const GeometryRegistry&)` | 根据规则和 `GeometryRegistry` 真实创建并 attach `BiasingMultiParticleXS`。 |
+| `LoadFromConfig(const ConfigManager&)` | 从 `[biasing]`、推荐 `[biasing.xs.<particle>.<process>]` 和 legacy `[biasing.xs]` 读取配置。 |
+| `AttachOperators(const GeometryRegistry&)` | 使用 enabled process-level rules，根据 volume 分组创建并 attach `BiasingMultiParticleXS`。 |
 | `ClearOperators()` | 清空当前持有的 biasing operator；建议只在 geometry rebuild 前后使用。 |
 | `AreOperatorsAttached()` | 查询当前是否已有 operator attach。 |
 | `GetAttachedOperatorCount()` | 返回当前 manager 持有的 operator 数量。 |
+
+配置格式：
+- 推荐新语法：`[biasing.xs.<particle>.<process>]`。
+- 旧语法：`[biasing.xs]` 仍支持，但为 legacy shorthand。
+- legacy `[biasing.xs]` 中 `particles` 与 `processes` 会做笛卡尔展开。
+- 如果新旧语法生成同一个 `particle + process`，explicit process-level rule 优先。
+- 当前版本不支持 process 名中包含点号 `.`。
 
 ### BiasingXS
 
@@ -1404,19 +1461,27 @@
 
 | 接口 | 基本作用 |
 |---|---|
-| `BiasingXS(const XSBiasRule&)` | 用单粒子 XS rule 创建 operator。 |
-| `SetRule/GetRule` | 替换或查询规则。 |
-| `SetXSBiasFactor/GetXSBiasFactor` | 设置或查询截面偏置因子。 |
-| `SetProcessNames/GetProcessNames` | 设置或查询需要偏置的 process 名称；为空表示允许所有 wrapped process。 |
-| `SetOnlyPrimary` / `SetApplyToSecondaries` | 控制 primary/secondary 作用策略。 |
-| `SetMinWeight` / `SetMaxInteractions` | 控制最低权重和每 track 最大偏置相互作用次数。 |
-| `StartRun()` | 校验粒子是否存在。 |
+| `BiasingXS(const XSProcessBiasRule&)` | 用一条 process-level rule 创建粒子级 operator。 |
+| `BiasingXS(const XSBiasRule&)` | legacy：用粒子级 rule 创建 operator，并展开其中 process list。 |
+| `SetRule/GetRule` | legacy：替换或查询粒子级兼容规则。 |
+| `AddProcessRule(const XSProcessBiasRule&)` | 给当前粒子 operator 添加一个 process-level rule。 |
+| `HasProcessRule(processName)` | 查询当前粒子是否配置某个 process rule。 |
+| `GetProcessRules()` | 获取当前粒子下的 process-level rules。 |
+| `SetXSBiasFactor/GetXSBiasFactor` | legacy compatibility：设置或查询粒子级默认因子。 |
+| `SetProcessNames/GetProcessNames` | legacy compatibility：设置或查询粒子级 process list。 |
+| `SetOnlyPrimary` / `SetApplyToSecondaries` | legacy compatibility：控制粒子级 primary/secondary 默认策略。 |
+| `SetMinWeight` / `SetMaxInteractions` | legacy compatibility：控制粒子级默认限制。 |
+| `StartRun()` | 校验粒子是否存在，并检查已配置 process 是否在当前 particle process manager 中可见。 |
 | `StartTracking(track)` | 重置当前 track 的偏置计数。 |
-| `ProposeOccurenceBiasingOperation(...)` | 使用 wrapped process 的 current interaction length 计算 analog XS，并通过 `G4BOptnChangeCrossSection` 设置 biased XS。 |
-| `OperationApplied(...)` | 标记 operation interaction occurred，并累加当前 track 的偏置次数。 |
+| `ProposeOccurenceBiasingOperation(...)` | 根据 wrapped process name 查找对应 `XSProcessBiasRule`，使用该 process 的 factor 设置 `G4BOptnChangeCrossSection`。 |
+| `OperationApplied(...)` | 标记 operation interaction occurred，并累加当前 track、当前 process 的偏置次数。 |
 
 说明：
 - `BiasingXS` 不访问 `GeometryRegistry`、`ScoringManager`、`OutputManager`。
+- 每个 `BiasingXS` 对应一个 particle，但内部可保存多个 process rule。
+- `maxInteractions` 是单 track、单 process 的限制；`-1` 表示无限制。
+- process 验证发生在 `StartRun()`，粒子不存在为 fatal；process 名不匹配会输出明确 warning 或 error，不静默忽略。
+- 对带电粒子做 XS biasing 时会 warning，提示需要额外物理验证。
 - 不手动修改 track weight；权重修正由 Geant4 biasing framework 和 `G4BOptnChangeCrossSection` 负责。
 
 ### BiasingMultiParticleXS
@@ -1429,7 +1494,8 @@
 
 | 接口 | 基本作用 |
 |---|---|
-| `AddParticle(const XSBiasRule&)` | 给当前 volume-level operator 添加一个粒子的 XS rule。 |
+| `AddProcessRule(const XSProcessBiasRule&)` | 给当前 volume-level operator 添加一条 process-level rule；内部按 particle 管理 `BiasingXS`。 |
+| `AddParticle(const XSBiasRule&)` | legacy：给当前 volume-level operator 添加一个粒子的 XS rule。 |
 | `HasParticle(particleName)` | 大小写不敏感查询粒子 operator。 |
 | `ClearParticles()` | 清空粒子 operator。 |
 | `AttachToVolume(G4LogicalVolume*)` | 调用 Geant4 `AttachTo()` 绑定 logical volume。 |
@@ -1439,6 +1505,7 @@
 
 说明：
 - 一个 `BiasingMultiParticleXS` 对应一个 logical volume。
+- 同一 logical volume 上只 attach 一个 `BiasingMultiParticleXS`，该 operator 内部再管理多粒子、多 process rules。
 - `currentOperator_` 是实例成员，不使用全局状态。
 
 ### BiasingMessenger
@@ -1452,15 +1519,29 @@
 | 命令 | 转发到 |
 |---|---|
 | `/AIHL/biasing/enable <true|false>` | `BiasingManager::Enable` |
+| `/AIHL/biasing/xs/addRule <particle> <process>` | `BiasingManager::CreateOrGetXSProcessBiasRule` |
+| `/AIHL/biasing/xs/setRuleFactor <particle> <process> <factor>` | `BiasingManager::SetXSProcessBiasFactor` |
+| `/AIHL/biasing/xs/addRuleVolume <particle> <process> <volume>` | `BiasingManager::AddXSProcessBiasVolume` |
+| `/AIHL/biasing/xs/setRuleOnlyPrimary <particle> <process> <true|false>` | `BiasingManager::SetXSProcessOnlyPrimary` |
+| `/AIHL/biasing/xs/setRuleApplyToSecondaries <particle> <process> <true|false>` | `BiasingManager::SetXSProcessApplyToSecondaries` |
+| `/AIHL/biasing/xs/setRuleMinWeight <particle> <process> <value>` | `BiasingManager::SetXSProcessMinWeight` |
+| `/AIHL/biasing/xs/setRuleMaxInteractions <particle> <process> <n>` | `BiasingManager::SetXSProcessMaxInteractions` |
+| `/AIHL/biasing/xs/printRules` | `BiasingManager::PrintSummary` |
 | `/AIHL/biasing/xs/addParticle <particle>` | `BiasingManager::AddXSBiasParticle` |
 | `/AIHL/biasing/xs/addProcess <process>` | `BiasingManager::AddXSBiasProcess(process)` |
 | `/AIHL/biasing/xs/addProcessForParticle <particle> <process>` | `BiasingManager::AddXSBiasProcess(particle, process)` |
-| `/AIHL/biasing/xs/setFactor <particle> <factor>` | `BiasingManager::SetXSBiasFactor` |
-| `/AIHL/biasing/xs/onlyPrimary <particle> <true|false>` | `BiasingManager::SetOnlyPrimary` |
-| `/AIHL/biasing/xs/applyToSecondaries <particle> <true|false>` | `BiasingManager::SetApplyToSecondaries` |
-| `/AIHL/biasing/xs/setMinWeight <particle> <value>` | `BiasingManager::SetMinWeight` |
-| `/AIHL/biasing/xs/setMaxInteractions <particle> <n>` | `BiasingManager::SetMaxInteractions` |
-| `/AIHL/biasing/xs/addVolume <volume>` | `BiasingManager::AddBiasVolume` |
+| `/AIHL/biasing/xs/setFactor <particle> <factor>` | legacy：`BiasingManager::SetXSBiasFactor` |
+| `/AIHL/biasing/xs/setFactor <particle> <process> <factor>` | process-level overload：`BiasingManager::SetXSProcessBiasFactor` |
+| `/AIHL/biasing/xs/onlyPrimary <particle> <true|false>` | legacy：`BiasingManager::SetOnlyPrimary` |
+| `/AIHL/biasing/xs/onlyPrimary <particle> <process> <true|false>` | process-level overload：`BiasingManager::SetXSProcessOnlyPrimary` |
+| `/AIHL/biasing/xs/applyToSecondaries <particle> <true|false>` | legacy：`BiasingManager::SetApplyToSecondaries` |
+| `/AIHL/biasing/xs/applyToSecondaries <particle> <process> <true|false>` | process-level overload：`BiasingManager::SetXSProcessApplyToSecondaries` |
+| `/AIHL/biasing/xs/setMinWeight <particle> <value>` | legacy：`BiasingManager::SetMinWeight` |
+| `/AIHL/biasing/xs/setMinWeight <particle> <process> <value>` | process-level overload：`BiasingManager::SetXSProcessMinWeight` |
+| `/AIHL/biasing/xs/setMaxInteractions <particle> <n>` | legacy：`BiasingManager::SetMaxInteractions` |
+| `/AIHL/biasing/xs/setMaxInteractions <particle> <process> <n>` | process-level overload：`BiasingManager::SetXSProcessMaxInteractions` |
+| `/AIHL/biasing/xs/addVolume <volume>` | legacy/global：`BiasingManager::AddBiasVolume` |
+| `/AIHL/biasing/xs/addVolume <particle> <process> <volume>` | process-level overload：`BiasingManager::AddXSProcessBiasVolume` |
 | `/AIHL/biasing/xs/addVolumeForParticle <particle> <volume>` | `BiasingManager::AddBiasVolumeForParticle` |
 | `/AIHL/biasing/validate` | `BiasingManager::Validate` |
 | `/AIHL/biasing/print` | `BiasingManager::PrintSummary` |
@@ -1475,7 +1556,7 @@ SimulationManager 集成：
 - `Configure()` 在 main config 已加载后调用 `biasingManager_->LoadFromConfig(*configManager_)`。
 - 若 `BiasingManager` enabled，`Configure()` 会启用 PhysicsManager 的 generic biasing hook。
 - `CreateDetectorConstruction()` 会设置 geometry post-build callback；几何构建完成后 callback 调用 `biasingManager_->AttachOperators(registry)`。
-- `RunSummary` 写入 `biasing_enabled`、`biasing_xs_rule_count`、`biasing_operators_attached`、`biasing_attached_operator_count`。
+- `RunSummary` 写入 `biasing_enabled`、`biasing_xs_rule_count`、`biasing_legacy_xs_rule_count`、`biasing_operators_attached`、`biasing_attached_operator_count`。
 
 与 Physics / Geometry / Scoring 的关系：
 - Physics 模块注册 `G4GenericBiasingPhysics` 并为 enabled rule 调用 `PhysicsBias(particle, processNames)`。
