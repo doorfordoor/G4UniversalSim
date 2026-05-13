@@ -97,11 +97,41 @@ The default configuration file is `config/main.ini`. Section and key names are l
 |---|---|---|---|---|
 | `enabled` | Enable biasing manager state and post-build attachment. | `false` | No | `false` |
 
-## `[biasing.xs]`
+## `[biasing.xs.<particle>.<process>]`
+
+Recommended process-level XS biasing rule. The section name supplies the particle and Geant4 process name. Process names containing `.` are not supported in section names in this version.
+
+```ini
+[biasing.xs.proton.protonInelastic]
+factor = 3.0
+volumes = Target
+only_primary = false
+apply_to_secondaries = true
+min_weight = 0.02
+max_interactions = 8
+```
+
+| Key | Meaning | Default | Required | Example |
+|---|---|---|---|---|
+| `enabled` | Enable this process rule. | `true` | No | `true` |
+| `factor` | Cross-section scale for this particle/process. | `1.0` | No | `3.0` |
+| `volumes` | Target logical volume names. Empty means global/registry bias volumes. | empty | No | `Target, Shield` |
+| `only_primary` | Apply only to primary tracks. | `true` | No | `false` |
+| `apply_to_secondaries` | Apply to secondary tracks too. Overrides `only_primary`. | `false` | No | `true` |
+| `min_weight` | Skip tracks below this weight. | `0.05` | No | `0.02` |
+| `max_interactions` | Max biased interactions per track/process. `-1` means unlimited. | `5` | No | `8` |
+
+## `[biasing.xs]` legacy shorthand
+
+Legacy particle-level shorthand. It is still supported, but it expands as `particles x processes`; all generated process rules share the same parameters. Prefer `[biasing.xs.<particle>.<process>]` for precise per-process control.
 
 | Key | Meaning | Default | Required | Example |
 |---|---|---|---|---|
 | `particles` | Comma-separated biased particles. | empty | When biasing enabled | `proton` |
-| `processes` | Comma-separated Geant4 process names. | all wrapped processes | No | `protonInelastic` |
+| `processes` | Comma-separated Geant4 process names. | empty | For effective XS biasing | `protonInelastic` |
 | `factor` | Cross-section scale. | `1.0` | No | `100` |
 | `volumes` | Target logical volume names. | registry bias volumes | No | `Target` |
+| `only_primary` | Apply only to primary tracks. | `true` | No | `true` |
+| `apply_to_secondaries` | Apply to secondary tracks too. | `false` | No | `false` |
+| `min_weight` | Skip tracks below this weight. | `0.05` | No | `0.05` |
+| `max_interactions` | Max biased interactions per track/process. `-1` means unlimited. | `5` | No | `5` |

@@ -101,9 +101,9 @@ std::map<std::string, std::vector<std::string>> BuildBiasParticleProcessMap(
 {
     std::map<std::string, std::vector<std::string>> values;
     if (!biasingManager) return values;
-    for (const XSBiasRule& rule : biasingManager->GetEnabledXSBiasRules()) {
-        if (!StringUtils::Trim(rule.particleName).empty()) {
-            values[rule.particleName] = rule.processNames;
+    for (const std::string& particle : biasingManager->GetBiasedParticles()) {
+        if (!StringUtils::Trim(particle).empty()) {
+            values[particle] = biasingManager->GetBiasedProcesses(particle);
         }
     }
     return values;
@@ -381,7 +381,8 @@ void SimulationManager::PrintSummary() const
     std::cout << "  source_preset     : " << (sourceManager_ ? sourceManager_->GetPresetName() : "") << '\n';
     std::cout << "  biasing_manager   : " << (biasingManager_ ? "created" : "null") << '\n';
     std::cout << "  biasing_enabled   : " << (biasingManager_ ? BoolText(biasingManager_->IsEnabled()) : "false") << '\n';
-    std::cout << "  biasing_xs_rules  : " << (biasingManager_ ? biasingManager_->GetXSBiasRules().size() : 0) << '\n';
+    std::cout << "  biasing_process_rules: " << (biasingManager_ ? biasingManager_->GetEnabledXSProcessBiasRules().size() : 0) << '\n';
+    std::cout << "  biasing_legacy_rules : " << (biasingManager_ ? biasingManager_->GetXSBiasRules().size() : 0) << '\n';
     std::cout << "  biasing_attached  : " << (biasingManager_ ? BoolText(biasingManager_->AreOperatorsAttached()) : "false") << '\n';
     std::cout << "  biasing_operators : " << (biasingManager_ ? biasingManager_->GetAttachedOperatorCount() : 0) << '\n';
     std::cout << "  scoring_manager   : " << (scoringManager_ ? "created" : "null") << '\n';
@@ -670,7 +671,8 @@ void SimulationManager::WriteBaseRunSummary()
     summary.Set("source_energy", sourceManager_ ? sourceManager_->GetMonoEnergy() : 0.0);
     summary.Set("source_preset", sourceManager_ ? sourceManager_->GetPresetName() : "");
     summary.SetBool("biasing_enabled", biasingManager_ ? biasingManager_->IsEnabled() : false);
-    summary.Set("biasing_xs_rule_count", static_cast<int>(biasingManager_ ? biasingManager_->GetXSBiasRules().size() : 0));
+    summary.Set("biasing_xs_rule_count", static_cast<int>(biasingManager_ ? biasingManager_->GetEnabledXSProcessBiasRules().size() : 0));
+    summary.Set("biasing_legacy_xs_rule_count", static_cast<int>(biasingManager_ ? biasingManager_->GetXSBiasRules().size() : 0));
     summary.SetBool("biasing_operators_attached", biasingManager_ ? biasingManager_->AreOperatorsAttached() : false);
     summary.Set("biasing_attached_operator_count", static_cast<int>(biasingManager_ ? biasingManager_->GetAttachedOperatorCount() : 0));
     summary.SetBool("scoring_enabled", scoringManager_ ? scoringManager_->IsEnabled() : false);

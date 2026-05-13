@@ -124,29 +124,53 @@ BiasingMessenger::BiasingMessenger(BiasingManager* manager)
     addProcessForParticleCmd_ = new G4UIcmdWithAString("/AIHL/biasing/xs/addProcessForParticle", this);
     addProcessForParticleCmd_->SetGuidance("Add process for particle: <particle> <process>.");
 
+    addRuleCmd_ = new G4UIcmdWithAString("/AIHL/biasing/xs/addRule", this);
+    addRuleCmd_->SetGuidance("Create or get process-level XS rule: <particle> <process>.");
+
     setFactorCmd_ = new G4UIcmdWithAString("/AIHL/biasing/xs/setFactor", this);
-    setFactorCmd_->SetGuidance("Set XS bias factor: <particle> <factor>.");
+    setFactorCmd_->SetGuidance("Set XS bias factor. Legacy: <particle> <factor>. Process-level: <particle> <process> <factor>.");
+
+    setRuleFactorCmd_ = new G4UIcmdWithAString("/AIHL/biasing/xs/setRuleFactor", this);
+    setRuleFactorCmd_->SetGuidance("Set process-level XS bias factor: <particle> <process> <factor>.");
 
     onlyPrimaryCmd_ = new G4UIcmdWithAString("/AIHL/biasing/xs/onlyPrimary", this);
-    onlyPrimaryCmd_->SetGuidance("Set only-primary flag: <particle> <true|false>.");
+    onlyPrimaryCmd_->SetGuidance("Set only-primary flag. Legacy: <particle> <true|false>. Process-level: <particle> <process> <true|false>.");
+
+    setRuleOnlyPrimaryCmd_ = new G4UIcmdWithAString("/AIHL/biasing/xs/setRuleOnlyPrimary", this);
+    setRuleOnlyPrimaryCmd_->SetGuidance("Set process-level only-primary flag: <particle> <process> <true|false>.");
 
     applyToSecondariesCmd_ = new G4UIcmdWithAString("/AIHL/biasing/xs/applyToSecondaries", this);
-    applyToSecondariesCmd_->SetGuidance("Set secondary application flag: <particle> <true|false>.");
+    applyToSecondariesCmd_->SetGuidance("Set secondary flag. Legacy: <particle> <true|false>. Process-level: <particle> <process> <true|false>.");
+
+    setRuleApplyToSecondariesCmd_ = new G4UIcmdWithAString("/AIHL/biasing/xs/setRuleApplyToSecondaries", this);
+    setRuleApplyToSecondariesCmd_->SetGuidance("Set process-level secondary flag: <particle> <process> <true|false>.");
 
     setMinWeightCmd_ = new G4UIcmdWithAString("/AIHL/biasing/xs/setMinWeight", this);
-    setMinWeightCmd_->SetGuidance("Set minimum track weight: <particle> <value>.");
+    setMinWeightCmd_->SetGuidance("Set minimum track weight. Legacy: <particle> <value>. Process-level: <particle> <process> <value>.");
+
+    setRuleMinWeightCmd_ = new G4UIcmdWithAString("/AIHL/biasing/xs/setRuleMinWeight", this);
+    setRuleMinWeightCmd_->SetGuidance("Set process-level minimum track weight: <particle> <process> <value>.");
 
     setMaxInteractionsCmd_ = new G4UIcmdWithAString("/AIHL/biasing/xs/setMaxInteractions", this);
-    setMaxInteractionsCmd_->SetGuidance("Set max biased interactions per track: <particle> <n>.");
+    setMaxInteractionsCmd_->SetGuidance("Set max biased interactions. Legacy: <particle> <n>. Process-level: <particle> <process> <n>.");
+
+    setRuleMaxInteractionsCmd_ = new G4UIcmdWithAString("/AIHL/biasing/xs/setRuleMaxInteractions", this);
+    setRuleMaxInteractionsCmd_->SetGuidance("Set process-level max biased interactions: <particle> <process> <n>.");
 
     addVolumeCmd_ = new G4UIcmdWithAString("/AIHL/biasing/xs/addVolume", this);
-    addVolumeCmd_->SetGuidance("Add a global target volume for XS biasing.");
+    addVolumeCmd_->SetGuidance("Add bias volume. Legacy/global: <volume>. Process-level: <particle> <process> <volume>.");
+
+    addRuleVolumeCmd_ = new G4UIcmdWithAString("/AIHL/biasing/xs/addRuleVolume", this);
+    addRuleVolumeCmd_->SetGuidance("Add process-level target volume: <particle> <process> <volume>.");
 
     addVolumeForParticleCmd_ = new G4UIcmdWithAString("/AIHL/biasing/xs/addVolumeForParticle", this);
     addVolumeForParticleCmd_->SetGuidance("Add target volume for particle: <particle> <volume>.");
 
     validateCmd_ = new G4UIcmdWithoutParameter("/AIHL/biasing/validate", this);
     validateCmd_->SetGuidance("Validate current biasing configuration.");
+
+    printRulesCmd_ = new G4UIcmdWithoutParameter("/AIHL/biasing/xs/printRules", this);
+    printRulesCmd_->SetGuidance("Print process-level and legacy XS bias rules.");
 
     printCmd_ = new G4UIcmdWithoutParameter("/AIHL/biasing/print", this);
     printCmd_->SetGuidance("Print current biasing configuration.");
@@ -159,14 +183,22 @@ BiasingMessenger::~BiasingMessenger()
 {
     delete clearCmd_;
     delete printCmd_;
+    delete printRulesCmd_;
     delete validateCmd_;
     delete addVolumeForParticleCmd_;
+    delete addRuleVolumeCmd_;
     delete addVolumeCmd_;
+    delete setRuleMaxInteractionsCmd_;
     delete setMaxInteractionsCmd_;
+    delete setRuleMinWeightCmd_;
     delete setMinWeightCmd_;
+    delete setRuleApplyToSecondariesCmd_;
     delete applyToSecondariesCmd_;
+    delete setRuleOnlyPrimaryCmd_;
     delete onlyPrimaryCmd_;
+    delete setRuleFactorCmd_;
     delete setFactorCmd_;
+    delete addRuleCmd_;
     delete addProcessForParticleCmd_;
     delete addProcessCmd_;
     delete addParticleCmd_;
@@ -200,61 +232,149 @@ void BiasingMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
         if (command == addProcessForParticleCmd_) {
             EnsureManager("/AIHL/biasing/xs/addProcessForParticle");
             const auto args = SplitArgs(raw);
-            if (args.size() < 2) ThrowCommandError("/AIHL/biasing/xs/addProcessForParticle", raw, "expected <particle> <process>");
+            if (args.size() != 2) ThrowCommandError("/AIHL/biasing/xs/addProcessForParticle", raw, "expected <particle> <process>");
             manager_->AddXSBiasProcess(args[0], args[1]);
+            NotifyChanged();
+            return;
+        }
+        if (command == addRuleCmd_) {
+            EnsureManager("/AIHL/biasing/xs/addRule");
+            const auto args = SplitArgs(raw);
+            if (args.size() != 2) ThrowCommandError("/AIHL/biasing/xs/addRule", raw, "expected <particle> <process>");
+            manager_->CreateOrGetXSProcessBiasRule(args[0], args[1]);
             NotifyChanged();
             return;
         }
         if (command == setFactorCmd_) {
             EnsureManager("/AIHL/biasing/xs/setFactor");
             const auto args = SplitArgs(raw);
-            if (args.size() < 2) ThrowCommandError("/AIHL/biasing/xs/setFactor", raw, "expected <particle> <factor>");
-            manager_->SetXSBiasFactor(args[0], ParseDoubleArg("/AIHL/biasing/xs/setFactor", raw, args[1], "factor"));
+            if (args.size() == 2) {
+                manager_->SetXSBiasFactor(args[0], ParseDoubleArg("/AIHL/biasing/xs/setFactor", raw, args[1], "factor"));
+            } else if (args.size() == 3) {
+                manager_->SetXSProcessBiasFactor(args[0], args[1], ParseDoubleArg("/AIHL/biasing/xs/setFactor", raw, args[2], "factor"));
+            } else {
+                ThrowCommandError("/AIHL/biasing/xs/setFactor", raw, "expected legacy <particle> <factor> or process-level <particle> <process> <factor>");
+            }
+            NotifyChanged();
+            return;
+        }
+        if (command == setRuleFactorCmd_) {
+            EnsureManager("/AIHL/biasing/xs/setRuleFactor");
+            const auto args = SplitArgs(raw);
+            if (args.size() != 3) ThrowCommandError("/AIHL/biasing/xs/setRuleFactor", raw, "expected <particle> <process> <factor>");
+            manager_->SetXSProcessBiasFactor(args[0], args[1], ParseDoubleArg("/AIHL/biasing/xs/setRuleFactor", raw, args[2], "factor"));
             NotifyChanged();
             return;
         }
         if (command == onlyPrimaryCmd_) {
             EnsureManager("/AIHL/biasing/xs/onlyPrimary");
             const auto args = SplitArgs(raw);
-            if (args.size() < 2) ThrowCommandError("/AIHL/biasing/xs/onlyPrimary", raw, "expected <particle> <true|false>");
-            manager_->SetOnlyPrimary(args[0], ParseBoolArg("/AIHL/biasing/xs/onlyPrimary", raw, args[1], "onlyPrimary"));
+            if (args.size() == 2) {
+                manager_->SetOnlyPrimary(args[0], ParseBoolArg("/AIHL/biasing/xs/onlyPrimary", raw, args[1], "onlyPrimary"));
+            } else if (args.size() == 3) {
+                manager_->SetXSProcessOnlyPrimary(args[0], args[1], ParseBoolArg("/AIHL/biasing/xs/onlyPrimary", raw, args[2], "onlyPrimary"));
+            } else {
+                ThrowCommandError("/AIHL/biasing/xs/onlyPrimary", raw, "expected legacy <particle> <true|false> or process-level <particle> <process> <true|false>");
+            }
+            NotifyChanged();
+            return;
+        }
+        if (command == setRuleOnlyPrimaryCmd_) {
+            EnsureManager("/AIHL/biasing/xs/setRuleOnlyPrimary");
+            const auto args = SplitArgs(raw);
+            if (args.size() != 3) ThrowCommandError("/AIHL/biasing/xs/setRuleOnlyPrimary", raw, "expected <particle> <process> <true|false>");
+            manager_->SetXSProcessOnlyPrimary(args[0], args[1], ParseBoolArg("/AIHL/biasing/xs/setRuleOnlyPrimary", raw, args[2], "onlyPrimary"));
             NotifyChanged();
             return;
         }
         if (command == applyToSecondariesCmd_) {
             EnsureManager("/AIHL/biasing/xs/applyToSecondaries");
             const auto args = SplitArgs(raw);
-            if (args.size() < 2) ThrowCommandError("/AIHL/biasing/xs/applyToSecondaries", raw, "expected <particle> <true|false>");
-            manager_->SetApplyToSecondaries(args[0], ParseBoolArg("/AIHL/biasing/xs/applyToSecondaries", raw, args[1], "applyToSecondaries"));
+            if (args.size() == 2) {
+                manager_->SetApplyToSecondaries(args[0], ParseBoolArg("/AIHL/biasing/xs/applyToSecondaries", raw, args[1], "applyToSecondaries"));
+            } else if (args.size() == 3) {
+                manager_->SetXSProcessApplyToSecondaries(args[0], args[1], ParseBoolArg("/AIHL/biasing/xs/applyToSecondaries", raw, args[2], "applyToSecondaries"));
+            } else {
+                ThrowCommandError("/AIHL/biasing/xs/applyToSecondaries", raw, "expected legacy <particle> <true|false> or process-level <particle> <process> <true|false>");
+            }
+            NotifyChanged();
+            return;
+        }
+        if (command == setRuleApplyToSecondariesCmd_) {
+            EnsureManager("/AIHL/biasing/xs/setRuleApplyToSecondaries");
+            const auto args = SplitArgs(raw);
+            if (args.size() != 3) ThrowCommandError("/AIHL/biasing/xs/setRuleApplyToSecondaries", raw, "expected <particle> <process> <true|false>");
+            manager_->SetXSProcessApplyToSecondaries(args[0], args[1], ParseBoolArg("/AIHL/biasing/xs/setRuleApplyToSecondaries", raw, args[2], "applyToSecondaries"));
             NotifyChanged();
             return;
         }
         if (command == setMinWeightCmd_) {
             EnsureManager("/AIHL/biasing/xs/setMinWeight");
             const auto args = SplitArgs(raw);
-            if (args.size() < 2) ThrowCommandError("/AIHL/biasing/xs/setMinWeight", raw, "expected <particle> <value>");
-            manager_->SetMinWeight(args[0], ParseDoubleArg("/AIHL/biasing/xs/setMinWeight", raw, args[1], "minWeight"));
+            if (args.size() == 2) {
+                manager_->SetMinWeight(args[0], ParseDoubleArg("/AIHL/biasing/xs/setMinWeight", raw, args[1], "minWeight"));
+            } else if (args.size() == 3) {
+                manager_->SetXSProcessMinWeight(args[0], args[1], ParseDoubleArg("/AIHL/biasing/xs/setMinWeight", raw, args[2], "minWeight"));
+            } else {
+                ThrowCommandError("/AIHL/biasing/xs/setMinWeight", raw, "expected legacy <particle> <value> or process-level <particle> <process> <value>");
+            }
+            NotifyChanged();
+            return;
+        }
+        if (command == setRuleMinWeightCmd_) {
+            EnsureManager("/AIHL/biasing/xs/setRuleMinWeight");
+            const auto args = SplitArgs(raw);
+            if (args.size() != 3) ThrowCommandError("/AIHL/biasing/xs/setRuleMinWeight", raw, "expected <particle> <process> <value>");
+            manager_->SetXSProcessMinWeight(args[0], args[1], ParseDoubleArg("/AIHL/biasing/xs/setRuleMinWeight", raw, args[2], "minWeight"));
             NotifyChanged();
             return;
         }
         if (command == setMaxInteractionsCmd_) {
             EnsureManager("/AIHL/biasing/xs/setMaxInteractions");
             const auto args = SplitArgs(raw);
-            if (args.size() < 2) ThrowCommandError("/AIHL/biasing/xs/setMaxInteractions", raw, "expected <particle> <n>");
-            manager_->SetMaxInteractions(args[0], ParseIntArg("/AIHL/biasing/xs/setMaxInteractions", raw, args[1], "maxInteractions"));
+            if (args.size() == 2) {
+                manager_->SetMaxInteractions(args[0], ParseIntArg("/AIHL/biasing/xs/setMaxInteractions", raw, args[1], "maxInteractions"));
+            } else if (args.size() == 3) {
+                manager_->SetXSProcessMaxInteractions(args[0], args[1], ParseIntArg("/AIHL/biasing/xs/setMaxInteractions", raw, args[2], "maxInteractions"));
+            } else {
+                ThrowCommandError("/AIHL/biasing/xs/setMaxInteractions", raw, "expected legacy <particle> <n> or process-level <particle> <process> <n>");
+            }
+            NotifyChanged();
+            return;
+        }
+        if (command == setRuleMaxInteractionsCmd_) {
+            EnsureManager("/AIHL/biasing/xs/setRuleMaxInteractions");
+            const auto args = SplitArgs(raw);
+            if (args.size() != 3) ThrowCommandError("/AIHL/biasing/xs/setRuleMaxInteractions", raw, "expected <particle> <process> <n>");
+            manager_->SetXSProcessMaxInteractions(args[0], args[1], ParseIntArg("/AIHL/biasing/xs/setRuleMaxInteractions", raw, args[2], "maxInteractions"));
             NotifyChanged();
             return;
         }
         if (command == addVolumeCmd_) {
             EnsureManager("/AIHL/biasing/xs/addVolume");
-            manager_->AddBiasVolume(raw);
+            const auto args = SplitArgs(raw);
+            if (args.size() == 1) {
+                manager_->AddBiasVolume(args[0]);
+            } else if (args.size() == 3) {
+                manager_->AddXSProcessBiasVolume(args[0], args[1], args[2]);
+            } else {
+                ThrowCommandError("/AIHL/biasing/xs/addVolume", raw, "expected legacy/global <volume> or process-level <particle> <process> <volume>");
+            }
+            NotifyChanged();
+            return;
+        }
+        if (command == addRuleVolumeCmd_) {
+            EnsureManager("/AIHL/biasing/xs/addRuleVolume");
+            const auto args = SplitArgs(raw);
+            if (args.size() != 3) ThrowCommandError("/AIHL/biasing/xs/addRuleVolume", raw, "expected <particle> <process> <volume>");
+            manager_->AddXSProcessBiasVolume(args[0], args[1], args[2]);
             NotifyChanged();
             return;
         }
         if (command == addVolumeForParticleCmd_) {
             EnsureManager("/AIHL/biasing/xs/addVolumeForParticle");
             const auto args = SplitArgs(raw);
-            if (args.size() < 2) ThrowCommandError("/AIHL/biasing/xs/addVolumeForParticle", raw, "expected <particle> <volume>");
+            if (args.size() != 2) ThrowCommandError("/AIHL/biasing/xs/addVolumeForParticle", raw, "expected <particle> <volume>");
             manager_->AddBiasVolumeForParticle(args[0], args[1]);
             NotifyChanged();
             return;
@@ -263,6 +383,11 @@ void BiasingMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
             EnsureManager("/AIHL/biasing/validate");
             manager_->Validate();
             G4cout << "[BiasingMessenger] Biasing configuration is valid." << G4endl;
+            return;
+        }
+        if (command == printRulesCmd_) {
+            EnsureManager("/AIHL/biasing/xs/printRules");
+            manager_->PrintSummary();
             return;
         }
         if (command == printCmd_) {

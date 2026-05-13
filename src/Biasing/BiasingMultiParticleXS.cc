@@ -4,7 +4,6 @@
 
 #include "G4LogicalVolume.hh"
 #include "G4ParticleDefinition.hh"
-#include "G4ParticleTable.hh"
 #include "G4Track.hh"
 #include "G4ios.hh"
 
@@ -20,11 +19,6 @@ BiasingMultiParticleXS::~BiasingMultiParticleXS() = default;
 void BiasingMultiParticleXS::AddParticle(const XSBiasRule& rule)
 {
     const G4String particleName(rule.particleName);
-    if (!G4ParticleTable::GetParticleTable()->FindParticle(particleName)) {
-        throw std::runtime_error("BiasingMultiParticleXS::AddParticle failed: particle '" +
-                                 rule.particleName + "' was not found in G4ParticleTable");
-    }
-
     particleOperators_[NormalizeParticleKey(particleName)] = std::make_unique<BiasingXS>(rule);
 }
 
@@ -35,6 +29,19 @@ void BiasingMultiParticleXS::AddParticle(const G4String& particleName, G4double 
     rule.particleName = particleName;
     rule.factor = factor;
     AddParticle(rule);
+}
+
+void BiasingMultiParticleXS::AddProcessRule(const XSProcessBiasRule& rule)
+{
+    const G4String particleName(rule.particleName);
+    const std::string key = NormalizeParticleKey(particleName);
+    auto iter = particleOperators_.find(key);
+    if (iter == particleOperators_.end()) {
+        auto biasing = std::make_unique<BiasingXS>(rule);
+        iter = particleOperators_.emplace(key, std::move(biasing)).first;
+    } else {
+        iter->second->AddProcessRule(rule);
+    }
 }
 
 bool BiasingMultiParticleXS::HasParticle(const G4String& particleName) const
@@ -144,7 +151,14 @@ void BiasingMultiParticleXS::PrintSummary() const
            << ", particles=" << particleOperators_.size() << G4endl;
     for (const auto& item : particleOperators_) {
         G4cout << "  - " << item.second->GetParticleName()
-               << " factor=" << item.second->GetXSBiasFactor() << G4endl;
+               << " processRules=" << item.second->GetProcessRules().size() << G4endl;
+        for (const auto& rule : item.second->GetProcessRules()) {
+            G4cout << "      process=" << rule.processName
+                   << " factor=" << rule.factor
+                   << " minWeight=" << rule.minWeight
+                   << " maxInteractions=" << rule.maxInteractions
+                   << G4endl;
+        }
     }
 }
 

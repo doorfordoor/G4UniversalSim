@@ -68,12 +68,27 @@ Biasing needs both the physics hook and operator attachment:
 
 ```text
 /AIHL/biasing/enable true
-/AIHL/biasing/xs/addParticle proton
-/AIHL/biasing/xs/addVolume Target
+/AIHL/biasing/xs/addRule proton protonInelastic
+/AIHL/biasing/xs/setRuleFactor proton protonInelastic 3.0
+/AIHL/biasing/xs/addRuleVolume proton protonInelastic Target
 /AIHL/physics/enableBiasing true
 ```
 
 Operators attach through the geometry post-build callback after `DetectorConstruction::Construct()` has rebuilt the registry.
+
+If you use the old `[biasing.xs]` section or old macro commands such as `/AIHL/biasing/xs/addParticle`, the manager expands them as legacy shorthand into particle/process rules and prints a warning. Make sure the legacy `processes` list is not empty.
+
+## Biasing Process Name Fails Validation
+
+Process-level XS rules are validated after physics construction, when particle process managers exist. If `/run/initialize` reports that a process was not found, check:
+
+```text
+[biasing.xs.proton.protonInelastic]
+```
+
+The process part must match an actual Geant4 process name for that particle and the selected physics list. Wrong names are reported as explicit warnings or errors instead of being silently ignored.
+
+For charged particles, the framework emits a warning that XS biasing needs extra validation because cross sections can vary during a step due to energy loss. Compare raw and weighted scoring carefully.
 
 ## Reference Physics List Not Found
 

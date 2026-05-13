@@ -16,14 +16,19 @@ class G4Track;
 class G4VBiasingOperation;
 class G4VParticleChange;
 
-// Single-particle cross-section biasing operator. It owns only biasing
-// operations and data copied from XSBiasRule; geometry attachment is handled
-// by BiasingMultiParticleXS/BiasingManager.
+// Single-particle cross-section biasing operator. It owns process-level rules
+// and operations; geometry attachment is handled by
+// BiasingMultiParticleXS/BiasingManager.
 class BiasingXS : public G4VBiasingOperator {
 public:
     explicit BiasingXS(const XSBiasRule& rule);
+    explicit BiasingXS(const XSProcessBiasRule& rule);
     BiasingXS(const G4String& particleName, G4double factor = 1.0);
     ~BiasingXS() override;
+
+    void AddProcessRule(const XSProcessBiasRule& rule);
+    bool HasProcessRule(const std::string& processName) const;
+    std::vector<XSProcessBiasRule> GetProcessRules() const;
 
     void SetRule(const XSBiasRule& rule);
     const XSBiasRule& GetRule() const;
@@ -72,8 +77,10 @@ public:
         const G4VParticleChange* particleChangeProduced) override;
 
 private:
-    bool IsTargetProcess(const G4String& processName) const;
-    bool ShouldBiasTrack(const G4Track* track) const;
+    static std::string NormalizeProcessKey(const std::string& processName);
+    const XSProcessBiasRule* FindProcessRule(const G4String& processName) const;
+    void ValidateProcessRulesForParticle() const;
+    bool ShouldBiasTrack(const G4Track* track, const XSProcessBiasRule& rule, const G4String& processName) const;
     G4BOptnChangeCrossSection* GetOrCreateOperation(const G4String& processName);
 
     XSBiasRule rule_;
@@ -86,5 +93,7 @@ private:
     G4int maxInteractions_ = 5;
     G4int currentTrackBiasInteractions_ = 0;
 
+    std::map<std::string, XSProcessBiasRule> processRules_;
+    std::map<std::string, G4int> currentTrackBiasInteractionsByProcess_;
     std::map<G4String, std::unique_ptr<G4BOptnChangeCrossSection>> operations_;
 };

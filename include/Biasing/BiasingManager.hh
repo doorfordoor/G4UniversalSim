@@ -21,6 +21,48 @@ public:
 
     void Clear();
 
+    void AddXSProcessBiasRule(const XSProcessBiasRule& rule);
+    XSProcessBiasRule& CreateOrGetXSProcessBiasRule(
+        const std::string& particleName,
+        const std::string& processName);
+    bool HasXSProcessBiasRule(
+        const std::string& particleName,
+        const std::string& processName) const;
+    const XSProcessBiasRule& GetXSProcessBiasRule(
+        const std::string& particleName,
+        const std::string& processName) const;
+    XSProcessBiasRule& GetXSProcessBiasRuleMutable(
+        const std::string& particleName,
+        const std::string& processName);
+    const std::vector<XSProcessBiasRule>& GetXSProcessBiasRules() const;
+    std::vector<XSProcessBiasRule> GetEnabledXSProcessBiasRules() const;
+
+    void SetXSProcessBiasFactor(
+        const std::string& particleName,
+        const std::string& processName,
+        double factor);
+    void AddXSProcessBiasVolume(
+        const std::string& particleName,
+        const std::string& processName,
+        const std::string& volumeName);
+    void SetXSProcessOnlyPrimary(
+        const std::string& particleName,
+        const std::string& processName,
+        bool onlyPrimary);
+    void SetXSProcessApplyToSecondaries(
+        const std::string& particleName,
+        const std::string& processName,
+        bool applyToSecondaries);
+    void SetXSProcessMinWeight(
+        const std::string& particleName,
+        const std::string& processName,
+        double minWeight);
+    void SetXSProcessMaxInteractions(
+        const std::string& particleName,
+        const std::string& processName,
+        int maxInteractions);
+
+    // Legacy particle-level API retained for old macro/config compatibility.
     void AddXSBiasRule(const XSBiasRule& rule);
     XSBiasRule& CreateOrGetXSBiasRule(const std::string& particleName);
 
@@ -58,8 +100,12 @@ public:
 
 private:
     static std::string NormalizeParticleName(const std::string& particleName);
+    static std::string ProcessRuleKey(const std::string& particleName, const std::string& processName);
     static std::string TrimRequired(const std::string& value, const std::string& label);
     static void AddUnique(std::vector<std::string>& values, const std::string& value);
+
+    std::vector<XSProcessBiasRule> BuildExpandedProcessRules(bool warnLegacy) const;
+    void WarnLegacySyntax(const std::string& detail) const;
 
     BiasingConfig config_;
 

@@ -21,9 +21,9 @@ std::map<std::string, std::vector<std::string>> BuildBiasParticleProcessMap(
     std::map<std::string, std::vector<std::string>> particleProcesses;
     if (!biasingManager) return particleProcesses;
 
-    for (const XSBiasRule& rule : biasingManager->GetEnabledXSBiasRules()) {
-        if (!rule.particleName.empty()) {
-            particleProcesses[rule.particleName] = rule.processNames;
+    for (const std::string& particle : biasingManager->GetBiasedParticles()) {
+        if (!particle.empty()) {
+            particleProcesses[particle] = biasingManager->GetBiasedProcesses(particle);
         }
     }
     return particleProcesses;

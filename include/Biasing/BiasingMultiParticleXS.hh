@@ -25,6 +25,7 @@ public:
 
     void AddParticle(const XSBiasRule& rule);
     void AddParticle(const G4String& particleName, G4double factor);
+    void AddProcessRule(const XSProcessBiasRule& rule);
     bool HasParticle(const G4String& particleName) const;
     void ClearParticles();
 

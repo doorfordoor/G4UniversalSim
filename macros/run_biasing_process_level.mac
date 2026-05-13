@@ -1,0 +1,38 @@
+# Process-level XS biasing smoke-test macro.
+
+/AIHL/material/load config/materials/material.ini
+
+/AIHL/geometry/setTemplate simple_box
+/AIHL/geometry/loadConfig config/geometry/simple_box.ini
+/AIHL/geometry/printTree
+
+/AIHL/physics/setReferenceList FTFP_BERT_EMZ
+/AIHL/physics/setDefaultCut 1 mm
+/AIHL/physics/enableBiasing true
+
+/AIHL/source/preset proton_beam
+/AIHL/source/particle proton
+/AIHL/source/energy 10 MeV
+/AIHL/source/point 0 0 -1 mm
+/AIHL/source/direction 0 0 1
+
+/AIHL/scoring/enable true
+/AIHL/scoring/hits true
+/AIHL/scoring/eventEdep true
+/AIHL/scoring/edep true
+/AIHL/scoring/setEdepHistogram bins=100 min=0 eV max=10 MeV
+/AIHL/scoring/setWeightedEdepHistogram bins=100 min=0 eV max=10 MeV
+
+/AIHL/biasing/enable true
+/AIHL/biasing/xs/addRule proton protonInelastic
+/AIHL/biasing/xs/setRuleFactor proton protonInelastic 3.0
+/AIHL/biasing/xs/addRuleVolume proton protonInelastic Target
+/AIHL/biasing/xs/setRuleOnlyPrimary proton protonInelastic false
+/AIHL/biasing/xs/setRuleApplyToSecondaries proton protonInelastic true
+/AIHL/biasing/xs/setRuleMinWeight proton protonInelastic 0.02
+/AIHL/biasing/xs/setRuleMaxInteractions proton protonInelastic 8
+/AIHL/biasing/print
+
+/run/initialize
+/run/beamOn 100
+

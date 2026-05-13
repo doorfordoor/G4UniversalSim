@@ -61,6 +61,20 @@ Scoring stores both raw energy deposition and weighted energy deposition. Weight
 
 ## Biasing Commands
 
+Recommended process-level XS biasing:
+
+```text
+/AIHL/biasing/enable true
+/AIHL/biasing/xs/addRule proton protonInelastic
+/AIHL/biasing/xs/setRuleFactor proton protonInelastic 3.0
+/AIHL/biasing/xs/addRuleVolume proton protonInelastic Target
+/AIHL/biasing/xs/setRuleMinWeight proton protonInelastic 0.02
+/AIHL/biasing/xs/setRuleMaxInteractions proton protonInelastic 8
+/AIHL/physics/enableBiasing true
+```
+
+Legacy particle-level commands remain supported and expand into process-level rules. They print a warning because all listed processes share the same parameters:
+
 ```text
 /AIHL/biasing/enable true
 /AIHL/biasing/xs/addParticle proton
@@ -71,6 +85,20 @@ Scoring stores both raw energy deposition and weighted energy deposition. Weight
 ```
 
 Biasing requires two pieces: the physics hook (`G4GenericBiasingPhysics`) and post-build operator attachment through `GeometryRegistry`. Configure biasing before `/run/initialize`.
+
+For ini files, prefer sections such as:
+
+```ini
+[biasing.xs.proton.protonInelastic]
+factor = 3.0
+volumes = Target
+only_primary = false
+apply_to_secondaries = true
+min_weight = 0.02
+max_interactions = 8
+```
+
+Charged-particle XS biasing needs extra physics validation because charged-particle cross sections can vary during a step due to energy loss. When biasing is enabled, inspect weighted scoring outputs such as `weighted_edep`.
 
 ## Advanced Physics
 
