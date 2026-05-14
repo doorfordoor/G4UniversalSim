@@ -473,6 +473,12 @@
 | `int GetThreadId() const` | 获取 thread id。 |
 | `void EnableThreadSuffix(bool enable)` | 开关线程后缀。 |
 | `bool IsThreadSuffixEnabled() const` | 查询线程后缀开关。 |
+| `bool IsInitialized() const` | 查询输出目录是否已初始化。 |
+| `bool IsHitFileOpen() const` | 查询 hit CSV 是否已打开。 |
+| `bool IsEventEdepFileOpen() const` | 查询 event edep CSV 是否已打开。 |
+| `bool HasOpenFiles() const` | 查询是否存在已打开输出文件。 |
+| `std::string GetHitFilename() const` | 返回当前 hit CSV 文件名，未打开时为空。 |
+| `std::string GetEventEdepFilename() const` | 返回当前 event edep CSV 文件名，未打开时为空。 |
 | `std::string MakeOutputPath(const std::string& filename) const` | 拼接输出目录与文件名。 |
 | `std::string MakeThreadFilename(const std::string& baseName) const` | 为文件名添加 `_tN` 后缀。 |
 | `void Initialize()` | 创建输出目录。 |
@@ -500,6 +506,28 @@
 - Event edep CSV header 包含 `eventID, raw_edep, weighted_edep`。
 - 获取不存在的 histogram 会抛出 `std::runtime_error`。
 
+### OutputMessenger
+
+位置：
+
+- 头文件：`include/Output/OutputMessenger.hh`
+- 源文件：`src/Output/OutputMessenger.cc`
+
+类：`OutputMessenger : public G4UImessenger`
+
+| UI 命令 | 转发到 | 说明 |
+|---|---|---|
+| `/AIHL/output/setDir <dir>` | `OutputManager::SetOutputDir` | 建议在 `/run/initialize` 和文件打开前调用；初始化后或文件已打开会 warning。 |
+| `/AIHL/output/setThreadSuffix <true|false>` | `OutputManager::EnableThreadSuffix` | 控制 `_tN` 文件名后缀；建议在文件打开前调用。 |
+| `/AIHL/output/print` | OutputManager 状态查询接口 | 打印 output dir、thread id、thread suffix、初始化状态和文件打开状态。 |
+| `/AIHL/output/flush` | `OutputManager::Flush` | flush 已打开文件。 |
+| `/AIHL/output/close` | `OutputManager::Close` | close 已打开文件。 |
+
+说明：
+
+- `OutputMessenger` 只转发 output manager 级命令，不保存业务状态，不直接写文件。
+- hits、event edep、edep histogram 等输出开关仍属于 `ScoringMessenger` / `ScoringManager`。
+
 ------
 
 ## Core 模块
@@ -518,6 +546,7 @@
 - seed 为可选状态；调用 `GetSeed()` 前可用 `HasSeed()` 判断。
 - `SimulationManager::Initialize()` 执行 `BuildManagers()`、`LoadConfig()`、`Configure()`、初始化 `OutputManager`、写基础 `RunSummary`。
 - `MaterialManager`、`GeometryManager`、`PhysicsManager`、`SourceManager`、`BiasingManager`、`ScoringManager` 由 `SimulationManager::BuildManagers()` 幂等创建。
+- `BuildManagers()` 默认注册 `AppMessenger`、`OutputMessenger`、`MaterialMessenger`、`GeometryMessenger`、`PhysicsMessenger`、`SourceMessenger`、`BiasingMessenger`、`ScoringMessenger`。
 - `DetectorConstruction`、`PhysicsList`、`PrimaryGeneratorAction`、`ActionInitialization` 通过工厂函数创建并交给 Geant4 RunManager 生命周期管理，`SimulationManager` 不长期 owning 它们。
 
 ### SimulationContext
@@ -581,7 +610,7 @@
 | `void LoadConfig()` | 加载 `context.mainConfig` 到 ConfigManager。 |
 | `void Initialize()` | 执行核心初始化顺序并写出基础 run summary。 |
 | `void Configure()` | 从主配置读取 `[run]`、`[output]`、`[materials]`、`[geometry]`、`[physics]`、`[source]`、`[biasing]`、`[scoring]` 等配置并转发给对应 manager。 |
-| `void BuildManagers()` | 幂等创建并连接 ConfigManager / OutputManager / MaterialManager / GeometryManager / PhysicsManager / SourceManager / BiasingManager / ScoringManager 及已实现 messenger。 |
+| `void BuildManagers()` | 幂等创建并连接 ConfigManager / OutputManager / MaterialManager / GeometryManager / PhysicsManager / SourceManager / BiasingManager / ScoringManager，并注册 App/Output/Material/Geometry/Physics/Source/Biasing/Scoring messenger。 |
 | `void PrintSummary() const` | 向 `std::cout` 打印当前上下文和状态。 |
 | `bool IsConfigured() const` | 查询是否已配置。 |
 | `bool IsInitialized() const` | 查询是否已初始化。 |
@@ -629,7 +658,9 @@
 
 说明：
 
+- `AppMessenger` 由 `SimulationManager::BuildManagers()` 默认注册。
 - `AppMessenger` 不启动 run，不构建几何，不修改 Detector/Physics/Scoring/Biasing。
+- `setMainConfig`、`setOutputDir`、`setNumThreads`、`setSeed`、`setCheckOverlaps` 在 `SimulationManager` 已初始化后会给出 warning；`setVerbose` 和 `printSummary` 可作为诊断命令。
 
 ------
 
@@ -816,7 +847,7 @@
 
 | 类型 | 基本作用 |
 |---|---|
-| `enum class VolumeShape` | 几何形状枚举：`Box`、`Tubs`、`Sphere`、`Orb`、`Cone`、`Trapezoid`、`Unknown`。 |
+| `enum class VolumeShape` | 几何形状枚举：`Box`、`Tubs`、`Sphere`、`Orb`、`Cone`、`Trd`、`Trap`、`Unknown`。 |
 | `enum class PlacementType` | placement 类型预留：`Normal`、`Replica`、`Parameterised`、`Assembly`。 |
 | `struct Vec3` | 三维长度向量。 |
 | `struct Rotation3` | 三维旋转角。 |
@@ -988,6 +1019,8 @@
 - 每层为 box，`size = xy.x, xy.y, thickness`。
 - 支持 `auto_stack=true` 沿 z 方向自动堆叠，默认整体居中；也支持 `z_start` 和 `gap`。
 - 保存每层 `material`、`sensitive`、`bias`、`region`、production cuts 和 visual 属性。
+- 支持每层 `copyNo`，写入 `VolumeNode::userProperties["copyNo"]`，最终由 `VolumeBuilder` 作为 `G4PVPlacement` copy number 使用。
+- 透传每层 `metadata.*` 和未知 key 到 `VolumeNode::userProperties`；当前只作为内部标签保存，不自动进入 `HitRecord` 或 CSV 输出。
 
 ### HierarchicalVolumeTemplate
 
@@ -1096,6 +1129,7 @@
 | `BuildVolume(const VolumeNode& node, G4LogicalVolume* motherLogical)` | 构建并 placement 非 world volume。 |
 | `CreateSolid(...)` | 根据 `VolumeShape` 分发到具体 solid 创建函数。 |
 | `CreateBoxSolid/CreateTubsSolid/CreateSphereSolid/CreateOrbSolid/CreateConeSolid` | 创建对应 Geant4 solid。 |
+| `CreateTrdSolid/CreateTrapSolid` | 创建 `G4Trd` 与完整 `G4Trap`。`trd/trapezoid` 使用 `dx1/dx2/dy1/dy2/dz` half-length；`trap` 使用 Geant4 完整 trap 参数。 |
 | `CreateRotation(const VolumeNode& node)` | 按 X/Y/Z 顺序创建旋转；零旋转返回 `nullptr`。 |
 | `CreateRegion(...)` | 创建/复用 `G4Region`，设置 production cuts，并向 registry 登记 region 名称。 |
 | `ApplyVisualAttributes(...)` | 应用可视化属性，支持基础颜色、alpha、wireframe、visible。 |
@@ -1104,6 +1138,9 @@
 说明：
 - `Box` 的 `size.x/y/z` 按全长保存，创建 `G4Box` 时自动除以 2。
 - `Tubs` 支持 5 参数 `rMin,rMax,halfZ,startPhi,deltaPhi`；若没有参数但有正 `size`，按 cylinder shorthand 处理。
+- `Trd`/`trapezoid` 的 `dx1/dx2/dy1/dy2/dz` 均按 half-length 解析。
+- `Trap` 的长度字段按 half-length 解析，角度字段使用 `UnitParser::ParseAngle()`；不合法的 trap 参数由 Geant4 solid 构造阶段报错。
+- `copyNo` 和兼容小写 `copyno` 会被读取为 placement copy number。
 - rotation 和 vis attributes 由 `VolumeBuilder` 持有，避免 logical/physical volume 引用悬空。
 
 ### GeometryManager
@@ -1219,6 +1256,7 @@
 - Detector 不解析 ini，不创建材料，不直接创建 `G4Box/G4Tubs/G4LogicalVolume/G4PVPlacement`。
 - Detector 不 attach biasing operator，不实现 scoring，不启动 run。
 - 几何命令仍归 `/AIHL/geometry/...`；DetectorMessenger 只管理 `/AIHL/detector/...`。
+- `DetectorConstruction` 构造时创建并持有 `DetectorMessenger`，保证 `/AIHL/detector/...` 生命周期覆盖该 detector construction。
 
 ### DetectorConstruction
 
@@ -1230,7 +1268,7 @@
 
 | 接口 | 基本作用 |
 |---|---|
-| `explicit DetectorConstruction(GeometryManager*)` | 绑定外部管理的 `GeometryManager`，不拥有其生命周期。 |
+| `explicit DetectorConstruction(GeometryManager*)` | 绑定外部管理的 `GeometryManager`，不拥有其生命周期，并注册 `DetectorMessenger`。 |
 | `G4VPhysicalVolume* Construct() override` | 调用 `GeometryManager::BuildWorld()` 并缓存 world pointer。 |
 | `void ConstructSDandField() override` | 根据 registry 中的 sensitive logical volumes 绑定 factory 创建的 SD。 |
 | `SetGeometryManager(...)` / `GetGeometryManager()` | 设置或获取 geometry manager。 |
@@ -1272,6 +1310,8 @@
 
 说明：
 - DetectorMessenger 不管理 `/AIHL/geometry/...`、`/AIHL/material/...`、`/run/...` 命令。
+- `enableSD` 和 `setSDName` 建议在 `/run/initialize` 前调用；world 已构建后调用会 warning，并建议在下一次 run 前 `/run/reinitializeGeometry`。
+- `printRegistry`、`printSensitiveVolumes`、`printBiasVolumes`、`printWorld` 是诊断命令，通常在 geometry 构建后使用。
 
 ### Core SimulationManager 集成更新
 

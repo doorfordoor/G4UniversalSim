@@ -16,6 +16,17 @@ The current project is intended to build into a runnable Geant4 executable with 
 
 Advanced MicroElec/ElectronCapture support is optional and experimental. LET, dose, and fluence scorers currently expose stubs or light interfaces; `EdepScorer` is the first usable scorer.
 
+## Current Safety Notes
+
+- `mode = volume_fraction` is parsed by the material command parser, but `MaterialFactory` intentionally rejects it because volume fractions have not yet been converted to physically correct mass fractions.
+- `gdml` is a placeholder template only. It does not call `G4GDMLParser`; do not run `/run/initialize` with `macros/run_gdml.mac` until real GDML import is implemented.
+- STL import is not implemented.
+- Hierarchical geometry supports `trd` / `trapezoid` through `G4Trd`, and full `trap` through `G4Trap`; all `trd` / `trap` length parameters are half-lengths.
+- `layered_device` propagates `copyNo`, `metadata.*`, and unknown layer keys to `VolumeNode::userProperties`; metadata is not written to hit CSV files yet.
+- `/AIHL/output/...`, `/AIHL/app/...`, and `/AIHL/detector/...` are registered by the default executable. Output commands do not include hits/scoring switches; use `/AIHL/scoring/...` for those.
+- Importance biasing, weight-window, splitting, and Russian roulette are future work. The currently usable biasing path is process-level XS biasing.
+- Multi-thread CSV output is not production-safe yet because per-worker `OutputManager`/`ScoringManager` instances are not fully wired. Use single-thread runs for production CSV output.
+
 ## Features
 
 - `/AIHL/...` command namespace for project commands.
@@ -79,6 +90,8 @@ For the default single-thread configuration, output is written under `output/sim
 - `run_summary.txt`
 
 If no step deposits energy in a sensitive volume, the hit file may be absent or contain fewer rows than expected, while `event_edep_t0.csv` is still written when event edep output is enabled.
+
+For production CSV output, prefer `--threads 1` until thread-local output and automatic merge are implemented.
 
 ## Documentation
 

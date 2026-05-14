@@ -6,7 +6,7 @@
 
 - `G4UniversalSim.exe` 命令行启动参数；
 - 当前默认 executable 已注册的 `/AIHL/...` UI macro 命令；
-- 源码中已经实现但当前默认 executable 尚未接入的 messenger 命令；
+- 源码中已实现命令的注册状态与限制说明；
 - `main.ini`、材料 ini、几何 ini、biasing ini 等配置 parser 支持的 section/key；
 - 命令在 `/run/initialize` 前后的推荐使用时机、重初始化方式和当前限制。
 
@@ -31,12 +31,14 @@
 - `SourceMessenger`：`/AIHL/source/...`
 - `BiasingMessenger`：`/AIHL/biasing/...`
 - `ScoringMessenger`：`/AIHL/scoring/...`
+- `OutputMessenger`：`/AIHL/output/...`
+- `AppMessenger`：`/AIHL/app/...`
 
-源码存在但当前默认 executable 未注册或未完整实现：
+Detector 命令由 `DetectorConstruction` 在创建时注册：
 
-- `AppMessenger`：源码定义 `/AIHL/app/...`，但当前 `SimulationManager` 未实例化它，默认运行时不可用。
-- `DetectorMessenger`：源码定义 `/AIHL/detector/...`，但当前 `DetectorConstruction` 创建后未创建对应 messenger，默认运行时不可用。
-- `OutputMessenger`：类存在，但当前没有定义任何 `/AIHL/output/...` 命令。
+- `DetectorMessenger`：`/AIHL/detector/...`
+
+这些命令应可在 `/control/manual` 中看到。若使用旧构建或未重新编译的 executable，可能仍会出现 unknown command。
 
 ## 3. G4UniversalSim.exe 启动命令
 
@@ -101,7 +103,7 @@ G4UniversalSim.exe macros/run_simple.mac
 
 #### `-o` / `--output <dir>`
 
-覆盖输出目录，并传给 `OutputManager::SetOutputDir()`。当前没有 `/AIHL/output/...` macro 命令，因此运行时 output dir 主要通过命令行或 `[output]/dir` 设置。
+覆盖输出目录，并传给 `OutputManager::SetOutputDir()`。macro 中也可以使用 `/AIHL/output/setDir <dir>` 修改后续输出目录；建议在 `/run/initialize` 和输出文件打开前设置。
 
 #### `--run-name <name>`
 
@@ -162,9 +164,9 @@ G4UniversalSim.exe macros/run_simple.mac
 | Source | `/AIHL/source/` | 是 | GPS preset、粒子、能量、位置、方向 |
 | Scoring | `/AIHL/scoring/` | 是 | hits、event edep、histogram、scorer 开关 |
 | Biasing | `/AIHL/biasing/` | 是 | XS biasing 规则和 operator attachment 配置 |
-| App | `/AIHL/app/` | 否 | 源码存在，但默认未实例化 |
-| Detector | `/AIHL/detector/` | 否 | 源码存在，但默认未实例化 |
-| Output | `/AIHL/output/` | 否 | 当前 `OutputMessenger` 为空，无命令 |
+| App | `/AIHL/app/` | 是 | application/context 级配置与摘要 |
+| Detector | `/AIHL/detector/` | 是 | SD 绑定开关和 GeometryRegistry 诊断 |
+| Output | `/AIHL/output/` | 是 | 输出目录、线程后缀、flush/close/status |
 
 此外，Geant4 原生命令仍可使用，例如：
 
@@ -291,12 +293,15 @@ state = solid
 
 - `[world]`：`size`、`material`；
 - `[layers]`：`count`、`names`、`auto_stack`、`axis`、`gap`、`z_start`；当前 `axis` 只支持 `z`；
-- `[layer.<name>]`：`thickness`、`xy`、`material`、`position`（仅 `auto_stack=false` 时使用）、`rotation`、`sensitive`、`bias`、`region`、`cut.*`、`vis.color`、`vis.alpha`、`vis.visible`、`vis.wireframe`。
+- `[layer.<name>]`：`thickness`、`xy`、`material`、`position`（仅 `auto_stack=false` 时使用）、`rotation`、`sensitive`、`bias`、`region`、`cut.*`、`vis.color`、`vis.alpha`、`vis.visible`、`vis.wireframe`、`copyNo`、`metadata.*`。
+- `copyNo` 会传给 `G4PVPlacement`；`metadata.*` 和其他未知 key 会保存到 `VolumeNode::userProperties`，但当前不会自动写入 `HitRecord` 或 CSV。
 
 `hierarchical`：
 
 - 使用通用 `[world]` 和 `[volume.<name>]`；
-- 支持 key：`name`、`parent`、`shape`、`size`、`parameters`、`material`、`position`、`rotation`、`sensitive`、`bias`、`region`、`placement`、`vis.color`、`vis.alpha`、`vis.visible`、`vis.wireframe`、`cut.*`；
+- 支持 key：`name`、`parent`、`shape`、`size`、`parameters`、`dx1`、`dx2`、`dy1`、`dy2`、`dz`、`theta`、`phi`、`alpha1`、`dx3`、`dx4`、`alpha2`、`material`、`position`、`rotation`、`sensitive`、`bias`、`region`、`placement`、`vis.color`、`vis.alpha`、`vis.visible`、`vis.wireframe`、`cut.*`；
+- `shape = trd` / `shape = trapezoid` 创建 `G4Trd`，需要 `dx1/dx2/dy1/dy2/dz`，全部为 half-length；
+- `shape = trap` 创建完整 `G4Trap`，需要完整 trap 参数；长度字段为 half-length，角度字段支持 `deg` / `rad`；
 - 未知 key 会作为 `userProperties` 保存；`copyNo` 会被 `VolumeBuilder` 用作 placement copy number。
 
 `array`：
@@ -315,6 +320,7 @@ state = solid
 
 - `[gdml]`：`file`、`world_name`、`sensitive_volumes`、`bias_volumes`；
 - 当前 `GDMLTemplate` 是 placeholder，`VolumeBuilder` 对 GDML import 明确未实现，不能作为真实 GDML 导入使用。
+- 不要对 `gdml` placeholder 执行 `/run/initialize` 或 `/run/beamOn`；`macros/run_gdml.mac` 只能作为 parser-only demo。
 
 ## 7. Physics 模块命令
 
@@ -624,10 +630,21 @@ legacy 写法会扩展为粒子+过程组合：每个 listed particle 会使用�
 
 ## 11. Output 模块命令
 
-当前 `OutputMessenger` 没有定义任何 `/AIHL/output/...` 命令。输出目录和输出行为来自：
+`OutputMessenger` 由 `SimulationManager::BuildManagers()` 默认注册，命令目录为 `/AIHL/output/`。本轮只暴露 output manager 的最小安全命令；hits、event edep、edep histogram 等开关仍归 `/AIHL/scoring/...`。
+
+| 命令 | UI cmd 类型 | 参数格式 | 建议时机 | 作用 |
+|---|---|---|---|---|
+| `/AIHL/output/setDir <dir>` | `G4UIcmdWithAString` | 路径 | `/run/initialize` 前、输出文件打开前 | 调用 `OutputManager::SetOutputDir()`；初始化后或文件已打开会 warning |
+| `/AIHL/output/setThreadSuffix <bool>` | `G4UIcmdWithABool` | `true/false` | `/run/initialize` 前、输出文件打开前 | 调用 `OutputManager::EnableThreadSuffix()` |
+| `/AIHL/output/print` | `G4UIcmdWithoutParameter` | 无 | 任意 | 打印 output dir、thread id、thread suffix、初始化状态和文件打开状态 |
+| `/AIHL/output/flush` | `G4UIcmdWithoutParameter` | 无 | 输出文件可能已打开后 | 调用 `OutputManager::Flush()` |
+| `/AIHL/output/close` | `G4UIcmdWithoutParameter` | 无 | run 结束后诊断或手动收尾 | 调用 `OutputManager::Close()` |
+
+输出目录和输出行为的配置来源包括：
 
 - 命令行 `--output <dir>`；
 - 主配置 `[output]/dir`；
+- `/AIHL/output/setDir <dir>`；
 - `ScoringManager` 的 hits/event_edep/scorer/histogram 开关；
 - `OutputManager` 自动按线程后缀写文件，如 `_t0`。
 
@@ -645,9 +662,7 @@ legacy 写法会扩展为粒子+过程组合：每个 listed particle 会使用�
 
 ## 12. Detector / Sensitive Detector 模块命令
 
-`DetectorMessenger` 源码中定义了 `/AIHL/detector/...` 命令，但当前默认 executable 没有实例化 `DetectorMessenger`，因此这些命令默认不可用。
-
-源码已实现命令如下，仅供后续接入参考：
+`DetectorMessenger` 由 `DetectorConstruction` 持有并注册，命令目录为 `/AIHL/detector/`。
 
 | 命令 | UI cmd 类型 | 参数格式 | 作用 |
 |---|---|---|---|
@@ -658,6 +673,8 @@ legacy 写法会扩展为粒子+过程组合：每个 listed particle 会使用�
 | `/AIHL/detector/printBiasVolumes` | `G4UIcmdWithoutParameter` | 无 | 打印 bias volume 名称 |
 | `/AIHL/detector/setVerbose <level>` | `G4UIcmdWithAnInteger` | 整数 | 设置 DetectorConstruction verbose |
 | `/AIHL/detector/printWorld` | `G4UIcmdWithoutParameter` | 无 | 打印 worldVolume 是否已构建 |
+
+`enableSD` 和 `setSDName` 建议在 `/run/initialize` 前调用；如果 geometry/world 已构建，命令会 warning，并建议在下一次 run 前执行 `/run/reinitializeGeometry`。`printRegistry`、`printSensitiveVolumes`、`printBiasVolumes`、`printWorld` 是诊断命令，通常在 geometry 构建后使用。
 
 Sensitive detector 当前由 `SimulationManager::CreateSensitiveDetectorFactory()` 自动创建，名称为 `AIHLParticleSD`，并绑定到 GeometryRegistry 中标记为 sensitive 的 logical volume。
 
@@ -682,11 +699,9 @@ Sensitive detector 当前由 `SimulationManager::CreateSensitiveDetectorFactory(
 | `/gps/...` | Geant4 GPS 原生命令 |
 | `/vis/...` | Geant4 visualization 原生命令 |
 
-### 13.2 AppMessenger 源码命令
+### 13.2 AppMessenger 命令
 
-`AppMessenger` 源码中定义了 `/AIHL/app/...`，但当前默认 executable 未注册，默认不可用。
-
-已实现命令：
+`AppMessenger` 由 `SimulationManager::BuildManagers()` 默认注册，命令目录为 `/AIHL/app/`。这些命令只修改 `SimulationManager` / `SimulationContext` 状态，不直接创建 RunManager，不直接 `/run/beamOn`。
 
 | 命令 | UI cmd 类型 | 参数格式 | 作用 |
 |---|---|---|---|
@@ -697,6 +712,8 @@ Sensitive detector 当前由 `SimulationManager::CreateSensitiveDetectorFactory(
 | `/AIHL/app/setVerbose <level>` | `G4UIcmdWithAnInteger` | 整数 | 设置 verbose |
 | `/AIHL/app/setCheckOverlaps <bool>` | `G4UIcmdWithABool` | bool | 设置 overlap 开关 |
 | `/AIHL/app/printSummary` | `G4UIcommand` | 无 | 打印 SimulationManager 摘要 |
+
+`setMainConfig`、`setOutputDir`、`setNumThreads`、`setSeed`、`setCheckOverlaps` 建议在 `/run/initialize` 前调用；若 `SimulationManager` 已初始化，命令会给出 warning。`setVerbose` 和 `printSummary` 可作为诊断命令使用。
 
 ## 14. 推荐 macro 执行顺序
 
@@ -754,7 +771,8 @@ Sensitive detector 当前由 `SimulationManager::CreateSensitiveDetectorFactory(
 - biasing physics hook：`/AIHL/physics/enableBiasing`；
 - biasing 规则：`/AIHL/biasing/...`；
 - MicroElec / ElectronCapture 相关 physics 配置；
-- scoring 默认 scorer 和 histogram 配置建议在 run 前完成。
+- scoring 默认 scorer 和 histogram 配置建议在 run 前完成；
+- `/AIHL/output/setDir`、`/AIHL/output/setThreadSuffix` 建议在输出目录初始化或输出文件打开前完成。
 
 ### 15.2 初始化后可配合重初始化使用
 
@@ -780,7 +798,7 @@ source 和 scoring 开关通常可在下一次 `/run/beamOn` 前调整，但已�
 - 已绑定的 biasing operators；
 - 已构建 geometry 中使用的材料定义；
 - 已创建 physics list 的 reference/manual 结构；
-- output dir。当前没有 output messenger，运行中改 output 主要靠代码或重新启动。
+- output dir 和 thread suffix。`/AIHL/output/setDir`、`/AIHL/output/setThreadSuffix` 已可用，但初始化后或文件已打开时只建议影响后续打开的文件，命令会 warning。
 
 ## 16. 多线程模式注意事项
 
@@ -789,6 +807,7 @@ source 和 scoring 开关通常可在下一次 `/run/beamOn` 前调整，但已�
 - 文件名默认带 `_t<threadId>` 后缀，如 `hits_t0.csv`、`event_edep_t0.csv`。
 - 后处理可使用 `scripts/merge_outputs.py` 或 `mergeHistograms`。
 - 当前 `SimulationManager::ConfigureOutputManager()` 设置主 `OutputManager` thread id 为 0；多线程下输出设计仍需按实际 worker 行为验证。
+- 在 per-worker `OutputManager` / `ScoringManager` 和自动 merge 完成前，生产级 CSV 输出建议使用 `--threads 1`。
 
 ## 17. 常见错误与排查
 
@@ -796,8 +815,9 @@ source 和 scoring 开关通常可在下一次 `/run/beamOn` 前调整，但已�
 
 如果 `/AIHL/app/...`、`/AIHL/detector/...` 或 `/AIHL/output/...` 报 unknown command：
 
-- `/AIHL/app/...` 和 `/AIHL/detector/...` 源码存在但默认 executable 未注册；
-- `/AIHL/output/...` 当前没有实现命令。
+- 确认已经重新编译 Round 1 之后的 executable；
+- 确认当前运行的是新生成的 `G4UniversalSim.exe`，不是旧 build 目录中的可执行文件；
+- 若只在没有创建 `DetectorConstruction` 的特殊 dry-run/debug 路径中检查命令，`/AIHL/detector/...` 可能不会出现。
 
 ### 17.2 `--version` 报未知参数
 
@@ -946,11 +966,13 @@ source 和 scoring 开关通常可在下一次 `/run/beamOn` 前调整，但已�
 /AIHL/biasing/xs/addRuleVolume
 /AIHL/biasing/xs/addVolumeForParticle
 /AIHL/biasing/xs/printRules
-```
 
-### 18.2 源码存在但当前默认 executable 未注册
+/AIHL/output/setDir
+/AIHL/output/setThreadSuffix
+/AIHL/output/print
+/AIHL/output/flush
+/AIHL/output/close
 
-```text
 /AIHL/app/setMainConfig
 /AIHL/app/setOutputDir
 /AIHL/app/setNumThreads
@@ -968,10 +990,6 @@ source 和 scoring 开关通常可在下一次 `/run/beamOn` 前调整，但已�
 /AIHL/detector/printWorld
 ```
 
-### 18.3 当前不存在
+### 18.2 当前不存在或仍属 future work
 
-```text
-/AIHL/output/...
-```
-
-当前 `OutputMessenger` 为空实现，没有 output macro 命令。
+当前没有 `/AIHL/output/enableHits`、`/AIHL/output/enableScoring`、`/AIHL/output/setFormat`、`/AIHL/output/setFileName` 等命令；hits/event edep/edep histogram 开关仍由 `/AIHL/scoring/...` 管理。advanced biasing、STL import、真实 GDML import 等仍按实现状态审计中的限制处理。

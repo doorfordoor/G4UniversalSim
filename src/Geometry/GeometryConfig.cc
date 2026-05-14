@@ -220,7 +220,7 @@ bool GeometryConfig::IsKnownKey(const std::string& key)
 {
     static const std::set<std::string> keys = {
         "name", "parent", "shape", "size", "parameters", "material", "position", "rotation",
-        "sensitive", "bias", "region", "placement", "vis.color", "vis.alpha",
+        "sensitive", "bias", "region", "placement", "copyNo", "copyno", "vis.color", "vis.alpha",
         "vis.visible", "vis.wireframe"
     };
     return keys.count(key) || IsCutKey(key);
@@ -284,6 +284,7 @@ VolumeNode GeometryConfig::ParseVolumeSection(
     if (values.count("sensitive")) node.sensitive = StringUtils::ToBool(values.at("sensitive"));
     if (values.count("bias")) node.bias = StringUtils::ToBool(values.at("bias"));
     if (values.count("region")) node.regionName = values.at("region");
+    if (values.count("copyno")) node.userProperties["copyNo"] = values.at("copyno");
 
     std::map<std::string, std::string> cutValues;
     for (const auto& item : values) {

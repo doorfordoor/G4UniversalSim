@@ -26,6 +26,8 @@ The default configuration file is `config/main.ini`. Section and key names are l
 |---|---|---|---|---|
 | `file` | Material configuration file. | none | For configured geometry | `config/materials/material.ini` |
 
+Current material safety limit: `mode = volume_fraction` can be parsed by the material parser, but `MaterialFactory` does not implement the backend conversion yet. Do not use it in runnable material files.
+
 ## `[geometry]`
 
 | Key | Meaning | Default | Required | Example |
@@ -34,6 +36,14 @@ The default configuration file is `config/main.ini`. Section and key names are l
 | `config` | Geometry ini file. | none | Yes for `/run/initialize` | `config/geometry/simple_box.ini` |
 | `check_overlaps` | Pass overlap flag to placements. | context default | No | `true` |
 | `default_world_material` | Fallback world material. | `G4_AIR` | No | `G4_AIR` |
+
+Current geometry safety limits:
+
+- `template = gdml` is placeholder-only. It stores `[gdml]` keys but does not call `G4GDMLParser`; do not use it with `/run/initialize`.
+- `shape = trd` and `shape = trapezoid` are runnable `G4Trd` aliases in hierarchical geometry. They require `dx1`, `dx2`, `dy1`, `dy2`, and `dz`; all are Geant4 half-lengths.
+- `shape = trap` is runnable through `G4Trap`. It requires `dz`, `theta`, `phi`, `dy1`, `dx1`, `dx2`, `alpha1`, `dy2`, `dx3`, `dx4`, and `alpha2`. Length fields are half-lengths and angle fields support `deg` or `rad`. Invalid `G4Trap` planarity still fails in Geant4 construction.
+- `layered_device` now propagates `copyNo`, `metadata.*`, and unknown layer keys into `VolumeNode::userProperties`. `copyNo` is used as the `G4PVPlacement` copy number; metadata is currently only an internal tag and is not written to hit CSV files.
+- STL import has no parser or backend in the current executable.
 
 ## `[physics]`
 
@@ -81,6 +91,8 @@ The default configuration file is `config/main.ini`. Section and key names are l
 | `fluence` | Enable fluence stub scorer. | `false` | No | `false` |
 | `auto_create_default_scorers` | Create default scorers at BeginRun. | `true` | No | `true` |
 
+`let`, `dose`, and `fluence` are current stub/no-op scorer surfaces. They are not validated physical LET, dose, or fluence outputs.
+
 ## `[scoring.edep]`
 
 | Key | Meaning | Default | Required | Example |
@@ -124,6 +136,8 @@ max_interactions = 8
 ## `[biasing.xs]` legacy shorthand
 
 Legacy particle-level shorthand. It is still supported, but it expands as `particles x processes`; all generated process rules share the same parameters. Prefer `[biasing.xs.<particle>.<process>]` for precise per-process control.
+
+Importance biasing, weight-window, splitting, and Russian roulette are not implemented in the current config parser/backend. Current runnable biasing support is process-level XS biasing.
 
 | Key | Meaning | Default | Required | Example |
 |---|---|---|---|---|

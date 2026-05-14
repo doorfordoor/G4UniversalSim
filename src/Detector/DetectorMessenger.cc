@@ -13,6 +13,7 @@
 
 #include <exception>
 #include <stdexcept>
+#include <string>
 
 DetectorMessenger::DetectorMessenger(DetectorConstruction* detector)
     : detector_(detector)
@@ -62,11 +63,13 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     try {
         if (command == enableSDCmd_) {
             EnsureDetector("/AIHL/detector/enableSD");
+            WarnIfWorldBuilt("/AIHL/detector/enableSD");
             detector_->SetSensitiveDetectorEnabled(enableSDCmd_->GetNewBoolValue(newValue));
             return;
         }
         if (command == setSDNameCmd_) {
             EnsureDetector("/AIHL/detector/setSDName");
+            WarnIfWorldBuilt("/AIHL/detector/setSDName");
             detector_->SetSensitiveDetectorName(newValue);
             return;
         }
@@ -115,6 +118,15 @@ void DetectorMessenger::EnsureDetector(const char* commandName) const
     if (!detector_) {
         throw std::runtime_error(std::string(commandName) + " failed: DetectorConstruction pointer is null");
     }
+}
+
+void DetectorMessenger::WarnIfWorldBuilt(const char* commandName) const
+{
+    if (!detector_ || !detector_->GetWorldVolume()) return;
+    const std::string message =
+        std::string(commandName) +
+        " is recommended before /run/initialize. If sensitive detector settings are changed after geometry construction, call /run/reinitializeGeometry before the next run.";
+    G4Exception("DetectorMessenger", "AIHLDetectorCmdWarn001", JustWarning, message.c_str());
 }
 
 void DetectorMessenger::ReportCommandError(const char* commandName, const G4String& value, const std::exception& error) const

@@ -58,7 +58,7 @@ The test files were based on the current source implementation:
 - `copyNo` is supported only through generic geometry user properties read by `VolumeBuilder`; therefore it is used in the hierarchical test, not the layered-device test.
 - Physics commands use `/AIHL/physics/setReferenceList`, `/AIHL/physics/setDefaultCut`, `/AIHL/physics/setCut`, `/AIHL/physics/setRegionCut`, `/AIHL/physics/enableBiasing`, `/AIHL/physics/verbose`, and `/AIHL/physics/print`.
 - Source commands use `/AIHL/source/preset`, `/AIHL/source/particle`, `/AIHL/source/energy`, `/AIHL/source/planeBeam`, and `/AIHL/source/print`.
-- Scoring commands use `/AIHL/scoring/enable`, `hits`, `eventEdep`, `edep`, `let`, `dose`, `fluence`, `autoCreateScorers`, histogram commands, `verbose`, and `print`.
+- Scoring commands use `/AIHL/scoring/enable`, `hits`, `eventEdep`, `edep`, `autoCreateScorers`, histogram commands, `verbose`, and `print`. LET/Dose/Fluence command surfaces are stub/no-op placeholders and are intentionally commented out in runnable test macros.
 - Biasing macro commands currently cover cross-section biasing through `/AIHL/biasing/xs/...`.
 
 ## Current Limitations Reflected Here
@@ -66,5 +66,6 @@ The test files were based on the current source implementation:
 - `OutputMessenger` has no implemented `/AIHL/output/...` commands, so output directories are configured through main ini and runner `--output`.
 - Biasing has an ini parser through `[biasing]` and `[biasing.xs]`; there is no standalone macro command to load an external biasing ini, so the biasing ini files are mirrored in the two main configs and expanded as real commands in the macros.
 - Importance biasing, weight-window biasing, and splitting/Russian roulette do not have usable messenger commands or ini parser support in the current implementation, so they are documented here rather than configured.
+- LET, Dose, and Fluence scorers are currently stub/no-op command surfaces. Runnable tests keep them disabled or commented out so placeholder output is not mistaken for validated physical quantities.
 - `LayeredDeviceTemplate` does not consume arbitrary metadata keys or copy numbers, so the layered geometry file avoids unsupported metadata/copy-number fields.
 - The generic hierarchical parser accepts user properties, so `metadata.role`, `purpose`, and `copyNo` are used there.

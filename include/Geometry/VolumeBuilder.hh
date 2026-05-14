@@ -40,6 +40,8 @@ public:
     G4VSolid* CreateSphereSolid(const VolumeNode& node);
     G4VSolid* CreateOrbSolid(const VolumeNode& node);
     G4VSolid* CreateConeSolid(const VolumeNode& node);
+    G4VSolid* CreateTrdSolid(const VolumeNode& node);
+    G4VSolid* CreateTrapSolid(const VolumeNode& node);
 
     G4RotationMatrix* CreateRotation(const VolumeNode& node);
 

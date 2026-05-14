@@ -1,0 +1,27 @@
+/control/verbose 1
+/run/verbose 1
+/event/verbose 0
+/tracking/verbose 0
+
+/AIHL/material/load config/materials/material.ini
+/AIHL/geometry/setTemplate hierarchical
+/AIHL/geometry/loadConfig config/geometry/trd_test.ini
+/AIHL/geometry/checkOverlaps true
+/AIHL/geometry/printTree
+
+/AIHL/physics/setReferenceList FTFP_BERT_EMZ
+/AIHL/physics/setDefaultCut 1 mm
+
+/AIHL/source/preset proton_beam
+
+/AIHL/scoring/enable true
+/AIHL/scoring/hits true
+/AIHL/scoring/eventEdep true
+/AIHL/scoring/edep true
+/AIHL/scoring/autoCreateScorers true
+/AIHL/scoring/setEdepHistogram bins=50 min=0 eV max=10 MeV
+/AIHL/scoring/setWeightedEdepHistogram bins=50 min=0 eV max=10 MeV
+
+/run/initialize
+/AIHL/detector/printSensitiveVolumes
+/run/beamOn 1

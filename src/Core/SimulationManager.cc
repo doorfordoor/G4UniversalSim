@@ -2,6 +2,7 @@
 
 #include "Actions/ActionInitialization.hh"
 #include "Config/ConfigManager.hh"
+#include "Core/AppMessenger.hh"
 #include "Detector/DetectorConstruction.hh"
 #include "Geometry/GeometryManager.hh"
 #include "Geometry/GeometryMessenger.hh"
@@ -9,6 +10,7 @@
 #include "Materials/MaterialManager.hh"
 #include "Materials/MaterialMessenger.hh"
 #include "Output/OutputManager.hh"
+#include "Output/OutputMessenger.hh"
 #include "Output/RunSummary.hh"
 #include "Physics/PhysicsFactory.hh"
 #include "Physics/PhysicsList.hh"
@@ -327,6 +329,12 @@ void SimulationManager::BuildManagers()
     outputManager_->SetOutputDir(context_.GetOutputDir());
     scoringManager_->SetOutputManager(outputManager_.get());
 
+    if (!appMessenger_) {
+        appMessenger_ = std::make_unique<AppMessenger>(this);
+    }
+    if (!outputMessenger_) {
+        outputMessenger_ = std::make_unique<OutputMessenger>(outputManager_.get());
+    }
     if (!materialMessenger_) {
         materialMessenger_ = std::make_unique<MaterialMessenger>(materialManager_.get());
     }

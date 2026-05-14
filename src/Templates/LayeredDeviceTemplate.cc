@@ -5,6 +5,7 @@
 #include "Utils/StringUtils.hh"
 #include "Utils/UnitParser.hh"
 
+#include <set>
 #include <stdexcept>
 
 namespace {
@@ -39,6 +40,43 @@ void ApplyVisual(const ConfigManager& config, const std::string& section, Volume
     if (config.HasKey(section, "vis.alpha")) node.visual.alpha = config.GetDouble(section, "vis.alpha");
     if (config.HasKey(section, "vis.visible")) node.visual.visible = config.GetBool(section, "vis.visible");
     if (config.HasKey(section, "vis.wireframe")) node.visual.wireframe = config.GetBool(section, "vis.wireframe");
+}
+
+bool IsKnownLayerKey(const std::string& key)
+{
+    static const std::set<std::string> keys = {
+        "thickness", "xy", "material", "position", "rotation", "sensitive", "bias", "region",
+        "cut.gamma", "cut.e-", "cut.e+", "cut.proton",
+        "vis.color", "vis.alpha", "vis.visible", "vis.wireframe",
+        "copyno"
+    };
+    return keys.count(StringUtils::ToLower(StringUtils::Trim(key))) > 0;
+}
+
+std::string ValidateCopyNo(const std::string& text, const std::string& section)
+{
+    const std::string trimmed = StringUtils::Trim(text);
+    try {
+        std::size_t consumed = 0;
+        (void)std::stoi(trimmed, &consumed);
+        if (consumed != trimmed.size()) throw std::runtime_error("trailing text");
+    } catch (...) {
+        throw std::runtime_error("layered_device " + section + "/copyNo must be an integer, got '" + text + "'");
+    }
+    return trimmed;
+}
+
+void ApplyUserProperties(const ConfigManager& config, const std::string& section, VolumeNode& node)
+{
+    if (config.HasKey(section, "copyNo")) {
+        node.userProperties["copyNo"] = ValidateCopyNo(config.GetString(section, "copyNo"), section);
+    }
+
+    for (const std::string& key : config.GetKeys(section)) {
+        if (!IsKnownLayerKey(key)) {
+            node.userProperties[key] = config.GetString(section, key);
+        }
+    }
 }
 
 }  // namespace
@@ -103,6 +141,7 @@ VolumeNode LayeredDeviceTemplate::BuildNodes(const ConfigManager& config) const
         layer.regionName = config.GetString(section, "region", "");
         ApplyCuts(config, section, layer);
         ApplyVisual(config, section, layer);
+        ApplyUserProperties(config, section, layer);
         layer.ValidateBasic();
         world.AddChild(layer);
     }

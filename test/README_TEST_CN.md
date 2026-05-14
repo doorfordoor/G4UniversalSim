@@ -52,12 +52,13 @@ bash test/scripts/run_tests.sh ./build/G4UniversalSim
 - `copyNo` 副本编号仅可通过 `VolumeBuilder` 读取通用几何用户属性实现配置；因此仅在层级结构测试中使用，分层设备测试暂不支持。
 - 物理过程命令支持：`/AIHL/physics/setReferenceList`、`/AIHL/physics/setDefaultCut`、`/AIHL/physics/setCut`、`/AIHL/physics/setRegionCut`、`/AIHL/physics/enableBiasing`、`/AIHL/physics/verbose`、`/AIHL/physics/print`。
 - 粒子源命令支持：`/AIHL/source/preset`、`/AIHL/source/particle`、`/AIHL/source/energy`、`/AIHL/source/planeBeam`、`/AIHL/source/print`。
-- 计数统计命令支持：`/AIHL/scoring/enable`、击中计数、事件能量沉积、能量沉积、线性能量转移、剂量、通量、自动创建统计器、直方图相关命令、日志详细等级、信息打印。
+- 计数统计命令支持：`/AIHL/scoring/enable`、击中计数、事件能量沉积、能量沉积、自动创建统计器、直方图相关命令、日志详细等级、信息打印。LET、Dose、Fluence 命令接口目前仍是 stub/no-op，占位命令在可运行测试宏中保持注释。
 - 偏置宏命令目前支持通过 `/AIHL/biasing/xs/...` 实现截面偏置配置。
 
 ## 当前已知功能限制
 - `OutputMessenger` 输出信使暂未实现 `/AIHL/output/...` 系列命令，因此输出目录需通过主 ini 配置文件及运行脚本 `--output` 参数指定。
 - 偏置功能已支持 `[biasing]`、`[biasing.xs]` 配置段解析，但暂无独立宏命令可加载外部偏置 ini 文件；因此偏置配置文件内容直接整合至两份主配置中，并在宏文件中展开为实际可执行命令。
 - 重要性偏置、权重窗口偏置、分裂/俄罗斯轮盘抽样，在当前版本中暂无可用信使命令及 ini 配置解析支持，仅做文档说明，暂不支持配置启用。
+- LET、Dose、Fluence scorer 当前仍是 stub/no-op 命令接口。可运行测试会保持关闭或注释，不把占位输出误当作已验证物理量。
 - `LayeredDeviceTemplate` 分层设备模板不识别自定义元数据键与副本编号，因此分层几何配置文件刻意规避了这类暂不支持的元数据及副本编号字段。
 - 通用层级结构解析器支持自定义用户属性，因此可在其中使用 `metadata.role`、`purpose`、`copyNo` 等自定义字段。

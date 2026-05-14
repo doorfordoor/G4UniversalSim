@@ -45,6 +45,36 @@ bool OutputManager::IsThreadSuffixEnabled() const
     return threadSuffixEnabled_;
 }
 
+bool OutputManager::IsInitialized() const
+{
+    return initialized_;
+}
+
+bool OutputManager::IsHitFileOpen() const
+{
+    return hitWriter_ && hitWriter_->IsOpen();
+}
+
+bool OutputManager::IsEventEdepFileOpen() const
+{
+    return eventEdepWriter_ && eventEdepWriter_->IsOpen();
+}
+
+bool OutputManager::HasOpenFiles() const
+{
+    return IsHitFileOpen() || IsEventEdepFileOpen();
+}
+
+std::string OutputManager::GetHitFilename() const
+{
+    return hitWriter_ ? hitWriter_->GetFilename() : "";
+}
+
+std::string OutputManager::GetEventEdepFilename() const
+{
+    return eventEdepWriter_ ? eventEdepWriter_->GetFilename() : "";
+}
+
 std::string OutputManager::MakeOutputPath(const std::string& filename) const
 {
     return FileUtils::JoinPath(outputDir_, filename);
@@ -72,6 +102,7 @@ std::string OutputManager::MakeThreadFilename(const std::string& baseName) const
 void OutputManager::Initialize()
 {
     FileUtils::CreateDirectories(outputDir_);
+    initialized_ = true;
 }
 
 void OutputManager::OpenHitFile()

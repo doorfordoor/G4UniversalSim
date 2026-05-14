@@ -46,7 +46,8 @@ VolumeShape ParseShape(const std::string& text)
     if (value == "sphere") return VolumeShape::Sphere;
     if (value == "orb") return VolumeShape::Orb;
     if (value == "cone" || value == "cons") return VolumeShape::Cone;
-    if (value == "trap" || value == "trapezoid") return VolumeShape::Trapezoid;
+    if (value == "trd" || value == "trapezoid") return VolumeShape::Trd;
+    if (value == "trap") return VolumeShape::Trap;
     return VolumeShape::Unknown;
 }
 
@@ -58,7 +59,8 @@ std::string ShapeToString(VolumeShape shape)
         case VolumeShape::Sphere: return "sphere";
         case VolumeShape::Orb: return "orb";
         case VolumeShape::Cone: return "cone";
-        case VolumeShape::Trapezoid: return "trapezoid";
+        case VolumeShape::Trd: return "trd";
+        case VolumeShape::Trap: return "trap";
         default: return "unknown";
     }
 }

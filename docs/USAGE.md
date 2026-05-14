@@ -16,6 +16,17 @@
 
 `macros/run_simple.mac` is self-contained for the simple box example: it loads materials, selects the `simple_box` template, configures a proton beam, enables scoring, initializes Geant4, and runs 100 events.
 
+## Safety Limits In Current Examples
+
+- `macros/run_gdml.mac` is a parser-only placeholder demo. It must not execute `/run/initialize` because real `G4GDMLParser` import is not wired yet.
+- Do not use `mode = volume_fraction` in runnable material files; it is parsed but rejected by `MaterialFactory`.
+- Hierarchical geometry supports `shape = trd` / `shape = trapezoid` through `G4Trd`, and `shape = trap` through full `G4Trap`. All `trd`/`trap` length parameters are Geant4 half-lengths; malformed `trap` faces can still fail Geant4 solid validation.
+- `layered_device` supports `copyNo`, `metadata.*`, and unknown layer keys as `VolumeNode::userProperties`. Metadata is currently not copied into `HitRecord` or CSV output.
+- STL import is not implemented. `/AIHL/output/...` is available only for output directory, thread suffix, status, flush, and close; hits/scoring switches remain under `/AIHL/scoring/...`.
+- LET, dose, and fluence scorer commands are stub/no-op surfaces, not validated physical LET/dose/fluence output.
+- Importance biasing, weight-window, splitting, and Russian roulette are future work. Use process-level XS biasing only.
+- For production CSV output, run single-threaded until per-thread output managers and merge are implemented.
+
 ## Interactive UI
 
 ```powershell
@@ -58,6 +69,8 @@ Manual mode is still available by clearing the reference list and adding modules
 ```
 
 Scoring stores both raw energy deposition and weighted energy deposition. Weighted values use `hit.edep * hit.weight`, which is important when biasing is active.
+
+`/AIHL/scoring/let`, `/AIHL/scoring/dose`, and `/AIHL/scoring/fluence` currently enable stub/no-op scorers. They should not be used as physical LET, dose, or fluence results.
 
 ## Biasing Commands
 
@@ -110,6 +123,20 @@ Charged-particle XS biasing needs extra physics validation because charged-parti
 ```
 
 MicroElec/ElectronCapture is optional and experimental. It is registered through PhysicsManager/PhysicsFactory and does not change DetectorConstruction.
+
+## Output Commands
+
+`OutputMessenger` is registered by default under `/AIHL/output/`:
+
+```text
+/AIHL/output/setDir output/run01
+/AIHL/output/setThreadSuffix true
+/AIHL/output/print
+/AIHL/output/flush
+/AIHL/output/close
+```
+
+Use `setDir` and `setThreadSuffix` before `/run/initialize` and before files are opened. Output commands do not enable hits, event edep, or scorers; use `/AIHL/scoring/...` for those switches.
 
 ## Post-Processing
 

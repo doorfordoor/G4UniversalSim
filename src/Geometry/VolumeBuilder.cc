@@ -6,6 +6,7 @@
 #include "Materials/MaterialManager.hh"
 #include "Utils/G4NameUtils.hh"
 #include "Utils/StringUtils.hh"
+#include "Utils/UnitParser.hh"
 
 #include "G4Box.hh"
 #include "G4Colour.hh"
@@ -21,6 +22,8 @@
 #include "G4RotationMatrix.hh"
 #include "G4Sphere.hh"
 #include "G4ThreeVector.hh"
+#include "G4Trap.hh"
+#include "G4Trd.hh"
 #include "G4Tubs.hh"
 #include "G4VPhysicalVolume.hh"
 #include "G4VisAttributes.hh"
@@ -36,11 +39,52 @@ constexpr double kZeroTolerance = 1.0e-12;
 
 int ReadCopyNumber(const VolumeNode& node)
 {
-    if (!node.HasProperty("copyNo")) return 0;
+    const std::string rawCopyNoText = node.HasProperty("copyNo")
+        ? node.GetProperty("copyNo")
+        : node.GetProperty("copyno");
+    const std::string copyNoText = StringUtils::Trim(rawCopyNoText);
+    if (StringUtils::Trim(copyNoText).empty()) return 0;
     try {
-        return std::stoi(node.GetProperty("copyNo"));
+        std::size_t consumed = 0;
+        const int copyNo = std::stoi(copyNoText, &consumed);
+        if (consumed != StringUtils::Trim(copyNoText).size()) {
+            throw std::runtime_error("trailing text");
+        }
+        return copyNo;
     } catch (...) {
-        throw std::runtime_error("Volume '" + node.name + "' has invalid copyNo property: '" + node.GetProperty("copyNo") + "'");
+        throw std::runtime_error("Volume '" + node.name + "' has invalid copyNo property: '" + copyNoText + "'");
+    }
+}
+
+std::string RequireProperty(const VolumeNode& node, const std::string& key)
+{
+    const std::string value = node.GetProperty(key);
+    if (StringUtils::Trim(value).empty()) {
+        throw std::runtime_error("Volume '" + node.name + "' is missing required key '" + key + "'");
+    }
+    return value;
+}
+
+double ReadLengthProperty(const VolumeNode& node, const std::string& key)
+{
+    double value = 0.0;
+    try {
+        value = UnitParser::ParseLength(RequireProperty(node, key));
+    } catch (const std::exception& e) {
+        throw std::runtime_error("Volume '" + node.name + "' has invalid length key '" + key + "': " + e.what());
+    }
+    if (value <= 0.0) {
+        throw std::runtime_error("Volume '" + node.name + "' length key '" + key + "' must be > 0");
+    }
+    return value;
+}
+
+double ReadAngleProperty(const VolumeNode& node, const std::string& key)
+{
+    try {
+        return UnitParser::ParseAngle(RequireProperty(node, key));
+    } catch (const std::exception& e) {
+        throw std::runtime_error("Volume '" + node.name + "' has invalid angle key '" + key + "': " + e.what());
     }
 }
 
@@ -215,6 +259,8 @@ G4VSolid* VolumeBuilder::CreateSolid(const VolumeNode& node)
         case VolumeShape::Sphere: return CreateSphereSolid(node);
         case VolumeShape::Orb: return CreateOrbSolid(node);
         case VolumeShape::Cone: return CreateConeSolid(node);
+        case VolumeShape::Trd: return CreateTrdSolid(node);
+        case VolumeShape::Trap: return CreateTrapSolid(node);
         default:
             throw std::runtime_error(
                 "Unsupported shape for volume '" + node.name + "': shapeName='" + node.shapeName
@@ -304,6 +350,45 @@ G4VSolid* VolumeBuilder::CreateConeSolid(const VolumeNode& node)
     ValidatePositive(halfZ, "cone halfZ", node);
     ValidatePositive(deltaPhi, "cone deltaPhi", node);
     return new G4Cons(G4NameUtils::SolidName(node.name), rMin1, rMax1, rMin2, rMax2, halfZ, startPhi, deltaPhi);
+}
+
+G4VSolid* VolumeBuilder::CreateTrdSolid(const VolumeNode& node)
+{
+    const double dx1 = ReadLengthProperty(node, "dx1");
+    const double dx2 = ReadLengthProperty(node, "dx2");
+    const double dy1 = ReadLengthProperty(node, "dy1");
+    const double dy2 = ReadLengthProperty(node, "dy2");
+    const double dz = ReadLengthProperty(node, "dz");
+    return new G4Trd(G4NameUtils::SolidName(node.name), dx1, dx2, dy1, dy2, dz);
+}
+
+G4VSolid* VolumeBuilder::CreateTrapSolid(const VolumeNode& node)
+{
+    const double dz = ReadLengthProperty(node, "dz");
+    const double theta = ReadAngleProperty(node, "theta");
+    const double phi = ReadAngleProperty(node, "phi");
+    const double dy1 = ReadLengthProperty(node, "dy1");
+    const double dx1 = ReadLengthProperty(node, "dx1");
+    const double dx2 = ReadLengthProperty(node, "dx2");
+    const double alpha1 = ReadAngleProperty(node, "alpha1");
+    const double dy2 = ReadLengthProperty(node, "dy2");
+    const double dx3 = ReadLengthProperty(node, "dx3");
+    const double dx4 = ReadLengthProperty(node, "dx4");
+    const double alpha2 = ReadAngleProperty(node, "alpha2");
+    return new G4Trap(
+        G4NameUtils::SolidName(node.name),
+        dz,
+        theta,
+        phi,
+        dy1,
+        dx1,
+        dx2,
+        alpha1,
+        dy2,
+        dx3,
+        dx4,
+        alpha2
+    );
 }
 
 G4RotationMatrix* VolumeBuilder::CreateRotation(const VolumeNode& node)

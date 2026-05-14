@@ -4,6 +4,8 @@
 审计范围：当前仓库 `D:\Geant4\G4UniversalSim` 的源码、配置、macro、文档和构建脚本。  
 审计性质：实现状态审计 + Geant4 可行性评估。本文不修改源码，只记录可追溯结论和建议。
 
+更新说明：本文主体是 Round 0 前的审计快照。Round 1 已实现并注册 `OutputMessenger`、`AppMessenger`、`DetectorMessenger`；Round 2 已实现 `trd/trapezoid` -> `G4Trd`、`trap` -> `G4Trap`，并补齐 `layered_device copyNo/metadata` 透传。下方 Executive Summary、Mismatch Table、Roadmap 和 Test Recommendations 已按当前状态修正；详细源码证据章节仍保留原审计时点的追踪记录。
+
 ## 1. Executive Summary
 
 | ID | Feature | Current Implementation | Runtime Availability | Geant4 Feasibility | Recommended Priority | Final Recommendation |
@@ -14,12 +16,12 @@
 | 4 | `LETScorer` / `DoseScorer` / `FluenceScorer` | Stub | Partially runnable | Risky / requires physics validation | P2 medium-term | `Dose`/`Fluence` 是 no-op，`LET` 只读未填充字段；应先补 dose/fluence，LET 需先定义物理口径 |
 | 5 | `ParticleAggregator` | Stub | Not runnable | Straightforward | P3 future work | 类为空且未接入；适合作为后处理或 scoring/run 层统计，不应抢在输出/MT 修复前做 |
 | 6 | 多线程输出与自动 merge | Partial | Partially runnable | Feasible with moderate work | P1 near-term implementation | 有 `_t0` 后缀和外部 merge 工具，但当前共享 `OutputManager`/`ScoringManager`，没有自动 merge，MT 有 race 风险 |
-| 7 | `trap` / `trapezoid` | Parser only | Not runnable | Straightforward | P1 near-term implementation | `ParseShape()` 识别，但 `VolumeBuilder` 不创建 `G4Trap`/`G4Trd`；建议补齐 |
+| 7 | `trap` / `trapezoid` | Implemented | Runnable | Straightforward | Completed in Round 2 | `trd/trapezoid` 已接入 `G4Trd`，`trap` 已接入完整 `G4Trap`；trap 参数仍需满足 Geant4 solid 约束 |
 | 8 | Qt UI 界面 | Not implemented | Not runnable | Feasible but high complexity | Do not implement now | 当前只有 Geant4 UI/Vis 支持，未实现项目级 Qt UI target；先稳定 CLI/macro |
-| 9 | `OutputMessenger` 与 `/AIHL/output/...` | Stub | Not runnable | Straightforward | P1 near-term implementation | 类存在但非 `G4UImessenger` 且无命令；建议实现最小输出命令或继续文档标注未实现 |
+| 9 | `OutputMessenger` 与 `/AIHL/output/...` | Implemented | Runnable | Straightforward | Completed in Round 1 | 已注册最小命令集合：`setDir`、`setThreadSuffix`、`print`、`flush`、`close`；hits/scoring 开关仍归 `/AIHL/scoring/...` |
 | 10 | 高级 biasing：importance / weight-window / splitting / Russian roulette | Planned only | Not runnable | Feasible but high complexity | P3 future work | 当前只实现 XS process-level biasing；高级几何/权重 biasing 与当前 XS 架构不是同一层，需单独设计和验证 |
-| 11 | `layered_device` copy number / metadata | Partial | Partially runnable | Straightforward | P1 near-term implementation | `hierarchical` 可保留未知 key 并支持 `copyNo`，`layered_device` 不读取；建议补齐一致性 |
-| 12 | `AppMessenger` / `DetectorMessenger` 默认注册 | Not registered | Not runnable | Straightforward | P1 near-term implementation | 源码命令存在，但 `SimulationManager`/`main.cc` 未实例化，默认 `/control/manual` 不会显示 |
+| 11 | `layered_device` copy number / metadata | Implemented | Runnable | Straightforward | Completed in Round 2 | `copyNo` 已进入 `userProperties` 并传给 placement；`metadata.*` 已保存但不自动输出 CSV |
+| 12 | `AppMessenger` / `DetectorMessenger` 默认注册 | Implemented | Runnable | Straightforward | Completed in Round 1 | 默认 executable 已注册 `/AIHL/app/...` 与 `/AIHL/detector/...`；运行后危险重配置仍需 warning/reinitialize |
 
 ## 2. Source Inspection Method
 
@@ -643,34 +645,34 @@ instances or explicit locking are implemented.
 
 ### 7.1 Current implementation status
 
-`ParseShape()` 识别 `trap` / `trapezoid`，但 `VolumeBuilder` 未实现 `G4Trap` 或 `G4Trd` 构建。
+更新：Round 2 后已实现。`trd/trapezoid` 由 `VolumeBuilder::CreateTrdSolid()` 创建 `G4Trd`；`trap` 由 `VolumeBuilder::CreateTrapSolid()` 创建完整 `G4Trap`。
 
 ### 7.2 Evidence from project source
 
 - File: `src/Geometry/GeometryUtils.cc`
 - Function: `ParseShape`
-- Evidence: `trap` / `trapezoid` 返回 `VolumeShape::Trapezoid`。
+- Evidence at audit time: `trap` / `trapezoid` 返回 `VolumeShape::Trapezoid`。Round 2 后已改为 `trd/trapezoid -> VolumeShape::Trd`，`trap -> VolumeShape::Trap`。
 
 - File: `src/Geometry/VolumeBuilder.cc`
 - Function: `CreateSolid`
-- Evidence: switch 只支持 `Box`、`Tubs`、`Sphere`、`Orb`、`Cone`；默认抛出 unsupported shape。
+- Evidence at audit time: switch 只支持 `Box`、`Tubs`、`Sphere`、`Orb`、`Cone`；默认抛出 unsupported shape。Round 2 后已增加 `Trd` / `Trap` 分支。
 
 - File: `docs/中文几何配置说明.md`, `docs/未实现功能.md`
-- Evidence: 文档已说明 `trap` / `trapezoid` 只解析不构建。
+- Evidence at audit time: 文档已说明 `trap` / `trapezoid` 只解析不构建。Round 2 后当前文档已改为可用但需满足 Geant4 参数约束。
 
 ### 7.3 Call-chain analysis
 
 ```text
-config parser: yes, shape = trap/trapezoid is recognized
-manager storage: yes, VolumeNode.shape = Trapezoid
-VolumeBuilder backend: no
-Geant4 backend call: no, no G4Trap include or constructor
-调用链中断位置：VolumeBuilder::CreateSolid
+config parser: yes, trd/trapezoid -> VolumeShape::Trd, trap -> VolumeShape::Trap
+manager storage: yes
+VolumeBuilder backend: yes, CreateTrdSolid/CreateTrapSolid
+Geant4 backend call: yes, G4Trd/G4Trap
+调用链中断位置：none after Round 2
 ```
 
 ### 7.4 Runtime behavior
 
-配置 `shape = trap` 或 `shape = trapezoid` 会 parser 通过，但几何构建时报 unsupported shape。当前不安全。
+Round 2 后，`shape = trd/trapezoid` 和 `shape = trap` 可运行。`trap` 参数若不满足 Geant4 `G4Trap` 几何约束，仍会在 solid 构建阶段失败。
 
 ### 7.5 Geant4 feasibility
 
@@ -735,10 +737,10 @@ alpha2 = ...
 
 ### 7.9 Documentation correction
 
-当前文档已正确提示不能使用。实现前保持：
+Round 2 后文档应保持：
 
 ```text
-trap / trapezoid are recognized by the parser but not supported by VolumeBuilder.
+trd/trapezoid use G4Trd, and trap uses full G4Trap. All length fields are half-lengths. Trap parameters must satisfy Geant4 solid constraints.
 ```
 
 ## 8. Qt UI 界面实现状态
@@ -816,37 +818,37 @@ provide a custom Qt application GUI.
 
 ### 9.1 Current implementation status
 
-`OutputMessenger` 是空 C++ 类，不继承 `G4UImessenger`，无 `/AIHL/output/...` 命令，未被 `SimulationManager` 实例化。
+更新：Round 1 后 `OutputMessenger` 已继承 `G4UImessenger` 并注册 `/AIHL/output/...` 最小命令集合，且由 `SimulationManager` 持有。
 
 ### 9.2 Evidence from project source
 
 - File: `include/Output/OutputMessenger.hh`
 - Class: `OutputMessenger`
-- Evidence: 只有构造/析构，不继承 `G4UImessenger`。
+- Evidence at audit time: 只有构造/析构，不继承 `G4UImessenger`。Round 1 后已实现为 `G4UImessenger`。
 
 - File: `src/Output/OutputMessenger.cc`
-- Evidence: 构造/析构空实现。
+- Evidence at audit time: 构造/析构空实现。Round 1 后已定义 `setDir`、`setThreadSuffix`、`print`、`flush`、`close`。
 
 - File: `include/Core/SimulationManager.hh`, `src/Core/SimulationManager.cc`
-- Evidence: 没有 `OutputMessenger` 成员；`BuildManagers()` 只创建 Material/Geometry/Physics/Source/Biasing/Scoring messengers。
+- Evidence at audit time: 没有 `OutputMessenger` 成员；`BuildManagers()` 只创建 Material/Geometry/Physics/Source/Biasing/Scoring messengers。Round 1 后 `SimulationManager` 已持有并创建 `OutputMessenger`。
 
 - File: `docs/COMMAND_REFERENCE.md`
-- Evidence: 已说明 `/AIHL/output/...` 当前不存在。
+- Evidence at audit time: 已说明 `/AIHL/output/...` 当前不存在。Round 1 后命令文档已列出最小真实命令。
 
 ### 9.3 Call-chain analysis
 
 ```text
-messenger class: stub, not a G4UImessenger
-command definition: no
-SimulationManager wiring: no
+messenger class: yes, G4UImessenger after Round 1
+command definition: yes, minimal output commands
+SimulationManager wiring: yes
 OutputManager backend: partial, has setters for outputDir/thread suffix
-macro runtime: no /AIHL/output commands
-调用链中断位置：OutputMessenger 未实现
+macro runtime: yes
+调用链中断位置：none for minimal commands after Round 1
 ```
 
 ### 9.4 Runtime behavior
 
-在 macro 中使用 `/AIHL/output/...` 会报 unknown command。输出目录只能通过 CLI `--output`、main ini `[output]/dir` 或 `SimulationManager::SetOutputDir()` 间接设置。
+Round 1 后，macro 中可使用 `/AIHL/output/setDir`、`setThreadSuffix`、`print`、`flush`、`close`。hits/scoring 开关仍属于 `/AIHL/scoring/...`。
 
 ### 9.5 Geant4 feasibility
 
@@ -899,10 +901,10 @@ Recommended。
 
 ### 9.9 Documentation correction
 
-当前 `docs/COMMAND_REFERENCE.md` 已正确。保持：
+Round 1 后文档应保持：
 
 ```text
-OutputMessenger exists as a stub only. No /AIHL/output/... command is registered.
+OutputMessenger is registered with setDir, setThreadSuffix, print, flush, and close. Hits/scoring switches remain under /AIHL/scoring.
 ```
 
 ## 10. 高级 biasing：importance / weight-window / splitting / Russian roulette
@@ -1005,14 +1007,14 @@ biasing backend is process-level cross-section biasing.
 
 ### 11.1 Current implementation status
 
-`layered_device` 不读取 `copyNo` 或 arbitrary metadata；`hierarchical` parser 会把未知 key 保存到 `VolumeNode::userProperties`，其中 `copyNo` 会被 `VolumeBuilder` 用作 `G4PVPlacement` copy number。
+更新：Round 2 后，`layered_device` 已读取 `copyNo`，并将 `metadata.*` 与未知 key 透传到 `VolumeNode::userProperties`；`copyNo` 会被 `VolumeBuilder` 用作 `G4PVPlacement` copy number。metadata 仍仅为内部标签，不自动输出到 CSV。
 
 ### 11.2 Evidence from project source
 
 - File: `src/Templates/LayeredDeviceTemplate.cc`
 - Class: `LayeredDeviceTemplate`
 - Function: `BuildNodes`
-- Evidence: 只读取 `thickness`、`xy`、`material`、`position`、`rotation`、`sensitive`、`bias`、`region`、cuts、visual；没有读取 `copyNo` 或 metadata，也没有保存未知 key。
+- Evidence at audit time: 只读取 `thickness`、`xy`、`material`、`position`、`rotation`、`sensitive`、`bias`、`region`、cuts、visual；没有读取 `copyNo` 或 metadata，也没有保存未知 key。Round 2 后已新增 `ApplyUserProperties()`。
 
 - File: `src/Geometry/GeometryConfig.cc`
 - Class: `GeometryConfig`
@@ -1024,26 +1026,26 @@ biasing backend is process-level cross-section biasing.
 - Evidence: 从 `node.GetProperty("copyNo")` 读取 copy number，并传给 `G4PVPlacement`。
 
 - File: `test/geometry/hierarchical_test.ini`
-- Evidence: 使用 `copyNo` 和 `metadata.role`。
+- Evidence: 使用 `copyNo` 和 `metadata.role`。Round 2 后也新增 `config/geometry/layered_metadata_test.ini` 覆盖 layered_device。
 
 - File: `test/geometry/layered_device_test.ini`
-- Evidence: 未使用 `copyNo` / metadata。
+- Evidence at audit time: 未使用 `copyNo` / metadata。Round 2 后新增 layered metadata 测试配置。
 
 ### 11.3 Call-chain analysis
 
 ```text
-layered_device parser copyNo: no
-layered_device parser metadata: no
-VolumeNode storage from layered_device: no
+layered_device parser copyNo: yes after Round 2
+layered_device parser metadata: yes, stored as userProperties after Round 2
+VolumeNode storage from layered_device: yes
 hierarchical parser copyNo/metadata: yes, via userProperties
 VolumeBuilder copyNo backend: yes, reads userProperties["copyNo"]
 metadata backend: storage only, no runtime behavior
-调用链中断位置：LayeredDeviceTemplate::BuildNodes 不消费额外 key
+调用链中断位置：none for copyNo/storage after Round 2; CSV output still not connected to metadata
 ```
 
 ### 11.4 Runtime behavior
 
-- 在 layered_device 的 `[layer.*]` 写 `copyNo` 或 `metadata.*` 不会生效。
+- 在 layered_device 的 `[layer.*]` 写 `copyNo` 会影响 placement copy number；写 `metadata.*` 会保存为内部标签。
 - 在 hierarchical 的 `[volume.*]` 写 `copyNo` 会影响 placement copy number。
 - hierarchical 的 `metadata.*` 会保存在 `VolumeNode::userProperties`，但当前不会进入 output tagging、SD、scoring selection。
 
@@ -1085,19 +1087,19 @@ layered device 经常需要按层/像素/器件编号识别 hits；copy number �
 
 ### 11.9 Documentation correction
 
-当前测试 README 已正确规避。建议主文档补充：
+Round 2 后主文档应保持：
 
 ```text
-In the current implementation, `copyNo` is honored only when it reaches
-VolumeNode::userProperties, which happens for hierarchical geometry. The
-layered_device template does not yet propagate copyNo or metadata keys.
+layered_device propagates copyNo, metadata.*, and unknown layer keys into
+VolumeNode::userProperties. copyNo is used for G4PVPlacement; metadata is
+not automatically written to HitRecord or CSV output.
 ```
 
 ## 12. AppMessenger 和 DetectorMessenger 默认注册情况
 
 ### 12.1 Current implementation status
 
-`AppMessenger` 和 `DetectorMessenger` 源码存在并定义 `/AIHL/app/...`、`/AIHL/detector/...` 命令，但默认 executable 未注册，运行时不可用。
+更新：Round 1 后，`AppMessenger` 和 `DetectorMessenger` 已默认注册。`/AIHL/app/...` 由 `SimulationManager` 持有的 messenger 提供；`/AIHL/detector/...` 由 `DetectorConstruction` 持有的 messenger 提供。
 
 ### 12.2 Evidence from project source
 
@@ -1110,30 +1112,31 @@ layered_device template does not yet propagate copyNo or metadata keys.
 - Evidence: 定义 `/AIHL/detector/enableSD`、`setSDName`、`printRegistry`、`printSensitiveVolumes`、`printBiasVolumes`、`setVerbose`、`printWorld`。
 
 - File: `include/Core/SimulationManager.hh`
-- Evidence: 成员中只有 `MaterialMessenger`、`GeometryMessenger`、`PhysicsMessenger`、`SourceMessenger`、`BiasingMessenger`、`ScoringMessenger`，没有 `AppMessenger` / `DetectorMessenger`。
+- Evidence at audit time: 成员中只有 `MaterialMessenger`、`GeometryMessenger`、`PhysicsMessenger`、`SourceMessenger`、`BiasingMessenger`、`ScoringMessenger`，没有 `AppMessenger` / `DetectorMessenger`。Round 1 后已新增相应持有关系。
 
 - File: `src/Core/SimulationManager.cc`
 - Function: `BuildManagers`
-- Evidence: 只实例化 Material/Geometry/Physics/Source/Biasing/Scoring messengers。
+- Evidence at audit time: 只实例化 Material/Geometry/Physics/Source/Biasing/Scoring messengers。Round 1 后 `BuildManagers()` 已创建 `AppMessenger`，`DetectorConstruction` 创建 `DetectorMessenger`。
 
 - File: `main.cc`
-- Evidence: 不实例化 `AppMessenger` 或 `DetectorMessenger`。
+- Evidence: `main.cc` 仍不直接实例化这些 messenger；Round 1 后实例化位置位于 `SimulationManager` / `DetectorConstruction`。
 
 ### 12.3 Call-chain analysis
 
 ```text
 messenger class implementation: yes
 G4UI command definitions: yes
-SimulationManager wiring: no
-main.cc wiring: no
-lifetime across UI session: no
-runtime command availability: no
-调用链中断位置：SimulationManager::BuildManagers / main.cc 未实例化
+SimulationManager wiring: yes for AppMessenger after Round 1
+DetectorConstruction wiring: yes for DetectorMessenger after Round 1
+main.cc wiring: not direct, by design
+lifetime across UI session: yes
+runtime command availability: yes
+调用链中断位置：none after Round 1
 ```
 
 ### 12.4 Runtime behavior
 
-默认 executable 启动后，`/AIHL/app/...` 和 `/AIHL/detector/...` 会是 unknown command，`/control/manual` 不会显示它们。
+Round 1 后，默认 executable 启动后 `/AIHL/app/...` 和 `/AIHL/detector/...` 可用；若 unknown command，通常是未重新构建或运行了旧 executable。
 
 ### 12.5 Geant4 feasibility
 
@@ -1166,7 +1169,7 @@ Recommended。
 
 ### 12.9 Documentation correction
 
-当前 `docs/COMMAND_REFERENCE.md` 已正确标注默认未注册。`docs/中文使用手册.md` 中若列出命令表，应在表标题处突出“源码存在但默认未注册”。
+Round 1 后文档应标注默认已注册，并说明哪些命令是初始化前配置命令、哪些是 geometry 构建后的诊断命令。
 
 ## 5. Mismatch Table
 
@@ -1179,12 +1182,12 @@ Recommended。
 | LET/Dose/Fluence | `/AIHL/scoring/let|dose|fluence`, config keys | Registerable stubs/no-op | 输出为空但用户误以为得到物理量 | LET/Dose/Fluence are placeholders; only Edep/hits/event edep are operational. |
 | ParticleAggregator | class name and docs future mention | Empty class | 用户误以为有高级粒子统计 | ParticleAggregator is a placeholder not connected to runtime. |
 | Multi-thread output | `_t0` suffix, merge tools | Partial; shared manager, no auto merge | MT race / corrupted CSV / no merge | Use single-thread for production CSV until per-thread output is implemented. |
-| `trap` / `trapezoid` | `ParseShape()` and docs | Parser only; no `G4Trap` | parser 通过但构建失败 | Parsed but unsupported by `VolumeBuilder`. |
+| `trap` / `trapezoid` | `ParseShape()` and docs | Implemented in Round 2 with `G4Trd/G4Trap` | `trap` 参数不合法时仍会构建失败 | `trd/trapezoid` use `G4Trd`; `trap` uses full `G4Trap` and must satisfy Geant4 solid constraints. |
 | Qt UI | README/toolchain notes mention Qt; `--ui` | Geant4 UI/Vis only; no custom Qt app | 用户误解为项目 GUI | `--ui` starts Geant4 UI/Vis; no custom Qt GUI target exists. |
-| `/AIHL/output/...` | `OutputMessenger` class name | Stub, no commands | macro unknown command | No output macro commands are registered. |
+| `/AIHL/output/...` | `OutputMessenger` class name | Implemented in Round 1, minimal command set | 用户可能误以为含 hits/scoring 开关 | Output commands cover dir/thread suffix/status/flush/close only; use `/AIHL/scoring/...` for scoring switches. |
 | importance / weight-window / splitting / Russian roulette | docs future list, `BiasingImportance` class | Not implemented | biasing 配置无效或误导 | Advanced biasing is future work; current backend is XS process biasing only. |
-| `layered_device` copyNo/metadata | test goals / docs contrast with hierarchical | Not consumed by layered template | metadata/copyNo silently ignored | Only hierarchical currently propagates unknown keys to `userProperties`. |
-| `/AIHL/app/...`, `/AIHL/detector/...` | source and `MODULE_API_INDEX.md` | Messenger commands exist but not registered | default runtime unknown command | Source exists, default executable does not instantiate these messengers. |
+| `layered_device` copyNo/metadata | test goals / docs contrast with hierarchical | Implemented in Round 2 for storage/copyNo | metadata 不会自动进入 CSV | `copyNo` is used for placement; metadata is stored in `userProperties` only. |
+| `/AIHL/app/...`, `/AIHL/detector/...` | source and `MODULE_API_INDEX.md` | Registered in Round 1 | 运行后重配置可能需要 reinitialize | Default executable registers these messengers; diagnostic commands are safe after geometry build. |
 
 ## 6. Implementation Value Matrix
 
@@ -1198,30 +1201,30 @@ Recommended。
 | FluenceScorer | Medium | Medium | Medium | Medium | P2 medium-term |
 | ParticleAggregator | Medium | Low | Low | Medium | P3 future work |
 | MT output + merge | High | Medium | Low | Medium | P1 near-term implementation |
-| `trap` / `trapezoid` | Medium | Low | Low | Low | P1 near-term implementation |
+| `trap` / `trapezoid` | Medium | Low | Low | Low | Completed in Round 2 |
 | Qt UI | Low/Medium | High | Low | High | Do not implement now |
-| OutputMessenger | High | Low | Low | Medium | P1 near-term implementation |
+| OutputMessenger | High | Low | Low | Medium | Completed in Round 1 |
 | Advanced biasing | Medium/High | High | High | High | P3 future work |
-| layered copyNo/metadata | Medium | Low | Low | Low | P1 near-term implementation |
-| App/Detector messenger registration | Medium | Low | Medium | Medium | P1 near-term implementation |
+| layered copyNo/metadata | Medium | Low | Low | Low | Completed in Round 2 |
+| App/Detector messenger registration | Medium | Low | Medium | Medium | Completed in Round 1 |
 
 ## 7. Recommended Roadmap
 
 ### P0: Documentation and test safety
 
 - 修正 `macros/run_gdml.mac`：不要在 placeholder macro 中执行 `/run/initialize`，或明确该 macro 预期失败。
-- 在所有测试配置中避免 `mode = volume_fraction`、`shape = trap`、GDML 真运行、STL、advanced biasing、`/AIHL/output/...`。
+- 在所有测试配置中避免 `mode = volume_fraction`、GDML 真运行、STL、advanced biasing。`trd/trapezoid/trap` 与最小 `/AIHL/output/...` 命令已可用，但应遵守各自限制。
 - 对 `LETScorer`、`DoseScorer`、`FluenceScorer` 保留 stub 标注，不把它们写成物理量已实现。
-- 在命令文档中继续标注 `/AIHL/app/...`、`/AIHL/detector/...` 默认未注册。
+- 在命令文档中标注 `/AIHL/app/...`、`/AIHL/detector/...` 已默认注册，并说明初始化后危险重配置需要 reinitialize/warning。
 - 在 README 或中文手册明确：多线程 CSV 输出当前不保证 race-free，生产数据建议单线程。
 
 ### P1: Low-risk useful features
 
-- 实现 `OutputMessenger` 最小命令集合：`setDir`、`print`、`flush`、`close`、`setThreadSuffix`。
-- 接入 `AppMessenger`，但限制运行后重配置。
-- 让 `DetectorConstruction` 持有 `DetectorMessenger`，并明确运行中改 SD 需要 reinitialize。
-- 实现 `trap` / `trd` / `G4Trap` 构建。
-- 补齐 `LayeredDeviceTemplate` 的 `copyNo` 和 metadata 透传。
+- Round 1 已完成：实现 `OutputMessenger` 最小命令集合：`setDir`、`print`、`flush`、`close`、`setThreadSuffix`。
+- Round 1 已完成：接入 `AppMessenger`，但限制运行后重配置。
+- Round 1 已完成：让 `DetectorConstruction` 持有 `DetectorMessenger`，并明确运行中改 SD 需要 reinitialize。
+- Round 2 已完成：实现 `trap` / `trd` / `G4Trap` 构建。
+- Round 2 已完成：补齐 `LayeredDeviceTemplate` 的 `copyNo` 和 metadata 透传。
 - 修复 MT 输出基本安全：至少做到 per-thread `OutputManager` 和正确 thread id。
 
 ### P2: Medium-complexity core features
@@ -1244,8 +1247,8 @@ Recommended。
 ### Safe to use now
 
 - NIST 材料加载和 `mass_fraction` / `atom_count` 自定义材料。
-- `simple_box`、`layered_device`、`hierarchical`、`array`、`shielding` 中已由 `VolumeBuilder` 支持的 CSG shapes：`box`、`tubs`、`sphere`、`orb`、`cone`。
-- `layered_device` 的 `thickness`、`xy`、`material`、`position`、`rotation`、`sensitive`、`bias`、`region`、production cuts、visual fields。
+- `simple_box`、`layered_device`、`hierarchical`、`array`、`shielding` 中已由 `VolumeBuilder` 支持的 CSG shapes：`box`、`tubs`、`sphere`、`orb`、`cone`、`trd/trapezoid`、`trap`。
+- `layered_device` 的 `thickness`、`xy`、`material`、`position`、`rotation`、`sensitive`、`bias`、`region`、production cuts、visual fields、`copyNo`、`metadata.*` 和未知 key 透传。
 - `hierarchical` 的 unknown key 保存、`copyNo` placement copy number。
 - 当前 `/AIHL/material/...`、`/AIHL/geometry/...`、`/AIHL/physics/...`、`/AIHL/source/...`、`/AIHL/scoring/...`、`/AIHL/biasing/xs/...` 默认注册命令。
 - hits CSV、event edep CSV、Edep histogram，前提是有真实 sensitive volume 和实际 hits。
@@ -1256,21 +1259,18 @@ Recommended。
 
 ```text
 mode = volume_fraction
-shape = trap
-shape = trapezoid
 GDML import with /run/initialize
 STL import
-/AIHL/output/...
 importance biasing
 weight-window
 splitting
 Russian roulette
-未注册的 /AIHL/app/...
-未注册的 /AIHL/detector/...
 多线程生产级 CSV 输出
 DoseScorer / FluenceScorer 作为物理量输出
 LETScorer 作为真实 LET 输出
 ```
+
+说明：`shape = trd/trapezoid`、`shape = trap`、最小 `/AIHL/output/...`、`/AIHL/app/...`、`/AIHL/detector/...` 已分别在 Round 1/Round 2 后可用；仍需遵守各自文档限制。
 
 ### Needs manual runtime verification
 
@@ -1282,7 +1282,7 @@ LETScorer 作为真实 LET 输出
 
 ## 9. Final Recommendations
 
-- 马上修正文档/测试安全项：`run_gdml.mac` 的 `/run/initialize` 风险、MT 输出不安全提示、stub scorer 说明、未注册 messenger 说明。
+- 马上修正文档/测试安全项：`run_gdml.mac` 的 `/run/initialize` 风险、MT 输出不安全提示、stub scorer 说明；Round 1 后 messenger 注册状态需标为已注册并保留初始化前后限制。
 - 近期值得实现：`OutputMessenger` 最小命令、`trap`/`trapezoid`、`layered_device` copyNo/metadata、App/Detector messenger 接入、per-thread 输出。
 - 中期核心能力：`volume_fraction`、GDML 真导入、Dose/Fluence scorer、多线程 merge。
 - 推迟：STL import、Qt UI、ParticleAggregator 高级分析。

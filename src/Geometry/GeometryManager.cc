@@ -564,6 +564,16 @@ void GeometryManager::PrintTreeNode(const VolumeNode& node, int depth) const
     if (node.sensitive) G4cout << " sensitive";
     if (node.bias) G4cout << " bias";
     if (!node.regionName.empty()) G4cout << " region=" << node.regionName;
+    if (!node.userProperties.empty()) {
+        G4cout << " properties={";
+        bool first = true;
+        for (const auto& item : node.userProperties) {
+            if (!first) G4cout << ", ";
+            G4cout << item.first << "=" << item.second;
+            first = false;
+        }
+        G4cout << "}";
+    }
     G4cout << G4endl;
     for (const VolumeNode& child : node.children) PrintTreeNode(child, depth + 1);
 }

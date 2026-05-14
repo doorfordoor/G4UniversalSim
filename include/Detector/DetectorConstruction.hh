@@ -3,8 +3,10 @@
 #include "G4VUserDetectorConstruction.hh"
 
 #include <functional>
+#include <memory>
 #include <string>
 
+class DetectorMessenger;
 class G4VPhysicalVolume;
 class G4VSensitiveDetector;
 class GeometryManager;
@@ -46,6 +48,7 @@ public:
 
 private:
     GeometryManager* geometryManager_ = nullptr;
+    std::unique_ptr<DetectorMessenger> detectorMessenger_;
     G4VPhysicalVolume* worldVolume_ = nullptr;
     bool sensitiveDetectorEnabled_ = true;
     std::string sensitiveDetectorName_ = "AIHLParticleSD";

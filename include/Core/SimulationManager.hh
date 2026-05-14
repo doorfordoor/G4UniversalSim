@@ -8,7 +8,9 @@
 
 class ConfigManager;
 class ActionInitialization;
+class AppMessenger;
 class OutputManager;
+class OutputMessenger;
 class MaterialManager;
 class MaterialMessenger;
 class GeometryManager;
@@ -101,6 +103,8 @@ private:
     std::unique_ptr<OutputManager> outputManager_;
     std::unique_ptr<MaterialManager> materialManager_;
     std::unique_ptr<GeometryManager> geometryManager_;
+    std::unique_ptr<AppMessenger> appMessenger_;
+    std::unique_ptr<OutputMessenger> outputMessenger_;
     std::unique_ptr<MaterialMessenger> materialMessenger_;
     std::unique_ptr<GeometryMessenger> geometryMessenger_;
     std::unique_ptr<PhysicsMessenger> physicsMessenger_;

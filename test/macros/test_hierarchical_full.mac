@@ -60,9 +60,12 @@
 /AIHL/scoring/hits true
 /AIHL/scoring/eventEdep true
 /AIHL/scoring/edep true
-/AIHL/scoring/let true
-/AIHL/scoring/dose true
-/AIHL/scoring/fluence true
+# LET/Dose/Fluence are currently stub/no-op command surfaces.
+# Keep them disabled in runnable tests to avoid presenting placeholder output
+# as validated physical LET, dose, or fluence.
+# /AIHL/scoring/let true
+# /AIHL/scoring/dose true
+# /AIHL/scoring/fluence true
 /AIHL/scoring/autoCreateScorers true
 /AIHL/scoring/setEdepHistogram bins=120 min=0 eV max=15 MeV
 /AIHL/scoring/setWeightedEdepHistogram bins=120 min=0 eV max=15 MeV

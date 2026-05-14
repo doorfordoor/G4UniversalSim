@@ -17,6 +17,15 @@ cmake --build build_vs --config Release
 
 Check that materials and geometry were loaded before initialization. `macros/run_simple.mac` is self-contained; if using your own macro, include material and geometry commands or run with `--config config/main.ini`.
 
+Known placeholder features that must not be initialized yet:
+
+- `template = gdml` / `macros/run_gdml.mac`: GDML import is placeholder-only and does not call `G4GDMLParser`.
+- STL import: no parser/backend exists.
+
+`shape = trd` / `shape = trapezoid` and `shape = trap` are now wired to `G4Trd` and `G4Trap`. If a `trap` geometry still fails during `/run/initialize`, check that all required parameters are present and that the resulting faces satisfy Geant4 `G4Trap` planarity constraints.
+
+If you need a runnable example, use `macros/run_simple.mac`, `run_layered.mac`, `run_hierarchical.mac`, `run_array.mac`, or `run_shielding.mac`.
+
 ## `config/main.ini` Not Found
 
 Run from the project root or pass an absolute path:
@@ -46,6 +55,8 @@ Load materials before geometry build:
 ```
 
 For NIST materials, names such as `G4_AIR`, `G4_Si`, and `G4_WATER` should be available through Geant4.
+
+Do not use `mode = volume_fraction` in runnable material files yet. The parser recognizes it, but `MaterialFactory` intentionally reports it as reserved and not implemented.
 
 ## Sensitive Volume Has No Hits
 
@@ -89,6 +100,20 @@ Process-level XS rules are validated after physics construction, when particle p
 The process part must match an actual Geant4 process name for that particle and the selected physics list. Wrong names are reported as explicit warnings or errors instead of being silently ignored.
 
 For charged particles, the framework emits a warning that XS biasing needs extra validation because cross sections can vary during a step due to energy loss. Compare raw and weighted scoring carefully.
+
+Importance biasing, weight-window, splitting, and Russian roulette are not implemented. If a macro or config appears to use them, treat it as future-work documentation rather than a runnable setup.
+
+## `/AIHL/output`, `/AIHL/app`, Or `/AIHL/detector` Is Unknown
+
+These command groups are registered by the current default executable. If they are unknown, rebuild the executable and make sure you are running the updated binary. `/AIHL/output/...` currently exposes output directory, thread suffix, print, flush, and close commands only; hits/scoring switches remain under `/AIHL/scoring/...`.
+
+## LET, Dose, Or Fluence Output Looks Empty
+
+`LETScorer`, `DoseScorer`, and `FluenceScorer` are currently stub/no-op or minimal command surfaces. Use hits, event edep, and `EdepScorer` outputs for runnable scoring. Do not interpret LET/dose/fluence stub output as validated physical quantities.
+
+## Multi-Thread CSV Output Is Inconsistent
+
+Current `OutputManager` / `ScoringManager` wiring is not production-safe for multi-thread CSV output. Use `--threads 1` for production CSV runs until per-thread managers and merge are implemented. Existing merge tools are post-processing helpers, not proof that runtime writes are race-free.
 
 ## Reference Physics List Not Found
 

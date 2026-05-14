@@ -8,7 +8,8 @@ enum class VolumeShape {
     Sphere,
     Orb,
     Cone,
-    Trapezoid,
+    Trd,
+    Trap,
     Unknown
 };
 

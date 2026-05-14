@@ -19,6 +19,7 @@ public:
 
 private:
     void EnsureDetector(const char* commandName) const;
+    void WarnIfWorldBuilt(const char* commandName) const;
     void ReportCommandError(const char* commandName, const G4String& value, const std::exception& error) const;
 
     DetectorConstruction* detector_ = nullptr;

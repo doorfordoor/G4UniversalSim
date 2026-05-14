@@ -1,5 +1,6 @@
 #include "Detector/DetectorConstruction.hh"
 
+#include "Detector/DetectorMessenger.hh"
 #include "Geometry/GeometryManager.hh"
 #include "Geometry/GeometryRegistry.hh"
 
@@ -17,6 +18,7 @@
 DetectorConstruction::DetectorConstruction(GeometryManager* geometryManager)
     : geometryManager_(geometryManager)
 {
+    detectorMessenger_ = std::make_unique<DetectorMessenger>(this);
 }
 
 DetectorConstruction::~DetectorConstruction() = default;

@@ -1,3 +1,12 @@
+# Parser-only GDML placeholder demo.
+#
+# Current status:
+# - GDML import is only a placeholder in GDMLTemplate.
+# - G4GDMLParser is not wired into DetectorConstruction or VolumeBuilder yet.
+# - Do NOT execute /run/initialize for this macro.
+# - This file is intentionally limited to loading and printing the placeholder
+#   configuration so users do not accidentally run an unsupported geometry.
+
 /control/verbose 1
 /run/verbose 1
 
@@ -9,5 +18,5 @@
 
 # GDMLTemplate is currently a placeholder only. Do not call /run/initialize
 # for this macro until VolumeBuilder gains real GDML import support.
-/run/initialize
-/control/execute macros\vis.mac
+# /run/initialize
+# /control/execute macros\vis.mac

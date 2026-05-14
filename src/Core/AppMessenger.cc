@@ -9,6 +9,25 @@
 #include "G4UIcommand.hh"
 #include "G4UIdirectory.hh"
 
+#include <string>
+
+namespace {
+
+void WarnIfInitialized(const SimulationManager* manager, const char* commandName)
+{
+    if (!manager || !manager->IsInitialized()) return;
+    G4Exception(
+        "AppMessenger",
+        "AIHLAppCmdWarn001",
+        JustWarning,
+        (std::string(commandName)
+         + " is recommended before /run/initialize. If run-manager state already exists, "
+           "reinitialize geometry/physics or restart the executable as appropriate.").c_str()
+    );
+}
+
+}  // namespace
+
 AppMessenger::AppMessenger(SimulationManager* manager)
     : manager_(manager)
 {
@@ -56,17 +75,22 @@ void AppMessenger::SetNewValue(G4UIcommand* command, G4String value)
     }
 
     if (command == setMainConfigCmd_.get()) {
+        WarnIfInitialized(manager_, "/AIHL/app/setMainConfig");
         manager_->SetMainConfig(value);
     } else if (command == setOutputDirCmd_.get()) {
+        WarnIfInitialized(manager_, "/AIHL/app/setOutputDir");
         manager_->SetOutputDir(value);
     } else if (command == setNumThreadsCmd_.get()) {
+        WarnIfInitialized(manager_, "/AIHL/app/setNumThreads");
         manager_->SetNumThreads(setNumThreadsCmd_->GetNewIntValue(value));
     } else if (command == setSeedCmd_.get()) {
+        WarnIfInitialized(manager_, "/AIHL/app/setSeed");
         const int seed = setSeedCmd_->GetNewIntValue(value);
         manager_->SetSeed(static_cast<unsigned long>(seed));
     } else if (command == setVerboseCmd_.get()) {
         manager_->SetVerboseLevel(setVerboseCmd_->GetNewIntValue(value));
     } else if (command == setCheckOverlapsCmd_.get()) {
+        WarnIfInitialized(manager_, "/AIHL/app/setCheckOverlaps");
         manager_->SetCheckOverlaps(setCheckOverlapsCmd_->GetNewBoolValue(value));
     } else if (command == printSummaryCmd_.get()) {
         manager_->PrintSummary();
