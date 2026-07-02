@@ -22,10 +22,10 @@ def merge(files, output):
         output.parent.mkdir(parents=True, exist_ok=True)
 
     header = None
-    with output.open("w", newline="") as out_handle:
+    with output.open("w", newline="", encoding="utf-8") as out_handle:
         writer = None
         for file_path in files:
-            with Path(file_path).open(newline="") as in_handle:
+            with Path(file_path).open(newline="", encoding="utf-8-sig") as in_handle:
                 reader = csv.reader(in_handle)
                 try:
                     current_header = next(reader)

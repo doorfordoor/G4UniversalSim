@@ -1,0 +1,42 @@
+from __future__ import annotations
+
+from PySide6.QtWidgets import QLabel, QPlainTextEdit, QVBoxLayout, QWidget
+
+from g4usim_gui.preview3d.scene_model import PreviewScene
+
+
+class FallbackPreviewWidget(QWidget):
+    def __init__(self, parent: QWidget | None = None, reason: str = "") -> None:
+        super().__init__(parent)
+        self.reason = reason
+        layout = QVBoxLayout(self)
+        self.banner = QLabel()
+        self.banner.setWordWrap(True)
+        self.text = QPlainTextEdit()
+        self.text.setReadOnly(True)
+        layout.addWidget(self.banner)
+        layout.addWidget(self.text, 1)
+        self._set_banner()
+
+    def _set_banner(self) -> None:
+        reason = f"\nReason: {self.reason}" if self.reason else ""
+        self.banner.setText(
+            "3D preview dependencies are optional and are not currently available."
+            f"{reason}\nInstall with: pip install -r requirements-3d.txt"
+        )
+
+    def render_scene(self, scene: PreviewScene) -> None:
+        self.text.setPlainText("\n".join(scene.summary_lines()))
+
+    def clear(self) -> None:
+        self.text.clear()
+
+    def reset_camera(self) -> None:
+        # Text fallback has no camera; keep this method so toolbar actions are safe.
+        return
+
+    def set_show_source(self, show: bool) -> None:
+        return
+
+    def set_show_labels(self, show: bool) -> None:
+        return

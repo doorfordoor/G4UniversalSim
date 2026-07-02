@@ -1,0 +1,245 @@
+from __future__ import annotations
+
+import re
+from dataclasses import asdict, dataclass, field
+
+from g4usim_gui.models.physics_model import PhysicsSettings
+from g4usim_gui.models.scoring_model import ScoringSettings
+from g4usim_gui.models.source_model import SourceSettings
+
+
+REFERENCE_LIST_CANDIDATES = [
+    "FTFP_BERT",
+    "FTFP_BERT_EMZ",
+    "FTFP_BERT_EMY",
+    "FTFP_BERT_HP",
+    "QGSP_BERT",
+    "QGSP_BIC",
+    "Shielding",
+]
+
+
+SOURCE_PRESETS = [
+    "proton_beam",
+    "mono_proton",
+    "neutron_beam",
+    "gamma_beam",
+    "isotropic_neutron",
+    "plane_proton_beam",
+]
+
+
+@dataclass
+class SourceEditableModel:
+    preset: str = "proton_beam"
+    particle: str = "proton"
+    energy: str = "10 MeV"
+    position_type: str = "point"
+    position: str = "0,0,-1 mm"
+    direction: str = "0,0,1"
+    source_shape: str = ""
+    radius: str = ""
+    center: str = ""
+    angular_mode: str = "beam"
+    enabled: bool = True
+    is_dirty: bool = False
+    errors: list[str] = field(default_factory=list)
+    warnings: list[str] = field(default_factory=list)
+
+    @classmethod
+    def from_settings(cls, settings: SourceSettings) -> "SourceEditableModel":
+        model = cls(
+            preset=settings.preset,
+            particle=settings.particle,
+            energy=settings.energy,
+            position=settings.position,
+            direction=settings.direction,
+        )
+        validate_source_model(model)
+        return model
+
+    def to_settings(self) -> SourceSettings:
+        return SourceSettings(
+            preset=self.preset,
+            particle=self.particle,
+            energy=self.energy,
+            position=self.position,
+            direction=self.direction,
+        )
+
+
+@dataclass
+class PhysicsEditableModel:
+    mode: str = "reference"
+    reference_list: str = "FTFP_BERT_EMZ"
+    default_cut: str = "1 mm"
+    enable_biasing_physics: bool = False
+    extra_modules: list[str] = field(default_factory=list)
+    manual_modules: list[str] = field(default_factory=list)
+    particle_cuts: dict[str, str] = field(default_factory=dict)
+    is_dirty: bool = False
+    errors: list[str] = field(default_factory=list)
+    warnings: list[str] = field(default_factory=list)
+
+    @classmethod
+    def from_settings(cls, settings: PhysicsSettings) -> "PhysicsEditableModel":
+        model = cls(
+            reference_list=settings.reference,
+            default_cut=settings.default_cut,
+            enable_biasing_physics=settings.enable_biasing,
+        )
+        validate_physics_model(model)
+        return model
+
+    def to_settings(self) -> PhysicsSettings:
+        return PhysicsSettings(
+            reference=self.reference_list,
+            default_cut=self.default_cut,
+            enable_biasing=self.enable_biasing_physics,
+        )
+
+
+@dataclass
+class ScoringEditableModel:
+    enabled: bool = True
+    hits: bool = True
+    event_edep: bool = True
+    edep: bool = True
+    raw_histogram: bool = True
+    weighted_histogram: bool = True
+    hist_bins: int = 100
+    hist_min: str = "0 eV"
+    hist_max: str = "10 MeV"
+    volume_summary: bool = True
+    particle_summary: bool = True
+    let: bool = False
+    dose: bool = False
+    fluence: bool = False
+    auto_create_default_scorers: bool = True
+    verbose: int = 1
+    is_dirty: bool = False
+    errors: list[str] = field(default_factory=list)
+    warnings: list[str] = field(default_factory=list)
+
+    @classmethod
+    def from_settings(cls, settings: ScoringSettings) -> "ScoringEditableModel":
+        model = cls(
+            enabled=settings.enabled,
+            hits=settings.hits,
+            event_edep=settings.event_edep,
+            edep=settings.edep,
+            hist_bins=settings.hist_bins,
+            hist_min=settings.hist_min,
+            hist_max=settings.hist_max,
+        )
+        validate_scoring_model(model)
+        return model
+
+    def to_settings(self) -> ScoringSettings:
+        return ScoringSettings(
+            enabled=self.enabled,
+            hits=self.hits,
+            event_edep=self.event_edep,
+            edep=self.edep,
+            hist_bins=self.hist_bins,
+            hist_min=self.hist_min,
+            hist_max=self.hist_max,
+        )
+
+
+def validate_source_model(model: SourceEditableModel) -> SourceEditableModel:
+    model.errors = []
+    model.warnings = []
+    if not model.enabled:
+        model.warnings.append("Source is disabled in the editor, but G4UniversalSim still requires a primary source.")
+    if not model.preset.strip():
+        model.errors.append("preset is required")
+    elif model.preset not in SOURCE_PRESETS:
+        model.warnings.append(f"preset '{model.preset}' is not in the GUI quick list; final validation happens in C++")
+    if not model.particle.strip():
+        model.errors.append("particle is required")
+    if not model.energy.strip():
+        model.errors.append("energy is required")
+    if model.position_type.strip() != "point":
+        model.errors.append("only position_type=point is generated by this GUI MVP")
+    if not _has_three_components(model.position):
+        model.errors.append("position should contain at least 3 components")
+    if not _has_three_components(model.direction):
+        model.errors.append("direction should contain at least 3 components")
+    elif not _direction_is_nonzero(model.direction):
+        model.errors.append("direction cannot be all zero")
+    if model.angular_mode not in {"beam", "fixed"}:
+        model.warnings.append("advanced angular modes are not generated by this GUI MVP")
+    return model
+
+
+def validate_physics_model(model: PhysicsEditableModel) -> PhysicsEditableModel:
+    model.errors = []
+    model.warnings = []
+    if model.mode != "reference":
+        model.errors.append("manual physics mode is not generated by this GUI MVP")
+    if not model.reference_list.strip():
+        model.errors.append("reference list is required")
+    elif model.reference_list not in REFERENCE_LIST_CANDIDATES:
+        model.warnings.append("reference list is not in the GUI quick list; Geant4 validates it at initialization")
+    if not model.default_cut.strip():
+        model.errors.append("default cut is required")
+    elif not _looks_like_value_with_unit(model.default_cut):
+        model.warnings.append("default cut should include a value and unit, for example '1 mm'")
+    if model.enable_biasing_physics:
+        model.warnings.append("This only enables the physics hook. Biasing rules are configured in a later editor.")
+    if model.extra_modules:
+        model.warnings.append("extra modules are preserved in the model but not edited by this MVP")
+    if model.manual_modules:
+        model.warnings.append("manual modules are preserved in the model but not generated by this MVP")
+    return model
+
+
+def validate_scoring_model(model: ScoringEditableModel) -> ScoringEditableModel:
+    model.errors = []
+    model.warnings = []
+    if model.enabled and not any([model.hits, model.event_edep, model.edep]):
+        model.errors.append("enabled scoring requires at least one of hits/event_edep/edep")
+    if model.hist_bins <= 0:
+        model.errors.append("histogram bins must be > 0")
+    if not model.hist_min.strip():
+        model.errors.append("histogram min is required")
+    if not model.hist_max.strip():
+        model.errors.append("histogram max is required")
+    if not model.edep and (model.raw_histogram or model.weighted_histogram):
+        model.warnings.append("edep scorer is disabled; edep histogram settings will not produce output")
+    if model.edep and not (model.raw_histogram or model.weighted_histogram):
+        model.errors.append("edep histogram output requires raw_histogram or weighted_histogram")
+    if model.let or model.dose or model.fluence:
+        model.errors.append("LET/Dose/Fluence are experimental stubs and are disabled in this GUI MVP")
+    return model
+
+
+def source_model_to_snapshot(model: SourceEditableModel) -> dict:
+    return asdict(model)
+
+
+def physics_model_to_snapshot(model: PhysicsEditableModel) -> dict:
+    return asdict(model)
+
+
+def scoring_model_to_snapshot(model: ScoringEditableModel) -> dict:
+    return asdict(model)
+
+
+def _has_three_components(value: str) -> bool:
+    tokens = [token for token in re.split(r"[,\s]+", value.strip()) if token]
+    return len(tokens) >= 3
+
+
+def _direction_is_nonzero(value: str) -> bool:
+    tokens = [token for token in re.split(r"[,\s]+", value.strip()) if token]
+    try:
+        numeric = [float(token) for token in tokens[:3]]
+    except ValueError:
+        return True
+    return any(abs(item) > 0 for item in numeric)
+
+
+def _looks_like_value_with_unit(value: str) -> bool:
+    return bool(re.search(r"\d", value)) and bool(re.search(r"[A-Za-z]", value))
