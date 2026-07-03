@@ -18,14 +18,14 @@ Advanced MicroElec/ElectronCapture support is optional and experimental. LET, do
 
 ## Current Safety Notes
 
-- `mode = volume_fraction` is parsed by the material command parser, but `MaterialFactory` intentionally rejects it because volume fractions have not yet been converted to physically correct mass fractions.
+- `mode = volume_fraction` is supported for material components. Volume fractions are converted to mass fractions using component densities; `density = auto` uses ideal additive-volume density, while explicit density overrides the final mixture density.
 - `gdml` is a placeholder template only. It does not call `G4GDMLParser`; do not run `/run/initialize` with `macros/run_gdml.mac` until real GDML import is implemented.
 - STL import is not implemented.
 - Hierarchical geometry supports `trd` / `trapezoid` through `G4Trd`, and full `trap` through `G4Trap`; all `trd` / `trap` length parameters are half-lengths.
 - `layered_device` propagates `copyNo`, `metadata.*`, and unknown layer keys to `VolumeNode::userProperties`; metadata is not written to hit CSV files yet.
 - `/AIHL/output/...`, `/AIHL/app/...`, and `/AIHL/detector/...` are registered by the default executable. Output commands do not include hits/scoring switches; use `/AIHL/scoring/...` for those.
 - Importance biasing, weight-window, splitting, and Russian roulette are future work. The currently usable biasing path is process-level XS biasing.
-- Multi-thread CSV output is not production-safe yet because per-worker `OutputManager`/`ScoringManager` instances are not fully wired. Use single-thread runs for production CSV output.
+- Multi-thread CSV output uses per-worker `OutputManager` / `ScoringManager` instances and writes `_tN` files. Automatic merge is not implemented; merge per-thread CSV/histogram files explicitly.
 
 ## Features
 
@@ -77,6 +77,33 @@ The same macro can also self-load the minimal material, geometry, physics, sourc
 .\build_vs\Release\G4UniversalSim.exe --macro macros/run_simple.mac
 ```
 
+## Validation Smoke Tests
+
+Use `macros/run_hit_smoke.mac` when you specifically need to verify the sensitive-detector hit chain. It places a 1 MeV electron source inside a sensitive silicon target so `hits_tN.csv`, event edep, and edep histograms are expected to be produced:
+
+```powershell
+.\build_vs2026\Release\G4UniversalSim.exe --macro macros/run_hit_smoke.mac --threads 1 --output test/output/hit_smoke_st
+.\build_vs2026\Release\G4UniversalSim.exe --macro macros/run_hit_smoke.mac --threads 2 --output test/output/hit_smoke_mt
+```
+
+`macros/test_simple_min.mac` remains a minimal initialization/run smoke test. It may produce no hit rows if the sample source does not deposit energy in a sensitive volume; that does not by itself indicate an SD failure.
+
+Process-level XS biasing has a runtime smoke test:
+
+```powershell
+.\build_vs2026\Release\G4UniversalSim.exe --macro macros/run_biasing_process_level_smoke.mac --threads 1 --output test/output/biasing_process_level_smoke
+```
+
+This checks initialization, operator attachment, and raw/weighted edep output only. It is not a physics validation of biased vs analog results.
+
+Volume-fraction material construction has a smoke test:
+
+```powershell
+.\build_vs2026\Release\G4UniversalSim.exe --macro macros/run_volume_fraction_test.mac --threads 1 --output test/output/volume_fraction_test
+```
+
+Only material components are supported for `mode = volume_fraction`; direct element components are rejected with a clear error.
+
 ## Outputs
 
 For the default single-thread configuration, output is written under `output/simple_test/`:
@@ -91,11 +118,18 @@ For the default single-thread configuration, output is written under `output/sim
 
 If no step deposits energy in a sensitive volume, the hit file may be absent or contain fewer rows than expected, while `event_edep_t0.csv` is still written when event edep output is enabled.
 
-For production CSV output, prefer `--threads 1` until thread-local output and automatic merge are implemented.
+For multi-thread CSV output, merge per-thread files explicitly:
+
+```powershell
+python scripts\merge_outputs.py --input test\output\hit_smoke_mt --pattern "hits_t*.csv" --output test\output\hit_smoke_mt\hits_merged.csv
+python scripts\merge_outputs.py --input test\output\hit_smoke_mt --pattern "event_edep_t*.csv" --output test\output\hit_smoke_mt\event_edep_merged.csv
+.\build_vs2026\Release\mergeHistograms.exe --input test\output\hit_smoke_mt --pattern hist_edep_raw_t*.csv --output test\output\hit_smoke_mt\hist_edep_raw_merged.csv
+.\build_vs2026\Release\mergeHistograms.exe --input test\output\hit_smoke_mt --pattern hist_edep_weighted_t*.csv --output test\output\hit_smoke_mt\hist_edep_weighted_merged.csv
+```
 
 ## Documentation
 
-- [Usage](docs/USAGE.md)
-- [Configuration reference](docs/CONFIG_REFERENCE.md)
-- [Module overview](docs/MODULE_OVERVIEW.md)
-- [Troubleshooting](docs/TROUBLESHOOTING.md)
+- [中文使用手册](docs/中文使用手册.md)
+- [中文几何配置说明](docs/中文几何配置说明.md)
+- [GUI 中文快速使用说明](gui/docs/中文快速使用说明.md)
+- [Agent 维护说明](docs/Agent维护说明.md)

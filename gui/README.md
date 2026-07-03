@@ -20,6 +20,8 @@ Round 7I upgrades the Config Builder Materials tab from preview-only to a Materi
 
 Round 7J upgrades Source, Physics, and Scoring from simple form fields to editable models. The Config Builder Run Config tab can edit source particle/energy/position/direction, reference physics list/default cut/biasing hook, and scoring hits/event_edep/edep histogram settings. Generated `main.ini` reflects the editor models and is previewed before package generation.
 
+Round 7J2 upgrades the Source editor and 3D Preview. Source now has separate position-distribution and angular-distribution controls. The generated backend-safe modes are point/fixed, point/isotropic, plane circle/fixed, and plane circle/isotropic. Plane rectangle/annulus, cone, cosine, and focused source modes are available for preview but blocked from package generation until the C++ Source backend supports them. The 3D Preview now renders primitive boxes, tubs/cylinders, spheres/orbs, cones, boolean tool primitives, source disks/rectangles, and thin semi-transparent source rays.
+
 Round 7K upgrades Geometry from static preview to a Simple Box / Layered Device editor MVP. The Config Builder Geometry tab can edit `simple_box` `[world]/[target]` fields and `layered_device` layer rows, validate material/sensitive/biasing consistency, preview generated `geometry.ini`, and write edited geometry only into generated run packages. Hierarchical, boolean, array, shielding, GDML, and STL remain preview-only.
 
 Round 7K-check adds backend verification for GUI-generated geometry packages. `gui/smoke_tests/smoke_geometry_backend_package.py` creates Simple Box and Layered Device packages, checks generated `main.ini`/`geometry.ini`/`validation_report.txt`, and optionally runs `G4UniversalSim.exe` when `G4USIM_EXE` is set.
@@ -50,15 +52,15 @@ When `QT_QPA_PLATFORM=offscreen` is set, the GUI also uses the text fallback by 
 python main.py
 ```
 
-## Checkpoint Docs And Smoke Tests
+## Current Docs And Smoke Tests
 
-Round 7 checkpoint material lives under:
+Current human-readable GUI documentation lives under:
 
-- `gui/docs/GUI_CHECKPOINT_ROUND7.md`
-- `gui/docs/MANUAL_QA_CHECKLIST.md`
-- `gui/docs/PACKAGING_PREP_NOTES.md`
 - `gui/docs/中文快速使用说明.md`
-- `gui/docs/EDITABLE_CONFIG_PLAN.md`
+
+Agent-oriented maintenance context lives under:
+
+- `docs/Agent维护说明.md`
 
 Lightweight smoke checks can be run from the workspace root:
 
@@ -71,7 +73,18 @@ python gui/smoke_tests/smoke_history.py
 python gui/smoke_tests/smoke_geometry_editor.py
 python gui/smoke_tests/smoke_geometry_backend_package.py
 python gui/smoke_tests/smoke_preview3d.py
+python gui/smoke_tests/smoke_source_editor_v2.py
+python gui/smoke_tests/smoke_preview3d_primitives.py
 ```
+
+Hierarchical / boolean geometry backend verification is optional and runs only when `G4USIM_EXE` points at a built executable:
+
+```powershell
+$env:G4USIM_EXE="D:\Geant4\G4UniversalSim\build_vs2026\Release\G4UniversalSim.exe"
+python gui/smoke_tests/smoke_hier_boolean_geometry_editor.py
+```
+
+It verifies GUI-generated hierarchical, boolean subtraction, mixed CSG, and boolean hit-smoke packages against the real C++ backend.
 
 To run the generated geometry packages through the real C++ backend:
 
@@ -114,7 +127,7 @@ The Input Files area includes:
 - Geometry tab: Simple Box editor, Layered Device editor, and preview for unsupported templates.
 - Geometry volume table: ordinary volumes only, shown in the Geometry preview sub-tab.
 - Boolean operation table: `volume.<name>.boolean.<index>` sections are summarized separately and are not treated as ordinary volumes.
-- 3D Preview tab: optional approximate Simple Box / Layered Device preview plus source arrow. Missing PyVista dependencies use a text fallback.
+- 3D Preview tab: optional approximate Simple Box / Layered Device / hierarchical primitive preview plus source surfaces/rays. Missing PyVista dependencies use a text fallback.
 - Raw previews for material and geometry ini files.
 - Common NIST quick list for reference/copying.
 - Warning/error panes for parser messages.
@@ -311,10 +324,10 @@ The JSON file is not an input to `G4UniversalSim.exe`; config and macro files re
 ## Current Limits
 
 - Materials Editor is MVP-level: it supports row-level editing and validation, but not a full material database or chemistry parser.
-- Source/Physics/Scoring editors are MVP-level. Manual physics editing, advanced source modes, and LET/Dose/Fluence controls are intentionally not exposed.
+- Source/Physics/Scoring editors are MVP-level. Source point and plane-circle modes are generated when supported by the current C++ backend; rectangle/annulus/cone/cosine/focused source modes are preview-only and intentionally blocked from package generation. Manual physics editing and LET/Dose/Fluence controls are intentionally not exposed.
 - Geometry Editor is MVP-level: `simple_box`, `layered_device`, hierarchical volumes, and sequential boolean operations are editable/generated. `array`, `shielding`, GDML, and STL remain preview-only.
 - Boolean tools are solid operands, not ordinary volumes. They do not have material/sensitive/bias state; the target volume keeps those properties.
-- 3D Preview is approximate and optional. It shows boolean tools as cutter/wireframe volumes and does not render real CSG, GDML/STL, embed Geant4 visualization, or validate overlaps.
+- 3D Preview is approximate and optional. It shows primitive boxes, tubs/cylinders, spheres/orbs, cones, and boolean tools as cutter/wireframe volumes. It does not render real CSG, GDML/STL, embed Geant4 visualization, or validate overlaps.
 - No biasing rule editor.
 - Source, physics, and scoring forms are intentionally minimal.
 - No Geant4 OpenGL/Qt view embedding.
