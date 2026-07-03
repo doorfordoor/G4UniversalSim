@@ -23,7 +23,7 @@ from g4usim_gui.editors.source_physics_scoring_model import (
 
 
 SCHEMA_NAME = "G4UniversalSimProject"
-SCHEMA_VERSION = 4
+SCHEMA_VERSION = 5
 
 
 @dataclass

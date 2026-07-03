@@ -16,6 +16,9 @@ public:
     ScoringManager();
     ~ScoringManager();
 
+    std::unique_ptr<ScoringManager> CloneForThread(OutputManager* outputManager,
+                                                   int threadId) const;
+
     void SetOutputManager(OutputManager* outputManager);
     OutputManager* GetOutputManager();
     const OutputManager* GetOutputManager() const;

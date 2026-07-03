@@ -252,11 +252,31 @@ class ConfigBuilderPage(QWidget):
         self.source_editor_particle = QLineEdit("proton")
         self.source_editor_energy = QLineEdit("10 MeV")
         self.source_editor_position_type = QComboBox()
-        self.source_editor_position_type.addItems(["point"])
+        self.source_editor_position_type.addItems(["point", "plane"])
+        self.source_editor_shape = QComboBox()
+        self.source_editor_shape.addItems(["point", "circle", "rectangle", "square", "annulus"])
         self.source_editor_position = QLineEdit("0,0,-1 mm")
+        self.source_editor_radius = QLineEdit("1 mm")
+        self.source_editor_inner_radius = QLineEdit("")
+        self.source_editor_halfx = QLineEdit("1 mm")
+        self.source_editor_halfy = QLineEdit("1 mm")
+        self.source_editor_normal = QLineEdit("0,0,1")
+        self.source_editor_confine_volume = QLineEdit("")
         self.source_editor_direction = QLineEdit("0,0,1")
         self.source_editor_angular_mode = QComboBox()
-        self.source_editor_angular_mode.addItems(["beam", "fixed"])
+        self.source_editor_angular_mode.addItems(["fixed", "isotropic", "cone", "cosine", "focused"])
+        self.source_editor_theta_min = QLineEdit("0 deg")
+        self.source_editor_theta_max = QLineEdit("180 deg")
+        self.source_editor_phi_min = QLineEdit("0 deg")
+        self.source_editor_phi_max = QLineEdit("360 deg")
+        self.source_editor_cone_half_angle = QLineEdit("5 deg")
+        self.source_editor_focus_point = QLineEdit("0,0,0 mm")
+        self.source_editor_preview_rays = QSpinBox()
+        self.source_editor_preview_rays.setRange(1, 512)
+        self.source_editor_preview_rays.setValue(12)
+        self.source_editor_preview_seed = QSpinBox()
+        self.source_editor_preview_seed.setRange(0, 2_147_483_647)
+        self.source_editor_preview_seed.setValue(12345)
         self.source_editor_messages = QPlainTextEdit()
         self.source_editor_messages.setReadOnly(True)
 
@@ -601,15 +621,40 @@ class ConfigBuilderPage(QWidget):
     def _source_editor_tab(self) -> QWidget:
         tab = QWidget()
         layout = QVBoxLayout(tab)
-        form = QFormLayout()
-        form.addRow("Preset", self.source_editor_preset)
-        form.addRow("Particle", self.source_editor_particle)
-        form.addRow("Energy", self.source_editor_energy)
-        form.addRow("Position type", self.source_editor_position_type)
-        form.addRow("Position", self.source_editor_position)
-        form.addRow("Direction", self.source_editor_direction)
-        form.addRow("Angular mode", self.source_editor_angular_mode)
-        layout.addLayout(form)
+        basic = QGroupBox("Basic")
+        basic_form = QFormLayout(basic)
+        basic_form.addRow("Preset", self.source_editor_preset)
+        basic_form.addRow("Particle", self.source_editor_particle)
+        basic_form.addRow("Energy", self.source_editor_energy)
+        layout.addWidget(basic)
+
+        position = QGroupBox("Position Distribution")
+        position_form = QFormLayout(position)
+        position_form.addRow("Mode", self.source_editor_position_type)
+        position_form.addRow("Center / position", self.source_editor_position)
+        position_form.addRow("Shape", self.source_editor_shape)
+        position_form.addRow("Radius", self.source_editor_radius)
+        position_form.addRow("Inner radius", self.source_editor_inner_radius)
+        position_form.addRow("Half X", self.source_editor_halfx)
+        position_form.addRow("Half Y", self.source_editor_halfy)
+        position_form.addRow("Normal", self.source_editor_normal)
+        position_form.addRow("Confine volume", self.source_editor_confine_volume)
+        layout.addWidget(position)
+
+        angular = QGroupBox("Angular Distribution")
+        angular_form = QFormLayout(angular)
+        angular_form.addRow("Mode", self.source_editor_angular_mode)
+        angular_form.addRow("Direction / axis", self.source_editor_direction)
+        angular_form.addRow("Theta min", self.source_editor_theta_min)
+        angular_form.addRow("Theta max", self.source_editor_theta_max)
+        angular_form.addRow("Phi min", self.source_editor_phi_min)
+        angular_form.addRow("Phi max", self.source_editor_phi_max)
+        angular_form.addRow("Cone half angle", self.source_editor_cone_half_angle)
+        angular_form.addRow("Focus point", self.source_editor_focus_point)
+        angular_form.addRow("Preview ray count", self.source_editor_preview_rays)
+        angular_form.addRow("Preview random seed", self.source_editor_preview_seed)
+        layout.addWidget(angular)
+        layout.addWidget(create_hint_label("Backend support: point/fixed, point/isotropic, plane circle/fixed, and plane circle/isotropic are generated to main.ini. Rectangle, annulus, cone, cosine, and focused modes are shown in preview but blocked from package generation until the C++ Source backend supports them."))
         layout.addWidget(QLabel("Validation messages"))
         layout.addWidget(self.source_editor_messages, 1)
         return tab
@@ -858,7 +903,19 @@ class ConfigBuilderPage(QWidget):
             self.source_editor_particle,
             self.source_editor_energy,
             self.source_editor_position,
+            self.source_editor_radius,
+            self.source_editor_inner_radius,
+            self.source_editor_halfx,
+            self.source_editor_halfy,
+            self.source_editor_normal,
+            self.source_editor_confine_volume,
             self.source_editor_direction,
+            self.source_editor_theta_min,
+            self.source_editor_theta_max,
+            self.source_editor_phi_min,
+            self.source_editor_phi_max,
+            self.source_editor_cone_half_angle,
+            self.source_editor_focus_point,
             self.physics_editor_default_cut,
             self.scoring_editor_min,
             self.scoring_editor_max,
@@ -867,6 +924,7 @@ class ConfigBuilderPage(QWidget):
         for combo in [
             self.source_editor_preset,
             self.source_editor_position_type,
+            self.source_editor_shape,
             self.source_editor_angular_mode,
             self.physics_editor_mode,
             self.physics_editor_reference,
@@ -886,6 +944,8 @@ class ConfigBuilderPage(QWidget):
         ]:
             widget.stateChanged.connect(self._update_sps_from_widgets)
         self.scoring_editor_bins.valueChanged.connect(self._update_sps_from_widgets)
+        self.source_editor_preview_rays.valueChanged.connect(self._update_sps_from_widgets)
+        self.source_editor_preview_seed.valueChanged.connect(self._update_sps_from_widgets)
         for widget in [
             self.source_particle,
             self.source_energy,
@@ -1633,10 +1693,25 @@ class ConfigBuilderPage(QWidget):
         self._set_combo_text(self.source_editor_preset, self.source_editor.preset)
         self.source_editor_particle.setText(self.source_editor.particle)
         self.source_editor_energy.setText(self.source_editor.energy)
-        self._set_combo_text(self.source_editor_position_type, self.source_editor.position_type)
+        self._set_combo_text(self.source_editor_position_type, self.source_editor.position_mode or self.source_editor.position_type)
+        self._set_combo_text(self.source_editor_shape, self.source_editor.source_shape)
         self.source_editor_position.setText(self.source_editor.position)
+        self.source_editor_radius.setText(self.source_editor.radius)
+        self.source_editor_inner_radius.setText(self.source_editor.inner_radius)
+        self.source_editor_halfx.setText(self.source_editor.halfx)
+        self.source_editor_halfy.setText(self.source_editor.halfy)
+        self.source_editor_normal.setText(self.source_editor.normal)
+        self.source_editor_confine_volume.setText(self.source_editor.confine_volume)
         self.source_editor_direction.setText(self.source_editor.direction)
         self._set_combo_text(self.source_editor_angular_mode, self.source_editor.angular_mode)
+        self.source_editor_theta_min.setText(self.source_editor.theta_min)
+        self.source_editor_theta_max.setText(self.source_editor.theta_max)
+        self.source_editor_phi_min.setText(self.source_editor.phi_min)
+        self.source_editor_phi_max.setText(self.source_editor.phi_max)
+        self.source_editor_cone_half_angle.setText(self.source_editor.cone_half_angle)
+        self.source_editor_focus_point.setText(self.source_editor.focus_point)
+        self.source_editor_preview_rays.setValue(self.source_editor.preview_ray_count)
+        self.source_editor_preview_seed.setValue(self.source_editor.random_seed_preview)
 
         self._set_combo_text(self.physics_editor_mode, self.physics_editor.mode)
         self._set_combo_text(self.physics_editor_reference, self.physics_editor.reference_list)
@@ -1665,10 +1740,26 @@ class ConfigBuilderPage(QWidget):
         self.source_editor.preset = self.source_editor_preset.currentText().strip()
         self.source_editor.particle = self.source_editor_particle.text().strip()
         self.source_editor.energy = self.source_editor_energy.text().strip()
-        self.source_editor.position_type = self.source_editor_position_type.currentText().strip()
+        self.source_editor.position_mode = self.source_editor_position_type.currentText().strip()
+        self.source_editor.position_type = self.source_editor.position_mode
+        self.source_editor.source_shape = self.source_editor_shape.currentText().strip()
         self.source_editor.position = self.source_editor_position.text().strip()
+        self.source_editor.radius = self.source_editor_radius.text().strip()
+        self.source_editor.inner_radius = self.source_editor_inner_radius.text().strip()
+        self.source_editor.halfx = self.source_editor_halfx.text().strip()
+        self.source_editor.halfy = self.source_editor_halfy.text().strip()
+        self.source_editor.normal = self.source_editor_normal.text().strip()
+        self.source_editor.confine_volume = self.source_editor_confine_volume.text().strip()
         self.source_editor.direction = self.source_editor_direction.text().strip()
         self.source_editor.angular_mode = self.source_editor_angular_mode.currentText().strip()
+        self.source_editor.theta_min = self.source_editor_theta_min.text().strip()
+        self.source_editor.theta_max = self.source_editor_theta_max.text().strip()
+        self.source_editor.phi_min = self.source_editor_phi_min.text().strip()
+        self.source_editor.phi_max = self.source_editor_phi_max.text().strip()
+        self.source_editor.cone_half_angle = self.source_editor_cone_half_angle.text().strip()
+        self.source_editor.focus_point = self.source_editor_focus_point.text().strip()
+        self.source_editor.preview_ray_count = self.source_editor_preview_rays.value()
+        self.source_editor.random_seed_preview = self.source_editor_preview_seed.value()
         self.source_editor.is_dirty = True
 
         self.physics_editor.mode = self.physics_editor_mode.currentText().strip()
@@ -1702,6 +1793,10 @@ class ConfigBuilderPage(QWidget):
         self.source_editor.energy = self.source_energy.text().strip()
         self.source_editor.position = self.source_position.text().strip()
         self.source_editor.direction = self.source_direction.text().strip()
+        self.source_editor.position_mode = "point"
+        self.source_editor.position_type = "point"
+        self.source_editor.source_shape = "point"
+        self.source_editor.angular_mode = "fixed"
         self.physics_editor.reference_list = self.physics_reference.text().strip()
         self.physics_editor.default_cut = self.default_cut.text().strip()
         self.physics_editor.enable_biasing_physics = self.enable_biasing.isChecked()

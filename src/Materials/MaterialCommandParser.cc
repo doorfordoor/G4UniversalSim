@@ -63,6 +63,9 @@ std::string MaterialCommandParser::Require(
 
 double MaterialCommandParser::ParseDensity(const std::string& text)
 {
+    if (IsAutoDensity(text)) {
+        throw std::runtime_error("density=auto is only valid where explicitly supported");
+    }
     const auto parsed = ParseNumberUnit(text);
     const double value = parsed.first;
     const std::string unit = parsed.second;
@@ -70,6 +73,11 @@ double MaterialCommandParser::ParseDensity(const std::string& text)
     if (unit == "kg/m3" || unit == "kg/m^3") return value * kg / m3;
     if (unit == "mg/cm3" || unit == "mg/cm^3") return value * mg / cm3;
     throw std::runtime_error("Unsupported density unit in '" + text + "'");
+}
+
+bool MaterialCommandParser::IsAutoDensity(const std::string& text)
+{
+    return StringUtils::ToLower(StringUtils::Trim(text)) == "auto";
 }
 
 double MaterialCommandParser::ParseMolarMass(const std::string& text)

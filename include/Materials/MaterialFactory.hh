@@ -42,6 +42,12 @@ public:
     );
 
 private:
+    G4Material* BuildVolumeFractionMaterial(
+        const MaterialDefinition& def,
+        const std::map<std::string, G4Element*>& elements,
+        const std::map<std::string, G4Material*>& materials
+    );
+
     static std::string Normalize(const std::string& name);
     static void ValidateMassFractions(const MaterialDefinition& def);
 };

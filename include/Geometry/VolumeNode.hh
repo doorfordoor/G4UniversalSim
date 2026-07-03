@@ -27,6 +27,7 @@ public:
     bool hasProductionCuts = false;
     PlacementType placementType = PlacementType::Normal;
     VisualAttributes visual;
+    std::vector<BooleanSolidOperation> booleanOperations;
     std::vector<VolumeNode> children;
     std::map<std::string, std::string> userProperties;
 
@@ -38,6 +39,7 @@ public:
 
     void AddChild(const VolumeNode& child);
     bool HasChildren() const;
+    bool HasBooleanOperations() const;
 
     std::vector<VolumeNode*> GetChildrenMutable();
     std::vector<const VolumeNode*> GetChildren() const;

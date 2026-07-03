@@ -8,8 +8,32 @@
 
 #include <fstream>
 #include <functional>
+#include <iostream>
 #include <sstream>
 #include <stdexcept>
+
+namespace {
+
+bool IsKnownBooleanKey(const std::string& key)
+{
+    static const std::set<std::string> keys = {
+        "name", "operation", "shape", "size", "parameters", "position", "rotation"
+    };
+    return keys.count(key) > 0;
+}
+
+bool IsForbiddenBooleanKey(const std::string& key)
+{
+    static const std::set<std::string> keys = {
+        "material", "sensitive", "bias", "region", "parent", "placement", "copyno", "copyNo"
+    };
+    const std::string lower = StringUtils::ToLower(StringUtils::Trim(key));
+    return keys.count(lower) > 0
+        || StringUtils::StartsWith(lower, "cut.")
+        || StringUtils::StartsWith(lower, "vis.");
+}
+
+}  // namespace
 
 void GeometryConfig::Load(const std::string& filename)
 {
@@ -67,11 +91,52 @@ void GeometryConfig::Load(const std::string& filename)
         sections[currentSection][key] = value;
     }
 
+    std::map<std::string, std::map<int, BooleanSolidOperation>> pendingBooleanOps;
+    std::map<std::string, std::string> pendingBooleanTargets;
+
     for (const auto& section : sections) {
         const std::string lower = StringUtils::ToLower(section.first);
+        if (IsBooleanSectionName(section.first)) {
+            const BooleanSectionId id = ParseBooleanSectionName(section.first);
+            const std::string targetKey = Normalize(id.targetVolumeName);
+            auto& opsByIndex = pendingBooleanOps[targetKey];
+            if (opsByIndex.count(id.index)) {
+                throw Error(filename_, section.first, id.targetVolumeName, "index", "duplicate boolean operation index " + std::to_string(id.index));
+            }
+            pendingBooleanTargets[targetKey] = id.targetVolumeName;
+            opsByIndex[id.index] = ParseBooleanSection(section.first, section.second, id.targetVolumeName, id.index);
+            continue;
+        }
         if (lower == "world" || StringUtils::StartsWith(lower, "volume.")) {
             AddVolume(ParseVolumeSection(section.first, section.second));
         }
+    }
+
+    for (const auto& pending : pendingBooleanOps) {
+        const std::string& targetKey = pending.first;
+        const auto targetIt = pendingBooleanTargets.find(targetKey);
+        const std::string targetName = targetIt == pendingBooleanTargets.end() ? targetKey : targetIt->second;
+        if (!HasVolume(targetName)) {
+            throw Error(filename_, "", targetName, "boolean", "target volume for boolean operations does not exist");
+        }
+
+        const auto& opsByIndex = pending.second;
+        int expected = 0;
+        for (const auto& item : opsByIndex) {
+            if (item.first != expected) {
+                throw Error(
+                    filename_,
+                    "volume." + targetName + ".boolean." + std::to_string(item.first),
+                    targetName,
+                    "index",
+                    "boolean operation indices must be contiguous starting at 0"
+                );
+            }
+            ++expected;
+        }
+
+        VolumeNode& target = GetVolumeMutable(targetName);
+        for (const auto& item : opsByIndex) target.booleanOperations.push_back(item.second);
     }
     Validate();
 }
@@ -226,6 +291,50 @@ bool GeometryConfig::IsKnownKey(const std::string& key)
     return keys.count(key) || IsCutKey(key);
 }
 
+bool GeometryConfig::IsBooleanSectionName(const std::string& sectionName)
+{
+    const std::string lower = StringUtils::ToLower(StringUtils::Trim(sectionName));
+    return StringUtils::StartsWith(lower, "volume.") && lower.find(".boolean.") != std::string::npos;
+}
+
+GeometryConfig::BooleanSectionId GeometryConfig::ParseBooleanSectionName(const std::string& sectionName)
+{
+    const std::string value = StringUtils::Trim(sectionName);
+    const std::string lower = StringUtils::ToLower(value);
+    const std::string prefix = "volume.";
+    const std::string marker = ".boolean.";
+    if (!StringUtils::StartsWith(lower, prefix)) {
+        throw std::runtime_error("Invalid boolean section name '" + sectionName + "': expected volume.<target>.boolean.<index>");
+    }
+    const std::size_t markerPos = lower.find(marker);
+    if (markerPos == std::string::npos) {
+        throw std::runtime_error("Invalid boolean section name '" + sectionName + "': expected volume.<target>.boolean.<index>");
+    }
+
+    const std::size_t targetBegin = prefix.size();
+    const std::string target = StringUtils::Trim(value.substr(targetBegin, markerPos - targetBegin));
+    const std::string indexText = StringUtils::Trim(value.substr(markerPos + marker.size()));
+    if (target.empty() || indexText.empty()) {
+        throw std::runtime_error("Invalid boolean section name '" + sectionName + "': target and index must not be empty");
+    }
+    if (indexText.find('.') != std::string::npos) {
+        throw std::runtime_error("Invalid boolean section name '" + sectionName + "': boolean index must be a non-negative integer");
+    }
+
+    std::size_t consumed = 0;
+    int index = -1;
+    try {
+        index = std::stoi(indexText, &consumed);
+    } catch (...) {
+        throw std::runtime_error("Invalid boolean section name '" + sectionName + "': boolean index must be a non-negative integer");
+    }
+    if (consumed != indexText.size() || index < 0) {
+        throw std::runtime_error("Invalid boolean section name '" + sectionName + "': boolean index must be a non-negative integer");
+    }
+
+    return {target, index};
+}
+
 std::runtime_error GeometryConfig::Error(
     const std::string& filename,
     const std::string& section,
@@ -305,6 +414,59 @@ VolumeNode GeometryConfig::ParseVolumeSection(
     }
 
     return node;
+}
+
+BooleanSolidOperation GeometryConfig::ParseBooleanSection(
+    const std::string& sectionName,
+    const Section& values,
+    const std::string& targetName,
+    int index
+) const
+{
+    BooleanSolidOperation op;
+    op.name = values.count("name") && !StringUtils::Trim(values.at("name")).empty()
+        ? values.at("name")
+        : targetName + "_bool_" + std::to_string(index);
+
+    if (!values.count("operation")) throw Error(filename_, sectionName, targetName, "operation", "missing boolean operation");
+    op.operation = GeometryUtils::ParseBooleanOperation(values.at("operation"));
+    if (op.operation == BooleanOperation::None) {
+        throw Error(filename_, sectionName, targetName, "operation", "boolean operation must be union, subtraction, or intersection");
+    }
+
+    if (!values.count("shape")) throw Error(filename_, sectionName, targetName, "shape", "missing boolean tool shape");
+    op.tool.shapeName = values.at("shape");
+    op.tool.shape = GeometryUtils::ParseShape(op.tool.shapeName);
+    if (op.tool.shape == VolumeShape::Unknown) {
+        throw Error(filename_, sectionName, targetName, "shape", "unsupported boolean tool shape '" + op.tool.shapeName + "'");
+    }
+
+    if (values.count("position")) op.tool.position = GeometryUtils::ParseVec3(values.at("position"));
+    if (values.count("rotation")) op.tool.rotation = GeometryUtils::ParseRotation3(values.at("rotation"));
+
+    if (op.tool.shape == VolumeShape::Box) {
+        if (!values.count("size")) throw Error(filename_, sectionName, targetName, "size", "box boolean tool requires size");
+        op.tool.size = GeometryUtils::ParseVec3(values.at("size"));
+    }
+    if (op.tool.shape == VolumeShape::Tubs) {
+        if (!values.count("parameters")) {
+            throw Error(filename_, sectionName, targetName, "parameters", "tubs boolean tool requires parameters");
+        }
+        op.tool.parameters = GeometryUtils::ParseParameterList(values.at("parameters"));
+    } else if (values.count("parameters")) {
+        op.tool.parameters = GeometryUtils::ParseParameterList(values.at("parameters"));
+    }
+
+    for (const auto& item : values) {
+        if (IsForbiddenBooleanKey(item.first)) {
+            std::cerr << "[GeometryConfig] warning: boolean section '" << sectionName
+                      << "' ignores volume-only key '" << item.first << "'." << std::endl;
+            continue;
+        }
+        if (!IsKnownBooleanKey(item.first)) op.tool.properties[item.first] = item.second;
+    }
+
+    return op;
 }
 
 void GeometryConfig::ValidateNoCycles() const

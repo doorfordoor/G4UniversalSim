@@ -48,6 +48,11 @@ bool VolumeNode::HasChildren() const
     return !children.empty();
 }
 
+bool VolumeNode::HasBooleanOperations() const
+{
+    return !booleanOperations.empty();
+}
+
 std::vector<VolumeNode*> VolumeNode::GetChildrenMutable()
 {
     std::vector<VolumeNode*> result;
@@ -91,7 +96,8 @@ std::string VolumeNode::ToString() const
     oss << "VolumeNode{name='" << name << "', parent='" << parentName
         << "', shape='" << ShapeAsString() << "', material='" << materialName
         << "', sensitive=" << (sensitive ? "true" : "false")
-        << ", bias=" << (bias ? "true" : "false") << "}";
+        << ", bias=" << (bias ? "true" : "false")
+        << ", booleanOps=" << booleanOperations.size() << "}";
     return oss.str();
 }
 
@@ -125,5 +131,29 @@ void VolumeNode::ValidateBasic() const
         checkCut(productionCuts.electron, "electron");
         checkCut(productionCuts.positron, "positron");
         checkCut(productionCuts.proton, "proton");
+    }
+    for (const BooleanSolidOperation& op : booleanOperations) {
+        const std::string opName = op.name.empty() ? "<unnamed>" : op.name;
+        if (op.operation == BooleanOperation::None) {
+            throw std::runtime_error("Volume '" + name + "' has boolean operation '" + opName + "' with operation=none");
+        }
+        if (op.tool.shape == VolumeShape::Unknown) {
+            throw std::runtime_error("Volume '" + name + "' has boolean operation '" + opName + "' with missing or unsupported tool shape");
+        }
+        if (op.tool.shape == VolumeShape::Box) {
+            GeometryUtils::ValidateBoxSize(op.tool.size);
+        }
+        if (op.tool.shape == VolumeShape::Tubs) {
+            if (op.tool.parameters.size() < 5) {
+                throw std::runtime_error("Volume '" + name + "' boolean operation '" + opName + "' requires 5 tubs parameters");
+            }
+            GeometryUtils::ValidateTubsParameters(
+                op.tool.parameters[0],
+                op.tool.parameters[1],
+                op.tool.parameters[2],
+                op.tool.parameters[3],
+                op.tool.parameters[4]
+            );
+        }
     }
 }

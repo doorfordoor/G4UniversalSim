@@ -3,6 +3,7 @@
 #include "Hits/ParticleHit.hh"
 #include "Hits/ParticleHitCollection.hh"
 #include "Scoring/ScoringManager.hh"
+#include "Scoring/ThreadLocalScoringContext.hh"
 
 #include "G4Event.hh"
 #include "G4Exception.hh"
@@ -12,6 +13,9 @@
 #include "G4Step.hh"
 #include "G4TouchableHistory.hh"
 #include "G4ios.hh"
+#ifdef G4MULTITHREADED
+#include "G4Threading.hh"
+#endif
 
 #include <memory>
 #include <stdexcept>
@@ -67,8 +71,10 @@ G4bool SensitiveDetector::ProcessHits(G4Step* step, G4TouchableHistory* history)
     rawEdepThisEvent_ += hit->GetEdep();
     weightedEdepThisEvent_ += hit->GetEdep() * hit->GetWeight();
 
-    if (scoringEnabled_ && scoringManager_) {
-        scoringManager_->ScoreHit(hit->ToHitRecord());
+    if (scoringEnabled_) {
+        if (ScoringManager* scoringManager = ResolveScoringManager()) {
+            scoringManager->ScoreHit(hit->ToHitRecord());
+        }
     }
 
     if (hitCollectionEnabled_ && hitsCollection_) {
@@ -178,4 +184,26 @@ int SensitiveDetector::GetCurrentEventID() const
     const G4Event* event = runManager->GetCurrentEvent();
     if (!event) return -1;
     return event->GetEventID();
+}
+
+ScoringManager* SensitiveDetector::ResolveScoringManager()
+{
+    if (ScoringManager* scoringManager = AIHL::GetCurrentThreadScoringManager()) {
+        return scoringManager;
+    }
+
+#ifdef G4MULTITHREADED
+    if (scoringManager_ && !fallbackWarningIssued_ &&
+        G4Threading::G4GetThreadId() >= 0) {
+        fallbackWarningIssued_ = true;
+        G4Exception(
+            "SensitiveDetector::ResolveScoringManager",
+            "AIHLSDMT001",
+            JustWarning,
+            "Thread-local ScoringManager is not registered for this worker; falling back to the global ScoringManager. Multi-thread scoring output may be unsafe."
+        );
+    }
+#endif
+
+    return scoringManager_;
 }

@@ -1,6 +1,8 @@
 #pragma once
 
+#include <map>
 #include <string>
+#include <vector>
 
 enum class VolumeShape {
     Box,
@@ -18,6 +20,13 @@ enum class PlacementType {
     Replica,
     Parameterised,
     Assembly
+};
+
+enum class BooleanOperation {
+    None,
+    Union,
+    Subtraction,
+    Intersection
 };
 
 struct Vec3 {
@@ -44,4 +53,20 @@ struct VisualAttributes {
     std::string color;
     double alpha = 1.0;
     bool wireframe = false;
+};
+
+struct BooleanOperand {
+    VolumeShape shape = VolumeShape::Unknown;
+    std::string shapeName;
+    Vec3 size;
+    std::vector<double> parameters;
+    Vec3 position;
+    Rotation3 rotation;
+    std::map<std::string, std::string> properties;
+};
+
+struct BooleanSolidOperation {
+    BooleanOperation operation = BooleanOperation::None;
+    BooleanOperand tool;
+    std::string name;
 };

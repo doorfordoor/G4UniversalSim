@@ -70,5 +70,6 @@ private:
     std::map<std::string, G4Element*> elements_;
     std::map<std::string, G4Material*> materials_;
     std::set<std::string> buildingMaterials_;
+    std::vector<std::string> buildingMaterialStack_;
     bool locked_ = false;
 };

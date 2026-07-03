@@ -12,6 +12,8 @@ class PreviewVolume:
     name: str = ""
     shape: str = "box"
     size_mm: Vec3 | None = None
+    parameters_mm: tuple[float, ...] = field(default_factory=tuple)
+    parameters_deg: tuple[float, ...] = field(default_factory=tuple)
     position_mm: Vec3 | None = None
     rotation_deg: Vec3 | None = None
     material: str = ""
@@ -26,7 +28,16 @@ class PreviewSource:
     energy: str = ""
     position_mm: Vec3 | None = None
     direction: Vec3 | None = None
-    mode: str = "unknown"
+    mode: str = "fixed"
+    position_mode: str = "point"
+    source_shape: str = "point"
+    radius_mm: float | None = None
+    inner_radius_mm: float | None = None
+    halfx_mm: float | None = None
+    halfy_mm: float | None = None
+    normal: Vec3 | None = None
+    cone_half_angle_deg: float | None = None
+    preview_rays: list[tuple[Vec3, Vec3]] = field(default_factory=list)
 
 
 @dataclass
@@ -56,7 +67,8 @@ class PreviewScene:
             flag_text = f" [{' '.join(flags)}]" if flags else ""
             lines.append(
                 f"- {volume.name or '<unnamed>'}: role={volume.role}, shape={volume.shape}, "
-                f"material={volume.material or '<none>'}, size_mm={volume.size_mm}, pos_mm={volume.position_mm}{flag_text}"
+                f"material={volume.material or '<none>'}, size_mm={volume.size_mm}, params_mm={volume.parameters_mm}, "
+                f"pos_mm={volume.position_mm}{flag_text}"
             )
         lines.extend(
             [
@@ -67,6 +79,9 @@ class PreviewScene:
                 f"- position_mm: {self.source.position_mm}",
                 f"- direction: {self.source.direction}",
                 f"- mode: {self.source.mode}",
+                f"- position_mode: {self.source.position_mode}",
+                f"- source_shape: {self.source.source_shape}",
+                f"- preview_rays: {len(self.source.preview_rays)}",
             ]
         )
         if self.bounds_mm:

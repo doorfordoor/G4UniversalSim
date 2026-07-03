@@ -23,6 +23,7 @@
 #include "Biasing/BiasingMessenger.hh"
 #include "Scoring/ScoringMessenger.hh"
 #include "Scoring/ScoringManager.hh"
+#include "Scoring/ThreadLocalScoringContext.hh"
 #include "Utils/FileUtils.hh"
 #include "Utils/StringUtils.hh"
 
@@ -497,7 +498,10 @@ std::function<G4VSensitiveDetector*()> SimulationManager::CreateSensitiveDetecto
     }
 
     return [this]() -> G4VSensitiveDetector* {
-        return new SensitiveDetector("AIHLParticleSD", scoringManager_.get());
+        ScoringManager* threadScoringManager = AIHL::GetCurrentThreadScoringManager();
+        return new SensitiveDetector(
+            "AIHLParticleSD",
+            threadScoringManager ? threadScoringManager : scoringManager_.get());
     };
 }
 

@@ -22,6 +22,21 @@ _LENGTH_FACTORS_MM = {
 }
 
 
+def _cross(a: tuple[float, float, float], b: tuple[float, float, float]) -> tuple[float, float, float]:
+    return (
+        a[1] * b[2] - a[2] * b[1],
+        a[2] * b[0] - a[0] * b[2],
+        a[0] * b[1] - a[1] * b[0],
+    )
+
+
+def _normalize(value: tuple[float, float, float]) -> tuple[float, float, float] | None:
+    norm = math.sqrt(sum(item * item for item in value))
+    if norm <= 0.0:
+        return None
+    return (value[0] / norm, value[1] / norm, value[2] / norm)
+
+
 def parse_length_to_mm(text: str) -> float | None:
     value, unit = _parse_value_unit(text)
     if value is None:
@@ -68,6 +83,49 @@ def parse_direction(text: str) -> tuple[float, float, float] | None:
     if norm <= 0.0:
         return None
     return tuple(value / norm for value in values)  # type: ignore[return-value]
+
+
+def parse_length_list_to_mm(text: str) -> tuple[float, ...]:
+    values = []
+    for part in [item.strip() for item in text.split(",") if item.strip()]:
+        value = parse_length_to_mm(part)
+        if value is None:
+            break
+        values.append(value)
+    return tuple(values)
+
+
+def parse_angle_list_deg(text: str) -> tuple[float, ...]:
+    values = []
+    for part in [item.strip() for item in text.split(",") if item.strip()]:
+        value = parse_angle_deg(part)
+        if value is None:
+            break
+        values.append(value)
+    return tuple(values)
+
+
+def perpendicular_basis(direction: tuple[float, float, float]) -> tuple[tuple[float, float, float], tuple[float, float, float]]:
+    if abs(direction[2]) < 0.9:
+        helper = (0.0, 0.0, 1.0)
+    else:
+        helper = (1.0, 0.0, 0.0)
+    u = _normalize(_cross(direction, helper)) or (1.0, 0.0, 0.0)
+    v = _normalize(_cross(direction, u)) or (0.0, 1.0, 0.0)
+    return u, v
+
+
+def rotate_from_axis(axis: tuple[float, float, float], angle_rad: float, azimuth_rad: float) -> tuple[float, float, float]:
+    u, v = perpendicular_basis(axis)
+    ca = math.cos(angle_rad)
+    sa = math.sin(angle_rad)
+    cp = math.cos(azimuth_rad)
+    sp = math.sin(azimuth_rad)
+    return _normalize((
+        ca * axis[0] + sa * (cp * u[0] + sp * v[0]),
+        ca * axis[1] + sa * (cp * u[1] + sp * v[1]),
+        ca * axis[2] + sa * (cp * u[2] + sp * v[2]),
+    )) or axis
 
 
 def _parse_vec3(text: str, scalar_parser, *, default_unit: str) -> tuple[float, float, float] | None:

@@ -46,6 +46,7 @@ public:
 
 private:
     int GetCurrentEventID() const;
+    ScoringManager* ResolveScoringManager();
 
     ScoringManager* scoringManager_ = nullptr; // not owned
     ParticleHitCollection* hitsCollection_ = nullptr; // owned by Geant4 event after insertion
@@ -57,6 +58,7 @@ private:
     bool scoringEnabled_ = true;
 
     int verboseLevel_ = 0;
+    bool fallbackWarningIssued_ = false;
     int hitsThisEvent_ = 0;
     double rawEdepThisEvent_ = 0.0;
     double weightedEdepThisEvent_ = 0.0;

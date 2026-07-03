@@ -21,7 +21,7 @@ public:
 
 private:
     SourceManager* sourceManager_ = nullptr;   // non-owning
-    ScoringManager* scoringManager_ = nullptr; // non-owning
-    OutputManager* outputManager_ = nullptr;   // non-owning
+    ScoringManager* masterScoringManager_ = nullptr; // non-owning
+    OutputManager* masterOutputManager_ = nullptr;   // non-owning
     int verboseLevel_ = 0;
 };

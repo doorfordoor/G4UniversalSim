@@ -12,6 +12,7 @@
 #include "G4Colour.hh"
 #include "G4Cons.hh"
 #include "G4Exception.hh"
+#include "G4IntersectionSolid.hh"
 #include "G4LogicalVolume.hh"
 #include "G4Material.hh"
 #include "G4Orb.hh"
@@ -21,10 +22,13 @@
 #include "G4RegionStore.hh"
 #include "G4RotationMatrix.hh"
 #include "G4Sphere.hh"
+#include "G4SubtractionSolid.hh"
 #include "G4ThreeVector.hh"
+#include "G4Transform3D.hh"
 #include "G4Trap.hh"
 #include "G4Trd.hh"
 #include "G4Tubs.hh"
+#include "G4UnionSolid.hh"
 #include "G4VPhysicalVolume.hh"
 #include "G4VisAttributes.hh"
 #include "G4ios.hh"
@@ -115,6 +119,17 @@ void ValidatePositive(double value, const std::string& label, const VolumeNode& 
     if (value <= 0.0) {
         throw std::runtime_error("Volume '" + node.name + "' has non-positive " + label);
     }
+}
+
+std::string BooleanToolContext(
+    const std::string& ownerVolumeName,
+    std::size_t booleanIndex,
+    const BooleanOperand& operand
+)
+{
+    return "Boolean tool creation failed for volume '" + ownerVolumeName
+        + "', operation #" + std::to_string(booleanIndex)
+        + ": shape=" + GeometryUtils::ShapeToString(operand.shape) + " ";
 }
 
 }  // namespace
@@ -249,6 +264,13 @@ G4VPhysicalVolume* VolumeBuilder::BuildVolume(const VolumeNode& node, G4LogicalV
 
 G4VSolid* VolumeBuilder::CreateSolid(const VolumeNode& node)
 {
+    G4VSolid* baseSolid = CreatePrimitiveSolid(node);
+    if (!node.HasBooleanOperations()) return baseSolid;
+    return ApplyBooleanOperations(node, baseSolid);
+}
+
+G4VSolid* VolumeBuilder::CreatePrimitiveSolid(const VolumeNode& node)
+{
     if (node.HasProperty("gdml_file") || node.GetProperty("template") == "gdml_placeholder" || node.GetProperty("source") == "gdml") {
         throw std::runtime_error("GDML geometry import is not implemented in VolumeBuilder yet for volume '" + node.name + "'");
     }
@@ -267,6 +289,161 @@ G4VSolid* VolumeBuilder::CreateSolid(const VolumeNode& node)
                 + "', parsed='" + GeometryUtils::ShapeToString(node.shape) + "'"
             );
     }
+}
+
+G4VSolid* VolumeBuilder::CreatePrimitiveSolidFromOperand(
+    const std::string& ownerVolumeName,
+    std::size_t booleanIndex,
+    const BooleanOperand& operand
+)
+{
+    VolumeNode toolNode(ownerVolumeName + "_bool_" + std::to_string(booleanIndex) + "_tool");
+    toolNode.shape = operand.shape;
+    toolNode.shapeName = operand.shapeName;
+    toolNode.size = operand.size;
+    toolNode.parameters = operand.parameters;
+    for (const auto& item : operand.properties) toolNode.SetProperty(item.first, item.second);
+
+    try {
+        switch (toolNode.shape) {
+            case VolumeShape::Box:
+                if (toolNode.size.x <= 0.0 || toolNode.size.y <= 0.0 || toolNode.size.z <= 0.0) {
+                    throw std::runtime_error("box requires positive size x,y,z");
+                }
+                return CreateBoxSolid(toolNode);
+            case VolumeShape::Tubs:
+                if (toolNode.parameters.size() < 5) {
+                    throw std::runtime_error("tubs requires 5 parameters: rMin,rMax,halfZ,startPhi,deltaPhi");
+                }
+                return CreateTubsSolid(toolNode);
+            case VolumeShape::Sphere:
+                if (toolNode.parameters.size() < 6) {
+                    throw std::runtime_error("sphere requires 6 parameters: rMin,rMax,startPhi,deltaPhi,startTheta,deltaTheta");
+                }
+                return CreateSphereSolid(toolNode);
+            case VolumeShape::Orb:
+                if (toolNode.parameters.empty() && toolNode.size.x <= 0.0) {
+                    throw std::runtime_error("orb requires parameters=radius or positive size.x shorthand");
+                }
+                return CreateOrbSolid(toolNode);
+            case VolumeShape::Cone:
+                if (toolNode.parameters.size() < 7) {
+                    throw std::runtime_error("cone requires 7 parameters: rMin1,rMax1,rMin2,rMax2,halfZ,startPhi,deltaPhi");
+                }
+                return CreateConeSolid(toolNode);
+            case VolumeShape::Trd:
+                return CreateTrdSolid(toolNode);
+            case VolumeShape::Trap:
+                return CreateTrapSolid(toolNode);
+            default:
+                throw std::runtime_error("unsupported or missing boolean tool shape");
+        }
+    } catch (const std::exception& e) {
+        throw std::runtime_error(BooleanToolContext(ownerVolumeName, booleanIndex, operand) + e.what());
+    }
+}
+
+G4VSolid* VolumeBuilder::ApplyBooleanOperations(const VolumeNode& node, G4VSolid* baseSolid)
+{
+    if (!baseSolid) throw std::runtime_error("Cannot apply boolean operations to null base solid for volume '" + node.name + "'");
+
+    if (node.booleanOperations.size() > 8) {
+        G4Exception(
+            "VolumeBuilder::ApplyBooleanOperations",
+            "AIHLGeometryBoolean001",
+            JustWarning,
+            ("Volume '" + node.name + "' has " + std::to_string(node.booleanOperations.size())
+             + " sequential boolean operations. Many sequential boolean operations may slow Geant4 navigation.").c_str()
+        );
+    }
+
+    bool hasUnionOrIntersection = false;
+    bool hasIntersection = false;
+    for (const auto& op : node.booleanOperations) {
+        hasUnionOrIntersection = hasUnionOrIntersection
+            || op.operation == BooleanOperation::Union
+            || op.operation == BooleanOperation::Intersection;
+        hasIntersection = hasIntersection || op.operation == BooleanOperation::Intersection;
+    }
+    if (hasUnionOrIntersection) {
+        G4Exception(
+            "VolumeBuilder::ApplyBooleanOperations",
+            "AIHLGeometryBoolean002",
+            JustWarning,
+            ("Volume '" + node.name + "' uses union/intersection boolean operations. "
+             "Union/intersection boolean operations can make geometry interpretation and navigation more complex. "
+             "Validate the geometry visually and with overlap checks.").c_str()
+        );
+    }
+    if (hasIntersection) {
+        G4Exception(
+            "VolumeBuilder::ApplyBooleanOperations",
+            "AIHLGeometryBoolean003",
+            JustWarning,
+            ("Volume '" + node.name + "' uses an intersection boolean operation. "
+             "If the intersection region is empty or extremely small, initialization may succeed but tracking results may be meaningless.").c_str()
+        );
+    }
+
+    G4VSolid* current = baseSolid;
+    for (std::size_t i = 0; i < node.booleanOperations.size(); ++i) {
+        const BooleanSolidOperation& op = node.booleanOperations[i];
+        if (op.operation != BooleanOperation::Subtraction
+            && op.operation != BooleanOperation::Union
+            && op.operation != BooleanOperation::Intersection) {
+            throw std::runtime_error(
+                "Invalid boolean operation '" + GeometryUtils::BooleanOperationToString(op.operation)
+                + "' for volume '" + node.name + "' at operation #" + std::to_string(i)
+            );
+        }
+
+        G4VSolid* tool = CreatePrimitiveSolidFromOperand(node.name, i, op.tool);
+        const G4Transform3D transform = MakeBooleanToolTransform(op.tool);
+        const std::string operationText = GeometryUtils::BooleanOperationToString(op.operation);
+
+        const std::string operationName = StringUtils::Trim(op.name).empty()
+            ? node.name + "_bool_" + std::to_string(i) + "_" + operationText
+            : node.name + "_bool_" + std::to_string(i) + "_" + op.name + "_" + operationText;
+
+        G4cout << "[VolumeBuilder] Applying boolean " << operationText << ": volume=" << node.name
+               << " index=" << i
+               << " toolShape=" << GeometryUtils::ShapeToString(op.tool.shape)
+               << " toolPosition=(" << op.tool.position.x << "," << op.tool.position.y << "," << op.tool.position.z << ")"
+               << " toolRotation=(" << op.tool.rotation.x << "," << op.tool.rotation.y << "," << op.tool.rotation.z << ")"
+               << G4endl;
+        if (i == 0) {
+            G4cout << "[VolumeBuilder] Boolean tool solids should slightly penetrate the base solid instead of sharing exactly coplanar boundaries." << G4endl;
+        }
+
+        const G4String solidName = G4NameUtils::SolidName(operationName);
+        switch (op.operation) {
+            case BooleanOperation::Subtraction:
+                current = new G4SubtractionSolid(solidName, current, tool, transform);
+                break;
+            case BooleanOperation::Union:
+                current = new G4UnionSolid(solidName, current, tool, transform);
+                break;
+            case BooleanOperation::Intersection:
+                current = new G4IntersectionSolid(solidName, current, tool, transform);
+                break;
+            default:
+                throw std::runtime_error(
+                    "Invalid boolean operation '" + GeometryUtils::BooleanOperationToString(op.operation)
+                    + "' for volume '" + node.name + "' at operation #" + std::to_string(i)
+                );
+        }
+    }
+    return current;
+}
+
+G4Transform3D VolumeBuilder::MakeBooleanToolTransform(const BooleanOperand& operand)
+{
+    G4RotationMatrix rotation;
+    rotation.rotateX(operand.rotation.x);
+    rotation.rotateY(operand.rotation.y);
+    rotation.rotateZ(operand.rotation.z);
+    const G4ThreeVector translation(operand.position.x, operand.position.y, operand.position.z);
+    return G4Transform3D(rotation, translation);
 }
 
 G4VSolid* VolumeBuilder::CreateBoxSolid(const VolumeNode& node)

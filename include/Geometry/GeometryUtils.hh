@@ -14,6 +14,9 @@ std::string ShapeToString(VolumeShape shape);
 PlacementType ParsePlacementType(const std::string& text);
 std::string PlacementTypeToString(PlacementType type);
 
+BooleanOperation ParseBooleanOperation(const std::string& text);
+std::string BooleanOperationToString(BooleanOperation operation);
+
 Vec3 ParseVec3(const std::string& text, bool parseAsLength = true);
 Rotation3 ParseRotation3(const std::string& text);
 std::vector<double> ParseParameterList(const std::string& text, bool parseWithUnits = true);

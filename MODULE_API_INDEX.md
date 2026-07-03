@@ -698,8 +698,8 @@
 | `struct IsotopeDefinition` | 保存同位素定义数据，不创建 `G4Isotope`。 |
 | `struct IsotopeComponent` | 保存同位素组成与丰度。 |
 | `struct ElementDefinition` | 保存普通元素或同位素组成元素定义，不创建 `G4Element`。 |
-| `struct MaterialComponent` | 保存材料组件名称、质量分数或原子数。 |
-| `struct MaterialDefinition` | 保存材料定义，不创建 `G4Material`。 |
+| `struct MaterialComponent` | 保存材料组件名称、质量分数、体积分数或原子数。 |
+| `struct MaterialDefinition` | 保存材料定义，不创建 `G4Material`；包含显式密度 / `density=auto` 状态。 |
 
 ### MaterialCommandParser
 
@@ -715,6 +715,7 @@
 | `ParseKeyValueLine(const std::string& line)` | 解析 `key=value` 命令行，支持双引号 value。 |
 | `Require(...)` | 从解析结果中读取必需 key，缺失则抛异常。 |
 | `ParseDensity(const std::string& text)` | 解析 `g/cm3`、`g/cm^3`、`kg/m3`、`kg/m^3`、`mg/cm3`、`mg/cm^3`。 |
+| `IsAutoDensity(const std::string& text)` | 判断 `density = auto`；当前仅 `volume_fraction` 支持自动密度。 |
 | `ParseMolarMass(const std::string& text)` | 解析 `g/mole`、`g/mol`、`kg/mole`、`kg/mol`。 |
 | `ParseFraction(const std::string& text)` | 解析 `0~1` 或百分比，如 `90%`。 |
 | `ParseMode(const std::string& text)` | 解析 `atom`、`atom_count`、`mass`、`mass_fraction`、`volume_fraction`。 |
@@ -766,7 +767,7 @@
 | `G4Element* BuildSimpleElement(...)` | 用 `z/a` 创建 `G4Element`。 |
 | `G4Element* BuildIsotopicElement(...)` | 用 `AddIsotope` 创建同位素元素。 |
 | `G4Material* BuildNistMaterial(const std::string& nistName)` | 从 `G4NistManager` 获取 NIST 材料。 |
-| `G4Material* BuildCustomMaterial(...)` | 根据 density/components 创建自定义材料。 |
+| `G4Material* BuildCustomMaterial(...)` | 根据 density/components 创建自定义材料；支持 `atom_count`、`mass_fraction`、材料组件 `volume_fraction`。 |
 | `G4Material* BuildMaterial(...)` | 根据 source 类型分派构建。 |
 
 ### MaterialManager
@@ -849,10 +850,13 @@
 |---|---|
 | `enum class VolumeShape` | 几何形状枚举：`Box`、`Tubs`、`Sphere`、`Orb`、`Cone`、`Trd`、`Trap`、`Unknown`。 |
 | `enum class PlacementType` | placement 类型预留：`Normal`、`Replica`、`Parameterised`、`Assembly`。 |
+| `enum class BooleanOperation` | 布尔操作枚举：`None`、`Union`、`Subtraction`、`Intersection`；Round 6C 仅 `Subtraction` 有 Geant4 后端。 |
 | `struct Vec3` | 三维长度向量。 |
 | `struct Rotation3` | 三维旋转角。 |
 | `struct ProductionCut` | gamma/electron/positron/proton production cut；小于 0 表示未设置。 |
 | `struct VisualAttributes` | 可视化属性预留，不创建 `G4VisAttributes`。 |
+| `struct BooleanOperand` | 布尔 tool 描述，保存 shape、size/parameters、position、rotation 与扩展 properties；tool 是 solid operand，不是 placed volume。 |
+| `struct BooleanSolidOperation` | 布尔操作描述，保存 operation、tool 和 operation name。 |
 
 ### VolumeNode
 
@@ -873,10 +877,11 @@
 | `sensitive`, `bias` | 后续 SD 与 biasing 标记。 |
 | `regionName`, `productionCuts`, `hasProductionCuts` | region/cuts 数据预留。 |
 | `visual` | 可视化数据预留。 |
+| `booleanOperations` | hierarchical 布尔操作列表；Round 6D 中 `subtraction` / `union` / `intersection` 会由 `VolumeBuilder` 构建为 `G4SubtractionSolid` / `G4UnionSolid` / `G4IntersectionSolid`。 |
 | `children` | 树结构子节点。 |
 | `userProperties` | 未识别或模板扩展属性。 |
 | `IsWorld/HasParent/HasRegion/IsSensitive/IsBiasVolume()` | 状态查询。 |
-| `AddChild/HasChildren/GetChildren/GetChildrenMutable()` | 子节点管理。 |
+| `AddChild/HasChildren/HasBooleanOperations/GetChildren/GetChildrenMutable()` | 子节点与 boolean metadata 查询。 |
 | `SetProperty/HasProperty/GetProperty()` | 扩展属性访问。 |
 | `ShapeAsString()` | shape 转字符串。 |
 | `ToString()` | 调试字符串。 |
@@ -895,6 +900,7 @@
 |---|---|
 | `ParseShape / ShapeToString` | 解析和输出形状名。 |
 | `ParsePlacementType / PlacementTypeToString` | 解析和输出 placement 类型。 |
+| `ParseBooleanOperation / BooleanOperationToString` | 解析和输出布尔操作名。 |
 | `ParseVec3(text, parseAsLength)` | 解析三维向量，支持逗号或空白分隔。 |
 | `ParseRotation3(text)` | 解析三维角度。 |
 | `ParseParameterList(text, parseWithUnits)` | 解析参数列表，支持单位。 |
@@ -933,6 +939,9 @@
 说明：
 
 - 支持 `[world]` 与 `[volume.NAME]`。
+- 支持 `[volume.<target>.boolean.<index>]`；section 会挂到目标 `VolumeNode::booleanOperations`，不会作为普通子 volume。`index` 必须从 0 连续递增。
+- Round 6D 支持 `operation = subtraction`、`operation = union`、`operation = intersection` 后端。
+- Boolean section 必需 `operation` 与 `shape`；`material/sensitive/bias/region/cut.*/vis.*` 等普通 volume 字段会 warning 并忽略。
 - 未识别 key 会保存到 `VolumeNode::userProperties`。
 - 不检查材料存在性，不检查 overlap。
 
@@ -1127,7 +1136,11 @@
 | `BuildWorld(const VolumeNode& rootNode)` | 构建 world physical volume，并递归构建 children。 |
 | `BuildLogicalVolume(const VolumeNode& node)` | 创建 solid、material、logical volume，并注册 logical volume。 |
 | `BuildVolume(const VolumeNode& node, G4LogicalVolume* motherLogical)` | 构建并 placement 非 world volume。 |
-| `CreateSolid(...)` | 根据 `VolumeShape` 分发到具体 solid 创建函数。 |
+| `CreateSolid(...)` | 创建 primitive solid，并按顺序应用 `booleanOperations`。 |
+| `CreatePrimitiveSolid(...)` | 根据 `VolumeShape` 分发到具体 primitive solid 创建函数，不处理 boolean。 |
+| `CreatePrimitiveSolidFromOperand(...)` | 将 boolean tool operand 转换为 Geant4 primitive solid；不创建 logical/physical volume。 |
+| `ApplyBooleanOperations(...)` | 按 index 顺序应用布尔操作；当前仅支持 `G4SubtractionSolid`。 |
+| `MakeBooleanToolTransform(...)` | 将 tool 的局部 position/rotation 转换为 `G4Transform3D`。 |
 | `CreateBoxSolid/CreateTubsSolid/CreateSphereSolid/CreateOrbSolid/CreateConeSolid` | 创建对应 Geant4 solid。 |
 | `CreateTrdSolid/CreateTrapSolid` | 创建 `G4Trd` 与完整 `G4Trap`。`trd/trapezoid` 使用 `dx1/dx2/dy1/dy2/dz` half-length；`trap` 使用 Geant4 完整 trap 参数。 |
 | `CreateRotation(const VolumeNode& node)` | 按 X/Y/Z 顺序创建旋转；零旋转返回 `nullptr`。 |
@@ -1140,6 +1153,10 @@
 - `Tubs` 支持 5 参数 `rMin,rMax,halfZ,startPhi,deltaPhi`；若没有参数但有正 `size`，按 cylinder shorthand 处理。
 - `Trd`/`trapezoid` 的 `dx1/dx2/dy1/dy2/dz` 均按 half-length 解析。
 - `Trap` 的长度字段按 half-length 解析，角度字段使用 `UnitParser::ParseAngle()`；不合法的 trap 参数由 Geant4 solid 构造阶段报错。
+- Boolean tool 使用目标体积局部坐标；tool 不继承 material/sensitive/bias/region/cuts/vis，目标 logical volume 保留这些业务属性。
+- Round 6C-check 已验证：布尔最终体积可作为 sensitive/bias volume 进入 `GeometryRegistry`；`DetectorConstruction::ConstructSDandField()` 只绑定最终 logical volume；`BiasingManager::AttachOperators()` 只 attach 到最终 logical volume；boolean tool 不注册 logical/physical volume、不产生 hit、不能作为 biasing operator attach 目标。
+- 诊断/烟测：`macros/run_boolean_hit_smoke.mac` 验证 SD/hits/event_edep/histogram 与 MT per-thread 输出；`macros/run_boolean_bias_smoke.mac` 验证 `bias=1` registry 标记和 post-build biasing operator attachment。
+- Boolean `union` / `intersection` 已有 Geant4 后端；复杂 CSG 仍需用户用 overlap check 和可视化检查，intersection 可能生成空或极小实体。
 - `copyNo` 和兼容小写 `copyno` 会被读取为 placement copy number。
 - rotation 和 vis attributes 由 `VolumeBuilder` 持有，避免 logical/physical volume 引用悬空。
 

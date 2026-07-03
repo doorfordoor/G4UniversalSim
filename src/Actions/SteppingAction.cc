@@ -1,5 +1,6 @@
 #include "Actions/SteppingAction.hh"
 
+#include "Actions/WorkerRunContext.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4Step.hh"
 #include "G4StepPoint.hh"
@@ -14,9 +15,15 @@
 
 #include <algorithm>
 #include <stdexcept>
+#include <utility>
 
 SteppingAction::SteppingAction(ScoringManager* scoringManager)
     : scoringManager_(scoringManager)
+{
+}
+
+SteppingAction::SteppingAction(std::shared_ptr<WorkerRunContext> context)
+    : context_(std::move(context))
 {
 }
 
@@ -41,7 +48,8 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
         return;
     }
 
-    if (!stepScoringEnabled_ || !scoringManager_) {
+    ScoringManager* scoringManager = ActiveScoringManager();
+    if (!stepScoringEnabled_ || !scoringManager) {
         return;
     }
 
@@ -81,7 +89,7 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
     hit.pz = mom.z();
     hit.volumeName = volumeName;
 
-    scoringManager_->ScoreHit(hit);
+    scoringManager->ScoreHit(hit);
 }
 
 void SteppingAction::SetScoringManager(ScoringManager* scoringManager)
@@ -91,7 +99,7 @@ void SteppingAction::SetScoringManager(ScoringManager* scoringManager)
 
 ScoringManager* SteppingAction::GetScoringManager()
 {
-    return scoringManager_;
+    return ActiveScoringManager();
 }
 
 void SteppingAction::SetVerboseLevel(int level)
@@ -137,4 +145,9 @@ bool SteppingAction::IsKillVolume(const std::string& volumeName) const
 {
     const auto name = StringUtils::Trim(volumeName);
     return std::find(killVolumes_.begin(), killVolumes_.end(), name) != killVolumes_.end();
+}
+
+ScoringManager* SteppingAction::ActiveScoringManager() const
+{
+    return context_ ? context_->GetScoringManager() : scoringManager_;
 }

@@ -15,6 +15,16 @@ OutputManager::~OutputManager() noexcept
     }
 }
 
+std::unique_ptr<OutputManager> OutputManager::CloneForThread(int threadId) const
+{
+    auto clone = std::make_unique<OutputManager>();
+    clone->outputDir_ = outputDir_;
+    clone->threadId_ = threadId;
+    clone->threadSuffixEnabled_ = threadSuffixEnabled_;
+    clone->runSummary_ = runSummary_;
+    return clone;
+}
+
 void OutputManager::SetOutputDir(const std::string& outputDir)
 {
     outputDir_ = outputDir.empty() ? "output" : outputDir;

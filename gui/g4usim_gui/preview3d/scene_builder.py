@@ -5,7 +5,7 @@ from g4usim_gui.editors.source_physics_scoring_model import SourceEditableModel
 from g4usim_gui.preview3d.geometry_primitives import combine_bounds
 from g4usim_gui.preview3d.scene_model import PreviewScene, PreviewVolume
 from g4usim_gui.preview3d.source_builder import build_preview_source
-from g4usim_gui.preview3d.units import parse_vec3_deg, parse_vec3_to_mm, parse_length_to_mm
+from g4usim_gui.preview3d.units import parse_angle_list_deg, parse_length_list_to_mm, parse_vec3_deg, parse_vec3_to_mm, parse_length_to_mm
 
 
 def build_preview_scene(geometry: GeometryDocument, source: SourceEditableModel) -> PreviewScene:
@@ -139,12 +139,14 @@ def _build_hierarchical(scene: PreviewScene, geometry: GeometryDocument) -> None
         if not row.enabled:
             continue
         shape = row.shape.strip().lower() or "box"
-        size = _volume_size_for_preview(row.size, row.parameters, shape, scene, row.name)
+        size, params_mm, params_deg = _volume_parameters_for_preview(row.size, row.parameters, shape, scene, row.name)
         scene.volumes.append(
             PreviewVolume(
                 name=row.name,
-                shape="box",
+                shape=shape,
                 size_mm=size,
+                parameters_mm=params_mm,
+                parameters_deg=params_deg,
                 position_mm=parse_vec3_to_mm(row.position) if row.position else (0.0, 0.0, 0.0),
                 rotation_deg=parse_vec3_deg(row.rotation) if row.rotation else (0.0, 0.0, 0.0),
                 material=row.material,
@@ -157,12 +159,14 @@ def _build_hierarchical(scene: PreviewScene, geometry: GeometryDocument) -> None
         if not op.enabled:
             continue
         shape = op.tool_shape.strip().lower() or "box"
-        size = _volume_size_for_preview(op.tool_size, op.tool_parameters, shape, scene, f"boolean:{op.name or op.target_volume}")
+        size, params_mm, params_deg = _volume_parameters_for_preview(op.tool_size, op.tool_parameters, shape, scene, f"boolean:{op.name or op.target_volume}")
         scene.volumes.append(
             PreviewVolume(
                 name=f"{op.target_volume}.{op.index}.{op.operation}",
-                shape="box",
+                shape=shape,
                 size_mm=size,
+                parameters_mm=params_mm,
+                parameters_deg=params_deg,
                 position_mm=parse_vec3_to_mm(op.position) if op.position else (0.0, 0.0, 0.0),
                 rotation_deg=parse_vec3_deg(op.rotation) if op.rotation else (0.0, 0.0, 0.0),
                 material="boolean tool",
@@ -173,23 +177,59 @@ def _build_hierarchical(scene: PreviewScene, geometry: GeometryDocument) -> None
         )
 
 
-def _volume_size_for_preview(size_text: str, parameters_text: str, shape: str, scene: PreviewScene, label: str) -> tuple[float, float, float] | None:
+def _volume_parameters_for_preview(size_text: str, parameters_text: str, shape: str, scene: PreviewScene, label: str) -> tuple[tuple[float, float, float] | None, tuple[float, ...], tuple[float, ...]]:
     if shape == "box":
         size = parse_vec3_to_mm(size_text)
         if size is None:
             scene.warnings.append(f"{label} box size could not be parsed for preview: {size_text!r}")
-        return size
-    if shape == "tubs":
+        return size, tuple(), tuple()
+    if shape in {"tubs", "cylinder"}:
         parts = [part.strip() for part in parameters_text.split(",") if part.strip()]
         if len(parts) >= 3:
             radius = parse_length_to_mm(parts[1])
             half_z = parse_length_to_mm(parts[2])
             if radius is not None and half_z is not None:
-                return (2.0 * radius, 2.0 * radius, 2.0 * half_z)
+                angles = parse_angle_list_deg(",".join(parts[3:5])) if len(parts) >= 5 else tuple()
+                if angles and (abs(angles[0]) > 1.0e-9 or (len(angles) > 1 and abs(angles[1] - 360.0) > 1.0e-9)):
+                    scene.warnings.append(f"{label} partial tubs is drawn as a full cylinder in preview.")
+                return (2.0 * radius, 2.0 * radius, 2.0 * half_z), (0.0, radius, half_z), angles
         scene.warnings.append(f"{label} tubs parameters could not be parsed for preview: {parameters_text!r}")
-        return None
+        return None, tuple(), tuple()
+    if shape in {"sphere", "orb"}:
+        params = parse_length_list_to_mm(parameters_text)
+        if shape == "orb" and params:
+            radius = params[0]
+            return (2.0 * radius, 2.0 * radius, 2.0 * radius), params, tuple()
+        if shape == "sphere" and len(params) >= 2:
+            radius = params[1]
+            angles = parse_angle_list_deg(",".join([part.strip() for part in parameters_text.split(",") if part.strip()][2:]))
+            if angles:
+                scene.warnings.append(f"{label} partial sphere is drawn as a full sphere in preview.")
+            return (2.0 * radius, 2.0 * radius, 2.0 * radius), params, angles
+        size = parse_vec3_to_mm(size_text) if size_text else None
+        if size:
+            return size, tuple(), tuple()
+        scene.warnings.append(f"{label} sphere/orb parameters could not be parsed for preview: {parameters_text!r}")
+        return None, tuple(), tuple()
+    if shape == "cone":
+        parts = [part.strip() for part in parameters_text.split(",") if part.strip()]
+        params = parse_length_list_to_mm(",".join(parts[:5]))
+        if len(params) >= 5:
+            radius = max(params[1], params[3])
+            half_z = params[4]
+            angles = parse_angle_list_deg(",".join(parts[5:7])) if len(parts) >= 7 else tuple()
+            if angles:
+                scene.warnings.append(f"{label} partial cone is drawn as a full cone/frustum approximation in preview.")
+            return (2.0 * radius, 2.0 * radius, 2.0 * half_z), params, angles
+        scene.warnings.append(f"{label} cone parameters could not be parsed for preview: {parameters_text!r}")
+        return None, tuple(), tuple()
     scene.warnings.append(f"{label} shape={shape!r} is shown only as approximate/unsupported in 3D preview.")
-    return parse_vec3_to_mm(size_text) if size_text else None
+    return (parse_vec3_to_mm(size_text) if size_text else None), tuple(), tuple()
+
+
+def _volume_size_for_preview(size_text: str, parameters_text: str, shape: str, scene: PreviewScene, label: str) -> tuple[float, float, float] | None:
+    size, _, _ = _volume_parameters_for_preview(size_text, parameters_text, shape, scene, label)
+    return size
 
 
 def _vec3(value: str, label: str, scene: PreviewScene) -> tuple[float, float, float] | None:

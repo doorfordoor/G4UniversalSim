@@ -4,6 +4,7 @@ Run Summary
 [Values]
 biasing_attached_operator_count = 0
 biasing_enabled = false
+biasing_legacy_xs_rule_count = 0
 biasing_operators_attached = false
 biasing_xs_rule_count = 0
 check_overlaps = true
@@ -11,8 +12,8 @@ dry_run = false
 geometry_config = 
 geometry_template = simple_box
 initialized = true
-interactive = true
-macro_file = 
+interactive = false
+macro_file = D:\Temp\g4usim_boolean_guard.mac
 main_config = 
 materials_file = 
 num_threads = 1
@@ -28,8 +29,6 @@ physics_microelec_region = SV
 physics_mode = manual
 physics_modules = G4DecayPhysics
 physics_reference = 
-run_id_begin = 0
-run_id_end = 0
 run_name = 
 scoring_auto_create_default_scorers = true
 scoring_dose_enabled = false

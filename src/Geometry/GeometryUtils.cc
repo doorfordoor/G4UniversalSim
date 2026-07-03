@@ -86,6 +86,29 @@ std::string PlacementTypeToString(PlacementType type)
     return "normal";
 }
 
+BooleanOperation ParseBooleanOperation(const std::string& text)
+{
+    const std::string value = StringUtils::ToLower(StringUtils::Trim(text));
+    if (value.empty() || value == "none") return BooleanOperation::None;
+    if (value == "subtraction" || value == "subtract" || value == "cut" || value == "minus") {
+        return BooleanOperation::Subtraction;
+    }
+    if (value == "union" || value == "add") return BooleanOperation::Union;
+    if (value == "intersection" || value == "intersect") return BooleanOperation::Intersection;
+    throw std::runtime_error("Unsupported boolean operation: '" + text + "'");
+}
+
+std::string BooleanOperationToString(BooleanOperation operation)
+{
+    switch (operation) {
+        case BooleanOperation::None: return "none";
+        case BooleanOperation::Union: return "union";
+        case BooleanOperation::Subtraction: return "subtraction";
+        case BooleanOperation::Intersection: return "intersection";
+    }
+    return "none";
+}
+
 Vec3 ParseVec3(const std::string& text, bool parseAsLength)
 {
     const auto parts = SplitVectorText(text);

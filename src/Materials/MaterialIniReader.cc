@@ -283,10 +283,26 @@ void MaterialIniReader::ParseSections(
             const std::string name = section.substr(std::string("material.").size());
             MaterialDefinition def;
             def.name = name;
-            def.densityText = Require(data, filename, section, "density");
-            def.density = MaterialCommandParser::ParseDensity(def.densityText);
             const std::string modeText = data.count("mode") ? data.at("mode") : "mass_fraction";
             const auto mode = MaterialCommandParser::ParseMode(modeText);
+            const auto densityIt = data.find("density");
+            if (densityIt != data.end()) {
+                def.densityText = densityIt->second;
+                if (MaterialCommandParser::IsAutoDensity(def.densityText)) {
+                    if (mode != MaterialComponentMode::ByVolumeFraction) {
+                        throw Error(filename, section, "density", "density=auto is only supported for mode=volume_fraction");
+                    }
+                    def.densityAuto = true;
+                } else {
+                    def.density = MaterialCommandParser::ParseDensity(def.densityText);
+                    def.densitySpecified = true;
+                }
+            } else if (mode == MaterialComponentMode::ByVolumeFraction) {
+                def.densityText = "auto";
+                def.densityAuto = true;
+            } else {
+                throw Error(filename, section, "density", "missing required key");
+            }
             def.components = MaterialCommandParser::ParseMaterialComponents(
                 Require(data, filename, section, "components"),
                 mode

@@ -51,6 +51,8 @@ struct MaterialDefinition {
     std::string nistName;
     double density = 0.0;
     std::string densityText;
+    bool densitySpecified = false;
+    bool densityAuto = false;
     std::string state;
     double temperature = 0.0;
     std::string temperatureText;
@@ -59,4 +61,7 @@ struct MaterialDefinition {
     std::vector<MaterialComponent> components;
     bool isElement = false;
     ElementDefinition element;
+
+    bool HasExplicitDensity() const { return densitySpecified && !densityAuto; }
+    bool IsDensityAuto() const { return densityAuto; }
 };

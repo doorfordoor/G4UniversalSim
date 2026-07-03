@@ -16,6 +16,7 @@ public:
     );
 
     static double ParseDensity(const std::string& text);
+    static bool IsAutoDensity(const std::string& text);
     static double ParseMolarMass(const std::string& text);
     static double ParseFraction(const std::string& text);
     static MaterialComponentMode ParseMode(const std::string& text);

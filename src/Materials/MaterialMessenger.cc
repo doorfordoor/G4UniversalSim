@@ -123,12 +123,29 @@ void MaterialMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
             const auto args = MaterialCommandParser::ParseKeyValueLine(value);
             MaterialDefinition def;
             def.name = MaterialCommandParser::Require(args, "name", value);
-            def.densityText = MaterialCommandParser::Require(args, "density", value);
-            def.density = MaterialCommandParser::ParseDensity(def.densityText);
             const std::string modeText = args.count("mode") ? args.at("mode") : "mass_fraction";
+            const auto mode = MaterialCommandParser::ParseMode(modeText);
+            const auto densityIt = args.find("density");
+            if (densityIt != args.end()) {
+                def.densityText = densityIt->second;
+                if (MaterialCommandParser::IsAutoDensity(def.densityText)) {
+                    if (mode != MaterialComponentMode::ByVolumeFraction) {
+                        throw std::runtime_error("density=auto is only supported for mode=volume_fraction");
+                    }
+                    def.densityAuto = true;
+                } else {
+                    def.density = MaterialCommandParser::ParseDensity(def.densityText);
+                    def.densitySpecified = true;
+                }
+            } else if (mode == MaterialComponentMode::ByVolumeFraction) {
+                def.densityText = "auto";
+                def.densityAuto = true;
+            } else {
+                MaterialCommandParser::Require(args, "density", value);
+            }
             def.components = MaterialCommandParser::ParseMaterialComponents(
                 MaterialCommandParser::Require(args, "components", value),
-                MaterialCommandParser::ParseMode(modeText)
+                mode
             );
             manager_->AddMaterialDefinition(def);
             manager_->BuildMaterial(def.name);

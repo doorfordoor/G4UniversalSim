@@ -36,9 +36,16 @@ public:
 private:
     using Section = std::map<std::string, std::string>;
 
+    struct BooleanSectionId {
+        std::string targetVolumeName;
+        int index = -1;
+    };
+
     static std::string Normalize(const std::string& name);
     static bool IsCutKey(const std::string& key);
     static bool IsKnownKey(const std::string& key);
+    static bool IsBooleanSectionName(const std::string& sectionName);
+    static BooleanSectionId ParseBooleanSectionName(const std::string& sectionName);
     static std::runtime_error Error(
         const std::string& filename,
         const std::string& section,
@@ -50,6 +57,12 @@ private:
     VolumeNode ParseVolumeSection(
         const std::string& sectionName,
         const Section& values
+    ) const;
+    BooleanSolidOperation ParseBooleanSection(
+        const std::string& sectionName,
+        const Section& values,
+        const std::string& targetName,
+        int index
     ) const;
 
     void ValidateNoCycles() const;

@@ -6,7 +6,6 @@
 #include "G4UImanager.hh"
 #include "G4VModularPhysicsList.hh"
 #include "G4VisExecutive.hh"
-
 #ifdef G4MULTITHREADED
 #include "G4MTRunManager.hh"
 #endif
@@ -54,11 +53,14 @@ void PrintUsage(const char* program) {
       << "  --output, -o <dir>   Override output directory.\n"
       << "  --run-name <name>    Override run name in SimulationManager.\n"
       << "  --ui                 Start an interactive Geant4 UI session.\n"
-      << "  --threads, -t <N>    Set requested number of worker threads when MT "
+      << "  --threads, -t <N>    Set requested number of worker threads when "
+         "MT "
          "is available.\n"
-      << "  --seed <N>           Set random seed in SimulationManager and CLHEP.\n"
+      << "  --seed <N>           Set random seed in SimulationManager and "
+         "CLHEP.\n"
       << "  --check-overlaps <true|false>  Override geometry overlap checks.\n"
-      << "  --dry-run            Configure and register Geant4 objects but skip macro/UI execution.\n"
+      << "  --dry-run            Configure and register Geant4 objects but "
+         "skip macro/UI execution.\n"
       << "  --help, -h           Show this help.\n\n"
       << "If neither --macro nor --ui is supplied, no beamOn is run "
          "automatically.\n";
@@ -94,8 +96,10 @@ unsigned long ParseSeed(const std::string& value) {
 }
 
 bool ParseBoolOption(const std::string& value, const std::string& option) {
-  if (value == "true" || value == "1" || value == "on" || value == "yes") return true;
-  if (value == "false" || value == "0" || value == "off" || value == "no") return false;
+  if (value == "true" || value == "1" || value == "on" || value == "yes")
+    return true;
+  if (value == "false" || value == "0" || value == "off" || value == "no")
+    return false;
   throw std::runtime_error("Invalid value for " + option + ": '" + value + "'");
 }
 
@@ -123,7 +127,8 @@ CommandLineOptions ParseCommandLine(int argc, char** argv) {
     } else if (arg == "--dry-run") {
       options.dryRun = true;
     } else if (arg == "--check-overlaps") {
-      options.checkOverlaps = ParseBoolOption(RequireValue(i, argc, argv, arg), arg);
+      options.checkOverlaps =
+          ParseBoolOption(RequireValue(i, argc, argv, arg), arg);
     } else if (!arg.empty() && arg[0] == '-') {
       throw std::runtime_error("Unknown command line option: '" + arg + "'");
     } else {
@@ -204,7 +209,9 @@ int main(int argc, char** argv) {
     }
 
     if (options.dryRun) {
-      std::cout << "G4UniversalSim dry-run completed: managers and Geant4 user initialization objects were created; macro/UI execution skipped.\n";
+      std::cout << "G4UniversalSim dry-run completed: managers and Geant4 user "
+                   "initialization objects were created; macro/UI execution "
+                   "skipped.\n";
       return EXIT_SUCCESS;
     }
 

@@ -51,6 +51,28 @@ void ValidateNodeRecursive(const VolumeNode& node, bool isRoot)
         check(node.productionCuts.positron, "e+");
         check(node.productionCuts.proton, "proton");
     }
+    for (const BooleanSolidOperation& op : node.booleanOperations) {
+        const std::string opName = op.name.empty() ? "<unnamed>" : op.name;
+        if (op.operation == BooleanOperation::None) {
+            throw std::runtime_error("Volume '" + node.name + "' has boolean operation '" + opName + "' with operation=none");
+        }
+        if (op.tool.shape == VolumeShape::Unknown) {
+            throw std::runtime_error("Volume '" + node.name + "' has boolean operation '" + opName + "' with unsupported tool shape");
+        }
+        if (op.tool.shape == VolumeShape::Box) GeometryUtils::ValidateBoxSize(op.tool.size);
+        if (op.tool.shape == VolumeShape::Tubs) {
+            if (op.tool.parameters.size() < 5) {
+                throw std::runtime_error("Volume '" + node.name + "' boolean operation '" + opName + "' requires 5 tubs parameters");
+            }
+            GeometryUtils::ValidateTubsParameters(
+                op.tool.parameters[0],
+                op.tool.parameters[1],
+                op.tool.parameters[2],
+                op.tool.parameters[3],
+                op.tool.parameters[4]
+            );
+        }
+    }
     for (const VolumeNode& child : node.children) ValidateNodeRecursive(child, false);
 }
 
@@ -564,6 +586,7 @@ void GeometryManager::PrintTreeNode(const VolumeNode& node, int depth) const
     if (node.sensitive) G4cout << " sensitive";
     if (node.bias) G4cout << " bias";
     if (!node.regionName.empty()) G4cout << " region=" << node.regionName;
+    if (node.HasBooleanOperations()) G4cout << " booleanOps=" << node.booleanOperations.size();
     if (!node.userProperties.empty()) {
         G4cout << " properties={";
         bool first = true;

@@ -1,6 +1,9 @@
 #pragma once
 
+#include "Geometry/GeometryTypes.hh"
+
 #include "G4RotationMatrix.hh"
+#include "G4Transform3D.hh"
 
 #include <memory>
 #include <string>
@@ -35,6 +38,15 @@ public:
     G4VPhysicalVolume* BuildVolume(const VolumeNode& node, G4LogicalVolume* motherLogical);
 
     G4VSolid* CreateSolid(const VolumeNode& node);
+    G4VSolid* CreatePrimitiveSolid(const VolumeNode& node);
+    G4VSolid* CreatePrimitiveSolidFromOperand(
+        const std::string& ownerVolumeName,
+        std::size_t booleanIndex,
+        const BooleanOperand& operand
+    );
+    G4VSolid* ApplyBooleanOperations(const VolumeNode& node, G4VSolid* baseSolid);
+    G4Transform3D MakeBooleanToolTransform(const BooleanOperand& operand);
+
     G4VSolid* CreateBoxSolid(const VolumeNode& node);
     G4VSolid* CreateTubsSolid(const VolumeNode& node);
     G4VSolid* CreateSphereSolid(const VolumeNode& node);

@@ -8,10 +8,27 @@
 #include "G4Isotope.hh"
 #include "G4Material.hh"
 #include "G4NistManager.hh"
+#include "G4SystemOfUnits.hh"
 #include "G4ios.hh"
 
+#include <cmath>
 #include <set>
 #include <stdexcept>
+
+namespace {
+
+bool IsVolumeFractionMaterial(const MaterialDefinition& def)
+{
+    return !def.components.empty()
+        && def.components.front().mode == MaterialComponentMode::ByVolumeFraction;
+}
+
+std::string DensityText(double density)
+{
+    return std::to_string(density / (g / cm3)) + " g/cm3";
+}
+
+}  // namespace
 
 MaterialManager::MaterialManager() = default;
 MaterialManager::~MaterialManager() = default;
@@ -100,14 +117,30 @@ G4Material* MaterialManager::BuildMaterial(const std::string& name)
     const auto defIt = materialDefinitions_.find(key);
     if (defIt == materialDefinitions_.end()) return BuildNistMaterial(name);
 
-    if (buildingMaterials_.count(key)) throw std::runtime_error("Material dependency cycle detected at '" + name + "'");
+    if (buildingMaterials_.count(key)) {
+        std::string path;
+        bool inCycle = false;
+        for (const std::string& stackKey : buildingMaterialStack_) {
+            if (stackKey == key) inCycle = true;
+            if (!inCycle) continue;
+            if (!path.empty()) path += " -> ";
+            const auto stackIt = materialDefinitions_.find(stackKey);
+            path += stackIt == materialDefinitions_.end() ? stackKey : stackIt->second.name;
+        }
+        if (!path.empty()) path += " -> ";
+        path += defIt->second.name;
+        throw std::runtime_error("Circular material dependency detected: " + path);
+    }
     buildingMaterials_.insert(key);
+    buildingMaterialStack_.push_back(key);
     try {
         G4Material* material = BuildCustomMaterial(defIt->second);
         buildingMaterials_.erase(key);
+        buildingMaterialStack_.pop_back();
         return material;
     } catch (...) {
         buildingMaterials_.erase(key);
+        buildingMaterialStack_.pop_back();
         throw;
     }
 }
@@ -118,28 +151,7 @@ void MaterialManager::BuildAll()
     for (const auto& item : isotopeDefinitions_) BuildIsotope(item.second.name);
     for (const auto& item : elementDefinitions_) BuildElement(item.second.name);
 
-    std::set<std::string> pending;
-    for (const auto& item : materialDefinitions_) pending.insert(item.first);
-    while (!pending.empty()) {
-        bool progress = false;
-        for (auto it = pending.begin(); it != pending.end();) {
-            try {
-                BuildMaterial(materialDefinitions_.at(*it).name);
-                it = pending.erase(it);
-                progress = true;
-            } catch (const std::exception&) {
-                ++it;
-            }
-        }
-        if (!progress) {
-            std::string names;
-            for (const auto& key : pending) {
-                if (!names.empty()) names += ", ";
-                names += materialDefinitions_.at(key).name;
-            }
-            throw std::runtime_error("Unable to resolve material dependencies: " + names);
-        }
-    }
+    for (const auto& item : materialDefinitions_) BuildMaterial(item.second.name);
 }
 
 G4Material* MaterialManager::GetMaterial(const std::string& name) const
@@ -200,8 +212,14 @@ G4Material* MaterialManager::BuildCustomMaterial(const MaterialDefinition& desc)
         return material;
     }
     for (const MaterialComponent& component : desc.components) {
-        if (elementDefinitions_.count(Normalize(component.name))) BuildElement(component.name);
-        else if (materialDefinitions_.count(Normalize(component.name))) BuildMaterial(component.name);
+        const std::string key = Normalize(component.name);
+        if (component.mode == MaterialComponentMode::ByVolumeFraction) {
+            if (materialDefinitions_.count(key)) BuildMaterial(component.name);
+            else if (elementDefinitions_.count(key)) BuildElement(component.name);
+        } else {
+            if (elementDefinitions_.count(key)) BuildElement(component.name);
+            else if (materialDefinitions_.count(key)) BuildMaterial(component.name);
+        }
     }
     MaterialFactory factory;
     G4Material* material = factory.BuildCustomMaterial(desc, elements_, materials_);
@@ -251,7 +269,58 @@ std::vector<std::string> MaterialManager::GetIsotopeNames() const
 void MaterialManager::PrintMaterials() const
 {
     G4cout << "[MaterialManager] Materials:" << G4endl;
-    for (const auto& item : materials_) G4cout << "  " << item.first << " -> " << item.second->GetName() << G4endl;
+    for (const auto& item : materials_) {
+        G4cout << "  " << item.first << " -> " << item.second->GetName();
+        const auto defIt = materialDefinitions_.find(item.first);
+        if (defIt != materialDefinitions_.end() && IsVolumeFractionMaterial(defIt->second)) {
+            const MaterialDefinition& def = defIt->second;
+            double idealDensity = 0.0;
+            struct PrintComponent {
+                std::string name;
+                double volumeFraction = 0.0;
+                double density = 0.0;
+                double massFraction = 0.0;
+            };
+            std::vector<PrintComponent> components;
+            bool printable = true;
+            for (const auto& component : def.components) {
+                G4Material* subMaterial = nullptr;
+                const auto subIt = materials_.find(Normalize(component.name));
+                if (subIt != materials_.end()) subMaterial = subIt->second;
+                else subMaterial = G4NistManager::Instance()->FindOrBuildMaterial(component.name, false);
+                if (!subMaterial || subMaterial->GetDensity() <= 0.0 || !std::isfinite(subMaterial->GetDensity())) {
+                    printable = false;
+                    break;
+                }
+                PrintComponent pc;
+                pc.name = component.name;
+                pc.volumeFraction = component.fraction;
+                pc.density = subMaterial->GetDensity();
+                components.push_back(pc);
+                idealDensity += pc.volumeFraction * pc.density;
+            }
+            G4cout << " (mode=volume_fraction";
+            if (def.HasExplicitDensity()) G4cout << ", configuredDensity=" << DensityText(def.density);
+            else G4cout << ", configuredDensity=auto";
+            if (printable && idealDensity > 0.0) {
+                G4cout << ", idealDensity=" << DensityText(idealDensity)
+                       << ", finalDensity=" << DensityText(item.second->GetDensity());
+            }
+            G4cout << ")";
+            if (printable && idealDensity > 0.0) {
+                G4cout << G4endl;
+                for (auto& component : components) {
+                    component.massFraction = component.volumeFraction * component.density / idealDensity;
+                    G4cout << "    " << component.name
+                           << ": v=" << component.volumeFraction
+                           << ", rho=" << DensityText(component.density)
+                           << ", w=" << component.massFraction << G4endl;
+                }
+                continue;
+            }
+        }
+        G4cout << G4endl;
+    }
 }
 
 void MaterialManager::PrintElements() const
@@ -283,6 +352,7 @@ void MaterialManager::Clear()
     elements_.clear();
     materials_.clear();
     buildingMaterials_.clear();
+    buildingMaterialStack_.clear();
 }
 
 void MaterialManager::SetLocked(bool locked)

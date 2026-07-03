@@ -4,16 +4,50 @@
 #include "Actions/RunAction.hh"
 #include "Actions/SteppingAction.hh"
 #include "Actions/TrackingAction.hh"
+#include "Actions/WorkerRunContext.hh"
+#include "Output/OutputManager.hh"
+#include "Scoring/ScoringManager.hh"
+#include "Scoring/ThreadLocalScoringContext.hh"
 #include "Source/PrimaryGeneratorAction.hh"
 
+#ifdef G4MULTITHREADED
+#include "G4Threading.hh"
+#endif
+
+#include <memory>
 #include <stdexcept>
+
+namespace {
+
+int CurrentThreadIdOrZero()
+{
+#ifdef G4MULTITHREADED
+    const int threadId = G4Threading::G4GetThreadId();
+    return threadId < 0 ? 0 : threadId;
+#else
+    return 0;
+#endif
+}
+
+RunAction::Role CurrentRunActionRole()
+{
+#ifdef G4MULTITHREADED
+    return G4Threading::G4GetThreadId() < 0
+        ? RunAction::Role::Sequential
+        : RunAction::Role::Worker;
+#else
+    return RunAction::Role::Sequential;
+#endif
+}
+
+}  // namespace
 
 ActionInitialization::ActionInitialization(SourceManager* sourceManager,
                                            ScoringManager* scoringManager,
                                            OutputManager* outputManager)
     : sourceManager_(sourceManager),
-      scoringManager_(scoringManager),
-      outputManager_(outputManager)
+      masterScoringManager_(scoringManager),
+      masterOutputManager_(outputManager)
 {
 }
 
@@ -21,7 +55,10 @@ ActionInitialization::~ActionInitialization() = default;
 
 void ActionInitialization::BuildForMaster() const
 {
-    auto* runAction = new RunAction(scoringManager_, outputManager_);
+    auto* runAction = new RunAction(
+        masterScoringManager_,
+        masterOutputManager_,
+        RunAction::Role::Master);
     runAction->SetVerboseLevel(verboseLevel_);
     SetUserAction(runAction);
 }
@@ -35,15 +72,35 @@ void ActionInitialization::Build() const
 
     SetUserAction(new PrimaryGeneratorAction(sourceManager_));
 
-    auto* runAction = new RunAction(scoringManager_, outputManager_);
+    auto context = std::make_shared<WorkerRunContext>();
+    const int threadId = CurrentThreadIdOrZero();
+    if (masterOutputManager_) {
+        context->output = masterOutputManager_->CloneForThread(threadId);
+    } else {
+        context->output = std::make_unique<OutputManager>();
+        context->output->SetThreadId(threadId);
+    }
+    context->output->EnableThreadSuffix(true);
+
+    if (masterScoringManager_) {
+        context->scoring = masterScoringManager_->CloneForThread(
+            context->output.get(),
+            threadId);
+    } else {
+        context->scoring = std::make_unique<ScoringManager>();
+        context->scoring->SetOutputManager(context->output.get());
+    }
+    AIHL::SetCurrentThreadScoringManager(context->scoring.get());
+
+    auto* runAction = new RunAction(context, CurrentRunActionRole());
     runAction->SetVerboseLevel(verboseLevel_);
     SetUserAction(runAction);
 
-    auto* eventAction = new EventAction(scoringManager_);
+    auto* eventAction = new EventAction(context);
     eventAction->SetVerboseLevel(verboseLevel_);
     SetUserAction(eventAction);
 
-    auto* steppingAction = new SteppingAction(scoringManager_);
+    auto* steppingAction = new SteppingAction(context);
     steppingAction->SetVerboseLevel(verboseLevel_);
     SetUserAction(steppingAction);
 

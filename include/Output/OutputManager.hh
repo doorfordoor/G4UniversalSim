@@ -15,6 +15,8 @@ public:
     OutputManager() = default;
     ~OutputManager() noexcept;
 
+    std::unique_ptr<OutputManager> CloneForThread(int threadId) const;
+
     void SetOutputDir(const std::string& outputDir);
     const std::string& GetOutputDir() const;
 

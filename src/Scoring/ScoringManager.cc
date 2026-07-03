@@ -15,6 +15,33 @@
 ScoringManager::ScoringManager() = default;
 ScoringManager::~ScoringManager() = default;
 
+std::unique_ptr<ScoringManager> ScoringManager::CloneForThread(OutputManager* outputManager,
+                                                               int threadId) const
+{
+    (void)threadId;
+    auto clone = std::make_unique<ScoringManager>();
+    clone->outputManager_ = outputManager;
+    clone->enabled_ = enabled_;
+    clone->hitOutputEnabled_ = hitOutputEnabled_;
+    clone->eventEdepOutputEnabled_ = eventEdepOutputEnabled_;
+    clone->edepScoringEnabled_ = edepScoringEnabled_;
+    clone->letScoringEnabled_ = letScoringEnabled_;
+    clone->doseScoringEnabled_ = doseScoringEnabled_;
+    clone->fluenceScoringEnabled_ = fluenceScoringEnabled_;
+    clone->autoCreateDefaultScorers_ = autoCreateDefaultScorers_;
+    clone->edepRawHistogramEnabled_ = edepRawHistogramEnabled_;
+    clone->edepWeightedHistogramEnabled_ = edepWeightedHistogramEnabled_;
+    clone->edepVolumeSummaryEnabled_ = edepVolumeSummaryEnabled_;
+    clone->edepParticleSummaryEnabled_ = edepParticleSummaryEnabled_;
+    clone->rawEdepHistogram_ = rawEdepHistogram_;
+    clone->weightedEdepHistogram_ = weightedEdepHistogram_;
+    clone->verboseLevel_ = verboseLevel_;
+    if (clone->autoCreateDefaultScorers_) {
+        clone->EnsureDefaultScorers();
+    }
+    return clone;
+}
+
 void ScoringManager::SetOutputManager(OutputManager* outputManager)
 {
     outputManager_ = outputManager;

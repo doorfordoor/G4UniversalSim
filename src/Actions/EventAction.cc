@@ -1,13 +1,20 @@
 #include "Actions/EventAction.hh"
 
+#include "Actions/WorkerRunContext.hh"
 #include "G4Event.hh"
 #include "G4ios.hh"
 #include "Scoring/ScoringManager.hh"
 
 #include <stdexcept>
+#include <utility>
 
 EventAction::EventAction(ScoringManager* scoringManager)
     : scoringManager_(scoringManager)
+{
+}
+
+EventAction::EventAction(std::shared_ptr<WorkerRunContext> context)
+    : context_(std::move(context))
 {
 }
 
@@ -23,8 +30,8 @@ void EventAction::BeginOfEventAction(const G4Event* event)
     if (verboseLevel_ > 1) {
         G4cout << "[EventAction] Begin event " << eventID << G4endl;
     }
-    if (scoringManager_) {
-        scoringManager_->BeginEvent(eventID);
+    if (ScoringManager* scoringManager = ActiveScoringManager()) {
+        scoringManager->BeginEvent(eventID);
     }
 }
 
@@ -35,8 +42,8 @@ void EventAction::EndOfEventAction(const G4Event* event)
     }
 
     const int eventID = event->GetEventID();
-    if (scoringManager_) {
-        scoringManager_->EndEvent(eventID);
+    if (ScoringManager* scoringManager = ActiveScoringManager()) {
+        scoringManager->EndEvent(eventID);
     }
     if (verboseLevel_ > 1) {
         G4cout << "[EventAction] End event " << eventID << G4endl;
@@ -50,7 +57,7 @@ void EventAction::SetScoringManager(ScoringManager* scoringManager)
 
 ScoringManager* EventAction::GetScoringManager()
 {
-    return scoringManager_;
+    return ActiveScoringManager();
 }
 
 void EventAction::SetVerboseLevel(int level)
@@ -64,4 +71,9 @@ void EventAction::SetVerboseLevel(int level)
 int EventAction::GetVerboseLevel() const
 {
     return verboseLevel_;
+}
+
+ScoringManager* EventAction::ActiveScoringManager() const
+{
+    return context_ ? context_->GetScoringManager() : scoringManager_;
 }
