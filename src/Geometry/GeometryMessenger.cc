@@ -180,8 +180,9 @@ void GeometryMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
         }
         if (command == checkOverlapsCmd_) {
             EnsureManager("/AIHL/geometry/checkOverlaps");
+            const bool locked = manager_->IsCheckOverlapsLocked();
             manager_->SetCheckOverlaps(checkOverlapsCmd_->GetNewBoolValue(newValue));
-            PrintChangedMessage();
+            if (!locked) PrintChangedMessage();
             return;
         }
         if (command == setDefaultWorldMaterialCmd_) {

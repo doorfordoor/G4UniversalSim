@@ -26,6 +26,8 @@ public:
     const std::string& GetGeometryConfigFile() const;
 
     void SetCheckOverlaps(bool enable);
+    void SetCheckOverlapsLocked(bool locked);
+    bool IsCheckOverlapsLocked() const;
     bool GetCheckOverlaps() const;
 
     void SetDefaultWorldMaterial(const std::string& materialName);
@@ -116,5 +118,6 @@ private:
     bool preserveUserVolumesOnLoad_ = true;
     bool dirty_ = true;
     bool checkOverlaps_ = true;
+    bool checkOverlapsLocked_ = false;
     std::string defaultWorldMaterial_ = "G4_AIR";
 };

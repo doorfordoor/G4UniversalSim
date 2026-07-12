@@ -13,9 +13,10 @@
 #include <memory>
 #include <stdexcept>
 #include <string>
+#include <utility>
 
-OutputMessenger::OutputMessenger(OutputManager* outputManager)
-    : outputManager_(outputManager)
+OutputMessenger::OutputMessenger(OutputManager* outputManager, OutputDirSetter outputDirSetter)
+    : outputManager_(outputManager), outputDirSetter_(std::move(outputDirSetter))
 {
     directory_ = std::make_unique<G4UIdirectory>("/AIHL/output/");
     directory_->SetGuidance("Output manager commands for G4UniversalSim.");
@@ -46,7 +47,11 @@ void OutputMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
         if (command == setDirCmd_.get()) {
             EnsureOutputManager("/AIHL/output/setDir");
             WarnIfInitializedOrOpen("/AIHL/output/setDir");
-            outputManager_->SetOutputDir(newValue);
+            if (outputDirSetter_) {
+                outputDirSetter_(newValue);
+            } else {
+                outputManager_->SetOutputDir(newValue);
+            }
             return;
         }
         if (command == setThreadSuffixCmd_.get()) {

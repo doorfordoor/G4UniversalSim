@@ -1,8 +1,10 @@
 # G4UniversalSim Agent 维护说明
 
-整理日期：2026-07-03。本文件面向 Codex 这类代码 Agent，用于后续修改时快速找到事实来源。普通用户请优先读 `docs/中文使用手册.md`、`docs/中文几何配置说明.md` 和 `gui/docs/中文快速使用说明.md`。
+整理日期：2026-07-11。本文件面向 Codex 这类代码 Agent，用于后续修改时快速找到事实来源。普通用户请优先读 `docs/中文使用手册.md`、`docs/中文几何配置说明.md` 和 `gui/docs/中文快速使用说明.md`。
 
 ## 1. 当前文档结构
+
+仓库级开发约束见根目录 AGENTS.md，GUI 专项约束见 gui/AGENTS.md。功能状态见 docs/功能支持矩阵.md，开发顺序见 docs/开发路线图.md。
 
 - `docs/中文使用手册.md`：后端命令行、主配置、材料、源、物理、计分、biasing、macro 命令和常见问题。
 - `docs/中文几何配置说明.md`：几何模板、层级几何、形状参数、布尔操作和几何常见错误。
@@ -39,7 +41,7 @@
 
 ## 3. 维护时的高风险事实
 
-- CLI 没有 `--version`。无 `--macro` 且无 `--ui` 时只打印帮助并退出。
+- CLI 没有 `--version`。无 `--macro` 且无 `--ui` 时通常只打印帮助并退出；`--dry-run` 是例外，会执行配置和 Geant4 对象注册但跳过 macro/UI。
 - `gdml` 模板目前只是占位。`VolumeBuilder` 遇到 GDML 占位属性会抛未实现错误。
 - STL 导入未实现。
 - 后端 `VolumeBuilder` 支持 `box`、`tubs`、`sphere`、`orb`、`cone`、`trd`、`trap`。
@@ -52,6 +54,24 @@
 - GUI 的 source rectangle、annulus、cone、cosine、focused 等模式属于预览或实验，当前 main.ini writer 会阻止不被后端支持的模式生成。
 - GUI 项目 JSON schema 当前是 `G4UniversalSimProject`，version 为 5。
 - GUI 生成包不会覆盖原始 `materials.ini` 或 `geometry.ini`，只写入 run package。
+
+### 3.1 M0-1/M0-1b 配置优先级
+
+当前启动字段的约定优先级为：
+
+`默认值 < 主配置文件 < macro 运行时命令 < 显式 CLI 参数`
+
+`main.cc` 将显式启动参数集中放入 `SimulationCommandLineOverrides`，先调用 `SimulationManager::Configure()` 生成最终上下文，再决定 dry-run、interactive、macro 或用法输出。显式 CLI 的 `--output`、`--threads`、`--seed`、`--check-overlaps`、`--run-name` 和 `--macro` 会阻止低优先级入口覆盖。
+
+macro 执行前由 `Core/MacroPreflight` 递归解析静态 `/control/execute`，并将同一份规范化命令序列交给 `G4UImanager::ApplyCommand()` 执行。嵌套相对路径按当前 macro 文件目录解析；解析器统一处理 Windows 路径、带空格路径、`../` 和引号外行尾 `#` 注释。遇到首个非零 Geant4 命令状态立即停止并返回失败。已知项目命令和原生命令 `/run/numberOfThreads`、`/random/...` 在对应 CLI 锁存在时会因冲突而失败；`/control/alias`、`/control/loop`、`/control/foreach` 等动态场景直接标记为不支持。
+
+M0-1 回归入口：
+
+```powershell
+python scripts/test_config_precedence.py
+```
+
+该测试覆盖配置-only、配置 macro、配置 dry-run/interactive、CLI-only、配置/CLI 冲突、macro preflight、真实 `beamOn`、带空格路径、重复 CLI、无效参数和缺失路径。`run_summary.txt` 目前仍在 macro 执行前写入，不能用它判断 macro 后最终上下文；这属于 M0-2。未被静态识别的动态 Geant4 命令仍需在 M0-3 继续审计。
 
 ## 4. 修改代码后同步文档
 

@@ -18,6 +18,8 @@ public:
     std::unique_ptr<OutputManager> CloneForThread(int threadId) const;
 
     void SetOutputDir(const std::string& outputDir);
+    void SetOutputDirLocked(bool locked);
+    bool IsOutputDirLocked() const;
     const std::string& GetOutputDir() const;
 
     void SetThreadId(int threadId);
@@ -67,6 +69,7 @@ private:
     static std::string ToString(double value);
 
     std::string outputDir_ = "output";
+    bool outputDirLocked_ = false;
     int threadId_ = 0;
     bool threadSuffixEnabled_ = true;
     // True once Initialize() has created the output directory; current file-open state is HasOpenFiles().

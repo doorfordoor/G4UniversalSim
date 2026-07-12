@@ -19,6 +19,7 @@ std::unique_ptr<OutputManager> OutputManager::CloneForThread(int threadId) const
 {
     auto clone = std::make_unique<OutputManager>();
     clone->outputDir_ = outputDir_;
+    clone->outputDirLocked_ = outputDirLocked_;
     clone->threadId_ = threadId;
     clone->threadSuffixEnabled_ = threadSuffixEnabled_;
     clone->runSummary_ = runSummary_;
@@ -27,7 +28,20 @@ std::unique_ptr<OutputManager> OutputManager::CloneForThread(int threadId) const
 
 void OutputManager::SetOutputDir(const std::string& outputDir)
 {
+    if (outputDirLocked_) {
+        throw std::runtime_error("Output directory is locked by an explicit CLI option");
+    }
     outputDir_ = outputDir.empty() ? "output" : outputDir;
+}
+
+void OutputManager::SetOutputDirLocked(bool locked)
+{
+    outputDirLocked_ = locked;
+}
+
+bool OutputManager::IsOutputDirLocked() const
+{
+    return outputDirLocked_;
 }
 
 const std::string& OutputManager::GetOutputDir() const

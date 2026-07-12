@@ -27,6 +27,12 @@
 #include "Utils/FileUtils.hh"
 #include "Utils/StringUtils.hh"
 
+#include "G4RunManager.hh"
+#ifdef G4MULTITHREADED
+#include "G4MTRunManager.hh"
+#endif
+#include "Randomize.hh"
+
 #include <iostream>
 #include <map>
 #include <stdexcept>
@@ -145,8 +151,38 @@ const SimulationContext& SimulationManager::GetContext() const
     return context_;
 }
 
+void SimulationManager::SetCommandLineOverrides(const SimulationCommandLineOverrides& overrides)
+{
+    if (commandLineOverridesSet_ || configLoaded_ || configured_ || initialized_) {
+        throw std::runtime_error(
+            "SimulationManager::SetCommandLineOverrides must be called exactly once before configuration"
+        );
+    }
+    commandLineOverridesSet_ = true;
+    commandLineOverrides_ = overrides;
+
+    if (overrides.mainConfig) {
+        context_.SetMainConfig(*overrides.mainConfig);
+        configLoaded_ = false;
+        configured_ = false;
+        initialized_ = false;
+    }
+    if (overrides.outputDir) context_.SetOutputDir(*overrides.outputDir);
+    if (overrides.runName) context_.SetRunName(*overrides.runName);
+    if (overrides.macroFile) context_.SetMacroFile(*overrides.macroFile);
+    if (overrides.numThreads) context_.SetNumThreads(*overrides.numThreads);
+    if (overrides.seed) context_.SetSeed(*overrides.seed);
+    if (overrides.interactive) context_.SetInteractive(*overrides.interactive);
+    if (overrides.dryRun) context_.SetDryRun(*overrides.dryRun);
+    if (overrides.checkOverlaps) context_.SetCheckOverlaps(*overrides.checkOverlaps);
+}
+
 void SimulationManager::SetMainConfig(const std::string& filename)
 {
+    if (commandLineOverrides_.mainConfig) {
+        WarnIgnoredCommandLineOverride("main config");
+        return;
+    }
     context_.SetMainConfig(filename);
     configLoaded_ = false;
     configured_ = false;
@@ -155,27 +191,55 @@ void SimulationManager::SetMainConfig(const std::string& filename)
 
 void SimulationManager::SetOutputDir(const std::string& outputDir)
 {
+    if (commandLineOverrides_.outputDir) {
+        WarnIgnoredCommandLineOverride("output directory");
+        return;
+    }
     context_.SetOutputDir(outputDir);
-    if (outputManager_) outputManager_->SetOutputDir(context_.GetOutputDir());
+    if (outputManager_ && !outputManager_->IsOutputDirLocked()) {
+        outputManager_->SetOutputDir(context_.GetOutputDir());
+    }
 }
 
 void SimulationManager::SetNumThreads(int n)
 {
+    if (commandLineOverrides_.numThreads) {
+        WarnIgnoredCommandLineOverride("thread count");
+        return;
+    }
     context_.SetNumThreads(n);
+#ifdef G4MULTITHREADED
+    if (auto* runManager = dynamic_cast<G4MTRunManager*>(G4RunManager::GetRunManager())) {
+        runManager->SetNumberOfThreads(n);
+    }
+#endif
 }
 
 void SimulationManager::SetSeed(unsigned long seed)
 {
+    if (commandLineOverrides_.seed) {
+        WarnIgnoredCommandLineOverride("random seed");
+        return;
+    }
     context_.SetSeed(seed);
+    CLHEP::HepRandom::setTheSeed(static_cast<long>(seed));
 }
 
 void SimulationManager::SetMacroFile(const std::string& filename)
 {
+    if (commandLineOverrides_.macroFile) {
+        WarnIgnoredCommandLineOverride("macro file");
+        return;
+    }
     context_.SetMacroFile(filename);
 }
 
 void SimulationManager::SetInteractive(bool interactive)
 {
+    if (commandLineOverrides_.interactive) {
+        WarnIgnoredCommandLineOverride("interactive mode");
+        return;
+    }
     context_.SetInteractive(interactive);
 }
 
@@ -186,17 +250,29 @@ void SimulationManager::SetVerboseLevel(int level)
 
 void SimulationManager::SetCheckOverlaps(bool enable)
 {
+    if (commandLineOverrides_.checkOverlaps) {
+        WarnIgnoredCommandLineOverride("geometry overlap checking");
+        return;
+    }
     context_.SetCheckOverlaps(enable);
     if (geometryManager_) geometryManager_->SetCheckOverlaps(enable);
 }
 
 void SimulationManager::SetDryRun(bool enable)
 {
+    if (commandLineOverrides_.dryRun) {
+        WarnIgnoredCommandLineOverride("dry-run mode");
+        return;
+    }
     context_.SetDryRun(enable);
 }
 
 void SimulationManager::SetRunName(const std::string& name)
 {
+    if (commandLineOverrides_.runName) {
+        WarnIgnoredCommandLineOverride("run name");
+        return;
+    }
     context_.SetRunName(name);
 }
 
@@ -308,6 +384,7 @@ void SimulationManager::Configure()
     outputManager_->SetOutputDir(context_.GetOutputDir());
     geometryManager_->SetCheckOverlaps(context_.GetCheckOverlaps());
     geometryManager_->SetMaterialManager(materialManager_.get());
+    ApplyCommandLineOverrides();
 
     configured_ = true;
     initialized_ = false;
@@ -334,7 +411,9 @@ void SimulationManager::BuildManagers()
         appMessenger_ = std::make_unique<AppMessenger>(this);
     }
     if (!outputMessenger_) {
-        outputMessenger_ = std::make_unique<OutputMessenger>(outputManager_.get());
+        outputMessenger_ = std::make_unique<OutputMessenger>(
+            outputManager_.get(),
+            [this](const std::string& outputDir) { SetOutputDir(outputDir); });
     }
     if (!materialMessenger_) {
         materialMessenger_ = std::make_unique<MaterialMessenger>(materialManager_.get());
@@ -647,7 +726,34 @@ void SimulationManager::ConfigureOutputManager()
     outputManager_->SetOutputDir(context_.GetOutputDir());
     outputManager_->SetThreadId(0);
     outputManager_->EnableThreadSuffix(true);
+    outputManager_->SetOutputDirLocked(commandLineOverrides_.outputDir.has_value());
     if (scoringManager_) scoringManager_->SetOutputManager(outputManager_.get());
+}
+
+void SimulationManager::ApplyCommandLineOverrides()
+{
+    if (commandLineOverrides_.mainConfig) context_.SetMainConfig(*commandLineOverrides_.mainConfig);
+    if (commandLineOverrides_.outputDir) {
+        context_.SetOutputDir(*commandLineOverrides_.outputDir);
+        outputManager_->SetOutputDir(*commandLineOverrides_.outputDir);
+    }
+    if (commandLineOverrides_.runName) context_.SetRunName(*commandLineOverrides_.runName);
+    if (commandLineOverrides_.macroFile) context_.SetMacroFile(*commandLineOverrides_.macroFile);
+    if (commandLineOverrides_.numThreads) context_.SetNumThreads(*commandLineOverrides_.numThreads);
+    if (commandLineOverrides_.seed) context_.SetSeed(*commandLineOverrides_.seed);
+    if (commandLineOverrides_.interactive) context_.SetInteractive(*commandLineOverrides_.interactive);
+    if (commandLineOverrides_.dryRun) context_.SetDryRun(*commandLineOverrides_.dryRun);
+    if (commandLineOverrides_.checkOverlaps) {
+        context_.SetCheckOverlaps(*commandLineOverrides_.checkOverlaps);
+        geometryManager_->SetCheckOverlaps(*commandLineOverrides_.checkOverlaps);
+        geometryManager_->SetCheckOverlapsLocked(true);
+    }
+}
+
+void SimulationManager::WarnIgnoredCommandLineOverride(const std::string& name) const
+{
+    std::cerr << "[SimulationManager] Ignoring runtime change to " << name
+              << " because an explicit CLI option has higher priority.\n";
 }
 
 void SimulationManager::WriteBaseRunSummary()

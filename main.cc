@@ -1,4 +1,5 @@
 ﻿#include "Actions/ActionInitialization.hh"
+#include "Core/MacroPreflight.hh"
 #include "Core/SimulationManager.hh"
 #include "Detector/DetectorConstruction.hh"
 #include "G4RunManager.hh"
@@ -12,6 +13,7 @@
 
 #include <cstdlib>
 #include <exception>
+#include <filesystem>
 #include <iostream>
 #include <memory>
 #include <optional>
@@ -62,8 +64,8 @@ void PrintUsage(const char* program) {
       << "  --dry-run            Configure and register Geant4 objects but "
          "skip macro/UI execution.\n"
       << "  --help, -h           Show this help.\n\n"
-      << "If neither --macro nor --ui is supplied, no beamOn is run "
-         "automatically.\n";
+      << "If the final configuration has no macro/UI and is not dry-run, "
+         "usage is shown.\n";
 }
 
 std::string RequireValue(int& index, int argc, char** argv,
@@ -74,6 +76,15 @@ std::string RequireValue(int& index, int argc, char** argv,
   }
   ++index;
   return argv[index];
+}
+
+std::string RequireNonEmptyValue(int& index, int argc, char** argv,
+                                 const std::string& option) {
+  const std::string value = RequireValue(index, argc, argv, option);
+  if (value.empty()) {
+    throw std::runtime_error("Empty value for command line option '" + option + "'");
+  }
+  return value;
 }
 
 int ParsePositiveInt(const std::string& value, const std::string& option) {
@@ -87,6 +98,9 @@ int ParsePositiveInt(const std::string& value, const std::string& option) {
 }
 
 unsigned long ParseSeed(const std::string& value) {
+  if (value.empty() || value[0] == '-') {
+    throw std::runtime_error("Invalid value for --seed: '" + value + "'");
+  }
   std::size_t consumed = 0;
   const unsigned long parsed = std::stoul(value, &consumed);
   if (consumed != value.size()) {
@@ -111,13 +125,13 @@ CommandLineOptions ParseCommandLine(int argc, char** argv) {
     if (arg == "--help" || arg == "-h") {
       options.help = true;
     } else if (arg == "--config" || arg == "-c") {
-      options.configFile = RequireValue(i, argc, argv, arg);
+      options.configFile = RequireNonEmptyValue(i, argc, argv, arg);
     } else if (arg == "--macro" || arg == "-m") {
-      options.macroFile = RequireValue(i, argc, argv, arg);
+      options.macroFile = RequireNonEmptyValue(i, argc, argv, arg);
     } else if (arg == "--output" || arg == "-o") {
-      options.outputDir = RequireValue(i, argc, argv, arg);
+      options.outputDir = RequireNonEmptyValue(i, argc, argv, arg);
     } else if (arg == "--run-name") {
-      options.runName = RequireValue(i, argc, argv, arg);
+      options.runName = RequireNonEmptyValue(i, argc, argv, arg);
     } else if (arg == "--ui") {
       options.interactive = true;
     } else if (arg == "--threads" || arg == "-t") {
@@ -159,21 +173,40 @@ std::unique_ptr<G4RunManager> CreateRunManager(const SimulationManager& sim) {
 int main(int argc, char** argv) {
   try {
     const CommandLineOptions options = ParseCommandLine(argc, argv);
-    if (options.help || (options.macroFile.empty() && !options.interactive)) {
+    if (options.help) {
       PrintUsage(argv[0]);
-      return options.help ? EXIT_SUCCESS : EXIT_SUCCESS;
+      return EXIT_SUCCESS;
     }
 
     SimulationManager sim;
-    if (!options.configFile.empty()) sim.SetMainConfig(options.configFile);
-    if (!options.macroFile.empty()) sim.SetMacroFile(options.macroFile);
-    if (!options.outputDir.empty()) sim.SetOutputDir(options.outputDir);
-    if (!options.runName.empty()) sim.SetRunName(options.runName);
-    sim.SetInteractive(options.interactive);
-    sim.SetDryRun(options.dryRun);
-    if (options.threads) sim.SetNumThreads(*options.threads);
-    if (options.seed) sim.SetSeed(*options.seed);
-    if (options.checkOverlaps) sim.SetCheckOverlaps(*options.checkOverlaps);
+    SimulationCommandLineOverrides cliOverrides;
+    if (!options.configFile.empty()) cliOverrides.mainConfig = options.configFile;
+    if (!options.macroFile.empty()) cliOverrides.macroFile = options.macroFile;
+    if (!options.outputDir.empty()) cliOverrides.outputDir = options.outputDir;
+    if (!options.runName.empty()) cliOverrides.runName = options.runName;
+    if (options.interactive) cliOverrides.interactive = true;
+    if (options.dryRun) cliOverrides.dryRun = true;
+    cliOverrides.checkOverlaps = options.checkOverlaps;
+    cliOverrides.numThreads = options.threads;
+    cliOverrides.seed = options.seed;
+    sim.SetCommandLineOverrides(cliOverrides);
+
+    sim.Configure();
+    const SimulationContext& context = sim.GetContext();
+    if (!context.IsDryRun() && !context.IsInteractive() && !context.HasMacroFile()) {
+      PrintUsage(argv[0]);
+      return EXIT_SUCCESS;
+    }
+
+    MacroPreflightResult preflight;
+    if (!context.IsDryRun() && context.HasMacroFile()) {
+      MacroPreflightLocks locks;
+      locks.outputDir = cliOverrides.outputDir.has_value();
+      locks.numThreads = cliOverrides.numThreads.has_value();
+      locks.seed = cliOverrides.seed.has_value();
+      locks.checkOverlaps = cliOverrides.checkOverlaps.has_value();
+      preflight = PreflightMacro(context.GetMacroFile(), locks);
+    }
 
     sim.Initialize();
     if (sim.GetContext().HasSeed()) {
@@ -198,7 +231,7 @@ int main(int argc, char** argv) {
     runManager->SetUserInitialization(actions.release());
 
     std::unique_ptr<G4VisManager> visManager;
-    if (options.interactive) {
+    if (sim.GetContext().IsInteractive() && !sim.GetContext().IsDryRun()) {
       visManager = std::make_unique<G4VisExecutive>();
       visManager->Initialize();
     }
@@ -208,24 +241,27 @@ int main(int argc, char** argv) {
       throw std::runtime_error("G4UImanager::GetUIpointer returned null");
     }
 
-    if (options.dryRun) {
+    if (sim.GetContext().IsDryRun()) {
       std::cout << "G4UniversalSim dry-run completed: managers and Geant4 user "
                    "initialization objects were created; macro/UI execution "
                    "skipped.\n";
       return EXIT_SUCCESS;
     }
 
-    if (!options.macroFile.empty()) {
-      const std::string command = "/control/execute " + options.macroFile;
-      const int status = uiManager->ApplyCommand(command);
-      if (status != 0) {
-        throw std::runtime_error(
-            "Failed to execute macro '" + options.macroFile +
-            "', G4UImanager status=" + std::to_string(status));
+    if (!sim.GetContext().GetMacroFile().empty()) {
+      for (const auto& command : preflight.commands) {
+        const int status = uiManager->ApplyCommand(command.text.c_str());
+        if (status != 0) {
+          throw std::runtime_error(
+              "Failed to execute macro command '" + command.text + "' at " +
+              command.sourceFile.string() + ":" +
+              std::to_string(command.lineNumber) +
+              ", G4UImanager status=" + std::to_string(status));
+        }
       }
     }
 
-    if (options.interactive) {
+    if (sim.GetContext().IsInteractive()) {
       G4UIExecutive ui(argc, argv);
       ui.SessionStart();
     }

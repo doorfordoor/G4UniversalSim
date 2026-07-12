@@ -3,7 +3,9 @@
 #include "G4UImessenger.hh"
 
 #include <exception>
+#include <functional>
 #include <memory>
+#include <string>
 
 class G4UIcmdWithABool;
 class G4UIcmdWithAString;
@@ -15,7 +17,9 @@ class OutputManager;
 
 class OutputMessenger : public G4UImessenger {
 public:
-    explicit OutputMessenger(OutputManager* outputManager);
+    using OutputDirSetter = std::function<void(const std::string&)>;
+
+    explicit OutputMessenger(OutputManager* outputManager, OutputDirSetter outputDirSetter = {});
     ~OutputMessenger() override;
 
     void SetNewValue(G4UIcommand* command, G4String newValue) override;
@@ -27,6 +31,7 @@ private:
     void PrintSummary() const;
 
     OutputManager* outputManager_ = nullptr;
+    OutputDirSetter outputDirSetter_;
     std::unique_ptr<G4UIdirectory> directory_;
     std::unique_ptr<G4UIcmdWithAString> setDirCmd_;
     std::unique_ptr<G4UIcmdWithABool> setThreadSuffixCmd_;

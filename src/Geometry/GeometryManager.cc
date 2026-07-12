@@ -152,9 +152,23 @@ const std::string& GeometryManager::GetGeometryConfigFile() const
 
 void GeometryManager::SetCheckOverlaps(bool enable)
 {
+    if (checkOverlapsLocked_) {
+        G4cout << "[GeometryManager] Ignoring check-overlaps change because an explicit CLI option is active.\n";
+        return;
+    }
     checkOverlaps_ = enable;
     volumeBuilder_.SetCheckOverlaps(enable);
     MarkDirty();
+}
+
+void GeometryManager::SetCheckOverlapsLocked(bool locked)
+{
+    checkOverlapsLocked_ = locked;
+}
+
+bool GeometryManager::IsCheckOverlapsLocked() const
+{
+    return checkOverlapsLocked_;
 }
 
 bool GeometryManager::GetCheckOverlaps() const

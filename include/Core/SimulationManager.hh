@@ -4,7 +4,20 @@
 
 #include <functional>
 #include <memory>
+#include <optional>
 #include <string>
+
+struct SimulationCommandLineOverrides {
+    std::optional<std::string> mainConfig;
+    std::optional<std::string> outputDir;
+    std::optional<std::string> runName;
+    std::optional<std::string> macroFile;
+    std::optional<int> numThreads;
+    std::optional<unsigned long> seed;
+    std::optional<bool> interactive;
+    std::optional<bool> dryRun;
+    std::optional<bool> checkOverlaps;
+};
 
 class ConfigManager;
 class ActionInitialization;
@@ -38,6 +51,7 @@ public:
     SimulationContext& GetContext();
     const SimulationContext& GetContext() const;
 
+    void SetCommandLineOverrides(const SimulationCommandLineOverrides& overrides);
     void SetMainConfig(const std::string& filename);
     void SetOutputDir(const std::string& outputDir);
     void SetNumThreads(int n);
@@ -96,6 +110,8 @@ private:
     void EnsureBiasingManager();
     void EnsureScoringManager();
     void ConfigureOutputManager();
+    void ApplyCommandLineOverrides();
+    void WarnIgnoredCommandLineOverride(const std::string& name) const;
     void WriteBaseRunSummary();
 
     SimulationContext context_;
@@ -122,6 +138,8 @@ private:
     std::string geometryTemplate_ = "simple_box";
     std::string geometryConfigFile_;
     std::string defaultWorldMaterial_ = "G4_AIR";
+    SimulationCommandLineOverrides commandLineOverrides_;
+    bool commandLineOverridesSet_ = false;
 
     bool configLoaded_ = false;
     bool configured_ = false;
