@@ -4,6 +4,7 @@ import re
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from g4usim_gui.core.capability_messages import capability_message
 from g4usim_gui.models.package_model import GeometrySettings, PathSettings
 from g4usim_gui.models.physics_model import PhysicsSettings
 from g4usim_gui.models.run_model import RunSettings
@@ -111,6 +112,7 @@ def validate_config_builder(
         materials_summary = parse_materials(paths.materials_config)
         report.warnings.extend(f"Materials: {item}" for item in materials_summary.warnings)
         report.errors.extend(f"Materials: {item}" for item in materials_summary.errors)
+        _validate_material_text(Path(paths.materials_config).expanduser(), report)
 
     use_edited_geometry = bool(geometry_document and geometry_document.is_dirty and geometry_document.mode != "preview_only")
 
@@ -226,11 +228,18 @@ def _validate_geometry_text(path: Path, report: ValidationReport) -> None:
     lower = text.lower()
     if "shape = stl" in lower or "stl" in lower:
         report.warnings.append("Geometry config mentions STL; STL import is not part of this GUI MVP.")
-    if "gdml" in lower:
-        report.warnings.append("Geometry config mentions GDML; GDML support should be verified before running.")
+    if re.search(r"(?im)^\s*\[gdml\]\s*(?:#.*)?$", text):
+        message = capability_message("geometry.gdml.unsupported")
+        if message not in report.errors:
+            report.errors.append(message)
+    unsupported_placements = sorted(set(re.findall(
+        r"(?im)^\s*placement\s*=\s*(replica|parameteri[sz]ed|assembly)\s*(?:#.*)?$",
+        text,
+    )))
+    for placement in unsupported_placements:
+        report.errors.append(capability_message("geometry.placement.unsupported", placement=placement))
     if "let" in lower or "dose" in lower or "fluence" in lower:
         report.warnings.append("Geometry config mentions LET/Dose/Fluence; those are not edited by this GUI MVP.")
-
     if "[volume." in lower and ".boolean." in lower:
         report.info.append("Boolean geometry sections detected and allowed.")
         for section_match in re.finditer(r"(?ims)^\s*\[([^\]]*boolean[^\]]*)\]\s*(.*?)(?=^\s*\[|\Z)", text):
@@ -243,8 +252,19 @@ def _validate_geometry_text(path: Path, report: ValidationReport) -> None:
                     )
 
 
+def _validate_material_text(path: Path, report: ValidationReport) -> None:
+    text = path.read_text(encoding="utf-8", errors="replace")
+    unsupported = sorted(set(re.findall(r"(?im)^\s*(temperature|pressure)\s*=", text)))
+    for field in unsupported:
+        report.errors.append(capability_message("materials.field.unsupported", field=field))
+
 def _validate_template_consistency(template: str, summary: GeometrySummary, report: ValidationReport) -> None:
-    template = template.strip()
+    template = template.strip().lower()
+    if template == "gdml":
+        message = capability_message("geometry.gdml.unsupported")
+        if message not in report.errors:
+            report.errors.append(message)
+        return
     known = {"simple_box", "layered_device", "hierarchical", "array", "shielding", "boolean_hierarchical", "hierarchical_boolean"}
     if template and template not in known:
         report.warnings.append(f"Geometry template '{template}' is not in the GUI quick list; verify C++ support.")

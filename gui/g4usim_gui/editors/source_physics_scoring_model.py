@@ -3,6 +3,7 @@ from __future__ import annotations
 import re
 from dataclasses import asdict, dataclass, field
 
+from g4usim_gui.core.capability_messages import capability_message
 from g4usim_gui.models.physics_model import PhysicsSettings
 from g4usim_gui.models.scoring_model import ScoringSettings
 from g4usim_gui.models.source_model import SourceSettings
@@ -279,8 +280,12 @@ def validate_scoring_model(model: ScoringEditableModel) -> ScoringEditableModel:
         model.warnings.append("edep scorer is disabled; edep histogram settings will not produce output")
     if model.edep and not (model.raw_histogram or model.weighted_histogram):
         model.errors.append("edep histogram output requires raw_histogram or weighted_histogram")
-    if model.let or model.dose or model.fluence:
-        model.errors.append("LET/Dose/Fluence are experimental stubs and are disabled in this GUI MVP")
+    if model.let:
+        model.errors.append(capability_message("scoring.let.unsupported"))
+    if model.dose:
+        model.errors.append(capability_message("scoring.dose.unsupported"))
+    if model.fluence:
+        model.errors.append(capability_message("scoring.fluence.unsupported"))
     return model
 
 

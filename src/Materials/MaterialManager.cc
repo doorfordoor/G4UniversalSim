@@ -64,6 +64,12 @@ void MaterialManager::AddMaterialDefinition(const MaterialDefinition& def)
 {
     EnsureUnlocked("add material definition");
     if (def.name.empty()) throw std::runtime_error("Cannot add material definition with empty name");
+    if (!StringUtils::Trim(def.temperatureText).empty() || !StringUtils::Trim(def.pressureText).empty()) {
+        throw std::runtime_error(
+            "Material '" + def.name + "' uses unsupported temperature/pressure fields. "
+            "Remove temperature and pressure; current materials support density, state, and composition only."
+        );
+    }
     materialDefinitions_[Normalize(def.name)] = def;
 }
 

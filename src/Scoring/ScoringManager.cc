@@ -100,6 +100,12 @@ bool ScoringManager::IsEdepScoringEnabled() const
 
 void ScoringManager::EnableLETScoring(bool enable)
 {
+    if (enable) {
+        throw std::runtime_error(
+            "Scoring capability 'LET' is not supported because no reliable runtime LET calculation chain exists. "
+            "Use hits or Edep scoring instead."
+        );
+    }
     letScoringEnabled_ = enable;
     SetScorerEnabledIfExists("let", enable);
 }
@@ -111,6 +117,11 @@ bool ScoringManager::IsLETScoringEnabled() const
 
 void ScoringManager::EnableDoseScoring(bool enable)
 {
+    if (enable) {
+        throw std::runtime_error(
+            "Scoring capability 'Dose' is not supported. Use Edep scoring; dose requires a defined mass/output contract."
+        );
+    }
     doseScoringEnabled_ = enable;
     SetScorerEnabledIfExists("dose", enable);
 }
@@ -122,6 +133,11 @@ bool ScoringManager::IsDoseScoringEnabled() const
 
 void ScoringManager::EnableFluenceScoring(bool enable)
 {
+    if (enable) {
+        throw std::runtime_error(
+            "Scoring capability 'Fluence' is not supported. Use hits or Edep scoring; fluence requires a defined area/track-length contract."
+        );
+    }
     fluenceScoringEnabled_ = enable;
     SetScorerEnabledIfExists("fluence", enable);
 }

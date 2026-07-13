@@ -213,6 +213,32 @@ private:
             );
         }
 
+        const std::string arguments = Lower(Trim(line.arguments));
+        const bool enableValue = arguments == "true" || arguments == "1"
+            || arguments == "on" || arguments == "yes";
+        std::string unsupported;
+        if ((line.command == "/aihl/scoring/let"
+             || line.command == "/aihl/scoring/dose"
+             || line.command == "/aihl/scoring/fluence") && enableValue) {
+            unsupported = "LET/Dose/Fluence scoring is not supported; use hits or Edep scoring instead";
+        } else if (line.command == "/aihl/physics/setregioncut") {
+            unsupported = "Physics region cuts are not supported; use geometry volume cut.* fields instead";
+        } else if (line.command == "/aihl/geometry/settemplate" && arguments == "gdml") {
+            unsupported = "GDML geometry is not supported; use a supported geometry template and regular volume definitions instead";
+        } else if (line.command == "/aihl/material/add"
+                   && (arguments.find("temperature=") != std::string::npos
+                       || arguments.find("pressure=") != std::string::npos)) {
+            unsupported = "material temperature/pressure is not supported; use density, state, and composition only";
+        }
+        if (!unsupported.empty()) {
+            ThrowMacroError(
+                filename,
+                lineNumber,
+                unsupported,
+                line.text
+            );
+        }
+
         if (line.command == "/control/alias" ||
             line.command == "/control/loop" ||
             line.command == "/control/foreach") {

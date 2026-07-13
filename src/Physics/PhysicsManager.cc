@@ -311,18 +311,16 @@ const std::map<std::string, double>& PhysicsManager::GetParticleCuts() const
 }
 
 void PhysicsManager::SetRegionCut(const std::string& regionName,
-                                  const std::string& particleName,
-                                  double cut)
+                                   const std::string& particleName,
+                                   double cut)
 {
-    const auto region = StringUtils::Trim(regionName);
-    if (region.empty()) {
-        throw std::runtime_error("PhysicsManager::SetRegionCut failed: regionName is empty");
-    }
-    if (cut <= 0.0) {
-        throw std::runtime_error("PhysicsManager::SetRegionCut failed for region '" + region +
-                                 "', particle '" + particleName + "': cut must be > 0");
-    }
-    regionCuts_[region][NormalizeParticleName(particleName)] = cut;
+    (void)regionName;
+    (void)particleName;
+    (void)cut;
+    throw std::runtime_error(
+        "Physics region cuts are not supported yet for [physics.region.*] or "
+        "/AIHL/physics/setRegionCut. Use geometry volume cut.* fields instead."
+    );
 }
 
 bool PhysicsManager::HasRegionCuts() const

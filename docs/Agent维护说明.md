@@ -42,14 +42,14 @@
 ## 3. 维护时的高风险事实
 
 - CLI 没有 `--version`。无 `--macro` 且无 `--ui` 时通常只打印帮助并退出；`--dry-run` 是例外，会执行配置和 Geant4 对象注册但跳过 macro/UI。
-- `gdml` 模板目前只是占位。`VolumeBuilder` 遇到 GDML 占位属性会抛未实现错误。
+- `gdml` 模板当前未支持，后端配置校验和 GUI validator 会在进入 Geant4 构建前拒绝。
 - STL 导入未实现。
 - 后端 `VolumeBuilder` 支持 `box`、`tubs`、`sphere`、`orb`、`cone`、`trd`、`trap`。
 - GUI 层级/布尔几何校验目前只把 `box`、`tubs`、`sphere`、`orb`、`cone` 放在白名单里，且稳定预览主要是 `box` 和 `tubs`。后端已支持但 GUI 未放开的形状不要在 GUI 文档里写成 GUI 可编辑。
 - `simple_box` 的 target 虽读取 `shape`，但 GUI writer 固定写 `shape = box`。
 - `volume_fraction` 材料只支持材料组件。直接用元素作为体积分数组分会被后端拒绝。
 - 多线程输出由 worker 写 `_tN` 文件，后端不自动合并。GUI 只是调用合并工具。
-- `LETScorer` 只有轻量直方图输出条件；`DoseScorer`、`FluenceScorer` 当前是 no-op。
+- LET、Dose、Fluence 当前未支持；开启时 fail-fast，不能依赖 scorer 注册或空输出表示支持。
 - process-level XS biasing 是推荐路径。旧 `[biasing.xs]` 和部分 `/AIHL/biasing/xs/...` 命令仍兼容但会提示 legacy。
 - GUI 的 source rectangle、annulus、cone、cosine、focused 等模式属于预览或实验，当前 main.ini writer 会阻止不被后端支持的模式生成。
 - GUI 项目 JSON schema 当前是 `G4UniversalSimProject`，version 为 5。
@@ -72,6 +72,14 @@ python scripts/test_config_precedence.py
 ```
 
 `scripts/test_config_precedence.py` 覆盖配置-only、配置 macro、配置 dry-run/interactive、CLI-only、配置/CLI 冲突、macro preflight、真实 `beamOn`、带空格路径、重复 CLI、无效参数、缺失路径和嵌套 macro 不得回退到 CWD。`scripts/test_run_summary.py` 覆盖 dry-run、单次和多次 `beamOn`、macro 中间失败、preflight 失败、无 run、输出目录切换、固定 seed、成功 `/random/setSeeds`、非修改随机命令、覆盖写入文件、生成文件和摘要写入失败。M0-2 后 `run_summary.txt` 在最终生命周期阶段写入，保留原有计划配置字段，并增加实际状态、每次 run、事件汇总、实际线程、配置/引擎 seed 区分、seed 修改、最终输出目录、生成文件和失败命令位置；worker 文件登记目前通过最终文件扫描和时间变化检测汇总，尚未采用共享线程安全登记表，仍需在多线程输出审计中继续验证。
+
+M0-3A 回归入口：
+
+```text
+python scripts/test_unsupported_features.py
+```
+
+M0-3A 只增加误导防护，不实现新 Geant4 能力。`placement=replica|parameterised|assembly`、GDML、材料 `temperature`/`pressure`、`[physics.region.*]` 和 LET/Dose/Fluence 开启会在构建或运行前 fail-fast；错误消息必须包含能力名称和替代方案。false 或缺失字段保持兼容，GUI validator 对同类配置返回 `can_run = false`。
 
 ## 4. 修改代码后同步文档
 

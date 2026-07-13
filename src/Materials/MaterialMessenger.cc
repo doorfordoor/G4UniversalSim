@@ -121,6 +121,16 @@ void MaterialMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     } else if (command == addMaterialCmd_.get()) {
         ExecuteWithWarning(value, [&]() {
             const auto args = MaterialCommandParser::ParseKeyValueLine(value);
+            if (args.count("temperature") || args.count("pressure")) {
+                G4Exception(
+                    "MaterialMessenger::SetNewValue",
+                    "AIHL_Material_UnsupportedState",
+                    FatalException,
+                    "Material temperature/pressure is not supported. Remove temperature and pressure; "
+                    "current materials support density, state, and composition only."
+                );
+                return;
+            }
             MaterialDefinition def;
             def.name = MaterialCommandParser::Require(args, "name", value);
             const std::string modeText = args.count("mode") ? args.at("mode") : "mass_fraction";

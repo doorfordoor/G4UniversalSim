@@ -39,5 +39,9 @@ VolumeNode GDMLTemplate::BuildNodesFromFile(const std::string& filename) const
 
 void GDMLTemplate::ValidateConfig(const ConfigManager& config) const
 {
-    if (!config.HasKey("gdml", "file")) throw std::runtime_error("gdml template missing [gdml]/file");
+    (void)config;
+    throw std::runtime_error(
+        "Geometry capability 'GDML' is not supported by the backend. "
+        "Use a supported geometry template and regular volume definitions instead."
+    );
 }

@@ -18,8 +18,7 @@
 /AIHL/physics/setDefaultCut 1 mm
 /AIHL/physics/setCut proton 10 um
 /AIHL/physics/setCut e- 100 nm
-/AIHL/physics/setRegionCut SV e- 100 nm
-/AIHL/physics/setRegionCut SV proton 10 um
+# Region cuts use geometry volume cut.* fields until Physics region cuts are implemented.
 /AIHL/physics/enableBiasing true
 /AIHL/physics/verbose 1
 /AIHL/physics/print

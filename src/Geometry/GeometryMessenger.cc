@@ -71,6 +71,7 @@ VolumeNode MakeCommonNode(
     node.materialName = RequireValue(args, "material", command);
     node.shape = shape;
     node.shapeName = shapeName;
+    node.placementType = GeometryUtils::ParsePlacementType(OptionalValue(args, "placement", "normal"));
     node.position = GeometryUtils::ParseVec3(OptionalValue(args, "position", "0 mm,0 mm,0 mm"));
     node.rotation = GeometryUtils::ParseRotation3(OptionalValue(args, "rotation", "0 deg,0 deg,0 deg"));
     node.sensitive = OptionalBool(args, "sensitive", false);
@@ -319,5 +320,5 @@ void GeometryMessenger::PrintTreeModifiedMessage() const
 void GeometryMessenger::ReportCommandError(const char* commandName, const G4String& value, const std::exception& error) const
 {
     const std::string message = std::string(commandName) + " failed for input '" + value + "': " + error.what();
-    G4Exception("GeometryMessenger", "AIHLGeometryCmd001", JustWarning, message.c_str());
+    G4Exception("GeometryMessenger", "AIHLGeometryCmd001", FatalException, message.c_str());
 }

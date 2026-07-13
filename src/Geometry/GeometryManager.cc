@@ -25,6 +25,15 @@ void CollectRegions(const VolumeNode& node, std::set<std::string>& regions)
 void ValidateNodeRecursive(const VolumeNode& node, bool isRoot)
 {
     GeometryUtils::ValidateVolumeName(node.name);
+    if (node.placementType != PlacementType::Normal) {
+        throw std::runtime_error(
+            "Geometry volume '" + node.name + "' requests placement="
+            + GeometryUtils::PlacementTypeToString(node.placementType)
+            + ", but this capability is not supported. Use placement=normal"
+            + " with explicit child volumes until replica/parameterised/assembly"
+            + " placement is implemented."
+        );
+    }
     if (!isRoot && node.parentName.empty()) {
         throw std::runtime_error("Non-world volume '" + node.name + "' has empty parentName");
     }
@@ -115,6 +124,12 @@ void GeometryManager::SetTemplate(const std::string& templateName)
 {
     const std::string value = StringUtils::Trim(templateName);
     if (value.empty()) throw std::runtime_error("Geometry template name must not be empty");
+    if (StringUtils::ToLower(value) == "gdml") {
+        throw std::runtime_error(
+            "Geometry capability 'GDML' is not supported by the backend. "
+            "Use a supported geometry template and regular volume definitions instead."
+        );
+    }
     (void)TemplateFactory::Create(value); // Validate early and keep creation deferred to LoadGeometryConfig.
     templateName_ = value;
     MarkDirty();
@@ -515,6 +530,12 @@ void GeometryManager::ValidateUserVolume(const VolumeNode& node) const
     if (StringUtils::Trim(node.parentName).empty()) throw std::runtime_error(prefix + "parentName must not be empty");
     if (node.shape == VolumeShape::Unknown) throw std::runtime_error(prefix + "shape must not be unknown");
     if (StringUtils::Trim(node.materialName).empty()) throw std::runtime_error(prefix + "materialName must not be empty");
+    if (node.placementType != PlacementType::Normal) {
+        throw std::runtime_error(
+            prefix + "placement=" + GeometryUtils::PlacementTypeToString(node.placementType)
+            + " is not supported; use placement=normal with explicit child volumes"
+        );
+    }
 
     if (node.shape == VolumeShape::Box) {
         try {
