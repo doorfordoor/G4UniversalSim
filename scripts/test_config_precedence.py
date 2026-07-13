@@ -79,6 +79,7 @@ def main() -> int:
         space_output = temp / "path with spaces" / "output dir"
         nested_space_macro = temp / "path with spaces" / "nested macro.mac"
         nested_space_parent = temp / "path with spaces" / "parent macro.mac"
+        nested_cwd_fallback = temp / "nested-cwd-fallback.mac"
         relative_root = temp / "relative macros"
         relative_parent = relative_root / "level1" / "parent.mac"
         relative_child = relative_root / "level1" / "level2" / "child.mac"
@@ -178,12 +179,12 @@ def main() -> int:
         )
         macro_threads.write_text(
             "/AIHL/app/setNumThreads 2\n"
-            "/control/execute macros/run_hit_smoke.mac\n",
+            f"/control/execute {(ROOT / 'macros' / 'run_hit_smoke.mac').as_posix()}\n",
             encoding="utf-8",
         )
         macro_seed.write_text(
             "/AIHL/app/setSeed 444\n"
-            "/control/execute macros/run_hit_smoke.mac\n",
+            f"/control/execute {(ROOT / 'macros' / 'run_hit_smoke.mac').as_posix()}\n",
             encoding="utf-8",
         )
         space_macro.parent.mkdir(parents=True, exist_ok=True)
@@ -195,6 +196,9 @@ def main() -> int:
         )
         nested_space_parent.write_text(
             f"/control/execute {nested_space_macro.as_posix()}\n", encoding="utf-8"
+        )
+        nested_cwd_fallback.write_text(
+            "/control/execute macros/run_simple.mac\n", encoding="utf-8"
         )
         relative_parent.parent.mkdir(parents=True, exist_ok=True)
         relative_child.parent.mkdir(parents=True, exist_ok=True)
@@ -361,15 +365,14 @@ def main() -> int:
             ["--config", str(config_file), "--macro", str(runtime_macro)],
         )
         require(macro_output_text, "CLI_MACRO_MARKER")
-        macro_values = read_summary(config_output)
-        # M0-2 will make run_summary reflect post-macro values; stdout is authoritative here.
+        macro_values = read_summary(direct_macro_output)
         require(macro_output_text, f"output_dir        : {direct_macro_output.as_posix()}")
         require(macro_output_text, "num_threads       : 3")
         require(macro_output_text, "seed              : 303")
         require(macro_output_text, "check_overlaps    : true")
         require(macro_output_text, f"outputDir={direct_macro_output.as_posix()}")
         require(macro_output_text, "checkOverlaps=true")
-        assert macro_values["output_dir"] == config_output.as_posix()
+        assert macro_values["actual_output_dir"] == direct_macro_output.as_posix()
 
         # Explicit CLI macro path wins over [run]/macro in the main config.
         cli_macro_path_text = run(
@@ -562,6 +565,12 @@ def main() -> int:
             raise AssertionError("repeated nested macro execution was deduplicated")
         if "WRONG_CWD_CHILD_MARKER" in relative_text:
             raise AssertionError("nested macro resolved from the process CWD")
+        fallback_text = run(
+            executable,
+            ["--macro", str(nested_cwd_fallback), "--output", str(space_output)],
+            expected=1,
+        )
+        require(fallback_text, "nested macro file does not exist")
         hash_text = run(
             executable,
             ["--macro", str(relative_root / "hash-parent.mac"), "--output", space_output.as_posix()],

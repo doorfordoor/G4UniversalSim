@@ -71,7 +71,7 @@ M0-1 回归入口：
 python scripts/test_config_precedence.py
 ```
 
-该测试覆盖配置-only、配置 macro、配置 dry-run/interactive、CLI-only、配置/CLI 冲突、macro preflight、真实 `beamOn`、带空格路径、重复 CLI、无效参数和缺失路径。`run_summary.txt` 目前仍在 macro 执行前写入，不能用它判断 macro 后最终上下文；这属于 M0-2。未被静态识别的动态 Geant4 命令仍需在 M0-3 继续审计。
+`scripts/test_config_precedence.py` 覆盖配置-only、配置 macro、配置 dry-run/interactive、CLI-only、配置/CLI 冲突、macro preflight、真实 `beamOn`、带空格路径、重复 CLI、无效参数、缺失路径和嵌套 macro 不得回退到 CWD。`scripts/test_run_summary.py` 覆盖 dry-run、单次和多次 `beamOn`、macro 中间失败、preflight 失败、无 run、输出目录切换、固定 seed、成功 `/random/setSeeds`、非修改随机命令、覆盖写入文件、生成文件和摘要写入失败。M0-2 后 `run_summary.txt` 在最终生命周期阶段写入，保留原有计划配置字段，并增加实际状态、每次 run、事件汇总、实际线程、配置/引擎 seed 区分、seed 修改、最终输出目录、生成文件和失败命令位置；worker 文件登记目前通过最终文件扫描和时间变化检测汇总，尚未采用共享线程安全登记表，仍需在多线程输出审计中继续验证。
 
 ## 4. 修改代码后同步文档
 

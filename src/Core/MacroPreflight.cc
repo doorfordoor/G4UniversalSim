@@ -5,6 +5,7 @@
 #include <fstream>
 #include <set>
 #include <stdexcept>
+#include <utility>
 #include <vector>
 
 namespace {
@@ -55,17 +56,19 @@ std::string MacroLocation(const std::filesystem::path& filename, std::size_t lin
 [[noreturn]] void ThrowMacroError(
     const std::filesystem::path& filename,
     std::size_t line,
-    const std::string& message
+    const std::string& message,
+    const std::string& command = {}
 )
 {
-    throw std::runtime_error(MacroLocation(filename, line) + ": " + message);
+    throw MacroPreflightError(filename, line, command, message);
 }
 
 std::filesystem::path NormalizeExistingFile(
     const std::filesystem::path& candidate,
     const std::filesystem::path& includingDirectory,
     const std::filesystem::path& includingFile,
-    std::size_t line
+    std::size_t line,
+    const std::string& command
 )
 {
     std::vector<std::filesystem::path> candidates;
@@ -73,7 +76,6 @@ std::filesystem::path NormalizeExistingFile(
         candidates.push_back(candidate);
     } else {
         candidates.push_back(includingDirectory / candidate);
-        candidates.push_back(std::filesystem::current_path() / candidate);
     }
 
     for (const auto& path : candidates) {
@@ -81,7 +83,7 @@ std::filesystem::path NormalizeExistingFile(
         if (std::filesystem::is_regular_file(path, error)) {
             const auto absolute = std::filesystem::absolute(path, error);
             if (error) {
-                ThrowMacroError(includingFile, line, "cannot resolve macro path '" + candidate.string() + "'");
+                ThrowMacroError(includingFile, line, "cannot resolve macro path '" + candidate.string() + "'", command);
             }
             return absolute.lexically_normal();
         }
@@ -90,7 +92,8 @@ std::filesystem::path NormalizeExistingFile(
     ThrowMacroError(
         includingFile,
         line,
-        "nested macro file does not exist: '" + candidate.string() + "'"
+        "nested macro file does not exist: '" + candidate.string() + "'",
+        command
     );
 }
 
@@ -134,7 +137,7 @@ std::string ParseSingleMacroPath(
 )
 {
     if (line.arguments.empty()) {
-        ThrowMacroError(filename, lineNumber, "missing nested macro path for /control/execute");
+        ThrowMacroError(filename, lineNumber, "missing nested macro path for /control/execute", line.text);
     }
 
     const char quote = line.arguments.front();
@@ -142,7 +145,7 @@ std::string ParseSingleMacroPath(
     if (quote == '\'' || quote == '"') {
         const std::size_t closing = line.arguments.find(quote, 1);
         if (closing == std::string::npos || !Trim(line.arguments.substr(closing + 1)).empty()) {
-            ThrowMacroError(filename, lineNumber, "invalid quoted path for /control/execute");
+            ThrowMacroError(filename, lineNumber, "invalid quoted path for /control/execute", line.text);
         }
         path = line.arguments.substr(1, closing - 1);
     } else {
@@ -155,7 +158,8 @@ std::string ParseSingleMacroPath(
         ThrowMacroError(
             filename,
             lineNumber,
-            "dynamic alias value in /control/execute is not supported by macro preflight"
+            "dynamic alias value in /control/execute is not supported by macro preflight",
+            line.text
         );
     }
     return path;
@@ -204,7 +208,8 @@ private:
             ThrowMacroError(
                 filename,
                 lineNumber,
-                "command '" + line.command + "' conflicts with an explicit CLI lock for " + conflict
+                "command '" + line.command + "' conflicts with an explicit CLI lock for " + conflict,
+                line.text
             );
         }
 
@@ -214,7 +219,8 @@ private:
             ThrowMacroError(
                 filename,
                 lineNumber,
-                "dynamic macro command '" + line.command + "' is not supported by preflight"
+                "dynamic macro command '" + line.command + "' is not supported by preflight",
+                line.text
             );
         }
     }
@@ -251,7 +257,8 @@ private:
                 nestedName,
                 filename.parent_path(),
                 filename,
-                lineNumber
+                lineNumber,
+                line.text
             );
             ScanFile(nestedPath, depth + 1);
             continue;
@@ -267,6 +274,17 @@ private:
 
 }  // namespace
 
+MacroPreflightError::MacroPreflightError(std::filesystem::path file,
+                                         std::size_t line,
+                                         std::string command,
+                                         std::string message)
+    : std::runtime_error(file.string() + ":" + std::to_string(line) + ": " + message),
+      file_(std::move(file)),
+      line_(line),
+      command_(std::move(command))
+{
+}
+
 MacroPreflightResult PreflightMacro(
     const std::string& filename,
     const MacroPreflightLocks& locks
@@ -277,7 +295,8 @@ MacroPreflightResult PreflightMacro(
         requested,
         std::filesystem::current_path(),
         requested,
-        0
+        0,
+        {}
     );
 
     MacroScanner scanner(locks);

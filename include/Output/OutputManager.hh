@@ -6,6 +6,7 @@
 #include "Output/RunSummary.hh"
 
 #include <map>
+#include <filesystem>
 #include <memory>
 #include <string>
 #include <vector>
@@ -59,6 +60,9 @@ public:
     RunSummary& GetRunSummary();
     const RunSummary& GetRunSummary() const;
     void WriteRunSummary();
+    void RecordRun(int runId, std::int64_t plannedEvents, std::int64_t completedEvents);
+    void RegisterGeneratedFile(const std::string& filename);
+    std::vector<std::string> GetGeneratedFiles() const;
 
     void Flush();
     void Close();
@@ -74,6 +78,10 @@ private:
     bool threadSuffixEnabled_ = true;
     // True once Initialize() has created the output directory; current file-open state is HasOpenFiles().
     bool initialized_ = false;
+    std::vector<std::string> outputDirectoriesUsed_;
+    std::vector<std::string> baselineFiles_;
+    std::map<std::string, std::filesystem::file_time_type> baselineFileTimes_;
+    std::vector<std::string> writtenFiles_;
     std::unique_ptr<CsvWriter> hitWriter_;
     std::unique_ptr<CsvWriter> eventEdepWriter_;
     std::map<std::string, Histogram1D> histograms1D_;

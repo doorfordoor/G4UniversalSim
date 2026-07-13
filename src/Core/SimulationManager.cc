@@ -34,6 +34,9 @@
 #include "Randomize.hh"
 
 #include <iostream>
+#include <algorithm>
+#include <chrono>
+#include <ctime>
 #include <map>
 #include <stdexcept>
 #include <vector>
@@ -43,6 +46,27 @@ namespace {
 std::string BoolText(bool value)
 {
     return value ? "true" : "false";
+}
+
+std::string UtcTimestamp()
+{
+    const std::time_t now = std::time(nullptr);
+    std::tm utc{};
+#ifdef _WIN32
+    gmtime_s(&utc, &now);
+#else
+    gmtime_r(&now, &utc);
+#endif
+    char buffer[32]{};
+    std::strftime(buffer, sizeof(buffer), "%Y-%m-%dT%H:%M:%SZ", &utc);
+    return buffer;
+}
+
+std::string FirstCommandToken(const std::string& command)
+{
+    const std::string trimmed = StringUtils::Trim(command);
+    const std::size_t separator = trimmed.find_first_of(" \t\r\n");
+    return StringUtils::ToLower(trimmed.substr(0, separator));
 }
 
 bool HasNonEmptyKey(const ConfigManager& config, const std::string& section, const std::string& key)
@@ -308,6 +332,105 @@ void SimulationManager::Initialize()
     outputManager_->Initialize();
     initialized_ = true;
     WriteBaseRunSummary();
+}
+
+void SimulationManager::BeginRuntimeTracking()
+{
+    initialSeed_ = context_.HasSeed()
+        ? std::optional<unsigned long>(context_.GetSeed())
+        : std::nullopt;
+    macroSeedModified_ = false;
+    runtimeTrackingStarted_ = true;
+}
+
+bool SimulationManager::NoteMacroCommand(const std::string& command) const
+{
+    const std::string token = FirstCommandToken(command);
+    return token == "/aihl/app/setseed" ||
+           token == "/random/setseeds" ||
+           token == "/random/resetenginefrom";
+}
+
+void SimulationManager::ConfirmMacroCommandSuccess(bool seedStateChanged)
+{
+    if (seedStateChanged) macroSeedModified_ = true;
+}
+
+void SimulationManager::SetExecutedMacroPath(const std::string& path)
+{
+    executedMacroPath_ = path;
+}
+
+void SimulationManager::FinalizeRunSummary(const std::string& status,
+                                            int exitCode,
+                                            const std::string& macroStatus,
+                                            const std::string& failureFile,
+                                            int failureLine,
+                                            const std::string& failureCommand,
+                                            int failureCode)
+{
+    EnsureOutputManager();
+    if (!initialized_) {
+        WriteBaseRunSummary();
+    }
+
+    outputManager_->Flush();
+    outputManager_->Close();
+
+    RunSummary& summary = outputManager_->GetRunSummary();
+    const auto& runs = summary.GetRuns();
+    std::int64_t plannedEvents = 0;
+    std::int64_t completedEvents = 0;
+    for (const auto& run : runs) {
+        plannedEvents += run.plannedEvents;
+        completedEvents += run.completedEvents;
+    }
+
+    std::string finalStatus = status;
+    if (status == "completed" && !runs.empty() && completedEvents < plannedEvents) {
+        finalStatus = "aborted";
+    }
+    summary.Set("status", finalStatus);
+    summary.Set("program_exit_code", exitCode);
+    summary.Set("summary_generated_at", UtcTimestamp());
+    summary.Set("macro_execution_status", macroStatus);
+    summary.Set("macro_failure_phase",
+                macroStatus == "preflight_failed" ? "preflight" :
+                (macroStatus == "failed" ? "execution" : ""));
+    summary.Set("actual_macro_file", executedMacroPath_.empty() ? "unknown" : executedMacroPath_);
+    summary.Set("macro_failure_file", failureFile);
+    summary.Set("macro_failure_line", failureLine);
+    summary.Set("macro_failure_command", failureCommand);
+    summary.Set("macro_failure_code", failureCode);
+    summary.SetBool("macro_failure_code_available",
+                    macroStatus == "failed" && !failureFile.empty());
+    summary.Set("planned_event_count", plannedEvents);
+    summary.Set("actual_completed_event_count", completedEvents);
+    summary.Set("run_count", static_cast<int>(runs.size()));
+    summary.SetBool("simulation_executed", !runs.empty());
+    summary.Set("actual_output_dir", outputManager_->GetOutputDir());
+    summary.Set("initial_seed", initialSeed_ ? std::to_string(*initialSeed_) : "unset");
+    summary.Set("configured_seed", context_.HasSeed() ? std::to_string(context_.GetSeed()) : "unset");
+    summary.Set("initial_engine_seed", "unknown");
+    summary.SetBool("macro_seed_modified", macroSeedModified_);
+
+    if (runs.empty()) {
+        summary.Set("actual_threads", status == "dry_run" ? "not_executed" : "unknown");
+    } else if (auto* runManager = G4RunManager::GetRunManager()) {
+        summary.Set("actual_threads", runManager->GetNumberOfThreads());
+    } else {
+        summary.Set("actual_threads", "unknown");
+    }
+
+    std::vector<std::string> generated = outputManager_->GetGeneratedFiles();
+    generated.push_back(FileUtils::AbsolutePath(outputManager_->MakeOutputPath("run_summary.txt")));
+    std::sort(generated.begin(), generated.end());
+    generated.erase(std::unique(generated.begin(), generated.end()), generated.end());
+    summary.SetGeneratedFiles(generated);
+    summary.Set("generated_file_count", static_cast<int>(generated.size()));
+    summary.Set("summary_write_status", "completed");
+
+    outputManager_->WriteRunSummary();
 }
 
 void SimulationManager::Configure()
@@ -766,6 +889,10 @@ void SimulationManager::WriteBaseRunSummary()
     summary.Set("num_threads", context_.GetNumThreads());
     summary.Set("seed", context_.HasSeed() ? std::to_string(context_.GetSeed()) : "unset");
     summary.Set("macro_file", context_.GetMacroFile());
+    summary.Set("planned_output_dir", context_.GetOutputDir());
+    summary.Set("planned_num_threads", context_.GetNumThreads());
+    summary.Set("planned_seed", context_.HasSeed() ? std::to_string(context_.GetSeed()) : "unset");
+    summary.Set("planned_macro_file", context_.GetMacroFile());
     summary.SetBool("interactive", context_.IsInteractive());
     summary.Set("verbose_level", context_.GetVerboseLevel());
     summary.SetBool("check_overlaps", context_.GetCheckOverlaps());
@@ -804,5 +931,4 @@ void SimulationManager::WriteBaseRunSummary()
     summary.Set("scoring_scorer_count", static_cast<int>(scoringManager_ ? scoringManager_->GetScorerNames().size() : 0));
     summary.SetBool("initialized", initialized_);
     summary.AddMessage("Core initialization completed");
-    outputManager_->WriteRunSummary();
 }

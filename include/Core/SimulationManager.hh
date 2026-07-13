@@ -65,6 +65,17 @@ public:
 
     void LoadConfig();
     void Initialize();
+    void BeginRuntimeTracking();
+    bool NoteMacroCommand(const std::string& command) const;
+    void ConfirmMacroCommandSuccess(bool seedStateChanged);
+    void SetExecutedMacroPath(const std::string& path);
+    void FinalizeRunSummary(const std::string& status,
+                            int exitCode,
+                            const std::string& macroStatus,
+                            const std::string& failureFile = {},
+                            int failureLine = 0,
+                            const std::string& failureCommand = {},
+                            int failureCode = 0);
     void Configure();
     void BuildManagers();
     void PrintSummary() const;
@@ -144,4 +155,8 @@ private:
     bool configLoaded_ = false;
     bool configured_ = false;
     bool initialized_ = false;
+    std::optional<unsigned long> initialSeed_;
+    bool macroSeedModified_ = false;
+    bool runtimeTrackingStarted_ = false;
+    std::string executedMacroPath_;
 };

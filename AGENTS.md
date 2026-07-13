@@ -26,8 +26,9 @@
 ## 3. 后端维护规则
 
 - SimulationManager、各模块 Manager、配置读取器和 Messenger 的行为必须保持一致；新增配置字段不能只加到 GUI writer 或文档。
-- 配置优先级必须以代码实际行为为准。M0-1/M0-1b 已对当前启动字段统一为“默认值 < 主配置文件 < macro 运行时命令 < 显式 CLI 参数”：`SimulationCommandLineOverrides` 在 `Configure()` 后重应用显式 CLI，并由 `SimulationManager`、`OutputManager`、`GeometryManager` 阻止低优先级入口改写 `output`、`threads`、`seed`、`check_overlaps` 等字段。它是向完整 `EffectiveConfig` 迁移的过渡层，不代表已经提供来源追踪或 `run_summary` 的 macro 后最终值。
-- macro 执行前必须运行静态递归 preflight：检查 `/control/execute` 引入的文件，拒绝已知 CLI 冲突的项目命令、`/run/numberOfThreads`、`/random/...`，以及无法可靠分析的 `/control/alias`、`/control/loop`、`/control/foreach`。预检生成的规范化命令序列必须直接用于实际执行；相对路径按发出命令的 macro 文件目录解析。不得声称能够保护任意动态 Geant4 命令；未覆盖命令必须记录为风险或明确不支持。
+- 配置优先级必须以代码实际行为为准。M0-1/M0-1b 已对当前启动字段统一为“默认值 < 主配置文件 < macro 运行时命令 < 显式 CLI 参数”：`SimulationCommandLineOverrides` 在 `Configure()` 后重应用显式 CLI，并由 `SimulationManager`、`OutputManager`、`GeometryManager` 阻止低优先级入口改写 `output`、`threads`、`seed`、`check_overlaps` 等字段。它是向完整 `EffectiveConfig` 迁移的过渡层，不代表已经提供来源追踪。
+- M0-2 的 `run_summary.txt` 只在最终生命周期阶段写入（dry-run、正常结束、交互会话结束或失败收尾），并区分计划配置与实际运行事实：状态、每次 run、计划/完成事件数、实际线程数、配置 seed、引擎初始 seed（无法可靠取得时为 `unknown`）、macro seed 修改、最终输出目录、生成文件和失败命令位置。seed 修改只可由当前代码明确识别且成功执行的命令确认；失败摘要必须区分执行失败和 preflight 失败。preflight 没有 `ApplyCommand()` 返回码，必须用 `macro_failure_code_available=false` 表达 `macro_failure_code=0` 的语义。无法取得的运行事实必须写为 `unknown` 或 `not_executed`。
+- macro 执行前必须运行静态递归 preflight：检查 `/control/execute` 引入的文件，顶层相对路径按进程工作目录解析，嵌套相对路径只能按发出命令的 macro 文件目录解析。预检生成的规范化命令序列必须直接用于实际执行；拒绝已知 CLI 冲突的项目命令、`/run/numberOfThreads`、`/random/...`，以及无法可靠分析的 `/control/alias`、`/control/loop`、`/control/foreach`。不得声称能够保护任意动态 Geant4 命令；未覆盖命令必须记录为风险或明确不支持。
 - 配置字段、Geant4 命令、输出列名和项目 JSON 字段属于接口。删除、改名或改变默认值时，必须给出迁移策略和兼容性说明。
 - 输出必须说明文件生成条件、线程后缀、单位/量纲、合并方式和未生成文件的正常原因。没有物理定义或数据契约的 scorer 不得输出看似有效的结果。
 - Geant4 对象创建、敏感体、region、biasing、线程本地输出和 reinitialize 生命周期必须有可重复的运行验证。只在内存中保存配置不能算运行时生效。
@@ -48,7 +49,7 @@
 ## 6. 测试和交付
 
 - 每个任务必须运行相应测试，并在最终报告中区分“已验证”和“未验证”。文档任务至少运行链接/路径检查和受影响的 GUI 或配置 smoke；涉及后端行为时还要运行可用的构建、--help、dry-run 或后端 smoke。
-- 配置优先级回归测试入口为 `python scripts/test_config_precedence.py`；涉及 M0-1/M0-1b 的改动至少覆盖配置-only、配置 macro、配置 dry-run/interactive、CLI-only、配置/CLI 冲突、macro preflight、真实 `beamOn`、无效参数、重复参数和缺失路径。
+- 配置优先级回归测试入口为 `python scripts/test_config_precedence.py`；M0-2 摘要回归测试入口为 `python scripts/test_run_summary.py`。涉及 M0-1/M0-1b 的改动至少覆盖配置-only、配置 macro、配置 dry-run/interactive、CLI-only、配置/CLI 冲突、macro preflight、真实 `beamOn`、无效参数、重复参数和缺失路径；涉及摘要时还必须覆盖多次 `beamOn`、失败收尾、无 run、输出目录切换和摘要写入失败。
 - 测试失败时先区分代码失败、环境缺失和未覆盖场景，不得把“命令成功退出”当作物理正确性证明。
 - 若真实 Geant4 可执行文件、Qt/PySide6、3D 依赖或特定工具链不可用，必须明确记录未验证部分和复现命令。
 - 完成前复核 git diff、 新增文件编码、文档中的支持等级和工作区状态，确保没有把用户已有改动混入本任务。

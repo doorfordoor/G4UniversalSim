@@ -7,6 +7,7 @@
 #include "G4UImanager.hh"
 #include "G4VModularPhysicsList.hh"
 #include "G4VisExecutive.hh"
+#include "Output/OutputManager.hh"
 #ifdef G4MULTITHREADED
 #include "G4MTRunManager.hh"
 #endif
@@ -23,6 +24,13 @@
 #include "Randomize.hh"
 
 namespace {
+
+struct MacroFailureInfo {
+  std::string file;
+  int line = 0;
+  std::string command;
+  int code = 0;
+};
 
 struct CommandLineOptions {
   std::string configFile;
@@ -171,6 +179,10 @@ std::unique_ptr<G4RunManager> CreateRunManager(const SimulationManager& sim) {
 }  // namespace
 
 int main(int argc, char** argv) {
+  SimulationManager sim;
+  std::optional<MacroFailureInfo> macroFailure;
+  std::string macroStatus = "not_run";
+  bool finalizationStarted = false;
   try {
     const CommandLineOptions options = ParseCommandLine(argc, argv);
     if (options.help) {
@@ -178,7 +190,6 @@ int main(int argc, char** argv) {
       return EXIT_SUCCESS;
     }
 
-    SimulationManager sim;
     SimulationCommandLineOverrides cliOverrides;
     if (!options.configFile.empty()) cliOverrides.mainConfig = options.configFile;
     if (!options.macroFile.empty()) cliOverrides.macroFile = options.macroFile;
@@ -192,6 +203,7 @@ int main(int argc, char** argv) {
     sim.SetCommandLineOverrides(cliOverrides);
 
     sim.Configure();
+    sim.BeginRuntimeTracking();
     const SimulationContext& context = sim.GetContext();
     if (!context.IsDryRun() && !context.IsInteractive() && !context.HasMacroFile()) {
       PrintUsage(argv[0]);
@@ -200,12 +212,14 @@ int main(int argc, char** argv) {
 
     MacroPreflightResult preflight;
     if (!context.IsDryRun() && context.HasMacroFile()) {
+      sim.SetExecutedMacroPath(context.GetMacroFile());
       MacroPreflightLocks locks;
       locks.outputDir = cliOverrides.outputDir.has_value();
       locks.numThreads = cliOverrides.numThreads.has_value();
       locks.seed = cliOverrides.seed.has_value();
       locks.checkOverlaps = cliOverrides.checkOverlaps.has_value();
       preflight = PreflightMacro(context.GetMacroFile(), locks);
+      sim.SetExecutedMacroPath(preflight.macroPath.string());
     }
 
     sim.Initialize();
@@ -245,20 +259,38 @@ int main(int argc, char** argv) {
       std::cout << "G4UniversalSim dry-run completed: managers and Geant4 user "
                    "initialization objects were created; macro/UI execution "
                    "skipped.\n";
+      finalizationStarted = true;
+      try {
+        sim.FinalizeRunSummary("dry_run", EXIT_SUCCESS, "skipped_dry_run");
+      } catch (const std::exception& summaryError) {
+        std::cerr << "G4UniversalSim summary failure: "
+                  << summaryError.what() << std::endl;
+        throw;
+      }
       return EXIT_SUCCESS;
     }
 
     if (!sim.GetContext().GetMacroFile().empty()) {
+      macroStatus = "running";
       for (const auto& command : preflight.commands) {
+        const bool seedStateChanged = sim.NoteMacroCommand(command.text);
         const int status = uiManager->ApplyCommand(command.text.c_str());
         if (status != 0) {
+          macroFailure = MacroFailureInfo{
+              command.sourceFile.string(),
+              static_cast<int>(command.lineNumber),
+              command.text,
+              status};
+          macroStatus = "failed";
           throw std::runtime_error(
               "Failed to execute macro command '" + command.text + "' at " +
               command.sourceFile.string() + ":" +
               std::to_string(command.lineNumber) +
               ", G4UImanager status=" + std::to_string(status));
         }
+        sim.ConfirmMacroCommandSuccess(seedStateChanged);
       }
+      macroStatus = "completed";
     }
 
     if (sim.GetContext().IsInteractive()) {
@@ -266,11 +298,74 @@ int main(int argc, char** argv) {
       ui.SessionStart();
     }
 
+    const auto& runs = sim.GetOutputManager()->GetRunSummary().GetRuns();
+    const std::string status = sim.GetContext().IsInteractive() && runs.empty()
+        ? "interactive_no_run"
+        : "completed";
+    finalizationStarted = true;
+    try {
+      sim.FinalizeRunSummary(status, EXIT_SUCCESS, macroStatus);
+    } catch (const std::exception& summaryError) {
+      std::cerr << "G4UniversalSim summary failure: "
+                << summaryError.what() << std::endl;
+      throw;
+    }
     return EXIT_SUCCESS;
+  } catch (const MacroPreflightError& ex) {
+    macroStatus = "preflight_failed";
+    macroFailure = MacroFailureInfo{
+        ex.File().string(),
+        static_cast<int>(ex.Line()),
+        ex.Command(),
+        0};
+    if (sim.IsConfigured() && !finalizationStarted) {
+      try {
+        finalizationStarted = true;
+        sim.FinalizeRunSummary(
+            "failed",
+            EXIT_FAILURE,
+            macroStatus,
+            macroFailure->file,
+            macroFailure->line,
+            macroFailure->command,
+            macroFailure->code);
+      } catch (const std::exception& summaryError) {
+        std::cerr << "G4UniversalSim summary failure: "
+                  << summaryError.what() << std::endl;
+      }
+    }
+    std::cerr << "G4UniversalSim macro preflight failed: "
+              << ex.what() << std::endl;
+    return EXIT_FAILURE;
   } catch (const std::exception& ex) {
+    if (sim.IsConfigured() && !finalizationStarted) {
+      try {
+        finalizationStarted = true;
+        sim.FinalizeRunSummary(
+            "failed",
+            EXIT_FAILURE,
+            macroStatus == "not_run" ? "failed" : macroStatus,
+            macroFailure ? macroFailure->file : "",
+            macroFailure ? macroFailure->line : 0,
+            macroFailure ? macroFailure->command : "",
+            macroFailure ? macroFailure->code : 0);
+      } catch (const std::exception& summaryError) {
+        std::cerr << "G4UniversalSim summary failure: "
+                  << summaryError.what() << std::endl;
+      }
+    }
     std::cerr << "G4UniversalSim fatal error: " << ex.what() << std::endl;
     return EXIT_FAILURE;
   } catch (...) {
+    if (sim.IsConfigured() && !finalizationStarted) {
+      try {
+        finalizationStarted = true;
+        sim.FinalizeRunSummary("failed", EXIT_FAILURE, macroStatus);
+      } catch (const std::exception& summaryError) {
+        std::cerr << "G4UniversalSim summary failure: "
+                  << summaryError.what() << std::endl;
+      }
+    }
     std::cerr << "G4UniversalSim fatal error: unknown exception" << std::endl;
     return EXIT_FAILURE;
   }

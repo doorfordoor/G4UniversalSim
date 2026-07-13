@@ -49,8 +49,8 @@ void RunAction::BeginOfRunAction(const G4Run* run)
     ScoringManager* scoringManager = ActiveScoringManager();
 
     if (outputManager) {
-        outputManager->Initialize();
         outputManager->GetRunSummary().Set("run_id_begin", runID);
+        outputManager->Initialize();
     } else if (verboseLevel_ > 0) {
         G4cout << "[RunAction] OutputManager is null; output initialization skipped." << G4endl;
     }
@@ -83,11 +83,14 @@ void RunAction::EndOfRunAction(const G4Run* run)
 
     if (outputManager) {
         outputManager->GetRunSummary().Set("run_id_end", runID);
+        if (role_ != Role::Worker) {
+            outputManager->RecordRun(
+                runID,
+                run->GetNumberOfEventToBeProcessed(),
+                run->GetNumberOfEvent());
+        }
         if (role_ != Role::Master) {
             outputManager->WriteAllHistograms();
-        }
-        if (role_ != Role::Worker) {
-            outputManager->WriteRunSummary();
         }
         outputManager->Flush();
         if (role_ == Role::Worker) {
