@@ -29,6 +29,7 @@ void IniReader::Load(const std::string& filename)
 
     std::string currentSection = kDefaultSection;
     data_[currentSection];
+    sectionInfo_[currentSection] = {currentSection, 0, false};
 
     std::string line;
     std::size_t lineNumber = 0;
@@ -54,6 +55,7 @@ void IniReader::Load(const std::string& filename)
 
             currentSection = NormalizeName(sectionName);
             data_[currentSection];
+            sectionInfo_[currentSection] = {currentSection, lineNumber, true};
             continue;
         }
 
@@ -68,7 +70,7 @@ void IniReader::Load(const std::string& filename)
             throw ParseError(filename, lineNumber, "empty key");
         }
 
-        data_[currentSection][NormalizeName(key)] = value;
+        data_[currentSection][NormalizeName(key)] = {value, lineNumber, key};
     }
 
     if (input.bad()) {
@@ -109,7 +111,8 @@ std::string IniReader::GetString(const std::string& section, const std::string& 
         );
     }
 
-    return keyIt->second;
+    keyIt->second.consumed = true;
+    return keyIt->second.value;
 }
 
 std::string IniReader::GetString(
@@ -149,6 +152,25 @@ std::vector<std::string> IniReader::GetKeys(const std::string& section) const
     return keys;
 }
 
+std::vector<IniFieldInfo> IniReader::GetFields() const
+{
+    std::vector<IniFieldInfo> fields;
+    for (const auto& section : data_) {
+        for (const auto& item : section.second) {
+            fields.push_back({section.first, item.second.originalKey, item.second.value,
+                              item.second.lineNumber, item.second.consumed});
+        }
+    }
+    return fields;
+}
+
+std::vector<IniSectionInfo> IniReader::GetSectionInfo() const
+{
+    std::vector<IniSectionInfo> sections;
+    for (const auto& item : sectionInfo_) sections.push_back(item.second);
+    return sections;
+}
+
 const std::string& IniReader::GetFilename() const
 {
     return filename_;
@@ -158,6 +180,7 @@ void IniReader::Clear()
 {
     filename_.clear();
     data_.clear();
+    sectionInfo_.clear();
 }
 
 std::string IniReader::NormalizeName(const std::string& name)

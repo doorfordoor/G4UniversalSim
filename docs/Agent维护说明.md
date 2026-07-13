@@ -81,6 +81,12 @@ python scripts/test_unsupported_features.py
 
 M0-3A 只增加误导防护，不实现新 Geant4 能力。`placement=replica|parameterised|assembly`、GDML、材料 `temperature`/`pressure`、`[physics.region.*]` 和 LET/Dose/Fluence 开启会在构建或运行前 fail-fast；错误消息必须包含能力名称和替代方案。false 或缺失字段保持兼容，GUI validator 对同类配置返回 `can_run = false`。
 
+### 3.3 M0-3B1 主配置字段消费追踪
+
+主配置只经过 `IniReader`/`ConfigManager` 链路追踪。成功的 `GetString`、`GetInt`、`GetDouble`、`GetBool`、`GetVector` 会标记实际字段已消费；`HasKey` 和 `HasSection` 仅探测，不会掩盖未消费字段。`SimulationManager::Configure()` 在各 Manager 完成后按文件和行号输出 `[ConfigWarning]`，未知 section 也会报告；warning 不改变退出码或既有运行结果。`run_summary.txt` 的 `config_warning_count` 和 `[Warnings]` 保存同一明细。材料文件和几何文件的独立解析器不在本轮范围内。
+
+回归入口：`python scripts/test_unconsumed_config.py`。
+
 ## 4. 修改代码后同步文档
 
 修改后端 CLI 或配置：

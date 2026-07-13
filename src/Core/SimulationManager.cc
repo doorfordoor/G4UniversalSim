@@ -38,6 +38,7 @@
 #include <chrono>
 #include <ctime>
 #include <map>
+#include <sstream>
 #include <stdexcept>
 #include <vector>
 
@@ -314,6 +315,7 @@ void SimulationManager::LoadConfig()
 
     configManager_->LoadMainConfig(context_.GetMainConfig());
     configLoaded_ = true;
+    configWarningsReported_ = false;
     configured_ = false;
     initialized_ = false;
 }
@@ -502,15 +504,65 @@ void SimulationManager::Configure()
         if (biasingManager_->IsEnabled()) {
             physicsManager_->EnableBiasingPhysics(true);
         }
+
+        // These aliases are intentionally accepted for compatibility.  A canonical
+        // spelling may win, but a shadowed legacy spelling is still a consumed field.
+        for (const auto& alias : {"seed", "randomSeed", "dry_run", "dryRun",
+                                  "check_overlaps", "checkOverlaps", "name",
+                                  "run_name", "runName"}) {
+            configManager_->MarkKeyConsumed("run", alias);
+        }
+        for (const auto& alias : {"seed", "randomSeed", "verbose"}) {
+            configManager_->MarkKeyConsumed("general", alias);
+        }
+        for (const auto& alias : {"dir", "outputDir"}) {
+            configManager_->MarkKeyConsumed("output", alias);
+        }
+        for (const auto& alias : {"file", "materialFile", "config", "configFile"}) {
+            configManager_->MarkKeyConsumed("materials", alias);
+            configManager_->MarkKeyConsumed("geometry", alias);
+        }
+        for (const auto& alias : {"template", "templateName", "check_overlaps",
+                                  "checkOverlaps", "default_world_material",
+                                  "defaultWorldMaterial"}) {
+            configManager_->MarkKeyConsumed("geometry", alias);
+        }
     }
 
     outputManager_->SetOutputDir(context_.GetOutputDir());
     geometryManager_->SetCheckOverlaps(context_.GetCheckOverlaps());
     geometryManager_->SetMaterialManager(materialManager_.get());
     ApplyCommandLineOverrides();
+    ReportConfigWarnings();
 
     configured_ = true;
     initialized_ = false;
+}
+
+void SimulationManager::ReportConfigWarnings()
+{
+    if (!configLoaded_ || configWarningsReported_) return;
+
+    const auto warnings = configManager_->GetUnconsumedWarnings();
+    RunSummary& summary = outputManager_->GetRunSummary();
+    summary.Set("config_warning_count", static_cast<int>(warnings.size()));
+    for (const auto& warning : warnings) {
+        std::ostringstream message;
+        message << "[ConfigWarning] unconsumed field " << warning.filename << ":"
+                << warning.lineNumber << " [" << warning.section << "]";
+        if (warning.key.empty()) {
+            message << " unknown section";
+        } else {
+            message << "/" << warning.key << " = " << warning.value;
+        }
+        if (!warning.suggestion.empty()) {
+            message << "; did you mean '" << warning.suggestion << "'?";
+        }
+        const std::string text = message.str();
+        std::cerr << text << '\n';
+        summary.AddWarning(text);
+    }
+    configWarningsReported_ = true;
 }
 
 void SimulationManager::BuildManagers()
@@ -897,6 +949,7 @@ void SimulationManager::WriteBaseRunSummary()
     summary.Set("verbose_level", context_.GetVerboseLevel());
     summary.SetBool("check_overlaps", context_.GetCheckOverlaps());
     summary.SetBool("dry_run", context_.IsDryRun());
+    if (!summary.Has("config_warning_count")) summary.Set("config_warning_count", 0);
     summary.Set("materials_file", materialsFile_);
     summary.Set("geometry_template", geometryTemplate_);
     summary.Set("geometry_config", geometryConfigFile_);

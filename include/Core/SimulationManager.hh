@@ -123,6 +123,7 @@ private:
     void ConfigureOutputManager();
     void ApplyCommandLineOverrides();
     void WarnIgnoredCommandLineOverride(const std::string& name) const;
+    void ReportConfigWarnings();
     void WriteBaseRunSummary();
 
     SimulationContext context_;
@@ -153,6 +154,7 @@ private:
     bool commandLineOverridesSet_ = false;
 
     bool configLoaded_ = false;
+    bool configWarningsReported_ = false;
     bool configured_ = false;
     bool initialized_ = false;
     std::optional<unsigned long> initialSeed_;

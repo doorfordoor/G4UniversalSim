@@ -31,6 +31,7 @@
 - macro 执行前必须运行静态递归 preflight：检查 `/control/execute` 引入的文件，顶层相对路径按进程工作目录解析，嵌套相对路径只能按发出命令的 macro 文件目录解析。预检生成的规范化命令序列必须直接用于实际执行；拒绝已知 CLI 冲突的项目命令、`/run/numberOfThreads`、`/random/...`，以及无法可靠分析的 `/control/alias`、`/control/loop`、`/control/foreach`。不得声称能够保护任意动态 Geant4 命令；未覆盖命令必须记录为风险或明确不支持。
 - 配置字段、Geant4 命令、输出列名和项目 JSON 字段属于接口。删除、改名或改变默认值时，必须给出迁移策略和兼容性说明。
 - M0-3A 对尚未完整支持的能力采用统一 fail-fast：`placement=replica|parameterised|assembly`、GDML、材料 `temperature`/`pressure`、`[physics.region.*]`、LET/Dose/Fluence 开启均必须在 Geant4 对象创建或运行前拒绝；替代方案必须出现在错误消息中。对应字段为 false 或缺失时保持兼容。
+- M0-3B1 对主配置文件建立字段消费追踪：`IniReader` 保留文件、section、key、原始值和行号；成功 getter 标记字段已消费，`ConfigManager` 在各 Manager 完成配置后稳定输出 `[ConfigWarning]` 未消费字段和未知 section，并写入 `run_summary.txt`。该机制只警告、不改变运行结果；材料文件和几何文件仍由各自解析器独立处理。
 - 输出必须说明文件生成条件、线程后缀、单位/量纲、合并方式和未生成文件的正常原因。没有物理定义或数据契约的 scorer 不得输出看似有效的结果。
 - Geant4 对象创建、敏感体、region、biasing、线程本地输出和 reinitialize 生命周期必须有可重复的运行验证。只在内存中保存配置不能算运行时生效。
 

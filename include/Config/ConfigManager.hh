@@ -7,6 +7,15 @@
 #include <string>
 #include <vector>
 
+struct ConfigWarning {
+    std::string filename;
+    std::string section;
+    std::string key;
+    std::string value;
+    std::size_t lineNumber = 0;
+    std::string suggestion;
+};
+
 class ConfigManager {
 public:
     ConfigManager() = default;
@@ -83,12 +92,19 @@ public:
 
     std::vector<std::string> GetKeys(const std::string& section) const;
 
+    std::vector<ConfigWarning> GetUnconsumedWarnings() const;
+
+    // Mark a known compatibility alias consumed after a higher-priority alias wins.
+    void MarkKeyConsumed(const std::string& section, const std::string& key) const;
+
     std::string GetMainConfigPath() const;
 
     void Clear();
 
 private:
     static std::string NormalizeConfigName(const std::string& name);
+    static std::string Suggestion(const std::string& value,
+                                  const std::vector<std::string>& candidates);
 
     const IniReader& RequireConfigFile(const std::string& name) const;
     void EnsureMainConfigLoaded() const;

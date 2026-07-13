@@ -5,6 +5,20 @@
 #include <string>
 #include <vector>
 
+struct IniFieldInfo {
+    std::string section;
+    std::string key;
+    std::string value;
+    std::size_t lineNumber = 0;
+        mutable bool consumed = false;
+};
+
+struct IniSectionInfo {
+    std::string section;
+    std::size_t lineNumber = 0;
+    bool explicitSection = false;
+};
+
 class IniReader {
 public:
     IniReader() = default;
@@ -27,12 +41,23 @@ public:
 
     std::vector<std::string> GetKeys(const std::string& section) const;
 
+    std::vector<IniFieldInfo> GetFields() const;
+
+    std::vector<IniSectionInfo> GetSectionInfo() const;
+
     const std::string& GetFilename() const;
 
     void Clear();
 
 private:
-    using Section = std::map<std::string, std::string>;
+    struct Entry {
+        std::string value;
+        std::size_t lineNumber = 0;
+        std::string originalKey;
+        mutable bool consumed = false;
+    };
+
+    using Section = std::map<std::string, Entry>;
 
     static std::string NormalizeName(const std::string& name);
     static std::runtime_error ParseError(
@@ -43,4 +68,5 @@ private:
 
     std::string filename_;
     std::map<std::string, Section> data_;
+    std::map<std::string, IniSectionInfo> sectionInfo_;
 };
