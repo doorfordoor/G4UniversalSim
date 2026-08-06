@@ -9,6 +9,7 @@
 #include <fstream>
 #include <functional>
 #include <iostream>
+#include <limits>
 #include <sstream>
 #include <stdexcept>
 
@@ -31,6 +32,15 @@ bool IsForbiddenBooleanKey(const std::string& key)
     return keys.count(lower) > 0
         || StringUtils::StartsWith(lower, "cut.")
         || StringUtils::StartsWith(lower, "vis.");
+}
+
+bool IsShapeProperty(const std::string& key)
+{
+    static const std::set<std::string> keys = {
+        "dx1", "dx2", "dx3", "dx4", "dy1", "dy2", "dz",
+        "theta", "phi", "alpha1", "alpha2"
+    };
+    return keys.count(StringUtils::ToLower(StringUtils::Trim(key))) > 0;
 }
 
 }  // namespace
@@ -94,6 +104,11 @@ void GeometryConfig::Load(const std::string& filename)
     std::map<std::string, std::map<int, BooleanSolidOperation>> pendingBooleanOps;
     std::map<std::string, std::string> pendingBooleanTargets;
 
+    IniReader sourceReader;
+    sourceReader.Load(filename);
+    sourceFields_ = sourceReader.GetFields();
+    ValidateCutFields();
+
     for (const auto& section : sections) {
         const std::string lower = StringUtils::ToLower(section.first);
         if (IsBooleanSectionName(section.first)) {
@@ -152,6 +167,7 @@ void GeometryConfig::Clear()
     filename_.clear();
     flatVolumes_.clear();
     indexByName_.clear();
+    sourceFields_.clear();
 }
 
 bool GeometryConfig::HasVolume(const std::string& name) const
@@ -255,7 +271,9 @@ void GeometryConfig::Validate() const
             throw Error(filename_, "", volume.name, "parent", "parent volume does not exist: '" + volume.parentName + "'");
         }
         if (volume.hasProductionCuts && volume.regionName.empty()) {
-            // Allowed: builder may choose to create a volume-specific region later.
+            throw std::runtime_error(
+                "Geometry volume '" + volume.name + "' has production cuts but no non-empty region"
+            );
         }
         if (volume.sensitive && volume.bias) {
             // Allowed intentionally: scoring and biasing can both be requested for the same logical volume.
@@ -286,7 +304,9 @@ bool GeometryConfig::IsKnownKey(const std::string& key)
     static const std::set<std::string> keys = {
         "name", "parent", "shape", "size", "parameters", "material", "position", "rotation",
         "sensitive", "bias", "region", "placement", "copyNo", "copyno", "vis.color", "vis.alpha",
-        "vis.visible", "vis.wireframe"
+        "vis.visible", "vis.wireframe",
+        "dx1", "dx2", "dx3", "dx4", "dy1", "dy2", "dz",
+        "theta", "phi", "alpha1", "alpha2"
     };
     return keys.count(key) || IsCutKey(key);
 }
@@ -349,6 +369,214 @@ std::runtime_error GeometryConfig::Error(
     );
 }
 
+const IniFieldInfo* GeometryConfig::FindField(const std::string& section, const std::string& key) const
+{
+    const std::string sectionKey = Normalize(section);
+    const std::string fieldKey = Normalize(key);
+    for (const auto& field : sourceFields_) {
+        if (Normalize(field.section) == sectionKey && Normalize(field.key) == fieldKey) return &field;
+    }
+    return nullptr;
+}
+
+std::runtime_error GeometryConfig::FieldError(
+    const std::string& section,
+    const std::string& volume,
+    const std::string& key,
+    const std::string& message,
+    const std::string& suggestion
+) const
+{
+    const IniFieldInfo* field = FindField(section, key);
+    std::ostringstream text;
+    text << "Geometry config error in file '" << filename_ << "'";
+    if (field) text << ", line " << field->lineNumber;
+    text << ", section '[" << section << "]', volume '" << volume << "', key '"
+         << (field ? field->key : key) << "', value '" << (field ? field->value : "<missing>")
+         << "': " << message;
+    if (!suggestion.empty()) text << " " << suggestion;
+    return std::runtime_error(text.str());
+}
+
+void GeometryConfig::ValidateCutFields() const
+{
+    static const std::set<std::string> allowed = {
+        "cut.gamma", "cut.e-", "cut.e+", "cut.proton"
+    };
+    for (const auto& field : sourceFields_) {
+        const std::string key = Normalize(field.key);
+        if (!StringUtils::StartsWith(key, "cut.")) continue;
+        const std::string section = Normalize(field.section);
+        const bool ordinaryVolume = section == "world" || StringUtils::StartsWith(section, "volume.");
+        const bool booleanTool = section.find(".boolean.") != std::string::npos;
+        if (!allowed.count(key)) {
+            const std::string suggestion = (key == "cut.electron" || key == "cut.electron-")
+                ? "Use 'cut.e-' instead."
+                : "Use one of cut.gamma, cut.e-, cut.e+, or cut.proton.";
+            throw FieldError(field.section, "", field.key, "unknown production cut key.", suggestion);
+        }
+        if (!ordinaryVolume || booleanTool) {
+            throw FieldError(
+                field.section,
+                "",
+                field.key,
+                "production cuts are only valid on ordinary geometry volumes.",
+                "Move the cut to [world] or [volume.<name>] and set a non-empty region."
+            );
+        }
+        const IniFieldInfo* region = FindField(field.section, "region");
+        if (!region || StringUtils::Trim(region->value).empty()) {
+            throw FieldError(
+                field.section,
+                "",
+                field.key,
+                "production cut requires a non-empty region in the same section.",
+                "Add 'region = <RegionName>' to this section."
+            );
+        }
+        try {
+            if (UnitParser::ParseLength(field.value) <= 0.0) {
+                throw FieldError(field.section, "", field.key, "production cut must be > 0.");
+            }
+        } catch (const std::runtime_error& error) {
+            const std::string message = error.what();
+            if (message.find("Geometry config error") != std::string::npos) throw;
+            throw FieldError(field.section, "", field.key, "invalid production cut value: " + message);
+        }
+    }
+}
+
+void GeometryConfig::ValidateCopyNumber(const std::string& section, const std::string& volume) const
+{
+    const IniFieldInfo* field = FindField(section, "copyno");
+    if (!field) return;
+    const std::string text = StringUtils::Trim(field->value);
+    try {
+        std::size_t consumed = 0;
+        const long long value = std::stoll(text, &consumed);
+        if (consumed != text.size()
+            || value < std::numeric_limits<int>::min()
+            || value > std::numeric_limits<int>::max()) {
+            throw std::runtime_error("out of range");
+        }
+    } catch (...) {
+        throw FieldError(
+            section,
+            volume,
+            field->key,
+            "copyNo must be a signed 32-bit integer.",
+            "Use an integer from -2147483648 to 2147483647."
+        );
+    }
+}
+
+void GeometryConfig::ValidateShapeContract(
+    const std::string& section,
+    const std::string& volume,
+    VolumeShape shape,
+    const Vec3& size,
+    const std::vector<double>& parameters,
+    const std::map<std::string, std::string>& properties,
+    bool booleanTool
+) const
+{
+    const auto fail = [&](const std::string& key, const std::string& message, const std::string& suggestion = "") {
+        throw FieldError(section, volume, key, message, suggestion);
+    };
+    const auto exactParameters = [&](std::size_t count, const std::string& label) {
+        if (parameters.size() != count) {
+            fail("parameters", label + " requires exactly " + std::to_string(count) + " parameters; got "
+                + std::to_string(parameters.size()) + ".");
+        }
+    };
+    const auto positiveProperty = [&](const std::string& key) {
+        const auto it = properties.find(key);
+        if (it == properties.end() || StringUtils::Trim(it->second).empty()) {
+            fail(key, "shape requires this length field.");
+        }
+        double value = 0.0;
+        try {
+            value = UnitParser::ParseLength(it->second);
+        } catch (const std::exception& error) {
+            fail(key, std::string("invalid positive length: ") + error.what());
+        }
+        if (value <= 0.0) fail(key, "shape length must be > 0.");
+    };
+    const auto angleProperty = [&](const std::string& key) {
+        const auto it = properties.find(key);
+        if (it == properties.end() || StringUtils::Trim(it->second).empty()) fail(key, "shape requires this angle field.");
+        try {
+            (void)UnitParser::ParseAngle(it->second);
+        } catch (const std::exception& error) {
+            fail(key, std::string("invalid angle: ") + error.what());
+        }
+    };
+
+    std::set<std::string> allowedProperties;
+    if (shape == VolumeShape::Trd) {
+        allowedProperties = {"dx1", "dx2", "dy1", "dy2", "dz"};
+    } else if (shape == VolumeShape::Trap) {
+        allowedProperties = {
+            "dz", "theta", "phi", "dy1", "dx1", "dx2", "alpha1",
+            "dy2", "dx3", "dx4", "alpha2"
+        };
+    }
+    for (const auto& item : properties) {
+        if (IsShapeProperty(item.first) && !allowedProperties.count(Normalize(item.first))) {
+            fail(
+                item.first,
+                "shape-specific field is not valid for shape=" + GeometryUtils::ShapeToString(shape) + ".",
+                "Remove the field or select the matching trd/trap shape."
+            );
+        }
+    }
+
+    if (shape == VolumeShape::Box) {
+        if (FindField(section, "parameters")) fail("parameters", "box does not accept parameters; use size with exactly three positive lengths.");
+        try { GeometryUtils::ValidateBoxSize(size); }
+        catch (const std::exception& error) { fail("size", error.what()); }
+        return;
+    }
+    if (FindField(section, "size")) {
+        fail("size", "this shape does not accept size shorthand.", "Use the documented parameters or shape-specific fields.");
+    }
+    try {
+        if (shape == VolumeShape::Tubs) {
+            exactParameters(5, "tubs");
+            GeometryUtils::ValidateTubsParameters(parameters[0], parameters[1], parameters[2], parameters[3], parameters[4]);
+        } else if (shape == VolumeShape::Sphere) {
+            exactParameters(6, "sphere");
+            if (parameters[0] < 0.0 || parameters[1] <= parameters[0]
+                || parameters[3] <= 0.0 || parameters[5] <= 0.0) {
+                fail("parameters", "sphere radii and angular spans are invalid.");
+            }
+        } else if (shape == VolumeShape::Orb) {
+            exactParameters(1, "orb");
+            if (parameters[0] <= 0.0) fail("parameters", "orb radius must be > 0.");
+        } else if (shape == VolumeShape::Cone) {
+            exactParameters(7, "cone");
+            if (parameters[0] < 0.0 || parameters[2] < 0.0
+                || parameters[1] <= parameters[0] || parameters[3] <= parameters[2]
+                || parameters[4] <= 0.0 || parameters[6] <= 0.0) {
+                fail("parameters", "cone radii, halfZ, or deltaPhi are invalid.");
+            }
+        } else if (shape == VolumeShape::Trd) {
+            if (FindField(section, "parameters")) fail("parameters", "trd uses dx1, dx2, dy1, dy2, and dz fields, not parameters.");
+            for (const auto& key : {"dx1", "dx2", "dy1", "dy2", "dz"}) positiveProperty(key);
+        } else if (shape == VolumeShape::Trap) {
+            if (FindField(section, "parameters")) fail("parameters", "trap uses explicit shape-specific fields, not parameters.");
+            for (const auto& key : {"dz", "dy1", "dx1", "dx2", "dy2", "dx3", "dx4"}) positiveProperty(key);
+            for (const auto& key : {"theta", "phi", "alpha1", "alpha2"}) angleProperty(key);
+        }
+    } catch (const std::runtime_error&) {
+        throw;
+    } catch (const std::exception& error) {
+        fail(shape == VolumeShape::Trd || shape == VolumeShape::Trap ? "shape" : "parameters", error.what());
+    }
+
+    (void)booleanTool;
+}
+
 VolumeNode GeometryConfig::ParseVolumeSection(
     const std::string& sectionName,
     const Section& values
@@ -369,25 +597,50 @@ VolumeNode GeometryConfig::ParseVolumeSection(
     node.shapeName = values.at("shape");
     node.shape = GeometryUtils::ParseShape(node.shapeName);
     if (node.shape == VolumeShape::Unknown) {
-        throw Error(filename_, sectionName, node.name, "shape", "unsupported shape '" + node.shapeName + "'");
+        throw FieldError(sectionName, node.name, "shape", "unsupported shape '" + node.shapeName + "'");
     }
 
     if (!values.count("material")) throw Error(filename_, sectionName, node.name, "material", "missing material");
     node.materialName = values.at("material");
 
-    if (values.count("position")) node.position = GeometryUtils::ParseVec3(values.at("position"));
-    if (values.count("rotation")) node.rotation = GeometryUtils::ParseRotation3(values.at("rotation"));
-    if (values.count("placement")) node.placementType = GeometryUtils::ParsePlacementType(values.at("placement"));
+    if (values.count("position")) {
+        try { node.position = GeometryUtils::ParseVec3(values.at("position")); }
+        catch (const std::exception& error) { throw FieldError(sectionName, node.name, "position", error.what()); }
+    }
+    if (values.count("rotation")) {
+        try { node.rotation = GeometryUtils::ParseRotation3(values.at("rotation")); }
+        catch (const std::exception& error) { throw FieldError(sectionName, node.name, "rotation", error.what()); }
+    }
+    if (values.count("placement")) {
+        try {
+            node.placementType = GeometryUtils::ParsePlacementType(values.at("placement"));
+        } catch (const std::exception& error) {
+            throw FieldError(sectionName, node.name, "placement", error.what(), "Use placement=normal.");
+        }
+        if (node.placementType != PlacementType::Normal) {
+            throw FieldError(
+                sectionName,
+                node.name,
+                "placement",
+                "geometry capability 'placement=" + GeometryUtils::PlacementTypeToString(node.placementType)
+                    + "' is not supported.",
+                "Use placement=normal with explicit child volumes."
+            );
+        }
+    }
 
     if (node.shape == VolumeShape::Box) {
         if (!values.count("size")) throw Error(filename_, sectionName, node.name, "size", "box requires size");
-        node.size = GeometryUtils::ParseVec3(values.at("size"));
+        try { node.size = GeometryUtils::ParseVec3(values.at("size")); }
+        catch (const std::exception& error) { throw FieldError(sectionName, node.name, "size", error.what()); }
     }
     if (node.shape == VolumeShape::Tubs) {
         if (!values.count("parameters")) throw Error(filename_, sectionName, node.name, "parameters", "tubs requires parameters");
-        node.parameters = GeometryUtils::ParseParameterList(values.at("parameters"));
+        try { node.parameters = GeometryUtils::ParseParameterList(values.at("parameters")); }
+        catch (const std::exception& error) { throw FieldError(sectionName, node.name, "parameters", error.what()); }
     } else if (values.count("parameters")) {
-        node.parameters = GeometryUtils::ParseParameterList(values.at("parameters"));
+        try { node.parameters = GeometryUtils::ParseParameterList(values.at("parameters")); }
+        catch (const std::exception& error) { throw FieldError(sectionName, node.name, "parameters", error.what()); }
     }
 
     if (values.count("sensitive")) node.sensitive = StringUtils::ToBool(values.at("sensitive"));
@@ -410,8 +663,14 @@ VolumeNode GeometryConfig::ParseVolumeSection(
     if (values.count("vis.wireframe")) node.visual.wireframe = StringUtils::ToBool(values.at("vis.wireframe"));
 
     for (const auto& item : values) {
+        if (IsShapeProperty(item.first)) node.userProperties[item.first] = item.second;
         if (!IsKnownKey(item.first)) node.userProperties[item.first] = item.second;
     }
+
+    ValidateCopyNumber(sectionName, node.name);
+    ValidateShapeContract(
+        sectionName, node.name, node.shape, node.size, node.parameters, node.userProperties, false
+    );
 
     return node;
 }
@@ -438,23 +697,32 @@ BooleanSolidOperation GeometryConfig::ParseBooleanSection(
     op.tool.shapeName = values.at("shape");
     op.tool.shape = GeometryUtils::ParseShape(op.tool.shapeName);
     if (op.tool.shape == VolumeShape::Unknown) {
-        throw Error(filename_, sectionName, targetName, "shape", "unsupported boolean tool shape '" + op.tool.shapeName + "'");
+        throw FieldError(sectionName, targetName, "shape", "unsupported boolean tool shape '" + op.tool.shapeName + "'");
     }
 
-    if (values.count("position")) op.tool.position = GeometryUtils::ParseVec3(values.at("position"));
-    if (values.count("rotation")) op.tool.rotation = GeometryUtils::ParseRotation3(values.at("rotation"));
+    if (values.count("position")) {
+        try { op.tool.position = GeometryUtils::ParseVec3(values.at("position")); }
+        catch (const std::exception& error) { throw FieldError(sectionName, targetName, "position", error.what()); }
+    }
+    if (values.count("rotation")) {
+        try { op.tool.rotation = GeometryUtils::ParseRotation3(values.at("rotation")); }
+        catch (const std::exception& error) { throw FieldError(sectionName, targetName, "rotation", error.what()); }
+    }
 
     if (op.tool.shape == VolumeShape::Box) {
         if (!values.count("size")) throw Error(filename_, sectionName, targetName, "size", "box boolean tool requires size");
-        op.tool.size = GeometryUtils::ParseVec3(values.at("size"));
+        try { op.tool.size = GeometryUtils::ParseVec3(values.at("size")); }
+        catch (const std::exception& error) { throw FieldError(sectionName, targetName, "size", error.what()); }
     }
     if (op.tool.shape == VolumeShape::Tubs) {
         if (!values.count("parameters")) {
             throw Error(filename_, sectionName, targetName, "parameters", "tubs boolean tool requires parameters");
         }
-        op.tool.parameters = GeometryUtils::ParseParameterList(values.at("parameters"));
+        try { op.tool.parameters = GeometryUtils::ParseParameterList(values.at("parameters")); }
+        catch (const std::exception& error) { throw FieldError(sectionName, targetName, "parameters", error.what()); }
     } else if (values.count("parameters")) {
-        op.tool.parameters = GeometryUtils::ParseParameterList(values.at("parameters"));
+        try { op.tool.parameters = GeometryUtils::ParseParameterList(values.at("parameters")); }
+        catch (const std::exception& error) { throw FieldError(sectionName, targetName, "parameters", error.what()); }
     }
 
     for (const auto& item : values) {
@@ -465,6 +733,10 @@ BooleanSolidOperation GeometryConfig::ParseBooleanSection(
         }
         if (!IsKnownBooleanKey(item.first)) op.tool.properties[item.first] = item.second;
     }
+
+    ValidateShapeContract(
+        sectionName, targetName, op.tool.shape, op.tool.size, op.tool.parameters, op.tool.properties, true
+    );
 
     return op;
 }

@@ -10,6 +10,11 @@ from g4usim_gui.preview3d.units import parse_angle_list_deg, parse_length_list_t
 
 def build_preview_scene(geometry: GeometryDocument, source: SourceEditableModel) -> PreviewScene:
     scene = PreviewScene(template=geometry.mode)
+    scene.errors.extend(f"Geometry source: {message}" for message in geometry.source_errors)
+    scene.warnings.extend(f"Geometry source: {message}" for message in geometry.source_warnings)
+    scene.warnings.extend(f"Round-trip blocker: {message}" for message in geometry.round_trip_blockers)
+    if geometry.source_copy_mode:
+        scene.warnings.append("Original geometry source copy mode is active; editor validation is bypassed.")
     if geometry.mode == "simple_box":
         _build_simple_box(scene, geometry)
     elif geometry.mode == "layered_device":

@@ -32,6 +32,10 @@ def test_simple_box_model() -> None:
     document.simple_box.target_size = "2 cm, 2 cm, 1 mm"
     document.is_dirty = True
     validate_geometry_document(document, material_names={"G4_AIR", "G4_Si"}, scoring_hits_enabled=True)
+    assert document.round_trip_blockers
+    assert any("Round-trip blocker" in item for item in document.errors)
+    document.round_trip_blockers = []  # Exercise writer with a new editor-authored document state.
+    validate_geometry_document(document, material_names={"G4_AIR", "G4_Si"}, scoring_hits_enabled=True)
     assert not document.errors, document.errors
     text = generate_geometry_ini_text(document)
     assert "[target]" in text
@@ -46,6 +50,9 @@ def test_layered_device_model() -> None:
     )
     document.layered_device.layers[0].enabled = False
     document.is_dirty = True
+    validate_geometry_document(document, material_names={"G4_AIR", "G4_Si", "G4_Cu", "G4_WATER"}, scoring_hits_enabled=True)
+    assert document.round_trip_blockers
+    document.round_trip_blockers = []  # Exercise writer separately from source round-trip protection.
     validate_geometry_document(document, material_names={"G4_AIR", "G4_Si", "G4_Cu", "G4_WATER"}, scoring_hits_enabled=True)
     assert not document.errors, document.errors
     text = generate_geometry_ini_text(document)
@@ -79,6 +86,7 @@ def test_package_writer_generates_geometry() -> None:
     document = geometry_document_from_summary(summary, "simple_box")
     document.simple_box.target_name = "GeneratedTarget"
     document.is_dirty = True
+    document.round_trip_blockers = []  # New editor-authored output, not a source round-trip.
     with tempfile.TemporaryDirectory() as tmp:
         tmp_path = Path(tmp)
         exe = tmp_path / "G4UniversalSim.exe"

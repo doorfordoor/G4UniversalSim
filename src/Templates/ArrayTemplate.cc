@@ -2,6 +2,7 @@
 
 #include "Config/ConfigManager.hh"
 #include "Geometry/GeometryUtils.hh"
+#include "Geometry/GeometrySafety.hh"
 #include "Utils/StringUtils.hh"
 #include "Utils/UnitParser.hh"
 
@@ -80,6 +81,9 @@ VolumeNode ArrayTemplate::BuildNodesFromFile(const std::string& filename) const
 
 void ArrayTemplate::ValidateConfig(const ConfigManager& config) const
 {
+    GeometrySafety::ValidateProductionCuts(config, {});
+    GeometrySafety::ValidateFixedBoxShape(config, "world", "array world");
+    GeometrySafety::ValidateFixedBoxShape(config, "array", "array element");
     for (const auto& key : {"size", "material"}) {
         if (!config.HasKey("world", key)) throw std::runtime_error(std::string("array missing [world]/") + key);
     }

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+import re
 
 from g4usim_gui.editors.geometry_editor_model import (
     HIERARCHICAL_GEOMETRY_MODES,
@@ -11,6 +12,13 @@ from g4usim_gui.editors.geometry_editor_model import (
 
 
 def generate_geometry_ini_text(document: GeometryDocument) -> str:
+    if document.source_copy_mode:
+        raise ValueError("Geometry Editor generation is disabled in original source copy mode.")
+    if document.round_trip_blockers:
+        raise ValueError(
+            "Geometry Editor round-trip is blocked because source fields cannot be preserved:\n"
+            + "\n".join(document.round_trip_blockers)
+        )
     validate_geometry_document(document, material_names=geometry_material_refs(document))
     if document.errors:
         raise ValueError("Geometry Editor validation failed:\n" + "\n".join(document.errors))
@@ -184,11 +192,15 @@ def _metadata_lines(metadata: str) -> list[str]:
     lines: list[str] = []
     for raw in metadata.splitlines():
         text = raw.strip()
-        if not text or text.startswith("#") or "=" not in text:
+        if not text or text.startswith("#"):
             continue
+        if "=" not in text:
+            raise ValueError("Geometry metadata must use metadata.<name> = value.")
         key, value = text.split("=", 1)
         key = key.strip()
-        if key.lower() in {"material", "sensitive", "bias", "region", "parent", "shape", "size", "parameters", "position", "rotation", "copyno", "copy_no"}:
-            continue
+        if not re.fullmatch(r"metadata\.[A-Za-z0-9_.-]+", key, flags=re.IGNORECASE):
+            raise ValueError(
+                f"Geometry metadata key '{key}' is not allowed; only metadata.<non-empty-name> may be written."
+            )
         lines.append(f"{key} = {value.strip()}")
     return lines

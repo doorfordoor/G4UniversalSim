@@ -2,6 +2,7 @@
 
 #include "Config/ConfigManager.hh"
 #include "Geometry/GeometryUtils.hh"
+#include "Geometry/GeometrySafety.hh"
 #include "Utils/StringUtils.hh"
 #include "Utils/UnitParser.hh"
 
@@ -160,6 +161,14 @@ void LayeredDeviceTemplate::ValidateConfig(const ConfigManager& config) const
     if (!config.HasKey("world", "material")) throw std::runtime_error("layered_device missing [world]/material");
     const int count = config.GetInt("layers", "count");
     const auto names = config.GetVector("layers", "names");
+    std::set<std::string> cutSections;
+    GeometrySafety::ValidateFixedBoxShape(config, "world", "layered_device world");
+    for (const std::string& rawName : names) {
+        const std::string section = "layer." + StringUtils::Trim(rawName);
+        cutSections.insert(GeometrySafety::Normalize(section));
+        GeometrySafety::ValidateFixedBoxShape(config, section, "layered_device layer");
+    }
+    GeometrySafety::ValidateProductionCuts(config, cutSections);
     if (count <= 0) throw std::runtime_error("layered_device [layers]/count must be > 0");
     if (static_cast<int>(names.size()) != count) {
         throw std::runtime_error("layered_device [layers]/count does not match names size");

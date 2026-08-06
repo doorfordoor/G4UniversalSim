@@ -133,6 +133,12 @@ Rotation3 ParseRotation3(const std::string& text)
 
 std::vector<double> ParseParameterList(const std::string& text, bool parseWithUnits)
 {
+    if (parseWithUnits && text.find(',') == std::string::npos) {
+        const auto tokens = StringUtils::SplitWhitespace(text);
+        if (tokens.size() == 2) {
+            return {UnitParser::ParseDoubleWithUnit(text)};
+        }
+    }
     const auto parts = SplitVectorText(text);
     std::vector<double> values;
     values.reserve(parts.size());

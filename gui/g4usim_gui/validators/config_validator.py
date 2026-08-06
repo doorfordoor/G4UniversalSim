@@ -114,7 +114,12 @@ def validate_config_builder(
         report.errors.extend(f"Materials: {item}" for item in materials_summary.errors)
         _validate_material_text(Path(paths.materials_config).expanduser(), report)
 
-    use_edited_geometry = bool(geometry_document and geometry_document.is_dirty and geometry_document.mode != "preview_only")
+    use_edited_geometry = bool(
+        geometry_document
+        and geometry_document.is_dirty
+        and geometry_document.mode != "preview_only"
+        and not geometry_document.source_copy_mode
+    )
 
     if not geometry.template:
         report.errors.append("Geometry template is required.")
@@ -163,6 +168,10 @@ def validate_config_builder(
             report.errors.extend(f"Materials Editor: {item}" for item in material_document.errors)
             report.warnings.extend(f"Materials Editor: {item}" for item in material_document.warnings)
         _add_edited_geometry_summary_info(geometry_document, report)
+    elif geometry_document and geometry_document.source_copy_mode:
+        report.warnings.append(
+            "Geometry Editor: original source copy mode is active; blocked fields are preserved but not certified by editor validation."
+        )
     elif geometry_summary and material_document:
         validate_material_document(material_document, geometry_material_refs=geometry_summary.material_refs)
         report.errors.extend(f"Materials Editor: {item}" for item in material_document.errors)

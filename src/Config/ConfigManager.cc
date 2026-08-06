@@ -256,6 +256,18 @@ std::vector<std::string> ConfigManager::GetKeys(const std::string& section) cons
     return mainConfig_.GetKeys(section);
 }
 
+std::vector<IniFieldInfo> ConfigManager::GetFields() const
+{
+    EnsureMainConfigLoaded();
+    return mainConfig_.GetFields();
+}
+
+std::vector<IniSectionInfo> ConfigManager::GetSectionInfo() const
+{
+    EnsureMainConfigLoaded();
+    return mainConfig_.GetSectionInfo();
+}
+
 std::vector<ConfigWarning> ConfigManager::GetUnconsumedWarnings() const
 {
     EnsureMainConfigLoaded();

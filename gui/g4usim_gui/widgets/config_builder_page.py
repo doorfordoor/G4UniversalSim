@@ -194,6 +194,7 @@ class ConfigBuilderPage(QWidget):
         self.geometry_editor_tabs = QTabWidget()
         self.geometry_mode_label = QLabel("Geometry editor: preview-only")
         self.geometry_mode_label.setWordWrap(True)
+        self.geometry_source_copy = QCheckBox("Copy original geometry source unchanged (editor validation bypassed)")
         self.simple_world_size = QLineEdit("10 cm, 10 cm, 10 cm")
         self.simple_world_material = QComboBox()
         self.simple_world_material.setEditable(True)
@@ -460,6 +461,7 @@ class ConfigBuilderPage(QWidget):
         tab = QWidget()
         layout = QVBoxLayout(tab)
         layout.addWidget(self.geometry_mode_label)
+        layout.addWidget(self.geometry_source_copy)
         self.geometry_editor_tabs.addTab(self._simple_box_editor_tab(), "Simple Box")
         self.geometry_editor_tabs.addTab(self._layered_device_editor_tab(), "Layered Device")
         self.geometry_editor_tabs.addTab(self._hierarchical_editor_tab(), "Hierarchical Volumes")
@@ -895,6 +897,7 @@ class ConfigBuilderPage(QWidget):
         self.move_boolean_up_button.clicked.connect(lambda: self._move_boolean_op(-1))
         self.move_boolean_down_button.clicked.connect(lambda: self._move_boolean_op(1))
         self.validate_boolean_button.clicked.connect(self._validate_geometry_editor)
+        self.geometry_source_copy.toggled.connect(self._on_geometry_source_copy_toggled)
         self.preview3d_refresh_button.clicked.connect(self.refresh_3d_preview)
         self.preview3d_reset_button.clicked.connect(lambda: self.preview3d_widget.reset_camera())
         self.preview3d_show_source.stateChanged.connect(self._update_preview_display_options)
@@ -1176,7 +1179,7 @@ class ConfigBuilderPage(QWidget):
 
     def _apply_geometry_mode_to_tabs(self) -> None:
         mode = self.geometry_document.mode
-        editable = mode in EDITABLE_GEOMETRY_MODES
+        editable = mode in EDITABLE_GEOMETRY_MODES and not self.geometry_document.source_copy_mode
         label = {
             "simple_box": "Geometry editor: Simple Box mode. Package generation will write a new geometry.ini when dirty.",
             "layered_device": "Geometry editor: Layered Device mode. Package generation will write a new geometry.ini when dirty.",
@@ -1194,8 +1197,19 @@ class ConfigBuilderPage(QWidget):
         self.geometry_editor_tabs.setTabEnabled(2, editable and mode in HIERARCHICAL_GEOMETRY_MODES)
         self.geometry_editor_tabs.setTabEnabled(3, editable and mode in HIERARCHICAL_GEOMETRY_MODES)
 
+    def _on_geometry_source_copy_toggled(self, checked: bool) -> None:
+        if self._building:
+            return
+        self.geometry_document.source_copy_mode = checked
+        self._apply_geometry_mode_to_tabs()
+        self._validate_geometry_editor()
+        self._update_generated_geometry_preview()
+        self._update_workspace_summary()
+        self._emit_changed()
+
     def _populate_geometry_editor(self) -> None:
         self._building = True
+        self.geometry_source_copy.setChecked(self.geometry_document.source_copy_mode)
         self._apply_material_candidates()
         simple = self.geometry_document.simple_box
         self.simple_world_size.setText(simple.world_size)

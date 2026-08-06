@@ -2,6 +2,7 @@
 
 #include "Config/ConfigManager.hh"
 #include "Geometry/GeometryUtils.hh"
+#include "Geometry/GeometrySafety.hh"
 #include "Utils/StringUtils.hh"
 
 #include <stdexcept>
@@ -74,6 +75,9 @@ VolumeNode SimpleBoxTemplate::BuildNodesFromFile(const std::string& filename) co
 
 void SimpleBoxTemplate::ValidateConfig(const ConfigManager& config) const
 {
+    GeometrySafety::ValidateProductionCuts(config, {"target"});
+    GeometrySafety::ValidateFixedBoxShape(config, "world", "simple_box world");
+    GeometrySafety::ValidateFixedBoxShape(config, "target", "simple_box target");
     if (!config.HasKey("world", "size")) throw std::runtime_error("simple_box missing [world]/size");
     if (!config.HasKey("world", "material")) throw std::runtime_error("simple_box missing [world]/material");
     if (!config.HasKey("target", "size")) throw std::runtime_error("simple_box missing [target]/size");

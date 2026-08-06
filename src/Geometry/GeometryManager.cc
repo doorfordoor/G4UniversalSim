@@ -146,9 +146,18 @@ void GeometryManager::LoadGeometryConfig(const std::string& filename)
         throw std::runtime_error("Geometry config file does not exist: '" + filename + "'");
     }
 
+    VolumeBuilder::ResetCreatedGeometryObjectCount();
     auto geometryTemplate = TemplateFactory::Create(templateName_);
-    VolumeNode root = geometryTemplate->BuildNodesFromFile(filename);
-    ValidateRootNode(root);
+    VolumeNode root;
+    try {
+        root = geometryTemplate->BuildNodesFromFile(filename);
+        ValidateRootNode(root);
+    } catch (const std::exception& error) {
+        throw std::runtime_error(
+            std::string(error.what()) + "; created_geometry_object_count="
+            + std::to_string(VolumeBuilder::GetCreatedGeometryObjectCount())
+        );
+    }
     templateRootNode_ = std::make_unique<VolumeNode>(root);
     rootNode_ = std::make_unique<VolumeNode>(root);
     if (!preserveUserVolumesOnLoad_) {
@@ -431,6 +440,7 @@ G4VPhysicalVolume* GeometryManager::BuildWorld()
     if (!rootNode_) throw std::runtime_error("GeometryManager cannot build world: root node is not set");
 
     ValidateRootNode(*rootNode_);
+    VolumeBuilder::ResetCreatedGeometryObjectCount();
     registry_.Clear();
     volumeBuilder_.Clear();
     volumeBuilder_.SetMaterialManager(materialManager_);

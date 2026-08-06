@@ -92,6 +92,10 @@ public:
 
     std::vector<std::string> GetKeys(const std::string& section) const;
 
+    std::vector<IniFieldInfo> GetFields() const;
+
+    std::vector<IniSectionInfo> GetSectionInfo() const;
+
     std::vector<ConfigWarning> GetUnconsumedWarnings() const;
 
     // Mark a known compatibility alias consumed after a higher-priority alias wins.

@@ -6,6 +6,8 @@
 #include "G4Transform3D.hh"
 
 #include <memory>
+#include <atomic>
+#include <cstddef>
 #include <string>
 #include <vector>
 
@@ -63,6 +65,9 @@ public:
     GeometryRegistry* GetRegistry();
     const GeometryRegistry* GetRegistry() const;
 
+    static void ResetCreatedGeometryObjectCount();
+    static std::size_t GetCreatedGeometryObjectCount();
+
 private:
     void EnsureReady(const std::string& action) const;
     void BuildChildren(const VolumeNode& parentNode, G4LogicalVolume* motherLogical);
@@ -77,4 +82,7 @@ private:
 
     // Logical volumes do not take ownership of vis attributes in all Geant4 versions.
     std::vector<std::unique_ptr<G4VisAttributes>> visualAttributes_;
+
+    static void RecordCreatedGeometryObject();
+    static std::atomic<std::size_t> createdGeometryObjectCount_;
 };

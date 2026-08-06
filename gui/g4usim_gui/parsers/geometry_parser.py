@@ -6,7 +6,7 @@ from pathlib import Path
 from g4usim_gui.parsers.ini_light_parser import IniSection, parse_ini_light
 
 
-FORBIDDEN_BOOLEAN_KEYS = {"material", "sensitive", "bias", "region", "cuts", "visual", "cut.gamma", "cut.e-", "cut.e+", "cut.proton"}
+FORBIDDEN_BOOLEAN_KEYS = {"material", "sensitive", "bias", "region", "parent", "placement", "copyno"}
 
 
 @dataclass
@@ -39,6 +39,7 @@ class VolumeEntry:
     bias: bool = False
     region: str = ""
     copy_no: str = ""
+    metadata: str = ""
     section: str = ""
     line_no: int = 0
     boolean_ops: list[BooleanOperationEntry] = field(default_factory=list)
@@ -55,11 +56,17 @@ class GeometrySummary:
     boolean_ops: list[BooleanOperationEntry] = field(default_factory=list)
     warnings: list[str] = field(default_factory=list)
     errors: list[str] = field(default_factory=list)
+    round_trip_blockers: list[str] = field(default_factory=list)
+    legacy_metadata: list[str] = field(default_factory=list)
     raw_text: str = ""
 
     @property
     def volume_names(self) -> set[str]:
         return {volume.name for volume in self.volumes if volume.name}
+
+    @property
+    def round_trip_blocker(self) -> bool:
+        return bool(self.round_trip_blockers)
 
 
 def parse_geometry(path: str | Path) -> GeometrySummary:
@@ -99,6 +106,7 @@ def parse_geometry(path: str | Path) -> GeometrySummary:
 
     if not summary.volumes and not summary.errors:
         summary.warnings.append("No ordinary volume sections were found.")
+    _detect_round_trip_blockers(document.sections, summary)
     return summary
 
 
@@ -113,6 +121,7 @@ def _parse_volume(section: IniSection) -> VolumeEntry:
     elif lower_section.startswith("volume."):
         name = name or section.name.split(".", 1)[1]
 
+    metadata_lines = [f"{key} = {value}" for key, value in section.values.items() if key.lower().startswith("metadata.")]
     return VolumeEntry(
         name=name,
         parent=values.get("parent", "world" if name != "world" else ""),
@@ -126,6 +135,7 @@ def _parse_volume(section: IniSection) -> VolumeEntry:
         bias=_parse_bool(values.get("bias", "false")),
         region=values.get("region", values.get("regionname", "")),
         copy_no=values.get("copyno", values.get("copy_no", "")),
+        metadata="\n".join(metadata_lines),
         section=section.name,
         line_no=section.line_no,
     )
@@ -133,14 +143,16 @@ def _parse_volume(section: IniSection) -> VolumeEntry:
 
 def _parse_boolean(section: IniSection) -> BooleanOperationEntry:
     values = {key.lower(): value for key, value in section.values.items()}
-    parts = section.name.split(".")
-    target = parts[1] if len(parts) >= 4 else ""
-    index_text = parts[-1] if parts else "0"
+    lower_name = section.name.lower()
+    marker = ".boolean."
+    marker_index = lower_name.find(marker)
+    target = section.name[len("volume.") : marker_index] if marker_index >= len("volume.") else ""
+    index_text = section.name[marker_index + len(marker) :] if marker_index >= 0 else ""
     try:
         index = int(index_text)
     except ValueError:
         index = -1
-    forbidden = sorted(key for key in values if key in FORBIDDEN_BOOLEAN_KEYS)
+    forbidden = sorted(key for key in values if _is_forbidden_boolean_key(key))
     return BooleanOperationEntry(
         target_volume=target,
         index=index,
@@ -158,8 +170,72 @@ def _parse_boolean(section: IniSection) -> BooleanOperationEntry:
 
 
 def _is_boolean_section(name: str) -> bool:
-    parts = name.lower().split(".")
-    return len(parts) >= 4 and parts[0] == "volume" and "boolean" in parts
+    lower = name.strip().lower()
+    return lower.startswith("volume.") and ".boolean." in lower
+
+
+def _is_forbidden_boolean_key(key: str) -> bool:
+    lower = key.strip().lower()
+    return lower in FORBIDDEN_BOOLEAN_KEYS or lower.startswith("cut.") or lower.startswith("vis.")
+
+
+def _detect_round_trip_blockers(sections: list[IniSection], summary: GeometrySummary) -> None:
+    mode = summary.template_hint
+    simple_keys = {
+        "world": {"size", "material"},
+        "target": {"name", "shape", "size", "material", "position", "rotation", "sensitive", "bias", "region"},
+    }
+    layered_control = {"count", "names", "axis", "gap", "z_start"}
+    layered_volume = {"thickness", "xy", "material", "sensitive", "bias", "region", "copyno"}
+    hierarchical_volume = {
+        "name", "parent", "shape", "size", "parameters", "material", "position", "rotation",
+        "sensitive", "bias", "region", "copyno",
+    }
+    boolean_keys = {"name", "operation", "shape", "size", "parameters", "position", "rotation"}
+
+    for section in sections:
+        section_lower = section.name.lower()
+        for original_key, value in section.values.items():
+            key = original_key.lower()
+            line = section.key_lines.get(original_key, section.line_no)
+            representable = False
+            legacy = False
+            if mode == "simple_box":
+                representable = section_lower in simple_keys and key in simple_keys[section_lower]
+            elif mode == "layered_device":
+                if section_lower == "world":
+                    representable = key in {"size", "material"}
+                elif section_lower == "layers":
+                    representable = key in layered_control
+                elif section_lower.startswith("layer."):
+                    representable = key in layered_volume
+            elif mode == "hierarchical":
+                if _is_boolean_section(section.name):
+                    representable = key in boolean_keys
+                elif section_lower == "world" or section_lower.startswith("volume."):
+                    representable = key in hierarchical_volume or key.startswith("metadata.")
+
+            if representable:
+                if key.startswith("metadata.") and not key[len("metadata.") :].strip():
+                    representable = False
+                else:
+                    continue
+
+            if not key.startswith(("cut.", "vis.", "metadata.")) and key not in {
+                "auto_stack", "position", "rotation", "placement", "dx1", "dx2", "dx3", "dx4",
+                "dy1", "dy2", "dz", "theta", "phi", "alpha1", "alpha2", "shape", "copyno",
+                "name", "material", "size", "parameters", "sensitive", "bias", "region", "parent",
+                "operation", "count", "names", "axis", "gap", "z_start", "thickness", "xy",
+            }:
+                legacy = True
+
+            message = (
+                f"{summary.path}:{line} [{section.name}]/{original_key} = {value}: "
+                "the current Geometry Editor cannot preserve this field without changing the source"
+            )
+            summary.round_trip_blockers.append(message)
+            if legacy:
+                summary.legacy_metadata.append(message)
 
 
 def _parse_bool(value: str) -> bool:

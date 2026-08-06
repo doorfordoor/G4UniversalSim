@@ -93,6 +93,14 @@ M0-3A 只增加误导防护，不实现新 Geant4 能力。`placement=replica|pa
 
 回归入口：`python scripts/test_material_config_schema.py`。测试设置 `G4USIM_TEST_MATERIAL_LIFECYCLE=1`，后端只在 schema 全部通过、即将进入 `MaterialManager::BuildAll()` 时输出 `[MaterialLifecycle] build_started`；所有 schema 失败用例都必须确认该标记尚未出现，以证明失败发生在首个材料对象构建前。该环境变量只用于测试可观察性，不改变材料定义或构建行为。
 
+### 3.5 M0-3B2B1 几何安全闭环
+
+`GeometrySafety` 负责非 hierarchical 模板的 production cut 与固定 box 校验；`GeometryConfig` 负责 hierarchical 普通 volume/boolean tool 的逐 shape 契约、shape-specific 字段、`copyNo` 和 placement 前置校验。`VolumeBuilder::GetCreatedGeometryObjectCount()` 提供真实创建计数，失败测试必须断言 `created_geometry_object_count=0`。
+
+GUI `GeometryDocument` 分开保存 source/validation diagnostics，并通过 `round_trip_blockers` 阻止当前模型不能无损表达的源配置被 writer 改写。`source_copy_mode` 只复制原文件，并明确声明未由 Geometry Editor 验证。回归入口：`python scripts/test_geometry_safety_contract.py`。
+
+本阶段不实现完整未知 section/key schema、legacy metadata warning、run summary 几何诊断、自动 metadata 迁移或 `version=2`；这些仍属于 M0-3B2B2。
+
 ## 4. 修改代码后同步文档
 
 修改后端 CLI 或配置：

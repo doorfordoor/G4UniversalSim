@@ -2,6 +2,7 @@
 
 #include "Config/ConfigManager.hh"
 #include "Geometry/GeometryUtils.hh"
+#include "Geometry/GeometrySafety.hh"
 #include "Utils/StringUtils.hh"
 #include "Utils/UnitParser.hh"
 
@@ -83,6 +84,8 @@ VolumeNode ShieldingTemplate::BuildNodesFromFile(const std::string& filename) co
 
 void ShieldingTemplate::ValidateConfig(const ConfigManager& config) const
 {
+    GeometrySafety::ValidateProductionCuts(config, {});
+    GeometrySafety::ValidateFixedBoxShape(config, "world", "shielding world");
     if (!config.HasKey("world", "size")) throw std::runtime_error("shielding missing [world]/size");
     if (!config.HasKey("world", "material")) throw std::runtime_error("shielding missing [world]/material");
     for (const auto& key : {"area", "start", "layers"}) {
@@ -90,7 +93,11 @@ void ShieldingTemplate::ValidateConfig(const ConfigManager& config) const
     }
     for (const std::string& rawName : config.GetVector("shielding", "layers")) {
         const std::string section = "shield." + StringUtils::Trim(rawName);
+        GeometrySafety::ValidateFixedBoxShape(config, section, "shielding layer");
         if (!config.HasKey(section, "thickness")) throw std::runtime_error("shielding missing " + section + "/thickness");
         if (!config.HasKey(section, "material")) throw std::runtime_error("shielding missing " + section + "/material");
+    }
+    if (config.HasSection("detector")) {
+        GeometrySafety::ValidateFixedBoxShape(config, "detector", "shielding detector");
     }
 }

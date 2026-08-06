@@ -106,6 +106,13 @@ class GeometryDocument(EditableDocument):
     volumes: list[HierarchicalVolumeRow] = field(default_factory=list)
     boolean_ops: list[BooleanOperationRow] = field(default_factory=list)
     raw_source_text: str = ""
+    source_errors: list[str] = field(default_factory=list)
+    source_warnings: list[str] = field(default_factory=list)
+    validation_errors: list[str] = field(default_factory=list)
+    validation_warnings: list[str] = field(default_factory=list)
+    round_trip_blockers: list[str] = field(default_factory=list)
+    legacy_metadata: list[str] = field(default_factory=list)
+    source_copy_mode: bool = False
 
 
 def geometry_document_from_summary(summary: GeometrySummary | None, template_name: str = "") -> GeometryDocument:
@@ -115,8 +122,12 @@ def geometry_document_from_summary(summary: GeometrySummary | None, template_nam
         return document
 
     document.source_path = summary.path
-    document.errors = list(summary.errors)
-    document.warnings = list(summary.warnings)
+    document.source_errors = _deduplicate(list(summary.errors))
+    document.source_warnings = _deduplicate(list(summary.warnings))
+    document.round_trip_blockers = _deduplicate(list(summary.round_trip_blockers))
+    document.legacy_metadata = _deduplicate(list(summary.legacy_metadata))
+    document.errors = list(document.source_errors)
+    document.warnings = list(document.source_warnings)
     document.mode = _mode_from_template(template_name or summary.template_hint)
     document.raw_source_text = summary.raw_text
     for volume in summary.volumes:
@@ -134,6 +145,7 @@ def geometry_document_from_summary(summary: GeometrySummary | None, template_nam
                 bias=volume.bias,
                 region=volume.region,
                 copy_no=volume.copy_no,
+                metadata=volume.metadata,
             )
         )
     for op in summary.boolean_ops:
@@ -168,6 +180,13 @@ def geometry_document_from_dict(data: dict | None) -> GeometryDocument:
     document.mode = str(data.get("mode", "preview_only"))
     document.source_path = str(data.get("source_path", data.get("sourcePath", "")))
     document.is_dirty = bool(data.get("is_dirty", data.get("dirty", False)))
+    document.source_copy_mode = bool(data.get("source_copy_mode", data.get("sourceCopyMode", False)))
+    document.source_errors = list(data.get("source_errors", data.get("sourceErrors", [])))
+    document.source_warnings = list(data.get("source_warnings", data.get("sourceWarnings", [])))
+    document.validation_errors = list(data.get("validation_errors", data.get("validationErrors", [])))
+    document.validation_warnings = list(data.get("validation_warnings", data.get("validationWarnings", [])))
+    document.round_trip_blockers = list(data.get("round_trip_blockers", data.get("roundTripBlockers", [])))
+    document.legacy_metadata = list(data.get("legacy_metadata", data.get("legacyMetadata", [])))
     simple = data.get("simple_box", data.get("simpleBox", {}))
     if isinstance(simple, dict):
         document.simple_box = SimpleBoxGeometryModel(**{k: v for k, v in simple.items() if k in SimpleBoxGeometryModel.__dataclass_fields__})
@@ -202,6 +221,13 @@ def geometry_document_to_snapshot(document: GeometryDocument | None) -> dict:
         "mode": document.mode,
         "source_path": document.source_path,
         "is_dirty": document.is_dirty,
+        "source_copy_mode": document.source_copy_mode,
+        "source_errors": list(document.source_errors),
+        "source_warnings": list(document.source_warnings),
+        "validation_errors": list(document.validation_errors),
+        "validation_warnings": list(document.validation_warnings),
+        "round_trip_blockers": list(document.round_trip_blockers),
+        "legacy_metadata": list(document.legacy_metadata),
         "simple_box": document.simple_box.__dict__.copy(),
         "layered_device": {
             "world_size": document.layered_device.world_size,
@@ -258,8 +284,8 @@ def validate_geometry_document(
     scoring_hits_enabled: bool = True,
     physics_biasing_enabled: bool = False,
 ) -> None:
-    document.errors.clear()
-    document.warnings.clear()
+    document.errors = []
+    document.warnings = []
     known_materials = set(material_names or set()) | NIST_QUICK_LIST
     if document.mode == "simple_box":
         _validate_simple(document, known_materials)
@@ -274,6 +300,20 @@ def validate_geometry_document(
         document.warnings.append("Geometry marks sensitive volumes, but scoring hits output is disabled.")
     if geometry_bias_count(document) and not physics_biasing_enabled:
         document.warnings.append("Geometry marks bias volumes, but physics biasing hook is disabled.")
+    if document.round_trip_blockers and not document.source_copy_mode:
+        document.errors.append(
+            "Source geometry contains fields that the current editor cannot preserve; use original source copy mode."
+        )
+        document.errors.extend(f"Round-trip blocker: {item}" for item in document.round_trip_blockers)
+    if document.source_copy_mode and document.round_trip_blockers:
+        document.warnings.append(
+            "Original geometry source will be copied unchanged; Geometry Editor validation does not certify blocked fields."
+        )
+
+    document.validation_errors = _deduplicate(document.errors)
+    document.validation_warnings = _deduplicate(document.warnings)
+    document.errors = _deduplicate([*document.source_errors, *document.validation_errors])
+    document.warnings = _deduplicate([*document.source_warnings, *document.validation_warnings])
 
 
 def _validate_simple(document: GeometryDocument, known_materials: set[str]) -> None:
@@ -283,7 +323,7 @@ def _validate_simple(document: GeometryDocument, known_materials: set[str]) -> N
     if not simple.target_name.strip():
         document.errors.append("simple_box target name is required.")
     if simple.target_shape.strip().lower() != "box":
-        document.warnings.append("Simple Box editor writes shape=box; other target shapes should use preview-only source config.")
+        document.errors.append("simple_box target only supports shape=box.")
     _require_vec3(simple.target_size, "simple_box [target]/size", document)
     _require_vec3(simple.target_position, "simple_box [target]/position", document)
     _require_vec3(simple.target_rotation, "simple_box [target]/rotation", document)
@@ -316,8 +356,8 @@ def _validate_layered(document: GeometryDocument, known_materials: set[str]) -> 
             document.errors.append(f"layered_device layer '{layer.name}' thickness must include a positive length with unit.")
         if not _looks_like_xy(layer.xy):
             document.errors.append(f"layered_device layer '{layer.name}' xy must have two lengths, e.g. 10 mm, 10 mm.")
-        if layer.copy_no.strip() and not _is_int(layer.copy_no):
-            document.errors.append(f"layered_device layer '{layer.name}' copyNo must be an integer.")
+        if layer.copy_no.strip() and not _is_int32(layer.copy_no):
+            document.errors.append(f"layered_device layer '{layer.name}' copyNo must be a signed 32-bit integer.")
 
 
 def _validate_hierarchical(document: GeometryDocument, known_materials: set[str]) -> None:
@@ -368,20 +408,23 @@ def _validate_hierarchical(document: GeometryDocument, known_materials: set[str]
             row.warnings.append(f"Shape '{row.shape}' is backend-supported but preview/editor validation is approximate.")
         if shape == "box":
             _require_vec3(row.size, f"[volume.{name}]/size", document)
-        elif shape == "tubs":
-            if len(_split_csv_or_space(row.parameters)) < 5:
-                row.errors.append("tubs requires parameters = rMin,rMax,halfZ,startPhi,deltaPhi.")
-        elif shape in {"sphere", "cone"} and not row.parameters.strip():
-            row.warnings.append(f"Shape '{shape}' should provide backend parameters.")
-        elif shape == "orb" and not (row.parameters.strip() or row.size.strip()):
-            row.warnings.append("orb should provide parameters=radius or size shorthand.")
+            if row.parameters.strip():
+                row.errors.append("box does not accept parameters.")
+        elif shape in {"tubs", "sphere", "orb", "cone"}:
+            expected = {"tubs": 5, "sphere": 6, "orb": 1, "cone": 7}[shape]
+            actual = _parameter_count(row.parameters)
+            if actual != expected:
+                row.errors.append(f"{shape} requires exactly {expected} parameters; got {actual}.")
+            if row.size.strip():
+                row.errors.append(f"{shape} does not accept size shorthand.")
         _require_material(row.material, f"[volume.{name}]/material", known_materials, document)
         if row.position.strip():
             _require_vec3(row.position, f"[volume.{name}]/position", document)
         if row.rotation.strip():
             _require_vec3(row.rotation, f"[volume.{name}]/rotation", document)
-        if row.copy_no.strip() and not _is_int(row.copy_no):
-            row.errors.append("copyNo must be an integer.")
+        if row.copy_no.strip() and not _is_int32(row.copy_no):
+            row.errors.append("copyNo must be a signed 32-bit integer.")
+        _validate_metadata_text(row.metadata, row)
 
     _validate_tree_cycles(enabled, document)
     _validate_boolean_operations(document, by_key)
@@ -443,9 +486,15 @@ def _validate_boolean_operations(document: GeometryDocument, volumes_by_key: dic
         if shape == "box":
             if len(_split_csv_or_space(row.tool_size)) < 3:
                 row.errors.append("box boolean tool requires size with three length components.")
-        elif shape == "tubs":
-            if len(_split_csv_or_space(row.tool_parameters)) < 5:
-                row.errors.append("tubs boolean tool requires parameters = rMin,rMax,halfZ,startPhi,deltaPhi.")
+            if row.tool_parameters.strip():
+                row.errors.append("box boolean tool does not accept parameters.")
+        elif shape in {"tubs", "sphere", "orb", "cone"}:
+            expected = {"tubs": 5, "sphere": 6, "orb": 1, "cone": 7}[shape]
+            actual = _parameter_count(row.tool_parameters)
+            if actual != expected:
+                row.errors.append(f"{shape} boolean tool requires exactly {expected} parameters; got {actual}.")
+            if row.tool_size.strip():
+                row.errors.append(f"{shape} boolean tool does not accept size shorthand.")
         if row.position.strip() and len(_split_csv_or_space(row.position)) < 3:
             row.errors.append("Tool position must have three components.")
         if row.rotation.strip() and len(_split_csv_or_space(row.rotation)) < 3:
@@ -486,6 +535,18 @@ def _split_csv_or_space(value: str) -> list[str]:
     return [token for token in re.split(r"[,\s]+", value.strip()) if token]
 
 
+def _parameter_count(value: str) -> int:
+    text = value.strip()
+    if not text:
+        return 0
+    if "," in text:
+        return len([part for part in text.split(",") if part.strip()])
+    tokens = text.split()
+    if len(tokens) % 2 == 0 and all(re.search(r"[A-Za-z]", tokens[index]) for index in range(1, len(tokens), 2)):
+        return len(tokens) // 2
+    return len(tokens)
+
+
 def _looks_like_xy(value: str) -> bool:
     tokens = [token for token in re.split(r"[,\s]+", value.strip()) if token]
     return len(tokens) >= 2 and bool(re.search(r"\d", value)) and bool(re.search(r"[A-Za-z]", value))
@@ -501,6 +562,13 @@ def _is_int(value: str) -> bool:
         return True
     except ValueError:
         return False
+
+
+def _is_int32(value: str) -> bool:
+    if not _is_int(value):
+        return False
+    number = int(value.strip())
+    return -(2**31) <= number <= 2**31 - 1
 
 
 def _mode_from_template(template_name: str) -> str:
@@ -581,6 +649,26 @@ def _layered_from_sections(sections: dict[str, dict[str, str]]) -> LayeredDevice
 
 def _split_csv(value: str) -> list[str]:
     return [part.strip() for part in value.split(",") if part.strip()]
+
+
+def _validate_metadata_text(metadata: str, row: HierarchicalVolumeRow) -> None:
+    for line_no, raw in enumerate(metadata.splitlines(), start=1):
+        text = raw.strip()
+        if not text or text.startswith("#"):
+            continue
+        if "=" not in text:
+            row.errors.append(f"metadata line {line_no} must use metadata.<name> = value.")
+            continue
+        key, _value = text.split("=", 1)
+        key = key.strip()
+        if not re.fullmatch(r"metadata\.[A-Za-z0-9_.-]+", key, flags=re.IGNORECASE):
+            row.errors.append(
+                f"metadata line {line_no} key '{key}' is not allowed; only metadata.<non-empty-name> is permitted."
+            )
+
+
+def _deduplicate(items: list[str]) -> list[str]:
+    return list(dict.fromkeys(items))
 
 
 def _as_bool(value: str) -> bool:

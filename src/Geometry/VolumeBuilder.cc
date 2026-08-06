@@ -134,6 +134,8 @@ std::string BooleanToolContext(
 
 }  // namespace
 
+std::atomic<std::size_t> VolumeBuilder::createdGeometryObjectCount_{0};
+
 VolumeBuilder::VolumeBuilder() = default;
 VolumeBuilder::~VolumeBuilder() = default;
 
@@ -175,6 +177,21 @@ void VolumeBuilder::Clear()
     visualAttributes_.clear();
 }
 
+void VolumeBuilder::ResetCreatedGeometryObjectCount()
+{
+    createdGeometryObjectCount_.store(0);
+}
+
+std::size_t VolumeBuilder::GetCreatedGeometryObjectCount()
+{
+    return createdGeometryObjectCount_.load();
+}
+
+void VolumeBuilder::RecordCreatedGeometryObject()
+{
+    createdGeometryObjectCount_.fetch_add(1);
+}
+
 G4VPhysicalVolume* VolumeBuilder::BuildWorld(const VolumeNode& rootNode)
 {
     EnsureReady("build world");
@@ -193,6 +210,7 @@ G4VPhysicalVolume* VolumeBuilder::BuildWorld(const VolumeNode& rootNode)
         0,
         checkOverlaps_
     );
+    RecordCreatedGeometryObject();
     if (!worldPhysical) throw std::runtime_error("Failed to create world physical volume for '" + rootNode.name + "'");
 
     registry_->RegisterPhysicalVolume(rootNode.name, worldPhysical);
@@ -224,6 +242,7 @@ G4LogicalVolume* VolumeBuilder::BuildLogicalVolume(const VolumeNode& node)
     }
 
     G4LogicalVolume* logical = new G4LogicalVolume(solid, material, G4NameUtils::LogicalName(node.name));
+    RecordCreatedGeometryObject();
     if (!logical) throw std::runtime_error("Failed to create logical volume for '" + node.name + "'");
 
     registry_->RegisterLogicalVolume(node.name, logical);
@@ -255,6 +274,7 @@ G4VPhysicalVolume* VolumeBuilder::BuildVolume(const VolumeNode& node, G4LogicalV
         copyNo,
         checkOverlaps_
     );
+    RecordCreatedGeometryObject();
     if (!physical) throw std::runtime_error("Failed to create physical volume for '" + node.name + "'");
 
     registry_->RegisterPhysicalVolume(node.name, physical);
@@ -419,12 +439,15 @@ G4VSolid* VolumeBuilder::ApplyBooleanOperations(const VolumeNode& node, G4VSolid
         switch (op.operation) {
             case BooleanOperation::Subtraction:
                 current = new G4SubtractionSolid(solidName, current, tool, transform);
+                RecordCreatedGeometryObject();
                 break;
             case BooleanOperation::Union:
                 current = new G4UnionSolid(solidName, current, tool, transform);
+                RecordCreatedGeometryObject();
                 break;
             case BooleanOperation::Intersection:
                 current = new G4IntersectionSolid(solidName, current, tool, transform);
+                RecordCreatedGeometryObject();
                 break;
             default:
                 throw std::runtime_error(
@@ -449,12 +472,14 @@ G4Transform3D VolumeBuilder::MakeBooleanToolTransform(const BooleanOperand& oper
 G4VSolid* VolumeBuilder::CreateBoxSolid(const VolumeNode& node)
 {
     GeometryUtils::ValidateBoxSize(node.size);
-    return new G4Box(
+    auto* solid = new G4Box(
         G4NameUtils::SolidName(node.name),
         node.size.x * 0.5,
         node.size.y * 0.5,
         node.size.z * 0.5
     );
+    RecordCreatedGeometryObject();
+    return solid;
 }
 
 G4VSolid* VolumeBuilder::CreateTubsSolid(const VolumeNode& node)
@@ -482,7 +507,9 @@ G4VSolid* VolumeBuilder::CreateTubsSolid(const VolumeNode& node)
     }
 
     GeometryUtils::ValidateTubsParameters(rMin, rMax, halfZ, startPhi, deltaPhi);
-    return new G4Tubs(G4NameUtils::SolidName(node.name), rMin, rMax, halfZ, startPhi, deltaPhi);
+    auto* solid = new G4Tubs(G4NameUtils::SolidName(node.name), rMin, rMax, halfZ, startPhi, deltaPhi);
+    RecordCreatedGeometryObject();
+    return solid;
 }
 
 G4VSolid* VolumeBuilder::CreateSphereSolid(const VolumeNode& node)
@@ -499,14 +526,18 @@ G4VSolid* VolumeBuilder::CreateSphereSolid(const VolumeNode& node)
     if (rMin < 0.0 || rMax <= rMin) throw std::runtime_error("Volume '" + node.name + "' has invalid sphere radii");
     ValidatePositive(deltaPhi, "sphere deltaPhi", node);
     ValidatePositive(deltaTheta, "sphere deltaTheta", node);
-    return new G4Sphere(G4NameUtils::SolidName(node.name), rMin, rMax, startPhi, deltaPhi, startTheta, deltaTheta);
+    auto* solid = new G4Sphere(G4NameUtils::SolidName(node.name), rMin, rMax, startPhi, deltaPhi, startTheta, deltaTheta);
+    RecordCreatedGeometryObject();
+    return solid;
 }
 
 G4VSolid* VolumeBuilder::CreateOrbSolid(const VolumeNode& node)
 {
     const double radius = !node.parameters.empty() ? node.parameters[0] : node.size.x * 0.5;
     ValidatePositive(radius, "orb radius", node);
-    return new G4Orb(G4NameUtils::SolidName(node.name), radius);
+    auto* solid = new G4Orb(G4NameUtils::SolidName(node.name), radius);
+    RecordCreatedGeometryObject();
+    return solid;
 }
 
 G4VSolid* VolumeBuilder::CreateConeSolid(const VolumeNode& node)
@@ -526,7 +557,9 @@ G4VSolid* VolumeBuilder::CreateConeSolid(const VolumeNode& node)
     }
     ValidatePositive(halfZ, "cone halfZ", node);
     ValidatePositive(deltaPhi, "cone deltaPhi", node);
-    return new G4Cons(G4NameUtils::SolidName(node.name), rMin1, rMax1, rMin2, rMax2, halfZ, startPhi, deltaPhi);
+    auto* solid = new G4Cons(G4NameUtils::SolidName(node.name), rMin1, rMax1, rMin2, rMax2, halfZ, startPhi, deltaPhi);
+    RecordCreatedGeometryObject();
+    return solid;
 }
 
 G4VSolid* VolumeBuilder::CreateTrdSolid(const VolumeNode& node)
@@ -536,7 +569,9 @@ G4VSolid* VolumeBuilder::CreateTrdSolid(const VolumeNode& node)
     const double dy1 = ReadLengthProperty(node, "dy1");
     const double dy2 = ReadLengthProperty(node, "dy2");
     const double dz = ReadLengthProperty(node, "dz");
-    return new G4Trd(G4NameUtils::SolidName(node.name), dx1, dx2, dy1, dy2, dz);
+    auto* solid = new G4Trd(G4NameUtils::SolidName(node.name), dx1, dx2, dy1, dy2, dz);
+    RecordCreatedGeometryObject();
+    return solid;
 }
 
 G4VSolid* VolumeBuilder::CreateTrapSolid(const VolumeNode& node)
@@ -552,7 +587,7 @@ G4VSolid* VolumeBuilder::CreateTrapSolid(const VolumeNode& node)
     const double dx3 = ReadLengthProperty(node, "dx3");
     const double dx4 = ReadLengthProperty(node, "dx4");
     const double alpha2 = ReadAngleProperty(node, "alpha2");
-    return new G4Trap(
+    auto* solid = new G4Trap(
         G4NameUtils::SolidName(node.name),
         dz,
         theta,
@@ -566,6 +601,8 @@ G4VSolid* VolumeBuilder::CreateTrapSolid(const VolumeNode& node)
         dx4,
         alpha2
     );
+    RecordCreatedGeometryObject();
+    return solid;
 }
 
 G4RotationMatrix* VolumeBuilder::CreateRotation(const VolumeNode& node)
@@ -594,13 +631,17 @@ void VolumeBuilder::CreateRegion(const VolumeNode& node, G4LogicalVolume* logica
     }
 
     G4Region* region = G4RegionStore::GetInstance()->GetRegion(regionName, false);
-    if (!region) region = new G4Region(regionName);
+    if (!region) {
+        region = new G4Region(regionName);
+        RecordCreatedGeometryObject();
+    }
     region->AddRootLogicalVolume(logicalVolume);
     registry_->RegisterRegionName(node.name, regionName);
 
     if (!node.hasProductionCuts) return;
 
     auto* cuts = new G4ProductionCuts();
+    RecordCreatedGeometryObject();
     const auto setCut = [&](double value, const char* particleName) {
         if (value < 0.0) return;
         if (value <= 0.0) {

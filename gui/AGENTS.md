@@ -61,3 +61,9 @@
 - 只有 GUI 字符串、主题或布局修改也必须测试页面构造、状态切换和关键错误显示；截图或人工视觉检查未做时要明确报告。
 - GUI 行为改变时同步 gui/docs/中文快速使用说明.md、根目录 docs/功能支持矩阵.md、docs/开发路线图.md 和本文件；面向人类的说明只使用中文。
 - 不把 GUI smoke 的“生成文本正确”当作 Geant4 运行或物理结果验证；后端可执行文件未运行时必须单独标注未验证。
+
+## 8. M0-3B2B1 几何 round-trip 保护
+
+- 几何文档与材料文档一样，必须分开保存 `source_errors/source_warnings` 和编辑语义校验消息；重复 validate、编辑或预览不得清空源问题。
+- parser 发现当前模型不能无损保存的 `cut.*`、`vis.*`、`auto_stack`、显式 placement/rotation、shape-specific 属性、userProperties 或 boolean tool properties 时，必须设置 round-trip blocker。editable writer 和 generated package 必须阻断；用户只能显式选择原始 geometry 文件复制模式，并在报告中标明编辑器验证已绕过。
+- metadata 编辑框只允许 `metadata.<非空名称>`。runtime 字段和旧式无前缀未知字段不得从 metadata 写出；legacy 字段本阶段只保留并阻断，不能自动改名或删除。

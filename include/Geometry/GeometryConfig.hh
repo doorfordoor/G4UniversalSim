@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Geometry/VolumeNode.hh"
+#include "Config/IniReader.hh"
 
 #include <map>
 #include <set>
@@ -53,6 +54,25 @@ private:
         const std::string& key,
         const std::string& message
     );
+    std::runtime_error FieldError(
+        const std::string& section,
+        const std::string& volume,
+        const std::string& key,
+        const std::string& message,
+        const std::string& suggestion = ""
+    ) const;
+    const IniFieldInfo* FindField(const std::string& section, const std::string& key) const;
+    void ValidateCutFields() const;
+    void ValidateShapeContract(
+        const std::string& section,
+        const std::string& volume,
+        VolumeShape shape,
+        const Vec3& size,
+        const std::vector<double>& parameters,
+        const std::map<std::string, std::string>& properties,
+        bool booleanTool
+    ) const;
+    void ValidateCopyNumber(const std::string& section, const std::string& volume) const;
 
     VolumeNode ParseVolumeSection(
         const std::string& sectionName,
@@ -75,4 +95,5 @@ private:
     std::string filename_;
     std::vector<VolumeNode> flatVolumes_;
     std::map<std::string, std::size_t> indexByName_;
+    std::vector<IniFieldInfo> sourceFields_;
 };

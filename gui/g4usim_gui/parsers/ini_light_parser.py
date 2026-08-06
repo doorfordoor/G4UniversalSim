@@ -9,6 +9,7 @@ class IniSection:
     name: str
     line_no: int
     values: dict[str, str] = field(default_factory=dict)
+    key_lines: dict[str, int] = field(default_factory=dict)
 
 
 @dataclass
@@ -42,19 +43,24 @@ def parse_ini_light(path: str | Path) -> IniLightDocument:
         if line.startswith("[") and "]" in line:
             name = line[1 : line.index("]")].strip()
             if not name:
-                warnings.append(f"Line {line_no}: empty section name")
+                errors.append(f"Line {line_no}: empty section name")
                 continue
             current = IniSection(name=name, line_no=line_no)
             sections.append(current)
             continue
         if "=" in line and current is not None:
             key, value = line.split("=", 1)
-            current.values[key.strip()] = _strip_inline_comment(value.strip())
+            key = key.strip()
+            if not key:
+                errors.append(f"Line {line_no}: empty key")
+                continue
+            current.values[key] = _strip_inline_comment(value.strip())
+            current.key_lines[key] = line_no
             continue
         if "=" in line and current is None:
-            warnings.append(f"Line {line_no}: key/value outside any section")
+            errors.append(f"Line {line_no}: key/value outside any section")
             continue
-        warnings.append(f"Line {line_no}: ignored line: {line}")
+        errors.append(f"Line {line_no}: invalid INI line: {line}")
 
     return IniLightDocument(str(source), sections, warnings, errors, raw_text)
 

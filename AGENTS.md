@@ -56,3 +56,10 @@
 - 测试失败时先区分代码失败、环境缺失和未覆盖场景，不得把“命令成功退出”当作物理正确性证明。
 - 若真实 Geant4 可执行文件、Qt/PySide6、3D 依赖或特定工具链不可用，必须明确记录未验证部分和复现命令。
 - 完成前复核 git diff、 新增文件编码、文档中的支持等级和工作区状态，确保没有把用户已有改动混入本任务。
+
+## 7. M0-3B2B1 几何安全闭环
+
+- M0-3B2B1 只闭合会造成静默失效或晚失败的几何字段：production cut 只允许 `cut.gamma`、`cut.e-`、`cut.e+`、`cut.proton`，且所在普通 volume 必须有非空 `region`；shape 参数、`copyNo` 和 M0-3A placement 拒绝必须在首个 Geant4 geometry object 创建前完成。
+- `simple_box` target 和 `array` element 只允许 `shape=box`；`layered_device`、`shielding` 继续固定为 box。hierarchical 普通 volume 和 boolean tool 使用严格的逐 shape 参数数量及 shape-specific 字段契约。
+- `VolumeBuilder` 的 `created_geometry_object_count` 是 B2B1 前置失败测试的可观察事实，不能用日志先后顺序替代。
+- 本阶段没有建立完整几何闭合 schema。普通未知字段、legacy metadata 的后端 warning、`run_summary.txt` 诊断、自动迁移及 `version=2` 留给 M0-3B2B2。
