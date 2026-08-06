@@ -9,6 +9,8 @@
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
+#include <algorithm>
+#include <limits>
 
 namespace {
 
@@ -51,6 +53,37 @@ double SumAbundance(const std::vector<IsotopeComponent>& isotopes)
     return sum;
 }
 
+std::string Suggestion(const std::string& value, const std::vector<std::string>& candidates)
+{
+    const std::string target = StringUtils::ToLower(StringUtils::Trim(value));
+    std::size_t best = std::numeric_limits<std::size_t>::max();
+    std::string match;
+    for (const auto& candidate : candidates) {
+        const std::string normalized = StringUtils::ToLower(candidate);
+        std::vector<std::size_t> previous(normalized.size() + 1);
+        std::vector<std::size_t> current(normalized.size() + 1);
+        for (std::size_t j = 0; j <= normalized.size(); ++j) previous[j] = j;
+        for (std::size_t i = 1; i <= target.size(); ++i) {
+            current[0] = i;
+            for (std::size_t j = 1; j <= normalized.size(); ++j) {
+                current[j] = std::min({previous[j] + 1, current[j - 1] + 1,
+                                       previous[j - 1] + (target[i - 1] == normalized[j - 1] ? 0 : 1)});
+            }
+            previous.swap(current);
+        }
+        if (previous.back() < best) { best = previous.back(); match = candidate; }
+    }
+    return best <= 3 && !match.empty() ? match : "";
+}
+
+std::string SchemaMessage(const std::string& key, const std::vector<std::string>& allowed)
+{
+    const std::string suggestion = Suggestion(key, allowed);
+    return suggestion.empty()
+        ? "unknown material configuration key"
+        : "unknown material configuration key; did you mean '" + suggestion + "'?";
+}
+
 }  // namespace
 
 void MaterialIniReader::Load(const std::string& filename)
@@ -66,8 +99,11 @@ void MaterialIniReader::Load(const std::string& filename)
     }
 
     std::map<std::string, Section> sections;
+    SourceMap sources;
+    std::map<std::string, std::size_t> sectionLines;
     std::string currentSection = "global";
     sections[currentSection];
+    sectionLines[currentSection] = 0;
 
     std::string line;
     std::size_t lineNumber = 0;
@@ -91,6 +127,7 @@ void MaterialIniReader::Load(const std::string& filename)
                 );
             }
             sections[currentSection];
+            sectionLines[currentSection] = lineNumber;
             continue;
         }
 
@@ -110,9 +147,10 @@ void MaterialIniReader::Load(const std::string& filename)
             );
         }
         sections[currentSection][key] = value;
+        sources[currentSection][key] = {currentSection, StringUtils::Trim(clean.substr(0, pos)), value, lineNumber};
     }
 
-    ParseSections(filename, sections);
+    ParseSections(filename, sections, sources, sectionLines);
 }
 
 bool MaterialIniReader::HasIsotope(const std::string& name) const
@@ -203,6 +241,21 @@ std::runtime_error MaterialIniReader::Error(
     );
 }
 
+std::runtime_error MaterialIniReader::SchemaError(
+    const std::string& filename,
+    std::size_t lineNumber,
+    const std::string& section,
+    const std::string& key,
+    const std::string& value,
+    const std::string& message
+)
+{
+    return std::runtime_error(
+        "Material schema error: file '" + filename + "', line " + std::to_string(lineNumber)
+        + ", section '" + section + "', key '" + key + "', value '" + value + "': " + message
+    );
+}
+
 std::string MaterialIniReader::Require(
     const Section& sectionData,
     const std::string& filename,
@@ -219,9 +272,93 @@ std::string MaterialIniReader::Require(
 
 void MaterialIniReader::ParseSections(
     const std::string& filename,
-    const std::map<std::string, Section>& sections
+    const std::map<std::string, Section>& sections,
+    const SourceMap& sources,
+    const std::map<std::string, std::size_t>& sectionLines
 )
 {
+    const std::vector<std::string> nistKeys = {"materials"};
+    const std::vector<std::string> isotopeKeys = {"symbol", "z", "n", "a"};
+    const std::vector<std::string> elementKeys = {"symbol", "isotopes", "z", "a"};
+    const std::vector<std::string> materialKeys = {"type", "mode", "density", "components", "state", "temperature", "pressure"};
+    const std::vector<std::string> aliasKeys = {"material"};
+
+    for (const auto& sectionPair : sections) {
+        const std::string& section = sectionPair.first;
+        const std::string sectionLower = StringUtils::ToLower(section);
+        const auto sourceIt = sources.find(section);
+        const auto& sectionSource = sourceIt == sources.end()
+            ? SourceMap::mapped_type{}
+            : sourceIt->second;
+        std::vector<std::string> allowed;
+        bool known = false;
+        bool legacy = false;
+        if (sectionLower == "global") {
+            known = true;
+            allowed = {};
+        } else if (sectionLower == "nist") {
+            known = true;
+            allowed = nistKeys;
+        } else if (StringUtils::StartsWith(sectionLower, "isotope.")) {
+            known = true;
+            allowed = isotopeKeys;
+            if (section.substr(std::string("isotope.").size()).empty()) {
+                throw SchemaError(filename, sectionLines.at(section), section, "<section>", "", "section suffix must not be empty");
+            }
+        } else if (StringUtils::StartsWith(sectionLower, "element.")) {
+            known = true;
+            allowed = elementKeys;
+            if (section.substr(std::string("element.").size()).empty()) {
+                throw SchemaError(filename, sectionLines.at(section), section, "<section>", "", "section suffix must not be empty");
+            }
+        } else if (StringUtils::StartsWith(sectionLower, "material.")) {
+            known = true;
+            allowed = materialKeys;
+            if (section.substr(std::string("material.").size()).empty()) {
+                throw SchemaError(filename, sectionLines.at(section), section, "<section>", "", "section suffix must not be empty");
+            }
+        } else if (sectionPair.second.find("material") != sectionPair.second.end()) {
+            known = true;
+            legacy = true;
+            allowed = aliasKeys;
+        }
+
+        if (!known) {
+            if (!sectionPair.second.empty()) {
+                const auto& field = *sectionPair.second.begin();
+                const auto fieldSourceIt = sectionSource.find(field.first);
+                const SourceInfo source = fieldSourceIt == sectionSource.end()
+                    ? SourceInfo{section, field.first, field.second, sectionLines.at(section)}
+                    : fieldSourceIt->second;
+                throw SchemaError(filename, source.lineNumber, source.section, source.key, source.value,
+                                  "unknown material configuration section");
+            }
+            throw SchemaError(filename, sectionLines.at(section), section, "<section>", "", "unknown material configuration section");
+        }
+        for (const auto& field : sectionPair.second) {
+            const auto fieldSourceIt = sectionSource.find(field.first);
+            const SourceInfo source = fieldSourceIt == sectionSource.end()
+                ? SourceInfo{section, field.first, field.second, sectionLines.at(section)}
+                : fieldSourceIt->second;
+            if (std::find(allowed.begin(), allowed.end(), field.first) == allowed.end()) {
+                throw SchemaError(filename, source.lineNumber, source.section, source.key, source.value,
+                                  SchemaMessage(source.key, allowed));
+            }
+            if (!legacy && !StringUtils::StartsWith(sectionLower, "material.")) {
+                continue;
+            }
+            if (!legacy && (field.first == "temperature" || field.first == "pressure")) {
+                throw SchemaError(filename, source.lineNumber, source.section, source.key, source.value,
+                                  "unsupported temperature/pressure field; remove it and use density, state, and composition only");
+            }
+            if (!legacy && field.first == "type"
+                && StringUtils::ToLower(StringUtils::Trim(field.second)) != "material") {
+                throw SchemaError(filename, source.lineNumber, source.section, source.key, source.value,
+                                  "deprecated compatibility field 'type' only accepts 'material'");
+            }
+        }
+    }
+
     for (const auto& sectionPair : sections) {
         const std::string& section = sectionPair.first;
         const Section& data = sectionPair.second;

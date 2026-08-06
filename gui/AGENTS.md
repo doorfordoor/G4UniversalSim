@@ -47,6 +47,8 @@
 
 - 编辑器必须区分“后端支持”“GUI 可编辑”“仅预览”三种状态。状态要在控件、验证消息、原始文件/生成文件预览和中文文档中一致。
 - 读取配置时保留 section/key、原始值、来源文件和未知字段信息；重新生成时不能无提示地改变单位、默认值、布尔语义、字段顺序含义或删掉用户配置。
+- 材料 parser 的源 schema 错误必须与编辑语义错误分开保存；重复校验和编辑不得清空源错误，公共 errors 视图要稳定合并并去重。只要源错误仍存在，生成预览和 run package 都必须保持不可用，不能通过丢弃未知字段表现为已经修复。
+- 材料独立配置文件采用后端闭合 schema；GUI writer 只能生成 `[NIST]`、`[isotope.<name>]`、`[element.<name>]`、`[material.<name>]` 和 legacy alias 的允许字段。旧包中的 `[material.<name>] type = material` 只作为已弃用兼容输入读取，新 writer 不得继续生成；其他 `type` 值或其他 section 中的 `type` 必须拒绝。未知 section/key、空动态后缀和 implicit global 字段必须阻止生成；`temperature`/`pressure` 显示为后端不可用，不得改写成可运行字段。
 - 材料、几何、源、物理和计分之间的依赖必须在生成前校验：材料引用、敏感体与 hits、bias 体与 biasing、histogram 范围、源分布与后端能力等。
 - writer 只生成后端实际支持的字段。布尔工具不是普通体积，不得给它写 material、sensitive、bias、region 等无效字段。
 - 生成包必须能脱离 GUI 运行，报告必须列出所选输入、复制/生成方式、最终配置路径和警告；源文件永远不因“保存项目”或“生成包”而覆盖。

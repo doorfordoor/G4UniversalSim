@@ -87,6 +87,12 @@ M0-3A 只增加误导防护，不实现新 Geant4 能力。`placement=replica|pa
 
 回归入口：`python scripts/test_unconsumed_config.py`。
 
+### 3.4 M0-3B2A 材料独立配置 schema
+
+`MaterialIniReader` 对材料文件执行闭合 schema 校验。允许的 section 是 `[NIST]`、`[isotope.<name>]`、`[element.<name>]`、`[material.<name>]` 和 legacy `[Alias] material = G4_*`；隐式 `global` 不允许字段。旧 GUI run package 可能在 `[material.<name>]` 中包含 `type = material`，该字段已弃用但继续按大小写不敏感、首尾空白忽略的规则兼容读取，不改变 `MaterialDefinition`，新 writer 不再生成；空值、其他值及其他 section 中的 `type` 都会失败。未知 section、空动态后缀、未知 key 和 legacy alias 多余字段都会在 Geant4 初始化前失败，错误包含文件、行号、原始 section/key/value，并在可判断时给出保守拼写建议。`temperature`/`pressure` 保留 M0-3A 专用错误，替代方案是 density、state 和 composition。材料文件不使用 M0-3B1 主配置 warning 机制。
+
+回归入口：`python scripts/test_material_config_schema.py`。测试设置 `G4USIM_TEST_MATERIAL_LIFECYCLE=1`，后端只在 schema 全部通过、即将进入 `MaterialManager::BuildAll()` 时输出 `[MaterialLifecycle] build_started`；所有 schema 失败用例都必须确认该标记尚未出现，以证明失败发生在首个材料对象构建前。该环境变量只用于测试可观察性，不改变材料定义或构建行为。
+
 ## 4. 修改代码后同步文档
 
 修改后端 CLI 或配置：

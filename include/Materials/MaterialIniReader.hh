@@ -45,9 +45,29 @@ public:
     );
 
 private:
+    struct SourceInfo {
+        std::string section;
+        std::string key;
+        std::string value;
+        std::size_t lineNumber = 0;
+    };
+
+    using SourceMap = std::map<std::string, std::map<std::string, SourceInfo>>;
+
     void ParseSections(
         const std::string& filename,
-        const std::map<std::string, Section>& sections
+        const std::map<std::string, Section>& sections,
+        const SourceMap& sources,
+        const std::map<std::string, std::size_t>& sectionLines
+    );
+
+    static std::runtime_error SchemaError(
+        const std::string& filename,
+        std::size_t lineNumber,
+        const std::string& section,
+        const std::string& key,
+        const std::string& value,
+        const std::string& message
     );
 
     std::vector<std::string> nistMaterials_;

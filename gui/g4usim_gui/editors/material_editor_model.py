@@ -48,6 +48,8 @@ class MaterialRow:
 class MaterialDocument(EditableDocument):
     rows: list[MaterialRow] = field(default_factory=list)
     raw_source_text: str = ""
+    source_errors: list[str] = field(default_factory=list)
+    validation_errors: list[str] = field(default_factory=list)
 
 
 def material_document_from_summary(summary: MaterialsSummary | None) -> MaterialDocument:
@@ -56,7 +58,7 @@ def material_document_from_summary(summary: MaterialsSummary | None) -> Material
         return document
     document.source_path = summary.path
     document.raw_source_text = summary.raw_text
-    document.errors = list(summary.errors)
+    document.source_errors = _deduplicate(summary.errors)
     document.warnings = list(summary.warnings)
     for entry in summary.materials:
         mode = _mode_from_kind(entry.kind)
@@ -183,7 +185,7 @@ def mark_dirty(document: MaterialDocument) -> None:
 
 
 def validate_material_document(document: MaterialDocument, *, geometry_material_refs: set[str] | None = None) -> MaterialDocument:
-    document.errors = []
+    validation_errors: list[str] = []
     document.warnings = []
     names: dict[str, int] = {}
     enabled_names: set[str] = set()
@@ -221,13 +223,19 @@ def validate_material_document(document: MaterialDocument, *, geometry_material_
             if ref.startswith("G4_"):
                 document.warnings.append(f"Geometry references possible NIST material '{ref}', not in quick list.")
             else:
-                document.errors.append(f"Geometry references custom material '{ref}' but it is not defined in edited materials.")
+                validation_errors.append(f"Geometry references custom material '{ref}' but it is not defined in edited materials.")
     for row in document.rows:
         for error in row.errors:
-            document.errors.append(f"{row.name or '<unnamed>'}: {error}")
+            validation_errors.append(f"{row.name or '<unnamed>'}: {error}")
         for warning in row.warnings:
             document.warnings.append(f"{row.name or '<unnamed>'}: {warning}")
+    document.validation_errors = _deduplicate(validation_errors)
+    document.errors = _deduplicate([*document.source_errors, *document.validation_errors])
     return document
+
+
+def _deduplicate(items: list[str]) -> list[str]:
+    return list(dict.fromkeys(items))
 
 
 def _validate_density(row: MaterialRow) -> None:
@@ -316,7 +324,6 @@ def generate_materials_ini_text(document: MaterialDocument) -> str:
             continue
         lines.extend([
             f"[material.{row.name}]",
-            "type = material",
             f"mode = {row.mode}",
             f"density = {row.density or 'auto'}",
             f"components = {components_to_ini_text(row.components_text, row.mode)}",
@@ -333,6 +340,8 @@ def material_document_to_snapshot(document: MaterialDocument) -> dict:
         "rowCount": len(document.rows),
         "enabledCount": sum(1 for row in document.rows if row.enabled),
         "errors": list(document.errors),
+        "sourceErrors": list(document.source_errors),
+        "validationErrors": list(document.validation_errors),
         "warnings": list(document.warnings),
         "rows": [
             {
@@ -369,6 +378,8 @@ def clone_document(document: MaterialDocument) -> MaterialDocument:
         errors=list(document.errors),
         warnings=list(document.warnings),
         raw_source_text=document.raw_source_text,
+        source_errors=list(document.source_errors),
+        validation_errors=list(document.validation_errors),
     )
     for row in document.rows:
         clone.rows.append(

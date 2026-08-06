@@ -12,6 +12,7 @@
 #include "G4ios.hh"
 
 #include <cmath>
+#include <cstdlib>
 #include <set>
 #include <stdexcept>
 
@@ -26,6 +27,20 @@ bool IsVolumeFractionMaterial(const MaterialDefinition& def)
 std::string DensityText(double density)
 {
     return std::to_string(density / (g / cm3)) + " g/cm3";
+}
+
+bool MaterialLifecycleTraceEnabled()
+{
+#ifdef _WIN32
+    char* value = nullptr;
+    std::size_t size = 0;
+    const errno_t result = _dupenv_s(&value, &size, "G4USIM_TEST_MATERIAL_LIFECYCLE");
+    const bool enabled = result == 0 && value != nullptr;
+    std::free(value);
+    return enabled;
+#else
+    return std::getenv("G4USIM_TEST_MATERIAL_LIFECYCLE") != nullptr;
+#endif
 }
 
 }  // namespace
@@ -43,6 +58,9 @@ void MaterialManager::LoadMaterials(const std::string& filename)
     for (const std::string& name : reader.GetIsotopeNames()) AddIsotopeDefinition(reader.GetIsotopeDefinition(name));
     for (const std::string& name : reader.GetElementNames()) AddElementDefinition(reader.GetElementDefinition(name));
     for (const std::string& name : reader.GetMaterialNames()) AddMaterialDefinition(reader.GetMaterialDefinition(name));
+    if (MaterialLifecycleTraceEnabled()) {
+        G4cout << "[MaterialLifecycle] build_started" << G4endl;
+    }
     BuildAll();
 }
 
