@@ -85,7 +85,14 @@ M0-3A 只增加误导防护，不实现新 Geant4 能力。`placement=replica|pa
 
 主配置只经过 `IniReader`/`ConfigManager` 链路追踪。成功的 `GetString`、`GetInt`、`GetDouble`、`GetBool`、`GetVector` 会标记实际字段已消费；`HasKey` 和 `HasSection` 仅探测，不会掩盖未消费字段。`SimulationManager::Configure()` 在各 Manager 完成后按文件和行号输出 `[ConfigWarning]`，未知 section 也会报告；warning 不改变退出码或既有运行结果。`run_summary.txt` 的 `config_warning_count` 和 `[Warnings]` 保存同一明细。材料文件和几何文件的独立解析器不在本轮范围内。
 
-回归入口：`python scripts/test_unconsumed_config.py`。
+### 3.6 M0-3B2B2 几何来源诊断
+
+几何文件使用 `GeometryConfigDiagnostic` 结构化报告 `unknown_section`、`unconsumed_key`、`legacy_metadata` 和 `ignored_boolean_key`。诊断保留原始来源并稳定排序去重，格式为 `[GeometryConfigWarning] file:line [section]/key = value: message; suggestion`，同时进入控制台和 `run_summary.txt`；`geometry_config_warning_count` 与主配置 `config_warning_count` 独立。
+
+canonical `metadata.<非空名称>` 不进入 Geant4 语义；hierarchical/layered 的旧式无前缀属性只保留并 warning，simple/array/shielding 的未知字段继续忽略并 warning。严格 `version=2`、自动迁移和完整 round-trip 仍留给 M0-3B3。
+
+专项回归入口：`python scripts/test_geometry_config_diagnostics.py`。同时运行
+`python scripts/test_unconsumed_config.py`，确认主配置 warning 统计未被几何 warning 混入。
 
 ### 3.4 M0-3B2A 材料独立配置 schema
 
@@ -99,7 +106,7 @@ M0-3A 只增加误导防护，不实现新 Geant4 能力。`placement=replica|pa
 
 GUI `GeometryDocument` 分开保存 source/validation diagnostics，并通过 `round_trip_blockers` 阻止当前模型不能无损表达的源配置被 writer 改写。`source_copy_mode` 只复制原文件，并明确声明未由 Geometry Editor 验证。回归入口：`python scripts/test_geometry_safety_contract.py`。
 
-本阶段不实现完整未知 section/key schema、legacy metadata warning、run summary 几何诊断、自动 metadata 迁移或 `version=2`；这些仍属于 M0-3B2B2。
+本阶段不实现严格 `version=2`、自动 metadata 迁移或完整无损 round-trip；这些仍属于 M0-3B3。
 
 ## 4. 修改代码后同步文档
 

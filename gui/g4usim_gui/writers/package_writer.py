@@ -63,7 +63,7 @@ def create_run_package(
         physics=physics,
         scoring=scoring,
         material_document=material_document if material_document and material_document.is_dirty else None,
-        geometry_document=geometry_document if geometry_document and geometry_document.is_dirty else None,
+        geometry_document=geometry_document,
         source_model=source_model,
         physics_model=physics_model,
         scoring_model=scoring_model,
@@ -74,7 +74,7 @@ def create_run_package(
     package = _allocate_package(paths.runs_root, run.run_name or project.projectName)
     materials_source_mode, geometry_source_mode = _copy_or_generate_inputs(package, paths, geometry, material_document, geometry_document)
     materials_summary = parse_materials(package.materials_ini_path)
-    geometry_summary = parse_geometry(package.geometry_ini_path)
+    geometry_summary = parse_geometry(package.geometry_ini_path, geometry.template)
     summary_text = (
         _package_paths_text(paths, package, materials_source_mode, geometry_source_mode)
         + "\n"
@@ -158,6 +158,11 @@ def _copy_or_generate_inputs(
     material_document: MaterialDocument | None,
     geometry_document: GeometryDocument | None,
 ) -> tuple[str, str]:
+    if geometry_document and geometry_document.round_trip_blockers and not geometry_document.source_copy_mode:
+        raise ValueError(
+            "Geometry round-trip blockers require explicit original source copy mode:\n"
+            + "\n".join(geometry_document.round_trip_blockers)
+        )
     if material_document and material_document.is_dirty:
         validate_material_document(material_document)
         if material_document.errors:

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Geometry/VolumeNode.hh"
+#include "Geometry/GeometryConfigDiagnostic.hh"
 
 #include <string>
 
@@ -20,4 +21,9 @@ public:
     virtual VolumeNode BuildNodes(const GeometryConfig& geometryConfig) const;
 
     virtual void ValidateConfig(const ConfigManager& config) const;
+
+    const std::vector<GeometryConfigDiagnostic>& GetDiagnostics() const;
+
+protected:
+    mutable std::vector<GeometryConfigDiagnostic> diagnostics_;
 };

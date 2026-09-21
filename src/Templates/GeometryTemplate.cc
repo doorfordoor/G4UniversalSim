@@ -14,8 +14,12 @@ VolumeNode GeometryTemplate::BuildNodesFromFile(const std::string& filename) con
 
     ConfigManager config;
     config.LoadMainConfig(filename);
+    diagnostics_.clear();
     try {
         ValidateConfig(config);
+        CollectGeometryConfigDiagnostics(
+            config.GetMainConfigPath(), config.GetFields(), config.GetSectionInfo(), Name(), diagnostics_
+        );
         return BuildNodes(config);
     } catch (const std::exception& error) {
         throw std::runtime_error(
@@ -23,6 +27,11 @@ VolumeNode GeometryTemplate::BuildNodesFromFile(const std::string& filename) con
             + filename + "': " + error.what()
         );
     }
+}
+
+const std::vector<GeometryConfigDiagnostic>& GeometryTemplate::GetDiagnostics() const
+{
+    return diagnostics_;
 }
 
 VolumeNode GeometryTemplate::BuildNodes(const GeometryConfig& geometryConfig) const

@@ -28,8 +28,9 @@ void IniReader::Load(const std::string& filename)
     }
 
     std::string currentSection = kDefaultSection;
+    std::string currentOriginalSection = kDefaultSection;
     data_[currentSection];
-    sectionInfo_[currentSection] = {currentSection, 0, false};
+    sectionInfo_[currentSection] = {currentSection, 0, false, currentOriginalSection, currentSection};
 
     std::string line;
     std::size_t lineNumber = 0;
@@ -53,9 +54,10 @@ void IniReader::Load(const std::string& filename)
                 throw ParseError(filename, lineNumber, "empty section name");
             }
 
+            currentOriginalSection = sectionName;
             currentSection = NormalizeName(sectionName);
             data_[currentSection];
-            sectionInfo_[currentSection] = {currentSection, lineNumber, true};
+            sectionInfo_[currentSection] = {currentSection, lineNumber, true, currentOriginalSection, currentSection};
             continue;
         }
 
@@ -70,7 +72,7 @@ void IniReader::Load(const std::string& filename)
             throw ParseError(filename, lineNumber, "empty key");
         }
 
-        data_[currentSection][NormalizeName(key)] = {value, lineNumber, key};
+        data_[currentSection][NormalizeName(key)] = {value, lineNumber, currentOriginalSection, key};
     }
 
     if (input.bad()) {
@@ -158,7 +160,9 @@ std::vector<IniFieldInfo> IniReader::GetFields() const
     for (const auto& section : data_) {
         for (const auto& item : section.second) {
             fields.push_back({section.first, item.second.originalKey, item.second.value,
-                              item.second.lineNumber, item.second.consumed});
+                              item.second.lineNumber, item.second.consumed,
+                              item.second.originalSection, section.first,
+                              item.second.originalKey, NormalizeName(item.second.originalKey)});
         }
     }
     return fields;

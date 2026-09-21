@@ -66,4 +66,10 @@
 
 - 几何文档与材料文档一样，必须分开保存 `source_errors/source_warnings` 和编辑语义校验消息；重复 validate、编辑或预览不得清空源问题。
 - parser 发现当前模型不能无损保存的 `cut.*`、`vis.*`、`auto_stack`、显式 placement/rotation、shape-specific 属性、userProperties 或 boolean tool properties 时，必须设置 round-trip blocker。editable writer 和 generated package 必须阻断；用户只能显式选择原始 geometry 文件复制模式，并在报告中标明编辑器验证已绕过。
+- Run 不得为了通过 generated package 校验而自动打开 `source_copy_mode`。只有用户显式勾选后才可逐字节复制源 geometry；复制模式不等于编辑器验证通过。
+
+## 9. M0-3B2B2 来源诊断对齐
+
+- `parse_geometry(path, template_name)` 在调用方已知模板时必须优先使用显式模板，不得依赖文本启发式；源 warning、legacy metadata blocker 和 source-copy 状态必须跨重复 validate 保留。
+- canonical `metadata.<非空名称>` 在可无损保存的编辑模式中不产生 blocker；legacy 无前缀属性只诊断和保留，不自动改名或删除。array/shielding 仍为 preview-only。
 - metadata 编辑框只允许 `metadata.<非空名称>`。runtime 字段和旧式无前缀未知字段不得从 metadata 写出；legacy 字段本阶段只保留并阻断，不能自动改名或删除。

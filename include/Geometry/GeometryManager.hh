@@ -3,6 +3,7 @@
 #include "Geometry/GeometryRegistry.hh"
 #include "Geometry/VolumeBuilder.hh"
 #include "Geometry/VolumeNode.hh"
+#include "Geometry/GeometryConfigDiagnostic.hh"
 
 #include <memory>
 #include <string>
@@ -90,6 +91,7 @@ public:
     std::vector<std::string> GetSensitiveVolumeNames() const;
     std::vector<std::string> GetBiasVolumeNames() const;
     std::vector<std::string> GetRegionNames() const;
+    const std::vector<GeometryConfigDiagnostic>& GetConfigDiagnostics() const;
 
     void PrintSummary() const;
     void PrintTree() const;
@@ -120,4 +122,5 @@ private:
     bool checkOverlaps_ = true;
     bool checkOverlapsLocked_ = false;
     std::string defaultWorldMaterial_ = "G4_AIR";
+    std::vector<GeometryConfigDiagnostic> configDiagnostics_;
 };

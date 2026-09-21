@@ -2,6 +2,7 @@
 
 #include "Config/ConfigManager.hh"
 #include "Geometry/GeometryUtils.hh"
+#include "Geometry/GeometryConfigDiagnostic.hh"
 #include "Utils/FileUtils.hh"
 #include "Utils/StringUtils.hh"
 #include "Utils/UnitParser.hh"
@@ -107,12 +108,22 @@ void GeometryConfig::Load(const std::string& filename)
     IniReader sourceReader;
     sourceReader.Load(filename);
     sourceFields_ = sourceReader.GetFields();
+    sourceSections_ = sourceReader.GetSectionInfo();
+    diagnostics_.clear();
+    CollectGeometryConfigDiagnostics(filename_, sourceFields_, sourceSections_, "hierarchical", diagnostics_);
     ValidateCutFields();
 
     for (const auto& section : sections) {
         const std::string lower = StringUtils::ToLower(section.first);
         if (IsBooleanSectionName(section.first)) {
-            const BooleanSectionId id = ParseBooleanSectionName(section.first);
+            BooleanSectionId id;
+            try {
+                id = ParseBooleanSectionName(section.first);
+            } catch (const std::exception&) {
+                // The diagnostic collector reports malformed boolean sections as
+                // unknown_section; preserve the legacy warning-only behavior.
+                continue;
+            }
             const std::string targetKey = Normalize(id.targetVolumeName);
             auto& opsByIndex = pendingBooleanOps[targetKey];
             if (opsByIndex.count(id.index)) {
@@ -122,7 +133,7 @@ void GeometryConfig::Load(const std::string& filename)
             opsByIndex[id.index] = ParseBooleanSection(section.first, section.second, id.targetVolumeName, id.index);
             continue;
         }
-        if (lower == "world" || StringUtils::StartsWith(lower, "volume.")) {
+        if (lower == "world" || (StringUtils::StartsWith(lower, "volume.") && lower != "volume.")) {
             AddVolume(ParseVolumeSection(section.first, section.second));
         }
     }
@@ -168,6 +179,8 @@ void GeometryConfig::Clear()
     flatVolumes_.clear();
     indexByName_.clear();
     sourceFields_.clear();
+    sourceSections_.clear();
+    diagnostics_.clear();
 }
 
 bool GeometryConfig::HasVolume(const std::string& name) const
@@ -287,6 +300,11 @@ void GeometryConfig::Validate() const
 const std::string& GeometryConfig::GetFilename() const
 {
     return filename_;
+}
+
+const std::vector<GeometryConfigDiagnostic>& GeometryConfig::GetDiagnostics() const
+{
+    return diagnostics_;
 }
 
 std::string GeometryConfig::Normalize(const std::string& name)
@@ -727,8 +745,6 @@ BooleanSolidOperation GeometryConfig::ParseBooleanSection(
 
     for (const auto& item : values) {
         if (IsForbiddenBooleanKey(item.first)) {
-            std::cerr << "[GeometryConfig] warning: boolean section '" << sectionName
-                      << "' ignores volume-only key '" << item.first << "'." << std::endl;
             continue;
         }
         if (!IsKnownBooleanKey(item.first)) op.tool.properties[item.first] = item.second;

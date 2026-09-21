@@ -69,11 +69,11 @@ class GeometrySummary:
         return bool(self.round_trip_blockers)
 
 
-def parse_geometry(path: str | Path) -> GeometrySummary:
+def parse_geometry(path: str | Path, template_name: str | None = None) -> GeometrySummary:
     document = parse_ini_light(path)
     summary = GeometrySummary(path=document.path, warnings=list(document.warnings), errors=list(document.errors), raw_text=document.raw_text)
     lower_text = document.raw_text.lower()
-    summary.template_hint = _template_hint(lower_text)
+    summary.template_hint = (template_name or "").strip().lower() or _template_hint(lower_text)
 
     volume_by_name: dict[str, VolumeEntry] = {}
     boolean_sections: list[IniSection] = []
@@ -236,6 +236,10 @@ def _detect_round_trip_blockers(sections: list[IniSection], summary: GeometrySum
             summary.round_trip_blockers.append(message)
             if legacy:
                 summary.legacy_metadata.append(message)
+                summary.warnings.append(
+                    f"{summary.path}:{line} [{section.name}]/{original_key} = {value}: legacy metadata is preserved; "
+                    f"use metadata.{original_key} in a future migration"
+                )
 
 
 def _parse_bool(value: str) -> bool:

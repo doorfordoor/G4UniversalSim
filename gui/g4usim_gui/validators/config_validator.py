@@ -120,6 +120,15 @@ def validate_config_builder(
         and geometry_document.mode != "preview_only"
         and not geometry_document.source_copy_mode
     )
+    if (
+        geometry_document
+        and not use_edited_geometry
+        and geometry_document.round_trip_blockers
+        and not geometry_document.source_copy_mode
+    ):
+        report.errors.extend(
+            f"Geometry round-trip blocker: {item}" for item in geometry_document.round_trip_blockers
+        )
 
     if not geometry.template:
         report.errors.append("Geometry template is required.")
@@ -129,7 +138,7 @@ def validate_config_builder(
     elif not Path(geometry.config_path).expanduser().is_file():
         report.errors.append(f"Geometry config does not exist: {geometry.config_path}")
     else:
-        geometry_summary = parse_geometry(geometry.config_path)
+        geometry_summary = parse_geometry(geometry.config_path, geometry.template)
         report.warnings.extend(f"Geometry: {item}" for item in geometry_summary.warnings)
         report.errors.extend(f"Geometry: {item}" for item in geometry_summary.errors)
         _validate_geometry_text(Path(geometry.config_path).expanduser(), report)

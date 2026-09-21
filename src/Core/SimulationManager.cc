@@ -546,6 +546,8 @@ void SimulationManager::ReportConfigWarnings()
     const auto warnings = configManager_->GetUnconsumedWarnings();
     RunSummary& summary = outputManager_->GetRunSummary();
     summary.Set("config_warning_count", static_cast<int>(warnings.size()));
+    const auto& geometryWarnings = geometryManager_->GetConfigDiagnostics();
+    summary.Set("geometry_config_warning_count", static_cast<int>(geometryWarnings.size()));
     for (const auto& warning : warnings) {
         std::ostringstream message;
         message << "[ConfigWarning] unconsumed field " << warning.filename << ":"
@@ -559,6 +561,11 @@ void SimulationManager::ReportConfigWarnings()
             message << "; did you mean '" << warning.suggestion << "'?";
         }
         const std::string text = message.str();
+        std::cerr << text << '\n';
+        summary.AddWarning(text);
+    }
+    for (const auto& warning : geometryWarnings) {
+        const std::string text = warning.FormatWarning();
         std::cerr << text << '\n';
         summary.AddWarning(text);
     }
@@ -950,6 +957,7 @@ void SimulationManager::WriteBaseRunSummary()
     summary.SetBool("check_overlaps", context_.GetCheckOverlaps());
     summary.SetBool("dry_run", context_.IsDryRun());
     if (!summary.Has("config_warning_count")) summary.Set("config_warning_count", 0);
+    if (!summary.Has("geometry_config_warning_count")) summary.Set("geometry_config_warning_count", 0);
     summary.Set("materials_file", materialsFile_);
     summary.Set("geometry_template", geometryTemplate_);
     summary.Set("geometry_config", geometryConfigFile_);

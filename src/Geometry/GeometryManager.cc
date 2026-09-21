@@ -147,12 +147,15 @@ void GeometryManager::LoadGeometryConfig(const std::string& filename)
     }
 
     VolumeBuilder::ResetCreatedGeometryObjectCount();
+    configDiagnostics_.clear();
     auto geometryTemplate = TemplateFactory::Create(templateName_);
     VolumeNode root;
     try {
         root = geometryTemplate->BuildNodesFromFile(filename);
+        configDiagnostics_ = geometryTemplate->GetDiagnostics();
         ValidateRootNode(root);
     } catch (const std::exception& error) {
+        if (configDiagnostics_.empty()) configDiagnostics_ = geometryTemplate->GetDiagnostics();
         throw std::runtime_error(
             std::string(error.what()) + "; created_geometry_object_count="
             + std::to_string(VolumeBuilder::GetCreatedGeometryObjectCount())
@@ -172,6 +175,11 @@ void GeometryManager::LoadGeometryConfig(const std::string& filename)
 const std::string& GeometryManager::GetGeometryConfigFile() const
 {
     return geometryConfigFile_;
+}
+
+const std::vector<GeometryConfigDiagnostic>& GeometryManager::GetConfigDiagnostics() const
+{
+    return configDiagnostics_;
 }
 
 void GeometryManager::SetCheckOverlaps(bool enable)
@@ -517,6 +525,7 @@ void GeometryManager::PrintTree() const
 void GeometryManager::Clear()
 {
     geometryConfigFile_.clear();
+    configDiagnostics_.clear();
     templateRootNode_.reset();
     rootNode_.reset();
     userAddedVolumes_.clear();

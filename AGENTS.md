@@ -62,4 +62,10 @@
 - M0-3B2B1 只闭合会造成静默失效或晚失败的几何字段：production cut 只允许 `cut.gamma`、`cut.e-`、`cut.e+`、`cut.proton`，且所在普通 volume 必须有非空 `region`；shape 参数、`copyNo` 和 M0-3A placement 拒绝必须在首个 Geant4 geometry object 创建前完成。
 - `simple_box` target 和 `array` element 只允许 `shape=box`；`layered_device`、`shielding` 继续固定为 box。hierarchical 普通 volume 和 boolean tool 使用严格的逐 shape 参数数量及 shape-specific 字段契约。
 - `VolumeBuilder` 的 `created_geometry_object_count` 是 B2B1 前置失败测试的可观察事实，不能用日志先后顺序替代。
-- 本阶段没有建立完整几何闭合 schema。普通未知字段、legacy metadata 的后端 warning、`run_summary.txt` 诊断、自动迁移及 `version=2` 留给 M0-3B2B2。
+- B2B1 本身没有建立完整几何闭合 schema；普通未知字段、legacy metadata warning、`run_summary.txt` 诊断已由 B2B2 补齐，自动迁移及 `version=2` 留给 M0-3B3。
+
+## 8. M0-3B2B2 几何来源诊断与兼容 warning
+
+- 几何配置诊断使用 `GeometryConfigDiagnostic`，必须保留文件、行号、原始 section/key/value、code/category、message 和 suggestion；输出统一为 `[GeometryConfigWarning] file:line [section]/key = value: message; suggestion`。
+- `unknown_section`、`unconsumed_key`、`legacy_metadata`、`ignored_boolean_key` 按文件、行号、section、key 稳定排序去重，并通过 `GeometryManager`、`SimulationManager` 和 `run_summary.txt` 统一输出；`config_warning_count` 仍只统计主 INI，几何 warning 使用独立 `geometry_config_warning_count`。
+- canonical `metadata.<非空名称>` 仅作为保存属性，不参与 Geant4 运行；hierarchical/layered 的无前缀未知属性继续保留并建议迁移到 `metadata.<原key>`，不得自动改写。严格 `version=2`、自动迁移和完整无损 round-trip 留给 M0-3B3。

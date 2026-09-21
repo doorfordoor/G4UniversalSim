@@ -10,13 +10,19 @@ struct IniFieldInfo {
     std::string key;
     std::string value;
     std::size_t lineNumber = 0;
-        mutable bool consumed = false;
+    mutable bool consumed = false;
+    std::string originalSection;
+    std::string normalizedSection;
+    std::string originalKey;
+    std::string normalizedKey;
 };
 
 struct IniSectionInfo {
     std::string section;
     std::size_t lineNumber = 0;
     bool explicitSection = false;
+    std::string originalSection;
+    std::string normalizedSection;
 };
 
 class IniReader {
@@ -53,6 +59,7 @@ private:
     struct Entry {
         std::string value;
         std::size_t lineNumber = 0;
+        std::string originalSection;
         std::string originalKey;
         mutable bool consumed = false;
     };

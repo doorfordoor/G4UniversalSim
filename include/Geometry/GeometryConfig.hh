@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Geometry/VolumeNode.hh"
+#include "Geometry/GeometryConfigDiagnostic.hh"
 #include "Config/IniReader.hh"
 
 #include <map>
@@ -33,6 +34,7 @@ public:
     void AddVolume(const VolumeNode& node);
     void Validate() const;
     const std::string& GetFilename() const;
+    const std::vector<GeometryConfigDiagnostic>& GetDiagnostics() const;
 
 private:
     using Section = std::map<std::string, std::string>;
@@ -96,4 +98,6 @@ private:
     std::vector<VolumeNode> flatVolumes_;
     std::map<std::string, std::size_t> indexByName_;
     std::vector<IniFieldInfo> sourceFields_;
+    std::vector<IniSectionInfo> sourceSections_;
+    std::vector<GeometryConfigDiagnostic> diagnostics_;
 };
