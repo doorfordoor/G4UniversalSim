@@ -19,6 +19,7 @@ public:
     void Set(const std::string& key, int value);
     void Set(const std::string& key, std::int64_t value);
     void Set(const std::string& key, double value);
+    void SetPath(const std::string& key, const std::string& nativePath);
     void SetBool(const std::string& key, bool value);
 
     bool Has(const std::string& key) const;

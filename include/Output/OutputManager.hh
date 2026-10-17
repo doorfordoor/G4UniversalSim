@@ -6,13 +6,19 @@
 #include "Output/RunSummary.hh"
 
 #include <map>
-#include <filesystem>
 #include <memory>
+#include <mutex>
 #include <string>
 #include <vector>
 
 class OutputManager {
 public:
+    struct OutputFailure {
+        int runId = -1;
+        int threadId = -1;
+        std::string stage;
+        std::string message;
+    };
     OutputManager() = default;
     ~OutputManager() noexcept;
 
@@ -25,6 +31,8 @@ public:
 
     void SetThreadId(int threadId);
     int GetThreadId() const;
+    void SetRunId(int runId);
+    int GetRunId() const;
 
     void EnableThreadSuffix(bool enable);
     bool IsThreadSuffixEnabled() const;
@@ -38,6 +46,7 @@ public:
 
     std::string MakeOutputPath(const std::string& filename) const;
     std::string MakeThreadFilename(const std::string& baseName) const;
+    void ValidateOutputTargetDirectories(int runId, int threadCount) const;
 
     void Initialize();
 
@@ -63,11 +72,26 @@ public:
     void RecordRun(int runId, std::int64_t plannedEvents, std::int64_t completedEvents);
     void RegisterGeneratedFile(const std::string& filename);
     std::vector<std::string> GetGeneratedFiles() const;
+    void RecordOutputFailure(const std::string& stage, const std::string& message,
+                             int attemptedRunId = -1);
+    bool HasOutputFailure() const;
+    OutputFailure GetOutputFailure() const;
+    // Messenger command failures are separate from worker/file write failures.
+    std::size_t GetCommandFailureCount() const;
+    const std::string& GetLastCommandFailure() const;
+    void RecordCommandFailure(const std::string& message);
 
     void Flush();
     void Close();
 
 private:
+    struct GeneratedFileRegistry {
+        std::mutex mutex;
+        std::vector<std::string> files;
+        bool hasFailure = false;
+        OutputFailure firstFailure;
+    };
+
     static std::vector<std::string> HitHeader();
     static std::vector<std::string> EventEdepHeader();
     static std::string ToString(double value);
@@ -75,15 +99,16 @@ private:
     std::string outputDir_ = "output";
     bool outputDirLocked_ = false;
     int threadId_ = 0;
+    int runId_ = -1;
     bool threadSuffixEnabled_ = true;
     // True once Initialize() has created the output directory; current file-open state is HasOpenFiles().
     bool initialized_ = false;
-    std::vector<std::string> outputDirectoriesUsed_;
-    std::vector<std::string> baselineFiles_;
-    std::map<std::string, std::filesystem::file_time_type> baselineFileTimes_;
-    std::vector<std::string> writtenFiles_;
+    // Shared by master and worker clones. Only finalized output files enter the manifest.
+    std::shared_ptr<GeneratedFileRegistry> generatedFiles_ = std::make_shared<GeneratedFileRegistry>();
     std::unique_ptr<CsvWriter> hitWriter_;
     std::unique_ptr<CsvWriter> eventEdepWriter_;
     std::map<std::string, Histogram1D> histograms1D_;
     RunSummary runSummary_;
+    std::size_t commandFailureCount_ = 0;
+    std::string lastCommandFailure_;
 };

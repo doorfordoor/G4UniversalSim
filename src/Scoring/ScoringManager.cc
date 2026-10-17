@@ -8,9 +8,29 @@
 #include "Scoring/LETScorer.hh"
 #include "Utils/StringUtils.hh"
 #include "Utils/UnitParser.hh"
+#include "G4RunManager.hh"
 
 #include <iostream>
+#include <cstdlib>
 #include <stdexcept>
+
+namespace {
+bool InjectBeginScoringFailure(int runID, const OutputManager* output)
+{
+    if (runID != 1 || !output || output->GetThreadId() != 0) return false;
+#ifdef _WIN32
+    char* value = nullptr;
+    std::size_t length = 0;
+    if (_dupenv_s(&value, &length, "G4USIM_TEST_OUTPUT_FAULT") != 0) return false;
+    const bool inject = value && std::string(value) == "begin_scoring_t0";
+    std::free(value);
+    return inject;
+#else
+    const char* value = std::getenv("G4USIM_TEST_OUTPUT_FAULT");
+    return value && std::string(value) == "begin_scoring_t0";
+#endif
+}
+}  // namespace
 
 ScoringManager::ScoringManager() = default;
 ScoringManager::~ScoringManager() = default;
@@ -270,6 +290,10 @@ std::vector<std::string> ScoringManager::GetScorerNames() const
 
 void ScoringManager::BeginRun(int runID)
 {
+    // Test-only deterministic fault in the real Geant4 worker run callback.
+    if (InjectBeginScoringFailure(runID, outputManager_)) {
+        throw std::runtime_error("Injected ScoringManager::BeginRun failure");
+    }
     currentRunID_ = runID;
     if (autoCreateDefaultScorers_) EnsureDefaultScorers();
     if (!enabled_) return;
@@ -302,24 +326,40 @@ void ScoringManager::EndEvent(int eventID)
         for (ScorerBase* scorer : EnabledScorers()) scorer->EndEvent(eventID);
     }
 
-    if (eventEdepOutputEnabled_ && outputManager_) {
+    if (enabled_ && eventEdepOutputEnabled_ && outputManager_ &&
+        !outputManager_->HasOutputFailure()) {
         EventEdepRecord record;
+        record.runID = currentRunID_;
         record.eventID = currentEventID_;
         record.rawEdep = currentEventRawEdep_;
         record.weightedEdep = currentEventWeightedEdep_;
-        outputManager_->WriteEventEdep(record);
+        try {
+            outputManager_->WriteEventEdep(record);
+        } catch (const std::exception& error) {
+            outputManager_->RecordOutputFailure("event_edep_write", error.what());
+            if (auto* runManager = G4RunManager::GetRunManager()) runManager->AbortRun(true);
+        }
     }
 }
 
 void ScoringManager::ScoreHit(const HitRecord& hit)
 {
     if (!enabled_) return;
+    if (outputManager_ && outputManager_->HasOutputFailure()) return;
 
     currentEventRawEdep_ += hit.edep;
     currentEventWeightedEdep_ += hit.edep * hit.weight;
 
     if (hitOutputEnabled_ && outputManager_) {
-        outputManager_->WriteHit(hit);
+        HitRecord row = hit;
+        row.runID = currentRunID_;
+        try {
+            outputManager_->WriteHit(row);
+        } catch (const std::exception& error) {
+            outputManager_->RecordOutputFailure("hits_write", error.what());
+            if (auto* runManager = G4RunManager::GetRunManager()) runManager->AbortRun(true);
+            return;
+        }
     }
 
     for (ScorerBase* scorer : EnabledScorers()) scorer->ScoreHit(hit);

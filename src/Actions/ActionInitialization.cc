@@ -44,10 +44,12 @@ RunAction::Role CurrentRunActionRole()
 
 ActionInitialization::ActionInitialization(SourceManager* sourceManager,
                                            ScoringManager* scoringManager,
-                                           OutputManager* outputManager)
+                                           OutputManager* outputManager,
+                                           BiasingManager* biasingManager)
     : sourceManager_(sourceManager),
       masterScoringManager_(scoringManager),
-      masterOutputManager_(outputManager)
+      masterOutputManager_(outputManager),
+      biasingManager_(biasingManager)
 {
 }
 
@@ -58,7 +60,8 @@ void ActionInitialization::BuildForMaster() const
     auto* runAction = new RunAction(
         masterScoringManager_,
         masterOutputManager_,
-        RunAction::Role::Master);
+        RunAction::Role::Master,
+        biasingManager_);
     runAction->SetVerboseLevel(verboseLevel_);
     SetUserAction(runAction);
 }
@@ -92,7 +95,7 @@ void ActionInitialization::Build() const
     }
     AIHL::SetCurrentThreadScoringManager(context->scoring.get());
 
-    auto* runAction = new RunAction(context, CurrentRunActionRole());
+    auto* runAction = new RunAction(context, CurrentRunActionRole(), biasingManager_);
     runAction->SetVerboseLevel(verboseLevel_);
     SetUserAction(runAction);
 

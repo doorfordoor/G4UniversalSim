@@ -116,6 +116,7 @@ void Histogram2D::WriteCSV(const std::string& filename) const
             });
         }
     }
+    writer.Close();
 }
 
 const std::string& Histogram2D::GetName() const

@@ -10,10 +10,28 @@
 #include "G4ios.hh"
 
 #include <exception>
+#include <cstdlib>
 #include <memory>
 #include <stdexcept>
 #include <string>
 #include <utility>
+
+namespace {
+bool InjectOutputSetDirFailure()
+{
+#ifdef _WIN32
+    char* value = nullptr;
+    std::size_t length = 0;
+    if (_dupenv_s(&value, &length, "G4USIM_TEST_OUTPUT_FAULT") != 0) return false;
+    const bool inject = value && std::string(value) == "messenger_set_dir";
+    std::free(value);
+    return inject;
+#else
+    const char* value = std::getenv("G4USIM_TEST_OUTPUT_FAULT");
+    return value && std::string(value) == "messenger_set_dir";
+#endif
+}
+}  // namespace
 
 OutputMessenger::OutputMessenger(OutputManager* outputManager, OutputDirSetter outputDirSetter)
     : outputManager_(outputManager), outputDirSetter_(std::move(outputDirSetter))
@@ -47,6 +65,10 @@ void OutputMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
         if (command == setDirCmd_.get()) {
             EnsureOutputManager("/AIHL/output/setDir");
             WarnIfInitializedOrOpen("/AIHL/output/setDir");
+            // Test-only: exercise an exception from the output command handler.
+            if (InjectOutputSetDirFailure()) {
+                throw std::runtime_error("Injected /AIHL/output/setDir handler failure");
+            }
             if (outputDirSetter_) {
                 outputDirSetter_(newValue);
             } else {
@@ -114,6 +136,7 @@ void OutputMessenger::WarnIfInitializedOrOpen(const char* commandName) const
 void OutputMessenger::ReportCommandError(const char* commandName, const G4String& value, const std::exception& error) const
 {
     const std::string message = std::string(commandName) + " failed for input '" + value + "': " + error.what();
+    if (outputManager_) outputManager_->RecordCommandFailure(message);
     G4Exception("OutputMessenger", "AIHLOutputCmd001", JustWarning, message.c_str());
 }
 

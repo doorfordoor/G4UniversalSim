@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import argparse
 import subprocess
 import sys
 import tempfile
@@ -160,13 +161,20 @@ def test_gui_validation(temp: Path) -> None:
 
 
 def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--layer", choices=("all", "backend", "gui"), default="all")
+    layer = parser.parse_args().layer
     executable = Path(os.environ.get("G4USIM_EXE", str(DEFAULT_EXE)))
-    if not executable.is_file():
+    if layer != "gui" and not executable.is_file():
         raise SystemExit(f"Executable not found: {executable}")
 
     with tempfile.TemporaryDirectory(prefix="g4usim-m03a-") as temporary:
         temp = Path(temporary)
-        test_gui_validation(temp)
+        if layer != "backend":
+            test_gui_validation(temp)
+        if layer == "gui":
+            print("M0-3A GUI unsupported capability validation passed")
+            return 0
         materials = ROOT / "config" / "materials" / "material.ini"
         simple_geometry = ROOT / "config" / "geometry" / "simple_box.ini"
         hierarchical_geometry = ROOT / "test" / "geometry" / "hierarchical_test.ini"

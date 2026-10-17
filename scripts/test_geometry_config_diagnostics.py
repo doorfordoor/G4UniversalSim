@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import argparse
 import subprocess
 import sys
 import tempfile
@@ -130,6 +131,49 @@ def backend_contract(exe: Path, temp: Path) -> None:
                                   ("array", ARRAY, "array"), ("shielding", SHIELDING, "shielding"),
                                   ("hierarchical", HIERARCHICAL, "hierarchical")):
         assert_clean(*run_case(exe, template, text, temp, f"valid-{label}"), label)
+        strict = "[global]\nversion = 2\n" + text
+        strict_output, strict_summary = run_case(exe, template, strict, temp, f"strict-valid-{label}")
+        assert "created_geometry_object_count=0" not in strict_output, (label, strict_output)
+        assert "geometry_config_warning_count = 0" in strict_summary, (label, strict_output, strict_summary)
+
+    strict_unknown = "[global]\nversion = 2\n" + SIMPLE + "\n[mystery]\nvalue = 1\n"
+    output, _ = run_case(exe, "simple_box", strict_unknown, temp, "strict-unknown-section")
+    assert "version=2 schema rejected unknown_section" in output and "created_geometry_object_count=0" in output
+    strict_empty_section = "[global]\nversion = 2\n" + SIMPLE + "\n[mystery]\n"
+    output, _ = run_case(exe, "simple_box", strict_empty_section, temp, "strict-empty-unknown-section")
+    assert "version=2 schema rejected unknown_section" in output and "created_geometry_object_count=0" in output
+    strict_key = "[global]\nversion = 2\n" + SIMPLE.replace("region = R", "region = R\nextra = 1")
+    output, _ = run_case(exe, "simple_box", strict_key, temp, "strict-unknown-key")
+    assert "version=2 schema rejected unconsumed_key" in output and "created_geometry_object_count=0" in output
+    strict_legacy = "[global]\nversion = 2\n" + HIERARCHICAL.replace("region = R", "region = R\nLegacyTag = retained")
+    output, _ = run_case(exe, "hierarchical", strict_legacy, temp, "strict-legacy")
+    assert "version=2 schema rejected legacy_metadata" in output and "created_geometry_object_count=0" in output
+    strict_canonical = "[global]\nversion = 2\n" + HIERARCHICAL.replace("region = R", "region = R\nmetadata.owner = QA")
+    assert_clean(*run_case(exe, "hierarchical", strict_canonical, temp, "strict-canonical"), "strict-canonical")
+    strict_vis = "[global]\nversion = 2\n" + HIERARCHICAL.replace("region = R", "region = R\nvis.palette = rainbow")
+    output, _ = run_case(exe, "hierarchical", strict_vis, temp, "strict-unknown-vis")
+    assert "version=2 schema rejected unconsumed_key" in output and "created_geometry_object_count=0" in output
+    strict_boolean = "[global]\nversion = 2\n" + HIERARCHICAL + "\n[volume.Target.boolean.0]\noperation = subtraction\nshape = box\nsize = 1 mm,1 mm,1 mm\nmaterial = G4_Si\n"
+    output, _ = run_case(exe, "hierarchical", strict_boolean, temp, "strict-boolean")
+    assert "version=2 schema rejected ignored_boolean_key" in output and "created_geometry_object_count=0" in output
+    invalid_version = "[global]\nversion = 3\n" + SIMPLE
+    output, _ = run_case(exe, "simple_box", invalid_version, temp, "unsupported-version")
+    assert "supported geometry versions are 1 (legacy) and 2 (strict)" in output
+    legacy_explicit = "[global]\nversion = 1\n" + HIERARCHICAL.replace("region = R", "region = R\nLegacyTag = retained")
+    output, summary = run_case(exe, "hierarchical", legacy_explicit, temp, "explicit-legacy-version")
+    assert "legacy unprefixed metadata" in output and "geometry_config_warning_count = 1" in summary
+    duplicated_version = "[global]\nversion = 2\nversion = 2\n" + SIMPLE
+    output, _ = run_case(exe, "simple_box", duplicated_version, temp, "duplicate-version")
+    assert "duplicate geometry version declaration" in output and "created_geometry_object_count=0" in output, output
+    repeated_section = "[global]\nversion = 2\n" + SIMPLE + "\n[WORLD]\nmaterial = G4_AIR\n"
+    output, _ = run_case(exe, "simple_box", repeated_section, temp, "strict-duplicate-section")
+    assert "version=2 schema rejected duplicate_section" in output and "created_geometry_object_count=0" in output, output
+    repeated_key = "[global]\nversion = 2\n" + SIMPLE.replace("material = G4_AIR", "material = G4_AIR\nMaterial = G4_AIR", 1)
+    output, _ = run_case(exe, "simple_box", repeated_key, temp, "strict-duplicate-key")
+    assert "version=2 schema rejected duplicate_key" in output and "created_geometry_object_count=0" in output, output
+    legacy_repeated_key = "[global]\nversion = 1\n" + SIMPLE.replace("material = G4_AIR", "material = G4_AIR\nMaterial = G4_AIR", 1)
+    _, legacy_summary = run_case(exe, "simple_box", legacy_repeated_key, temp, "legacy-duplicate-key")
+    assert "status = completed" in legacy_summary, legacy_summary
 
     layered_copy_no = LAYERED.replace("region = R", "region = R\ncopyNo = 7")
     assert_clean(*run_case(exe, "layered_device", layered_copy_no, temp, "layered-copy-no"), "layered-copy-no")
@@ -176,7 +220,10 @@ Material = G4_Si
 
 
 def gui_contract(temp: Path) -> None:
-    from g4usim_gui.editors.geometry_editor_model import geometry_document_from_summary, validate_geometry_document
+    from g4usim_gui.editors.geometry_editor_model import (
+        geometry_document_from_dict, geometry_document_from_summary,
+        geometry_document_to_snapshot, validate_geometry_document,
+    )
     from g4usim_gui.editors.source_physics_scoring_model import SourceEditableModel
     from g4usim_gui.models.package_model import GeometrySettings, PathSettings
     from g4usim_gui.parsers.geometry_parser import parse_geometry
@@ -187,6 +234,44 @@ def gui_contract(temp: Path) -> None:
     explicit = temp / "explicit.ini"
     explicit.write_text("[world]\nsize=1 cm,1 cm,1 cm\nmaterial=G4_AIR\n", encoding="utf-8")
     assert parse_geometry(explicit, "array").template_hint == "array"
+
+    strict_source = temp / "strict-source.ini"
+    strict_source.write_text("[global]\nversion = 2\n" + HIERARCHICAL, encoding="utf-8")
+    strict_summary = parse_geometry(strict_source, "hierarchical")
+    assert strict_summary.schema_version == 2 and not strict_summary.round_trip_blockers
+    strict_document = geometry_document_from_summary(strict_summary, "hierarchical")
+    strict_reloaded = geometry_document_from_dict(geometry_document_to_snapshot(strict_document))
+    assert strict_reloaded.schema_version == 2
+    try:
+        geometry_document_from_dict({"schema_version": 3})
+    except ValueError as error:
+        assert "Unsupported geometry schema version" in str(error)
+    else:
+        raise AssertionError("Unsupported project geometry schema version was silently dropped")
+    strict_generated = temp / "strict-generated.ini"
+    strict_generated.write_text(generate_geometry_ini_text(strict_reloaded), encoding="utf-8")
+    strict_reparsed = parse_geometry(strict_generated, "hierarchical")
+    assert strict_reparsed.schema_version == 2 and not strict_reparsed.round_trip_blockers
+    strict_reloaded.is_dirty = True
+    strict_package = type("Package", (), {"materials_ini_path": str(temp / "strict-material.ini"), "geometry_ini_path": str(temp / "strict-package.ini")})()
+    strict_paths = PathSettings(materials_config=str(ROOT / "config" / "materials" / "material.ini"), geometry_config=str(strict_source))
+    strict_modes = _copy_or_generate_inputs(
+        strict_package, strict_paths, GeometrySettings(template="hierarchical", config_path=str(strict_source)),
+        None, strict_reloaded,
+    )
+    assert "generated" in strict_modes[1]
+    assert parse_geometry(strict_package.geometry_ini_path, "hierarchical").schema_version == 2
+
+    duplicate_version = temp / "duplicate-version.ini"
+    duplicate_version.write_text("[global]\nversion = 2\nversion = 2\n" + HIERARCHICAL, encoding="utf-8")
+    assert any("duplicate [global]/version" in item for item in parse_geometry(duplicate_version, "hierarchical").errors)
+    unsupported_version = temp / "unsupported-version-gui.ini"
+    unsupported_version.write_text("[global]\nversion = 3\n" + HIERARCHICAL, encoding="utf-8")
+    assert any("supported geometry versions" in item for item in parse_geometry(unsupported_version, "hierarchical").errors)
+    legacy_version = temp / "legacy-version-gui.ini"
+    legacy_version.write_text("[global]\nversion = 1\n" + HIERARCHICAL, encoding="utf-8")
+    legacy_document = geometry_document_from_summary(parse_geometry(legacy_version, "hierarchical"), "hierarchical")
+    assert "[global]\nversion = 1" in generate_geometry_ini_text(legacy_document)
 
     legacy = temp / "legacy.ini"
     legacy.write_text(HIERARCHICAL.replace("region = R", "region = R\nLegacyTag = retained"), encoding="utf-8")
@@ -214,13 +299,18 @@ def gui_contract(temp: Path) -> None:
 
 
 def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--layer", choices=("all", "backend", "gui"), default="all")
+    layer = parser.parse_args().layer
     exe = Path(os.environ.get("G4USIM_EXE", str(DEFAULT_EXE)))
-    if not exe.is_file():
+    if layer != "gui" and not exe.is_file():
         raise FileNotFoundError(f"G4UniversalSim executable not found: {exe}")
     with tempfile.TemporaryDirectory(prefix="g4usim-geometry-diagnostics-") as raw:
         temp = Path(raw)
-        backend_contract(exe, temp)
-        gui_contract(temp)
+        if layer != "gui":
+            backend_contract(exe, temp)
+        if layer != "backend":
+            gui_contract(temp)
     print("test_geometry_config_diagnostics: OK")
     return 0
 

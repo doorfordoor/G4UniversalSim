@@ -192,7 +192,7 @@ void EdepScorer::WriteSummaryCsv(OutputManager& output,
                                  const std::map<std::string, double>& weighted) const
 {
     CsvWriter writer(output.MakeOutputPath(output.MakeThreadFilename(baseFilename)));
-    writer.WriteHeader({"name", "raw_edep", "weighted_edep"});
+    writer.WriteHeader({"name", "raw_edep_MeV", "weighted_edep_MeV"});
 
     std::set<std::string> keys;
     for (const auto& item : raw) keys.insert(item.first);
@@ -207,4 +207,6 @@ void EdepScorer::WriteSummaryCsv(OutputManager& output,
             ToString(weightedIt == weighted.end() ? 0.0 : weightedIt->second)
         });
     }
+    writer.Close();
+    output.RegisterGeneratedFile(writer.GetFilename());
 }

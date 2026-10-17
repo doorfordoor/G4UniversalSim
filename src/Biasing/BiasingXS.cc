@@ -16,6 +16,7 @@
 #include <algorithm>
 #include <cfloat>
 #include <set>
+#include <sstream>
 #include <stdexcept>
 
 namespace {
@@ -264,7 +265,8 @@ const G4String& BiasingXS::GetParticleName() const
 
 void BiasingXS::StartRun()
 {
-    ValidateProcessRulesForParticle();
+    // The application validates each unique rule once after /run/initialize
+    // and before /run/beamOn; per-volume callbacks would duplicate diagnostics.
 }
 
 void BiasingXS::StartTracking(const G4Track*)
@@ -365,21 +367,23 @@ const XSProcessBiasRule* BiasingXS::FindProcessRule(const G4String& processName)
     return iter == processRules_.end() ? nullptr : &iter->second;
 }
 
-void BiasingXS::ValidateProcessRulesForParticle() const
+void BiasingXS::ValidateActiveProcessRule(const XSProcessBiasRule& rule)
 {
-    auto* particle = G4ParticleTable::GetParticleTable()->FindParticle(particleName_);
+    if (!rule.enabled) return;
+    auto* particle = G4ParticleTable::GetParticleTable()->FindParticle(rule.particleName);
     if (!particle) {
-        throw std::runtime_error("BiasingXS::StartRun failed: particle '" +
-                                 std::string(particleName_) + "' was not found in G4ParticleTable");
+        throw std::runtime_error("XS bias target particle '" + rule.particleName +
+                                 "' was not found after physics initialization. Choose a particle in the selected physics list.");
     }
 
     auto* processManager = particle->GetProcessManager();
     if (!processManager) {
-        throw std::runtime_error("BiasingXS::StartRun failed: particle '" +
-                                 std::string(particleName_) + "' has no process manager");
+        throw std::runtime_error("XS bias target particle '" + rule.particleName +
+                                 "' has no process manager after physics initialization.");
     }
 
     std::set<std::string> processNames;
+    std::set<std::string> wrappedNames;
     auto* processList = processManager->GetProcessList();
     if (processList) {
         for (G4int i = 0; i < static_cast<G4int>(processList->size()); ++i) {
@@ -388,39 +392,23 @@ void BiasingXS::ValidateProcessRulesForParticle() const
             processNames.insert(StringUtils::Trim(std::string(process->GetProcessName())));
             auto* biasingProcess = dynamic_cast<G4BiasingProcessInterface*>(process);
             if (biasingProcess && biasingProcess->GetWrappedProcess()) {
-                processNames.insert(StringUtils::Trim(std::string(biasingProcess->GetWrappedProcess()->GetProcessName())));
+                wrappedNames.insert(StringUtils::Trim(std::string(biasingProcess->GetWrappedProcess()->GetProcessName())));
             }
         }
     }
 
-    for (const auto& item : processRules_) {
-        const XSProcessBiasRule& rule = item.second;
-        if (!rule.enabled) continue;
-        if (processNames.find(rule.processName) == processNames.end()) {
-            std::ostringstream message;
-            message << "Configured XS bias process '" << rule.processName
-                    << "' was not found for particle '" << rule.particleName
-                    << "'. The rule will not bias any process unless the selected physics list "
-                    << "later exposes a matching wrapped process name. Available processes:";
-            for (const auto& processName : processNames) {
-                message << ' ' << processName;
-            }
-            G4Exception(
-                "BiasingXS::StartRun",
-                "AIHLBiasingXSProcess001",
-                JustWarning,
-                message.str().c_str());
-        }
-    }
-
-    if (particle->GetPDGCharge() != 0.0 && !processRules_.empty()) {
-        G4Exception(
-            "BiasingXS::StartRun",
-            "AIHLBiasingXSCharged001",
-            JustWarning,
-            ("XS biasing for charged particle '" + std::string(particleName_)
-             + "' may require special validation because cross sections can vary during a step due to energy loss. Validate results carefully.").c_str());
-    }
+    if (wrappedNames.find(rule.processName) != wrappedNames.end()) return;
+    std::ostringstream message;
+    message << "XS bias target process '" << rule.processName << "' for particle '"
+            << rule.particleName << "' is not a wrapped process after physics initialization."
+            << " Available wrapped processes:";
+    if (wrappedNames.empty()) message << " <none>";
+    for (const auto& name : wrappedNames) message << ' ' << name;
+    message << ". Available particle processes:";
+    if (processNames.empty()) message << " <none>";
+    for (const auto& name : processNames) message << ' ' << name;
+    message << ". Choose an available wrapped process, or change the physics list/biasing configuration.";
+    throw std::runtime_error(message.str());
 }
 
 bool BiasingXS::ShouldBiasTrack(const G4Track* track, const XSProcessBiasRule& rule, const G4String& processName) const

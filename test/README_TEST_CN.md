@@ -57,7 +57,7 @@ bash test/scripts/run_tests.sh ./build/G4UniversalSim
 
 ## 当前已知功能限制
 - `OutputMessenger` 输出信使暂未实现 `/AIHL/output/...` 系列命令，因此输出目录需通过主 ini 配置文件及运行脚本 `--output` 参数指定。
-- 偏置功能已支持 `[biasing]`、`[biasing.xs]` 配置段解析，但暂无独立宏命令可加载外部偏置 ini 文件；因此偏置配置文件内容直接整合至两份主配置中，并在宏文件中展开为实际可执行命令。
+- 偏置功能支持 `[biasing]` 和逐 process 的 `[biasing.xs.<particle>.<process>]`；旧 `[biasing.xs]` 仍是兼容输入，会产生 legacy 提示。`test/main_hierarchical.ini` 使用显式 `process` 值保留 Geant4 过程名称大小写，并只引用已注册体积；真实回归证实目标匹配与事件完成，实际偏置效果仍未知。暂无独立宏命令可加载外部偏置 ini 文件，宏文件须展开为实际命令。
 - 重要性偏置、权重窗口偏置、分裂/俄罗斯轮盘抽样，在当前版本中暂无可用信使命令及 ini 配置解析支持，仅做文档说明，暂不支持配置启用。
 - LET、Dose、Fluence 当前未支持。可运行测试会保持关闭或注释，不把占位输出误当作已验证物理量。
 - `LayeredDeviceTemplate` 分层设备模板不识别自定义元数据键与副本编号，因此分层几何配置文件刻意规避了这类暂不支持的元数据及副本编号字段。

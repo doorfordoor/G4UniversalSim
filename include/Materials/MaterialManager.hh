@@ -17,6 +17,13 @@ public:
     ~MaterialManager();
 
     void LoadMaterials(const std::string& filename);
+    const std::vector<std::string>& GetLoadedConfigFiles() const;
+    bool HasNonFileConfigMutations() const;
+    bool HasIncompleteConfigLoad() const;
+    void MarkNonFileConfigMutation();
+    std::size_t GetCommandFailureCount() const;
+    const std::string& GetLastCommandFailure() const;
+    void RecordCommandFailure(const std::string& error);
 
     void AddIsotopeDefinition(const IsotopeDefinition& def);
     void AddElementDefinition(const ElementDefinition& def);
@@ -72,4 +79,10 @@ private:
     std::set<std::string> buildingMaterials_;
     std::vector<std::string> buildingMaterialStack_;
     bool locked_ = false;
+    // A file load is additive, not a replacement for earlier definitions.
+    std::vector<std::string> loadedConfigFiles_;
+    bool nonFileConfigMutations_ = false;
+    bool incompleteConfigLoad_ = false;
+    std::size_t commandFailureCount_ = 0;
+    std::string lastCommandFailure_;
 };

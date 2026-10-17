@@ -22,6 +22,7 @@ private:
     void NotifyChanged() const;
 
     BiasingManager* manager_ = nullptr; // not owned
+    mutable bool changeNoticeEmitted_ = false;
 
     G4UIdirectory* biasingDir_ = nullptr;
     G4UIdirectory* xsDir_ = nullptr;

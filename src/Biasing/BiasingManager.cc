@@ -1,6 +1,7 @@
 #include "Biasing/BiasingManager.hh"
 
 #include "Biasing/BiasingMultiParticleXS.hh"
+#include "Biasing/BiasingXS.hh"
 #include "Config/ConfigManager.hh"
 #include "Geometry/GeometryRegistry.hh"
 #include "Utils/StringUtils.hh"
@@ -61,6 +62,9 @@ BiasingManager::~BiasingManager() = default;
 
 void BiasingManager::Enable(bool enable)
 {
+    if (enable && interactiveSessionMode_) {
+        throw std::runtime_error("XS biasing is not supported in an interactive session because geometry reinitialization can invalidate attached operators. Use a batch macro in a fresh process instead.");
+    }
     config_.enabled = enable;
 }
 
@@ -69,11 +73,26 @@ bool BiasingManager::IsEnabled() const
     return config_.enabled;
 }
 
+void BiasingManager::SetInteractiveSessionMode(bool interactive)
+{
+    if (interactive && IsEnabled()) {
+        throw std::runtime_error("XS biasing is not supported in an interactive session because geometry reinitialization can invalidate attached operators. Use a batch macro in a fresh process instead.");
+    }
+    interactiveSessionMode_ = interactive;
+}
+
+bool BiasingManager::IsInteractiveSessionMode() const
+{
+    return interactiveSessionMode_;
+}
+
 void BiasingManager::Clear()
 {
     ClearOperators();
     config_.Clear();
     globalBiasVolumes_.clear();
+    legacyWarningEmitted_ = false;
+    legacyDetailWarnings_.clear();
 }
 
 void BiasingManager::AddXSProcessBiasRule(const XSProcessBiasRule& rule)
@@ -404,8 +423,6 @@ void BiasingManager::PrintSummary() const
               << ", globalBiasVolumes=" << Join(globalBiasVolumes_, "<none>")
               << '\n';
     if (!config_.xsRules.empty()) {
-        std::cout << "  warning: Legacy particle-level XS bias syntax is configured. "
-                  << "Legacy rules expand to particle+process rules with shared parameters.\n";
         for (const XSBiasRule& rule : config_.xsRules) {
             std::cout << "  legacy: " << rule.ToString() << '\n';
         }
@@ -583,6 +600,7 @@ void BiasingManager::ClearOperators()
     // use it as a live run-time detach operation.
     xsOperators_.clear();
     operatorsAttached_ = false;
+    matchedProcessRuleCount_ = 0;
 }
 
 bool BiasingManager::AreOperatorsAttached() const
@@ -593,6 +611,32 @@ bool BiasingManager::AreOperatorsAttached() const
 std::size_t BiasingManager::GetAttachedOperatorCount() const
 {
     return xsOperators_.size();
+}
+
+void BiasingManager::ValidateActiveProcessRules()
+{
+    matchedProcessRuleCount_ = 0;
+    if (!IsEnabled()) return;
+    const auto rules = GetEnabledXSProcessBiasRules();
+    if (rules.empty()) {
+        throw std::runtime_error("XS biasing is enabled but no process-level rule is active. Add a rule or disable biasing.");
+    }
+    if (!operatorsAttached_) {
+        throw std::runtime_error("XS biasing has active rules but no operator is attached to a geometry volume. Configure a valid rule volume or disable biasing.");
+    }
+    std::set<std::string> matched;
+    for (const auto& rule : rules) {
+        const std::string key = ProcessRuleKey(rule.particleName, rule.processName);
+        if (matched.insert(key).second) {
+            BiasingXS::ValidateActiveProcessRule(rule);
+        }
+    }
+    matchedProcessRuleCount_ = matched.size();
+}
+
+std::size_t BiasingManager::GetMatchedProcessRuleCount() const
+{
+    return matchedProcessRuleCount_;
 }
 
 std::string BiasingManager::NormalizeParticleName(const std::string& particleName)
@@ -631,7 +675,7 @@ std::vector<XSProcessBiasRule> BiasingManager::BuildExpandedProcessRules(bool wa
         if (!legacyRule.enabled) continue;
         legacyRule.Validate();
         if (legacyRule.processNames.empty()) {
-            if (warnLegacy) {
+            if (warnLegacy && legacyDetailWarnings_.insert("empty:" + legacyRule.particleName).second) {
                 std::cout << "[BiasingManager] warning: legacy rule for particle '" << legacyRule.particleName
                           << "' has no processes. Process-level biasing requires explicit process names; skipping expansion.\n";
             }
@@ -666,7 +710,7 @@ std::vector<XSProcessBiasRule> BiasingManager::BuildExpandedProcessRules(bool wa
                     && ProcessRuleKey(existing.particleName, existing.processName)
                         == ProcessRuleKey(processRule.particleName, processRule.processName)) {
                     skipLegacy = true;
-                    if (warnLegacy) {
+                    if (warnLegacy && legacyDetailWarnings_.insert("override:" + ProcessRuleKey(processRule.particleName, processRule.processName)).second) {
                         std::cout << "[BiasingManager] warning: explicit process-level rule for '"
                                   << processRule.particleName << "/" << processRule.processName
                                   << "' overrides legacy expansion.\n";
@@ -683,6 +727,8 @@ std::vector<XSProcessBiasRule> BiasingManager::BuildExpandedProcessRules(bool wa
 
 void BiasingManager::WarnLegacySyntax(const std::string& detail) const
 {
+    if (legacyWarningEmitted_) return;
+    legacyWarningEmitted_ = true;
     std::cout << "[BiasingManager] warning: Legacy particle-level XS bias syntax is used"
               << " (" << detail << "). All listed processes share the same parameters. "
               << "Prefer process-level rules: [biasing.xs.<particle>.<process>] or "

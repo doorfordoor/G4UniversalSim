@@ -5,26 +5,27 @@
 
 #include <iomanip>
 #include <algorithm>
+#include <cstdlib>
+#include <exception>
 #include <filesystem>
 #include <sstream>
 #include <stdexcept>
 
 namespace {
 
-std::vector<std::string> ListRegularFiles(const std::string& directory)
+std::string TestOutputFault()
 {
-    std::vector<std::string> files;
-    std::error_code error;
-    if (!std::filesystem::is_directory(directory, error)) return files;
-
-    for (const auto& entry : std::filesystem::recursive_directory_iterator(directory, error)) {
-        if (error) break;
-        if (!entry.is_regular_file(error)) continue;
-        files.push_back(std::filesystem::absolute(entry.path(), error).lexically_normal().string());
-        if (error) break;
-    }
-    std::sort(files.begin(), files.end());
-    return files;
+#ifdef _WIN32
+    char* value = nullptr;
+    std::size_t length = 0;
+    if (_dupenv_s(&value, &length, "G4USIM_TEST_OUTPUT_FAULT") != 0) return {};
+    const std::string result = value ? value : "";
+    std::free(value);
+    return result;
+#else
+    const char* value = std::getenv("G4USIM_TEST_OUTPUT_FAULT");
+    return value ? value : "";
+#endif
 }
 
 }  // namespace
@@ -43,12 +44,10 @@ std::unique_ptr<OutputManager> OutputManager::CloneForThread(int threadId) const
     clone->outputDir_ = outputDir_;
     clone->outputDirLocked_ = outputDirLocked_;
     clone->threadId_ = threadId;
+    clone->runId_ = runId_;
     clone->threadSuffixEnabled_ = threadSuffixEnabled_;
     clone->runSummary_ = runSummary_;
-    clone->outputDirectoriesUsed_ = outputDirectoriesUsed_;
-    clone->baselineFiles_ = baselineFiles_;
-    clone->baselineFileTimes_ = baselineFileTimes_;
-    clone->writtenFiles_ = writtenFiles_;
+    clone->generatedFiles_ = generatedFiles_;
     return clone;
 }
 
@@ -56,6 +55,12 @@ void OutputManager::SetOutputDir(const std::string& outputDir)
 {
     if (outputDirLocked_) {
         throw std::runtime_error("Output directory is locked by an explicit CLI option");
+    }
+    // Test-only: fail inside the manager setter (rather than in the
+    // Messenger) to check that SimulationManager keeps its prior state.
+    if (TestOutputFault() == "manager_set_dir" &&
+        outputDir.find("__g4usim_inject_manager_set_dir__") != std::string::npos) {
+        throw std::runtime_error("Injected OutputManager::SetOutputDir failure");
     }
     outputDir_ = outputDir.empty() ? "output" : outputDir;
 }
@@ -83,6 +88,27 @@ void OutputManager::SetThreadId(int threadId)
 int OutputManager::GetThreadId() const
 {
     return threadId_;
+}
+
+void OutputManager::SetRunId(int runId)
+{
+    if (runId < 0) throw std::runtime_error("OutputManager run ID must be nonnegative");
+    if (runId_ == runId) return;
+    Close();
+    // Test-only: a failure during run transition must be attributed to the
+    // attempted run, without discarding the previous run's completed files.
+    if (runId == 1 && threadId_ == 0 && TestOutputFault() == "begin_set_run_id_t0") {
+        throw std::runtime_error("Injected failure during OutputManager::SetRunId");
+    }
+    hitWriter_.reset();
+    eventEdepWriter_.reset();
+    histograms1D_.clear();
+    runId_ = runId;
+}
+
+int OutputManager::GetRunId() const
+{
+    return runId_;
 }
 
 void OutputManager::EnableThreadSuffix(bool enable)
@@ -132,11 +158,12 @@ std::string OutputManager::MakeOutputPath(const std::string& filename) const
 
 std::string OutputManager::MakeThreadFilename(const std::string& baseName) const
 {
-    if (!threadSuffixEnabled_) {
+    if (!threadSuffixEnabled_ && runId_ <= 0) {
         return baseName;
     }
 
-    const std::string suffix = "_t" + std::to_string(threadId_);
+    const std::string suffix = (threadSuffixEnabled_ ? "_t" + std::to_string(threadId_) : "")
+        + (runId_ > 0 ? "_r" + std::to_string(runId_) : "");
     const std::string extension = FileUtils::Extension(baseName);
     if (extension.empty()) {
         return baseName + suffix;
@@ -145,25 +172,47 @@ std::string OutputManager::MakeThreadFilename(const std::string& baseName) const
     const std::string parent = FileUtils::ParentPath(baseName);
     const std::string filename = FileUtils::Filename(baseName);
     const std::string stem = filename.substr(0, filename.size() - extension.size());
-    const std::string threaded = stem + suffix + extension;
-    return parent.empty() ? threaded : FileUtils::JoinPath(parent, threaded);
+    const std::string named = stem + suffix + extension;
+    return parent.empty() ? named : FileUtils::JoinPath(parent, named);
+}
+
+void OutputManager::ValidateOutputTargetDirectories(int runId, int threadCount) const
+{
+    if (runId < 0 || threadCount < 1) {
+        throw std::runtime_error("Invalid run ID or thread count for output target validation");
+    }
+    const std::filesystem::path directory(outputDir_);
+    std::error_code error;
+    const bool directoryExists = std::filesystem::exists(directory, error);
+    if (error) throw std::filesystem::filesystem_error("Cannot inspect output directory", directory, error);
+    if (directoryExists && std::filesystem::is_regular_file(directory, error)) {
+        throw std::runtime_error("Output directory is an existing file: " + directory.string());
+    }
+    if (error) throw std::filesystem::filesystem_error("Cannot inspect output directory", directory, error);
+    for (int thread = 0; thread < threadCount; ++thread) {
+        OutputManager candidate;
+        candidate.outputDir_ = outputDir_;
+        candidate.threadSuffixEnabled_ = threadSuffixEnabled_;
+        candidate.threadId_ = thread;
+        candidate.runId_ = runId;
+        for (const char* name : {"hits.csv", "event_edep.csv", "hist_edep_raw.csv",
+                                 "hist_edep_weighted.csv", "edep_volume_summary.csv",
+                                 "edep_particle_summary.csv"}) {
+            const std::filesystem::path path(candidate.MakeOutputPath(candidate.MakeThreadFilename(name)));
+            error.clear();
+            const bool exists = std::filesystem::exists(path, error);
+            if (error) throw std::filesystem::filesystem_error("Cannot inspect output CSV target", path, error);
+            if (exists && std::filesystem::is_directory(path, error)) {
+                throw std::runtime_error("Output CSV target is an existing directory: " + path.string());
+            }
+            if (error) throw std::filesystem::filesystem_error("Cannot inspect output CSV target", path, error);
+        }
+    }
 }
 
 void OutputManager::Initialize()
 {
     FileUtils::CreateDirectories(outputDir_);
-    const std::string absoluteDir = FileUtils::AbsolutePath(outputDir_);
-    if (std::find(outputDirectoriesUsed_.begin(), outputDirectoriesUsed_.end(), absoluteDir) ==
-        outputDirectoriesUsed_.end()) {
-        outputDirectoriesUsed_.push_back(absoluteDir);
-        const auto files = ListRegularFiles(absoluteDir);
-        baselineFiles_.insert(baselineFiles_.end(), files.begin(), files.end());
-        for (const auto& file : files) {
-            std::error_code error;
-            const auto time = std::filesystem::last_write_time(file, error);
-            if (!error) baselineFileTimes_[file] = time;
-        }
-    }
     initialized_ = true;
 }
 
@@ -172,7 +221,6 @@ void OutputManager::OpenHitFile()
     Initialize();
     hitWriter_ = std::make_unique<CsvWriter>(MakeOutputPath(MakeThreadFilename("hits.csv")));
     hitWriter_->WriteHeader(HitHeader());
-    RegisterGeneratedFile(hitWriter_->GetFilename());
 }
 
 void OutputManager::OpenEventEdepFile()
@@ -181,7 +229,6 @@ void OutputManager::OpenEventEdepFile()
     eventEdepWriter_ =
         std::make_unique<CsvWriter>(MakeOutputPath(MakeThreadFilename("event_edep.csv")));
     eventEdepWriter_->WriteHeader(EventEdepHeader());
-    RegisterGeneratedFile(eventEdepWriter_->GetFilename());
 }
 
 void OutputManager::WriteHit(const HitRecord& record)
@@ -191,6 +238,7 @@ void OutputManager::WriteHit(const HitRecord& record)
     }
 
     WriteHitRow({
+        std::to_string(record.runID),
         std::to_string(record.eventID),
         std::to_string(record.trackID),
         std::to_string(record.parentID),
@@ -210,9 +258,7 @@ void OutputManager::WriteHit(const HitRecord& record)
         ToString(record.kineticEnergy),
         record.processName,
         record.volumeName,
-        ToString(record.weight),
-        ToString(record.LETcalc),
-        ToString(record.LETstep)
+        ToString(record.weight)
     });
 }
 
@@ -223,6 +269,7 @@ void OutputManager::WriteEventEdep(const EventEdepRecord& record)
     }
 
     WriteEventEdepRow({
+        std::to_string(record.runID),
         std::to_string(record.eventID),
         ToString(record.rawEdep),
         ToString(record.weightedEdep)
@@ -281,7 +328,8 @@ void OutputManager::WriteHistogram1D(const std::string& name)
     const Histogram1D& hist = GetHistogram1D(name);
     const std::string safeName = StringUtils::Trim(name).empty() ? "unnamed" : name;
     const std::string filename = MakeOutputPath(MakeThreadFilename("hist_" + safeName + ".csv"));
-    hist.WriteCSV(filename);
+    const std::string axisUnit = name == "edep_raw" || name == "edep_weighted" ? "MeV" : "";
+    hist.WriteCSV(filename, axisUnit);
     RegisterGeneratedFile(filename);
 }
 
@@ -315,65 +363,111 @@ void OutputManager::RecordRun(int runId, std::int64_t plannedEvents, std::int64_
 void OutputManager::RegisterGeneratedFile(const std::string& filename)
 {
     const std::string absolute = FileUtils::AbsolutePath(filename);
-    if (std::find(writtenFiles_.begin(), writtenFiles_.end(), absolute) == writtenFiles_.end()) {
-        writtenFiles_.push_back(absolute);
+    std::lock_guard<std::mutex> guard(generatedFiles_->mutex);
+    if (std::find(generatedFiles_->files.begin(), generatedFiles_->files.end(), absolute) ==
+        generatedFiles_->files.end()) {
+        generatedFiles_->files.push_back(absolute);
     }
 }
 
 std::vector<std::string> OutputManager::GetGeneratedFiles() const
 {
     std::vector<std::string> generated;
-    for (const auto& directory : outputDirectoriesUsed_) {
-        for (const auto& file : ListRegularFiles(directory)) {
-            std::error_code error;
-            const auto currentTime = std::filesystem::last_write_time(file, error);
-            const auto baselineIt = baselineFileTimes_.find(file);
-            if (baselineIt == baselineFileTimes_.end() ||
-                (baselineIt->second != currentTime && !error)) {
-                generated.push_back(file);
-            }
-        }
+    {
+        std::lock_guard<std::mutex> guard(generatedFiles_->mutex);
+        generated = generatedFiles_->files;
     }
-    for (const auto& file : writtenFiles_) {
-        if (FileUtils::IsFile(file)) generated.push_back(file);
-    }
+    generated.erase(std::remove_if(generated.begin(), generated.end(), [](const std::string& file) {
+        return !FileUtils::IsFile(file);
+    }), generated.end());
     std::sort(generated.begin(), generated.end());
-    generated.erase(std::unique(generated.begin(), generated.end()), generated.end());
     return generated;
+}
+
+void OutputManager::RecordOutputFailure(const std::string& stage, const std::string& message,
+                                        int attemptedRunId)
+{
+    std::lock_guard<std::mutex> guard(generatedFiles_->mutex);
+    if (!generatedFiles_->hasFailure) {
+        generatedFiles_->firstFailure = {
+            attemptedRunId >= 0 ? attemptedRunId : runId_, threadId_, stage, message};
+        generatedFiles_->hasFailure = true;
+    }
+}
+
+bool OutputManager::HasOutputFailure() const
+{
+    std::lock_guard<std::mutex> guard(generatedFiles_->mutex);
+    return generatedFiles_->hasFailure;
+}
+
+std::size_t OutputManager::GetCommandFailureCount() const
+{
+    return commandFailureCount_;
+}
+
+const std::string& OutputManager::GetLastCommandFailure() const
+{
+    return lastCommandFailure_;
+}
+
+void OutputManager::RecordCommandFailure(const std::string& message)
+{
+    ++commandFailureCount_;
+    lastCommandFailure_ = message;
+}
+
+OutputManager::OutputFailure OutputManager::GetOutputFailure() const
+{
+    std::lock_guard<std::mutex> guard(generatedFiles_->mutex);
+    return generatedFiles_->firstFailure;
 }
 
 void OutputManager::Flush()
 {
-    if (hitWriter_) {
-        hitWriter_->Flush();
-    }
-    if (eventEdepWriter_) {
-        eventEdepWriter_->Flush();
-    }
+    std::exception_ptr firstError;
+    const auto flushWriter = [&firstError](const std::unique_ptr<CsvWriter>& writer) {
+        if (!writer) return;
+        try {
+            writer->Flush();
+        } catch (...) {
+            if (!firstError) firstError = std::current_exception();
+        }
+    };
+    flushWriter(hitWriter_);
+    flushWriter(eventEdepWriter_);
+    if (firstError) std::rethrow_exception(firstError);
 }
 
 void OutputManager::Close()
 {
-    if (hitWriter_) {
-        hitWriter_->Close();
-    }
-    if (eventEdepWriter_) {
-        eventEdepWriter_->Close();
-    }
+    std::exception_ptr firstError;
+    const auto closeWriter = [this, &firstError](const std::unique_ptr<CsvWriter>& writer) {
+        if (!writer || !writer->IsOpen()) return;
+        try {
+            writer->Close();
+            RegisterGeneratedFile(writer->GetFilename());
+        } catch (...) {
+            if (!firstError) firstError = std::current_exception();
+        }
+    };
+    closeWriter(hitWriter_);
+    closeWriter(eventEdepWriter_);
+    if (firstError) std::rethrow_exception(firstError);
 }
 
 std::vector<std::string> OutputManager::HitHeader()
 {
     return {
-        "eventID", "trackID", "parentID", "particle", "edep", "ndep", "stepLength",
-        "x0", "y0", "z0", "x1", "y1", "z1", "px", "py", "pz", "kineticEnergy",
-        "process", "volume", "weight", "LETcalc", "LETstep"
+        "runID", "eventID", "trackID", "parentID", "particle", "edep_MeV", "ndep_MeV", "stepLength_mm",
+        "x0_mm", "y0_mm", "z0_mm", "x1_mm", "y1_mm", "z1_mm", "px", "py", "pz", "kineticEnergy_MeV",
+        "process", "volume", "weight"
     };
 }
 
 std::vector<std::string> OutputManager::EventEdepHeader()
 {
-    return {"eventID", "raw_edep", "weighted_edep"};
+    return {"runID", "eventID", "raw_edep_MeV", "weighted_edep_MeV"};
 }
 
 std::string OutputManager::ToString(double value)

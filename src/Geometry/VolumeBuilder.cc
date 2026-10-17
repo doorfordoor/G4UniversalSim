@@ -102,8 +102,12 @@ G4Colour ParseColour(const std::string& text)
     if (value == "blue") return G4Colour(0.0, 0.0, 1.0);
     if (value == "yellow") return G4Colour(1.0, 1.0, 0.0);
     if (value == "cyan") return G4Colour(0.0, 1.0, 1.0);
+    if (value == "aqua") return G4Colour(0.0, 1.0, 1.0);
     if (value == "magenta") return G4Colour(1.0, 0.0, 1.0);
     if (value == "gray" || value == "grey") return G4Colour(0.5, 0.5, 0.5);
+    if (value == "darkgray") return G4Colour(0.25, 0.25, 0.25);
+    if (value == "lime") return G4Colour(0.0, 1.0, 0.0);
+    if (value == "brown") return G4Colour(0.6, 0.3, 0.1);
 
     G4Exception(
         "VolumeBuilder::ApplyVisualAttributes",

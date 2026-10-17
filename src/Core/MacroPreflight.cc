@@ -185,6 +185,15 @@ private:
         std::size_t lineNumber
     ) const
     {
+        // Macro preflight follows Configure(); a late main-config switch
+        // would desynchronize already-configured managers from the summary.
+        if (line.command == "/aihl/app/setmainconfig") {
+            ThrowMacroError(
+                filename, lineNumber,
+                "/AIHL/app/setMainConfig cannot change the main config after Configure(); use --config <file> at process startup instead",
+                line.text
+            );
+        }
         std::string conflict;
         if (locks_.outputDir &&
             (line.command == "/aihl/app/setoutputdir" || line.command == "/aihl/output/setdir")) {
@@ -280,7 +289,7 @@ private:
 
             const std::string nestedName = ParseSingleMacroPath(line, filename, lineNumber);
             const auto nestedPath = NormalizeExistingFile(
-                nestedName,
+                std::filesystem::u8path(nestedName),
                 filename.parent_path(),
                 filename,
                 lineNumber,

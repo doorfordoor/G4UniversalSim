@@ -7,6 +7,7 @@
 class G4Run;
 class OutputManager;
 class ScoringManager;
+class BiasingManager;
 struct WorkerRunContext;
 
 class RunAction : public G4UserRunAction {
@@ -19,9 +20,11 @@ public:
 
     RunAction(ScoringManager* scoringManager = nullptr,
               OutputManager* outputManager = nullptr,
-              Role role = Role::Sequential);
+              Role role = Role::Sequential,
+              BiasingManager* biasingManager = nullptr);
     explicit RunAction(std::shared_ptr<WorkerRunContext> context,
-                       Role role = Role::Worker);
+                       Role role = Role::Worker,
+                       BiasingManager* biasingManager = nullptr);
     ~RunAction() override;
 
     void BeginOfRunAction(const G4Run* run) override;
@@ -43,6 +46,7 @@ private:
     std::shared_ptr<WorkerRunContext> context_;
     ScoringManager* scoringManager_ = nullptr; // non-owning
     OutputManager* outputManager_ = nullptr;   // non-owning
+    BiasingManager* biasingManager_ = nullptr; // non-owning
     Role role_ = Role::Sequential;
     int verboseLevel_ = 0;
 };

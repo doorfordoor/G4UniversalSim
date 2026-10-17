@@ -76,12 +76,16 @@ void Histogram1D::Reset()
     sumWeight_ = 0.0;
 }
 
-void Histogram1D::WriteCSV(const std::string& filename) const
+void Histogram1D::WriteCSV(const std::string& filename, const std::string& axisUnit) const
 {
     ValidateConfigured();
 
     CsvWriter writer(filename);
-    writer.WriteHeader({"bin", "low_edge", "high_edge", "center", "count"});
+    if (axisUnit == "MeV") {
+        writer.WriteHeader({"bin", "low_edge_MeV", "high_edge_MeV", "center_MeV", "count"});
+    } else {
+        writer.WriteHeader({"bin", "low_edge", "high_edge", "center", "count"});
+    }
 
     const double width = BinWidth();
     for (int i = 0; i < bins_; ++i) {
@@ -95,6 +99,7 @@ void Histogram1D::WriteCSV(const std::string& filename) const
             std::to_string(counts_[static_cast<std::size_t>(i)])
         });
     }
+    writer.Close();
 }
 
 const std::string& Histogram1D::GetName() const

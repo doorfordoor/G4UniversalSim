@@ -2,6 +2,7 @@
 
 #include "Materials/MaterialFactory.hh"
 #include "Materials/MaterialIniReader.hh"
+#include "Utils/FileUtils.hh"
 #include "Utils/StringUtils.hh"
 
 #include "G4Element.hh"
@@ -53,15 +54,58 @@ void MaterialManager::LoadMaterials(const std::string& filename)
     EnsureUnlocked("load materials");
     MaterialIniReader reader;
     reader.Load(filename);
-
-    for (const std::string& nistName : reader.GetNistMaterialNames()) nistMaterialDefinitions_.push_back(nistName);
-    for (const std::string& name : reader.GetIsotopeNames()) AddIsotopeDefinition(reader.GetIsotopeDefinition(name));
-    for (const std::string& name : reader.GetElementNames()) AddElementDefinition(reader.GetElementDefinition(name));
-    for (const std::string& name : reader.GetMaterialNames()) AddMaterialDefinition(reader.GetMaterialDefinition(name));
-    if (MaterialLifecycleTraceEnabled()) {
-        G4cout << "[MaterialLifecycle] build_started" << G4endl;
+    try {
+        for (const std::string& nistName : reader.GetNistMaterialNames()) nistMaterialDefinitions_.push_back(nistName);
+        for (const std::string& name : reader.GetIsotopeNames()) AddIsotopeDefinition(reader.GetIsotopeDefinition(name));
+        for (const std::string& name : reader.GetElementNames()) AddElementDefinition(reader.GetElementDefinition(name));
+        for (const std::string& name : reader.GetMaterialNames()) AddMaterialDefinition(reader.GetMaterialDefinition(name));
+        if (MaterialLifecycleTraceEnabled()) {
+            G4cout << "[MaterialLifecycle] build_started" << G4endl;
+        }
+        BuildAll();
+        loadedConfigFiles_.push_back(FileUtils::AbsolutePath(filename));
+    } catch (...) {
+        // BuildAll may have installed a subset of definitions/Geant4 objects.
+        // An unsuccessful load must never be reported as a clean source.
+        incompleteConfigLoad_ = true;
+        throw;
     }
-    BuildAll();
+}
+
+const std::vector<std::string>& MaterialManager::GetLoadedConfigFiles() const
+{
+    return loadedConfigFiles_;
+}
+
+bool MaterialManager::HasNonFileConfigMutations() const
+{
+    return nonFileConfigMutations_;
+}
+
+bool MaterialManager::HasIncompleteConfigLoad() const
+{
+    return incompleteConfigLoad_;
+}
+
+void MaterialManager::MarkNonFileConfigMutation()
+{
+    nonFileConfigMutations_ = true;
+}
+
+std::size_t MaterialManager::GetCommandFailureCount() const
+{
+    return commandFailureCount_;
+}
+
+const std::string& MaterialManager::GetLastCommandFailure() const
+{
+    return lastCommandFailure_;
+}
+
+void MaterialManager::RecordCommandFailure(const std::string& error)
+{
+    ++commandFailureCount_;
+    lastCommandFailure_ = error;
 }
 
 void MaterialManager::AddIsotopeDefinition(const IsotopeDefinition& def)
@@ -368,6 +412,7 @@ void MaterialManager::PrintAll() const
 
 void MaterialManager::Clear()
 {
+    nonFileConfigMutations_ = true;
     isotopeDefinitions_.clear();
     elementDefinitions_.clear();
     materialDefinitions_.clear();

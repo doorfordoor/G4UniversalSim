@@ -3,8 +3,29 @@
 #include "Utils/FileUtils.hh"
 
 #include <iomanip>
+#include <cstdlib>
+#include <filesystem>
 #include <sstream>
 #include <stdexcept>
+
+namespace {
+
+std::string TestOutputFault()
+{
+#ifdef _WIN32
+    char* value = nullptr;
+    std::size_t length = 0;
+    if (_dupenv_s(&value, &length, "G4USIM_TEST_OUTPUT_FAULT") != 0) return {};
+    const std::string result = value ? value : "";
+    std::free(value);
+    return result;
+#else
+    const char* value = std::getenv("G4USIM_TEST_OUTPUT_FAULT");
+    return value ? value : "";
+#endif
+}
+
+}  // namespace
 
 CsvWriter::CsvWriter(const std::string& filename)
 {
@@ -36,6 +57,7 @@ void CsvWriter::Open(const std::string& filename)
     filename_ = filename;
     columnCount_ = 0;
     headerWritten_ = false;
+    writeFailed_ = false;
 }
 
 bool CsvWriter::IsOpen() const
@@ -101,7 +123,8 @@ void CsvWriter::Flush()
 {
     if (IsOpen()) {
         stream_.flush();
-        if (!stream_) {
+        if (!stream_ || writeFailed_) {
+            writeFailed_ = true;
             throw std::runtime_error("Failed to flush CSV file: '" + filename_ + "'");
         }
     }
@@ -110,8 +133,16 @@ void CsvWriter::Flush()
 void CsvWriter::Close()
 {
     if (stream_.is_open()) {
+        // Test-only, opt-in fault injection exercises the real worker finalization path.
+        const bool injected = TestOutputFault() == "summary_close_t0" &&
+            std::filesystem::path(filename_).filename() == "edep_volume_summary_t0.csv";
         stream_.flush();
+        const bool flushFailed = !stream_ || writeFailed_ || injected;
         stream_.close();
+        if (flushFailed || !stream_) {
+            writeFailed_ = true;
+            throw std::runtime_error("Failed to finalize CSV file: '" + filename_ + "'");
+        }
     }
 }
 
@@ -156,6 +187,11 @@ std::string CsvWriter::Escape(const std::string& value) const
 
 void CsvWriter::WriteEscapedRow(const std::vector<std::string>& values)
 {
+    if (headerWritten_ && TestOutputFault() == "event_row_t0" &&
+        std::filesystem::path(filename_).filename() == "event_edep_t0.csv") {
+        writeFailed_ = true;
+        throw std::runtime_error("Injected CSV row write failure: '" + filename_ + "'");
+    }
     for (std::size_t i = 0; i < values.size(); ++i) {
         if (i != 0) {
             stream_ << ',';
@@ -165,6 +201,7 @@ void CsvWriter::WriteEscapedRow(const std::vector<std::string>& values)
     stream_ << '\n';
 
     if (!stream_) {
+        writeFailed_ = true;
         throw std::runtime_error("Failed to write CSV file: '" + filename_ + "'");
     }
 }

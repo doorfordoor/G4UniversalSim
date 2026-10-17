@@ -29,6 +29,7 @@ public:
     void AddProcessRule(const XSProcessBiasRule& rule);
     bool HasProcessRule(const std::string& processName) const;
     std::vector<XSProcessBiasRule> GetProcessRules() const;
+    static void ValidateActiveProcessRule(const XSProcessBiasRule& rule);
 
     void SetRule(const XSBiasRule& rule);
     const XSBiasRule& GetRule() const;
@@ -79,7 +80,6 @@ public:
 private:
     static std::string NormalizeProcessKey(const std::string& processName);
     const XSProcessBiasRule* FindProcessRule(const G4String& processName) const;
-    void ValidateProcessRulesForParticle() const;
     bool ShouldBiasTrack(const G4Track* track, const XSProcessBiasRule& rule, const G4String& processName) const;
     G4BOptnChangeCrossSection* GetOrCreateOperation(const G4String& processName);
 

@@ -1,6 +1,12 @@
 ﻿#include "Actions/ActionInitialization.hh"
+#include "Biasing/BiasingManager.hh"
 #include "Core/MacroPreflight.hh"
+#include "Core/BackendCapabilities.hh"
 #include "Core/SimulationManager.hh"
+#include "Config/ConfigManager.hh"
+#include "Geometry/GeometryManager.hh"
+#include "Materials/MaterialManager.hh"
+#include "Utils/StringUtils.hh"
 #include "Detector/DetectorConstruction.hh"
 #include "G4RunManager.hh"
 #include "G4UIExecutive.hh"
@@ -13,6 +19,7 @@
 #endif
 
 #include <cstdlib>
+#include <cctype>
 #include <exception>
 #include <filesystem>
 #include <iostream>
@@ -20,6 +27,10 @@
 #include <optional>
 #include <stdexcept>
 #include <string>
+#include <sstream>
+#include <initializer_list>
+#include <utility>
+#include <vector>
 
 #include "Randomize.hh"
 
@@ -30,6 +41,7 @@ struct MacroFailureInfo {
   int line = 0;
   std::string command;
   int code = 0;
+  bool codeAvailable = false;
 };
 
 struct CommandLineOptions {
@@ -43,6 +55,9 @@ struct CommandLineOptions {
   std::optional<int> threads;
   std::optional<unsigned long> seed;
   bool help = false;
+  bool capabilities = false;
+  bool inspectMacro = false;
+  bool inspectRun = false;
 };
 
 void PrintUsage(const char* program) {
@@ -72,6 +87,9 @@ void PrintUsage(const char* program) {
       << "  --dry-run            Configure and register Geant4 objects but "
          "skip macro/UI execution.\n"
       << "  --help, -h           Show this help.\n\n"
+      << "  --capabilities      Print versioned backend capabilities as JSON; no simulation.\n\n"
+      << "  --inspect-macro     Print recursive macro preflight as JSON; requires --macro; does not evaluate --config.\n\n"
+      << "  --inspect-run       Configure and preflight inputs as JSON without initialization or execution.\n\n"
       << "If the final configuration has no macro/UI and is not dry-run, "
          "usage is shown.\n";
 }
@@ -132,6 +150,12 @@ CommandLineOptions ParseCommandLine(int argc, char** argv) {
 
     if (arg == "--help" || arg == "-h") {
       options.help = true;
+    } else if (arg == "--capabilities") {
+      options.capabilities = true;
+    } else if (arg == "--inspect-macro") {
+      options.inspectMacro = true;
+    } else if (arg == "--inspect-run") {
+      options.inspectRun = true;
     } else if (arg == "--config" || arg == "-c") {
       options.configFile = RequireNonEmptyValue(i, argc, argv, arg);
     } else if (arg == "--macro" || arg == "-m") {
@@ -165,6 +189,168 @@ CommandLineOptions ParseCommandLine(int argc, char** argv) {
   return options;
 }
 
+std::string JsonEscape(const std::string& value) {
+  std::string escaped;
+  for (unsigned char ch : value) {
+    switch (ch) {
+      case '"': escaped += "\\\""; break;
+      case '\\': escaped += "\\\\"; break;
+      case '\n': escaped += "\\n"; break;
+      case '\r': escaped += "\\r"; break;
+      case '\t': escaped += "\\t"; break;
+      default:
+        if (ch < 0x20) {
+          constexpr char hex[] = "0123456789abcdef";
+          escaped += "\\u00";
+          escaped += hex[ch >> 4];
+          escaped += hex[ch & 0xf];
+        } else {
+          escaped += static_cast<char>(ch);
+        }
+    }
+  }
+  return escaped;
+}
+
+std::string MacroCommandName(const std::string& text) {
+  const auto end = text.find_first_of(" \t\r\n");
+  std::string name = text.substr(0, end);
+  for (char& ch : name) ch = static_cast<char>(std::tolower(static_cast<unsigned char>(ch)));
+  return name;
+}
+
+std::string MacroCommandCategory(const std::string& command) {
+  if (command == "/run/beamon") return "beam_on";
+  if (command == "/aihl/app/setoutputdir" || command == "/aihl/output/setdir") return "output";
+  if (command == "/aihl/app/setnumthreads" || command == "/run/numberofthreads"
+      || command == "/run/setnumberofthreads") return "threads";
+  if (command == "/aihl/app/setseed" || command.rfind("/random/", 0) == 0) return "seed";
+  if (command == "/aihl/app/setmainconfig") return "configuration";
+  if (command == "/aihl/app/setcheckoverlaps") return "geometry";
+  if (command.rfind("/aihl/material/", 0) == 0) return "materials";
+  if (command.rfind("/aihl/geometry/", 0) == 0) return "geometry";
+  if (command.rfind("/aihl/physics/", 0) == 0) return "physics";
+  if (command.rfind("/aihl/source/", 0) == 0) return "source";
+  if (command.rfind("/gps/", 0) == 0 || command.rfind("/gun/", 0) == 0) return "source";
+  if (command.rfind("/aihl/scoring/", 0) == 0) return "scoring";
+  if (command.rfind("/aihl/bias", 0) == 0) return "biasing";
+  if (command.rfind("/vis/", 0) == 0) return "visualization";
+  return "other";
+}
+
+void WriteMacroPlan(const MacroPreflightResult& plan, std::ostream& out) {
+  out << "{\"schema\":\"G4UniversalSimMacroPlan\",\"version\":1,"
+      << "\"macro_file\":\"" << JsonEscape(plan.macroPath.u8string()) << "\","
+      << "\"status\":\"preflight_passed\",\"configuration_evaluated\":false,"
+      << "\"runtime_command_validation_required\":true,"
+      << "\"commands\":[";
+  bool first = true;
+  for (const auto& command : plan.commands) {
+    if (!first) out << ',';
+    first = false;
+    const auto name = MacroCommandName(command.text);
+    out << "{\"file\":\"" << JsonEscape(command.sourceFile.u8string())
+        << "\",\"line\":" << command.lineNumber
+        << ",\"text\":\"" << JsonEscape(command.text)
+        << "\",\"command\":\"" << JsonEscape(name)
+        << "\",\"category\":\"" << MacroCommandCategory(name) << "\"}";
+  }
+  out << "]}\n";
+}
+
+class ScopedCoutCapture {
+public:
+  explicit ScopedCoutCapture(std::ostringstream& capture)
+      : previous_(std::cout.rdbuf(capture.rdbuf())) {}
+  ~ScopedCoutCapture() { std::cout.rdbuf(previous_); }
+private:
+  std::streambuf* previous_;
+};
+
+std::string NativeArgumentToUtf8(const std::string& value) {
+#ifdef _WIN32
+  return std::filesystem::path(value).u8string();
+#else
+  return value;
+#endif
+}
+
+void WriteRunPlan(const SimulationManager& sim, const CommandLineOptions& options,
+                  const MacroPreflightResult& macro, std::ostream& out) {
+  const auto& context = sim.GetContext();
+  const auto* config = sim.GetConfigManager();
+  const auto fact = [&](const std::string& name, const std::string& value, bool cli,
+                        std::initializer_list<std::pair<std::string, std::string>> keys,
+                        bool requireNonEmpty = false) {
+    out << "{\"name\":\"" << name << "\",\"value\":\"" << JsonEscape(value) << "\","
+        << "\"source\":\"";
+    if (cli) {
+      out << "cli\"}";
+      return;
+    }
+    if (context.GetMainConfig().empty()) {
+      out << "default\"}";
+      return;
+    }
+    for (const auto& key : keys) {
+      if (!config->HasKey(key.first, key.second)) continue;
+      if (requireNonEmpty && StringUtils::Trim(config->GetString(key.first, key.second)).empty()) continue;
+      out << "main_ini\",\"file\":\"" << JsonEscape(NativeArgumentToUtf8(context.GetMainConfig()))
+          << "\",\"section\":\"" << key.first << "\",\"key\":\"" << key.second << "\"";
+      for (const auto& field : config->GetFields()) {
+        if (StringUtils::ToLower(field.section) == StringUtils::ToLower(key.first)
+            && StringUtils::ToLower(field.key) == StringUtils::ToLower(key.second)) {
+          out << ",\"line\":" << field.lineNumber;
+          break;
+        }
+      }
+      out << '}';
+      return;
+    }
+    out << "default\"}";
+  };
+  out << "{\"schema\":\"G4UniversalSimRunPlan\",\"version\":1,"
+      << "\"configuration_evaluated\":true,\"execution_performed\":false,"
+      << "\"configuration_phase\":\"before_macro\","
+      << "\"working_directory\":\"" << JsonEscape(std::filesystem::current_path().u8string()) << "\","
+      << "\"macro_execution_planned\":" << ((!context.IsDryRun() && context.HasMacroFile()) ? "true" : "false")
+      << ",\"initial_configuration\":[";
+  fact("main_config", NativeArgumentToUtf8(context.GetMainConfig()), !options.configFile.empty(), {}); out << ',';
+  fact("macro_file", options.macroFile.empty() ? context.GetMacroFile() : NativeArgumentToUtf8(context.GetMacroFile()),
+       !options.macroFile.empty(), {{"run", "macro"}}); out << ',';
+  fact("output_dir", options.outputDir.empty() ? context.GetOutputDir() : NativeArgumentToUtf8(context.GetOutputDir()),
+       !options.outputDir.empty(), {{"output", "dir"}, {"output", "outputDir"}}, true); out << ',';
+  fact("threads", std::to_string(context.GetNumThreads()), options.threads.has_value(), {{"run", "threads"}}); out << ',';
+  fact("seed", context.HasSeed() ? std::to_string(context.GetSeed()) : "unset", options.seed.has_value(),
+       {{"run", "seed"}, {"run", "randomSeed"}, {"general", "seed"}, {"general", "randomSeed"}}); out << ',';
+  fact("run_name", options.runName.empty() ? context.GetRunName() : NativeArgumentToUtf8(context.GetRunName()),
+       !options.runName.empty(), {{"run", "name"}, {"run", "run_name"}, {"run", "runName"}}, true); out << ',';
+  fact("dry_run", context.IsDryRun() ? "true" : "false", options.dryRun, {{"run", "dry_run"}, {"run", "dryRun"}}); out << ',';
+  fact("interactive", context.IsInteractive() ? "true" : "false", options.interactive, {{"run", "interactive"}}); out << ',';
+  fact("check_overlaps", context.GetCheckOverlaps() ? "true" : "false", options.checkOverlaps.has_value(),
+       {{"geometry", "check_overlaps"}, {"geometry", "checkOverlaps"}, {"run", "check_overlaps"}, {"run", "checkOverlaps"}}); out << ',';
+  fact("geometry_template", sim.GetGeometryManager()->GetTemplateName(), false,
+       {{"geometry", "template"}, {"geometry", "templateName"}}, true); out << ',';
+  fact("geometry_config", sim.GetGeometryManager()->GetGeometryConfigFile(), false,
+       {{"geometry", "config"}, {"geometry", "configFile"}}, true); out << ',';
+  fact("materials_file", sim.GetMaterialsConfigFile(), false,
+       {{"materials", "file"}, {"materials", "materialFile"}, {"materials", "config"}, {"materials", "configFile"}}, true);
+  out << "],\"main_ini_fields\":[";
+  bool first = true;
+  const auto fields = context.GetMainConfig().empty() ? std::vector<IniFieldInfo>{} : config->GetFields();
+  for (const auto& field : fields) {
+    if (!first) out << ',';
+    first = false;
+    out << "{\"section\":\"" << JsonEscape(field.originalSection)
+        << "\",\"key\":\"" << JsonEscape(field.originalKey)
+        << "\",\"value\":\"" << JsonEscape(field.value) << "\",\"line\":" << field.lineNumber
+        << ",\"consumed\":" << (field.consumed ? "true" : "false") << '}';
+  }
+  out << "],\"macro_plan\":";
+  WriteMacroPlan(macro, out);
+  out << "}\n";
+}
+
 std::unique_ptr<G4RunManager> CreateRunManager(const SimulationManager& sim) {
 #ifdef G4MULTITHREADED
   auto runManager = std::make_unique<G4MTRunManager>();
@@ -189,6 +375,26 @@ int main(int argc, char** argv) {
       PrintUsage(argv[0]);
       return EXIT_SUCCESS;
     }
+    if (options.capabilities) {
+      WriteBackendCapabilities(std::cout);
+      return EXIT_SUCCESS;
+    }
+    if (options.inspectMacro) {
+      if (options.macroFile.empty()) {
+        throw std::runtime_error("--inspect-macro requires --macro <file>.");
+      }
+      if (!options.configFile.empty()) {
+        throw std::runtime_error("--inspect-macro does not evaluate --config; inspect the macro separately from configuration.");
+      }
+      MacroPreflightLocks locks;
+      locks.outputDir = !options.outputDir.empty();
+      locks.numThreads = options.threads.has_value();
+      locks.seed = options.seed.has_value();
+      locks.checkOverlaps = options.checkOverlaps.has_value();
+      const auto plan = PreflightMacro(options.macroFile, locks);
+      WriteMacroPlan(plan, std::cout);
+      return EXIT_SUCCESS;
+    }
 
     SimulationCommandLineOverrides cliOverrides;
     if (!options.configFile.empty()) cliOverrides.mainConfig = options.configFile;
@@ -201,6 +407,32 @@ int main(int argc, char** argv) {
     cliOverrides.numThreads = options.threads;
     cliOverrides.seed = options.seed;
     sim.SetCommandLineOverrides(cliOverrides);
+
+    if (options.inspectRun) {
+      try {
+        std::ostringstream configurationLog;
+        {
+          ScopedCoutCapture capture(configurationLog);
+          sim.Configure();
+        }
+        std::cerr << configurationLog.str();
+        MacroPreflightResult plan;
+        const auto& context = sim.GetContext();
+        if (!context.IsDryRun() && context.HasMacroFile()) {
+          MacroPreflightLocks locks;
+          locks.outputDir = cliOverrides.outputDir.has_value();
+          locks.numThreads = cliOverrides.numThreads.has_value();
+          locks.seed = cliOverrides.seed.has_value();
+          locks.checkOverlaps = cliOverrides.checkOverlaps.has_value();
+          plan = PreflightMacro(context.GetMacroFile(), locks);
+        }
+        WriteRunPlan(sim, options, plan, std::cout);
+        return EXIT_SUCCESS;
+      } catch (const std::exception& error) {
+        std::cerr << "G4UniversalSim run inspection failed: " << error.what() << '\n';
+        return EXIT_FAILURE;
+      }
+    }
 
     sim.Configure();
     sim.BeginRuntimeTracking();
@@ -220,6 +452,22 @@ int main(int argc, char** argv) {
       locks.checkOverlaps = cliOverrides.checkOverlaps.has_value();
       preflight = PreflightMacro(context.GetMacroFile(), locks);
       sim.SetExecutedMacroPath(preflight.macroPath.string());
+    }
+
+    if (context.IsInteractive() && !context.IsDryRun()) {
+      sim.GetBiasingManager()->SetInteractiveSessionMode(true);
+      for (const auto& command : preflight.commands) {
+        const std::string name = MacroCommandName(command.text);
+        const bool biasingMutation = name.rfind("/aihl/biasing/", 0) == 0 &&
+            name != "/aihl/biasing/print" &&
+            name != "/aihl/biasing/validate" &&
+            name != "/aihl/biasing/xs/printrules";
+        if (biasingMutation) {
+          macroFailure = MacroFailureInfo{command.sourceFile.string(), static_cast<int>(command.lineNumber), command.text, 0, false};
+          macroStatus = "preflight_failed";
+          throw std::runtime_error("Interactive XS biasing macro mutation is not supported because geometry reinitialization can invalidate attached operators; run this macro in batch mode in a fresh process: " + command.text);
+        }
+      }
     }
 
     sim.Initialize();
@@ -261,7 +509,10 @@ int main(int argc, char** argv) {
                    "skipped.\n";
       finalizationStarted = true;
       try {
-        sim.FinalizeRunSummary("dry_run", EXIT_SUCCESS, "skipped_dry_run");
+        if (!sim.FinalizeRunSummary("dry_run", EXIT_SUCCESS, "skipped_dry_run")) {
+          std::cerr << "G4UniversalSim output finalization failed; see run_summary.txt\n";
+          return EXIT_FAILURE;
+        }
       } catch (const std::exception& summaryError) {
         std::cerr << "G4UniversalSim summary failure: "
                   << summaryError.what() << std::endl;
@@ -272,7 +523,77 @@ int main(int argc, char** argv) {
 
     if (!sim.GetContext().GetMacroFile().empty()) {
       macroStatus = "running";
+      bool physicsListDirty = false;
+      bool kernelInitialized = false;
       for (const auto& command : preflight.commands) {
+        const std::string commandName = MacroCommandName(command.text);
+        const bool physicsCommand = commandName.rfind("/aihl/physics/", 0) == 0 ||
+            commandName.rfind("/aihl/biasing/", 0) == 0;
+        const bool readOnlyPhysicsCommand = commandName == "/aihl/physics/print" ||
+            commandName == "/aihl/biasing/print" ||
+            commandName == "/aihl/biasing/validate" ||
+            commandName == "/aihl/biasing/xs/printrules";
+        const bool changesPhysics = physicsCommand && !readOnlyPhysicsCommand;
+        const bool materialCommand = commandName.rfind("/aihl/material/", 0) == 0;
+        const bool readOnlyMaterialCommand = commandName == "/aihl/material/print" ||
+            commandName == "/aihl/material/list";
+        if (materialCommand && !readOnlyMaterialCommand && kernelInitialized) {
+          macroFailure = MacroFailureInfo{command.sourceFile.string(), static_cast<int>(command.lineNumber), command.text, 0, false};
+          macroStatus = "failed";
+          throw std::runtime_error("Material macro command after kernel initialization is not supported; move it before /run/initialize or /run/beamOn, or start a new process: " + command.text);
+        }
+        if (changesPhysics && kernelInitialized) {
+          macroFailure = MacroFailureInfo{command.sourceFile.string(), static_cast<int>(command.lineNumber), command.text, 0, false};
+          macroStatus = "failed";
+          throw std::runtime_error("Physics/biasing macro command after kernel initialization is not supported; move it before /run/initialize or /run/beamOn: " + command.text);
+        }
+        if (commandName == "/run/reinitializegeometry" && kernelInitialized &&
+            sim.GetBiasingManager() && sim.GetBiasingManager()->IsEnabled()) {
+          macroFailure = MacroFailureInfo{command.sourceFile.string(), static_cast<int>(command.lineNumber), command.text, 0, false};
+          macroStatus = "failed";
+          throw std::runtime_error("/run/reinitializeGeometry with attached biasing operators is not safe in this lifecycle; start a fresh process with the new geometry instead.");
+        }
+        if (commandName == "/run/initialize" || commandName == "/run/beamon") {
+          if (physicsListDirty) {
+            runManager->SetUserInitialization(sim.CreatePhysicsList().release());
+            sim.InitializeSourceAfterPhysicsListRegistered();
+            physicsListDirty = false;
+          }
+        }
+        if (commandName == "/run/beamon" && sim.GetBiasingManager() && sim.GetBiasingManager()->IsEnabled()) {
+          runManager->Initialize();
+          kernelInitialized = true;
+          try {
+            sim.ValidateBiasingProcessTargets();
+          } catch (...) {
+            macroFailure = MacroFailureInfo{command.sourceFile.string(), static_cast<int>(command.lineNumber), command.text, 0, false};
+            macroStatus = "failed";
+            throw;
+          }
+        }
+        if (commandName == "/run/beamon") {
+          if (!kernelInitialized) {
+            macroFailure = MacroFailureInfo{
+                command.sourceFile.string(), static_cast<int>(command.lineNumber),
+                command.text, 0, false};
+            macroStatus = "failed";
+            throw std::runtime_error(
+                "/run/beamOn requires an initialized Geant4 kernel in batch mode; "
+                "add /run/initialize before /run/beamOn. Without initialization "
+                "Geant4 may silently ignore BeamOn without processing events.");
+          }
+          try {
+            const int nextRunId = static_cast<int>(sim.GetOutputManager()->GetRunSummary().GetRuns().size());
+            sim.GetOutputManager()->ValidateOutputTargetDirectories(
+                nextRunId, sim.GetContext().GetNumThreads());
+          } catch (...) {
+            macroFailure = MacroFailureInfo{command.sourceFile.string(), static_cast<int>(command.lineNumber), command.text, 0, false};
+            macroStatus = "failed";
+            throw;
+          }
+        }
+        const auto materialFailuresBefore = sim.GetMaterialManager()->GetCommandFailureCount();
+        const auto outputFailuresBefore = sim.GetOutputManager()->GetCommandFailureCount();
         const bool seedStateChanged = sim.NoteMacroCommand(command.text);
         const int status = uiManager->ApplyCommand(command.text.c_str());
         if (status != 0) {
@@ -280,7 +601,8 @@ int main(int argc, char** argv) {
               command.sourceFile.string(),
               static_cast<int>(command.lineNumber),
               command.text,
-              status};
+              status,
+              true};
           macroStatus = "failed";
           throw std::runtime_error(
               "Failed to execute macro command '" + command.text + "' at " +
@@ -288,7 +610,47 @@ int main(int argc, char** argv) {
               std::to_string(command.lineNumber) +
               ", G4UImanager status=" + std::to_string(status));
         }
+        if (materialCommand &&
+            sim.GetMaterialManager()->GetCommandFailureCount() != materialFailuresBefore) {
+          macroFailure = MacroFailureInfo{
+              command.sourceFile.string(), static_cast<int>(command.lineNumber),
+              command.text, 0, false};
+          macroStatus = "failed";
+          throw std::runtime_error(sim.GetMaterialManager()->GetLastCommandFailure());
+        }
+        if (commandName.rfind("/aihl/output/", 0) == 0 &&
+            sim.GetOutputManager()->GetCommandFailureCount() != outputFailuresBefore) {
+          macroFailure = MacroFailureInfo{
+              command.sourceFile.string(), static_cast<int>(command.lineNumber),
+              command.text, 0, false};
+          macroStatus = "failed";
+          throw std::runtime_error(sim.GetOutputManager()->GetLastCommandFailure());
+        }
+        if (commandName == "/run/beamon" && sim.GetOutputManager()->HasOutputFailure()) {
+          const auto failure = sim.GetOutputManager()->GetOutputFailure();
+          macroFailure = MacroFailureInfo{
+              command.sourceFile.string(), static_cast<int>(command.lineNumber),
+              command.text, 0, false};
+          macroStatus = "failed";
+          throw std::runtime_error("Worker output failure (run " +
+              std::to_string(failure.runId) + ", thread " +
+              std::to_string(failure.threadId) + ", " + failure.stage +
+              "): " + failure.message);
+        }
+        if (commandName == "/run/initialize") {
+          kernelInitialized = true;
+          try {
+            sim.ValidateBiasingProcessTargets();
+          } catch (...) {
+            macroFailure = MacroFailureInfo{command.sourceFile.string(), static_cast<int>(command.lineNumber), command.text, 0, false};
+            macroStatus = "failed";
+            throw;
+          }
+        }
+        if (changesPhysics) physicsListDirty = true;
         sim.ConfirmMacroCommandSuccess(seedStateChanged);
+        sim.RecordSuccessfulMacroCommand(command.text, command.sourceFile.string(),
+                                         static_cast<int>(command.lineNumber));
       }
       macroStatus = "completed";
     }
@@ -297,6 +659,13 @@ int main(int argc, char** argv) {
       G4UIExecutive ui(argc, argv);
       ui.SessionStart();
     }
+    if (sim.GetOutputManager()->HasOutputFailure()) {
+      const auto failure = sim.GetOutputManager()->GetOutputFailure();
+      throw std::runtime_error("Interactive output failure (run " +
+          std::to_string(failure.runId) + ", thread " +
+          std::to_string(failure.threadId) + ", " + failure.stage +
+          "): " + failure.message);
+    }
 
     const auto& runs = sim.GetOutputManager()->GetRunSummary().GetRuns();
     const std::string status = sim.GetContext().IsInteractive() && runs.empty()
@@ -304,7 +673,10 @@ int main(int argc, char** argv) {
         : "completed";
     finalizationStarted = true;
     try {
-      sim.FinalizeRunSummary(status, EXIT_SUCCESS, macroStatus);
+      if (!sim.FinalizeRunSummary(status, EXIT_SUCCESS, macroStatus)) {
+        std::cerr << "G4UniversalSim output finalization failed; see run_summary.txt\n";
+        return EXIT_FAILURE;
+      }
     } catch (const std::exception& summaryError) {
       std::cerr << "G4UniversalSim summary failure: "
                 << summaryError.what() << std::endl;
@@ -348,7 +720,8 @@ int main(int argc, char** argv) {
             macroFailure ? macroFailure->file : "",
             macroFailure ? macroFailure->line : 0,
             macroFailure ? macroFailure->command : "",
-            macroFailure ? macroFailure->code : 0);
+            macroFailure ? macroFailure->code : 0,
+            macroFailure ? macroFailure->codeAvailable : false);
       } catch (const std::exception& summaryError) {
         std::cerr << "G4UniversalSim summary failure: "
                   << summaryError.what() << std::endl;

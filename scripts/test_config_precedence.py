@@ -5,23 +5,25 @@ from __future__ import annotations
 import hashlib
 import os
 import subprocess
+import shutil
 import tempfile
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_EXE = ROOT / "build_vs2026" / "Release" / "G4UniversalSim.exe"
+TEST_CWD = ROOT
 
 
 def run(
     executable: Path,
     args: list[str],
     expected: int = 0,
-    cwd: Path = ROOT,
+    cwd: Path | None = None,
 ) -> str:
     result = subprocess.run(
         [str(executable), *args],
-        cwd=cwd,
+        cwd=cwd or TEST_CWD,
         text=True,
         capture_output=True,
         timeout=120,
@@ -61,12 +63,16 @@ def sha256(path: Path) -> str:
 
 
 def main() -> int:
+    global TEST_CWD
     executable = Path(os.environ.get("G4USIM_EXE", str(DEFAULT_EXE)))
     if not executable.is_file():
         raise SystemExit(f"Executable not found: {executable}")
 
     with tempfile.TemporaryDirectory(prefix="g4usim-m01-") as temporary:
         temp = Path(temporary)
+        TEST_CWD = temp
+        shutil.copytree(ROOT / "config", temp / "config")
+        shutil.copytree(ROOT / "macros", temp / "macros")
         config_output = temp / "config-output"
         cli_output = temp / "cli-output"
         macro_output = temp / "macro-output"
@@ -584,7 +590,7 @@ def main() -> int:
         require(indirect_cycle_text, "recursive /control/execute cycle detected")
 
         # A failed command must stop execution and produce a non-zero process exit.
-        failure_text = run(executable, ["--macro", str(failing_macro)], expected=1)
+        failure_text = run(executable, ["--macro", str(failing_macro), "--output", str(temp / "failing-output")], expected=1)
         require(failure_text, "BEFORE_FAILURE_MARKER")
         if "AFTER_FAILURE_MARKER" in failure_text:
             raise AssertionError("macro continued after a failed command")

@@ -74,6 +74,7 @@ void MaterialMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
         ExecuteWithWarning("/AIHL/material/list", [&]() { manager_->PrintAll(); });
     } else if (command == addNistCmd_.get()) {
         ExecuteWithWarning(value, [&]() {
+            manager_->MarkNonFileConfigMutation();
             const auto args = MaterialCommandParser::ParseKeyValueLine(value);
             const std::string nist = MaterialCommandParser::Require(args, "nist", value);
             const auto nameIt = args.find("name");
@@ -82,6 +83,7 @@ void MaterialMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
         });
     } else if (command == addIsotopeCmd_.get()) {
         ExecuteWithWarning(value, [&]() {
+            manager_->MarkNonFileConfigMutation();
             const auto args = MaterialCommandParser::ParseKeyValueLine(value);
             IsotopeDefinition def;
             def.name = MaterialCommandParser::Require(args, "name", value);
@@ -95,6 +97,7 @@ void MaterialMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
         });
     } else if (command == addElementCmd_.get()) {
         ExecuteWithWarning(value, [&]() {
+            manager_->MarkNonFileConfigMutation();
             const auto args = MaterialCommandParser::ParseKeyValueLine(value);
             ElementDefinition def;
             def.name = MaterialCommandParser::Require(args, "name", value);
@@ -107,6 +110,7 @@ void MaterialMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
         });
     } else if (command == addElementFromIsotopesCmd_.get()) {
         ExecuteWithWarning(value, [&]() {
+            manager_->MarkNonFileConfigMutation();
             const auto args = MaterialCommandParser::ParseKeyValueLine(value);
             ElementDefinition def;
             def.name = MaterialCommandParser::Require(args, "name", value);
@@ -120,6 +124,7 @@ void MaterialMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
         });
     } else if (command == addMaterialCmd_.get()) {
         ExecuteWithWarning(value, [&]() {
+            manager_->MarkNonFileConfigMutation();
             const auto args = MaterialCommandParser::ParseKeyValueLine(value);
             if (args.count("temperature") || args.count("pressure")) {
                 G4Exception(
@@ -177,6 +182,8 @@ void MaterialMessenger::ExecuteWithWarning(
     try {
         action();
     } catch (const std::exception& ex) {
-        Warn("Material command failed: '" + commandText + "': " + ex.what());
+        const std::string message = "Material command failed: '" + commandText + "': " + ex.what();
+        manager_->RecordCommandFailure(message);
+        Warn(message);
     }
 }

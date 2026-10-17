@@ -4,6 +4,7 @@
 
 #include <cstddef>
 #include <memory>
+#include <set>
 #include <string>
 #include <vector>
 
@@ -18,6 +19,8 @@ public:
 
     void Enable(bool enable);
     bool IsEnabled() const;
+    void SetInteractiveSessionMode(bool interactive);
+    bool IsInteractiveSessionMode() const;
 
     void Clear();
 
@@ -97,6 +100,8 @@ public:
     void ClearOperators();
     bool AreOperatorsAttached() const;
     std::size_t GetAttachedOperatorCount() const;
+    void ValidateActiveProcessRules();
+    std::size_t GetMatchedProcessRuleCount() const;
 
 private:
     static std::string NormalizeParticleName(const std::string& particleName);
@@ -115,4 +120,8 @@ private:
     std::vector<std::string> globalBiasVolumes_;
     std::vector<std::unique_ptr<BiasingMultiParticleXS>> xsOperators_;
     bool operatorsAttached_ = false;
+    bool interactiveSessionMode_ = false;
+    std::size_t matchedProcessRuleCount_ = 0;
+    mutable bool legacyWarningEmitted_ = false;
+    mutable std::set<std::string> legacyDetailWarnings_;
 };

@@ -38,5 +38,6 @@ private:
     std::string filename_;
     std::size_t columnCount_ = 0;
     bool headerWritten_ = false;
+    bool writeFailed_ = false;
     int precision_ = 12;
 };

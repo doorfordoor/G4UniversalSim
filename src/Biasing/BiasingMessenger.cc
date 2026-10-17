@@ -211,6 +211,13 @@ void BiasingMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
 {
     const std::string raw = std::string(newValue);
     try {
+        if (manager_ && manager_->IsInteractiveSessionMode() &&
+            command != validateCmd_ && command != printRulesCmd_ && command != printCmd_) {
+            G4ExceptionDescription desc;
+            desc << "Interactive XS biasing configuration is unavailable because geometry reinitialization can invalidate attached operators. Use a batch macro in a fresh process instead. Command ignored.";
+            G4Exception("BiasingMessenger::SetNewValue", "AIHLBiasingInteractive001", JustWarning, desc);
+            return;
+        }
         if (command == enableCmd_) {
             EnsureManager("/AIHL/biasing/enable");
             manager_->Enable(enableCmd_->GetNewBoolValue(newValue));
@@ -417,7 +424,8 @@ void BiasingMessenger::EnsureManager(const char* commandName) const
 
 void BiasingMessenger::NotifyChanged() const
 {
-    G4cout << "[BiasingMessenger] Biasing state changed. Configure /AIHL/physics/enableBiasing true "
-              "and reinitialize physics/geometry before the next run if the run manager was already initialized."
+    if (changeNoticeEmitted_) return;
+    changeNoticeEmitted_ = true;
+    G4cout << "[BiasingMessenger] Biasing configuration changed; the batch runner binds its physics list before initialization."
            << G4endl;
 }

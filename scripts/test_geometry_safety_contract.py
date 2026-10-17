@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import argparse
 import os
 import shutil
 import subprocess
@@ -212,13 +213,18 @@ def gui_contract(temp: Path) -> None:
 
 
 def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--layer", choices=("all", "backend", "gui"), default="all")
+    layer = parser.parse_args().layer
     exe = Path(os.environ.get("G4USIM_EXE", str(DEFAULT_EXE)))
-    if not exe.is_file():
+    if layer != "gui" and not exe.is_file():
         raise FileNotFoundError(f"G4UniversalSim executable not found: {exe}")
     with tempfile.TemporaryDirectory(prefix="g4usim_geometry_safety_") as raw:
         temp = Path(raw)
-        backend_contract(exe, temp)
-        gui_contract(temp)
+        if layer != "gui":
+            backend_contract(exe, temp)
+        if layer != "backend":
+            gui_contract(temp)
     print("test_geometry_safety_contract: OK")
     return 0
 

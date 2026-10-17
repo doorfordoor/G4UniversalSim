@@ -1,5 +1,7 @@
 #include <algorithm>
+#include <chrono>
 #include <cmath>
+#include <cstdlib>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
@@ -62,7 +64,8 @@ double ToDouble(const std::string& text, const fs::path& file, int lineNumber) {
   const auto trimmed = Trim(text);
   char* end = nullptr;
   const double value = std::strtod(trimmed.c_str(), &end);
-  if (end == trimmed.c_str() || !Trim(std::string(end)).empty()) {
+  if (end == trimmed.c_str() || !Trim(std::string(end)).empty() ||
+      !std::isfinite(value)) {
     throw std::runtime_error(file.string() + ":" + std::to_string(lineNumber) +
                              ": expected numeric CSV field, got '" + text +
                              "'");
@@ -146,7 +149,7 @@ std::vector<fs::path> ResolveInputFiles(const Options& options) {
   return files;
 }
 
-std::vector<Bin> ReadHistogram(const fs::path& file) {
+std::vector<Bin> ReadHistogram(const fs::path& file, bool& explicitMevUnits) {
   std::ifstream input(file);
   if (!input)
     throw std::runtime_error("Cannot open input file: " + file.string());
@@ -154,22 +157,47 @@ std::vector<Bin> ReadHistogram(const fs::path& file) {
   std::vector<Bin> bins;
   std::string line;
   int lineNumber = 0;
+  int lowColumn = -1;
+  int highColumn = -1;
+  int countColumn = -1;
+  std::size_t columnCount = 0;
   while (std::getline(input, line)) {
     ++lineNumber;
     if (Trim(line).empty()) continue;
     const auto fields = SplitCsvLine(line);
-    if (fields.size() < 3) {
-      throw std::runtime_error(file.string() + ":" +
-                               std::to_string(lineNumber) +
-                               ": expected at least 3 CSV fields");
+    if (columnCount == 0) {
+      if (fields == std::vector<std::string>{"bin", "low_edge_MeV", "high_edge_MeV", "center_MeV", "count"}) {
+        lowColumn = 1;
+        highColumn = 2;
+        countColumn = 4;
+        explicitMevUnits = true;
+      } else if (fields == std::vector<std::string>{"bin", "low_edge", "high_edge", "center", "count"}) {
+        lowColumn = 1;
+        highColumn = 2;
+        countColumn = 4;
+      } else if (fields == std::vector<std::string>{"bin_low", "bin_high", "count"}) {
+        lowColumn = 0;
+        highColumn = 1;
+        countColumn = 2;
+      } else {
+        throw std::runtime_error(file.string() + ":" + std::to_string(lineNumber) +
+                                 ": unsupported histogram CSV header");
+      }
+      columnCount = fields.size();
+      continue;
     }
-    if (!IsNumber(fields[0])) {
-      continue;  // header
+    if (fields.size() != columnCount) {
+      throw std::runtime_error(file.string() + ":" + std::to_string(lineNumber) +
+                               ": histogram CSV column count mismatch");
     }
     Bin bin;
-    bin.low = ToDouble(fields[0], file, lineNumber);
-    bin.high = ToDouble(fields[1], file, lineNumber);
-    bin.values.push_back(ToDouble(fields[2], file, lineNumber));
+    bin.low = ToDouble(fields[lowColumn], file, lineNumber);
+    bin.high = ToDouble(fields[highColumn], file, lineNumber);
+    if (!(bin.high > bin.low)) {
+      throw std::runtime_error(file.string() + ":" + std::to_string(lineNumber) +
+                               ": histogram bin requires high > low");
+    }
+    bin.values.push_back(ToDouble(fields[countColumn], file, lineNumber));
     bins.push_back(bin);
   }
   if (bins.empty()) {
@@ -181,8 +209,11 @@ std::vector<Bin> ReadHistogram(const fs::path& file) {
 
 void MergeAndWrite(const std::vector<fs::path>& files, const fs::path& output) {
   std::vector<Bin> merged;
+  bool allInputsExplicitMev = true;
   for (std::size_t fileIndex = 0; fileIndex < files.size(); ++fileIndex) {
-    auto bins = ReadHistogram(files[fileIndex]);
+    bool explicitMevUnits = false;
+    auto bins = ReadHistogram(files[fileIndex], explicitMevUnits);
+    allInputsExplicitMev = allInputsExplicitMev && explicitMevUnits;
     if (fileIndex == 0) {
       merged = std::move(bins);
       continue;
@@ -192,7 +223,11 @@ void MergeAndWrite(const std::vector<fs::path>& files, const fs::path& output) {
                                files[fileIndex].string());
     }
     for (std::size_t i = 0; i < bins.size(); ++i) {
-      if (bins[i].low != merged[i].low || bins[i].high != merged[i].high) {
+      const auto closeEdge = [](double a, double b) {
+        return std::abs(a - b) <= 1e-12 + 1e-10 * std::max(std::abs(a), std::abs(b));
+      };
+      if (!closeEdge(bins[i].low, merged[i].low) ||
+          !closeEdge(bins[i].high, merged[i].high)) {
         throw std::runtime_error(
             "Bin edge mismatch in file: " + files[fileIndex].string() +
             ", bin index " + std::to_string(i));
@@ -204,26 +239,76 @@ void MergeAndWrite(const std::vector<fs::path>& files, const fs::path& output) {
   if (!output.parent_path().empty()) {
     fs::create_directories(output.parent_path());
   }
-  std::ofstream out(output);
-  if (!out)
-    throw std::runtime_error("Cannot open output file: " + output.string());
-  out << "bin_low,bin_high,sum,mean,stddev,n_files\n";
-  for (const auto& bin : merged) {
-    double sum = 0.0;
-    for (double value : bin.values) sum += value;
-    const double mean = sum / static_cast<double>(bin.values.size());
-    double variance = 0.0;
-    for (double value : bin.values) {
-      const double diff = value - mean;
-      variance += diff * diff;
-    }
-    variance /= static_cast<double>(bin.values.size());
-    out << bin.low << ',' << bin.high << ',' << sum << ',' << mean << ','
-        << std::sqrt(variance) << ',' << bin.values.size() << '\n';
+  if (fs::exists(output)) {
+    throw std::runtime_error("Output file already exists: " + output.string());
   }
+
+  // Reserve a private sibling directory, then expose the completed file with
+  // a hard link. Publishing cannot replace an existing result on either OS.
+  fs::path temporaryDir;
+  const auto nonce = std::chrono::steady_clock::now().time_since_epoch().count();
+  for (unsigned attempt = 0; attempt < 1000; ++attempt) {
+    fs::path candidate = output;
+    candidate += ".tmp." + std::to_string(nonce) + "." + std::to_string(attempt);
+    std::error_code error;
+    if (fs::create_directory(candidate, error)) {
+      temporaryDir = std::move(candidate);
+      break;
+    }
+    if (error && error != std::errc::file_exists) {
+      throw fs::filesystem_error("Cannot reserve temporary output directory", candidate, error);
+    }
+  }
+  if (temporaryDir.empty()) {
+    throw std::runtime_error("Cannot reserve temporary output directory for: " + output.string());
+  }
+  const fs::path temporaryFile = temporaryDir / output.filename();
+  try {
+    std::ofstream out(temporaryFile);
+    if (!out)
+      throw std::runtime_error("Cannot open temporary output file: " + temporaryFile.string());
+    out << (allInputsExplicitMev
+        ? "bin_low_MeV,bin_high_MeV,sum,mean,stddev,n_files\n"
+        : "bin_low,bin_high,sum,mean,stddev,n_files\n");
+    for (const auto& bin : merged) {
+      double sum = 0.0;
+      for (double value : bin.values) sum += value;
+      const double mean = sum / static_cast<double>(bin.values.size());
+      double variance = 0.0;
+      for (double value : bin.values) {
+        const double diff = value - mean;
+        variance += diff * diff;
+      }
+      variance /= static_cast<double>(bin.values.size());
+      out << bin.low << ',' << bin.high << ',' << sum << ',' << mean << ','
+          << std::sqrt(variance) << ',' << bin.values.size() << '\n';
+    }
+    out.flush();
+    if (!out) throw std::runtime_error("Failed to write histogram output: " + temporaryFile.string());
+    out.close();
+    if (!out) throw std::runtime_error("Failed to close histogram output: " + temporaryFile.string());
+    fs::create_hard_link(temporaryFile, output);
+  } catch (...) {
+    std::error_code ignored;
+    fs::remove(temporaryFile, ignored);
+    fs::remove(temporaryDir, ignored);
+    throw;
+  }
+  std::error_code ignored;
+  fs::remove(temporaryFile, ignored);
+  fs::remove(temporaryDir, ignored);
 }
 
 int main(int argc, char** argv) {
+  if (argc == 2 && std::string(argv[1]) == "--source-fingerprint") {
+#ifdef G4USIM_MERGE_SOURCE_SHA256
+    std::cout << G4USIM_MERGE_SOURCE_SHA256 << '\n';
+    return 0;
+#else
+    std::cerr << "mergeHistograms source fingerprint is unavailable\n";
+    return 1;
+#endif
+  }
   try {
     const Options options = ParseArgs(argc, argv);
     const auto files = ResolveInputFiles(options);

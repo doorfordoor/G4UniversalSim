@@ -17,7 +17,7 @@ public:
 
     void Reset();
 
-    void WriteCSV(const std::string& filename) const;
+    void WriteCSV(const std::string& filename, const std::string& axisUnit = "") const;
 
     const std::string& GetName() const;
     int GetBins() const;

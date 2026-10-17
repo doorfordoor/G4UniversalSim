@@ -36,6 +36,7 @@
 #include <iostream>
 #include <algorithm>
 #include <chrono>
+#include <cstdlib>
 #include <ctime>
 #include <map>
 #include <sstream>
@@ -61,6 +62,21 @@ std::string UtcTimestamp()
     char buffer[32]{};
     std::strftime(buffer, sizeof(buffer), "%Y-%m-%dT%H:%M:%SZ", &utc);
     return buffer;
+}
+
+std::string TestOutputFault()
+{
+#ifdef _WIN32
+    char* value = nullptr;
+    std::size_t length = 0;
+    if (_dupenv_s(&value, &length, "G4USIM_TEST_OUTPUT_FAULT") != 0) return {};
+    const std::string result = value ? value : "";
+    std::free(value);
+    return result;
+#else
+    const char* value = std::getenv("G4USIM_TEST_OUTPUT_FAULT");
+    return value ? value : "";
+#endif
 }
 
 std::string FirstCommandToken(const std::string& command)
@@ -204,6 +220,13 @@ void SimulationManager::SetCommandLineOverrides(const SimulationCommandLineOverr
 
 void SimulationManager::SetMainConfig(const std::string& filename)
 {
+    // Changing the main INI after Configure() would invalidate the effective
+    // configuration while leaving already-configured managers in place.
+    if (configured_ || initialized_) {
+        throw std::runtime_error(
+            "Main config cannot be changed after configuration; start a new process with --config <file>"
+        );
+    }
     if (commandLineOverrides_.mainConfig) {
         WarnIgnoredCommandLineOverride("main config");
         return;
@@ -220,10 +243,15 @@ void SimulationManager::SetOutputDir(const std::string& outputDir)
         WarnIgnoredCommandLineOverride("output directory");
         return;
     }
-    context_.SetOutputDir(outputDir);
-    if (outputManager_ && !outputManager_->IsOutputDirLocked()) {
-        outputManager_->SetOutputDir(context_.GetOutputDir());
+    // Do not change the effective context or its origin unless the runtime
+    // output manager accepts the new directory. Messenger failures may have
+    // an ApplyCommand() status of zero when reported as JustWarning.
+    const std::string normalizedDir = outputDir.empty() ? "output" : outputDir;
+    if (outputManager_) {
+        outputManager_->SetOutputDir(normalizedDir);
     }
+    context_.SetOutputDir(normalizedDir);
+    MarkRuntimeValueOrigin("output_dir");
 }
 
 void SimulationManager::SetNumThreads(int n)
@@ -233,6 +261,7 @@ void SimulationManager::SetNumThreads(int n)
         return;
     }
     context_.SetNumThreads(n);
+    MarkRuntimeValueOrigin("threads");
 #ifdef G4MULTITHREADED
     if (auto* runManager = dynamic_cast<G4MTRunManager*>(G4RunManager::GetRunManager())) {
         runManager->SetNumberOfThreads(n);
@@ -247,6 +276,7 @@ void SimulationManager::SetSeed(unsigned long seed)
         return;
     }
     context_.SetSeed(seed);
+    MarkRuntimeValueOrigin("seed");
     CLHEP::HepRandom::setTheSeed(static_cast<long>(seed));
 }
 
@@ -257,6 +287,7 @@ void SimulationManager::SetMacroFile(const std::string& filename)
         return;
     }
     context_.SetMacroFile(filename);
+    MarkRuntimeValueOrigin("macro_file");
 }
 
 void SimulationManager::SetInteractive(bool interactive)
@@ -280,6 +311,7 @@ void SimulationManager::SetCheckOverlaps(bool enable)
         return;
     }
     context_.SetCheckOverlaps(enable);
+    MarkRuntimeValueOrigin("check_overlaps");
     if (geometryManager_) geometryManager_->SetCheckOverlaps(enable);
 }
 
@@ -299,6 +331,7 @@ void SimulationManager::SetRunName(const std::string& name)
         return;
     }
     context_.SetRunName(name);
+    MarkRuntimeValueOrigin("run_name");
 }
 
 void SimulationManager::LoadConfig()
@@ -358,63 +391,175 @@ void SimulationManager::ConfirmMacroCommandSuccess(bool seedStateChanged)
     if (seedStateChanged) macroSeedModified_ = true;
 }
 
+void SimulationManager::MarkRuntimeValueOrigin(const std::string& field)
+{
+    effectiveValueOrigins_[field] = ValueOrigin{"runtime_unattributed", "", "", "", 0};
+}
+
+void SimulationManager::RecordSuccessfulMacroCommand(const std::string& command,
+                                                       const std::string& file,
+                                                       int line)
+{
+    // The command is recorded only after ApplyCommand and the corresponding
+    // Messenger failure checks succeed. Never attribute an attempted command.
+    const std::string token = FirstCommandToken(command);
+    std::string field;
+    if (token == "/aihl/app/setoutputdir" || token == "/aihl/output/setdir") field = "output_dir";
+    else if (token == "/aihl/app/setnumthreads") field = "threads";
+    else if (token == "/aihl/app/setseed") field = "seed";
+    else if (token == "/aihl/app/setcheckoverlaps" || token == "/aihl/geometry/checkoverlaps") field = "check_overlaps";
+    if (field.empty()) return;
+    const bool locked = (field == "output_dir" && commandLineOverrides_.outputDir) ||
+                        (field == "threads" && commandLineOverrides_.numThreads) ||
+                        (field == "seed" && commandLineOverrides_.seed) ||
+                        (field == "check_overlaps" && commandLineOverrides_.checkOverlaps);
+    if (!locked) effectiveValueOrigins_[field] = ValueOrigin{"macro", file, "", token, line};
+}
+
+void SimulationManager::CaptureConfiguredValueOrigins()
+{
+    const auto fields = configLoaded_ ? configManager_->GetFields() : std::vector<IniFieldInfo>{};
+    const auto select = [this, &fields](const std::string& name, bool cli,
+                                       std::initializer_list<std::pair<std::string, std::string>> keys,
+                                       bool nonempty = false) {
+        ValueOrigin origin;
+        if (cli) {
+            origin.kind = "cli";
+        } else if (configLoaded_) {
+            for (const auto& key : keys) {
+                if (!configManager_->HasKey(key.first, key.second)) continue;
+                if (nonempty && StringUtils::Trim(configManager_->GetString(key.first, key.second)).empty()) continue;
+                origin.kind = "main_ini";
+                origin.file = configManager_->GetMainConfigPath();
+                origin.section = key.first;
+                origin.key = key.second;
+                for (const auto& item : fields) {
+                    if (StringUtils::ToLower(item.section) == StringUtils::ToLower(key.first) &&
+                        StringUtils::ToLower(item.key) == StringUtils::ToLower(key.second)) {
+                        origin.section = item.originalSection;
+                        origin.key = item.originalKey;
+                        origin.line = static_cast<int>(item.lineNumber);
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+        effectiveValueOrigins_[name] = origin;
+    };
+    select("output_dir", commandLineOverrides_.outputDir.has_value(),
+           {{"output", "dir"}, {"output", "outputDir"}}, true);
+    select("run_name", commandLineOverrides_.runName.has_value(),
+           {{"run", "name"}, {"run", "run_name"}, {"run", "runName"}}, true);
+    select("threads", commandLineOverrides_.numThreads.has_value(), {{"run", "threads"}});
+    select("seed", commandLineOverrides_.seed.has_value(),
+           {{"run", "seed"}, {"run", "randomSeed"}, {"general", "seed"}, {"general", "randomSeed"}});
+    select("macro_file", commandLineOverrides_.macroFile.has_value(), {{"run", "macro"}});
+    select("check_overlaps", commandLineOverrides_.checkOverlaps.has_value(),
+           {{"geometry", "check_overlaps"}, {"geometry", "checkOverlaps"},
+            {"run", "check_overlaps"}, {"run", "checkOverlaps"}});
+}
+
 void SimulationManager::SetExecutedMacroPath(const std::string& path)
 {
     executedMacroPath_ = path;
 }
 
-void SimulationManager::FinalizeRunSummary(const std::string& status,
+bool SimulationManager::FinalizeRunSummary(const std::string& status,
                                             int exitCode,
                                             const std::string& macroStatus,
                                             const std::string& failureFile,
                                             int failureLine,
                                             const std::string& failureCommand,
-                                            int failureCode)
+                                            int failureCode,
+                                            bool failureCodeAvailable)
 {
     EnsureOutputManager();
     if (!initialized_) {
         WriteBaseRunSummary();
     }
 
-    outputManager_->Flush();
-    outputManager_->Close();
+    const auto finalizeOutput = [this](const char* stage, const auto& action) {
+        try {
+            action();
+        } catch (const std::exception& error) {
+            outputManager_->RecordOutputFailure(stage, error.what());
+        } catch (...) {
+            outputManager_->RecordOutputFailure(stage, "unknown exception");
+        }
+    };
+
+    // Only test processes opt into these deterministic main-thread failures.
+    // Production output still uses the real Flush/Close operations below.
+    const std::string injectedFault = TestOutputFault();
+    finalizeOutput("final_flush", [this, &injectedFault]() {
+        outputManager_->Flush();
+        if (injectedFault == "final_flush_master") {
+            throw std::runtime_error("Injected main-thread final flush failure");
+        }
+    });
+    finalizeOutput("final_close", [this, &injectedFault]() {
+        outputManager_->Close();
+        if (injectedFault == "final_close_master") {
+            throw std::runtime_error("Injected main-thread final close failure");
+        }
+    });
 
     RunSummary& summary = outputManager_->GetRunSummary();
     const auto& runs = summary.GetRuns();
     std::int64_t plannedEvents = 0;
     std::int64_t completedEvents = 0;
+    bool incompleteRun = false;
     for (const auto& run : runs) {
         plannedEvents += run.plannedEvents;
         completedEvents += run.completedEvents;
+        incompleteRun = incompleteRun || run.completedEvents != run.plannedEvents;
     }
 
     std::string finalStatus = status;
-    if (status == "completed" && !runs.empty() && completedEvents < plannedEvents) {
-        finalStatus = "aborted";
+    const bool outputFailed = outputManager_->HasOutputFailure();
+    const auto outputFailure = outputManager_->GetOutputFailure();
+    if (outputFailed) finalStatus = "failed";
+    if (status == "completed" && incompleteRun) {
+        if (!outputFailed) finalStatus = "aborted";
     }
     summary.Set("status", finalStatus);
-    summary.Set("program_exit_code", exitCode);
+    summary.Set("program_exit_code", outputFailed ? EXIT_FAILURE : exitCode);
+    summary.Set("output_failure_status", outputFailed ? "failed" : "none");
+    summary.Set("output_failure_run_id", outputFailed ? std::to_string(outputFailure.runId) : "not_applicable");
+    summary.Set("output_failure_thread_id", outputFailed ? std::to_string(outputFailure.threadId) : "not_applicable");
+    summary.Set("output_failure_stage", outputFailed ? outputFailure.stage : "not_applicable");
+    summary.Set("output_failure_message", outputFailed ? outputFailure.message : "not_applicable");
     summary.Set("summary_generated_at", UtcTimestamp());
     summary.Set("macro_execution_status", macroStatus);
     summary.Set("macro_failure_phase",
                 macroStatus == "preflight_failed" ? "preflight" :
                 (macroStatus == "failed" ? "execution" : ""));
-    summary.Set("actual_macro_file", executedMacroPath_.empty() ? "unknown" : executedMacroPath_);
-    summary.Set("macro_failure_file", failureFile);
+    summary.SetPath("actual_macro_file", executedMacroPath_.empty() ? "unknown" : executedMacroPath_);
+    summary.SetPath("macro_failure_file", failureFile);
     summary.Set("macro_failure_line", failureLine);
     summary.Set("macro_failure_command", failureCommand);
     summary.Set("macro_failure_code", failureCode);
     summary.SetBool("macro_failure_code_available",
-                    macroStatus == "failed" && !failureFile.empty());
+                    macroStatus == "failed" && failureCodeAvailable);
     summary.Set("planned_event_count", plannedEvents);
     summary.Set("actual_completed_event_count", completedEvents);
     summary.Set("run_count", static_cast<int>(runs.size()));
     summary.SetBool("simulation_executed", !runs.empty());
-    summary.Set("actual_output_dir", outputManager_->GetOutputDir());
+    summary.Set("biasing_matched_process_rule_count", static_cast<int>(biasingManager_ ? biasingManager_->GetMatchedProcessRuleCount() : 0));
+    summary.Set("biasing_process_match_status", !biasingManager_ || !biasingManager_->IsEnabled() ? "not_applicable" :
+                (biasingManager_->GetMatchedProcessRuleCount() > 0 ? "validated" : "not_validated"));
+    summary.Set("biasing_effect_observed", "unknown");
+    summary.SetPath("actual_output_dir", outputManager_->GetOutputDir());
     summary.Set("initial_seed", initialSeed_ ? std::to_string(*initialSeed_) : "unset");
     summary.Set("configured_seed", context_.HasSeed() ? std::to_string(context_.GetSeed()) : "unset");
     summary.Set("initial_engine_seed", "unknown");
     summary.SetBool("macro_seed_modified", macroSeedModified_);
+
+    // Capture the current Manager values at the execution boundary.  These
+    // are not a claim that every setting was applied to an initialized G4
+    // object, and they deliberately do not fabricate per-field provenance.
+    WriteFinalConfigSnapshot(macroStatus);
 
     if (runs.empty()) {
         summary.Set("actual_threads", status == "dry_run" ? "not_executed" : "unknown");
@@ -433,6 +578,7 @@ void SimulationManager::FinalizeRunSummary(const std::string& status,
     summary.Set("summary_write_status", "completed");
 
     outputManager_->WriteRunSummary();
+    return !outputFailed;
 }
 
 void SimulationManager::Configure()
@@ -533,6 +679,7 @@ void SimulationManager::Configure()
     geometryManager_->SetCheckOverlaps(context_.GetCheckOverlaps());
     geometryManager_->SetMaterialManager(materialManager_.get());
     ApplyCommandLineOverrides();
+    CaptureConfiguredValueOrigins();
     ReportConfigWarnings();
 
     configured_ = true;
@@ -677,6 +824,11 @@ bool SimulationManager::IsConfigured() const
     return configured_;
 }
 
+const std::string& SimulationManager::GetMaterialsConfigFile() const
+{
+    return materialsFile_;
+}
+
 bool SimulationManager::IsInitialized() const
 {
     return initialized_;
@@ -749,7 +901,8 @@ std::unique_ptr<ActionInitialization> SimulationManager::CreateActionInitializat
     return std::make_unique<ActionInitialization>(
         sourceManager_.get(),
         scoringManager_.get(),
-        outputManager_.get());
+        outputManager_.get(),
+        biasingManager_.get());
 }
 
 std::function<G4VSensitiveDetector*()> SimulationManager::CreateSensitiveDetectorFactory() const
@@ -779,6 +932,13 @@ void SimulationManager::InitializeSourceAfterPhysicsListRegistered()
 {
     if (sourceManager_) {
         sourceManager_->InitializeAfterPhysicsListRegistered();
+    }
+}
+
+void SimulationManager::ValidateBiasingProcessTargets()
+{
+    if (biasingManager_ && biasingManager_->IsEnabled()) {
+        biasingManager_->ValidateActiveProcessRules();
     }
 }
 
@@ -942,25 +1102,27 @@ void SimulationManager::WriteBaseRunSummary()
 {
     EnsureOutputManager();
     RunSummary& summary = outputManager_->GetRunSummary();
+    summary.Set("run_summary_schema_version", 1);
     summary.Set("run_name", context_.GetRunName());
-    summary.Set("main_config", context_.GetMainConfig());
-    summary.Set("output_dir", context_.GetOutputDir());
+    summary.Set("output_csv_schema_version", 3);
+    summary.SetPath("main_config", context_.GetMainConfig());
+    summary.SetPath("output_dir", context_.GetOutputDir());
     summary.Set("num_threads", context_.GetNumThreads());
     summary.Set("seed", context_.HasSeed() ? std::to_string(context_.GetSeed()) : "unset");
-    summary.Set("macro_file", context_.GetMacroFile());
-    summary.Set("planned_output_dir", context_.GetOutputDir());
+    summary.SetPath("macro_file", context_.GetMacroFile());
+    summary.SetPath("planned_output_dir", context_.GetOutputDir());
     summary.Set("planned_num_threads", context_.GetNumThreads());
     summary.Set("planned_seed", context_.HasSeed() ? std::to_string(context_.GetSeed()) : "unset");
-    summary.Set("planned_macro_file", context_.GetMacroFile());
+    summary.SetPath("planned_macro_file", context_.GetMacroFile());
     summary.SetBool("interactive", context_.IsInteractive());
     summary.Set("verbose_level", context_.GetVerboseLevel());
     summary.SetBool("check_overlaps", context_.GetCheckOverlaps());
     summary.SetBool("dry_run", context_.IsDryRun());
     if (!summary.Has("config_warning_count")) summary.Set("config_warning_count", 0);
     if (!summary.Has("geometry_config_warning_count")) summary.Set("geometry_config_warning_count", 0);
-    summary.Set("materials_file", materialsFile_);
+    summary.SetPath("materials_file", materialsFile_);
     summary.Set("geometry_template", geometryTemplate_);
-    summary.Set("geometry_config", geometryConfigFile_);
+    summary.SetPath("geometry_config", geometryConfigFile_);
     summary.Set("physics_mode", physicsManager_ ? (physicsManager_->HasReferenceList() ? "reference" : "manual") : "");
     summary.Set("physics_reference", physicsManager_ ? physicsManager_->GetReferenceList() : "");
     summary.Set("physics_extra_modules", physicsManager_ ? StringUtils::Join(physicsManager_->GetExtraModules(), ",") : "");
@@ -981,6 +1143,10 @@ void SimulationManager::WriteBaseRunSummary()
     summary.Set("biasing_legacy_xs_rule_count", static_cast<int>(biasingManager_ ? biasingManager_->GetXSBiasRules().size() : 0));
     summary.SetBool("biasing_operators_attached", biasingManager_ ? biasingManager_->AreOperatorsAttached() : false);
     summary.Set("biasing_attached_operator_count", static_cast<int>(biasingManager_ ? biasingManager_->GetAttachedOperatorCount() : 0));
+    summary.Set("biasing_matched_process_rule_count", static_cast<int>(biasingManager_ ? biasingManager_->GetMatchedProcessRuleCount() : 0));
+    summary.Set("biasing_process_match_status", !biasingManager_ || !biasingManager_->IsEnabled() ? "not_applicable" :
+                (biasingManager_->GetMatchedProcessRuleCount() > 0 ? "validated" : "not_validated"));
+    summary.Set("biasing_effect_observed", "unknown");
     summary.SetBool("scoring_enabled", scoringManager_ ? scoringManager_->IsEnabled() : false);
     summary.SetBool("scoring_hits_enabled", scoringManager_ ? scoringManager_->IsHitOutputEnabled() : false);
     summary.SetBool("scoring_event_edep_enabled", scoringManager_ ? scoringManager_->IsEventEdepOutputEnabled() : false);
@@ -992,4 +1158,64 @@ void SimulationManager::WriteBaseRunSummary()
     summary.Set("scoring_scorer_count", static_cast<int>(scoringManager_ ? scoringManager_->GetScorerNames().size() : 0));
     summary.SetBool("initialized", initialized_);
     summary.AddMessage("Core initialization completed");
+}
+
+void SimulationManager::WriteFinalConfigSnapshot(const std::string& macroStatus)
+{
+    RunSummary& summary = outputManager_->GetRunSummary();
+    summary.Set("effective_config_snapshot_version", 1);
+    summary.Set("effective_config_snapshot_stage", "finalization");
+    summary.Set("effective_config_snapshot_scope", "manager_state_subset");
+    summary.Set("effective_config_macro_execution_status", macroStatus);
+    summary.Set("effective_config_source_coverage", "startup_fields_only");
+    summary.Set("effective_config_geant4_applied", "unknown");
+    for (const auto& entry : effectiveValueOrigins_) {
+        const std::string prefix = "effective_" + entry.first + "_origin_";
+        summary.Set(prefix + "kind", entry.second.kind);
+        summary.SetPath(prefix + "file", entry.second.file.empty() ? "not_applicable" : entry.second.file);
+        summary.Set(prefix + "line", entry.second.line);
+        summary.Set(prefix + "section", entry.second.section.empty() ? "not_applicable" : entry.second.section);
+        summary.Set(prefix + "key", entry.second.key.empty() ? "not_applicable" : entry.second.key);
+    }
+
+    // Read the live owners rather than the pre-macro planned_* fields.
+    summary.SetPath("effective_output_dir", outputManager_->GetOutputDir());
+    summary.Set("effective_run_name", context_.GetRunName());
+    summary.Set("effective_requested_threads", context_.GetNumThreads());
+    summary.Set("effective_configured_seed",
+                context_.HasSeed() ? std::to_string(context_.GetSeed()) : "unset");
+    summary.SetBool("effective_check_overlaps",
+                    geometryManager_ ? geometryManager_->GetCheckOverlaps() : context_.GetCheckOverlaps());
+    summary.SetPath("effective_macro_file", context_.GetMacroFile());
+    summary.Set("effective_geometry_template",
+                geometryManager_ ? geometryManager_->GetTemplateName() : "unknown");
+    summary.SetPath("effective_geometry_config",
+                    geometryManager_ ? geometryManager_->GetGeometryConfigFile() : "unknown");
+    // Material loads are additive and macro commands can also edit definitions.
+    // Only name a single effective file when it is the sole known file source.
+    if (materialManager_) {
+        const auto& files = materialManager_->GetLoadedConfigFiles();
+        summary.Set("effective_materials_loaded_file_count", static_cast<int>(files.size()));
+        for (std::size_t index = 0; index < files.size(); ++index) {
+            summary.SetPath("effective_materials_loaded_file_" + std::to_string(index), files[index]);
+        }
+        std::string sourceStatus = "no_file_loaded";
+        if (materialManager_->HasIncompleteConfigLoad()) sourceStatus = "incomplete_load";
+        else if (materialManager_->HasNonFileConfigMutations()) sourceStatus = "non_file_mutation";
+        else if (files.size() > 1) sourceStatus = "multiple_files";
+        else if (files.size() == 1) sourceStatus = "single_file";
+        summary.Set("effective_materials_source_status", sourceStatus);
+        summary.SetPath("effective_materials_file",
+                        sourceStatus == "single_file" ? files.front() : "unknown");
+    } else {
+        summary.Set("effective_materials_loaded_file_count", 0);
+        summary.Set("effective_materials_source_status", "manager_unavailable");
+        summary.SetPath("effective_materials_file", "unknown");
+    }
+    summary.Set("effective_physics_reference",
+                physicsManager_ ? physicsManager_->GetReferenceList() : "unknown");
+    summary.Set("effective_source_particle",
+                sourceManager_ ? sourceManager_->GetParticleName() : "unknown");
+    summary.SetBool("effective_scoring_enabled", scoringManager_ && scoringManager_->IsEnabled());
+    summary.SetBool("effective_biasing_enabled", biasingManager_ && biasingManager_->IsEnabled());
 }

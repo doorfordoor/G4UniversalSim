@@ -3,6 +3,7 @@
 #include <string>
 
 struct HitRecord {
+    int runID = -1;
     int eventID = -1;
     int trackID = -1;
     int parentID = -1;
@@ -28,6 +29,7 @@ struct HitRecord {
 };
 
 struct EventEdepRecord {
+    int runID = -1;
     int eventID = -1;
     double rawEdep = 0.0;
     double weightedEdep = 0.0;

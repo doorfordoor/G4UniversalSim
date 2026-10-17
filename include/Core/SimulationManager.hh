@@ -3,6 +3,7 @@
 #include "Core/SimulationContext.hh"
 
 #include <functional>
+#include <map>
 #include <memory>
 #include <optional>
 #include <string>
@@ -50,6 +51,7 @@ public:
 
     SimulationContext& GetContext();
     const SimulationContext& GetContext() const;
+    const std::string& GetMaterialsConfigFile() const;
 
     void SetCommandLineOverrides(const SimulationCommandLineOverrides& overrides);
     void SetMainConfig(const std::string& filename);
@@ -68,14 +70,18 @@ public:
     void BeginRuntimeTracking();
     bool NoteMacroCommand(const std::string& command) const;
     void ConfirmMacroCommandSuccess(bool seedStateChanged);
+    void RecordSuccessfulMacroCommand(const std::string& command,
+                                      const std::string& file,
+                                      int line);
     void SetExecutedMacroPath(const std::string& path);
-    void FinalizeRunSummary(const std::string& status,
+    bool FinalizeRunSummary(const std::string& status,
                             int exitCode,
                             const std::string& macroStatus,
                             const std::string& failureFile = {},
                             int failureLine = 0,
                             const std::string& failureCommand = {},
-                            int failureCode = 0);
+                            int failureCode = 0,
+                            bool failureCodeAvailable = false);
     void Configure();
     void BuildManagers();
     void PrintSummary() const;
@@ -90,6 +96,7 @@ public:
     std::function<G4VSensitiveDetector*()> CreateSensitiveDetectorFactory() const;
     std::function<void(const GeometryRegistry&)> CreateGeometryPostBuildCallback() const;
     void InitializeSourceAfterPhysicsListRegistered();
+    void ValidateBiasingProcessTargets();
 
     ConfigManager* GetConfigManager();
     OutputManager* GetOutputManager();
@@ -125,6 +132,17 @@ private:
     void WarnIgnoredCommandLineOverride(const std::string& name) const;
     void ReportConfigWarnings();
     void WriteBaseRunSummary();
+    void WriteFinalConfigSnapshot(const std::string& macroStatus);
+    void CaptureConfiguredValueOrigins();
+    void MarkRuntimeValueOrigin(const std::string& field);
+
+    struct ValueOrigin {
+        std::string kind = "default";
+        std::string file;
+        std::string section;
+        std::string key;
+        int line = 0;
+    };
 
     SimulationContext context_;
     std::unique_ptr<ConfigManager> configManager_;
@@ -161,4 +179,5 @@ private:
     bool macroSeedModified_ = false;
     bool runtimeTrackingStarted_ = false;
     std::string executedMacroPath_;
+    std::map<std::string, ValueOrigin> effectiveValueOrigins_;
 };
