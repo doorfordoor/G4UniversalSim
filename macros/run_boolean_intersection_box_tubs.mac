@@ -1,0 +1,21 @@
+# Round 6D boolean intersection smoke: box intersected with tubs.
+
+/control/verbose 1
+/run/verbose 1
+/event/verbose 0
+/tracking/verbose 0
+
+/AIHL/material/load config/materials/material.ini
+
+/AIHL/geometry/setTemplate hierarchical
+/AIHL/geometry/loadConfig config/geometry/boolean_intersection_box_tubs.ini
+/AIHL/geometry/checkOverlaps true
+/AIHL/geometry/printTree
+
+/AIHL/physics/setReferenceList FTFP_BERT_EMZ
+/AIHL/physics/setDefaultCut 1 um
+
+/run/initialize
+/AIHL/detector/printRegistry
+/AIHL/detector/printSensitiveVolumes
+/AIHL/detector/printBiasVolumes

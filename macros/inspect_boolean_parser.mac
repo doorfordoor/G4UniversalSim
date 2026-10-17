@@ -1,0 +1,8 @@
+# Round 6C parser inspection macro.
+# This intentionally stops before /run/initialize so it stays a lightweight
+# metadata check. Runnable boolean examples are run_boolean_*.mac.
+
+/AIHL/geometry/setTemplate hierarchical
+/AIHL/geometry/loadConfig config/geometry/boolean_parser_test.ini
+/AIHL/geometry/print
+/AIHL/geometry/printTree

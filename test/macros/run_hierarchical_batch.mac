@@ -1,0 +1,12 @@
+# Headless batch acceptance for test/geometry/hierarchical_test.ini.
+# Keep Qt/OpenGL commands in test/macros/vis.mac; this macro must reach beamOn.
+/AIHL/material/load test/materials/test_materials.ini
+/AIHL/geometry/setTemplate hierarchical
+/AIHL/geometry/loadConfig test/geometry/hierarchical_test.ini
+/AIHL/geometry/checkOverlaps true
+/AIHL/physics/setReferenceList FTFP_BERT_EMZ
+/AIHL/source/preset proton_beam
+/AIHL/scoring/enable true
+/AIHL/scoring/eventEdep true
+/run/initialize
+/run/beamOn 3

@@ -1,0 +1,32 @@
+# Round 6C boolean subtraction smoke: rotated box cut.
+
+/control/verbose 1
+/run/verbose 1
+/event/verbose 0
+/tracking/verbose 0
+
+/AIHL/material/load config/materials/material.ini
+
+/AIHL/geometry/setTemplate hierarchical
+/AIHL/geometry/loadConfig config/geometry/boolean_rotated_box_cut.ini
+/AIHL/geometry/checkOverlaps true
+/AIHL/geometry/printTree
+
+/AIHL/physics/setReferenceList FTFP_BERT_EMZ
+/AIHL/physics/setDefaultCut 1 um
+
+/AIHL/source/particle e-
+/AIHL/source/energy 1 MeV
+/AIHL/source/point 0 0 -9 mm
+/AIHL/source/direction 0 0 1
+
+/AIHL/scoring/enable true
+/AIHL/scoring/hits true
+/AIHL/scoring/eventEdep true
+/AIHL/scoring/edep true
+/AIHL/scoring/autoCreateScorers true
+/AIHL/scoring/setEdepHistogram bins=100 min=0 eV max=1 MeV
+/AIHL/scoring/setWeightedEdepHistogram bins=100 min=0 eV max=1 MeV
+
+/run/initialize
+/run/beamOn 10
