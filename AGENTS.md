@@ -28,12 +28,24 @@
 - SimulationManager、各模块 Manager、配置读取器和 Messenger 的行为必须保持一致；新增配置字段不能只加到 GUI writer 或文档。
 - 配置优先级必须以代码实际行为为准。M0-1/M0-1b 已对当前启动字段统一为“默认值 < 主配置文件 < macro 运行时命令 < 显式 CLI 参数”：`SimulationCommandLineOverrides` 在 `Configure()` 后重应用显式 CLI，并由 `SimulationManager`、`OutputManager`、`GeometryManager` 阻止低优先级入口改写 `output`、`threads`、`seed`、`check_overlaps` 等字段。它是向完整 `EffectiveConfig` 迁移的过渡层，不代表已经提供来源追踪。
 - M0-2 的 `run_summary.txt` 只在最终生命周期阶段写入（dry-run、正常结束、交互会话结束或失败收尾），并区分计划配置与实际运行事实：状态、每次 run、计划/完成事件数、实际线程数、配置 seed、引擎初始 seed（无法可靠取得时为 `unknown`）、macro seed 修改、最终输出目录、生成文件和失败命令位置。seed 修改只可由当前代码明确识别且成功执行的命令确认；失败摘要必须区分执行失败和 preflight 失败。preflight 没有 `ApplyCommand()` 返回码，必须用 `macro_failure_code_available=false` 表达 `macro_failure_code=0` 的语义。无法取得的运行事实必须写为 `unknown` 或 `not_executed`。
+- M0-3C4 的 GUI 结果判定不能仅凭进程退出码：`success` 必须有正常退出、本次新摘要、后端和 macro 完成、至少一个 run 与正数计划事件；每个 run 的计划/完成事件数须一致，逐 run 合计也须与摘要总数一致，不能仅用相等总数掩盖单轮未完成。dry-run、交互无 run、普通无 run、终止、kill、失败和未证实分别保留状态；旧摘要和无摘要不得冒充成功。当前仅是未提交工作区候选，见 `gui/g4usim_gui/core/run_result.py` 和专项 smoke。
+- M0-3D 默认复杂示例的无界面验收入口是 `test/macros/run_hierarchical_batch.mac`；`test/macros/vis.mac` 仅用于显式 UI 可视化。复杂源文件的冷却管和颜色修复须由真实后端 overlap、运行摘要和旧坐标反例回归证明，不得因 3D Preview 正常或进程退出码 0 宣称场景可信。`test/main_hierarchical.ini` 已改为逐 process 规则和真实体积；它与批处理 macro 完成 3/3、与完整 macro 完成 100/100 事件且两个目标匹配，但实际偏置效果仍为 `unknown`，不能当作 M2 验证。
+- M0-3E 的工作区候选要求以物理初始化后的实际 wrapped process 校验每个启用的 bias 目标；普通 process 名存在但未包裹不算匹配。macro 配置的物理/biasing 修改须在初始化前重绑物理列表，初始化后修改应拒绝；失败在事件前报告粒子、目标、候选和替代建议。摘要分别记录规则、挂接、匹配，未观察实际偏置时必须写 `unknown`，不得把目标匹配当成 M2 物理验证。GUI generated 模式无规则编辑器，启用空 hook 时不得生成运行包。
+- biasing operator 已挂接后的 `/run/reinitializeGeometry` 在本机真实后端曾访问违例；当前 batch macro 必须提前拒绝并建议新进程重建。`--ui` 与已启用的 biasing 配置或会修改 biasing 的 macro 不能组合，交互会话内的 biasing 修改命令必须明确拒绝，避免绕过 batch 保护。`/run/physicsModified` 后 `/run/initialize` 的专项通过不等于完整几何重建安全；实际交互 UI 操作尚未自动化验收。
 - macro 执行前必须运行静态递归 preflight：检查 `/control/execute` 引入的文件，顶层相对路径按进程工作目录解析，嵌套相对路径只能按发出命令的 macro 文件目录解析。预检生成的规范化命令序列必须直接用于实际执行；拒绝已知 CLI 冲突的项目命令、`/run/numberOfThreads`、`/random/...`，以及无法可靠分析的 `/control/alias`、`/control/loop`、`/control/foreach`。不得声称能够保护任意动态 Geant4 命令；未覆盖命令必须记录为风险或明确不支持。
+- `/AIHL/app/setMainConfig` 只能用于 `Configure()` 以前的入口，批处理 macro 已在配置后，必须在 preflight 阶段拒绝切换主 INI；直接调用 `SimulationManager::SetMainConfig()` 在已配置/初始化状态也必须拒绝，避免破坏来源快照与 Manager 一致性。更换主配置须新进程指定 `--config`。
 - 配置字段、Geant4 命令、输出列名和项目 JSON 字段属于接口。删除、改名或改变默认值时，必须给出迁移策略和兼容性说明。
 - M0-3A 对尚未完整支持的能力采用统一 fail-fast：`placement=replica|parameterised|assembly`、GDML、材料 `temperature`/`pressure`、`[physics.region.*]`、LET/Dose/Fluence 开启均必须在 Geant4 对象创建或运行前拒绝；替代方案必须出现在错误消息中。对应字段为 false 或缺失时保持兼容。
 - M0-3B1 对主配置文件建立字段消费追踪：`IniReader` 保留文件、section、key、原始值和行号；成功 getter 标记字段已消费，`ConfigManager` 在各 Manager 完成配置后稳定输出 `[ConfigWarning]` 未消费字段和未知 section，并写入 `run_summary.txt`。该机制只警告、不改变运行结果；材料文件和几何文件仍由各自解析器独立处理。
 - M0-3B2A 对材料独立配置文件使用闭合 schema：隐式 `global`、未知 section、空的动态 section 后缀和未知 key 必须在 Geant4 对象创建前失败，并报告 file、line、section、key、value；`temperature`/`pressure` 继续使用专用的 M0-3A 错误和替代建议。旧 GUI run package 在 `[material.<name>]` 中生成的 `type = material` 是已弃用兼容字段，只可取该值且不得影响 `MaterialDefinition`；新 writer 不再生成。该 schema 不适用于几何独立配置文件，也不实现新的材料能力。
 - 输出必须说明文件生成条件、线程后缀、单位/量纲、合并方式和未生成文件的正常原因。没有物理定义或数据契约的 scorer 不得输出看似有效的结果。
+- M0-4 工作区 CSV 契约候选采用 `output_csv_schema_version=3`：hits/event 保留 `runID`，首轮仍使用 `_tN`，后续 run 使用 `_tN_rR`；当前已验证的能量/长度列在表头标记 `_MeV`/`_mm`，hits 不再输出未计算的 `LETcalc`/`LETstep` 零值占位。Edep 直方图和分类汇总按 run 独立，摘要根据实际表头区分 v2/v3 或 `unknown`；`run_summary_schema_version=1` 只描述摘要结构，单位标记和目标匹配都不代表物理结果已验证。旧 CSV v1 无可靠的多 run 恢复路径，v2→v3 的字段迁移见 `docs/输出数据契约.md`。
+- M0-4 工作区输出文件登记已改为 master/worker 共享的互斥保护登记表，仅在 CSV 显式关闭成功或直方图写出成功后登记；`GetGeneratedFiles()` 不再扫描目录或依赖 mtime，因此外部程序同期创建的文件不会因时间戳被误列。真实双线程运行期间外部文件注入回归见 `scripts/test_run_summary.py`。登记只证明写出组件报告完成且文件仍存在，不证明设备持久化、未被外部修改或物理正确。
+- M0-4 工作区候选还在共享登记表中锁存首个 worker 输出失败（`run_id/thread_id/stage/message`）；event/hits 写出错误请求停止 run，worker 收尾阶段捕获并记录异常，batch `beamOn` 返回后以及交互会话结束时检查失败，最终摘要写 `output_failure_*`、`status=failed` 和非零退出码。`G4USIM_TEST_OUTPUT_FAULT=event_row_t0|summary_close_t0` 仅供测试，在真实 Geant4 双线程 worker 路径中验证了事件行和汇总关闭故障；不要在正常生产环境设置此变量。未验证磁盘满/断连、异常进程终止及交互 UI 的全部失败路径，M0-4 仍为部分实现。
+- M0-4 主线程最终化补充：`FinalizeRunSummary()` 必须分别尝试最终 `Flush`/`Close`，将首个异常锁存在共享输出失败登记表，尽力写出 `failed` 摘要并返回失败结果；正常结束路径收到失败结果时必须返回非零退出码，不能把已写出的失败摘要误报为摘要写入失败。测试专用 `final_flush_master` / `final_close_master` 在真实最终化分支完成操作后模拟异常，验证失败状态和摘要写出；这不是磁盘错误实测。摘要本身无法写入时仍使用专用 summary failure 错误路径。
+- M0-4 运行启动阶段补充：`BeginOfRunAction()` 的 `SetRunId`、run 开始摘要、输出初始化及 `ScoringManager::BeginRun` 共用分阶段异常捕获，锁存首因并请求中止，不允许 worker 启动异常穿出回调。`SetRunId` 切换旧文件失败时使用尝试启动的 run ID 登记错误，避免误归属上一轮；`OutputManager::Flush()` 逐 writer 尝试并重新抛出首个异常。测试专用 `begin_set_run_id_t0` / `begin_scoring_t0` 仅模拟第二轮启动故障，不代表物理介质故障。必须检查首轮 run 与输出保留、失败摘要、非零退出；MT 下 master/worker 的线程编号可能重叠，不能仅以编号判定故障源。
+- batch macro 中材料 Messenger 的命令执行异常不能只降级成 `JustWarning` 并假装成功；须同时锁存命令失败计数与错误，`ApplyCommand()` 即使返回 0 也应在本条 macro 后拒绝继续、写入来源行号和失败摘要并非零退出。交互 UI 材料命令的逐条失败判定尚未完成，不能当作 batch 契约已覆盖。
+- batch macro 的 `/AIHL/output/*` 命令也必须检查 `OutputManager` 记录的 Messenger 命令失败计数；即使 `ApplyCommand()` 返回 0，内部异常仍须中止后续命令、保留失败文件/行号、输出 `macro_failure_code_available=false` 并返回非零。`SimulationManager::SetOutputDir()` 应先让 `OutputManager` 接受目录，再更新 context 和 EffectiveConfig 来源；失败不得冒充成功来源。测试专用 `G4USIM_TEST_OUTPUT_FAULT=messenger_set_dir|manager_set_dir` 分别注入命令处理器和 Manager setter 失败，正常运行不得设置。交互 UI 尚未完成逐命令相同保证。
 - Geant4 对象创建、敏感体、region、biasing、线程本地输出和 reinitialize 生命周期必须有可重复的运行验证。只在内存中保存配置不能算运行时生效。
 
 ## 4. GUI、国际化和人类文档
@@ -54,6 +66,7 @@
 - 每个任务必须运行相应测试，并在最终报告中区分“已验证”和“未验证”。文档任务至少运行链接/路径检查和受影响的 GUI 或配置 smoke；涉及后端行为时还要运行可用的构建、--help、dry-run 或后端 smoke。
 - 配置优先级回归测试入口为 `python scripts/test_config_precedence.py`；M0-2 摘要回归测试入口为 `python scripts/test_run_summary.py`。涉及 M0-1/M0-1b 的改动至少覆盖配置-only、配置 macro、配置 dry-run/interactive、CLI-only、配置/CLI 冲突、macro preflight、真实 `beamOn`、无效参数、重复参数和缺失路径；涉及摘要时还必须覆盖多次 `beamOn`、失败收尾、无 run、输出目录切换和摘要写入失败。
 - 测试失败时先区分代码失败、环境缺失和未覆盖场景，不得把“命令成功退出”当作物理正确性证明。
+- M0-5 工作区统一测试入口为 `scripts/run_m0_tests.py`，按 static/GUI/backend/integration 分层，报告 pass/fail/skip 和日志；后端用例必须核对 `--capabilities.source_fingerprint` 与当前 C++ 工作区。CTest skipped 不等于完整通过，不能只看总退出码；详情见 `docs/测试平台说明.md`。
 - 若真实 Geant4 可执行文件、Qt/PySide6、3D 依赖或特定工具链不可用，必须明确记录未验证部分和复现命令。
 - 完成前复核 git diff、 新增文件编码、文档中的支持等级和工作区状态，确保没有把用户已有改动混入本任务。
 
@@ -68,4 +81,18 @@
 
 - 几何配置诊断使用 `GeometryConfigDiagnostic`，必须保留文件、行号、原始 section/key/value、code/category、message 和 suggestion；输出统一为 `[GeometryConfigWarning] file:line [section]/key = value: message; suggestion`。
 - `unknown_section`、`unconsumed_key`、`legacy_metadata`、`ignored_boolean_key` 按文件、行号、section、key 稳定排序去重，并通过 `GeometryManager`、`SimulationManager` 和 `run_summary.txt` 统一输出；`config_warning_count` 仍只统计主 INI，几何 warning 使用独立 `geometry_config_warning_count`。
-- canonical `metadata.<非空名称>` 仅作为保存属性，不参与 Geant4 运行；hierarchical/layered 的无前缀未知属性继续保留并建议迁移到 `metadata.<原key>`，不得自动改写。严格 `version=2`、自动迁移和完整无损 round-trip 留给 M0-3B3。
+- canonical `metadata.<非空名称>` 仅作为保存属性，不参与 Geant4 运行；hierarchical/layered 的无前缀未知属性继续保留并建议迁移到 `metadata.<原key>`，不得自动改写。B3 工作区候选允许在几何文件 `[global]` 显式写 `version = 2`，此时现有四类来源诊断在创建几何对象前变为错误；无版本或 `version = 1` 保持兼容 warning。GUI 已可在受支持编辑子集里保留版本标记并写回，项目快照不得丢失它；其他 round-trip blocker 仍须阻止 editable 生成。自动迁移和完整无损 round-trip 仍未完成。
+- B3 严格几何源中的重复 section/key 也须在首个几何对象前拒绝，避免 `IniReader` 的后值覆盖前值；GUI 对空未知 section、未列于 `[layers]/names` 的层以及重复声明设置 round-trip blocker。无版本或版本 1 的重复声明暂保留原兼容行为，升级到版本 2 前须人工消歧。
+
+## 9. M0-3C0B 运行前清单（工作区）
+
+- `--inspect-run` 必须复用真实 `SimulationManager::Configure()` 和 `PreflightMacro`，不初始化/执行 Geant4 run，不写摘要或创建输出目录；JSON `G4UniversalSimRunPlan` v1 使用 `configuration_phase=before_macro` 明确区分配置计划与运行事实。
+- 初始配置清单记录当前启动字段、材料/几何输入、默认/主配置/CLI 来源以及主 INI 原文和行号。它尚非全模块 EffectiveConfig，macro 后续修改必须作为待执行命令报告，不能声称已生效。
+- GUI 外部 Run 先异步查询同一组实际启动参数，成功且输入未变化才启动；config-only、macro-only、中文路径、CLI 冲突和失败阻断由 `scripts/test_macro_plan.py` 与 GUI `smoke_run_input_modes.py` 验证。实际运行成功由 C4 结合摘要判断。
+- 回归脚本的默认输出和随机引擎文件必须留在临时工作区，不能改写仓库示例输出。当前 M0-1/M0-2 脚本复制所需配置/macro fixture 后在临时目录运行。
+
+## 10. M0 有效启动字段来源快照（工作区候选）
+
+- `effective_config_source_coverage=startup_fields_only` 仅代表 `output_dir`、`run_name`、`threads`、`seed`、`macro_file`、`check_overlaps` 六个启动字段具有来源记录；不能宣称全模块 `EffectiveConfig` 或 Geant4 内核实际应用已验证。
+- `effective_<field>_origin_kind/file/line/section/key` 的 `kind` 只能使用 `default`、`main_ini`、`cli`、`macro` 或 `runtime_unattributed`。主 INI 保留原始字段和行号；宏命令须在真实执行成功并通过 Messenger 错误检查后记载来源；CLI 锁定字段不受宏重新归属。无法确定的运行时修改必须明确标为 `runtime_unattributed`。
+- 相关回归由 `scripts/test_run_summary.py` 覆盖。后续若扩展到 source、physics、geometry、materials、scoring，应逐模块校验实际消费与运行生命周期，不能直接把配置表中的初始值当作最终有效值。
