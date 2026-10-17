@@ -183,6 +183,7 @@ def main() -> int:
     environment["PYTHONDONTWRITEBYTECODE"] = "1"
     environment["QT_QPA_PLATFORM"] = "offscreen"
     environment["G4USIM_EXE"] = str(args.executable.resolve())
+    environment["G4USIM_MERGE_EXE"] = str(args.merge_executable.resolve())
 
     for case in selected:
         source = ROOT / case.script

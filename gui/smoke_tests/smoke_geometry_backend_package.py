@@ -177,7 +177,9 @@ def _assert_backend_outputs(result: BackendResult, *, output_name: str = "output
                     "This backend may be a sequential Geant4 build or may not emit worker files in this environment."
                 )
                 return False
-        tasks = build_merge_plan(str(output_dir), str(ROOT)).tasks
+        tasks = build_merge_plan(
+            str(output_dir), str(ROOT), os.environ.get("G4USIM_MERGE_EXE", "")
+        ).tasks
         assert any(task.kind == "event_edep" and task.available for task in tasks)
         assert any(task.kind == "hist_raw" and task.available for task in tasks)
         return True
