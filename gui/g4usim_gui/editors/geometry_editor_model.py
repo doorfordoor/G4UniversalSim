@@ -1,16 +1,25 @@
 from __future__ import annotations
 
 import re
+import math
 from dataclasses import asdict, dataclass, field
 
 from g4usim_gui.editors.editable_models import EditableDocument
+from g4usim_gui.core.i18n import ui_format, ui_text
 from g4usim_gui.parsers.materials_parser import NIST_QUICK_LIST
 from g4usim_gui.parsers.geometry_parser import GeometrySummary
+from g4usim_gui.parsers.geometry_parser import PRODUCTION_CUT_KEYS, TRD_PROPERTY_KEYS, VISUAL_KEYS
+from g4usim_gui.preview3d.units import parse_length_to_mm
 
 
 EDITABLE_GEOMETRY_MODES = {"simple_box", "layered_device", "hierarchical", "hierarchical_boolean", "boolean_hierarchical", "boolean"}
 HIERARCHICAL_GEOMETRY_MODES = {"hierarchical", "hierarchical_boolean", "boolean_hierarchical", "boolean"}
-SUPPORTED_HIERARCHICAL_SHAPES = {"box", "tubs", "sphere", "orb", "cone"}
+SUPPORTED_HIERARCHICAL_SHAPES = {"box", "tubs", "sphere", "orb", "cone", "trd"}
+SUPPORTED_BOOLEAN_TOOL_SHAPES = {"box", "tubs", "sphere", "orb", "cone"}
+SUPPORTED_VISUAL_COLORS = {
+    "white", "black", "red", "green", "blue", "yellow", "cyan", "aqua",
+    "magenta", "gray", "grey", "darkgray", "lime", "brown",
+}
 STABLE_GUI_SHAPES = {"box", "tubs"}
 BOOLEAN_OPERATIONS = {"subtraction", "union", "intersection"}
 
@@ -31,6 +40,9 @@ class HierarchicalVolumeRow:
     region: str = ""
     copy_no: str = ""
     metadata: str = ""
+    shape_properties: dict[str, str] = field(default_factory=dict)
+    visual: dict[str, str] = field(default_factory=dict)
+    production_cuts: dict[str, str] = field(default_factory=dict)
     notes: str = ""
     errors: list[str] = field(default_factory=list)
     warnings: list[str] = field(default_factory=list)
@@ -83,6 +95,12 @@ class LayerRow:
     bias: bool = False
     region: str = ""
     copy_no: str = ""
+    position: str = ""
+    rotation: str = ""
+    visual: dict[str, str] = field(default_factory=dict)
+    production_cuts: dict[str, str] = field(default_factory=dict)
+    metadata: str = ""
+    errors: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -90,6 +108,7 @@ class LayeredDeviceGeometryModel:
     world_size: str = "20 cm, 20 cm, 20 cm"
     world_material: str = "G4_AIR"
     axis: str = "z"
+    auto_stack: bool = True
     gap: str = "0 um"
     z_start: str = ""
     layers: list[LayerRow] = field(default_factory=lambda: [
@@ -101,6 +120,7 @@ class LayeredDeviceGeometryModel:
 @dataclass
 class GeometryDocument(EditableDocument):
     mode: str = "preview_only"
+    schema_version: int | None = None
     simple_box: SimpleBoxGeometryModel = field(default_factory=SimpleBoxGeometryModel)
     layered_device: LayeredDeviceGeometryModel = field(default_factory=LayeredDeviceGeometryModel)
     volumes: list[HierarchicalVolumeRow] = field(default_factory=list)
@@ -129,6 +149,7 @@ def geometry_document_from_summary(summary: GeometrySummary | None, template_nam
     document.errors = list(document.source_errors)
     document.warnings = list(document.source_warnings)
     document.mode = _mode_from_template(template_name or summary.template_hint)
+    document.schema_version = summary.schema_version
     document.raw_source_text = summary.raw_text
     for volume in summary.volumes:
         document.volumes.append(
@@ -146,6 +167,9 @@ def geometry_document_from_summary(summary: GeometrySummary | None, template_nam
                 region=volume.region,
                 copy_no=volume.copy_no,
                 metadata=volume.metadata,
+                shape_properties=dict(volume.shape_properties),
+                visual=dict(volume.visual),
+                production_cuts=dict(volume.production_cuts),
             )
         )
     for op in summary.boolean_ops:
@@ -167,7 +191,7 @@ def geometry_document_from_summary(summary: GeometrySummary | None, template_nam
     if document.mode == "simple_box":
         document.simple_box = _simple_from_sections(sections)
     elif document.mode == "layered_device":
-        document.layered_device = _layered_from_sections(sections)
+        document.layered_device = _layered_from_sections(sections, summary.raw_text)
     if document.boolean_ops and document.mode in HIERARCHICAL_GEOMETRY_MODES:
         document.mode = "hierarchical_boolean"
     return document
@@ -178,6 +202,11 @@ def geometry_document_from_dict(data: dict | None) -> GeometryDocument:
     if not isinstance(data, dict):
         return document
     document.mode = str(data.get("mode", "preview_only"))
+    raw_version = data.get("schema_version", data.get("schemaVersion"))
+    if raw_version is not None:
+        if str(raw_version) not in {"1", "2"}:
+            raise ValueError(f"Unsupported geometry schema version in project snapshot: {raw_version}")
+        document.schema_version = int(raw_version)
     document.source_path = str(data.get("source_path", data.get("sourcePath", "")))
     document.is_dirty = bool(data.get("is_dirty", data.get("dirty", False)))
     document.source_copy_mode = bool(data.get("source_copy_mode", data.get("sourceCopyMode", False)))
@@ -219,6 +248,7 @@ def geometry_document_to_snapshot(document: GeometryDocument | None) -> dict:
         return {}
     return {
         "mode": document.mode,
+        "schema_version": document.schema_version,
         "source_path": document.source_path,
         "is_dirty": document.is_dirty,
         "source_copy_mode": document.source_copy_mode,
@@ -233,6 +263,7 @@ def geometry_document_to_snapshot(document: GeometryDocument | None) -> dict:
             "world_size": document.layered_device.world_size,
             "world_material": document.layered_device.world_material,
             "axis": document.layered_device.axis,
+            "auto_stack": document.layered_device.auto_stack,
             "gap": document.layered_device.gap,
             "z_start": document.layered_device.z_start,
             "layers": [layer.__dict__.copy() for layer in document.layered_device.layers],
@@ -286,6 +317,8 @@ def validate_geometry_document(
 ) -> None:
     document.errors = []
     document.warnings = []
+    if document.schema_version not in {None, 1, 2}:
+        document.errors.append("Geometry schema version must be 1, 2, or absent.")
     known_materials = set(material_names or set()) | NIST_QUICK_LIST
     if document.mode == "simple_box":
         _validate_simple(document, known_materials)
@@ -344,6 +377,7 @@ def _validate_layered(document: GeometryDocument, known_materials: set[str]) -> 
         document.errors.append("layered_device requires at least one enabled layer.")
     seen: set[str] = set()
     for index, layer in enumerate(enabled_layers, start=1):
+        layer.errors.clear()
         if not layer.name.strip():
             document.errors.append(f"layered_device layer #{index} name is required.")
             continue
@@ -358,6 +392,35 @@ def _validate_layered(document: GeometryDocument, known_materials: set[str]) -> 
             document.errors.append(f"layered_device layer '{layer.name}' xy must have two lengths, e.g. 10 mm, 10 mm.")
         if layer.copy_no.strip() and not _is_int32(layer.copy_no):
             document.errors.append(f"layered_device layer '{layer.name}' copyNo must be a signed 32-bit integer.")
+        if not layered.auto_stack and not layer.position.strip():
+            document.errors.append(f"layered_device layer '{layer.name}' requires position when auto_stack=false.")
+        if layer.position.strip():
+            _require_vec3(layer.position, f"[layer.{layer.name}]/position", document)
+        if layer.rotation.strip():
+            _require_vec3(layer.rotation, f"[layer.{layer.name}]/rotation", document)
+        for field, value in layer.production_cuts.items():
+            if field not in PRODUCTION_CUT_KEYS:
+                layer.errors.append(f"Unsupported production cut field '{field}'.")
+            elif not layer.region.strip():
+                layer.errors.append(f"{field} requires a non-empty region in the same layer.")
+            elif (parsed := parse_length_to_mm(value)) is None or parsed <= 0:
+                layer.errors.append(f"{field} must be a positive length.")
+        for field, value in layer.visual.items():
+            if field not in VISUAL_KEYS:
+                layer.errors.append(f"Unsupported visual field '{field}'.")
+            elif field == "vis.alpha":
+                try:
+                    alpha = float(value.strip())
+                    if not math.isfinite(alpha) or not 0 <= alpha <= 1:
+                        layer.errors.append("vis.alpha must be between 0 and 1.")
+                except ValueError:
+                    layer.errors.append("vis.alpha must be numeric.")
+            elif field in {"vis.visible", "vis.wireframe"} and value.strip().lower() not in {"true", "false", "1", "0", "yes", "no", "on", "off"}:
+                layer.errors.append(f"{field} must be a boolean value.")
+            elif field == "vis.color" and value.strip().lower() not in SUPPORTED_VISUAL_COLORS:
+                layer.errors.append("vis.color must be a color supported by the backend.")
+        _validate_metadata_text(layer.metadata, layer)
+        document.errors.extend(f"[layer.{layer.name}]: {message}" for message in layer.errors)
 
 
 def _validate_hierarchical(document: GeometryDocument, known_materials: set[str]) -> None:
@@ -403,7 +466,7 @@ def _validate_hierarchical(document: GeometryDocument, known_materials: set[str]
             elif parent.lower() not in by_key:
                 row.errors.append(f"Parent volume does not exist: {parent}")
         if shape not in SUPPORTED_HIERARCHICAL_SHAPES:
-            row.errors.append(f"Unsupported shape '{row.shape}'. Supported by backend: box, tubs, sphere, orb, cone.")
+            row.errors.append(ui_format("Unsupported shape '{shape}'. Supported in the editor: box, tubs, sphere, orb, cone, trd.", shape=row.shape))
         elif shape not in STABLE_GUI_SHAPES:
             row.warnings.append(f"Shape '{row.shape}' is backend-supported but preview/editor validation is approximate.")
         if shape == "box":
@@ -417,6 +480,19 @@ def _validate_hierarchical(document: GeometryDocument, known_materials: set[str]
                 row.errors.append(f"{shape} requires exactly {expected} parameters; got {actual}.")
             if row.size.strip():
                 row.errors.append(f"{shape} does not accept size shorthand.")
+        elif shape == "trd":
+            if row.size.strip() or row.parameters.strip():
+                row.errors.append(ui_text("trd uses dx1, dx2, dy1, dy2, dz instead of size/parameters."))
+            for field in TRD_PROPERTY_KEYS:
+                value = row.shape_properties.get(field, "")
+                parsed = parse_length_to_mm(value)
+                if parsed is None or not math.isfinite(parsed) or parsed <= 0:
+                    row.errors.append(ui_format("trd {field} must be a positive length.", field=field))
+            for field in row.shape_properties:
+                if field not in TRD_PROPERTY_KEYS:
+                    row.errors.append(ui_format("Unsupported trd shape field '{field}'.", field=field))
+        if shape != "trd" and row.shape_properties:
+            row.errors.append(ui_text("Shape-specific fields are present but the selected shape is not trd."))
         _require_material(row.material, f"[volume.{name}]/material", known_materials, document)
         if row.position.strip():
             _require_vec3(row.position, f"[volume.{name}]/position", document)
@@ -424,6 +500,27 @@ def _validate_hierarchical(document: GeometryDocument, known_materials: set[str]
             _require_vec3(row.rotation, f"[volume.{name}]/rotation", document)
         if row.copy_no.strip() and not _is_int32(row.copy_no):
             row.errors.append("copyNo must be a signed 32-bit integer.")
+        for field, value in row.production_cuts.items():
+            if field not in PRODUCTION_CUT_KEYS:
+                row.errors.append(ui_format("Unsupported production cut field '{field}'.", field=field))
+            elif not row.region.strip():
+                row.errors.append(ui_format("{field} requires a non-empty region in the same volume.", field=field))
+            elif (parsed := parse_length_to_mm(value)) is None or parsed <= 0:
+                row.errors.append(ui_format("{field} must be a positive length.", field=field))
+        for field, value in row.visual.items():
+            if field not in VISUAL_KEYS:
+                row.errors.append(ui_format("Unsupported visual field '{field}'.", field=field))
+            elif field == "vis.alpha":
+                try:
+                    alpha = float(value.strip())
+                    if not math.isfinite(alpha) or not 0 <= alpha <= 1:
+                        row.errors.append(ui_text("vis.alpha must be between 0 and 1."))
+                except ValueError:
+                    row.errors.append(ui_text("vis.alpha must be numeric."))
+            elif field in {"vis.visible", "vis.wireframe"} and value.strip().lower() not in {"true", "false", "1", "0", "yes", "no", "on", "off"}:
+                row.errors.append(ui_format("{field} must be a boolean value.", field=field))
+            elif field == "vis.color" and value.strip().lower() not in SUPPORTED_VISUAL_COLORS:
+                row.errors.append(ui_text("vis.color must be a color supported by the backend."))
         _validate_metadata_text(row.metadata, row)
 
     _validate_tree_cycles(enabled, document)
@@ -479,7 +576,7 @@ def _validate_boolean_operations(document: GeometryDocument, volumes_by_key: dic
         if operation not in BOOLEAN_OPERATIONS:
             row.errors.append("Operation must be subtraction, union, or intersection.")
         shape = row.tool_shape.strip().lower()
-        if shape not in SUPPORTED_HIERARCHICAL_SHAPES:
+        if shape not in SUPPORTED_BOOLEAN_TOOL_SHAPES:
             row.errors.append(f"Unsupported boolean tool shape '{row.tool_shape}'.")
         elif shape not in STABLE_GUI_SHAPES:
             row.warnings.append(f"Tool shape '{row.tool_shape}' is backend-supported but preview is approximate.")
@@ -617,7 +714,7 @@ def _simple_from_sections(sections: dict[str, dict[str, str]]) -> SimpleBoxGeome
     )
 
 
-def _layered_from_sections(sections: dict[str, dict[str, str]]) -> LayeredDeviceGeometryModel:
+def _layered_from_sections(sections: dict[str, dict[str, str]], raw_text: str) -> LayeredDeviceGeometryModel:
     world = sections.get("world", {})
     layers_section = sections.get("layers", {})
     names = _split_csv(layers_section.get("names", ""))
@@ -635,12 +732,18 @@ def _layered_from_sections(sections: dict[str, dict[str, str]]) -> LayeredDevice
                 bias=_as_bool(layer.get("bias", "false")),
                 region=layer.get("region", ""),
                 copy_no=layer.get("copyno", ""),
+                position=layer.get("position", ""),
+                rotation=layer.get("rotation", ""),
+                visual={key: value for key, value in layer.items() if key in VISUAL_KEYS},
+                production_cuts={key: value for key, value in layer.items() if key in PRODUCTION_CUT_KEYS},
+                metadata="\n".join(_original_metadata_lines(raw_text, f"layer.{name}")),
             )
         )
     return LayeredDeviceGeometryModel(
         world_size=world.get("size", "20 cm, 20 cm, 20 cm"),
         world_material=world.get("material", "G4_AIR"),
         axis=layers_section.get("axis", "z"),
+        auto_stack=_as_bool(layers_section.get("auto_stack", "true")),
         gap=layers_section.get("gap", "0 um"),
         z_start=layers_section.get("z_start", ""),
         layers=rows or LayeredDeviceGeometryModel().layers,
@@ -651,7 +754,21 @@ def _split_csv(value: str) -> list[str]:
     return [part.strip() for part in value.split(",") if part.strip()]
 
 
-def _validate_metadata_text(metadata: str, row: HierarchicalVolumeRow) -> None:
+def _original_metadata_lines(raw_text: str, section_name: str) -> list[str]:
+    current = ""
+    lines: list[str] = []
+    for raw in raw_text.splitlines():
+        text = raw.split("#", 1)[0].strip()
+        if text.startswith("[") and text.endswith("]"):
+            current = text[1:-1].strip().lower()
+        elif current == section_name.lower() and "=" in text:
+            key, value = text.split("=", 1)
+            if key.strip().lower().startswith("metadata."):
+                lines.append(f"{key.strip()} = {value.strip()}")
+    return lines
+
+
+def _validate_metadata_text(metadata: str, row: HierarchicalVolumeRow | LayerRow) -> None:
     for line_no, raw in enumerate(metadata.splitlines(), start=1):
         text = raw.strip()
         if not text or text.startswith("#"):

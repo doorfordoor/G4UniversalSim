@@ -8,7 +8,9 @@ from PySide6.QtCore import QObject, QProcess, Signal
 
 from g4usim_gui.core.log_parser import parse_log_line
 from g4usim_gui.core.paths import ensure_directory
-from g4usim_gui.core.project import G4USimProject
+from g4usim_gui.core.i18n import ui_format, ui_text
+from g4usim_gui.core.project import G4USimProject, RUN_INPUT_MODES
+from g4usim_gui.core.run_result import RunResult, evaluate_run_result, summary_fingerprint
 
 
 class G4USimRunner(QObject):
@@ -29,6 +31,9 @@ class G4USimRunner(QObject):
         self._run_status_path: Path | None = None
         self._status_data: dict = {}
         self._requested_state: str = ""
+        self._summary_path: Path | None = None
+        self._summary_before: tuple[int, int] | None = None
+        self.last_result: RunResult | None = None
 
         self._process.readyReadStandardOutput.connect(self._read_stdout)
         self._process.readyReadStandardError.connect(self._read_stderr)
@@ -37,8 +42,15 @@ class G4USimRunner(QObject):
         self._process.stateChanged.connect(self._on_state_changed)
 
     @staticmethod
-    def validate_project(project: G4USimProject) -> list[str]:
+    def validate_project(project: G4USimProject, *, ready_to_run: bool = False) -> list[str]:
         errors: list[str] = []
+
+        if project.runInputMode not in RUN_INPUT_MODES:
+            errors.append(ui_text("Unsupported run input mode."))
+        if ready_to_run and project.runInputMode == "generated" and (
+            not project.configPath or not project.macroPath
+        ):
+            errors.append(ui_text("Generate a run package before starting generated input."))
 
         executable = Path(project.executable).expanduser() if project.executable else None
         if not project.executable:
@@ -48,13 +60,18 @@ class G4USimRunner(QObject):
         elif not executable.is_file():
             errors.append(f"Executable path is not a file: {project.executable}")
 
-        if not project.macroPath:
-            errors.append("Macro path is required.")
-        elif not Path(project.macroPath).expanduser().exists():
+        if project.runInputMode == "external" and not project.configPath and not project.macroPath:
+            errors.append("External input mode requires a config file, a macro file, or both.")
+
+        if project.macroPath and not Path(project.macroPath).expanduser().exists():
             errors.append(f"Macro file does not exist: {project.macroPath}")
+        elif project.macroPath and not Path(project.macroPath).expanduser().is_file():
+            errors.append(ui_format("Macro path is not a file: {path}", path=project.macroPath))
 
         if project.configPath and not Path(project.configPath).expanduser().exists():
             errors.append(f"Config file does not exist: {project.configPath}")
+        elif project.configPath and not Path(project.configPath).expanduser().is_file():
+            errors.append(ui_format("Config path is not a file: {path}", path=project.configPath))
 
         if project.workspaceRoot and not Path(project.workspaceRoot).expanduser().is_dir():
             errors.append(f"Workspace root does not exist: {project.workspaceRoot}")
@@ -88,7 +105,8 @@ class G4USimRunner(QObject):
         args: list[str] = []
         if project.configPath:
             args.extend(["--config", project.configPath])
-        args.extend(["--macro", project.macroPath])
+        if project.macroPath:
+            args.extend(["--macro", project.macroPath])
         if project.outputDir:
             args.extend(["--output", project.outputDir])
         if project.threads:
@@ -102,12 +120,12 @@ class G4USimRunner(QObject):
     def is_running(self) -> bool:
         return self._process.state() != QProcess.NotRunning
 
-    def start(self, project: G4USimProject) -> None:
+    def start(self, project: G4USimProject, command: list[str] | None = None) -> None:
         if self.is_running():
             self.errorOccurred.emit("A run is already active.")
             return
 
-        errors = self.validate_project(project)
+        errors = self.validate_project(project, ready_to_run=True)
         if errors:
             self.errorOccurred.emit("\n".join(errors))
             return
@@ -119,8 +137,11 @@ class G4USimRunner(QObject):
         self._stdout_file = (logs_dir / "stdout.log").open("w", encoding="utf-8", newline="\n")
         self._stderr_file = (logs_dir / "stderr.log").open("w", encoding="utf-8", newline="\n")
 
-        command = self.build_command(project)
+        command = list(command) if command is not None else self.build_command(project)
         self._run_status_path = logs_dir / "run_status.json"
+        self._summary_path = self._output_dir / "run_summary.txt"
+        self._summary_before = summary_fingerprint(self._summary_path)
+        self.last_result = None
         self._requested_state = ""
         self._status_data = {
             "state": "running",
@@ -185,10 +206,29 @@ class G4USimRunner(QObject):
             for tag in parse_log_line(line):
                 self.logTagDetected.emit(tag.level, tag.message, tag.advice)
 
-    def _on_finished(self, exit_code: int, _exit_status: QProcess.ExitStatus) -> None:
-        state = self._requested_state or "finished"
-        self._status_data["state"] = state
+    def _on_finished(self, exit_code: int, exit_status: QProcess.ExitStatus) -> None:
+        assert self._summary_path is not None
+        after = summary_fingerprint(self._summary_path)
+        fresh = after is not None and after != self._summary_before
+        self.last_result = evaluate_run_result(
+            self._summary_path,
+            exit_code=exit_code,
+            crashed=exit_status != QProcess.NormalExit or self._status_data.get("state") == "error",
+            requested_state=self._requested_state,
+            summary_fresh=fresh,
+        )
+        self._status_data["state"] = self.last_result.state
         self._status_data["exitCode"] = exit_code
+        self._status_data["exitStatus"] = "normal" if exit_status == QProcess.NormalExit else "crashed"
+        self._status_data["resultVersion"] = 1
+        self._status_data["resultReason"] = self.last_result.reason
+        self._status_data["summaryPath"] = str(self._summary_path)
+        self._status_data["summaryFresh"] = fresh
+        self._status_data["summaryFingerprint"] = list(after) if after else None
+        self._status_data["summaryStatus"] = self.last_result.summary_status
+        self._status_data["runCount"] = self.last_result.run_count
+        self._status_data["plannedEvents"] = self.last_result.planned_events
+        self._status_data["completedEvents"] = self.last_result.completed_events
         self._status_data["finishedAt"] = _now_iso()
         self._write_run_status()
         self.save_logs()

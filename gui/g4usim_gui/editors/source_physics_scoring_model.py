@@ -257,7 +257,7 @@ def validate_physics_model(model: PhysicsEditableModel) -> PhysicsEditableModel:
     elif not _looks_like_value_with_unit(model.default_cut):
         model.warnings.append("default cut should include a value and unit, for example '1 mm'")
     if model.enable_biasing_physics:
-        model.warnings.append("This only enables the physics hook. Biasing rules are configured in a later editor.")
+        model.errors.append("Biasing rules cannot be edited or generated here. Disable the hook for generated packages, or use external config/macro with explicit process-level rules.")
     if model.extra_modules:
         model.warnings.append("extra modules are preserved in the model but not edited by this MVP")
     if model.manual_modules:

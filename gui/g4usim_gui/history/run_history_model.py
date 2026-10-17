@@ -9,6 +9,7 @@ class RunHistoryEntry:
     run_name: str = ""
     timestamp: str = ""
     status: str = "unknown"
+    result_reason: str = ""
     exit_code: int | None = None
     executable: str = ""
     config_path: str = ""

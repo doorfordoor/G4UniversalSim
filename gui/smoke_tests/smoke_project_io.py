@@ -6,7 +6,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from g4usim_gui.core.project import G4USimProject, load_project, save_project
+from g4usim_gui.core.project import G4USimProject, SCHEMA_VERSION, load_project, save_project
 
 
 def main() -> int:
@@ -19,6 +19,15 @@ def main() -> int:
         assert loaded.projectName == "smoke"
         assert loaded.threads == 2
         assert loaded.runSettings.run_name == "smoke_run"
+        assert loaded.runInputMode == "generated"
+        assert loaded.version == SCHEMA_VERSION
+
+        old_external = path.with_name("old_external.json")
+        old_external.write_text(
+            '{"schema":"G4UniversalSimProject","version":5,"macroPath":"old.mac"}',
+            encoding="utf-8",
+        )
+        assert load_project(old_external).runInputMode == "external"
     print("smoke_project_io: ok")
     return 0
 

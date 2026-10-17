@@ -7,6 +7,13 @@ from g4usim_gui.parsers.ini_light_parser import IniSection, parse_ini_light
 
 
 FORBIDDEN_BOOLEAN_KEYS = {"material", "sensitive", "bias", "region", "parent", "placement", "copyno"}
+SHAPE_PROPERTY_KEYS = {
+    "dx1", "dx2", "dx3", "dx4", "dy1", "dy2", "dz",
+    "theta", "phi", "alpha1", "alpha2",
+}
+TRD_PROPERTY_KEYS = ("dx1", "dx2", "dy1", "dy2", "dz")
+VISUAL_KEYS = {"vis.color", "vis.alpha", "vis.visible", "vis.wireframe"}
+PRODUCTION_CUT_KEYS = {"cut.gamma", "cut.e-", "cut.e+", "cut.proton"}
 
 
 @dataclass
@@ -40,6 +47,9 @@ class VolumeEntry:
     region: str = ""
     copy_no: str = ""
     metadata: str = ""
+    shape_properties: dict[str, str] = field(default_factory=dict)
+    visual: dict[str, str] = field(default_factory=dict)
+    production_cuts: dict[str, str] = field(default_factory=dict)
     section: str = ""
     line_no: int = 0
     boolean_ops: list[BooleanOperationEntry] = field(default_factory=list)
@@ -49,6 +59,7 @@ class VolumeEntry:
 class GeometrySummary:
     path: str
     template_hint: str = ""
+    schema_version: int | None = None
     volumes: list[VolumeEntry] = field(default_factory=list)
     material_refs: set[str] = field(default_factory=set)
     sensitive_volumes: set[str] = field(default_factory=set)
@@ -74,6 +85,19 @@ def parse_geometry(path: str | Path, template_name: str | None = None) -> Geomet
     summary = GeometrySummary(path=document.path, warnings=list(document.warnings), errors=list(document.errors), raw_text=document.raw_text)
     lower_text = document.raw_text.lower()
     summary.template_hint = (template_name or "").strip().lower() or _template_hint(lower_text)
+
+    version_fields = _schema_version_fields(document.raw_text)
+    if len(version_fields) > 1:
+        summary.errors.append(f"{summary.path}: duplicate [global]/version declaration")
+    elif version_fields:
+        line, section, key, value = version_fields[0]
+        if value.strip() in {"1", "2"}:
+            summary.schema_version = int(value.strip())
+        else:
+            summary.errors.append(
+                f"{summary.path}:{line} [{section}]/{key} = {value}: "
+                "supported geometry versions are 1 and 2"
+            )
 
     volume_by_name: dict[str, VolumeEntry] = {}
     boolean_sections: list[IniSection] = []
@@ -122,6 +146,9 @@ def _parse_volume(section: IniSection) -> VolumeEntry:
         name = name or section.name.split(".", 1)[1]
 
     metadata_lines = [f"{key} = {value}" for key, value in section.values.items() if key.lower().startswith("metadata.")]
+    shape_properties = {key: value for key, value in values.items() if key in SHAPE_PROPERTY_KEYS}
+    visual = {key: value for key, value in values.items() if key in VISUAL_KEYS}
+    production_cuts = {key: value for key, value in values.items() if key in PRODUCTION_CUT_KEYS}
     return VolumeEntry(
         name=name,
         parent=values.get("parent", "world" if name != "world" else ""),
@@ -136,6 +163,9 @@ def _parse_volume(section: IniSection) -> VolumeEntry:
         region=values.get("region", values.get("regionname", "")),
         copy_no=values.get("copyno", values.get("copy_no", "")),
         metadata="\n".join(metadata_lines),
+        shape_properties=shape_properties,
+        visual=visual,
+        production_cuts=production_cuts,
         section=section.name,
         line_no=section.line_no,
     )
@@ -181,23 +211,70 @@ def _is_forbidden_boolean_key(key: str) -> bool:
 
 def _detect_round_trip_blockers(sections: list[IniSection], summary: GeometrySummary) -> None:
     mode = summary.template_hint
+    layer_names: set[str] = set()
+    if mode == "layered_device":
+        for section in sections:
+            if section.name.lower() == "layers":
+                for key, value in section.values.items():
+                    if key.lower() == "names":
+                        layer_names.update(name.strip().lower() for name in value.split(",") if name.strip())
     simple_keys = {
         "world": {"size", "material"},
         "target": {"name", "shape", "size", "material", "position", "rotation", "sensitive", "bias", "region"},
     }
-    layered_control = {"count", "names", "axis", "gap", "z_start"}
-    layered_volume = {"thickness", "xy", "material", "sensitive", "bias", "region", "copyno"}
+    layered_control = {"count", "names", "auto_stack", "axis", "gap", "z_start"}
+    layered_volume = {"thickness", "xy", "material", "sensitive", "bias", "region", "copyno", "position", "rotation"}
     hierarchical_volume = {
         "name", "parent", "shape", "size", "parameters", "material", "position", "rotation",
         "sensitive", "bias", "region", "copyno",
     }
     boolean_keys = {"name", "operation", "shape", "size", "parameters", "position", "rotation"}
 
-    for section in sections:
+    seen_sections: set[str] = set()
+    raw_lines = summary.raw_text.splitlines()
+
+    for index, section in enumerate(sections):
         section_lower = section.name.lower()
+        if section_lower in seen_sections:
+            summary.round_trip_blockers.append(
+                f"{summary.path}:{section.line_no} [{section.name}]: duplicate section cannot be preserved by the Geometry Editor"
+            )
+        seen_sections.add(section_lower)
+        if mode == "simple_box":
+            recognized_section = section_lower in {"global", "world", "target", "visual.world", "visual.target"}
+        elif mode == "layered_device":
+            recognized_section = section_lower in {"global", "world", "layers"} or (
+                section_lower.startswith("layer.") and section_lower[6:] in layer_names
+            )
+        elif mode in {"hierarchical", "hierarchical_boolean", "boolean_hierarchical", "boolean"}:
+            recognized_section = section_lower in {"global", "world"} or (
+                section_lower.startswith("volume.") and len(section_lower) > 7
+            )
+        else:
+            recognized_section = False
+        if not recognized_section:
+            summary.round_trip_blockers.append(
+                f"{summary.path}:{section.line_no} [{section.name}]: section is not represented by the Geometry Editor"
+            )
+            continue
+
+        end_line = sections[index + 1].line_no if index + 1 < len(sections) else len(raw_lines) + 1
+        seen_keys: set[str] = set()
+        for line_no in range(section.line_no + 1, end_line):
+            raw = raw_lines[line_no - 1].strip()
+            if not raw or raw.startswith(("#", ";")) or "=" not in raw:
+                continue
+            key = raw.split("=", 1)[0].strip().lower()
+            if key in seen_keys:
+                summary.round_trip_blockers.append(
+                    f"{summary.path}:{line_no} [{section.name}]/{key}: duplicate key cannot be preserved by the Geometry Editor"
+                )
+            seen_keys.add(key)
         for original_key, value in section.values.items():
             key = original_key.lower()
             line = section.key_lines.get(original_key, section.line_no)
+            if section_lower == "global" and key == "version":
+                continue
             representable = False
             legacy = False
             if mode == "simple_box":
@@ -207,13 +284,18 @@ def _detect_round_trip_blockers(sections: list[IniSection], summary: GeometrySum
                     representable = key in {"size", "material"}
                 elif section_lower == "layers":
                     representable = key in layered_control
-                elif section_lower.startswith("layer."):
-                    representable = key in layered_volume
-            elif mode == "hierarchical":
+                elif section_lower.startswith("layer.") and section_lower[6:] in layer_names:
+                    representable = (key in layered_volume or key in VISUAL_KEYS
+                                     or key in PRODUCTION_CUT_KEYS or key.startswith("metadata."))
+            elif mode in {"hierarchical", "hierarchical_boolean", "boolean_hierarchical", "boolean"}:
                 if _is_boolean_section(section.name):
                     representable = key in boolean_keys
                 elif section_lower == "world" or section_lower.startswith("volume."):
-                    representable = key in hierarchical_volume or key.startswith("metadata.")
+                    representable = (key in hierarchical_volume or key.startswith("metadata.")
+                                     or key in VISUAL_KEYS or key in PRODUCTION_CUT_KEYS
+                                     or (key in TRD_PROPERTY_KEYS and
+                                         next((value for name, value in section.values.items()
+                                               if name.lower() == "shape"), "").strip().lower() == "trd"))
 
             if representable:
                 if key.startswith("metadata.") and not key[len("metadata.") :].strip():
@@ -244,6 +326,25 @@ def _detect_round_trip_blockers(sections: list[IniSection], summary: GeometrySum
 
 def _parse_bool(value: str) -> bool:
     return value.strip().lower() in {"true", "1", "yes", "on"}
+
+
+def _schema_version_fields(raw_text: str) -> list[tuple[int, str, str, str]]:
+    fields: list[tuple[int, str, str, str]] = []
+    section = ""
+    for line_number, raw in enumerate(raw_text.splitlines(), start=1):
+        line = raw.strip()
+        if not line or line.startswith(("#", ";")):
+            continue
+        if line.startswith("[") and "]" in line:
+            section = line[1 : line.index("]")].strip()
+            continue
+        if section.lower() != "global" or "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        if key.strip().lower() == "version":
+            value = value.split(" #", 1)[0].split(" ;", 1)[0].strip()
+            fields.append((line_number, section, key.strip(), value))
+    return fields
 
 
 def _template_hint(text: str) -> str:

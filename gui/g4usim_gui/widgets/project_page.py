@@ -9,6 +9,7 @@ from PySide6.QtWidgets import (
     QGroupBox,
     QHBoxLayout,
     QLabel,
+    QComboBox,
     QLineEdit,
     QPushButton,
     QSplitter,
@@ -17,6 +18,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from g4usim_gui.core.i18n import ui_format, ui_text
 from g4usim_gui.core.project import G4USimProject
 from g4usim_gui.widgets.ui_helpers import create_hint_label, make_path_row
 
@@ -31,6 +33,9 @@ class ProjectPage(QWidget):
         self._building = False
 
         self.project_name = QLineEdit()
+        self.run_input_mode = QComboBox()
+        self.run_input_mode.addItem(ui_text("Generated from Configuration"), "generated")
+        self.run_input_mode.addItem(ui_text("Use external files"), "external")
         self.executable = QLineEdit()
         self.workspace_root = QLineEdit()
         self.config_path = QLineEdit()
@@ -59,8 +64,8 @@ class ProjectPage(QWidget):
         layout.setContentsMargins(12, 12, 12, 12)
         layout.setSpacing(10)
         layout.addWidget(create_hint_label(
-            "Step 1: choose executable. Step 2: choose config/macro here or generate a run package in Config Builder. "
-            "Project JSON stores GUI state only; simulation inputs remain config and macro files."
+            "Choose the executable, then use Configuration-generated input (default) or external config/macro files. "
+            "Generated input is validated and rebuilt when Run is clicked."
         ))
 
         setup_group = QGroupBox("Project Setup")
@@ -74,8 +79,11 @@ class ProjectPage(QWidget):
 
         run_group = QGroupBox("Current Run Defaults")
         run_form = QFormLayout(run_group)
-        run_form.addRow("Config file", make_path_row(self.config_path, "Browse", self._browse_config))
-        run_form.addRow("Macro file", make_path_row(self.macro_path, "Browse", self._browse_macro))
+        self.config_path_row = make_path_row(self.config_path, "Browse", self._browse_config)
+        self.macro_path_row = make_path_row(self.macro_path, "Browse", self._browse_macro)
+        run_form.addRow("Run input mode", self.run_input_mode)
+        run_form.addRow("Config file", self.config_path_row)
+        run_form.addRow("Macro file", self.macro_path_row)
         run_form.addRow("Output directory", make_path_row(self.output_dir, "Browse", self._browse_output))
         run_form.addRow("Threads", self.threads)
         run_form.addRow("Seed", self.seed)
@@ -103,10 +111,13 @@ class ProjectPage(QWidget):
         ]:
             widget.textChanged.connect(self._emit_changed)
         self.threads.valueChanged.connect(self._emit_changed)
+        self.run_input_mode.currentIndexChanged.connect(self._on_run_input_mode_changed)
 
     def set_project(self, project: G4USimProject) -> None:
         self._building = True
         self.project_name.setText(project.projectName)
+        mode_index = self.run_input_mode.findData(project.runInputMode)
+        self.run_input_mode.setCurrentIndex(max(0, mode_index))
         self.executable.setText(project.executable)
         self.workspace_root.setText(project.workspaceRoot)
         self.config_path.setText(project.configPath)
@@ -117,25 +128,30 @@ class ProjectPage(QWidget):
         self.seed.setText(str(project.seed) if project.seed else "")
         self.run_name.setText(project.runName)
         self._building = False
+        self._update_mode_controls()
         self._update_status_summary()
 
-    def to_project(self) -> G4USimProject:
-        return G4USimProject(
-            projectName=self.project_name.text().strip() or "demo",
-            executable=self.executable.text().strip(),
-            workspaceRoot=self.workspace_root.text().strip(),
-            configPath=self.config_path.text().strip(),
-            macroPath=self.macro_path.text().strip(),
-            outputDir=self.output_dir.text().strip(),
-            runsRoot=self.runs_root.text().strip(),
-            threads=self.threads.value(),
-            seed=self.seed.text().strip(),
-            runName=self.run_name.text().strip(),
-        )
+    def apply_to_project(self, project: G4USimProject) -> G4USimProject:
+        project.projectName = self.project_name.text().strip() or "demo"
+        project.runInputMode = str(self.run_input_mode.currentData() or "generated")
+        project.executable = self.executable.text().strip()
+        project.workspaceRoot = self.workspace_root.text().strip()
+        project.configPath = self.config_path.text().strip()
+        project.macroPath = self.macro_path.text().strip()
+        project.outputDir = self.output_dir.text().strip()
+        project.runsRoot = self.runs_root.text().strip()
+        project.threads = self.threads.value()
+        project.seed = self.seed.text().strip()
+        project.runName = self.run_name.text().strip()
+        return project
+
+    def to_project(self, existing_project: G4USimProject | None = None) -> G4USimProject:
+        return self.apply_to_project(existing_project or G4USimProject())
 
     def set_inputs_enabled(self, enabled: bool) -> None:
         for widget in [
             self.project_name,
+            self.run_input_mode,
             self.executable,
             self.workspace_root,
             self.config_path,
@@ -149,6 +165,27 @@ class ProjectPage(QWidget):
             self.load_button,
         ]:
             widget.setEnabled(enabled)
+
+    def refresh_language(self) -> None:
+        current_mode = self.run_input_mode.currentData()
+        self.run_input_mode.setItemText(0, ui_text("Generated from Configuration"))
+        self.run_input_mode.setItemText(1, ui_text("Use external files"))
+        index = self.run_input_mode.findData(current_mode)
+        self.run_input_mode.setCurrentIndex(max(0, index))
+        self._update_mode_controls()
+        self._update_status_summary()
+
+    def _on_run_input_mode_changed(self) -> None:
+        self._update_mode_controls()
+        self._emit_changed()
+
+    def _update_mode_controls(self) -> None:
+        generated = self.run_input_mode.currentData() == "generated"
+        self.config_path_row.setEnabled(not generated)
+        self.macro_path_row.setEnabled(not generated)
+        hint = ui_text("Generated automatically at run time") if generated else ""
+        self.config_path.setPlaceholderText(hint)
+        self.macro_path.setPlaceholderText(hint)
 
     def _with_browse(self, line_edit: QLineEdit, callback) -> QWidget:
         container = QWidget()
@@ -201,20 +238,30 @@ class ProjectPage(QWidget):
         def status_for_file(value: str, *, required: bool) -> str:
             text = value.strip()
             if not text:
-                return "missing" if required else "not set"
-            return "ok" if Path(text).expanduser().exists() else "missing"
+                return ui_text("missing" if required else "not set")
+            return ui_text("ok" if Path(text).expanduser().exists() else "missing")
 
         output_text = self.output_dir.text().strip()
         if not output_text:
-            output_status = "missing"
+            output_status = ui_text("missing")
         else:
             output = Path(output_text).expanduser()
-            output_status = "ok" if output.exists() and output.is_dir() else "creatable" if output.parent.exists() else "missing parent"
+            output_status = ui_text(
+                "ok" if output.exists() and output.is_dir() else "creatable" if output.parent.exists() else "missing parent"
+            )
         lines = [
-            f"Executable: {status_for_file(self.executable.text(), required=True)}",
-            f"Config: {status_for_file(self.config_path.text(), required=False)}",
-            f"Macro: {status_for_file(self.macro_path.text(), required=True)}",
-            f"Output: {output_status}",
-            f"Workspace: {'ok' if self.workspace_root.text().strip() and Path(self.workspace_root.text().strip()).expanduser().is_dir() else 'not set/missing'}",
+            ui_format("Executable: {status}", status=status_for_file(self.executable.text(), required=True)),
+            ui_format("Config: {status}", status=status_for_file(self.config_path.text(), required=False)),
+            ui_format("Macro: {status}", status=status_for_file(self.macro_path.text(), required=False)),
+            ui_format("Output: {status}", status=output_status),
+            ui_format(
+                "Workspace: {status}",
+                status=ui_text(
+                    "ok"
+                    if self.workspace_root.text().strip()
+                    and Path(self.workspace_root.text().strip()).expanduser().is_dir()
+                    else "not set/missing"
+                ),
+            ),
         ]
         self.status_summary.setText("\n".join(lines))

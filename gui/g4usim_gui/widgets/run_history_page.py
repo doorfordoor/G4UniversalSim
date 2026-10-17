@@ -20,6 +20,7 @@ from PySide6.QtWidgets import (
 )
 
 from g4usim_gui.core.paths import open_directory
+from g4usim_gui.core.i18n import ui_text
 from g4usim_gui.history.run_history_model import RunHistoryEntry
 from g4usim_gui.history.run_history_scanner import scan_runs_root
 
@@ -38,7 +39,7 @@ class RunHistoryPage(QWidget):
         self.runs_root = QLineEdit()
         self.search = QLineEdit()
         self.status_filter = QComboBox()
-        self.status_filter.addItems(["all", "success", "failed", "incomplete", "unknown", "stopped", "killed", "error"])
+        self.status_filter.addItems(["all", "success", "dry_run", "interactive_no_run", "no_run", "failed", "incomplete", "stopped", "killed"])
 
         self.browse_button = QPushButton("Browse")
         self.refresh_button = QPushButton("Refresh")
@@ -167,7 +168,7 @@ class RunHistoryPage(QWidget):
             values = [
                 entry.timestamp,
                 entry.run_name,
-                entry.status,
+                ui_text(entry.status),
                 "" if entry.exit_code is None else str(entry.exit_code),
                 entry.geometry_template,
                 "" if entry.threads is None else str(entry.threads),
@@ -194,6 +195,7 @@ class RunHistoryPage(QWidget):
         lines = [
             f"package = {entry.package_dir}",
             f"status = {entry.status}",
+            f"result_reason = {ui_text(entry.result_reason)}",
             f"exit_code = {entry.exit_code}",
             f"executable = {entry.executable}",
             f"config = {entry.config_path}",

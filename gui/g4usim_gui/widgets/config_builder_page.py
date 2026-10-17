@@ -1,16 +1,19 @@
 from __future__ import annotations
 
-from PySide6.QtCore import Signal
+from PySide6.QtCore import Qt, Signal
+from PySide6.QtGui import QStandardItemModel
 from PySide6.QtWidgets import (
     QApplication,
     QCheckBox,
     QComboBox,
     QFileDialog,
+    QFrame,
     QFormLayout,
     QGridLayout,
     QGroupBox,
     QHBoxLayout,
     QLabel,
+    QLayout,
     QLineEdit,
     QPlainTextEdit,
     QPushButton,
@@ -24,6 +27,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from g4usim_gui.core.i18n import ui_format, ui_text
 from g4usim_gui.core.project import G4USimProject
 from g4usim_gui.editors.geometry_editor_model import (
     BooleanOperationRow,
@@ -83,7 +87,23 @@ class ConfigBuilderPage(QWidget):
     generatePackageRequested = Signal(bool)
     settingsChanged = Signal()
 
-    GEOMETRY_TEMPLATES = ["simple_box", "layered_device", "hierarchical", "boolean_hierarchical", "array", "shielding"]
+    GEOMETRY_PRIMARY_OPTIONS = (
+        ("layered_device", "Layered Model"),
+        ("hierarchical", "Hierarchical Model"),
+    )
+    GEOMETRY_PLANNED_OPTIONS = (
+        ("external_geometry_import", "External Geometry Import (Planned)"),
+    )
+    GEOMETRY_COMPATIBILITY_LABELS = {
+        "simple_box": "Single Target Preset (Legacy)",
+        "simple": "Single Target Preset (Legacy)",
+        "array": "Regular Array Preset (Legacy)",
+        "shielding": "Shielding Preset (Legacy)",
+        "boolean_hierarchical": "Hierarchical Boolean Alias (Legacy)",
+        "hierarchical_boolean": "Hierarchical Boolean Alias (Legacy)",
+        "boolean": "Hierarchical Boolean Alias (Legacy)",
+        "layered": "Layered Model",
+    }
     SOURCE_PRESETS = ["proton_beam", "mono_proton", "neutron_beam", "gamma_beam", "isotropic_neutron", "plane_proton_beam"]
 
     def __init__(self, parent: QWidget | None = None) -> None:
@@ -112,7 +132,7 @@ class ConfigBuilderPage(QWidget):
         self.materials_config = QLineEdit()
         self.geometry_config = QLineEdit()
         self.geometry_template = QComboBox()
-        self.geometry_template.addItems(self.GEOMETRY_TEMPLATES)
+        self._populate_geometry_template_options("hierarchical")
         self.reload_materials_button = QPushButton("Reload materials")
         self.reload_geometry_button = QPushButton("Reload geometry")
 
@@ -151,8 +171,8 @@ class ConfigBuilderPage(QWidget):
         set_table_minimum_rows(self.nist_table, 8)
         self.nist_table.itemClicked.connect(lambda item: QApplication.clipboard().setText(item.text()))
 
-        self.geometry_table = QTableWidget(0, 12)
-        self.geometry_table.setHorizontalHeaderLabels(["enabled", "name", "parent", "shape", "material", "position", "size/parameters", "rotation", "sensitive", "bias", "region", "status"])
+        self.geometry_table = QTableWidget(0, 17)
+        self.geometry_table.setHorizontalHeaderLabels(["enabled", "name", "parent", "shape", "material", "position", "size/parameters", "rotation", "sensitive", "bias", "region", "dx1", "dx2", "dy1", "dy2", "dz", "status"])
         set_table_minimum_rows(self.geometry_table, 8)
         self.geometry_count_label = QLabel("Volumes: 0 entries | Preview only")
         self.add_volume_button = QPushButton("Add Volume")
@@ -188,6 +208,7 @@ class ConfigBuilderPage(QWidget):
         self.preview3d_status.setWordWrap(True)
         self.preview3d_messages = QPlainTextEdit()
         self.preview3d_messages.setReadOnly(True)
+        self.preview3d_messages.setMaximumHeight(150)
         self.preview_scene = PreviewScene()
         self.preview3d_widget = self._create_preview3d_widget()
         self.geometry_document = GeometryDocument()
@@ -217,6 +238,8 @@ class ConfigBuilderPage(QWidget):
         self.layered_axis.addItems(["z"])
         self.layered_gap = QLineEdit("0 um")
         self.layered_z_start = QLineEdit()
+        self.layered_auto_stack = QCheckBox("Automatically stack layers")
+        self.layered_auto_stack.setChecked(True)
         self.layer_table = QTableWidget(0, 8)
         self.layer_table.setHorizontalHeaderLabels(["enabled", "name", "material", "thickness", "xy", "sensitive", "bias", "region"])
         set_table_minimum_rows(self.layer_table, 6)
@@ -235,6 +258,8 @@ class ConfigBuilderPage(QWidget):
         self.layer_bias = QCheckBox("Bias volume")
         self.layer_region = QLineEdit()
         self.layer_copy_no = QLineEdit()
+        self.layer_position = QLineEdit()
+        self.layer_rotation = QLineEdit()
         self.layer_status = QPlainTextEdit()
         self.layer_status.setReadOnly(True)
         self._selected_layer_row = -1
@@ -291,7 +316,7 @@ class ConfigBuilderPage(QWidget):
         self.physics_editor_reference.setEditable(True)
         self.physics_editor_reference.addItems(REFERENCE_LIST_CANDIDATES)
         self.physics_editor_default_cut = QLineEdit("1 mm")
-        self.physics_editor_biasing = QCheckBox("Enable biasing physics hook")
+        self.physics_editor_biasing = QCheckBox(ui_text("Biasing hook (external input only)"))
         self.physics_editor_messages = QPlainTextEdit()
         self.physics_editor_messages.setReadOnly(True)
 
@@ -363,6 +388,7 @@ class ConfigBuilderPage(QWidget):
 
     def _setup_panel(self) -> QWidget:
         content = QWidget()
+        content.setObjectName("setupPanel")
         content_layout = QVBoxLayout(content)
         content_layout.setContentsMargins(8, 8, 8, 8)
         content_layout.setSpacing(8)
@@ -373,10 +399,12 @@ class ConfigBuilderPage(QWidget):
         content_layout.addWidget(self._physics_group())
         content_layout.addWidget(self._scoring_group())
 
-        buttons = QHBoxLayout()
-        buttons.addWidget(self.validate_button)
-        buttons.addWidget(self.generate_button)
-        buttons.addWidget(self.generate_run_button)
+        buttons = QGridLayout()
+        buttons.setHorizontalSpacing(8)
+        buttons.setVerticalSpacing(8)
+        buttons.addWidget(self.validate_button, 0, 0)
+        buttons.addWidget(self.generate_button, 0, 1)
+        buttons.addWidget(self.generate_run_button, 1, 0, 1, 2)
         actions = QGroupBox("Actions")
         actions_layout = QVBoxLayout(actions)
         actions_layout.addLayout(buttons)
@@ -398,6 +426,7 @@ class ConfigBuilderPage(QWidget):
         layout.addWidget(self.workspace_summary)
 
         tabs = QTabWidget()
+        self.workspace_tabs = tabs
         tabs.addTab(self._materials_editor_tab(), "Materials")
         tabs.addTab(self._geometry_editor_tab(), "Geometry")
         tabs.addTab(self._table_tab(self.boolean_count_label, self.boolean_table), "Boolean Ops")
@@ -416,14 +445,23 @@ class ConfigBuilderPage(QWidget):
         layout.addWidget(table, 1)
         return tab
 
+    def _toolbar_grid(self, buttons: list[QPushButton], columns: int) -> QGridLayout:
+        toolbar = QGridLayout()
+        toolbar.setHorizontalSpacing(8)
+        toolbar.setVerticalSpacing(8)
+        for index, button in enumerate(buttons):
+            toolbar.addWidget(button, index // columns, index % columns)
+        for column in range(columns):
+            toolbar.setColumnStretch(column, 1)
+        return toolbar
+
     def _materials_editor_tab(self) -> QWidget:
         tab = QWidget()
         layout = QVBoxLayout(tab)
         layout.addWidget(QLabel("Materials Editor"))
         layout.addWidget(self.materials_count_label)
         layout.addWidget(QLabel("Generated target: run package config/materials/material.ini. Source file is never overwritten."))
-        toolbar = QHBoxLayout()
-        for button in [
+        toolbar = self._toolbar_grid([
             self.load_materials_editor_button,
             self.add_nist_button,
             self.add_mass_button,
@@ -433,9 +471,7 @@ class ConfigBuilderPage(QWidget):
             self.delete_material_button,
             self.validate_materials_button,
             self.revert_materials_button,
-        ]:
-            toolbar.addWidget(button)
-        toolbar.addStretch(1)
+        ], 5)
         layout.addLayout(toolbar)
         layout.addWidget(self.materials_table, 2)
 
@@ -500,6 +536,7 @@ class ConfigBuilderPage(QWidget):
         form.addRow("Stacking axis", self.layered_axis)
         form.addRow("Gap", self.layered_gap)
         form.addRow("z_start", self.layered_z_start)
+        form.addRow("", self.layered_auto_stack)
         layout.addLayout(form)
         toolbar = QHBoxLayout()
         for button in [
@@ -524,6 +561,8 @@ class ConfigBuilderPage(QWidget):
         detail_form.addRow("", self.layer_bias)
         detail_form.addRow("Region", self.layer_region)
         detail_form.addRow("copyNo", self.layer_copy_no)
+        detail_form.addRow("Position (manual stacking)", self.layer_position)
+        detail_form.addRow("Rotation", self.layer_rotation)
         layout.addWidget(detail)
         layout.addWidget(QLabel("Layer validation"))
         layout.addWidget(self.layer_status, 1)
@@ -542,8 +581,7 @@ class ConfigBuilderPage(QWidget):
         tab = QWidget()
         layout = QVBoxLayout(tab)
         layout.addWidget(create_hint_label("Edits generic [world] and [volume.*] sections. Disabled rows stay in the GUI but are not generated."))
-        toolbar = QHBoxLayout()
-        for button in [
+        toolbar = self._toolbar_grid([
             self.add_volume_button,
             self.duplicate_volume_button,
             self.delete_volume_button,
@@ -551,9 +589,7 @@ class ConfigBuilderPage(QWidget):
             self.move_volume_down_button,
             self.validate_geometry_button,
             self.revert_geometry_button,
-        ]:
-            toolbar.addWidget(button)
-        toolbar.addStretch(1)
+        ], 4)
         layout.addLayout(toolbar)
         layout.addWidget(self.geometry_count_label)
         layout.addWidget(self.geometry_table, 1)
@@ -563,17 +599,14 @@ class ConfigBuilderPage(QWidget):
         tab = QWidget()
         layout = QVBoxLayout(tab)
         layout.addWidget(create_hint_label("Boolean tools are solid operands, not volumes. They do not have material/sensitive/bias state. Writer renumbers enabled ops per target."))
-        toolbar = QHBoxLayout()
-        for button in [
+        toolbar = self._toolbar_grid([
             self.add_boolean_button,
             self.duplicate_boolean_button,
             self.delete_boolean_button,
             self.move_boolean_up_button,
             self.move_boolean_down_button,
             self.validate_boolean_button,
-        ]:
-            toolbar.addWidget(button)
-        toolbar.addStretch(1)
+        ], 3)
         layout.addLayout(toolbar)
         layout.addWidget(self.boolean_count_label)
         layout.addWidget(self.boolean_table, 1)
@@ -614,6 +647,7 @@ class ConfigBuilderPage(QWidget):
         status.addStretch(1)
         layout.addLayout(status)
         tabs = QTabWidget()
+        self.run_config_tabs = tabs
         tabs.addTab(self._source_editor_tab(), "Source")
         tabs.addTab(self._physics_editor_tab(), "Physics")
         tabs.addTab(self._scoring_editor_tab(), "Scoring")
@@ -621,8 +655,10 @@ class ConfigBuilderPage(QWidget):
         return tab
 
     def _source_editor_tab(self) -> QWidget:
-        tab = QWidget()
-        layout = QVBoxLayout(tab)
+        content = QWidget()
+        content.setObjectName("sourceEditorContent")
+        layout = QVBoxLayout(content)
+        layout.setSizeConstraint(QLayout.SizeConstraint.SetMinimumSize)
         basic = QGroupBox("Basic")
         basic_form = QFormLayout(basic)
         basic_form.addRow("Preset", self.source_editor_preset)
@@ -658,8 +694,16 @@ class ConfigBuilderPage(QWidget):
         layout.addWidget(angular)
         layout.addWidget(create_hint_label("Backend support: point/fixed, point/isotropic, plane circle/fixed, and plane circle/isotropic are generated to main.ini. Rectangle, annulus, cone, cosine, and focused modes are shown in preview but blocked from package generation until the C++ Source backend supports them."))
         layout.addWidget(QLabel("Validation messages"))
-        layout.addWidget(self.source_editor_messages, 1)
-        return tab
+        self.source_editor_messages.setMinimumHeight(110)
+        layout.addWidget(self.source_editor_messages)
+
+        self.source_editor_scroll = QScrollArea()
+        self.source_editor_scroll.setObjectName("sourceEditorScroll")
+        self.source_editor_scroll.setFrameShape(QFrame.Shape.NoFrame)
+        self.source_editor_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.source_editor_scroll.setWidgetResizable(True)
+        self.source_editor_scroll.setWidget(content)
+        return self.source_editor_scroll
 
     def _physics_editor_tab(self) -> QWidget:
         tab = QWidget()
@@ -670,7 +714,7 @@ class ConfigBuilderPage(QWidget):
         form.addRow("Default cut", self.physics_editor_default_cut)
         form.addRow("", self.physics_editor_biasing)
         layout.addLayout(form)
-        layout.addWidget(create_hint_label("Biasing physics only enables the physics hook. Biasing rules are configured in a later editor. Manual mode is not generated by this MVP."))
+        layout.addWidget(create_hint_label(ui_text("Generated packages cannot configure biasing rules. Use external config/macro for process-level biasing.")))
         layout.addWidget(QLabel("Validation messages"))
         layout.addWidget(self.physics_editor_messages, 1)
         return tab
@@ -768,7 +812,7 @@ class ConfigBuilderPage(QWidget):
         form = QFormLayout(group)
         form.addRow("Reference list", self.physics_reference)
         form.addRow("Default cut", self.default_cut)
-        form.addRow("Enable biasing physics", self.enable_biasing)
+        form.addRow(ui_text("Biasing hook (external input only)"), self.enable_biasing)
         return group
 
     def _scoring_group(self) -> QGroupBox:
@@ -835,7 +879,7 @@ class ConfigBuilderPage(QWidget):
             self.scoring_edep,
         ]:
             widget.stateChanged.connect(self._emit_changed)
-        self.geometry_template.currentTextChanged.connect(self._on_geometry_template_changed)
+        self.geometry_template.currentIndexChanged.connect(self._on_geometry_template_changed)
         self.source_preset.currentTextChanged.connect(self._emit_changed)
         self.material_name.textEdited.connect(self._update_selected_material_from_detail)
         self.material_mode.currentTextChanged.connect(self._update_selected_material_from_detail)
@@ -857,6 +901,8 @@ class ConfigBuilderPage(QWidget):
             self.layer_xy,
             self.layer_region,
             self.layer_copy_no,
+            self.layer_position,
+            self.layer_rotation,
         ]:
             widget.textEdited.connect(self._update_geometry_from_widgets)
         for combo in [
@@ -874,6 +920,7 @@ class ConfigBuilderPage(QWidget):
             self.layer_enabled,
             self.layer_sensitive,
             self.layer_bias,
+            self.layered_auto_stack,
         ]:
             widget.stateChanged.connect(self._update_geometry_from_widgets)
         self.layer_table.itemSelectionChanged.connect(self._on_layer_selection_changed)
@@ -989,7 +1036,7 @@ class ConfigBuilderPage(QWidget):
 
         self.materials_config.setText(paths.materials_config)
         self.geometry_config.setText(geometry.config_path or paths.geometry_config)
-        self._set_combo_text(self.geometry_template, geometry.template)
+        self._set_geometry_template_token(geometry.template)
 
         self._set_combo_text(self.source_preset, source.preset)
         self.source_particle.setText(source.particle)
@@ -1016,7 +1063,9 @@ class ConfigBuilderPage(QWidget):
         self.reload_materials()
         self.reload_geometry()
         saved_geometry = getattr(project, "geometryEditor", None)
-        if isinstance(saved_geometry, GeometryDocument) and saved_geometry.is_dirty:
+        if isinstance(saved_geometry, GeometryDocument) and (
+            saved_geometry.is_dirty or saved_geometry.source_copy_mode
+        ):
             self.geometry_document = saved_geometry
             self._populate_geometry_editor()
             self._update_workspace_summary()
@@ -1033,6 +1082,14 @@ class ConfigBuilderPage(QWidget):
         project.sourceSettings = self.source_settings()
         project.physicsSettings = self.physics_settings()
         project.scoringSettings = self.scoring_settings()
+
+    def set_run_defaults(self, project: G4USimProject) -> None:
+        """Apply flat Project-page run defaults without replacing editor models."""
+        self._building = True
+        self.run_name.setText(project.runName or project.projectName or "gui_run")
+        self.threads.setValue(max(1, int(project.threads)))
+        self.seed.setText(str(project.seed) if project.seed else "")
+        self._building = False
 
     def path_settings(self, project: G4USimProject) -> PathSettings:
         paths = PathSettings(
@@ -1064,7 +1121,7 @@ class ConfigBuilderPage(QWidget):
 
     def geometry_settings(self) -> GeometrySettings:
         return GeometrySettings(
-            template=self.geometry_template.currentText().strip(),
+            template=self._geometry_template_token(),
             config_path=self.geometry_config.text().strip(),
         )
 
@@ -1080,7 +1137,7 @@ class ConfigBuilderPage(QWidget):
     def validate_current(self, project: G4USimProject) -> ValidationReport:
         if not self.material_document.is_dirty:
             self.reload_materials()
-        if not self.geometry_document.is_dirty:
+        if not self.geometry_document.is_dirty and not self.geometry_document.source_copy_mode:
             self.reload_geometry()
         report = validate_config_builder(
             paths=self.path_settings(project),
@@ -1090,7 +1147,7 @@ class ConfigBuilderPage(QWidget):
             physics=self.physics_settings(),
             scoring=self.scoring_settings(),
             material_document=self.material_document if self.material_document.is_dirty else None,
-            geometry_document=self.geometry_document if self.geometry_document.is_dirty else None,
+            geometry_document=self.geometry_document,
             source_model=self.source_editor,
             physics_model=self.physics_editor,
             scoring_model=self.scoring_editor,
@@ -1130,6 +1187,45 @@ class ConfigBuilderPage(QWidget):
             index = combo.findText(value)
         combo.setCurrentIndex(index)
 
+    def _geometry_template_token(self) -> str:
+        return str(self.geometry_template.currentData() or "").strip()
+
+    def _set_geometry_template_token(self, token: str) -> None:
+        normalized = token.strip() or "hierarchical"
+        index = self.geometry_template.findData(normalized)
+        if index < 0:
+            self._populate_geometry_template_options(normalized)
+            index = self.geometry_template.findData(normalized)
+        self.geometry_template.setCurrentIndex(max(0, index))
+
+    def _populate_geometry_template_options(self, selected_token: str = "") -> None:
+        token = selected_token.strip() or self._geometry_template_token() or "hierarchical"
+        blocked = self.geometry_template.blockSignals(True)
+        self.geometry_template.clear()
+        for machine_value, label in self.GEOMETRY_PRIMARY_OPTIONS:
+            self.geometry_template.addItem(ui_text(label), machine_value)
+        for machine_value, label in self.GEOMETRY_PLANNED_OPTIONS:
+            index = self.geometry_template.count()
+            self.geometry_template.addItem(ui_text(label), machine_value)
+            model = self.geometry_template.model()
+            if isinstance(model, QStandardItemModel):
+                item = model.item(index)
+                if item is not None:
+                    item.setEnabled(False)
+        known_values = {
+            machine_value for machine_value, _label in self.GEOMETRY_PRIMARY_OPTIONS + self.GEOMETRY_PLANNED_OPTIONS
+        }
+        if token not in known_values:
+            self.geometry_template.insertSeparator(self.geometry_template.count())
+            label = self.GEOMETRY_COMPATIBILITY_LABELS.get(token)
+            display = ui_text(label) if label else ui_format("Compatibility mode: {token}", token=token)
+            self.geometry_template.addItem(display, token)
+        index = self.geometry_template.findData(token)
+        if index < 0 or token == "external_geometry_import":
+            index = self.geometry_template.findData("hierarchical")
+        self.geometry_template.setCurrentIndex(max(0, index))
+        self.geometry_template.blockSignals(blocked)
+
     def _emit_changed(self) -> None:
         if not self._building:
             self._mark_preview_stale()
@@ -1157,7 +1253,13 @@ class ConfigBuilderPage(QWidget):
             message_lines = self.preview_scene.summary_lines()
             self.preview3d_messages.setPlainText("\n".join(message_lines))
             status = "ERROR" if self.preview_scene.errors else "WARN" if self.preview_scene.warnings else "OK"
-            self.preview3d_status.setText(f"3D Preview: {status} | volumes={len(self.preview_scene.volumes)}")
+            self.preview3d_status.setText(
+                ui_format(
+                    "3D Preview: {status} | volumes={volumes}",
+                    status=ui_text(status),
+                    volumes=len(self.preview_scene.volumes),
+                )
+            )
         except Exception as exc:  # noqa: BLE001
             self.preview3d_status.setText(f"3D Preview: ERROR")
             self.preview3d_messages.setPlainText(f"Preview refresh failed:\n{exc}")
@@ -1165,7 +1267,7 @@ class ConfigBuilderPage(QWidget):
     def _on_geometry_template_changed(self) -> None:
         if self._building:
             return
-        set_geometry_mode(self.geometry_document, self.geometry_template.currentText())
+        set_geometry_mode(self.geometry_document, self._geometry_template_token())
         if self.geometry_document.mode in HIERARCHICAL_GEOMETRY_MODES and not self.geometry_document.volumes:
             self.geometry_document.volumes.append(
                 HierarchicalVolumeRow(name="world", shape="box", size="10 cm,10 cm,10 cm", material="G4_AIR", position="0 mm,0 mm,0 mm", rotation="0 deg,0 deg,0 deg")
@@ -1230,6 +1332,7 @@ class ConfigBuilderPage(QWidget):
         self._set_combo_text(self.layered_axis, layered.axis)
         self.layered_gap.setText(layered.gap)
         self.layered_z_start.setText(layered.z_start)
+        self.layered_auto_stack.setChecked(layered.auto_stack)
         self._building = False
         self._populate_layers_table()
         self._populate_hierarchical_tables()
@@ -1272,6 +1375,11 @@ class ConfigBuilderPage(QWidget):
                 "true" if volume.sensitive else "false",
                 "true" if volume.bias else "false",
                 volume.region,
+                volume.shape_properties.get("dx1", ""),
+                volume.shape_properties.get("dx2", ""),
+                volume.shape_properties.get("dy1", ""),
+                volume.shape_properties.get("dy2", ""),
+                volume.shape_properties.get("dz", ""),
                 status,
             ]
             for col, value in enumerate(values):
@@ -1330,6 +1438,7 @@ class ConfigBuilderPage(QWidget):
         layered.axis = self.layered_axis.currentText().strip()
         layered.gap = self.layered_gap.text().strip()
         layered.z_start = self.layered_z_start.text().strip()
+        layered.auto_stack = self.layered_auto_stack.isChecked()
         self._update_selected_layer_from_detail()
         self.geometry_document.is_dirty = self.geometry_document.mode in EDITABLE_GEOMETRY_MODES
         self._validate_geometry_editor()
@@ -1360,6 +1469,11 @@ class ConfigBuilderPage(QWidget):
         volume.sensitive = self._as_bool(values[8])
         volume.bias = self._as_bool(values[9])
         volume.region = values[10]
+        for field, value in zip(("dx1", "dx2", "dy1", "dy2", "dz"), values[11:16]):
+            if value:
+                volume.shape_properties[field] = value
+            else:
+                volume.shape_properties.pop(field, None)
         self._mark_geometry_dirty()
 
     def _on_boolean_table_changed(self, item: QTableWidgetItem) -> None:
@@ -1567,6 +1681,8 @@ class ConfigBuilderPage(QWidget):
             self.layer_xy.clear()
             self.layer_region.clear()
             self.layer_copy_no.clear()
+            self.layer_position.clear()
+            self.layer_rotation.clear()
             self.layer_status.setPlainText("Select a layer to edit.")
             self._building = False
             return
@@ -1580,6 +1696,8 @@ class ConfigBuilderPage(QWidget):
         self.layer_bias.setChecked(layer.bias)
         self.layer_region.setText(layer.region)
         self.layer_copy_no.setText(layer.copy_no)
+        self.layer_position.setText(layer.position)
+        self.layer_rotation.setText(layer.rotation)
         self._building = False
 
     def _update_selected_layer_from_detail(self) -> None:
@@ -1597,6 +1715,8 @@ class ConfigBuilderPage(QWidget):
         layer.bias = self.layer_bias.isChecked()
         layer.region = self.layer_region.text().strip()
         layer.copy_no = self.layer_copy_no.text().strip()
+        layer.position = self.layer_position.text().strip()
+        layer.rotation = self.layer_rotation.text().strip()
         self._populate_layers_table()
         if 0 <= row < self.layer_table.rowCount():
             self.layer_table.selectRow(row)
@@ -1670,7 +1790,7 @@ class ConfigBuilderPage(QWidget):
         self._building = True
         for row, volume in enumerate(self.geometry_document.volumes):
             if row < self.geometry_table.rowCount():
-                self.geometry_table.setItem(row, 11, QTableWidgetItem(self._row_status(volume.errors, volume.warnings)))
+                self.geometry_table.setItem(row, 16, QTableWidgetItem(self._row_status(volume.errors, volume.warnings)))
         for row, op in enumerate(self.geometry_document.boolean_ops):
             if row < self.boolean_table.rowCount():
                 self.boolean_table.setItem(row, 9, QTableWidgetItem(self._row_status(op.errors, op.warnings)))
@@ -1681,16 +1801,26 @@ class ConfigBuilderPage(QWidget):
         volume_warnings = sum(len(volume.warnings) for volume in self.geometry_document.volumes)
         boolean_errors = sum(len(op.errors) for op in self.geometry_document.boolean_ops)
         boolean_warnings = sum(len(op.warnings) for op in self.geometry_document.boolean_ops)
-        mode_text = "editable" if self.geometry_document.mode in HIERARCHICAL_GEOMETRY_MODES else "preview"
+        mode_text = ui_text("editable" if self.geometry_document.mode in HIERARCHICAL_GEOMETRY_MODES else "preview")
         self.geometry_count_label.setText(
-            f"Volumes: {len(self.geometry_document.volumes)} rows, "
-            f"{sum(1 for volume in self.geometry_document.volumes if volume.enabled)} enabled | "
-            f"{volume_errors} errors, {volume_warnings} warnings | {mode_text}"
+            ui_format(
+                "Volumes: {count} rows, {enabled} enabled | {errors} errors, {warnings} warnings | {mode}",
+                count=len(self.geometry_document.volumes),
+                enabled=sum(1 for volume in self.geometry_document.volumes if volume.enabled),
+                errors=volume_errors,
+                warnings=volume_warnings,
+                mode=mode_text,
+            )
         )
         self.boolean_count_label.setText(
-            f"Boolean ops: {len(self.geometry_document.boolean_ops)} rows, "
-            f"{sum(1 for op in self.geometry_document.boolean_ops if op.enabled)} enabled | "
-            f"{boolean_errors} errors, {boolean_warnings} warnings | {mode_text}"
+            ui_format(
+                "Boolean ops: {count} rows, {enabled} enabled | {errors} errors, {warnings} warnings | {mode}",
+                count=len(self.geometry_document.boolean_ops),
+                enabled=sum(1 for op in self.geometry_document.boolean_ops if op.enabled),
+                errors=boolean_errors,
+                warnings=boolean_warnings,
+                mode=mode_text,
+            )
         )
 
     def _update_generated_geometry_preview(self) -> None:
@@ -1925,20 +2055,21 @@ class ConfigBuilderPage(QWidget):
 
     def reload_geometry(self) -> None:
         path = self.geometry_config.text().strip()
-        self.geometry_summary = parse_geometry(path) if path else None
+        template = self._geometry_template_token()
+        self.geometry_summary = parse_geometry(path, template) if path else None
         self.geometry_table.setRowCount(0)
         self.boolean_table.setRowCount(0)
         self.geometry_messages.clear()
         self.geometry_raw.clear()
         if not self.geometry_summary:
             self.geometry_document = GeometryDocument()
-            set_geometry_mode(self.geometry_document, self.geometry_template.currentText())
+            set_geometry_mode(self.geometry_document, template)
             self._populate_geometry_editor()
             self.geometry_count_label.setText("Volumes: 0 entries | Preview only")
             self.boolean_count_label.setText("Boolean ops: 0 entries | Preview only")
             self._update_workspace_summary()
             return
-        self.geometry_document = geometry_document_from_summary(self.geometry_summary, self.geometry_template.currentText())
+        self.geometry_document = geometry_document_from_summary(self.geometry_summary, template)
         self.geometry_document.is_dirty = False
         self._populate_hierarchical_tables()
         self.geometry_messages.setPlainText(self._messages_text(self.geometry_summary.errors, self.geometry_summary.warnings))
@@ -1975,12 +2106,7 @@ class ConfigBuilderPage(QWidget):
             for col, value in enumerate(values):
                 self.materials_table.setItem(row, col, QTableWidgetItem(value))
         self.materials_table.resizeColumnsToContents()
-        self.materials_count_label.setText(
-            f"Materials: {len(self.material_document.rows)} rows, "
-            f"{sum(1 for row in self.material_document.rows if row.enabled)} enabled | "
-            f"{len(self.material_document.errors)} errors, {len(self.material_document.warnings)} warnings | "
-            f"{'Dirty' if self.material_document.is_dirty else 'Clean'}"
-        )
+        self._update_material_count_label()
         self.materials_messages.setPlainText(self._messages_text(self.material_document.errors, self.material_document.warnings))
         try:
             self.generated_materials_raw.setPlainText(generate_materials_ini_text(self.material_document))
@@ -1995,6 +2121,24 @@ class ConfigBuilderPage(QWidget):
         self._validate_geometry_editor()
         self._update_workspace_summary()
         self._select_material_row(min(self._selected_material_row, len(self.material_document.rows) - 1))
+
+    def _update_material_count_label(self) -> None:
+        self.materials_count_label.setText(
+            ui_format(
+                "Materials: {count} rows, {enabled} enabled | {errors} errors, {warnings} warnings | {state}",
+                count=len(self.material_document.rows),
+                enabled=sum(1 for row in self.material_document.rows if row.enabled),
+                errors=len(self.material_document.errors),
+                warnings=len(self.material_document.warnings),
+                state=ui_text("Dirty" if self.material_document.is_dirty else "Clean"),
+            )
+        )
+
+    def refresh_language(self) -> None:
+        self._populate_geometry_template_options(self._geometry_template_token())
+        self._update_material_count_label()
+        self._update_hierarchical_count_labels()
+        self._update_workspace_summary()
 
     def _select_material_row(self, row: int) -> None:
         self._building = True
@@ -2118,17 +2262,24 @@ class ConfigBuilderPage(QWidget):
         material_count = len(self.material_document.rows)
         volume_count = len(self.geometry_summary.volumes) if self.geometry_summary else 0
         boolean_count = len(self.geometry_summary.boolean_ops) if self.geometry_summary else 0
-        warning_count = len(self.material_document.warnings) + (
-            len(self.geometry_summary.warnings) if self.geometry_summary else 0
-        ) + len(self.geometry_document.warnings)
-        error_count = len(self.material_document.errors) + (
-            len(self.geometry_summary.errors) if self.geometry_summary else 0
-        ) + len(self.geometry_document.errors)
+        # GeometryDocument merges source and validation diagnostics. MaterialDocument
+        # retains source errors, while parser warnings live only in the summary.
+        material_source_warnings = len(self.materials_summary.warnings) if self.materials_summary else 0
+        warning_count = material_source_warnings + len(self.material_document.warnings) + len(self.geometry_document.warnings)
+        error_count = len(self.material_document.errors) + len(self.geometry_document.errors)
         self.workspace_summary.setText(
-            f"Materials: {material_count} entries | Geometry: {volume_count} volumes, {boolean_count} boolean ops | "
-            f"Messages: {error_count} errors, {warning_count} warnings | Materials: {'Dirty' if self.material_document.is_dirty else 'Clean'} | "
-            f"Geometry: {self.geometry_document.mode} {'Dirty' if self.geometry_document.is_dirty else 'Clean'} | "
-            f"Source: {self._status_text(self.source_editor.errors, self.source_editor.warnings)} | "
-            f"Physics: {self._status_text(self.physics_editor.errors, self.physics_editor.warnings)} | "
-            f"Scoring: {self._status_text(self.scoring_editor.errors, self.scoring_editor.warnings)}"
+            ui_format(
+                "Materials: {materials} entries | Geometry: {volumes} volumes, {booleans} boolean ops | Messages: {errors} errors, {warnings} warnings | Materials: {material_state} | Geometry: {geometry_mode} {geometry_state} | Source: {source_status} | Physics: {physics} | Scoring: {scoring}",
+                materials=material_count,
+                volumes=volume_count,
+                booleans=boolean_count,
+                errors=error_count,
+                warnings=warning_count,
+                material_state=ui_text("Dirty" if self.material_document.is_dirty else "Clean"),
+                geometry_mode=self.geometry_document.mode,
+                geometry_state=ui_text("Dirty" if self.geometry_document.is_dirty else "Clean"),
+                source_status=self._status_text(self.source_editor.errors, self.source_editor.warnings),
+                physics=self._status_text(self.physics_editor.errors, self.physics_editor.warnings),
+                scoring=self._status_text(self.scoring_editor.errors, self.scoring_editor.warnings),
+            )
         )

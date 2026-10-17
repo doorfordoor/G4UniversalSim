@@ -144,7 +144,14 @@ def _build_hierarchical(scene: PreviewScene, geometry: GeometryDocument) -> None
         if not row.enabled:
             continue
         shape = row.shape.strip().lower() or "box"
-        size, params_mm, params_deg = _volume_parameters_for_preview(row.size, row.parameters, shape, scene, row.name)
+        size, params_mm, params_deg = _volume_parameters_for_preview(
+            row.size,
+            row.parameters,
+            shape,
+            scene,
+            row.name,
+            shape_properties=row.shape_properties,
+        )
         scene.volumes.append(
             PreviewVolume(
                 name=row.name,
@@ -182,7 +189,15 @@ def _build_hierarchical(scene: PreviewScene, geometry: GeometryDocument) -> None
         )
 
 
-def _volume_parameters_for_preview(size_text: str, parameters_text: str, shape: str, scene: PreviewScene, label: str) -> tuple[tuple[float, float, float] | None, tuple[float, ...], tuple[float, ...]]:
+def _volume_parameters_for_preview(
+    size_text: str,
+    parameters_text: str,
+    shape: str,
+    scene: PreviewScene,
+    label: str,
+    *,
+    shape_properties: dict[str, str] | None = None,
+) -> tuple[tuple[float, float, float] | None, tuple[float, ...], tuple[float, ...]]:
     if shape == "box":
         size = parse_vec3_to_mm(size_text)
         if size is None:
@@ -191,13 +206,18 @@ def _volume_parameters_for_preview(size_text: str, parameters_text: str, shape: 
     if shape in {"tubs", "cylinder"}:
         parts = [part.strip() for part in parameters_text.split(",") if part.strip()]
         if len(parts) >= 3:
-            radius = parse_length_to_mm(parts[1])
+            inner_radius = parse_length_to_mm(parts[0])
+            outer_radius = parse_length_to_mm(parts[1])
             half_z = parse_length_to_mm(parts[2])
-            if radius is not None and half_z is not None:
+            if inner_radius is not None and outer_radius is not None and half_z is not None:
                 angles = parse_angle_list_deg(",".join(parts[3:5])) if len(parts) >= 5 else tuple()
                 if angles and (abs(angles[0]) > 1.0e-9 or (len(angles) > 1 and abs(angles[1] - 360.0) > 1.0e-9)):
                     scene.warnings.append(f"{label} partial tubs is drawn as a full cylinder in preview.")
-                return (2.0 * radius, 2.0 * radius, 2.0 * half_z), (0.0, radius, half_z), angles
+                return (
+                    (2.0 * outer_radius, 2.0 * outer_radius, 2.0 * half_z),
+                    (inner_radius, outer_radius, half_z),
+                    angles,
+                )
         scene.warnings.append(f"{label} tubs parameters could not be parsed for preview: {parameters_text!r}")
         return None, tuple(), tuple()
     if shape in {"sphere", "orb"}:
@@ -227,6 +247,18 @@ def _volume_parameters_for_preview(size_text: str, parameters_text: str, shape: 
                 scene.warnings.append(f"{label} partial cone is drawn as a full cone/frustum approximation in preview.")
             return (2.0 * radius, 2.0 * radius, 2.0 * half_z), params, angles
         scene.warnings.append(f"{label} cone parameters could not be parsed for preview: {parameters_text!r}")
+        return None, tuple(), tuple()
+    if shape == "trd":
+        properties = shape_properties or {}
+        values = tuple(parse_length_to_mm(properties.get(key, "")) for key in ("dx1", "dx2", "dy1", "dy2", "dz"))
+        if all(value is not None and value > 0.0 for value in values):
+            dx1, dx2, dy1, dy2, dz = values
+            return (
+                (2.0 * max(dx1, dx2), 2.0 * max(dy1, dy2), 2.0 * dz),
+                (dx1, dx2, dy1, dy2, dz),
+                tuple(),
+            )
+        scene.warnings.append(f"{label} trd properties could not be parsed for preview: {properties!r}")
         return None, tuple(), tuple()
     scene.warnings.append(f"{label} shape={shape!r} is shown only as approximate/unsupported in 3D preview.")
     return (parse_vec3_to_mm(size_text) if size_text else None), tuple(), tuple()

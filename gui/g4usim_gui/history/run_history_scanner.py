@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 
 from g4usim_gui.history.run_history_model import RunHistoryEntry
+from g4usim_gui.core.run_result import evaluate_run_result, summary_fingerprint
 from g4usim_gui.output.file_classifier import OutputFileType, classify_files
 from g4usim_gui.output.run_summary_parser import parse_run_summary
 
@@ -129,27 +130,25 @@ def _apply_output_counts(entry: RunHistoryEntry, package: Path) -> None:
 
 
 def _infer_status(entry: RunHistoryEntry, package: Path, status: dict[str, Any]) -> None:
-    if status:
-        if entry.status == "finished":
-            entry.status = "success" if entry.exit_code == 0 else "failed"
-        elif entry.status in {"stopped", "killed", "error"}:
-            return
-    stderr = package / "logs" / "stderr.log"
-    text = stderr.read_text(encoding="utf-8", errors="replace") if stderr.is_file() else ""
-    if "G4Exception" in text or "fatal error" in text.lower():
-        entry.status = "failed"
-        return
-    if not (package / "config" / "main.ini").exists() or not (package / "macros" / "run.mac").exists():
-        entry.status = "incomplete"
-        return
+    summary_path = package / "output" / "run_summary.txt"
+    stored_fingerprint = status.get("summaryFingerprint")
+    fresh = (
+        status.get("resultVersion") == 1
+        and status.get("summaryFresh") is True
+        and isinstance(stored_fingerprint, list)
+        and tuple(stored_fingerprint) == summary_fingerprint(summary_path)
+    )
+    result = evaluate_run_result(
+        summary_path,
+        exit_code=entry.exit_code,
+        crashed=status.get("exitStatus") == "crashed" or status.get("state") == "error",
+        requested_state=status.get("state") if status.get("state") in {"stopped", "killed"} else "",
+        summary_fresh=fresh,
+    )
+    entry.status = result.state
+    entry.result_reason = result.reason
     if entry.has_run_summary:
-        entry.status = "success" if entry.status in {"unknown", "finished"} else entry.status
-    elif entry.status == "unknown" and not (package / "output").exists():
-        entry.status = "incomplete"
-    if entry.has_run_summary:
-        summary = parse_run_summary(package / "output" / "run_summary.txt")
-        if summary.warnings:
-            entry.warnings.extend(summary.warnings)
+        entry.warnings.extend(parse_run_summary(summary_path).warnings)
 
 
 def _int_or_none(value) -> int | None:

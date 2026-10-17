@@ -16,16 +16,14 @@ from PySide6.QtWidgets import (
 
 def create_section_title(text: str) -> QLabel:
     label = QLabel(text)
-    font = label.font()
-    font.setBold(True)
-    label.setFont(font)
+    label.setProperty("uiRole", "sectionTitle")
     return label
 
 
 def create_hint_label(text: str) -> QLabel:
     label = QLabel(text)
     label.setWordWrap(True)
-    label.setStyleSheet("color: #555;")
+    label.setProperty("uiRole", "hint")
     return label
 
 
@@ -33,7 +31,7 @@ def create_empty_state_label(text: str) -> QLabel:
     label = QLabel(text)
     label.setWordWrap(True)
     label.setAlignment(Qt.AlignCenter)
-    label.setStyleSheet("color: #666; padding: 12px;")
+    label.setProperty("uiRole", "emptyState")
     return label
 
 

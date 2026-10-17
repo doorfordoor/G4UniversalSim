@@ -1,9 +1,11 @@
 from __future__ import annotations
 
+import math
 import os
 
 from PySide6.QtWidgets import QLabel, QVBoxLayout, QWidget
 
+from g4usim_gui.core.i18n import ui_format, ui_text
 from g4usim_gui.preview3d.geometry_primitives import add_vec3, scale_vec3, scene_extent
 from g4usim_gui.preview3d.scene_model import PreviewScene, PreviewVolume
 from g4usim_gui.preview3d.units import perpendicular_basis
@@ -21,6 +23,8 @@ class PyVistaPreviewWidget(QWidget):
         self._show_labels = True
         self.status = QLabel()
         self.status.setWordWrap(True)
+        self.status.setMaximumHeight(34)
+        self.status.setProperty("uiRole", "hint")
         layout = QVBoxLayout(self)
         layout.addWidget(self._plotter, 1)
         layout.addWidget(self.status)
@@ -51,8 +55,18 @@ class PyVistaPreviewWidget(QWidget):
             self._plotter.add_axes()
             self._plotter.reset_camera()
             self._plotter.render()
-            messages = scene.errors or scene.warnings
-            self.status.setText("\n".join(messages[:8]) if messages else "3D Preview: OK")
+            if scene.errors:
+                summary = ui_format(
+                    "Rendered with {errors} error(s) and {warnings} warning(s).",
+                    errors=len(scene.errors),
+                    warnings=len(scene.warnings),
+                )
+            elif scene.warnings:
+                summary = ui_format("Rendered with {warnings} warning(s).", warnings=len(scene.warnings))
+            else:
+                summary = ui_text("3D Preview: OK")
+            self.status.setText(summary)
+            self.status.setToolTip("\n".join([*scene.errors, *scene.warnings][:12]))
         except Exception as exc:  # noqa: BLE001
             self.status.setText(f"3D render failed: {exc}")
 
@@ -79,9 +93,16 @@ class PyVistaPreviewWidget(QWidget):
         if shape == "box":
             mesh = self._pv.Box(bounds=(px - sx / 2, px + sx / 2, py - sy / 2, py + sy / 2, pz - sz / 2, pz + sz / 2))
         elif shape in {"tubs", "cylinder"}:
-            radius = volume.parameters_mm[1] if len(volume.parameters_mm) >= 2 else max(sx, sy) / 2
-            height = 2.0 * volume.parameters_mm[2] if len(volume.parameters_mm) >= 3 else sz
-            mesh = self._pv.Cylinder(center=volume.position_mm, direction=(0.0, 0.0, 1.0), radius=radius, height=height, resolution=64)
+            inner_radius = volume.parameters_mm[0] if len(volume.parameters_mm) >= 3 else 0.0
+            outer_radius = volume.parameters_mm[1] if len(volume.parameters_mm) >= 3 else max(sx, sy) / 2
+            half_z = volume.parameters_mm[2] if len(volume.parameters_mm) >= 3 else sz / 2
+            mesh = make_tubs_mesh(
+                self._pv,
+                center=volume.position_mm,
+                inner_radius=inner_radius,
+                outer_radius=outer_radius,
+                half_z=half_z,
+            )
         elif shape in {"sphere", "orb"}:
             radius = max(sx, sy, sz) / 2
             mesh = self._pv.Sphere(radius=radius, center=volume.position_mm, theta_resolution=48, phi_resolution=24)
@@ -89,6 +110,16 @@ class PyVistaPreviewWidget(QWidget):
             radius = max(sx, sy) / 2
             height = sz
             mesh = self._pv.Cone(center=volume.position_mm, direction=(0.0, 0.0, 1.0), height=height, radius=radius, resolution=64)
+        elif shape == "trd" and len(volume.parameters_mm) >= 5:
+            mesh = make_trd_mesh(
+                self._pv,
+                center=volume.position_mm,
+                dx1=volume.parameters_mm[0],
+                dx2=volume.parameters_mm[1],
+                dy1=volume.parameters_mm[2],
+                dy2=volume.parameters_mm[3],
+                half_z=volume.parameters_mm[4],
+            )
         else:
             return None
         self._apply_rotation(mesh, volume)
@@ -170,6 +201,67 @@ def _style(volume: PreviewVolume) -> tuple[str, float, str]:
     if volume.role == "boolean_tool":
         return ("crimson", 0.25, "wireframe")
     return ("lightblue", 0.55, "surface")
+
+
+def make_tubs_mesh(pv, *, center, inner_radius: float, outer_radius: float, half_z: float, resolution: int = 64):
+    """Build a closed full-phi G4Tubs approximation, preserving a non-zero inner radius."""
+    if inner_radius <= 1.0e-9:
+        return pv.Cylinder(
+            center=center,
+            direction=(0.0, 0.0, 1.0),
+            radius=outer_radius,
+            height=2.0 * half_z,
+            resolution=resolution,
+        )
+
+    cx, cy, cz = center
+    points: list[tuple[float, float, float]] = []
+    for radius, z_offset in [
+        (outer_radius, -half_z),
+        (outer_radius, half_z),
+        (inner_radius, -half_z),
+        (inner_radius, half_z),
+    ]:
+        for index in range(resolution):
+            angle = math.tau * index / resolution
+            points.append((cx + radius * math.cos(angle), cy + radius * math.sin(angle), cz + z_offset))
+
+    outer_bottom = 0
+    outer_top = resolution
+    inner_bottom = 2 * resolution
+    inner_top = 3 * resolution
+    faces: list[int] = []
+    for index in range(resolution):
+        next_index = (index + 1) % resolution
+        faces.extend([4, outer_bottom + index, outer_bottom + next_index, outer_top + next_index, outer_top + index])
+        faces.extend([4, inner_bottom + next_index, inner_bottom + index, inner_top + index, inner_top + next_index])
+        faces.extend([4, outer_top + index, outer_top + next_index, inner_top + next_index, inner_top + index])
+        faces.extend([4, outer_bottom + next_index, outer_bottom + index, inner_bottom + index, inner_bottom + next_index])
+    return pv.PolyData(points, faces)
+
+
+def make_trd_mesh(pv, *, center, dx1: float, dx2: float, dy1: float, dy2: float, half_z: float):
+    """Build the eight-corner G4Trd surface used by read-only geometry preview."""
+    cx, cy, cz = center
+    points = [
+        (cx - dx1, cy - dy1, cz - half_z),
+        (cx + dx1, cy - dy1, cz - half_z),
+        (cx + dx1, cy + dy1, cz - half_z),
+        (cx - dx1, cy + dy1, cz - half_z),
+        (cx - dx2, cy - dy2, cz + half_z),
+        (cx + dx2, cy - dy2, cz + half_z),
+        (cx + dx2, cy + dy2, cz + half_z),
+        (cx - dx2, cy + dy2, cz + half_z),
+    ]
+    faces = [
+        4, 0, 3, 2, 1,
+        4, 4, 5, 6, 7,
+        4, 0, 1, 5, 4,
+        4, 1, 2, 6, 5,
+        4, 2, 3, 7, 6,
+        4, 3, 0, 4, 7,
+    ]
+    return pv.PolyData(points, faces)
 
 
 def pyvista_available() -> tuple[bool, str]:

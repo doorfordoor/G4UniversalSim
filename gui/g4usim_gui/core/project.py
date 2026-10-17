@@ -23,7 +23,8 @@ from g4usim_gui.editors.source_physics_scoring_model import (
 
 
 SCHEMA_NAME = "G4UniversalSimProject"
-SCHEMA_VERSION = 5
+SCHEMA_VERSION = 6
+RUN_INPUT_MODES = {"generated", "external"}
 
 
 @dataclass
@@ -33,6 +34,7 @@ class G4USimProject:
     schema: str = SCHEMA_NAME
     version: int = SCHEMA_VERSION
     projectName: str = "demo"
+    runInputMode: str = "generated"
     executable: str = ""
     workspaceRoot: str = ""
     configPath: str = ""
@@ -68,6 +70,8 @@ def project_from_dict(data: dict[str, Any]) -> G4USimProject:
 
     allowed = set(G4USimProject.__dataclass_fields__.keys())
     filtered = {key: value for key, value in data.items() if key in allowed}
+    if "runInputMode" not in data:
+        filtered["runInputMode"] = "external" if data.get("configPath") or data.get("macroPath") else "generated"
     for key, cls in [
         ("runSettings", RunSettings),
         ("pathSettings", PathSettings),
@@ -88,6 +92,8 @@ def project_from_dict(data: dict[str, Any]) -> G4USimProject:
     has_physics_editor = "physicsEditor" in data
     has_scoring_editor = "scoringEditor" in data
     project = G4USimProject(**filtered)
+    if project.runInputMode not in RUN_INPUT_MODES:
+        raise ValueError(f"Unsupported runInputMode: {project.runInputMode}")
     if not isinstance(project.threads, int):
         project.threads = int(project.threads)
     if project.threads <= 0:

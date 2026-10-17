@@ -6,7 +6,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from g4usim_gui.core.project import G4USimProject, load_project, save_project
-from g4usim_gui.editors.source_physics_scoring_model import SourceEditableModel, validate_source_model
+from g4usim_gui.editors.source_physics_scoring_model import SourceEditableModel, PhysicsEditableModel, validate_source_model, validate_physics_model
 from g4usim_gui.models.package_model import GeometrySettings, RunPackage
 from g4usim_gui.models.physics_model import PhysicsSettings
 from g4usim_gui.models.run_model import RunSettings
@@ -104,6 +104,12 @@ def test_validation_errors() -> None:
     assert any("theta_min" in item for item in bad_angle.errors)
 
 
+def test_generated_biasing_hook_is_blocked() -> None:
+    physics = PhysicsEditableModel(enable_biasing_physics=True)
+    validate_physics_model(physics)
+    assert any("Biasing rules cannot be edited" in item for item in physics.errors), physics.errors
+
+
 def test_project_save_load(tmp_path: Path | None = None) -> None:
     import tempfile
 
@@ -125,5 +131,6 @@ if __name__ == "__main__":
     test_point_isotropic()
     test_preview_only_modes_are_blocked()
     test_validation_errors()
+    test_generated_biasing_hook_is_blocked()
     test_project_save_load()
     print("smoke_source_editor_v2: OK")

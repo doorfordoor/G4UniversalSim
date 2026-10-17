@@ -1,17 +1,30 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
-from PySide6.QtCore import QTimer
+from PySide6.QtCore import QProcess, QSettings, QSize, Qt, QTimer
+from PySide6.QtGui import QActionGroup
 from PySide6.QtWidgets import (
+    QApplication,
+    QButtonGroup,
     QFileDialog,
+    QFrame,
+    QHBoxLayout,
+    QLabel,
     QMainWindow,
     QMessageBox,
-    QTabWidget,
+    QStackedWidget,
+    QStyle,
+    QToolButton,
+    QVBoxLayout,
+    QWidget,
 )
 
+from g4usim_gui.core.i18n import LanguageCode, apply_language, current_language, ui_format, ui_text
 from g4usim_gui.core.project import G4USimProject, load_project, save_project
 from g4usim_gui.core.runner import G4USimRunner
+from g4usim_gui.core.theme import ThemeMode, apply_theme
 from g4usim_gui.history.run_history_store import add_recent_project, clear_recent_projects, get_recent_projects, load_state, save_state
 from g4usim_gui.history.run_package_actions import duplicate_package
 from g4usim_gui.models.package_model import PathSettings
@@ -32,7 +45,14 @@ class MainWindow(QMainWindow):
 
         self.project = self._default_project()
         self.project_file: Path | None = None
+        self._generated_package_stale = True
+        self._generated_package_dir = ""
         self.runner = G4USimRunner(self)
+        self._macro_inspection = QProcess(self)
+        self._macro_inspection_snapshot: tuple[object, ...] | None = None
+        self._pending_inspection_run = False
+        self._macro_inspection.finished.connect(self._on_macro_inspection_finished)
+        self._macro_inspection.errorOccurred.connect(self._on_macro_inspection_error)
 
         self.project_page = ProjectPage()
         self.config_builder_page = ConfigBuilderPage()
@@ -40,29 +60,190 @@ class MainWindow(QMainWindow):
         self.output_page = OutputPage()
         self.run_history_page = RunHistoryPage()
 
-        tabs = QTabWidget()
-        tabs.addTab(self.project_page, "Project")
-        tabs.addTab(self.config_builder_page, "Config Builder")
-        tabs.addTab(self.run_page, "Run")
-        tabs.addTab(self.output_page, "Output")
-        tabs.addTab(self.run_history_page, "Run History")
-        self.setCentralWidget(tabs)
-        self.tabs = tabs
+        self._build_workspace_shell()
+        self._apply_visual_roles()
 
         self._connect_signals()
         self._create_menu()
         self._restore_app_state()
         self._set_project(self.project)
-        self.statusBar().showMessage("Ready", 5000)
+        self._set_language(current_language(), persist=False)
+        self.statusBar().showMessage(ui_text("Ready"), 5000)
+
+    def _build_workspace_shell(self) -> None:
+        shell = QWidget()
+        shell.setObjectName("appShell")
+        shell_layout = QHBoxLayout(shell)
+        shell_layout.setContentsMargins(0, 0, 0, 0)
+        shell_layout.setSpacing(0)
+
+        sidebar = QWidget()
+        sidebar.setObjectName("sidebar")
+        sidebar.setFixedWidth(224)
+        sidebar_layout = QVBoxLayout(sidebar)
+        sidebar_layout.setContentsMargins(16, 20, 16, 16)
+        sidebar_layout.setSpacing(6)
+
+        brand = QLabel("G4UniversalSim")
+        brand.setObjectName("brandMark")
+        brand_caption = QLabel(self.tr("SIMULATION WORKSPACE"))
+        brand_caption.setObjectName("brandCaption")
+        sidebar_layout.addWidget(brand)
+        sidebar_layout.addWidget(brand_caption)
+        sidebar_layout.addSpacing(24)
+
+        section_label = QLabel(self.tr("WORKFLOW"))
+        section_label.setObjectName("sidebarSection")
+        sidebar_layout.addWidget(section_label)
+
+        page_specs = [
+            (
+                self.project_page,
+                self.tr("Project"),
+                self.tr("Connect the executable, workspace and run defaults."),
+                QStyle.SP_DirHomeIcon,
+            ),
+            (
+                self.config_builder_page,
+                self.tr("Configuration"),
+                self.tr("Compose supported simulation inputs and inspect the geometry preview."),
+                QStyle.SP_FileDialogDetailedView,
+            ),
+            (
+                self.run_page,
+                self.tr("Run Console"),
+                self.tr("Validate the launch command and monitor backend execution."),
+                QStyle.SP_MediaPlay,
+            ),
+            (
+                self.output_page,
+                self.tr("Results"),
+                self.tr("Review summaries, logs and generated output files."),
+                QStyle.SP_DriveHDIcon,
+            ),
+            (
+                self.run_history_page,
+                self.tr("Run History"),
+                self.tr("Browse previous packages and restore reproducible snapshots."),
+                QStyle.SP_FileDialogContentsView,
+            ),
+        ]
+        self._page_specs = page_specs
+        self._nav_group = QButtonGroup(self)
+        self._nav_group.setExclusive(True)
+        self._nav_buttons: list[QToolButton] = []
+        for index, (_page, title, _subtitle, standard_icon) in enumerate(page_specs):
+            button = QToolButton()
+            button.setText(title)
+            button.setIcon(self.style().standardIcon(standard_icon))
+            button.setIconSize(QSize(19, 19))
+            button.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
+            button.setCheckable(True)
+            button.setAutoExclusive(True)
+            button.setProperty("navButton", True)
+            button.setMinimumHeight(42)
+            button.setAccessibleName(title)
+            sidebar_layout.addWidget(button)
+            self._nav_group.addButton(button, index)
+            self._nav_buttons.append(button)
+        self._nav_buttons[0].setChecked(True)
+        sidebar_layout.addStretch(1)
+
+        footer = QLabel(self.tr("Desktop GUI\nGeant4 workflow"))
+        footer.setObjectName("sidebarFooter")
+        sidebar_layout.addWidget(footer)
+
+        content = QWidget()
+        content.setObjectName("contentHost")
+        content_layout = QVBoxLayout(content)
+        content_layout.setContentsMargins(0, 0, 0, 0)
+        content_layout.setSpacing(0)
+
+        page_header = QFrame()
+        page_header.setObjectName("pageHeader")
+        page_header.setFixedHeight(82)
+        header_layout = QHBoxLayout(page_header)
+        header_layout.setContentsMargins(24, 13, 22, 13)
+        header_layout.setSpacing(10)
+
+        heading_layout = QVBoxLayout()
+        heading_layout.setSpacing(2)
+        self.page_title = QLabel(page_specs[0][1])
+        self.page_title.setObjectName("pageTitle")
+        self.page_subtitle = QLabel(page_specs[0][2])
+        self.page_subtitle.setObjectName("pageSubtitle")
+        heading_layout.addWidget(self.page_title)
+        heading_layout.addWidget(self.page_subtitle)
+        header_layout.addLayout(heading_layout, 1)
+
+        self.project_context = QLabel(self.tr("Project: demo"))
+        self.project_context.setProperty("uiRole", "contextChip")
+        self.run_context = QLabel(self.tr("Idle"))
+        self.run_context.setProperty("uiRole", "contextChip")
+        header_layout.addWidget(self.project_context)
+        header_layout.addWidget(self.run_context)
+
+        self.theme_button = QToolButton()
+        self.theme_button.setText(self.tr("Theme"))
+        self.theme_button.setIcon(self.style().standardIcon(QStyle.SP_DesktopIcon))
+        self.theme_button.setIconSize(QSize(18, 18))
+        self.theme_button.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
+        self.theme_button.setPopupMode(QToolButton.InstantPopup)
+        self.theme_button.setProperty("toolbarButton", True)
+        self.theme_button.setToolTip(self.tr("Choose light, dark or system appearance"))
+        header_layout.addWidget(self.theme_button)
+
+        self.language_button = QToolButton()
+        self.language_button.setText(self.tr("Language"))
+        self.language_button.setIcon(self.style().standardIcon(QStyle.SP_FileDialogInfoView))
+        self.language_button.setIconSize(QSize(18, 18))
+        self.language_button.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
+        self.language_button.setPopupMode(QToolButton.InstantPopup)
+        self.language_button.setProperty("toolbarButton", True)
+        self.language_button.setToolTip(self.tr("Choose the interface language"))
+        header_layout.addWidget(self.language_button)
+
+        self.page_stack = QStackedWidget()
+        self.page_stack.setObjectName("pageViewport")
+        for page, _title, _subtitle, _icon in page_specs:
+            self.page_stack.addWidget(page)
+
+        content_layout.addWidget(page_header)
+        content_layout.addWidget(self.page_stack, 1)
+        shell_layout.addWidget(sidebar)
+        shell_layout.addWidget(content, 1)
+        self.setCentralWidget(shell)
+
+        # Keep the historical attribute available to internal navigation helpers.
+        self.tabs = self.page_stack
+        self._nav_group.idClicked.connect(self.page_stack.setCurrentIndex)
+        self.page_stack.currentChanged.connect(self._on_page_changed)
+
+    def _apply_visual_roles(self) -> None:
+        self.config_builder_page.generate_run_button.setProperty("buttonRole", "primary")
+        self.run_page.run_button.setProperty("buttonRole", "primary")
+        self.run_page.stop_button.setProperty("buttonRole", "danger")
+        self.run_page.kill_button.setProperty("buttonRole", "danger")
+        self.project_page.save_button.setProperty("buttonRole", "primary")
+        self.project_page.status_summary.setProperty("uiRole", "contextChip")
+
+    def _on_page_changed(self, index: int) -> None:
+        if not 0 <= index < len(self._page_specs):
+            return
+        _page, title, subtitle, _icon = self._page_specs[index]
+        self.page_title.setText(ui_text(title))
+        self.page_subtitle.setText(ui_text(subtitle))
+        self._nav_buttons[index].setChecked(True)
 
     def _default_project(self) -> G4USimProject:
         root = Path(__file__).resolve().parents[2]
         output = root / "gui_runs" / "demo" / "output"
         project = G4USimProject(
             projectName="demo",
+            runInputMode="generated",
             workspaceRoot=str(root),
-            configPath=str(root / "config" / "main.ini"),
-            macroPath=str(root / "macros" / "test_simple_min.mac"),
+            configPath="",
+            macroPath="",
             outputDir=str(output),
             runsRoot=str(root / "gui_runs"),
             threads=1,
@@ -73,10 +254,10 @@ class MainWindow(QMainWindow):
             workspace_root=str(root),
             runs_root=str(root / "gui_runs"),
             materials_config=str(root / "config" / "materials" / "material.ini"),
-            geometry_config=str(root / "config" / "geometry" / "simple_box.ini"),
+            geometry_config=str(root / "test" / "geometry" / "hierarchical_test.ini"),
         )
         project.geometrySettings.config_path = project.pathSettings.geometry_config
-        project.geometrySettings.template = "simple_box"
+        project.geometrySettings.template = "hierarchical"
         return project
 
     def _connect_signals(self) -> None:
@@ -88,6 +269,7 @@ class MainWindow(QMainWindow):
         self.config_builder_page.generatePackageRequested.connect(self.generate_package)
 
         self.run_page.buildCommandRequested.connect(self.build_command_preview)
+        self.run_page.inspectMacroRequested.connect(self.inspect_external_macro)
         self.run_page.runRequested.connect(self.start_run)
         self.run_page.stopRequested.connect(self.stop_run)
         self.run_page.killRequested.connect(self.runner.kill)
@@ -121,25 +303,112 @@ class MainWindow(QMainWindow):
         exit_action.triggered.connect(self.close)
         self._refresh_recent_menu()
 
+        view_menu = self.menuBar().addMenu(self.tr("View"))
+        theme_menu = view_menu.addMenu(self.tr("Theme"))
+        self._theme_action_group = QActionGroup(self)
+        self._theme_action_group.setExclusive(True)
+        self._theme_actions = {}
+        current_mode = str(QApplication.instance().property("themeMode") or "light")
+        for mode, label in [
+            ("light", self.tr("Light")),
+            ("dark", self.tr("Dark")),
+            ("system", self.tr("System")),
+        ]:
+            action = theme_menu.addAction(label)
+            action.setCheckable(True)
+            action.setChecked(mode == current_mode)
+            action.triggered.connect(lambda _checked=False, selected=mode: self._set_theme(selected))
+            self._theme_action_group.addAction(action)
+            self._theme_actions[mode] = action
+        self.theme_button.setMenu(theme_menu)
+
+        language_menu = view_menu.addMenu(self.tr("Language"))
+        self._language_action_group = QActionGroup(self)
+        self._language_action_group.setExclusive(True)
+        self._language_actions = {}
+        active_language = current_language()
+        for code, label in [("zh_CN", self.tr("Chinese")), ("en", self.tr("English"))]:
+            action = language_menu.addAction(label)
+            action.setCheckable(True)
+            action.setChecked(code == active_language)
+            action.triggered.connect(lambda _checked=False, selected=code: self._set_language(selected))
+            self._language_action_group.addAction(action)
+            self._language_actions[code] = action
+        self.language_button.setMenu(language_menu)
+
+    def _set_theme(self, mode: ThemeMode) -> None:
+        app = QApplication.instance()
+        if app is None:
+            return
+        apply_theme(app, mode)
+        QSettings().setValue("appearance/theme", mode)
+        action = self._theme_actions.get(mode)
+        if action is not None:
+            action.setChecked(True)
+
+    def _set_language(self, language: LanguageCode, *, persist: bool = True) -> None:
+        app = QApplication.instance()
+        if app is None:
+            return
+        app.setProperty("languageCode", language)
+        apply_language(self, language)
+        for page in (self.project_page, self.config_builder_page, self.run_page):
+            refresh_language = getattr(page, "refresh_language", None)
+            if refresh_language is not None:
+                refresh_language()
+        if persist:
+            QSettings().setValue("appearance/language", language)
+        action = self._language_actions.get(language)
+        if action is not None:
+            action.setChecked(True)
+        self._on_page_changed(self.page_stack.currentIndex())
+        self.project_context.setText(
+            ui_format("Project: {name}", name=self.project.projectName or ui_text("untitled"))
+        )
+
     def _set_project(self, project: G4USimProject) -> None:
         self.project = project
+        self.run_page.set_macro_plan("")
+        self._generated_package_stale = project.runInputMode == "generated"
+        self._generated_package_dir = ""
         self.project_page.set_project(project)
         self.config_builder_page.set_from_project(project)
         self.output_page.set_workspace_root(project.workspaceRoot)
         self.output_page.set_output_dir(project.outputDir)
         self.run_history_page.set_runs_root(project.runsRoot)
+        self.project_context.setText(
+            ui_format("Project: {name}", name=project.projectName or ui_text("untitled"))
+        )
         self.build_command_preview(show_errors=False)
 
     def _update_project_from_page(self) -> None:
-        self.project = self.project_page.to_project()
+        before = self._project_page_stale_signature(self.project)
+        macro_before = self._macro_inspection_inputs()
+        self.project_page.apply_to_project(self.project)
+        after = self._project_page_stale_signature(self.project)
+        if macro_before != self._macro_inspection_inputs():
+            self.run_page.set_macro_plan(ui_text("Run plan is stale; inputs changed."))
+        self.project_context.setText(
+            ui_format("Project: {name}", name=self.project.projectName or ui_text("untitled"))
+        )
         self._sync_flat_project_to_nested_paths()
+        self.config_builder_page.set_run_defaults(self.project)
         self.output_page.set_workspace_root(self.project.workspaceRoot)
         self.output_page.set_output_dir(self.project.outputDir)
         self.run_history_page.set_runs_root(self.project.runsRoot)
-        self.build_command_preview(show_errors=False)
+        if before != after and self.project.runInputMode == "generated":
+            self._mark_generated_package_stale()
+        else:
+            self.build_command_preview(show_errors=False)
 
     def _update_project_from_config_builder(self) -> None:
         self.config_builder_page.update_project(self.project)
+        run = self.project.runSettings
+        self.project.runName = run.run_name
+        self.project.threads = run.threads
+        self.project.seed = "" if run.seed is None else str(run.seed)
+        self.project_page.set_project(self.project)
+        self._mark_generated_package_stale()
 
     def open_project(self) -> None:
         path, _ = QFileDialog.getOpenFileName(
@@ -184,6 +453,9 @@ class MainWindow(QMainWindow):
 
     def build_command_preview(self, *, show_errors: bool = True) -> None:
         self._update_project_from_page_without_preview()
+        if self.project.runInputMode == "generated" and self._generated_package_stale:
+            self.run_page.set_command([ui_text("Configuration changed; the run package will be regenerated at run time.")])
+            return
         errors = self.runner.validate_project(self.project)
         if errors:
             self.run_page.set_command(["Validation errors:", *errors])
@@ -193,19 +465,105 @@ class MainWindow(QMainWindow):
         command = self.runner.build_command(self.project)
         self.run_page.set_command(self._format_command_preview(command))
 
-    def start_run(self) -> None:
+    def _macro_inspection_inputs(self) -> tuple[object, ...]:
+        return (self.project.runInputMode, self.project.executable,
+                self.project.workspaceRoot, self.project.configPath, self.project.macroPath,
+                self.project.outputDir, self.project.threads, self.project.seed, self.project.runName)
+
+    def inspect_external_macro(self, *, run_after: bool = False) -> None:
+        if self._macro_inspection.state() != QProcess.NotRunning:
+            return
         self._update_project_from_page_without_preview()
-        errors = self.runner.validate_project(self.project)
+        if self.project.runInputMode != "external":
+            self.run_page.set_macro_plan(ui_text(
+                "Input inspection is available in external mode."
+            ))
+            return
+        errors = self.runner.validate_project(self.project, ready_to_run=True)
+        if errors:
+            self.run_page.set_macro_plan("\n".join(errors))
+            return
+        args = ["--inspect-run", *self.runner.build_command(self.project)[1:]]
+        self._pending_inspection_run = run_after
+        self._macro_inspection_snapshot = self._macro_inspection_inputs()
+        self._macro_inspection.setProgram(self.project.executable)
+        self._macro_inspection.setArguments(args)
+        self._macro_inspection.setWorkingDirectory(self.project.workspaceRoot or str(Path.cwd()))
+        self.run_page.set_macro_plan(ui_text("Inspecting inputs with backend preflight..."))
+        self._macro_inspection.start()
+
+    def _on_macro_inspection_finished(self, exit_code: int, exit_status: QProcess.ExitStatus) -> None:
+        run_after = self._pending_inspection_run
+        self._pending_inspection_run = False
+        self.project_page.apply_to_project(self.project)
+        if self._macro_inspection_snapshot != self._macro_inspection_inputs():
+            self.run_page.set_macro_plan(ui_text("Run plan is stale; inputs changed."))
+            return
+        stderr = bytes(self._macro_inspection.readAllStandardError()).decode("utf-8", errors="replace").strip()
+        stdout = bytes(self._macro_inspection.readAllStandardOutput()).decode("utf-8", errors="replace")
+        if exit_status != QProcess.NormalExit or exit_code != 0:
+            self.run_page.set_macro_plan(ui_format("Input inspection failed: {reason}", reason=stderr or exit_code))
+            return
+        try:
+            plan = json.loads(stdout)
+            if plan.get("schema") != "G4UniversalSimRunPlan" or plan.get("version") != 1:
+                raise ValueError("unsupported run plan schema")
+            commands = plan["macro_plan"]["commands"]
+            if not isinstance(commands, list):
+                raise ValueError("macro plan commands are not a list")
+            lines = [
+                ui_text("Configuration before macro execution; runtime results remain unknown."),
+                ui_text("Initial configuration and sources:"),
+            ]
+            for item in plan["initial_configuration"]:
+                location = f" {item.get('file', '')}:{item.get('line', '')}" if item["source"] == "main_ini" else ""
+                lines.append(f"{item['name']} = {item['value']} [{item['source']}]{location}")
+            lines.extend(["", ui_format("Expanded commands: {count}", count=len(commands)),
+                          ui_text("Macro commands may change configuration after initialization.")])
+            for item in commands:
+                lines.append(f"{item['file']}:{item['line']} [{item['category']}] {item['text']}")
+            if plan["macro_execution_planned"] and not any(item["category"] == "beam_on" for item in commands):
+                lines.extend(["", ui_text("No beamOn command was found; no macro events are planned.")])
+            if stderr:
+                lines.extend(["", ui_text("Backend diagnostics:"), stderr])
+            self.run_page.set_macro_plan("\n".join(lines))
+            if run_after:
+                self._start_current_project()
+        except (KeyError, TypeError, ValueError) as error:
+            self.run_page.set_macro_plan(ui_format("Input inspection failed: {reason}", reason=str(error)))
+
+    def _on_macro_inspection_error(self, error: QProcess.ProcessError) -> None:
+        if error == QProcess.FailedToStart:
+            self._pending_inspection_run = False
+            self.run_page.set_macro_plan(ui_format("Input inspection failed: {reason}", reason=self._macro_inspection.errorString()))
+
+    def start_run(self) -> None:
+        if self.runner.is_running() or self._macro_inspection.state() != QProcess.NotRunning:
+            self.run_page.append_status_message(ui_text("A run is already active."))
+            return
+        self._update_project_from_page_without_preview()
+        self.config_builder_page.update_project(self.project)
+        if self.project.runInputMode == "generated":
+            if not self._generate_current_package():
+                return
+            self._start_current_project()
+            return
+        self.inspect_external_macro(run_after=True)
+
+    def _start_current_project(self) -> None:
+        errors = self.runner.validate_project(self.project, ready_to_run=True)
         if errors:
             message = "\n".join(errors)
             self.run_page.append_status_message(message)
             QMessageBox.warning(self, "Validation failed", message)
             return
         self.run_page.clear_logs()
-        self.run_page.set_command(self._format_command_preview(self.runner.build_command(self.project)))
+        self.run_page.set_result("")
+        command = self.runner.build_command(self.project)
+        self.run_page.set_command(self._format_command_preview(command))
         self.run_page.append_status_message("Starting run")
         self.statusBar().showMessage("Running", 5000)
-        self.runner.start(self.project)
+        self.runner.start(self.project, command)
 
     def validate_generated_config(self) -> None:
         self._update_project_from_page_without_preview()
@@ -225,12 +583,18 @@ class MainWindow(QMainWindow):
     def generate_package(self, run_after_generate: bool) -> None:
         self._update_project_from_page_without_preview()
         self.config_builder_page.update_project(self.project)
+        if not self._generate_current_package():
+            return
+        if run_after_generate:
+            self._start_current_project()
+
+    def _generate_current_package(self) -> bool:
         try:
             pre_report = self.config_builder_page.validate_current(self.project)
             if not pre_report.can_run:
                 self.config_builder_page.set_validation_text(pre_report.to_text())
                 QMessageBox.warning(self, "Validation failed", "\n".join(pre_report.errors))
-                return
+                return False
             if pre_report.warnings:
                 QMessageBox.information(
                     self,
@@ -247,7 +611,7 @@ class MainWindow(QMainWindow):
                 physics=self.config_builder_page.physics_settings(),
                 scoring=self.config_builder_page.scoring_settings(),
                 material_document=self.config_builder_page.material_document if self.config_builder_page.material_document.is_dirty else None,
-                geometry_document=self.config_builder_page.geometry_document if self.config_builder_page.geometry_document.is_dirty else None,
+                geometry_document=self.config_builder_page.geometry_document,
                 source_model=self.config_builder_page.source_editor,
                 physics_model=self.config_builder_page.physics_editor,
                 scoring_model=self.config_builder_page.scoring_editor,
@@ -256,7 +620,7 @@ class MainWindow(QMainWindow):
             message = str(exc)
             self.config_builder_page.set_validation_text(message)
             QMessageBox.warning(self, "Generate package failed", message)
-            return
+            return False
 
         self.project.configPath = package.main_ini_path
         self.project.macroPath = package.run_macro_path
@@ -265,7 +629,10 @@ class MainWindow(QMainWindow):
         self.project.threads = self.config_builder_page.run_settings().threads
         seed = self.config_builder_page.run_settings().seed
         self.project.seed = "" if seed is None else str(seed)
+        self.project.runInputMode = "generated"
         self.project_page.set_project(self.project)
+        self._generated_package_dir = package.package_dir
+        self._generated_package_stale = False
         self.config_builder_page.set_package_path(package.package_dir)
         self.config_builder_page.set_validation_text(report_text)
         self.output_page.set_package_dir(package.package_dir, package.output_dir)
@@ -274,8 +641,7 @@ class MainWindow(QMainWindow):
         self.build_command_preview(show_errors=False)
         self.statusBar().showMessage(f"Generated package: {package.package_dir}", 8000)
 
-        if run_after_generate:
-            self.start_run()
+        return True
 
     def stop_run(self) -> None:
         self.runner.terminate()
@@ -290,15 +656,30 @@ class MainWindow(QMainWindow):
     def _on_state_changed(self, state: str) -> None:
         self.run_page.set_state(state)
         running = state in {"Starting", "Running"}
+        self.run_context.setText(ui_text(state))
+        self.run_context.setProperty("statusRole", "running" if running else "")
+        self.run_context.setProperty("uiRole", "" if running else "contextChip")
+        self.run_context.style().unpolish(self.run_context)
+        self.run_context.style().polish(self.run_context)
         self.project_page.set_inputs_enabled(not running)
 
     def _on_finished(self, exit_code: int) -> None:
         self.run_page.set_exit_code(exit_code)
+        result = self.runner.last_result
+        state = result.state if result else "incomplete"
+        reason = result.reason if result else "Run result is unavailable."
+        self.run_page.set_result(state)
+        self.run_page.append_status_message(ui_format("Run result: {state}. {reason}", state=ui_text(state), reason=ui_text(reason)))
         self.project_page.set_inputs_enabled(True)
         self.output_page.set_output_dir(self.project.outputDir)
         self.output_page.refresh()
         self.run_history_page.refresh()
-        self.statusBar().showMessage(("Finished" if exit_code == 0 else "Failed") + f" with exit code {exit_code}", 8000)
+        self.run_context.setText(ui_text(state))
+        self.run_context.setProperty("statusRole", "")
+        self.run_context.setProperty("uiRole", "contextChip")
+        self.run_context.style().unpolish(self.run_context)
+        self.run_context.style().polish(self.run_context)
+        self.statusBar().showMessage(ui_format("Run result: {state}. {reason}", state=ui_text(state), reason=ui_text(reason)), 8000)
 
     def _on_runner_error(self, message: str) -> None:
         self.run_page.append_status_message(message)
@@ -312,8 +693,9 @@ class MainWindow(QMainWindow):
         self.run_page.append_status_message(detail)
 
     def _update_project_from_page_without_preview(self) -> None:
-        self.project = self.project_page.to_project()
+        self.project_page.apply_to_project(self.project)
         self._sync_flat_project_to_nested_paths()
+        self.config_builder_page.set_run_defaults(self.project)
         self.output_page.set_workspace_root(self.project.workspaceRoot)
         self.output_page.set_output_dir(self.project.outputDir)
         self.run_history_page.set_runs_root(self.project.runsRoot)
@@ -322,6 +704,27 @@ class MainWindow(QMainWindow):
         self.project.pathSettings.executable = self.project.executable
         self.project.pathSettings.workspace_root = self.project.workspaceRoot
         self.project.pathSettings.runs_root = self.project.runsRoot
+
+    def _project_page_stale_signature(self, project: G4USimProject) -> tuple[object, ...]:
+        return (
+            project.runInputMode,
+            project.projectName,
+            project.executable,
+            project.workspaceRoot,
+            project.outputDir,
+            project.runsRoot,
+            project.threads,
+            project.seed,
+            project.runName,
+        )
+
+    def _mark_generated_package_stale(self) -> None:
+        if self.project.runInputMode != "generated":
+            self.build_command_preview(show_errors=False)
+            return
+        self._generated_package_stale = True
+        self.config_builder_page.set_package_path("<stale>")
+        self.run_page.set_command([ui_text("Configuration changed; the run package will be regenerated at run time.")])
 
     def _format_command_preview(self, command: list[str]) -> list[str]:
         if not command:
@@ -360,6 +763,7 @@ class MainWindow(QMainWindow):
         self.project.configPath = str(package / "config" / "main.ini")
         self.project.macroPath = str(package / "macros" / "run.mac")
         self.project.outputDir = str(package / "output")
+        self.project.runInputMode = "external"
         self.project_page.set_project(self.project)
         self.output_page.set_package_dir(str(package), self.project.outputDir)
         self.run_history_page.refresh()
@@ -376,6 +780,9 @@ class MainWindow(QMainWindow):
             self.project.runsRoot = state["lastRunsRoot"]
 
     def closeEvent(self, event) -> None:  # noqa: N802 - Qt override.
+        if self._macro_inspection.state() != QProcess.NotRunning:
+            self._macro_inspection.kill()
+            self._macro_inspection.waitForFinished(1000)
         state = load_state()
         state["lastWorkspaceRoot"] = self.project.workspaceRoot
         state["lastRunsRoot"] = self.project.runsRoot

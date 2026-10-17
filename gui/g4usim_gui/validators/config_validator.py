@@ -4,6 +4,7 @@ import re
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from g4usim_gui.core.i18n import ui_text
 from g4usim_gui.core.capability_messages import capability_message
 from g4usim_gui.models.package_model import GeometrySettings, PathSettings
 from g4usim_gui.models.physics_model import PhysicsSettings
@@ -110,8 +111,16 @@ def validate_config_builder(
         report.errors.append(f"Materials config does not exist: {paths.materials_config}")
     else:
         materials_summary = parse_materials(paths.materials_config)
+        material_editor_covers_source = bool(
+            material_document and _editor_source_matches(material_document, materials_summary)
+        )
+        if material_document and material_document.source_path and not material_editor_covers_source:
+            report.errors.append(ui_text("Materials source changed since the editor was loaded; reload materials before generating a package."))
+        # MaterialDocument retains source errors, but its semantic validator
+        # rebuilds warnings; keep parser warnings from the current source.
         report.warnings.extend(f"Materials: {item}" for item in materials_summary.warnings)
-        report.errors.extend(f"Materials: {item}" for item in materials_summary.errors)
+        if not material_editor_covers_source:
+            report.errors.extend(f"Materials: {item}" for item in materials_summary.errors)
         _validate_material_text(Path(paths.materials_config).expanduser(), report)
 
     use_edited_geometry = bool(
@@ -139,8 +148,15 @@ def validate_config_builder(
         report.errors.append(f"Geometry config does not exist: {geometry.config_path}")
     else:
         geometry_summary = parse_geometry(geometry.config_path, geometry.template)
-        report.warnings.extend(f"Geometry: {item}" for item in geometry_summary.warnings)
-        report.errors.extend(f"Geometry: {item}" for item in geometry_summary.errors)
+        geometry_editor_covers_source = bool(
+            use_edited_geometry and geometry_document
+            and _editor_source_matches(geometry_document, geometry_summary)
+        )
+        if use_edited_geometry and geometry_document and geometry_document.source_path and not geometry_editor_covers_source:
+            report.errors.append(ui_text("Geometry source changed since the editor was loaded; reload geometry before generating a package."))
+        if not geometry_editor_covers_source:
+            report.warnings.extend(f"Geometry: {item}" for item in geometry_summary.warnings)
+            report.errors.extend(f"Geometry: {item}" for item in geometry_summary.errors)
         _validate_geometry_text(Path(geometry.config_path).expanduser(), report)
         _validate_template_consistency(geometry.template, geometry_summary, report)
 
@@ -197,6 +213,15 @@ def validate_config_builder(
     if not report.errors:
         report.info.append("Validation passed.")
     return report
+
+
+def _editor_source_matches(document: MaterialDocument | GeometryDocument,
+                           summary: MaterialsSummary | GeometrySummary) -> bool:
+    return bool(
+        document.source_path
+        and Path(document.source_path).expanduser().resolve() == Path(summary.path).expanduser().resolve()
+        and document.raw_source_text == summary.raw_text
+    )
 
 
 def build_config_summary_text(
