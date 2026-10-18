@@ -115,6 +115,7 @@ def main() -> int:
         geometry_clear_macro = temp / "geometry-clear.mac"
         source_preset_macro = temp / "source-preset.mac"
         source_particle_macro = temp / "source-particle.mac"
+        source_energy_macro = temp / "source-energy.mac"
         source_reset_macro = temp / "source-reset.mac"
         output_command_fault_macro = temp / "output-command-fault.mac"
         second_material_macro = temp / "second-material.mac"
@@ -144,6 +145,10 @@ def main() -> int:
         source_preset_only_config.write_text(
             main_text.replace("preset = proton_beam\nparticle = proton", "preset = neutron_beam"),
             encoding="utf-8",
+        )
+        source_energy_override_config = temp / "source-energy-override.ini"
+        source_energy_override_config.write_text(
+            main_text.replace("energy = 10 MeV", "energy = 5 MeV"), encoding="utf-8"
         )
         scoring_off_config.write_text(
             main_text.replace("[scoring]\nenabled = true", "[scoring]\nenabled = false"), encoding="utf-8"
@@ -186,6 +191,11 @@ def main() -> int:
         source_particle_macro.write_text(
             "/AIHL/source/preset gamma_beam\n"
             "/AIHL/source/particle proton\n/run/initialize\n/run/beamOn 1\n",
+            encoding="utf-8",
+        )
+        source_energy_macro.write_text(
+            "/AIHL/source/preset gamma_beam\n"
+            "/AIHL/source/energy 7 MeV\n/run/initialize\n/run/beamOn 1\n",
             encoding="utf-8",
         )
         source_reset_macro.write_text("/AIHL/source/reset\n", encoding="utf-8")
@@ -262,7 +272,7 @@ def main() -> int:
         assert single_values["macro_seed_modified"] == "false"
         assert single_values["program_exit_code"] == "0"
         assert single_values["effective_config_snapshot_stage"] == "finalization"
-        assert single_values["effective_config_source_coverage"] == "startup_geometry_and_source_particle"
+        assert single_values["effective_config_source_coverage"] == "startup_geometry_and_source_particle_energy"
         assert single_values["effective_output_dir_origin_kind"] == "cli"
         assert single_values["effective_seed_origin_kind"] == "cli"
         assert single_values["effective_threads_origin_kind"] == "main_ini"
@@ -289,6 +299,11 @@ def main() -> int:
         assert single_values["effective_source_particle_origin_section"] == "source"
         assert single_values["effective_source_particle_origin_key"] == "particle"
         assert int(single_values["effective_source_particle_origin_line"]) > 0
+        assert float(single_values["effective_source_energy_MeV"]) == 10.0
+        assert single_values["effective_source_energy_origin_kind"] == "main_ini"
+        assert single_values["effective_source_energy_origin_section"] == "source"
+        assert single_values["effective_source_energy_origin_key"] == "energy"
+        assert int(single_values["effective_source_energy_origin_line"]) > 0
         assert single_values["effective_physics_reference"] == "FTFP_BERT_EMZ"
         assert single_values["effective_materials_source_status"] == "single_file"
         assert single_values["effective_materials_loaded_file_count"] == "1"
@@ -331,6 +346,25 @@ def main() -> int:
         assert preset_only_values["effective_source_particle_origin_kind"] == "main_ini"
         assert preset_only_values["effective_source_particle_origin_key"] == "preset"
         assert int(preset_only_values["effective_source_particle_origin_line"]) > 0
+        assert float(preset_only_values["effective_source_energy_MeV"]) == 10.0
+        assert preset_only_values["effective_source_energy_origin_key"] == "energy"
+        source_energy_preset_config = temp / "source-energy-preset.ini"
+        source_energy_preset_config.write_text(
+            source_preset_only_config.read_text(encoding="utf-8").replace("energy = 10 MeV\n", ""),
+            encoding="utf-8",
+        )
+        energy_preset_output = temp / "source-energy-preset-output"
+        run(executable, ["--config", str(source_energy_preset_config), "--macro", str(single_macro),
+                         "--output", str(energy_preset_output)])
+        energy_preset_values, _ = read_summary(energy_preset_output)
+        assert float(energy_preset_values["effective_source_energy_MeV"]) == 1.0
+        assert energy_preset_values["effective_source_energy_origin_key"] == "preset"
+        energy_override_output = temp / "source-energy-override-output"
+        run(executable, ["--config", str(source_energy_override_config), "--macro", str(single_macro),
+                         "--output", str(energy_override_output)])
+        energy_override_values, _ = read_summary(energy_override_output)
+        assert float(energy_override_values["effective_source_energy_MeV"]) == 5.0
+        assert energy_override_values["effective_source_energy_origin_key"] == "energy"
         for source_macro, expected_particle, expected_command, expected_line, run_count in (
             (source_preset_macro, "gamma", "/aihl/source/preset", 1, "1"),
             (source_particle_macro, "proton", "/aihl/source/particle", 2, "1"),
@@ -346,6 +380,26 @@ def main() -> int:
             assert values["effective_source_particle_origin_key"] == expected_command
             assert values["effective_source_particle_origin_line"] == str(expected_line)
             assert normalize(values["effective_source_particle_origin_file"]) == normalize(str(source_macro))
+            expected_energy = 0.0 if source_macro == source_reset_macro else 1.0
+            assert float(values["effective_source_energy_MeV"]) == expected_energy
+            assert values["effective_source_energy_origin_kind"] == "macro"
+            assert values["effective_source_energy_origin_key"] == (
+                "/aihl/source/reset" if source_macro == source_reset_macro else "/aihl/source/preset"
+            )
+            assert values["effective_source_energy_origin_line"] == "1"
+            assert normalize(values["effective_source_energy_origin_file"]) == normalize(str(source_macro))
+        energy_macro_output = temp / "source-energy-macro-output"
+        run(executable, ["--config", "config/main.ini", "--macro", str(source_energy_macro),
+                         "--output", str(energy_macro_output)])
+        energy_macro_values, _ = read_summary(energy_macro_output)
+        assert energy_macro_values["status"] == "completed"
+        assert energy_macro_values["actual_completed_event_count"] == "1"
+        assert float(energy_macro_values["effective_source_energy_MeV"]) == 7.0
+        assert energy_macro_values["effective_source_energy_origin_kind"] == "macro"
+        assert energy_macro_values["effective_source_energy_origin_key"] == "/aihl/source/energy"
+        assert energy_macro_values["effective_source_energy_origin_line"] == "2"
+        assert normalize(energy_macro_values["effective_source_energy_origin_file"]) == normalize(str(source_energy_macro))
+        assert energy_macro_values["effective_source_particle_origin_key"] == "/aihl/source/preset"
         single_schemas = read_generated_file_schemas(single_output)
         assert set(single_schemas) == set(single_files)
         assert single_schemas[str((single_output / "event_edep_t0.csv").resolve())] == "event_edep_csv_v3"

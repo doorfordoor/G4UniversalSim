@@ -28,6 +28,7 @@
 #include "Utils/StringUtils.hh"
 
 #include "G4RunManager.hh"
+#include "G4SystemOfUnits.hh"
 #ifdef G4MULTITHREADED
 #include "G4MTRunManager.hh"
 #endif
@@ -413,6 +414,10 @@ void SimulationManager::RecordSuccessfulMacroCommand(const std::string& command,
     else if (token == "/aihl/geometry/setdefaultworldmaterial") field = "geometry_default_world_material";
     else if (token == "/aihl/source/particle" || token == "/aihl/source/preset" ||
              token == "/aihl/source/reset") field = "source_particle";
+    if (token == "/aihl/source/energy" || token == "/aihl/source/preset" ||
+        token == "/aihl/source/reset") {
+        effectiveValueOrigins_["source_energy"] = ValueOrigin{"macro", file, "", token, line};
+    }
     if (field.empty()) return;
     const bool locked = (field == "output_dir" && commandLineOverrides_.outputDir) ||
                         (field == "threads" && commandLineOverrides_.numThreads) ||
@@ -469,6 +474,8 @@ void SimulationManager::CaptureConfiguredValueOrigins()
            {{"geometry", "default_world_material"}, {"geometry", "defaultWorldMaterial"}}, true);
     // A preset supplies a particle unless an explicit, nonempty particle key overrides it.
     select("source_particle", false, {{"source", "particle"}, {"source", "preset"}}, true);
+    // ApplyPreset assigns its default energy before any explicit [source]/energy override.
+    select("source_energy", false, {{"source", "energy"}, {"source", "preset"}}, true);
 }
 
 void SimulationManager::SetExecutedMacroPath(const std::string& path)
@@ -1178,7 +1185,7 @@ void SimulationManager::WriteFinalConfigSnapshot(const std::string& macroStatus)
     summary.Set("effective_config_snapshot_stage", "finalization");
     summary.Set("effective_config_snapshot_scope", "manager_state_subset");
     summary.Set("effective_config_macro_execution_status", macroStatus);
-    summary.Set("effective_config_source_coverage", "startup_geometry_and_source_particle");
+    summary.Set("effective_config_source_coverage", "startup_geometry_and_source_particle_energy");
     summary.Set("effective_config_geant4_applied", "unknown");
     for (const auto& entry : effectiveValueOrigins_) {
         const std::string prefix = "effective_" + entry.first + "_origin_";
@@ -1229,6 +1236,8 @@ void SimulationManager::WriteFinalConfigSnapshot(const std::string& macroStatus)
                 physicsManager_ ? physicsManager_->GetReferenceList() : "unknown");
     summary.Set("effective_source_particle",
                 sourceManager_ ? sourceManager_->GetParticleName() : "unknown");
+    summary.Set("effective_source_energy_MeV",
+                sourceManager_ ? sourceManager_->GetMonoEnergy() / CLHEP::MeV : 0.0);
     summary.SetBool("effective_scoring_enabled", scoringManager_ && scoringManager_->IsEnabled());
     summary.SetBool("effective_biasing_enabled", biasingManager_ && biasingManager_->IsEnabled());
 }
