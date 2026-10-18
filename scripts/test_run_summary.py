@@ -647,6 +647,44 @@ def main() -> int:
                 assert abs(float(hit["kineticEnergy_MeV"]) - energy) < 1e-9, (event_id, hit)
                 assert abs(float(hit["z0_mm"]) + 9.0) < 1e-9, (event_id, hit)
 
+        # The single-thread check above does not show that *both* MT workers
+        # observe a source change between runs. Verify actual primary steps in
+        # each worker output, not just the final SourceManager summary.
+        source_sampling_mt_macro = temp / "source-sampling-mt.mac"
+        source_sampling_mt_macro.write_text(
+            source_sampling_macro.read_text(encoding="utf-8").replace(
+                "/run/beamOn 3", "/run/beamOn 8"
+            ),
+            encoding="utf-8",
+        )
+        source_sampling_mt_output = temp / "source-sampling-mt-output"
+        run(executable, ["--macro", str(source_sampling_mt_macro),
+                         "--output", str(source_sampling_mt_output), "--threads", "2"])
+        mt_values, _ = read_summary(source_sampling_mt_output)
+        assert mt_values["status"] == "completed", mt_values
+        assert mt_values["run_count"] == "2", mt_values
+        assert mt_values["actual_completed_event_count"] == "16", mt_values
+        for run_id, particle, energy in ((0, "e-", 1.0), (1, "proton", 3.0)):
+            suffix = "" if run_id == 0 else f"_r{run_id}"
+            worker_files = [
+                source_sampling_mt_output / f"hits_t{thread}{suffix}.csv"
+                for thread in (0, 1)
+            ]
+            assert all(file.is_file() for file in worker_files), worker_files
+            primary_first_steps = {}
+            for file in worker_files:
+                with file.open(newline="", encoding="utf-8") as stream:
+                    for hit in csv.DictReader(stream):
+                        if hit["trackID"] == "1" and hit["parentID"] == "0":
+                            event_id = int(hit["eventID"])
+                            primary_first_steps.setdefault(event_id, hit)
+            assert set(primary_first_steps) == set(range(8)), (run_id, primary_first_steps)
+            for event_id, hit in primary_first_steps.items():
+                assert int(hit["runID"]) == run_id, (event_id, hit)
+                assert hit["particle"] == particle, (event_id, hit)
+                assert abs(float(hit["kineticEnergy_MeV"]) - energy) < 1e-9, (event_id, hit)
+                assert abs(float(hit["z0_mm"]) + 9.0) < 1e-9, (event_id, hit)
+
         with (single_output / "event_edep_t0.csv").open(newline="", encoding="utf-8") as stream:
             assert sum(1 for _ in csv.reader(stream)) - 1 == 3
         run(executable, ["--config", "config/main.ini", "--macro", str(single_macro), "--output", str(single_output), "--seed", "77"])
