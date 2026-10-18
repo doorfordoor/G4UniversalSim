@@ -113,6 +113,9 @@ def main() -> int:
         changed_macro = temp / "changed.mac"
         geometry_origin_macro = temp / "geometry-origin.mac"
         geometry_clear_macro = temp / "geometry-clear.mac"
+        source_preset_macro = temp / "source-preset.mac"
+        source_particle_macro = temp / "source-particle.mac"
+        source_reset_macro = temp / "source-reset.mac"
         output_command_fault_macro = temp / "output-command-fault.mac"
         second_material_macro = temp / "second-material.mac"
         manual_material_macro = temp / "manual-material.mac"
@@ -136,6 +139,12 @@ def main() -> int:
         scoring_off_config = temp / "scoring-off.ini"
         main_text = (temp / "config" / "main.ini").read_text(encoding="utf-8")
         assert "[scoring]\nenabled = true" in main_text
+        source_preset_only_config = temp / "source-preset-only.ini"
+        assert "preset = proton_beam\nparticle = proton" in main_text
+        source_preset_only_config.write_text(
+            main_text.replace("preset = proton_beam\nparticle = proton", "preset = neutron_beam"),
+            encoding="utf-8",
+        )
         scoring_off_config.write_text(
             main_text.replace("[scoring]\nenabled = true", "[scoring]\nenabled = false"), encoding="utf-8"
         )
@@ -170,6 +179,16 @@ def main() -> int:
             encoding="utf-8",
         )
         geometry_clear_macro.write_text("/AIHL/geometry/clear\n", encoding="utf-8")
+        source_preset_macro.write_text(
+            "/AIHL/source/preset gamma_beam\n/run/initialize\n/run/beamOn 1\n",
+            encoding="utf-8",
+        )
+        source_particle_macro.write_text(
+            "/AIHL/source/preset gamma_beam\n"
+            "/AIHL/source/particle proton\n/run/initialize\n/run/beamOn 1\n",
+            encoding="utf-8",
+        )
+        source_reset_macro.write_text("/AIHL/source/reset\n", encoding="utf-8")
         output_command_fault_target = temp / "output-command-fault-target"
         output_command_rejected_target = temp / "__g4usim_inject_manager_set_dir__"
         output_command_fault_config = temp / "output-command-fault.ini"
@@ -243,7 +262,7 @@ def main() -> int:
         assert single_values["macro_seed_modified"] == "false"
         assert single_values["program_exit_code"] == "0"
         assert single_values["effective_config_snapshot_stage"] == "finalization"
-        assert single_values["effective_config_source_coverage"] == "startup_and_geometry_fields"
+        assert single_values["effective_config_source_coverage"] == "startup_geometry_and_source_particle"
         assert single_values["effective_output_dir_origin_kind"] == "cli"
         assert single_values["effective_seed_origin_kind"] == "cli"
         assert single_values["effective_threads_origin_kind"] == "main_ini"
@@ -266,6 +285,10 @@ def main() -> int:
             assert int(single_values[f"effective_{field}_origin_line"]) > 0
         assert single_values["effective_geometry_default_world_material"] == "G4_AIR"
         assert single_values["effective_source_particle"] == "proton"
+        assert single_values["effective_source_particle_origin_kind"] == "main_ini"
+        assert single_values["effective_source_particle_origin_section"] == "source"
+        assert single_values["effective_source_particle_origin_key"] == "particle"
+        assert int(single_values["effective_source_particle_origin_line"]) > 0
         assert single_values["effective_physics_reference"] == "FTFP_BERT_EMZ"
         assert single_values["effective_materials_source_status"] == "single_file"
         assert single_values["effective_materials_loaded_file_count"] == "1"
@@ -299,6 +322,30 @@ def main() -> int:
         assert geometry_clear_values["effective_geometry_config_origin_kind"] == "macro"
         assert geometry_clear_values["effective_geometry_config_origin_key"] == "/aihl/geometry/clear"
         assert geometry_clear_values["effective_geometry_config_origin_line"] == "1"
+        preset_only_output = temp / "source-preset-only-output"
+        run(executable, ["--config", str(source_preset_only_config), "--macro", str(single_macro),
+                         "--output", str(preset_only_output)])
+        preset_only_values, _ = read_summary(preset_only_output)
+        assert preset_only_values["status"] == "completed"
+        assert preset_only_values["effective_source_particle"] == "neutron"
+        assert preset_only_values["effective_source_particle_origin_kind"] == "main_ini"
+        assert preset_only_values["effective_source_particle_origin_key"] == "preset"
+        assert int(preset_only_values["effective_source_particle_origin_line"]) > 0
+        for source_macro, expected_particle, expected_command, expected_line, run_count in (
+            (source_preset_macro, "gamma", "/aihl/source/preset", 1, "1"),
+            (source_particle_macro, "proton", "/aihl/source/particle", 2, "1"),
+            (source_reset_macro, "", "/aihl/source/reset", 1, "0"),
+        ):
+            output = temp / f"{source_macro.stem}-output"
+            run(executable, ["--config", "config/main.ini", "--macro", str(source_macro),
+                             "--output", str(output)])
+            values, _ = read_summary(output)
+            assert values["effective_source_particle"] == expected_particle
+            assert values["run_count"] == run_count
+            assert values["effective_source_particle_origin_kind"] == "macro"
+            assert values["effective_source_particle_origin_key"] == expected_command
+            assert values["effective_source_particle_origin_line"] == str(expected_line)
+            assert normalize(values["effective_source_particle_origin_file"]) == normalize(str(source_macro))
         single_schemas = read_generated_file_schemas(single_output)
         assert set(single_schemas) == set(single_files)
         assert single_schemas[str((single_output / "event_edep_t0.csv").resolve())] == "event_edep_csv_v3"

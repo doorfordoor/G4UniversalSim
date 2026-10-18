@@ -411,6 +411,8 @@ void SimulationManager::RecordSuccessfulMacroCommand(const std::string& command,
     else if (token == "/aihl/geometry/settemplate") field = "geometry_template";
     else if (token == "/aihl/geometry/loadconfig" || token == "/aihl/geometry/clear") field = "geometry_config";
     else if (token == "/aihl/geometry/setdefaultworldmaterial") field = "geometry_default_world_material";
+    else if (token == "/aihl/source/particle" || token == "/aihl/source/preset" ||
+             token == "/aihl/source/reset") field = "source_particle";
     if (field.empty()) return;
     const bool locked = (field == "output_dir" && commandLineOverrides_.outputDir) ||
                         (field == "threads" && commandLineOverrides_.numThreads) ||
@@ -465,6 +467,8 @@ void SimulationManager::CaptureConfiguredValueOrigins()
     select("geometry_config", false, {{"geometry", "config"}, {"geometry", "configFile"}}, true);
     select("geometry_default_world_material", false,
            {{"geometry", "default_world_material"}, {"geometry", "defaultWorldMaterial"}}, true);
+    // A preset supplies a particle unless an explicit, nonempty particle key overrides it.
+    select("source_particle", false, {{"source", "particle"}, {"source", "preset"}}, true);
 }
 
 void SimulationManager::SetExecutedMacroPath(const std::string& path)
@@ -1174,7 +1178,7 @@ void SimulationManager::WriteFinalConfigSnapshot(const std::string& macroStatus)
     summary.Set("effective_config_snapshot_stage", "finalization");
     summary.Set("effective_config_snapshot_scope", "manager_state_subset");
     summary.Set("effective_config_macro_execution_status", macroStatus);
-    summary.Set("effective_config_source_coverage", "startup_and_geometry_fields");
+    summary.Set("effective_config_source_coverage", "startup_geometry_and_source_particle");
     summary.Set("effective_config_geant4_applied", "unknown");
     for (const auto& entry : effectiveValueOrigins_) {
         const std::string prefix = "effective_" + entry.first + "_origin_";
