@@ -3,6 +3,7 @@
 #include "Core/SimulationManager.hh"
 
 #include "G4Exception.hh"
+#include "G4ApplicationState.hh"
 #include "G4UIcmdWithABool.hh"
 #include "G4UIcmdWithAString.hh"
 #include "G4UIcmdWithAnInteger.hh"
@@ -55,6 +56,7 @@ AppMessenger::AppMessenger(SimulationManager* manager)
 
     setCheckOverlapsCmd_ = std::make_unique<G4UIcmdWithABool>("/AIHL/app/setCheckOverlaps", this);
     setCheckOverlapsCmd_->SetGuidance("Enable or disable geometry overlap checks.");
+    setCheckOverlapsCmd_->AvailableForStates(G4State_PreInit);
 
     printSummaryCmd_ = std::make_unique<G4UIcommand>("/AIHL/app/printSummary", this);
     printSummaryCmd_->SetGuidance("Print current SimulationManager summary.");

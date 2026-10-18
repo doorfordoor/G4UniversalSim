@@ -7,6 +7,7 @@
 #include "Utils/UnitParser.hh"
 
 #include "G4Exception.hh"
+#include "G4ApplicationState.hh"
 #include "G4RunManager.hh"
 #include "G4UIcmdWithABool.hh"
 #include "G4UIcmdWithAString.hh"
@@ -142,6 +143,23 @@ GeometryMessenger::GeometryMessenger(GeometryManager* manager)
 
     markModifiedCmd_ = new G4UIcmdWithoutParameter("/AIHL/geometry/markModified", this);
     markModifiedCmd_->SetGuidance("Call G4RunManager::GeometryHasBeenModified(). Does not rebuild geometry or start a run.");
+
+    // These commands update GeometryManager's cached tree/settings. After
+    // /run/initialize, they cannot guarantee that the existing Geant4 world
+    // or attached biasing operators reflect the new values. Use a new process
+    // for a different geometry until a safe rebuild lifecycle is validated.
+    setTemplateCmd_->AvailableForStates(G4State_PreInit);
+    loadConfigCmd_->AvailableForStates(G4State_PreInit);
+    checkOverlapsCmd_->AvailableForStates(G4State_PreInit);
+    setDefaultWorldMaterialCmd_->AvailableForStates(G4State_PreInit);
+    addBoxCmd_->AvailableForStates(G4State_PreInit);
+    addTubsCmd_->AvailableForStates(G4State_PreInit);
+    addVolumeCmd_->AvailableForStates(G4State_PreInit);
+    removeUserVolumeCmd_->AvailableForStates(G4State_PreInit);
+    clearCmd_->AvailableForStates(G4State_PreInit);
+    clearUserVolumesCmd_->AvailableForStates(G4State_PreInit);
+    preserveUserVolumesOnLoadCmd_->AvailableForStates(G4State_PreInit);
+    markModifiedCmd_->AvailableForStates(G4State_PreInit);
 }
 
 GeometryMessenger::~GeometryMessenger()

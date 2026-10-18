@@ -113,6 +113,7 @@ def main() -> int:
         changed_macro = temp / "changed.mac"
         geometry_origin_macro = temp / "geometry-origin.mac"
         geometry_clear_macro = temp / "geometry-clear.mac"
+        late_geometry_macro = temp / "geometry-after-init.mac"
         source_preset_macro = temp / "source-preset.mac"
         source_particle_macro = temp / "source-particle.mac"
         source_energy_macro = temp / "source-energy.mac"
@@ -194,6 +195,11 @@ def main() -> int:
             encoding="utf-8",
         )
         geometry_clear_macro.write_text("/AIHL/geometry/clear\n", encoding="utf-8")
+        late_geometry_macro.write_text(
+            "/run/initialize\n/AIHL/geometry/setTemplate hierarchical\n"
+            "/control/echo GEOMETRY_MUTATION_CONTINUED\n/run/beamOn 1\n",
+            encoding="utf-8",
+        )
         source_preset_macro.write_text(
             "/AIHL/source/preset gamma_beam\n/run/initialize\n/run/beamOn 1\n",
             encoding="utf-8",
@@ -374,6 +380,23 @@ def main() -> int:
         assert geometry_clear_values["effective_geometry_config_origin_kind"] == "macro"
         assert geometry_clear_values["effective_geometry_config_origin_key"] == "/aihl/geometry/clear"
         assert geometry_clear_values["effective_geometry_config_origin_line"] == "1"
+
+        # A post-initialization Manager mutation previously returned success
+        # and let beamOn run with an already-constructed Geant4 world.
+        late_geometry_output = temp / "geometry-after-init-output"
+        late_geometry_log = run(
+            executable, ["--config", "config/main.ini", "--macro", str(late_geometry_macro),
+                         "--output", str(late_geometry_output)], expected=1,
+        )
+        late_geometry_values, _ = read_summary(late_geometry_output)
+        assert "GEOMETRY_MUTATION_CONTINUED" not in late_geometry_log
+        assert "G4UImanager status=200" in late_geometry_log, late_geometry_log[-4000:]
+        assert late_geometry_values["status"] == "failed", late_geometry_values
+        assert late_geometry_values["macro_execution_status"] == "failed", late_geometry_values
+        assert late_geometry_values["macro_failure_command"] == "/AIHL/geometry/setTemplate hierarchical"
+        assert late_geometry_values["run_count"] == "0", late_geometry_values
+        assert late_geometry_values["effective_geometry_template"] != "hierarchical", late_geometry_values
+        assert late_geometry_values["effective_geometry_template_origin_kind"] == "main_ini"
         preset_only_output = temp / "source-preset-only-output"
         run(executable, ["--config", str(source_preset_only_config), "--macro", str(single_macro),
                          "--output", str(preset_only_output)])

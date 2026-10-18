@@ -63,6 +63,34 @@ def main() -> int:
         code, log, result = session("physics_read_only", "/AIHL/physics/print")
         assert code == 0 and result["status"] == "interactive_no_run", log[-4000:]
 
+        # Before /run/initialize geometry edits remain usable; afterwards
+        # Geant4 refuses them and the audited terminal skips subsequent input.
+        code, log, result = session(
+            "geometry_before_init", "/AIHL/geometry/setTemplate hierarchical\n/AIHL/geometry/print",
+            config=True,
+        )
+        assert code == 0 and result["status"] == "interactive_no_run", log[-4000:]
+        assert result["effective_geometry_template"] == "hierarchical", result
+
+        code, log, result = session(
+            "geometry_after_init", "/run/initialize\n/AIHL/geometry/setTemplate hierarchical\n"
+            "/control/echo GEOMETRY_MUTATION_CONTINUED\n/run/beamOn 2",
+            config=True, threads=1,
+        )
+        assert code != 0 and result["status"] == "failed", log[-4000:]
+        assert "GEOMETRY_MUTATION_CONTINUED" not in log, log[-4000:]
+        assert result["run_count"] == "0", result
+        assert result["interactive_command_failure_kind"] == "geant4_illegal_application_state", result
+        assert result["effective_geometry_template"] != "hierarchical", result
+
+        code, log, result = session(
+            "app_geometry_after_init", "/run/initialize\n/AIHL/app/setCheckOverlaps true\n"
+            "/control/echo APP_GEOMETRY_CONTINUED", config=True, threads=1,
+        )
+        assert code != 0 and result["status"] == "failed", log[-4000:]
+        assert "APP_GEOMETRY_CONTINUED" not in log, log[-4000:]
+        assert result["interactive_command_failure_kind"] == "geant4_illegal_application_state", result
+
         # A physics list is already registered when the terminal starts.
         # Interactive manager changes must not pretend to rebuild that list.
         code, log, result = session(
