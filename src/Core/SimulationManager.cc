@@ -408,6 +408,9 @@ void SimulationManager::RecordSuccessfulMacroCommand(const std::string& command,
     else if (token == "/aihl/app/setnumthreads") field = "threads";
     else if (token == "/aihl/app/setseed") field = "seed";
     else if (token == "/aihl/app/setcheckoverlaps" || token == "/aihl/geometry/checkoverlaps") field = "check_overlaps";
+    else if (token == "/aihl/geometry/settemplate") field = "geometry_template";
+    else if (token == "/aihl/geometry/loadconfig" || token == "/aihl/geometry/clear") field = "geometry_config";
+    else if (token == "/aihl/geometry/setdefaultworldmaterial") field = "geometry_default_world_material";
     if (field.empty()) return;
     const bool locked = (field == "output_dir" && commandLineOverrides_.outputDir) ||
                         (field == "threads" && commandLineOverrides_.numThreads) ||
@@ -458,6 +461,10 @@ void SimulationManager::CaptureConfiguredValueOrigins()
     select("check_overlaps", commandLineOverrides_.checkOverlaps.has_value(),
            {{"geometry", "check_overlaps"}, {"geometry", "checkOverlaps"},
             {"run", "check_overlaps"}, {"run", "checkOverlaps"}});
+    select("geometry_template", false, {{"geometry", "template"}, {"geometry", "templateName"}}, true);
+    select("geometry_config", false, {{"geometry", "config"}, {"geometry", "configFile"}}, true);
+    select("geometry_default_world_material", false,
+           {{"geometry", "default_world_material"}, {"geometry", "defaultWorldMaterial"}}, true);
 }
 
 void SimulationManager::SetExecutedMacroPath(const std::string& path)
@@ -1167,7 +1174,7 @@ void SimulationManager::WriteFinalConfigSnapshot(const std::string& macroStatus)
     summary.Set("effective_config_snapshot_stage", "finalization");
     summary.Set("effective_config_snapshot_scope", "manager_state_subset");
     summary.Set("effective_config_macro_execution_status", macroStatus);
-    summary.Set("effective_config_source_coverage", "startup_fields_only");
+    summary.Set("effective_config_source_coverage", "startup_and_geometry_fields");
     summary.Set("effective_config_geant4_applied", "unknown");
     for (const auto& entry : effectiveValueOrigins_) {
         const std::string prefix = "effective_" + entry.first + "_origin_";
@@ -1191,6 +1198,8 @@ void SimulationManager::WriteFinalConfigSnapshot(const std::string& macroStatus)
                 geometryManager_ ? geometryManager_->GetTemplateName() : "unknown");
     summary.SetPath("effective_geometry_config",
                     geometryManager_ ? geometryManager_->GetGeometryConfigFile() : "unknown");
+    summary.Set("effective_geometry_default_world_material",
+                geometryManager_ ? geometryManager_->GetDefaultWorldMaterial() : "unknown");
     // Material loads are additive and macro commands can also edit definitions.
     // Only name a single effective file when it is the sole known file source.
     if (materialManager_) {

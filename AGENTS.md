@@ -94,6 +94,6 @@
 
 ## 10. M0 有效启动字段来源快照（工作区候选）
 
-- `effective_config_source_coverage=startup_fields_only` 仅代表 `output_dir`、`run_name`、`threads`、`seed`、`macro_file`、`check_overlaps` 六个启动字段具有来源记录；不能宣称全模块 `EffectiveConfig` 或 Geant4 内核实际应用已验证。
+- `effective_config_source_coverage=startup_and_geometry_fields` 代表六个启动字段 `output_dir`、`run_name`、`threads`、`seed`、`macro_file`、`check_overlaps` 与三个几何字段 `geometry_template`、`geometry_config`、`geometry_default_world_material` 的来源记录；不能宣称全模块 `EffectiveConfig` 或 Geant4 内核实际应用已验证。
 - `effective_<field>_origin_kind/file/line/section/key` 的 `kind` 只能使用 `default`、`main_ini`、`cli`、`macro` 或 `runtime_unattributed`。主 INI 保留原始字段和行号；宏命令须在真实执行成功并通过 Messenger 错误检查后记载来源；CLI 锁定字段不受宏重新归属。无法确定的运行时修改必须明确标为 `runtime_unattributed`。
-- 相关回归由 `scripts/test_run_summary.py` 覆盖。后续若扩展到 source、physics、geometry、materials、scoring，应逐模块校验实际消费与运行生命周期，不能直接把配置表中的初始值当作最终有效值。
+- 相关回归由 `scripts/test_run_summary.py` 覆盖，几何来源在成功执行已识别 batch macro 后登记；`/AIHL/geometry/clear` 只重新归属 `geometry_config`，不改变模板或默认世界材料。`effective_geometry_default_world_material` 为 Manager 当前值，`effective_config_geant4_applied=unknown` 仍保留。`startup_fields_only` 是旧摘要枚举值，消费者应同时识别新值；后续若扩展到 source、physics、materials、scoring，应逐模块校验实际消费与运行生命周期，不能直接把配置表中的初始值当作最终有效值。

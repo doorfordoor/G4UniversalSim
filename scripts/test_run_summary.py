@@ -111,6 +111,8 @@ def main() -> int:
         random_nonseed_macro = temp / "random-nonseed.mac"
         no_run_macro = temp / "no-run.mac"
         changed_macro = temp / "changed.mac"
+        geometry_origin_macro = temp / "geometry-origin.mac"
+        geometry_clear_macro = temp / "geometry-clear.mac"
         output_command_fault_macro = temp / "output-command-fault.mac"
         second_material_macro = temp / "second-material.mac"
         manual_material_macro = temp / "manual-material.mac"
@@ -160,6 +162,14 @@ def main() -> int:
             "/run/initialize\n/run/beamOn 2\n",
             encoding="utf-8",
         )
+        geometry_origin_macro.write_text(
+            "/AIHL/geometry/setTemplate simple_box\n"
+            "/AIHL/geometry/loadConfig config/geometry/simple_box.ini\n"
+            "/AIHL/geometry/setDefaultWorldMaterial G4_Galactic\n"
+            "/run/initialize\n/run/beamOn 1\n",
+            encoding="utf-8",
+        )
+        geometry_clear_macro.write_text("/AIHL/geometry/clear\n", encoding="utf-8")
         output_command_fault_target = temp / "output-command-fault-target"
         output_command_rejected_target = temp / "__g4usim_inject_manager_set_dir__"
         output_command_fault_config = temp / "output-command-fault.ini"
@@ -233,7 +243,7 @@ def main() -> int:
         assert single_values["macro_seed_modified"] == "false"
         assert single_values["program_exit_code"] == "0"
         assert single_values["effective_config_snapshot_stage"] == "finalization"
-        assert single_values["effective_config_source_coverage"] == "startup_fields_only"
+        assert single_values["effective_config_source_coverage"] == "startup_and_geometry_fields"
         assert single_values["effective_output_dir_origin_kind"] == "cli"
         assert single_values["effective_seed_origin_kind"] == "cli"
         assert single_values["effective_threads_origin_kind"] == "main_ini"
@@ -245,6 +255,16 @@ def main() -> int:
         assert single_values["effective_requested_threads"] == "1"
         assert single_values["effective_configured_seed"] == "77"
         assert single_values["effective_geometry_template"] == "simple_box"
+        for field, key in (
+            ("geometry_template", "template"),
+            ("geometry_config", "config"),
+            ("geometry_default_world_material", "default_world_material"),
+        ):
+            assert single_values[f"effective_{field}_origin_kind"] == "main_ini"
+            assert single_values[f"effective_{field}_origin_section"] == "geometry"
+            assert single_values[f"effective_{field}_origin_key"] == key
+            assert int(single_values[f"effective_{field}_origin_line"]) > 0
+        assert single_values["effective_geometry_default_world_material"] == "G4_AIR"
         assert single_values["effective_source_particle"] == "proton"
         assert single_values["effective_physics_reference"] == "FTFP_BERT_EMZ"
         assert single_values["effective_materials_source_status"] == "single_file"
@@ -253,6 +273,32 @@ def main() -> int:
             str(temp / "config" / "materials" / "material.ini")
         )
         assert any(Path(file).name == "event_edep_t0.csv" for file in single_files)
+        geometry_origin_output = temp / "geometry-origin-output"
+        run(executable, ["--config", "config/main.ini", "--macro", str(geometry_origin_macro),
+                         "--output", str(geometry_origin_output)])
+        geometry_origin_values, _ = read_summary(geometry_origin_output)
+        assert geometry_origin_values["status"] == "completed"
+        assert geometry_origin_values["actual_completed_event_count"] == "1"
+        assert geometry_origin_values["effective_geometry_default_world_material"] == "G4_Galactic"
+        for field, command, line in (
+            ("geometry_template", "/aihl/geometry/settemplate", 1),
+            ("geometry_config", "/aihl/geometry/loadconfig", 2),
+            ("geometry_default_world_material", "/aihl/geometry/setdefaultworldmaterial", 3),
+        ):
+            assert geometry_origin_values[f"effective_{field}_origin_kind"] == "macro"
+            assert geometry_origin_values[f"effective_{field}_origin_key"] == command
+            assert geometry_origin_values[f"effective_{field}_origin_line"] == str(line)
+            assert normalize(geometry_origin_values[f"effective_{field}_origin_file"]) == normalize(str(geometry_origin_macro))
+
+        # Clearing the live geometry invalidates the earlier config-file provenance.
+        geometry_clear_output = temp / "geometry-clear-output"
+        run(executable, ["--config", "config/main.ini", "--macro", str(geometry_clear_macro),
+                         "--output", str(geometry_clear_output)])
+        geometry_clear_values, _ = read_summary(geometry_clear_output)
+        assert geometry_clear_values["effective_geometry_config"] == ""
+        assert geometry_clear_values["effective_geometry_config_origin_kind"] == "macro"
+        assert geometry_clear_values["effective_geometry_config_origin_key"] == "/aihl/geometry/clear"
+        assert geometry_clear_values["effective_geometry_config_origin_line"] == "1"
         single_schemas = read_generated_file_schemas(single_output)
         assert set(single_schemas) == set(single_files)
         assert single_schemas[str((single_output / "event_edep_t0.csv").resolve())] == "event_edep_csv_v3"
