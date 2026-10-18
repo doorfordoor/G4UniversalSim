@@ -252,8 +252,11 @@ void SourceManager::SetParticle(const std::string& particleName)
     const std::string name = StringUtils::Trim(particleName);
     if (name.empty()) throw std::runtime_error("SourceManager::SetParticle requires non-empty particleName");
     particleName_ = name;
-    MarkGPSConfigDirty();
+    // Once GPS exists, update only the field explicitly changed. Replaying the
+    // complete cached configuration would overwrite unrelated native /gps/*
+    // settings (for example /gps/ene/mono after a particle-only update).
     if (gps_) ApplyParticleToGPS();
+    else MarkGPSConfigDirty();
     configured_ = true;
 }
 
@@ -266,8 +269,8 @@ void SourceManager::SetMonoEnergy(double energy)
 {
     if (energy <= 0.0) throw std::runtime_error("SourceManager::SetMonoEnergy requires energy > 0");
     monoEnergy_ = energy;
-    MarkGPSConfigDirty();
     if (gps_) ApplyMonoEnergyToGPS();
+    else MarkGPSConfigDirty();
     configured_ = true;
 }
 
@@ -282,8 +285,8 @@ void SourceManager::SetPosition(const std::string& type, const std::string& shap
     positionShape_ = shape;
     positionParams_ = params;
     hasPosition_ = true;
-    MarkGPSConfigDirty();
     if (gps_) ApplyPositionToGPS();
+    else MarkGPSConfigDirty();
     configured_ = true;
 }
 
@@ -300,8 +303,8 @@ void SourceManager::SetDirection(double x, double y, double z)
     direction_ = {x * invMag, y * invMag, z * invMag};
     hasDirection_ = true;
     isotropic_ = false;
-    MarkGPSConfigDirty();
     if (gps_) ApplyAngularDistributionToGPS();
+    else MarkGPSConfigDirty();
     configured_ = true;
 }
 
@@ -310,8 +313,8 @@ void SourceManager::SetIsotropic()
     isotropic_ = true;
     hasDirection_ = false;
     direction_.clear();
-    MarkGPSConfigDirty();
     if (gps_) ApplyAngularDistributionToGPS();
+    else MarkGPSConfigDirty();
     configured_ = true;
 }
 

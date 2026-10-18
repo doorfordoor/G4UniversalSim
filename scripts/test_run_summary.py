@@ -132,6 +132,7 @@ def main() -> int:
         invalid_material_macro = temp / "invalid-material.mac"
         hit_macro = temp / "hit.mac"
         source_sampling_macro = temp / "source-sampling.mac"
+        source_native_interleave_macro = temp / "source-native-interleave.mac"
 
         dry_macro.write_text(
             "/control/echo SHOULD_NOT_EXECUTE\n/run/beamOn 2\n", encoding="utf-8"
@@ -281,6 +282,17 @@ def main() -> int:
                 "/AIHL/source/particle proton\n"
                 "/AIHL/source/energy 3 MeV\n"
                 "/run/beamOn 3",
+            ),
+            encoding="utf-8",
+        )
+        source_native_interleave_macro.write_text(
+            hit_macro.read_text(encoding="utf-8").replace(
+                "/run/beamOn 100",
+                "/run/beamOn 8\n"
+                "/gps/ene/mono 2 MeV\n"
+                "/run/beamOn 8\n"
+                "/AIHL/source/particle proton\n"
+                "/run/beamOn 8",
             ),
             encoding="utf-8",
         )
@@ -684,6 +696,32 @@ def main() -> int:
                 assert hit["particle"] == particle, (event_id, hit)
                 assert abs(float(hit["kineticEnergy_MeV"]) - energy) < 1e-9, (event_id, hit)
                 assert abs(float(hit["z0_mm"]) + 9.0) < 1e-9, (event_id, hit)
+
+        # After a native GPS energy change, a particle-only AIHL command must
+        # not silently replay the cached mono energy. Verify all three runs
+        # using transported primary first steps from both Geant4 MT workers.
+        interleave_output = temp / "source-native-interleave-output"
+        run(executable, ["--macro", str(source_native_interleave_macro),
+                         "--output", str(interleave_output), "--threads", "2"])
+        interleave_values, _ = read_summary(interleave_output)
+        assert interleave_values["status"] == "completed", interleave_values
+        assert interleave_values["run_count"] == "3", interleave_values
+        assert interleave_values["actual_completed_event_count"] == "24", interleave_values
+        for run_id, particle, energy in ((0, "e-", 1.0), (1, "e-", 2.0), (2, "proton", 2.0)):
+            suffix = "" if run_id == 0 else f"_r{run_id}"
+            workers = [interleave_output / f"hits_t{thread}{suffix}.csv" for thread in (0, 1)]
+            assert all(path.is_file() for path in workers), workers
+            primary_steps = {}
+            for path in workers:
+                with path.open(newline="", encoding="utf-8") as stream:
+                    for hit in csv.DictReader(stream):
+                        if hit["trackID"] == "1" and hit["parentID"] == "0":
+                            primary_steps.setdefault(int(hit["eventID"]), hit)
+            assert set(primary_steps) == set(range(8)), (run_id, primary_steps)
+            for event_id, hit in primary_steps.items():
+                assert int(hit["runID"]) == run_id, (event_id, hit)
+                assert hit["particle"] == particle, (event_id, hit)
+                assert abs(float(hit["kineticEnergy_MeV"]) - energy) < 1e-9, (event_id, hit)
 
         with (single_output / "event_edep_t0.csv").open(newline="", encoding="utf-8") as stream:
             assert sum(1 for _ in csv.reader(stream)) - 1 == 3
