@@ -97,6 +97,7 @@
 
 ## 10. M0 有效启动字段来源快照（工作区候选）
 
+- `scripts/test_run_summary.py` 的单线程双 run 源采样回归，通过真实 hits 的主粒子首步记录验证 `/AIHL/source/particle`、`/AIHL/source/energy` 在受控点源、单能配置中实际作用于 Geant4 事件；不得推广为原生 `/gps/*`、多线程或全模块 EffectiveConfig 的应用验证。
 - `effective_config_source_coverage=startup_geometry_source_and_physics_reference` 代表六个启动字段 `output_dir`、`run_name`、`threads`、`seed`、`macro_file`、`check_overlaps`、三个几何字段 `geometry_template`、`geometry_config`、`geometry_default_world_material` 及 `source_particle`、`source_energy` 及 `physics_reference` 的来源记录；历史 `startup_geometry_and_source_particle`、`startup_geometry_and_source_particle_energy` 仍须兼容。不能宣称全模块 `EffectiveConfig` 或 Geant4 内核实际应用已验证。
 - `effective_<field>_origin_kind/file/line/section/key` 的 `kind` 只能使用 `default`、`main_ini`、`cli`、`macro` 或 `runtime_unattributed`。主 INI 保留原始字段和行号；宏命令须在真实执行成功并通过 Messenger 错误检查后记载来源；CLI 锁定字段不受宏重新归属。无法确定的运行时修改必须明确标为 `runtime_unattributed`。
 - `physics_reference` 在主 INI 中通常由 `[physics]/reference` 决定；reference 模式下非空 `[physics]/em` 改变最终 reference 后由 `em` 归属。成功 batch `/AIHL/physics/setReferenceList`、`setBaseReferenceList`、`clearReferenceList` 更新来源；`setEM` 仅在 PhysicsManager 当前处于 reference 模式时更新 reference 来源。`effective_physics_reference` 是 Manager 名称，不能据此推断 Geant4 内核或 biasing 已实际验证。

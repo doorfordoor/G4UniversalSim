@@ -128,6 +128,7 @@ def main() -> int:
         missing_initialize_macro = temp / "missing-initialize.mac"
         invalid_material_macro = temp / "invalid-material.mac"
         hit_macro = temp / "hit.mac"
+        source_sampling_macro = temp / "source-sampling.mac"
 
         dry_macro.write_text(
             "/control/echo SHOULD_NOT_EXECUTE\n/run/beamOn 2\n", encoding="utf-8"
@@ -258,6 +259,16 @@ def main() -> int:
             encoding="utf-8",
         )
         hit_macro.write_text((ROOT / "macros" / "run_hit_smoke.mac").read_text(encoding="utf-8"), encoding="utf-8")
+        source_sampling_macro.write_text(
+            hit_macro.read_text(encoding="utf-8").replace(
+                "/run/beamOn 100",
+                "/run/beamOn 3\n"
+                "/AIHL/source/particle proton\n"
+                "/AIHL/source/energy 3 MeV\n"
+                "/run/beamOn 3",
+            ),
+            encoding="utf-8",
+        )
 
         # dry-run produces a summary but never creates simulation output.
         dry_text = run(
@@ -552,6 +563,35 @@ def main() -> int:
                 "px", "py", "pz", "kineticEnergy_MeV", "process", "volume", "weight",
             ]
             assert next(hit_reader, None) is not None
+
+        # Compare source Manager provenance with the primary particles actually
+        # transported by Geant4. The source changes between two beamOn calls;
+        # the first sensitive pre-step occurs at the injection point in silicon.
+        source_sampling_output = temp / "source-sampling-output"
+        run(executable, ["--macro", str(source_sampling_macro),
+                         "--output", str(source_sampling_output), "--threads", "1"])
+        sampled_values, _ = read_summary(source_sampling_output)
+        assert sampled_values["status"] == "completed", sampled_values
+        assert sampled_values["run_count"] == "2", sampled_values
+        assert sampled_values["actual_completed_event_count"] == "6", sampled_values
+        assert sampled_values["effective_source_particle"] == "proton", sampled_values
+        assert float(sampled_values["effective_source_energy_MeV"]) == 3.0, sampled_values
+        assert sampled_values["effective_source_particle_origin_key"] == "/aihl/source/particle", sampled_values
+        assert sampled_values["effective_source_energy_origin_key"] == "/aihl/source/energy", sampled_values
+        for run_id, particle, energy in ((0, "e-", 1.0), (1, "proton", 3.0)):
+            suffix = "_t0" if run_id == 0 else f"_t0_r{run_id}"
+            with (source_sampling_output / f"hits{suffix}.csv").open(newline="", encoding="utf-8") as stream:
+                primary_first_steps = {}
+                for hit in csv.DictReader(stream):
+                    if hit["trackID"] == "1" and hit["parentID"] == "0":
+                        primary_first_steps.setdefault(int(hit["eventID"]), hit)
+            assert set(primary_first_steps) == {0, 1, 2}, (run_id, primary_first_steps)
+            for event_id, hit in primary_first_steps.items():
+                assert int(hit["runID"]) == run_id, (event_id, hit)
+                assert hit["particle"] == particle, (event_id, hit)
+                assert abs(float(hit["kineticEnergy_MeV"]) - energy) < 1e-9, (event_id, hit)
+                assert abs(float(hit["z0_mm"]) + 9.0) < 1e-9, (event_id, hit)
+
         with (single_output / "event_edep_t0.csv").open(newline="", encoding="utf-8") as stream:
             assert sum(1 for _ in csv.reader(stream)) - 1 == 3
         run(executable, ["--config", "config/main.ini", "--macro", str(single_macro), "--output", str(single_output), "--seed", "77"])
