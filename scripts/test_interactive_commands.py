@@ -70,6 +70,17 @@ def main() -> int:
         assert result["interactive_command_failure_kind"] == "geant4_invalid_parameter", result
         assert "Parameter is wrong type" in result["interactive_command_failure_message"], result
 
+        code, log, result = session("parameter_out_of_range", "/run/verbose -1\n/AIHL/material/list")
+        assert code != 0 and "parameter out of range: level >=0 && level <=4" in log, log[-4000:]
+        assert result["status"] == "failed" and result["program_exit_code"] != "0", result
+        assert result["interactive_command_failure_kind"] == "geant4_parameter_out_of_range", result
+        assert "parameter out of range" in result["interactive_command_failure_message"], result
+
+        code, log, result = session("negative_beamon", "/run/beamOn -1")
+        assert code != 0 and "parameter out of range: numberOfEvent >= 0" in log, log[-4000:]
+        assert result["status"] == "failed" and result["run_count"] == "0", result
+        assert result["interactive_command_failure_kind"] == "geant4_parameter_out_of_range", result
+
         code, log, result = session("real_run", "/run/initialize\n/run/beamOn 2", config=True, threads=1)
         assert code == 0, log[-4000:]
         assert result["status"] == "completed" and result["run_count"] == "1", result
