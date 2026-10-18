@@ -955,6 +955,58 @@ def main() -> int:
         assert (suffix_true_output / "event_edep_t1.csv").is_file()
         assert not (suffix_true_output / "event_edep.csv").exists()
 
+        # Scoring settings are copied to MT workers during /run/initialize.
+        # A post-initialize master-only change previously exited successfully
+        # while both workers continued writing the supposedly disabled CSV.
+        scoring_early_output = temp / "scoring-before-init"
+        scoring_early_macro = temp / "scoring-before-init.mac"
+        scoring_early_macro.write_text(
+            "/AIHL/scoring/eventEdep false\n/run/initialize\n/run/beamOn 4\n",
+            encoding="utf-8",
+        )
+        run(executable, ["--config", "config/main.ini", "--macro", str(scoring_early_macro),
+                         "--output", str(scoring_early_output), "--threads", "2"])
+        scoring_early_values, scoring_early_generated = read_summary(scoring_early_output)
+        assert scoring_early_values["status"] == "completed", scoring_early_values
+        assert scoring_early_values["run_0_completed_events"] == "4", scoring_early_values
+        assert scoring_early_values["scoring_event_edep_enabled"] == "true", scoring_early_values
+        assert scoring_early_values["effective_scoring_event_edep_enabled"] == "false", scoring_early_values
+        assert not list(scoring_early_output.glob("event_edep*.csv"))
+        assert not any("event_edep" in file for file in scoring_early_generated)
+
+        for completed_run in (False, True):
+            for label, rejected_command in (
+                ("event", "/AIHL/scoring/eventEdep false"),
+                ("histogram", "/AIHL/scoring/setEdepHistogram bins=10 min=0 eV max=2 MeV"),
+                ("autocreate", "/AIHL/scoring/autoCreateScorers false"),
+            ):
+                tag = f"scoring-{label}-{'after-run' if completed_run else 'after-init'}"
+                target = temp / tag
+                macro = temp / f"{tag}.mac"
+                lines = ["/run/initialize"]
+                if completed_run:
+                    lines.append("/run/beamOn 2")
+                lines.extend((rejected_command, "/control/echo UNSAFE_SCORING_CONTINUED", "/run/beamOn 3"))
+                macro.write_text("\n".join(lines) + "\n", encoding="utf-8")
+                failure_log = run(
+                    executable,
+                    ["--config", "config/main.ini", "--macro", str(macro),
+                     "--output", str(target), "--threads", "2"], expected=1,
+                )
+                values, generated = read_summary(target)
+                assert "G4UImanager status=200" in failure_log, failure_log[-3000:]
+                assert "UNSAFE_SCORING_CONTINUED" not in failure_log, failure_log[-3000:]
+                assert values["status"] == "failed", values
+                assert values["effective_scoring_event_edep_enabled"] == "true", values
+                assert values["macro_failure_command"] == rejected_command, values
+                assert values["macro_failure_line"] == ("3" if completed_run else "2"), values
+                assert values["run_count"] == ("1" if completed_run else "0"), values
+                if completed_run:
+                    assert values["run_0_completed_events"] == "2", values
+                    assert any("event_edep_t0.csv" in path for path in generated), generated
+                    assert (target / "event_edep_t0.csv").is_file(), target
+                assert not any("_r1.csv" in path for path in generated), generated
+
         # Real MT workers retain their initial output directory. Previously a
         # later master-only switch succeeded, sending the final summary to a
         # different directory while both runs' CSV files stayed in the first.

@@ -123,6 +123,32 @@ def main() -> int:
         assert result["interactive_command_failure_kind"] == "output", result
         assert result["run_count"] == "0", result
 
+        # Scoring configuration must reach workers before initialization.
+        code, log, result = session(
+            "scoring_before_init", "/AIHL/scoring/eventEdep false\n"
+            "/run/initialize\n/run/beamOn 2", config=True, threads=2,
+        )
+        assert code == 0 and result["status"] == "completed", log[-4000:]
+        assert result["run_0_completed_events"] == "2", result
+        assert not list((temp / "scoring_before_init").glob("event_edep*.csv"))
+
+        code, log, result = session(
+            "scoring_after_init", "/run/initialize\n/AIHL/scoring/eventEdep false\n"
+            "/control/echo SCORING_CSH_CONTINUED\n/run/beamOn 2",
+            config=True, threads=2,
+        )
+        assert code != 0 and result["status"] == "failed", log[-4000:]
+        assert result["interactive_command_failure_kind"] == "geant4_illegal_application_state", result
+        assert "SCORING_CSH_CONTINUED" not in log, log[-4000:]
+        assert result["run_count"] == "0", result
+
+        code, log, result = session(
+            "scoring_read_only_after_init", "/run/initialize\n/AIHL/scoring/print\n"
+            "/run/beamOn 2", config=True, threads=2,
+        )
+        assert code == 0 and result["status"] == "completed", log[-4000:]
+        assert result["run_0_completed_events"] == "2", result
+
         # A physics list is already registered when the terminal starts.
         # Interactive manager changes must not pretend to rebuild that list.
         code, log, result = session(

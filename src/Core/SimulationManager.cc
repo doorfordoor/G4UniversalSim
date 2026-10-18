@@ -1284,5 +1284,10 @@ void SimulationManager::WriteFinalConfigSnapshot(const std::string& macroStatus)
     summary.Set("effective_source_energy_MeV",
                 sourceManager_ ? sourceManager_->GetMonoEnergy() / CLHEP::MeV : 0.0);
     summary.SetBool("effective_scoring_enabled", scoringManager_ && scoringManager_->IsEnabled());
+    // The legacy scoring_* keys were captured before batch macro execution.
+    // Preserve them as an initialization snapshot, and expose the final
+    // manager setting separately (without asserting Geant4 kernel application).
+    summary.SetBool("effective_scoring_event_edep_enabled",
+                    scoringManager_ && scoringManager_->IsEventEdepOutputEnabled());
     summary.SetBool("effective_biasing_enabled", biasingManager_ && biasingManager_->IsEnabled());
 }

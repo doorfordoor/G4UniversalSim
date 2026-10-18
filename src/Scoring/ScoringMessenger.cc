@@ -6,6 +6,7 @@
 #include "Utils/UnitParser.hh"
 
 #include "G4Exception.hh"
+#include "G4ApplicationState.hh"
 #include "G4UIcmdWithABool.hh"
 #include "G4UIcmdWithAString.hh"
 #include "G4UIcmdWithAnInteger.hh"
@@ -98,7 +99,7 @@ ScoringMessenger::ScoringMessenger(ScoringManager* manager)
     : manager_(manager)
 {
     scoringDir_ = new G4UIdirectory("/AIHL/scoring/");
-    scoringDir_->SetGuidance("AIHL scoring configuration commands. Prefer before /run/initialize.");
+    scoringDir_->SetGuidance("Configure scoring before /run/initialize; restart to change worker scoring afterward.");
 
     enableCmd_ = new G4UIcmdWithABool("/AIHL/scoring/enable", this);
     hitsCmd_ = new G4UIcmdWithABool("/AIHL/scoring/hits", this);
@@ -125,6 +126,21 @@ ScoringMessenger::ScoringMessenger(ScoringManager* manager)
     setWeightedEdepHistogramCmd_->SetGuidance("Configure weighted event edep histogram.");
     verboseCmd_->SetGuidance("Set scoring verbose level.");
     printCmd_->SetGuidance("Print scoring summary.");
+
+    // MT workers clone scoring settings during initialization. A later change
+    // would affect only the master and silently leave worker output unchanged.
+    enableCmd_->AvailableForStates(G4State_PreInit);
+    hitsCmd_->AvailableForStates(G4State_PreInit);
+    eventEdepCmd_->AvailableForStates(G4State_PreInit);
+    edepCmd_->AvailableForStates(G4State_PreInit);
+    letCmd_->AvailableForStates(G4State_PreInit);
+    doseCmd_->AvailableForStates(G4State_PreInit);
+    fluenceCmd_->AvailableForStates(G4State_PreInit);
+    autoCreateScorersCmd_->AvailableForStates(G4State_PreInit);
+    setEdepHistogramCmd_->AvailableForStates(G4State_PreInit);
+    setWeightedEdepHistogramCmd_->AvailableForStates(G4State_PreInit);
+    verboseCmd_->AvailableForStates(G4State_PreInit);
+    // print remains available after initialization as a read-only query.
 }
 
 ScoringMessenger::~ScoringMessenger()

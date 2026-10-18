@@ -1738,6 +1738,10 @@ SimulationManager 集成：
 
 命令前缀：`/AIHL/scoring/`
 
+生命周期约束（M0）：除了只读 `/AIHL/scoring/print` 外，下面所有修改型命令仅在 `G4State_PreInit` 可用。`ActionInitialization::Build()` 创建 worker 时克隆 master 计分配置；初始化后修改 master 不会同步已有 worker。Geant4 状态错误会由 batch macro 或受审计的 `csh` 路径报告为失败，配置变更须重启新进程。此约束不等于计分结果的物理标定。
+
+`run_summary.txt` 中既有 `scoring_event_edep_enabled` 在初始化时记录，不能反映随后合法执行的初始化前 batch macro；新字段 `effective_scoring_event_edep_enabled` 在最终收尾取 `ScoringManager` 当前值，仍不代表核内每个 worker 的事实。
+
 | UI 命令 | 转发到 |
 |---|---|
 | `/AIHL/scoring/enable <true|false>` | `ScoringManager::Enable` |
