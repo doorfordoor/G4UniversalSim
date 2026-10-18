@@ -913,6 +913,41 @@ def main() -> int:
         if (locked_output / "run_summary.txt").exists():
             raise AssertionError("summary remained in the pre-macro output directory")
 
+        # Real MT workers retain their initial output directory. Previously a
+        # later master-only switch succeeded, sending the final summary to a
+        # different directory while both runs' CSV files stayed in the first.
+        for label, command in (
+            ("output", "/AIHL/output/setDir"),
+            ("app", "/AIHL/app/setOutputDir"),
+            ("suffix", "/AIHL/output/setThreadSuffix"),
+        ):
+            for completed_run in (False, True):
+                tag = f"late-{label}-{'after-run' if completed_run else 'after-init'}"
+                original_dir = temp / f"{tag}-original"
+                rejected_dir = temp / f"{tag}-rejected"
+                rejected_command = (f"{command} false" if label == "suffix"
+                                    else f"{command} {rejected_dir.as_posix()}")
+                lines = [f"/AIHL/output/setDir {original_dir.as_posix()}", "/run/initialize"]
+                if completed_run:
+                    lines.append("/run/beamOn 2")
+                lines.extend((rejected_command, "/control/echo UNSAFE_OUTPUT_CHANGE_CONTINUED", "/run/beamOn 3"))
+                macro = temp / f"{tag}.mac"
+                macro.write_text("\n".join(lines) + "\n", encoding="utf-8")
+                failure_log = run(executable, ["--config", "config/main.ini", "--macro", str(macro)], expected=1)
+                values, generated = read_summary(original_dir)
+                assert values["status"] == "failed", values
+                assert values["macro_failure_command"] == rejected_command, values
+                assert values["macro_failure_line"] == str(4 if completed_run else 3), values
+                assert values["run_count"] == ("1" if completed_run else "0"), values
+                assert values["effective_output_dir_origin_line"] == "1", values
+                assert normalize(values["effective_output_dir"]) == normalize(str(original_dir)), values
+                assert not rejected_dir.exists(), rejected_dir
+                assert "UNSAFE_OUTPUT_CHANGE_CONTINUED" not in failure_log, failure_log[-2500:]
+                if completed_run:
+                    assert values["run_0_completed_events"] == "2", values
+                    assert any("event_edep_t0.csv" in filename for filename in generated), generated
+                    assert (original_dir / "event_edep_t0.csv").is_file(), original_dir
+
         # A Messenger exception and a failure *inside* OutputManager's setter
         # must both stop the macro, without selecting the rejected path or
         # recording the attempted command as a successful EffectiveConfig origin.

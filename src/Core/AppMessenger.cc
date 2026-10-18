@@ -39,7 +39,8 @@ AppMessenger::AppMessenger(SimulationManager* manager)
     setMainConfigCmd_->SetGuidance("Set the main ini config file.");
 
     setOutputDirCmd_ = std::make_unique<G4UIcmdWithAString>("/AIHL/app/setOutputDir", this);
-    setOutputDirCmd_->SetGuidance("Set output directory.");
+    setOutputDirCmd_->SetGuidance("Set output directory before /run/initialize; restart to change it afterward.");
+    setOutputDirCmd_->AvailableForStates(G4State_PreInit);
 
     setNumThreadsCmd_ = std::make_unique<G4UIcmdWithAnInteger>("/AIHL/app/setNumThreads", this);
     setNumThreadsCmd_->SetGuidance("Set number of worker threads.");

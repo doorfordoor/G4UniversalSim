@@ -26,7 +26,7 @@ public:
 
 private:
     void EnsureOutputManager(const char* commandName) const;
-    void WarnIfInitializedOrOpen(const char* commandName) const;
+    void EnsureNoOpenFiles(const char* commandName) const;
     void ReportCommandError(const char* commandName, const G4String& value, const std::exception& error) const;
     void PrintSummary() const;
 

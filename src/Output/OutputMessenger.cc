@@ -3,6 +3,7 @@
 #include "Output/OutputManager.hh"
 
 #include "G4Exception.hh"
+#include "G4ApplicationState.hh"
 #include "G4UIcmdWithABool.hh"
 #include "G4UIcmdWithAString.hh"
 #include "G4UIcmdWithoutParameter.hh"
@@ -40,12 +41,14 @@ OutputMessenger::OutputMessenger(OutputManager* outputManager, OutputDirSetter o
     directory_->SetGuidance("Output manager commands for G4UniversalSim.");
 
     setDirCmd_ = std::make_unique<G4UIcmdWithAString>("/AIHL/output/setDir", this);
-    setDirCmd_->SetGuidance("Set output directory. Recommended before /run/initialize and before output files are opened.");
+    setDirCmd_->SetGuidance("Set output directory before /run/initialize; restart to change it afterward.");
     setDirCmd_->SetParameterName("dir", false);
+    setDirCmd_->AvailableForStates(G4State_PreInit);
 
     setThreadSuffixCmd_ = std::make_unique<G4UIcmdWithABool>("/AIHL/output/setThreadSuffix", this);
-    setThreadSuffixCmd_->SetGuidance("Enable or disable _tN thread suffixes in output filenames.");
+    setThreadSuffixCmd_->SetGuidance("Set _tN thread suffix preference before /run/initialize.");
     setThreadSuffixCmd_->SetParameterName("enable", false);
+    setThreadSuffixCmd_->AvailableForStates(G4State_PreInit);
 
     printCmd_ = std::make_unique<G4UIcmdWithoutParameter>("/AIHL/output/print", this);
     printCmd_->SetGuidance("Print OutputManager state.");
@@ -64,7 +67,7 @@ void OutputMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     try {
         if (command == setDirCmd_.get()) {
             EnsureOutputManager("/AIHL/output/setDir");
-            WarnIfInitializedOrOpen("/AIHL/output/setDir");
+            EnsureNoOpenFiles("/AIHL/output/setDir");
             // Test-only: exercise an exception from the output command handler.
             if (InjectOutputSetDirFailure()) {
                 throw std::runtime_error("Injected /AIHL/output/setDir handler failure");
@@ -78,7 +81,7 @@ void OutputMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
         }
         if (command == setThreadSuffixCmd_.get()) {
             EnsureOutputManager("/AIHL/output/setThreadSuffix");
-            WarnIfInitializedOrOpen("/AIHL/output/setThreadSuffix");
+            EnsureNoOpenFiles("/AIHL/output/setThreadSuffix");
             outputManager_->EnableThreadSuffix(setThreadSuffixCmd_->GetNewBoolValue(newValue));
             return;
         }
@@ -118,17 +121,13 @@ void OutputMessenger::EnsureOutputManager(const char* commandName) const
     }
 }
 
-void OutputMessenger::WarnIfInitializedOrOpen(const char* commandName) const
+void OutputMessenger::EnsureNoOpenFiles(const char* commandName) const
 {
     if (!outputManager_) return;
-    if (outputManager_->IsInitialized() || outputManager_->HasOpenFiles()) {
-        G4Exception(
-            "OutputMessenger",
-            "AIHLOutputCmdWarn001",
-            JustWarning,
-            (std::string(commandName)
-             + " is recommended before /run/initialize and before output files are opened. "
-               "Changing output settings after initialization may only affect files opened later.").c_str()
+    if (outputManager_->HasOpenFiles()) {
+        throw std::runtime_error(
+            std::string(commandName) + " cannot change output settings while files are open; "
+            "start a new process to change output settings after /run/initialize"
         );
     }
 }

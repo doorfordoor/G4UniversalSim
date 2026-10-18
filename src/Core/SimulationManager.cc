@@ -241,6 +241,14 @@ void SimulationManager::SetMainConfig(const std::string& filename)
 
 void SimulationManager::SetOutputDir(const std::string& outputDir)
 {
+    // Worker outputs are cloned from the selected directory. After Geant4
+    // initialization, changing only the master would split CSVs and summary.
+    if (G4StateManager::GetStateManager()->GetCurrentState() != G4State_PreInit) {
+        throw std::runtime_error(
+            "Output directory cannot be changed after Geant4 initialization; "
+            "set it before /run/initialize or start a new process with --output <dir>"
+        );
+    }
     if (commandLineOverrides_.outputDir) {
         WarnIgnoredCommandLineOverride("output directory");
         return;
