@@ -45,6 +45,7 @@ AppMessenger::AppMessenger(SimulationManager* manager)
     setNumThreadsCmd_->SetGuidance("Set number of worker threads.");
     setNumThreadsCmd_->SetParameterName("threads", false);
     setNumThreadsCmd_->SetRange("threads > 0");
+    setNumThreadsCmd_->AvailableForStates(G4State_PreInit);
 
     setSeedCmd_ = std::make_unique<G4UIcmdWithAnInteger>("/AIHL/app/setSeed", this);
     setSeedCmd_->SetGuidance("Set random seed stored in SimulationContext.");
@@ -90,7 +91,6 @@ void AppMessenger::SetNewValue(G4UIcommand* command, G4String value)
         WarnIfInitialized(manager_, "/AIHL/app/setOutputDir");
         manager_->SetOutputDir(value);
     } else if (command == setNumThreadsCmd_.get()) {
-        WarnIfInitialized(manager_, "/AIHL/app/setNumThreads");
         manager_->SetNumThreads(setNumThreadsCmd_->GetNewIntValue(value));
     } else if (command == setSeedCmd_.get()) {
         WarnIfInitialized(manager_, "/AIHL/app/setSeed");

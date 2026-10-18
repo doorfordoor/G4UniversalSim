@@ -90,6 +90,25 @@ def main() -> int:
         assert code != 0 and result["status"] == "failed", log[-4000:]
         assert "APP_GEOMETRY_CONTINUED" not in log, log[-4000:]
         assert result["interactive_command_failure_kind"] == "geant4_illegal_application_state", result
+        # The interactive shell must reject a thread-count mutation after
+        # initialization and stop input before any subsequent beamOn.
+        code, log, result = session(
+            "threads_before_init", "/AIHL/app/setNumThreads 2\n/run/initialize\n/run/beamOn 2",
+            config=True,
+        )
+        assert code == 0 and result["status"] == "completed", log[-4000:]
+        assert result["actual_threads"] == "2", result
+        assert result["effective_threads_origin_kind"] == "runtime_unattributed", result
+
+        code, log, result = session(
+            "threads_after_init", "/run/initialize\n/AIHL/app/setNumThreads 3\n"
+            "/control/echo THREAD_MUTATION_CONTINUED\n/run/beamOn 2", config=True,
+        )
+        assert code != 0 and result["status"] == "failed", log[-4000:]
+        assert result["interactive_command_failure_kind"] == "geant4_illegal_application_state", result
+        assert "THREAD_MUTATION_CONTINUED" not in log, log[-4000:]
+        assert result["run_count"] == "0", result
+        assert result["effective_threads_origin_kind"] == "main_ini", result
 
         # A physics list is already registered when the terminal starts.
         # Interactive manager changes must not pretend to rebuild that list.

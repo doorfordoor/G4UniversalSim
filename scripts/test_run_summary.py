@@ -114,6 +114,8 @@ def main() -> int:
         geometry_origin_macro = temp / "geometry-origin.mac"
         geometry_clear_macro = temp / "geometry-clear.mac"
         late_geometry_macro = temp / "geometry-after-init.mac"
+        early_threads_macro = temp / "threads-before-init.mac"
+        late_threads_macro = temp / "threads-after-init.mac"
         source_preset_macro = temp / "source-preset.mac"
         source_particle_macro = temp / "source-particle.mac"
         source_energy_macro = temp / "source-energy.mac"
@@ -199,6 +201,13 @@ def main() -> int:
             "/run/initialize\n/AIHL/geometry/setTemplate hierarchical\n"
             "/control/echo GEOMETRY_MUTATION_CONTINUED\n/run/beamOn 1\n",
             encoding="utf-8",
+        )
+        early_threads_macro.write_text(
+            "/AIHL/app/setNumThreads 2\n/run/initialize\n/run/beamOn 3\n", encoding="utf-8",
+        )
+        late_threads_macro.write_text(
+            "/run/initialize\n/AIHL/app/setNumThreads 3\n"
+            "/control/echo THREAD_MUTATION_CONTINUED\n/run/beamOn 3\n", encoding="utf-8",
         )
         source_preset_macro.write_text(
             "/AIHL/source/preset gamma_beam\n/run/initialize\n/run/beamOn 1\n",
@@ -397,6 +406,29 @@ def main() -> int:
         assert late_geometry_values["run_count"] == "0", late_geometry_values
         assert late_geometry_values["effective_geometry_template"] != "hierarchical", late_geometry_values
         assert late_geometry_values["effective_geometry_template_origin_kind"] == "main_ini"
+        # The kernel previously rejected a post-init thread-count change while
+        # the manager and summary falsely claimed that the macro applied it.
+        early_threads_output = temp / "threads-before-init-output"
+        run(executable, ["--config", "config/main.ini", "--macro", str(early_threads_macro),
+                         "--output", str(early_threads_output)])
+        early_threads_values, _ = read_summary(early_threads_output)
+        assert early_threads_values["status"] == "completed", early_threads_values
+        assert early_threads_values["actual_threads"] == "2", early_threads_values
+        assert early_threads_values["effective_threads_origin_kind"] == "macro", early_threads_values
+
+        late_threads_output = temp / "threads-after-init-output"
+        late_threads_log = run(
+            executable, ["--config", "config/main.ini", "--macro", str(late_threads_macro),
+                         "--output", str(late_threads_output)], expected=1,
+        )
+        late_threads_values, _ = read_summary(late_threads_output)
+        assert "THREAD_MUTATION_CONTINUED" not in late_threads_log
+        assert "G4UImanager status=200" in late_threads_log, late_threads_log[-4000:]
+        assert late_threads_values["status"] == "failed", late_threads_values
+        assert late_threads_values["macro_failure_command"] == "/AIHL/app/setNumThreads 3"
+        assert late_threads_values["run_count"] == "0", late_threads_values
+        assert late_threads_values["effective_threads_origin_kind"] == "main_ini", late_threads_values
+        assert late_threads_values["num_threads"] == "1", late_threads_values
         preset_only_output = temp / "source-preset-only-output"
         run(executable, ["--config", str(source_preset_only_config), "--macro", str(single_macro),
                          "--output", str(preset_only_output)])

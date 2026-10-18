@@ -28,6 +28,7 @@
 #include "Utils/StringUtils.hh"
 
 #include "G4RunManager.hh"
+#include "G4StateManager.hh"
 #include "G4SystemOfUnits.hh"
 #ifdef G4MULTITHREADED
 #include "G4MTRunManager.hh"
@@ -257,6 +258,15 @@ void SimulationManager::SetOutputDir(const std::string& outputDir)
 
 void SimulationManager::SetNumThreads(int n)
 {
+    // G4MTRunManager rejects thread-count changes once workers are initialized.
+    // Refuse before changing our configuration/origin snapshot, so the summary
+    // cannot claim a thread count which the Geant4 kernel ignored.
+    if (G4StateManager::GetStateManager()->GetCurrentState() != G4State_PreInit) {
+        throw std::runtime_error(
+            "Thread count cannot be changed after Geant4 initialization; restart with --threads <n> "
+            "or set /AIHL/app/setNumThreads before /run/initialize"
+        );
+    }
     if (commandLineOverrides_.numThreads) {
         WarnIgnoredCommandLineOverride("thread count");
         return;
