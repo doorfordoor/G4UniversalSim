@@ -63,6 +63,13 @@ def main() -> int:
         assert result["interactive_command_failure_kind"] == "geant4_command_not_found", result
         assert "/definitely/not/a/geant4/command" in result["interactive_command_failure_message"], result
 
+        code, log, result = session("invalid_parameter", "/run/beamOn wrong\n/AIHL/material/list")
+        assert code != 0 and "integer expected" in log, log[-4000:]
+        assert result["status"] == "failed" and result["program_exit_code"] != "0", result
+        assert result["macro_execution_status"] == "not_run", result
+        assert result["interactive_command_failure_kind"] == "geant4_invalid_parameter", result
+        assert "Parameter is wrong type" in result["interactive_command_failure_message"], result
+
         code, log, result = session("real_run", "/run/initialize\n/run/beamOn 2", config=True, threads=1)
         assert code == 0, log[-4000:]
         assert result["status"] == "completed" and result["run_count"] == "1", result

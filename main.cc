@@ -52,6 +52,7 @@ class AuditedCshSession final : public G4UIterminal {
   }
 
   const std::string& UnrecognizedCommandDiagnostic() const { return unrecognizedCommand_; }
+  const std::string& InvalidParameterDiagnostic() const { return invalidParameter_; }
 
  private:
   void RecordDiagnostic(const G4String& message) {
@@ -64,9 +65,16 @@ class AuditedCshSession final : public G4UIterminal {
         normalized.find("command not found:") != std::string::npos) {
       if (unrecognizedCommand_.empty()) unrecognizedCommand_ = message;
     }
+    // Geant4's csh session does not expose an ApplyCommand return code for
+    // each command. Record only the concrete parameter rejection seen here;
+    // this does not imply that every Geant4 command failure is covered.
+    if (normalized.find("parameter is wrong type and/or is not omittable") != std::string::npos) {
+      if (invalidParameter_.empty()) invalidParameter_ = message;
+    }
   }
 
   std::string unrecognizedCommand_;
+  std::string invalidParameter_;
 };
 
 struct MacroFailureInfo {
@@ -705,24 +713,29 @@ int main(int argc, char** argv) {
       summary.Set("interactive_command_failure_kind", "none");
       summary.Set("interactive_command_failure_message", "not_applicable");
       std::string unrecognizedCommand;
+      std::string invalidParameter;
       if (options.uiSession == "csh") {
         AuditedCshSession ui;
         ui.SessionStart();
         unrecognizedCommand = ui.UnrecognizedCommandDiagnostic();
+        invalidParameter = ui.InvalidParameterDiagnostic();
       } else {
         G4UIExecutive ui(argc, argv);
         ui.SessionStart();
       }
       const bool materialFailed = sim.GetMaterialManager()->GetCommandFailureCount() != materialFailuresBefore;
       const bool outputFailed = sim.GetOutputManager()->GetCommandFailureCount() != outputFailuresBefore;
-      if (materialFailed || outputFailed || !unrecognizedCommand.empty()) {
+      if (materialFailed || outputFailed || !unrecognizedCommand.empty() || !invalidParameter.empty()) {
         const std::string kind = materialFailed && outputFailed ? "material_and_output" :
-            (materialFailed ? "material" : (outputFailed ? "output" : "geant4_command_not_found"));
+            (materialFailed ? "material" : (outputFailed ? "output" :
+            (!unrecognizedCommand.empty() ? "geant4_command_not_found" : "geant4_invalid_parameter")));
         const std::string message = (materialFailed ? sim.GetMaterialManager()->GetLastCommandFailure() : "") +
             (materialFailed && outputFailed ? "; " : "") +
             (outputFailed ? sim.GetOutputManager()->GetLastCommandFailure() : "") +
             ((materialFailed || outputFailed) && !unrecognizedCommand.empty() ? "; " : "") +
-            unrecognizedCommand;
+            unrecognizedCommand +
+            ((!invalidParameter.empty() && (materialFailed || outputFailed || !unrecognizedCommand.empty())) ? "; " : "") +
+            invalidParameter;
         summary.Set("interactive_command_failure_kind", kind);
         summary.Set("interactive_command_failure_message", message);
         throw std::runtime_error("Interactive command failure: " + message);
