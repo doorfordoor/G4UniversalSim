@@ -117,6 +117,10 @@ def main() -> int:
         source_particle_macro = temp / "source-particle.mac"
         source_energy_macro = temp / "source-energy.mac"
         source_reset_macro = temp / "source-reset.mac"
+        physics_reference_macro = temp / "physics-reference.mac"
+        physics_base_macro = temp / "physics-base.mac"
+        physics_em_macro = temp / "physics-em.mac"
+        physics_clear_macro = temp / "physics-clear.mac"
         output_command_fault_macro = temp / "output-command-fault.mac"
         second_material_macro = temp / "second-material.mac"
         manual_material_macro = temp / "manual-material.mac"
@@ -149,6 +153,11 @@ def main() -> int:
         source_energy_override_config = temp / "source-energy-override.ini"
         source_energy_override_config.write_text(
             main_text.replace("energy = 10 MeV", "energy = 5 MeV"), encoding="utf-8"
+        )
+        physics_em_config = temp / "physics-em.ini"
+        physics_em_config.write_text(
+            main_text.replace("reference = FTFP_BERT_EMZ", "reference = FTFP_BERT\nem = option4"),
+            encoding="utf-8",
         )
         scoring_off_config.write_text(
             main_text.replace("[scoring]\nenabled = true", "[scoring]\nenabled = false"), encoding="utf-8"
@@ -199,6 +208,19 @@ def main() -> int:
             encoding="utf-8",
         )
         source_reset_macro.write_text("/AIHL/source/reset\n", encoding="utf-8")
+        physics_reference_macro.write_text(
+            "/AIHL/physics/setReferenceList QGSP_BERT\n/run/initialize\n/run/beamOn 1\n",
+            encoding="utf-8",
+        )
+        physics_base_macro.write_text(
+            "/AIHL/physics/setBaseReferenceList QGSP_BERT\n/run/initialize\n/run/beamOn 1\n",
+            encoding="utf-8",
+        )
+        physics_em_macro.write_text(
+            "/AIHL/physics/setEM option4\n/run/initialize\n/run/beamOn 1\n",
+            encoding="utf-8",
+        )
+        physics_clear_macro.write_text("/AIHL/physics/clearReferenceList\n", encoding="utf-8")
         output_command_fault_target = temp / "output-command-fault-target"
         output_command_rejected_target = temp / "__g4usim_inject_manager_set_dir__"
         output_command_fault_config = temp / "output-command-fault.ini"
@@ -272,7 +294,7 @@ def main() -> int:
         assert single_values["macro_seed_modified"] == "false"
         assert single_values["program_exit_code"] == "0"
         assert single_values["effective_config_snapshot_stage"] == "finalization"
-        assert single_values["effective_config_source_coverage"] == "startup_geometry_and_source_particle_energy"
+        assert single_values["effective_config_source_coverage"] == "startup_geometry_source_and_physics_reference"
         assert single_values["effective_output_dir_origin_kind"] == "cli"
         assert single_values["effective_seed_origin_kind"] == "cli"
         assert single_values["effective_threads_origin_kind"] == "main_ini"
@@ -305,6 +327,10 @@ def main() -> int:
         assert single_values["effective_source_energy_origin_key"] == "energy"
         assert int(single_values["effective_source_energy_origin_line"]) > 0
         assert single_values["effective_physics_reference"] == "FTFP_BERT_EMZ"
+        assert single_values["effective_physics_reference_origin_kind"] == "main_ini"
+        assert single_values["effective_physics_reference_origin_section"] == "physics"
+        assert single_values["effective_physics_reference_origin_key"] == "reference"
+        assert int(single_values["effective_physics_reference_origin_line"]) > 0
         assert single_values["effective_materials_source_status"] == "single_file"
         assert single_values["effective_materials_loaded_file_count"] == "1"
         assert normalize(single_values["effective_materials_file"]) == normalize(
@@ -400,6 +426,33 @@ def main() -> int:
         assert energy_macro_values["effective_source_energy_origin_line"] == "2"
         assert normalize(energy_macro_values["effective_source_energy_origin_file"]) == normalize(str(source_energy_macro))
         assert energy_macro_values["effective_source_particle_origin_key"] == "/aihl/source/preset"
+        physics_em_config_output = temp / "physics-em-config-output"
+        run(executable, ["--config", str(physics_em_config), "--macro", str(single_macro),
+                         "--output", str(physics_em_config_output)])
+        physics_em_config_values, _ = read_summary(physics_em_config_output)
+        assert physics_em_config_values["status"] == "completed"
+        assert physics_em_config_values["effective_physics_reference"].startswith("FTFP_BERT")
+        assert physics_em_config_values["effective_physics_reference_origin_kind"] == "main_ini"
+        assert physics_em_config_values["effective_physics_reference_origin_key"] == "em"
+        for macro, reference, command, run_count in (
+            (physics_reference_macro, "QGSP_BERT", "/aihl/physics/setreferencelist", "1"),
+            (physics_base_macro, "QGSP_BERT", "/aihl/physics/setbasereferencelist", "1"),
+            (physics_em_macro, "FTFP_BERT", "/aihl/physics/setem", "1"),
+            (physics_clear_macro, "", "/aihl/physics/clearreferencelist", "0"),
+        ):
+            physics_output = temp / f"{macro.stem}-output"
+            run(executable, ["--config", "config/main.ini", "--macro", str(macro),
+                             "--output", str(physics_output)])
+            values, _ = read_summary(physics_output)
+            assert values["run_count"] == run_count
+            if reference in ("", "QGSP_BERT"):
+                assert values["effective_physics_reference"] == reference
+            else:
+                assert values["effective_physics_reference"].startswith(reference)
+            assert values["effective_physics_reference_origin_kind"] == "macro"
+            assert values["effective_physics_reference_origin_key"] == command
+            assert values["effective_physics_reference_origin_line"] == "1"
+            assert normalize(values["effective_physics_reference_origin_file"]) == normalize(str(macro))
         single_schemas = read_generated_file_schemas(single_output)
         assert set(single_schemas) == set(single_files)
         assert single_schemas[str((single_output / "event_edep_t0.csv").resolve())] == "event_edep_csv_v3"

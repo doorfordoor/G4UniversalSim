@@ -414,6 +414,11 @@ void SimulationManager::RecordSuccessfulMacroCommand(const std::string& command,
     else if (token == "/aihl/geometry/setdefaultworldmaterial") field = "geometry_default_world_material";
     else if (token == "/aihl/source/particle" || token == "/aihl/source/preset" ||
              token == "/aihl/source/reset") field = "source_particle";
+    else if (token == "/aihl/physics/setreferencelist" ||
+             token == "/aihl/physics/clearreferencelist" ||
+             token == "/aihl/physics/setbasereferencelist") field = "physics_reference";
+    else if (token == "/aihl/physics/setem" && physicsManager_ &&
+             physicsManager_->HasReferenceList()) field = "physics_reference";
     if (token == "/aihl/source/energy" || token == "/aihl/source/preset" ||
         token == "/aihl/source/reset") {
         effectiveValueOrigins_["source_energy"] = ValueOrigin{"macro", file, "", token, line};
@@ -476,6 +481,13 @@ void SimulationManager::CaptureConfiguredValueOrigins()
     select("source_particle", false, {{"source", "particle"}, {"source", "preset"}}, true);
     // ApplyPreset assigns its default energy before any explicit [source]/energy override.
     select("source_energy", false, {{"source", "energy"}, {"source", "preset"}}, true);
+    select("physics_reference", false, {{"physics", "reference"}});
+    // In reference mode the explicit EM option selects the final reference suffix.
+    if (physicsManager_ && physicsManager_->HasReferenceList() && configLoaded_ &&
+        configManager_->HasKey("physics", "em") &&
+        !StringUtils::Trim(configManager_->GetString("physics", "em")).empty()) {
+        select("physics_reference", false, {{"physics", "em"}}, true);
+    }
 }
 
 void SimulationManager::SetExecutedMacroPath(const std::string& path)
@@ -1185,7 +1197,7 @@ void SimulationManager::WriteFinalConfigSnapshot(const std::string& macroStatus)
     summary.Set("effective_config_snapshot_stage", "finalization");
     summary.Set("effective_config_snapshot_scope", "manager_state_subset");
     summary.Set("effective_config_macro_execution_status", macroStatus);
-    summary.Set("effective_config_source_coverage", "startup_geometry_and_source_particle_energy");
+    summary.Set("effective_config_source_coverage", "startup_geometry_source_and_physics_reference");
     summary.Set("effective_config_geant4_applied", "unknown");
     for (const auto& entry : effectiveValueOrigins_) {
         const std::string prefix = "effective_" + entry.first + "_origin_";
