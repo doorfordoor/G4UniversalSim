@@ -712,6 +712,10 @@ int main(int argc, char** argv) {
     }
 
     if (sim.GetContext().IsInteractive()) {
+      // Only the preceding batch macro may rebuild the registered physics
+      // list. Commands typed in the UI have no equivalent rebind step.
+      sim.EnableInteractivePhysicsGuard();
+      const auto physicsFailuresBefore = sim.GetInteractivePhysicsFailureCount();
       const auto materialFailuresBefore = sim.GetMaterialManager()->GetCommandFailureCount();
       const auto outputFailuresBefore = sim.GetOutputManager()->GetCommandFailureCount();
       RunSummary& summary = sim.GetOutputManager()->GetRunSummary();
@@ -732,13 +736,19 @@ int main(int argc, char** argv) {
       }
       const bool materialFailed = sim.GetMaterialManager()->GetCommandFailureCount() != materialFailuresBefore;
       const bool outputFailed = sim.GetOutputManager()->GetCommandFailureCount() != outputFailuresBefore;
+      const bool physicsFailed = sim.GetInteractivePhysicsFailureCount() != physicsFailuresBefore;
       if (materialFailed || outputFailed || !unrecognizedCommand.empty() || !invalidParameter.empty() ||
-          !parameterOutOfRange.empty()) {
-        const std::string kind = materialFailed && outputFailed ? "material_and_output" :
+          !parameterOutOfRange.empty() || physicsFailed) {
+        const bool otherFailed = materialFailed || outputFailed || !unrecognizedCommand.empty() ||
+                                 !invalidParameter.empty() || !parameterOutOfRange.empty();
+        const std::string kind = physicsFailed ? (otherFailed ? "multiple" : "physics") :
+            (materialFailed && outputFailed ? "material_and_output" :
             (materialFailed ? "material" : (outputFailed ? "output" :
             (!unrecognizedCommand.empty() ? "geant4_command_not_found" :
-             (!invalidParameter.empty() ? "geant4_invalid_parameter" : "geant4_parameter_out_of_range"))));
-        const std::string message = (materialFailed ? sim.GetMaterialManager()->GetLastCommandFailure() : "") +
+             (!invalidParameter.empty() ? "geant4_invalid_parameter" : "geant4_parameter_out_of_range")))));
+        const std::string message = (physicsFailed ? sim.GetLastInteractivePhysicsFailure() : "") +
+            (physicsFailed && otherFailed ? "; " : "") +
+            (materialFailed ? sim.GetMaterialManager()->GetLastCommandFailure() : "") +
             (materialFailed && outputFailed ? "; " : "") +
             (outputFailed ? sim.GetOutputManager()->GetLastCommandFailure() : "") +
             ((materialFailed || outputFailed) && !unrecognizedCommand.empty() ? "; " : "") +

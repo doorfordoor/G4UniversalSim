@@ -152,9 +152,39 @@ PhysicsMessenger::~PhysicsMessenger()
     delete physicsDir_;
 }
 
+void PhysicsMessenger::SetInteractiveSessionMode(bool enabled)
+{
+    interactiveSessionMode_ = enabled;
+}
+
+std::size_t PhysicsMessenger::GetInteractiveCommandFailureCount() const
+{
+    return interactiveCommandFailureCount_;
+}
+
+const std::string& PhysicsMessenger::GetLastInteractiveCommandFailure() const
+{
+    return lastInteractiveCommandFailure_;
+}
+
 void PhysicsMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
 {
     const std::string raw = newValue;
+    // The UI session starts after a physics list was already registered with
+    // Geant4. Editing the manager here cannot rebuild that registered list.
+    // Batch macros are allowed to mutate it before initialization because
+    // main.cc explicitly rebinds their modified physics list.
+    if (interactiveSessionMode_ && command != printCmd_ &&
+        command != listAvailableReferencesCmd_ &&
+        command != listAvailableEMReferencesCmd_) {
+        lastInteractiveCommandFailure_ = "Interactive physics mutation is unsupported after "
+            "Geant4 physics-list registration; use a batch macro before /run/initialize "
+            "in a fresh process: " + std::string(command ? command->GetCommandPath() : "<unknown>");
+        ++interactiveCommandFailureCount_;
+        G4Exception("PhysicsMessenger::SetNewValue", "AIHL_PHYSICS_UI_001",
+                    JustWarning, lastInteractiveCommandFailure_.c_str());
+        return;
+    }
     try {
         auto* manager = RequireManager(manager_, command ? command->GetCommandPath() : "<unknown>");
         if (command == setEMCmd_) {

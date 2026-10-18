@@ -2,6 +2,9 @@
 
 #include "G4UImessenger.hh"
 
+#include <cstddef>
+#include <string>
+
 class G4UIcmdWithABool;
 class G4UIcmdWithAString;
 class G4UIcmdWithAnInteger;
@@ -16,9 +19,15 @@ public:
     ~PhysicsMessenger() override;
 
     void SetNewValue(G4UIcommand* command, G4String newValue) override;
+    void SetInteractiveSessionMode(bool enabled);
+    std::size_t GetInteractiveCommandFailureCount() const;
+    const std::string& GetLastInteractiveCommandFailure() const;
 
 private:
     PhysicsManager* manager_ = nullptr; // not owned
+    bool interactiveSessionMode_ = false;
+    std::size_t interactiveCommandFailureCount_ = 0;
+    std::string lastInteractiveCommandFailure_;
 
     G4UIdirectory* physicsDir_ = nullptr;
     G4UIcmdWithAString* setEMCmd_ = nullptr;

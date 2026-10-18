@@ -1007,6 +1007,21 @@ PhysicsManager* SimulationManager::GetPhysicsManager()
     return physicsManager_.get();
 }
 
+void SimulationManager::EnableInteractivePhysicsGuard()
+{
+    if (physicsMessenger_) physicsMessenger_->SetInteractiveSessionMode(true);
+}
+
+std::size_t SimulationManager::GetInteractivePhysicsFailureCount() const
+{
+    return physicsMessenger_ ? physicsMessenger_->GetInteractiveCommandFailureCount() : 0;
+}
+
+std::string SimulationManager::GetLastInteractivePhysicsFailure() const
+{
+    return physicsMessenger_ ? physicsMessenger_->GetLastInteractiveCommandFailure() : "";
+}
+
 SourceManager* SimulationManager::GetSourceManager()
 {
     return sourceManager_.get();

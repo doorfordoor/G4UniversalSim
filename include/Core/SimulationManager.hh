@@ -97,6 +97,9 @@ public:
     std::function<void(const GeometryRegistry&)> CreateGeometryPostBuildCallback() const;
     void InitializeSourceAfterPhysicsListRegistered();
     void ValidateBiasingProcessTargets();
+    void EnableInteractivePhysicsGuard();
+    std::size_t GetInteractivePhysicsFailureCount() const;
+    std::string GetLastInteractivePhysicsFailure() const;
 
     ConfigManager* GetConfigManager();
     OutputManager* GetOutputManager();

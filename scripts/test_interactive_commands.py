@@ -57,6 +57,29 @@ def main() -> int:
         assert result["macro_execution_status"] == "not_run", result
         assert result["interactive_command_failure_kind"] == "none", result
 
+        code, log, result = session("physics_read_only", "/AIHL/physics/print")
+        assert code == 0 and result["status"] == "interactive_no_run", log[-4000:]
+
+        # A physics list is already registered when the terminal starts.
+        # Interactive manager changes must not pretend to rebuild that list.
+        code, log, result = session(
+            "physics_before_init", "/AIHL/physics/setReferenceList QGSP_BIC\n/AIHL/physics/print",
+            config=True,
+        )
+        assert code != 0 and "Interactive physics mutation is unsupported" in log, log[-4000:]
+        assert result["status"] == "failed" and result["run_count"] == "0", result
+        assert result["interactive_command_failure_kind"] == "physics", result
+        assert result["effective_physics_reference"] != "QGSP_BIC", result
+
+        code, log, result = session(
+            "physics_after_run", "/run/initialize\n/run/beamOn 2\n/AIHL/physics/setEM option3",
+            config=True, threads=1,
+        )
+        assert code != 0 and "Interactive physics mutation is unsupported" in log, log[-4000:]
+        assert result["status"] == "failed" and result["run_count"] == "1", result
+        assert result["run_0_completed_events"] == "2", result
+        assert result["interactive_command_failure_kind"] == "physics", result
+
         # csh bypasses the batch macro loop. A collision must be caught by the
         # Geant4 run-start callback before a worker writes its first event.
         first_target = temp / "collision_first"
