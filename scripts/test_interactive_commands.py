@@ -168,6 +168,24 @@ def main() -> int:
         assert result["status"] == "failed" and result["run_count"] == "0", result
         assert result["interactive_command_failure_kind"] == "geant4_parameter_out_of_range", result
 
+        # This Geant4 state-machine rejection previously returned exit code 0
+        # and was incorrectly summarized as a clean interactive_no_run.
+        code, log, result = session("illegal_state", "/run/abort\n/AIHL/material/list")
+        assert code != 0 and "illegal application state -- command refused" in log, log[-4000:]
+        assert result["status"] == "failed" and result["run_count"] == "0", result
+        assert result["interactive_command_failure_kind"] == "geant4_illegal_application_state", result
+        assert "command refused" in result["interactive_command_failure_message"], result
+
+        code, log, result = session(
+            "mixed_physics_and_state", "/AIHL/physics/setReferenceList QGSP_BIC\n/run/abort",
+            config=True,
+        )
+        assert code != 0 and result["status"] == "failed", log[-4000:]
+        assert result["interactive_command_failure_kind"] == "multiple", result
+        assert "Interactive physics mutation is unsupported" in result["interactive_command_failure_message"], result
+        assert "illegal application state -- command refused" in result["interactive_command_failure_message"], result
+        assert "; ; " not in result["interactive_command_failure_message"], result
+
         code, log, result = session("real_run", "/run/initialize\n/run/beamOn 2", config=True, threads=1)
         assert code == 0, log[-4000:]
         assert result["status"] == "completed" and result["run_count"] == "1", result

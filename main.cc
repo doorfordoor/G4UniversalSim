@@ -54,6 +54,7 @@ class AuditedCshSession final : public G4UIterminal {
   const std::string& UnrecognizedCommandDiagnostic() const { return unrecognizedCommand_; }
   const std::string& InvalidParameterDiagnostic() const { return invalidParameter_; }
   const std::string& ParameterOutOfRangeDiagnostic() const { return parameterOutOfRange_; }
+  const std::string& IllegalApplicationStateDiagnostic() const { return illegalApplicationState_; }
 
  private:
   void RecordDiagnostic(const G4String& message) {
@@ -75,11 +76,15 @@ class AuditedCshSession final : public G4UIterminal {
     if (normalized.find("parameter out of range:") != std::string::npos) {
       if (parameterOutOfRange_.empty()) parameterOutOfRange_ = message;
     }
+    if (normalized.find("illegal application state -- command refused") != std::string::npos) {
+      if (illegalApplicationState_.empty()) illegalApplicationState_ = message;
+    }
   }
 
   std::string unrecognizedCommand_;
   std::string invalidParameter_;
   std::string parameterOutOfRange_;
+  std::string illegalApplicationState_;
 };
 
 struct MacroFailureInfo {
@@ -734,12 +739,14 @@ int main(int argc, char** argv) {
       std::string unrecognizedCommand;
       std::string invalidParameter;
       std::string parameterOutOfRange;
+      std::string illegalApplicationState;
       if (options.uiSession == "csh") {
         AuditedCshSession ui;
         ui.SessionStart();
         unrecognizedCommand = ui.UnrecognizedCommandDiagnostic();
         invalidParameter = ui.InvalidParameterDiagnostic();
         parameterOutOfRange = ui.ParameterOutOfRangeDiagnostic();
+        illegalApplicationState = ui.IllegalApplicationStateDiagnostic();
       } else {
         G4UIExecutive ui(argc, argv);
         ui.SessionStart();
@@ -748,26 +755,29 @@ int main(int argc, char** argv) {
       const bool outputFailed = sim.GetOutputManager()->GetCommandFailureCount() != outputFailuresBefore;
       const bool physicsFailed = sim.GetInteractivePhysicsFailureCount() != physicsFailuresBefore;
       if (materialFailed || outputFailed || !unrecognizedCommand.empty() || !invalidParameter.empty() ||
-          !parameterOutOfRange.empty() || physicsFailed) {
+          !parameterOutOfRange.empty() || !illegalApplicationState.empty() || physicsFailed) {
         const bool otherFailed = materialFailed || outputFailed || !unrecognizedCommand.empty() ||
-                                 !invalidParameter.empty() || !parameterOutOfRange.empty();
+                                 !invalidParameter.empty() || !parameterOutOfRange.empty() ||
+                                 !illegalApplicationState.empty();
         const std::string kind = physicsFailed ? (otherFailed ? "multiple" : "physics") :
             (materialFailed && outputFailed ? "material_and_output" :
             (materialFailed ? "material" : (outputFailed ? "output" :
             (!unrecognizedCommand.empty() ? "geant4_command_not_found" :
-             (!invalidParameter.empty() ? "geant4_invalid_parameter" : "geant4_parameter_out_of_range")))));
-        const std::string message = (physicsFailed ? sim.GetLastInteractivePhysicsFailure() : "") +
-            (physicsFailed && otherFailed ? "; " : "") +
-            (materialFailed ? sim.GetMaterialManager()->GetLastCommandFailure() : "") +
-            (materialFailed && outputFailed ? "; " : "") +
-            (outputFailed ? sim.GetOutputManager()->GetLastCommandFailure() : "") +
-            ((materialFailed || outputFailed) && !unrecognizedCommand.empty() ? "; " : "") +
-            unrecognizedCommand +
-            ((!invalidParameter.empty() && (materialFailed || outputFailed || !unrecognizedCommand.empty())) ? "; " : "") +
-            invalidParameter +
-            ((!parameterOutOfRange.empty() && (materialFailed || outputFailed || !unrecognizedCommand.empty() ||
-                                               !invalidParameter.empty())) ? "; " : "") +
-            parameterOutOfRange;
+             (!invalidParameter.empty() ? "geant4_invalid_parameter" :
+             (!parameterOutOfRange.empty() ? "geant4_parameter_out_of_range" :
+              "geant4_illegal_application_state"))))));
+        std::vector<std::string> messages;
+        const auto appendDiagnostic = [&](const std::string& diagnostic) {
+          if (!diagnostic.empty()) messages.push_back(diagnostic);
+        };
+        if (physicsFailed) appendDiagnostic(sim.GetLastInteractivePhysicsFailure());
+        if (materialFailed) appendDiagnostic(sim.GetMaterialManager()->GetLastCommandFailure());
+        if (outputFailed) appendDiagnostic(sim.GetOutputManager()->GetLastCommandFailure());
+        appendDiagnostic(unrecognizedCommand);
+        appendDiagnostic(invalidParameter);
+        appendDiagnostic(parameterOutOfRange);
+        appendDiagnostic(illegalApplicationState);
+        const std::string message = StringUtils::Join(messages, "; ");
         summary.Set("interactive_command_failure_kind", kind);
         summary.Set("interactive_command_failure_message", message);
         throw std::runtime_error("Interactive command failure: " + message);
