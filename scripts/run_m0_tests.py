@@ -54,6 +54,7 @@ CASES = (
     Case("backend_capabilities", "scripts/test_backend_capabilities.py", "backend", ("exe",)),
     Case("config_precedence", "scripts/test_config_precedence.py", "backend", ("exe",)),
     Case("run_summary", "scripts/test_run_summary.py", "backend", ("exe",)),
+    Case("interactive_commands", "scripts/test_interactive_commands.py", "backend", ("exe",)),
     Case("unsupported_features", "scripts/test_unsupported_features.py", "backend", ("exe",), args=("--layer", "backend")),
     Case("unconsumed_config", "scripts/test_unconsumed_config.py", "backend", ("exe",)),
     Case("material_schema", "scripts/test_material_config_schema.py", "backend", ("exe",)),

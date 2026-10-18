@@ -46,6 +46,7 @@
 - M0-4 运行启动阶段补充：`BeginOfRunAction()` 的 `SetRunId`、run 开始摘要、输出初始化及 `ScoringManager::BeginRun` 共用分阶段异常捕获，锁存首因并请求中止，不允许 worker 启动异常穿出回调。`SetRunId` 切换旧文件失败时使用尝试启动的 run ID 登记错误，避免误归属上一轮；`OutputManager::Flush()` 逐 writer 尝试并重新抛出首个异常。测试专用 `begin_set_run_id_t0` / `begin_scoring_t0` 仅模拟第二轮启动故障，不代表物理介质故障。必须检查首轮 run 与输出保留、失败摘要、非零退出；MT 下 master/worker 的线程编号可能重叠，不能仅以编号判定故障源。
 - batch macro 中材料 Messenger 的命令执行异常不能只降级成 `JustWarning` 并假装成功；须同时锁存命令失败计数与错误，`ApplyCommand()` 即使返回 0 也应在本条 macro 后拒绝继续、写入来源行号和失败摘要并非零退出。交互 UI 材料命令的逐条失败判定尚未完成，不能当作 batch 契约已覆盖。
 - batch macro 的 `/AIHL/output/*` 命令也必须检查 `OutputManager` 记录的 Messenger 命令失败计数；即使 `ApplyCommand()` 返回 0，内部异常仍须中止后续命令、保留失败文件/行号、输出 `macro_failure_code_available=false` 并返回非零。`SimulationManager::SetOutputDir()` 应先让 `OutputManager` 接受目录，再更新 context 和 EffectiveConfig 来源；失败不得冒充成功来源。测试专用 `G4USIM_TEST_OUTPUT_FAULT=messenger_set_dir|manager_set_dir` 分别注入命令处理器和 Manager setter 失败，正常运行不得设置。交互 UI 尚未完成逐命令相同保证。
+- 交互会话可用 `--ui --ui-session csh` 选择可脚本输入的 Geant4 命令行 UI。会话结束后比较材料与输出 Messenger 的命令失败计数；失败须非零退出、写 `status=failed`、`interactive_command_failure_kind/message`，无 macro 时 `macro_execution_status=not_run`。这只是会话结束判定，不会在失败命令发生时立即停止交互会话，也尚未覆盖所有 Geant4 命令及完整交互生命周期；真实回归见 `scripts/test_interactive_commands.py`。
 - Geant4 对象创建、敏感体、region、biasing、线程本地输出和 reinitialize 生命周期必须有可重复的运行验证。只在内存中保存配置不能算运行时生效。
 
 ## 4. GUI、国际化和人类文档

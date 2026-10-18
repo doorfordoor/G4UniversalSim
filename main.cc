@@ -10,6 +10,7 @@
 #include "Detector/DetectorConstruction.hh"
 #include "G4RunManager.hh"
 #include "G4UIExecutive.hh"
+#include "G4UIterminal.hh"
 #include "G4UImanager.hh"
 #include "G4VModularPhysicsList.hh"
 #include "G4VisExecutive.hh"
@@ -36,6 +37,38 @@
 
 namespace {
 
+// G4UIterminal prints unrecognized commands but does not propagate their
+// failure to the exit code of the enclosing interactive session.
+class AuditedCshSession final : public G4UIterminal {
+ public:
+  G4int ReceiveG4cerr(const G4String& message) override {
+    RecordDiagnostic(message);
+    return G4UIterminal::ReceiveG4cerr(message);
+  }
+
+  G4int ReceiveG4cout(const G4String& message) override {
+    RecordDiagnostic(message);
+    return G4UIterminal::ReceiveG4cout(message);
+  }
+
+  const std::string& UnrecognizedCommandDiagnostic() const { return unrecognizedCommand_; }
+
+ private:
+  void RecordDiagnostic(const G4String& message) {
+    std::string normalized(message);
+    for (char& ch : normalized) {
+      ch = static_cast<char>(std::tolower(static_cast<unsigned char>(ch)));
+    }
+    if ((normalized.find("command <") != std::string::npos &&
+         normalized.find("> not found") != std::string::npos) ||
+        normalized.find("command not found:") != std::string::npos) {
+      if (unrecognizedCommand_.empty()) unrecognizedCommand_ = message;
+    }
+  }
+
+  std::string unrecognizedCommand_;
+};
+
 struct MacroFailureInfo {
   std::string file;
   int line = 0;
@@ -50,6 +83,7 @@ struct CommandLineOptions {
   std::string outputDir;
   std::string runName;
   bool interactive = false;
+  std::string uiSession;
   bool dryRun = false;
   std::optional<bool> checkOverlaps;
   std::optional<int> threads;
@@ -78,6 +112,7 @@ void PrintUsage(const char* program) {
       << "  --output, -o <dir>   Override output directory.\n"
       << "  --run-name <name>    Override run name in SimulationManager.\n"
       << "  --ui                 Start an interactive Geant4 UI session.\n"
+      << "  --ui-session csh   Use the Geant4 command-line UI with --ui.\n"
       << "  --threads, -t <N>    Set requested number of worker threads when "
          "MT "
          "is available.\n"
@@ -166,6 +201,11 @@ CommandLineOptions ParseCommandLine(int argc, char** argv) {
       options.runName = RequireNonEmptyValue(i, argc, argv, arg);
     } else if (arg == "--ui") {
       options.interactive = true;
+    } else if (arg == "--ui-session") {
+      options.uiSession = RequireNonEmptyValue(i, argc, argv, arg);
+      if (options.uiSession != "csh") {
+        throw std::runtime_error("Invalid --ui-session; supported value: csh");
+      }
     } else if (arg == "--threads" || arg == "-t") {
       options.threads = ParsePositiveInt(RequireValue(i, argc, argv, arg), arg);
     } else if (arg == "--seed") {
@@ -185,6 +225,9 @@ CommandLineOptions ParseCommandLine(int argc, char** argv) {
       }
       options.macroFile = arg;
     }
+  }
+  if (!options.uiSession.empty() && !options.interactive) {
+    throw std::runtime_error("--ui-session requires --ui");
   }
   return options;
 }
@@ -656,8 +699,34 @@ int main(int argc, char** argv) {
     }
 
     if (sim.GetContext().IsInteractive()) {
-      G4UIExecutive ui(argc, argv);
-      ui.SessionStart();
+      const auto materialFailuresBefore = sim.GetMaterialManager()->GetCommandFailureCount();
+      const auto outputFailuresBefore = sim.GetOutputManager()->GetCommandFailureCount();
+      RunSummary& summary = sim.GetOutputManager()->GetRunSummary();
+      summary.Set("interactive_command_failure_kind", "none");
+      summary.Set("interactive_command_failure_message", "not_applicable");
+      std::string unrecognizedCommand;
+      if (options.uiSession == "csh") {
+        AuditedCshSession ui;
+        ui.SessionStart();
+        unrecognizedCommand = ui.UnrecognizedCommandDiagnostic();
+      } else {
+        G4UIExecutive ui(argc, argv);
+        ui.SessionStart();
+      }
+      const bool materialFailed = sim.GetMaterialManager()->GetCommandFailureCount() != materialFailuresBefore;
+      const bool outputFailed = sim.GetOutputManager()->GetCommandFailureCount() != outputFailuresBefore;
+      if (materialFailed || outputFailed || !unrecognizedCommand.empty()) {
+        const std::string kind = materialFailed && outputFailed ? "material_and_output" :
+            (materialFailed ? "material" : (outputFailed ? "output" : "geant4_command_not_found"));
+        const std::string message = (materialFailed ? sim.GetMaterialManager()->GetLastCommandFailure() : "") +
+            (materialFailed && outputFailed ? "; " : "") +
+            (outputFailed ? sim.GetOutputManager()->GetLastCommandFailure() : "") +
+            ((materialFailed || outputFailed) && !unrecognizedCommand.empty() ? "; " : "") +
+            unrecognizedCommand;
+        summary.Set("interactive_command_failure_kind", kind);
+        summary.Set("interactive_command_failure_message", message);
+        throw std::runtime_error("Interactive command failure: " + message);
+      }
     }
     if (sim.GetOutputManager()->HasOutputFailure()) {
       const auto failure = sim.GetOutputManager()->GetOutputFailure();
@@ -716,7 +785,7 @@ int main(int argc, char** argv) {
         sim.FinalizeRunSummary(
             "failed",
             EXIT_FAILURE,
-            macroStatus == "not_run" ? "failed" : macroStatus,
+            macroStatus == "not_run" && !sim.GetContext().IsInteractive() ? "failed" : macroStatus,
             macroFailure ? macroFailure->file : "",
             macroFailure ? macroFailure->line : 0,
             macroFailure ? macroFailure->command : "",
