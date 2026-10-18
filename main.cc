@@ -11,6 +11,7 @@
 #include "G4RunManager.hh"
 #include "G4UIExecutive.hh"
 #include "G4UIterminal.hh"
+#include "G4UIcsh.hh"
 #include "G4UImanager.hh"
 #include "G4UIcommand.hh"
 #include "G4UIparameter.hh"
@@ -25,6 +26,7 @@
 #include <cstdlib>
 #include <cctype>
 #include <exception>
+#include <functional>
 #include <filesystem>
 #include <iostream>
 #include <memory>
@@ -42,8 +44,25 @@ namespace {
 
 // G4UIterminal prints unrecognized commands but does not propagate their
 // failure to the exit code of the enclosing interactive session.
+class FailFastCshShell final : public G4UIcsh {
+ public:
+  explicit FailFastCshShell(bool& stopAfterFailure) : stopAfterFailure_(stopAfterFailure) {}
+
+  G4String GetCommandLineString(const char* message = nullptr) override {
+    if (stopAfterFailure_) return "exit";
+    return G4UIcsh::GetCommandLineString(message);
+  }
+
+ private:
+  bool& stopAfterFailure_;
+};
+
 class AuditedCshSession final : public G4UIterminal {
  public:
+  AuditedCshSession(bool& stopAfterFailure, std::function<bool()> hasHandlerFailure)
+      : G4UIterminal(new FailFastCshShell(stopAfterFailure)),
+        stopAfterFailure_(stopAfterFailure), hasHandlerFailure_(std::move(hasHandlerFailure)) {}
+
   G4int ReceiveG4cerr(const G4String& message) override {
     RecordDiagnostic(message);
     return G4UIterminal::ReceiveG4cerr(message);
@@ -71,6 +90,9 @@ class AuditedCshSession final : public G4UIterminal {
     if (!ui) return;
 
     const G4int result = ui->ApplyCommand(command);
+    // Finish the current command's diagnostics, then stop reading later input.
+    // Messenger failures can occur even when ApplyCommand returns zero.
+    if (result != fCommandSucceeded || hasHandlerFailure_()) stopAfterFailure_ = true;
     const G4int parameterIndex = result % 100;
     const G4int status = result - parameterIndex;
     if (status != fCommandSucceeded && failedCommand_.empty()) {
@@ -132,6 +154,8 @@ class AuditedCshSession final : public G4UIterminal {
     }
   }
 
+  bool& stopAfterFailure_;
+  std::function<bool()> hasHandlerFailure_;
   std::string unrecognizedCommand_;
   std::string invalidParameter_;
   std::string parameterOutOfRange_;
@@ -796,7 +820,14 @@ int main(int argc, char** argv) {
       std::string failedCommand;
       G4int failedCommandStatus = fCommandSucceeded;
       if (options.uiSession == "csh") {
-        AuditedCshSession ui;
+        bool stopAfterFailure = false;
+        const auto hasHandlerFailure = [&]() {
+          return sim.GetInteractivePhysicsFailureCount() != physicsFailuresBefore ||
+                 sim.GetMaterialManager()->GetCommandFailureCount() != materialFailuresBefore ||
+                 sim.GetOutputManager()->GetCommandFailureCount() != outputFailuresBefore ||
+                 sim.GetOutputManager()->HasOutputFailure();
+        };
+        AuditedCshSession ui(stopAfterFailure, hasHandlerFailure);
         ui.SessionStart();
         unrecognizedCommand = ui.UnrecognizedCommandDiagnostic();
         invalidParameter = ui.InvalidParameterDiagnostic();

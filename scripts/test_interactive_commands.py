@@ -143,16 +143,20 @@ def main() -> int:
             assert len(list(csv.DictReader(stream))) == 2
         assert not (second_target / "hits_t0_r1.csv").exists()
 
-        code, log, result = session("unknown_command", "/definitely/not/a/geant4/command")
+        code, log, result = session(
+            "unknown_command", "/definitely/not/a/geant4/command\n/control/echo POST_ERROR_SENTINEL"
+        )
         assert code != 0 and "command </definitely/not/a/geant4/command> not found" in log, log[-4000:]
+        assert "POST_ERROR_SENTINEL" not in log, log[-4000:]
         assert result["status"] == "failed" and result["program_exit_code"] != "0", result
         assert result["macro_execution_status"] == "not_run", result
         assert result["interactive_command_failure_kind"] == "geant4_command_not_found", result
         assert "/definitely/not/a/geant4/command" in result["interactive_command_failure_message"], result
         assert "Geant4 UI status=100" in result["interactive_command_failure_message"], result
 
-        code, log, result = session("invalid_parameter", "/run/beamOn wrong\n/AIHL/material/list")
+        code, log, result = session("invalid_parameter", "/run/beamOn wrong\n/control/echo POST_ERROR_SENTINEL")
         assert code != 0 and "integer expected" in log, log[-4000:]
+        assert "POST_ERROR_SENTINEL" not in log, log[-4000:]
         assert result["status"] == "failed" and result["program_exit_code"] != "0", result
         assert result["macro_execution_status"] == "not_run", result
         assert result["interactive_command_failure_kind"] == "geant4_invalid_parameter", result
@@ -161,8 +165,11 @@ def main() -> int:
 
         # This native Geant4 failure was not covered by text-only audit:
         # the command's candidate rejection is carried by numeric status 500.
-        code, log, result = session("invalid_candidate", "/gps/pos/type InvalidCandidate", config=True)
+        code, log, result = session(
+            "invalid_candidate", "/gps/pos/type InvalidCandidate\n/run/initialize\n/run/beamOn 2", config=True
+        )
         assert code != 0 and result["status"] == "failed", log[-4000:]
+        assert result["run_count"] == "0", result
         assert result["interactive_command_failure_kind"] == "geant4_command_status", result
         assert "Geant4 UI status=500 for command: /gps/pos/type InvalidCandidate" in (
             result["interactive_command_failure_message"]
@@ -189,14 +196,13 @@ def main() -> int:
         assert "Geant4 UI status=200 for command: /run/abort" in result["interactive_command_failure_message"], result
 
         code, log, result = session(
-            "mixed_physics_and_state", "/AIHL/physics/setReferenceList QGSP_BIC\n/run/abort",
+            "physics_stops_before_state", "/AIHL/physics/setReferenceList QGSP_BIC\n/run/abort",
             config=True,
         )
         assert code != 0 and result["status"] == "failed", log[-4000:]
-        assert result["interactive_command_failure_kind"] == "multiple", result
+        assert result["interactive_command_failure_kind"] == "physics", result
         assert "Interactive physics mutation is unsupported" in result["interactive_command_failure_message"], result
-        assert "illegal application state -- command refused" in result["interactive_command_failure_message"], result
-        assert "; ; " not in result["interactive_command_failure_message"], result
+        assert "illegal application state -- command refused" not in log, log[-4000:]
 
         code, log, result = session("real_run", "/run/initialize\n/run/beamOn 2", config=True, threads=1)
         assert code == 0, log[-4000:]
@@ -211,8 +217,11 @@ def main() -> int:
         assert result["run_count"] == "1" and result["output_failure_stage"] == "event_edep_write", result
         assert result["macro_execution_status"] == "not_run", result
 
-        code, log, result = session("material_failure", "/AIHL/material/addNist missing_required_nist=G4_Si")
+        code, log, result = session(
+            "material_failure", "/AIHL/material/addNist missing_required_nist=G4_Si\n/control/echo POST_ERROR_SENTINEL"
+        )
         assert code != 0 and "Interactive command failure" in log, log[-4000:]
+        assert "POST_ERROR_SENTINEL" not in log, log[-4000:]
         assert result["status"] == "failed" and result["program_exit_code"] != "0", result
         assert result["macro_execution_status"] == "not_run", result
         assert result["interactive_command_failure_kind"] == "material", result
