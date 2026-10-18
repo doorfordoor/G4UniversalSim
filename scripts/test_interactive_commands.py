@@ -31,7 +31,8 @@ def main() -> int:
         temp = Path(directory)
 
         def session(name: str, commands: str, fault: str | None = None,
-                    config: bool = False, threads: int | None = None) -> tuple[int, str, dict[str, str]]:
+                    config: bool = False, threads: int | None = None,
+                    macro: Path | None = None) -> tuple[int, str, dict[str, str]]:
             output_dir = temp / name
             environment = os.environ.copy()
             if fault is None:
@@ -41,6 +42,8 @@ def main() -> int:
             args = [str(executable), "--ui", "--ui-session", "csh", "--output", str(output_dir)]
             if config:
                 args.extend(["--config", str(ROOT / "config/main.ini")])
+            if macro is not None:
+                args.extend(["--macro", str(macro)])
             if threads is not None:
                 args.extend(["--threads", str(threads)])
             completed = subprocess.run(
@@ -69,6 +72,32 @@ def main() -> int:
         assert code != 0 and "Interactive physics mutation is unsupported" in log, log[-4000:]
         assert result["status"] == "failed" and result["run_count"] == "0", result
         assert result["interactive_command_failure_kind"] == "physics", result
+
+        # A batch macro may stop before initialization; its physics edits must
+        # be registered before csh later runs /run/initialize.
+        physics_macro = temp / "physics_before_ui.mac"
+        physics_macro.write_text("/AIHL/physics/setReferenceList QGSP_BIC\n", encoding="utf-8")
+        code, log, result = session(
+            "physics_macro_before_ui", "/run/initialize\n/run/beamOn 2",
+            config=True, threads=1, macro=physics_macro,
+        )
+        assert code == 0 and result["status"] == "completed", log[-4000:]
+        assert "[PhysicsLifecycle] Rebound physics list from batch macro before interactive UI." in log, log[-4000:]
+        assert result["effective_physics_reference"] == "QGSP_BIC", result
+        assert result["macro_execution_status"] == "completed", result
+        assert result["run_0_completed_events"] == "2", result
+
+        # List commands only inspect physics; they remain legal after init.
+        query_macro = temp / "physics_query_after_init.mac"
+        query_macro.write_text(
+            "/run/initialize\n/AIHL/physics/listAvailableReferences\n"
+            "/AIHL/physics/listAvailableEMReferences\n/run/beamOn 2\n", encoding="utf-8",
+        )
+        code, log, result = session("physics_macro_queries", "", config=True,
+                                    threads=1, macro=query_macro)
+        assert code == 0 and result["status"] == "completed", log[-4000:]
+        assert result["macro_execution_status"] == "completed", result
+        assert result["run_0_completed_events"] == "2", result
         assert result["effective_physics_reference"] != "QGSP_BIC", result
 
         code, log, result = session(

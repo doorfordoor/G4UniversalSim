@@ -577,15 +577,17 @@ int main(int argc, char** argv) {
       return EXIT_SUCCESS;
     }
 
+    bool physicsListDirty = false;
     if (!sim.GetContext().GetMacroFile().empty()) {
       macroStatus = "running";
-      bool physicsListDirty = false;
       bool kernelInitialized = false;
       for (const auto& command : preflight.commands) {
         const std::string commandName = MacroCommandName(command.text);
         const bool physicsCommand = commandName.rfind("/aihl/physics/", 0) == 0 ||
             commandName.rfind("/aihl/biasing/", 0) == 0;
         const bool readOnlyPhysicsCommand = commandName == "/aihl/physics/print" ||
+            commandName == "/aihl/physics/listavailablereferences" ||
+            commandName == "/aihl/physics/listavailableemreferences" ||
             commandName == "/aihl/biasing/print" ||
             commandName == "/aihl/biasing/validate" ||
             commandName == "/aihl/biasing/xs/printrules";
@@ -712,8 +714,16 @@ int main(int argc, char** argv) {
     }
 
     if (sim.GetContext().IsInteractive()) {
-      // Only the preceding batch macro may rebuild the registered physics
-      // list. Commands typed in the UI have no equivalent rebind step.
+      // A batch macro may end after mutating physics but before initializing
+      // the kernel. Rebind now: the interactive /run/initialize command is
+      // dispatched inside Geant4 and cannot go through the batch rebind path.
+      if (physicsListDirty) {
+        runManager->SetUserInitialization(sim.CreatePhysicsList().release());
+        sim.InitializeSourceAfterPhysicsListRegistered();
+        physicsListDirty = false;
+        std::cout << "[PhysicsLifecycle] Rebound physics list from batch macro before interactive UI.\n";
+      }
+      // Interactive PhysicsMessenger mutations are rejected after registration.
       sim.EnableInteractivePhysicsGuard();
       const auto physicsFailuresBefore = sim.GetInteractivePhysicsFailureCount();
       const auto materialFailuresBefore = sim.GetMaterialManager()->GetCommandFailureCount();
