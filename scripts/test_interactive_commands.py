@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import csv
 import subprocess
 import tempfile
 from pathlib import Path
@@ -55,6 +56,40 @@ def main() -> int:
         assert result["status"] == "interactive_no_run", result
         assert result["macro_execution_status"] == "not_run", result
         assert result["interactive_command_failure_kind"] == "none", result
+
+        # csh bypasses the batch macro loop. A collision must be caught by the
+        # Geant4 run-start callback before a worker writes its first event.
+        first_target = temp / "collision_first"
+        blocked = first_target / "event_edep_t1.csv"
+        blocked.mkdir(parents=True)
+        marker = blocked / "keep.txt"
+        marker.write_text("untouched\n", encoding="utf-8")
+        code, log, result = session(
+            "collision_first", "/run/initialize\n/run/beamOn 2", config=True, threads=2
+        )
+        assert code != 0 and "run_begin_validate_targets" in log, log[-4000:]
+        assert result["status"] == "failed" and result["run_count"] == "1", result
+        assert result["actual_completed_event_count"] == "0", result
+        assert result["output_failure_stage"] == "run_begin_validate_targets", result
+        assert result["output_failure_run_id"] == "0", result
+        assert marker.read_text(encoding="utf-8") == "untouched\n"
+        assert not list(first_target.glob("event_edep_t0.csv"))
+
+        # A collision on the second run must leave first-run data intact.
+        second_target = temp / "collision_second"
+        (second_target / "event_edep_t0_r1.csv").mkdir(parents=True)
+        code, log, result = session(
+            "collision_second", "/run/initialize\n/run/beamOn 2\n/run/beamOn 3",
+            config=True, threads=1,
+        )
+        assert code != 0 and "run_begin_validate_targets" in log, log[-4000:]
+        assert result["status"] == "failed" and result["output_failure_run_id"] == "1", result
+        assert result["output_failure_stage"] == "run_begin_validate_targets", result
+        assert result["actual_completed_event_count"] == "2", result
+        assert result["run_0_completed_events"] == "2", result
+        with (second_target / "event_edep_t0.csv").open(newline="", encoding="utf-8") as stream:
+            assert len(list(csv.DictReader(stream))) == 2
+        assert not (second_target / "hits_t0_r1.csv").exists()
 
         code, log, result = session("unknown_command", "/definitely/not/a/geant4/command")
         assert code != 0 and "command </definitely/not/a/geant4/command> not found" in log, log[-4000:]

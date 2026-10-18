@@ -192,7 +192,9 @@ void OutputManager::ValidateOutputTargetDirectories(int runId, int threadCount) 
     for (int thread = 0; thread < threadCount; ++thread) {
         OutputManager candidate;
         candidate.outputDir_ = outputDir_;
-        candidate.threadSuffixEnabled_ = threadSuffixEnabled_;
+        // ActionInitialization::Build() always enables the suffix on worker
+        // outputs, even when an earlier UI command disabled it on the master.
+        candidate.threadSuffixEnabled_ = true;
         candidate.threadId_ = thread;
         candidate.runId_ = runId;
         for (const char* name : {"hits.csv", "event_edep.csv", "hist_edep_raw.csv",

@@ -11,6 +11,7 @@
 #include "Scoring/ScoringManager.hh"
 #include "Scoring/ThreadLocalScoringContext.hh"
 
+#include <algorithm>
 #include <stdexcept>
 #include <utility>
 
@@ -63,8 +64,17 @@ void RunAction::BeginOfRunAction(const G4Run* run)
     OutputManager* outputManager = ActiveOutputManager();
     ScoringManager* scoringManager = ActiveScoringManager();
 
-    const char* stage = "run_begin_set_run_id";
+    const char* stage = "run_begin_validate_targets";
     try {
+        // The interactive UI invokes beamOn without passing through main.cc's
+        // batch macro guard. Check the master/sequential output targets before
+        // any worker begins writing event data.
+        if (outputManager && role_ != Role::Worker) {
+            auto* runManager = G4RunManager::GetRunManager();
+            const int threads = runManager ? std::max(1, runManager->GetNumberOfThreads()) : 1;
+            outputManager->ValidateOutputTargetDirectories(runID, threads);
+        }
+        stage = "run_begin_set_run_id";
         if (outputManager) {
             outputManager->SetRunId(runID);
             stage = "run_begin_summary";
