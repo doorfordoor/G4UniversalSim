@@ -149,6 +149,7 @@ def main() -> int:
         assert result["macro_execution_status"] == "not_run", result
         assert result["interactive_command_failure_kind"] == "geant4_command_not_found", result
         assert "/definitely/not/a/geant4/command" in result["interactive_command_failure_message"], result
+        assert "Geant4 UI status=100" in result["interactive_command_failure_message"], result
 
         code, log, result = session("invalid_parameter", "/run/beamOn wrong\n/AIHL/material/list")
         assert code != 0 and "integer expected" in log, log[-4000:]
@@ -156,6 +157,16 @@ def main() -> int:
         assert result["macro_execution_status"] == "not_run", result
         assert result["interactive_command_failure_kind"] == "geant4_invalid_parameter", result
         assert "Parameter is wrong type" in result["interactive_command_failure_message"], result
+        assert "Geant4 UI status=400" in result["interactive_command_failure_message"], result
+
+        # This native Geant4 failure was not covered by text-only audit:
+        # the command's candidate rejection is carried by numeric status 500.
+        code, log, result = session("invalid_candidate", "/gps/pos/type InvalidCandidate", config=True)
+        assert code != 0 and result["status"] == "failed", log[-4000:]
+        assert result["interactive_command_failure_kind"] == "geant4_command_status", result
+        assert "Geant4 UI status=500 for command: /gps/pos/type InvalidCandidate" in (
+            result["interactive_command_failure_message"]
+        ), result
 
         code, log, result = session("parameter_out_of_range", "/run/verbose -1\n/AIHL/material/list")
         assert code != 0 and "parameter out of range: level >=0 && level <=4" in log, log[-4000:]
@@ -175,6 +186,7 @@ def main() -> int:
         assert result["status"] == "failed" and result["run_count"] == "0", result
         assert result["interactive_command_failure_kind"] == "geant4_illegal_application_state", result
         assert "command refused" in result["interactive_command_failure_message"], result
+        assert "Geant4 UI status=200 for command: /run/abort" in result["interactive_command_failure_message"], result
 
         code, log, result = session(
             "mixed_physics_and_state", "/AIHL/physics/setReferenceList QGSP_BIC\n/run/abort",

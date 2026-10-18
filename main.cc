@@ -12,6 +12,9 @@
 #include "G4UIExecutive.hh"
 #include "G4UIterminal.hh"
 #include "G4UImanager.hh"
+#include "G4UIcommand.hh"
+#include "G4UIparameter.hh"
+#include "G4UIcommandStatus.hh"
 #include "G4VModularPhysicsList.hh"
 #include "G4VisExecutive.hh"
 #include "Output/OutputManager.hh"
@@ -55,8 +58,57 @@ class AuditedCshSession final : public G4UIterminal {
   const std::string& InvalidParameterDiagnostic() const { return invalidParameter_; }
   const std::string& ParameterOutOfRangeDiagnostic() const { return parameterOutOfRange_; }
   const std::string& IllegalApplicationStateDiagnostic() const { return illegalApplicationState_; }
+  const std::string& FailedCommand() const { return failedCommand_; }
+  G4int FailedCommandStatus() const { return failedCommandStatus_; }
 
  private:
+  // G4UIterminal's own override is private but virtual. Capture the actual
+  // ApplyCommand result here: G4UImanager::GetLastReturnCode() remains zero
+  // for rejected csh commands in the tested Geant4 11.3.2 installation.
+  void ExecuteCommand(const G4String& command) override {
+    if (command.length() < 2) return;
+    auto* ui = G4UImanager::GetUIpointer();
+    if (!ui) return;
+
+    const G4int result = ui->ApplyCommand(command);
+    const G4int parameterIndex = result % 100;
+    const G4int status = result - parameterIndex;
+    if (status != fCommandSucceeded && failedCommand_.empty()) {
+      failedCommand_ = command;
+      failedCommandStatus_ = result;
+    }
+
+    // Preserve the stock G4UIterminal diagnostics alongside the status audit.
+    switch (status) {
+      case fCommandSucceeded: break;
+      case fCommandNotFound:
+        G4cerr << "command <" << ui->SolveAlias(command) << "> not found" << G4endl;
+        if (command.find("@@") != G4String::npos) G4cout << "@@G4UIterminal" << G4endl;
+        break;
+      case fIllegalApplicationState:
+        G4cerr << "illegal application state -- command refused" << G4endl;
+        break;
+      case fParameterOutOfRange:
+        break;
+      case fParameterOutOfCandidates: {
+        if (auto* cmd = FindCommand(command)) {
+          G4cerr << "Parameter is out of candidate list (index " << parameterIndex << ")" << G4endl;
+          if (parameterIndex < 99 && cmd->GetParameter(parameterIndex)) {
+            G4cerr << "Candidates : " << cmd->GetParameter(parameterIndex)->GetParameterCandidates() << G4endl;
+          }
+        }
+        break;
+      }
+      case fParameterUnreadable:
+        G4cerr << "Parameter is wrong type and/or is not omittable (index "
+               << parameterIndex << ")" << G4endl;
+        break;
+      default:
+        G4cerr << "command refused (" << status << ")" << G4endl;
+        break;
+    }
+  }
+
   void RecordDiagnostic(const G4String& message) {
     std::string normalized(message);
     for (char& ch : normalized) {
@@ -67,9 +119,8 @@ class AuditedCshSession final : public G4UIterminal {
         normalized.find("command not found:") != std::string::npos) {
       if (unrecognizedCommand_.empty()) unrecognizedCommand_ = message;
     }
-    // Geant4's csh session does not expose an ApplyCommand return code for
-    // each command. Record only the concrete parameter rejection seen here;
-    // this does not imply that every Geant4 command failure is covered.
+    // Keep human-readable native diagnostics in addition to the numeric
+    // ApplyCommand result recorded by this session's ExecuteCommand override.
     if (normalized.find("parameter is wrong type and/or is not omittable") != std::string::npos) {
       if (invalidParameter_.empty()) invalidParameter_ = message;
     }
@@ -85,6 +136,8 @@ class AuditedCshSession final : public G4UIterminal {
   std::string invalidParameter_;
   std::string parameterOutOfRange_;
   std::string illegalApplicationState_;
+  std::string failedCommand_;
+  G4int failedCommandStatus_ = 0;
 };
 
 struct MacroFailureInfo {
@@ -740,6 +793,8 @@ int main(int argc, char** argv) {
       std::string invalidParameter;
       std::string parameterOutOfRange;
       std::string illegalApplicationState;
+      std::string failedCommand;
+      G4int failedCommandStatus = fCommandSucceeded;
       if (options.uiSession == "csh") {
         AuditedCshSession ui;
         ui.SessionStart();
@@ -747,6 +802,8 @@ int main(int argc, char** argv) {
         invalidParameter = ui.InvalidParameterDiagnostic();
         parameterOutOfRange = ui.ParameterOutOfRangeDiagnostic();
         illegalApplicationState = ui.IllegalApplicationStateDiagnostic();
+        failedCommand = ui.FailedCommand();
+        failedCommandStatus = ui.FailedCommandStatus();
       } else {
         G4UIExecutive ui(argc, argv);
         ui.SessionStart();
@@ -754,21 +811,37 @@ int main(int argc, char** argv) {
       const bool materialFailed = sim.GetMaterialManager()->GetCommandFailureCount() != materialFailuresBefore;
       const bool outputFailed = sim.GetOutputManager()->GetCommandFailureCount() != outputFailuresBefore;
       const bool physicsFailed = sim.GetInteractivePhysicsFailureCount() != physicsFailuresBefore;
+      const bool uiCommandFailed = failedCommandStatus != fCommandSucceeded;
       if (materialFailed || outputFailed || !unrecognizedCommand.empty() || !invalidParameter.empty() ||
-          !parameterOutOfRange.empty() || !illegalApplicationState.empty() || physicsFailed) {
+          !parameterOutOfRange.empty() || !illegalApplicationState.empty() || physicsFailed || uiCommandFailed) {
         const bool otherFailed = materialFailed || outputFailed || !unrecognizedCommand.empty() ||
                                  !invalidParameter.empty() || !parameterOutOfRange.empty() ||
-                                 !illegalApplicationState.empty();
+                                 !illegalApplicationState.empty() || uiCommandFailed;
         const std::string kind = physicsFailed ? (otherFailed ? "multiple" : "physics") :
             (materialFailed && outputFailed ? "material_and_output" :
             (materialFailed ? "material" : (outputFailed ? "output" :
             (!unrecognizedCommand.empty() ? "geant4_command_not_found" :
              (!invalidParameter.empty() ? "geant4_invalid_parameter" :
              (!parameterOutOfRange.empty() ? "geant4_parameter_out_of_range" :
-              "geant4_illegal_application_state"))))));
+             (!illegalApplicationState.empty() ? "geant4_illegal_application_state" :
+              "geant4_command_status")))))));
         std::vector<std::string> messages;
         const auto appendDiagnostic = [&](const std::string& diagnostic) {
-          if (!diagnostic.empty()) messages.push_back(diagnostic);
+          if (diagnostic.empty()) return;
+          // Native G4cerr diagnostics often end with a newline; the summary
+          // is key=value line-oriented and must keep the complete message on
+          // a single line for downstream parsers.
+          std::string singleLine;
+          singleLine.reserve(diagnostic.size());
+          for (char ch : diagnostic) {
+            if (ch == '\r' || ch == '\n' || ch == '\t') {
+              if (!singleLine.empty() && singleLine.back() != ' ') singleLine.push_back(' ');
+            } else {
+              singleLine.push_back(ch);
+            }
+          }
+          while (!singleLine.empty() && singleLine.back() == ' ') singleLine.pop_back();
+          if (!singleLine.empty()) messages.push_back(std::move(singleLine));
         };
         if (physicsFailed) appendDiagnostic(sim.GetLastInteractivePhysicsFailure());
         if (materialFailed) appendDiagnostic(sim.GetMaterialManager()->GetLastCommandFailure());
@@ -777,6 +850,10 @@ int main(int argc, char** argv) {
         appendDiagnostic(invalidParameter);
         appendDiagnostic(parameterOutOfRange);
         appendDiagnostic(illegalApplicationState);
+        if (uiCommandFailed) {
+          appendDiagnostic("Geant4 UI status=" + std::to_string(failedCommandStatus) +
+                           " for command: " + failedCommand);
+        }
         const std::string message = StringUtils::Join(messages, "; ");
         summary.Set("interactive_command_failure_kind", kind);
         summary.Set("interactive_command_failure_message", message);
