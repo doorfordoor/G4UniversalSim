@@ -517,8 +517,8 @@
 
 | UI 命令 | 转发到 | 说明 |
 |---|---|---|
-| `/AIHL/output/setDir <dir>` | `OutputManager::SetOutputDir` | 建议在 `/run/initialize` 和文件打开前调用；初始化后或文件已打开会 warning。 |
-| `/AIHL/output/setThreadSuffix <true|false>` | `OutputManager::EnableThreadSuffix` | 控制 `_tN` 文件名后缀；建议在文件打开前调用。 |
+| `/AIHL/output/setDir <dir>` | `SimulationManager::SetOutputDir` 或 `OutputManager::SetOutputDir` | 仅在 Geant4 `PreInit` 可调用；初始化后由命令状态限制拒绝，batch 失败摘要记录来源，CLI 显式锁定的目录不能被更改。 |
+| `/AIHL/output/setThreadSuffix <true|false>` | `OutputManager::EnableThreadSuffix` | 仅 Geant4 `PreInit` 可调用；`true` 保留 `_tN`，`false` 因 worker CSV 文件名冲突风险明确拒绝并记录命令失败。 |
 | `/AIHL/output/print` | OutputManager 状态查询接口 | 打印 output dir、thread id、thread suffix、初始化状态和文件打开状态。 |
 | `/AIHL/output/flush` | `OutputManager::Flush` | flush 已打开文件。 |
 | `/AIHL/output/close` | `OutputManager::Close` | close 已打开文件。 |

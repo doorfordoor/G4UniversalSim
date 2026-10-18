@@ -913,6 +913,48 @@ def main() -> int:
         if (locked_output / "run_summary.txt").exists():
             raise AssertionError("summary remained in the pre-macro output directory")
 
+        # Workers force _tN filenames. Previously the pre-init command accepted
+        # false but affected only the master, silently ignoring user intent.
+        for threads in (1, 2):
+            suffix_output = temp / f"suffix-disabled-{threads}"
+            suffix_macro = temp / f"suffix-disabled-{threads}.mac"
+            suffix_macro.write_text(
+                "/AIHL/output/setThreadSuffix false\n"
+                "/control/echo UNSAFE_SUFFIX_COMMAND_CONTINUED\n"
+                "/run/initialize\n/run/beamOn 4\n",
+                encoding="utf-8",
+            )
+            suffix_log = run(
+                executable,
+                ["--config", "config/main.ini", "--macro", str(suffix_macro),
+                 "--output", str(suffix_output), "--threads", str(threads)],
+                expected=1,
+            )
+            suffix_values, suffix_generated = read_summary(suffix_output)
+            assert "disabling worker _tN suffix is unsupported" in suffix_log
+            assert "UNSAFE_SUFFIX_COMMAND_CONTINUED" not in suffix_log
+            assert suffix_values["status"] == "failed", suffix_values
+            assert suffix_values["macro_failure_command"] == "/AIHL/output/setThreadSuffix false"
+            assert suffix_values["macro_failure_line"] == "1"
+            assert suffix_values["macro_failure_code_available"] == "false"
+            assert suffix_values["run_count"] == "0"
+            assert all(Path(path).name == "run_summary.txt" for path in suffix_generated), suffix_generated
+
+        suffix_true_output = temp / "suffix-enabled-two-workers"
+        suffix_true_macro = temp / "suffix-enabled-two-workers.mac"
+        suffix_true_macro.write_text(
+            "/AIHL/output/setThreadSuffix true\n/run/initialize\n/run/beamOn 4\n",
+            encoding="utf-8",
+        )
+        run(executable, ["--config", "config/main.ini", "--macro", str(suffix_true_macro),
+                         "--output", str(suffix_true_output), "--threads", "2"])
+        suffix_true_values, _ = read_summary(suffix_true_output)
+        assert suffix_true_values["status"] == "completed", suffix_true_values
+        assert suffix_true_values["run_0_completed_events"] == "4", suffix_true_values
+        assert (suffix_true_output / "event_edep_t0.csv").is_file()
+        assert (suffix_true_output / "event_edep_t1.csv").is_file()
+        assert not (suffix_true_output / "event_edep.csv").exists()
+
         # Real MT workers retain their initial output directory. Previously a
         # later master-only switch succeeded, sending the final summary to a
         # different directory while both runs' CSV files stayed in the first.

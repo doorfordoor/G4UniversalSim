@@ -110,6 +110,19 @@ def main() -> int:
         assert result["run_count"] == "0", result
         assert result["effective_threads_origin_kind"] == "main_ini", result
 
+        # The output suffix preference used to accept false while workers
+        # silently kept _tN. csh must stop after the Messenger reports failure.
+        code, log, result = session(
+            "suffix_disabled", "/AIHL/output/setThreadSuffix false\n"
+            "/control/echo SUFFIX_CSH_CONTINUED\n/run/initialize\n/run/beamOn 2",
+            config=True, threads=2,
+        )
+        assert code != 0 and result["status"] == "failed", log[-4000:]
+        assert "disabling worker _tN suffix is unsupported" in log, log[-4000:]
+        assert "SUFFIX_CSH_CONTINUED" not in log, log[-4000:]
+        assert result["interactive_command_failure_kind"] == "output", result
+        assert result["run_count"] == "0", result
+
         # A physics list is already registered when the terminal starts.
         # Interactive manager changes must not pretend to rebuild that list.
         code, log, result = session(

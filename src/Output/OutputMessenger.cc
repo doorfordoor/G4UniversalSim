@@ -46,7 +46,7 @@ OutputMessenger::OutputMessenger(OutputManager* outputManager, OutputDirSetter o
     setDirCmd_->AvailableForStates(G4State_PreInit);
 
     setThreadSuffixCmd_ = std::make_unique<G4UIcmdWithABool>("/AIHL/output/setThreadSuffix", this);
-    setThreadSuffixCmd_->SetGuidance("Set _tN thread suffix preference before /run/initialize.");
+    setThreadSuffixCmd_->SetGuidance("Only true is supported: workers require distinct _tN filenames; false is rejected before /run/initialize.");
     setThreadSuffixCmd_->SetParameterName("enable", false);
     setThreadSuffixCmd_->AvailableForStates(G4State_PreInit);
 
@@ -82,7 +82,13 @@ void OutputMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
         if (command == setThreadSuffixCmd_.get()) {
             EnsureOutputManager("/AIHL/output/setThreadSuffix");
             EnsureNoOpenFiles("/AIHL/output/setThreadSuffix");
-            outputManager_->EnableThreadSuffix(setThreadSuffixCmd_->GetNewBoolValue(newValue));
+            if (!setThreadSuffixCmd_->GetNewBoolValue(newValue)) {
+                throw std::runtime_error(
+                    "disabling worker _tN suffix is unsupported: concurrent workers would overwrite shared CSV targets; "
+                    "keep /AIHL/output/setThreadSuffix true and merge per-thread files after the run"
+                );
+            }
+            outputManager_->EnableThreadSuffix(true);
             return;
         }
         if (command == printCmd_.get()) {
