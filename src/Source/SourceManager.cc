@@ -215,6 +215,11 @@ void SourceManager::LoadFromConfig(const ConfigManager& config)
             const auto d = ReadVector3Double(config, "source", "direction");
             SetDirection(d[0], d[1], d[2]);
         }
+    } else if (config.HasKey("source", "isotropic") && isotropic_) {
+        throw std::runtime_error(
+            "SourceManager [source]/isotropic=false cannot disable an isotropic preset "
+            "without [source]/direction; supply a non-zero direction vector "
+            "or omit isotropic=false to use the preset.");
     }
 
     configured_ = true;
@@ -436,7 +441,10 @@ void SourceManager::ApplyAngularDistributionToGPS() const
         return;
     }
     if (hasDirection_ && direction_.size() == 3) {
-        ang->SetAngDistType("beam1d");
+        // beam1d samples a Gaussian around its own -Z axis and does not
+        // consume SetParticleMomentumDirection. Planar uses that explicit
+        // unit vector, as required by the fixed-direction source contract.
+        ang->SetAngDistType("planar");
         ang->SetParticleMomentumDirection(G4ThreeVector(direction_[0], direction_[1], direction_[2]));
     }
 }

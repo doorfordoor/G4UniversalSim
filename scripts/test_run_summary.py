@@ -148,6 +148,14 @@ def main() -> int:
         )
         scoring_off_config = temp / "scoring-off.ini"
         main_text = (temp / "config" / "main.ini").read_text(encoding="utf-8")
+        # Manifest registration tests exercise output I/O rather than energy
+        # deposition. Pin a beam directed away from the target so a corrected
+        # +Z fixed-direction source cannot produce multi-GB hit output here.
+        assert main_text.count("direction = 0,0,1") == 1
+        manifest_config = temp / "manifest-source-away.ini"
+        manifest_config.write_text(
+            main_text.replace("direction = 0,0,1", "direction = 0,0,-1"), encoding="utf-8"
+        )
         assert "[scoring]\nenabled = true" in main_text
         source_preset_only_config = temp / "source-preset-only.ini"
         assert "preset = proton_beam\nparticle = proton" in main_text
@@ -321,6 +329,79 @@ def main() -> int:
                                      "--output", str(invalid_source_output)], expected=1)
             assert expected_error in output, output
             assert not list(invalid_source_output.glob("hits*.csv")), invalid_source_output
+
+        # An explicit isotropic=false must not silently inherit the isotropic
+        # direction from a preset. The original program completed real events
+        # with random primary directions despite this request.
+        assert main_text.count("preset = proton_beam") == 1
+        assert main_text.count("direction = 0,0,1") == 1
+        inherited_iso = main_text.replace("preset = proton_beam", "preset = isotropic_neutron")
+        source_disabled_isotropic_ini = temp / "source-disable-isotropic-without-direction.ini"
+        source_disabled_isotropic_ini.write_text(
+            inherited_iso.replace("direction = 0,0,1", "isotropic = false"), encoding="utf-8")
+        source_disabled_isotropic_output = temp / "source-disable-isotropic-without-direction-output"
+        output = run(executable, ["--config", str(source_disabled_isotropic_ini),
+                                  "--macro", str(invalid_source_macro),
+                                  "--output", str(source_disabled_isotropic_output)], expected=1)
+        assert "isotropic=false cannot disable an isotropic preset" in output, output
+        assert not list(source_disabled_isotropic_output.glob("hits*.csv"))
+
+        # Providing a fixed direction resolves the contradictory preset.
+        source_explicit_direction_ini = temp / "source-disable-isotropic-with-direction.ini"
+        source_explicit_direction_ini.write_text(
+            inherited_iso.replace("direction = 0,0,1", "isotropic = false\ndirection = 0,0,1"),
+            encoding="utf-8",
+        )
+        explicit_direction_macro = temp / "source-disable-isotropic-direction.mac"
+        explicit_direction_macro.write_text(
+            "/AIHL/geometry/loadConfig config/geometry/hit_smoke_box.ini\n"
+            "/run/initialize\n/run/beamOn 6\n", encoding="utf-8",
+        )
+        explicit_direction_output = temp / "source-disable-isotropic-with-direction-output"
+        run(executable, ["--config", str(source_explicit_direction_ini),
+                         "--macro", str(explicit_direction_macro),
+                         "--output", str(explicit_direction_output), "--threads", "1"])
+        direction_summary, _ = read_summary(explicit_direction_output)
+        assert direction_summary["status"] == "completed", direction_summary
+        assert direction_summary["actual_completed_event_count"] == "6", direction_summary
+        with (explicit_direction_output / "hits_t0.csv").open(newline="", encoding="utf-8") as stream:
+            first_directions = {}
+            for hit in csv.DictReader(stream):
+                if hit["trackID"] == "1" and hit["parentID"] == "0":
+                    first_directions.setdefault(int(hit["eventID"]), hit)
+        assert set(first_directions) == set(range(6)), first_directions.keys()
+        for hit in first_directions.values():
+            assert abs(float(hit["px"])) < 1e-6, hit
+            assert abs(float(hit["py"])) < 1e-6, hit
+            assert abs(float(hit["pz"]) - 1.0) < 1e-6, hit
+
+        # The old beam1d angular type emitted -Z regardless of the requested
+        # fixed vector; also verify a reverse and a non-axis-aligned beam.
+        for label, configured_direction, expected_vector in (
+            ("reverse-z", "0,0,-1", (0.0, 0.0, -1.0)),
+            ("diagonal", "1,0,1", (2 ** -0.5, 0.0, 2 ** -0.5)),
+        ):
+            directional_ini = temp / f"source-fixed-{label}.ini"
+            directional_ini.write_text(
+                main_text.replace("direction = 0,0,1", f"direction = {configured_direction}"),
+                encoding="utf-8",
+            )
+            directional_output = temp / f"source-fixed-{label}-output"
+            run(executable, ["--config", str(directional_ini),
+                             "--macro", str(explicit_direction_macro),
+                             "--output", str(directional_output), "--threads", "1"])
+            directional_summary, _ = read_summary(directional_output)
+            assert directional_summary["status"] == "completed", directional_summary
+            assert directional_summary["actual_completed_event_count"] == "6", directional_summary
+            with (directional_output / "hits_t0.csv").open(newline="", encoding="utf-8") as stream:
+                first_vectors = {}
+                for hit in csv.DictReader(stream):
+                    if hit["trackID"] == "1" and hit["parentID"] == "0":
+                        first_vectors.setdefault(int(hit["eventID"]), hit)
+            assert set(first_vectors) == set(range(6)), first_vectors.keys()
+            for hit in first_vectors.values():
+                for column, expected in zip(("px", "py", "pz"), expected_vector):
+                    assert abs(float(hit[column]) - expected) < 1e-6, hit
 
         # The plane center must reach GPS in all three dimensions. Previously
         # SourceManager parsed center x/y but silently reset both to zero;
@@ -894,7 +975,7 @@ def main() -> int:
         # A file written by a different process during beamOn must not be
         # mistaken for a worker output just because its mtime is recent.
         manifest_process = subprocess.Popen(
-            [str(executable), "--config", "config/main.ini", "--macro", str(manifest_macro),
+            [str(executable), "--config", str(manifest_config), "--macro", str(manifest_macro),
              "--output", str(manifest_output), "--threads", "2"],
             cwd=TEST_CWD, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, text=True,
         )
@@ -908,7 +989,12 @@ def main() -> int:
             raise AssertionError(f"Could not inject an in-run unrelated file: {stderr[-2000:]}")
         foreign_file = manifest_output / "unrelated_file.txt"
         foreign_file.write_text("not a simulation output\n", encoding="utf-8")
-        _, stderr = manifest_process.communicate(timeout=120)
+        try:
+            _, stderr = manifest_process.communicate(timeout=120)
+        except subprocess.TimeoutExpired as error:
+            manifest_process.kill()
+            _, stderr = manifest_process.communicate()
+            raise AssertionError(f"Manifest registration run exceeded 120 seconds: {stderr[-2000:]}") from error
         assert manifest_process.returncode == 0, stderr[-2000:]
         manifest_values, manifest_files = read_summary(manifest_output)
         assert manifest_values["actual_completed_event_count"] == "5000", manifest_values
@@ -925,7 +1011,7 @@ def main() -> int:
             environment = os.environ.copy()
             environment["G4USIM_TEST_OUTPUT_FAULT"] = fault
             worker_failure = subprocess.run(
-                [str(executable), "--config", "config/main.ini", "--macro", str(manifest_macro),
+                [str(executable), "--config", str(manifest_config), "--macro", str(manifest_macro),
                  "--output", str(target), "--threads", "2"],
                 cwd=TEST_CWD, capture_output=True, text=True, timeout=120, env=environment,
             )
