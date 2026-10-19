@@ -53,12 +53,15 @@ def test_point_fixed() -> None:
 
 
 def test_plane_circle_fixed() -> None:
-    source = SourceEditableModel(position_mode="plane", source_shape="circle", radius="2 mm", angular_mode="fixed")
+    source = SourceEditableModel(position_mode="plane", source_shape="circle", radius="2 mm",
+                                 position="4 mm, 0 mm, -9 mm", angular_mode="fixed")
     validate_source_model(source)
     assert not source.errors, source.errors
     assert any("plane circle source" in item for item in source.warnings)
     text = _ini(source)
     assert "position_type = plane" in text
+    assert "center = 4 mm, 0 mm, -9 mm" in text
+    assert "position = 4 mm, 0 mm, -9 mm" not in text
     assert "radius = 2 mm" in text
 
 

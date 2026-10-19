@@ -140,11 +140,15 @@ def _source_lines(source_model: SourceEditableModel) -> str:
         f"particle = {source_model.particle}",
         f"energy = {source_model.energy}",
         f"position_type = {mode}",
-        f"position = {source_model.position}",
         f"direction = {source_model.direction}",
     ]
     if mode == "plane":
+        # The editor's Position field is the plane center in both preview and
+        # Geant4; the backend consumes [source]/center for plane sources.
+        lines.append(f"center = {source_model.position}")
         lines.append(f"radius = {source_model.radius}")
+    else:
+        lines.append(f"position = {source_model.position}")
     if angular == "isotropic":
         lines.append("isotropic = true")
     return "\n".join(lines)

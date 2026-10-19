@@ -322,6 +322,42 @@ def main() -> int:
             assert expected_error in output, output
             assert not list(invalid_source_output.glob("hits*.csv")), invalid_source_output
 
+        # The plane center must reach GPS in all three dimensions. Previously
+        # SourceManager parsed center x/y but silently reset both to zero;
+        # Geant4 still ran successfully and the hit positions were wrong.
+        plane_config = temp / "source-plane-offset.ini"
+        plane_fixture = "position_type = point\nposition = 0,0,-1 mm"
+        assert main_text.count(plane_fixture) == 1, "plane test input fixture changed"
+        plane_config.write_text(
+            main_text.replace(
+                plane_fixture,
+                "position_type = plane\ncenter = 4 mm, 0 mm, -9 mm\nradius = 0.05 mm",
+            ),
+            encoding="utf-8",
+        )
+        plane_macro = temp / "source-plane-offset.mac"
+        plane_macro.write_text(
+            "/AIHL/geometry/loadConfig config/geometry/hit_smoke_box.ini\n"
+            "/run/initialize\n/run/beamOn 12\n",
+            encoding="utf-8",
+        )
+        plane_output = temp / "source-plane-offset-output"
+        run(executable, ["--config", str(plane_config), "--macro", str(plane_macro),
+                         "--output", str(plane_output), "--threads", "1"])
+        plane_values, _ = read_summary(plane_output)
+        assert plane_values["status"] == "completed", plane_values
+        assert plane_values["actual_completed_event_count"] == "12", plane_values
+        with (plane_output / "hits_t0.csv").open(newline="", encoding="utf-8") as stream:
+            first_steps = {}
+            for hit in csv.DictReader(stream):
+                if hit["trackID"] == "1" and hit["parentID"] == "0":
+                    first_steps.setdefault(int(hit["eventID"]), hit)
+        assert set(first_steps) == set(range(12)), first_steps.keys()
+        for hit in first_steps.values():
+            assert abs(float(hit["x0_mm"]) - 4.0) < 0.051, hit
+            assert abs(float(hit["y0_mm"])) < 0.051, hit
+            assert abs(float(hit["z0_mm"]) + 9.0) < 1e-6, hit
+
         # dry-run produces a summary but never creates simulation output.
         dry_text = run(
             executable,

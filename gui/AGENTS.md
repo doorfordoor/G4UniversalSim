@@ -1,5 +1,7 @@
 # G4UniversalSim GUI Agent 开发约束
 
+2026-10-19 平面源位置映射：Source Editor 的 `Position` 在 `position_mode=plane` 时必须生成 `[source]/center`（三轴及单位），在 `point` 时生成 `[source]/position`；GUI 预览中心、writer 和 Geant4 GPS 实际采样必须一致。`gui/smoke_tests/smoke_source_editor_v2.py` 检查偏移 4 mm 的生成配置，`scripts/test_run_summary.py` 核对真实后端 hits。旧 `planeBeam` 命令保留零 x/y 的兼容语义，不能扩大为任意空间分布已验证。
+
 本文件适用于 gui/。GUI 是 PySide6 外部运行器和配置编辑器，后端 C++/Geant4 的实际实现仍是功能支持的唯一依据。
 
 ## 1. 分层和数据流

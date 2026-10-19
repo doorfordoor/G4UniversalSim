@@ -188,12 +188,12 @@ void SourceManager::LoadFromConfig(const ConfigManager& config)
             const double radius = config.HasKey("source", "radius")
                 ? UnitParser::ParseLength(config.GetString("source", "radius"))
                 : 1.0 * CLHEP::mm;
-            double z = -1.0 * CLHEP::mm;
+            std::vector<double> center{0.0, 0.0, -1.0 * CLHEP::mm};
             if (config.HasKey("source", "center")) {
-                const auto center = ReadVector3WithUnit(config, "source", "center");
-                z = center[2];
+                center = ReadVector3WithUnit(config, "source", "center");
             }
-            SetPlaneBeam(radius, z, config.GetString("source", "direction", "+z"));
+            SetPlaneBeamAt(radius, center[0], center[1], center[2],
+                           config.GetString("source", "direction", "+z"));
         } else {
             throw std::runtime_error(
                 "SourceManager unsupported [source]/position_type='" + type +
@@ -330,8 +330,14 @@ void SourceManager::SetIsotropic()
 
 void SourceManager::SetPlaneBeam(double radius, double z, const std::string& direction)
 {
+    SetPlaneBeamAt(radius, 0.0, 0.0, z, direction);
+}
+
+void SourceManager::SetPlaneBeamAt(double radius, double x, double y, double z,
+                                   const std::string& direction)
+{
     if (radius <= 0.0) throw std::runtime_error("SourceManager::SetPlaneBeam requires radius > 0");
-    SetPosition("Plane", "Circle", {0.0, 0.0, z, radius});
+    SetPosition("Plane", "Circle", {x, y, z, radius});
     const auto d = ParseDirectionVector(NormalizeDirectionToken(direction));
     SetDirection(d[0], d[1], d[2]);
     configured_ = true;
