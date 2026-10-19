@@ -297,6 +297,31 @@ def main() -> int:
             encoding="utf-8",
         )
 
+        # Invalid source geometry input used to be silently ignored: the
+        # configured preset still ran two events at its old point position.
+        # Reject it before kernel initialization and event transport.
+        source_invalid_type_ini = temp / "source-invalid-position-type.ini"
+        source_invalid_type_ini.write_text(
+            main_text.replace("position_type = point", "position_type = unsupported_ellipsoid"),
+            encoding="utf-8",
+        )
+        source_missing_point_ini = temp / "source-missing-point.ini"
+        source_missing_point_ini.write_text(
+            main_text.replace("position = 0,0,-1 mm", ""), encoding="utf-8",
+        )
+        invalid_source_macro = temp / "source-invalid.mac"
+        invalid_source_macro.write_text("/run/initialize\n/run/beamOn 2\n", encoding="utf-8")
+        for bad_config, expected_error in (
+            (source_invalid_type_ini, "unsupported [source]/position_type"),
+            (source_missing_point_ini, "[source]/position_type=point requires"),
+        ):
+            invalid_source_output = temp / (bad_config.stem + "-output")
+            output = run(executable, ["--config", str(bad_config),
+                                     "--macro", str(invalid_source_macro),
+                                     "--output", str(invalid_source_output)], expected=1)
+            assert expected_error in output, output
+            assert not list(invalid_source_output.glob("hits*.csv")), invalid_source_output
+
         # dry-run produces a summary but never creates simulation output.
         dry_text = run(
             executable,

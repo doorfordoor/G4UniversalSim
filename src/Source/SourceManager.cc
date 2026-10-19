@@ -175,7 +175,13 @@ void SourceManager::LoadFromConfig(const ConfigManager& config)
     const bool isotropic = config.GetBool("source", "isotropic", false);
     if (config.HasKey("source", "position_type")) {
         const std::string type = StringUtils::ToLower(StringUtils::Trim(config.GetString("source", "position_type", "")));
-        if (type == "point" && config.HasKey("source", "position")) {
+        if (type == "point") {
+            if (!config.HasKey("source", "position") ||
+                StringUtils::Trim(config.GetString("source", "position", "")).empty()) {
+                throw std::runtime_error(
+                    "SourceManager [source]/position_type=point requires a non-empty "
+                    "[source]/position; supply x,y,z with length units.");
+            }
             const auto pos = ReadVector3WithUnit(config, "source", "position");
             SetPointPosition(pos[0], pos[1], pos[2]);
         } else if (type == "plane") {
@@ -188,6 +194,10 @@ void SourceManager::LoadFromConfig(const ConfigManager& config)
                 z = center[2];
             }
             SetPlaneBeam(radius, z, config.GetString("source", "direction", "+z"));
+        } else {
+            throw std::runtime_error(
+                "SourceManager unsupported [source]/position_type='" + type +
+                "'; supported values: point (requires position) or plane (radius/center).");
         }
     } else if (config.HasKey("source", "position")) {
         const auto pos = ReadVector3WithUnit(config, "source", "position");
