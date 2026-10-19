@@ -72,6 +72,16 @@ def test_point_isotropic() -> None:
     assert "isotropic = true" in _ini(source)
 
 
+def test_source_nonfinite_is_blocked() -> None:
+    for field, value in (("direction", "NaN,0,1"), ("energy", "inf MeV"),
+                         ("energy", "1e999 MeV"), ("position", "inf,0,-1 mm"),
+                         ("radius", "NaN mm")):
+        source = SourceEditableModel(position_mode="plane", source_shape="circle")
+        setattr(source, field, value)
+        validate_source_model(source)
+        assert any(f"{field} must contain only finite" in msg for msg in source.errors), (field, source.errors)
+
+
 def test_preview_only_modes_are_blocked() -> None:
     rectangle = SourceEditableModel(
         position_mode="plane",
@@ -132,6 +142,7 @@ if __name__ == "__main__":
     test_point_fixed()
     test_plane_circle_fixed()
     test_point_isotropic()
+    test_source_nonfinite_is_blocked()
     test_preview_only_modes_are_blocked()
     test_validation_errors()
     test_generated_biasing_hook_is_blocked()

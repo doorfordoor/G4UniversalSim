@@ -6,6 +6,7 @@
 #include "G4UnitsTable.hh"
 
 #include <cstdlib>
+#include <cmath>
 #include <map>
 #include <stdexcept>
 #include <string>
@@ -37,6 +38,10 @@ double ParseStrictDouble(const std::string& text, const std::string& original)
         throw std::runtime_error("Unexpected text after numeric value in: '" + original + "'");
     }
 
+    if (!std::isfinite(value)) {
+        throw std::runtime_error("Non-finite numeric value in: '" + original + "'");
+    }
+
     return value;
 }
 
@@ -51,6 +56,9 @@ ParsedQuantity ParseQuantity(const std::string& text)
     const double value = std::strtod(trimmed.c_str(), &end);
     if (end == trimmed.c_str()) {
         throw std::runtime_error("Cannot parse numeric value from quantity: '" + text + "'");
+    }
+    if (!std::isfinite(value)) {
+        throw std::runtime_error("Non-finite numeric value in quantity: '" + text + "'");
     }
 
     std::string unit = StringUtils::Trim(std::string(end));
@@ -126,7 +134,11 @@ double ParseTypedQuantity(
         );
     }
 
-    return parsed.value * it->second;
+    const double result = parsed.value * it->second;
+    if (!std::isfinite(result)) {
+        throw std::runtime_error("Non-finite " + quantityType + " quantity: '" + text + "'");
+    }
+    return result;
 }
 
 }  // namespace
@@ -152,7 +164,11 @@ double ParseDoubleWithUnit(const std::string& text)
         );
     }
 
-    return parsed.value * unitValue;
+    const double result = parsed.value * unitValue;
+    if (!std::isfinite(result)) {
+        throw std::runtime_error("Non-finite quantity: '" + text + "'");
+    }
+    return result;
 }
 
 double ParseLength(const std::string& text)

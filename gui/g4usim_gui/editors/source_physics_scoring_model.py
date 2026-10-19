@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import math
 import re
 from dataclasses import asdict, dataclass, field
 
@@ -180,6 +181,10 @@ def validate_source_model(model: SourceEditableModel) -> SourceEditableModel:
         model.errors.append("particle is required")
     if not model.energy.strip():
         model.errors.append("energy is required")
+    for name, text in (("energy", model.energy), ("position", model.position),
+                       ("direction", model.direction), ("radius", model.radius)):
+        if _contains_nonfinite_number(text):
+            model.errors.append(f"{name} must contain only finite numeric values")
     mode = model.position_mode.strip().lower()
     shape = model.source_shape.strip().lower() or ("point" if mode == "point" else "circle")
     angular = model.angular_mode.strip().lower()
@@ -304,6 +309,15 @@ def scoring_model_to_snapshot(model: ScoringEditableModel) -> dict:
 def _has_three_components(value: str) -> bool:
     tokens = [token for token in re.split(r"[,\s]+", value.strip()) if token]
     return len(tokens) >= 3
+
+
+def _contains_nonfinite_number(value: str) -> bool:
+    if re.search(r"(?i)(?<![a-z_])[+-]?(?:nan|inf(?:inity)?)(?![a-z_])", value):
+        return True
+    for token in re.finditer(r"(?<![a-zA-Z_])[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?", value):
+        if not math.isfinite(float(token.group())):
+            return True
+    return False
 
 
 def _direction_is_nonzero(value: str) -> bool:

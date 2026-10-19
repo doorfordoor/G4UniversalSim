@@ -282,7 +282,8 @@ std::string SourceManager::GetParticleName() const
 
 void SourceManager::SetMonoEnergy(double energy)
 {
-    if (energy <= 0.0) throw std::runtime_error("SourceManager::SetMonoEnergy requires energy > 0");
+    if (!std::isfinite(energy) || energy <= 0.0)
+        throw std::runtime_error("SourceManager::SetMonoEnergy requires finite energy > 0");
     monoEnergy_ = energy;
     if (gps_) ApplyMonoEnergyToGPS();
     else MarkGPSConfigDirty();
@@ -296,6 +297,10 @@ double SourceManager::GetMonoEnergy() const
 
 void SourceManager::SetPosition(const std::string& type, const std::string& shape, const std::vector<double>& params)
 {
+    for (double value : params) {
+        if (!std::isfinite(value))
+            throw std::runtime_error("SourceManager::SetPosition requires finite position parameters");
+    }
     positionType_ = type;
     positionShape_ = shape;
     positionParams_ = params;
@@ -312,9 +317,12 @@ void SourceManager::SetPointPosition(double x, double y, double z)
 
 void SourceManager::SetDirection(double x, double y, double z)
 {
-    const double mag2 = x * x + y * y + z * z;
-    if (mag2 <= 0.0) throw std::runtime_error("SourceManager::SetDirection requires non-zero direction vector");
-    const double invMag = 1.0 / std::sqrt(mag2);
+    if (!std::isfinite(x) || !std::isfinite(y) || !std::isfinite(z))
+        throw std::runtime_error("SourceManager::SetDirection requires finite direction components");
+    const double magnitude = std::hypot(x, y, z);
+    if (!std::isfinite(magnitude) || magnitude <= 0.0)
+        throw std::runtime_error("SourceManager::SetDirection requires a finite non-zero direction vector");
+    const double invMag = 1.0 / magnitude;
     direction_ = {x * invMag, y * invMag, z * invMag};
     hasDirection_ = true;
     isotropic_ = false;
@@ -341,9 +349,10 @@ void SourceManager::SetPlaneBeam(double radius, double z, const std::string& dir
 void SourceManager::SetPlaneBeamAt(double radius, double x, double y, double z,
                                    const std::string& direction)
 {
-    if (radius <= 0.0) throw std::runtime_error("SourceManager::SetPlaneBeam requires radius > 0");
-    SetPosition("Plane", "Circle", {x, y, z, radius});
+    if (!std::isfinite(radius) || radius <= 0.0)
+        throw std::runtime_error("SourceManager::SetPlaneBeam requires finite radius > 0");
     const auto d = ParseDirectionVector(NormalizeDirectionToken(direction));
+    SetPosition("Plane", "Circle", {x, y, z, radius});
     SetDirection(d[0], d[1], d[2]);
     configured_ = true;
 }

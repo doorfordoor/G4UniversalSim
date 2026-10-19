@@ -317,11 +317,27 @@ def main() -> int:
         source_missing_point_ini.write_text(
             main_text.replace("position = 0,0,-1 mm", ""), encoding="utf-8",
         )
+        # strtod accepts NaN/Inf, but they cannot represent a physical GPS
+        # source. They previously passed --inspect-run without an error.
+        invalid_numeric_sources = []
+        for name, old, new in (
+            ("direction-nan", "direction = 0,0,1", "direction = NaN,0,1"),
+            ("direction-inf", "direction = 0,0,1", "direction = inf,0,1"),
+            ("energy-nan", "energy = 10 MeV", "energy = NaN MeV"),
+            ("position-inf", "position = 0,0,-1 mm", "position = inf,0,-1 mm"),
+            ("radius-nan", "position_type = point\nposition = 0,0,-1 mm",
+             "position_type = plane\ncenter = 0,0,-1 mm\nradius = NaN mm"),
+        ):
+            assert main_text.count(old) == 1, (name, old)
+            path = temp / f"source-invalid-{name}.ini"
+            path.write_text(main_text.replace(old, new), encoding="utf-8")
+            invalid_numeric_sources.append(path)
         invalid_source_macro = temp / "source-invalid.mac"
         invalid_source_macro.write_text("/run/initialize\n/run/beamOn 2\n", encoding="utf-8")
         for bad_config, expected_error in (
             (source_invalid_type_ini, "unsupported [source]/position_type"),
             (source_missing_point_ini, "[source]/position_type=point requires"),
+            *((path, "Non-finite numeric value") for path in invalid_numeric_sources),
         ):
             invalid_source_output = temp / (bad_config.stem + "-output")
             output = run(executable, ["--config", str(bad_config),
