@@ -328,6 +328,27 @@ def main() -> int:
             path = temp / f"source-empty-{key}.ini"
             path.write_text(main_text.replace(original, f"{key} =   "), encoding="utf-8")
             empty_source_fields.append((path, f"[source]/{key} must not be empty"))
+        # Explicitly contradictory source fields used to be ignored with a
+        # successful run-plan response. Fail before Geant4 initialization.
+        conflicting_source_fields = []
+        for name, old, new, diagnostic in (
+            ("isotropic-direction", "direction = 0,0,1",
+             "isotropic = true\ndirection = 0,0,1",
+             "isotropic=true conflicts with [source]/direction"),
+            ("point-center", "position = 0,0,-1 mm",
+             "position = 0,0,-1 mm\ncenter = 4,0,-1 mm\nradius = 1 mm",
+             "position_type=point conflicts with center/radius"),
+            ("plane-position", "position_type = point",
+             "position_type = plane",
+             "position_type=plane conflicts with position"),
+            ("center-without-type", "position_type = point",
+             "center = 4,0,-1 mm\nradius = 1 mm",
+             "center and radius require position_type=plane"),
+        ):
+            assert main_text.count(old) == 1, (name, old)
+            path = temp / f"source-conflict-{name}.ini"
+            path.write_text(main_text.replace(old, new), encoding="utf-8")
+            conflicting_source_fields.append((path, diagnostic))
         # strtod accepts NaN/Inf, but they cannot represent a physical GPS
         # source. They previously passed --inspect-run without an error.
         invalid_numeric_sources = []
@@ -349,6 +370,7 @@ def main() -> int:
             (source_invalid_type_ini, "unsupported [source]/position_type"),
             (source_missing_point_ini, "[source]/position_type=point requires"),
             *empty_source_fields,
+            *conflicting_source_fields,
             *((path, "Non-finite numeric value") for path in invalid_numeric_sources),
         ):
             invalid_source_output = temp / (bad_config.stem + "-output")
@@ -357,6 +379,62 @@ def main() -> int:
                                      "--output", str(invalid_source_output)], expected=1)
             assert expected_error in output, output
             assert not list(invalid_source_output.glob("hits*.csv")), invalid_source_output
+
+        # The GUI emits no direction when isotropic is selected. Plane's
+        # historical radius/center defaults and untyped point remain valid.
+        for label, accepted in (
+            ("isotropic-no-direction", main_text.replace(
+                "direction = 0,0,1", "isotropic = true")),
+            ("plane-defaults", main_text.replace(
+                "position_type = point\nposition = 0,0,-1 mm", "position_type = plane")),
+            ("legacy-untyped-point", main_text.replace("position_type = point\n", "")),
+        ):
+            valid_ini = temp / f"source-compatible-{label}.ini"
+            valid_ini.write_text(accepted, encoding="utf-8")
+            valid_output = temp / f"source-compatible-{label}-output"
+            run(executable, ["--config", str(valid_ini), "--macro", str(invalid_source_macro),
+                             "--output", str(valid_output)])
+            valid_summary, _ = read_summary(valid_output)
+            assert valid_summary["status"] == "completed", valid_summary
+            assert valid_summary["actual_completed_event_count"] == "2", valid_summary
+
+        # Exercise the actual GPS angular sampler, not just the run summary.
+        # Place a low-energy proton source inside a sensitive box so each
+        # primary deposits energy and leaves an observable first step.
+        isotropic_macro = temp / "source-isotropic-sampling.mac"
+        isotropic_macro.write_text(
+            "/AIHL/geometry/loadConfig config/geometry/hit_smoke_box.ini\n"
+            "/run/initialize\n/run/beamOn 64\n", encoding="utf-8",
+        )
+        for label, position_fields in (
+            ("point", "position_type = point\nposition = 0,0,0 mm"),
+            ("plane", "position_type = plane\ncenter = 0,0,0 mm\nradius = 0.05 mm"),
+        ):
+            assert main_text.count("position_type = point\nposition = 0,0,-1 mm") == 1
+            sampled_ini = temp / f"source-isotropic-sampling-{label}.ini"
+            sampled_text = main_text.replace(
+                "position_type = point\nposition = 0,0,-1 mm", position_fields,
+            ).replace("direction = 0,0,1", "isotropic = true")
+            sampled_text = sampled_text.replace("energy = 10 MeV", "energy = 1 MeV")
+            sampled_ini.write_text(sampled_text, encoding="utf-8")
+            sampled_output = temp / f"source-isotropic-sampling-{label}-output"
+            run(executable, ["--config", str(sampled_ini), "--macro", str(isotropic_macro),
+                             "--output", str(sampled_output), "--threads", "1"])
+            sampled_summary, _ = read_summary(sampled_output)
+            assert sampled_summary["status"] == "completed", sampled_summary
+            assert sampled_summary["actual_completed_event_count"] == "64", sampled_summary
+            with (sampled_output / "hits_t0.csv").open(newline="", encoding="utf-8") as stream:
+                sampled_primaries = {}
+                for hit in csv.DictReader(stream):
+                    if hit["trackID"] == "1" and hit["parentID"] == "0":
+                        sampled_primaries.setdefault(int(hit["eventID"]), hit)
+            assert set(sampled_primaries) == set(range(64)), (label, sampled_primaries.keys())
+            for component in ("px", "py", "pz"):
+                values = [float(hit[component]) for hit in sampled_primaries.values()]
+                assert min(values) < -0.2 and max(values) > 0.2, (label, component, values)
+            for hit in sampled_primaries.values():
+                norm2 = sum(float(hit[c]) ** 2 for c in ("px", "py", "pz"))
+                assert abs(norm2 - 1.0) < 1e-5, (label, hit)
 
         # An explicit isotropic=false must not silently inherit the isotropic
         # direction from a preset. The original program completed real events

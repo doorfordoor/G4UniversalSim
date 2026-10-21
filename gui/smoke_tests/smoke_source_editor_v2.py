@@ -69,7 +69,16 @@ def test_point_isotropic() -> None:
     source = SourceEditableModel(position_mode="point", source_shape="point", angular_mode="isotropic")
     validate_source_model(source)
     assert not source.errors, source.errors
-    assert "isotropic = true" in _ini(source)
+    text = _ini(source)
+    assert "isotropic = true" in text
+    assert "direction = " not in text
+
+    plane = SourceEditableModel(position_mode="plane", source_shape="circle", radius="2 mm",
+                                angular_mode="isotropic")
+    plane_text = _ini(plane)
+    assert "isotropic = true" in plane_text
+    assert "direction = " not in plane_text
+    assert "center = " in plane_text
 
 
 def test_source_nonfinite_is_blocked() -> None:

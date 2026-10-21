@@ -185,9 +185,21 @@ void SourceManager::LoadFromConfig(const ConfigManager& config)
     }
 
     const bool isotropic = config.GetBool("source", "isotropic", false);
+    // These combinations previously completed initialization while silently
+    // discarding an explicitly supplied source field.
+    if (isotropic && config.HasKey("source", "direction")) {
+        throw std::runtime_error(
+            "SourceManager [source]/isotropic=true conflicts with [source]/direction; "
+            "remove direction for isotropic emission or set isotropic=false.");
+    }
     if (config.HasKey("source", "position_type")) {
         const std::string type = StringUtils::ToLower(StringUtils::Trim(config.GetString("source", "position_type", "")));
         if (type == "point") {
+            if (config.HasKey("source", "center") || config.HasKey("source", "radius")) {
+                throw std::runtime_error(
+                    "SourceManager [source]/position_type=point conflicts with center/radius; "
+                    "remove plane-only fields or use position_type=plane.");
+            }
             if (!config.HasKey("source", "position") ||
                 StringUtils::Trim(config.GetString("source", "position", "")).empty()) {
                 throw std::runtime_error(
@@ -197,6 +209,11 @@ void SourceManager::LoadFromConfig(const ConfigManager& config)
             const auto pos = ReadVector3WithUnit(config, "source", "position");
             SetPointPosition(pos[0], pos[1], pos[2]);
         } else if (type == "plane") {
+            if (config.HasKey("source", "position")) {
+                throw std::runtime_error(
+                    "SourceManager [source]/position_type=plane conflicts with position; "
+                    "use center for the plane origin instead.");
+            }
             const double radius = config.HasKey("source", "radius")
                 ? UnitParser::ParseLength(config.GetString("source", "radius"))
                 : 1.0 * CLHEP::mm;
@@ -211,6 +228,10 @@ void SourceManager::LoadFromConfig(const ConfigManager& config)
                 "SourceManager unsupported [source]/position_type='" + type +
                 "'; supported values: point (requires position) or plane (radius/center).");
         }
+    } else if (config.HasKey("source", "center") || config.HasKey("source", "radius")) {
+        throw std::runtime_error(
+            "SourceManager [source]/center and radius require position_type=plane; "
+            "legacy point positions must use position.");
     } else if (config.HasKey("source", "position")) {
         const auto pos = ReadVector3WithUnit(config, "source", "position");
         SetPointPosition(pos[0], pos[1], pos[2]);

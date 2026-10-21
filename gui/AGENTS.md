@@ -1,5 +1,7 @@
 # G4UniversalSim GUI Agent 开发约束
 
+2026-10-21 Source isotropic 输出约束：`angular_mode=isotropic` 时，generated main.ini 只输出 `isotropic=true`，不输出模型中保留供 fixed 模式使用的 `direction` 字段；后端明确拒绝 `isotropic=true` 与显式 `direction` 冲突。点源写 `position`，圆形平面源写 `center`/`radius`；禁止混写两种位置字段。`smoke_source_editor_v2.py` 同时验证点源和平面源的 isotropic writer。
+
 2026-10-19 Source Editor 数值门禁：运行包中的 `energy`、`position`、`direction`、`radius` 不允许 `NaN`、`Inf` 和超出有限浮点范围的表示；validator 在生成前拒绝，后端 `UnitParser` 保留最终约束。由 `gui/smoke_tests/smoke_source_editor_v2.py` 覆盖。该门禁不表示全部单位和参数组合已完成 GUI 验证。
 
 2026-10-19 平面源位置映射：Source Editor 的 `Position` 在 `position_mode=plane` 时必须生成 `[source]/center`（三轴及单位），在 `point` 时生成 `[source]/position`；GUI 预览中心、writer 和 Geant4 GPS 实际采样必须一致。`gui/smoke_tests/smoke_source_editor_v2.py` 检查偏移 4 mm 的生成配置，`scripts/test_run_summary.py` 核对真实后端 hits。旧 `planeBeam` 命令保留零 x/y 的兼容语义，不能扩大为任意空间分布已验证。
