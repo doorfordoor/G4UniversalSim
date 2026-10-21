@@ -1,0 +1,19 @@
+# Normalize line endings: LF in the repository, native EOL in working trees.
+* text=auto
+
+# Scripts that must keep a specific EOL
+*.sh   text eol=lf
+*.bat  text eol=crlf
+*.cmd  text eol=crlf
+*.ps1  text eol=crlf
+*.sln  text eol=crlf
+
+# Binary files
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.pdf  binary
+*.root binary
+*.gdml text
