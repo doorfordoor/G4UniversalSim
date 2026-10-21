@@ -30,6 +30,9 @@ std::string GeneratedFileSchema(const std::string& path)
     if (name == "scoring_mesh.csv" || (name.rfind("scoring_mesh_r", 0) == 0 &&
                                        name.size() > 4 && name.compare(name.size() - 4, 4, ".csv") == 0))
         return "scoring_mesh_csv_v1";
+    if (name == "scorer_statistics.csv" || (name.rfind("scorer_statistics_r", 0) == 0 &&
+                                            name.size() > 4 && name.compare(name.size() - 4, 4, ".csv") == 0))
+        return "scorer_statistics_csv_v1";
     if (name.size() > 5 && name.compare(name.size() - 5, 5, ".root") == 0 &&
         name.rfind("g4usim", 0) == 0) return "g4usim_root_v" + std::to_string(AnalysisOutput::kRootSchemaVersion);
     std::ifstream input(path);
@@ -53,20 +56,33 @@ std::string GeneratedFileSchema(const std::string& path)
         if (header == "bin,low_edge,high_edge,center,count") return "histogram1d_csv_v2";
     }
     if (matches("edep_volume_summary") || matches("edep_particle_summary")) {
+        if (header == "name,raw_edep_MeV,weighted_edep_MeV,raw_edep_sum_sq_MeV2,weighted_edep_sum_sq_MeV2,"
+                      "n_events") return "edep_summary_csv_v4";
         if (header == "name,raw_edep_MeV,weighted_edep_MeV") return "edep_summary_csv_v3";
         if (header == "name,raw_edep,weighted_edep") return "edep_summary_csv_v2";
     }
     if (matches("dose_volume_summary")) {
         if (header == "runID,volume_path,volume_name,mass_kg,raw_edep_MeV,weighted_edep_MeV,"
                       "raw_dose_Gy,weighted_dose_Gy") return "dose_volume_csv_v1";
+        if (header == "runID,volume_path,volume_name,mass_kg,raw_edep_MeV,weighted_edep_MeV,"
+                      "raw_dose_Gy,weighted_dose_Gy,raw_edep_sum_sq_MeV2,weighted_edep_sum_sq_MeV2,"
+                      "n_events") return "dose_volume_csv_v2";
     }
     if (matches("let_volume_summary")) {
         if (header == "runID,volume_path,volume_name,particles,steps,sum_wl_mm,sum_wSl_MeV,"
                       "sum_wS2l_MeV2_per_mm,let_t_keV_per_um,let_d_keV_per_um") return "let_volume_csv_v1";
+        if (header == "runID,volume_path,volume_name,particles,steps,sum_wl_mm,sum_wSl_MeV,"
+                      "sum_wS2l_MeV2_per_mm,let_t_keV_per_um,let_d_keV_per_um,sum_sq_wl_mm2,"
+                      "sum_sq_wSl_MeV2,sum_sq_wS2l_MeV4_per_mm2,sum_wl_x_wSl_MeV_mm,"
+                      "sum_wSl_x_wS2l_MeV3_per_mm,n_events") return "let_volume_csv_v2";
     }
     if (matches("fluence_volume_summary")) {
         if (header == "runID,volume_path,volume_name,volume_mm3,raw_track_length_mm,"
                       "weighted_track_length_mm,raw_fluence_mm-2,weighted_fluence_mm-2") return "fluence_volume_csv_v1";
+        if (header == "runID,volume_path,volume_name,volume_mm3,raw_track_length_mm,"
+                      "weighted_track_length_mm,raw_fluence_mm-2,weighted_fluence_mm-2,"
+                      "raw_track_length_sum_sq_mm2,weighted_track_length_sum_sq_mm2,n_events")
+            return "fluence_volume_csv_v2";
     }
     return "unknown";
 }

@@ -71,21 +71,25 @@ void Book(G4AnalysisManager* manager, const AnalysisOutput::H1Binning& raw,
     NtupleBuilder(manager, AnalysisOutput::kEdepVolumeNtuple, "edep_volume",
                   "Energy deposition per volume (one row per worker; sum over threadID)")
         .I("runID").I("threadID").S("name").D("raw_edep_MeV").D("weighted_edep_MeV")
+        .D("raw_edep_sum_sq_MeV2").D("weighted_edep_sum_sq_MeV2").D("n_events")
         .Finish();
     NtupleBuilder(manager, AnalysisOutput::kEdepParticleNtuple, "edep_particle",
                   "Energy deposition per particle (one row per worker; sum over threadID)")
         .I("runID").I("threadID").S("name").D("raw_edep_MeV").D("weighted_edep_MeV")
+        .D("raw_edep_sum_sq_MeV2").D("weighted_edep_sum_sq_MeV2").D("n_events")
         .Finish();
     NtupleBuilder(manager, AnalysisOutput::kDoseNtuple, "dose",
                   "Dose per sensitive touchable (experimental; one row per worker)")
         .I("runID").I("threadID").S("volume_path").S("volume_name").D("mass_kg")
         .D("raw_edep_MeV").D("weighted_edep_MeV").D("raw_dose_Gy").D("weighted_dose_Gy")
+        .D("raw_edep_sum_sq_MeV2").D("weighted_edep_sum_sq_MeV2").D("n_events")
         .Finish();
     NtupleBuilder(manager, AnalysisOutput::kFluenceNtuple, "fluence",
                   "Track-length fluence per sensitive touchable (experimental; one row per worker)")
         .I("runID").I("threadID").S("volume_path").S("volume_name").D("volume_mm3")
         .D("raw_track_length_mm").D("weighted_track_length_mm")
         .D("raw_fluence_mm-2").D("weighted_fluence_mm-2")
+        .D("raw_track_length_sum_sq_mm2").D("weighted_track_length_sum_sq_mm2").D("n_events")
         .Finish();
     NtupleBuilder(manager, AnalysisOutput::kMeshNtuple, "mesh",
                   "Geant4 scoring-mesh cells (/score/), one row per worker; sum columns over threadID")
@@ -97,6 +101,8 @@ void Book(G4AnalysisManager* manager, const AnalysisOutput::H1Binning& raw,
         .I("runID").I("threadID").S("volume_path").S("volume_name").S("particles").D("steps")
         .D("sum_wl_mm").D("sum_wSl_MeV").D("sum_wS2l_MeV2_per_mm")
         .D("let_t_keV_per_um").D("let_d_keV_per_um")
+        .D("sum_sq_wl_mm2").D("sum_sq_wSl_MeV2").D("sum_sq_wS2l_MeV4_per_mm2")
+        .D("sum_wl_x_wSl_MeV_mm").D("sum_wSl_x_wS2l_MeV3_per_mm").D("n_events")
         .Finish();
 }
 
@@ -185,34 +191,40 @@ void FillEdepHistograms(bool fillRaw, double rawMeV, bool fillWeighted, double w
 }
 
 void FillEdepSummary(bool byVolume, int runId, int threadId, const std::string& name,
-                     double rawMeV, double weightedMeV)
+                     double rawMeV, double weightedMeV, double rawSumSqMeV2, double weightedSumSqMeV2,
+                     long long events)
 {
     if (!fileOpen) return;
     RowFiller(G4AnalysisManager::Instance(), byVolume ? kEdepVolumeNtuple : kEdepParticleNtuple)
         .I(runId).I(threadId).S(name).D(rawMeV).D(weightedMeV)
+        .D(rawSumSqMeV2).D(weightedSumSqMeV2).D(static_cast<double>(events))
         .Add();
 }
 
 void FillDose(int runId, int threadId, const std::string& volumePath, const std::string& volumeName,
               double massKg, double rawEdepMeV, double weightedEdepMeV,
-              double rawDoseGy, double weightedDoseGy)
+              double rawDoseGy, double weightedDoseGy, double rawEdepSumSqMeV2,
+              double weightedEdepSumSqMeV2, long long events)
 {
     if (!fileOpen) return;
     RowFiller(G4AnalysisManager::Instance(), kDoseNtuple)
         .I(runId).I(threadId).S(volumePath).S(volumeName).D(massKg)
         .D(rawEdepMeV).D(weightedEdepMeV).D(rawDoseGy).D(weightedDoseGy)
+        .D(rawEdepSumSqMeV2).D(weightedEdepSumSqMeV2).D(static_cast<double>(events))
         .Add();
 }
 
 void FillFluence(int runId, int threadId, const std::string& volumePath, const std::string& volumeName,
                  double volumeMm3, double rawTrackLengthMm, double weightedTrackLengthMm,
-                 double rawFluencePerMm2, double weightedFluencePerMm2)
+                 double rawFluencePerMm2, double weightedFluencePerMm2, double rawLengthSumSqMm2,
+                 double weightedLengthSumSqMm2, long long events)
 {
     if (!fileOpen) return;
     RowFiller(G4AnalysisManager::Instance(), kFluenceNtuple)
         .I(runId).I(threadId).S(volumePath).S(volumeName).D(volumeMm3)
         .D(rawTrackLengthMm).D(weightedTrackLengthMm)
         .D(rawFluencePerMm2).D(weightedFluencePerMm2)
+        .D(rawLengthSumSqMm2).D(weightedLengthSumSqMm2).D(static_cast<double>(events))
         .Add();
 }
 
@@ -229,12 +241,16 @@ void FillMeshCell(int runId, int threadId, const std::string& mesh, const std::s
 
 void FillLET(int runId, int threadId, const std::string& volumePath, const std::string& volumeName,
              const std::string& particles, long long steps, double sumWLmm, double sumWSlMeV,
-             double sumWS2lMeV2PerMm, double letTkeVPerUm, double letDkeVPerUm)
+             double sumWS2lMeV2PerMm, double letTkeVPerUm, double letDkeVPerUm,
+             double sumSqWLmm2, double sumSqWSlMeV2, double sumSqWS2l, double sumWLxWSl,
+             double sumWSlxWS2l, long long events)
 {
     if (!fileOpen) return;
     RowFiller(G4AnalysisManager::Instance(), kLetNtuple)
         .I(runId).I(threadId).S(volumePath).S(volumeName).S(particles).D(static_cast<double>(steps))
         .D(sumWLmm).D(sumWSlMeV).D(sumWS2lMeV2PerMm).D(letTkeVPerUm).D(letDkeVPerUm)
+        .D(sumSqWLmm2).D(sumSqWSlMeV2).D(sumSqWS2l).D(sumWLxWSl).D(sumWSlxWS2l)
+        .D(static_cast<double>(events))
         .Add();
 }
 

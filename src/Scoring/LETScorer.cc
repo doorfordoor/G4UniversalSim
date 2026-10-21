@@ -39,7 +39,28 @@ LETScorer::~LETScorer() = default;
 void LETScorer::BeginRun(int runID)
 {
     runID_ = runID;
+    events_ = 0;
+    touched_.clear();
     volumes_.clear();
+}
+
+void LETScorer::EndEvent(int)
+{
+    ++events_;
+    for (VolumeLET* v : touched_) {
+        v->sumWL += v->eventWL;
+        v->sumWSL += v->eventWSL;
+        v->sumWS2L += v->eventWS2L;
+        v->sumSqWL += v->eventWL * v->eventWL;
+        v->sumSqWSL += v->eventWSL * v->eventWSL;
+        v->sumSqWS2L += v->eventWS2L * v->eventWS2L;
+        v->sumWLxWSL += v->eventWL * v->eventWSL;
+        v->sumWSLxWS2L += v->eventWSL * v->eventWS2L;
+        ++v->entries;
+        v->eventWL = v->eventWSL = v->eventWS2L = 0.0;
+        v->pending = false;
+    }
+    touched_.clear();
 }
 
 void LETScorer::ScoreHit(const HitRecord& hit)
@@ -57,10 +78,14 @@ void LETScorer::ScoreHit(const HitRecord& hit)
     const double l = hit.stepLength / mm;
     auto& volume = volumes_[hit.doseVolumePath];
     if (volume.name.empty()) volume.name = hit.volumeName;
+    if (!volume.pending) {
+        volume.pending = true;
+        touched_.push_back(&volume);
+    }
     ++volume.steps;
-    volume.sumWL += hit.weight * l;
-    volume.sumWSL += hit.weight * s * l;
-    volume.sumWS2L += hit.weight * s * s * l;
+    volume.eventWL += hit.weight * l;
+    volume.eventWSL += hit.weight * s * l;
+    volume.eventWS2L += hit.weight * s * s * l;
 }
 
 void LETScorer::Write(OutputManager& output)
@@ -82,20 +107,47 @@ void LETScorer::Write(OutputManager& output)
         }
         rows.push_back({&item.first, &v, letT, letD});
     }
+    for (const Row& r : rows) {
+        const VolumeLET& v = *r.v;
+        HistoryStatistics::Entry letT;
+        letT.name = v.name;
+        letT.unit = "keV/um";
+        letT.ratio = true;
+        letT.entries = v.entries;
+        HistoryStatistics::Entry letD = letT;
+        letT.sum = v.sumWSL;
+        letT.sumSq = v.sumSqWSL;
+        letT.denSum = v.sumWL;
+        letT.denSumSq = v.sumSqWL;
+        letT.crossSum = v.sumWLxWSL;
+        letD.sum = v.sumWS2L;
+        letD.sumSq = v.sumSqWS2L;
+        letD.denSum = v.sumWSL;
+        letD.denSumSq = v.sumSqWSL;
+        letD.crossSum = v.sumWSLxWS2L;
+        HistoryStatistics::Submit(runID_, "let", "let_t", *r.path, letT);
+        HistoryStatistics::Submit(runID_, "let", "let_d", *r.path, letD);
+    }
     if (output.WritesRoot()) {
         for (const Row& r : rows) {
             AnalysisOutput::FillLET(runID_, output.GetThreadId(), *r.path, r.v->name, particles, r.v->steps,
-                                    r.v->sumWL, r.v->sumWSL, r.v->sumWS2L, r.letT, r.letD);
+                                    r.v->sumWL, r.v->sumWSL, r.v->sumWS2L, r.letT, r.letD,
+                                    r.v->sumSqWL, r.v->sumSqWSL, r.v->sumSqWS2L, r.v->sumWLxWSL,
+                                    r.v->sumWSLxWS2L, events_);
         }
     }
     if (!output.WritesCsv()) return;
     CsvWriter writer(output.MakeOutputPath(output.MakeThreadFilename("let_volume_summary.csv")));
     writer.WriteHeader({"runID", "volume_path", "volume_name", "particles", "steps", "sum_wl_mm",
-                        "sum_wSl_MeV", "sum_wS2l_MeV2_per_mm", "let_t_keV_per_um", "let_d_keV_per_um"});
+                        "sum_wSl_MeV", "sum_wS2l_MeV2_per_mm", "let_t_keV_per_um", "let_d_keV_per_um",
+                        "sum_sq_wl_mm2", "sum_sq_wSl_MeV2", "sum_sq_wS2l_MeV4_per_mm2",
+                        "sum_wl_x_wSl_MeV_mm", "sum_wSl_x_wS2l_MeV3_per_mm", "n_events"});
     for (const Row& r : rows) {
         writer.WriteRow({std::to_string(runID_), *r.path, r.v->name, particles, std::to_string(r.v->steps),
                          Number(r.v->sumWL), Number(r.v->sumWSL), Number(r.v->sumWS2L),
-                         Number(r.letT), Number(r.letD)});
+                         Number(r.letT), Number(r.letD), Number(r.v->sumSqWL), Number(r.v->sumSqWSL),
+                         Number(r.v->sumSqWS2L), Number(r.v->sumWLxWSL), Number(r.v->sumWSLxWS2L),
+                         std::to_string(events_)});
     }
     writer.Close();
     output.RegisterGeneratedFile(writer.GetFilename());
@@ -104,6 +156,8 @@ void LETScorer::Write(OutputManager& output)
 void LETScorer::Reset()
 {
     runID_ = -1;
+    events_ = 0;
+    touched_.clear();
     volumes_.clear();
 }
 

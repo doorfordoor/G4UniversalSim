@@ -1,5 +1,6 @@
 #pragma once
 
+#include "G4Timer.hh"
 #include "G4UserRunAction.hh"
 
 #include <memory>
@@ -49,4 +50,5 @@ private:
     BiasingManager* biasingManager_ = nullptr; // non-owning
     Role role_ = Role::Sequential;
     int verboseLevel_ = 0;
+    G4Timer runTimer_;  // master/sequential wall time of the current run (FOM)
 };

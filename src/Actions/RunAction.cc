@@ -9,6 +9,7 @@
 #include "Output/AnalysisOutput.hh"
 #include "Output/OutputManager.hh"
 #include "Output/RunSummary.hh"
+#include "Scoring/HistoryStatistics.hh"
 #include "Scoring/ScoringManager.hh"
 #include "Scoring/ThreadLocalScoringContext.hh"
 
@@ -61,6 +62,7 @@ void RunAction::BeginOfRunAction(const G4Run* run)
     if (verboseLevel_ > 0) {
         G4cout << "[RunAction] Begin run " << runID << G4endl;
     }
+    if (role_ != Role::Worker) runTimer_.Start();
 
     OutputManager* outputManager = ActiveOutputManager();
     ScoringManager* scoringManager = ActiveScoringManager();
@@ -189,6 +191,18 @@ void RunAction::EndOfRunAction(const G4Run* run)
                     outputManager->WriteScoringMeshesCsv(runID, run->GetNumberOfEvent());
                 });
             }
+        }
+        // Workers submitted their per-event statistics in WriteAll(); Geant4
+        // finishes every worker run before this master callback.
+        if (role_ != Role::Worker) {
+            runTimer_.Stop();
+            if (!outputManager->HasOutputFailure()) {
+                attempt("scorer_statistics_csv", [&]() {
+                    outputManager->WriteScorerStatisticsCsv(runID, run->GetNumberOfEvent(),
+                                                            runTimer_.GetRealElapsed());
+                });
+            }
+            HistoryStatistics::Take(runID);  // drop partial results of a failed run
         }
         // Always close an open ROOT file, even after a failure, so the master
         // can finish merging. Workers end before the master in Geant4 MT.

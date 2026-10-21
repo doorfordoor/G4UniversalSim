@@ -20,7 +20,9 @@ namespace AnalysisOutput {
 // Version of the ROOT object layout below. Bump on any column/object change.
 // v2: added the "mesh" ntuple (Geant4 command-based scoring meshes).
 // v3: added the "let" ntuple (track-/dose-averaged LET).
-constexpr int kRootSchemaVersion = 3;
+// v4: per-event sums of squares and n_events in edep_volume, edep_particle,
+//     dose, fluence and let (statistical uncertainty, roadmap A3).
+constexpr int kRootSchemaVersion = 4;
 
 enum NtupleId : int {
     kHitsNtuple = 0,
@@ -53,14 +55,19 @@ bool IsOpen();
 void FillHit(const HitRecord& record, int threadId);
 void FillEvent(const EventEdepRecord& record, int threadId);
 void FillEdepHistograms(bool fillRaw, double rawMeV, bool fillWeighted, double weightedMeV);
+// Summary rows are worker partial results: value, sum-of-squares (over events)
+// and n_events columns are additive over threadID.
 void FillEdepSummary(bool byVolume, int runId, int threadId, const std::string& name,
-                     double rawMeV, double weightedMeV);
+                     double rawMeV, double weightedMeV, double rawSumSqMeV2, double weightedSumSqMeV2,
+                     long long events);
 void FillDose(int runId, int threadId, const std::string& volumePath, const std::string& volumeName,
               double massKg, double rawEdepMeV, double weightedEdepMeV,
-              double rawDoseGy, double weightedDoseGy);
+              double rawDoseGy, double weightedDoseGy, double rawEdepSumSqMeV2,
+              double weightedEdepSumSqMeV2, long long events);
 void FillFluence(int runId, int threadId, const std::string& volumePath, const std::string& volumeName,
                  double volumeMm3, double rawTrackLengthMm, double weightedTrackLengthMm,
-                 double rawFluencePerMm2, double weightedFluencePerMm2);
+                 double rawFluencePerMm2, double weightedFluencePerMm2, double rawLengthSumSqMm2,
+                 double weightedLengthSumSqMm2, long long events);
 
 // One row per non-empty scoring-mesh cell per worker thread (worker partial
 // results; sum, sum_sq, entries and n_events are additive over threadID).
@@ -71,6 +78,8 @@ void FillMeshCell(int runId, int threadId, const std::string& mesh, const std::s
 // LET sums per sensitive touchable, one row per worker (sums additive over threadID).
 void FillLET(int runId, int threadId, const std::string& volumePath, const std::string& volumeName,
              const std::string& particles, long long steps, double sumWLmm, double sumWSlMeV,
-             double sumWS2lMeV2PerMm, double letTkeVPerUm, double letDkeVPerUm);
+             double sumWS2lMeV2PerMm, double letTkeVPerUm, double letDkeVPerUm,
+             double sumSqWLmm2, double sumSqWSlMeV2, double sumSqWS2l, double sumWLxWSl,
+             double sumWSlxWS2l, long long events);
 
 }  // namespace AnalysisOutput

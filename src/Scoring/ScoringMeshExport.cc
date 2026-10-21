@@ -1,6 +1,7 @@
 #include "Scoring/ScoringMeshExport.hh"
 
 #include "Output/RunSummary.hh"
+#include "Scoring/HistoryStatistics.hh"
 
 #include "G4ScoringManager.hh"
 #include "G4StatDouble.hh"
@@ -111,9 +112,7 @@ std::vector<Cell> CollectCells()
 
 double RelativeError(double sum, double sumSquares, long long events)
 {
-    if (events <= 0 || sum == 0.0) return 0.0;
-    const double value = sumSquares / (sum * sum) - 1.0 / static_cast<double>(events);
-    return value > 0.0 ? std::sqrt(value) : 0.0;
+    return HistoryStatistics::RelativeError(sum, sumSquares, events);
 }
 
 void RecordInSummary(RunSummary& summary)

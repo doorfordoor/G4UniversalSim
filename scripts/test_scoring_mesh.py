@@ -192,7 +192,7 @@ def main() -> int:
         assert metadata["scoring_mesh_depthMesh_shape"] == "box"
         assert metadata["scoring_mesh_depthMesh_bins"] == "1,1,20"
         assert metadata["scoring_mesh_tube_shape"] == "cylinder"
-        assert metadata["output_root_schema_version"] == "3"
+        assert metadata["output_root_schema_version"] == "4"
 
         for run_id, events_expected in ((0, 80), (1, 30)):
             suffix = "" if run_id == 0 else f"_r{run_id}"

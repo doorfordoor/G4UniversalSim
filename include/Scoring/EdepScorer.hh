@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Output/Histogram1D.hh"
+#include "Scoring/HistoryStatistics.hh"
 #include "Scoring/ScorerBase.hh"
 
 #include <map>
@@ -43,12 +44,16 @@ public:
     double GetRunWeightedEdep() const;
 
 private:
+    struct EdepTally {
+        HistoryTally raw;
+        HistoryTally weighted;
+    };
     static std::string SummaryKey(const std::string& value);
     static std::string ToString(double value);
     void WriteSummaryCsv(OutputManager& output,
                          const std::string& baseFilename,
-                         const std::map<std::string, double>& raw,
-                         const std::map<std::string, double>& weighted) const;
+                         const std::map<std::string, EdepTally>& tallies) const;
+    void SubmitStatistics(const std::string& scorer, const std::string& key, const EdepTally& tally) const;
 
     int currentRunID_ = -1;
     int currentEventID_ = -1;
@@ -58,6 +63,8 @@ private:
 
     double runRawEdep_ = 0.0;
     double runWeightedEdep_ = 0.0;
+    EdepTally runTotal_;  // per-event totals over all sensitive volumes
+    long long events_ = 0;
 
     bool rawHistogramEnabled_ = true;
     bool weightedHistogramEnabled_ = true;
@@ -67,8 +74,7 @@ private:
     Histogram1D rawEdepHist_;
     Histogram1D weightedEdepHist_;
 
-    std::map<std::string, double> volumeRawEdep_;
-    std::map<std::string, double> volumeWeightedEdep_;
-    std::map<std::string, double> particleRawEdep_;
-    std::map<std::string, double> particleWeightedEdep_;
+    std::map<std::string, EdepTally> volumeEdep_;
+    std::map<std::string, EdepTally> particleEdep_;
+    HistoryTallySet touched_;
 };

@@ -16,6 +16,8 @@ from pathlib import Path
 NAME = re.compile(r"fluence_volume_summary_t(?P<thread>\d+)(?:_r(?P<run>\d+))?\.csv$")
 COLUMNS = {"runID", "volume_path", "volume_name", "volume_mm3", "raw_track_length_mm",
            "weighted_track_length_mm", "raw_fluence_mm-2", "weighted_fluence_mm-2"}
+# Schema v2 (roadmap A3) appends per-event sum-of-squares columns; v1 files stay readable.
+COLUMNS_V2 = COLUMNS | {"raw_track_length_sum_sq_mm2", "weighted_track_length_sum_sq_mm2", "n_events"}
 
 
 @dataclass
@@ -55,7 +57,7 @@ def read_fluence_summaries(output_dir: str | Path) -> tuple[list[FluenceVolumeSu
             seen = set()
             with filename.open(newline="", encoding="utf-8-sig") as stream:
                 reader = csv.DictReader(stream)
-                if reader.fieldnames is None or set(reader.fieldnames) != COLUMNS:
+                if reader.fieldnames is None or set(reader.fieldnames) not in (COLUMNS, COLUMNS_V2):
                     raise ValueError("Unexpected CSV column schema")
                 for row in reader:
                     if int(row["runID"]) != run_id:

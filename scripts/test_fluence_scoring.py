@@ -18,7 +18,8 @@ ROOT = Path(__file__).resolve().parents[1]
 EXE = Path(os.environ.get("G4USIM_EXE", ROOT / "build_vs2026/Release/G4UniversalSim.exe"))
 NAME = re.compile(r"fluence_volume_summary_t(\d+)(?:_r(\d+))?\.csv$")
 HEADER = ["runID", "volume_path", "volume_name", "volume_mm3", "raw_track_length_mm",
-          "weighted_track_length_mm", "raw_fluence_mm-2", "weighted_fluence_mm-2"]
+          "weighted_track_length_mm", "raw_fluence_mm-2", "weighted_fluence_mm-2",
+          "raw_track_length_sum_sq_mm2", "weighted_track_length_sum_sq_mm2", "n_events"]
 
 
 def run(root: Path, name: str, config: str, macro: str, threads: int = 1, expected: int = 0) -> Path:
@@ -63,7 +64,7 @@ def check(output: Path, threads: int, runs: int) -> dict[tuple[int, int], dict]:
     assert {thread for _, thread in measurements} == set(range(threads))
     summary = (output / "run_summary.txt").read_text(encoding="utf-8")
     assert "status = completed" in summary, summary[-800:]
-    assert "fluence_volume_csv_v1" in summary, summary[-1200:]
+    assert "fluence_volume_csv_v2" in summary, summary[-1200:]
     for path in files:
         assert path.name in summary, (path, summary[-1200:])
     return measurements

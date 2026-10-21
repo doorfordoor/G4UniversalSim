@@ -4,9 +4,9 @@
 #include "Output/CsvWriter.hh"
 #include "Output/OutputManager.hh"
 #include "Utils/StringUtils.hh"
+#include "G4SystemOfUnits.hh"
 
 #include <iomanip>
-#include <set>
 #include <sstream>
 
 EdepScorer::EdepScorer(const std::string& name)
@@ -23,10 +23,11 @@ void EdepScorer::BeginRun(int runID)
     currentRunID_ = runID;
     runRawEdep_ = 0.0;
     runWeightedEdep_ = 0.0;
-    volumeRawEdep_.clear();
-    volumeWeightedEdep_.clear();
-    particleRawEdep_.clear();
-    particleWeightedEdep_.clear();
+    runTotal_ = EdepTally{};
+    events_ = 0;
+    touched_.Clear();
+    volumeEdep_.clear();
+    particleEdep_.clear();
     rawEdepHist_.Reset();
     weightedEdepHist_.Reset();
 }
@@ -46,6 +47,12 @@ void EdepScorer::EndEvent(int)
 {
     runRawEdep_ += currentEventRawEdep_;
     runWeightedEdep_ += currentEventWeightedEdep_;
+    runTotal_.raw.event = currentEventRawEdep_;
+    runTotal_.weighted.event = currentEventWeightedEdep_;
+    runTotal_.raw.Close();
+    runTotal_.weighted.Close();
+    touched_.EndEvent();
+    ++events_;
     if (rawHistogramEnabled_) rawEdepHist_.Fill(currentEventRawEdep_);
     if (weightedHistogramEnabled_) weightedEdepHist_.Fill(currentEventWeightedEdep_);
 }
@@ -60,13 +67,15 @@ void EdepScorer::ScoreHit(const HitRecord& hit)
 
     if (volumeSummaryEnabled_) {
         const std::string key = SummaryKey(hit.volumeName);
-        volumeRawEdep_[key] += raw;
-        volumeWeightedEdep_[key] += weighted;
+        EdepTally& tally = volumeEdep_[key];
+        touched_.Add(tally.raw, raw);
+        touched_.Add(tally.weighted, weighted);
     }
     if (particleSummaryEnabled_) {
         const std::string key = SummaryKey(hit.particleName);
-        particleRawEdep_[key] += raw;
-        particleWeightedEdep_[key] += weighted;
+        EdepTally& tally = particleEdep_[key];
+        touched_.Add(tally.raw, raw);
+        touched_.Add(tally.weighted, weighted);
     }
 }
 
@@ -80,11 +89,14 @@ void EdepScorer::Write(OutputManager& output)
         output.AddHistogram1D(weightedEdepHist_);
         output.WriteHistogram1D(weightedEdepHist_.GetName());
     }
+    SubmitStatistics("edep", "total", runTotal_);
     if (volumeSummaryEnabled_) {
-        WriteSummaryCsv(output, "edep_volume_summary.csv", volumeRawEdep_, volumeWeightedEdep_);
+        for (const auto& item : volumeEdep_) SubmitStatistics("edep_volume", item.first, item.second);
+        WriteSummaryCsv(output, "edep_volume_summary.csv", volumeEdep_);
     }
     if (particleSummaryEnabled_) {
-        WriteSummaryCsv(output, "edep_particle_summary.csv", particleRawEdep_, particleWeightedEdep_);
+        for (const auto& item : particleEdep_) SubmitStatistics("edep_particle", item.first, item.second);
+        WriteSummaryCsv(output, "edep_particle_summary.csv", particleEdep_);
     }
 }
 
@@ -96,10 +108,11 @@ void EdepScorer::Reset()
     currentEventWeightedEdep_ = 0.0;
     runRawEdep_ = 0.0;
     runWeightedEdep_ = 0.0;
-    volumeRawEdep_.clear();
-    volumeWeightedEdep_.clear();
-    particleRawEdep_.clear();
-    particleWeightedEdep_.clear();
+    runTotal_ = EdepTally{};
+    events_ = 0;
+    touched_.Clear();
+    volumeEdep_.clear();
+    particleEdep_.clear();
     rawEdepHist_.Reset();
     weightedEdepHist_.Reset();
 }
@@ -187,40 +200,44 @@ std::string EdepScorer::ToString(double value)
     return oss.str();
 }
 
+void EdepScorer::SubmitStatistics(const std::string& scorer, const std::string& key,
+                                  const EdepTally& tally) const
+{
+    for (const bool weighted : {false, true}) {
+        const HistoryTally& t = weighted ? tally.weighted : tally.raw;
+        HistoryStatistics::Entry entry;
+        entry.name = key;
+        entry.unit = "MeV";
+        entry.sum = t.sum / MeV;
+        entry.sumSq = t.sumSq / (MeV * MeV);
+        entry.entries = t.entries;
+        HistoryStatistics::Submit(currentRunID_, scorer, weighted ? "weighted_edep" : "raw_edep", key, entry);
+    }
+}
+
 void EdepScorer::WriteSummaryCsv(OutputManager& output,
                                  const std::string& baseFilename,
-                                 const std::map<std::string, double>& raw,
-                                 const std::map<std::string, double>& weighted) const
+                                 const std::map<std::string, EdepTally>& tallies) const
 {
+    const double mev2 = MeV * MeV;
     if (output.WritesRoot()) {
         const bool byVolume = baseFilename.rfind("edep_volume", 0) == 0;
-        std::set<std::string> rootKeys;
-        for (const auto& item : raw) rootKeys.insert(item.first);
-        for (const auto& item : weighted) rootKeys.insert(item.first);
-        for (const std::string& key : rootKeys) {
-            const auto rawIt = raw.find(key);
-            const auto weightedIt = weighted.find(key);
-            AnalysisOutput::FillEdepSummary(byVolume, currentRunID_, output.GetThreadId(), key,
-                                            rawIt == raw.end() ? 0.0 : rawIt->second,
-                                            weightedIt == weighted.end() ? 0.0 : weightedIt->second);
+        for (const auto& item : tallies) {
+            const EdepTally& t = item.second;
+            AnalysisOutput::FillEdepSummary(byVolume, currentRunID_, output.GetThreadId(), item.first,
+                                            t.raw.sum / MeV, t.weighted.sum / MeV,
+                                            t.raw.sumSq / mev2, t.weighted.sumSq / mev2, events_);
         }
     }
     if (!output.WritesCsv()) return;
     CsvWriter writer(output.MakeOutputPath(output.MakeThreadFilename(baseFilename)));
-    writer.WriteHeader({"name", "raw_edep_MeV", "weighted_edep_MeV"});
-
-    std::set<std::string> keys;
-    for (const auto& item : raw) keys.insert(item.first);
-    for (const auto& item : weighted) keys.insert(item.first);
-
-    for (const std::string& key : keys) {
-        const auto rawIt = raw.find(key);
-        const auto weightedIt = weighted.find(key);
-        writer.WriteRow({
-            key,
-            ToString(rawIt == raw.end() ? 0.0 : rawIt->second),
-            ToString(weightedIt == weighted.end() ? 0.0 : weightedIt->second)
-        });
+    writer.WriteHeader({"name", "raw_edep_MeV", "weighted_edep_MeV",
+                        "raw_edep_sum_sq_MeV2", "weighted_edep_sum_sq_MeV2", "n_events"});
+    for (const auto& item : tallies) {
+        const EdepTally& t = item.second;
+        writer.WriteRow({item.first, ToString(t.raw.sum / MeV), ToString(t.weighted.sum / MeV),
+                         ToString(t.raw.sumSq / mev2), ToString(t.weighted.sumSq / mev2),
+                         std::to_string(events_)});
     }
     writer.Close();
     output.RegisterGeneratedFile(writer.GetFilename());

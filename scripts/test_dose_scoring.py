@@ -19,7 +19,8 @@ EXE = Path(os.environ.get("G4USIM_EXE", ROOT / "build_vs2026/Release/G4Universal
 MEV_J = 1.602176634e-13
 DOSE_NAME = re.compile(r"dose_volume_summary_t\d+(?:_r\d+)?\.csv$")
 HEADER = ["runID", "volume_path", "volume_name", "mass_kg", "raw_edep_MeV",
-          "weighted_edep_MeV", "raw_dose_Gy", "weighted_dose_Gy"]
+          "weighted_edep_MeV", "raw_dose_Gy", "weighted_dose_Gy",
+          "raw_edep_sum_sq_MeV2", "weighted_edep_sum_sq_MeV2", "n_events"]
 
 
 def execute(root: Path, name: str, main_text: str, macro: str, threads: int = 1,
@@ -68,7 +69,7 @@ def check_output(output: Path, threads: int, runs: int) -> None:
     assert run_names == set(range(runs)), run_names
     summary = (output / "run_summary.txt").read_text(encoding="utf-8")
     assert "status = completed" in summary, summary[-1000:]
-    assert "dose_volume_summary" in summary and "dose_volume_csv_v1" in summary, summary[-1500:]
+    assert "dose_volume_summary" in summary and "dose_volume_csv_v2" in summary, summary[-1500:]
     for path in paths:
         assert path.name in summary, f"Missing output registration: {path}"
 

@@ -11,8 +11,8 @@ This file is the single source of truth for progress. Every work session updates
 | Repo cleanup | Done | `f90e1da` |
 | A1 ROOT output layer (G4AnalysisManager) | Done | `889b618` |
 | A2 Native Geant4 scoring + LET | Done | see log |
-| A3 Statistical uncertainty | Next (meshes already carry sum_sq / rel_error) | |
-| A4 Full GPS sources | Not started | |
+| A3 Statistical uncertainty | Done | see log |
+| A4 Full GPS sources | Next | |
 | A5 Geometry (GDML, replica/parameterised, solids, true preview) | Not started | |
 | A6 Physics (EM options, radioactive decay, region cuts/limits) | Not started | |
 | A7 Fields | Not started | |
@@ -28,7 +28,7 @@ Geant4's analysis category (`G4AnalysisManager`) is the single output layer. ROO
 
 1. **Output layer on G4AnalysisManager — done.** `[output] format = csv|root|both`; one merged `g4usim[_rR].root` per run (schema `g4usim_root_v1`); `run_metadata.json`. Follow-ups: switch default to `root` once the GUI reads ROOT; add git commit and config hash to metadata.
 2. **Scoring on native Geant4 scorers — done.** `/score/` meshes from macro or INI (`[scoring.mesh.*]`), exported to ROOT `mesh` / `scoring_mesh.csv` with sum, sum_sq, entries, rel_error; dose/fluence prototypes validated against native scorers; LET_t/LET_d (`[scoring] let = true`) validated against Bethe. Follow-ups: real-volume primitive scorers (G4MultiFunctionalDetector on logical volumes), heavy-ion LET benchmark, GUI editors. Original scope: `/score/` box/cylinder meshes written to the ROOT file; `G4MultiFunctionalDetector` primitive scorers (energyDeposit, doseDeposit, cellFlux, passageCellCurrent, nOfSecondary) with particle and energy filters, configurable from INI/macro; validate the existing dose/fluence prototypes against them; add LET (track- and dose-averaged).
-3. **Statistical uncertainty everywhere.** Per-scorer mean, variance (sum of squares per event), relative error and figure of merit in outputs.
+3. **Statistical uncertainty everywhere — done.** Edep/dose/fluence/LET accumulate per-event sum and sum of squares; master-merged `scorer_statistics[_rR].csv` (all formats) with mean, std error, rel error and FOM; LET ratio errors by the delta method; additive columns in per-thread CSVs and ROOT (`g4usim_root_v4`). Follow-ups: show error bars in the GUI results pages, validate weighted (biased) runs, batch-statistics option for heavy-tailed LET_d.
 4. **Full GPS sources.** Energy spectra from file, multiple weighted sources, beam profiles, cosine-law/focused angular distributions, confined volume sources, radioactive-decay sources, phase-space file read/write.
 5. **Geometry.** Real GDML import/export (`G4GDMLParser`, detect XercesC); replica and parameterised placement; unified SolidRegistry with additional solids; CAD via tessellated solids; backend geometry export so the GUI 3D preview shows the true geometry.
 6. **Physics.** EM option presets (opt4, Livermore, Penelope); radioactive decay; per-region production cuts and step limits (finish the region-cut implementation); active-process dump.
@@ -75,3 +75,4 @@ One-click Windows installer (backend + GUI + examples) after Phases A–C are mo
 - 2026-10-21: Repo cleanup pushed (`f90e1da`).
 - 2026-10-22: A1 ROOT output done (`889b618`): ROOT identical to CSV for 1/2/4 threads and repeated runs; suite 40/40 PASS.
 - 2026-10-22: A2 done: scoring meshes (macro + INI) with ROOT/CSV export and uncertainties; native doseDeposit/cellFlux agree with DoseScorer/FluenceScorer to <1e-9; LET_t within 0.6 % (100 MeV) / 1.4 % (10 MeV) of Bethe for protons in water.
+- 2026-10-22: A3 done: per-event uncertainties for edep/dose/fluence/LET; agree with raw-hit recomputation (1e-9) and with the observed spread of 20 independent runs (ratio 1.04–1.25).

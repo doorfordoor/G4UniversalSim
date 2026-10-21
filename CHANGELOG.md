@@ -7,6 +7,15 @@ Short, user-facing record of notable changes. Detailed support status lives in
 ## Unreleased
 
 ### Added
+- **Statistical uncertainty for every built-in scorer** (roadmap A3): Edep (event total,
+  per volume, per particle), Dose, Fluence and LET now accumulate per-event sums of
+  squares. The master writes the merged `scorer_statistics[_rR].csv` (any output format)
+  with value, mean per event, standard error, relative error and figure of merit; LET_t /
+  LET_d use delta-method errors for ratios. Per-thread CSVs and ROOT ntuples gain additive
+  `*_sum_sq*` and `n_events` columns (ROOT schema `g4usim_root_v4`; dose/fluence/LET CSV v2,
+  edep summary CSV v4); `scripts/g4usim_io.py` adds `load_scorer_statistics()`.
+  `scripts/test_statistical_uncertainty.py` checks against raw hits and against the
+  observed spread of 20 independent runs.
 - **Geant4 scoring meshes** (roadmap A2): native `/score/` box and cylinder meshes with
   all primitive scorers and particle/energy filters, from macros or INI
   (`[scoring.mesh.<mesh>]`, `[scoring.mesh.<mesh>.<quantity>]`). Results per run in the

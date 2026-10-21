@@ -18,6 +18,8 @@ MEV_IN_JOULES = 1.602176634e-13
 NAME = re.compile(r"dose_volume_summary_t(?P<thread>\d+)(?:_r(?P<run>\d+))?\.csv$")
 COLUMNS = {"runID", "volume_path", "volume_name", "mass_kg", "raw_edep_MeV",
            "weighted_edep_MeV", "raw_dose_Gy", "weighted_dose_Gy"}
+# Schema v2 (roadmap A3) appends per-event sum-of-squares columns; v1 files stay readable.
+COLUMNS_V2 = COLUMNS | {"raw_edep_sum_sq_MeV2", "weighted_edep_sum_sq_MeV2", "n_events"}
 
 
 @dataclass
@@ -55,7 +57,7 @@ def read_dose_summaries(output_dir: str | Path) -> tuple[list[DoseVolumeSummary]
         try:
             with filename.open(newline="", encoding="utf-8-sig") as stream:
                 reader = csv.DictReader(stream)
-                if reader.fieldnames is None or set(reader.fieldnames) != COLUMNS:
+                if reader.fieldnames is None or set(reader.fieldnames) not in (COLUMNS, COLUMNS_V2):
                     raise ValueError("Unexpected CSV column schema")
                 file_keys: set[tuple[int, str]] = set()
                 pending: list[tuple[tuple[int, str], str, float, float, float]] = []

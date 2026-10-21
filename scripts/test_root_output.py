@@ -108,11 +108,11 @@ def main() -> int:
         metadata = json.loads((output / "run_metadata.json").read_text(encoding="utf-8"))
         assert metadata["schema"] == "run_metadata_json_v1"
         assert metadata["values"]["output_format"] == "both"
-        assert metadata["values"]["output_root_schema_version"] == "3"
+        assert metadata["values"]["output_root_schema_version"] == "4"
         assert [r["completed_events"] for r in metadata["runs"]] == [60, 20], metadata["runs"]
         schemas = {Path(f["path"]).name: f["schema"] for f in metadata["generated_files"]}
-        assert schemas.get("g4usim.root") == "g4usim_root_v3", schemas
-        assert schemas.get("g4usim_r1.root") == "g4usim_root_v3", schemas
+        assert schemas.get("g4usim.root") == "g4usim_root_v4", schemas
+        assert schemas.get("g4usim_r1.root") == "g4usim_root_v4", schemas
 
         # 2. root only: no CSV data files.
         output, _ = run(work, "root_only", "format = root", "/run/initialize\n/run/beamOn 30\n")

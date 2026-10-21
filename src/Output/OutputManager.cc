@@ -1,10 +1,12 @@
 #include "Output/OutputManager.hh"
 
 #include "Output/AnalysisOutput.hh"
+#include "Scoring/HistoryStatistics.hh"
 #include "Scoring/ScoringMeshExport.hh"
 #include "Utils/FileUtils.hh"
 #include "Utils/StringUtils.hh"
 
+#include <cmath>
 #include <iomanip>
 #include <algorithm>
 #include <cstdlib>
@@ -197,6 +199,45 @@ void OutputManager::WriteScoringMeshesCsv(int runId, long long events)
                          std::to_string(c.i1), std::to_string(c.i2), ToString(c.sum), ToString(c.sumSquares),
                          std::to_string(c.entries), std::to_string(events),
                          ToString(ScoringMeshExport::RelativeError(c.sum, c.sumSquares, events))});
+    }
+    writer.Close();
+    RegisterGeneratedFile(filename);
+}
+
+void OutputManager::WriteScorerStatisticsCsv(int runId, long long events, double wallSeconds)
+{
+    const auto entries = HistoryStatistics::Take(runId);
+    if (entries.empty()) return;
+    Initialize();
+    const std::string filename = MakeOutputPath(
+        runId > 0 ? "scorer_statistics_r" + std::to_string(runId) + ".csv" : "scorer_statistics.csv");
+    CsvWriter writer(filename);
+    writer.WriteHeader({"runID", "scorer", "quantity", "key", "name", "unit", "estimator", "n_events",
+                        "entries", "value", "mean_per_event", "std_error", "rel_error", "fom_per_s",
+                        "run_wall_time_s", "sum", "sum_sq"});
+    for (const auto& item : entries) {
+        const auto& [scorer, quantity, key] = item.first;
+        const HistoryStatistics::Entry& e = item.second;
+        double value = 0.0;
+        double relError = 0.0;
+        std::string mean;
+        std::string sum;
+        std::string sumSq;
+        if (e.ratio) {
+            value = e.denSum != 0.0 ? e.sum / e.denSum : 0.0;
+            relError = HistoryStatistics::RatioRelativeError(e.sum, e.sumSq, e.denSum, e.denSumSq, e.crossSum);
+        } else {
+            value = e.sum;
+            relError = HistoryStatistics::RelativeError(e.sum, e.sumSq, events);
+            mean = ToString(events > 0 ? e.sum / static_cast<double>(events) : 0.0);
+            sum = ToString(e.sum);
+            sumSq = ToString(e.sumSq);
+        }
+        writer.WriteRow({std::to_string(runId), scorer, quantity, key, e.name, e.unit,
+                         e.ratio ? "ratio" : "total", std::to_string(events), std::to_string(e.entries),
+                         ToString(value), mean, ToString(relError * std::abs(value)), ToString(relError),
+                         ToString(HistoryStatistics::FigureOfMerit(relError, wallSeconds)),
+                         ToString(wallSeconds), sum, sumSq});
     }
     writer.Close();
     RegisterGeneratedFile(filename);

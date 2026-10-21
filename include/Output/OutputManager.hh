@@ -56,6 +56,10 @@ public:
     void WriteScoringMeshesCsv(int runId, long long events);
     // Worker/sequential: this thread's partial mesh results to the ROOT "mesh" ntuple.
     void FillScoringMeshesRoot(int runId, long long threadEvents);
+    // Master/sequential: merged per-event statistics of the built-in scorers
+    // (edep, dose, fluence, LET) to scorer_statistics[_rR].csv, for every output
+    // format. events = events of the run, wallSeconds = run wall time (for FOM).
+    void WriteScorerStatisticsCsv(int runId, long long events, double wallSeconds);
 
     void EnableThreadSuffix(bool enable);
     bool IsThreadSuffixEnabled() const;
