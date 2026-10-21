@@ -1,5 +1,11 @@
 # G4UniversalSim Agent 开发约束
 
+2026-10-21 M5 输出后处理原型：`scripts/output_extension_registry.py` 的 API v1 只允许显式加载可信 Python 模块；`scripts/run_output_extension.py` 独占发布 JSON，内置 `dose_json` 读取并按 run/touchable 合并实验性 Dose worker CSV。`scripts/test_output_extensions.py` 覆盖接口与失败路径，`scripts/test_dose_scoring.py` 对真实 Geant4 双线程双 run 原始 CSV 和 JSON 做独立对账。无需宣称插件沙箱、C++ scorer 动态注册、任意输出转换或独立物理 benchmark 已完成；接口与限制见 `docs/输出扩展原型说明.md`，统一平台含 `output_extensions` 静态用例。
+
+2026-10-21 M1 矩形平面源原型：`[source]/position_type=plane` + `shape=rectangle` + `center` + 正 `halfx/halfy` 已传递至 GPS `Plane/Rectangle`；矩形固定于 XY 平面，可用既有 fixed/isotropic 角分布。GUI generated 可写出受支持子集并拒绝 square/annulus、负半宽、字段混写；`scripts/test_run_summary.py` 在敏感硅体真实运行 128 事件验证初级粒子命中位置范围和正向束流、非法源参数前置失败。首条 sensitive hit 是输运后的步进，不能将其位置或动量当作精确 GPS 顶点。尚未独立验证源采样均匀性、旋转矩形与其他高级形状；原型不构成 M0/M1 总验收。
+
+2026-10-21 开发策略改为 M0–M5 跨阶段功能切片，不以 M0 全部完成为其他阶段原型开发的前提。首条真实端到端功能是实验性敏感 physical touchable Dose：以 hit Edep 和 `GetMass(true,true)` 算 Gy、每 worker/run 独立 CSV、GUI 仅以沉积求和后除单份质量，必须提示无通量/时间归一化与独立物理 benchmark。后端专项 `scripts/test_dose_scoring.py`，GUI 专项 `gui/smoke_tests/smoke_dose_results.py`。完整物理验收及 M0 未完成项仍须分别追踪。
+
 2026-10-21 M0 源字段冲突失败边界：`[source]/isotropic=true` 与显式 `direction` 同时出现时在配置阶段失败；`position_type=point` 不得同时配置 plane 专有的 `center`/`radius`，`position_type=plane` 不得同时配置 point 专有的 `position`；省略 `position_type` 时 `center`/`radius` 不允许静默丢弃。原 `plane` 的 center/radius 兼容默认值和无类型的旧 `position` 点源继续可用。GUI 的 isotropic writer 不得写 `direction`；真实负向与兼容回归见 `scripts/test_run_summary.py`，GUI 见 `smoke_source_editor_v2.py`。此外点源/平面源 isotropic 使用置于敏感硅体内的 1 MeV 质子各完成 64 事件，hits 初级方向各分量均观察到正负方向且模长为 1；这仅验证 GPS 实际采样存在方向变化，不证明统计均匀性。其他 Source/GPS 组合仍属 M0 缺口。
 
 2026-10-21 M0 源配置显式空值：`SourceManager::LoadFromConfig()` 对显式存在但为空白的 `[source]/preset`、`particle`、`energy` 在配置阶段报错；字段完全缺失仍允许沿用默认值或 preset。先前 `energy =` 在真实 Windows Release `--inspect-run` 中被静默视为已消费并返回成功。负向回归见 `scripts/test_run_summary.py`，GUI 原有 `validate_source_model()` 对三字段已有空值拦截。此修复只闭合三个字段的失败边界，不代表全源 schema 或 GPS 实际状态已全部验收。
@@ -58,7 +64,7 @@ M0 输出目录生命周期：`/AIHL/output/setDir`、`/AIHL/output/setThreadSuf
 - macro 执行前必须运行静态递归 preflight：检查 `/control/execute` 引入的文件，顶层相对路径按进程工作目录解析，嵌套相对路径只能按发出命令的 macro 文件目录解析。预检生成的规范化命令序列必须直接用于实际执行；拒绝已知 CLI 冲突的项目命令、`/run/numberOfThreads`、`/random/...`，以及无法可靠分析的 `/control/alias`、`/control/loop`、`/control/foreach`。不得声称能够保护任意动态 Geant4 命令；未覆盖命令必须记录为风险或明确不支持。
 - `/AIHL/app/setMainConfig` 只能用于 `Configure()` 以前的入口，批处理 macro 已在配置后，必须在 preflight 阶段拒绝切换主 INI；直接调用 `SimulationManager::SetMainConfig()` 在已配置/初始化状态也必须拒绝，避免破坏来源快照与 Manager 一致性。更换主配置须新进程指定 `--config`。
 - 配置字段、Geant4 命令、输出列名和项目 JSON 字段属于接口。删除、改名或改变默认值时，必须给出迁移策略和兼容性说明。
-- M0-3A 对尚未完整支持的能力采用统一 fail-fast：`placement=replica|parameterised|assembly`、GDML、材料 `temperature`/`pressure`、`[physics.region.*]`、LET/Dose/Fluence 开启均必须在 Geant4 对象创建或运行前拒绝；替代方案必须出现在错误消息中。对应字段为 false 或缺失时保持兼容。
+- M0-3A 对尚未支持的能力采用统一 fail-fast：`placement=replica|parameterised|assembly`、GDML、材料 `temperature`/`pressure`、`[physics.region.*]`、LET 开启均必须在 Geant4 对象创建或运行前拒绝；替代方案必须出现在错误消息中。Dose 和 Fluence 例外仅为已实现的实验性敏感体计分（需默认 scorer），Fluence 限无 daughter 的 solid 与 track-length 定义，不能推断其他剂量或注量能力已支持。
 - M0-3B1 对主配置文件建立字段消费追踪：`IniReader` 保留文件、section、key、原始值和行号；成功 getter 标记字段已消费，`ConfigManager` 在各 Manager 完成配置后稳定输出 `[ConfigWarning]` 未消费字段和未知 section，并写入 `run_summary.txt`。该机制只警告、不改变运行结果；材料文件和几何文件仍由各自解析器独立处理。
 - M0-3B2A 对材料独立配置文件使用闭合 schema：隐式 `global`、未知 section、空的动态 section 后缀和未知 key 必须在 Geant4 对象创建前失败，并报告 file、line、section、key、value；`temperature`/`pressure` 继续使用专用的 M0-3A 错误和替代建议。旧 GUI run package 在 `[material.<name>]` 中生成的 `type = material` 是已弃用兼容字段，只可取该值且不得影响 `MaterialDefinition`；新 writer 不再生成。该 schema 不适用于几何独立配置文件，也不实现新的材料能力。
 - 输出必须说明文件生成条件、线程后缀、单位/量纲、合并方式和未生成文件的正常原因。没有物理定义或数据契约的 scorer 不得输出看似有效的结果。

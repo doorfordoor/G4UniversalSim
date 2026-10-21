@@ -1,5 +1,7 @@
 # G4UniversalSim Agent 维护说明
 
+2026-10-21 M5 Python 后处理扩展：`scripts/output_extension_registry.py`（API v1 注册/装载）、`scripts/run_output_extension.py`（CLI/独占写出）、`scripts/extensions/dose_json_extension.py`（借用 `gui/g4usim_gui/output/dose_summary.py` 聚合）。`scripts/test_output_extensions.py` 为受控数据专项，`scripts/test_dose_scoring.py` 执行真实 Geant4 worker CSV → JSON 的双 run 核对；统一入口添加 `output_extensions`。加载 `.py` 即执行任意 Python 代码，当前只允许显式可信来源，无沙箱、无内核 C++ 扩展。人类文档见 `docs/输出扩展原型说明.md`。
+
 整理日期：2026-07-11。本文件面向 Codex 这类代码 Agent，用于后续修改时快速找到事实来源。普通用户请优先读 `docs/中文使用手册.md`、`docs/中文几何配置说明.md` 和 `gui/docs/中文快速使用说明.md`。
 
 ## 1. 当前文档结构
@@ -52,9 +54,9 @@
 - 多线程输出由 worker 写 `_tN` 文件，后端不自动合并。GUI 只是调用合并工具。
 - M0-4 工作区候选：`scripts/merge_outputs.py` 是同表头 CSV 的稳定顺序拼接，不做事件聚合；先校验再发布，拒绝已有目标，失败不留半成品。`tools/mergeHistograms.cc` 读取后端带 `_MeV` 的五列及旧五列/三列，只有全部输入为 v3 时输出边界列带 `_MeV`；用私有临时文件及硬链接发布，拒绝覆盖已有目标。`scripts/plot_hist.py` 识别新旧原始与合并文件。测试入口为 `python -B scripts/test_merge_outputs.py` 和 `python -B scripts/test_merge_histograms.py --executable <新编译的 mergeHistograms>`。完整后端故障注入和 MT 统计未验收。
 - M0-4 工作区 CSV 契约 v3：`OutputManager::SetRunId` 在每次 run 开始时切换文件，首轮沿用 `_tN`，后续使用 `_tN_rR`；hits/event 首列 `runID`，已验证的能量/长度列在 header 标 `_MeV`/`_mm`，不再写出旧 hits 的 LET 零值占位。Edep 直方图与分类汇总按 run 独立。关闭总计分时 `ScoringManager` 不写全零 event CSV。摘要写 `run_summary_schema_version=1`、`output_csv_schema_version=3` 和按实际表头区分 v2/v3/`unknown` 的逐文件结构标识；已知原生路径写出前转 UTF-8，Windows 中文 config/macro/output 路径由 `scripts/test_run_summary.py` 真实验证。能力清单同步；迁移说明见 `docs/输出数据契约.md`。通用直方图单位、自由文本编码、真实设备故障与物理基准尚缺。
-- LET、Dose、Fluence 当前未支持；开启时 fail-fast，不能依赖 scorer 注册或空输出表示支持。
+- LET 仍不支持并 fail-fast；Dose 和 Track-Length Fluence 仅在受限敏感 physical touchable、默认 scorer 自动创建条件下支持实验性 Gy/mm^-2 CSV，Fluence 要求无 daughter 的敏感 solid。两者均缺独立物理 benchmark，不能依赖 scorer 注册或空输出表示已完成计分。
 - process-level XS biasing 是推荐路径。旧 `[biasing.xs]` 和部分 `/AIHL/biasing/xs/...` 命令仍兼容但会提示 legacy。
-- GUI 的 source rectangle、annulus、cone、cosine、focused 等模式属于预览或实验，当前 main.ini writer 会阻止不被后端支持的模式生成。
+- GUI 的 source rectangle 已允许生成 XY 平面 `shape=rectangle`、`center`、`halfx`、`halfy` 的实验性子集；annulus、cone、cosine、focused 仍会阻止生成。矩形方向与平面旋转是不同概念，目前不支持旋转平面。
 - GUI 项目 JSON schema 在 HEAD `018345c` 中为 version 5；当前 C0A 工作区为 version 6，新增 `runInputMode=generated|external`，尚未提交。缺少该字段的旧项目按 config/macro 是否存在迁移，专项入口为 `gui/smoke_tests/smoke_run_input_modes.py`；设置 `G4USIM_EXE` 时还验证真实 QProcess 运行和实际事件数。
 - 2026-10-03 审计发现 `gui/g4usim_gui/output/` 和部分 boolean fixture 尚未跟踪且被用户 staged `.gitignore` 忽略。本机 smoke 通过不能作为全新检出证据；独立审查所需源文件，不得修改保护 index blob。阶段现场以 `docs/开发审计与阶段目标.md` 为准，旧交接快照不自动更新。
 - GUI 生成包不会覆盖原始 `materials.ini` 或 `geometry.ini`，只写入 run package。
@@ -99,7 +101,7 @@ M0-3A 回归入口：
 python scripts/test_unsupported_features.py
 ```
 
-M0-3A 只增加误导防护，不实现新 Geant4 能力。`placement=replica|parameterised|assembly`、GDML、材料 `temperature`/`pressure`、`[physics.region.*]` 和 LET/Dose/Fluence 开启会在构建或运行前 fail-fast；错误消息必须包含能力名称和替代方案。false 或缺失字段保持兼容，GUI validator 对同类配置返回 `can_run = false`。
+M0-3A 最初只增加误导防护。`placement=replica|parameterised|assembly`、GDML、材料 `temperature`/`pressure`、`[physics.region.*]` 和 LET 开启仍会在构建或运行前 fail-fast；错误消息必须包含能力名称和替代方案。Dose 与 Fluence 后续已有受限敏感体实验性实现，均需默认 scorer；Fluence 只对没有 daughter 的敏感 solid 定义 track-length/volume。false 或缺失字段保持兼容，GUI validator 对尚未支持的配置仍返回 `can_run = false`。
 
 ### 3.3 M0-3B1 主配置字段消费追踪
 

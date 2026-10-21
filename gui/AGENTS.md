@@ -1,5 +1,13 @@
 # G4UniversalSim GUI Agent 开发约束
 
+2026-10-21 M3/M5 Results JSON 导出原型：`widgets/output_page.py` 通过 `output/extension_runner.py` 的 `QProcess` 运行正式 Python CLI `dose_json`/`fluence_json`；只在存在模拟输出目录且目标为尚不存在的 JSON 文件时允许启动，重复启动拒绝，支持取消、启动/退出失败报告与页面关闭时子进程清理。GUI 对 schema、version、extension ID/version、data、warnings 和无效 JSON 常量执行读取校验，刷新文件列表；`smoke_output_extensions_gui.py` 覆盖真实 Qt 子进程和错误路径。导出成功只说明发现的 CSV 被后处理，必须提示检查上游 run_summary、worker 文件完整性及独立物理 benchmark，不能提升实验性 Dose/Fluence 的支持等级。
+
+2026-10-21 Rectangle Source GUI 原型：`source_shape=rectangle` 在 generated 模式仅开放 XY 平面、`center`、有限正 `halfx/halfy`，按 `shape=rectangle` 写出且不混入 `radius`；fixed/isotropic 两种角分布遵循方向字段互斥；square、annulus、其他高级分布继续阻止运行包。`gui/smoke_tests/smoke_source_editor_v2.py` 检查生成及非法输入；C++ 真实采样专项见 `scripts/test_run_summary.py`。普通预览不代表源平面任意旋转受支持。
+
+2026-10-21 Dose GUI 原型已开放：`ScoringSettings` 与 `ScoringEditableModel` 双向保留 `dose`（默认 false），writer 只在选择时写 `dose=true`，且必须依赖默认 scorer 自动创建；Results / Dose (Gy) 使用 `read_dose_summaries()` 合并已发现的 worker 数据，质量不能跨线程累加，缺失/损坏文件需提示。GUI smoke 入口 `gui/smoke_tests/smoke_dose_results.py`；尚未独立物理标定，文案必须标明实验性。
+
+2026-10-21 Fluence GUI 实验性原型：`fluence` 默认 false，配置模型、生成包 writer 与 Results / Fluence (mm^-2) 已接通。GUI 按 `(runID, physical touchable path)` 聚合已发现的 worker CSV，只累加 raw/weighted track length、每体积只取一次并重新计算 mm^-2；拒绝 schema、非有限值、坏文件及 worker 体积冲突，缺失 worker 只能提示风险。专项 `gui/smoke_tests/smoke_fluence_results.py`；零 Edep Geantino 和 ST/MT 双 run 真实验证见 `scripts/test_fluence_scoring.py`。仅适用于 daughter-free sensitive solid，不能宣称 surface fluence 或独立物理基准已通过。
+
 2026-10-21 Source isotropic 输出约束：`angular_mode=isotropic` 时，generated main.ini 只输出 `isotropic=true`，不输出模型中保留供 fixed 模式使用的 `direction` 字段；后端明确拒绝 `isotropic=true` 与显式 `direction` 冲突。点源写 `position`，圆形平面源写 `center`/`radius`；禁止混写两种位置字段。`smoke_source_editor_v2.py` 同时验证点源和平面源的 isotropic writer。
 
 2026-10-19 Source Editor 数值门禁：运行包中的 `energy`、`position`、`direction`、`radius` 不允许 `NaN`、`Inf` 和超出有限浮点范围的表示；validator 在生成前拒绝，后端 `UnitParser` 保留最终约束。由 `gui/smoke_tests/smoke_source_editor_v2.py` 覆盖。该门禁不表示全部单位和参数组合已完成 GUI 验证。
@@ -22,7 +30,7 @@
 - 后端未实现的功能不得出现在“可运行/已支持”列表中。若需要保留设计入口，必须同时显示“预览”“实验”或“不可用”，在 validator 中阻止生成可运行配置，并在 validation report 中说明原因。
 - 解析到但后端会忽略、空实现、占位模板或只用于预览的字段，不得被 writer 静默写出并宣称生效。未知字段要么原样保留并标记未编辑，要么明确提示会被丢弃后再由用户确认。
 - 当前 GUI 可生成的后端子集以 writers/main_ini_writer.py、writers/geometry_ini_writer.py 和 editors/source_physics_scoring_model.py 的真实逻辑为准；不要只根据 combobox 的选项扩展支持矩阵。
-- `trd` 普通 hierarchical 体积已在 B3 工作区候选中通过五参数表格编辑、writer 往返、GUI package 和真实后端测试；boolean tool 的 `trd` 及 `trap`、GDML、STL、高级 GPS 分布、手动物理模块、biasing 规则、LET/Dose/Fluence 等能力仍须等待各自后端和测试闭环后再开放生成。
+- `trd` 普通 hierarchical 体积已在 B3 工作区候选中通过五参数表格编辑、writer 往返、GUI package 和真实后端测试；boolean tool 的 `trd` 及 `trap`、GDML、STL、高级 GPS 分布、手动物理模块、biasing 规则、LET 等能力仍须等待各自后端和测试闭环后再开放生成。Dose 与 Fluence 仅开放实验性敏感体计分子集。
 - 3D 预览永远不是 Geant4 几何真值。预览不能修改后端配置语义；缺少 PyVista 或遇到不支持 shape 时应显示降级原因。
 - 预览读取 `tubs` 时必须保留内半径；除已验证的 hierarchical 普通体积 `trd` 五字段外，读取后端已支持但 GUI writer 尚未开放的 shape-specific 字段时，只能作为只读预览数据使用，不得借此扩大可生成白名单。
 
