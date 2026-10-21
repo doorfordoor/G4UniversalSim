@@ -34,6 +34,7 @@ class Case:
 
 CASES = (
     Case("merge_outputs", "scripts/test_merge_outputs.py", "static"),
+    Case("output_extensions", "scripts/test_output_extensions.py", "static"),
     Case("runner_contract", "scripts/test_m0_runner.py", "static"),
     Case("merge_histograms", "scripts/test_merge_histograms.py", "backend", ("merge",)),
     Case("gui_parsers", "gui/smoke_tests/smoke_parsers.py", "gui", ("qt",)),
@@ -44,6 +45,9 @@ CASES = (
     Case("gui_project_io", "gui/smoke_tests/smoke_project_io.py", "gui", ("qt",)),
     Case("gui_source", "gui/smoke_tests/smoke_source_editor_v2.py", "gui", ("qt",)),
     Case("gui_run_config", "gui/smoke_tests/smoke_run_config_editors.py", "gui", ("qt",)),
+    Case("gui_dose_results", "gui/smoke_tests/smoke_dose_results.py", "gui", ("qt",)),
+    Case("gui_fluence_results", "gui/smoke_tests/smoke_fluence_results.py", "gui", ("qt",)),
+    Case("gui_output_extensions", "gui/smoke_tests/smoke_output_extensions_gui.py", "gui", ("qt",)),
     Case("gui_output", "gui/smoke_tests/smoke_output_tools.py", "gui", ("qt",)),
     Case("gui_history", "gui/smoke_tests/smoke_history.py", "gui", ("qt",)),
     Case("gui_run_result", "gui/smoke_tests/smoke_run_result.py", "gui", ("qt",)),
@@ -54,6 +58,8 @@ CASES = (
     Case("backend_capabilities", "scripts/test_backend_capabilities.py", "backend", ("exe",)),
     Case("config_precedence", "scripts/test_config_precedence.py", "backend", ("exe",)),
     Case("run_summary", "scripts/test_run_summary.py", "backend", ("exe",)),
+    Case("dose_scoring", "scripts/test_dose_scoring.py", "backend", ("exe",)),
+    Case("fluence_scoring", "scripts/test_fluence_scoring.py", "backend", ("exe",)),
     Case("interactive_commands", "scripts/test_interactive_commands.py", "backend", ("exe",)),
     Case("unsupported_features", "scripts/test_unsupported_features.py", "backend", ("exe",), args=("--layer", "backend")),
     Case("unconsumed_config", "scripts/test_unconsumed_config.py", "backend", ("exe",)),

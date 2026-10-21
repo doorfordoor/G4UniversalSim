@@ -70,6 +70,10 @@ public:
     void EndEvent(int eventID);
 
     void ScoreHit(const HitRecord& hit);
+    // Accumulate a zero-deposition step for fluence only, without hits or Edep.
+    void ScoreFluenceStep(const HitRecord& hit);
+    // Record failures before a transport step can be converted to HitRecord.
+    void ReportFluenceTransportFailure(const std::string& message);
 
     double GetCurrentEventRawEdep() const;
     double GetCurrentEventWeightedEdep() const;

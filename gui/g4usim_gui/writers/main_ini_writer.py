@@ -113,8 +113,8 @@ hits = {_bool(scoring_model.hits)}
 event_edep = {_bool(scoring_model.event_edep)}
 edep = {_bool(scoring_model.edep)}
 let = false
-dose = false
-fluence = false
+dose = {_bool(scoring_model.dose)}
+fluence = {_bool(scoring_model.fluence)}
 auto_create_default_scorers = {_bool(scoring_model.auto_create_default_scorers)}
 verbose = {scoring_model.verbose}
 
@@ -147,7 +147,12 @@ def _source_lines(source_model: SourceEditableModel) -> str:
         # The editor's Position field is the plane center in both preview and
         # Geant4; the backend consumes [source]/center for plane sources.
         lines.append(f"center = {source_model.position}")
-        lines.append(f"radius = {source_model.radius}")
+        if source_model.source_shape.strip().lower() == "rectangle":
+            lines.append("shape = rectangle")
+            lines.append(f"halfx = {source_model.halfx}")
+            lines.append(f"halfy = {source_model.halfy}")
+        else:
+            lines.append(f"radius = {source_model.radius}")
     else:
         lines.append(f"position = {source_model.position}")
     if angular == "isotropic":

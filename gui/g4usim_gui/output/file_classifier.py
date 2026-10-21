@@ -17,6 +17,8 @@ class OutputFileType(str, Enum):
     MACRO = "macro"
     HITS_THREAD_CSV = "hits_thread_csv"
     EVENT_EDEP_THREAD_CSV = "event_edep_thread_csv"
+    DOSE_VOLUME_THREAD_CSV = "dose_volume_thread_csv"
+    FLUENCE_VOLUME_THREAD_CSV = "fluence_volume_thread_csv"
     HIST_EDEP_RAW_THREAD_CSV = "hist_edep_raw_thread_csv"
     HIST_EDEP_WEIGHTED_THREAD_CSV = "hist_edep_weighted_thread_csv"
     HITS_MERGED_CSV = "hits_merged_csv"
@@ -85,6 +87,10 @@ def _classify_name(path: Path) -> OutputFileType:
         return OutputFileType.HITS_THREAD_CSV
     if name.startswith("event_edep_t") and name.endswith(".csv"):
         return OutputFileType.EVENT_EDEP_THREAD_CSV
+    if name.startswith("dose_volume_summary_t") and name.endswith(".csv"):
+        return OutputFileType.DOSE_VOLUME_THREAD_CSV
+    if name.startswith("fluence_volume_summary_t") and name.endswith(".csv"):
+        return OutputFileType.FLUENCE_VOLUME_THREAD_CSV
     if name.startswith("hist_edep_raw_t") and name.endswith(".csv"):
         return OutputFileType.HIST_EDEP_RAW_THREAD_CSV
     if name.startswith("hist_edep_weighted_t") and name.endswith(".csv"):

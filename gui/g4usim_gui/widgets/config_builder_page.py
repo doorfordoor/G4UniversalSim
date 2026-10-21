@@ -342,6 +342,10 @@ class ConfigBuilderPage(QWidget):
         self.scoring_editor_event_edep.setChecked(True)
         self.scoring_editor_edep = QCheckBox("Enable EdepScorer")
         self.scoring_editor_edep.setChecked(True)
+        self.scoring_editor_dose = QCheckBox(ui_text("Enable sensitive-volume Dose (Gy, prototype)"))
+        self.scoring_editor_dose.setChecked(False)
+        self.scoring_editor_fluence = QCheckBox(ui_text("Enable track-length Fluence (mm^-2, prototype)"))
+        self.scoring_editor_fluence.setChecked(False)
         self.scoring_editor_raw_hist = QCheckBox("Raw edep histogram")
         self.scoring_editor_raw_hist.setChecked(True)
         self.scoring_editor_weighted_hist = QCheckBox("Weighted edep histogram")
@@ -692,7 +696,7 @@ class ConfigBuilderPage(QWidget):
         angular_form.addRow("Preview ray count", self.source_editor_preview_rays)
         angular_form.addRow("Preview random seed", self.source_editor_preview_seed)
         layout.addWidget(angular)
-        layout.addWidget(create_hint_label("Backend support: point/fixed, point/isotropic, plane circle/fixed, and plane circle/isotropic are generated to main.ini. Rectangle, annulus, cone, cosine, and focused modes are shown in preview but blocked from package generation until the C++ Source backend supports them."))
+        layout.addWidget(create_hint_label("Backend support: point, plane circle, and XY-plane rectangle (halfx/halfy) with fixed or isotropic emission. Square, annulus, cone, cosine, and focused modes are preview-only and blocked from package generation."))
         layout.addWidget(QLabel("Validation messages"))
         self.source_editor_messages.setMinimumHeight(110)
         layout.addWidget(self.source_editor_messages)
@@ -729,6 +733,8 @@ class ConfigBuilderPage(QWidget):
             self.scoring_editor_hits,
             self.scoring_editor_event_edep,
             self.scoring_editor_edep,
+            self.scoring_editor_dose,
+            self.scoring_editor_fluence,
         ]:
             switch_layout.addWidget(widget)
         hist = QGroupBox("Edep histogram")
@@ -746,7 +752,7 @@ class ConfigBuilderPage(QWidget):
         layout.addWidget(switches)
         layout.addWidget(hist)
         layout.addWidget(summary)
-        layout.addWidget(QLabel("LET/Dose/Fluence are experimental stubs and are not exposed by this MVP."))
+        layout.addWidget(create_hint_label(ui_text("Dose and Fluence are experimental sensitive-volume scorers; LET remains unavailable.")))
         layout.addWidget(QLabel("Validation messages"))
         layout.addWidget(self.scoring_editor_messages, 1)
         return tab
@@ -986,6 +992,8 @@ class ConfigBuilderPage(QWidget):
             self.scoring_editor_hits,
             self.scoring_editor_event_edep,
             self.scoring_editor_edep,
+            self.scoring_editor_dose,
+            self.scoring_editor_fluence,
             self.scoring_editor_raw_hist,
             self.scoring_editor_weighted_hist,
             self.scoring_editor_volume_summary,
@@ -1866,6 +1874,8 @@ class ConfigBuilderPage(QWidget):
         self.scoring_editor_hits.setChecked(self.scoring_editor.hits)
         self.scoring_editor_event_edep.setChecked(self.scoring_editor.event_edep)
         self.scoring_editor_edep.setChecked(self.scoring_editor.edep)
+        self.scoring_editor_dose.setChecked(self.scoring_editor.dose)
+        self.scoring_editor_fluence.setChecked(self.scoring_editor.fluence)
         self.scoring_editor_raw_hist.setChecked(self.scoring_editor.raw_histogram)
         self.scoring_editor_weighted_hist.setChecked(self.scoring_editor.weighted_histogram)
         self.scoring_editor_bins.setValue(self.scoring_editor.hist_bins)
@@ -1916,6 +1926,8 @@ class ConfigBuilderPage(QWidget):
         self.scoring_editor.hits = self.scoring_editor_hits.isChecked()
         self.scoring_editor.event_edep = self.scoring_editor_event_edep.isChecked()
         self.scoring_editor.edep = self.scoring_editor_edep.isChecked()
+        self.scoring_editor.dose = self.scoring_editor_dose.isChecked()
+        self.scoring_editor.fluence = self.scoring_editor_fluence.isChecked()
         self.scoring_editor.raw_histogram = self.scoring_editor_raw_hist.isChecked()
         self.scoring_editor.weighted_histogram = self.scoring_editor_weighted_hist.isChecked()
         self.scoring_editor.hist_bins = self.scoring_editor_bins.value()

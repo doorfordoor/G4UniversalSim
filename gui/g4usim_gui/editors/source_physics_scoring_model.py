@@ -148,6 +148,8 @@ class ScoringEditableModel:
             hits=settings.hits,
             event_edep=settings.event_edep,
             edep=settings.edep,
+            dose=settings.dose,
+            fluence=settings.fluence,
             hist_bins=settings.hist_bins,
             hist_min=settings.hist_min,
             hist_max=settings.hist_max,
@@ -161,6 +163,8 @@ class ScoringEditableModel:
             hits=self.hits,
             event_edep=self.event_edep,
             edep=self.edep,
+            dose=self.dose,
+            fluence=self.fluence,
             hist_bins=self.hist_bins,
             hist_min=self.hist_min,
             hist_max=self.hist_max,
@@ -182,7 +186,8 @@ def validate_source_model(model: SourceEditableModel) -> SourceEditableModel:
     if not model.energy.strip():
         model.errors.append("energy is required")
     for name, text in (("energy", model.energy), ("position", model.position),
-                       ("direction", model.direction), ("radius", model.radius)):
+                       ("direction", model.direction), ("radius", model.radius),
+                       ("halfx", model.halfx), ("halfy", model.halfy)):
         if _contains_nonfinite_number(text):
             model.errors.append(f"{name} must contain only finite numeric values")
     mode = model.position_mode.strip().lower()
@@ -208,10 +213,16 @@ def validate_source_model(model: SourceEditableModel) -> SourceEditableModel:
         if shape in {"rectangle", "square"}:
             if not model.halfx.strip():
                 model.errors.append("rectangle/square source requires halfx")
+            elif shape == "rectangle" and not _is_positive_length(model.halfx):
+                model.errors.append("rectangle source halfx must be a finite positive length (nm/um/mm/cm/m)")
             if shape == "rectangle" and not model.halfy.strip():
                 model.errors.append("rectangle source requires halfy")
-        if shape in {"rectangle", "square", "annulus"}:
-            model.errors.append(f"plane {shape} source is preview-only; current C++ main.ini backend supports plane circle only")
+            elif shape == "rectangle" and not _is_positive_length(model.halfy):
+                model.errors.append("rectangle source halfy must be a finite positive length (nm/um/mm/cm/m)")
+        if shape == "rectangle" and model.normal.replace(" ", "") != "0,0,1":
+            model.errors.append("plane rectangle currently uses the XY plane; normal must be 0,0,1")
+        if shape in {"square", "annulus"}:
+            model.errors.append(f"plane {shape} source is preview-only; current C++ main.ini backend supports plane circle and rectangle")
     if not _has_three_components(model.direction):
         model.errors.append("direction should contain at least 3 components")
     elif not _direction_is_nonzero(model.direction):
@@ -273,8 +284,8 @@ def validate_physics_model(model: PhysicsEditableModel) -> PhysicsEditableModel:
 def validate_scoring_model(model: ScoringEditableModel) -> ScoringEditableModel:
     model.errors = []
     model.warnings = []
-    if model.enabled and not any([model.hits, model.event_edep, model.edep]):
-        model.errors.append("enabled scoring requires at least one of hits/event_edep/edep")
+    if model.enabled and not any([model.hits, model.event_edep, model.edep, model.dose, model.fluence]):
+        model.errors.append("enabled scoring requires at least one of hits/event_edep/edep/dose/fluence")
     if model.hist_bins <= 0:
         model.errors.append("histogram bins must be > 0")
     if not model.hist_min.strip():
@@ -287,10 +298,10 @@ def validate_scoring_model(model: ScoringEditableModel) -> ScoringEditableModel:
         model.errors.append("edep histogram output requires raw_histogram or weighted_histogram")
     if model.let:
         model.errors.append(capability_message("scoring.let.unsupported"))
-    if model.dose:
-        model.errors.append(capability_message("scoring.dose.unsupported"))
-    if model.fluence:
-        model.errors.append(capability_message("scoring.fluence.unsupported"))
+    if model.dose and not model.auto_create_default_scorers:
+        model.errors.append("Dose requires auto-create default scorers")
+    if model.fluence and not model.auto_create_default_scorers:
+        model.errors.append("Fluence requires auto-create default scorers")
     return model
 
 
@@ -331,6 +342,18 @@ def _direction_is_nonzero(value: str) -> bool:
 
 def _looks_like_value_with_unit(value: str) -> bool:
     return bool(re.search(r"\d", value)) and bool(re.search(r"[A-Za-z]", value))
+
+
+def _is_positive_length(value: str) -> bool:
+    # Match the C++ UnitParser length vocabulary before package generation.
+    match = re.fullmatch(
+        r"\s*([+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?)\s*(?:\*\s*)?(?:nm|um|mm|cm|m)?\s*",
+        value,
+    )
+    if not match:
+        return False
+    number = float(match.group(1))
+    return math.isfinite(number) and number > 0.0
 
 
 def _looks_like_angle(value: str) -> bool:

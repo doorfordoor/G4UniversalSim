@@ -49,6 +49,14 @@ std::string GeneratedFileSchema(const std::string& path)
         if (header == "name,raw_edep_MeV,weighted_edep_MeV") return "edep_summary_csv_v3";
         if (header == "name,raw_edep,weighted_edep") return "edep_summary_csv_v2";
     }
+    if (matches("dose_volume_summary")) {
+        if (header == "runID,volume_path,volume_name,mass_kg,raw_edep_MeV,weighted_edep_MeV,"
+                      "raw_dose_Gy,weighted_dose_Gy") return "dose_volume_csv_v1";
+    }
+    if (matches("fluence_volume_summary")) {
+        if (header == "runID,volume_path,volume_name,volume_mm3,raw_track_length_mm,"
+                      "weighted_track_length_mm,raw_fluence_mm-2,weighted_fluence_mm-2") return "fluence_volume_csv_v1";
+    }
     return "unknown";
 }
 

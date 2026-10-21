@@ -20,6 +20,23 @@ LanguageCode = Literal["en", "zh_CN"]
 
 
 ZH_CN: dict[str, str] = {
+    "Export Dose JSON...": "导出 Dose JSON...",
+    "Export Fluence JSON...": "导出 Fluence JSON...",
+    "Cancel export": "取消导出",
+    "Select an output directory to export results.": "选择模拟输出目录后可导出结果。",
+    "JSON export process output and warnings": "JSON 导出进程输出与警告",
+    "JSON Exports (M5 prototype)": "JSON 导出（M5 原型）",
+    "JSON export reads discovered CSV files only; verify run_summary.txt status, event counts, worker files and warnings. Dose/Fluence are experimental.": "JSON 仅汇总已发现的 CSV；请核对 run_summary.txt 状态、事件数、worker 文件及警告。Dose/Fluence 仍为实验性。",
+    "Choose a new JSON result file": "选择新的 JSON 结果文件",
+    "Select an existing output directory first.": "请先选择已有的模拟输出目录。",
+    "An output extension is already running.": "已有输出扩展正在运行。",
+    "JSON export rejected: {error}": "JSON 导出已拒绝：{error}",
+    "Exporting {extension}...": "正在导出 {extension}...",
+    "{extension}: {state}": "{extension}：{state}",
+    "Enable sensitive-volume Dose (Gy, prototype)": "启用敏感体吸收剂量 Dose (Gy，原型)",
+    "Enable track-length Fluence (mm^-2, prototype)": "启用径迹长度 Fluence (mm^-2，原型)",
+    "Dose and Fluence are experimental sensitive-volume scorers; LET remains unavailable.": "Dose 与 Fluence 均为实验性敏感体计分；LET 仍不可用。",
+    "Dose sums energy deposition in sensitive volumes; results are per run and thread. LET/Fluence remain unavailable.": "Dose 仅累计敏感体中的能量沉积；原始 CSV 按 run 和线程分别保存。Fluence 现有实验性原型，LET 仍不可用。",
     "Unsupported run input mode.": "运行来源模式无效。",
     "Generate a run package before starting generated input.": "请先生成运行包，再启动配置页生成模式。",
     "A run is already active.": "已有仿真正在运行。",

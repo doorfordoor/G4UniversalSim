@@ -80,6 +80,22 @@ def main() -> int:
     assert "let = false" in text
     assert "dose = false" in text
     assert "fluence = false" in text
+    scoring.dose = True
+    validate_scoring_model(scoring)
+    assert not scoring.errors, scoring.errors
+    dose_text = build_main_ini_text(
+        package=package, run=RunSettings(run_name="dose", threads=2),
+        geometry=GeometrySettings(template="simple_box", config_path=package.geometry_ini_path),
+        source=source.to_settings(), physics=physics.to_settings(), scoring=scoring.to_settings(),
+        source_model=source, physics_model=physics, scoring_model=scoring,
+    )
+    assert "dose = true" in dose_text
+    assert scoring.to_settings().dose
+    scoring.auto_create_default_scorers = False
+    validate_scoring_model(scoring)
+    assert any("auto-create" in message for message in scoring.errors)
+    scoring.auto_create_default_scorers = True
+    validate_scoring_model(scoring)
 
     with tempfile.TemporaryDirectory() as tmp:
         tmp_path = Path(tmp)
@@ -132,6 +148,8 @@ def main() -> int:
         assert loaded.sourceEditor.particle == "neutron"
         assert loaded.physicsEditor.reference_list == "Shielding"
         assert loaded.scoringEditor.hist_bins == 321
+        assert loaded.scoringEditor.dose
+        assert loaded.scoringSettings.dose is False  # separate legacy settings remain compatible
 
         old_path = tmp_path / "old_project.json"
         old_path.write_text(
@@ -144,6 +162,7 @@ def main() -> int:
         )
         old_loaded = load_project(old_path)
         assert old_loaded.sourceEditor.particle == "gamma"
+        assert old_loaded.scoringEditor.dose is False
 
     print("smoke_run_config_editors: ok")
     return 0

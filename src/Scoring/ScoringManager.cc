@@ -137,11 +137,6 @@ bool ScoringManager::IsLETScoringEnabled() const
 
 void ScoringManager::EnableDoseScoring(bool enable)
 {
-    if (enable) {
-        throw std::runtime_error(
-            "Scoring capability 'Dose' is not supported. Use Edep scoring; dose requires a defined mass/output contract."
-        );
-    }
     doseScoringEnabled_ = enable;
     SetScorerEnabledIfExists("dose", enable);
 }
@@ -153,11 +148,6 @@ bool ScoringManager::IsDoseScoringEnabled() const
 
 void ScoringManager::EnableFluenceScoring(bool enable)
 {
-    if (enable) {
-        throw std::runtime_error(
-            "Scoring capability 'Fluence' is not supported. Use hits or Edep scoring; fluence requires a defined area/track-length contract."
-        );
-    }
     fluenceScoringEnabled_ = enable;
     SetScorerEnabledIfExists("fluence", enable);
 }
@@ -362,7 +352,34 @@ void ScoringManager::ScoreHit(const HitRecord& hit)
         }
     }
 
-    for (ScorerBase* scorer : EnabledScorers()) scorer->ScoreHit(hit);
+    for (ScorerBase* scorer : EnabledScorers()) {
+        try {
+            scorer->ScoreHit(hit);
+        } catch (const std::exception& error) {
+            if (outputManager_) outputManager_->RecordOutputFailure("scoring_" + scorer->GetName(), error.what());
+            if (auto* runManager = G4RunManager::GetRunManager()) runManager->AbortRun(true);
+            return;
+        }
+    }
+}
+
+void ScoringManager::ScoreFluenceStep(const HitRecord& hit)
+{
+    if (!enabled_ || !fluenceScoringEnabled_) return;
+    if (outputManager_ && outputManager_->HasOutputFailure()) return;
+    ScorerBase* scorer = GetScorer("fluence");
+    if (!scorer || !scorer->IsEnabled()) return;
+    try {
+        scorer->ScoreHit(hit);
+    } catch (const std::exception& error) {
+        ReportFluenceTransportFailure(error.what());
+    }
+}
+
+void ScoringManager::ReportFluenceTransportFailure(const std::string& message)
+{
+    if (outputManager_) outputManager_->RecordOutputFailure("scoring_fluence", message);
+    if (auto* runManager = G4RunManager::GetRunManager()) runManager->AbortRun(true);
 }
 
 double ScoringManager::GetCurrentEventRawEdep() const
@@ -398,6 +415,9 @@ void ScoringManager::LoadFromConfig(const ConfigManager& config)
     EnableDoseScoring(config.GetBool("scoring", "dose", doseScoringEnabled_));
     EnableFluenceScoring(config.GetBool("scoring", "fluence", fluenceScoringEnabled_));
     SetAutoCreateDefaultScorers(config.GetBool("scoring", "auto_create_default_scorers", autoCreateDefaultScorers_));
+    if (enabled_ && (doseScoringEnabled_ || fluenceScoringEnabled_) && !autoCreateDefaultScorers_) {
+        throw std::runtime_error("Dose/Fluence scoring requires [scoring]/auto_create_default_scorers = true");
+    }
     SetVerboseLevel(config.GetInt("scoring", "verbose", verboseLevel_));
 
     if (config.HasSection("scoring.edep")) {

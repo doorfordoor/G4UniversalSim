@@ -19,10 +19,10 @@ _MESSAGES = {
         "LET calculation chain exists"
     ),
     "scoring.dose.unsupported": (
-        "Dose is not supported by the backend; use Edep scoring instead"
+        "Dose is experimental and only supports sensitive physical touchables with default scorers"
     ),
     "scoring.fluence.unsupported": (
-        "Fluence is not supported by the backend; use hits or Edep scoring instead"
+        "Fluence is experimental: track length in daughter-free sensitive solids with default scorers only"
     ),
 }
 

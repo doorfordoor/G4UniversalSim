@@ -3,6 +3,7 @@
 #include "Hits/ParticleHit.hh"
 #include "Hits/ParticleHitCollection.hh"
 #include "Scoring/ScoringManager.hh"
+#include "Scoring/DoseContext.hh"
 #include "Scoring/ThreadLocalScoringContext.hh"
 
 #include "G4Event.hh"
@@ -62,6 +63,19 @@ G4bool SensitiveDetector::ProcessHits(G4Step* step, G4TouchableHistory* history)
     const G4double edep = step->GetTotalEnergyDeposit();
     const G4double ndep = step->GetNonIonizingEnergyDeposit();
     if (!zeroEdepHitsEnabled_ && edep <= 0.0 && ndep <= 0.0) {
+        if (scoringEnabled_) {
+            if (ScoringManager* manager = ResolveScoringManager();
+                manager && manager->IsFluenceScoringEnabled() && step->GetStepLength() > 0.0) {
+                try {
+                    std::unique_ptr<ParticleHit> particle(ParticleHit::FromStep(step, GetCurrentEventID()));
+                    auto record = particle->ToHitRecord();
+                    PopulateDoseContext(step, record);
+                    manager->ScoreFluenceStep(record);
+                } catch (const std::exception& error) {
+                    manager->ReportFluenceTransportFailure(error.what());
+                }
+            }
+        }
         return false;
     }
 
@@ -73,7 +87,9 @@ G4bool SensitiveDetector::ProcessHits(G4Step* step, G4TouchableHistory* history)
 
     if (scoringEnabled_) {
         if (ScoringManager* scoringManager = ResolveScoringManager()) {
-            scoringManager->ScoreHit(hit->ToHitRecord());
+            auto record = hit->ToHitRecord();
+            if (scoringManager->IsDoseScoringEnabled() || scoringManager->IsFluenceScoringEnabled()) PopulateDoseContext(step, record);
+            scoringManager->ScoreHit(record);
         }
     }
 

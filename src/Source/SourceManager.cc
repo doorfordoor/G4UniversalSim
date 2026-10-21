@@ -195,9 +195,11 @@ void SourceManager::LoadFromConfig(const ConfigManager& config)
     if (config.HasKey("source", "position_type")) {
         const std::string type = StringUtils::ToLower(StringUtils::Trim(config.GetString("source", "position_type", "")));
         if (type == "point") {
-            if (config.HasKey("source", "center") || config.HasKey("source", "radius")) {
+            if (config.HasKey("source", "center") || config.HasKey("source", "radius") ||
+                config.HasKey("source", "shape") || config.HasKey("source", "halfx") ||
+                config.HasKey("source", "halfy") || config.HasKey("source", "inner_radius")) {
                 throw std::runtime_error(
-                    "SourceManager [source]/position_type=point conflicts with center/radius; "
+                    "SourceManager [source]/position_type=point conflicts with plane-only fields; "
                     "remove plane-only fields or use position_type=plane.");
             }
             if (!config.HasKey("source", "position") ||
@@ -214,23 +216,47 @@ void SourceManager::LoadFromConfig(const ConfigManager& config)
                     "SourceManager [source]/position_type=plane conflicts with position; "
                     "use center for the plane origin instead.");
             }
-            const double radius = config.HasKey("source", "radius")
-                ? UnitParser::ParseLength(config.GetString("source", "radius"))
-                : 1.0 * CLHEP::mm;
+            const std::string shape = StringUtils::ToLower(StringUtils::Trim(
+                config.GetString("source", "shape", "circle")));
             std::vector<double> center{0.0, 0.0, -1.0 * CLHEP::mm};
             if (config.HasKey("source", "center")) {
                 center = ReadVector3WithUnit(config, "source", "center");
             }
-            SetPlaneBeamAt(radius, center[0], center[1], center[2],
-                           config.GetString("source", "direction", "+z"));
+            if (shape == "circle") {
+                if (config.HasKey("source", "halfx") || config.HasKey("source", "halfy") ||
+                    config.HasKey("source", "inner_radius")) {
+                    throw std::runtime_error("SourceManager plane circle conflicts with halfx/halfy/inner_radius; remove unused shape fields.");
+                }
+                const double radius = config.HasKey("source", "radius")
+                    ? UnitParser::ParseLength(config.GetString("source", "radius"))
+                    : 1.0 * CLHEP::mm;
+                SetPlaneBeamAt(radius, center[0], center[1], center[2],
+                               config.GetString("source", "direction", "+z"));
+            } else if (shape == "rectangle") {
+                if (config.HasKey("source", "radius") || config.HasKey("source", "inner_radius")) {
+                    throw std::runtime_error("SourceManager plane rectangle conflicts with radius/inner_radius; use halfx and halfy.");
+                }
+                if (!config.HasKey("source", "halfx") || !config.HasKey("source", "halfy")) {
+                    throw std::runtime_error("SourceManager plane rectangle requires halfx and halfy with length units.");
+                }
+                const double halfX = UnitParser::ParseLength(config.GetString("source", "halfx"));
+                const double halfY = UnitParser::ParseLength(config.GetString("source", "halfy"));
+                SetPlaneRectangleAt(halfX, halfY, center[0], center[1], center[2],
+                                    config.GetString("source", "direction", "+z"));
+            } else {
+                throw std::runtime_error("SourceManager unsupported [source]/shape='" + shape +
+                    "'; supported plane shapes: circle or rectangle.");
+            }
         } else {
             throw std::runtime_error(
                 "SourceManager unsupported [source]/position_type='" + type +
-                "'; supported values: point (requires position) or plane (radius/center).");
+                "'; supported values: point (requires position) or plane (circle/rectangle).");
         }
-    } else if (config.HasKey("source", "center") || config.HasKey("source", "radius")) {
+    } else if (config.HasKey("source", "center") || config.HasKey("source", "radius") ||
+               config.HasKey("source", "shape") || config.HasKey("source", "halfx") ||
+               config.HasKey("source", "halfy") || config.HasKey("source", "inner_radius")) {
         throw std::runtime_error(
-            "SourceManager [source]/center and radius require position_type=plane; "
+            "SourceManager [source]/plane shape fields require position_type=plane; "
             "legacy point positions must use position.");
     } else if (config.HasKey("source", "position")) {
         const auto pos = ReadVector3WithUnit(config, "source", "position");
@@ -390,6 +416,17 @@ void SourceManager::SetPlaneBeamAt(double radius, double x, double y, double z,
     configured_ = true;
 }
 
+void SourceManager::SetPlaneRectangleAt(double halfX, double halfY, double x, double y, double z,
+                                         const std::string& direction)
+{
+    if (!std::isfinite(halfX) || !std::isfinite(halfY) || halfX <= 0.0 || halfY <= 0.0)
+        throw std::runtime_error("SourceManager::SetPlaneRectangleAt requires finite halfx and halfy > 0");
+    const auto d = ParseDirectionVector(NormalizeDirectionToken(direction));
+    SetPosition("Plane", "Rectangle", {x, y, z, halfX, halfY});
+    SetDirection(d[0], d[1], d[2]);
+    configured_ = true;
+}
+
 void SourceManager::SetVerboseLevel(int level)
 {
     if (level < 0) throw std::runtime_error("SourceManager::SetVerboseLevel requires level >= 0");
@@ -471,7 +508,12 @@ void SourceManager::ApplyPositionToGPS() const
     if (positionParams_.size() >= 3) {
         pos->SetCentreCoords(G4ThreeVector(positionParams_[0], positionParams_[1], positionParams_[2]));
     }
-    if (positionParams_.size() >= 4) pos->SetRadius(positionParams_[3]);
+    if (positionShape_ == "Rectangle" && positionParams_.size() == 5) {
+        pos->SetHalfX(positionParams_[3]);
+        pos->SetHalfY(positionParams_[4]);
+    } else if (positionShape_ == "Circle" && positionParams_.size() >= 4) {
+        pos->SetRadius(positionParams_[3]);
+    }
 }
 
 void SourceManager::ApplyAngularDistributionToGPS() const

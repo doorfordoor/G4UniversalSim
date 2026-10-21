@@ -11,6 +11,7 @@
 #include "G4VProcess.hh"
 #include "Output/OutputRecord.hh"
 #include "Scoring/ScoringManager.hh"
+#include "Scoring/DoseContext.hh"
 #include "Utils/StringUtils.hh"
 
 #include <algorithm>
@@ -88,6 +89,8 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
     hit.py = mom.y();
     hit.pz = mom.z();
     hit.volumeName = volumeName;
+
+    if (scoringManager->IsDoseScoringEnabled() || scoringManager->IsFluenceScoringEnabled()) PopulateDoseContext(step, hit);
 
     scoringManager->ScoreHit(hit);
 }

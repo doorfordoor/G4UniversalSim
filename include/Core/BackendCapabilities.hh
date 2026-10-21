@@ -42,8 +42,8 @@ inline void WriteBackendCapabilities(std::ostream& out)
 "placements":[{"id":"normal","runtime":true},{"id":"replica","runtime":false},{"id":"parameterised","runtime":false},{"id":"assembly","runtime":false}],
 "materials":[{"id":"nist","runtime":true},{"id":"isotope","runtime":true},{"id":"element","runtime":true},{"id":"mass_fraction","runtime":true},{"id":"atom_count","runtime":true},{"id":"volume_fraction","runtime":true},{"id":"temperature","runtime":false},{"id":"pressure","runtime":false}],
 "physics":[{"id":"reference","runtime":true},{"id":"manual","runtime":true},{"id":"geometry_region_cuts","runtime":true},{"id":"physics_region_cuts","runtime":false},{"id":"process_xs_biasing","runtime":true,"physical_validation":false}],
-"sources":[{"id":"point_fixed","runtime":true},{"id":"point_isotropic","runtime":true},{"id":"plane_circle","runtime":true},{"id":"rectangle","runtime":false},{"id":"annulus","runtime":false},{"id":"cone","runtime":false},{"id":"cosine","runtime":false},{"id":"focused","runtime":false}],
-"scorers":[{"id":"hits","runtime":true},{"id":"edep","runtime":true},{"id":"let","runtime":false},{"id":"dose","runtime":false},{"id":"fluence","runtime":false}],
+"sources":[{"id":"point_fixed","runtime":true},{"id":"point_isotropic","runtime":true},{"id":"plane_circle","runtime":true},{"id":"rectangle","runtime":true,"contract":"XY plane, halfx/halfy, center, fixed/isotropic"},{"id":"annulus","runtime":false},{"id":"cone","runtime":false},{"id":"cosine","runtime":false},{"id":"focused","runtime":false}],
+"scorers":[{"id":"hits","runtime":true},{"id":"edep","runtime":true},{"id":"let","runtime":false},{"id":"dose","runtime":true,"validation":"per sensitive touchable, Geant4 mass; no physical benchmark"},{"id":"fluence","runtime":true,"validation":"per daughter-free sensitive touchable, track length / solid volume; no physical benchmark"}],
 "outputs":{"schema_version":3,"run_summary_schema_version":1,"worker_suffix":"_tN","subsequent_run_suffix":"_rR","csv_units_in_header":true,"automatic_merge":false},
 "validation_scope":"configuration and runtime smoke; not physical benchmark",
 "geometry_schema_version":null

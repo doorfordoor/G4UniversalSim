@@ -154,10 +154,15 @@ def test_gui_validation(temp: Path) -> None:
     if report.can_run or not any("temperature" in item for item in report.errors):
         raise AssertionError(f"GUI material validation did not block temperature: {report.errors}")
 
-    scoring = ScoringEditableModel(dose=True)
+    scoring = ScoringEditableModel(dose=True, auto_create_default_scorers=False)
     validate_scoring_model(scoring)
     if not scoring.errors or not any("Dose" in item for item in scoring.errors):
-        raise AssertionError("GUI scoring validation did not block Dose")
+        raise AssertionError("GUI scoring validation did not enforce Dose scorer prerequisites")
+
+    scoring.auto_create_default_scorers = True
+    validate_scoring_model(scoring)
+    if scoring.errors:
+        raise AssertionError(f"GUI scoring validation rejected supported Dose MVP: {scoring.errors}")
 
 
 def main() -> int:
@@ -245,7 +250,7 @@ def main() -> int:
         )
         assert_failure(region_text, "Physics region cuts", "geometry volume cut.*")
 
-        for scoring, label, alternative in (("dose", "Dose", "Edep"), ("fluence", "Fluence", "hits"), ("let", "LET", "Edep")):
+        for scoring, label, alternative in (("let", "LET", "Edep"),):
             text = write_and_run(
                 scoring,
                 main_config(
@@ -264,7 +269,6 @@ def main() -> int:
                 '/AIHL/geometry/addBox name=Replica parent=world material=G4_AIR size="1 mm,1 mm,1 mm" placement=replica\n',
                 ("placement=replica", "placement=normal"),
             ),
-            ("macro-dose", "/AIHL/scoring/dose true\n", ("Dose", "Edep")),
             ("macro-region", "/AIHL/physics/setRegionCut SV e- 1 mm\n", ("region cuts", "geometry volume cut.*")),
             (
                 "macro-material-temperature",

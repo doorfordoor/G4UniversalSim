@@ -24,6 +24,12 @@ struct HitRecord {
     std::string processName;
     std::string volumeName;
     double weight = 1.0;
+    // Internal Geant4 mass units and full touchable path, used only by DoseScorer.
+    // These fields are deliberately absent from the existing hits CSV v3 schema.
+    double doseMass = 0.0;
+    std::string doseVolumePath;
+    // Internal sensitive solid volume (Geant4 volume units); not part of hits CSV.
+    double fluenceVolume = 0.0;
     double LETcalc = 0.0;
     double LETstep = 0.0;
 };

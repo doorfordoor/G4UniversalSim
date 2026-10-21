@@ -91,16 +91,34 @@ def test_source_nonfinite_is_blocked() -> None:
         assert any(f"{field} must contain only finite" in msg for msg in source.errors), (field, source.errors)
 
 
-def test_preview_only_modes_are_blocked() -> None:
+def test_rectangle_source_and_preview_only_modes() -> None:
     rectangle = SourceEditableModel(
         position_mode="plane",
         source_shape="rectangle",
         halfx="1 mm",
         halfy="2 mm",
+        position="1 mm, -2 mm, 0 mm",
         angular_mode="fixed",
     )
     validate_source_model(rectangle)
-    assert any("preview-only" in item for item in rectangle.errors)
+    assert not rectangle.errors, rectangle.errors
+    text = _ini(rectangle)
+    assert "shape = rectangle" in text
+    assert "halfx = 1 mm" in text
+    assert "halfy = 2 mm" in text
+    assert "center = 1 mm, -2 mm, 0 mm" in text
+    assert "radius = " not in text
+
+    rectangle.angular_mode = "isotropic"
+    validate_source_model(rectangle)
+    assert not rectangle.errors, rectangle.errors
+    assert "isotropic = true" in _ini(rectangle)
+    assert "direction = " not in _ini(rectangle)
+
+    for shape in ("square", "annulus"):
+        source = SourceEditableModel(position_mode="plane", source_shape=shape)
+        validate_source_model(source)
+        assert any("preview-only" in error for error in source.errors), (shape, source.errors)
 
     cone = SourceEditableModel(position_mode="point", source_shape="point", angular_mode="cone", cone_half_angle="5 deg")
     validate_source_model(cone)
@@ -120,6 +138,19 @@ def test_validation_errors() -> None:
     validate_source_model(rectangle)
     assert any("requires halfx" in item for item in rectangle.errors)
     assert any("requires halfy" in item for item in rectangle.errors)
+    for field, value in (("halfx", "0 mm"), ("halfy", "-2 mm"),
+                         ("halfx", "1 MeV"), ("halfy", "oops"),
+                         ("halfx", "NaN mm"), ("halfy", "Inf mm"),
+                         ("halfx", "1e999 mm")):
+        rectangle = SourceEditableModel(position_mode="plane", source_shape="rectangle",
+                                         halfx="1 mm", halfy="2 mm")
+        setattr(rectangle, field, value)
+        validate_source_model(rectangle)
+        assert rectangle.errors, (field, value)
+    rectangle = SourceEditableModel(position_mode="plane", source_shape="rectangle",
+                                    halfx="1 mm", halfy="2 mm", normal="0,1,0")
+    validate_source_model(rectangle)
+    assert any("XY plane" in error for error in rectangle.errors)
 
     bad_angle = SourceEditableModel(theta_min="not_an_angle")
     validate_source_model(bad_angle)
@@ -152,7 +183,7 @@ if __name__ == "__main__":
     test_plane_circle_fixed()
     test_point_isotropic()
     test_source_nonfinite_is_blocked()
-    test_preview_only_modes_are_blocked()
+    test_rectangle_source_and_preview_only_modes()
     test_validation_errors()
     test_generated_biasing_hook_is_blocked()
     test_project_save_load()

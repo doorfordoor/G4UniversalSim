@@ -33,6 +33,8 @@ public:
     void SetIsotropic();
     void SetPlaneBeam(double radius, double z, const std::string& direction = "-z");
     void SetPlaneBeamAt(double radius, double x, double y, double z, const std::string& direction);
+    void SetPlaneRectangleAt(double halfX, double halfY, double x, double y, double z,
+                             const std::string& direction);
 
     void SetVerboseLevel(int level);
     int GetVerboseLevel() const;

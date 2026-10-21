@@ -337,13 +337,13 @@ def main() -> int:
              "isotropic=true conflicts with [source]/direction"),
             ("point-center", "position = 0,0,-1 mm",
              "position = 0,0,-1 mm\ncenter = 4,0,-1 mm\nradius = 1 mm",
-             "position_type=point conflicts with center/radius"),
+             "position_type=point conflicts with plane-only fields"),
             ("plane-position", "position_type = point",
              "position_type = plane",
              "position_type=plane conflicts with position"),
             ("center-without-type", "position_type = point",
              "center = 4,0,-1 mm\nradius = 1 mm",
-             "center and radius require position_type=plane"),
+             "plane shape fields require position_type=plane"),
         ):
             assert main_text.count(old) == 1, (name, old)
             path = temp / f"source-conflict-{name}.ini"
@@ -544,6 +544,63 @@ def main() -> int:
             assert abs(float(hit["x0_mm"]) - 4.0) < 0.051, hit
             assert abs(float(hit["y0_mm"])) < 0.051, hit
             assert abs(float(hit["z0_mm"]) + 9.0) < 1e-6, hit
+
+        # M1 rectangle: first recorded sensitive hits occur after transport,
+        # possibly after a short non-depositing step or scattering. Check the
+        # spatial envelope and the predominance of forward-moving primaries;
+        # these hits are not an exact GPS vertex/direction record.
+        rectangle_fields = ("position_type = plane\nshape = rectangle\n"
+                            "center = 1 mm, -2 mm, 0 mm\nhalfx = 1 mm\nhalfy = 2 mm")
+        rectangle_config = temp / "source-rectangle.ini"
+        rectangle_config.write_text(main_text.replace(plane_fixture, rectangle_fields), encoding="utf-8")
+        rectangle_macro = temp / "source-rectangle.mac"
+        rectangle_macro.write_text(
+            "/AIHL/geometry/loadConfig config/geometry/hit_smoke_box.ini\n"
+            "/run/initialize\n/run/beamOn 128\n", encoding="utf-8")
+        rectangle_output = temp / "source-rectangle-output"
+        run(executable, ["--config", str(rectangle_config), "--macro", str(rectangle_macro),
+                         "--output", str(rectangle_output), "--threads", "1"])
+        rectangle_summary, _ = read_summary(rectangle_output)
+        assert rectangle_summary["status"] == "completed", rectangle_summary
+        assert rectangle_summary["actual_completed_event_count"] == "128", rectangle_summary
+        with (rectangle_output / "hits_t0.csv").open(newline="", encoding="utf-8") as stream:
+            primaries = {}
+            for hit in csv.DictReader(stream):
+                if hit["trackID"] == "1" and hit["parentID"] == "0":
+                    primaries.setdefault(int(hit["eventID"]), hit)
+        assert set(primaries) == set(range(128)), primaries.keys()
+        xs = [float(hit["x0_mm"]) for hit in primaries.values()]
+        ys = [float(hit["y0_mm"]) for hit in primaries.values()]
+        near_plane = 0
+        forward = 0
+        for hit, x, y in zip(primaries.values(), xs, ys):
+            assert -0.05 <= x <= 2.05, hit
+            assert -4.05 <= y <= 0.05, hit
+            near_plane += abs(float(hit["z0_mm"])) < 0.05
+            forward += float(hit["pz"]) > 0.99
+        assert near_plane >= 120, near_plane
+        assert forward >= 120, forward
+        assert min(xs) < 0.5 and max(xs) > 1.5, (min(xs), max(xs))
+        assert min(ys) < -3.0 and max(ys) > -1.0, (min(ys), max(ys))
+
+        # Bad shape dimensions and incompatible plane fields must fail before
+        # the first event; no partial scoring output may be produced.
+        for label, replacement, error in (
+            ("zero", "halfx = 0 mm", "finite halfx and halfy > 0"),
+            ("negative", "halfy = -2 mm", "finite halfx and halfy > 0"),
+            ("nan", "halfx = NaN mm", "Non-finite numeric value"),
+            ("missing", "halfy =", "Cannot parse empty quantity"),
+            ("radius", "halfx = 1 mm\nradius = 3 mm", "conflicts with radius/inner_radius"),
+        ):
+            original = "halfy = 2 mm" if label in {"negative", "missing"} else "halfx = 1 mm"
+            bad_ini = temp / f"source-rectangle-invalid-{label}.ini"
+            bad_ini.write_text(main_text.replace(plane_fixture,
+                rectangle_fields.replace(original, replacement)), encoding="utf-8")
+            bad_output = temp / f"source-rectangle-invalid-{label}-output"
+            log = run(executable, ["--config", str(bad_ini), "--macro", str(invalid_source_macro),
+                                   "--output", str(bad_output)], expected=1)
+            assert error in log, (label, log)
+            assert not list(bad_output.glob("hits*.csv")), label
 
         # dry-run produces a summary but never creates simulation output.
         dry_text = run(

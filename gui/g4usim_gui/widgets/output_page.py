@@ -5,6 +5,7 @@ from pathlib import Path
 
 from PySide6.QtWidgets import (
     QComboBox,
+    QFileDialog,
     QHBoxLayout,
     QLabel,
     QMessageBox,
@@ -21,7 +22,11 @@ from PySide6.QtWidgets import (
 )
 
 from g4usim_gui.core.paths import format_size, open_directory
+from g4usim_gui.core.i18n import ui_format, ui_text
 from g4usim_gui.output.csv_preview import read_csv_preview
+from g4usim_gui.output.dose_summary import read_dose_summaries
+from g4usim_gui.output.extension_runner import OutputExtensionRunner
+from g4usim_gui.output.fluence_summary import read_fluence_summaries
 from g4usim_gui.output.file_classifier import OutputFileInfo, OutputFileType, classify_files
 from g4usim_gui.output.merge_plan import MergePlan, MergeTask, build_merge_plan
 from g4usim_gui.output.merge_runner import MergeRunner
@@ -40,6 +45,7 @@ class OutputPage(QWidget):
         self._merge_plan = MergePlan([])
         self._selected_file: Path | None = None
         self._merge_runner = MergeRunner(self)
+        self._extension_runner = OutputExtensionRunner(self)
 
         self.output_label = QLabel("Output directory: <none>")
         self.refresh_button = QPushButton("Refresh")
@@ -64,12 +70,39 @@ class OutputPage(QWidget):
         self.csv_limit.currentTextChanged.connect(self._refresh_csv_preview)
         self.csv_table = QTableWidget()
         self.csv_message = QLabel("")
+        self.dose_message = QPlainTextEdit()
+        self.dose_message.setReadOnly(True)
+        self.dose_message.setMaximumHeight(115)
+        self.dose_table = QTableWidget(0, 8)
+        self.dose_table.setHorizontalHeaderLabels([
+            "runID", "volume_path", "threads", "mass_kg", "raw_edep_MeV",
+            "weighted_edep_MeV", "raw_dose_Gy", "weighted_dose_Gy",
+        ])
+        self.fluence_message = QPlainTextEdit()
+        self.fluence_message.setReadOnly(True)
+        self.fluence_message.setMaximumHeight(115)
+        self.fluence_table = QTableWidget(0, 8)
+        self.fluence_table.setHorizontalHeaderLabels([
+            "runID", "volume_path", "threads", "volume_mm3", "raw_track_length_mm",
+            "weighted_track_length_mm", "raw_fluence_mm-2", "weighted_fluence_mm-2",
+        ])
         self.merge_table = QTableWidget(0, 7)
         self.merge_table.setHorizontalHeaderLabels(["name", "pattern", "matches", "output", "tool", "available", "reason"])
         self.merge_log = QPlainTextEdit()
         self.merge_log.setReadOnly(True)
         self.logs_text = QPlainTextEdit()
         self.logs_text.setReadOnly(True)
+        self.export_dose_button = QPushButton("Export Dose JSON...")
+        self.export_fluence_button = QPushButton("Export Fluence JSON...")
+        self.cancel_extension_button = QPushButton("Cancel export")
+        self.extension_status = QLabel("Select an output directory to export results.")
+        self.extension_caution = QLabel(ui_text(
+            "JSON export reads discovered CSV files only; verify run_summary.txt status, "
+            "event counts, worker files and warnings. Dose/Fluence are experimental."
+        ))
+        self.extension_caution.setWordWrap(True)
+        self.extension_log = QPlainTextEdit()
+        self.extension_log.setReadOnly(True)
 
         self._build_layout()
         self._connect_signals()
@@ -95,6 +128,31 @@ class OutputPage(QWidget):
         csv_layout.addWidget(self.csv_message)
         csv_layout.addWidget(self.csv_table, 1)
         self.tabs.addTab(csv_tab, "CSV Preview")
+
+        dose_tab = QWidget()
+        dose_layout = QVBoxLayout(dose_tab)
+        dose_layout.addWidget(self.dose_message)
+        dose_layout.addWidget(self.dose_table, 1)
+        self.tabs.addTab(dose_tab, "Dose (Gy)")
+        fluence_tab = QWidget()
+        fluence_layout = QVBoxLayout(fluence_tab)
+        fluence_layout.addWidget(self.fluence_message)
+        fluence_layout.addWidget(self.fluence_table, 1)
+        self.tabs.addTab(fluence_tab, "Fluence (mm^-2)")
+
+        extension_tab = QWidget()
+        extension_layout = QVBoxLayout(extension_tab)
+        extension_buttons = QHBoxLayout()
+        extension_buttons.addWidget(self.export_dose_button)
+        extension_buttons.addWidget(self.export_fluence_button)
+        extension_buttons.addWidget(self.cancel_extension_button)
+        extension_buttons.addStretch(1)
+        extension_layout.addLayout(extension_buttons)
+        extension_layout.addWidget(self.extension_status)
+        extension_layout.addWidget(self.extension_caution)
+        extension_layout.addWidget(QLabel("JSON export process output and warnings"))
+        extension_layout.addWidget(self.extension_log, 1)
+        self.tabs.addTab(extension_tab, "JSON Exports (M5 prototype)")
 
         merge_tab = QWidget()
         merge_layout = QVBoxLayout(merge_tab)
@@ -141,6 +199,13 @@ class OutputPage(QWidget):
         self._merge_runner.allFinished.connect(self._on_all_merges_finished)
         self._merge_runner.errorOccurred.connect(lambda msg: QMessageBox.warning(self, "Merge error", msg))
         self._merge_runner.stateChanged.connect(self._on_merge_state_changed)
+        self.export_dose_button.clicked.connect(lambda: self.run_output_extension("dose_json"))
+        self.export_fluence_button.clicked.connect(lambda: self.run_output_extension("fluence_json"))
+        self.cancel_extension_button.clicked.connect(self._extension_runner.cancel)
+        self._extension_runner.outputReceived.connect(self.extension_log.insertPlainText)
+        self._extension_runner.stateChanged.connect(lambda _: self._update_extension_buttons())
+        self._extension_runner.finished.connect(self._on_extension_finished)
+        self._update_extension_buttons()
 
     def set_workspace_root(self, workspace_root: str) -> None:
         self._workspace_root = workspace_root
@@ -164,15 +229,21 @@ class OutputPage(QWidget):
         root_text = self._package_dir or self._output_dir
         if not root_text:
             self._files = []
+            self._update_dose_summary()
+            self._update_fluence_summary()
             self._update_overview()
             self._update_open_buttons()
+            self._update_extension_buttons()
             return
         root = Path(root_text)
         if not root.exists():
             self._files = []
+            self._update_dose_summary()
+            self._update_fluence_summary()
             self.preview_text.setPlainText(f"Directory does not exist yet:\n{root}")
             self._update_overview()
             self._update_open_buttons()
+            self._update_extension_buttons()
             return
         self._files = sorted(classify_files(root), key=self._file_sort_key)
         for info in self._files:
@@ -181,10 +252,57 @@ class OutputPage(QWidget):
         for column in range(3):
             self.file_tree.resizeColumnToContents(column)
         self._update_overview()
+        self._update_dose_summary()
+        self._update_fluence_summary()
         self._update_run_summary()
         self._update_logs_tab()
         self.refresh_merge_plan()
         self._update_open_buttons()
+        self._update_extension_buttons()
+
+    def run_output_extension(self, extension_id: str, destination: str | None = None) -> bool:
+        """Start a bundled CLI export without blocking the GUI event loop."""
+        if self._extension_runner.is_running():
+            self.extension_status.setText(ui_text("An output extension is already running."))
+            return False
+        if destination is None:
+            if not self._output_dir or not Path(self._output_dir).is_dir():
+                self.extension_status.setText(ui_text("Select an existing output directory first."))
+                return False
+            suggestion = str(Path(self._output_dir) / f"{extension_id}.json")
+            destination, _ = QFileDialog.getSaveFileName(
+                self, ui_text("Choose a new JSON result file"), suggestion, "JSON (*.json)",
+            )
+            if not destination:
+                return False
+        try:
+            self._extension_runner.start(extension_id, self._output_dir, destination)
+        except ValueError as error:
+            self.extension_status.setText(ui_format("JSON export rejected: {error}", error=error))
+            self.extension_log.appendPlainText(str(error))
+            return False
+        self.extension_log.clear()
+        self.extension_status.setText(ui_format("Exporting {extension}...", extension=extension_id))
+        return True
+
+    def _on_extension_finished(self, extension_id: str, path: str, success: bool, message: str) -> None:
+        state = "Completed" if success else "Failed"
+        self.extension_status.setText(ui_format("{extension}: {state}", extension=extension_id,
+                                                state=ui_text(state)))
+        self.extension_log.appendPlainText(message)
+        if success:
+            self.refresh()
+
+    def _update_extension_buttons(self) -> None:
+        idle = not self._extension_runner.is_running()
+        available = bool(self._output_dir and Path(self._output_dir).is_dir())
+        self.export_dose_button.setEnabled(idle and available)
+        self.export_fluence_button.setEnabled(idle and available)
+        self.cancel_extension_button.setEnabled(not idle)
+
+    def closeEvent(self, event) -> None:
+        self._extension_runner.shutdown()
+        super().closeEvent(event)
 
     def refresh_merge_plan(self) -> None:
         if not self._output_dir:
@@ -291,6 +409,53 @@ class OutputPage(QWidget):
                 self.csv_table.setItem(row_index, col_index, QTableWidgetItem(row[col_index] if col_index < len(row) else ""))
         self.csv_table.resizeColumnsToContents()
 
+    def _update_dose_summary(self) -> None:
+        self.dose_table.setRowCount(0)
+        records, warnings = read_dose_summaries(self._output_dir) if self._output_dir else ([], [])
+        explanation = ("每行是同一 run 和 physical touchable 在已发现线程中的累计吸收剂量。"
+                       "线程的沉积能量相加、质量只取一次；未证明线程文件完整。"
+                       "结果未按粒子注量、源强、照射时间或事件数归一化，尚无物理基准验收。")
+        if not records:
+            explanation += "\n没有可显示的 Dose 记录。"
+        if warnings:
+            explanation += "\n" + "\n".join(warnings)
+        self.dose_message.setPlainText(explanation)
+        for record in records:
+            values = [str(record.run_id), record.volume_path,
+                      ",".join(str(thread) for thread in sorted(record.thread_ids)),
+                      f"{record.mass_kg:.12g}", f"{record.raw_edep_MeV:.12g}",
+                      f"{record.weighted_edep_MeV:.12g}",
+                      f"{record.raw_dose_Gy:.12g}", f"{record.weighted_dose_Gy:.12g}"]
+            row = self.dose_table.rowCount()
+            self.dose_table.insertRow(row)
+            for col, value in enumerate(values):
+                self.dose_table.setItem(row, col, QTableWidgetItem(value))
+        self.dose_table.resizeColumnsToContents()
+
+    def _update_fluence_summary(self) -> None:
+        self.fluence_table.setRowCount(0)
+        records, warnings = read_fluence_summaries(self._output_dir) if self._output_dir else ([], [])
+        explanation = ("实验性 Track-Length Fluence：各线程对同一 physical touchable 的步长求和，"
+                       "再除以仅计一次的实体体积；单位 mm^-2。"
+                       "raw 未加权，weighted 使用 Geant4 step weight。"
+                       "未证明线程文件完整，未按事件数、照射时间归一化，也未完成独立物理基准。")
+        if not records:
+            explanation += "\n没有可显示的 Fluence 记录。"
+        if warnings:
+            explanation += "\n" + "\n".join(warnings)
+        self.fluence_message.setPlainText(explanation)
+        for record in records:
+            values = [str(record.run_id), record.volume_path,
+                      ",".join(map(str, sorted(record.thread_ids))),
+                      f"{record.volume_mm3:.12g}", f"{record.raw_track_length_mm:.12g}",
+                      f"{record.weighted_track_length_mm:.12g}",
+                      f"{record.raw_fluence_mm2:.12g}", f"{record.weighted_fluence_mm2:.12g}"]
+            row = self.fluence_table.rowCount()
+            self.fluence_table.insertRow(row)
+            for col, value in enumerate(values):
+                self.fluence_table.setItem(row, col, QTableWidgetItem(value))
+        self.fluence_table.resizeColumnsToContents()
+
     def _update_overview(self) -> None:
         counts: dict[str, int] = {}
         for info in self._files:
@@ -298,6 +463,8 @@ class OutputPage(QWidget):
         thread_csv = sum(counts.get(kind.value, 0) for kind in [
             OutputFileType.HITS_THREAD_CSV,
             OutputFileType.EVENT_EDEP_THREAD_CSV,
+            OutputFileType.DOSE_VOLUME_THREAD_CSV,
+            OutputFileType.FLUENCE_VOLUME_THREAD_CSV,
             OutputFileType.HIST_EDEP_RAW_THREAD_CSV,
             OutputFileType.HIST_EDEP_WEIGHTED_THREAD_CSV,
         ])
