@@ -1,5 +1,6 @@
 #pragma once
 
+#include "G4EmCalculator.hh"
 #include "G4String.hh"
 #include "G4VSensitiveDetector.hh"
 #include "globals.hh"
@@ -47,6 +48,9 @@ public:
 private:
     int GetCurrentEventID() const;
     ScoringManager* ResolveScoringManager();
+    // Unrestricted electronic stopping power at the step's mean kinetic energy
+    // (Geant4 units); 0 for neutral particles or zero-length steps.
+    double ElectronicStoppingPower(const G4Step* step);
 
     ScoringManager* scoringManager_ = nullptr; // not owned
     ParticleHitCollection* hitsCollection_ = nullptr; // owned by Geant4 event after insertion
@@ -59,6 +63,7 @@ private:
 
     int verboseLevel_ = 0;
     bool fallbackWarningIssued_ = false;
+    G4EmCalculator emCalculator_;
     int hitsThisEvent_ = 0;
     double rawEdepThisEvent_ = 0.0;
     double weightedEdepThisEvent_ = 0.0;

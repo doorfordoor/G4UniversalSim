@@ -4,6 +4,7 @@
 #include "Scoring/ScorerBase.hh"
 
 #include <memory>
+#include <set>
 #include <string>
 #include <vector>
 
@@ -37,6 +38,9 @@ public:
 
     void EnableLETScoring(bool enable);
     bool IsLETScoringEnabled() const;
+    // Particles included in LET averages; empty = all charged particles.
+    void SetLETParticles(const std::set<std::string>& particles);
+    const std::set<std::string>& GetLETParticles() const;
 
     void EnableDoseScoring(bool enable);
     bool IsDoseScoringEnabled() const;
@@ -80,6 +84,8 @@ public:
     void ScoreFluenceStep(const HitRecord& hit);
     // Record failures before a transport step can be converted to HitRecord.
     void ReportFluenceTransportFailure(const std::string& message);
+    // Charged step without energy deposit: LET track-length contribution only.
+    void ScoreLETStep(const HitRecord& hit);
 
     double GetCurrentEventRawEdep() const;
     double GetCurrentEventWeightedEdep() const;
@@ -115,6 +121,7 @@ private:
     bool letScoringEnabled_ = false;
     bool doseScoringEnabled_ = false;
     bool fluenceScoringEnabled_ = false;
+    std::set<std::string> letParticles_;
     bool autoCreateDefaultScorers_ = true;
 
     bool edepRawHistogramEnabled_ = true;

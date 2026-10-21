@@ -250,18 +250,7 @@ def main() -> int:
         )
         assert_failure(region_text, "Physics region cuts", "geometry volume cut.*")
 
-        for scoring, label, alternative in (("let", "LET", "Edep"),):
-            text = write_and_run(
-                scoring,
-                main_config(
-                    output=temp / f"{scoring}-output",
-                    geometry_template="simple_box",
-                    geometry_config=simple_geometry,
-                    materials_config=materials,
-                    extra=f"\n[scoring]\n{scoring} = true\n",
-                ),
-            )
-            assert_failure(text, f"'{label}'", alternative)
+        # LET became a supported (experimental) scorer in roadmap A2; see scripts/test_let_scoring.py.
 
         for name, command, markers in (
             (

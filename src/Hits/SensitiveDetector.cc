@@ -18,6 +18,7 @@
 #include "G4Threading.hh"
 #endif
 
+#include <cmath>
 #include <memory>
 #include <stdexcept>
 
@@ -65,12 +66,17 @@ G4bool SensitiveDetector::ProcessHits(G4Step* step, G4TouchableHistory* history)
     if (!zeroEdepHitsEnabled_ && edep <= 0.0 && ndep <= 0.0) {
         if (scoringEnabled_) {
             if (ScoringManager* manager = ResolveScoringManager();
-                manager && manager->IsFluenceScoringEnabled() && step->GetStepLength() > 0.0) {
+                manager && (manager->IsFluenceScoringEnabled() || manager->IsLETScoringEnabled()) &&
+                step->GetStepLength() > 0.0) {
                 try {
                     std::unique_ptr<ParticleHit> particle(ParticleHit::FromStep(step, GetCurrentEventID()));
                     auto record = particle->ToHitRecord();
                     PopulateDoseContext(step, record);
-                    manager->ScoreFluenceStep(record);
+                    if (manager->IsFluenceScoringEnabled()) manager->ScoreFluenceStep(record);
+                    if (manager->IsLETScoringEnabled()) {
+                        record.LETstep = ElectronicStoppingPower(step);
+                        manager->ScoreLETStep(record);
+                    }
                 } catch (const std::exception& error) {
                     manager->ReportFluenceTransportFailure(error.what());
                 }
@@ -88,7 +94,9 @@ G4bool SensitiveDetector::ProcessHits(G4Step* step, G4TouchableHistory* history)
     if (scoringEnabled_) {
         if (ScoringManager* scoringManager = ResolveScoringManager()) {
             auto record = hit->ToHitRecord();
-            if (scoringManager->IsDoseScoringEnabled() || scoringManager->IsFluenceScoringEnabled()) PopulateDoseContext(step, record);
+            if (scoringManager->IsDoseScoringEnabled() || scoringManager->IsFluenceScoringEnabled() ||
+                scoringManager->IsLETScoringEnabled()) PopulateDoseContext(step, record);
+            if (scoringManager->IsLETScoringEnabled()) record.LETstep = ElectronicStoppingPower(step);
             scoringManager->ScoreHit(record);
         }
     }
@@ -200,6 +208,21 @@ int SensitiveDetector::GetCurrentEventID() const
     const G4Event* event = runManager->GetCurrentEvent();
     if (!event) return -1;
     return event->GetEventID();
+}
+
+double SensitiveDetector::ElectronicStoppingPower(const G4Step* step)
+{
+    if (!step || step->GetStepLength() <= 0.0) return 0.0;
+    const G4Track* track = step->GetTrack();
+    const G4StepPoint* pre = step->GetPreStepPoint();
+    const G4StepPoint* post = step->GetPostStepPoint();
+    if (!track || !pre || !post || !pre->GetMaterial()) return 0.0;
+    const G4ParticleDefinition* particle = track->GetParticleDefinition();
+    if (!particle || particle->GetPDGCharge() == 0.0) return 0.0;
+    const G4double meanEnergy = 0.5 * (pre->GetKineticEnergy() + post->GetKineticEnergy());
+    if (meanEnergy <= 0.0) return 0.0;
+    const G4double dedx = emCalculator_.ComputeElectronicDEDX(meanEnergy, particle, pre->GetMaterial());
+    return std::isfinite(dedx) && dedx > 0.0 ? dedx : 0.0;
 }
 
 ScoringManager* SensitiveDetector::ResolveScoringManager()

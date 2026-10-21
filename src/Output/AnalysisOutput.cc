@@ -92,6 +92,12 @@ void Book(G4AnalysisManager* manager, const AnalysisOutput::H1Binning& raw,
         .I("runID").I("threadID").S("mesh").S("quantity").S("unit").I("i0").I("i1").I("i2")
         .D("sum").D("sum_sq").I("entries").D("n_events")
         .Finish();
+    NtupleBuilder(manager, AnalysisOutput::kLetNtuple, "let",
+                  "Track/dose-averaged LET per sensitive touchable (one row per worker; sum the sum_* columns)")
+        .I("runID").I("threadID").S("volume_path").S("volume_name").S("particles").D("steps")
+        .D("sum_wl_mm").D("sum_wSl_MeV").D("sum_wS2l_MeV2_per_mm")
+        .D("let_t_keV_per_um").D("let_d_keV_per_um")
+        .Finish();
 }
 
 // Small helper so fill code reads as a column list.
@@ -218,6 +224,17 @@ void FillMeshCell(int runId, int threadId, const std::string& mesh, const std::s
     RowFiller(G4AnalysisManager::Instance(), kMeshNtuple)
         .I(runId).I(threadId).S(mesh).S(quantity).S(unit).I(i0).I(i1).I(i2)
         .D(sum).D(sumSquares).I(entries).D(static_cast<double>(events))
+        .Add();
+}
+
+void FillLET(int runId, int threadId, const std::string& volumePath, const std::string& volumeName,
+             const std::string& particles, long long steps, double sumWLmm, double sumWSlMeV,
+             double sumWS2lMeV2PerMm, double letTkeVPerUm, double letDkeVPerUm)
+{
+    if (!fileOpen) return;
+    RowFiller(G4AnalysisManager::Instance(), kLetNtuple)
+        .I(runId).I(threadId).S(volumePath).S(volumeName).S(particles).D(static_cast<double>(steps))
+        .D(sumWLmm).D(sumWSlMeV).D(sumWS2lMeV2PerMm).D(letTkeVPerUm).D(letDkeVPerUm)
         .Add();
 }
 

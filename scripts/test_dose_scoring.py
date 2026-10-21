@@ -138,11 +138,11 @@ def main() -> None:
         double = execute(root, "double", enabled, macro + "/run/beamOn 40\n", 2)
         check_output(double, 2, 2)
         check_output_extension(double, root)
-        for unsupported in ("let",):
-            invalid = enabled.replace(f"{unsupported} = false", f"{unsupported} = true")
-            failed = execute(root, unsupported, invalid, macro, expected=1)
-            assert not list(failed.glob("hits*.csv")), unsupported
-        print("PASS: disabled, single/MT, multi-run, mass, Gy, manifest, M5 real Dose JSON, LET rejection")
+        # LET is supported since roadmap A2 (scripts/test_let_scoring.py); dose + LET must coexist.
+        both = execute(root, "dose_let", enabled.replace("let = false", "let = true"), macro)
+        check_output(both, 1, 1)
+        assert list(both.glob("let_volume_summary_t*.csv")), "LET summary missing next to dose"
+        print("PASS: disabled, single/MT, multi-run, mass, Gy, manifest, M5 real Dose JSON, dose+LET coexistence")
 
 
 if __name__ == "__main__":

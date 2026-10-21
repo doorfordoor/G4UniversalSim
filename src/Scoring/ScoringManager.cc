@@ -47,6 +47,7 @@ std::unique_ptr<ScoringManager> ScoringManager::CloneForThread(OutputManager* ou
     clone->eventEdepOutputEnabled_ = eventEdepOutputEnabled_;
     clone->edepScoringEnabled_ = edepScoringEnabled_;
     clone->letScoringEnabled_ = letScoringEnabled_;
+    clone->letParticles_ = letParticles_;
     clone->doseScoringEnabled_ = doseScoringEnabled_;
     clone->fluenceScoringEnabled_ = fluenceScoringEnabled_;
     clone->autoCreateDefaultScorers_ = autoCreateDefaultScorers_;
@@ -121,12 +122,6 @@ bool ScoringManager::IsEdepScoringEnabled() const
 
 void ScoringManager::EnableLETScoring(bool enable)
 {
-    if (enable) {
-        throw std::runtime_error(
-            "Scoring capability 'LET' is not supported because no reliable runtime LET calculation chain exists. "
-            "Use hits or Edep scoring instead."
-        );
-    }
     letScoringEnabled_ = enable;
     SetScorerEnabledIfExists("let", enable);
 }
@@ -134,6 +129,17 @@ void ScoringManager::EnableLETScoring(bool enable)
 bool ScoringManager::IsLETScoringEnabled() const
 {
     return letScoringEnabled_;
+}
+
+void ScoringManager::SetLETParticles(const std::set<std::string>& particles)
+{
+    letParticles_ = particles;
+    if (auto* scorer = dynamic_cast<LETScorer*>(GetScorer("let"))) scorer->SetParticles(particles);
+}
+
+const std::set<std::string>& ScoringManager::GetLETParticles() const
+{
+    return letParticles_;
 }
 
 void ScoringManager::EnableDoseScoring(bool enable)
@@ -235,6 +241,7 @@ void ScoringManager::EnsureDefaultScorers()
     if (letScoringEnabled_ && !HasScorer("let")) {
         auto scorer = std::make_unique<LETScorer>("let");
         scorer->SetEnabled(true);
+        scorer->SetParticles(letParticles_);
         RegisterScorer(std::move(scorer));
     }
     if (doseScoringEnabled_ && !HasScorer("dose")) {
@@ -395,6 +402,20 @@ void ScoringManager::ScoreFluenceStep(const HitRecord& hit)
     }
 }
 
+void ScoringManager::ScoreLETStep(const HitRecord& hit)
+{
+    if (!enabled_ || !letScoringEnabled_) return;
+    if (outputManager_ && outputManager_->HasOutputFailure()) return;
+    ScorerBase* scorer = GetScorer("let");
+    if (!scorer || !scorer->IsEnabled()) return;
+    try {
+        scorer->ScoreHit(hit);
+    } catch (const std::exception& error) {
+        if (outputManager_) outputManager_->RecordOutputFailure("scoring_let", error.what());
+        if (auto* runManager = G4RunManager::GetRunManager()) runManager->AbortRun(true);
+    }
+}
+
 void ScoringManager::ReportFluenceTransportFailure(const std::string& message)
 {
     if (outputManager_) outputManager_->RecordOutputFailure("scoring_fluence", message);
@@ -459,6 +480,19 @@ void ScoringManager::LoadFromConfig(const ConfigManager& config)
 
     if (auto* scorer = GetEdepScorer()) {
         ApplyEdepSettings(*scorer);
+    }
+
+    if (config.HasKey("scoring.let", "particles")) {
+        std::set<std::string> particles;
+        const std::string text = StringUtils::Trim(config.GetString("scoring.let", "particles"));
+        if (StringUtils::ToLower(text) != "all") {
+            for (const std::string& part : StringUtils::Split(text, ',')) {
+                const std::string name = StringUtils::Trim(part);
+                if (!name.empty()) particles.insert(name);
+            }
+            if (particles.empty()) throw std::runtime_error("[scoring.let] particles must be 'all' or a particle list");
+        }
+        SetLETParticles(particles);
     }
 }
 

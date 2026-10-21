@@ -30,6 +30,7 @@ const std::map<std::string, std::vector<std::string>>& KnownKeys()
         {"physics.microelec", {"enabled", "region", "electron_capture", "electron_capture_threshold"}},
         {"scoring", {"enabled", "hits", "event_edep", "edep", "let", "dose", "fluence", "auto_create_default_scorers", "verbose"}},
         {"scoring.edep", {"raw_histogram", "weighted_histogram", "bins", "min", "max", "volume_summary", "particle_summary"}},
+        {"scoring.let", {"particles"}},
         {"biasing", {"enabled"}},
         {"biasing.xs", {"particles", "processes", "volumes", "factor", "only_primary", "apply_to_secondaries", "min_weight", "max_interactions"}},
         {"source", {"preset", "particle", "energy", "verbose", "isotropic", "position_type", "position", "radius", "center", "z", "direction"}},

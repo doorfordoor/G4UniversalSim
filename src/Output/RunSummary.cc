@@ -60,6 +60,10 @@ std::string GeneratedFileSchema(const std::string& path)
         if (header == "runID,volume_path,volume_name,mass_kg,raw_edep_MeV,weighted_edep_MeV,"
                       "raw_dose_Gy,weighted_dose_Gy") return "dose_volume_csv_v1";
     }
+    if (matches("let_volume_summary")) {
+        if (header == "runID,volume_path,volume_name,particles,steps,sum_wl_mm,sum_wSl_MeV,"
+                      "sum_wS2l_MeV2_per_mm,let_t_keV_per_um,let_d_keV_per_um") return "let_volume_csv_v1";
+    }
     if (matches("fluence_volume_summary")) {
         if (header == "runID,volume_path,volume_name,volume_mm3,raw_track_length_mm,"
                       "weighted_track_length_mm,raw_fluence_mm-2,weighted_fluence_mm-2") return "fluence_volume_csv_v1";

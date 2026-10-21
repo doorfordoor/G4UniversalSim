@@ -19,7 +19,8 @@ namespace AnalysisOutput {
 
 // Version of the ROOT object layout below. Bump on any column/object change.
 // v2: added the "mesh" ntuple (Geant4 command-based scoring meshes).
-constexpr int kRootSchemaVersion = 2;
+// v3: added the "let" ntuple (track-/dose-averaged LET).
+constexpr int kRootSchemaVersion = 3;
 
 enum NtupleId : int {
     kHitsNtuple = 0,
@@ -28,7 +29,8 @@ enum NtupleId : int {
     kEdepParticleNtuple = 3,
     kDoseNtuple = 4,
     kFluenceNtuple = 5,
-    kMeshNtuple = 6
+    kMeshNtuple = 6,
+    kLetNtuple = 7
 };
 
 enum H1Id : int {
@@ -65,5 +67,10 @@ void FillFluence(int runId, int threadId, const std::string& volumePath, const s
 void FillMeshCell(int runId, int threadId, const std::string& mesh, const std::string& quantity,
                   const std::string& unit, int i0, int i1, int i2, double sum, double sumSquares,
                   int entries, long long events);
+
+// LET sums per sensitive touchable, one row per worker (sums additive over threadID).
+void FillLET(int runId, int threadId, const std::string& volumePath, const std::string& volumeName,
+             const std::string& particles, long long steps, double sumWLmm, double sumWSlMeV,
+             double sumWS2lMeV2PerMm, double letTkeVPerUm, double letDkeVPerUm);
 
 }  // namespace AnalysisOutput

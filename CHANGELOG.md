@@ -7,6 +7,17 @@ Short, user-facing record of notable changes. Detailed support status lives in
 ## Unreleased
 
 ### Added
+- **Geant4 scoring meshes** (roadmap A2): native `/score/` box and cylinder meshes with
+  all primitive scorers and particle/energy filters, from macros or INI
+  (`[scoring.mesh.<mesh>]`, `[scoring.mesh.<mesh>.<quantity>]`). Results per run in the
+  ROOT `mesh` ntuple and `scoring_mesh[_rR].csv` with sum, sum of squares, entries and
+  relative error; `scripts/g4usim_io.py` loads them as dense arrays.
+- **LET** (roadmap A2): `[scoring] let = true` gives track- and dose-averaged LET per
+  sensitive volume (`let` ntuple, `let_volume_summary` CSV), checked against the Bethe
+  formula for protons in water.
+- Dose and fluence prototypes validated against native `doseDeposit` / `cellFlux`
+  (agreement < 1e-9).
+- ROOT schema is now `g4usim_root_v3` (adds `mesh` and `let`).
 - **ROOT output** via Geant4 `G4AnalysisManager` (roadmap Phase A1).
   `[output] format = csv | root | both` and `/AIHL/output/setFormat`.
   One `g4usim.root` per run with worker threads merged automatically; histograms

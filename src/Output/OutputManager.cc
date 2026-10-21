@@ -302,7 +302,7 @@ void OutputManager::ValidateOutputTargetDirectories(int runId, int threadCount) 
         for (const char* name : {"hits.csv", "event_edep.csv", "hist_edep_raw.csv",
                                  "hist_edep_weighted.csv", "edep_volume_summary.csv",
                                  "edep_particle_summary.csv", "dose_volume_summary.csv",
-                                 "fluence_volume_summary.csv"}) {
+                                 "fluence_volume_summary.csv", "let_volume_summary.csv"}) {
             const std::filesystem::path path(candidate.MakeOutputPath(candidate.MakeThreadFilename(name)));
             error.clear();
             const bool exists = std::filesystem::exists(path, error);

@@ -1232,6 +1232,13 @@ void SimulationManager::WriteBaseRunSummary()
     summary.SetBool("scoring_event_edep_enabled", scoringManager_ ? scoringManager_->IsEventEdepOutputEnabled() : false);
     summary.SetBool("scoring_edep_enabled", scoringManager_ ? scoringManager_->IsEdepScoringEnabled() : false);
     summary.SetBool("scoring_let_enabled", scoringManager_ ? scoringManager_->IsLETScoringEnabled() : false);
+    {
+        std::string particles;
+        if (scoringManager_) {
+            for (const auto& name : scoringManager_->GetLETParticles()) particles += (particles.empty() ? "" : ",") + name;
+        }
+        summary.Set("scoring_let_particles", particles.empty() ? "all_charged" : particles);
+    }
     summary.SetBool("scoring_dose_enabled", scoringManager_ ? scoringManager_->IsDoseScoringEnabled() : false);
     summary.SetBool("scoring_fluence_enabled", scoringManager_ ? scoringManager_->IsFluenceScoringEnabled() : false);
     summary.SetBool("scoring_auto_create_default_scorers", scoringManager_ ? scoringManager_->IsAutoCreateDefaultScorersEnabled() : false);

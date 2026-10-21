@@ -29,8 +29,8 @@ def main() -> int:
     assert "gdml" not in capabilities.runtime_ids("templates")
     assert "temperature" not in capabilities.runtime_ids("materials")
     assert "physics_region_cuts" not in capabilities.runtime_ids("physics")
-    assert capabilities.runtime_ids("scorers") == {"hits", "edep", "dose", "fluence"}
-    assert "let" not in capabilities.runtime_ids("scorers")
+    assert capabilities.runtime_ids("scorers") == {"hits", "edep", "dose", "fluence", "let"}
+    assert "let" in capabilities.runtime_ids("scorers")
     assert re.fullmatch(r"[0-9a-f]{64}", capabilities.data["source_fingerprint"])
     assert capabilities.data["build_configuration"] in {"Debug", "Release", "RelWithDebInfo", "MinSizeRel"}
     assert capabilities.data["compiler_id"]

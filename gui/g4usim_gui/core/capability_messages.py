@@ -15,8 +15,8 @@ _MESSAGES = {
         "use density, state, and composition only."
     ),
     "scoring.let.unsupported": (
-        "LET is not supported by the backend because no reliable runtime "
-        "LET calculation chain exists"
+        "LET is experimental and not yet editable in this GUI; enable it with "
+        "[scoring] let = true in an external main INI"
     ),
     "scoring.dose.unsupported": (
         "Dose is experimental and only supports sensitive physical touchables with default scorers"

@@ -118,7 +118,7 @@ ScoringMessenger::ScoringMessenger(ScoringManager* manager)
     hitsCmd_->SetGuidance("Enable or disable hit output.");
     eventEdepCmd_->SetGuidance("Enable or disable event edep output.");
     edepCmd_->SetGuidance("Enable or disable EdepScorer.");
-    letCmd_->SetGuidance("LET scoring is unavailable until a reliable runtime LET calculation chain exists.");
+    letCmd_->SetGuidance("Enable track-/dose-averaged LET in sensitive volumes (keV/um, experimental; set in INI [scoring] let = true).");
     doseCmd_->SetGuidance("Enable sensitive-volume absorbed dose scoring (Gy, experimental; pre-initialization only).");
     fluenceCmd_->SetGuidance("Enable experimental sensitive-volume track-length fluence (mm^-2); requires daughter-free sensitive solids.");
     autoCreateScorersCmd_->SetGuidance("Enable automatic default scorer creation.");
