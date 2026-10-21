@@ -158,15 +158,27 @@ void SourceManager::LoadFromConfig(const ConfigManager& config)
 
     if (config.HasKey("source", "preset")) {
         const std::string preset = StringUtils::Trim(config.GetString("source", "preset", ""));
-        if (!preset.empty()) ApplyPreset(preset);
+        if (preset.empty()) {
+            throw std::runtime_error("SourceManager [source]/preset must not be empty; "
+                                     "remove the key or choose a supported preset.");
+        }
+        ApplyPreset(preset);
     }
     if (config.HasKey("source", "particle")) {
         const std::string particle = StringUtils::Trim(config.GetString("source", "particle", ""));
-        if (!particle.empty()) SetParticle(particle);
+        if (particle.empty()) {
+            throw std::runtime_error("SourceManager [source]/particle must not be empty; "
+                                     "remove the key or specify a particle.");
+        }
+        SetParticle(particle);
     }
     if (config.HasKey("source", "energy")) {
         const std::string energy = StringUtils::Trim(config.GetString("source", "energy", ""));
-        if (!energy.empty()) SetMonoEnergy(UnitParser::ParseEnergy(energy));
+        if (energy.empty()) {
+            throw std::runtime_error("SourceManager [source]/energy must not be empty; "
+                                     "remove the key or specify a positive energy with units.");
+        }
+        SetMonoEnergy(UnitParser::ParseEnergy(energy));
     }
     if (config.HasKey("source", "verbose")) {
         SetVerboseLevel(config.GetInt("source", "verbose", verboseLevel_));

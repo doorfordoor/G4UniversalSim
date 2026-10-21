@@ -317,6 +317,17 @@ def main() -> int:
         source_missing_point_ini.write_text(
             main_text.replace("position = 0,0,-1 mm", ""), encoding="utf-8",
         )
+        # Explicit empty fields were marked consumed while silently falling
+        # back to the preset. Absent keys remain valid for preset defaults.
+        empty_source_fields = []
+        for key, configured in (("preset", "proton_beam"),
+                                ("particle", "proton"),
+                                ("energy", "10 MeV")):
+            original = f"{key} = {configured}"
+            assert main_text.count(original) == 1, original
+            path = temp / f"source-empty-{key}.ini"
+            path.write_text(main_text.replace(original, f"{key} =   "), encoding="utf-8")
+            empty_source_fields.append((path, f"[source]/{key} must not be empty"))
         # strtod accepts NaN/Inf, but they cannot represent a physical GPS
         # source. They previously passed --inspect-run without an error.
         invalid_numeric_sources = []
@@ -337,6 +348,7 @@ def main() -> int:
         for bad_config, expected_error in (
             (source_invalid_type_ini, "unsupported [source]/position_type"),
             (source_missing_point_ini, "[source]/position_type=point requires"),
+            *empty_source_fields,
             *((path, "Non-finite numeric value") for path in invalid_numeric_sources),
         ):
             invalid_source_output = temp / (bad_config.stem + "-output")
