@@ -1,0 +1,29 @@
+# ---- Build trees (CMake / Visual Studio / Ninja) ----
+/build*/
+/.build_ninja/
+/out/
+/.vs/
+/.upload/
+CMakeUserPresets.json
+
+# ---- Compiled and packaged artifacts ----
+*.o
+*.obj
+*.exe
+*.pdb
+*.ilk
+*.zip
+
+# ---- Python ----
+__pycache__/
+*.py[cod]
+.venv/
+
+# ---- Simulation run outputs ----
+# Anchored with a leading slash so source packages such as
+# gui/g4usim_gui/output/ are NOT ignored.
+/output/
+/test/output/
+/gui_runs/
+*.root
+*.log
