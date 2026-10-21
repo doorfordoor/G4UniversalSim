@@ -1,6 +1,7 @@
 #include "Output/OutputManager.hh"
 
 #include "Output/AnalysisOutput.hh"
+#include "Scoring/ScoringMeshExport.hh"
 #include "Utils/FileUtils.hh"
 #include "Utils/StringUtils.hh"
 
@@ -168,6 +169,37 @@ std::string OutputManager::RootFilePath() const
 void OutputManager::WriteRunMetadataJson()
 {
     runSummary_.WriteJson(MakeOutputPath("run_metadata.json"));
+}
+
+void OutputManager::FillScoringMeshesRoot(int runId, long long threadEvents)
+{
+    if (!WritesRoot() || !ScoringMeshExport::HasMeshes()) return;
+    for (const auto& c : ScoringMeshExport::CollectCells()) {
+        AnalysisOutput::FillMeshCell(runId, threadId_, c.mesh, c.quantity, c.unit, c.i0, c.i1, c.i2,
+                                     c.sum, c.sumSquares, c.entries, threadEvents);
+    }
+}
+
+void OutputManager::WriteScoringMeshesCsv(int runId, long long events)
+{
+    if (!ScoringMeshExport::HasMeshes()) return;
+    ScoringMeshExport::RecordInSummary(runSummary_);
+    if (!WritesCsv()) return;
+    const auto cells = ScoringMeshExport::CollectCells();
+    Initialize();
+    const std::string filename = MakeOutputPath(
+        runId > 0 ? "scoring_mesh_r" + std::to_string(runId) + ".csv" : "scoring_mesh.csv");
+    CsvWriter writer(filename);
+    writer.WriteHeader({"runID", "mesh", "quantity", "unit", "i0", "i1", "i2", "sum", "sum_sq",
+                        "entries", "n_events", "rel_error"});
+    for (const auto& c : cells) {
+        writer.WriteRow({std::to_string(runId), c.mesh, c.quantity, c.unit, std::to_string(c.i0),
+                         std::to_string(c.i1), std::to_string(c.i2), ToString(c.sum), ToString(c.sumSquares),
+                         std::to_string(c.entries), std::to_string(events),
+                         ToString(ScoringMeshExport::RelativeError(c.sum, c.sumSquares, events))});
+    }
+    writer.Close();
+    RegisterGeneratedFile(filename);
 }
 
 void OutputManager::EnableThreadSuffix(bool enable)

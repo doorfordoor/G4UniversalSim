@@ -108,11 +108,11 @@ def main() -> int:
         metadata = json.loads((output / "run_metadata.json").read_text(encoding="utf-8"))
         assert metadata["schema"] == "run_metadata_json_v1"
         assert metadata["values"]["output_format"] == "both"
-        assert metadata["values"]["output_root_schema_version"] == "1"
+        assert metadata["values"]["output_root_schema_version"] == "2"
         assert [r["completed_events"] for r in metadata["runs"]] == [60, 20], metadata["runs"]
         schemas = {Path(f["path"]).name: f["schema"] for f in metadata["generated_files"]}
-        assert schemas.get("g4usim.root") == "g4usim_root_v1", schemas
-        assert schemas.get("g4usim_r1.root") == "g4usim_root_v1", schemas
+        assert schemas.get("g4usim.root") == "g4usim_root_v2", schemas
+        assert schemas.get("g4usim_r1.root") == "g4usim_root_v2", schemas
 
         # 2. root only: no CSV data files.
         output, _ = run(work, "root_only", "format = root", "/run/initialize\n/run/beamOn 30\n")
@@ -141,7 +141,7 @@ def main() -> int:
                                          check=True, cwd=EXE.parent).stdout)
         outputs = caps["outputs"]
         assert outputs["formats"] == ["csv", "root", "both"], outputs
-        assert outputs["root"]["thread_merge"] is True and outputs["root"]["schema_version"] == 1, outputs
+        assert outputs["root"]["thread_merge"] is True and outputs["root"]["schema_version"] == 2, outputs
         print("capabilities: ok")
     finally:
         shutil.rmtree(work, ignore_errors=True)

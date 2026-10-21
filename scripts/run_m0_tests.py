@@ -61,6 +61,7 @@ CASES = (
     Case("dose_scoring", "scripts/test_dose_scoring.py", "backend", ("exe",)),
     Case("fluence_scoring", "scripts/test_fluence_scoring.py", "backend", ("exe",)),
     Case("root_output", "scripts/test_root_output.py", "backend", ("exe", "uproot")),
+    Case("scoring_mesh", "scripts/test_scoring_mesh.py", "backend", ("exe", "uproot")),
     Case("interactive_commands", "scripts/test_interactive_commands.py", "backend", ("exe",)),
     Case("unsupported_features", "scripts/test_unsupported_features.py", "backend", ("exe",), args=("--layer", "backend")),
     Case("unconsumed_config", "scripts/test_unconsumed_config.py", "backend", ("exe",)),

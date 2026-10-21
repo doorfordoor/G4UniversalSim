@@ -18,7 +18,8 @@ struct EventEdepRecord;
 namespace AnalysisOutput {
 
 // Version of the ROOT object layout below. Bump on any column/object change.
-constexpr int kRootSchemaVersion = 1;
+// v2: added the "mesh" ntuple (Geant4 command-based scoring meshes).
+constexpr int kRootSchemaVersion = 2;
 
 enum NtupleId : int {
     kHitsNtuple = 0,
@@ -26,7 +27,8 @@ enum NtupleId : int {
     kEdepVolumeNtuple = 2,
     kEdepParticleNtuple = 3,
     kDoseNtuple = 4,
-    kFluenceNtuple = 5
+    kFluenceNtuple = 5,
+    kMeshNtuple = 6
 };
 
 enum H1Id : int {
@@ -57,5 +59,11 @@ void FillDose(int runId, int threadId, const std::string& volumePath, const std:
 void FillFluence(int runId, int threadId, const std::string& volumePath, const std::string& volumeName,
                  double volumeMm3, double rawTrackLengthMm, double weightedTrackLengthMm,
                  double rawFluencePerMm2, double weightedFluencePerMm2);
+
+// One row per non-empty scoring-mesh cell per worker thread (worker partial
+// results; sum, sum_sq, entries and n_events are additive over threadID).
+void FillMeshCell(int runId, int threadId, const std::string& mesh, const std::string& quantity,
+                  const std::string& unit, int i0, int i1, int i2, double sum, double sumSquares,
+                  int entries, long long events);
 
 }  // namespace AnalysisOutput

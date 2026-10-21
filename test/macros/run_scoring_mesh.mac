@@ -1,0 +1,15 @@
+# Geant4 command-based scoring mesh over the 20 mm silicon target of
+# config/geometry/hit_smoke_box.ini (centred at the origin): a depth profile in
+# 20 slices of 1 mm. Use with test/main_root_output.ini (format = both).
+/score/create/boxMesh depthMesh
+/score/mesh/boxSize 10. 10. 10. mm
+/score/mesh/nBin 1 1 20
+/score/mesh/translate/xyz 0. 0. 0. mm
+/score/quantity/energyDeposit eDep MeV
+/score/quantity/doseDeposit dose Gy
+/score/quantity/cellFlux flux
+/score/close
+
+/run/initialize
+/run/beamOn 100
+/run/beamOn 40

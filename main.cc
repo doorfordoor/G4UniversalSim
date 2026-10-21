@@ -13,6 +13,7 @@
 #include "G4UIterminal.hh"
 #include "G4UIcsh.hh"
 #include "G4UImanager.hh"
+#include "G4ScoringManager.hh"
 #include "G4UIcommand.hh"
 #include "G4UIparameter.hh"
 #include "G4UIcommandStatus.hh"
@@ -615,6 +616,9 @@ int main(int argc, char** argv) {
     }
 
     auto runManager = CreateRunManager(sim);
+    // Enable Geant4 command-based scoring (/score/...). Must exist on the
+    // master before /run/initialize; meshes are merged across threads.
+    G4ScoringManager::GetScoringManager();
 
     auto detector = sim.CreateDetectorConstruction();
     detector->SetSensitiveDetectorFactory(sim.CreateSensitiveDetectorFactory());

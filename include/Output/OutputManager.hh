@@ -52,6 +52,10 @@ public:
     std::string RootFilename() const;
     std::string RootFilePath() const;
     void WriteRunMetadataJson();
+    // Master/sequential: merged /score/ mesh results of this run to CSV and the summary.
+    void WriteScoringMeshesCsv(int runId, long long events);
+    // Worker/sequential: this thread's partial mesh results to the ROOT "mesh" ntuple.
+    void FillScoringMeshesRoot(int runId, long long threadEvents);
 
     void EnableThreadSuffix(bool enable);
     bool IsThreadSuffixEnabled() const;

@@ -173,6 +173,23 @@ void RunAction::EndOfRunAction(const G4Run* run)
         if (!outputManager->HasOutputFailure()) {
             attempt("run_flush", [&]() { outputManager->Flush(); });
         }
+        // Geant4 merges worker scoring meshes into the master before the
+        // master's EndOfRunAction, so meshes are exported once, here.
+        // Workers still hold their own partial mesh values here; in MT the
+        // master owns no ntuples, so ROOT rows come from workers (per thread)
+        // and the merged CSV comes from the master.
+        if (!outputManager->HasOutputFailure()) {
+            if (role_ != Role::Master) {
+                attempt("scoring_mesh_root", [&]() {
+                    outputManager->FillScoringMeshesRoot(runID, run->GetNumberOfEvent());
+                });
+            }
+            if (role_ != Role::Worker) {
+                attempt("scoring_mesh_csv", [&]() {
+                    outputManager->WriteScoringMeshesCsv(runID, run->GetNumberOfEvent());
+                });
+            }
+        }
         // Always close an open ROOT file, even after a failure, so the master
         // can finish merging. Workers end before the master in Geant4 MT.
         attempt("root_write_close", [&]() {

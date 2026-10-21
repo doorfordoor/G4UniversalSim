@@ -87,6 +87,11 @@ void Book(G4AnalysisManager* manager, const AnalysisOutput::H1Binning& raw,
         .D("raw_track_length_mm").D("weighted_track_length_mm")
         .D("raw_fluence_mm-2").D("weighted_fluence_mm-2")
         .Finish();
+    NtupleBuilder(manager, AnalysisOutput::kMeshNtuple, "mesh",
+                  "Geant4 scoring-mesh cells (/score/), one row per worker; sum columns over threadID")
+        .I("runID").I("threadID").S("mesh").S("quantity").S("unit").I("i0").I("i1").I("i2")
+        .D("sum").D("sum_sq").I("entries").D("n_events")
+        .Finish();
 }
 
 // Small helper so fill code reads as a column list.
@@ -202,6 +207,17 @@ void FillFluence(int runId, int threadId, const std::string& volumePath, const s
         .I(runId).I(threadId).S(volumePath).S(volumeName).D(volumeMm3)
         .D(rawTrackLengthMm).D(weightedTrackLengthMm)
         .D(rawFluencePerMm2).D(weightedFluencePerMm2)
+        .Add();
+}
+
+void FillMeshCell(int runId, int threadId, const std::string& mesh, const std::string& quantity,
+                  const std::string& unit, int i0, int i1, int i2, double sum, double sumSquares,
+                  int entries, long long events)
+{
+    if (!fileOpen) return;
+    RowFiller(G4AnalysisManager::Instance(), kMeshNtuple)
+        .I(runId).I(threadId).S(mesh).S(quantity).S(unit).I(i0).I(i1).I(i2)
+        .D(sum).D(sumSquares).I(entries).D(static_cast<double>(events))
         .Add();
 }
 
