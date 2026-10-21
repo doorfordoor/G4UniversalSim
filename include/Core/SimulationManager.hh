@@ -7,6 +7,7 @@
 #include <memory>
 #include <optional>
 #include <string>
+#include <vector>
 
 struct SimulationCommandLineOverrides {
     std::optional<std::string> mainConfig;
@@ -106,6 +107,9 @@ public:
 
     const ConfigManager* GetConfigManager() const;
     const OutputManager* GetOutputManager() const;
+    // /score/ commands generated from [scoring.mesh.*] INI sections; main applies
+    // them after G4ScoringManager is created and before user macros.
+    const std::vector<std::string>& GetScoringMeshCommands() const { return scoringMeshCommands_; }
 
     MaterialManager* GetMaterialManager();
     GeometryManager* GetGeometryManager();
@@ -168,6 +172,7 @@ private:
     std::unique_ptr<ScoringManager> scoringManager_;
 
     std::string materialsFile_;
+    std::vector<std::string> scoringMeshCommands_;
     std::string geometryTemplate_ = "simple_box";
     std::string geometryConfigFile_;
     std::string defaultWorldMaterial_ = "G4_AIR";

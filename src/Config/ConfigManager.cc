@@ -44,6 +44,14 @@ bool IsKnownDynamicSection(const std::string& section)
         const std::string suffix = section.substr(std::string("physics.region.").size());
         return !suffix.empty() && suffix.find('.') == std::string::npos;
     }
+    if (StartsWith(section, "scoring.mesh.")) {
+        // [scoring.mesh.<mesh>] and [scoring.mesh.<mesh>.<quantity>]
+        const std::string suffix = section.substr(std::string("scoring.mesh.").size());
+        const auto separator = suffix.find('.');
+        if (suffix.empty() || separator == 0) return false;
+        return separator == std::string::npos ||
+               (separator + 1 < suffix.size() && suffix.find('.', separator + 1) == std::string::npos);
+    }
     if (StartsWith(section, "biasing.xs.")) {
         const std::string suffix = section.substr(std::string("biasing.xs.").size());
         const auto separator = suffix.find('.');
@@ -57,6 +65,11 @@ std::vector<std::string> DynamicKeys(const std::string& section)
 {
     if (StartsWith(section, "physics.cuts")) return {"gamma", "e-", "e+", "proton", "alpha"};
     if (StartsWith(section, "physics.region.")) return {"gamma", "e-", "e+", "proton", "alpha"};
+    if (StartsWith(section, "scoring.mesh.")) {
+        const std::string suffix = section.substr(std::string("scoring.mesh.").size());
+        if (suffix.find('.') == std::string::npos) return {"shape", "size", "bins", "center"};
+        return {"type", "unit", "particles", "energy_min", "energy_max"};
+    }
     if (StartsWith(section, "biasing.xs.")) return {"particle", "process", "name", "enabled", "factor", "only_primary", "apply_to_secondaries", "min_weight", "max_interactions", "volumes"};
     return {};
 }

@@ -24,6 +24,7 @@
 #include "Biasing/BiasingMessenger.hh"
 #include "Scoring/ScoringMessenger.hh"
 #include "Scoring/ScoringManager.hh"
+#include "Scoring/ScoringMeshConfig.hh"
 #include "Scoring/ThreadLocalScoringContext.hh"
 #include "Utils/FileUtils.hh"
 #include "Utils/StringUtils.hh"
@@ -603,6 +604,7 @@ bool SimulationManager::FinalizeRunSummary(const std::string& status,
     summary.Set("biasing_effect_observed", "unknown");
     summary.SetPath("actual_output_dir", outputManager_->GetOutputDir());
     summary.Set("output_format", OutputManager::FormatName(outputManager_->GetFormat()));
+    summary.Set("scoring_mesh_ini_command_count", static_cast<int>(scoringMeshCommands_.size()));
     summary.Set("output_root_schema_version",
                 outputManager_->WritesRoot() ? std::to_string(AnalysisOutput::kRootSchemaVersion) : "not_applicable");
     summary.Set("geant4_version", G4Version);
@@ -708,6 +710,7 @@ void SimulationManager::Configure()
         physicsManager_->LoadFromConfig(*configManager_);
         sourceManager_->LoadFromConfig(*configManager_);
         scoringManager_->LoadFromConfig(*configManager_);
+        scoringMeshCommands_ = ScoringMeshConfig::BuildCommands(*configManager_);
         biasingManager_->LoadFromConfig(*configManager_);
         if (biasingManager_->IsEnabled()) {
             physicsManager_->EnableBiasingPhysics(true);

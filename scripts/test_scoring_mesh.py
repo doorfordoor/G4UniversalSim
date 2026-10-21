@@ -89,6 +89,86 @@ MACRO = """
 """
 
 
+INI_MESHES = """
+[scoring.mesh.depthMesh]
+shape = box
+size = 10 mm, 10 mm, 1 cm
+bins = 1, 1, 20
+[scoring.mesh.depthMesh.eDep]
+type = energyDeposit
+unit = MeV
+[scoring.mesh.depthMesh.dose]
+type = doseDeposit
+unit = Gy
+[scoring.mesh.depthMesh.flux]
+type = cellFlux
+[scoring.mesh.depthMesh.eDepElectron]
+type = energyDeposit
+unit = MeV
+particles = e-
+[scoring.mesh.depthMesh.eDepGamma]
+type = energyDeposit
+unit = MeV
+particles = gamma
+[scoring.mesh.tube]
+shape = cylinder
+size = 10 mm, 10 mm
+bins = 5, 4, 1
+[scoring.mesh.tube.eDep]
+type = energyDeposit
+unit = MeV
+"""
+
+BAD_INI_CASES = {
+    "bad_type": ("[scoring.mesh.m]\nshape = box\nsize = 1 mm, 1 mm, 1 mm\nbins = 1, 1, 1\n"
+                 "[scoring.mesh.m.q]\ntype = noSuchScorer\n", "generated command failed"),
+    "missing_bins": ("[scoring.mesh.m]\nshape = box\nsize = 1 mm, 1 mm, 1 mm\n[scoring.mesh.m.q]\ntype = energyDeposit\n",
+                     "shape, size and bins are required"),
+    "orphan_quantity": ("[scoring.mesh.other.q]\ntype = energyDeposit\n", "no matching [scoring.mesh.other]"),
+    "bad_shape": ("[scoring.mesh.m]\nshape = sphere\nsize = 1 mm, 1 mm, 1 mm\nbins = 1, 1, 1\n"
+                  "[scoring.mesh.m.q]\ntype = energyDeposit\n", "expected box or cylinder"),
+}
+
+
+def run_job(work: Path, name: str, config: str, macro: str, expect_ok: bool = True) -> tuple[Path, str]:
+    (work / f"{name}.ini").write_text(config, encoding="utf-8")
+    (work / f"{name}.mac").write_text(macro, encoding="utf-8")
+    output = work / name
+    result = subprocess.run([str(EXE), "--config", str(work / f"{name}.ini"), "--macro", str(work / f"{name}.mac"),
+                             "--output", str(output)], cwd=ROOT, capture_output=True, text=True,
+                            errors="replace", timeout=600)
+    log = result.stdout + result.stderr
+    if expect_ok:
+        assert result.returncode == 0, f"{name}:\n{log[-2500:]}"
+    else:
+        assert result.returncode != 0, f"{name}: expected failure"
+    return output, log
+
+
+def check_ini_equivalence(work: Path, macro_output: Path) -> None:
+    """The same meshes defined in INI reproduce the macro-defined results cell by cell."""
+    run_macro = MACRO[MACRO.index("/run/initialize"):]
+    output, _ = run_job(work, "ini_mesh", CONFIG + INI_MESHES, run_macro)
+    values = json.loads((output / "run_metadata.json").read_text(encoding="utf-8"))["values"]
+    assert values["scoring_mesh_ini_command_count"] != "0", values["scoring_mesh_ini_command_count"]
+    assert values["config_warning_count"] == "0", values["config_warning_count"]
+    for suffix in ("", "_r1"):
+        def cells(path: Path) -> dict:
+            return {(r["mesh"], r["quantity"], r["i0"], r["i1"], r["i2"]): float(r["sum"])
+                    for r in csv.DictReader(path.open(encoding="utf-8"))}
+        from_ini = cells(output / f"scoring_mesh{suffix}.csv")
+        from_macro = cells(macro_output / f"scoring_mesh{suffix}.csv")
+        assert from_ini.keys() == from_macro.keys(), sorted(set(from_ini) ^ set(from_macro))[:5]
+        for key, value in from_macro.items():
+            rel_close(from_ini[key], value, 1e-9, f"INI vs macro {key}")
+    print(f"INI meshes reproduce macro meshes cell by cell ({len(from_macro)} cells in last run)")
+
+    for name, (section, message) in BAD_INI_CASES.items():
+        _, log = run_job(work, name, CONFIG + section, "/run/initialize\n/run/beamOn 1\n", expect_ok=False)
+        assert message in log, f"{name}: '{message}' not in log\n{log[-1500:]}"
+    print(f"invalid [scoring.mesh.*] rejected: {', '.join(BAD_INI_CASES)}")
+
+
 def rel_close(a: float, b: float, tol: float, label: str) -> None:
     assert math.isclose(a, b, rel_tol=tol, abs_tol=1e-300), f"{label}: {a!r} vs {b!r}"
 
@@ -168,6 +248,7 @@ def main() -> int:
                   f"native dose/flux == DoseScorer/FluenceScorer; e- share {electron / box_total:.4f}, "
                   f"gamma share {gamma / box_total:.2e}; "
                   f"cylinder share {tube / box_total:.3f}")
+        check_ini_equivalence(work, output)
     finally:
         shutil.rmtree(work, ignore_errors=True)
     print("test_scoring_mesh: OK")

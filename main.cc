@@ -634,6 +634,18 @@ int main(int argc, char** argv) {
     auto actions = sim.CreateActionInitialization();
     runManager->SetUserInitialization(actions.release());
 
+    // [scoring.mesh.*] INI sections -> /score/ commands. Applied after the
+    // physics list is registered (particle filters need the particle table)
+    // and before any user macro, so macros may add further meshes.
+    for (const std::string& command : sim.GetScoringMeshCommands()) {
+      const G4int status = G4UImanager::GetUIpointer()->ApplyCommand(command);
+      if (status != 0) {
+        throw std::runtime_error("[scoring.mesh.*] generated command failed (Geant4 status " +
+                                 std::to_string(status) + "): " + command +
+                                 "; check the scorer type, unit and particle names");
+      }
+    }
+
     std::unique_ptr<G4VisManager> visManager;
     if (sim.GetContext().IsInteractive() && !sim.GetContext().IsDryRun()) {
       visManager = std::make_unique<G4VisExecutive>();
