@@ -34,6 +34,8 @@ public:
 
     void WriteText(const std::string& filename) const;
     void WriteCSV(const std::string& filename) const;
+    // Machine-readable run metadata (run_metadata.json, schema run_metadata_json_v1).
+    void WriteJson(const std::string& filename) const;
 
     void Clear();
 

@@ -621,8 +621,10 @@ def main() -> int:
         assert dry_values["effective_config_macro_execution_status"] == "skipped_dry_run"
         assert dry_values["effective_config_geant4_applied"] == "unknown"
         assert any(Path(file).name == "run_summary.txt" for file in dry_files)
+        assert any(Path(file).name == "run_metadata.json" for file in dry_files)
         assert read_generated_file_schemas(dry_output) == {
-            file: "run_summary_v1" for file in dry_files
+            file: "run_metadata_json_v1" if Path(file).name == "run_metadata.json" else "run_summary_v1"
+            for file in dry_files
         }
 
         # A single real run reports completed events and generated files.
@@ -1324,7 +1326,8 @@ def main() -> int:
             assert suffix_values["macro_failure_line"] == "1"
             assert suffix_values["macro_failure_code_available"] == "false"
             assert suffix_values["run_count"] == "0"
-            assert all(Path(path).name == "run_summary.txt" for path in suffix_generated), suffix_generated
+            assert all(Path(path).name in {"run_summary.txt", "run_metadata.json"}
+                       for path in suffix_generated), suffix_generated
 
         suffix_true_output = temp / "suffix-enabled-two-workers"
         suffix_true_macro = temp / "suffix-enabled-two-workers.mac"

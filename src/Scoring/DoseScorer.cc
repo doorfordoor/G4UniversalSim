@@ -1,5 +1,6 @@
 #include "Scoring/DoseScorer.hh"
 
+#include "Output/AnalysisOutput.hh"
 #include "Output/CsvWriter.hh"
 #include "Output/OutputManager.hh"
 #include "G4SystemOfUnits.hh"
@@ -56,6 +57,16 @@ void DoseScorer::ScoreHit(const HitRecord& hit)
 
 void DoseScorer::Write(OutputManager& output)
 {
+    if (output.WritesRoot()) {
+        for (const auto& item : volumes_) {
+            const auto& v = item.second;
+            const double massKg = v.mass / kg;
+            AnalysisOutput::FillDose(runID_, output.GetThreadId(), item.first, v.name, massKg,
+                                     v.rawEdep / MeV, v.weightedEdep / MeV,
+                                     (v.rawEdep / joule) / massKg, (v.weightedEdep / joule) / massKg);
+        }
+    }
+    if (!output.WritesCsv()) return;
     CsvWriter writer(output.MakeOutputPath(output.MakeThreadFilename("dose_volume_summary.csv")));
     writer.WriteHeader({"runID", "volume_path", "volume_name", "mass_kg", "raw_edep_MeV",
                         "weighted_edep_MeV", "raw_dose_Gy", "weighted_dose_Gy"});

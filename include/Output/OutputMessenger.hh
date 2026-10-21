@@ -35,6 +35,7 @@ private:
     std::unique_ptr<G4UIdirectory> directory_;
     std::unique_ptr<G4UIcmdWithAString> setDirCmd_;
     std::unique_ptr<G4UIcmdWithABool> setThreadSuffixCmd_;
+    std::unique_ptr<G4UIcmdWithAString> setFormatCmd_;
     std::unique_ptr<G4UIcmdWithoutParameter> printCmd_;
     std::unique_ptr<G4UIcmdWithoutParameter> flushCmd_;
     std::unique_ptr<G4UIcmdWithoutParameter> closeCmd_;

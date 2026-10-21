@@ -25,6 +25,9 @@ std::string GeneratedFileSchema(const std::string& path)
                name.rfind(stem + "_r", 0) == 0;
     };
     if (name == "run_summary.txt") return "run_summary_v1";
+    if (name == "run_metadata.json") return "run_metadata_json_v1";
+    if (name.size() > 5 && name.compare(name.size() - 5, 5, ".root") == 0 &&
+        name.rfind("g4usim", 0) == 0) return "g4usim_root_v1";
     std::ifstream input(path);
     std::string header;
     if (!input || !std::getline(input, header)) return "unknown";
@@ -217,6 +220,70 @@ void RunSummary::WriteCSV(const std::string& filename) const
         writer.WriteRow({"warning", "", warning});
     }
     writer.Close();
+}
+
+namespace {
+std::string JsonString(const std::string& value)
+{
+    std::ostringstream out;
+    out << '"';
+    for (const unsigned char c : value) {
+        switch (c) {
+        case '"': out << "\\\""; break;
+        case '\\': out << "\\\\"; break;
+        case '\n': out << "\\n"; break;
+        case '\r': out << "\\r"; break;
+        case '\t': out << "\\t"; break;
+        default:
+            if (c < 0x20) {
+                out << "\\u" << std::hex << std::setw(4) << std::setfill('0') << static_cast<int>(c)
+                    << std::dec << std::setfill(' ');
+            } else {
+                out << static_cast<char>(c);
+            }
+        }
+    }
+    out << '"';
+    return out.str();
+}
+}  // namespace
+
+void RunSummary::WriteJson(const std::string& filename) const
+{
+    const std::string parent = FileUtils::ParentPath(filename);
+    if (!parent.empty()) FileUtils::CreateDirectories(parent);
+    std::ofstream out(filename, std::ios::binary);
+    if (!out) throw std::runtime_error("Failed to open run metadata file: '" + filename + "'");
+
+    out << "{\n  \"schema\": \"run_metadata_json_v1\",\n  \"values\": {";
+    bool first = true;
+    for (const auto& item : values_) {
+        out << (first ? "\n" : ",\n") << "    " << JsonString(item.first) << ": " << JsonString(item.second);
+        first = false;
+    }
+    out << "\n  },\n  \"runs\": [";
+    for (std::size_t index = 0; index < runs_.size(); ++index) {
+        const auto& run = runs_[index];
+        out << (index ? "," : "") << "\n    {\"run_id\": " << run.runId
+            << ", \"planned_events\": " << run.plannedEvents
+            << ", \"completed_events\": " << run.completedEvents << '}';
+    }
+    out << "\n  ],\n  \"generated_files\": [";
+    for (std::size_t index = 0; index < generatedFiles_.size(); ++index) {
+        out << (index ? "," : "") << "\n    {\"path\": " << JsonString(PathForSummary(generatedFiles_[index]))
+            << ", \"schema\": " << JsonString(GeneratedFileSchema(generatedFiles_[index])) << '}';
+    }
+    const auto writeList = [&out](const char* key, const std::vector<std::string>& items) {
+        out << "\n  ],\n  \"" << key << "\": [";
+        for (std::size_t index = 0; index < items.size(); ++index) {
+            out << (index ? "," : "") << "\n    " << JsonString(items[index]);
+        }
+    };
+    writeList("messages", messages_);
+    writeList("warnings", warnings_);
+    out << "\n  ]\n}\n";
+    out.close();
+    if (!out) throw std::runtime_error("Failed to write run metadata file: '" + filename + "'");
 }
 
 void RunSummary::Clear()

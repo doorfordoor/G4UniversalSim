@@ -1,6 +1,7 @@
 #include "Scoring/ScoringManager.hh"
 
 #include "Config/ConfigManager.hh"
+#include "Output/AnalysisOutput.hh"
 #include "Output/OutputManager.hh"
 #include "Scoring/DoseScorer.hh"
 #include "Scoring/EdepScorer.hh"
@@ -175,6 +176,12 @@ void ScoringManager::ConfigureEdepHistogram(int bins, double min, double max)
     if (auto* scorer = GetEdepScorer()) scorer->ConfigureRawHistogram(bins, min, max);
 }
 
+ScoringManager::EdepHistogramBinning ScoringManager::GetEdepHistogramBinning(bool weighted) const
+{
+    const HistogramConfig& config = weighted ? weightedEdepHistogram_ : rawEdepHistogram_;
+    return {config.bins, config.min, config.max};
+}
+
 void ScoringManager::ConfigureWeightedEdepHistogram(int bins, double min, double max)
 {
     if (bins <= 0) throw std::runtime_error("ScoringManager::ConfigureWeightedEdepHistogram requires bins > 0");
@@ -314,6 +321,18 @@ void ScoringManager::EndEvent(int eventID)
 
     if (enabled_) {
         for (ScorerBase* scorer : EnabledScorers()) scorer->EndEvent(eventID);
+    }
+
+    // ROOT histograms are filled per event (the CSV path bins inside EdepScorer
+    // and writes at end of run); Geant4 merges them across worker threads.
+    if (enabled_ && outputManager_ && outputManager_->WritesRoot() &&
+        !outputManager_->HasOutputFailure()) {
+        const EdepScorer* edep = GetEdepScorer();
+        if (edep && edep->IsEnabled()) {
+            AnalysisOutput::FillEdepHistograms(
+                edep->IsRawHistogramEnabled(), edep->GetCurrentEventRawEdep(),
+                edep->IsWeightedHistogramEnabled(), edep->GetCurrentEventWeightedEdep());
+        }
     }
 
     if (enabled_ && eventEdepOutputEnabled_ && outputManager_ &&

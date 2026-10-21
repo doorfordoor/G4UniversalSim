@@ -106,6 +106,12 @@ Only material components are supported for `mode = volume_fraction`; direct elem
 
 ## Outputs
 
+Select the data format with `[output] format = csv | root | both` (default `csv`) or `/AIHL/output/setFormat` before `/run/initialize`.
+
+**ROOT** (`format = root`): one `g4usim.root` per run (`g4usim_rR.root` for later runs) written through Geant4's `G4AnalysisManager`. Worker threads are merged automatically. It contains the `edep_raw`/`edep_weighted` histograms and the `hits`, `events`, `edep_volume`, `edep_particle`, `dose` and `fluence` ntuples. No ROOT installation is needed to run; read it with `uproot` (`pip install uproot`) or ROOT. Every run also writes `run_metadata.json`. See `docs/输出数据契约.md`.
+
+**CSV** (default):
+
 For the default single-thread configuration, output is written under `output/simple_test/`:
 
 - `hits_t0.csv`

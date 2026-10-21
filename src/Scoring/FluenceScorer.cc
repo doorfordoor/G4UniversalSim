@@ -1,5 +1,6 @@
 #include "Scoring/FluenceScorer.hh"
 
+#include "Output/AnalysisOutput.hh"
 #include "Output/CsvWriter.hh"
 #include "Output/OutputManager.hh"
 #include "G4SystemOfUnits.hh"
@@ -8,6 +9,7 @@
 #include <iomanip>
 #include <sstream>
 #include <stdexcept>
+#include <vector>
 
 namespace {
 std::string Number(double value)
@@ -58,6 +60,33 @@ void FluenceScorer::ScoreHit(const HitRecord& hit)
 
 void FluenceScorer::Write(OutputManager& output)
 {
+    struct Row {
+        const std::string* path;
+        const std::string* name;
+        double volumeMm3, rawLengthMm, weightedLengthMm, rawFluence, weightedFluence;
+    };
+    std::vector<Row> rows;
+    for (const auto& item : volumes_) {
+        const auto& v = item.second;
+        const double volumeMm3 = v.volume / (mm * mm * mm);
+        const double rawLengthMm = v.rawLength / mm;
+        const double weightedLengthMm = v.weightedLength / mm;
+        const double rawFluence = rawLengthMm / volumeMm3;
+        const double weightedFluence = weightedLengthMm / volumeMm3;
+        if (!std::isfinite(volumeMm3) || volumeMm3 <= 0.0 ||
+            !std::isfinite(rawLengthMm) || !std::isfinite(weightedLengthMm) ||
+            !std::isfinite(rawFluence) || !std::isfinite(weightedFluence)) {
+            throw std::runtime_error("FluenceScorer refuses nonfinite/invalid output for touchable " + item.first);
+        }
+        rows.push_back({&item.first, &v.name, volumeMm3, rawLengthMm, weightedLengthMm, rawFluence, weightedFluence});
+    }
+    if (output.WritesRoot()) {
+        for (const Row& r : rows) {
+            AnalysisOutput::FillFluence(runID_, output.GetThreadId(), *r.path, *r.name, r.volumeMm3,
+                                        r.rawLengthMm, r.weightedLengthMm, r.rawFluence, r.weightedFluence);
+        }
+    }
+    if (!output.WritesCsv()) return;
     CsvWriter writer(output.MakeOutputPath(output.MakeThreadFilename("fluence_volume_summary.csv")));
     writer.WriteHeader({"runID", "volume_path", "volume_name", "volume_mm3", "raw_track_length_mm",
                         "weighted_track_length_mm", "raw_fluence_mm-2", "weighted_fluence_mm-2"});

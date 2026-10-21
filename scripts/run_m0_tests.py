@@ -60,6 +60,7 @@ CASES = (
     Case("run_summary", "scripts/test_run_summary.py", "backend", ("exe",)),
     Case("dose_scoring", "scripts/test_dose_scoring.py", "backend", ("exe",)),
     Case("fluence_scoring", "scripts/test_fluence_scoring.py", "backend", ("exe",)),
+    Case("root_output", "scripts/test_root_output.py", "backend", ("exe", "uproot")),
     Case("interactive_commands", "scripts/test_interactive_commands.py", "backend", ("exe",)),
     Case("unsupported_features", "scripts/test_unsupported_features.py", "backend", ("exe",), args=("--layer", "backend")),
     Case("unconsumed_config", "scripts/test_unconsumed_config.py", "backend", ("exe",)),
@@ -164,6 +165,7 @@ def main() -> int:
     report_dir.mkdir(parents=True, exist_ok=False)
     requirements = {
         "qt": "" if importlib.util.find_spec("PySide6") else "PySide6 is unavailable",
+        "uproot": "" if importlib.util.find_spec("uproot") else "uproot is unavailable (pip install uproot)",
         "exe": executable_freshness(args.executable.resolve()),
         "merge": merge_executable_freshness(args.merge_executable.resolve()),
     }

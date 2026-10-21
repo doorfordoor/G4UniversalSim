@@ -44,7 +44,7 @@ inline void WriteBackendCapabilities(std::ostream& out)
 "physics":[{"id":"reference","runtime":true},{"id":"manual","runtime":true},{"id":"geometry_region_cuts","runtime":true},{"id":"physics_region_cuts","runtime":false},{"id":"process_xs_biasing","runtime":true,"physical_validation":false}],
 "sources":[{"id":"point_fixed","runtime":true},{"id":"point_isotropic","runtime":true},{"id":"plane_circle","runtime":true},{"id":"rectangle","runtime":true,"contract":"XY plane, halfx/halfy, center, fixed/isotropic"},{"id":"annulus","runtime":false},{"id":"cone","runtime":false},{"id":"cosine","runtime":false},{"id":"focused","runtime":false}],
 "scorers":[{"id":"hits","runtime":true},{"id":"edep","runtime":true},{"id":"let","runtime":false},{"id":"dose","runtime":true,"validation":"per sensitive touchable, Geant4 mass; no physical benchmark"},{"id":"fluence","runtime":true,"validation":"per daughter-free sensitive touchable, track length / solid volume; no physical benchmark"}],
-"outputs":{"schema_version":3,"run_summary_schema_version":1,"worker_suffix":"_tN","subsequent_run_suffix":"_rR","csv_units_in_header":true,"automatic_merge":false},
+"outputs":{"schema_version":3,"run_summary_schema_version":1,"worker_suffix":"_tN","subsequent_run_suffix":"_rR","csv_units_in_header":true,"automatic_merge":false,"formats":["csv","root","both"],"default_format":"csv","root":{"schema_version":1,"file":"g4usim.root","subsequent_run_file":"g4usim_rR.root","thread_merge":true,"histograms":["edep_raw","edep_weighted"],"ntuples":["hits","events","edep_volume","edep_particle","dose","fluence"]},"run_metadata":"run_metadata.json"},
 "validation_scope":"configuration and runtime smoke; not physical benchmark",
 "geometry_schema_version":null
 }

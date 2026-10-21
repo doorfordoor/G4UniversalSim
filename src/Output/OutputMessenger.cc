@@ -50,6 +50,13 @@ OutputMessenger::OutputMessenger(OutputManager* outputManager, OutputDirSetter o
     setThreadSuffixCmd_->SetParameterName("enable", false);
     setThreadSuffixCmd_->AvailableForStates(G4State_PreInit);
 
+    setFormatCmd_ = std::make_unique<G4UIcmdWithAString>("/AIHL/output/setFormat", this);
+    setFormatCmd_->SetGuidance("Select data output: csv (per-thread CSV v3), root (one merged ROOT file per run)");
+    setFormatCmd_->SetGuidance("or both. Only before /run/initialize.");
+    setFormatCmd_->SetParameterName("format", false);
+    setFormatCmd_->SetCandidates("csv root both");
+    setFormatCmd_->AvailableForStates(G4State_PreInit);
+
     printCmd_ = std::make_unique<G4UIcmdWithoutParameter>("/AIHL/output/print", this);
     printCmd_->SetGuidance("Print OutputManager state.");
 
@@ -89,6 +96,12 @@ void OutputMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
                 );
             }
             outputManager_->EnableThreadSuffix(true);
+            return;
+        }
+        if (command == setFormatCmd_.get()) {
+            EnsureOutputManager("/AIHL/output/setFormat");
+            EnsureNoOpenFiles("/AIHL/output/setFormat");
+            outputManager_->SetFormat(OutputManager::ParseFormat(newValue));
             return;
         }
         if (command == printCmd_.get()) {
@@ -150,6 +163,7 @@ void OutputMessenger::PrintSummary() const
     EnsureOutputManager("/AIHL/output/print");
     G4cout << "[OutputManager] outputDir=" << outputManager_->GetOutputDir()
            << ", threadId=" << outputManager_->GetThreadId()
+           << ", format=" << OutputManager::FormatName(outputManager_->GetFormat())
            << ", threadSuffix=" << (outputManager_->IsThreadSuffixEnabled() ? "true" : "false")
            << ", initialized=" << (outputManager_->IsInitialized() ? "true" : "false")
            << G4endl;

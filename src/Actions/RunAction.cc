@@ -6,6 +6,7 @@
 #include "G4Run.hh"
 #include "G4RunManager.hh"
 #include "G4ios.hh"
+#include "Output/AnalysisOutput.hh"
 #include "Output/OutputManager.hh"
 #include "Output/RunSummary.hh"
 #include "Scoring/ScoringManager.hh"
@@ -81,6 +82,20 @@ void RunAction::BeginOfRunAction(const G4Run* run)
             outputManager->GetRunSummary().Set("run_id_begin", runID);
             stage = "run_begin_initialize";
             outputManager->Initialize();
+            if (outputManager->WritesRoot()) {
+                // Master and workers each open the same logical file; Geant4
+                // merges worker histograms/ntuples into the master's file.
+                stage = "run_begin_root_open";
+                AnalysisOutput::H1Binning raw;
+                AnalysisOutput::H1Binning weighted;
+                if (scoringManager) {
+                    const auto r = scoringManager->GetEdepHistogramBinning(false);
+                    const auto w = scoringManager->GetEdepHistogramBinning(true);
+                    raw = {r.bins, r.min, r.max};
+                    weighted = {w.bins, w.min, w.max};
+                }
+                AnalysisOutput::BeginRun(outputManager->RootFilePath(), raw, weighted);
+            }
         }
         if (role_ != Role::Master && scoringManager) {
             stage = "scoring_begin_run";
@@ -158,6 +173,13 @@ void RunAction::EndOfRunAction(const G4Run* run)
         if (!outputManager->HasOutputFailure()) {
             attempt("run_flush", [&]() { outputManager->Flush(); });
         }
+        // Always close an open ROOT file, even after a failure, so the master
+        // can finish merging. Workers end before the master in Geant4 MT.
+        attempt("root_write_close", [&]() {
+            if (AnalysisOutput::EndRun() && role_ != Role::Worker) {
+                outputManager->RegisterGeneratedFile(outputManager->RootFilePath());
+            }
+        });
         if (role_ == Role::Worker) {
             attempt("worker_close", [&]() { outputManager->Close(); });
         }

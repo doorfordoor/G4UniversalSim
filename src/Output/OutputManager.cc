@@ -1,5 +1,6 @@
 #include "Output/OutputManager.hh"
 
+#include "Output/AnalysisOutput.hh"
 #include "Utils/FileUtils.hh"
 #include "Utils/StringUtils.hh"
 
@@ -46,6 +47,7 @@ std::unique_ptr<OutputManager> OutputManager::CloneForThread(int threadId) const
     clone->threadId_ = threadId;
     clone->runId_ = runId_;
     clone->threadSuffixEnabled_ = threadSuffixEnabled_;
+    clone->format_ = format_;
     clone->runSummary_ = runSummary_;
     clone->generatedFiles_ = generatedFiles_;
     return clone;
@@ -109,6 +111,63 @@ void OutputManager::SetRunId(int runId)
 int OutputManager::GetRunId() const
 {
     return runId_;
+}
+
+OutputManager::Format OutputManager::ParseFormat(const std::string& value)
+{
+    const std::string normalized = StringUtils::ToLower(StringUtils::Trim(value));
+    if (normalized == "csv") return Format::Csv;
+    if (normalized == "root") return Format::Root;
+    if (normalized == "both" || normalized == "csv+root" || normalized == "root+csv") return Format::Both;
+    throw std::runtime_error("Unknown output format '" + value + "'; expected csv, root or both");
+}
+
+const char* OutputManager::FormatName(Format format)
+{
+    switch (format) {
+    case Format::Csv: return "csv";
+    case Format::Root: return "root";
+    case Format::Both: return "both";
+    }
+    return "csv";
+}
+
+void OutputManager::SetFormat(Format format)
+{
+    if (HasOpenFiles() || AnalysisOutput::IsOpen()) {
+        throw std::runtime_error("Output format cannot change while output files are open");
+    }
+    format_ = format;
+}
+
+OutputManager::Format OutputManager::GetFormat() const
+{
+    return format_;
+}
+
+bool OutputManager::WritesCsv() const
+{
+    return format_ == Format::Csv || format_ == Format::Both;
+}
+
+bool OutputManager::WritesRoot() const
+{
+    return format_ == Format::Root || format_ == Format::Both;
+}
+
+std::string OutputManager::RootFilename() const
+{
+    return runId_ > 0 ? "g4usim_r" + std::to_string(runId_) + ".root" : "g4usim.root";
+}
+
+std::string OutputManager::RootFilePath() const
+{
+    return MakeOutputPath(RootFilename());
+}
+
+void OutputManager::WriteRunMetadataJson()
+{
+    runSummary_.WriteJson(MakeOutputPath("run_metadata.json"));
 }
 
 void OutputManager::EnableThreadSuffix(bool enable)
@@ -197,6 +256,17 @@ void OutputManager::ValidateOutputTargetDirectories(int runId, int threadCount) 
         candidate.threadSuffixEnabled_ = true;
         candidate.threadId_ = thread;
         candidate.runId_ = runId;
+        if (thread == 0 && WritesRoot()) {
+            candidate.format_ = format_;
+            const std::filesystem::path rootPath(candidate.RootFilePath());
+            error.clear();
+            const bool rootExists = std::filesystem::exists(rootPath, error);
+            if (error) throw std::filesystem::filesystem_error("Cannot inspect output ROOT target", rootPath, error);
+            if (rootExists && std::filesystem::is_directory(rootPath, error)) {
+                throw std::runtime_error("Output ROOT target is an existing directory: " + rootPath.string());
+            }
+        }
+        if (!WritesCsv()) continue;
         for (const char* name : {"hits.csv", "event_edep.csv", "hist_edep_raw.csv",
                                  "hist_edep_weighted.csv", "edep_volume_summary.csv",
                                  "edep_particle_summary.csv", "dose_volume_summary.csv",
@@ -236,6 +306,8 @@ void OutputManager::OpenEventEdepFile()
 
 void OutputManager::WriteHit(const HitRecord& record)
 {
+    if (WritesRoot()) AnalysisOutput::FillHit(record, threadId_);
+    if (!WritesCsv()) return;
     if (!hitWriter_ || !hitWriter_->IsOpen()) {
         OpenHitFile();
     }
@@ -267,6 +339,8 @@ void OutputManager::WriteHit(const HitRecord& record)
 
 void OutputManager::WriteEventEdep(const EventEdepRecord& record)
 {
+    if (WritesRoot()) AnalysisOutput::FillEvent(record, threadId_);
+    if (!WritesCsv()) return;
     if (!eventEdepWriter_ || !eventEdepWriter_->IsOpen()) {
         OpenEventEdepFile();
     }
@@ -328,6 +402,8 @@ bool OutputManager::HasHistogram1D(const std::string& name) const
 
 void OutputManager::WriteHistogram1D(const std::string& name)
 {
+    // ROOT histograms are filled per event by ScoringManager; this is the CSV path.
+    if (!WritesCsv()) return;
     const Histogram1D& hist = GetHistogram1D(name);
     const std::string safeName = StringUtils::Trim(name).empty() ? "unnamed" : name;
     const std::string filename = MakeOutputPath(MakeThreadFilename("hist_" + safeName + ".csv"));

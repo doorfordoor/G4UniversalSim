@@ -49,6 +49,12 @@ public:
 
     void ConfigureEdepHistogram(int bins, double min, double max);
     void ConfigureWeightedEdepHistogram(int bins, double min, double max);
+    struct EdepHistogramBinning {
+        int bins = 200;
+        double min = 0.0;
+        double max = 10.0;
+    };
+    EdepHistogramBinning GetEdepHistogramBinning(bool weighted) const;
 
     void SetVerboseLevel(int level);
     int GetVerboseLevel() const;

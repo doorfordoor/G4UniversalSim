@@ -1,5 +1,6 @@
 #include "Scoring/EdepScorer.hh"
 
+#include "Output/AnalysisOutput.hh"
 #include "Output/CsvWriter.hh"
 #include "Output/OutputManager.hh"
 #include "Utils/StringUtils.hh"
@@ -191,6 +192,20 @@ void EdepScorer::WriteSummaryCsv(OutputManager& output,
                                  const std::map<std::string, double>& raw,
                                  const std::map<std::string, double>& weighted) const
 {
+    if (output.WritesRoot()) {
+        const bool byVolume = baseFilename.rfind("edep_volume", 0) == 0;
+        std::set<std::string> rootKeys;
+        for (const auto& item : raw) rootKeys.insert(item.first);
+        for (const auto& item : weighted) rootKeys.insert(item.first);
+        for (const std::string& key : rootKeys) {
+            const auto rawIt = raw.find(key);
+            const auto weightedIt = weighted.find(key);
+            AnalysisOutput::FillEdepSummary(byVolume, currentRunID_, output.GetThreadId(), key,
+                                            rawIt == raw.end() ? 0.0 : rawIt->second,
+                                            weightedIt == weighted.end() ? 0.0 : weightedIt->second);
+        }
+    }
+    if (!output.WritesCsv()) return;
     CsvWriter writer(output.MakeOutputPath(output.MakeThreadFilename(baseFilename)));
     writer.WriteHeader({"name", "raw_edep_MeV", "weighted_edep_MeV"});
 

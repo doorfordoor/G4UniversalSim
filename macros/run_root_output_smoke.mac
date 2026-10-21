@@ -1,0 +1,37 @@
+# ROOT output smoke test: writes CSV and ROOT for the same events so they can be cross-checked.
+
+/control/verbose 1
+/run/verbose 1
+/event/verbose 0
+/tracking/verbose 0
+
+/AIHL/material/load config/materials/material.ini
+
+/AIHL/geometry/setTemplate simple_box
+/AIHL/geometry/loadConfig config/geometry/hit_smoke_box.ini
+/AIHL/geometry/checkOverlaps true
+/AIHL/geometry/printTree
+
+/AIHL/physics/setReferenceList FTFP_BERT_EMZ
+/AIHL/physics/setDefaultCut 1 um
+
+/AIHL/source/particle e-
+/AIHL/source/energy 1 MeV
+/AIHL/source/point 0 0 -9 mm
+/AIHL/source/direction 0 0 1
+/AIHL/source/print
+
+/AIHL/scoring/enable true
+/AIHL/scoring/hits true
+/AIHL/scoring/eventEdep true
+/AIHL/scoring/edep true
+/AIHL/scoring/autoCreateScorers true
+/AIHL/scoring/setEdepHistogram bins=100 min=0 eV max=1 MeV
+/AIHL/scoring/setWeightedEdepHistogram bins=100 min=0 eV max=1 MeV
+/AIHL/scoring/print
+
+/AIHL/output/setFormat both
+
+/run/initialize
+/run/beamOn 200
+/run/beamOn 50

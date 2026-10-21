@@ -23,7 +23,7 @@ const std::map<std::string, std::vector<std::string>>& KnownKeys()
     static const std::map<std::string, std::vector<std::string>> keys = {
         {"run", {"threads", "seed", "randomseed", "interactive", "macro", "dry_run", "dryrun", "verbose", "check_overlaps", "checkoverlaps", "name", "run_name", "runname"}},
         {"general", {"seed", "randomseed", "verbose"}},
-        {"output", {"dir", "outputdir"}},
+        {"output", {"dir", "outputdir", "format"}},
         {"materials", {"file", "materialfile", "config", "configfile"}},
         {"geometry", {"template", "templatename", "check_overlaps", "checkoverlaps", "default_world_material", "defaultworldmaterial", "config", "configfile"}},
         {"physics", {"reference", "em", "list", "modules", "extra_modules", "default_cut", "biasing", "verbose"}},

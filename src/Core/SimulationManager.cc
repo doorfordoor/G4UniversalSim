@@ -9,6 +9,7 @@
 #include "Hits/SensitiveDetector.hh"
 #include "Materials/MaterialManager.hh"
 #include "Materials/MaterialMessenger.hh"
+#include "Output/AnalysisOutput.hh"
 #include "Output/OutputManager.hh"
 #include "Output/OutputMessenger.hh"
 #include "Output/RunSummary.hh"
@@ -27,7 +28,9 @@
 #include "Utils/FileUtils.hh"
 #include "Utils/StringUtils.hh"
 
+#include "BuildInfo.hh"
 #include "G4RunManager.hh"
+#include "G4Version.hh"
 #include "G4StateManager.hh"
 #include "G4SystemOfUnits.hh"
 #ifdef G4MULTITHREADED
@@ -599,6 +602,11 @@ bool SimulationManager::FinalizeRunSummary(const std::string& status,
                 (biasingManager_->GetMatchedProcessRuleCount() > 0 ? "validated" : "not_validated"));
     summary.Set("biasing_effect_observed", "unknown");
     summary.SetPath("actual_output_dir", outputManager_->GetOutputDir());
+    summary.Set("output_format", OutputManager::FormatName(outputManager_->GetFormat()));
+    summary.Set("output_root_schema_version",
+                outputManager_->WritesRoot() ? std::to_string(AnalysisOutput::kRootSchemaVersion) : "not_applicable");
+    summary.Set("geant4_version", G4Version);
+    summary.Set("source_fingerprint", G4USIM_SOURCE_FINGERPRINT);
     summary.Set("initial_seed", initialSeed_ ? std::to_string(*initialSeed_) : "unset");
     summary.Set("configured_seed", context_.HasSeed() ? std::to_string(context_.GetSeed()) : "unset");
     summary.Set("initial_engine_seed", "unknown");
@@ -619,6 +627,7 @@ bool SimulationManager::FinalizeRunSummary(const std::string& status,
 
     std::vector<std::string> generated = outputManager_->GetGeneratedFiles();
     generated.push_back(FileUtils::AbsolutePath(outputManager_->MakeOutputPath("run_summary.txt")));
+    generated.push_back(FileUtils::AbsolutePath(outputManager_->MakeOutputPath("run_metadata.json")));
     std::sort(generated.begin(), generated.end());
     generated.erase(std::unique(generated.begin(), generated.end()), generated.end());
     summary.SetGeneratedFiles(generated);
@@ -626,6 +635,7 @@ bool SimulationManager::FinalizeRunSummary(const std::string& status,
     summary.Set("summary_write_status", "completed");
 
     outputManager_->WriteRunSummary();
+    outputManager_->WriteRunMetadataJson();
     return !outputFailed;
 }
 
@@ -659,6 +669,10 @@ void SimulationManager::Configure()
         context_.SetCheckOverlaps(GetBoolCompat(*configManager_, "run", {"check_overlaps", "checkOverlaps"}, context_.GetCheckOverlaps()));
         context_.SetRunName(GetStringCompat(*configManager_, "run", {"name", "run_name", "runName"}, context_.GetRunName()));
         context_.SetOutputDir(GetStringCompat(*configManager_, "output", {"dir", "outputDir"}, context_.GetOutputDir()));
+        if (HasKeyCompat(*configManager_, "output", {"format"})) {
+            outputManager_->SetFormat(OutputManager::ParseFormat(
+                GetStringCompat(*configManager_, "output", {"format"}, "csv")));
+        }
 
         if (HasNonEmptyKeyCompat(*configManager_, "materials", {"file", "materialFile", "config", "configFile"})) {
             materialsFile_ = GetStringCompat(*configManager_, "materials", {"file", "materialFile", "config", "configFile"});
@@ -709,7 +723,7 @@ void SimulationManager::Configure()
         for (const auto& alias : {"seed", "randomSeed", "verbose"}) {
             configManager_->MarkKeyConsumed("general", alias);
         }
-        for (const auto& alias : {"dir", "outputDir"}) {
+        for (const auto& alias : {"dir", "outputDir", "format"}) {
             configManager_->MarkKeyConsumed("output", alias);
         }
         for (const auto& alias : {"file", "materialFile", "config", "configFile"}) {

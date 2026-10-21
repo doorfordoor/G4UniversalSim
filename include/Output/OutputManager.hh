@@ -13,6 +13,16 @@
 
 class OutputManager {
 public:
+    // Which data files a run produces. CSV keeps the per-thread v3 files;
+    // ROOT writes one merged g4usim[_rN].root per run via G4AnalysisManager.
+    enum class Format {
+        Csv,
+        Root,
+        Both
+    };
+    static Format ParseFormat(const std::string& value);
+    static const char* FormatName(Format format);
+
     struct OutputFailure {
         int runId = -1;
         int threadId = -1;
@@ -33,6 +43,15 @@ public:
     int GetThreadId() const;
     void SetRunId(int runId);
     int GetRunId() const;
+
+    void SetFormat(Format format);
+    Format GetFormat() const;
+    bool WritesCsv() const;
+    bool WritesRoot() const;
+    // ROOT file for the current run: g4usim.root (run 0) or g4usim_rN.root.
+    std::string RootFilename() const;
+    std::string RootFilePath() const;
+    void WriteRunMetadataJson();
 
     void EnableThreadSuffix(bool enable);
     bool IsThreadSuffixEnabled() const;
@@ -101,6 +120,7 @@ private:
     int threadId_ = 0;
     int runId_ = -1;
     bool threadSuffixEnabled_ = true;
+    Format format_ = Format::Csv;
     // True once Initialize() has created the output directory; current file-open state is HasOpenFiles().
     bool initialized_ = false;
     // Shared by master and worker clones. Only finalized output files enter the manifest.
