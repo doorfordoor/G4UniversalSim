@@ -1,5 +1,7 @@
 # G4UniversalSim GUI Agent 开发约束
 
+2026-10-22 C1 内置图表：数据读取只放在 `output/plot_data.py`（无 Qt，numpy），页面 `widgets/plot_panel.py` 只选数据集/视图、用 matplotlib 绘制并导出；图中数值必须与后端文件一致（scorer_statistics 的 value/std_error，网格 CSV 或 ROOT 的 sum 与 rel_error，box 网格坐标取 `run_metadata.json` 的 bins/size_mm（半宽）/center_mm）。每初级粒子归一化只能用 `run_summary.txt` 的 `run_<R>_completed_events`。说明文字以 (模板, 参数) 返回再经 `ui_format` 翻译。视图 combobox 的 data 用字符串（`profile:<轴>`、`map:<x>:<y>`），PySide6 的 `findData` 不能匹配 Python tuple。matplotlib 缺失时输出页仍须可用。专项 `smoke_plots.py`（合成逐值）与 `smoke_plots_backend.py`（真实后端，CSV/ROOT 网格一致）。
+
 2026-10-21 M3/M5 Results JSON 导出原型：`widgets/output_page.py` 通过 `output/extension_runner.py` 的 `QProcess` 运行正式 Python CLI `dose_json`/`fluence_json`；只在存在模拟输出目录且目标为尚不存在的 JSON 文件时允许启动，重复启动拒绝，支持取消、启动/退出失败报告与页面关闭时子进程清理。GUI 对 schema、version、extension ID/version、data、warnings 和无效 JSON 常量执行读取校验，刷新文件列表；`smoke_output_extensions_gui.py` 覆盖真实 Qt 子进程和错误路径。导出成功只说明发现的 CSV 被后处理，必须提示检查上游 run_summary、worker 文件完整性及独立物理 benchmark，不能提升实验性 Dose/Fluence 的支持等级。
 
 2026-10-21 Rectangle Source GUI 原型：`source_shape=rectangle` 在 generated 模式仅开放 XY 平面、`center`、有限正 `halfx/halfy`，按 `shape=rectangle` 写出且不混入 `radius`；fixed/isotropic 两种角分布遵循方向字段互斥；square、annulus、其他高级分布继续阻止运行包。`gui/smoke_tests/smoke_source_editor_v2.py` 检查生成及非法输入；C++ 真实采样专项见 `scripts/test_run_summary.py`。普通预览不代表源平面任意旋转受支持。

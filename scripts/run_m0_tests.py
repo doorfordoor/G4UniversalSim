@@ -46,6 +46,7 @@ CASES = (
     Case("gui_source", "gui/smoke_tests/smoke_source_editor_v2.py", "gui", ("qt",)),
     Case("gui_run_config", "gui/smoke_tests/smoke_run_config_editors.py", "gui", ("qt",)),
     Case("gui_dose_results", "gui/smoke_tests/smoke_dose_results.py", "gui", ("qt",)),
+    Case("gui_plots", "gui/smoke_tests/smoke_plots.py", "gui", ("qt",)),
     Case("gui_fluence_results", "gui/smoke_tests/smoke_fluence_results.py", "gui", ("qt",)),
     Case("gui_output_extensions", "gui/smoke_tests/smoke_output_extensions_gui.py", "gui", ("qt",)),
     Case("gui_output", "gui/smoke_tests/smoke_output_tools.py", "gui", ("qt",)),
@@ -86,6 +87,7 @@ CASES = (
     Case("gui_run_inputs", "gui/smoke_tests/smoke_run_input_modes.py", "integration", ("exe", "qt")),
     Case("gui_backend_geometry", "gui/smoke_tests/smoke_backend_geometry.py", "integration", ("exe", "qt")),
     Case("gui_backend_package", "gui/smoke_tests/smoke_geometry_backend_package.py", "integration", ("exe", "qt")),
+    Case("gui_plots_backend", "gui/smoke_tests/smoke_plots_backend.py", "integration", ("exe", "qt")),
 )
 
 
@@ -163,6 +165,9 @@ def merge_executable_freshness(executable: Path) -> str:
 
 
 def main() -> int:
+    # Failure tails may hold characters the console code page (e.g. GBK) cannot encode;
+    # replace them instead of crashing the runner and hiding the failure.
+    sys.stdout.reconfigure(errors="replace")
     parser = argparse.ArgumentParser(description="Run M0 tests by dependency layer; missing requirements are not green.")
     parser.add_argument("--profile", choices=("static", "gui", "backend", "integration", "all"), default="all")
     parser.add_argument("--case", action="append", choices=tuple(case.name for case in CASES),

@@ -7,6 +7,11 @@ Short, user-facing record of notable changes. Detailed support status lives in
 ## Unreleased
 
 ### Added
+- **Built-in plots** (roadmap Phase C1): a Results / Plots tab in the GUI for scorer
+  totals with statistical error bars, scoring-mesh depth profiles and 2D maps (CSV or
+  ROOT), Edep histograms, per-event deposit and phase-space spectra, with log axes,
+  per-primary normalisation, run overlay, comparison across output directories and
+  image/CSV export. `gui/requirements.txt` now lists numpy and matplotlib.
 - **Detector response pack** (roadmap Phase B4): `scenarios/detector_response/` with
   `make_detector.py` (housed gamma spectrometer crystals, silicon pads) and
   `analyze_detector.py` (pulse-height spectra, Gaussian resolution, efficiencies,
@@ -101,6 +106,8 @@ Short, user-facing record of notable changes. Detailed support status lives in
 - `scripts/compare_root_csv.py` and the `root_output` regression case.
 
 ### Changed
+- `scripts/run_m0_tests.py` no longer crashes when a failing case's log tail contains
+  characters the console code page cannot encode (they are replaced).
 - Repository hygiene: corrected `.gitignore`, removed tracked build artifacts and
   Geant4 example B1 leftovers, `.gitattributes` line-ending normalization.
 - `gui/requirements.txt` now includes `uproot`.

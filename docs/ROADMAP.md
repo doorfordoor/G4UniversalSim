@@ -17,7 +17,7 @@ This file is the single source of truth for progress. Every work session updates
 | A6 Physics (EM options, radioactive decay, region cuts/limits) | Done | see log |
 | A7 Fields | Done | see log |
 | B Scenario packs + benchmarks | Done (B1 benchmarks, B2 shielding/coating, B3 semiconductor, B4 detector response) | see log |
-| C Wizard + built-in plotting | Not started | |
+| C Wizard + built-in plotting | In progress: C1 built-in plots done; wizard and parameter scans next | see log |
 | D Installer | Not started (only after A–C are mostly stable) | |
 
 ## Data storage decision
@@ -46,7 +46,7 @@ Each pack = configs + docs + a benchmark against reference data.
 ## Phase C: wizard and built-in plotting
 
 - Guided "new simulation" wizard (scenario → materials → geometry → source → run); full editors stay as advanced mode.
-- Built-in plots from ROOT output: spectra, depth-dose, 2D maps, error bars, run comparison.
+- Built-in plots — done (C1): Results / Plots tab (`gui/g4usim_gui/output/plot_data.py`, `widgets/plot_panel.py`, matplotlib) for scorer totals with A3 error bars, scoring-mesh profiles and 2D maps (CSV or ROOT), Edep histograms, per-event deposit and phase-space spectra; log axes, per-primary normalisation, run overlay, comparison with other output directories, image and data export. Follow-ups: selection statistics, map comparison (ratio/difference), plots for scenario-pack reports.
 - Parameter scans and batch runs with a results table.
 
 ## Cross-cutting improvements
@@ -82,6 +82,7 @@ One-click Windows installer (backend + GUI + examples) after Phases A–C are mo
 - 2026-10-22: A6 done: 5 EM presets match NIST XCOM 1 MeV transmission in water (1 sigma); region cuts/limits behave as Geant4 defines them; Co-60 decays only with time_threshold, matching NNDC (99.8 % to the 2505.7 keV level, mean beta 95.3 vs 95.8 keV).
 - 2026-10-22: A7 done: uniform B circle (1e-5 mm), E work, Wien filter, constant and gradient maps (canonical momentum, 1e-6) and a local field box all match analytic trajectories. Phase A complete.
 - 2026-10-22: Phase B1 benchmarks done: 7 CSDA ranges, R80 and 6 photon attenuation cases agree with NIST within the stated tolerances; the suite runs the quick set.
+- 2026-10-22: Phase C1 built-in plots done: Results / Plots tab, exact-value synthetic smoke and a real-backend smoke (CSV = ROOT mesh, Bragg peak at 157 mm, per-primary run comparison).
 - 2026-10-22: Phase B4 detector response pack done, completing Phase B: 7 detector_response cases within tolerance; Geant4 option4 thin-Si MPV found +2.7 % (300 um, MIP) to ~+5 % (100 um) above the PDG LVB formula.
 - 2026-10-22: Phase B3 semiconductor pack done: SR-NIEL Si tables obtained from the public calculators (user-approved), device generator/analysis, 7 device_dose cases within tolerance (TID vs PSTAR, DDD vs SR-NIEL).
 - 2026-10-22: Phase B2 shielding/coating pack done: generator, analysis, displacement damage scorer (exact against a hits recomputation), and 11 Al/Si range/residual-energy cases within tolerance of the user-supplied NIST PSTAR/ESTAR tables.

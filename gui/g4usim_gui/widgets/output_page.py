@@ -32,6 +32,14 @@ from g4usim_gui.output.merge_plan import MergePlan, MergeTask, build_merge_plan
 from g4usim_gui.output.merge_runner import MergeRunner
 from g4usim_gui.output.run_summary_parser import parse_run_summary
 
+try:   # built-in plots (roadmap C1) need matplotlib; the rest of the page does not
+    from g4usim_gui.widgets.plot_panel import PlotPanel
+except ImportError as _plot_import_error:   # pragma: no cover - depends on the environment
+    PlotPanel = None
+    PLOT_IMPORT_ERROR = str(_plot_import_error)
+else:
+    PLOT_IMPORT_ERROR = ""
+
 
 class OutputPage(QWidget):
     MAX_PREVIEW_BYTES = 50 * 1024 * 1024
@@ -103,6 +111,11 @@ class OutputPage(QWidget):
         self.extension_caution.setWordWrap(True)
         self.extension_log = QPlainTextEdit()
         self.extension_log.setReadOnly(True)
+        if PlotPanel is not None:
+            self.plot_panel = PlotPanel()
+        else:
+            self.plot_panel = None
+            self.plot_unavailable = QLabel(ui_format("Plots need matplotlib: {error}", error=PLOT_IMPORT_ERROR))
 
         self._build_layout()
         self._connect_signals()
@@ -153,6 +166,7 @@ class OutputPage(QWidget):
         extension_layout.addWidget(QLabel("JSON export process output and warnings"))
         extension_layout.addWidget(self.extension_log, 1)
         self.tabs.addTab(extension_tab, "JSON Exports (M5 prototype)")
+        self.tabs.addTab(self.plot_panel if self.plot_panel is not None else self.plot_unavailable, "Plots")
 
         merge_tab = QWidget()
         merge_layout = QVBoxLayout(merge_tab)
@@ -226,6 +240,9 @@ class OutputPage(QWidget):
     def refresh(self) -> None:
         self.file_tree.clear()
         self.preview_text.clear()
+        if self.plot_panel is not None:
+            self.plot_panel.set_output_dir(self._output_dir if self._output_dir and Path(self._output_dir).is_dir()
+                                           else "")
         root_text = self._package_dir or self._output_dir
         if not root_text:
             self._files = []
