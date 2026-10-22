@@ -16,6 +16,9 @@ results with NIST reference data:
   device_dose        dose per unit proton fluence in a thin Si slab in delta-electron
                      equilibrium against the PSTAR Si electronic stopping power, and the
                      displacement damage dose per unit fluence against the SR-NIEL tables
+  detector_response  Compton edges and pair-production escape lines of gamma pulse-height
+                     spectra (kinematics) and the most probable deposit in 300 um Si
+                     against the PDG Landau-Vavilov-Bichsel formula
 
 A case passes when |simulated - reference| <= tolerance * reference + 3 sigma
 (sigma = statistical standard error of the simulated value). Writes
@@ -300,8 +303,72 @@ def device_dose(backend: Backend, quick: bool) -> list[dict]:
         results.append(result)
     return results
 
+
+def detector_response(backend: Backend, quick: bool) -> list[dict]:
+    """Pulse-height features against analytic references (detector response pack)."""
+    pack = ROOT / "scenarios" / "detector_response"
+    runs: dict[tuple, dict] = {}
+    results = []
+    for row in reference("detector_response"):
+        kind, detector, particle = row["kind"], row["detector"].split(), row["particle"]
+        energy, expected = float(row["energy_MeV"]), float(row["reference_MeV"])
+        if quick and (kind, energy) not in (("compton_edge", 0.662), ("single_escape", 4.44),
+                                            ("landau_mpv", 4000.0)):
+            continue
+        key = (tuple(detector), particle, energy)
+        if key not in runs:
+            backend.count += 1
+            out = backend.work / f"run{backend.count:02d}"
+            if detector[0] == "Si":
+                options = ["--kind", "silicon", "--thickness", detector[1]]
+                events = 40000 if quick else 200000     # the mode of a Landau is a noisy estimate
+            else:
+                options = ["--kind", "gamma", "--crystal", detector[0], "--radius", detector[1], "--length", detector[2]]
+                events = 30000 if quick else 100000
+            subprocess.run([sys.executable, str(pack / "make_detector.py"), "--out", str(out), *options,
+                            "--particle", particle, "--energy", str(energy), "--events", str(events),
+                            "--threads", str(backend.threads), "--seed", str(1000 + backend.count)],
+                           check=True, capture_output=True, text=True)
+            result = subprocess.run([str(EXE), "--config", "main.ini"], cwd=out, capture_output=True, text=True,
+                                    errors="replace", timeout=7200)
+            if result.returncode != 0:
+                raise RuntimeError(f"detector_response run failed:\n{(result.stdout + result.stderr)[-3000:]}")
+            subprocess.run([sys.executable, str(pack / "analyze_detector.py"), str(out / "output")],
+                           check=True, capture_output=True, text=True)
+            report = json.loads((out / "output" / "detector_report.json").read_text(encoding="utf-8"))
+            report["events"] = events
+            runs[key] = report
+        report = runs[key]
+        if kind == "landau_mpv":
+            simulated, sigma, tolerance = report["mpv_MeV"], report["mpv_error_MeV"], 0.03
+            quantity = "most probable deposit [MeV]"
+        else:
+            # positions from 1 keV bins: sigma = bin / sqrt(12); edges also carry the smoothing
+            field = "compton_edge_MeV" if kind == "compton_edge" else None
+            if field:
+                simulated, tolerance = report[field], 0.01
+            else:
+                line = report[f"{kind}_MeV"]
+                if report[f"{kind}_per_primary"] <= 0:
+                    raise RuntimeError(f"detector_response: no {kind} counts")
+                simulated, tolerance = line, 0.0
+                # the line itself: verify the deposit histogram peaks there (within 1 keV)
+                with (backend.work / f"run{backend.count:02d}" / "output" / "pulse_height.csv").open(
+                        newline="", encoding="utf-8") as handle:
+                    bins = [(float(r["e_low_MeV"]), float(r["deposit_per_primary"])) for r in csv.DictReader(handle)
+                            if abs(float(r["e_low_MeV"]) + 0.0005 - line) <= 0.010]
+                simulated = max(bins, key=lambda b: b[1])[0] + 0.0005
+            sigma = 0.001 / math.sqrt(12)
+            quantity = "Compton edge [MeV]" if field else "escape peak [MeV]"
+        result = verdict(simulated, sigma, expected, tolerance)
+        result.update(case=f"{particle} {energy:g} MeV, {' '.join(detector)}", quantity=quantity, source=row["source"],
+                      events=report["events"])
+        results.append(result)
+    return results
+
 BENCHMARKS = {"csda_range": csda_range, "bragg_peak": bragg_peak, "gamma_attenuation": gamma_attenuation,
-              "shielding_range": shielding_range, "device_dose": device_dose}
+              "shielding_range": shielding_range, "device_dose": device_dose,
+              "detector_response": detector_response}
 
 
 def write_report(output: Path, report: dict) -> None:

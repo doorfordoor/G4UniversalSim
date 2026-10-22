@@ -7,6 +7,12 @@ Short, user-facing record of notable changes. Detailed support status lives in
 ## Unreleased
 
 ### Added
+- **Detector response pack** (roadmap Phase B4): `scenarios/detector_response/` with
+  `make_detector.py` (housed gamma spectrometer crystals, silicon pads) and
+  `analyze_detector.py` (pulse-height spectra, Gaussian resolution, efficiencies,
+  peak-to-total, Compton edge, escape peaks, most probable deposit). New benchmark
+  `detector_response` (Klein-Nishina Compton edges, pair escape lines, PDG
+  Landau-Vavilov-Bichsel most probable energy loss in silicon).
 - **Semiconductor device pack** (roadmap Phase B3): `scenarios/semiconductor/` with
   `make_device.py` (lid, BEOL, gate oxide, active silicon, substrate depth slices) and
   `analyze_device.py` (per-layer TID, displacement damage dose, 1 MeV neutron-equivalent

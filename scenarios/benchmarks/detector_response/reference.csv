@@ -1,0 +1,10 @@
+# detector_response references from response_physics.py (Klein-Nishina kinematics,
+# pair-production escape lines, PDG Landau-Vavilov-Bichsel MPV with Sternheimer delta).
+kind,detector,particle,energy_MeV,reference_MeV,source
+compton_edge,plastic 12.7mm 25.4mm,gamma,0.662,0.47765,Klein-Nishina kinematics
+compton_edge,plastic 12.7mm 25.4mm,gamma,1.332,1.11762,Klein-Nishina kinematics
+single_escape,HPGe 30mm 50mm,gamma,4.44,3.929,E - m_e c^2
+double_escape,HPGe 30mm 50mm,gamma,4.44,3.418,E - 2 m_e c^2
+landau_mpv,Si 300um,mu-,4000,0.0825318,PDG Landau-Vavilov-Bichsel (Eq. 34.12)
+landau_mpv,Si 300um,proton,300,0.15582,PDG Landau-Vavilov-Bichsel (Eq. 34.12)
+landau_mpv,Si 300um,proton,1000,0.0897595,PDG Landau-Vavilov-Bichsel (Eq. 34.12)
