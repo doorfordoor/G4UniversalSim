@@ -122,7 +122,10 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
     hit.pz = mom.z();
     hit.volumeName = volumeName;
 
-    if (scoringManager->IsDoseScoringEnabled() || scoringManager->IsFluenceScoringEnabled()) PopulateDoseContext(step, hit);
+    if (scoringManager->IsDoseScoringEnabled() || scoringManager->IsFluenceScoringEnabled() ||
+        scoringManager->IsDisplacementScoringEnabled()) {
+        PopulateDoseContext(step, hit);
+    }
 
     scoringManager->ScoreHit(hit);
 }

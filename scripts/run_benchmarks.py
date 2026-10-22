@@ -10,6 +10,9 @@ results with NIST reference data:
                      against PSTAR CSDA range x detour factor
   gamma_attenuation  narrow-beam transmission of photons, mu/rho = -ln(T) / (rho x),
                      against NIST XCOM (FTFP_BERT_EMZ)
+  shielding_range    CSDA ranges of protons and electrons in Al and Si (PSTAR/ESTAR) and
+                     the mean energy of protons behind Al/Si slabs against the PSTAR
+                     projected-range inversion (EM-only, G4EmStandardPhysics_option4)
 
 A case passes when |simulated - reference| <= tolerance * reference + 3 sigma
 (sigma = statistical standard error of the simulated value). Writes
@@ -206,7 +209,55 @@ def gamma_attenuation(backend: Backend, quick: bool) -> list[dict]:
     return results
 
 
-BENCHMARKS = {"csda_range": csda_range, "bragg_peak": bragg_peak, "gamma_attenuation": gamma_attenuation}
+def shielding_range(backend: Backend, quick: bool) -> list[dict]:
+    """CSDA ranges in Al/Si and residual proton energy behind slabs (shielding pack)."""
+    results = []
+    for row in reference("shielding_range"):
+        particle, material = row["particle"], row["material"]
+        energy = float(row["energy_MeV"])
+        density = float(row["density_g_cm3"])
+        expected = float(row["reference"])
+        source = (f"[source]\nparticle = {particle}\nenergy = {energy} MeV\nposition_type = point\n"
+                  "position = 0,0,0 mm\ndirection = +z\n")
+        if row["kind"] == "csda_range":
+            if quick and (particle, energy) not in (("proton", 100.0), ("e-", 1.0)):
+                continue
+            geometry = WORLD + ("[volume.Block]\nparent = world\nshape = box\nsize = 80 cm, 80 cm, 80 cm\n"
+                                f"material = {material}\nposition = 0 mm, 0 mm, 0 mm\nsensitive = true\n")
+            events = (150 if quick else 1000) if particle == "proton" else (300 if quick else 2000)
+            output = backend.run(geometry, "em = option4", source, events, hits=True)
+            path = defaultdict(float)
+            for hit in worker_rows(output, "hits"):
+                if hit["trackID"] == "1":
+                    path[(hit["runID"], hit["eventID"])] += float(hit["stepLength_mm"])
+            values = [v / 10.0 * density for v in path.values()]    # g/cm2
+            tolerance = 0.015 if particle == "proton" else 0.03
+            case, quantity = f"{particle} {energy:g} MeV in {material}", "CSDA range [g/cm2]"
+        else:
+            thickness = float(row["thickness_mm"])
+            if quick and thickness not in (5.0, 2.0):
+                continue
+            geometry = WORLD + (f"[volume.Slab]\nparent = world\nshape = box\nsize = 30 cm, 30 cm, {thickness} mm\n"
+                                f"material = {material}\nposition = 0 mm, 0 mm, {10 + thickness / 2} mm\n"
+                                "[volume.Plane]\nparent = world\nshape = box\nsize = 30 cm, 30 cm, 1 mm\n"
+                                f"material = G4_Galactic\nposition = 0 mm, 0 mm, {thickness + 20.5} mm\n")
+            extra = source + "[phase_space]\nvolume = Plane_PV\nparticles = proton\nkill = true\n"
+            events = 300 if quick else 2000
+            output = backend.run(geometry, "em = option4", extra, events, hits=False)
+            values = [float(p["kineticEnergy_MeV"]) for p in worker_rows(output, "phase_space") if p["trackID"] == "1"]
+            if len(values) < 0.99 * events:
+                raise RuntimeError(f"shielding_range: only {len(values)} of {events} protons crossed the slab")
+            tolerance = 0.01
+            case, quantity = f"proton {energy:g} MeV behind {thickness:g} mm {material}", "mean exit energy [MeV]"
+        mean = sum(values) / len(values)
+        sigma = math.sqrt(sum((v - mean) ** 2 for v in values) / (len(values) - 1) / len(values))
+        result = verdict(mean, sigma, expected, tolerance)
+        result.update(case=case, quantity=quantity, source=row["source"], events=len(values))
+        results.append(result)
+    return results
+
+BENCHMARKS = {"csda_range": csda_range, "bragg_peak": bragg_peak, "gamma_attenuation": gamma_attenuation,
+              "shielding_range": shielding_range}
 
 
 def write_report(output: Path, report: dict) -> None:

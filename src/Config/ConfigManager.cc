@@ -31,7 +31,8 @@ const std::map<std::string, std::vector<std::string>>& KnownKeys()
         {"physics.radioactive_decay", {"enabled", "time_threshold"}},
         {"field", {"magnetic", "electric", "magnetic_map", "electric_map", "min_step", "delta_chord", "delta_one_step",
                    "delta_intersection"}},
-        {"scoring", {"enabled", "hits", "event_edep", "edep", "let", "dose", "fluence", "auto_create_default_scorers", "verbose"}},
+        {"scoring", {"enabled", "hits", "event_edep", "edep", "let", "dose", "fluence", "displacement",
+                     "auto_create_default_scorers", "verbose"}},
         {"scoring.edep", {"raw_histogram", "weighted_histogram", "bins", "min", "max", "volume_summary", "particle_summary"}},
         {"scoring.let", {"particles"}},
         {"biasing", {"enabled"}},
@@ -49,6 +50,7 @@ const std::map<std::string, std::vector<std::string>>& KnownKeys()
 bool IsKnownDynamicSection(const std::string& section)
 {
     if (section == "physics.cuts") return true;
+    if (section == "scoring.displacement") return true;  // keys are particle names
     if (StartsWith(section, "physics.region.")) {
         const std::string suffix = section.substr(std::string("physics.region.").size());
         return !suffix.empty() && suffix.find('.') == std::string::npos;

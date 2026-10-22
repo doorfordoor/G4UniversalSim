@@ -30,6 +30,8 @@ struct HitRecord {
     std::string doseVolumePath;
     // Internal sensitive solid volume (Geant4 volume units); not part of hits CSV.
     double fluenceVolume = 0.0;
+    // Mean of pre- and post-step kinetic energy (Geant4 units); not part of hits CSV.
+    double meanKineticEnergy = 0.0;
     double LETcalc = 0.0;
     double LETstep = 0.0;
 };

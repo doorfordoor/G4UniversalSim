@@ -16,7 +16,7 @@ This file is the single source of truth for progress. Every work session updates
 | A5 Geometry (GDML, replica/parameterised, solids, true preview) | Done | see log |
 | A6 Physics (EM options, radioactive decay, region cuts/limits) | Done | see log |
 | A7 Fields | Done | see log |
-| B Scenario packs + benchmarks | In progress: benchmarks B1 done; packs (shielding, semiconductor, detector) next | see log |
+| B Scenario packs + benchmarks | In progress: B1 benchmarks and B2 shielding/coating pack done; semiconductor and detector packs next | see log |
 | C Wizard + built-in plotting | Not started | |
 | D Installer | Not started (only after A–C are mostly stable) | |
 
@@ -38,7 +38,7 @@ Geant4's analysis category (`G4AnalysisManager`) is the single output layer. ROO
 
 Each pack = configs + docs + a benchmark against reference data.
 
-- Shielding / composite coating (port from `D:\Geant4\CoatingSimulation`: TID, displacement damage, escape spectra, porosity).
+- Shielding / composite coating — done (B2): `scenarios/shielding_coating` ports CoatingSimulation as a generator (`make_scenario.py`: layer stack, integral-flux proton/electron/mixed spectra, reduced-density junction layers, parameterised vacuum pores, region cuts/step limits, transmission or albedo phase space) plus `analyze.py` (TID/DDD per primary, per fluence and normal-incidence rate; spectra). New experimental displacement damage scorer (`[scoring] displacement`, track-length fluence folded with user NIEL tables; no NIEL data shipped). Reference benchmark `scenarios/benchmarks/shielding_range`: Al/Si CSDA ranges and proton residual energies vs PSTAR/ESTAR. Follow-ups: cited Si NIEL tables, omnidirectional (cosine-law) irradiation, coating-material stopping benchmarks, GUI support.
 - Semiconductor device dose and displacement damage.
 - Detector response.
 - Benchmarks — done (B1): `scenarios/benchmarks` (csda_range, bragg_peak, gamma_attenuation) with `scripts/run_benchmarks.py` (JSON/Markdown report, `--quick` in the suite): proton/electron CSDA ranges vs PSTAR/ESTAR (+0.2 to +0.95 %, explained by I = 78 eV for G4_WATER), 150 MeV R80 +0.84 %, photon mu/rho vs XCOM within 1.7 sigma.
@@ -82,3 +82,4 @@ One-click Windows installer (backend + GUI + examples) after Phases A–C are mo
 - 2026-10-22: A6 done: 5 EM presets match NIST XCOM 1 MeV transmission in water (1 sigma); region cuts/limits behave as Geant4 defines them; Co-60 decays only with time_threshold, matching NNDC (99.8 % to the 2505.7 keV level, mean beta 95.3 vs 95.8 keV).
 - 2026-10-22: A7 done: uniform B circle (1e-5 mm), E work, Wien filter, constant and gradient maps (canonical momentum, 1e-6) and a local field box all match analytic trajectories. Phase A complete.
 - 2026-10-22: Phase B1 benchmarks done: 7 CSDA ranges, R80 and 6 photon attenuation cases agree with NIST within the stated tolerances; the suite runs the quick set.
+- 2026-10-22: Phase B2 shielding/coating pack done: generator, analysis, displacement damage scorer (exact against a hits recomputation), and 11 Al/Si range/residual-energy cases within tolerance of the user-supplied NIST PSTAR/ESTAR tables.

@@ -4,15 +4,18 @@
 #include "Output/AnalysisOutput.hh"
 #include "Output/CsvWriter.hh"
 #include "Output/OutputManager.hh"
+#include "Scoring/DisplacementScorer.hh"
 #include "Scoring/DoseScorer.hh"
 #include "Scoring/EdepScorer.hh"
 #include "Scoring/FluenceScorer.hh"
 #include "Scoring/LETScorer.hh"
+#include "Scoring/NielTable.hh"
 #include "Utils/StringUtils.hh"
 #include "Utils/UnitParser.hh"
 #include "G4PhysicalVolumeStore.hh"
 #include "G4RunManager.hh"
 
+#include <filesystem>
 #include <iostream>
 #include <cstdlib>
 #include <stdexcept>
@@ -52,6 +55,8 @@ std::unique_ptr<ScoringManager> ScoringManager::CloneForThread(OutputManager* ou
     clone->letParticles_ = letParticles_;
     clone->doseScoringEnabled_ = doseScoringEnabled_;
     clone->fluenceScoringEnabled_ = fluenceScoringEnabled_;
+    clone->displacementScoringEnabled_ = displacementScoringEnabled_;
+    clone->nielTables_ = nielTables_;
     clone->autoCreateDefaultScorers_ = autoCreateDefaultScorers_;
     clone->edepRawHistogramEnabled_ = edepRawHistogramEnabled_;
     clone->edepWeightedHistogramEnabled_ = edepWeightedHistogramEnabled_;
@@ -169,6 +174,28 @@ bool ScoringManager::IsFluenceScoringEnabled() const
     return fluenceScoringEnabled_;
 }
 
+void ScoringManager::EnableDisplacementScoring(bool enable)
+{
+    displacementScoringEnabled_ = enable;
+    SetScorerEnabledIfExists("displacement", enable);
+}
+
+bool ScoringManager::IsDisplacementScoringEnabled() const
+{
+    return displacementScoringEnabled_;
+}
+
+void ScoringManager::SetNielTables(const std::map<std::string, std::shared_ptr<const NielTable>>& tables)
+{
+    nielTables_ = tables;
+    if (auto* scorer = dynamic_cast<DisplacementScorer*>(GetScorer("displacement"))) scorer->SetTables(tables);
+}
+
+const std::map<std::string, std::shared_ptr<const NielTable>>& ScoringManager::GetNielTables() const
+{
+    return nielTables_;
+}
+
 void ScoringManager::SetAutoCreateDefaultScorers(bool enable)
 {
     autoCreateDefaultScorers_ = enable;
@@ -260,10 +287,18 @@ void ScoringManager::EnsureDefaultScorers()
         RegisterScorer(std::move(scorer));
     }
 
+    if (displacementScoringEnabled_ && !HasScorer("displacement")) {
+        auto scorer = std::make_unique<DisplacementScorer>("displacement");
+        scorer->SetEnabled(true);
+        scorer->SetTables(nielTables_);
+        RegisterScorer(std::move(scorer));
+    }
+
     SetScorerEnabledIfExists("edep", edepScoringEnabled_);
     SetScorerEnabledIfExists("let", letScoringEnabled_);
     SetScorerEnabledIfExists("dose", doseScoringEnabled_);
     SetScorerEnabledIfExists("fluence", fluenceScoringEnabled_);
+    SetScorerEnabledIfExists("displacement", displacementScoringEnabled_);
 }
 
 bool ScoringManager::HasScorer(const std::string& name) const
@@ -423,6 +458,20 @@ void ScoringManager::ScoreLETStep(const HitRecord& hit)
     }
 }
 
+void ScoringManager::ScoreDisplacementStep(const HitRecord& hit)
+{
+    if (!enabled_ || !displacementScoringEnabled_) return;
+    if (outputManager_ && outputManager_->HasOutputFailure()) return;
+    ScorerBase* scorer = GetScorer("displacement");
+    if (!scorer || !scorer->IsEnabled()) return;
+    try {
+        scorer->ScoreHit(hit);
+    } catch (const std::exception& error) {
+        if (outputManager_) outputManager_->RecordOutputFailure("scoring_displacement", error.what());
+        if (auto* runManager = G4RunManager::GetRunManager()) runManager->AbortRun(true);
+    }
+}
+
 void ScoringManager::ReportFluenceTransportFailure(const std::string& message)
 {
     if (outputManager_) outputManager_->RecordOutputFailure("scoring_fluence", message);
@@ -477,9 +526,33 @@ void ScoringManager::LoadFromConfig(const ConfigManager& config)
     EnableLETScoring(config.GetBool("scoring", "let", letScoringEnabled_));
     EnableDoseScoring(config.GetBool("scoring", "dose", doseScoringEnabled_));
     EnableFluenceScoring(config.GetBool("scoring", "fluence", fluenceScoringEnabled_));
+    EnableDisplacementScoring(config.GetBool("scoring", "displacement", displacementScoringEnabled_));
     SetAutoCreateDefaultScorers(config.GetBool("scoring", "auto_create_default_scorers", autoCreateDefaultScorers_));
-    if (enabled_ && (doseScoringEnabled_ || fluenceScoringEnabled_) && !autoCreateDefaultScorers_) {
-        throw std::runtime_error("Dose/Fluence scoring requires [scoring]/auto_create_default_scorers = true");
+    if (enabled_ && (doseScoringEnabled_ || fluenceScoringEnabled_ || displacementScoringEnabled_) &&
+        !autoCreateDefaultScorers_) {
+        throw std::runtime_error("Dose/Fluence/Displacement scoring requires [scoring]/auto_create_default_scorers = true");
+    }
+    if (config.HasSection("scoring.displacement")) {
+        std::map<std::string, std::shared_ptr<const NielTable>> tables;
+        for (const std::string& key : config.GetKeys("scoring.displacement")) {
+            const std::string particle = StringUtils::Trim(key);
+            std::filesystem::path file = std::filesystem::u8path(
+                StringUtils::Trim(config.GetString("scoring.displacement", key)));
+            if (file.empty()) throw std::runtime_error("[scoring.displacement]/" + particle + " needs a NIEL table file");
+            if (file.is_relative() && !config.GetMainConfigPath().empty()) {
+                file = std::filesystem::u8path(config.GetMainConfigPath()).parent_path() / file;
+            }
+            try {
+                tables[particle] = NielTable::Load(file.u8string());
+            } catch (const std::exception& error) {
+                throw std::runtime_error("[scoring.displacement]/" + particle + ": " + error.what());
+            }
+        }
+        SetNielTables(tables);
+    }
+    if (enabled_ && displacementScoringEnabled_ && nielTables_.empty()) {
+        throw std::runtime_error("[scoring]/displacement = true needs [scoring.displacement] with "
+                                 "<particle> = <NIEL table CSV> entries (header energy_MeV,niel_MeV_cm2_g)");
     }
     SetVerboseLevel(config.GetInt("scoring", "verbose", verboseLevel_));
 
@@ -528,6 +601,7 @@ void ScoringManager::PrintSummary() const
               << ", let=" << (letScoringEnabled_ ? "true" : "false")
               << ", dose=" << (doseScoringEnabled_ ? "true" : "false")
               << ", fluence=" << (fluenceScoringEnabled_ ? "true" : "false")
+              << ", displacement=" << (displacementScoringEnabled_ ? "true" : "false")
               << ", autoCreateDefaultScorers=" << (autoCreateDefaultScorers_ ? "true" : "false")
               << ", verbose=" << verboseLevel_
               << ", currentRunID=" << currentRunID_

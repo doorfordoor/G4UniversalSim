@@ -7,6 +7,13 @@ Short, user-facing record of notable changes. Detailed support status lives in
 ## Unreleased
 
 ### Added
+- **Shielding / coating scenario pack** (roadmap Phase B2): `scenarios/shielding_coating/`
+  ports CoatingSimulation as `make_scenario.py` (layer stack, mission spectra, mixed
+  sources, junction layers, vacuum pores, transmission/albedo spectra) and `analyze.py`
+  (TID, DDD, spectra). New experimental **displacement damage dose** scorer:
+  `[scoring] displacement = true` with `[scoring.displacement] <particle> = <NIEL table>`
+  writes `displacement_volume_summary_tN[_rR].csv` and `ddd_*` statistics. New benchmark
+  `shielding_range` (Al/Si CSDA ranges and proton residual energies vs NIST PSTAR/ESTAR).
 - **Physics benchmarks** (roadmap Phase B1): `scenarios/benchmarks/` packs (reference
   data, runnable example configs, Chinese READMEs) for water CSDA ranges (NIST
   PSTAR/ESTAR), the 150 MeV proton Bragg peak R80, and narrow-beam photon attenuation

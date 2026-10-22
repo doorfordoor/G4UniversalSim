@@ -80,6 +80,11 @@ std::string GeneratedFileSchema(const std::string& path)
                       "sum_sq_wSl_MeV2,sum_sq_wS2l_MeV4_per_mm2,sum_wl_x_wSl_MeV_mm,"
                       "sum_wSl_x_wS2l_MeV3_per_mm,n_events") return "let_volume_csv_v2";
     }
+    if (matches("displacement_volume_summary")) {
+        if (header == "runID,volume_path,volume_name,particle,niel_table,volume_mm3,track_length_mm,"
+                      "out_of_range_track_length_mm,ddd_MeV_g,ddd_sum_sq_MeV2_g2,n_events")
+            return "displacement_volume_csv_v1";
+    }
     if (matches("fluence_volume_summary")) {
         if (header == "runID,volume_path,volume_name,volume_mm3,raw_track_length_mm,"
                       "weighted_track_length_mm,raw_fluence_mm-2,weighted_fluence_mm-2") return "fluence_volume_csv_v1";

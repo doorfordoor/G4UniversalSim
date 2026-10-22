@@ -66,13 +66,15 @@ G4bool SensitiveDetector::ProcessHits(G4Step* step, G4TouchableHistory* history)
     if (!zeroEdepHitsEnabled_ && edep <= 0.0 && ndep <= 0.0) {
         if (scoringEnabled_) {
             if (ScoringManager* manager = ResolveScoringManager();
-                manager && (manager->IsFluenceScoringEnabled() || manager->IsLETScoringEnabled()) &&
+                manager && (manager->IsFluenceScoringEnabled() || manager->IsLETScoringEnabled() ||
+                            manager->IsDisplacementScoringEnabled()) &&
                 step->GetStepLength() > 0.0) {
                 try {
                     std::unique_ptr<ParticleHit> particle(ParticleHit::FromStep(step, GetCurrentEventID()));
                     auto record = particle->ToHitRecord();
                     PopulateDoseContext(step, record);
                     if (manager->IsFluenceScoringEnabled()) manager->ScoreFluenceStep(record);
+                    if (manager->IsDisplacementScoringEnabled()) manager->ScoreDisplacementStep(record);
                     if (manager->IsLETScoringEnabled()) {
                         record.LETstep = ElectronicStoppingPower(step);
                         manager->ScoreLETStep(record);
@@ -95,7 +97,9 @@ G4bool SensitiveDetector::ProcessHits(G4Step* step, G4TouchableHistory* history)
         if (ScoringManager* scoringManager = ResolveScoringManager()) {
             auto record = hit->ToHitRecord();
             if (scoringManager->IsDoseScoringEnabled() || scoringManager->IsFluenceScoringEnabled() ||
-                scoringManager->IsLETScoringEnabled()) PopulateDoseContext(step, record);
+                scoringManager->IsLETScoringEnabled() || scoringManager->IsDisplacementScoringEnabled()) {
+                PopulateDoseContext(step, record);
+            }
             if (scoringManager->IsLETScoringEnabled()) record.LETstep = ElectronicStoppingPower(step);
             scoringManager->ScoreHit(record);
         }

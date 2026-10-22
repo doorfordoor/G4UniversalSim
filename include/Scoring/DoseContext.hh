@@ -29,6 +29,10 @@ inline void PopulateDoseContext(const G4Step* step, HitRecord& record)
     if (logical->GetNoDaughters() == 0 && logical->GetSolid()) {
         record.fluenceVolume = logical->GetSolid()->GetCubicVolume();
     }
+    if (const auto* post = step->GetPostStepPoint()) {
+        record.meanKineticEnergy =
+            0.5 * (step->GetPreStepPoint()->GetKineticEnergy() + post->GetKineticEnergy());
+    }
     const int depth = touchable->GetHistoryDepth();
     for (int i = depth; i >= 0; --i) {
         const auto* volume = touchable->GetVolume(i);

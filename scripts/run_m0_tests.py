@@ -68,6 +68,8 @@ CASES = (
     Case("geometry_a5", "scripts/test_geometry_a5.py", "backend", ("exe",)),
     Case("physics_a6", "scripts/test_physics_a6.py", "backend", ("exe",)),
     Case("fields_a7", "scripts/test_fields_a7.py", "backend", ("exe",)),
+    Case("displacement_damage", "scripts/test_displacement_damage.py", "backend", ("exe",)),
+    Case("shielding_coating", "scripts/test_shielding_coating.py", "backend", ("exe",)),
     Case("benchmarks", "scripts/run_benchmarks.py", "backend", ("exe",), args=("--quick",)),
     Case("interactive_commands", "scripts/test_interactive_commands.py", "backend", ("exe",)),
     Case("unsupported_features", "scripts/test_unsupported_features.py", "backend", ("exe",), args=("--layer", "backend")),

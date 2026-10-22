@@ -4,6 +4,7 @@
 #include "Scoring/PhaseSpace.hh"
 #include "Scoring/ScorerBase.hh"
 
+#include <map>
 #include <memory>
 #include <set>
 #include <string>
@@ -12,6 +13,7 @@
 class ConfigManager;
 class CsvWriter;
 class EdepScorer;
+class NielTable;
 class OutputManager;
 
 class ScoringManager {
@@ -49,6 +51,13 @@ public:
 
     void EnableFluenceScoring(bool enable);
     bool IsFluenceScoringEnabled() const;
+
+    // Displacement damage dose from NIEL tables ([scoring] displacement,
+    // [scoring.displacement] <particle> = <table.csv>), roadmap B2.
+    void EnableDisplacementScoring(bool enable);
+    bool IsDisplacementScoringEnabled() const;
+    void SetNielTables(const std::map<std::string, std::shared_ptr<const NielTable>>& tables);
+    const std::map<std::string, std::shared_ptr<const NielTable>>& GetNielTables() const;
 
     void SetAutoCreateDefaultScorers(bool enable);
     bool IsAutoCreateDefaultScorersEnabled() const;
@@ -88,6 +97,8 @@ public:
     void ReportFluenceTransportFailure(const std::string& message);
     // Charged step without energy deposit: LET track-length contribution only.
     void ScoreLETStep(const HitRecord& hit);
+    // Step without energy deposit (e.g. neutrons): displacement damage only.
+    void ScoreDisplacementStep(const HitRecord& hit);
 
     double GetCurrentEventRawEdep() const;
     double GetCurrentEventWeightedEdep() const;
@@ -134,6 +145,8 @@ private:
     bool letScoringEnabled_ = false;
     bool doseScoringEnabled_ = false;
     bool fluenceScoringEnabled_ = false;
+    bool displacementScoringEnabled_ = false;
+    std::map<std::string, std::shared_ptr<const NielTable>> nielTables_;
     std::set<std::string> letParticles_;
     bool autoCreateDefaultScorers_ = true;
 

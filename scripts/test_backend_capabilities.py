@@ -48,7 +48,7 @@ def main() -> int:
     assert "temperature" not in capabilities.runtime_ids("materials")
     assert {"physics_region_cuts", "region_step_limits", "radioactive_decay", "process_dump"} <= capabilities.runtime_ids("physics")
     assert {"uniform_fields", "field_maps", "local_fields"} <= capabilities.runtime_ids("physics")
-    assert capabilities.runtime_ids("scorers") == {"hits", "edep", "dose", "fluence", "let"}
+    assert capabilities.runtime_ids("scorers") == {"hits", "edep", "dose", "fluence", "let", "displacement"}
     assert "let" in capabilities.runtime_ids("scorers")
     assert re.fullmatch(r"[0-9a-f]{64}", capabilities.data["source_fingerprint"])
     assert capabilities.data["build_configuration"] in {"Debug", "Release", "RelWithDebInfo", "MinSizeRel"}
