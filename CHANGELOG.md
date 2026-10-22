@@ -7,6 +7,12 @@ Short, user-facing record of notable changes. Detailed support status lives in
 ## Unreleased
 
 ### Added
+- **Windows installer** (roadmap Phase D): `packaging/build_package.py` builds a portable
+  folder, a ZIP and an Inno Setup installer with the backend and its DLLs, a frozen GUI
+  (no Python needed), examples, scenarios, scripts, docs and third-party licenses. The
+  Geant4 data is not bundled; the backend finds an existing data folder through the usual
+  variables, `GEANT4_DATA_DIR` or `bin/geant4-data.txt`, and the new
+  `--check-geant4-data` option reports what it found. The GUI gains `--self-test`.
 - **Parameter scans and batch runs** (roadmap Phase C3): a Parameter Scans page varies
   one Configuration-page setting (source energy or particle, physics list, seed, events,
   a volume's material or box thickness) over a list or lin/log range, writes one run

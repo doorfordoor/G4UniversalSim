@@ -23,6 +23,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from g4usim_gui.core import install_layout
 from g4usim_gui.core import scan as parameter_scan
 from g4usim_gui.core import wizard as simulation_wizard
 from g4usim_gui.core.i18n import LanguageCode, apply_language, current_language, ui_format, ui_text
@@ -254,8 +255,9 @@ class MainWindow(QMainWindow):
         self._nav_buttons[index].setChecked(True)
 
     def _default_project(self) -> G4USimProject:
-        root = Path(__file__).resolve().parents[2]
-        output = root / "gui_runs" / "demo" / "output"
+        root = install_layout.application_root()
+        runs_root = install_layout.default_runs_root()
+        output = runs_root / "demo" / "output"
         project = G4USimProject(
             projectName="demo",
             runInputMode="generated",
@@ -263,14 +265,16 @@ class MainWindow(QMainWindow):
             configPath="",
             macroPath="",
             outputDir=str(output),
-            runsRoot=str(root / "gui_runs"),
+            runsRoot=str(runs_root),
             threads=1,
             runName="demo_run",
         )
+        executable = install_layout.default_backend_executable()
+        project.executable = executable
         project.pathSettings = PathSettings(
-            executable="",
+            executable=executable,
             workspace_root=str(root),
-            runs_root=str(root / "gui_runs"),
+            runs_root=str(runs_root),
             materials_config=str(root / "config" / "materials" / "material.ini"),
             geometry_config=str(root / "test" / "geometry" / "hierarchical_test.ini"),
         )

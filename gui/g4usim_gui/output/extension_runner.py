@@ -4,10 +4,11 @@ from __future__ import annotations
 
 import json
 import re
-import sys
 from pathlib import Path
 
 from PySide6.QtCore import QObject, QProcess, Signal
+
+from g4usim_gui.core import install_layout
 
 
 class OutputExtensionRunner(QObject):
@@ -31,7 +32,7 @@ class OutputExtensionRunner(QObject):
         return self._active is not None
 
     def _cli_script(self) -> Path:
-        return Path(__file__).resolve().parents[3] / "scripts" / "run_output_extension.py"
+        return install_layout.scripts_dir() / "run_output_extension.py"
 
     def start(self, extension_id: str, input_dir: str | Path, output: str | Path) -> None:
         if self.is_running():
@@ -53,10 +54,13 @@ class OutputExtensionRunner(QObject):
         script = self._cli_script()
         if not script.is_file():
             raise ValueError(f"Output extension CLI is missing: {script}")
+        python = install_layout.script_python()
+        if python is None:
+            raise ValueError("JSON export runs a Python script; install Python 3 or set G4USIM_PYTHON.")
         self._active = (extension_id, target)
         self._cancelled = False
         self.stateChanged.emit(True)
-        self._process.setProgram(sys.executable)
+        self._process.setProgram(python)
         self._process.setArguments([
             "-B", str(script), "--run", extension_id,
             "--input-dir", str(source), "--output", str(target),

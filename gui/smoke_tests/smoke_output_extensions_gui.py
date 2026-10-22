@@ -123,7 +123,7 @@ def main() -> None:
 
         # Process-start error must clear the busy state, with no reported success.
         runner._cli_script = real_script
-        with patch.object(extension_module.sys, "executable", str(root / "no_python.exe")):
+        with patch.object(extension_module.install_layout, "script_python", lambda: str(root / "no_python.exe")):
             assert page.run_output_extension("dose_json", str(out / "not_started.json"))
             result = wait_for_completion(app, page, 5, completed)
         assert result[2] is False and "Cannot start" in result[3]

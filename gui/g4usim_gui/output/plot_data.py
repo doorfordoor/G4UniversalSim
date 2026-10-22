@@ -193,7 +193,8 @@ def load_mesh(output_dir: str | Path, dataset: DataSet) -> MeshData:
         error[tuple(index.T)] = np.abs(sums) * rel
     else:
         import sys
-        sys.path.insert(0, str(Path(__file__).resolve().parents[3] / "scripts"))
+        from g4usim_gui.core import install_layout
+        sys.path.insert(0, str(install_layout.scripts_dir()))
         import g4usim_io   # noqa: E402  (repository helper, needs uproot)
         name = "g4usim.root" if dataset.run_id == 0 else f"g4usim_r{dataset.run_id}.root"
         data = g4usim_io.load_mesh(output / name, mesh, quantity, bins)

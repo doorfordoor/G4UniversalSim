@@ -18,6 +18,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from g4usim_gui.core import install_layout
 from g4usim_gui.core.i18n import ui_format, ui_text
 from g4usim_gui.core.project import G4USimProject
 from g4usim_gui.widgets.ui_helpers import create_hint_label, make_path_row
@@ -202,7 +203,7 @@ class ProjectPage(QWidget):
         if path:
             self.executable.setText(path)
             if not self.workspace_root.text().strip():
-                self.workspace_root.setText(str(Path(path).resolve().parents[2]) if len(Path(path).resolve().parents) > 2 else str(Path(path).resolve().parent))
+                self.workspace_root.setText(str(install_layout.workspace_for_executable(path)))
 
     def _browse_workspace(self) -> None:
         path = QFileDialog.getExistingDirectory(self, "Select workspace root")

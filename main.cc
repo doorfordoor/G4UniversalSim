@@ -2,6 +2,7 @@
 #include "Biasing/BiasingManager.hh"
 #include "Core/MacroPreflight.hh"
 #include "Core/BackendCapabilities.hh"
+#include "Core/Geant4DataLocator.hh"
 #include "Core/SimulationManager.hh"
 #include "Config/ConfigManager.hh"
 #include "Geometry/GeometryManager.hh"
@@ -186,6 +187,7 @@ struct CommandLineOptions {
   std::optional<unsigned long> seed;
   bool help = false;
   bool capabilities = false;
+  bool checkGeant4Data = false;
   bool inspectMacro = false;
   bool inspectRun = false;
 };
@@ -219,6 +221,9 @@ void PrintUsage(const char* program) {
          "skip macro/UI execution.\n"
       << "  --help, -h           Show this help.\n\n"
       << "  --capabilities      Print versioned backend capabilities as JSON; no simulation.\n\n"
+      << "  --check-geant4-data Print where each Geant4 dataset was found as JSON; exit 1 if a\n"
+      << "                      required dataset is missing (set GEANT4_DATA_DIR or write the data\n"
+      << "                      folder into geant4-data.txt next to the executable).\n\n"
       << "  --inspect-macro     Print recursive macro preflight as JSON; requires --macro; does not evaluate --config.\n\n"
       << "  --inspect-run       Configure and preflight inputs as JSON without initialization or execution.\n\n"
       << "If the final configuration has no macro/UI and is not dry-run, "
@@ -283,6 +288,8 @@ CommandLineOptions ParseCommandLine(int argc, char** argv) {
       options.help = true;
     } else if (arg == "--capabilities") {
       options.capabilities = true;
+    } else if (arg == "--check-geant4-data") {
+      options.checkGeant4Data = true;
     } else if (arg == "--inspect-macro") {
       options.inspectMacro = true;
     } else if (arg == "--inspect-run") {
@@ -509,7 +516,12 @@ int main(int argc, char** argv) {
   std::string macroStatus = "not_run";
   bool finalizationStarted = false;
   try {
+    // An installed package points at an existing Geant4 data folder (roadmap D).
+    const std::string dataNote = Geant4DataLocator::ApplyGeant4DataFile(argc > 0 ? argv[0] : nullptr);
     const CommandLineOptions options = ParseCommandLine(argc, argv);
+    if (options.checkGeant4Data) {
+      return Geant4DataLocator::WriteReport(std::cout, dataNote) ? EXIT_SUCCESS : EXIT_FAILURE;
+    }
     if (options.help) {
       PrintUsage(argv[0]);
       return EXIT_SUCCESS;

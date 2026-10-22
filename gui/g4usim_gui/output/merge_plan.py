@@ -1,8 +1,9 @@
 from __future__ import annotations
 
-import sys
 from dataclasses import dataclass
 from pathlib import Path
+
+from g4usim_gui.core import install_layout
 
 
 @dataclass
@@ -44,7 +45,9 @@ def build_merge_plan(output_dir: str, workspace_root: str = "", merge_histograms
         out_file = output / output_name
         available, reason = _availability(output, matched, tool_type, Path(tool_path), out_file)
         if tool_type == "python_script":
-            program = sys.executable
+            program = install_layout.script_python() or ""
+            if not program and available:
+                available, reason = False, "Python 3 is needed for this merge (install it or set G4USIM_PYTHON)"
             args = [str(tool_path), "--input", str(output), "--pattern", pattern, "--output", str(out_file)]
         else:
             program = str(tool_path)
@@ -70,6 +73,7 @@ def build_merge_plan(output_dir: str, workspace_root: str = "", merge_histograms
 
 def find_merge_histograms(workspace: Path) -> Path:
     candidates = [
+        workspace / "bin" / "mergeHistograms.exe",   # installed package
         workspace / "build_vs2026" / "Release" / "mergeHistograms.exe",
         workspace / "build" / "Release" / "mergeHistograms.exe",
         workspace / "build_vs" / "Release" / "mergeHistograms.exe",
