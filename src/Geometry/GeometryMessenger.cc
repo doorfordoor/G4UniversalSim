@@ -1,5 +1,6 @@
 #include "Geometry/GeometryMessenger.hh"
 
+#include "Geometry/GeometryExport.hh"
 #include "Geometry/GeometryManager.hh"
 #include "Geometry/GeometryUtils.hh"
 #include "Utils/CommandParser.hh"
@@ -144,6 +145,12 @@ GeometryMessenger::GeometryMessenger(GeometryManager* manager)
     markModifiedCmd_ = new G4UIcmdWithoutParameter("/AIHL/geometry/markModified", this);
     markModifiedCmd_->SetGuidance("Call G4RunManager::GeometryHasBeenModified(). Does not rebuild geometry or start a run.");
 
+    // Read-only: needs the built Geant4 world, so only after /run/initialize.
+    exportMeshCmd_ = new G4UIcmdWithAString("/AIHL/geometry/exportMesh", this);
+    exportMeshCmd_->SetGuidance("Write the built Geant4 geometry (every volume copy as a world-frame mesh) to a JSON file.");
+    exportMeshCmd_->SetParameterName("file", false);
+    exportMeshCmd_->AvailableForStates(G4State_Idle);
+
     // These commands update GeometryManager's cached tree/settings. After
     // /run/initialize, they cannot guarantee that the existing Geant4 world
     // or attached biasing operators reflect the new values. Use a new process
@@ -164,6 +171,7 @@ GeometryMessenger::GeometryMessenger(GeometryManager* manager)
 
 GeometryMessenger::~GeometryMessenger()
 {
+    delete exportMeshCmd_;
     delete markModifiedCmd_;
     delete preserveUserVolumesOnLoadCmd_;
     delete listUserVolumesCmd_;
@@ -294,6 +302,11 @@ void GeometryMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
             EnsureManager("/AIHL/geometry/preserveUserVolumesOnLoad");
             manager_->SetPreserveUserVolumesOnLoad(preserveUserVolumesOnLoadCmd_->GetNewBoolValue(newValue));
             PrintChangedMessage();
+            return;
+        }
+        if (command == exportMeshCmd_) {
+            const int count = GeometryExport::WriteMeshJson(StringUtils::Trim(newValue));
+            G4cout << "[GeometryMessenger] Exported " << count << " volume copies to " << newValue << G4endl;
             return;
         }
         if (command == markModifiedCmd_) {

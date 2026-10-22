@@ -7,6 +7,15 @@ Short, user-facing record of notable changes. Detailed support status lives in
 ## Unreleased
 
 ### Added
+- **Geometry** (roadmap A5, experimental): new solids `ellipsoid`, `eltube`, `torus`,
+  `para`, `hype`, `polycone`, `polyhedra`; STL import as `shape = tessellated` (ASCII or
+  binary, closed-manifold check, automatic reorientation); `placement = replica` (box
+  x/y/z, tubs phi) and `placement = parameterised` (per-copy position, rotation and
+  material from `copies_file`, or `copies` + `copy_step`); `/AIHL/geometry/exportMesh`
+  writes the geometry Geant4 actually built (`g4usim_geometry_mesh_v1`) and the GUI 3D
+  Preview gains "Show Backend Geometry". `scripts/test_geometry_a5.py` checks volumes
+  against analytic formulas, exact STL navigation, replica dose against explicit slabs
+  and per-copy materials. GDML stays unavailable: the installed Geant4 has no GDML.
 - **Full GPS sources** (roadmap A4, experimental): energy spectra (`energy_type` gauss,
   uniform, power, exp, histogram or point-wise `spectrum_file`), volume sources (sphere,
   cylinder, box, ellipsoid) with `confine`, Gaussian beam spots, rotated planes

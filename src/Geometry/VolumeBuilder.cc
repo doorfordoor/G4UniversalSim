@@ -2,6 +2,7 @@
 
 #include "Geometry/GeometryRegistry.hh"
 #include "Geometry/GeometryUtils.hh"
+#include "Geometry/StlReader.hh"
 #include "Geometry/VolumeNode.hh"
 #include "Materials/MaterialManager.hh"
 #include "Utils/G4NameUtils.hh"
@@ -11,17 +12,29 @@
 #include "G4Box.hh"
 #include "G4Colour.hh"
 #include "G4Cons.hh"
+#include "G4Ellipsoid.hh"
+#include "G4EllipticalTube.hh"
+#include "G4Hype.hh"
 #include "G4Exception.hh"
 #include "G4IntersectionSolid.hh"
 #include "G4LogicalVolume.hh"
 #include "G4Material.hh"
 #include "G4Orb.hh"
+#include "G4PVParameterised.hh"
+#include "G4PVReplica.hh"
+#include "G4Para.hh"
+#include "G4Polycone.hh"
+#include "G4Polyhedra.hh"
+#include "G4VPVParameterisation.hh"
 #include "G4PVPlacement.hh"
 #include "G4ProductionCuts.hh"
 #include "G4Region.hh"
 #include "G4RegionStore.hh"
 #include "G4RotationMatrix.hh"
 #include "G4Sphere.hh"
+#include "G4TessellatedSolid.hh"
+#include "G4Torus.hh"
+#include "G4TriangularFacet.hh"
 #include "G4SubtractionSolid.hh"
 #include "G4ThreeVector.hh"
 #include "G4Transform3D.hh"
@@ -40,6 +53,55 @@
 namespace {
 
 constexpr double kZeroTolerance = 1.0e-12;
+
+// One position, rotation and (optional) material per copy number.
+class CopyTableParameterisation : public G4VPVParameterisation {
+public:
+    struct Copy {
+        G4ThreeVector translation;
+        G4RotationMatrix* rotation = nullptr;  // owned by rotations_
+        G4Material* material = nullptr;        // nullptr = logical volume material
+    };
+
+    CopyTableParameterisation(std::vector<Copy> copies, std::vector<std::unique_ptr<G4RotationMatrix>> rotations)
+        : copies_(std::move(copies)), rotations_(std::move(rotations))
+    {
+    }
+
+    void ComputeTransformation(const G4int copyNo, G4VPhysicalVolume* physical) const override
+    {
+        const Copy& copy = copies_.at(static_cast<std::size_t>(copyNo));
+        physical->SetTranslation(copy.translation);
+        physical->SetRotation(copy.rotation);
+    }
+
+    G4Material* ComputeMaterial(const G4int copyNo, G4VPhysicalVolume* physical,
+                                const G4VTouchable* touchable) override
+    {
+        const Copy& copy = copies_.at(static_cast<std::size_t>(copyNo));
+        return copy.material ? copy.material : G4VPVParameterisation::ComputeMaterial(copyNo, physical, touchable);
+    }
+
+    std::size_t Size() const { return copies_.size(); }
+
+private:
+    std::vector<Copy> copies_;
+    std::vector<std::unique_ptr<G4RotationMatrix>> rotations_;
+};
+
+// Several Geant4 solids cache GetCubicVolume() lazily in a member; the first
+// concurrent calls from worker threads (dose mass, fluence volume) can read a
+// partial sum. Fill the cache once on the master while building.
+G4VSolid* PrecomputeVolume(G4VSolid* solid)
+{
+    if (solid) (void)solid->GetCubicVolume();
+    return solid;
+}
+
+bool Close(double a, double b)
+{
+    return std::abs(a - b) <= 1e-9 * std::max({1.0, std::abs(a), std::abs(b)});
+}
 
 int ReadCopyNumber(const VolumeNode& node)
 {
@@ -264,6 +326,15 @@ G4VPhysicalVolume* VolumeBuilder::BuildVolume(const VolumeNode& node, G4LogicalV
     if (node.IsWorld()) throw std::runtime_error("BuildVolume cannot place world volume '" + node.name + "'");
 
     G4LogicalVolume* logical = BuildLogicalVolume(node);
+    if (node.placementType == PlacementType::Replica || node.placementType == PlacementType::Parameterised) {
+        G4VPhysicalVolume* placed = node.placementType == PlacementType::Replica
+            ? PlaceReplica(node, logical, motherLogical)
+            : PlaceParameterised(node, logical, motherLogical);
+        RecordCreatedGeometryObject();
+        registry_->RegisterPhysicalVolume(node.name, placed);
+        BuildChildren(node, logical);
+        return placed;
+    }
     G4RotationMatrix* rotation = CreateRotation(node);
     const G4ThreeVector position(node.position.x, node.position.y, node.position.z);
     const int copyNo = ReadCopyNumber(node);
@@ -307,6 +378,14 @@ G4VSolid* VolumeBuilder::CreatePrimitiveSolid(const VolumeNode& node)
         case VolumeShape::Cone: return CreateConeSolid(node);
         case VolumeShape::Trd: return CreateTrdSolid(node);
         case VolumeShape::Trap: return CreateTrapSolid(node);
+        case VolumeShape::Ellipsoid: return PrecomputeVolume(CreateEllipsoidSolid(node));
+        case VolumeShape::EllipticalTube: return PrecomputeVolume(CreateEllipticalTubeSolid(node));
+        case VolumeShape::Torus: return PrecomputeVolume(CreateTorusSolid(node));
+        case VolumeShape::Para: return PrecomputeVolume(CreateParaSolid(node));
+        case VolumeShape::Hype: return PrecomputeVolume(CreateHypeSolid(node));
+        case VolumeShape::Polycone: return PrecomputeVolume(CreatePolyconeSolid(node, false));
+        case VolumeShape::Polyhedra: return PrecomputeVolume(CreatePolyconeSolid(node, true));
+        case VolumeShape::Tessellated: return PrecomputeVolume(CreateTessellatedSolid(node));
         default:
             throw std::runtime_error(
                 "Unsupported shape for volume '" + node.name + "': shapeName='" + node.shapeName
@@ -607,6 +686,191 @@ G4VSolid* VolumeBuilder::CreateTrapSolid(const VolumeNode& node)
     );
     RecordCreatedGeometryObject();
     return solid;
+}
+
+G4VSolid* VolumeBuilder::CreateEllipsoidSolid(const VolumeNode& node)
+{
+    const auto& p = node.parameters;
+    if (p.size() != 3 && p.size() != 5) throw std::runtime_error("Volume '" + node.name + "' ellipsoid needs 3 or 5 parameters");
+    auto* solid = new G4Ellipsoid(G4NameUtils::SolidName(node.name), p[0], p[1], p[2],
+                                  p.size() == 5 ? p[3] : 0.0, p.size() == 5 ? p[4] : 0.0);
+    RecordCreatedGeometryObject();
+    return solid;
+}
+
+G4VSolid* VolumeBuilder::CreateEllipticalTubeSolid(const VolumeNode& node)
+{
+    const auto& p = node.parameters;
+    if (p.size() != 3) throw std::runtime_error("Volume '" + node.name + "' eltube needs 3 parameters");
+    auto* solid = new G4EllipticalTube(G4NameUtils::SolidName(node.name), p[0], p[1], p[2]);
+    RecordCreatedGeometryObject();
+    return solid;
+}
+
+G4VSolid* VolumeBuilder::CreateTorusSolid(const VolumeNode& node)
+{
+    const auto& p = node.parameters;
+    if (p.size() != 5) throw std::runtime_error("Volume '" + node.name + "' torus needs 5 parameters");
+    auto* solid = new G4Torus(G4NameUtils::SolidName(node.name), p[0], p[1], p[2], p[3], p[4]);
+    RecordCreatedGeometryObject();
+    return solid;
+}
+
+G4VSolid* VolumeBuilder::CreateParaSolid(const VolumeNode& node)
+{
+    const auto& p = node.parameters;
+    if (p.size() != 6) throw std::runtime_error("Volume '" + node.name + "' para needs 6 parameters");
+    auto* solid = new G4Para(G4NameUtils::SolidName(node.name), p[0], p[1], p[2], p[3], p[4], p[5]);
+    RecordCreatedGeometryObject();
+    return solid;
+}
+
+G4VSolid* VolumeBuilder::CreateHypeSolid(const VolumeNode& node)
+{
+    const auto& p = node.parameters;
+    if (p.size() != 5) throw std::runtime_error("Volume '" + node.name + "' hype needs 5 parameters");
+    auto* solid = new G4Hype(G4NameUtils::SolidName(node.name), p[0], p[1], p[2], p[3], p[4]);
+    RecordCreatedGeometryObject();
+    return solid;
+}
+
+G4VSolid* VolumeBuilder::CreatePolyconeSolid(const VolumeNode& node, bool polyhedra)
+{
+    const auto z = GeometryUtils::ParseParameterList(node.GetProperty("z_planes"));
+    const auto rInner = GeometryUtils::ParseParameterList(node.GetProperty("r_inner"));
+    const auto rOuter = GeometryUtils::ParseParameterList(node.GetProperty("r_outer"));
+    if (z.size() < 2 || rInner.size() != z.size() || rOuter.size() != z.size()) {
+        throw std::runtime_error("Volume '" + node.name + "' needs matching z_planes, r_inner and r_outer lists");
+    }
+    const auto& p = node.parameters;
+    G4VSolid* solid = nullptr;
+    if (polyhedra) {
+        solid = new G4Polyhedra(G4NameUtils::SolidName(node.name), p[0], p[1], static_cast<G4int>(p[2]),
+                                static_cast<G4int>(z.size()), z.data(), rInner.data(), rOuter.data());
+    } else {
+        solid = new G4Polycone(G4NameUtils::SolidName(node.name), p[0], p[1],
+                               static_cast<G4int>(z.size()), z.data(), rInner.data(), rOuter.data());
+    }
+    RecordCreatedGeometryObject();
+    return solid;
+}
+
+G4VSolid* VolumeBuilder::CreateTessellatedSolid(const VolumeNode& node)
+{
+    const std::string path = node.HasProperty("file.resolved") ? node.GetProperty("file.resolved") : node.GetProperty("file");
+    const std::string unitText = StringUtils::Trim(node.GetProperty("file_unit", "mm"));
+    const StlMesh mesh = StlReader::Read(path, UnitParser::ParseLength("1 " + unitText));
+    auto* solid = new G4TessellatedSolid(G4NameUtils::SolidName(node.name));
+    RecordCreatedGeometryObject();
+    auto vertex = [&](int index) {
+        const auto& v = mesh.vertices[static_cast<std::size_t>(index)];
+        return G4ThreeVector(v[0], v[1], v[2]);
+    };
+    for (const auto& tri : mesh.triangles) {
+        auto* facet = new G4TriangularFacet(vertex(tri[0]), vertex(tri[1]), vertex(tri[2]), ABSOLUTE);
+        if (!facet->IsDefined() || !solid->AddFacet(facet)) {
+            throw std::runtime_error("Volume '" + node.name + "' STL '" + path + "' has a facet Geant4 cannot use "
+                                     "(degenerate or too small)");
+        }
+    }
+    solid->SetSolidClosed(true);
+    return solid;
+}
+
+G4VPhysicalVolume* VolumeBuilder::PlaceReplica(const VolumeNode& node, G4LogicalVolume* logical,
+                                               G4LogicalVolume* motherLogical)
+{
+    const PlacementSpec& spec = node.placement;
+    const std::string prefix = "Volume '" + node.name + "' placement=replica: ";
+    if (motherLogical->GetNoDaughters() != 0) {
+        throw std::runtime_error(prefix + "the mother must contain only the replica (Geant4 requirement); "
+                                 "move other daughters into a separate mother volume");
+    }
+    const double total = spec.replicaWidth * spec.replicaCount;
+    EAxis axis = kXAxis;
+    double offset = 0.0;
+    if (spec.replicaAxis == "phi") {
+        const auto* mother = dynamic_cast<const G4Tubs*>(motherLogical->GetSolid());
+        const auto* slice = dynamic_cast<const G4Tubs*>(logical->GetSolid());
+        if (!mother || !slice) throw std::runtime_error(prefix + "replica_axis=phi needs a tubs mother and a tubs replica");
+        if (!Close(total, mother->GetDeltaPhiAngle())) {
+            throw std::runtime_error(prefix + "replica_count * replica_width must equal the mother's deltaPhi");
+        }
+        if (!Close(slice->GetInnerRadius(), mother->GetInnerRadius()) || !Close(slice->GetOuterRadius(), mother->GetOuterRadius()) ||
+            !Close(slice->GetZHalfLength(), mother->GetZHalfLength()) || !Close(slice->GetDeltaPhiAngle(), spec.replicaWidth)) {
+            throw std::runtime_error(prefix + "the replica tubs must have the mother's radii and halfZ and deltaPhi = replica_width");
+        }
+        // Geant4 rotates copy i to the centre of [offset + i*w, offset + (i+1)*w],
+        // so the slice must be centred on phi = 0.
+        if (!Close(slice->GetStartPhiAngle(), -0.5 * spec.replicaWidth)) {
+            throw std::runtime_error(prefix + "the replica tubs must start at phi = -replica_width/2 (centred on phi = 0)");
+        }
+        offset = spec.hasReplicaOffset ? spec.replicaOffset : mother->GetStartPhiAngle();
+        if (!Close(offset, mother->GetStartPhiAngle())) {
+            throw std::runtime_error(prefix + "replica_offset must equal the mother's startPhi");
+        }
+        axis = kPhi;
+    } else {
+        const auto* mother = dynamic_cast<const G4Box*>(motherLogical->GetSolid());
+        const auto* slice = dynamic_cast<const G4Box*>(logical->GetSolid());
+        if (!mother || !slice) throw std::runtime_error(prefix + "replica_axis=" + spec.replicaAxis + " needs a box mother and a box replica");
+        const double motherHalf[3] = {mother->GetXHalfLength(), mother->GetYHalfLength(), mother->GetZHalfLength()};
+        const double sliceHalf[3] = {slice->GetXHalfLength(), slice->GetYHalfLength(), slice->GetZHalfLength()};
+        const int index = spec.replicaAxis == "x" ? 0 : (spec.replicaAxis == "y" ? 1 : 2);
+        if (!Close(total, 2.0 * motherHalf[index])) {
+            throw std::runtime_error(prefix + "replica_count * replica_width must equal the mother's full length along " +
+                                     spec.replicaAxis);
+        }
+        for (int k = 0; k < 3; ++k) {
+            const double expected = k == index ? 0.5 * spec.replicaWidth : motherHalf[k];
+            if (!Close(sliceHalf[k], expected)) {
+                throw std::runtime_error(prefix + "the replica box must have the mother's size except replica_width along " +
+                                         spec.replicaAxis);
+            }
+        }
+        axis = index == 0 ? kXAxis : (index == 1 ? kYAxis : kZAxis);
+    }
+    return new G4PVReplica(G4NameUtils::PhysicalName(node.name), logical, motherLogical, axis,
+                           spec.replicaCount, spec.replicaWidth, offset);
+}
+
+G4VPhysicalVolume* VolumeBuilder::PlaceParameterised(const VolumeNode& node, G4LogicalVolume* logical,
+                                                     G4LogicalVolume* motherLogical)
+{
+    if (motherLogical->GetNoDaughters() != 0) {
+        throw std::runtime_error("Volume '" + node.name + "' placement=parameterised: the mother must contain only "
+                                 "the parameterised volume (Geant4 requirement)");
+    }
+    std::vector<CopyTableParameterisation::Copy> copies;
+    std::vector<std::unique_ptr<G4RotationMatrix>> rotations;
+    for (const ParameterisedCopy& source : node.placement.copies) {
+        CopyTableParameterisation::Copy copy;
+        copy.translation = G4ThreeVector(source.position.x, source.position.y, source.position.z);
+        if (std::abs(source.rotation.x) > kZeroTolerance || std::abs(source.rotation.y) > kZeroTolerance ||
+            std::abs(source.rotation.z) > kZeroTolerance) {
+            auto rotation = std::make_unique<G4RotationMatrix>();
+            rotation->rotateX(source.rotation.x);
+            rotation->rotateY(source.rotation.y);
+            rotation->rotateZ(source.rotation.z);
+            copy.rotation = rotation.get();
+            rotations.push_back(std::move(rotation));
+        }
+        if (!StringUtils::Trim(source.material).empty()) {
+            try {
+                copy.material = materialManager_->GetMaterial(StringUtils::Trim(source.material));
+            } catch (const std::exception& error) {
+                throw std::runtime_error("Volume '" + node.name + "' parameterised copy material '" + source.material +
+                                         "': " + error.what());
+            }
+        }
+        copies.push_back(copy);
+    }
+    auto parameterisation = std::make_unique<CopyTableParameterisation>(std::move(copies), std::move(rotations));
+    const auto count = static_cast<G4int>(parameterisation->Size());
+    auto* placed = new G4PVParameterised(G4NameUtils::PhysicalName(node.name), logical, motherLogical, kUndefined,
+                                         count, parameterisation.get(), checkOverlaps_);
+    parameterisations_.push_back(std::move(parameterisation));
+    return placed;
 }
 
 G4RotationMatrix* VolumeBuilder::CreateRotation(const VolumeNode& node)

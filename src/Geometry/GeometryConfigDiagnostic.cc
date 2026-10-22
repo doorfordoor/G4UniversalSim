@@ -277,7 +277,11 @@ void CollectGeometryConfigDiagnostics(
                 return key == "name" || key == "parent" || key == "shape" || key == "size" || key == "parameters" || key == "material"
                     || key == "position" || key == "rotation" || key == "sensitive" || key == "bias" || key == "region"
                     || key == "placement" || key == "copyno" || key == "copyNo" || IsKnownVisual(key)
-                    || IsCut(key) || IsCanonicalMetadata(key);
+                    || IsCut(key) || IsCanonicalMetadata(key)
+                    // roadmap A5 shape and placement fields
+                    || key == "z_planes" || key == "r_inner" || key == "r_outer" || key == "file" || key == "file_unit"
+                    || key == "replica_axis" || key == "replica_count" || key == "replica_width" || key == "replica_offset"
+                    || key == "copies_file" || key == "copies" || key == "copy_step";
             }
         }
         return false;

@@ -39,4 +39,5 @@ private:
     G4UIcmdWithoutParameter* listUserVolumesCmd_ = nullptr;
     G4UIcmdWithABool* preserveUserVolumesOnLoadCmd_ = nullptr;
     G4UIcmdWithoutParameter* markModifiedCmd_ = nullptr;
+    G4UIcmdWithAString* exportMeshCmd_ = nullptr;
 };

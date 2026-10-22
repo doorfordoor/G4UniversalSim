@@ -48,6 +48,14 @@ VolumeShape ParseShape(const std::string& text)
     if (value == "cone" || value == "cons") return VolumeShape::Cone;
     if (value == "trd" || value == "trapezoid") return VolumeShape::Trd;
     if (value == "trap") return VolumeShape::Trap;
+    if (value == "ellipsoid") return VolumeShape::Ellipsoid;
+    if (value == "eltube" || value == "elliptical_tube") return VolumeShape::EllipticalTube;
+    if (value == "torus") return VolumeShape::Torus;
+    if (value == "para" || value == "parallelepiped") return VolumeShape::Para;
+    if (value == "hype") return VolumeShape::Hype;
+    if (value == "polycone") return VolumeShape::Polycone;
+    if (value == "polyhedra") return VolumeShape::Polyhedra;
+    if (value == "tessellated" || value == "stl") return VolumeShape::Tessellated;
     return VolumeShape::Unknown;
 }
 
@@ -61,6 +69,14 @@ std::string ShapeToString(VolumeShape shape)
         case VolumeShape::Cone: return "cone";
         case VolumeShape::Trd: return "trd";
         case VolumeShape::Trap: return "trap";
+        case VolumeShape::Ellipsoid: return "ellipsoid";
+        case VolumeShape::EllipticalTube: return "eltube";
+        case VolumeShape::Torus: return "torus";
+        case VolumeShape::Para: return "para";
+        case VolumeShape::Hype: return "hype";
+        case VolumeShape::Polycone: return "polycone";
+        case VolumeShape::Polyhedra: return "polyhedra";
+        case VolumeShape::Tessellated: return "tessellated";
         default: return "unknown";
     }
 }

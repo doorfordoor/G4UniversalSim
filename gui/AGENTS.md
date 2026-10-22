@@ -31,7 +31,7 @@
 - 解析到但后端会忽略、空实现、占位模板或只用于预览的字段，不得被 writer 静默写出并宣称生效。未知字段要么原样保留并标记未编辑，要么明确提示会被丢弃后再由用户确认。
 - 当前 GUI 可生成的后端子集以 writers/main_ini_writer.py、writers/geometry_ini_writer.py 和 editors/source_physics_scoring_model.py 的真实逻辑为准；不要只根据 combobox 的选项扩展支持矩阵。
 - `trd` 普通 hierarchical 体积已在 B3 工作区候选中通过五参数表格编辑、writer 往返、GUI package 和真实后端测试；boolean tool 的 `trd` 及 `trap`、GDML、STL、高级 GPS 分布、手动物理模块、biasing 规则、LET 等能力仍须等待各自后端和测试闭环后再开放生成。Dose 与 Fluence 仅开放实验性敏感体计分子集。
-- 3D 预览永远不是 Geant4 几何真值。预览不能修改后端配置语义；缺少 PyVista 或遇到不支持 shape 时应显示降级原因。
+- 3D 预览永远不是 Geant4 几何真值；唯一例外是路线图 A5 的“显示后端几何”，它显示后端 `/AIHL/geometry/exportMesh` 写出的 Geant4 实际网格（`preview3d/backend_mesh.py`，MainWindow 异步 QProcess，generated 模式须先有运行包），状态栏与消息须注明来源，不得把编辑器近似预览称为后端几何。replica/parameterised 放置在 validator 中只警告（后端支持、GUI 不可编辑），`assembly` 仍阻断。预览不能修改后端配置语义；缺少 PyVista 或遇到不支持 shape 时应显示降级原因。
 - 预览读取 `tubs` 时必须保留内半径；除已验证的 hierarchical 普通体积 `trd` 五字段外，读取后端已支持但 GUI writer 尚未开放的 shape-specific 字段时，只能作为只读预览数据使用，不得借此扩大可生成白名单。
 
 ## 3. PySide6 约束

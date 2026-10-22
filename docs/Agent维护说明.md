@@ -46,7 +46,7 @@
 
 - CLI 没有 `--version`。无 `--macro` 且无 `--ui` 时通常只打印帮助并退出；`--dry-run` 是例外，会执行配置和 Geant4 对象注册但跳过 macro/UI。
 - `gdml` 模板当前未支持，后端配置校验和 GUI validator 会在进入 Geant4 构建前拒绝。
-- STL 导入未实现。
+- STL 导入：路线图 A5 实验性 `shape = tessellated`（`Geometry/StlReader` 校验封闭流形）；GDML 仍因本机 Geant4 无 GDML/XercesC 而阻塞。
 - 后端 `VolumeBuilder` 支持 `box`、`tubs`、`sphere`、`orb`、`cone`、`trd`、`trap`。
 - GUI 层级/布尔几何校验目前只把 `box`、`tubs`、`sphere`、`orb`、`cone` 放在白名单里，且稳定预览主要是 `box` 和 `tubs`。后端已支持但 GUI 未放开的形状不要在 GUI 文档里写成 GUI 可编辑。
 - `simple_box` 的 target 虽读取 `shape`，但 GUI writer 固定写 `shape = box`。

@@ -26,6 +26,7 @@ public:
     ProductionCut productionCuts;
     bool hasProductionCuts = false;
     PlacementType placementType = PlacementType::Normal;
+    PlacementSpec placement;
     VisualAttributes visual;
     std::vector<BooleanSolidOperation> booleanOperations;
     std::vector<VolumeNode> children;

@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from PySide6.QtWidgets import QLabel, QPlainTextEdit, QVBoxLayout, QWidget
 
+from g4usim_gui.core.i18n import ui_format
+from g4usim_gui.preview3d.backend_mesh import BackendMesh
 from g4usim_gui.preview3d.scene_model import PreviewScene
 
 
@@ -27,6 +29,13 @@ class FallbackPreviewWidget(QWidget):
 
     def render_scene(self, scene: PreviewScene) -> None:
         self.text.setPlainText("\n".join(scene.summary_lines()))
+
+    def render_backend_mesh(self, mesh: BackendMesh) -> None:
+        lines = [ui_format("Backend geometry: {count} volume copies from Geant4.", count=len(mesh.volumes))]
+        for volume in mesh.volumes:
+            lines.append(f"{'  ' * volume.depth}{volume.path}  {volume.solid}  {volume.material}  "
+                         f"{volume.cubic_volume_mm3:.6g} mm3{'  sensitive' if volume.sensitive else ''}")
+        self.text.setPlainText("\n".join(lines))
 
     def clear(self) -> None:
         self.text.clear()

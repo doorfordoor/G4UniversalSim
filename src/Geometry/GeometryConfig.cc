@@ -3,10 +3,14 @@
 #include "Config/ConfigManager.hh"
 #include "Geometry/GeometryUtils.hh"
 #include "Geometry/GeometryConfigDiagnostic.hh"
+#include "Geometry/StlReader.hh"
+#include "G4SystemOfUnits.hh"
 #include "Utils/FileUtils.hh"
 #include "Utils/StringUtils.hh"
 #include "Utils/UnitParser.hh"
 
+#include <cmath>
+#include <filesystem>
 #include <fstream>
 #include <functional>
 #include <iostream>
@@ -39,9 +43,36 @@ bool IsShapeProperty(const std::string& key)
 {
     static const std::set<std::string> keys = {
         "dx1", "dx2", "dx3", "dx4", "dy1", "dy2", "dz",
-        "theta", "phi", "alpha1", "alpha2"
+        "theta", "phi", "alpha1", "alpha2",
+        // roadmap A5: polycone/polyhedra planes and tessellated STL input
+        "z_planes", "r_inner", "r_outer", "file", "file_unit"
     };
     return keys.count(StringUtils::ToLower(StringUtils::Trim(key))) > 0;
+}
+
+bool IsPlacementKey(const std::string& key)
+{
+    static const std::set<std::string> keys = {
+        "replica_axis", "replica_count", "replica_width", "replica_offset",
+        "copies_file", "copies", "copy_step"
+    };
+    return keys.count(StringUtils::ToLower(StringUtils::Trim(key))) > 0;
+}
+
+std::string ResolveNextTo(const std::string& baseFile, const std::string& path)
+{
+    std::filesystem::path file = std::filesystem::u8path(StringUtils::Trim(path));
+    if (file.is_relative()) file = std::filesystem::u8path(baseFile).parent_path() / file;
+    return file.u8string();
+}
+
+int ParseCount(const std::string& text)
+{
+    const std::string trimmed = StringUtils::Trim(text);
+    std::size_t consumed = 0;
+    const long long value = std::stoll(trimmed, &consumed);
+    if (consumed != trimmed.size() || value < 1 || value > 1000000) throw std::runtime_error("expected an integer in 1..1000000");
+    return static_cast<int>(value);
 }
 
 }  // namespace
@@ -324,7 +355,10 @@ bool GeometryConfig::IsKnownKey(const std::string& key)
         "sensitive", "bias", "region", "placement", "copyNo", "copyno", "vis.color", "vis.alpha",
         "vis.visible", "vis.wireframe",
         "dx1", "dx2", "dx3", "dx4", "dy1", "dy2", "dz",
-        "theta", "phi", "alpha1", "alpha2"
+        "theta", "phi", "alpha1", "alpha2",
+        "z_planes", "r_inner", "r_outer", "file", "file_unit",
+        "replica_axis", "replica_count", "replica_width", "replica_offset",
+        "copies_file", "copies", "copy_step"
     };
     return keys.count(key) || IsCutKey(key);
 }
@@ -538,6 +572,17 @@ void GeometryConfig::ValidateShapeContract(
             "dz", "theta", "phi", "dy1", "dx1", "dx2", "alpha1",
             "dy2", "dx3", "dx4", "alpha2"
         };
+    } else if (shape == VolumeShape::Polycone || shape == VolumeShape::Polyhedra) {
+        allowedProperties = {"z_planes", "r_inner", "r_outer"};
+    } else if (shape == VolumeShape::Tessellated) {
+        allowedProperties = {"file", "file_unit"};
+    }
+    const bool a5Shape = shape == VolumeShape::Ellipsoid || shape == VolumeShape::EllipticalTube
+        || shape == VolumeShape::Torus || shape == VolumeShape::Para || shape == VolumeShape::Hype
+        || shape == VolumeShape::Polycone || shape == VolumeShape::Polyhedra || shape == VolumeShape::Tessellated;
+    if (booleanTool && a5Shape) {
+        fail("shape", "shape=" + GeometryUtils::ShapeToString(shape) + " is not supported as a boolean tool.",
+             "Use box, tubs, sphere, orb, cone, trd or trap as the boolean tool.");
     }
     for (const auto& item : properties) {
         if (IsShapeProperty(item.first) && !allowedProperties.count(Normalize(item.first))) {
@@ -585,6 +630,61 @@ void GeometryConfig::ValidateShapeContract(
             if (FindField(section, "parameters")) fail("parameters", "trap uses explicit shape-specific fields, not parameters.");
             for (const auto& key : {"dz", "dy1", "dx1", "dx2", "dy2", "dx3", "dx4"}) positiveProperty(key);
             for (const auto& key : {"theta", "phi", "alpha1", "alpha2"}) angleProperty(key);
+        } else if (shape == VolumeShape::Ellipsoid) {
+            if (parameters.size() != 3 && parameters.size() != 5) {
+                fail("parameters", "ellipsoid requires 3 parameters (ax,by,cz) or 5 (ax,by,cz,zBottomCut,zTopCut).");
+            }
+            if (parameters[0] <= 0.0 || parameters[1] <= 0.0 || parameters[2] <= 0.0) fail("parameters", "ellipsoid semi-axes must be > 0.");
+            if (parameters.size() == 5 && !(parameters[3] < parameters[4])) fail("parameters", "ellipsoid requires zBottomCut < zTopCut.");
+        } else if (shape == VolumeShape::EllipticalTube) {
+            exactParameters(3, "eltube");
+            if (parameters[0] <= 0.0 || parameters[1] <= 0.0 || parameters[2] <= 0.0) fail("parameters", "eltube half-lengths dx,dy,dz must be > 0.");
+        } else if (shape == VolumeShape::Torus) {
+            exactParameters(5, "torus");
+            if (parameters[0] < 0.0 || parameters[1] <= parameters[0] || parameters[2] < parameters[1] || parameters[4] <= 0.0) {
+                fail("parameters", "torus requires 0 <= rMin < rMax <= rTor and deltaPhi > 0.");
+            }
+        } else if (shape == VolumeShape::Para) {
+            exactParameters(6, "para");
+            if (parameters[0] <= 0.0 || parameters[1] <= 0.0 || parameters[2] <= 0.0) fail("parameters", "para half-lengths dx,dy,dz must be > 0.");
+        } else if (shape == VolumeShape::Hype) {
+            exactParameters(5, "hype");
+            if (parameters[0] < 0.0 || parameters[1] <= parameters[0] || parameters[4] <= 0.0) {
+                fail("parameters", "hype requires 0 <= innerRadius < outerRadius and halfZ > 0.");
+            }
+        } else if (shape == VolumeShape::Polycone || shape == VolumeShape::Polyhedra) {
+            const bool polyhedra = shape == VolumeShape::Polyhedra;
+            exactParameters(polyhedra ? 3 : 2, polyhedra ? "polyhedra (startPhi,deltaPhi,numSide)" : "polycone (startPhi,deltaPhi)");
+            if (parameters[1] <= 0.0) fail("parameters", "deltaPhi must be > 0.");
+            if (polyhedra && (parameters[2] < 3.0 || parameters[2] != std::floor(parameters[2]))) {
+                fail("parameters", "polyhedra numSide must be an integer >= 3.");
+            }
+            std::vector<std::vector<double>> lists;
+            for (const char* key : {"z_planes", "r_inner", "r_outer"}) {
+                const auto it = properties.find(key);
+                if (it == properties.end()) fail(key, "shape requires this list of lengths.");
+                try { lists.push_back(GeometryUtils::ParseParameterList(it->second)); }
+                catch (const std::exception& error) { fail(key, error.what()); }
+            }
+            if (lists[0].size() < 2 || lists[1].size() != lists[0].size() || lists[2].size() != lists[0].size()) {
+                fail("z_planes", "z_planes, r_inner and r_outer need the same number (>= 2) of entries.");
+            }
+            for (std::size_t i = 0; i < lists[0].size(); ++i) {
+                if (i > 0 && lists[0][i] < lists[0][i - 1]) fail("z_planes", "z_planes must be non-decreasing.");
+                if (lists[1][i] < 0.0 || lists[2][i] < lists[1][i]) fail("r_outer", "every plane needs 0 <= r_inner <= r_outer.");
+            }
+        } else if (shape == VolumeShape::Tessellated) {
+            if (FindField(section, "parameters")) fail("parameters", "tessellated uses file (STL) and optional file_unit, not parameters.");
+            const auto file = properties.find("file");
+            if (file == properties.end() || StringUtils::Trim(file->second).empty()) fail("file", "tessellated requires file = <mesh.stl>.");
+            double unit = CLHEP::mm;
+            const auto unitText = properties.find("file_unit");
+            if (unitText != properties.end()) {
+                try { unit = UnitParser::ParseLength("1 " + StringUtils::Trim(unitText->second)); }
+                catch (const std::exception& error) { fail("file_unit", error.what(), "Use a length unit such as mm, cm or m."); }
+            }
+            try { (void)StlReader::Read(ResolveNextTo(filename_, file->second), unit); }
+            catch (const std::exception& error) { fail("file", error.what()); }
         }
     } catch (const std::runtime_error&) {
         throw;
@@ -633,19 +733,19 @@ VolumeNode GeometryConfig::ParseVolumeSection(
         try {
             node.placementType = GeometryUtils::ParsePlacementType(values.at("placement"));
         } catch (const std::exception& error) {
-            throw FieldError(sectionName, node.name, "placement", error.what(), "Use placement=normal.");
+            throw FieldError(sectionName, node.name, "placement", error.what(), "Use placement=normal, replica or parameterised.");
         }
-        if (node.placementType != PlacementType::Normal) {
+        if (node.placementType == PlacementType::Assembly) {
             throw FieldError(
                 sectionName,
                 node.name,
                 "placement",
-                "geometry capability 'placement=" + GeometryUtils::PlacementTypeToString(node.placementType)
-                    + "' is not supported.",
-                "Use placement=normal with explicit child volumes."
+                "geometry capability 'placement=assembly' is not supported.",
+                "Use placement=normal with explicit child volumes, or placement=parameterised for repeated copies."
             );
         }
     }
+    ParsePlacement(sectionName, node, values);
 
     if (node.shape == VolumeShape::Box) {
         if (!values.count("size")) throw Error(filename_, sectionName, node.name, "size", "box requires size");
@@ -684,6 +784,9 @@ VolumeNode GeometryConfig::ParseVolumeSection(
         if (IsShapeProperty(item.first)) node.userProperties[item.first] = item.second;
         if (!IsKnownKey(item.first)) node.userProperties[item.first] = item.second;
     }
+    if (node.shape == VolumeShape::Tessellated && values.count("file")) {
+        node.userProperties["file.resolved"] = ResolveNextTo(filename_, values.at("file"));
+    }
 
     ValidateCopyNumber(sectionName, node.name);
     ValidateShapeContract(
@@ -691,6 +794,125 @@ VolumeNode GeometryConfig::ParseVolumeSection(
     );
 
     return node;
+}
+
+void GeometryConfig::ParsePlacement(const std::string& sectionName, VolumeNode& node, const Section& values) const
+{
+    const auto fail = [&](const std::string& key, const std::string& message, const std::string& suggestion = "") {
+        throw FieldError(sectionName, node.name, key, message, suggestion);
+    };
+    const bool replica = node.placementType == PlacementType::Replica;
+    const bool parameterised = node.placementType == PlacementType::Parameterised;
+    for (const auto& item : values) {
+        const std::string key = Normalize(item.first);
+        if (!IsPlacementKey(key)) continue;
+        const bool replicaKey = StringUtils::StartsWith(key, "replica_");
+        if ((replicaKey && !replica) || (!replicaKey && !parameterised)) {
+            fail(item.first, "is only valid with placement=" + std::string(replicaKey ? "replica" : "parameterised") + ".");
+        }
+    }
+    if (replica) {
+        if (values.count("position") || values.count("rotation") || values.count("copyno") || values.count("copyNo")) {
+            fail("placement", "placement=replica takes its position from the mother; remove position, rotation and copyNo.");
+        }
+        if (!values.count("replica_axis") || !values.count("replica_count") || !values.count("replica_width")) {
+            fail("placement", "placement=replica requires replica_axis, replica_count and replica_width.");
+        }
+        auto& spec = node.placement;
+        spec.replicaAxis = Normalize(values.at("replica_axis"));
+        if (spec.replicaAxis != "x" && spec.replicaAxis != "y" && spec.replicaAxis != "z" && spec.replicaAxis != "phi") {
+            fail("replica_axis", "must be x, y, z (box mother) or phi (tubs mother).");
+        }
+        try { spec.replicaCount = ParseCount(values.at("replica_count")); }
+        catch (const std::exception& error) { fail("replica_count", error.what()); }
+        const bool angular = spec.replicaAxis == "phi";
+        try {
+            spec.replicaWidth = angular ? UnitParser::ParseAngle(values.at("replica_width"))
+                                        : UnitParser::ParseLength(values.at("replica_width"));
+            if (values.count("replica_offset")) {
+                spec.hasReplicaOffset = true;
+                spec.replicaOffset = angular ? UnitParser::ParseAngle(values.at("replica_offset"))
+                                             : UnitParser::ParseLength(values.at("replica_offset"));
+            }
+        } catch (const std::exception& error) {
+            fail("replica_width", error.what(), angular ? "Use an angle such as '30 deg'." : "Use a length such as '2 mm'.");
+        }
+        if (!(spec.replicaWidth > 0.0)) fail("replica_width", "must be > 0.");
+        if (!angular && values.count("replica_offset") && spec.replicaOffset != 0.0) {
+            fail("replica_offset", "Geant4 requires offset 0 for cartesian replicas; remove replica_offset.");
+        }
+    }
+    if (parameterised) {
+        const bool table = values.count("copies_file") > 0;
+        const bool linear = values.count("copies") > 0 || values.count("copy_step") > 0;
+        if (table == linear) {
+            fail("placement", "placement=parameterised requires either copies_file or copies + copy_step.");
+        }
+        auto& copies = node.placement.copies;
+        if (linear) {
+            if (!values.count("copies") || !values.count("copy_step")) fail("copies", "copies and copy_step must be given together.");
+            int count = 0;
+            try { count = ParseCount(values.at("copies")); }
+            catch (const std::exception& error) { fail("copies", error.what()); }
+            Vec3 step;
+            try { step = GeometryUtils::ParseVec3(values.at("copy_step")); }
+            catch (const std::exception& error) { fail("copy_step", error.what()); }
+            for (int i = 0; i < count; ++i) {
+                ParameterisedCopy copy;
+                copy.position = {node.position.x + i * step.x, node.position.y + i * step.y, node.position.z + i * step.z};
+                copy.rotation = node.rotation;
+                copies.push_back(copy);
+            }
+        } else {
+            if (values.count("position") || values.count("rotation")) {
+                fail("copies_file", "copies_file defines every copy's position and rotation; remove position and rotation.");
+            }
+            const std::string path = ResolveNextTo(filename_, values.at("copies_file"));
+            std::ifstream input(std::filesystem::u8path(path));
+            if (!input) fail("copies_file", "cannot open '" + path + "'.");
+            std::string line;
+            std::vector<std::string> header;
+            int lineNumber = 0;
+            while (std::getline(input, line)) {
+                ++lineNumber;
+                const std::string clean = StringUtils::Trim(StringUtils::RemoveComment(line));
+                if (clean.empty()) continue;
+                std::vector<std::string> cells;
+                for (const auto& cell : StringUtils::Split(clean, ',')) cells.push_back(Normalize(cell));
+                if (header.empty()) {
+                    header = cells;
+                    const std::vector<std::string> base{"x_mm", "y_mm", "z_mm"};
+                    const bool ok = header.size() >= 3 && std::equal(base.begin(), base.end(), header.begin()) &&
+                        (header.size() == 3 || header.size() == 4 || header.size() == 6 || header.size() == 7) &&
+                        (header.size() < 6 || (header[3] == "rot_x_deg" && header[4] == "rot_y_deg" && header[5] == "rot_z_deg")) &&
+                        (header.size() != 4 || header[3] == "material") && (header.size() != 7 || header[6] == "material");
+                    if (!ok) {
+                        fail("copies_file", "'" + path + "' header must be x_mm,y_mm,z_mm[,rot_x_deg,rot_y_deg,rot_z_deg][,material].");
+                    }
+                    continue;
+                }
+                if (cells.size() != header.size()) {
+                    fail("copies_file", "'" + path + "' line " + std::to_string(lineNumber) + " has the wrong number of columns.");
+                }
+                std::vector<std::string> raw;
+                for (const auto& cell : StringUtils::Split(clean, ',')) raw.push_back(StringUtils::Trim(cell));
+                ParameterisedCopy copy;
+                try {
+                    copy.position = {UnitParser::ParseDouble(raw[0]) * CLHEP::mm, UnitParser::ParseDouble(raw[1]) * CLHEP::mm,
+                                     UnitParser::ParseDouble(raw[2]) * CLHEP::mm};
+                    if (header.size() >= 6) {
+                        copy.rotation = {UnitParser::ParseDouble(raw[3]) * CLHEP::deg, UnitParser::ParseDouble(raw[4]) * CLHEP::deg,
+                                         UnitParser::ParseDouble(raw[5]) * CLHEP::deg};
+                    }
+                } catch (const std::exception& error) {
+                    fail("copies_file", "'" + path + "' line " + std::to_string(lineNumber) + ": " + error.what());
+                }
+                if (header.back() == "material") copy.material = raw.back();
+                copies.push_back(copy);
+            }
+            if (copies.empty()) fail("copies_file", "'" + path + "' contains no copies.");
+        }
+    }
 }
 
 BooleanSolidOperation GeometryConfig::ParseBooleanSection(

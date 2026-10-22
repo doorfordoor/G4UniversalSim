@@ -22,17 +22,76 @@ void CollectRegions(const VolumeNode& node, std::set<std::string>& regions)
     for (const VolumeNode& child : node.children) CollectRegions(child, regions);
 }
 
+bool Close(double a, double b)
+{
+    return std::abs(a - b) <= 1e-9 * std::max({1.0, std::abs(a), std::abs(b)});
+}
+
+// Same rules as VolumeBuilder::PlaceReplica, checked before any Geant4
+// geometry object is created.
+void ValidateReplicaAgainstMother(const VolumeNode& mother, const VolumeNode& replica)
+{
+    const PlacementSpec& spec = replica.placement;
+    const std::string prefix = "Geometry volume '" + replica.name + "' placement=replica in mother '" + mother.name + "': ";
+    if (mother.children.size() != 1) {
+        throw std::runtime_error(prefix + "the mother must contain only the replica (Geant4 requirement); "
+                                 "move other daughters into a separate mother volume");
+    }
+    if (mother.HasBooleanOperations() || replica.HasBooleanOperations()) {
+        throw std::runtime_error(prefix + "boolean solids cannot be replicated; use placement=parameterised");
+    }
+    const double total = spec.replicaWidth * spec.replicaCount;
+    if (spec.replicaAxis == "phi") {
+        if (mother.shape != VolumeShape::Tubs || replica.shape != VolumeShape::Tubs ||
+            mother.parameters.size() != 5 || replica.parameters.size() != 5) {
+            throw std::runtime_error(prefix + "replica_axis=phi needs a tubs mother and a tubs replica");
+        }
+        const auto& m = mother.parameters;
+        const auto& r = replica.parameters;
+        if (!Close(total, m[4])) throw std::runtime_error(prefix + "replica_count * replica_width must equal the mother's deltaPhi");
+        if (!Close(r[0], m[0]) || !Close(r[1], m[1]) || !Close(r[2], m[2]) || !Close(r[4], spec.replicaWidth)) {
+            throw std::runtime_error(prefix + "the replica tubs must have the mother's radii and halfZ and deltaPhi = replica_width");
+        }
+        if (!Close(r[3], -0.5 * spec.replicaWidth)) {
+            throw std::runtime_error(prefix + "the replica tubs must start at phi = -replica_width/2 (centred on phi = 0)");
+        }
+        if (spec.hasReplicaOffset && !Close(spec.replicaOffset, m[3])) {
+            throw std::runtime_error(prefix + "replica_offset must equal the mother's startPhi");
+        }
+        return;
+    }
+    if (mother.shape != VolumeShape::Box || replica.shape != VolumeShape::Box) {
+        throw std::runtime_error(prefix + "replica_axis=" + spec.replicaAxis + " needs a box mother and a box replica");
+    }
+    const double motherSize[3] = {mother.size.x, mother.size.y, mother.size.z};
+    const double sliceSize[3] = {replica.size.x, replica.size.y, replica.size.z};
+    const int index = spec.replicaAxis == "x" ? 0 : (spec.replicaAxis == "y" ? 1 : 2);
+    if (!Close(total, motherSize[index])) {
+        throw std::runtime_error(prefix + "replica_count * replica_width must equal the mother's full length along " + spec.replicaAxis);
+    }
+    for (int k = 0; k < 3; ++k) {
+        const double expected = k == index ? spec.replicaWidth : motherSize[k];
+        if (!Close(sliceSize[k], expected)) {
+            throw std::runtime_error(prefix + "the replica box must have the mother's size except replica_width along " +
+                                     spec.replicaAxis);
+        }
+    }
+}
+
 void ValidateNodeRecursive(const VolumeNode& node, bool isRoot)
 {
     GeometryUtils::ValidateVolumeName(node.name);
-    if (node.placementType != PlacementType::Normal) {
+    if (node.placementType == PlacementType::Assembly) {
         throw std::runtime_error(
-            "Geometry volume '" + node.name + "' requests placement="
-            + GeometryUtils::PlacementTypeToString(node.placementType)
-            + ", but this capability is not supported. Use placement=normal"
-            + " with explicit child volumes until replica/parameterised/assembly"
-            + " placement is implemented."
+            "Geometry volume '" + node.name + "' requests placement=assembly, but this capability is not"
+            " supported. Use placement=normal with explicit child volumes or placement=parameterised."
         );
+    }
+    if (node.placementType == PlacementType::Replica && node.placement.replicaCount < 1) {
+        throw std::runtime_error("Geometry volume '" + node.name + "' placement=replica has no replica_count");
+    }
+    if (node.placementType == PlacementType::Parameterised && node.placement.copies.empty()) {
+        throw std::runtime_error("Geometry volume '" + node.name + "' placement=parameterised has no copies");
     }
     if (!isRoot && node.parentName.empty()) {
         throw std::runtime_error("Non-world volume '" + node.name + "' has empty parentName");
@@ -82,7 +141,15 @@ void ValidateNodeRecursive(const VolumeNode& node, bool isRoot)
             );
         }
     }
-    for (const VolumeNode& child : node.children) ValidateNodeRecursive(child, false);
+    for (const VolumeNode& child : node.children) {
+        if (child.placementType == PlacementType::Replica) ValidateReplicaAgainstMother(node, child);
+        if (child.placementType == PlacementType::Parameterised && node.children.size() != 1) {
+            throw std::runtime_error("Geometry volume '" + child.name + "' placement=parameterised in mother '" + node.name +
+                                     "': the mother must contain only the parameterised volume (Geant4 requirement); "
+                                     "put it in its own container volume");
+        }
+        ValidateNodeRecursive(child, false);
+    }
 }
 
 std::string NormalizeVolumeKey(const std::string& name)

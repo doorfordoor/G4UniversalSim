@@ -126,10 +126,10 @@ def test_gui_validation(temp: Path) -> None:
     )
 
     geometry = temp / "gui-unsupported-geometry.ini"
-    geometry.write_text("[volume.target]\nplacement = replica\n", encoding="utf-8")
+    geometry.write_text("[volume.target]\nplacement = assembly\n", encoding="utf-8")
     report = ValidationReport()
     _validate_geometry_text(geometry, report)
-    if report.can_run or not any("placement=replica" in item for item in report.errors):
+    if report.can_run or not any("placement=assembly" in item for item in report.errors):
         raise AssertionError(f"GUI geometry validation did not block unsupported placement: {report.errors}")
 
     report = ValidationReport()
@@ -189,7 +189,8 @@ def main() -> int:
             config_path.write_text(config, encoding="utf-8")
             return run(executable, ["--config", str(config_path)], expected=1)
 
-        for placement in ("replica", "parameterised", "assembly"):
+        # replica / parameterised became supported in roadmap A5 (scripts/test_geometry_a5.py).
+        for placement in ("assembly",):
             geometry = temp / f"{placement}.ini"
             geometry.write_text(
                 hierarchical_geometry.read_text(encoding="utf-8").replace(

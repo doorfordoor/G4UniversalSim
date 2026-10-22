@@ -75,6 +75,7 @@ private:
         bool booleanTool
     ) const;
     void ValidateCopyNumber(const std::string& section, const std::string& volume) const;
+    void ParsePlacement(const std::string& sectionName, VolumeNode& node, const Section& values) const;
 
     VolumeNode ParseVolumeSection(
         const std::string& sectionName,

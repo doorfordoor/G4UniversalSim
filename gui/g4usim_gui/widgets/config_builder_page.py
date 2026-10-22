@@ -86,6 +86,7 @@ class ConfigBuilderPage(QWidget):
     validateRequested = Signal()
     generatePackageRequested = Signal(bool)
     settingsChanged = Signal()
+    backendGeometryRequested = Signal()
 
     GEOMETRY_PRIMARY_OPTIONS = (
         ("layered_device", "Layered Model"),
@@ -200,6 +201,11 @@ class ConfigBuilderPage(QWidget):
         self.generated_geometry_raw.setReadOnly(True)
         self.preview3d_refresh_button = QPushButton("Refresh Preview")
         self.preview3d_reset_button = QPushButton("Reset Camera")
+        self.preview3d_backend_button = QPushButton("Show Backend Geometry")
+        self.preview3d_backend_button.setToolTip(
+            "Run the backend with /run/initialize only and show the geometry Geant4 actually built "
+            "(every replica and parameterised copy, all solids)."
+        )
         self.preview3d_show_source = QCheckBox("Show Source")
         self.preview3d_show_source.setChecked(True)
         self.preview3d_show_labels = QCheckBox("Show Labels")
@@ -622,6 +628,7 @@ class ConfigBuilderPage(QWidget):
         toolbar = QHBoxLayout()
         toolbar.addWidget(self.preview3d_refresh_button)
         toolbar.addWidget(self.preview3d_reset_button)
+        toolbar.addWidget(self.preview3d_backend_button)
         toolbar.addWidget(self.preview3d_show_source)
         toolbar.addWidget(self.preview3d_show_labels)
         toolbar.addStretch(1)
@@ -953,6 +960,7 @@ class ConfigBuilderPage(QWidget):
         self.geometry_source_copy.toggled.connect(self._on_geometry_source_copy_toggled)
         self.preview3d_refresh_button.clicked.connect(self.refresh_3d_preview)
         self.preview3d_reset_button.clicked.connect(lambda: self.preview3d_widget.reset_camera())
+        self.preview3d_backend_button.clicked.connect(self.backendGeometryRequested.emit)
         self.preview3d_show_source.stateChanged.connect(self._update_preview_display_options)
         self.preview3d_show_labels.stateChanged.connect(self._update_preview_display_options)
         for widget in [
@@ -1271,6 +1279,29 @@ class ConfigBuilderPage(QWidget):
         except Exception as exc:  # noqa: BLE001
             self.preview3d_status.setText(f"3D Preview: ERROR")
             self.preview3d_messages.setPlainText(f"Preview refresh failed:\n{exc}")
+
+    def set_backend_geometry_busy(self, busy: bool) -> None:
+        self.preview3d_backend_button.setEnabled(not busy)
+        if busy:
+            self.preview3d_status.setText(ui_text("Backend geometry: exporting..."))
+
+    def show_backend_geometry_message(self, message: str) -> None:
+        self.preview3d_status.setText(ui_text("Backend geometry: ERROR"))
+        self.preview3d_messages.setPlainText(message)
+
+    def show_backend_geometry(self, mesh) -> None:
+        """Display the exportMesh result; the editor preview is replaced until the next Refresh."""
+        self.preview3d_widget.render_backend_mesh(mesh)
+        solids = sorted({volume.solid for volume in mesh.volumes})
+        self.preview3d_status.setText(ui_format(
+            "Backend geometry: {count} volume copies from Geant4.", count=len(mesh.volumes)))
+        self.preview3d_messages.setPlainText("\n".join([
+            ui_text("This is the geometry built by the Geant4 backend, not the editor approximation."),
+            ui_format("Source: {path}", path=mesh.source_file),
+            ui_format("Solids: {solids}", solids=", ".join(solids)),
+            *(f"{volume.path}  {volume.solid}  {volume.material}  {volume.cubic_volume_mm3:.6g} mm3"
+              for volume in mesh.volumes[:200]),
+        ]))
 
     def _on_geometry_template_changed(self) -> None:
         if self._building:

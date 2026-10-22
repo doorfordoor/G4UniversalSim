@@ -12,6 +12,15 @@ enum class VolumeShape {
     Cone,
     Trd,
     Trap,
+    // roadmap A5
+    Ellipsoid,
+    EllipticalTube,
+    Torus,
+    Para,
+    Hype,
+    Polycone,
+    Polyhedra,
+    Tessellated,
     Unknown
 };
 
@@ -53,6 +62,26 @@ struct VisualAttributes {
     std::string color;
     double alpha = 1.0;
     bool wireframe = false;
+};
+
+// One copy of a parameterised placement (position/rotation in the mother
+// frame; empty material = the volume's own material).
+struct ParameterisedCopy {
+    Vec3 position;
+    Rotation3 rotation;
+    std::string material;
+};
+
+// placement = replica: Geant4 G4PVReplica slices of the mother along axis
+// (x, y, z for a box mother; phi for a tubs mother). placement = parameterised:
+// G4PVParameterised with one entry per copy.
+struct PlacementSpec {
+    std::string replicaAxis;
+    int replicaCount = 0;
+    double replicaWidth = 0.0;
+    double replicaOffset = 0.0;
+    bool hasReplicaOffset = false;  // phi: defaults to the mother's startPhi
+    std::vector<ParameterisedCopy> copies;
 };
 
 struct BooleanOperand {

@@ -20,7 +20,9 @@ inline void PopulateDoseContext(const G4Step* step, HitRecord& record)
     if (!touchable || !touchable->GetVolume()) return;
     auto* logical = touchable->GetVolume()->GetLogicalVolume();
     if (!logical) return;
-    record.doseMass = logical->GetMass(true, true);
+    // Pass the step material so parameterised copies with their own material
+    // get their own mass (same as the logical volume's material otherwise).
+    record.doseMass = logical->GetMass(true, true, step->GetPreStepPoint()->GetMaterial());
     // MVP fluence supports sensitive solids without daughter volumes only.
     // A mother volume's cubic volume includes its daughters and would give a
     // wrong track-length normalization if silently used here.

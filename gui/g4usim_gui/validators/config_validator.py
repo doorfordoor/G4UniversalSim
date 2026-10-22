@@ -276,11 +276,16 @@ def _validate_geometry_text(path: Path, report: ValidationReport) -> None:
         if message not in report.errors:
             report.errors.append(message)
     unsupported_placements = sorted(set(re.findall(
-        r"(?im)^\s*placement\s*=\s*(replica|parameteri[sz]ed|assembly)\s*(?:#.*)?$",
+        r"(?im)^\s*placement\s*=\s*(assembly)\s*(?:#.*)?$",
         text,
     )))
     for placement in unsupported_placements:
         report.errors.append(capability_message("geometry.placement.unsupported", placement=placement))
+    # Roadmap A5: the backend builds replica/parameterised placement from a
+    # hand-written geometry INI; the GUI editors cannot edit them.
+    if re.search(r"(?im)^\s*placement\s*=\s*(replica|parameteri[sz]ed)\s*(?:#.*)?$", text):
+        report.warnings.append("Geometry uses placement=replica/parameterised (backend-supported); "
+                               "the GUI geometry editors cannot edit these volumes.")
     if "let" in lower or "dose" in lower or "fluence" in lower:
         report.warnings.append("Geometry config mentions LET/Dose/Fluence; those are not edited by this GUI MVP.")
     if "[volume." in lower and ".boolean." in lower:

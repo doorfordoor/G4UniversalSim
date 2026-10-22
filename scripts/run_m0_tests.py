@@ -65,6 +65,7 @@ CASES = (
     Case("let_scoring", "scripts/test_let_scoring.py", "backend", ("exe", "uproot")),
     Case("statistical_uncertainty", "scripts/test_statistical_uncertainty.py", "backend", ("exe", "uproot")),
     Case("gps_sources", "scripts/test_gps_sources.py", "backend", ("exe",)),
+    Case("geometry_a5", "scripts/test_geometry_a5.py", "backend", ("exe",)),
     Case("interactive_commands", "scripts/test_interactive_commands.py", "backend", ("exe",)),
     Case("unsupported_features", "scripts/test_unsupported_features.py", "backend", ("exe",), args=("--layer", "backend")),
     Case("unconsumed_config", "scripts/test_unconsumed_config.py", "backend", ("exe",)),
@@ -76,6 +77,7 @@ CASES = (
     Case("geometry_roundtrip", "scripts/test_geometry_roundtrip_backend.py", "integration", ("exe", "qt")),
     Case("biasing_targets", "scripts/test_biasing_target_contract.py", "backend", ("exe",)),
     Case("gui_run_inputs", "gui/smoke_tests/smoke_run_input_modes.py", "integration", ("exe", "qt")),
+    Case("gui_backend_geometry", "gui/smoke_tests/smoke_backend_geometry.py", "integration", ("exe", "qt")),
     Case("gui_backend_package", "gui/smoke_tests/smoke_geometry_backend_package.py", "integration", ("exe", "qt")),
 )
 

@@ -8,7 +8,7 @@ _MESSAGES = {
     ),
     "geometry.placement.unsupported": (
         "Geometry: placement={placement} is not supported by the backend; "
-        "use placement=normal with explicit child volumes."
+        "use placement=normal with explicit child volumes, or placement=parameterised."
     ),
     "materials.field.unsupported": (
         "Materials: {field} is not supported by the backend; remove it and "

@@ -146,7 +146,7 @@ def backend_contract(exe: Path, temp: Path) -> None:
     fail(exe, temp, "orb-size-shorthand", "hierarchical", hierarchical("shape = orb\nsize = 2 mm,2 mm,2 mm"), "does not accept size shorthand")
     fail(exe, temp, "copy-no-text", "hierarchical", hierarchical("shape = box\nsize = 1 mm,1 mm,1 mm\ncopyNo = 1x"), "signed 32-bit integer")
     fail(exe, temp, "copy-no-range", "hierarchical", hierarchical("shape = box\nsize = 1 mm,1 mm,1 mm\ncopyNo = 2147483648"), "signed 32-bit integer")
-    fail(exe, temp, "placement", "hierarchical", hierarchical("shape = box\nsize = 1 mm,1 mm,1 mm\nplacement = replica"), "placement=replica", "placement=normal")
+    fail(exe, temp, "placement", "hierarchical", hierarchical("shape = box\nsize = 1 mm,1 mm,1 mm\nplacement = assembly"), "placement=assembly", "placement=normal")
 
 
 def gui_contract(temp: Path) -> None:

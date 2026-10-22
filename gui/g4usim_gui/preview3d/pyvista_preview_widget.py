@@ -6,6 +6,7 @@ import os
 from PySide6.QtWidgets import QLabel, QVBoxLayout, QWidget
 
 from g4usim_gui.core.i18n import ui_format, ui_text
+from g4usim_gui.preview3d.backend_mesh import BackendMesh
 from g4usim_gui.preview3d.geometry_primitives import add_vec3, scale_vec3, scene_extent
 from g4usim_gui.preview3d.scene_model import PreviewScene, PreviewVolume
 from g4usim_gui.preview3d.units import perpendicular_basis
@@ -69,6 +70,32 @@ class PyVistaPreviewWidget(QWidget):
             self.status.setToolTip("\n".join([*scene.errors, *scene.warnings][:12]))
         except Exception as exc:  # noqa: BLE001
             self.status.setText(f"3D render failed: {exc}")
+
+    def render_backend_mesh(self, mesh: BackendMesh) -> None:
+        """Show the geometry Geant4 built (exportMesh), not the editor approximation."""
+        try:
+            self.clear()
+            for volume in mesh.volumes:
+                if not volume.vertices or not volume.faces:
+                    continue
+                faces: list[int] = []
+                for face in volume.faces:
+                    faces.extend((len(face), *face))
+                poly = self._pv.PolyData(volume.vertices, faces)
+                if volume.depth == 0:
+                    color, opacity, style = ("white", 0.08, "wireframe")
+                elif volume.sensitive:
+                    color, opacity, style = ("dodgerblue", 0.55, "surface")
+                else:
+                    color, opacity, style = ("lightblue", 0.4, "surface")
+                self._plotter.add_mesh(poly, color=color, opacity=opacity, style=style, show_edges=True)
+            self._plotter.add_axes()
+            self._plotter.reset_camera()
+            self._plotter.render()
+            self.status.setText(ui_format("Backend geometry: {count} volume copies from Geant4.", count=len(mesh.volumes)))
+            self.status.setToolTip(mesh.source_file)
+        except Exception as exc:  # noqa: BLE001
+            self.status.setText(ui_format("Backend geometry render failed: {reason}", reason=exc))
 
     def _add_volume(self, volume: PreviewVolume) -> None:
         if not volume.size_mm or not volume.position_mm:

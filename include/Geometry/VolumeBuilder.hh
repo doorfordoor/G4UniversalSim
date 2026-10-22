@@ -12,6 +12,7 @@
 #include <vector>
 
 class G4LogicalVolume;
+class G4VPVParameterisation;
 class G4VPhysicalVolume;
 class G4VSolid;
 class G4VisAttributes;
@@ -56,6 +57,14 @@ public:
     G4VSolid* CreateConeSolid(const VolumeNode& node);
     G4VSolid* CreateTrdSolid(const VolumeNode& node);
     G4VSolid* CreateTrapSolid(const VolumeNode& node);
+    // roadmap A5
+    G4VSolid* CreateEllipsoidSolid(const VolumeNode& node);
+    G4VSolid* CreateEllipticalTubeSolid(const VolumeNode& node);
+    G4VSolid* CreateTorusSolid(const VolumeNode& node);
+    G4VSolid* CreateParaSolid(const VolumeNode& node);
+    G4VSolid* CreateHypeSolid(const VolumeNode& node);
+    G4VSolid* CreatePolyconeSolid(const VolumeNode& node, bool polyhedra);
+    G4VSolid* CreateTessellatedSolid(const VolumeNode& node);
 
     G4RotationMatrix* CreateRotation(const VolumeNode& node);
 
@@ -71,6 +80,8 @@ public:
 private:
     void EnsureReady(const std::string& action) const;
     void BuildChildren(const VolumeNode& parentNode, G4LogicalVolume* motherLogical);
+    G4VPhysicalVolume* PlaceReplica(const VolumeNode& node, G4LogicalVolume* logical, G4LogicalVolume* motherLogical);
+    G4VPhysicalVolume* PlaceParameterised(const VolumeNode& node, G4LogicalVolume* logical, G4LogicalVolume* motherLogical);
 
     MaterialManager* materialManager_ = nullptr;
     GeometryRegistry* registry_ = nullptr;
@@ -82,6 +93,9 @@ private:
 
     // Logical volumes do not take ownership of vis attributes in all Geant4 versions.
     std::vector<std::unique_ptr<G4VisAttributes>> visualAttributes_;
+
+    // G4PVParameterised does not own its parameterisation.
+    std::vector<std::unique_ptr<G4VPVParameterisation>> parameterisations_;
 
     static void RecordCreatedGeometryObject();
     static std::atomic<std::size_t> createdGeometryObjectCount_;
