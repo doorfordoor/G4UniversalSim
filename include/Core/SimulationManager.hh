@@ -4,6 +4,8 @@
 
 #include <functional>
 #include <map>
+#include "Field/FieldConfig.hh"
+
 #include <memory>
 #include <optional>
 #include <string>
@@ -167,6 +169,7 @@ private:
 
     // These managers are intentionally reserved for later modules.
     std::unique_ptr<PhysicsManager> physicsManager_;
+    FieldConfig fieldConfig_;
     std::unique_ptr<SourceManager> sourceManager_;
     std::unique_ptr<BiasingManager> biasingManager_;
     std::unique_ptr<ScoringManager> scoringManager_;

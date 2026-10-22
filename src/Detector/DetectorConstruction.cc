@@ -1,6 +1,8 @@
 #include "Detector/DetectorConstruction.hh"
 
 #include "Detector/DetectorMessenger.hh"
+#include "Field/FieldConfig.hh"
+#include "Field/FieldSetup.hh"
 #include "Geometry/GeometryManager.hh"
 #include "Geometry/GeometryRegistry.hh"
 
@@ -50,6 +52,13 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
 void DetectorConstruction::ConstructSDandField()
 {
+    if (fieldConfig_ && !fieldConfig_->Empty()) {
+        try {
+            FieldSetup::Construct(*fieldConfig_);
+        } catch (const std::exception& error) {
+            G4Exception("DetectorConstruction::ConstructSDandField", "AIHLField001", FatalException, error.what());
+        }
+    }
     if (!sensitiveDetectorEnabled_) {
         if (verboseLevel_ > 0) G4cout << "[DetectorConstruction] Sensitive detector binding is disabled." << G4endl;
         return;
@@ -105,6 +114,11 @@ void DetectorConstruction::ConstructSDandField()
         G4cout << "[DetectorConstruction] Attached sensitive detector '" << sensitiveDetectorName_
                << "' to " << sensitiveLVs.size() << " logical volume(s)." << G4endl;
     }
+}
+
+void DetectorConstruction::SetFieldConfig(const FieldConfig* fieldConfig)
+{
+    fieldConfig_ = fieldConfig;
 }
 
 void DetectorConstruction::SetGeometryManager(GeometryManager* geometryManager)

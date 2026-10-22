@@ -29,6 +29,8 @@ const std::map<std::string, std::vector<std::string>>& KnownKeys()
         {"physics", {"reference", "em", "list", "modules", "extra_modules", "default_cut", "biasing", "verbose"}},
         {"physics.microelec", {"enabled", "region", "electron_capture", "electron_capture_threshold"}},
         {"physics.radioactive_decay", {"enabled", "time_threshold"}},
+        {"field", {"magnetic", "electric", "magnetic_map", "electric_map", "min_step", "delta_chord", "delta_one_step",
+                   "delta_intersection"}},
         {"scoring", {"enabled", "hits", "event_edep", "edep", "let", "dose", "fluence", "auto_create_default_scorers", "verbose"}},
         {"scoring.edep", {"raw_histogram", "weighted_histogram", "bins", "min", "max", "volume_summary", "particle_summary"}},
         {"scoring.let", {"particles"}},
@@ -63,6 +65,10 @@ bool IsKnownDynamicSection(const std::string& section)
         const std::string suffix = section.substr(std::string("source.").size());
         return !suffix.empty() && suffix.find('.') == std::string::npos;
     }
+    if (StartsWith(section, "field.")) {
+        const std::string suffix = section.substr(std::string("field.").size());
+        return !suffix.empty() && suffix.find('.') == std::string::npos;
+    }
     if (StartsWith(section, "biasing.xs.")) {
         const std::string suffix = section.substr(std::string("biasing.xs.").size());
         const auto separator = suffix.find('.');
@@ -82,6 +88,10 @@ std::vector<std::string> DynamicKeys(const std::string& section)
         const std::string suffix = section.substr(std::string("scoring.mesh.").size());
         if (suffix.find('.') == std::string::npos) return {"shape", "size", "bins", "center"};
         return {"type", "unit", "particles", "energy_min", "energy_max"};
+    }
+    if (StartsWith(section, "field.")) {
+        return {"magnetic", "electric", "magnetic_map", "electric_map", "volumes", "min_step", "delta_chord",
+                "delta_one_step", "delta_intersection"};
     }
     if (StartsWith(section, "source.")) {
         return {"preset", "particle", "energy", "isotropic", "position_type", "position", "radius", "center", "direction",

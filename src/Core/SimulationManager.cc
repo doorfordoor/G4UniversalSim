@@ -709,6 +709,15 @@ void SimulationManager::Configure()
         physicsManager_->SetBiasingManager(biasingManager_.get());
         physicsManager_->LoadFromConfig(*configManager_);
         geometryManager_->ValidateRegionPhysicsNames();
+        fieldConfig_.LoadFromConfig(*configManager_);
+        for (const FieldSpec& field : fieldConfig_.GetFields()) {
+            for (const std::string& volume : field.volumes) {
+                if (!geometryManager_->HasConfiguredVolume(volume)) {
+                    throw std::runtime_error("[field." + field.name + "]/volumes names '" + volume +
+                                             "', which is not a volume of the geometry");
+                }
+            }
+        }
         sourceManager_->LoadFromConfig(*configManager_);
         scoringManager_->LoadFromConfig(*configManager_);
         scoringMeshCommands_ = ScoringMeshConfig::BuildCommands(*configManager_);
@@ -907,6 +916,7 @@ std::unique_ptr<DetectorConstruction> SimulationManager::CreateDetectorConstruct
         throw std::runtime_error("SimulationManager::CreateDetectorConstruction failed: GeometryManager is null");
     }
     auto detector = std::make_unique<DetectorConstruction>(geometryManager_.get());
+    detector->SetFieldConfig(&fieldConfig_);
     detector->SetSensitiveDetectorFactory(CreateSensitiveDetectorFactory());
     detector->SetGeometryPostBuildCallback(CreateGeometryPostBuildCallback());
     return detector;
@@ -1226,6 +1236,10 @@ void SimulationManager::WriteBaseRunSummary()
     summary.Set("source_preset", sourceManager_ ? sourceManager_->GetPresetName() : "");
     if (sourceManager_) {
         const auto& sources = sourceManager_->GetSources();
+        summary.Set("field_count", static_cast<int>(fieldConfig_.GetFields().size()));
+        for (std::size_t index = 0; index < fieldConfig_.GetFields().size(); ++index) {
+            summary.Set("field_" + std::to_string(index) + "_spec", fieldConfig_.GetFields()[index].Describe());
+        }
         summary.Set("source_count", static_cast<int>(sources.size()));
         summary.SetBool("source_phase_space", sourceManager_->UsesPhaseSpace());
         if (sourceManager_->UsesPhaseSpace()) {

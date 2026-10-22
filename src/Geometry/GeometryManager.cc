@@ -11,6 +11,7 @@
 #include "G4ios.hh"
 
 #include "Geometry/GdmlIO.hh"
+#include "Utils/G4NameUtils.hh"
 #include "G4LogicalVolume.hh"
 #include "G4LogicalVolumeStore.hh"
 #include "G4ProductionCuts.hh"
@@ -22,6 +23,7 @@
 #include <cfloat>
 
 #include <algorithm>
+#include <functional>
 #include <set>
 #include <stdexcept>
 
@@ -600,6 +602,19 @@ void GeometryManager::ApplyRegionPhysics()
                 settings.minKineticEnergy));
         }
     }
+}
+
+bool GeometryManager::HasConfiguredVolume(const std::string& name) const
+{
+    if (!rootNode_ || rootNode_->GetProperty("template") == "gdml") return true;
+    const std::function<bool(const VolumeNode&)> visit = [&](const VolumeNode& node) {
+        if (node.name == name || G4NameUtils::LogicalName(node.name) == name) return true;
+        for (const VolumeNode& child : node.children) {
+            if (visit(child)) return true;
+        }
+        return false;
+    };
+    return visit(*rootNode_);
 }
 
 void GeometryManager::ValidateRegionPhysicsNames() const

@@ -7,6 +7,7 @@
 #include <string>
 
 class DetectorMessenger;
+class FieldConfig;
 class G4VPhysicalVolume;
 class G4VSensitiveDetector;
 class GeometryManager;
@@ -45,6 +46,8 @@ public:
 
     void SetSensitiveDetectorFactory(std::function<G4VSensitiveDetector*()> factory);
     void SetGeometryPostBuildCallback(GeometryPostBuildCallback callback);
+    // Roadmap A7: fields are built per thread in ConstructSDandField.
+    void SetFieldConfig(const FieldConfig* fieldConfig);
 
 private:
     GeometryManager* geometryManager_ = nullptr;
@@ -55,4 +58,5 @@ private:
     int verboseLevel_ = 1;
     std::function<G4VSensitiveDetector*()> sensitiveDetectorFactory_;
     GeometryPostBuildCallback postBuildCallback_;
+    const FieldConfig* fieldConfig_ = nullptr;  // not owned
 };

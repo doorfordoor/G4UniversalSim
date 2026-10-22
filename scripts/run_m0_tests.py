@@ -67,6 +67,7 @@ CASES = (
     Case("gps_sources", "scripts/test_gps_sources.py", "backend", ("exe",)),
     Case("geometry_a5", "scripts/test_geometry_a5.py", "backend", ("exe",)),
     Case("physics_a6", "scripts/test_physics_a6.py", "backend", ("exe",)),
+    Case("fields_a7", "scripts/test_fields_a7.py", "backend", ("exe",)),
     Case("interactive_commands", "scripts/test_interactive_commands.py", "backend", ("exe",)),
     Case("unsupported_features", "scripts/test_unsupported_features.py", "backend", ("exe",), args=("--layer", "backend")),
     Case("unconsumed_config", "scripts/test_unconsumed_config.py", "backend", ("exe",)),

@@ -91,6 +91,9 @@ public:
     // Configure-time check (INI geometries): every [physics.region.<name>]
     // either names a region of the volume tree or lists its own volumes.
     void ValidateRegionPhysicsNames() const;
+    // True when a volume (geometry name or <name>_LV) of an INI geometry has this
+    // name; always true for GDML (names are known only after reading the file).
+    bool HasConfiguredVolume(const std::string& name) const;
 
     GeometryRegistry& GetRegistry();
     const GeometryRegistry& GetRegistry() const;

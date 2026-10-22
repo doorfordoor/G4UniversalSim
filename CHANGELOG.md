@@ -7,6 +7,13 @@ Short, user-facing record of notable changes. Detailed support status lives in
 ## Unreleased
 
 ### Added
+- **Electromagnetic fields** (roadmap A7, experimental): `[field]` (global) and
+  `[field.<name>]` with `volumes` (local) take uniform `magnetic` / `electric` values
+  (combined fields allowed) or `magnetic_map` / `electric_map` CSV grids with trilinear
+  interpolation, plus `min_step` / `delta_chord` / `delta_one_step` /
+  `delta_intersection`. `scripts/test_fields_a7.py` checks trajectories against exact
+  analytic results (circle in B, work done by E, Wien filter, canonical momentum in a
+  gradient map, local field box).
 - **Physics options** (roadmap A6, experimental): `[physics.region.<name>]` production
   cuts, `max_step`, `max_track_length`, `max_time`, `min_kinetic_energy` and `volumes`
   (regions can be created from logical volumes, also for GDML); `/AIHL/physics/setRegionCut`
