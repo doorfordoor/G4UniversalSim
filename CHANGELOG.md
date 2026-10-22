@@ -7,6 +7,11 @@ Short, user-facing record of notable changes. Detailed support status lives in
 ## Unreleased
 
 ### Added
+- **Parameter scans and batch runs** (roadmap Phase C3): a Parameter Scans page varies
+  one Configuration-page setting (source energy or particle, physics list, seed, events,
+  a volume's material or box thickness) over a list or lin/log range, writes one run
+  package per point plus `scan.json`, runs the points one after another and shows a
+  results table and a plot of any scorer quantity with statistical errors.
 - **New simulation wizard** (roadmap Phase C2): File -> New Simulation... guides through
   scenario (single target, depth-dose phantom, shielding slab, silicon detector, gamma
   spectrometer), NIST materials and sizes, source, and physics/outputs/run, then fills

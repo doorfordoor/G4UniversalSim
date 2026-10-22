@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import copy
 import json
 import tempfile
 from pathlib import Path
@@ -22,6 +23,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from g4usim_gui.core import scan as parameter_scan
 from g4usim_gui.core import wizard as simulation_wizard
 from g4usim_gui.core.i18n import LanguageCode, apply_language, current_language, ui_format, ui_text
 from g4usim_gui.core.project import G4USimProject, load_project, save_project
@@ -38,6 +40,7 @@ from g4usim_gui.widgets.output_page import OutputPage
 from g4usim_gui.widgets.project_page import ProjectPage
 from g4usim_gui.widgets.run_page import RunPage
 from g4usim_gui.widgets.run_history_page import RunHistoryPage
+from g4usim_gui.widgets.scan_page import ScanPage
 
 
 class MainWindow(QMainWindow):
@@ -66,6 +69,8 @@ class MainWindow(QMainWindow):
         self.run_page = RunPage()
         self.output_page = OutputPage()
         self.run_history_page = RunHistoryPage()
+        self.scan_page = ScanPage()
+        self.scan_page.set_base_provider(self.scan_base)
 
         self._build_workspace_shell()
         self._apply_visual_roles()
@@ -133,6 +138,12 @@ class MainWindow(QMainWindow):
                 self.tr("Run History"),
                 self.tr("Browse previous packages and restore reproducible snapshots."),
                 QStyle.SP_FileDialogContentsView,
+            ),
+            (
+                self.scan_page,
+                self.tr("Parameter Scans"),
+                self.tr("Vary one setting over several values, run every point and compare the results."),
+                QStyle.SP_BrowserReload,
             ),
         ]
         self._page_specs = page_specs
@@ -421,6 +432,22 @@ class MainWindow(QMainWindow):
         self.project.seed = "" if run.seed is None else str(run.seed)
         self.project_page.set_project(self.project)
         self._mark_generated_package_stale()
+
+    def scan_base(self) -> tuple[parameter_scan.ScanBase, str, str, str]:
+        """Snapshot of the Configuration page for a parameter scan (same inputs as Generate & Run)."""
+        self._update_project_from_page_without_preview()
+        self.config_builder_page.update_project(self.project)
+        if self.project.runInputMode != "generated":
+            raise ValueError(ui_text("Parameter scans use the Configuration page as run input (generated mode)."))
+        page = self.config_builder_page
+        paths = page.path_settings(self.project)
+        base = parameter_scan.ScanBase(
+            project=copy.deepcopy(self.project), paths=paths, run=page.run_settings(),
+            geometry_settings=page.geometry_settings(), geometry=copy.deepcopy(page.geometry_document),
+            source=copy.deepcopy(page.source_editor), physics=copy.deepcopy(page.physics_editor),
+            scoring=copy.deepcopy(page.scoring_editor),
+            materials=copy.deepcopy(page.material_document) if page.material_document.is_dirty else None)
+        return base, paths.runs_root, self.project.executable or paths.executable, self.project.workspaceRoot
 
     def open_new_simulation_wizard(self) -> None:
         wizard = NewSimulationWizard(self)
@@ -860,6 +887,8 @@ class MainWindow(QMainWindow):
         if self._macro_inspection.state() != QProcess.NotRunning:
             self._macro_inspection.kill()
             self._macro_inspection.waitForFinished(1000)
+        if self.scan_page.runner.is_running():   # do not leave a scan point running after exit
+            self.scan_page.runner.stop()
         state = load_state()
         state["lastWorkspaceRoot"] = self.project.workspaceRoot
         state["lastRunsRoot"] = self.project.runsRoot
