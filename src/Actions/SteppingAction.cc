@@ -50,6 +50,38 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
     }
 
     ScoringManager* scoringManager = ActiveScoringManager();
+    // Phase space: a step that ends on a boundary into the volume carries the
+    // entry state at its post-step point (before anything happens inside).
+    const G4VPhysicalVolume* next = post ? post->GetPhysicalVolume() : nullptr;
+    if (scoringManager && scoringManager->IsPhaseSpaceEnabled() && post && next &&
+        post->GetStepStatus() == fGeomBoundary && next->GetName() == scoringManager->GetPhaseSpaceVolume()) {
+        const G4ParticleDefinition* definition = track->GetParticleDefinition();
+        const std::string particle = definition ? definition->GetParticleName() : "";
+        if (scoringManager->AcceptsPhaseSpaceParticle(particle)) {
+            PhaseSpaceParticle entry;
+            entry.trackID = track->GetTrackID();
+            entry.parentID = track->GetParentID();
+            entry.particle = particle;
+            entry.pdg = definition ? definition->GetPDGEncoding() : 0;
+            const G4ThreeVector position = post->GetPosition();
+            const G4ThreeVector direction = post->GetMomentumDirection();
+            entry.x = position.x();
+            entry.y = position.y();
+            entry.z = position.z();
+            entry.u = direction.x();
+            entry.v = direction.y();
+            entry.w = direction.z();
+            entry.kineticEnergy = post->GetKineticEnergy();
+            entry.time = post->GetGlobalTime();
+            entry.weight = post->GetWeight();
+            scoringManager->RecordPhaseSpace(entry);
+            if (scoringManager->KillsPhaseSpaceParticles()) {
+                track->SetTrackStatus(fStopAndKill);
+                return;
+            }
+        }
+    }
+
     if (!stepScoringEnabled_ || !scoringManager) {
         return;
     }

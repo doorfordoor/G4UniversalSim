@@ -68,6 +68,10 @@ std::string GeneratedFileSchema(const std::string& path)
                       "raw_dose_Gy,weighted_dose_Gy,raw_edep_sum_sq_MeV2,weighted_edep_sum_sq_MeV2,"
                       "n_events") return "dose_volume_csv_v2";
     }
+    if (matches("phase_space")) {
+        if (header == "runID,eventID,trackID,parentID,particle,pdg,x_mm,y_mm,z_mm,u,v,w,"
+                      "kineticEnergy_MeV,time_ns,weight") return "phase_space_csv_v1";
+    }
     if (matches("let_volume_summary")) {
         if (header == "runID,volume_path,volume_name,particles,steps,sum_wl_mm,sum_wSl_MeV,"
                       "sum_wS2l_MeV2_per_mm,let_t_keV_per_um,let_d_keV_per_um") return "let_volume_csv_v1";

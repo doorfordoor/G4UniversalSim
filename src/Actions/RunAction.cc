@@ -12,6 +12,7 @@
 #include "Scoring/HistoryStatistics.hh"
 #include "Scoring/ScoringManager.hh"
 #include "Scoring/ThreadLocalScoringContext.hh"
+#include "Source/SourceManager.hh"
 
 #include <algorithm>
 #include <stdexcept>
@@ -54,6 +55,21 @@ void RunAction::BeginOfRunAction(const G4Run* run)
             biasingManager_->ValidateActiveProcessRules();
         } catch (const std::exception& error) {
             G4Exception("RunAction::BeginOfRunAction", "AIHLBiasingTarget001", RunMustBeAborted, error.what());
+            return;
+        }
+    }
+
+    if (role_ != Role::Worker && sourceManager_) {
+        try {
+            sourceManager_->PrepareForRun(run->GetNumberOfEventToBeProcessed());
+        } catch (const std::exception& error) {
+            // Recorded in the shared failure registry so batch and interactive
+            // sessions end with a failed summary and a non-zero exit code.
+            if (OutputManager* output = ActiveOutputManager()) {
+                output->RecordOutputFailure("source_prepare_run", error.what(), run->GetRunID());
+            }
+            G4cerr << "[SourceFailure] " << error.what() << G4endl;
+            if (auto* runManager = G4RunManager::GetRunManager()) runManager->AbortRun(true);
             return;
         }
     }
@@ -237,6 +253,11 @@ void RunAction::SetOutputManager(OutputManager* outputManager)
 OutputManager* RunAction::GetOutputManager()
 {
     return ActiveOutputManager();
+}
+
+void RunAction::SetSourceManager(SourceManager* sourceManager)
+{
+    sourceManager_ = sourceManager;
 }
 
 void RunAction::SetVerboseLevel(int level)

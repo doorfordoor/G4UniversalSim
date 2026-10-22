@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Output/OutputRecord.hh"
+#include "Scoring/PhaseSpace.hh"
 #include "Scoring/ScorerBase.hh"
 
 #include <memory>
@@ -9,6 +10,7 @@
 #include <vector>
 
 class ConfigManager;
+class CsvWriter;
 class EdepScorer;
 class OutputManager;
 
@@ -96,6 +98,15 @@ public:
     void LoadFromConfig(const ConfigManager& config);
     void PrintSummary() const;
 
+    // Phase-space recording ([phase_space] in the main INI): particles entering
+    // the named physical volume are written to phase_space_tN[_rR].csv.
+    bool IsPhaseSpaceEnabled() const;
+    const std::string& GetPhaseSpaceVolume() const;
+    bool AcceptsPhaseSpaceParticle(const std::string& particle) const;
+    bool KillsPhaseSpaceParticles() const;
+    // Worker: fills runID/eventID and writes one row; failures abort the run.
+    void RecordPhaseSpace(PhaseSpaceParticle particle);
+
 private:
     struct HistogramConfig {
         int bins = 200;
@@ -112,6 +123,8 @@ private:
     const EdepScorer* GetEdepScorer() const;
     void ApplyEdepSettings(EdepScorer& scorer) const;
     void SetScorerEnabledIfExists(const std::string& name, bool enable);
+    void BeginPhaseSpaceRun();
+    void EndPhaseSpaceRun();
 
     OutputManager* outputManager_ = nullptr;
     bool enabled_ = true;
@@ -137,4 +150,9 @@ private:
     double currentEventRawEdep_ = 0.0;
     double currentEventWeightedEdep_ = 0.0;
     std::vector<std::unique_ptr<ScorerBase>> scorers_;
+
+    std::string phaseSpaceVolume_;          // empty = disabled
+    std::set<std::string> phaseSpaceParticles_;  // empty = all
+    bool phaseSpaceKill_ = false;
+    std::unique_ptr<CsvWriter> phaseSpaceWriter_;
 };

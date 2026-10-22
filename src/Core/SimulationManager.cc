@@ -1218,6 +1218,22 @@ void SimulationManager::WriteBaseRunSummary()
     summary.Set("source_particle", sourceManager_ ? sourceManager_->GetParticleName() : "");
     summary.Set("source_energy", sourceManager_ ? sourceManager_->GetMonoEnergy() : 0.0);
     summary.Set("source_preset", sourceManager_ ? sourceManager_->GetPresetName() : "");
+    if (sourceManager_) {
+        const auto& sources = sourceManager_->GetSources();
+        summary.Set("source_count", static_cast<int>(sources.size()));
+        summary.SetBool("source_phase_space", sourceManager_->UsesPhaseSpace());
+        if (sourceManager_->UsesPhaseSpace()) {
+            std::string files;
+            for (const auto& file : sourceManager_->GetPhaseSpaceFiles()) files += (files.empty() ? "" : ",") + file;
+            summary.Set("source_phase_space_files", files);
+            summary.Set("source_phase_space_histories", static_cast<std::int64_t>(sourceManager_->GetPhaseSpaceHistoryCount()));
+            summary.Set("source_phase_space_particles", static_cast<std::int64_t>(sourceManager_->GetPhaseSpaceParticleCount()));
+            summary.SetBool("source_phase_space_recycle", sourceManager_->IsPhaseSpaceRecycled());
+        }
+        for (std::size_t index = 0; index < sources.size(); ++index) {
+            summary.Set("source_" + std::to_string(index) + "_spec", sources[index].Describe());
+        }
+    }
     summary.SetBool("biasing_enabled", biasingManager_ ? biasingManager_->IsEnabled() : false);
     summary.Set("biasing_xs_rule_count", static_cast<int>(biasingManager_ ? biasingManager_->GetEnabledXSProcessBiasRules().size() : 0));
     summary.Set("biasing_legacy_xs_rule_count", static_cast<int>(biasingManager_ ? biasingManager_->GetXSBiasRules().size() : 0));

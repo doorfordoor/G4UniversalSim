@@ -9,6 +9,7 @@ class G4Run;
 class OutputManager;
 class ScoringManager;
 class BiasingManager;
+class SourceManager;
 struct WorkerRunContext;
 
 class RunAction : public G4UserRunAction {
@@ -37,6 +38,10 @@ public:
     void SetOutputManager(OutputManager* outputManager);
     OutputManager* GetOutputManager();
 
+    // Master/sequential: source settings that need the built geometry are
+    // applied at the start of each run (SourceManager::PrepareForRun).
+    void SetSourceManager(SourceManager* sourceManager);
+
     void SetVerboseLevel(int level);
     int GetVerboseLevel() const;
 
@@ -48,6 +53,7 @@ private:
     ScoringManager* scoringManager_ = nullptr; // non-owning
     OutputManager* outputManager_ = nullptr;   // non-owning
     BiasingManager* biasingManager_ = nullptr; // non-owning
+    SourceManager* sourceManager_ = nullptr;   // non-owning
     Role role_ = Role::Sequential;
     int verboseLevel_ = 0;
     G4Timer runTimer_;  // master/sequential wall time of the current run (FOM)

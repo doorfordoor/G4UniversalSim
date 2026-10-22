@@ -62,6 +62,7 @@ void ActionInitialization::BuildForMaster() const
         masterOutputManager_,
         RunAction::Role::Master,
         biasingManager_);
+    runAction->SetSourceManager(sourceManager_);
     runAction->SetVerboseLevel(verboseLevel_);
     SetUserAction(runAction);
 }
@@ -96,6 +97,7 @@ void ActionInitialization::Build() const
     AIHL::SetCurrentThreadScoringManager(context->scoring.get());
 
     auto* runAction = new RunAction(context, CurrentRunActionRole(), biasingManager_);
+    if (CurrentRunActionRole() != RunAction::Role::Worker) runAction->SetSourceManager(sourceManager_);
     runAction->SetVerboseLevel(verboseLevel_);
     SetUserAction(runAction);
 

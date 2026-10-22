@@ -696,7 +696,7 @@ class ConfigBuilderPage(QWidget):
         angular_form.addRow("Preview ray count", self.source_editor_preview_rays)
         angular_form.addRow("Preview random seed", self.source_editor_preview_seed)
         layout.addWidget(angular)
-        layout.addWidget(create_hint_label("Backend support: point, plane circle, and XY-plane rectangle (halfx/halfy) with fixed or isotropic emission. Square, annulus, cone, cosine, and focused modes are preview-only and blocked from package generation."))
+        layout.addWidget(create_hint_label("This editor generates point, plane circle, and XY-plane rectangle (halfx/halfy) sources with fixed or isotropic emission. Square, annulus, cone, cosine, and focused modes are preview-only here and blocked from package generation; the backend supports them (and spectra, volume, beam, multi-source, ion and phase-space sources) in a hand-written main INI."))
         layout.addWidget(QLabel("Validation messages"))
         self.source_editor_messages.setMinimumHeight(110)
         layout.addWidget(self.source_editor_messages)

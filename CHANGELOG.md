@@ -7,6 +7,16 @@ Short, user-facing record of notable changes. Detailed support status lives in
 ## Unreleased
 
 ### Added
+- **Full GPS sources** (roadmap A4, experimental): energy spectra (`energy_type` gauss,
+  uniform, power, exp, histogram or point-wise `spectrum_file`), volume sources (sphere,
+  cylinder, box, ellipsoid) with `confine`, Gaussian beam spots, rotated planes
+  (`rot1`/`rot2`), annulus/ellipse/square planes, angular distributions (cosine law, cone,
+  beam1d, beam2d, focused), multiple weighted sources in `[source.<name>]` sections, ion
+  and radioactive-decay sources (`particle = ion`, `ion = Z A [Q [E*]]`), and phase-space
+  files: `[phase_space]` writes particles entering a volume to `phase_space_tN[_rR].csv`
+  and `[source] phase_space_file` replays them (event k = history k).
+  `scripts/test_gps_sources.py` checks every distribution against analytic expectations
+  from real primary vertices, Na-24 decay against NNDC, and exact phase-space replay.
 - **Statistical uncertainty for every built-in scorer** (roadmap A3): Edep (event total,
   per volume, per particle), Dose, Fluence and LET now accumulate per-event sums of
   squares. The master writes the merged `scorer_statistics[_rR].csv` (any output format)

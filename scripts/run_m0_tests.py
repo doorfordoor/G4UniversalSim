@@ -64,6 +64,7 @@ CASES = (
     Case("scoring_mesh", "scripts/test_scoring_mesh.py", "backend", ("exe", "uproot")),
     Case("let_scoring", "scripts/test_let_scoring.py", "backend", ("exe", "uproot")),
     Case("statistical_uncertainty", "scripts/test_statistical_uncertainty.py", "backend", ("exe", "uproot")),
+    Case("gps_sources", "scripts/test_gps_sources.py", "backend", ("exe",)),
     Case("interactive_commands", "scripts/test_interactive_commands.py", "backend", ("exe",)),
     Case("unsupported_features", "scripts/test_unsupported_features.py", "backend", ("exe",), args=("--layer", "backend")),
     Case("unconsumed_config", "scripts/test_unconsumed_config.py", "backend", ("exe",)),

@@ -23,6 +23,11 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
             "PrimaryGeneratorAction::GeneratePrimaries failed: G4Event is null");
     }
 
+    if (sourceManager_ && sourceManager_->UsesPhaseSpace()) {
+        sourceManager_->GeneratePhaseSpaceEvent(event);
+        return;
+    }
+
     auto* gps = GetGPS();
     if (!gps) {
         throw std::runtime_error(

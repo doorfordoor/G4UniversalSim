@@ -2,6 +2,7 @@
 
 #include "Config/ConfigManager.hh"
 #include "Output/AnalysisOutput.hh"
+#include "Output/CsvWriter.hh"
 #include "Output/OutputManager.hh"
 #include "Scoring/DoseScorer.hh"
 #include "Scoring/EdepScorer.hh"
@@ -9,6 +10,7 @@
 #include "Scoring/LETScorer.hh"
 #include "Utils/StringUtils.hh"
 #include "Utils/UnitParser.hh"
+#include "G4PhysicalVolumeStore.hh"
 #include "G4RunManager.hh"
 
 #include <iostream>
@@ -58,6 +60,9 @@ std::unique_ptr<ScoringManager> ScoringManager::CloneForThread(OutputManager* ou
     clone->rawEdepHistogram_ = rawEdepHistogram_;
     clone->weightedEdepHistogram_ = weightedEdepHistogram_;
     clone->verboseLevel_ = verboseLevel_;
+    clone->phaseSpaceVolume_ = phaseSpaceVolume_;
+    clone->phaseSpaceParticles_ = phaseSpaceParticles_;
+    clone->phaseSpaceKill_ = phaseSpaceKill_;
     if (clone->autoCreateDefaultScorers_) {
         clone->EnsureDefaultScorers();
     }
@@ -299,6 +304,7 @@ void ScoringManager::BeginRun(int runID)
         throw std::runtime_error("Injected ScoringManager::BeginRun failure");
     }
     currentRunID_ = runID;
+    BeginPhaseSpaceRun();
     if (autoCreateDefaultScorers_) EnsureDefaultScorers();
     if (!enabled_) return;
     for (ScorerBase* scorer : EnabledScorers()) scorer->BeginRun(runID);
@@ -306,6 +312,7 @@ void ScoringManager::BeginRun(int runID)
 
 void ScoringManager::EndRun(int runID)
 {
+    EndPhaseSpaceRun();
     if (!enabled_) return;
     for (ScorerBase* scorer : EnabledScorers()) scorer->EndRun(runID);
 }
@@ -445,6 +452,22 @@ void ScoringManager::WriteAll()
 
 void ScoringManager::LoadFromConfig(const ConfigManager& config)
 {
+    if (config.HasSection("phase_space")) {
+        phaseSpaceVolume_ = StringUtils::Trim(config.GetString("phase_space", "volume", ""));
+        if (phaseSpaceVolume_.empty()) {
+            throw std::runtime_error("[phase_space]/volume must name the physical volume whose entering particles are recorded");
+        }
+        phaseSpaceParticles_.clear();
+        const std::string particles = StringUtils::Trim(config.GetString("phase_space", "particles", "all"));
+        if (StringUtils::ToLower(particles) != "all") {
+            for (const std::string& part : StringUtils::Split(particles, ',')) {
+                const std::string name = StringUtils::Trim(part);
+                if (!name.empty()) phaseSpaceParticles_.insert(name);
+            }
+            if (phaseSpaceParticles_.empty()) throw std::runtime_error("[phase_space]/particles must be 'all' or a particle list");
+        }
+        phaseSpaceKill_ = config.GetBool("phase_space", "kill", false);
+    }
     if (!config.HasSection("scoring")) return;
 
     Enable(config.GetBool("scoring", "enabled", enabled_));
@@ -518,6 +541,62 @@ void ScoringManager::PrintSummary() const
         std::cout << "  - " << scorer->GetName()
                   << " enabled=" << (scorer->IsEnabled() ? "true" : "false")
                   << '\n';
+    }
+}
+
+bool ScoringManager::IsPhaseSpaceEnabled() const
+{
+    return !phaseSpaceVolume_.empty();
+}
+
+const std::string& ScoringManager::GetPhaseSpaceVolume() const
+{
+    return phaseSpaceVolume_;
+}
+
+bool ScoringManager::AcceptsPhaseSpaceParticle(const std::string& particle) const
+{
+    return phaseSpaceParticles_.empty() || phaseSpaceParticles_.count(particle) > 0;
+}
+
+bool ScoringManager::KillsPhaseSpaceParticles() const
+{
+    return phaseSpaceKill_;
+}
+
+void ScoringManager::BeginPhaseSpaceRun()
+{
+    phaseSpaceWriter_.reset();
+    if (phaseSpaceVolume_.empty() || !outputManager_) return;
+    if (!G4PhysicalVolumeStore::GetInstance()->GetVolume(phaseSpaceVolume_, false)) {
+        throw std::runtime_error("[phase_space]/volume '" + phaseSpaceVolume_ +
+                                 "' is not a physical volume of the built geometry (usually <name>_PV)");
+    }
+    outputManager_->Initialize();
+    phaseSpaceWriter_ = std::make_unique<CsvWriter>(
+        outputManager_->MakeOutputPath(outputManager_->MakeThreadFilename("phase_space.csv")));
+    phaseSpaceWriter_->WriteHeader(PhaseSpace::Header());
+}
+
+void ScoringManager::EndPhaseSpaceRun()
+{
+    if (!phaseSpaceWriter_) return;
+    phaseSpaceWriter_->Close();
+    if (outputManager_) outputManager_->RegisterGeneratedFile(phaseSpaceWriter_->GetFilename());
+    phaseSpaceWriter_.reset();
+}
+
+void ScoringManager::RecordPhaseSpace(PhaseSpaceParticle particle)
+{
+    if (!phaseSpaceWriter_) return;
+    if (outputManager_ && outputManager_->HasOutputFailure()) return;
+    particle.runID = currentRunID_;
+    particle.eventID = currentEventID_;
+    try {
+        phaseSpaceWriter_->WriteRow(PhaseSpace::Row(particle));
+    } catch (const std::exception& error) {
+        if (outputManager_) outputManager_->RecordOutputFailure("phase_space_write", error.what());
+        if (auto* runManager = G4RunManager::GetRunManager()) runManager->AbortRun(true);
     }
 }
 

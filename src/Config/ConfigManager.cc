@@ -33,7 +33,12 @@ const std::map<std::string, std::vector<std::string>>& KnownKeys()
         {"scoring.let", {"particles"}},
         {"biasing", {"enabled"}},
         {"biasing.xs", {"particles", "processes", "volumes", "factor", "only_primary", "apply_to_secondaries", "min_weight", "max_interactions"}},
-        {"source", {"preset", "particle", "energy", "verbose", "isotropic", "position_type", "position", "radius", "center", "z", "direction"}},
+        {"source", {"preset", "particle", "energy", "verbose", "isotropic", "position_type", "position", "radius", "center", "z", "direction",
+                    "shape", "halfx", "halfy", "inner_radius", "ion", "energy_type", "energy_sigma", "energy_min", "energy_max", "alpha",
+                    "ezero", "spectrum_file", "halfz", "beam_sigma", "beam_sigma_x", "beam_sigma_y", "rot1", "rot2", "confine", "angular",
+                    "min_theta", "max_theta", "angular_sigma", "angular_sigma_x", "angular_sigma_y", "focus",
+                    "phase_space_file", "phase_space_recycle"}},
+        {"phase_space", {"volume", "particles", "kill"}},
     };
     return keys;
 }
@@ -53,6 +58,10 @@ bool IsKnownDynamicSection(const std::string& section)
         return separator == std::string::npos ||
                (separator + 1 < suffix.size() && suffix.find('.', separator + 1) == std::string::npos);
     }
+    if (StartsWith(section, "source.")) {
+        const std::string suffix = section.substr(std::string("source.").size());
+        return !suffix.empty() && suffix.find('.') == std::string::npos;
+    }
     if (StartsWith(section, "biasing.xs.")) {
         const std::string suffix = section.substr(std::string("biasing.xs.").size());
         const auto separator = suffix.find('.');
@@ -70,6 +79,13 @@ std::vector<std::string> DynamicKeys(const std::string& section)
         const std::string suffix = section.substr(std::string("scoring.mesh.").size());
         if (suffix.find('.') == std::string::npos) return {"shape", "size", "bins", "center"};
         return {"type", "unit", "particles", "energy_min", "energy_max"};
+    }
+    if (StartsWith(section, "source.")) {
+        return {"preset", "particle", "energy", "isotropic", "position_type", "position", "radius", "center", "direction",
+                "shape", "halfx", "halfy", "inner_radius", "intensity", "ion", "energy_type", "energy_sigma", "energy_min",
+                "energy_max", "alpha", "ezero", "spectrum_file", "halfz", "beam_sigma", "beam_sigma_x", "beam_sigma_y",
+                "rot1", "rot2", "confine", "angular", "min_theta", "max_theta", "angular_sigma", "angular_sigma_x",
+                "angular_sigma_y", "focus"};
     }
     if (StartsWith(section, "biasing.xs.")) return {"particle", "process", "name", "enabled", "factor", "only_primary", "apply_to_secondaries", "min_weight", "max_interactions", "volumes"};
     return {};
