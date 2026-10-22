@@ -1,0 +1,103 @@
+{
+  "particle": "proton",
+  "energy_MeV": null,
+  "events": 5000,
+  "source_area_cm2": 0.25,
+  "sampled_integral_flux_cm2_s": {
+    "proton": 28749.286
+  },
+  "unsampled_flux_above_last_energy_cm2_s": {
+    "proton": 11.714
+  },
+  "lid": [
+    {
+      "material": "G4_Al",
+      "thickness_mm": 1.0
+    }
+  ],
+  "beol": [
+    {
+      "material": "G4_SILICON_DIOXIDE",
+      "thickness_mm": 0.003
+    },
+    {
+      "material": "G4_Al",
+      "thickness_mm": 0.001
+    },
+    {
+      "material": "G4_SILICON_DIOXIDE",
+      "thickness_mm": 0.002
+    }
+  ],
+  "layers": [
+    {
+      "name": "GateOxide",
+      "material": "G4_SILICON_DIOXIDE",
+      "depth_mm": 2.006,
+      "thickness_mm": 9.999999999999999e-05
+    },
+    {
+      "name": "Active",
+      "material": "G4_Si",
+      "depth_mm": 2.0061,
+      "thickness_mm": 0.01
+    }
+  ],
+  "slices": [
+    {
+      "copy": 0,
+      "depth_mm": 2.0161,
+      "thickness_mm": 0.03
+    },
+    {
+      "copy": 1,
+      "depth_mm": 2.0460999999999996,
+      "thickness_mm": 0.03
+    },
+    {
+      "copy": 2,
+      "depth_mm": 2.0761,
+      "thickness_mm": 0.03
+    },
+    {
+      "copy": 3,
+      "depth_mm": 2.1060999999999996,
+      "thickness_mm": 0.03
+    },
+    {
+      "copy": 4,
+      "depth_mm": 2.1361,
+      "thickness_mm": 0.03
+    },
+    {
+      "copy": 5,
+      "depth_mm": 2.1660999999999997,
+      "thickness_mm": 0.03
+    },
+    {
+      "copy": 6,
+      "depth_mm": 2.1961,
+      "thickness_mm": 0.03
+    },
+    {
+      "copy": 7,
+      "depth_mm": 2.2260999999999997,
+      "thickness_mm": 0.03
+    },
+    {
+      "copy": 8,
+      "depth_mm": 2.2561,
+      "thickness_mm": 0.03
+    },
+    {
+      "copy": 9,
+      "depth_mm": 2.2861,
+      "thickness_mm": 0.03
+    }
+  ],
+  "niel_tables": {
+    "e-": "../niel/si_electron.csv",
+    "neutron": "../niel/si_neutron.csv",
+    "proton": "../niel/si_proton.csv"
+  }
+}

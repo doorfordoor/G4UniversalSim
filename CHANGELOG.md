@@ -7,6 +7,12 @@ Short, user-facing record of notable changes. Detailed support status lives in
 ## Unreleased
 
 ### Added
+- **Semiconductor device pack** (roadmap Phase B3): `scenarios/semiconductor/` with
+  `make_device.py` (lid, BEOL, gate oxide, active silicon, substrate depth slices) and
+  `analyze_device.py` (per-layer TID, displacement damage dose, 1 MeV neutron-equivalent
+  fluence, depth profile); SR-NIEL silicon NIEL tables for protons, electrons and
+  neutrons (ASTM E722-19) with a converter. New benchmark `device_dose` (thin-slab proton
+  dose vs NIST PSTAR silicon stopping power; DDD vs the SR-NIEL tables).
 - **Shielding / coating scenario pack** (roadmap Phase B2): `scenarios/shielding_coating/`
   ports CoatingSimulation as `make_scenario.py` (layer stack, mission spectra, mixed
   sources, junction layers, vacuum pores, transmission/albedo spectra) and `analyze.py`

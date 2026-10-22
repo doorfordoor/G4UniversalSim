@@ -13,6 +13,7 @@ python scripts/run_benchmarks.py --output benchmark_report
 | `csda_range` | 质子 10–200 MeV、电子 1/10 MeV 在水中的 CSDA 射程 | NIST PSTAR / ESTAR | 质子 1.5 %，电子 3 % |
 | `bragg_peak` | 150 MeV 质子笔形束在水中的远端 80 % 剂量深度 R80 | PSTAR CSDA 射程 × 迂回因子 | 1 % |
 | `gamma_attenuation` | 0.1/1/10 MeV 光子在水、Al、Pb 中的窄束质量衰减系数 | NIST XCOM | 2 % |
+| `device_dose` | 硅薄层（δ 电子平衡）中 10–200 MeV 质子的剂量/注量；质子与 14 MeV 中子的 DDD/注量（半导体场景包 B3） | NIST PSTAR 硅电子阻止本领；SR-NIEL 硅 NIEL 表 | TID 2 %，DDD 1 % |
 | `shielding_range` | 质子/电子在 Al、Si 中的 CSDA 射程；质子穿过 Al/Si 平板后的平均能量（屏蔽场景包 B2） | NIST PSTAR / ESTAR（`nist/` 原表） | 射程：质子 1.5 %，电子 3 %；剩余能量 1 % |
 
 2026-10-22 完整模式（4 线程，Geant4 11.3.2）全部通过（`shielding_range` 同日加入），详见各包 README。这些基准验证所选物理列表在这些条件下与参考数据一致，不代表任意材料、能量或几何下的结果都已验证。

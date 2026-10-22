@@ -49,7 +49,7 @@ python scenarios/shielding_coating/make_scenario.py --out work/shield --layers B
 
 原工程按每步动能做粗略 Kinchin–Pease 估计，Geant4 自身的非电离沉积（`GetNonIonizingEnergyDeposit`）只是局部反冲能，不含 Lindhard 分配且依赖 cut，二者都不适合作为位移损伤量。本包使用工程上通用的方法：器件内每种粒子的径迹长度注量与其 NIEL(E) 表折积，DDD = Σ w·l·NIEL(E_平均)/V（MeV/g），由主 INI 的 `[scoring] displacement = true` 和 `[scoring.displacement] <粒子> = <表.csv>` 开启（见《中文使用手册》9 节）。
 
-**本包不附带 NIEL 数据**：结果的物理正确性完全取决于所用的表。请使用有出处的硅 NIEL 表（例如 SR-NIEL 计算器、Summers 等或 Jun 等的质子/电子表、ASTM E722 的中子位移损伤函数），转换为表头 `energy_MeV,niel_MeV_cm2_g` 的 CSV；以 MeV·mb 给出的位移损伤函数 D(E) 可按 NIEL = D × N_A / A × 10⁻²⁷ 换算（硅 A = 28.0855 g/mol）。表外能量的径迹计入 `out_of_range_track_length_mm` 而不计 DDD，请检查该列以确认表覆盖了器件内的能谱。
+结果的物理正确性完全取决于所用的表。`scenarios/semiconductor/niel` 附带 SR-NIEL 的硅表（质子、电子、ASTM E722-19 中子），例如 `--niel proton=scenarios/semiconductor/niel/si_proton.csv`；其他表请转换为表头 `energy_MeV,niel_MeV_cm2_g` 的 CSV；以 MeV·mb 给出的位移损伤函数 D(E) 可按 NIEL = D × N_A / A × 10⁻²⁷ 换算（硅 A = 28.0855 g/mol）。表外能量的径迹计入 `out_of_range_track_length_mm` 而不计 DDD，请检查该列以确认表覆盖了器件内的能谱。
 
 ## 验证
 

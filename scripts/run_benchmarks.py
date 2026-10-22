@@ -13,6 +13,9 @@ results with NIST reference data:
   shielding_range    CSDA ranges of protons and electrons in Al and Si (PSTAR/ESTAR) and
                      the mean energy of protons behind Al/Si slabs against the PSTAR
                      projected-range inversion (EM-only, G4EmStandardPhysics_option4)
+  device_dose        dose per unit proton fluence in a thin Si slab in delta-electron
+                     equilibrium against the PSTAR Si electronic stopping power, and the
+                     displacement damage dose per unit fluence against the SR-NIEL tables
 
 A case passes when |simulated - reference| <= tolerance * reference + 3 sigma
 (sigma = statistical standard error of the simulated value). Writes
@@ -256,8 +259,49 @@ def shielding_range(backend: Backend, quick: bool) -> list[dict]:
         results.append(result)
     return results
 
+
+def device_dose(backend: Backend, quick: bool) -> list[dict]:
+    """TID and DDD per unit fluence in a thin Si slab embedded in Si (semiconductor pack)."""
+    niel_dir = ROOT / "scenarios" / "semiconductor" / "niel"
+    source_area_cm2 = 1.2 ** 2          # square source, half side 6 mm, covers the 10 mm slab
+    results = []
+    for row in reference("device_dose"):
+        kind, particle = row["kind"], row["particle"]
+        energy, buildup, slab = float(row["energy_MeV"]), float(row["buildup_mm"]), float(row["slab_mm"])
+        if quick and (kind, particle, energy) not in (("tid", "proton", 10.0), ("tid", "proton", 100.0),
+                                                      ("ddd", "proton", 100.0)):
+            continue
+        block = 2 * buildup + slab
+        geometry = WORLD + (f"[volume.Block]\nparent = world\nshape = box\nsize = 40 mm, 40 mm, {block:g} mm\n"
+                            f"material = G4_Si\nposition = 0 mm, 0 mm, {block / 2:g} mm\n"
+                            f"[volume.Slab]\nparent = Block\nshape = box\nsize = 10 mm, 10 mm, {slab:g} mm\n"
+                            "material = G4_Si\nposition = 0 mm, 0 mm, 0 mm\nsensitive = true\n")
+        extra = "dose = true\n"
+        if kind == "ddd":
+            extra += (f"displacement = true\n[scoring.displacement]\n"
+                      f"{particle} = {(niel_dir / f'si_{particle}.csv').as_posix()}\n")
+        extra += (f"[source]\nparticle = {particle}\nenergy = {energy} MeV\nposition_type = plane\nshape = square\n"
+                  "halfx = 6 mm\ncenter = 0 mm, 0 mm, -1 mm\ndirection = 0, 0, 1\n")
+        events = 4000 if quick else 20000
+        # Protons: EM-only (PSTAR excludes nuclear reactions); neutrons need hadronic physics.
+        physics = "em = option4" if particle == "proton" else "reference = QGSP_BIC_HP"
+        output = backend.run(geometry, physics, extra, events, hits=False, cut="10 um")
+        scorer, quantity = ("dose", "weighted_dose") if kind == "tid" else ("displacement", f"ddd_{particle}")
+        with (output / "scorer_statistics.csv").open(newline="", encoding="utf-8") as handle:
+            stat = next(r for r in csv.DictReader(handle)
+                        if r["scorer"] == scorer and r["quantity"] == quantity and "Slab_PV" in r["key"])
+        per_fluence = float(stat["value"]) / events * source_area_cm2
+        sigma = per_fluence * float(stat["rel_error"])
+        result = verdict(per_fluence, sigma, float(row["reference"]), 0.02 if kind == "tid" else 0.01)
+        label = "TID / fluence [Gy cm2]" if kind == "tid" else "DDD / fluence [MeV cm2/g]"
+        result.update(case=f"{particle} {energy:g} MeV, {1000 * slab:g} um Si slab behind {1000 * buildup:g} um Si",
+                      quantity=label, source=row["source"], events=events,
+                      mean_energy_MeV=float(row["mean_energy_MeV"]))
+        results.append(result)
+    return results
+
 BENCHMARKS = {"csda_range": csda_range, "bragg_peak": bragg_peak, "gamma_attenuation": gamma_attenuation,
-              "shielding_range": shielding_range}
+              "shielding_range": shielding_range, "device_dose": device_dose}
 
 
 def write_report(output: Path, report: dict) -> None:
