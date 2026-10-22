@@ -3,9 +3,11 @@ from __future__ import annotations
 import math
 import os
 
-from PySide6.QtWidgets import QLabel, QVBoxLayout, QWidget
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QLabel, QStackedWidget, QVBoxLayout, QWidget
 
 from g4usim_gui.core.i18n import ui_format, ui_text
+from g4usim_gui.core.theme import current_colors
 from g4usim_gui.preview3d.backend_mesh import BackendMesh
 from g4usim_gui.preview3d.geometry_primitives import add_vec3, scale_vec3, scene_extent
 from g4usim_gui.preview3d.scene_model import PreviewScene, PreviewVolume
@@ -26,9 +28,24 @@ class PyVistaPreviewWidget(QWidget):
         self.status.setWordWrap(True)
         self.status.setMaximumHeight(34)
         self.status.setProperty("uiRole", "hint")
+        # until the first render the (black) render window is replaced by a hint
+        self.empty = QLabel(ui_text("Press Refresh Preview to draw the editor geometry, or Show Backend "
+                                    "Geometry for the geometry Geant4 builds."))
+        self.empty.setWordWrap(True)
+        self.empty.setAlignment(Qt.AlignCenter)
+        self.empty.setProperty("uiRole", "emptyState")
+        self.stack = QStackedWidget()
+        self.stack.addWidget(self.empty)
+        self.stack.addWidget(self._plotter)
         layout = QVBoxLayout(self)
-        layout.addWidget(self._plotter, 1)
+        layout.addWidget(self.stack, 1)
         layout.addWidget(self.status)
+        self.set_theme()
+
+    def set_theme(self) -> None:
+        colors = current_colors()
+        self._plotter.set_background(colors.surface_alt)
+        self._plotter.render()
 
     def clear(self) -> None:
         self._plotter.clear()
@@ -45,6 +62,7 @@ class PyVistaPreviewWidget(QWidget):
         self._show_labels = show
 
     def render_scene(self, scene: PreviewScene) -> None:
+        self.stack.setCurrentWidget(self._plotter)
         try:
             self.clear()
             for volume in scene.volumes:
@@ -73,6 +91,7 @@ class PyVistaPreviewWidget(QWidget):
 
     def render_backend_mesh(self, mesh: BackendMesh) -> None:
         """Show the geometry Geant4 built (exportMesh), not the editor approximation."""
+        self.stack.setCurrentWidget(self._plotter)
         try:
             self.clear()
             for volume in mesh.volumes:

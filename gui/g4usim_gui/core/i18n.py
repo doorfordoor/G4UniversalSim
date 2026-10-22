@@ -45,6 +45,10 @@ ZH_CN: dict[str, str] = {
     "Materials source changed since the editor was loaded; reload materials before generating a package.": "材料源文件在加载到编辑器后已变化；生成运行包前请重新加载材料。",
     "Geometry source changed since the editor was loaded; reload geometry before generating a package.": "几何源文件在加载到编辑器后已变化；生成运行包前请重新加载几何。",
     # Parameter scans (roadmap C3).
+    'Point': '点',
+    'Value': '取值',
+    'State': '状态',
+    'Rel. error': '相对误差',
     'Parameter Scans': '参数扫描',
     'Vary one setting over several values, run every point and compare the results.': '让一个设置取多个值，逐点运行并比较结果。',
     'Use current configuration': '使用当前配置',
@@ -501,6 +505,57 @@ ZH_CN: dict[str, str] = {
         "布尔运算：{count} 行，启用 {enabled} 行 | {errors} 个错误，{warnings} 个警告 | {mode}",
     "Materials: {materials} entries | Geometry: {volumes} volumes, {booleans} boolean ops | Messages: {errors} errors, {warnings} warnings | Materials: {material_state} | Geometry: {geometry_mode} {geometry_state} | Source: {source_status} | Physics: {physics} | Scoring: {scoring}":
         "材料：{materials} 项 | 几何：{volumes} 个体积，{booleans} 个布尔运算 | 消息：{errors} 个错误，{warnings} 个警告 | 材料：{material_state} | 几何：{geometry_mode} {geometry_state} | 源：{source_status} | 物理：{physics} | 计分：{scoring}",
+    # GUI refresh: Start page, examples gallery, grouped Results tabs, plot toolbar.
+    'Start': '开始',
+    'Start a new simulation, reopen a project or explore an example.': '新建仿真、重新打开项目或浏览示例。',
+    'Simulation workspace': '仿真工作台',
+    'GUI version {version}': 'GUI 版本 {version}',
+    'Welcome to G4UniversalSim': '欢迎使用 G4UniversalSim',
+    'Set up a Geant4 simulation step by step, run it and look at the results, or start from one of the examples below.':
+        '逐步设置 Geant4 仿真、运行并查看结果，或从下方的示例开始。',
+    'New simulation...': '新建仿真...',
+    'Open project...': '打开项目...',
+    'Recent projects': '最近的项目',
+    'No recent projects yet. Saved projects appear here.': '还没有最近的项目。保存过的项目会显示在这里。',
+    'Examples': '示例',
+    'Each example opens with results Geant4 has already computed; press Generate & Run on the Configuration page to compute them again.':
+        '每个示例打开时附带 Geant4 已算好的结果；在配置页按“生成并运行”可重新计算。',
+    'Open example': '打开示例',
+    'No bundled results': '没有附带结果',
+    'Example {name} loaded with its bundled results; Generate & Run computes it again.':
+        '已载入示例“{name}”及其附带结果；“生成并运行”会重新计算。',
+    'Proton Bragg peak': '质子布拉格峰',
+    '150 MeV protons in a water phantom cut into 40 slabs: the dose per slab rises to the Bragg peak near 158 mm and falls to almost zero behind it.':
+        '150 MeV 质子射入分成 40 片的水体模：各片剂量逐渐升高，在约 158 mm 处形成布拉格峰，其后几乎降为零。',
+    '70 MeV protons slowed down in 10 mm of aluminium: the 300 um silicon detector behind the shield sees a larger, broadened deposit; dose and track-length fluence are scored too.':
+        '70 MeV 质子在 10 mm 铝中减速：屏蔽后的 300 um 硅探测器看到更大且展宽的沉积能量；同时计分剂量与径迹长度注量。',
+    'Silicon Landau distribution': '硅中的朗道分布',
+    '100 MeV protons crossing a 300 um silicon pad: the per-event energy deposit follows the asymmetric Landau-Vavilov distribution with its long high-energy tail.':
+        '100 MeV 质子穿过 300 um 硅片：逐事件沉积能量服从不对称的朗道-瓦维洛夫分布，带有长长的高能尾。',
+    'NaI gamma spectrum': 'NaI γ 能谱',
+    '662 keV photons (the Cs-137 line) from an isotropic point source on a 3 in x 3 in NaI crystal: photopeak, Compton continuum and edge, without detector resolution.':
+        '各向同性点源发出的 662 keV 光子（Cs-137 谱线）照射 3 in x 3 in NaI 晶体：全能峰、康普顿连续谱与康普顿边，未加探测器分辨率。',
+    'Proton energy scan': '质子能量扫描',
+    'A parameter scan of the proton energy from 20 to 200 MeV on a 300 um silicon pad: the mean deposit falls with energy as the stopping power does.':
+        '在 300 um 硅片上把质子能量从 20 MeV 扫描到 200 MeV：平均沉积能量随能量下降，与阻止本领的变化一致。',
+    'Tables': '表格',
+    'Files': '文件',
+    'Tools': '工具',
+    'Reset view': '重置视图',
+    'Previous view': '上一视图',
+    'Next view': '下一视图',
+    'Pan (drag with the left button, zoom with the right)': '平移（左键拖动，右键缩放）',
+    'Zoom to rectangle': '框选放大',
+    'No plot yet: choose an output directory with results.': '暂无图表：请选择包含结果的输出目录。',
+    'No scan results yet: create or open a scan and run its points.': '暂无扫描结果：请新建或打开扫描并运行各点。',
+    'No point has this quantity yet.': '还没有点包含此物理量。',
+    'Showing the results of {path}; its run packages are not there, so create a new scan to run it again.':
+        '正在显示 {path} 的结果；其运行包不在此处，如需重新运行请新建扫描。',
+    'Press Refresh Preview to draw the editor geometry, or Show Backend Geometry for the geometry Geant4 builds.':
+        '按“刷新预览”绘制编辑器几何，或按“显示后端几何”查看 Geant4 实际构建的几何。',
+    'Messages and files': '消息与文件',
+    'Example {name} loaded with its bundled scan results; Create scan makes new run packages.':
+        '已载入示例“{name}”及其附带扫描结果；“创建扫描”会生成新的运行包。',
 }
 
 

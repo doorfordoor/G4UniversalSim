@@ -75,6 +75,7 @@ from g4usim_gui.validators.config_validator import ValidationReport, validate_co
 from g4usim_gui.writers.geometry_ini_writer import generate_geometry_ini_text
 from g4usim_gui.writers.main_ini_writer import build_main_ini_text
 from g4usim_gui.widgets.ui_helpers import (
+    CollapsibleSection,
     create_hint_label,
     make_path_row,
     set_table_compact_readonly,
@@ -403,11 +404,11 @@ class ConfigBuilderPage(QWidget):
         content_layout.setContentsMargins(8, 8, 8, 8)
         content_layout.setSpacing(8)
         content_layout.addWidget(create_hint_label("Setup generates a reproducible run package. Material and geometry previews are read-only in this round."))
-        content_layout.addWidget(self._run_group())
-        content_layout.addWidget(self._input_group())
-        content_layout.addWidget(self._source_group())
-        content_layout.addWidget(self._physics_group())
-        content_layout.addWidget(self._scoring_group())
+        self.setup_sections = [CollapsibleSection(group) for group in (
+            self._run_group(), self._input_group(), self._source_group(), self._physics_group(),
+            self._scoring_group())]
+        for section in self.setup_sections:
+            content_layout.addWidget(section)
 
         buttons = QGridLayout()
         buttons.setHorizontalSpacing(8)
@@ -424,8 +425,11 @@ class ConfigBuilderPage(QWidget):
 
         scroll = QScrollArea()
         scroll.setWidgetResizable(True)
-        scroll.setMinimumWidth(380)
+        scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         scroll.setWidget(content)
+        # wide enough for the widest row (path + Browse), so nothing is clipped without a scroll bar
+        scroll.setMinimumWidth(content.minimumSizeHint().width() + scroll.verticalScrollBar().sizeHint().width() + 4)
+        self.setup_scroll = scroll
         return scroll
 
     def _workspace_panel(self) -> QWidget:
@@ -442,9 +446,14 @@ class ConfigBuilderPage(QWidget):
         tabs.addTab(self._table_tab(self.boolean_count_label, self.boolean_table), "Boolean Ops")
         tabs.addTab(self._preview3d_tab(), "3D Preview")
         tabs.addTab(self._run_config_tab(), "Run Config")
-        tabs.addTab(self._messages_tab(), "Messages")
-        tabs.addTab(self._raw_files_tab(), "Raw Files")
-        tabs.addTab(self._table_tab(QLabel("Click a material name to copy it to the clipboard."), self.nist_table), "NIST Quick List")
+        # messages, raw/generated files and the NIST list are reference views: one tab with sub-tabs
+        details = QTabWidget()
+        details.setDocumentMode(True)
+        self.details_tabs = details
+        details.addTab(self._messages_tab(), "Messages")
+        details.addTab(self._raw_files_tab(), "Raw Files")
+        details.addTab(self._table_tab(QLabel("Click a material name to copy it to the clipboard."), self.nist_table), "NIST Quick List")
+        tabs.addTab(details, "Messages and files")
         layout.addWidget(tabs, 1)
         return panel
 
@@ -1084,6 +1093,8 @@ class ConfigBuilderPage(QWidget):
         ):
             self.geometry_document = saved_geometry
             self._populate_geometry_editor()
+            # revalidate materials against the restored (edited) geometry, not the source file
+            self._populate_material_editor()
             self._update_workspace_summary()
 
     def update_project(self, project: G4USimProject) -> None:
@@ -2126,10 +2137,14 @@ class ConfigBuilderPage(QWidget):
         self._populate_material_editor()
         self._update_workspace_summary()
 
+    def _geometry_refs(self):
+        """Materials used by the geometry being generated: the edited document when dirty, else the source file."""
+        if self.geometry_document.is_dirty:
+            return geometry_material_refs(self.geometry_document)
+        return self.geometry_summary.material_refs if self.geometry_summary else None
+
     def _populate_material_editor(self) -> None:
-        refs = geometry_material_refs(self.geometry_document) if self.geometry_document.is_dirty else (
-            self.geometry_summary.material_refs if self.geometry_summary else None
-        )
+        refs = self._geometry_refs()
         validate_material_document(
             self.material_document,
             geometry_material_refs=refs,
@@ -2176,6 +2191,11 @@ class ConfigBuilderPage(QWidget):
                 state=ui_text("Dirty" if self.material_document.is_dirty else "Clean"),
             )
         )
+
+    def refresh_theme(self) -> None:
+        set_theme = getattr(self.preview3d_widget, "set_theme", None)
+        if set_theme is not None:
+            set_theme()
 
     def refresh_language(self) -> None:
         self._populate_geometry_template_options(self._geometry_template_token())
@@ -2267,10 +2287,7 @@ class ConfigBuilderPage(QWidget):
         self._emit_changed()
 
     def _validate_materials_editor(self) -> None:
-        validate_material_document(
-            self.material_document,
-            geometry_material_refs=self.geometry_summary.material_refs if self.geometry_summary else None,
-        )
+        validate_material_document(self.material_document, geometry_material_refs=self._geometry_refs())
         self._populate_material_editor()
 
     def _component_preview(self, text: str) -> str:
@@ -2303,8 +2320,12 @@ class ConfigBuilderPage(QWidget):
 
     def _update_workspace_summary(self) -> None:
         material_count = len(self.material_document.rows)
-        volume_count = len(self.geometry_summary.volumes) if self.geometry_summary else 0
-        boolean_count = len(self.geometry_summary.boolean_ops) if self.geometry_summary else 0
+        if self.geometry_document.is_dirty:   # the edited geometry is what will be generated
+            volume_count = sum(1 for v in self.geometry_document.volumes if v.enabled)
+            boolean_count = sum(1 for op in self.geometry_document.boolean_ops if op.enabled)
+        else:
+            volume_count = len(self.geometry_summary.volumes) if self.geometry_summary else 0
+            boolean_count = len(self.geometry_summary.boolean_ops) if self.geometry_summary else 0
         # GeometryDocument merges source and validation diagnostics. MaterialDocument
         # retains source errors, while parser warnings live only in the summary.
         material_source_warnings = len(self.materials_summary.warnings) if self.materials_summary else 0

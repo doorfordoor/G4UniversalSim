@@ -22,6 +22,8 @@
 
 2026-10-19 平面源位置映射：Source Editor 的 `Position` 在 `position_mode=plane` 时必须生成 `[source]/center`（三轴及单位），在 `point` 时生成 `[source]/position`；GUI 预览中心、writer 和 Geant4 GPS 实际采样必须一致。`gui/smoke_tests/smoke_source_editor_v2.py` 检查偏移 4 mm 的生成配置，`scripts/test_run_summary.py` 核对真实后端 hits。旧 `planeBeam` 命令保留零 x/y 的兼容语义，不能扩大为任意空间分布已验证。
 
+2026-10-22 界面刷新：主题色只在 `core/theme.py`（样式表 + `build_palette` 的 Qt palette；“系统”主题读 `styleHints().colorScheme()`，因为应用 palette 已是自定义的）；图标只用 `core/icons.py` 的 SVG 线条图标，主题切换时由 `MainWindow._refresh_icons` 和各页 `refresh_theme` 重绘，样式表中的箭头图片由 `_svg_url` 写到临时目录。matplotlib 图用 `plot_panel.style_axes`/`draw_empty`，字体族列表带 CJK 回退（`font.family` 而非 `font.sans-serif`，否则不逐字回退）。开始页 `widgets/start_page.py` 的示例在 `core/examples.py`（无 Qt）登记：示例 = 向导 spec + `examples/gallery/<id>/` 附带结果，载入走 `apply_simulation_wizard`，附带文件只读、输出仍写运行目录；附带结果只能由 `examples/gallery/build_gallery.py` 用真实后端生成，卡片描述须与数据一致（`smoke_start_page.py` 核对）。`core/scan.load_manifest` 支持相对路径与目录移动后的改基；运行包缺失的扫描只读（`ScanPage.is_read_only`）。页序：开始、项目、配置、运行、结果、历史、扫描；结果页分组为 `tabs`（概览、图表、表格、文件、工具）及 `data_tabs`/`file_tabs`/`tool_tabs`，配置页消息/原始文件/NIST 在 `details_tabs`。Tab 文字不能含 `&`（会被当作助记符）。
+
 本文件适用于 gui/。GUI 是 PySide6 外部运行器和配置编辑器，后端 C++/Geant4 的实际实现仍是功能支持的唯一依据。
 
 ## 1. 分层和数据流

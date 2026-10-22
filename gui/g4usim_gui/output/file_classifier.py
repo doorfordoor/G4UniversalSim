@@ -27,6 +27,7 @@ class OutputFileType(str, Enum):
     HIST_EDEP_WEIGHTED_MERGED_CSV = "hist_edep_weighted_merged_csv"
     OTHER_CSV = "other_csv"
     OTHER_TEXT = "other_text"
+    ROOT_FILE = "root_file"
     LARGE_FILE = "large_file"
     UNKNOWN = "unknown"
 
@@ -107,4 +108,6 @@ def _classify_name(path: Path) -> OutputFileType:
         return OutputFileType.OTHER_CSV
     if path.suffix.lower() in {".txt", ".log", ".ini", ".mac", ".json"}:
         return OutputFileType.OTHER_TEXT
+    if path.suffix.lower() == ".root":
+        return OutputFileType.ROOT_FILE
     return OutputFileType.UNKNOWN

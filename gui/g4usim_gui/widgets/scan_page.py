@@ -15,7 +15,6 @@ from pathlib import Path
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg
 from matplotlib.figure import Figure
 from PySide6.QtWidgets import (
-    QApplication,
     QCheckBox,
     QComboBox,
     QFileDialog,
@@ -36,7 +35,8 @@ from PySide6.QtWidgets import (
 from g4usim_gui.core import scan
 from g4usim_gui.core.i18n import ui_format, ui_text
 from g4usim_gui.core.scan_runner import ScanRunner
-from g4usim_gui.core.theme import DARK, LIGHT
+from g4usim_gui.core.theme import current_colors
+from g4usim_gui.widgets.plot_panel import draw_empty, style_axes
 
 # (base, runs root, executable, workspace root) for the current configuration; raises ValueError
 BaseProvider = Callable[[], tuple[scan.ScanBase, str, str, str]]
@@ -72,7 +72,8 @@ class ScanPage(QWidget):
         self.per_primary = QCheckBox("Per primary")
         self.export_button = QPushButton("Export results...")
         self.table = QTableWidget(0, 6)
-        self.table.setHorizontalHeaderLabels(["point", "value", "state", "events", "metric", "rel. error"])
+        self.table.verticalHeader().setVisible(False)   # the Point column numbers the rows
+        self._set_headers()
         self.figure = Figure(figsize=(6, 3.6), layout="constrained")
         self.canvas = FigureCanvasQTAgg(self.figure)
         self.log = QPlainTextEdit()
@@ -128,6 +129,23 @@ class ScanPage(QWidget):
         self._update_buttons()
 
     # --- API used by the main window and the smoke tests ------------------------------
+
+    def _set_headers(self) -> None:
+        self.table.setHorizontalHeaderLabels([ui_text(text) for text in
+                                              ("Point", "Value", "State", "Events", "Quantity", "Rel. error")])
+
+    def refresh_theme(self) -> None:
+        self._draw()
+
+    def refresh_language(self) -> None:
+        self._set_headers()
+        self._show_results()
+
+    def showEvent(self, event) -> None:  # noqa: N802 - Qt override
+        # load the scannable settings the first time the page is shown
+        if self._base is None and self._provider is not None:
+            self.refresh_base()
+        super().showEvent(event)
 
     def set_base_provider(self, provider: BaseProvider) -> None:
         self._provider = provider
@@ -185,6 +203,9 @@ class ScanPage(QWidget):
             manifest = scan.load_manifest(manifest)
         self._manifest = manifest
         self.refresh_results()
+        if self.is_read_only():
+            self.status.setText(ui_format("Showing the results of {path}; its run packages are not there, so "
+                                          "create a new scan to run it again.", path=manifest.scan_dir))
 
     def manifest(self) -> scan.ScanManifest | None:
         return self._manifest
@@ -216,6 +237,20 @@ class ScanPage(QWidget):
         self.quantity.setCurrentIndex(index if index >= 0 else 0)
         self.quantity.blockSignals(False)
         self._show_results()
+
+    def select_quantity(self, scorer: str, quantity: str) -> bool:
+        """Plot the first metric of that scorer and quantity (e.g. edep / raw_edep)."""
+        for index in range(self.quantity.count()):
+            key = str(self.quantity.itemData(index)).split("|")
+            if key[:2] == [scorer, quantity]:
+                self.quantity.setCurrentIndex(index)
+                return True
+        return False
+
+    def is_read_only(self) -> bool:
+        """A scan whose run packages are not there (bundled example results) can be viewed, not run."""
+        return self._manifest is not None and any(not point.main_ini or not Path(point.main_ini).is_file()
+                                                  for point in self._manifest.points)
 
     def current_metric(self) -> tuple[str, str, str] | None:
         data = self.quantity.currentData()
@@ -265,17 +300,18 @@ class ScanPage(QWidget):
         self._update_buttons()
 
     def _draw(self) -> None:
-        colors = DARK if QApplication.instance() and QApplication.instance().property("resolvedTheme") == "dark" \
-            else LIGHT
-        self.figure.clear()
-        self.figure.set_facecolor(colors.surface)
-        axes = self.figure.add_subplot(1, 1, 1)
-        axes.set_facecolor(colors.surface)
-        axes.tick_params(colors=colors.text, which="both")
-        for spine in axes.spines.values():
-            spine.set_color(colors.border_strong)
+        colors = current_colors()
         metric = self.current_metric()
         xs, ys, es = self.plotted()
+        if not (metric and xs):
+            draw_empty(self.figure, colors, ui_text("No scan results yet: create or open a scan and run its points.")
+                       if self._manifest is None or not self._results else
+                       ui_text("No point has this quantity yet."))
+            self.canvas.draw_idle()
+            return
+        self.figure.clear()
+        axes = self.figure.add_subplot(1, 1, 1)
+        style_axes(self.figure, axes, colors)
         if metric and xs:
             axes.errorbar(xs, ys, yerr=es, fmt="o-", capsize=3, color=colors.accent)
             numeric = all(scan.numeric_value(r.value) is not None for r in self._results)
@@ -286,15 +322,16 @@ class ScanPage(QWidget):
             label = f"{metric[0]} / {metric[1]} [{unit}{' / primary' if self.per_primary.isChecked() else ''}]"
             axes.set_ylabel(label, color=colors.text)
             axes.set_xlabel(self._manifest.parameter if self._manifest else "", color=colors.text)
-            axes.set_title(metric[2], color=colors.text, fontsize=9)
+            axes.set_title(metric[2], color=colors.text, fontsize=9, loc="left")
         self.canvas.draw_idle()
 
     def _update_buttons(self) -> None:
         running = self.runner.is_running()
         self.create_button.setEnabled(not running)
         self.open_button.setEnabled(not running)
-        self.run_button.setEnabled(self._manifest is not None and not running)
-        self.rerun_button.setEnabled(self._manifest is not None and not running)
+        runnable = self._manifest is not None and not running and not self.is_read_only()
+        self.run_button.setEnabled(runnable)
+        self.rerun_button.setEnabled(runnable)
         self.stop_button.setEnabled(running)
         self.export_button.setEnabled(self._manifest is not None)
 

@@ -95,8 +95,8 @@ def main() -> None:
 
         page = OutputPage()
         page.set_output_dir(str(root))
-        assert page.tabs.tabText(4) == "Dose (Gy)"
-        assert page.tabs.tabText(5) == "Fluence (mm^-2)"
+        assert page.data_tabs.tabText(1) == "Dose (Gy)"
+        assert page.data_tabs.tabText(2) == "Fluence (mm^-2)"
         assert page.fluence_table.rowCount() == 2
         assert float(page.fluence_table.item(0, 4).text()) == 32
         assert float(page.fluence_table.item(0, 3).text()) == 100

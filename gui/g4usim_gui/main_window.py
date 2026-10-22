@@ -17,19 +17,21 @@ from PySide6.QtWidgets import (
     QMainWindow,
     QMessageBox,
     QStackedWidget,
-    QStyle,
     QToolButton,
     QVBoxLayout,
     QWidget,
 )
 
+from g4usim_gui import __version__
+from g4usim_gui.core import examples as gallery
+from g4usim_gui.core import icons
 from g4usim_gui.core import install_layout
 from g4usim_gui.core import scan as parameter_scan
 from g4usim_gui.core import wizard as simulation_wizard
 from g4usim_gui.core.i18n import LanguageCode, apply_language, current_language, ui_format, ui_text
 from g4usim_gui.core.project import G4USimProject, load_project, save_project
 from g4usim_gui.core.runner import G4USimRunner
-from g4usim_gui.core.theme import ThemeMode, apply_theme
+from g4usim_gui.core.theme import ThemeMode, apply_theme, current_colors
 from g4usim_gui.history.run_history_store import add_recent_project, clear_recent_projects, get_recent_projects, load_state, save_state
 from g4usim_gui.history.run_package_actions import duplicate_package
 from g4usim_gui.models.package_model import PathSettings
@@ -42,6 +44,7 @@ from g4usim_gui.widgets.project_page import ProjectPage
 from g4usim_gui.widgets.run_page import RunPage
 from g4usim_gui.widgets.run_history_page import RunHistoryPage
 from g4usim_gui.widgets.scan_page import ScanPage
+from g4usim_gui.widgets.start_page import StartPage
 
 
 class MainWindow(QMainWindow):
@@ -65,6 +68,7 @@ class MainWindow(QMainWindow):
         self._macro_inspection.finished.connect(self._on_macro_inspection_finished)
         self._macro_inspection.errorOccurred.connect(self._on_macro_inspection_error)
 
+        self.start_page = StartPage()
         self.project_page = ProjectPage()
         self.config_builder_page = ConfigBuilderPage()
         self.run_page = RunPage()
@@ -75,6 +79,7 @@ class MainWindow(QMainWindow):
 
         self._build_workspace_shell()
         self._apply_visual_roles()
+        self._run_chip = ("Idle", "")
 
         self._connect_signals()
         self._create_menu()
@@ -92,18 +97,28 @@ class MainWindow(QMainWindow):
 
         sidebar = QWidget()
         sidebar.setObjectName("sidebar")
-        sidebar.setFixedWidth(224)
+        sidebar.setFixedWidth(220)
         sidebar_layout = QVBoxLayout(sidebar)
-        sidebar_layout.setContentsMargins(16, 20, 16, 16)
-        sidebar_layout.setSpacing(6)
+        sidebar_layout.setContentsMargins(14, 18, 14, 14)
+        sidebar_layout.setSpacing(4)
 
+        brand_row = QHBoxLayout()
+        brand_row.setSpacing(10)
+        self.brand_logo = QLabel()
+        self.brand_logo.setObjectName("brandLogo")
+        self.brand_logo.setFixedSize(30, 30)
+        brand_text = QVBoxLayout()
+        brand_text.setSpacing(0)
         brand = QLabel("G4UniversalSim")
         brand.setObjectName("brandMark")
-        brand_caption = QLabel(self.tr("SIMULATION WORKSPACE"))
+        brand_caption = QLabel(self.tr("Simulation workspace"))
         brand_caption.setObjectName("brandCaption")
-        sidebar_layout.addWidget(brand)
-        sidebar_layout.addWidget(brand_caption)
-        sidebar_layout.addSpacing(24)
+        brand_text.addWidget(brand)
+        brand_text.addWidget(brand_caption)
+        brand_row.addWidget(self.brand_logo)
+        brand_row.addLayout(brand_text, 1)
+        sidebar_layout.addLayout(brand_row)
+        sidebar_layout.addSpacing(22)
 
         section_label = QLabel(self.tr("WORKFLOW"))
         section_label.setObjectName("sidebarSection")
@@ -111,56 +126,61 @@ class MainWindow(QMainWindow):
 
         page_specs = [
             (
+                self.start_page,
+                self.tr("Start"),
+                self.tr("Start a new simulation, reopen a project or explore an example."),
+                "start",
+            ),
+            (
                 self.project_page,
                 self.tr("Project"),
                 self.tr("Connect the executable, workspace and run defaults."),
-                QStyle.SP_DirHomeIcon,
+                "project",
             ),
             (
                 self.config_builder_page,
                 self.tr("Configuration"),
                 self.tr("Compose supported simulation inputs and inspect the geometry preview."),
-                QStyle.SP_FileDialogDetailedView,
+                "configuration",
             ),
             (
                 self.run_page,
                 self.tr("Run Console"),
                 self.tr("Validate the launch command and monitor backend execution."),
-                QStyle.SP_MediaPlay,
+                "run",
             ),
             (
                 self.output_page,
                 self.tr("Results"),
                 self.tr("Review summaries, logs and generated output files."),
-                QStyle.SP_DriveHDIcon,
+                "results",
             ),
             (
                 self.run_history_page,
                 self.tr("Run History"),
                 self.tr("Browse previous packages and restore reproducible snapshots."),
-                QStyle.SP_FileDialogContentsView,
+                "history",
             ),
             (
                 self.scan_page,
                 self.tr("Parameter Scans"),
                 self.tr("Vary one setting over several values, run every point and compare the results."),
-                QStyle.SP_BrowserReload,
+                "scans",
             ),
         ]
         self._page_specs = page_specs
         self._nav_group = QButtonGroup(self)
         self._nav_group.setExclusive(True)
         self._nav_buttons: list[QToolButton] = []
-        for index, (_page, title, _subtitle, standard_icon) in enumerate(page_specs):
+        for index, (_page, title, _subtitle, _icon) in enumerate(page_specs):
             button = QToolButton()
             button.setText(title)
-            button.setIcon(self.style().standardIcon(standard_icon))
-            button.setIconSize(QSize(19, 19))
+            button.setIconSize(QSize(18, 18))
             button.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
             button.setCheckable(True)
             button.setAutoExclusive(True)
             button.setProperty("navButton", True)
-            button.setMinimumHeight(42)
+            button.setMinimumHeight(38)
             button.setAccessibleName(title)
             sidebar_layout.addWidget(button)
             self._nav_group.addButton(button, index)
@@ -168,8 +188,9 @@ class MainWindow(QMainWindow):
         self._nav_buttons[0].setChecked(True)
         sidebar_layout.addStretch(1)
 
-        footer = QLabel(self.tr("Desktop GUI\nGeant4 workflow"))
+        footer = QLabel(f"G4UniversalSim {__version__}")
         footer.setObjectName("sidebarFooter")
+        footer.setToolTip(ui_format("GUI version {version}", version=__version__))
         sidebar_layout.addWidget(footer)
 
         content = QWidget()
@@ -180,13 +201,13 @@ class MainWindow(QMainWindow):
 
         page_header = QFrame()
         page_header.setObjectName("pageHeader")
-        page_header.setFixedHeight(82)
+        page_header.setFixedHeight(66)
         header_layout = QHBoxLayout(page_header)
-        header_layout.setContentsMargins(24, 13, 22, 13)
-        header_layout.setSpacing(10)
+        header_layout.setContentsMargins(24, 10, 16, 10)
+        header_layout.setSpacing(8)
 
         heading_layout = QVBoxLayout()
-        heading_layout.setSpacing(2)
+        heading_layout.setSpacing(1)
         self.page_title = QLabel(page_specs[0][1])
         self.page_title.setObjectName("pageTitle")
         self.page_subtitle = QLabel(page_specs[0][2])
@@ -198,28 +219,30 @@ class MainWindow(QMainWindow):
         self.project_context = QLabel(self.tr("Project: demo"))
         self.project_context.setProperty("uiRole", "contextChip")
         self.run_context = QLabel(self.tr("Idle"))
-        self.run_context.setProperty("uiRole", "contextChip")
-        header_layout.addWidget(self.project_context)
-        header_layout.addWidget(self.run_context)
+        self.run_context.setProperty("uiRole", "statusChip")
+        header_layout.addWidget(self.project_context, 0, Qt.AlignVCenter)
+        header_layout.addWidget(self.run_context, 0, Qt.AlignVCenter)
+        header_layout.addSpacing(6)
 
+        # icon-only: the tooltip and accessible name carry the text
         self.theme_button = QToolButton()
         self.theme_button.setText(self.tr("Theme"))
-        self.theme_button.setIcon(self.style().standardIcon(QStyle.SP_DesktopIcon))
-        self.theme_button.setIconSize(QSize(18, 18))
-        self.theme_button.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
+        self.theme_button.setIconSize(QSize(20, 20))
+        self.theme_button.setToolButtonStyle(Qt.ToolButtonIconOnly)
         self.theme_button.setPopupMode(QToolButton.InstantPopup)
-        self.theme_button.setProperty("toolbarButton", True)
+        self.theme_button.setProperty("iconButton", True)
         self.theme_button.setToolTip(self.tr("Choose light, dark or system appearance"))
+        self.theme_button.setAccessibleName(self.tr("Theme"))
         header_layout.addWidget(self.theme_button)
 
         self.language_button = QToolButton()
         self.language_button.setText(self.tr("Language"))
-        self.language_button.setIcon(self.style().standardIcon(QStyle.SP_FileDialogInfoView))
-        self.language_button.setIconSize(QSize(18, 18))
-        self.language_button.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
+        self.language_button.setIconSize(QSize(20, 20))
+        self.language_button.setToolButtonStyle(Qt.ToolButtonIconOnly)
         self.language_button.setPopupMode(QToolButton.InstantPopup)
-        self.language_button.setProperty("toolbarButton", True)
+        self.language_button.setProperty("iconButton", True)
         self.language_button.setToolTip(self.tr("Choose the interface language"))
+        self.language_button.setAccessibleName(self.tr("Language"))
         header_layout.addWidget(self.language_button)
 
         self.page_stack = QStackedWidget()
@@ -237,6 +260,17 @@ class MainWindow(QMainWindow):
         self.tabs = self.page_stack
         self._nav_group.idClicked.connect(self.page_stack.setCurrentIndex)
         self.page_stack.currentChanged.connect(self._on_page_changed)
+        self._refresh_icons()
+
+    def _refresh_icons(self) -> None:
+        """Line icons in the current theme's colours (re-rendered on theme change)."""
+        colors = current_colors()
+        self.brand_logo.setPixmap(icons.pixmap("logo", colors.accent, 30))
+        for button, (_page, _title, _subtitle, name) in zip(self._nav_buttons, self._page_specs):
+            button.setIcon(icons.icon(name, colors.sidebar_muted, 18, active=colors.sidebar_text,
+                                      background=colors.sidebar))
+        self.theme_button.setIcon(icons.icon("theme", colors.text_muted, 20, active=colors.text))
+        self.language_button.setIcon(icons.icon("language", colors.text_muted, 20, active=colors.text))
 
     def _apply_visual_roles(self) -> None:
         self.config_builder_page.generate_run_button.setProperty("buttonRole", "primary")
@@ -283,6 +317,10 @@ class MainWindow(QMainWindow):
         return project
 
     def _connect_signals(self) -> None:
+        self.start_page.newSimulationRequested.connect(self.open_new_simulation_wizard)
+        self.start_page.openProjectRequested.connect(self.open_project)
+        self.start_page.recentProjectRequested.connect(self._open_recent_project)
+        self.start_page.exampleRequested.connect(self.open_example)
         self.project_page.projectChanged.connect(self._update_project_from_page)
         self.project_page.saveProjectRequested.connect(self.save_project_as)
         self.project_page.loadProjectRequested.connect(self.open_project)
@@ -368,6 +406,12 @@ class MainWindow(QMainWindow):
         if app is None:
             return
         apply_theme(app, mode)
+        self._refresh_icons()
+        # matplotlib figures, icons and other custom-painted views keep their colours until redrawn
+        for page in (self.start_page, self.config_builder_page, self.output_page, self.scan_page):
+            refresh_theme = getattr(page, "refresh_theme", None)
+            if refresh_theme is not None:
+                refresh_theme()
         QSettings().setValue("appearance/theme", mode)
         action = self._theme_actions.get(mode)
         if action is not None:
@@ -379,7 +423,8 @@ class MainWindow(QMainWindow):
             return
         app.setProperty("languageCode", language)
         apply_language(self, language)
-        for page in (self.project_page, self.config_builder_page, self.run_page):
+        for page in (self.start_page, self.project_page, self.config_builder_page, self.run_page, self.output_page,
+                     self.scan_page):
             refresh_language = getattr(page, "refresh_language", None)
             if refresh_language is not None:
                 refresh_language()
@@ -389,6 +434,8 @@ class MainWindow(QMainWindow):
         if action is not None:
             action.setChecked(True)
         self._on_page_changed(self.page_stack.currentIndex())
+        self._set_run_chip(*self._run_chip)
+        self.statusBar().clearMessage()   # a message shown before the switch is in the old language
         self.project_context.setText(
             ui_format("Project: {name}", name=self.project.projectName or ui_text("untitled"))
         )
@@ -477,6 +524,33 @@ class MainWindow(QMainWindow):
             8000)
         if run_after:
             self.generate_package(run_after_generate=True)
+        return True
+
+    def open_example(self, example_id: str) -> bool:
+        """Load a gallery example: its wizard spec into the project, its bundled results into the views."""
+        example = gallery.find(example_id)
+        if example is None:
+            return False
+        if not self.apply_simulation_wizard(example.spec(), run_after=False):
+            return False
+        if example.is_scan:
+            if example.has_results():
+                self.scan_page.refresh_base()
+                self.scan_page.select_parameter(example.scan_parameter)
+                self.scan_page.values.setText(example.scan_values)
+                self.scan_page.name.setText(example.id)
+                self.scan_page.load_scan(example.scan_dir())
+                self.scan_page.select_quantity(*example.scan_quantity)
+            self.page_stack.setCurrentWidget(self.scan_page)
+        elif example.has_results():
+            self.output_page.set_output_dir(str(example.output_dir()))
+            self.output_page.refresh()
+            self.output_page.show_plot(example.plot)
+            self.page_stack.setCurrentWidget(self.output_page)
+        message = ("Example {name} loaded with its bundled scan results; Create scan makes new run packages."
+                   if example.is_scan else
+                   "Example {name} loaded with its bundled results; Generate & Run computes it again.")
+        self.statusBar().showMessage(ui_format(message, name=ui_text(example.title)), 10000)
         return True
 
     def open_project(self) -> None:
@@ -764,11 +838,7 @@ class MainWindow(QMainWindow):
     def _on_state_changed(self, state: str) -> None:
         self.run_page.set_state(state)
         running = state in {"Starting", "Running"}
-        self.run_context.setText(ui_text(state))
-        self.run_context.setProperty("statusRole", "running" if running else "")
-        self.run_context.setProperty("uiRole", "" if running else "contextChip")
-        self.run_context.style().unpolish(self.run_context)
-        self.run_context.style().polish(self.run_context)
+        self._set_run_chip(state, "running" if running else "")
         self.project_page.set_inputs_enabled(not running)
 
     def _on_finished(self, exit_code: int) -> None:
@@ -782,12 +852,16 @@ class MainWindow(QMainWindow):
         self.output_page.set_output_dir(self.project.outputDir)
         self.output_page.refresh()
         self.run_history_page.refresh()
-        self.run_context.setText(ui_text(state))
-        self.run_context.setProperty("statusRole", "")
-        self.run_context.setProperty("uiRole", "contextChip")
+        self._set_run_chip(state, {"success": "success", "failed": "failed"}.get(state, ""))
+        self.statusBar().showMessage(ui_format("Run result: {state}. {reason}", state=ui_text(state), reason=ui_text(reason)), 8000)
+
+    def _set_run_chip(self, state: str, role: str) -> None:
+        """Header status chip: a dot and the state in words; colour only repeats what the text says."""
+        self._run_chip = (state, role)
+        self.run_context.setText(f"\u25CF {ui_text(state)}")
+        self.run_context.setProperty("statusRole", role)
         self.run_context.style().unpolish(self.run_context)
         self.run_context.style().polish(self.run_context)
-        self.statusBar().showMessage(ui_format("Run result: {state}. {reason}", state=ui_text(state), reason=ui_text(reason)), 8000)
 
     def _on_runner_error(self, message: str) -> None:
         self.run_page.append_status_message(message)
@@ -902,6 +976,7 @@ class MainWindow(QMainWindow):
     def _refresh_recent_menu(self) -> None:
         self.recent_menu.clear()
         projects = get_recent_projects()
+        self.start_page.set_recent_projects(projects)
         if not projects:
             action = self.recent_menu.addAction("<none>")
             action.setEnabled(False)

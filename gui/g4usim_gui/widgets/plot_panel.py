@@ -10,25 +10,56 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from cycler import cycler
+from matplotlib import font_manager, rcParams
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg, NavigationToolbar2QT
 from matplotlib.figure import Figure
+from PySide6.QtCore import QSize
 from PySide6.QtWidgets import (
-    QApplication,
     QCheckBox,
     QComboBox,
     QFileDialog,
     QHBoxLayout,
     QLabel,
     QPushButton,
+    QToolButton,
     QVBoxLayout,
     QWidget,
 )
 
+from g4usim_gui.core import icons
 from g4usim_gui.core.i18n import ui_format, ui_text
-from g4usim_gui.core.theme import DARK, LIGHT
+from g4usim_gui.core.theme import ThemeColors, current_colors
 from g4usim_gui.output import plot_data
 
 AXES = ("0", "1", "2")
+# Chinese hints and labels in figures need a CJK font after DejaVu Sans (per-glyph fallback)
+_installed = {font.name for font in font_manager.fontManager.ttflist}
+rcParams["font.family"] = ["DejaVu Sans", *[name for name in (
+    "Microsoft YaHei", "SimHei", "Noto Sans CJK SC", "Source Han Sans SC", "PingFang SC", "WenQuanYi Zen Hei")
+    if name in _installed]]
+# series colours after the theme accent (comparisons, runs, particles)
+SERIES = ("#d08a3b", "#6f7fd1", "#c25b8f", "#8aa04a", "#4fa3c7", "#a07c5a")
+
+
+def style_axes(figure: Figure, axes, colors: ThemeColors) -> None:
+    """Theme colours for a matplotlib figure: surface background, muted spines and grid."""
+    figure.set_facecolor(colors.surface)
+    axes.set_facecolor(colors.surface)
+    axes.set_prop_cycle(cycler(color=[colors.accent, *SERIES]))
+    for side, spine in axes.spines.items():
+        spine.set_visible(side in ("left", "bottom"))
+        spine.set_color(colors.border_strong)
+    axes.tick_params(colors=colors.text_muted, labelcolor=colors.text, which="both")
+    axes.grid(True, color=colors.border, linewidth=0.6)
+    axes.set_axisbelow(True)
+
+
+def draw_empty(figure: Figure, colors: ThemeColors, text: str) -> None:
+    """An empty plot area in the theme colours with a muted one-line hint."""
+    figure.clear()
+    figure.set_facecolor(colors.surface)
+    figure.text(0.5, 0.5, text, ha="center", va="center", color=colors.text_muted, fontsize=10, wrap=True)
 
 
 class PlotPanel(QWidget):
@@ -56,17 +87,39 @@ class PlotPanel(QWidget):
         self.message.setWordWrap(True)
         self.figure = Figure(figsize=(7, 4.5), layout="constrained")
         self.canvas = FigureCanvasQTAgg(self.figure)
+        # matplotlib's own toolbar does the work; it stays hidden behind theme-coloured icon buttons
         self.toolbar = NavigationToolbar2QT(self.canvas, self)
+        self.toolbar.hide()
+        self.tool_buttons: dict[str, QToolButton] = {}
+        tools = QHBoxLayout()
+        tools.setSpacing(2)
+        for name, tip, action in (("home", "Reset view", self.toolbar.home),
+                                  ("back", "Previous view", self.toolbar.back),
+                                  ("forward", "Next view", self.toolbar.forward),
+                                  ("pan", "Pan (drag with the left button, zoom with the right)", self.toolbar.pan),
+                                  ("zoom", "Zoom to rectangle", self.toolbar.zoom)):
+            button = QToolButton()
+            button.setProperty("iconButton", True)
+            button.setToolTip(tip)
+            button.setAccessibleName(tip)
+            button.setIconSize(QSize(18, 18))
+            button.setCheckable(name in ("pan", "zoom"))
+            button.clicked.connect(lambda _checked=False, run=action: self._tool(run))
+            tools.addWidget(button)
+            self.tool_buttons[name] = button
 
         row = QHBoxLayout()
         row.addWidget(QLabel("Data set"))
         row.addWidget(self.dataset_combo, 2)
         row.addWidget(QLabel("View"))
         row.addWidget(self.view_combo, 1)
-        row.addWidget(self.log_x)
-        row.addWidget(self.log_y)
-        row.addWidget(self.per_primary)
-        row.addWidget(self.all_runs)
+        options = QHBoxLayout()
+        options.addWidget(self.log_x)
+        options.addWidget(self.log_y)
+        options.addWidget(self.per_primary)
+        options.addWidget(self.all_runs)
+        options.addStretch(1)
+        options.addLayout(tools)
         buttons = QHBoxLayout()
         buttons.addWidget(self.compare_button)
         buttons.addWidget(self.clear_compare_button)
@@ -75,9 +128,9 @@ class PlotPanel(QWidget):
         buttons.addWidget(self.export_csv_button)
         layout = QVBoxLayout(self)
         layout.addLayout(row)
+        layout.addLayout(options)
         layout.addLayout(buttons)
         layout.addWidget(self.comparison_label)
-        layout.addWidget(self.toolbar)
         layout.addWidget(self.canvas, 1)
         layout.addWidget(self.message)
 
@@ -92,6 +145,23 @@ class PlotPanel(QWidget):
         self.export_png_button.clicked.connect(self._choose_png)
         self.export_csv_button.clicked.connect(self._choose_csv)
         self._update_buttons()
+        self.refresh_icons()
+        self._draw_empty()
+
+    def refresh_icons(self) -> None:
+        colors = current_colors()
+        for name, button in self.tool_buttons.items():
+            button.setIcon(icons.icon(name, colors.text_muted, 18, active=colors.accent))
+
+    def _tool(self, action) -> None:
+        action()
+        mode = getattr(self.toolbar.mode, "name", "")
+        self.tool_buttons["pan"].setChecked(mode == "PAN")
+        self.tool_buttons["zoom"].setChecked(mode == "ZOOM")
+
+    def _draw_empty(self) -> None:
+        draw_empty(self.figure, current_colors(), ui_text("No plot yet: choose an output directory with results."))
+        self.canvas.draw_idle()
 
     # --- public API (also used by the smoke test) ---------------------------------
 
@@ -110,8 +180,7 @@ class PlotPanel(QWidget):
         self.dataset_combo.blockSignals(False)
         if not self._datasets:
             self._plot = None
-            self.figure.clear()
-            self.canvas.draw_idle()
+            self._draw_empty()
             self.message.setText(ui_text("No plottable data in this output directory.") if self._output_dir
                                  else ui_text("Select an output directory to plot results."))
             self._update_buttons()
@@ -213,21 +282,17 @@ class PlotPanel(QWidget):
         return sources
 
     def redraw(self) -> None:
+        self.refresh_icons()
         self.figure.clear()
         self._plot = None
         dataset = self.current_dataset()
         if dataset is None:
-            self.canvas.draw_idle()
+            self._draw_empty()
             self._update_buttons()
             return
-        colors = DARK if QApplication.instance() and QApplication.instance().property("resolvedTheme") == "dark" \
-            else LIGHT
-        self.figure.set_facecolor(colors.surface)
+        colors = current_colors()
         axes = self.figure.add_subplot(1, 1, 1)
-        axes.set_facecolor(colors.surface)
-        for spine in axes.spines.values():
-            spine.set_color(colors.border_strong)
-        axes.tick_params(colors=colors.text, which="both")
+        style_axes(self.figure, axes, colors)
         options = self._options()
         notes: list[str] = []
         try:
@@ -245,8 +310,10 @@ class PlotPanel(QWidget):
                                          "spectra and totals."))
                 image = axes.imshow(main.image, origin="lower", aspect="auto", extent=main.extent,
                                     cmap="viridis")
+                axes.grid(False)
                 bar = self.figure.colorbar(image, ax=axes)
-                bar.ax.tick_params(colors=colors.text)
+                bar.ax.tick_params(colors=colors.text_muted, labelcolor=colors.text)
+                bar.outline.set_edgecolor(colors.border_strong)
             elif main.kind == "bar":
                 categories = []
                 for plot in plots:
@@ -260,9 +327,13 @@ class PlotPanel(QWidget):
                     xs = [i + (n - (len(plots) - 1) / 2) * width for i, c in enumerate(categories) if c in lookup]
                     ys = [lookup[c][0] for c in categories if c in lookup]
                     es = [lookup[c][1] for c in categories if c in lookup]
-                    axes.bar(xs, ys, width, yerr=es, capsize=3, label=series.label)
-                axes.set_xticks(range(len(categories)))
-                axes.set_xticklabels([c.rsplit("/", 1)[-1] for c in categories], rotation=30, ha="right",
+                    axes.bar(xs, ys, width, yerr=es, capsize=2, label=series.label,
+                             error_kw={"ecolor": colors.text_muted, "elinewidth": 0.8})
+                # at most ~16 labels: name every n-th volume of long lists (slabs, layers)
+                step = max(1, -(-len(categories) // 16))
+                ticks = list(range(0, len(categories), step))
+                axes.set_xticks(ticks)
+                axes.set_xticklabels([categories[i].rsplit("/", 1)[-1] for i in ticks], rotation=30, ha="right",
                                      fontsize=8)
                 main = plot_data.Plot(main.title, main.xlabel, main.ylabel, "bar", categories=categories,
                                       series=[s for p in plots for s in p.series], notes=main.notes)
@@ -289,9 +360,10 @@ class PlotPanel(QWidget):
                 if len(main.series) > 1 or self._comparisons:
                     legend = axes.legend(fontsize=8)
                     legend.get_frame().set_facecolor(colors.surface_alt)
+                    legend.get_frame().set_edgecolor(colors.border)
                     for text in legend.get_texts():
                         text.set_color(colors.text)
-            axes.set_title(main.title, color=colors.text)
+            axes.set_title(main.title, color=colors.text, fontsize=11, loc="left")
             axes.set_xlabel(main.xlabel, color=colors.text)
             axes.set_ylabel(main.ylabel, color=colors.text)
             missing = len(self._comparisons) - sum(1 for directory, _, _ in sources if directory != self._output_dir)

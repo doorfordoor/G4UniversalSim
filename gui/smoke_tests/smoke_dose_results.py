@@ -80,7 +80,7 @@ def main() -> None:
 
         page = OutputPage()
         page.set_output_dir(str(root))
-        assert page.tabs.tabText(4) == "Dose (Gy)"
+        assert page.tabs.tabText(2) == "Tables" and page.data_tabs.tabText(1) == "Dose (Gy)"
         assert page.dose_table.rowCount() == 2
         assert float(page.dose_table.item(0, 4).text()) == 314
         assert float(page.dose_table.item(0, 3).text()) == MASS

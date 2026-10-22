@@ -65,7 +65,13 @@ class OutputPage(QWidget):
         self.file_tree.setMinimumWidth(300)
         self.file_tree.itemSelectionChanged.connect(self._on_file_selected)
 
+        # grouped: Overview, Plots, Tables (CSV/Dose/Fluence), Files (preview/summary/logs), Tools
         self.tabs = QTabWidget()
+        self.data_tabs = QTabWidget()
+        self.file_tabs = QTabWidget()
+        self.tool_tabs = QTabWidget()
+        for group in (self.data_tabs, self.file_tabs, self.tool_tabs):
+            group.setDocumentMode(True)
         self.overview_text = QPlainTextEdit()
         self.overview_text.setReadOnly(True)
         self.preview_text = QPlainTextEdit()
@@ -128,8 +134,9 @@ class OutputPage(QWidget):
         top.addWidget(self.open_output_button)
 
         self.tabs.addTab(self.overview_text, "Overview")
-        self.tabs.addTab(self.preview_text, "Preview")
-        self.tabs.addTab(self.summary_text, "Run Summary")
+        self.tabs.addTab(self.plot_panel if self.plot_panel is not None else self.plot_unavailable, "Plots")
+        self.file_tabs.addTab(self.preview_text, "Preview")
+        self.file_tabs.addTab(self.summary_text, "Run Summary")
 
         csv_tab = QWidget()
         csv_layout = QVBoxLayout(csv_tab)
@@ -140,18 +147,18 @@ class OutputPage(QWidget):
         csv_layout.addLayout(row)
         csv_layout.addWidget(self.csv_message)
         csv_layout.addWidget(self.csv_table, 1)
-        self.tabs.addTab(csv_tab, "CSV Preview")
+        self.data_tabs.addTab(csv_tab, "CSV Preview")
 
         dose_tab = QWidget()
         dose_layout = QVBoxLayout(dose_tab)
         dose_layout.addWidget(self.dose_message)
         dose_layout.addWidget(self.dose_table, 1)
-        self.tabs.addTab(dose_tab, "Dose (Gy)")
+        self.data_tabs.addTab(dose_tab, "Dose (Gy)")
         fluence_tab = QWidget()
         fluence_layout = QVBoxLayout(fluence_tab)
         fluence_layout.addWidget(self.fluence_message)
         fluence_layout.addWidget(self.fluence_table, 1)
-        self.tabs.addTab(fluence_tab, "Fluence (mm^-2)")
+        self.data_tabs.addTab(fluence_tab, "Fluence (mm^-2)")
 
         extension_tab = QWidget()
         extension_layout = QVBoxLayout(extension_tab)
@@ -165,8 +172,7 @@ class OutputPage(QWidget):
         extension_layout.addWidget(self.extension_caution)
         extension_layout.addWidget(QLabel("JSON export process output and warnings"))
         extension_layout.addWidget(self.extension_log, 1)
-        self.tabs.addTab(extension_tab, "JSON Exports (M5 prototype)")
-        self.tabs.addTab(self.plot_panel if self.plot_panel is not None else self.plot_unavailable, "Plots")
+        self.tool_tabs.addTab(extension_tab, "JSON Exports (M5 prototype)")
 
         merge_tab = QWidget()
         merge_layout = QVBoxLayout(merge_tab)
@@ -184,8 +190,11 @@ class OutputPage(QWidget):
         merge_layout.addWidget(self.merge_table, 2)
         merge_layout.addWidget(QLabel("Merge stdout/stderr"))
         merge_layout.addWidget(self.merge_log, 1)
-        self.tabs.addTab(merge_tab, "Merge")
-        self.tabs.addTab(self.logs_text, "Logs")
+        self.tool_tabs.addTab(merge_tab, "Merge")
+        self.file_tabs.addTab(self.logs_text, "Logs")
+        self.tabs.addTab(self.data_tabs, "Tables")
+        self.tabs.addTab(self.file_tabs, "Files")
+        self.tabs.addTab(self.tool_tabs, "Tools")
 
         self.splitter = QSplitter()
         self.splitter.addWidget(self.file_tree)
@@ -220,6 +229,21 @@ class OutputPage(QWidget):
         self._extension_runner.stateChanged.connect(lambda _: self._update_extension_buttons())
         self._extension_runner.finished.connect(self._on_extension_finished)
         self._update_extension_buttons()
+
+    def refresh_theme(self) -> None:
+        if self.plot_panel is not None:
+            self.plot_panel.redraw()
+
+    def refresh_language(self) -> None:
+        if self.plot_panel is not None:
+            self.plot_panel.redraw()   # notes and view names are translated when drawn
+
+    def show_plot(self, key: str) -> bool:
+        """Show the Plots tab with the data set of that key selected (if the output has it)."""
+        if self.plot_panel is None:
+            return False
+        self.tabs.setCurrentWidget(self.plot_panel)
+        return self.plot_panel.select(key)
 
     def set_workspace_root(self, workspace_root: str) -> None:
         self._workspace_root = workspace_root

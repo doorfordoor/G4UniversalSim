@@ -49,6 +49,7 @@ CASES = (
     Case("gui_plots", "gui/smoke_tests/smoke_plots.py", "gui", ("qt",)),
     Case("gui_new_simulation_wizard", "gui/smoke_tests/smoke_new_simulation_wizard.py", "gui", ("qt",)),
     Case("gui_scans", "gui/smoke_tests/smoke_scans.py", "gui", ("qt",)),
+    Case("gui_start_page", "gui/smoke_tests/smoke_start_page.py", "gui", ("qt",)),
     Case("gui_fluence_results", "gui/smoke_tests/smoke_fluence_results.py", "gui", ("qt",)),
     Case("gui_output_extensions", "gui/smoke_tests/smoke_output_extensions_gui.py", "gui", ("qt",)),
     Case("gui_output", "gui/smoke_tests/smoke_output_tools.py", "gui", ("qt",)),

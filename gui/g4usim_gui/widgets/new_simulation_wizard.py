@@ -7,6 +7,7 @@ validation and writers as the full editors (which remain the advanced mode).
 
 from __future__ import annotations
 
+from PySide6.QtCore import QSize
 from PySide6.QtWidgets import (
     QCheckBox,
     QComboBox,
@@ -24,8 +25,10 @@ from PySide6.QtWidgets import (
     QWizardPage,
 )
 
+from g4usim_gui.core import icons
 from g4usim_gui.core import wizard as wz
 from g4usim_gui.core.i18n import ui_format, ui_text
+from g4usim_gui.core.theme import current_colors
 
 SCENARIO_TEXT = {
     "single_target": ("Single target", "One sensitive box: energy deposit, dose and fluence in a slab of any material."),
@@ -34,6 +37,8 @@ SCENARIO_TEXT = {
     "silicon_detector": ("Silicon detector", "A thin silicon pad: energy deposit spectrum of charged particles."),
     "gamma_spectrometer": ("Gamma spectrometer", "A scintillator cylinder with an isotropic point source: pulse-height spectrum from per-event deposits."),
 }
+SCENARIO_ICONS = {"single_target": "target", "depth_dose": "layers", "shielding": "shield",
+                  "silicon_detector": "chip", "gamma_spectrometer": "spectrum"}
 SOURCE_TEXT = {"pencil": "Pencil beam (point, along +z)", "broad": "Broad beam (rectangle, along +z)",
                "isotropic": "Isotropic point source"}
 
@@ -61,9 +66,13 @@ class ScenarioPage(QWizardPage):
         self.setSubTitle(ui_text("Choose what to simulate. Every value can be changed later in the full editors."))
         self._wizard = wizard
         self.list = QListWidget()
+        self.list.setIconSize(QSize(24, 24))
+        self.list.setSpacing(2)
+        accent = current_colors().accent
         for key in wz.SCENARIOS:
             title, description = SCENARIO_TEXT[key]
-            item = QListWidgetItem(ui_text(title))
+            item = QListWidgetItem(icons.icon(SCENARIO_ICONS[key], accent, 24), ui_text(title))
+            item.setSizeHint(QSize(0, 40))
             item.setData(256, key)   # Qt.UserRole
             item.setToolTip(ui_text(description))
             self.list.addItem(item)

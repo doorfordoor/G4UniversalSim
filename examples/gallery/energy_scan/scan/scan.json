@@ -1,0 +1,65 @@
+{
+  "schema": "G4UniversalSimScan",
+  "version": 1,
+  "name": "energy_scan",
+  "parameter": "source.energy",
+  "parameter_label": "source energy",
+  "values": [
+    "20 MeV",
+    "35 MeV",
+    "50 MeV",
+    "100 MeV",
+    "200 MeV"
+  ],
+  "scan_dir": ".",
+  "created": "2026-10-22T23:44:16",
+  "threads": 2,
+  "seed": 12345,
+  "points": [
+    {
+      "index": 0,
+      "value": "20 MeV",
+      "package_dir": "points/p000",
+      "output_dir": "points/p000/output",
+      "main_ini": "",
+      "macro": "",
+      "seed": 12345
+    },
+    {
+      "index": 1,
+      "value": "35 MeV",
+      "package_dir": "points/p001",
+      "output_dir": "points/p001/output",
+      "main_ini": "",
+      "macro": "",
+      "seed": 12345
+    },
+    {
+      "index": 2,
+      "value": "50 MeV",
+      "package_dir": "points/p002",
+      "output_dir": "points/p002/output",
+      "main_ini": "",
+      "macro": "",
+      "seed": 12345
+    },
+    {
+      "index": 3,
+      "value": "100 MeV",
+      "package_dir": "points/p003",
+      "output_dir": "points/p003/output",
+      "main_ini": "",
+      "macro": "",
+      "seed": 12345
+    },
+    {
+      "index": 4,
+      "value": "200 MeV",
+      "package_dir": "points/p004",
+      "output_dir": "points/p004/output",
+      "main_ini": "",
+      "macro": "",
+      "seed": 12345
+    }
+  ]
+}

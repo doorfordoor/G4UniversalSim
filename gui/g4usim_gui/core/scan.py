@@ -272,8 +272,26 @@ def load_manifest(path: str | Path) -> ScanManifest:
     for key in ("schema", "version"):
         data.pop(key)
     manifest = ScanManifest(**data, points=points)
+    old_dir = Path(manifest.scan_dir) if manifest.scan_dir else None
     manifest.scan_dir = str(path.parent.resolve())   # the scan directory may have moved
+    for point in points:   # relative paths (bundled examples) and moved scans resolve in the new folder
+        for name in ("package_dir", "output_dir", "main_ini", "macro"):
+            setattr(point, name, _rebase(getattr(point, name), old_dir, path.parent.resolve()))
     return manifest
+
+
+def _rebase(value: str, old_dir: Path | None, new_dir: Path) -> str:
+    if not value:
+        return value
+    target = Path(value)
+    if not target.is_absolute():
+        return str(new_dir / target)
+    if not target.exists() and old_dir is not None:
+        try:
+            return str(new_dir / target.relative_to(old_dir))
+        except ValueError:
+            pass
+    return value
 
 
 @dataclass

@@ -34,7 +34,7 @@ class RunPage(QWidget):
         self.command_preview = QPlainTextEdit()
         self.command_preview.setReadOnly(True)
         self.command_preview.setMaximumBlockCount(1000)
-        self.command_preview.setMaximumHeight(170)
+        self.command_preview.setMaximumHeight(110)
 
         self.stdout_view = QPlainTextEdit()
         self.stdout_view.setReadOnly(True)

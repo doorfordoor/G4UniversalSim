@@ -3,6 +3,7 @@ from __future__ import annotations
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QAbstractItemView,
+    QGroupBox,
     QHBoxLayout,
     QHeaderView,
     QLabel,
@@ -10,6 +11,8 @@ from PySide6.QtWidgets import (
     QMessageBox,
     QPushButton,
     QTableWidget,
+    QToolButton,
+    QVBoxLayout,
     QWidget,
 )
 
@@ -33,6 +36,43 @@ def create_empty_state_label(text: str) -> QLabel:
     label.setAlignment(Qt.AlignCenter)
     label.setProperty("uiRole", "emptyState")
     return label
+
+
+class CollapsibleSection(QWidget):
+    """A group box whose title is a toggle: the user can fold the section away.
+
+    The group keeps its widgets and layout; only its title moves to the toggle button
+    (so translation still finds it as button text).
+    """
+
+    def __init__(self, group: QGroupBox, expanded: bool = True, parent: QWidget | None = None) -> None:
+        super().__init__(parent)
+        self.group = group
+        self.toggle = QToolButton()
+        self.toggle.setText(group.title())
+        self.toggle.setProperty("sectionToggle", True)
+        self.toggle.setCheckable(True)
+        self.toggle.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
+        self.toggle.setCursor(Qt.PointingHandCursor)
+        group.setTitle("")
+        group.setProperty("uiRole", "panel")
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setSpacing(4)
+        layout.addWidget(self.toggle)
+        layout.addWidget(group)
+        self.toggle.toggled.connect(self.set_expanded)
+        self.toggle.setChecked(expanded)
+        self.set_expanded(expanded)
+
+    def set_expanded(self, expanded: bool) -> None:
+        self.toggle.setArrowType(Qt.DownArrow if expanded else Qt.RightArrow)
+        self.group.setVisible(expanded)
+        if self.toggle.isChecked() != expanded:
+            self.toggle.setChecked(expanded)
+
+    def is_expanded(self) -> bool:
+        return self.toggle.isChecked()
 
 
 def set_table_compact_readonly(table: QTableWidget) -> None:

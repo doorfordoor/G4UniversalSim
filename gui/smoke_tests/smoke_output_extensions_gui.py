@@ -148,7 +148,7 @@ def main() -> None:
 
         apply_language(page, "zh_CN")
         assert page.export_dose_button.text() == "导出 Dose JSON..."
-        assert page.tabs.tabText(6) == "JSON 导出（M5 原型）"
+        assert page.tool_tabs.tabText(0) == "JSON 导出（M5 原型）"
         assert "仅汇总已发现的 CSV" in page.extension_caution.text()
 
         # Closing Results while the child runs must terminate it before deletion.

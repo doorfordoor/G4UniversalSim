@@ -132,6 +132,9 @@ def main() -> None:
         assert window.page_stack.currentWidget() is page
         assert [v.name for v in page.geometry_document.volumes] == ["world", "Shield", "Detector"]
         assert page.source_editor.particle == "e-" and page.run_settings().beam_on == 321
+        # materials are validated against the wizard geometry, not the source geometry file
+        assert not page.material_document.errors, page.material_document.errors
+        assert "Geometry: 3 volumes" in page.workspace_summary.text(), page.workspace_summary.text()
         report = page.validate_current(window.project)
         assert report.can_run, report.to_text()
         window.generate_package(run_after_generate=False)
