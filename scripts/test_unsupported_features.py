@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import os
 import argparse
+import json
 import subprocess
 import sys
 import tempfile
@@ -43,6 +44,15 @@ def run_nonzero(executable: Path, args: list[str]) -> str:
     if result.returncode == 0:
         raise AssertionError(f"Expected non-zero exit code for {' '.join(args)}\n{output}")
     return output
+
+
+def backend_has_gdml(executable) -> bool:
+    """True when the backend reports the gdml template as runtime (Geant4 built with GDML)."""
+    result = subprocess.run([str(executable), "--capabilities"], capture_output=True, text=True, timeout=60)
+    if result.returncode != 0:
+        return False
+    data = json.loads(result.stdout)
+    return any(item.get("id") == "gdml" and item.get("runtime") for item in data.get("templates", []))
 
 
 def main_config(
@@ -220,7 +230,11 @@ def main() -> int:
                 materials_config=materials,
             ),
         )
-        assert_failure(text, "GDML", "supported geometry template")
+        if backend_has_gdml(executable):
+            # Roadmap A5: GDML import exists; a missing model file must fail clearly.
+            assert_failure(text, "GDML file does not exist", "model.gdml")
+        else:
+            assert_failure(text, "GDML", "supported geometry template")
 
         temperature_materials = temp / "temperature-materials.ini"
         temperature_materials.write_text(
@@ -265,7 +279,8 @@ def main() -> int:
                 '/AIHL/material/add name=MacroMaterial density="1 g/cm3" components="H:1" temperature="300 K"\n',
                 ("temperature/pressure", "density, state, and composition"),
             ),
-            ("macro-gdml", "/AIHL/geometry/setTemplate gdml\n", ("GDML", "supported geometry template")),
+            *((("macro-gdml", "/AIHL/geometry/setTemplate gdml\n", ("GDML", "supported geometry template")),)
+              if not backend_has_gdml(executable) else ()),
         ):
             macro = temp / f"{name}.mac"
             macro.write_text(command, encoding="utf-8")

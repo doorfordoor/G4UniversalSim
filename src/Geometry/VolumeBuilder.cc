@@ -367,7 +367,7 @@ G4VSolid* VolumeBuilder::CreateSolid(const VolumeNode& node)
 G4VSolid* VolumeBuilder::CreatePrimitiveSolid(const VolumeNode& node)
 {
     if (node.HasProperty("gdml_file") || node.GetProperty("template") == "gdml_placeholder" || node.GetProperty("source") == "gdml") {
-        throw std::runtime_error("GDML geometry import is not implemented in VolumeBuilder yet for volume '" + node.name + "'");
+        throw std::runtime_error("GDML geometry is read by GeometryManager (template = gdml), not built per volume: '" + node.name + "'");
     }
 
     switch (node.shape) {

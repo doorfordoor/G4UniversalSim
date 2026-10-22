@@ -10,6 +10,10 @@
 #include "G4VPhysicalVolume.hh"
 #include "G4ios.hh"
 
+#include "Geometry/GdmlIO.hh"
+#include "G4LogicalVolume.hh"
+#include "G4LogicalVolumeStore.hh"
+
 #include <algorithm>
 #include <set>
 #include <stdexcept>
@@ -191,9 +195,9 @@ void GeometryManager::SetTemplate(const std::string& templateName)
 {
     const std::string value = StringUtils::Trim(templateName);
     if (value.empty()) throw std::runtime_error("Geometry template name must not be empty");
-    if (StringUtils::ToLower(value) == "gdml") {
+    if (StringUtils::ToLower(value) == "gdml" && !GdmlIO::Available()) {
         throw std::runtime_error(
-            "Geometry capability 'GDML' is not supported by the backend. "
+            "Geometry capability 'GDML' is not available in this build (Geant4 without GDML/XercesC). "
             "Use a supported geometry template and regular volume definitions instead."
         );
     }
@@ -523,10 +527,49 @@ G4VPhysicalVolume* GeometryManager::BuildWorld()
     volumeBuilder_.SetCheckOverlaps(checkOverlaps_);
     volumeBuilder_.SetDefaultWorldMaterial(defaultWorldMaterial_);
 
+    if (rootNode_->GetProperty("template") == "gdml") {
+        G4VPhysicalVolume* world = BuildGdmlWorld(*rootNode_);
+        ClearDirty();
+        return world;
+    }
+
     G4VPhysicalVolume* world = volumeBuilder_.BuildWorld(*rootNode_);
     if (!world) throw std::runtime_error("GeometryManager BuildWorld returned null world physical volume");
     ClearDirty();
     return world;
+}
+
+G4VPhysicalVolume* GeometryManager::BuildGdmlWorld(const VolumeNode& root)
+{
+    const std::string file = root.GetProperty("gdml_file");
+    const GdmlIO::ImportResult imported = GdmlIO::Read(file, root.GetProperty("gdml_validate") == "true", checkOverlaps_);
+    registry_.RegisterPhysicalVolume(imported.world->GetName(), imported.world);
+    std::string available;
+    for (G4LogicalVolume* logical : *G4LogicalVolumeStore::GetInstance()) {
+        available += (available.empty() ? "" : ", ") + std::string(logical->GetName());
+    }
+    const auto mark = [&](const std::string& key, bool sensitive) {
+        for (const std::string& part : StringUtils::Split(root.GetProperty(key), ',')) {
+            const std::string name = StringUtils::Trim(part);
+            if (name.empty()) continue;
+            G4LogicalVolume* logical = G4LogicalVolumeStore::GetInstance()->GetVolume(name, false);
+            if (!logical) {
+                throw std::runtime_error("[gdml]/" + key + " names logical volume '" + name + "' which is not in '" +
+                                         file + "'; available logical volumes: " + available);
+            }
+            if (!registry_.HasLogicalVolume(name)) registry_.RegisterLogicalVolume(name, logical);
+            if (sensitive) registry_.MarkSensitiveVolume(name);
+            else registry_.MarkBiasVolume(name);
+        }
+    };
+    mark("sensitive_volumes", true);
+    mark("bias_volumes", false);
+    for (G4LogicalVolume* logical : imported.auxSensitive) {
+        const std::string name = logical->GetName();
+        if (!registry_.HasLogicalVolume(name)) registry_.RegisterLogicalVolume(name, logical);
+        registry_.MarkSensitiveVolume(name);
+    }
+    return imported.world;
 }
 
 GeometryRegistry& GeometryManager::GetRegistry()

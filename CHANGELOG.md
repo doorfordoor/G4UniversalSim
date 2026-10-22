@@ -15,7 +15,13 @@ Short, user-facing record of notable changes. Detailed support status lives in
   writes the geometry Geant4 actually built (`g4usim_geometry_mesh_v1`) and the GUI 3D
   Preview gains "Show Backend Geometry". `scripts/test_geometry_a5.py` checks volumes
   against analytic formulas, exact STL navigation, replica dose against explicit slabs
-  and per-copy materials. GDML stays unavailable: the installed Geant4 has no GDML.
+  and per-copy materials.
+- **GDML** (roadmap A5): `[geometry] template = gdml` imports a GDML file through
+  `G4GDMLParser` (`[gdml] file`, `validate`, `sensitive_volumes`, `bias_volumes`, and
+  `<auxiliary auxtype="SensDet">`); `/AIHL/geometry/exportGDML` writes the built world.
+  Needs Geant4 with GDML; the backend reports it in `--capabilities`.
+- `--capabilities` now lists the A4 source modes, A5 solids and placements, and the
+  ROOT schema version 4 (it still reported the pre-A3/A4 state).
 - **Full GPS sources** (roadmap A4, experimental): energy spectra (`energy_type` gauss,
   uniform, power, exp, histogram or point-wise `spectrum_file`), volume sources (sphere,
   cylinder, box, ellipsoid) with `confine`, Gaussian beam spots, rotated planes

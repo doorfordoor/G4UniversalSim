@@ -271,6 +271,10 @@ void CollectGeometryConfigDiagnostics(
             if (section == "detector") return key == "size" || key == "material" || key == "position" || key == "sensitive" || key == "region";
             return false;
         }
+        if (mode == "gdml") {
+            return section == "gdml" && (key == "file" || key == "validate" || key == "sensitive_volumes"
+                                         || key == "bias_volumes" || key == "world_name");
+        }
         if (mode == "hierarchical" || mode == "hierarchical_boolean" || mode == "boolean_hierarchical" || mode == "boolean") {
             if (IsBooleanSection(section)) return key == "name" || key == "operation" || key == "shape" || key == "size" || key == "parameters" || key == "position" || key == "rotation";
             if (IsOrdinaryHierarchicalSection(section)) {
@@ -292,6 +296,7 @@ void CollectGeometryConfigDiagnostics(
         if (mode == "layered_device") return section == "global" || section == "world" || section == "layers" || (StringUtils::StartsWith(section, "layer.") && layerNames.count(section.substr(6)));
         if (mode == "array") return section == "global" || section == "world" || section == "array";
         if (mode == "shielding") return section == "global" || section == "world" || section == "shielding" || section == "detector" || (StringUtils::StartsWith(section, "shield.") && shieldNames.count(section.substr(7)));
+        if (mode == "gdml") return section == "global" || section == "gdml";
         if (mode == "hierarchical" || mode == "hierarchical_boolean" || mode == "boolean_hierarchical" || mode == "boolean") return section == "global" || IsOrdinaryHierarchicalSection(section) || IsBooleanSection(section);
         return false;
     };

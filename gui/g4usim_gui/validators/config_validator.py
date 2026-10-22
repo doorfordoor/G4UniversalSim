@@ -269,12 +269,13 @@ def build_config_summary_text(
 def _validate_geometry_text(path: Path, report: ValidationReport) -> None:
     text = path.read_text(encoding="utf-8", errors="replace")
     lower = text.lower()
-    if "shape = stl" in lower or "stl" in lower:
-        report.warnings.append("Geometry config mentions STL; STL import is not part of this GUI MVP.")
+    if re.search(r"(?im)^\s*shape\s*=\s*(tessellated|stl)\s*(?:#.*)?$", text):
+        report.warnings.append("Geometry uses shape = tessellated (STL, backend-supported); the GUI geometry "
+                               "editors cannot edit it.")
     if re.search(r"(?im)^\s*\[gdml\]\s*(?:#.*)?$", text):
-        message = capability_message("geometry.gdml.unsupported")
-        if message not in report.errors:
-            report.errors.append(message)
+        message = capability_message("geometry.gdml.external")
+        if message not in report.warnings:
+            report.warnings.append(message)
     unsupported_placements = sorted(set(re.findall(
         r"(?im)^\s*placement\s*=\s*(assembly)\s*(?:#.*)?$",
         text,

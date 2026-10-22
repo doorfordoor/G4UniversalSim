@@ -10,6 +10,21 @@ import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def _geant4_has_gdml() -> bool:
+    """GDML availability of the Geant4 that build_vs2026 was configured with."""
+    cache = ROOT / "build_vs2026" / "CMakeCache.txt"
+    if not cache.is_file():
+        return False
+    for line in cache.read_text(encoding="utf-8", errors="replace").splitlines():
+        if line.startswith("Geant4_DIR:"):
+            config = Path(line.split("=", 1)[1]) / "Geant4Config.cmake"
+            return config.is_file() and "set(Geant4_gdml_FOUND ON)" in config.read_text(encoding="utf-8", errors="replace")
+    return False
+
+
+GDML_EXPECTED = _geant4_has_gdml()
 sys.path.insert(0, str(ROOT / "gui"))
 from g4usim_gui.core.backend_capabilities import BackendCapabilities, query_backend_capabilities
 
@@ -24,9 +39,12 @@ def main() -> int:
         assert not list(Path(tmp).iterdir())
         repeated = subprocess.run([str(exe), "--capabilities"], cwd=tmp, capture_output=True, text=True, timeout=30)
         assert result.stdout == repeated.stdout
-    assert capabilities.runtime_ids("solids") == {"box", "tubs", "sphere", "orb", "cone", "trd", "trap"}
-    assert capabilities.runtime_ids("placements") == {"normal"}
-    assert "gdml" not in capabilities.runtime_ids("templates")
+    assert capabilities.runtime_ids("solids") == {"box", "tubs", "sphere", "orb", "cone", "trd", "trap", "ellipsoid",
+                                                  "eltube", "torus", "para", "hype", "polycone", "polyhedra",
+                                                  "tessellated"}
+    assert capabilities.runtime_ids("placements") == {"normal", "replica", "parameterised"}
+    # GDML is runtime only when the backend was built against a Geant4 with GDML.
+    assert ("gdml" in capabilities.runtime_ids("templates")) == GDML_EXPECTED
     assert "temperature" not in capabilities.runtime_ids("materials")
     assert "physics_region_cuts" not in capabilities.runtime_ids("physics")
     assert capabilities.runtime_ids("scorers") == {"hits", "edep", "dose", "fluence", "let"}

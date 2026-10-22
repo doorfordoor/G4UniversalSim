@@ -17,6 +17,14 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Find Geant4 package
+# A Geant4 built with GDML needs XercesC; the machine-wide install keeps it in
+# the Geant4 prefix, so derive the hint from Geant4_DIR when none is given.
+if(NOT DEFINED XercesC_ROOT AND NOT DEFINED ENV{XercesC_ROOT} AND DEFINED Geant4_DIR)
+  get_filename_component(_g4usim_geant4_prefix "${Geant4_DIR}/../../.." ABSOLUTE)
+  if(EXISTS "${_g4usim_geant4_prefix}/include/xercesc")
+    set(XercesC_ROOT "${_g4usim_geant4_prefix}")
+  endif()
+endif()
 find_package(Geant4 REQUIRED ui_all vis_all)
 
 # Include Geant4 directories
@@ -58,6 +66,13 @@ set_source_files_properties(main.cc PROPERTIES
 
 # Executable
 add_executable(G4UniversalSim main.cc ${SOURCES})
+# GDML import/export (roadmap A5) needs a Geant4 built with GDML (XercesC).
+if(Geant4_gdml_FOUND)
+  target_compile_definitions(G4UniversalSim PRIVATE G4USIM_HAVE_GDML=1)
+  message(STATUS "G4UniversalSim: GDML support enabled")
+else()
+  message(STATUS "G4UniversalSim: Geant4 has no GDML; [gdml] geometry will be rejected")
+endif()
 target_include_directories(G4UniversalSim PRIVATE ${PROJECT_BINARY_DIR}/generated)
 target_compile_definitions(G4UniversalSim PRIVATE
     G4USIM_BUILD_CONFIGURATION="$<CONFIG>")

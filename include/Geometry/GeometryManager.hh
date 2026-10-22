@@ -81,6 +81,9 @@ public:
     bool IsDirty() const;
 
     G4VPhysicalVolume* BuildWorld();
+    // template = gdml: read the file with G4GDMLParser and register the named
+    // (or <auxiliary auxtype="SensDet">) logical volumes as sensitive / bias.
+    G4VPhysicalVolume* BuildGdmlWorld(const VolumeNode& root);
 
     GeometryRegistry& GetRegistry();
     const GeometryRegistry& GetRegistry() const;

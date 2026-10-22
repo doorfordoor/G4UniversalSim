@@ -1,5 +1,6 @@
 #include "Geometry/GeometryMessenger.hh"
 
+#include "Geometry/GdmlIO.hh"
 #include "Geometry/GeometryExport.hh"
 #include "Geometry/GeometryManager.hh"
 #include "Geometry/GeometryUtils.hh"
@@ -10,6 +11,7 @@
 #include "G4Exception.hh"
 #include "G4ApplicationState.hh"
 #include "G4RunManager.hh"
+#include "G4TransportationManager.hh"
 #include "G4UIcmdWithABool.hh"
 #include "G4UIcmdWithAString.hh"
 #include "G4UIcmdWithoutParameter.hh"
@@ -151,6 +153,11 @@ GeometryMessenger::GeometryMessenger(GeometryManager* manager)
     exportMeshCmd_->SetParameterName("file", false);
     exportMeshCmd_->AvailableForStates(G4State_Idle);
 
+    exportGdmlCmd_ = new G4UIcmdWithAString("/AIHL/geometry/exportGDML", this);
+    exportGdmlCmd_->SetGuidance("Write the built Geant4 geometry to a new GDML file (refuses to overwrite).");
+    exportGdmlCmd_->SetParameterName("file", false);
+    exportGdmlCmd_->AvailableForStates(G4State_Idle);
+
     // These commands update GeometryManager's cached tree/settings. After
     // /run/initialize, they cannot guarantee that the existing Geant4 world
     // or attached biasing operators reflect the new values. Use a new process
@@ -171,6 +178,7 @@ GeometryMessenger::GeometryMessenger(GeometryManager* manager)
 
 GeometryMessenger::~GeometryMessenger()
 {
+    delete exportGdmlCmd_;
     delete exportMeshCmd_;
     delete markModifiedCmd_;
     delete preserveUserVolumesOnLoadCmd_;
@@ -307,6 +315,13 @@ void GeometryMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
         if (command == exportMeshCmd_) {
             const int count = GeometryExport::WriteMeshJson(StringUtils::Trim(newValue));
             G4cout << "[GeometryMessenger] Exported " << count << " volume copies to " << newValue << G4endl;
+            return;
+        }
+        if (command == exportGdmlCmd_) {
+            G4VPhysicalVolume* world = G4TransportationManager::GetTransportationManager()
+                ->GetNavigatorForTracking()->GetWorldVolume();
+            GdmlIO::Write(StringUtils::Trim(newValue), world);
+            G4cout << "[GeometryMessenger] Exported GDML to " << newValue << G4endl;
             return;
         }
         if (command == markModifiedCmd_) {

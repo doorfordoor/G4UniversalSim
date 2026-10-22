@@ -17,7 +17,12 @@ Checks:
      a linear row;
   5. /AIHL/geometry/exportMesh writes every copy with world-frame vertices that match
      the configured positions;
-  6. invalid definitions (open/non-manifold STL, replica mismatches, mixed
+  6. GDML: a geometry with polycone, STL, boolean, replica, parameterised and rotated
+     volumes exported with /AIHL/geometry/exportGDML and re-imported with
+     template = gdml has identical copies, solids, materials, mesh and masses and the
+     same per-slice dose (5 sigma); <auxiliary auxtype="SensDet"> marks sensitive
+     volumes; missing files, unknown sensitive volumes and overwrites are rejected;
+  7. invalid definitions (open/non-manifold STL, replica mismatches, mixed
      parameterised inputs, assembly, A5 shapes as boolean tools) fail before any
      Geant4 geometry object is created.
 """
@@ -27,6 +32,7 @@ from __future__ import annotations
 import csv
 import json
 import math
+import re
 import os
 import shutil
 import struct
@@ -363,6 +369,158 @@ def export_case(r: Runner) -> None:
     print(f"  daughter centre in world frame {tuple(round(c, 3) for c in centre)} = expected {expected}")
 
 
+GDML_SENSDET = """<?xml version="1.0" encoding="UTF-8"?>
+<gdml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="http://service-spi.web.cern.ch/service-spi/app/releases/GDML/schema/gdml.xsd">
+  <materials>
+    <material name="Water" Z="1">
+      <D value="1.0" unit="g/cm3"/>
+      <atom value="1.008"/>
+    </material>
+    <material name="Vacuum" Z="1">
+      <D value="1e-25" unit="g/cm3"/>
+      <atom value="1.008"/>
+    </material>
+  </materials>
+  <solids>
+    <box name="WorldBox" x="1000" y="1000" z="1000" lunit="mm"/>
+    <box name="DetBox" x="20" y="20" z="20" lunit="mm"/>
+  </solids>
+  <structure>
+    <volume name="Det_LV">
+      <materialref ref="Water"/>
+      <solidref ref="DetBox"/>
+      <auxiliary auxtype="SensDet" auxvalue="Detector"/>
+    </volume>
+    <volume name="World_LV">
+      <materialref ref="Vacuum"/>
+      <solidref ref="WorldBox"/>
+      <physvol name="Det_PV">
+        <volumeref ref="Det_LV"/>
+        <position name="DetPos" x="0" y="0" z="100" unit="mm"/>
+      </physvol>
+    </volume>
+  </structure>
+  <setup name="Default" version="1.0">
+    <world ref="World_LV"/>
+  </setup>
+</gdml>
+"""
+
+
+def run_gdml(r: Runner, gdml_ini_text: str, source: str, events: int, *, seed: int = 4242, macro_extra: str = "",
+             expect_ok: bool = True):
+    """Like Runner.run, with [geometry] template = gdml and the given [gdml] INI."""
+    r.count += 1
+    name = f"case{r.count:02d}"
+    geo = r.work / f"{name}_gdml.ini"
+    geo.write_text(gdml_ini_text, encoding="utf-8")
+    ini = r.work / f"{name}.ini"
+    ini.write_text(MAIN.replace("template = hierarchical", "template = gdml").format(
+        seed=seed, root=ROOT.as_posix(), geometry=geo.as_posix(), source=source), encoding="utf-8")
+    mac = r.work / f"{name}.mac"
+    mac.write_text(f"/run/initialize\n{macro_extra}/run/beamOn {events}\n", encoding="utf-8")
+    output = r.work / name
+    result = subprocess.run([str(EXE), "--config", str(ini), "--macro", str(mac), "--output", str(output)],
+                            cwd=r.work, capture_output=True, text=True, errors="replace", timeout=1200)
+    log = result.stdout + result.stderr
+    if expect_ok:
+        assert result.returncode == 0, f"{name} failed:\n{log[-3000:]}"
+    else:
+        assert result.returncode != 0, f"{name} unexpectedly succeeded"
+    return output, log
+
+
+def gdml_path(path: str) -> str:
+    """Map re-imported GDML touchable names onto the exported ones.
+
+    GDML does not store the physical-volume name of the world, of replicas or of
+    parameterised volumes; G4GDMLParser names them <LV>_PV (world, replica) and
+    <LV>_param (parameterised)."""
+    return re.sub(r"/(\w+)_LV_(?:PV|param)#", r"/\1_PV#", path)
+
+
+def gdml_cases(r: Runner) -> None:
+    print("GDML export and re-import")
+    write_ascii_stl(r.work / "cube.stl", cube(10.0, inside_out=False))
+    geometry = WORLD + \
+        volume("Lens", "shape = polycone\nparameters = 0 deg, 360 deg\nz_planes = -20 mm, 0 mm, 20 mm\n"
+                       "r_inner = 0 mm, 5 mm, 0 mm\nr_outer = 10 mm, 20 mm, 10 mm\nposition = -200 mm, 0 mm, 0 mm") + \
+        volume("Mesh", "shape = tessellated\nfile = cube.stl\nposition = 200 mm, 0 mm, 0 mm\n"
+                       "rotation = 0 deg, 0 deg, 30 deg", material="G4_Si") + \
+        volume("Holed", "shape = box\nsize = 40 mm, 40 mm, 40 mm\nposition = 0 mm, 200 mm, 0 mm") + \
+        "\n[volume.Holed.boolean.0]\noperation = subtraction\nshape = tubs\n" \
+        "parameters = 0 mm, 8 mm, 30 mm, 0 deg, 360 deg\n" + \
+        volume("Stack", "shape = box\nsize = 50 mm, 50 mm, 100 mm\nposition = 0 mm, 0 mm, 0 mm", sensitive=False) + \
+        volume("Slice", "shape = box\nsize = 50 mm, 50 mm, 10 mm\nplacement = replica\nreplica_axis = z\n"
+                        "replica_count = 10\nreplica_width = 10 mm", parent="Stack") + \
+        volume("RowBox", "shape = box\nsize = 20 mm, 20 mm, 200 mm\nposition = 0 mm, -200 mm, 0 mm",
+               material="G4_Galactic", sensitive=False) + \
+        volume("Cell", "shape = box\nsize = 4 mm, 4 mm, 4 mm\nposition = 0 mm, 0 mm, -60 mm\n"
+                       "placement = parameterised\ncopies = 4\ncopy_step = 0 mm, 0 mm, 40 mm", parent="RowBox")
+    beam = ("[source]\nparticle = proton\nenergy = 100 MeV\nposition_type = point\nposition = 0,0,-300 mm\n"
+            "direction = +z\n")
+    gdml = r.work / "model.gdml"
+    mesh_a = r.work / "mesh_a.json"
+    a, _ = r.run(geometry, beam, 1500, seed=21,
+                 macro_extra=f"/AIHL/geometry/exportGDML {gdml.as_posix()}\n/AIHL/geometry/exportMesh {mesh_a.as_posix()}\n")
+    assert gdml.is_file() and gdml.stat().st_size > 1000
+    sensitive = "Lens_LV, Mesh_LV, Holed_LV, Slice_LV, Cell_LV"
+    mesh_b = r.work / "mesh_b.json"
+    b, _ = run_gdml(r, f"[gdml]\nfile = {gdml.name}\nsensitive_volumes = {sensitive}\n", beam, 1500, seed=22,
+                    macro_extra=f"/AIHL/geometry/exportMesh {mesh_b.as_posix()}\n")
+    va = {v["path"]: v for v in json.loads(mesh_a.read_text(encoding="utf-8"))["volumes"]}
+    vb = {gdml_path(v["path"]): v for v in json.loads(mesh_b.read_text(encoding="utf-8"))["volumes"]}
+    assert set(va) == set(vb), (sorted(set(va) ^ set(vb)))[:10]
+    worst = 0.0
+    for path, x in va.items():
+        y = vb[path]
+        assert x["solid"] == y["solid"] and x["material"] == y["material"], (path, x["solid"], y["solid"], x["material"], y["material"])
+        assert len(x["vertices"]) == len(y["vertices"]), path
+        for p, q in zip(x["vertices"], y["vertices"]):
+            worst = max(worst, max(abs(p[k] - q[k]) for k in range(3)))
+        if x["solid"] != "G4SubtractionSolid":   # boolean volumes are Monte Carlo estimates
+            assert abs(x["cubic_volume_mm3"] / y["cubic_volume_mm3"] - 1) < 1e-9, path
+    print(f"  {len(va)} volume copies re-imported with identical solids, materials and mesh "
+          f"(max vertex difference {worst:.1e} mm)")
+    assert worst < 1e-6, worst
+
+    mass_a = {k: v["mass_kg"] for k, v in by_volume(a, "dose_volume_summary", "raw_edep_MeV").items()}
+    mass_b = {gdml_path(k): v["mass_kg"] for k, v in by_volume(b, "dose_volume_summary", "raw_edep_MeV").items()}
+    # Off-axis volumes may score in only one run (stray secondaries); compare the common ones.
+    common = mass_a.keys() & mass_b.keys()
+    assert sum("/Slice_PV#" in k for k in common) == 10, sorted(common)
+    for key in common:
+        if "/Holed_PV#" not in key:
+            assert abs(mass_a[key] / mass_b[key] - 1) < 1e-6, (key, mass_a[key], mass_b[key])
+    da = scorer_rows(a, "dose", "raw_dose")
+    db = {gdml_path(k): v for k, v in scorer_rows(b, "dose", "raw_dose").items()}
+    slices = [k for k in da if "/Slice_PV#" in k]
+    assert len(slices) == 10 and all(k in db for k in slices), (len(slices), sorted(db)[:5])
+    for key in slices:
+        (x, ex), (y, ey) = da[key], db[key]
+        assert abs(x - y) < 5 * math.hypot(ex, ey) + 1e-30, (key, x, y)
+    print("  masses identical; per-slice dose of original and re-imported geometry agree (5 sigma)")
+
+    (r.work / "sensdet.gdml").write_text(GDML_SENSDET, encoding="utf-8")
+    source = ("[source]\nparticle = proton\nenergy = 20 MeV\nposition_type = point\nposition = 0,0,0 mm\n"
+              "direction = +z\n")
+    output, _ = run_gdml(r, "[gdml]\nfile = sensdet.gdml\n", source, 50)
+    dose = by_volume(output, "dose_volume_summary", "raw_edep_MeV")
+    assert list(dose) and all("/Det_PV#0" in k for k in dose), list(dose)
+    assert abs(next(iter(dose.values()))["mass_kg"] / 8e-3 - 1) < 1e-9
+    print("  hand-written GDML: <auxiliary auxtype=\"SensDet\"> makes Det_LV sensitive (8 g of water)")
+
+    _, log = run_gdml(r, "[gdml]\nfile = missing.gdml\n", source, 1, expect_ok=False)
+    assert "GDML file does not exist" in log
+    _, log = run_gdml(r, "[gdml]\nfile = sensdet.gdml\nsensitive_volumes = Nope_LV\n", source, 1, expect_ok=False)
+    assert "Nope_LV" in log and "available logical volumes" in log, log[-1500:]
+    _, log = r.run(WORLD + volume("B", "shape = box\nsize = 1 mm, 1 mm, 1 mm"), source, 1, expect_ok=False,
+                   macro_extra=f"/AIHL/geometry/exportGDML {gdml.as_posix()}\n")
+    assert "refuses to overwrite" in log, log[-1500:]
+    print("  missing file, unknown sensitive volume and overwriting an existing GDML file are rejected")
+
+
 def failure_cases(r: Runner) -> None:
     print("failures before Geant4 geometry objects")
     (r.work / "open.stl").write_text("solid o\n" + "".join(
@@ -418,6 +576,7 @@ def main() -> int:
         replica_cases(r)
         parameterised_cases(r)
         export_case(r)
+        gdml_cases(r)
         failure_cases(r)
     finally:
         shutil.rmtree(work, ignore_errors=True)

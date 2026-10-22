@@ -3,8 +3,13 @@ from __future__ import annotations
 
 _MESSAGES = {
     "geometry.gdml.unsupported": (
-        "Geometry: GDML is not supported by the backend; use a supported "
-        "geometry template and regular volume definitions."
+        "Geometry: the GUI cannot generate GDML run packages; run a hand-written main INI with "
+        "[geometry] template = gdml in external mode (backend built with Geant4 GDML), or use a "
+        "supported geometry template and regular volume definitions."
+    ),
+    "geometry.gdml.external": (
+        "Geometry: [gdml] is imported by the backend (template = gdml, Geant4 with GDML); "
+        "the GUI geometry editors cannot edit GDML."
     ),
     "geometry.placement.unsupported": (
         "Geometry: placement={placement} is not supported by the backend; "

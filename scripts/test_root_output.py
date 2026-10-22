@@ -141,7 +141,7 @@ def main() -> int:
                                          check=True, cwd=EXE.parent).stdout)
         outputs = caps["outputs"]
         assert outputs["formats"] == ["csv", "root", "both"], outputs
-        assert outputs["root"]["thread_merge"] is True and outputs["root"]["schema_version"] == 3, outputs
+        assert outputs["root"]["thread_merge"] is True and outputs["root"]["schema_version"] == 4, outputs
         print("capabilities: ok")
     finally:
         shutil.rmtree(work, ignore_errors=True)
