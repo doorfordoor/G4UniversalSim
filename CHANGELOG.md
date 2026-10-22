@@ -7,6 +7,10 @@ Short, user-facing record of notable changes. Detailed support status lives in
 ## Unreleased
 
 ### Added
+- **New simulation wizard** (roadmap Phase C2): File -> New Simulation... guides through
+  scenario (single target, depth-dose phantom, shielding slab, silicon detector, gamma
+  spectrometer), NIST materials and sizes, source, and physics/outputs/run, then fills
+  the Configuration page's editors and can generate the package and run right away.
 - **Built-in plots** (roadmap Phase C1): a Results / Plots tab in the GUI for scorer
   totals with statistical error bars, scoring-mesh depth profiles and 2D maps (CSV or
   ROOT), Edep histograms, per-event deposit and phase-space spectra, with log axes,

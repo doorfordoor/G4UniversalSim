@@ -22,6 +22,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from g4usim_gui.core import wizard as simulation_wizard
 from g4usim_gui.core.i18n import LanguageCode, apply_language, current_language, ui_format, ui_text
 from g4usim_gui.core.project import G4USimProject, load_project, save_project
 from g4usim_gui.core.runner import G4USimRunner
@@ -32,6 +33,7 @@ from g4usim_gui.models.package_model import PathSettings
 from g4usim_gui.writers.package_writer import create_run_package
 from g4usim_gui.preview3d.backend_mesh import export_arguments, load_backend_mesh, write_export_macro
 from g4usim_gui.widgets.config_builder_page import ConfigBuilderPage
+from g4usim_gui.widgets.new_simulation_wizard import NewSimulationWizard
 from g4usim_gui.widgets.output_page import OutputPage
 from g4usim_gui.widgets.project_page import ProjectPage
 from g4usim_gui.widgets.run_page import RunPage
@@ -294,6 +296,10 @@ class MainWindow(QMainWindow):
 
     def _create_menu(self) -> None:
         file_menu = self.menuBar().addMenu("File")
+        wizard_action = file_menu.addAction("New Simulation...")
+        wizard_action.setShortcut("Ctrl+N")
+        wizard_action.triggered.connect(self.open_new_simulation_wizard)
+        file_menu.addSeparator()
         open_action = file_menu.addAction("Open Project...")
         save_action = file_menu.addAction("Save Project")
         save_as_action = file_menu.addAction("Save Project As...")
@@ -415,6 +421,32 @@ class MainWindow(QMainWindow):
         self.project.seed = "" if run.seed is None else str(run.seed)
         self.project_page.set_project(self.project)
         self._mark_generated_package_stale()
+
+    def open_new_simulation_wizard(self) -> None:
+        wizard = NewSimulationWizard(self)
+        if wizard.exec() != NewSimulationWizard.Accepted:
+            return
+        self.apply_simulation_wizard(wizard.spec, run_after=wizard.run_after_finish())
+
+    def apply_simulation_wizard(self, spec: simulation_wizard.WizardSpec, *, run_after: bool) -> bool:
+        """Put a wizard result into the current project (in place) and show the Configuration page."""
+        try:
+            result = simulation_wizard.build(spec)
+        except ValueError as error:
+            QMessageBox.warning(self, ui_text("New simulation"), str(error))
+            return False
+        self._update_project_from_page_without_preview()
+        simulation_wizard.apply_to_project(self.project, result)
+        self._set_project(self.project)
+        index = self.page_stack.indexOf(self.config_builder_page)
+        self.page_stack.setCurrentIndex(index)
+        self._nav_buttons[index].setChecked(True)
+        self.statusBar().showMessage(
+            ui_format("New simulation {name}: review the editors or press Generate & Run.", name=spec.project_name),
+            8000)
+        if run_after:
+            self.generate_package(run_after_generate=True)
+        return True
 
     def open_project(self) -> None:
         path, _ = QFileDialog.getOpenFileName(
