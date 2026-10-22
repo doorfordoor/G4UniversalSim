@@ -28,6 +28,7 @@ const std::map<std::string, std::vector<std::string>>& KnownKeys()
         {"geometry", {"template", "templatename", "check_overlaps", "checkoverlaps", "default_world_material", "defaultworldmaterial", "config", "configfile"}},
         {"physics", {"reference", "em", "list", "modules", "extra_modules", "default_cut", "biasing", "verbose"}},
         {"physics.microelec", {"enabled", "region", "electron_capture", "electron_capture_threshold"}},
+        {"physics.radioactive_decay", {"enabled", "time_threshold"}},
         {"scoring", {"enabled", "hits", "event_edep", "edep", "let", "dose", "fluence", "auto_create_default_scorers", "verbose"}},
         {"scoring.edep", {"raw_histogram", "weighted_histogram", "bins", "min", "max", "volume_summary", "particle_summary"}},
         {"scoring.let", {"particles"}},
@@ -74,7 +75,9 @@ bool IsKnownDynamicSection(const std::string& section)
 std::vector<std::string> DynamicKeys(const std::string& section)
 {
     if (StartsWith(section, "physics.cuts")) return {"gamma", "e-", "e+", "proton", "alpha"};
-    if (StartsWith(section, "physics.region.")) return {"gamma", "e-", "e+", "proton", "alpha"};
+    if (StartsWith(section, "physics.region.")) {
+        return {"gamma", "e-", "e+", "proton", "max_step", "max_track_length", "max_time", "min_kinetic_energy", "volumes"};
+    }
     if (StartsWith(section, "scoring.mesh.")) {
         const std::string suffix = section.substr(std::string("scoring.mesh.").size());
         if (suffix.find('.') == std::string::npos) return {"shape", "size", "bins", "center"};

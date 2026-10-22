@@ -12,6 +12,9 @@ public:
     ~PhysicsList() override;
 
     void SetPhysicsManager(PhysicsManager* manager);
+    // Registers the configured constructors now so that later additions
+    // (roadmap A6 decay/step-limiter settings) see the complete list.
+    void ConfigureNow();
     PhysicsManager* GetPhysicsManager();
     const PhysicsManager* GetPhysicsManager() const;
 

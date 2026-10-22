@@ -686,6 +686,7 @@ int main(int argc, char** argv) {
         const bool readOnlyPhysicsCommand = commandName == "/aihl/physics/print" ||
             commandName == "/aihl/physics/listavailablereferences" ||
             commandName == "/aihl/physics/listavailableemreferences" ||
+            commandName == "/aihl/physics/dumpprocesses" ||
             commandName == "/aihl/biasing/print" ||
             commandName == "/aihl/biasing/validate" ||
             commandName == "/aihl/biasing/xs/printrules";

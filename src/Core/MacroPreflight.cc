@@ -233,8 +233,6 @@ private:
              || line.command == "/aihl/scoring/fluence") && enableValue) {
             unsupported = "LET/Dose/Fluence scoring cannot be enabled from a macro; set let/dose/fluence = true "
                           "in the main INI [scoring] section instead (they need default scorers created before initialization)";
-        } else if (line.command == "/aihl/physics/setregioncut") {
-            unsupported = "Physics region cuts are not supported; use geometry volume cut.* fields instead";
         } else if (line.command == "/aihl/geometry/settemplate" && arguments == "gdml" && !GdmlIO::Available()) {
             unsupported = "GDML geometry is not supported; use a supported geometry template and regular volume definitions instead";
         } else if (line.command == "/aihl/material/add"

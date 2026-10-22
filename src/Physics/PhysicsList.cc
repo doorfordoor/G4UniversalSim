@@ -55,6 +55,11 @@ const PhysicsManager* PhysicsList::GetPhysicsManager() const
     return manager_;
 }
 
+void PhysicsList::ConfigureNow()
+{
+    ConfigureFromManager();
+}
+
 void PhysicsList::ConstructParticle()
 {
     ConfigureFromManager();

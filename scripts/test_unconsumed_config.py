@@ -135,10 +135,11 @@ def main() -> int:
         if "config_warning_count = 1" not in warning_summary or "threds" not in warning_summary:
             raise AssertionError(f"Summary did not preserve warning count/details:\n{warning_summary}")
 
-        unsupported = write_config(temp, "unsupported", make_config(temp / "unsupported-output", geometry, materials, "[physics.region.SV]\ne- = 1 mm\n"))
+        unsupported = write_config(temp, "unsupported", make_config(temp / "unsupported-output", geometry, materials, "[physics.region.NoSuchRegion]\ne- = 1 mm\n"))
         text = run(executable, unsupported, 1)
-        if "Physics region cuts" not in text or "geometry volume cut" not in text:
-            raise AssertionError(f"M0-3A failure was downgraded to a warning:\n{text}")
+        # Roadmap A6: region physics is supported; an unknown region must still fail, not warn.
+        if "region 'NoSuchRegion' does not exist in the geometry" not in text:
+            raise AssertionError(f"Unknown physics region was downgraded to a warning:\n{text}")
 
     print("M0-3B1 unconsumed main-config field tests passed")
     return 0

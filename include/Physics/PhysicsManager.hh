@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Physics/RegionPhysics.hh"
+
 #include <map>
 #include <string>
 #include <vector>
@@ -66,6 +68,21 @@ public:
     bool HasRegionCuts() const;
     const std::map<std::string, std::map<std::string, double>>& GetRegionCuts() const;
 
+    // Roadmap A6: production cuts, step limits and user special cuts per
+    // G4Region; applied by GeometryManager after the world is built.
+    void SetRegionPhysics(const std::string& regionName, const RegionPhysicsSettings& settings);
+    const std::map<std::string, RegionPhysicsSettings>& GetRegionPhysics() const;
+    bool NeedsStepLimiter() const;
+
+    // Roadmap A6: radioactive decay. enabled registers G4RadioactiveDecayPhysics
+    // unless the list already has it; the time threshold (Geant4 >= 11.2
+    // default 1 year) decides which long-lived nuclides still decay.
+    void EnableRadioactiveDecay(bool enable);
+    bool IsRadioactiveDecayEnabled() const;
+    void SetRadioactiveDecayTimeThreshold(double time);
+    bool HasRadioactiveDecayTimeThreshold() const;
+    double GetRadioactiveDecayTimeThreshold() const;
+
     void SetBiasingManager(BiasingManager* biasingManager);
     BiasingManager* GetBiasingManager();
     const BiasingManager* GetBiasingManager() const;
@@ -104,6 +121,9 @@ private:
     double defaultCut_ = 1.0; // initialized to 1 mm in .cc constructor
     std::map<std::string, double> particleCuts_;
     std::map<std::string, std::map<std::string, double>> regionCuts_;
+    std::map<std::string, RegionPhysicsSettings> regionPhysics_;
+    bool radioactiveDecayEnabled_ = false;
+    double radioactiveDecayTimeThreshold_ = -1.0;  // < 0: Geant4 default
     BiasingManager* biasingManager_ = nullptr; // not owned
     bool biasingPhysicsEnabled_ = false;
     bool microElecEnabled_ = false;

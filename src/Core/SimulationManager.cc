@@ -708,6 +708,7 @@ void SimulationManager::Configure()
 
         physicsManager_->SetBiasingManager(biasingManager_.get());
         physicsManager_->LoadFromConfig(*configManager_);
+        geometryManager_->ValidateRegionPhysicsNames();
         sourceManager_->LoadFromConfig(*configManager_);
         scoringManager_->LoadFromConfig(*configManager_);
         scoringMeshCommands_ = ScoringMeshConfig::BuildCommands(*configManager_);
@@ -798,6 +799,7 @@ void SimulationManager::BuildManagers()
     geometryManager_->SetMaterialManager(materialManager_.get());
     geometryManager_->SetCheckOverlaps(context_.GetCheckOverlaps());
     physicsManager_->SetBiasingManager(biasingManager_.get());
+    geometryManager_->SetPhysicsManager(physicsManager_.get());
     outputManager_->SetOutputDir(context_.GetOutputDir());
     scoringManager_->SetOutputManager(outputManager_.get());
 
@@ -940,6 +942,7 @@ std::unique_ptr<G4VModularPhysicsList> SimulationManager::CreatePhysicsList() co
             }
         }
 
+        PhysicsFactory::ApplyRegionAndDecaySettings(list.get(), *physicsManager_);
         PhysicsFactory::ApplyCuts(
             list.get(),
             physicsManager_->GetDefaultCut(),
@@ -947,7 +950,10 @@ std::unique_ptr<G4VModularPhysicsList> SimulationManager::CreatePhysicsList() co
         return list;
     }
 
-    return std::make_unique<PhysicsList>(physicsManager_.get());
+    auto list = std::make_unique<PhysicsList>(physicsManager_.get());
+    list->ConfigureNow();
+    PhysicsFactory::ApplyRegionAndDecaySettings(list.get(), *physicsManager_);
+    return list;
 }
 
 std::unique_ptr<PrimaryGeneratorAction> SimulationManager::CreatePrimaryGeneratorAction() const

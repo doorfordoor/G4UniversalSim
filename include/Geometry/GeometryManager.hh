@@ -10,6 +10,7 @@
 #include <vector>
 
 class G4VPhysicalVolume;
+class PhysicsManager;
 class MaterialManager;
 
 class GeometryManager {
@@ -84,6 +85,12 @@ public:
     // template = gdml: read the file with G4GDMLParser and register the named
     // (or <auxiliary auxtype="SensDet">) logical volumes as sensitive / bias.
     G4VPhysicalVolume* BuildGdmlWorld(const VolumeNode& root);
+    // Roadmap A6: physics settings per region, applied after each world build.
+    void SetPhysicsManager(const PhysicsManager* physicsManager);
+    void ApplyRegionPhysics();
+    // Configure-time check (INI geometries): every [physics.region.<name>]
+    // either names a region of the volume tree or lists its own volumes.
+    void ValidateRegionPhysicsNames() const;
 
     GeometryRegistry& GetRegistry();
     const GeometryRegistry& GetRegistry() const;
@@ -114,6 +121,7 @@ private:
 
     MaterialManager* materialManager_ = nullptr;
     GeometryRegistry registry_;
+    const PhysicsManager* physicsManager_ = nullptr; // not owned
     VolumeBuilder volumeBuilder_;
     std::string templateName_ = "simple_box";
     std::string geometryConfigFile_;

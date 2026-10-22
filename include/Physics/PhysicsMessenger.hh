@@ -54,4 +54,5 @@ private:
     G4UIcmdWithoutParameter* printCmd_ = nullptr;
     G4UIcmdWithoutParameter* listAvailableReferencesCmd_ = nullptr;
     G4UIcmdWithoutParameter* listAvailableEMReferencesCmd_ = nullptr;
+    G4UIcmdWithAString* dumpProcessesCmd_ = nullptr;
 };

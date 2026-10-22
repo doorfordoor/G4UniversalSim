@@ -260,10 +260,11 @@ def main() -> int:
                 geometry_template="simple_box",
                 geometry_config=simple_geometry,
                 materials_config=materials,
-                extra="\n[physics.region.SV]\ne- = 1 mm\n",
+                extra="\n[physics.region.NoSuchRegion]\ne- = 1 mm\n",
             ),
         )
-        assert_failure(region_text, "Physics region cuts", "geometry volume cut.*")
+        # Roadmap A6: [physics.region.*] is supported; a region the geometry does not define fails.
+        assert_failure(region_text, "region 'NoSuchRegion' does not exist in the geometry", "volumes = ...")
 
         # LET became a supported (experimental) scorer in roadmap A2; see scripts/test_let_scoring.py.
 
@@ -273,7 +274,8 @@ def main() -> int:
                 '/AIHL/geometry/addBox name=Replica parent=world material=G4_AIR size="1 mm,1 mm,1 mm" placement=replica\n',
                 ("placement=replica", "placement=normal"),
             ),
-            ("macro-region", "/AIHL/physics/setRegionCut SV e- 1 mm\n", ("region cuts", "geometry volume cut.*")),
+            ("macro-region", "/AIHL/physics/setRegionCut NoSuchRegion e- 1 mm\n/run/initialize\n",
+             ("region 'NoSuchRegion' does not exist in the geometry", "volumes = ...")),
             (
                 "macro-material-temperature",
                 '/AIHL/material/add name=MacroMaterial density="1 g/cm3" components="H:1" temperature="300 K"\n',

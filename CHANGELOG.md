@@ -7,6 +7,14 @@ Short, user-facing record of notable changes. Detailed support status lives in
 ## Unreleased
 
 ### Added
+- **Physics options** (roadmap A6, experimental): `[physics.region.<name>]` production
+  cuts, `max_step`, `max_track_length`, `max_time`, `min_kinetic_energy` and `volumes`
+  (regions can be created from logical volumes, also for GDML); `/AIHL/physics/setRegionCut`
+  now works; `[physics.radioactive_decay] enabled / time_threshold` (Geant4's default
+  1-year threshold skips long-lived nuclides such as Co-60); `/AIHL/physics/dumpProcesses`
+  writes processes, models, region cuts/limits and energy thresholds as JSON. Time values
+  accept `min`, `h`, `d`, `y`. `scripts/test_physics_a6.py` checks the EM presets against
+  NIST XCOM and the decay settings against NNDC.
 - **Geometry** (roadmap A5, experimental): new solids `ellipsoid`, `eltube`, `torus`,
   `para`, `hype`, `polycone`, `polyhedra`; STL import as `shape = tessellated` (ASCII or
   binary, closed-manifold check, automatic reorientation); `placement = replica` (box

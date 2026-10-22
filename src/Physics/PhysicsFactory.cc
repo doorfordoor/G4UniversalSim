@@ -30,6 +30,9 @@
 #include "G4OpticalPhysics.hh"
 #include "G4PhysListFactory.hh"
 #include "G4RadioactiveDecayPhysics.hh"
+#include "G4HadronicParameters.hh"
+#include "G4StepLimiterPhysics.hh"
+#include "Physics/PhysicsManager.hh"
 #include "G4StoppingPhysics.hh"
 #include "G4VModularPhysicsList.hh"
 
@@ -461,3 +464,33 @@ void PhysicsFactory::ApplyCuts(G4VModularPhysicsList* list,
         list->SetCutValue(item.second, item.first);
     }
 }
+
+bool PhysicsFactory::HasRadioactiveDecay(const G4VModularPhysicsList* list)
+{
+    if (!list) return false;
+    for (G4int index = 0;; ++index) {
+        const G4VPhysicsConstructor* physics = list->GetPhysics(index);
+        if (!physics) return false;
+        if (physics->GetPhysicsName().find("Radioactive") != std::string::npos) return true;
+    }
+}
+
+void PhysicsFactory::ApplyRegionAndDecaySettings(G4VModularPhysicsList* list, const PhysicsManager& manager)
+{
+    if (!list) throw std::runtime_error("PhysicsFactory::ApplyRegionAndDecaySettings failed: physics list is null");
+    if (manager.IsRadioactiveDecayEnabled() && !HasRadioactiveDecay(list)) {
+        list->RegisterPhysics(new G4RadioactiveDecayPhysics(0));
+    }
+    if (manager.HasRadioactiveDecayTimeThreshold()) {
+        if (!HasRadioactiveDecay(list)) {
+            throw std::runtime_error(
+                "[physics.radioactive_decay]/time_threshold has no effect: the physics list has no radioactive decay; "
+                "set [physics.radioactive_decay] enabled = true or use a list that includes it");
+        }
+        G4HadronicParameters::Instance()->SetTimeThresholdForRadioactiveDecay(manager.GetRadioactiveDecayTimeThreshold());
+    }
+    if (manager.NeedsStepLimiter() && !list->GetPhysics("stepLimiter")) {
+        list->RegisterPhysics(new G4StepLimiterPhysics());
+    }
+}
+

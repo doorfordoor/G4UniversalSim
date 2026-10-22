@@ -9,6 +9,7 @@
 #include "G4SystemOfUnits.hh"
 
 #include <algorithm>
+#include <cmath>
 #include <iostream>
 #include <stdexcept>
 
@@ -314,13 +315,84 @@ void PhysicsManager::SetRegionCut(const std::string& regionName,
                                    const std::string& particleName,
                                    double cut)
 {
-    (void)regionName;
-    (void)particleName;
-    (void)cut;
-    throw std::runtime_error(
-        "Physics region cuts are not supported yet for [physics.region.*] or "
-        "/AIHL/physics/setRegionCut. Use geometry volume cut.* fields instead."
-    );
+    const std::string region = StringUtils::Trim(regionName);
+    const std::string particle = NormalizeParticleName(particleName);
+    if (region.empty()) throw std::runtime_error("PhysicsManager::SetRegionCut requires a region name");
+    if (region == "DefaultRegionForTheWorld") {
+        throw std::runtime_error("PhysicsManager::SetRegionCut: use [physics]/default_cut or [physics.cuts] for the world region");
+    }
+    if (particle != "gamma" && particle != "e-" && particle != "e+" && particle != "proton") {
+        throw std::runtime_error("PhysicsManager region production cuts exist only for gamma, e-, e+ and proton; got '" +
+                                 particle + "'");
+    }
+    if (!std::isfinite(cut) || cut <= 0.0) {
+        throw std::runtime_error("PhysicsManager region cut for '" + particle + "' must be a finite length > 0");
+    }
+    regionPhysics_[region].cuts[particle] = cut;
+    regionCuts_[region][particle] = cut;
+}
+
+void PhysicsManager::SetRegionPhysics(const std::string& regionName, const RegionPhysicsSettings& settings)
+{
+    const std::string region = StringUtils::Trim(regionName);
+    if (region.empty()) throw std::runtime_error("PhysicsManager::SetRegionPhysics requires a region name");
+    if (region == "DefaultRegionForTheWorld") {
+        throw std::runtime_error("[physics.region.DefaultRegionForTheWorld] is not allowed; use [physics]/default_cut "
+                                 "and [physics.cuts] for the world region");
+    }
+    for (const auto& item : settings.cuts) SetRegionCut(region, item.first, item.second);
+    RegionPhysicsSettings& target = regionPhysics_[region];
+    for (double value : {settings.maxStep, settings.maxTrackLength, settings.maxTime, settings.minKineticEnergy}) {
+        if (!std::isfinite(value) || value < 0.0) {
+            throw std::runtime_error("[physics.region." + region + "] limits must be finite and > 0");
+        }
+    }
+    target.maxStep = settings.maxStep;
+    target.maxTrackLength = settings.maxTrackLength;
+    target.maxTime = settings.maxTime;
+    target.minKineticEnergy = settings.minKineticEnergy;
+    target.volumes = settings.volumes;
+}
+
+const std::map<std::string, RegionPhysicsSettings>& PhysicsManager::GetRegionPhysics() const
+{
+    return regionPhysics_;
+}
+
+bool PhysicsManager::NeedsStepLimiter() const
+{
+    for (const auto& item : regionPhysics_) {
+        if (item.second.HasUserLimits()) return true;
+    }
+    return false;
+}
+
+void PhysicsManager::EnableRadioactiveDecay(bool enable)
+{
+    radioactiveDecayEnabled_ = enable;
+}
+
+bool PhysicsManager::IsRadioactiveDecayEnabled() const
+{
+    return radioactiveDecayEnabled_;
+}
+
+void PhysicsManager::SetRadioactiveDecayTimeThreshold(double time)
+{
+    if (!std::isfinite(time) || time <= 0.0) {
+        throw std::runtime_error("[physics.radioactive_decay]/time_threshold must be a finite time > 0");
+    }
+    radioactiveDecayTimeThreshold_ = time;
+}
+
+bool PhysicsManager::HasRadioactiveDecayTimeThreshold() const
+{
+    return radioactiveDecayTimeThreshold_ > 0.0;
+}
+
+double PhysicsManager::GetRadioactiveDecayTimeThreshold() const
+{
+    return radioactiveDecayTimeThreshold_;
 }
 
 bool PhysicsManager::HasRegionCuts() const
@@ -482,12 +554,63 @@ void PhysicsManager::LoadFromConfig(const ConfigManager& config)
         }
     }
 
-    for (const auto& section : config.GetSections()) {
+    // Geant4 region names are case-sensitive; section lookups use the
+    // normalized name, the region keeps the spelling from the INI.
+    for (const auto& info : config.GetSectionInfo()) {
         const std::string prefix = "physics.region.";
-        if (!StringUtils::StartsWith(section, prefix)) continue;
-        const auto region = section.substr(prefix.size());
+        const std::string section = info.section;
+        if (!StringUtils::StartsWith(StringUtils::ToLower(section), prefix)) continue;
+        const std::string original = info.originalSection.empty() ? section : info.originalSection;
+        const auto region = StringUtils::Trim(original).substr(prefix.size());
+        if (region.empty() || region.find('.') != std::string::npos) {
+            throw std::runtime_error("[" + section + "] must be [physics.region.<region name>]");
+        }
+        RegionPhysicsSettings settings;
         for (const auto& key : config.GetKeys(section)) {
-            SetRegionCut(region, key, UnitParser::ParseLength(config.GetString(section, key)));
+            const std::string name = StringUtils::ToLower(StringUtils::Trim(key));
+            const std::string value = config.GetString(section, key);
+            const auto positive = [&](double parsed) {
+                if (!std::isfinite(parsed) || parsed <= 0.0) {
+                    throw std::runtime_error("[" + section + "]/" + key + " must be > 0");
+                }
+                return parsed;
+            };
+            if (name == "gamma" || name == "e-" || name == "e+" || name == "proton") {
+                settings.cuts[name] = positive(UnitParser::ParseLength(value));
+            } else if (name == "max_step") {
+                settings.maxStep = positive(UnitParser::ParseLength(value));
+            } else if (name == "max_track_length") {
+                settings.maxTrackLength = positive(UnitParser::ParseLength(value));
+            } else if (name == "max_time") {
+                settings.maxTime = positive(UnitParser::ParseTime(value));
+            } else if (name == "min_kinetic_energy") {
+                settings.minKineticEnergy = positive(UnitParser::ParseEnergy(value));
+            } else if (name == "volumes") {
+                for (const auto& part : StringUtils::Split(value, ',')) {
+                    const std::string volume = StringUtils::Trim(part);
+                    if (!volume.empty()) settings.volumes.push_back(volume);
+                }
+                if (settings.volumes.empty()) throw std::runtime_error("[" + section + "]/volumes lists no volume");
+            } else {
+                throw std::runtime_error("unknown key [" + section + "]/" + key +
+                                         "; supported: gamma, e-, e+, proton (production cuts), max_step, "
+                                         "max_track_length, max_time, min_kinetic_energy, volumes");
+            }
+        }
+        SetRegionPhysics(region, settings);
+    }
+
+    if (config.HasSection("physics.radioactive_decay")) {
+        const std::string section = "physics.radioactive_decay";
+        for (const auto& key : config.GetKeys(section)) {
+            const std::string name = StringUtils::ToLower(StringUtils::Trim(key));
+            if (name != "enabled" && name != "time_threshold") {
+                throw std::runtime_error("unknown key [" + section + "]/" + key + "; supported: enabled, time_threshold");
+            }
+        }
+        EnableRadioactiveDecay(config.GetBool(section, "enabled", true));
+        if (config.HasKey(section, "time_threshold")) {
+            SetRadioactiveDecayTimeThreshold(UnitParser::ParseTime(config.GetString(section, "time_threshold")));
         }
     }
 }
@@ -547,6 +670,9 @@ void PhysicsManager::PrintSummary() const
     std::cout << "  default_cut     : " << defaultCut_ << '\n';
     std::cout << "  particle_cuts   : " << particleCuts_.size() << '\n';
     std::cout << "  region_cuts     : " << regionCuts_.size() << '\n';
+    std::cout << "  region_physics  : " << regionPhysics_.size() << '\n';
+    std::cout << "  radioactive_decay: " << (radioactiveDecayEnabled_ ? "true" : "false")
+              << ", time_threshold=" << radioactiveDecayTimeThreshold_ << '\n';
     std::cout << "  biasing_physics : " << (biasingPhysicsEnabled_ ? "true" : "false") << '\n';
     std::cout << "  biasing_manager : " << (biasingManager_ ? "connected" : "null") << '\n';
     std::cout << "  microelec       : " << (microElecEnabled_ ? "true" : "false") << '\n';

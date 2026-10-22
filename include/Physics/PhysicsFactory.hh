@@ -62,4 +62,9 @@ public:
     static void ApplyCuts(G4VModularPhysicsList* list,
                           double defaultCut,
                           const std::map<std::string, double>& particleCuts);
+
+    // Roadmap A6, for reference and manual lists: radioactive decay physics and
+    // its time threshold, and G4StepLimiterPhysics when a region has user limits.
+    static void ApplyRegionAndDecaySettings(G4VModularPhysicsList* list, const PhysicsManager& manager);
+    static bool HasRadioactiveDecay(const G4VModularPhysicsList* list);
 };

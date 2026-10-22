@@ -1,5 +1,7 @@
 #include "Physics/PhysicsMessenger.hh"
 
+#include "Physics/ProcessDump.hh"
+
 #include "Physics/PhysicsFactory.hh"
 #include "Physics/PhysicsManager.hh"
 #include "Utils/CommandParser.hh"
@@ -96,6 +98,11 @@ PhysicsMessenger::PhysicsMessenger(PhysicsManager* manager)
     printCmd_ = new G4UIcmdWithoutParameter("/AIHL/physics/print", this);
     listAvailableReferencesCmd_ = new G4UIcmdWithoutParameter("/AIHL/physics/listAvailableReferences", this);
     listAvailableEMReferencesCmd_ = new G4UIcmdWithoutParameter("/AIHL/physics/listAvailableEMReferences", this);
+    dumpProcessesCmd_ = new G4UIcmdWithAString("/AIHL/physics/dumpProcesses", this);
+    dumpProcessesCmd_->SetGuidance("Write the active processes, models, region cuts/limits and energy thresholds to JSON:"
+                                   " <file.json> [particle,particle,...]. Available after /run/initialize.");
+    dumpProcessesCmd_->SetParameterName("arguments", false);
+    dumpProcessesCmd_->AvailableForStates(G4State_Idle);
 
     setEMCmd_->SetGuidance("Set EM physics option, e.g. option4, livermore, penelope.");
     setReferenceListCmd_->SetGuidance("Set Geant4 reference physics list, e.g. FTFP_BERT_EMZ.");
@@ -125,6 +132,7 @@ PhysicsMessenger::PhysicsMessenger(PhysicsManager* manager)
 
 PhysicsMessenger::~PhysicsMessenger()
 {
+    delete dumpProcessesCmd_;
     delete listAvailableEMReferencesCmd_;
     delete listAvailableReferencesCmd_;
     delete printCmd_;
@@ -176,7 +184,8 @@ void PhysicsMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     // main.cc explicitly rebinds their modified physics list.
     if (interactiveSessionMode_ && command != printCmd_ &&
         command != listAvailableReferencesCmd_ &&
-        command != listAvailableEMReferencesCmd_) {
+        command != listAvailableEMReferencesCmd_ &&
+        command != dumpProcessesCmd_) {
         lastInteractiveCommandFailure_ = "Interactive physics mutation is unsupported after "
             "Geant4 physics-list registration; use a batch macro before /run/initialize "
             "in a fresh process: " + std::string(command ? command->GetCommandPath() : "<unknown>");
@@ -243,6 +252,20 @@ void PhysicsMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
             for (const auto& name : PhysicsFactory::AvailableReferenceLists()) {
                 G4cout << "  " << name << G4endl;
             }
+        } else if (command == dumpProcessesCmd_) {
+            const auto tokens = CommandParser::SplitWhitespaceRespectQuotes(raw);
+            if (tokens.empty() || tokens.size() > 2) {
+                throw std::runtime_error("usage: /AIHL/physics/dumpProcesses <file.json> [particle,particle,...]");
+            }
+            std::vector<std::string> particles;
+            if (tokens.size() == 2) {
+                for (const auto& part : StringUtils::Split(tokens[1], ',')) {
+                    const std::string name = StringUtils::Trim(part);
+                    if (!name.empty()) particles.push_back(name);
+                }
+            }
+            const int count = ProcessDump::WriteJson(tokens[0], particles);
+            G4cout << "[PhysicsMessenger] Dumped processes of " << count << " particles to " << tokens[0] << G4endl;
         } else if (command == listAvailableEMReferencesCmd_) {
             G4cout << "[PhysicsMessenger] Available reference EM options:" << G4endl;
             for (const auto& name : PhysicsFactory::AvailableReferenceListsEM()) {
@@ -252,7 +275,8 @@ void PhysicsMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
 
         if (command != printCmd_ &&
             command != listAvailableReferencesCmd_ &&
-            command != listAvailableEMReferencesCmd_) {
+            command != listAvailableEMReferencesCmd_ &&
+            command != dumpProcessesCmd_) {
             G4cout << "[PhysicsMessenger] Physics configuration changed. "
                    << "Apply before /run/initialize or notify Geant4 with /run/physicsModified when appropriate."
                    << G4endl;

@@ -98,10 +98,17 @@ const std::map<std::string, double>& EnergyUnits()
 const std::map<std::string, double>& TimeUnits()
 {
     static const std::map<std::string, double> units = {
+        {"ps", picosecond},
         {"ns", ns},
         {"us", microsecond},
         {"ms", millisecond},
         {"s", second},
+        {"min", minute},
+        {"h", hour},
+        {"d", day},
+        {"day", day},
+        {"y", year},
+        {"year", year},
     };
     return units;
 }

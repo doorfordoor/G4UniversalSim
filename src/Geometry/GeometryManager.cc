@@ -13,6 +13,13 @@
 #include "Geometry/GdmlIO.hh"
 #include "G4LogicalVolume.hh"
 #include "G4LogicalVolumeStore.hh"
+#include "G4ProductionCuts.hh"
+#include "G4Region.hh"
+#include "G4RegionStore.hh"
+#include "G4UserLimits.hh"
+#include "Physics/PhysicsManager.hh"
+
+#include <cfloat>
 
 #include <algorithm>
 #include <set>
@@ -529,14 +536,86 @@ G4VPhysicalVolume* GeometryManager::BuildWorld()
 
     if (rootNode_->GetProperty("template") == "gdml") {
         G4VPhysicalVolume* world = BuildGdmlWorld(*rootNode_);
+        ApplyRegionPhysics();
         ClearDirty();
         return world;
     }
 
     G4VPhysicalVolume* world = volumeBuilder_.BuildWorld(*rootNode_);
     if (!world) throw std::runtime_error("GeometryManager BuildWorld returned null world physical volume");
+    ApplyRegionPhysics();
     ClearDirty();
     return world;
+}
+
+void GeometryManager::SetPhysicsManager(const PhysicsManager* physicsManager)
+{
+    physicsManager_ = physicsManager;
+}
+
+void GeometryManager::ApplyRegionPhysics()
+{
+    if (!physicsManager_) return;
+    for (const auto& item : physicsManager_->GetRegionPhysics()) {
+        const std::string& name = item.first;
+        const RegionPhysicsSettings& settings = item.second;
+        const std::string context = "[physics.region." + name + "]: ";
+        G4Region* region = G4RegionStore::GetInstance()->GetRegion(name, false);
+        if (!region && settings.volumes.empty()) {
+            std::string available;
+            for (const G4Region* existing : *G4RegionStore::GetInstance()) {
+                available += (available.empty() ? "" : ", ") + std::string(existing->GetName());
+            }
+            throw std::runtime_error(context + "region '" + name + "' does not exist in the geometry; set region = " + name +
+                                     " on a geometry volume or list its logical volumes in volumes = ... "
+                                     "(existing regions: " + available + ")");
+        }
+        const bool created = region == nullptr;
+        if (created) region = new G4Region(name);
+        for (const std::string& volume : settings.volumes) {
+            G4LogicalVolume* logical = G4LogicalVolumeStore::GetInstance()->GetVolume(volume, false);
+            if (!logical) logical = G4LogicalVolumeStore::GetInstance()->GetVolume(volume + "_LV", false);
+            if (!logical) throw std::runtime_error(context + "volumes names unknown logical volume '" + volume + "'");
+            if (logical->GetRegion() && logical->IsRootRegion() && logical->GetRegion() != region) {
+                throw std::runtime_error(context + "logical volume '" + volume + "' is already the root of region '" +
+                                         std::string(logical->GetRegion()->GetName()) + "'");
+            }
+            region->AddRootLogicalVolume(logical);
+        }
+        if (!settings.cuts.empty()) {
+            if (!created && region->GetProductionCuts()) {
+                throw std::runtime_error(context + "region '" + name + "' already has production cuts from geometry "
+                                         "volume cut.* fields; set the cuts in one place only");
+            }
+            auto* cuts = new G4ProductionCuts();
+            cuts->SetProductionCut(physicsManager_->GetDefaultCut());
+            for (const auto& cut : settings.cuts) cuts->SetProductionCut(cut.second, cut.first);
+            region->SetProductionCuts(cuts);
+        }
+        if (settings.HasUserLimits()) {
+            region->SetUserLimits(new G4UserLimits(
+                settings.maxStep > 0.0 ? settings.maxStep : DBL_MAX,
+                settings.maxTrackLength > 0.0 ? settings.maxTrackLength : DBL_MAX,
+                settings.maxTime > 0.0 ? settings.maxTime : DBL_MAX,
+                settings.minKineticEnergy));
+        }
+    }
+}
+
+void GeometryManager::ValidateRegionPhysicsNames() const
+{
+    if (!physicsManager_ || !rootNode_ || rootNode_->GetProperty("template") == "gdml") return;
+    const std::vector<std::string> regions = GetRegionNames();
+    for (const auto& item : physicsManager_->GetRegionPhysics()) {
+        if (!item.second.volumes.empty()) continue;
+        if (std::find(regions.begin(), regions.end(), item.first) != regions.end()) continue;
+        std::string available;
+        for (const std::string& region : regions) available += (available.empty() ? "" : ", ") + region;
+        throw std::runtime_error("[physics.region." + item.first + "]: region '" + item.first +
+                                 "' does not exist in the geometry; set region = " + item.first +
+                                 " on a geometry volume or list its logical volumes in volumes = ... "
+                                 "(geometry regions: " + (available.empty() ? std::string("none") : available) + ")");
+    }
 }
 
 G4VPhysicalVolume* GeometryManager::BuildGdmlWorld(const VolumeNode& root)

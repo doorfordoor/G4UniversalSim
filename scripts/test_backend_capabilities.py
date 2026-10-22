@@ -46,7 +46,7 @@ def main() -> int:
     # GDML is runtime only when the backend was built against a Geant4 with GDML.
     assert ("gdml" in capabilities.runtime_ids("templates")) == GDML_EXPECTED
     assert "temperature" not in capabilities.runtime_ids("materials")
-    assert "physics_region_cuts" not in capabilities.runtime_ids("physics")
+    assert {"physics_region_cuts", "region_step_limits", "radioactive_decay", "process_dump"} <= capabilities.runtime_ids("physics")
     assert capabilities.runtime_ids("scorers") == {"hits", "edep", "dose", "fluence", "let"}
     assert "let" in capabilities.runtime_ids("scorers")
     assert re.fullmatch(r"[0-9a-f]{64}", capabilities.data["source_fingerprint"])
