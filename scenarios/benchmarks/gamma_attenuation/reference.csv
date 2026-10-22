@@ -1,0 +1,9 @@
+# Total mass attenuation coefficient with coherent scattering (cm2/g).
+# Source: NIST XCOM, https://physics.nist.gov/PhysRefData/Xcom/html/xcom1.html
+material,density_g_cm3,energy_MeV,mu_rho_cm2_g,thickness_mm,source
+G4_WATER,1.0,0.1,0.1707,40,NIST XCOM
+G4_WATER,1.0,1.0,0.07072,100,NIST XCOM
+G4_WATER,1.0,10.0,0.02219,300,NIST XCOM
+G4_Al,2.699,1.0,0.06146,40,NIST XCOM
+G4_Pb,11.35,0.1,5.549,0.1,NIST XCOM
+G4_Pb,11.35,1.0,0.07102,10,NIST XCOM

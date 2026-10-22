@@ -7,6 +7,11 @@ Short, user-facing record of notable changes. Detailed support status lives in
 ## Unreleased
 
 ### Added
+- **Physics benchmarks** (roadmap Phase B1): `scenarios/benchmarks/` packs (reference
+  data, runnable example configs, Chinese READMEs) for water CSDA ranges (NIST
+  PSTAR/ESTAR), the 150 MeV proton Bragg peak R80, and narrow-beam photon attenuation
+  (NIST XCOM); `scripts/run_benchmarks.py` runs them and writes a JSON/Markdown report
+  (`--quick` runs in the test suite).
 - **Electromagnetic fields** (roadmap A7, experimental): `[field]` (global) and
   `[field.<name>]` with `volumes` (local) take uniform `magnetic` / `electric` values
   (combined fields allowed) or `magnetic_map` / `electric_map` CSV grids with trilinear
