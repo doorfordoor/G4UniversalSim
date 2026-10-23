@@ -28,6 +28,8 @@
 
 2026-10-23 G1 后端几何默认显示：配置页 3D 标签可见且勾选“自动显示 Geant4 几何”时，`schedule_backend_geometry` 在修改后 1.2 秒、切换到该页后 0.1 秒发出 `autoBackendGeometryRequested`；导出期间显示编辑器草图并注明近似。writer 不得在调用方文档上做校验（`generate_geometry_ini_text` 校验副本），否则会抹掉页面的材料错误。专项 `smoke_backend_geometry_auto.py`（真实后端：无运行包导出、缓存、去抖、忙时合并、编辑器错误、后端错误、关闭自动）。
 
+2026-10-23 G2/G3 3D 视图：后端几何与编辑器草图都转为 `preview3d/view_model.ViewItem` 列表，由 `ViewState` 决定可见性（世界、隐藏、单独显示、按材料）、颜色（常见材料固定色，其余按名称顺序取调色板）、样式（容器半透明、敏感体实心、选中描边且其余变淡）和剖切平面；`pyvista_preview_widget.py` 只把它们映射到 VTK 属性，不在控件里写判定逻辑。体积名：后端物理/逻辑体名去掉 `_PV`/`_LV` 即编辑器名；`volumeSelected` 与体积表双向联动（`select_geometry_row` 屏蔽信号避免回环）。点击与拖动以 4 像素区分。VTK 在 Windows 上不能用 Qt offscreen 平台渲染，`smoke_3d_view.py` 的控件部分切换到 windows 平台、无显示时跳过；独立 QtInteractor 关闭前先 `_plotter.close()`，否则测试退出时 wglMakeCurrent 报错。
+
 本文件适用于 gui/。GUI 是 PySide6 外部运行器和配置编辑器，后端 C++/Geant4 的实际实现仍是功能支持的唯一依据。
 
 ## 1. 分层和数据流

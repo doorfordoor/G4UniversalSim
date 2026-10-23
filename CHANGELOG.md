@@ -7,6 +7,14 @@ Short, user-facing record of notable changes. Detailed support status lives in
 ## Unreleased
 
 ### Changed
+- **3D view redesign** (roadmap G2/G3): one colour per material (common materials keep
+  fixed colours) with a legend whose check boxes hide a material; the world hidden by
+  default; volumes that contain others drawn as faint glass; theme background; camera
+  presets (front, side, top, iso) and an orthographic toggle; hovering a volume names
+  it with material, solid and volume; a click selects it (and its row in the volume
+  table, both ways) and fades the rest; Isolate, Hide and Show all; a section plane
+  along x, y or z with a slider. The same view draws the Geant4 world and the editor
+  sketch. Permanent labels are now off by default (hover replaces them).
 - **The 3D view shows the real Geant4 geometry by default** (roadmap G1). Opening the 3D
   Preview tab builds the world with the backend (about 3 s) without generating a run
   package first, and rebuilds it a moment after each change while the tab is open

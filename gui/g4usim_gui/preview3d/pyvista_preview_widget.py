@@ -1,10 +1,35 @@
+"""3D view of the geometry (roadmap A5, G1-G3): the Geant4 world or the editor sketch.
+
+Both are drawn through one path: a list of view_model.ViewItems with their meshes,
+styled by a ViewState (material colours and legend, world/hidden/isolated volumes,
+selection, section plane). Interaction: hover shows a volume's name, material, solid
+and volume; a click (without dragging) selects it and emits volumeSelected so the
+geometry table can follow; Isolate/Hide/Show all, the legend's check boxes, camera
+presets, an orthographic toggle and a section plane change only what is drawn.
+"""
+
 from __future__ import annotations
 
 import math
 import os
 
-from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QLabel, QStackedWidget, QVBoxLayout, QWidget
+import numpy as np
+
+from PySide6.QtCore import QSize, Qt, QTimer, Signal
+from PySide6.QtGui import QColor, QIcon, QPixmap
+from PySide6.QtWidgets import (
+    QCheckBox,
+    QComboBox,
+    QHBoxLayout,
+    QLabel,
+    QListWidget,
+    QListWidgetItem,
+    QSlider,
+    QStackedWidget,
+    QToolButton,
+    QVBoxLayout,
+    QWidget,
+)
 
 from g4usim_gui.core.i18n import ui_format, ui_text
 from g4usim_gui.core.theme import current_colors
@@ -12,23 +37,41 @@ from g4usim_gui.preview3d.backend_mesh import BackendMesh
 from g4usim_gui.preview3d.geometry_primitives import add_vec3, scale_vec3, scene_extent
 from g4usim_gui.preview3d.scene_model import PreviewScene, PreviewVolume
 from g4usim_gui.preview3d.units import perpendicular_basis
+from g4usim_gui.preview3d.view_model import CAMERA_PRESETS, ViewItem, ViewState, backend_items, mark_containers
+
+CLICK_TOLERANCE_PX = 4
+SECTION_LABELS = (("No section", ""), ("Section x", "x"), ("Section y", "y"), ("Section z", "z"))
 
 
 class PyVistaPreviewWidget(QWidget):
+    volumeSelected = Signal(str)     # editor volume name, "" when the selection is cleared
+
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         import pyvista as pv  # noqa: PLC0415
+        import vtk  # noqa: PLC0415
         from pyvistaqt import QtInteractor  # noqa: PLC0415
 
         self._pv = pv
+        self._vtk = vtk
         self._plotter = QtInteractor(self)
         self._show_source = True
-        self._show_labels = True
+        self._show_labels = False
+        self.state = ViewState()
+        self._meshes: dict[str, object] = {}
+        self._actors: dict[str, object] = {}
+        self._items: dict[str, ViewItem] = {}
+        self._actor_keys: dict[int, str] = {}
+        self._plane = vtk.vtkPlane()
+        self._picker = vtk.vtkCellPicker()
+        self._picker.SetTolerance(0.0005)
+        self._press_position: tuple[int, int] | None = None
+        self._hovered = ""
+        self._source_label = ""
+
         self.status = QLabel()
         self.status.setWordWrap(True)
-        self.status.setMaximumHeight(34)
         self.status.setProperty("uiRole", "hint")
-        # until the first render the (black) render window is replaced by a hint
         self.empty = QLabel(ui_text("Press Refresh Preview to draw the editor geometry, or Show Backend "
                                     "Geometry for the geometry Geant4 builds."))
         self.empty.setWordWrap(True)
@@ -37,23 +80,109 @@ class PyVistaPreviewWidget(QWidget):
         self.stack = QStackedWidget()
         self.stack.addWidget(self.empty)
         self.stack.addWidget(self._plotter)
+
+        # view controls: cameras, projection, world, section, visibility
+        self.camera_buttons: dict[str, QToolButton] = {}
+        controls = QHBoxLayout()
+        controls.setSpacing(4)
+        controls.addWidget(QLabel("View"))
+        for name, label in (("front", "Front"), ("side", "Side"), ("top", "Top"), ("iso", "Iso")):
+            button = QToolButton()
+            button.setText(label)
+            button.setProperty("toolbarButton", True)
+            button.setToolTip(ui_format("Look at the geometry from the {view}", view=label.lower()))
+            button.clicked.connect(lambda _checked=False, preset=name: self.set_camera(preset))
+            controls.addWidget(button)
+            self.camera_buttons[name] = button
+        self.ortho = QCheckBox("Orthographic")
+        self.show_world = QCheckBox("World")
+        self.show_world.setToolTip("Draw the world volume as a faint outline")
+        self.section_axis = QComboBox()
+        for label, axis in SECTION_LABELS:
+            self.section_axis.addItem(ui_text(label), axis)
+        self.section_slider = QSlider(Qt.Horizontal)
+        self.section_slider.setRange(0, 1000)
+        self.section_slider.setValue(500)
+        self.section_slider.setEnabled(False)
+        self.section_slider.setMinimumWidth(110)
+        self.isolate_button = QToolButton()
+        self.isolate_button.setText("Isolate")
+        self.hide_button = QToolButton()
+        self.hide_button.setText("Hide")
+        self.show_all_button = QToolButton()
+        self.show_all_button.setText("Show all")
+        for button in (self.isolate_button, self.hide_button, self.show_all_button):
+            button.setProperty("toolbarButton", True)
+        controls.addSpacing(6)
+        controls.addWidget(self.ortho)
+        controls.addWidget(self.show_world)
+        controls.addStretch(1)
+        tools = QHBoxLayout()     # second row: cut and visibility
+        tools.setSpacing(4)
+        tools.addWidget(self.section_axis)
+        tools.addWidget(self.section_slider, 1)
+        tools.addSpacing(10)
+        tools.addWidget(self.isolate_button)
+        tools.addWidget(self.hide_button)
+        tools.addWidget(self.show_all_button)
+
+        self.legend = QListWidget()
+        self.legend.setFixedWidth(190)
+        self.legend.setIconSize(QSize(14, 14))
+        self.legend.setToolTip("Materials in the view; untick one to hide its volumes")
+        legend_box = QVBoxLayout()
+        legend_title = QLabel("Materials")
+        legend_title.setProperty("uiRole", "sectionTitle")
+        legend_box.addWidget(legend_title)
+        legend_box.addWidget(self.legend, 1)
+        view_row = QHBoxLayout()
+        view_row.addWidget(self.stack, 1)
+        view_row.addLayout(legend_box)
         layout = QVBoxLayout(self)
-        layout.addWidget(self.stack, 1)
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.addLayout(controls)
+        layout.addLayout(tools)
+        layout.addLayout(view_row, 1)
         layout.addWidget(self.status)
+
+        self.ortho.toggled.connect(self._on_ortho)
+        self.show_world.toggled.connect(self._on_show_world)
+        self.section_axis.currentIndexChanged.connect(self._on_section_axis)
+        self.section_slider.valueChanged.connect(self._on_section_slider)
+        self.isolate_button.clicked.connect(self.isolate_selected)
+        self.hide_button.clicked.connect(self.hide_selected)
+        self.show_all_button.clicked.connect(self.show_all)
+        self.legend.itemChanged.connect(self._on_legend_item)
+        self._hover_timer = QTimer(self)
+        self._hover_timer.setSingleShot(True)
+        self._hover_timer.setInterval(40)
+        self._hover_timer.timeout.connect(self._update_hover)
+        iren = self._plotter.iren
+        iren.add_observer("MouseMoveEvent", lambda *_: self._hover_timer.start())
+        iren.add_observer("LeftButtonPressEvent", self._on_press)
+        iren.add_observer("LeftButtonReleaseEvent", self._on_release)
+        self._update_controls()
         self.set_theme()
 
+    # --- public API used by the Configuration page -----------------------------------
     def set_theme(self) -> None:
         colors = current_colors()
         self._plotter.set_background(colors.surface_alt)
-        self._plotter.render()
+        self._apply_styles()
+        self._fill_legend()
+
+    def refresh_language(self) -> None:
+        for index, (label, _axis) in enumerate(SECTION_LABELS):
+            self.section_axis.setItemText(index, ui_text(label))
+        self._show_info()
 
     def clear(self) -> None:
         self._plotter.clear()
+        self._meshes, self._actors, self._items, self._actor_keys = {}, {}, {}, {}
         self.status.clear()
 
     def reset_camera(self) -> None:
-        self._plotter.reset_camera()
-        self._plotter.render()
+        self.set_camera("iso")
 
     def set_show_source(self, show: bool) -> None:
         self._show_source = show
@@ -61,30 +190,61 @@ class PyVistaPreviewWidget(QWidget):
     def set_show_labels(self, show: bool) -> None:
         self._show_labels = show
 
+    def set_camera(self, preset: str) -> None:
+        direction, up = CAMERA_PRESETS[preset]
+        self._plotter.view_vector(direction, viewup=up)
+        self._plotter.reset_camera(bounds=self.state.visible_bounds())
+        self._plotter.render()
+
+    def select_volume(self, name: str) -> None:
+        """Select a volume by its editor name (from the geometry table); "" clears."""
+        if (name or None) == self.state.selected:
+            return
+        self.state.select(name or None)
+        self._apply_styles()
+        self._show_info()
+        self._update_controls()
+
+    def isolate_selected(self) -> None:
+        self.state.isolate_selected()
+        self._apply_visibility()
+
+    def hide_selected(self) -> None:
+        self.state.hide_selected()
+        self._apply_visibility()
+        self.volumeSelected.emit("")
+
+    def show_all(self) -> None:
+        self.state.show_all()
+        self._apply_visibility()
+
     def render_scene(self, scene: PreviewScene) -> None:
+        """The editor sketch: approximate shapes from the editor's geometry."""
         self.stack.setCurrentWidget(self._plotter)
         try:
-            self.clear()
+            items, meshes = [], {}
             for volume in scene.volumes:
-                self._add_volume(volume)
-            if self._show_source and scene.source.position_mm and scene.source.direction:
-                self._add_source(scene)
-            if scene.bounds_mm:
-                self._plotter.show_bounds(grid="front", location="outer")
-            self._plotter.add_axes()
-            self._plotter.reset_camera()
-            self._plotter.render()
+                if volume.role == "boolean_tool" or not volume.size_mm or not volume.position_mm:
+                    continue
+                mesh = self._make_volume_mesh(volume)
+                if mesh is None:
+                    continue
+                key = volume.name or f"volume{len(items)}"
+                items.append(ViewItem(key=key, name=volume.name, material=volume.material, solid=volume.shape,
+                                      sensitive=volume.sensitive, world=volume.role == "world",
+                                      bounds=tuple(mesh.bounds)))
+                meshes[key] = mesh
+            mark_containers(items)
+            self._render(items, meshes, scene)
             if scene.errors:
-                summary = ui_format(
-                    "Rendered with {errors} error(s) and {warnings} warning(s).",
-                    errors=len(scene.errors),
-                    warnings=len(scene.warnings),
-                )
+                summary = ui_format("Rendered with {errors} error(s) and {warnings} warning(s).",
+                                    errors=len(scene.errors), warnings=len(scene.warnings))
             elif scene.warnings:
                 summary = ui_format("Rendered with {warnings} warning(s).", warnings=len(scene.warnings))
             else:
                 summary = ui_text("3D Preview: OK")
-            self.status.setText(summary)
+            self._source_label = summary
+            self._show_info()
             self.status.setToolTip("\n".join([*scene.errors, *scene.warnings][:12]))
         except Exception as exc:  # noqa: BLE001
             self.status.setText(f"3D render failed: {exc}")
@@ -93,44 +253,186 @@ class PyVistaPreviewWidget(QWidget):
         """Show the geometry Geant4 built (exportMesh), not the editor approximation."""
         self.stack.setCurrentWidget(self._plotter)
         try:
-            self.clear()
-            for volume in mesh.volumes:
-                if not volume.vertices or not volume.faces:
-                    continue
+            items = backend_items(mesh)
+            meshes = {}
+            by_path = {volume.path: volume for volume in mesh.volumes}
+            for item in items:
+                volume = by_path[item.key]
                 faces: list[int] = []
                 for face in volume.faces:
                     faces.extend((len(face), *face))
-                poly = self._pv.PolyData(volume.vertices, faces)
-                if volume.depth == 0:
-                    color, opacity, style = ("white", 0.08, "wireframe")
-                elif volume.sensitive:
-                    color, opacity, style = ("dodgerblue", 0.55, "surface")
-                else:
-                    color, opacity, style = ("lightblue", 0.4, "surface")
-                self._plotter.add_mesh(poly, color=color, opacity=opacity, style=style, show_edges=True)
-            self._plotter.add_axes()
-            self._plotter.reset_camera()
-            self._plotter.render()
-            self.status.setText(ui_format("Backend geometry: {count} volume copies from Geant4.", count=len(mesh.volumes)))
+                meshes[item.key] = self._pv.PolyData(np.asarray(volume.vertices, dtype=float), faces)
+            self._render(items, meshes, None)
+            self._source_label = ui_format("Backend geometry: {count} volume copies from Geant4.",
+                                           count=len(mesh.volumes))
+            self._show_info()
             self.status.setToolTip(mesh.source_file)
         except Exception as exc:  # noqa: BLE001
             self.status.setText(ui_format("Backend geometry render failed: {reason}", reason=exc))
 
-    def _add_volume(self, volume: PreviewVolume) -> None:
-        if not volume.size_mm or not volume.position_mm:
-            return
-        mesh = self._make_volume_mesh(volume)
-        if mesh is None:
-            return
-        color, opacity, style = _style(volume)
-        self._plotter.add_mesh(mesh, color=color, opacity=opacity, style=style, show_edges=True)
-        if self._show_labels and volume.role != "world":
-            label = volume.name
-            if volume.sensitive:
-                label += " [S]"
-            if volume.bias:
-                label += " [B]"
-            self._plotter.add_point_labels([volume.position_mm], [label], point_size=0, font_size=12)
+    # --- drawing -------------------------------------------------------------------------
+    def _render(self, items: list[ViewItem], meshes: dict, scene: PreviewScene | None) -> None:
+        first = not self._items
+        self._plotter.clear()
+        self.state.set_items(items)
+        self._meshes = meshes
+        self._items = {item.key: item for item in items}
+        self._actors, self._actor_keys = {}, {}
+        for item in items:
+            actor = self._plotter.add_mesh(meshes[item.key], show_edges=not item.world, smooth_shading=False,
+                                           pickable=not item.world, reset_camera=False)
+            self._actors[item.key] = actor
+            self._actor_keys[id(actor)] = item.key
+        if scene is not None and self._show_source and scene.source.position_mm and scene.source.direction:
+            styled = {id(a) for a in self._actors.values()}
+            self._add_source(scene)
+            for actor in self._plotter.renderer.actors.values():
+                if id(actor) not in styled and hasattr(actor, "SetPickable"):
+                    actor.SetPickable(False)
+        if self._show_labels:
+            seen = set()
+            for item in items:
+                if item.world or item.name in seen or not item.bounds:
+                    continue
+                seen.add(item.name)
+                b = item.bounds
+                self._plotter.add_point_labels([((b[0] + b[1]) / 2, (b[2] + b[3]) / 2, (b[4] + b[5]) / 2)],
+                                               [item.name], point_size=0, font_size=11, pickable=False)
+        self._plotter.add_axes()
+        self._apply_visibility(render=False)
+        self._apply_styles(render=False)
+        self._fill_legend()
+        if first:
+            self.set_camera("iso")
+        else:
+            self._plotter.render()
+
+    def _apply_styles(self, render: bool = True) -> None:
+        colors = current_colors()
+        edge = colors.border_strong
+        for key, actor in self._actors.items():
+            style = self.state.style(self._items[key])
+            prop = actor.GetProperty()
+            if style["wireframe"]:
+                prop.SetRepresentationToWireframe()
+                prop.SetColor(QColor(colors.text_muted).getRgbF()[:3])
+                prop.SetOpacity(0.25)
+                continue
+            prop.SetRepresentationToSurface()
+            prop.SetColor(QColor(style["colour"]).getRgbF()[:3])
+            prop.SetOpacity(style["opacity"])
+            prop.SetEdgeVisibility(True)
+            if style["selected"]:
+                prop.SetEdgeColor(QColor(colors.accent).getRgbF()[:3])
+                prop.SetLineWidth(2.5)
+            else:
+                prop.SetEdgeColor(QColor(edge).getRgbF()[:3])
+                prop.SetLineWidth(0.6)
+        if render:
+            self._plotter.render()
+
+    def _apply_visibility(self, render: bool = True) -> None:
+        for key, actor in self._actors.items():
+            actor.SetVisibility(self.state.visible(self._items[key]))
+        self._apply_section(render=False)
+        self._apply_styles(render=False)
+        self._update_controls()
+        self._fill_legend()
+        if render:
+            self._plotter.render()
+
+    def _apply_section(self, render: bool = True) -> None:
+        plane = self.state.section_plane()
+        for key, actor in self._actors.items():
+            mapper = actor.GetMapper()
+            mapper.RemoveAllClippingPlanes()
+            if plane is not None and not self._items[key].world:
+                mapper.AddClippingPlane(self._plane)
+        if plane is not None:
+            self._plane.SetOrigin(*plane[0])
+            self._plane.SetNormal(*plane[1])
+        if render:
+            self._plotter.render()
+
+    def _fill_legend(self) -> None:
+        self.legend.blockSignals(True)
+        self.legend.clear()
+        for material, colour, count, shown in self.state.legend():
+            swatch = QPixmap(14, 14)
+            swatch.fill(QColor(colour))
+            item = QListWidgetItem(QIcon(swatch), f"{material}  ({count})")
+            item.setData(Qt.UserRole, material)
+            item.setFlags(item.flags() | Qt.ItemIsUserCheckable)
+            item.setCheckState(Qt.Checked if shown else Qt.Unchecked)
+            self.legend.addItem(item)
+        self.legend.blockSignals(False)
+
+    def _update_controls(self) -> None:
+        has_selection = self.state.selected is not None
+        self.isolate_button.setEnabled(has_selection)
+        self.hide_button.setEnabled(has_selection)
+        self.show_all_button.setEnabled(bool(self.state.hidden or self.state.hidden_materials or self.state.isolated))
+
+    def _show_info(self) -> None:
+        item = next((i for i in self._items.values() if i.name == (self._hovered or self.state.selected)), None)
+        if self._hovered:
+            hovered = self._items.get(self._hovered)
+            text = hovered.describe() if hovered else ""
+        elif item is not None:
+            text = ui_format("Selected: {volume}", volume=item.describe())
+        else:
+            text = self._source_label + "  " + ui_text("Hover a volume to name it; click to select it.")
+        self.status.setText(text)
+
+    # --- interaction ------------------------------------------------------------------------
+    def _pick(self) -> str:
+        x, y = self._plotter.iren.interactor.GetEventPosition()
+        if not self._picker.Pick(x, y, 0, self._plotter.renderer):
+            return ""
+        return self._actor_keys.get(id(self._picker.GetActor()), "")
+
+    def _update_hover(self) -> None:
+        key = self._pick() if self._actors else ""
+        if key != self._hovered:
+            self._hovered = key
+            self._show_info()
+
+    def _on_press(self, *_args) -> None:
+        self._press_position = tuple(self._plotter.iren.interactor.GetEventPosition())
+
+    def _on_release(self, *_args) -> None:
+        start, self._press_position = self._press_position, None
+        position = tuple(self._plotter.iren.interactor.GetEventPosition())
+        if start is None or max(abs(position[0] - start[0]), abs(position[1] - start[1])) > CLICK_TOLERANCE_PX:
+            return    # a drag rotates the camera; only a click selects
+        key = self._pick()
+        name = self._items[key].name if key else ""
+        self.select_volume(name)
+        self.volumeSelected.emit(name)
+
+    def _on_ortho(self, on: bool) -> None:
+        if on:
+            self._plotter.enable_parallel_projection()
+        else:
+            self._plotter.disable_parallel_projection()
+        self._plotter.render()
+
+    def _on_show_world(self, on: bool) -> None:
+        self.state.show_world = on
+        self._apply_visibility()
+
+    def _on_section_axis(self) -> None:
+        self.state.section_axis = self.section_axis.currentData() or ""
+        self.section_slider.setEnabled(bool(self.state.section_axis))
+        self._apply_section()
+
+    def _on_section_slider(self, value: int) -> None:
+        self.state.section_fraction = value / 1000.0
+        self._apply_section()
+
+    def _on_legend_item(self, item: QListWidgetItem) -> None:
+        self.state.toggle_material(item.data(Qt.UserRole), item.checkState() == Qt.Checked)
+        self._apply_visibility()
 
     def _make_volume_mesh(self, volume: PreviewVolume):
         sx, sy, sz = volume.size_mm
@@ -231,22 +533,6 @@ class PyVistaPreviewWidget(QWidget):
             ]
             mesh = self._pv.PolyData(points, faces=[4, 0, 1, 2, 3])
             self._plotter.add_mesh(mesh, color="red", opacity=0.12, show_edges=True)
-
-
-def _style(volume: PreviewVolume) -> tuple[str, float, str]:
-    if volume.role == "world":
-        return ("white", 0.08, "wireframe")
-    if volume.sensitive and volume.bias:
-        return ("magenta", 0.45, "surface")
-    if volume.sensitive:
-        return ("dodgerblue", 0.55, "surface")
-    if volume.bias:
-        return ("orange", 0.45, "surface")
-    if volume.role == "layer":
-        return ("lightgray", 0.65, "surface")
-    if volume.role == "boolean_tool":
-        return ("crimson", 0.25, "wireframe")
-    return ("lightblue", 0.55, "surface")
 
 
 def make_tubs_mesh(pv, *, center, inner_radius: float, outer_radius: float, half_z: float, resolution: int = 64):

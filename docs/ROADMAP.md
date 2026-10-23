@@ -21,7 +21,7 @@ This file is the single source of truth for progress. Every work session updates
 | D Installer | Done (portable ZIP + Inno Setup installer; uses an existing Geant4 data folder) | see log |
 | E Fixes and foundations | In progress: E1 done | see log |
 | F System optimisation (backend + GUI) | Planned | |
-| G 3D view redesign | In progress: G1 done | see log |
+| G 3D view redesign | In progress: G1-G3 done | see log |
 | H Geant4 capability increments | Planned | |
 
 ## Data storage decision
@@ -217,6 +217,7 @@ H4–H8 if the user's applications favour some of them.
 
 ## Progress log
 
+- 2026-10-23: G2/G3 done: material colours and legend, glass containers, camera presets, hover info, click-to-select linked with the volume table, isolate/hide/show all, section plane; Qt-free view model plus a real-window VTK smoke (`gui_3d_view`: click vs drag picking, visibility, clipping planes, table link).
 - 2026-10-23: G1 done: the 3D tab builds the Geant4 world without a run package (demo project: 15 volume copies), re-exports after edits with a 1.2 s debounce, serves unchanged inputs from the cache, collapses a burst of edits into one export, and reports editor and backend errors; real-backend smoke `gui_backend_geometry_auto`. Also fixed the geometry writer erasing the editor's material errors.
 - 2026-10-23: E1 done: GUI and backend agree on all 61 geometry/material cases (46 same verdict, 15 the editor reports as source-copy only, 48 GUI-writer round trips accepted); the default demo project now generates a package and shows 15 backend volume copies. Fixed seven GUI rule differences (see CHANGELOG).
 - 2026-10-22: GUI refresh done: Start page and examples gallery (bundled results checked against the card claims: Bragg peak at 157.5 mm, 662 keV photopeak and Compton edge, Landau tail, deposit falling with energy), new shell and page styling, before/after screenshots; suite with the new `gui_start_page` smoke.

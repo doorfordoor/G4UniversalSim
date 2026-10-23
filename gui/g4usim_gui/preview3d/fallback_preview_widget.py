@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from PySide6.QtCore import Signal
 from PySide6.QtWidgets import QLabel, QPlainTextEdit, QVBoxLayout, QWidget
 
 from g4usim_gui.core.i18n import ui_format
@@ -8,6 +9,7 @@ from g4usim_gui.preview3d.scene_model import PreviewScene
 
 
 class FallbackPreviewWidget(QWidget):
+    volumeSelected = Signal(str)   # same interface as the 3D widget; text has nothing to click
     def __init__(self, parent: QWidget | None = None, reason: str = "") -> None:
         super().__init__(parent)
         self.reason = reason
@@ -48,4 +50,7 @@ class FallbackPreviewWidget(QWidget):
         return
 
     def set_show_labels(self, show: bool) -> None:
+        return
+
+    def select_volume(self, name: str) -> None:
         return

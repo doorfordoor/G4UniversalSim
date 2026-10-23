@@ -569,6 +569,24 @@ ZH_CN: dict[str, str] = {
     'Geant4 could not build this geometry: {reason}': 'Geant4 无法构建此几何：{reason}',
     'Backend geometry in external mode needs a main INI: choose one on the Project page.':
         '外部文件模式下显示后端几何需要主 INI：请在项目页选择。',
+    'Front': '正视',
+    'Side': '侧视',
+    'Top': '俯视',
+    'Iso': '等轴',
+    'Look at the geometry from the {view}': '从{view}方向观察几何',
+    'Orthographic': '正交投影',
+    'World': '世界',
+    'Draw the world volume as a faint outline': '以淡色线框显示世界体',
+    'No section': '无剖切',
+    'Section x': '沿 x 剖切',
+    'Section y': '沿 y 剖切',
+    'Section z': '沿 z 剖切',
+    'Isolate': '单独显示',
+    'Hide': '隐藏',
+    'Show all': '全部显示',
+    'Materials in the view; untick one to hide its volumes': '视图中的材料；取消勾选可隐藏对应体积',
+    'Selected: {volume}': '已选中：{volume}',
+    'Hover a volume to name it; click to select it.': '鼠标悬停显示体积名称，单击选中。',
 }
 
 

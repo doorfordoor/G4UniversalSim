@@ -211,7 +211,7 @@ class ConfigBuilderPage(QWidget):
         self.preview3d_show_source = QCheckBox("Show Source")
         self.preview3d_show_source.setChecked(True)
         self.preview3d_show_labels = QCheckBox("Show Labels")
-        self.preview3d_show_labels.setChecked(True)
+        self.preview3d_show_labels.setChecked(False)   # hovering a volume names it (G3)
         self.preview3d_auto_backend = QCheckBox("Geant4 geometry automatically")
         self.preview3d_auto_backend.setChecked(True)
         self.preview3d_auto_backend.setToolTip(
@@ -647,8 +647,8 @@ class ConfigBuilderPage(QWidget):
         layout = QVBoxLayout(tab)
         toolbar = QHBoxLayout()
         toolbar.addWidget(self.preview3d_refresh_button)
-        toolbar.addWidget(self.preview3d_reset_button)
         toolbar.addWidget(self.preview3d_backend_button)
+        self.preview3d_reset_button.hide()   # the view's own Iso camera button does this now (G2)
         toolbar.addStretch(1)
         options = QHBoxLayout()
         options.addWidget(self.preview3d_auto_backend)
@@ -986,6 +986,9 @@ class ConfigBuilderPage(QWidget):
         self.preview3d_reset_button.clicked.connect(lambda: self.preview3d_widget.reset_camera())
         self.preview3d_backend_button.clicked.connect(self.backendGeometryRequested.emit)
         self.preview3d_auto_backend.toggled.connect(lambda on: on and self.schedule_backend_geometry(100))
+        # selection follows between the 3D view and the volume table (G3)
+        self.preview3d_widget.volumeSelected.connect(self.select_geometry_row)
+        self.geometry_table.itemSelectionChanged.connect(self._on_geometry_row_selected)
         self.preview3d_show_source.stateChanged.connect(self._update_preview_display_options)
         self.preview3d_show_labels.stateChanged.connect(self._update_preview_display_options)
         for widget in [
@@ -1274,6 +1277,23 @@ class ConfigBuilderPage(QWidget):
             self._mark_preview_stale()
             self.schedule_backend_geometry()
             self.settingsChanged.emit()
+
+    def select_geometry_row(self, name: str) -> None:
+        """Select the volume table row of a volume picked in the 3D view (without switching tabs)."""
+        target = name.strip().lower()
+        self.geometry_table.blockSignals(True)
+        self.geometry_table.clearSelection()
+        for row in range(self.geometry_table.rowCount()):
+            item = self.geometry_table.item(row, 1)
+            if target and item is not None and item.text().strip().lower() == target:
+                self.geometry_table.selectRow(row)
+                break
+        self.geometry_table.blockSignals(False)
+
+    def _on_geometry_row_selected(self) -> None:
+        rows = {index.row() for index in self.geometry_table.selectedIndexes()}
+        item = self.geometry_table.item(min(rows), 1) if rows else None
+        self.preview3d_widget.select_volume(item.text().strip() if item is not None else "")
 
     def preview3d_tab_visible(self) -> bool:
         tab = self.preview3d_widget.parentWidget()
@@ -2237,6 +2257,9 @@ class ConfigBuilderPage(QWidget):
             set_theme()
 
     def refresh_language(self) -> None:
+        refresh = getattr(self.preview3d_widget, "refresh_language", None)
+        if refresh is not None:
+            refresh()
         self._populate_geometry_template_options(self._geometry_template_token())
         self._update_material_count_label()
         self._update_hierarchical_count_labels()

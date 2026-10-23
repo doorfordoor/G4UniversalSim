@@ -29,6 +29,7 @@ class BackendVolume:
     cubic_volume_mm3: float
     vertices: list[tuple[float, float, float]]
     faces: list[tuple[int, ...]]
+    logical: str = ""
 
 
 @dataclass
@@ -71,6 +72,7 @@ def load_backend_mesh(path: str | Path) -> BackendMesh:
             path=str(item["path"]), name=str(item["name"]), copy=int(item["copy"]), depth=int(item["depth"]),
             solid=str(item["solid"]), material=str(item["material"]), sensitive=bool(item["sensitive"]),
             cubic_volume_mm3=float(item["cubic_volume_mm3"]), vertices=vertices, faces=faces,
+            logical=str(item.get("logical", "")),
         ))
     if len(mesh.volumes) != int(data.get("volume_count", -1)):
         raise ValueError(f"'{path}': volume_count does not match the volumes list")
