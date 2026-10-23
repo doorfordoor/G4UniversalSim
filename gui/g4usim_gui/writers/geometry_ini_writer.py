@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import copy
 from pathlib import Path
 import re
 
@@ -20,9 +21,12 @@ def generate_geometry_ini_text(document: GeometryDocument) -> str:
             "Geometry Editor round-trip is blocked because source fields cannot be preserved:\n"
             + "\n".join(document.round_trip_blockers)
         )
-    validate_geometry_document(document, material_names=geometry_material_refs(document))
-    if document.errors:
-        raise ValueError("Geometry Editor validation failed:\n" + "\n".join(document.errors))
+    # check a copy: validating the caller's document here (with every referenced material
+    # counted as known) used to wipe its real material errors whenever a preview was written
+    check = copy.deepcopy(document)
+    validate_geometry_document(check, material_names=geometry_material_refs(check))
+    if check.errors:
+        raise ValueError("Geometry Editor validation failed:\n" + "\n".join(check.errors))
     if document.mode == "simple_box":
         body = _generate_simple_box(document)
     elif document.mode == "layered_device":

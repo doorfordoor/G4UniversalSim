@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from PySide6.QtCore import Qt, Signal
+from PySide6.QtCore import Qt, QTimer, Signal
 from PySide6.QtGui import QStandardItemModel
 from PySide6.QtWidgets import (
     QApplication,
@@ -88,6 +88,7 @@ class ConfigBuilderPage(QWidget):
     generatePackageRequested = Signal(bool)
     settingsChanged = Signal()
     backendGeometryRequested = Signal()
+    autoBackendGeometryRequested = Signal()   # the 3D tab wants the Geant4 world after a change (G1)
 
     GEOMETRY_PRIMARY_OPTIONS = (
         ("layered_device", "Layered Model"),
@@ -211,6 +212,16 @@ class ConfigBuilderPage(QWidget):
         self.preview3d_show_source.setChecked(True)
         self.preview3d_show_labels = QCheckBox("Show Labels")
         self.preview3d_show_labels.setChecked(True)
+        self.preview3d_auto_backend = QCheckBox("Geant4 geometry automatically")
+        self.preview3d_auto_backend.setChecked(True)
+        self.preview3d_auto_backend.setToolTip(
+            "While this tab is open, rebuild the Geant4 geometry a moment after each change "
+            "(about 3 s; unchanged geometry is shown from the cache).")
+        # debounce: one export after a burst of edits
+        self._backend_timer = QTimer(self)
+        self._backend_timer.setSingleShot(True)
+        self._backend_timer.setInterval(1200)
+        self._backend_timer.timeout.connect(self._request_auto_backend_geometry)
         self.preview3d_status = QLabel("3D Preview: stale")
         self.preview3d_status.setWordWrap(True)
         self.preview3d_messages = QPlainTextEdit()
@@ -638,10 +649,14 @@ class ConfigBuilderPage(QWidget):
         toolbar.addWidget(self.preview3d_refresh_button)
         toolbar.addWidget(self.preview3d_reset_button)
         toolbar.addWidget(self.preview3d_backend_button)
-        toolbar.addWidget(self.preview3d_show_source)
-        toolbar.addWidget(self.preview3d_show_labels)
         toolbar.addStretch(1)
+        options = QHBoxLayout()
+        options.addWidget(self.preview3d_auto_backend)
+        options.addWidget(self.preview3d_show_source)
+        options.addWidget(self.preview3d_show_labels)
+        options.addStretch(1)
         layout.addLayout(toolbar)
+        layout.addLayout(options)
         layout.addWidget(self.preview3d_status)
         layout.addWidget(self.preview3d_widget, 3)
         layout.addWidget(QLabel("3D preview messages"))
@@ -970,6 +985,7 @@ class ConfigBuilderPage(QWidget):
         self.preview3d_refresh_button.clicked.connect(self.refresh_3d_preview)
         self.preview3d_reset_button.clicked.connect(lambda: self.preview3d_widget.reset_camera())
         self.preview3d_backend_button.clicked.connect(self.backendGeometryRequested.emit)
+        self.preview3d_auto_backend.toggled.connect(lambda on: on and self.schedule_backend_geometry(100))
         self.preview3d_show_source.stateChanged.connect(self._update_preview_display_options)
         self.preview3d_show_labels.stateChanged.connect(self._update_preview_display_options)
         for widget in [
@@ -1256,7 +1272,25 @@ class ConfigBuilderPage(QWidget):
     def _emit_changed(self) -> None:
         if not self._building:
             self._mark_preview_stale()
+            self.schedule_backend_geometry()
             self.settingsChanged.emit()
+
+    def preview3d_tab_visible(self) -> bool:
+        tab = self.preview3d_widget.parentWidget()
+        return bool(self.isVisible() and tab is not None and self.workspace_tabs.currentWidget() is tab)
+
+    def schedule_backend_geometry(self, delay_ms: int | None = None) -> None:
+        """Ask for the Geant4 world a moment after the last change, while the 3D tab is shown."""
+        if not self.preview3d_auto_backend.isChecked() or not self.preview3d_tab_visible():
+            return
+        if delay_ms is not None:
+            self._backend_timer.setInterval(delay_ms)
+        self._backend_timer.start()
+        self._backend_timer.setInterval(1200)
+
+    def _request_auto_backend_geometry(self) -> None:
+        if self.preview3d_auto_backend.isChecked() and self.preview3d_tab_visible():
+            self.autoBackendGeometryRequested.emit()
 
     def _mark_preview_stale(self) -> None:
         if hasattr(self, "preview3d_status"):
@@ -1294,18 +1328,23 @@ class ConfigBuilderPage(QWidget):
     def set_backend_geometry_busy(self, busy: bool) -> None:
         self.preview3d_backend_button.setEnabled(not busy)
         if busy:
-            self.preview3d_status.setText(ui_text("Backend geometry: exporting..."))
+            # the editor sketch while Geant4 builds; it is labelled as an approximation
+            self.refresh_3d_preview()
+            self.preview3d_status.setText(ui_text(
+                "Building the Geant4 geometry... Showing the editor sketch meanwhile (approximate)."))
 
     def show_backend_geometry_message(self, message: str) -> None:
-        self.preview3d_status.setText(ui_text("Backend geometry: ERROR"))
+        self.preview3d_status.setText(ui_text(
+            "Geant4 geometry not available; the editor sketch (approximate) is shown. Reason below."))
         self.preview3d_messages.setPlainText(message)
 
-    def show_backend_geometry(self, mesh) -> None:
+    def show_backend_geometry(self, mesh, cached: bool = False) -> None:
         """Display the exportMesh result; the editor preview is replaced until the next Refresh."""
         self.preview3d_widget.render_backend_mesh(mesh)
         solids = sorted({volume.solid for volume in mesh.volumes})
         self.preview3d_status.setText(ui_format(
-            "Backend geometry: {count} volume copies from Geant4.", count=len(mesh.volumes)))
+            "Backend geometry: {count} volume copies from Geant4.", count=len(mesh.volumes))
+            + ("  " + ui_text("(unchanged, from the cache)") if cached else ""))
         self.preview3d_messages.setPlainText("\n".join([
             ui_text("This is the geometry built by the Geant4 backend, not the editor approximation."),
             ui_format("Source: {path}", path=mesh.source_file),

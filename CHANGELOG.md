@@ -6,7 +6,20 @@ Short, user-facing record of notable changes. Detailed support status lives in
 
 ## Unreleased
 
+### Changed
+- **The 3D view shows the real Geant4 geometry by default** (roadmap G1). Opening the 3D
+  Preview tab builds the world with the backend (about 3 s) without generating a run
+  package first, and rebuilds it a moment after each change while the tab is open
+  (option "Geant4 geometry automatically"). The editor sketch is shown, labelled
+  approximate, while Geant4 builds; unchanged geometry is shown from a cache; a burst of
+  edits ends in one export of the latest state; failures show the backend's own reason.
+  Unedited geometry and materials files are used in place, so files they refer to (STL,
+  GDML) keep resolving.
+
 ### Fixed
+- Writing the generated-geometry preview no longer erases the Geometry Editor's material
+  errors (the writer re-validated the document in place with every referenced material
+  counted as defined).
 - **GUI checks now match the backend for geometry and materials** (roadmap E1). The
   default demo project could not generate a package or show backend geometry: the GUI
   compared material names case-sensitively and paired the demo geometry with a

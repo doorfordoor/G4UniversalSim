@@ -26,6 +26,8 @@
 
 2026-10-23 E1 GUI/后端规则一致：材料名一律经 `parsers/materials_parser.material_reference_status`（自定义名去空白后不区分大小写，NIST 名区分大小写，其他 `G4_` 名只警告），与后端 `MaterialManager::GetMaterial` 一致；`[material.X]` 定义 X，`[NIST]`/`[element.*]`/`[isotope.*]` 不是材料行，原文保存在 `preserved_sections` 并由 writer 写在材料之前；组分保留 `名称:数值`；体积分数材料无 density 即 auto；材料循环引用报错。后端支持而编辑器不支持的形状（`geometry_editor_model.BACKEND_SHAPES`，与 `GeometryUtils.cc` 的 `ParseShape` 同步）是编辑器限制：提示原始文件复制模式，勾选后降为警告。默认演示项目用 `test/materials/test_materials.ini`。新规则差异由 `scripts/test_gui_backend_agreement.py`（统一平台 `gui_backend_agreement`）发现：新增几何/材料夹具会自动加入，判定不一致必须修正 GUI 或在 `EXPECTED` 中写明原因。
 
+2026-10-23 G1 后端几何默认显示：配置页 3D 标签可见且勾选“自动显示 Geant4 几何”时，`schedule_backend_geometry` 在修改后 1.2 秒、切换到该页后 0.1 秒发出 `autoBackendGeometryRequested`；导出期间显示编辑器草图并注明近似。writer 不得在调用方文档上做校验（`generate_geometry_ini_text` 校验副本），否则会抹掉页面的材料错误。专项 `smoke_backend_geometry_auto.py`（真实后端：无运行包导出、缓存、去抖、忙时合并、编辑器错误、后端错误、关闭自动）。
+
 本文件适用于 gui/。GUI 是 PySide6 外部运行器和配置编辑器，后端 C++/Geant4 的实际实现仍是功能支持的唯一依据。
 
 ## 1. 分层和数据流
@@ -43,7 +45,7 @@
 - 解析到但后端会忽略、空实现、占位模板或只用于预览的字段，不得被 writer 静默写出并宣称生效。未知字段要么原样保留并标记未编辑，要么明确提示会被丢弃后再由用户确认。
 - 当前 GUI 可生成的后端子集以 writers/main_ini_writer.py、writers/geometry_ini_writer.py 和 editors/source_physics_scoring_model.py 的真实逻辑为准；不要只根据 combobox 的选项扩展支持矩阵。
 - `trd` 普通 hierarchical 体积已在 B3 工作区候选中通过五参数表格编辑、writer 往返、GUI package 和真实后端测试；boolean tool 的 `trd` 及 `trap`、GDML、STL、高级 GPS 分布、手动物理模块、biasing 规则、LET 等能力仍须等待各自后端和测试闭环后再开放生成。Dose 与 Fluence 仅开放实验性敏感体计分子集。
-- 3D 预览永远不是 Geant4 几何真值；唯一例外是路线图 A5 的“显示后端几何”，它显示后端 `/AIHL/geometry/exportMesh` 写出的 Geant4 实际网格（`preview3d/backend_mesh.py`，MainWindow 异步 QProcess，generated 模式须先有运行包），状态栏与消息须注明来源，不得把编辑器近似预览称为后端几何。replica/parameterised 放置在 validator 中只警告（后端支持、GUI 不可编辑），`assembly` 仍阻断。预览不能修改后端配置语义；缺少 PyVista 或遇到不支持 shape 时应显示降级原因。
+- 3D 预览永远不是 Geant4 几何真值；唯一例外是路线图 A5 的“显示后端几何”，它显示后端 `/AIHL/geometry/exportMesh` 写出的 Geant4 实际网格（`preview3d/backend_mesh.py`；G1 起由 `preview3d/backend_geometry_controller.py` 运行，一次一个导出、忙时只保留最新请求、按 `backend_inputs.GeometryInputs.key` 缓存；generated 模式不需运行包，输入规则见 `preview3d/backend_inputs.py`：未编辑文件原地使用以保持 STL/GDML 相对路径，编辑过的须通过编辑器校验），状态栏与消息须注明来源，不得把编辑器近似预览称为后端几何。replica/parameterised 放置在 validator 中只警告（后端支持、GUI 不可编辑），`assembly` 仍阻断。预览不能修改后端配置语义；缺少 PyVista 或遇到不支持 shape 时应显示降级原因。
 - 预览读取 `tubs` 时必须保留内半径；除已验证的 hierarchical 普通体积 `trd` 五字段外，读取后端已支持但 GUI writer 尚未开放的 shape-specific 字段时，只能作为只读预览数据使用，不得借此扩大可生成白名单。
 
 ## 3. PySide6 约束

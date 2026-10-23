@@ -558,6 +558,17 @@ ZH_CN: dict[str, str] = {
         '已载入示例“{name}”及其附带扫描结果；“创建扫描”会生成新的运行包。',
     "Shape '{shape}' is supported by the backend but not by the Geometry Editor; use original source copy mode.":
         "形状 '{shape}' 由后端支持，但几何编辑器尚不能编辑；请勾选 “Copy original geometry source unchanged” 使用原始文件复制模式。",
+    'Geant4 geometry automatically': '自动显示 Geant4 几何',
+    'While this tab is open, rebuild the Geant4 geometry a moment after each change (about 3 s; unchanged geometry is shown from the cache).':
+        '此页打开时，每次修改后稍候自动重建 Geant4 几何（约 3 秒；未改变的几何直接从缓存显示）。',
+    'Building the Geant4 geometry... Showing the editor sketch meanwhile (approximate).':
+        '正在构建 Geant4 几何……其间先显示编辑器草图（近似）。',
+    'Geant4 geometry not available; the editor sketch (approximate) is shown. Reason below.':
+        '暂无 Geant4 几何，当前显示编辑器草图（近似）。原因见下方。',
+    '(unchanged, from the cache)': '（未改变，来自缓存）',
+    'Geant4 could not build this geometry: {reason}': 'Geant4 无法构建此几何：{reason}',
+    'Backend geometry in external mode needs a main INI: choose one on the Project page.':
+        '外部文件模式下显示后端几何需要主 INI：请在项目页选择。',
 }
 
 

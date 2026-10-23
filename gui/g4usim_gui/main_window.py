@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import copy
 import json
-import tempfile
 from pathlib import Path
 
 from PySide6.QtCore import QProcess, QSettings, QSize, Qt, QTimer
@@ -36,7 +35,8 @@ from g4usim_gui.history.run_history_store import add_recent_project, clear_recen
 from g4usim_gui.history.run_package_actions import duplicate_package
 from g4usim_gui.models.package_model import PathSettings
 from g4usim_gui.writers.package_writer import create_run_package
-from g4usim_gui.preview3d.backend_mesh import export_arguments, load_backend_mesh, write_export_macro
+from g4usim_gui.preview3d.backend_geometry_controller import BackendGeometryController
+from g4usim_gui.preview3d.backend_inputs import external_inputs, generated_inputs
 from g4usim_gui.widgets.config_builder_page import ConfigBuilderPage
 from g4usim_gui.widgets.new_simulation_wizard import NewSimulationWizard
 from g4usim_gui.widgets.output_page import OutputPage
@@ -60,9 +60,8 @@ class MainWindow(QMainWindow):
         self._generated_package_dir = ""
         self.runner = G4USimRunner(self)
         self._macro_inspection = QProcess(self)
-        self._geometry_export = QProcess(self)
-        self._geometry_export.finished.connect(self._on_geometry_export_finished)
-        self._geometry_export_dir: tempfile.TemporaryDirectory | None = None
+        self.geometry_controller = BackendGeometryController(self)
+        self._geometry_export = self.geometry_controller.process   # the export's QProcess (tests wait on it)
         self._macro_inspection_snapshot: tuple[object, ...] | None = None
         self._pending_inspection_run = False
         self._macro_inspection.finished.connect(self._on_macro_inspection_finished)
@@ -329,6 +328,13 @@ class MainWindow(QMainWindow):
         self.config_builder_page.validateRequested.connect(self.validate_generated_config)
         self.config_builder_page.generatePackageRequested.connect(self.generate_package)
         self.config_builder_page.backendGeometryRequested.connect(self.export_backend_geometry)
+        self.config_builder_page.autoBackendGeometryRequested.connect(lambda: self.export_backend_geometry(auto=True))
+        self.config_builder_page.workspace_tabs.currentChanged.connect(
+            lambda _index: self.config_builder_page.schedule_backend_geometry(100))
+        controller = self.geometry_controller
+        controller.started.connect(lambda: self.config_builder_page.set_backend_geometry_busy(True))
+        controller.meshReady.connect(self._on_backend_mesh)
+        controller.failed.connect(self._on_backend_geometry_failed)
 
         self.run_page.buildCommandRequested.connect(self.build_command_preview)
         self.run_page.inspectMacroRequested.connect(self.inspect_external_macro)
@@ -614,44 +620,34 @@ class MainWindow(QMainWindow):
                 self.project.workspaceRoot, self.project.configPath, self.project.macroPath,
                 self.project.outputDir, self.project.threads, self.project.seed, self.project.runName)
 
-    def export_backend_geometry(self) -> None:
-        """Roadmap A5: show the geometry the backend builds (asynchronous QProcess)."""
-        if self._geometry_export.state() != QProcess.NotRunning:
-            return
+    def export_backend_geometry(self, auto: bool = False) -> None:
+        """Show the world Geant4 builds (roadmap A5/G1); generated mode needs no run package."""
         self._update_project_from_page_without_preview()
-        config = self.project.configPath
-        if not config or not Path(config).is_file():
-            self.config_builder_page.show_backend_geometry_message(ui_text(
-                "Backend geometry needs a main INI: choose one in external mode or generate the run package first."))
-            return
-        if not self.project.executable or not Path(self.project.executable).is_file():
-            self.config_builder_page.show_backend_geometry_message(ui_text("Backend executable not found."))
-            return
-        self._geometry_export_dir = tempfile.TemporaryDirectory(prefix="g4usim_geometry_")
-        work = Path(self._geometry_export_dir.name)
-        json_path = work / "geometry_mesh.json"
-        macro = write_export_macro(work, json_path)
-        self._geometry_export.setProgram(self.project.executable)
-        self._geometry_export.setArguments(export_arguments(config, macro, work / "output"))
-        self._geometry_export.setWorkingDirectory(self.project.workspaceRoot or str(Path(config).parent))
-        self.config_builder_page.set_backend_geometry_busy(True)
-        self._geometry_export.start()
-
-    def _on_geometry_export_finished(self, exit_code: int, exit_status: QProcess.ExitStatus) -> None:
-        self.config_builder_page.set_backend_geometry_busy(False)
-        work = Path(self._geometry_export_dir.name) if self._geometry_export_dir else None
-        stderr = bytes(self._geometry_export.readAllStandardError()).decode("utf-8", errors="replace").strip()
+        page = self.config_builder_page
+        executable = self.project.executable
         try:
-            if exit_status != QProcess.NormalExit or exit_code != 0 or work is None:
-                raise ValueError(ui_format("Backend geometry export failed: {reason}", reason=stderr[-2000:] or exit_code))
-            mesh = load_backend_mesh(work / "geometry_mesh.json")
-            self.config_builder_page.show_backend_geometry(mesh)
-        except ValueError as exc:
-            self.config_builder_page.show_backend_geometry_message(str(exc))
-        finally:
-            if self._geometry_export_dir:
-                self._geometry_export_dir.cleanup()
-                self._geometry_export_dir = None
+            if self.project.runInputMode == "external":
+                inputs = external_inputs(self.project.configPath, executable)
+            else:
+                inputs = generated_inputs(
+                    template=page.geometry_settings().template, geometry_config=page.geometry_config.text().strip(),
+                    geometry=page.geometry_document, materials_config=page.materials_config.text().strip(),
+                    materials=page.material_document, executable=executable)
+        except (ValueError, OSError) as exc:
+            if auto:
+                page.refresh_3d_preview()
+            page.show_backend_geometry_message(ui_text(str(exc)))
+            return
+        self.geometry_controller.request(inputs, executable, self.project.workspaceRoot)
+
+    def _on_backend_mesh(self, mesh, cached: bool) -> None:
+        self.config_builder_page.set_backend_geometry_busy(False)
+        self.config_builder_page.show_backend_geometry(mesh, cached)
+
+    def _on_backend_geometry_failed(self, reason: str) -> None:
+        self.config_builder_page.set_backend_geometry_busy(False)
+        self.config_builder_page.show_backend_geometry_message(
+            ui_format("Geant4 could not build this geometry: {reason}", reason=reason))
 
     def inspect_external_macro(self, *, run_after: bool = False) -> None:
         if self._macro_inspection.state() != QProcess.NotRunning:
@@ -966,6 +962,7 @@ class MainWindow(QMainWindow):
         if self._macro_inspection.state() != QProcess.NotRunning:
             self._macro_inspection.kill()
             self._macro_inspection.waitForFinished(1000)
+        self.geometry_controller.stop()
         if self.scan_page.runner.is_running():   # do not leave a scan point running after exit
             self.scan_page.runner.stop()
         state = load_state()
