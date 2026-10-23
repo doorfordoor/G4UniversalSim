@@ -7,6 +7,12 @@ Short, user-facing record of notable changes. Detailed support status lives in
 ## Unreleased
 
 ### Changed
+- **GUI code split by editor** (roadmap E5): the Configuration page (2,400 lines) is now
+  `widgets/config/` with one widget per editor (setup column, Materials, Geometry, 3D
+  Preview, Run Config, Messages and files) plus that editor's logic (also layers and
+  boolean operations), and the main window (1,000 lines) is split into
+  `window/shell.py`, `project.py`, `run.py` and `content.py`. A fingerprint of every
+  widget, text, placement and signal connection is unchanged apart from the fix below.
 - **3D view redesign** (roadmap G2/G3): one colour per material (common materials keep
   fixed colours) with a legend whose check boxes hide a material; the world hidden by
   default; volumes that contain others drawn as faint glass; theme background; camera
@@ -25,6 +31,9 @@ Short, user-facing record of notable changes. Detailed support status lives in
   GDML) keep resolving.
 
 ### Fixed
+- The Geometry tab's **Add Volume** also added a volume-fraction material, and the Materials
+  tab had no **Add volume_fraction** button: both used one shared attribute. They are
+  separate buttons again.
 - Writing the generated-geometry preview no longer erases the Geometry Editor's material
   errors (the writer re-validated the document in place with every referenced material
   counted as defined).

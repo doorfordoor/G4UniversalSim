@@ -13,7 +13,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from PySide6.QtWidgets import QApplication, QMessageBox
 from PySide6.QtCore import QProcess
 
-import g4usim_gui.main_window as main_window_module
+import g4usim_gui.window.run as main_window_module   # _generate_current_package lives here (E5)
 from g4usim_gui.core.project import G4USimProject, project_from_dict
 from g4usim_gui.core.runner import G4USimRunner
 from g4usim_gui.editors.geometry_editor_model import GeometryDocument

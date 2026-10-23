@@ -3,6 +3,7 @@ from __future__ import annotations
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QAbstractItemView,
+    QGridLayout,
     QGroupBox,
     QHBoxLayout,
     QHeaderView,
@@ -73,6 +74,18 @@ class CollapsibleSection(QWidget):
 
     def is_expanded(self) -> bool:
         return self.toggle.isChecked()
+
+
+def toolbar_grid(buttons: list[QPushButton], columns: int) -> QGridLayout:
+    """Buttons in a grid of equal-width columns."""
+    toolbar = QGridLayout()
+    toolbar.setHorizontalSpacing(8)
+    toolbar.setVerticalSpacing(8)
+    for index, button in enumerate(buttons):
+        toolbar.addWidget(button, index // columns, index % columns)
+    for column in range(columns):
+        toolbar.setColumnStretch(column, 1)
+    return toolbar
 
 
 def set_table_compact_readonly(table: QTableWidget) -> None:

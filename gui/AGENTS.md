@@ -30,6 +30,8 @@
 
 2026-10-23 G2/G3 3D 视图：后端几何与编辑器草图都转为 `preview3d/view_model.ViewItem` 列表，由 `ViewState` 决定可见性（世界、隐藏、单独显示、按材料）、颜色（常见材料固定色，其余按名称顺序取调色板）、样式（容器半透明、敏感体实心、选中描边且其余变淡）和剖切平面；`pyvista_preview_widget.py` 只把它们映射到 VTK 属性，不在控件里写判定逻辑。体积名：后端物理/逻辑体名去掉 `_PV`/`_LV` 即编辑器名；`volumeSelected` 与体积表双向联动（`select_geometry_row` 屏蔽信号避免回环）。点击与拖动以 4 像素区分。VTK 在 Windows 上不能用 Qt offscreen 平台渲染，`smoke_3d_view.py` 的控件部分切换到 windows 平台、无显示时跳过；独立 QtInteractor 关闭前先 `_plotter.close()`，否则测试退出时 wglMakeCurrent 报错。
 
+2026-10-23 E5 拆分：配置页在 `widgets/config/`，每个编辑器一个模块，内含其控件与布局的 QWidget（`SetupPanel`、`MaterialsEditor`、`GeometryEditor`、`Preview3DPanel`、`RunConfigEditor`、`DetailsPanel`，可单独构建）和其逻辑 mixin（另有 `layers.py`、`booleans.py`）；`ConfigBuilderPage` 只保存共享状态（文档与模型）、组合这些控件并做跨编辑器协调，通过 `_adopt` 把各控件挂到页面属性上（重名即报错）。标签页的构建顺序决定共用控件的最终位置（布尔表在“Boolean Ops”、3D 消息框在“Messages and files”），改顺序即改界面。`_connect_signals` 按原顺序调用各模块的连接函数，同一信号的槽按此顺序执行。主窗口行为在 `window/`（shell、project、run、content 四个 mixin），`main_window.py` 只剩构造、信号连接和关闭；测试替换模块函数时要替换其所在模块（例如 `window.run.create_run_package`）。新控件属性名在整页内必须唯一（`add_volume_button` 曾被材料和几何两处共用）。专项 `smoke_config_editors.py`。
+
 本文件适用于 gui/。GUI 是 PySide6 外部运行器和配置编辑器，后端 C++/Geant4 的实际实现仍是功能支持的唯一依据。
 
 ## 1. 分层和数据流

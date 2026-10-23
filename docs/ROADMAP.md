@@ -19,7 +19,7 @@ This file is the single source of truth for progress. Every work session updates
 | B Scenario packs + benchmarks | Done (B1 benchmarks, B2 shielding/coating, B3 semiconductor, B4 detector response) | see log |
 | C Wizard + built-in plotting | Done (C1 built-in plots, C2 wizard, C3 parameter scans) | see log |
 | D Installer | Done (portable ZIP + Inno Setup installer; uses an existing Geant4 data folder) | see log |
-| E Fixes and foundations | In progress: E1 done | see log |
+| E Fixes and foundations | In progress: E1, E5 done | see log |
 | F System optimisation (backend + GUI) | Planned | |
 | G 3D view redesign | In progress: G1-G3 done | see log |
 | H Geant4 capability increments | Planned | |
@@ -217,6 +217,7 @@ H4–H8 if the user's applications favour some of them.
 
 ## Progress log
 
+- 2026-10-23: E5 done: `config_builder_page.py` 2411 -> 383 lines plus `widgets/config/` (one widget and one logic module per editor), `main_window.py` 997 -> 115 lines plus `window/` (shell, project, run, content). Moved code was copied by line range and method body; a widget/text/placement/signal-receiver fingerprint of the page and window is identical except one fix (Add Volume also added a volume-fraction material). New smoke `gui_config_editors`.
 - 2026-10-23: G2/G3 done: material colours and legend, glass containers, camera presets, hover info, click-to-select linked with the volume table, isolate/hide/show all, section plane; Qt-free view model plus a real-window VTK smoke (`gui_3d_view`: click vs drag picking, visibility, clipping planes, table link).
 - 2026-10-23: G1 done: the 3D tab builds the Geant4 world without a run package (demo project: 15 volume copies), re-exports after edits with a 1.2 s debounce, serves unchanged inputs from the cache, collapses a burst of edits into one export, and reports editor and backend errors; real-backend smoke `gui_backend_geometry_auto`. Also fixed the geometry writer erasing the editor's material errors.
 - 2026-10-23: E1 done: GUI and backend agree on all 61 geometry/material cases (46 same verdict, 15 the editor reports as source-copy only, 48 GUI-writer round trips accepted); the default demo project now generates a package and shows 15 backend volume copies. Fixed seven GUI rule differences (see CHANGELOG).
