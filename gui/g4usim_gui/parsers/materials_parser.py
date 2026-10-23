@@ -38,6 +38,10 @@ class MaterialsSummary:
     warnings: list[str] = field(default_factory=list)
     errors: list[str] = field(default_factory=list)
     raw_text: str = ""
+    # [NIST], [element.*] and [isotope.*] sections: not materials the editor shows, kept verbatim
+    # (in file order) so a generated materials file still defines them
+    preserved_sections: list[str] = field(default_factory=list)
+    nist_materials: list[str] = field(default_factory=list)
 
     @property
     def names(self) -> set[str]:
@@ -45,21 +49,50 @@ class MaterialsSummary:
         for entry in self.materials:
             if entry.kind == "nist" and entry.components:
                 names.update(entry.components)
+        names.update(self.nist_materials)
         return names
+
+
+def material_reference_status(name: str, custom_names: set[str]) -> str:
+    """How the backend resolves a material name (MaterialManager::GetMaterial).
+
+    "custom"  a material of the materials file: names compare trimmed and case-insensitively
+    "nist"    a Geant4 NIST material of the quick list (NIST names are case-sensitive)
+    "g4"      another G4_ name: the backend asks G4NistManager, which may know it
+    "missing" neither
+    """
+    key = name.strip().lower()
+    if key in {item.strip().lower() for item in custom_names if item}:
+        return "custom"
+    if name.strip() in NIST_QUICK_LIST:
+        return "nist"
+    if name.strip().startswith("G4_"):
+        return "g4"
+    return "missing"
 
 
 def parse_materials(path: str | Path) -> MaterialsSummary:
     document = parse_ini_light(path)
     summary = MaterialsSummary(path=document.path, warnings=list(document.warnings), errors=list(document.errors), raw_text=document.raw_text)
     _validate_material_schema(summary)
+    raw_sections = _raw_section_texts(summary.raw_text)
     for section in document.sections:
         values = {key.lower(): value for key, value in section.values.items()}
-        name = values.get("name", section.name)
+        section_lower = section.name.lower()
+        if section_lower == "nist" or section_lower.startswith(("element.", "isotope.")):
+            if section_lower == "nist":
+                summary.nist_materials.extend(_split_components(values.get("materials", "")))
+            summary.preserved_sections.append(raw_sections.get(section_lower, f"[{section.name}]"))
+            continue
+        # [material.<name>] defines <name>; a legacy alias section [<name>] has material = G4_...
+        default_name = section.name[len("material."):] if section_lower.startswith("material.") else section.name
+        name = values.get("name", default_name)
         material_alias = values.get("material", "")
         mode = values.get("mode", values.get("type", "")).lower()
         density = values.get("density", "")
         components_text = values.get("components", values.get("component", ""))
-        components = _split_components(components_text)
+        # "name:value" entries as written (the editor needs the counts/fractions, not only the names)
+        components = [part.strip() for part in components_text.replace(";", ",").split(",") if part.strip()]
 
         if material_alias.startswith("G4_"):
             kind = "nist"
@@ -92,6 +125,20 @@ def parse_materials(path: str | Path) -> MaterialsSummary:
     if not summary.materials and not summary.errors:
         summary.warnings.append("No material sections were found.")
     return summary
+
+
+def _raw_section_texts(raw_text: str) -> dict[str, str]:
+    """Each section's original text (header to the line before the next header), by lower-case name."""
+    texts: dict[str, list[str]] = {}
+    current = None
+    for line in raw_text.splitlines():
+        stripped = line.strip()
+        if stripped.startswith("[") and "]" in stripped:
+            current = stripped[1:stripped.index("]")].strip().lower()
+            texts.setdefault(current, [])
+        if current is not None:
+            texts[current].append(line)
+    return {name: "\n".join(lines).rstrip() for name, lines in texts.items()}
 
 
 def _validate_material_schema(summary: MaterialsSummary) -> None:

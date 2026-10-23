@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from g4usim_gui.editors.editable_models import EditableDocument
-from g4usim_gui.parsers.materials_parser import NIST_QUICK_LIST, MaterialsSummary
+from g4usim_gui.parsers.materials_parser import NIST_QUICK_LIST, MaterialsSummary, material_reference_status
 
 
 MATERIAL_MODES = {"nist", "mass_fraction", "volume_fraction", "atom_count"}
@@ -50,6 +50,7 @@ class MaterialDocument(EditableDocument):
     raw_source_text: str = ""
     source_errors: list[str] = field(default_factory=list)
     validation_errors: list[str] = field(default_factory=list)
+    preserved_sections: list[str] = field(default_factory=list)   # [NIST]/[element.*]/[isotope.*], verbatim
 
 
 def material_document_from_summary(summary: MaterialsSummary | None) -> MaterialDocument:
@@ -60,6 +61,7 @@ def material_document_from_summary(summary: MaterialsSummary | None) -> Material
     document.raw_source_text = summary.raw_text
     document.source_errors = _deduplicate(summary.errors)
     document.warnings = list(summary.warnings)
+    document.preserved_sections = list(summary.preserved_sections)
     for entry in summary.materials:
         mode = _mode_from_kind(entry.kind)
         density = entry.density
@@ -211,16 +213,15 @@ def validate_material_document(document: MaterialDocument, *, geometry_material_
     for row in document.rows:
         if row.enabled and row.name and names.get(row.name.lower(), 0) > 1:
             row.errors.append("duplicate material name")
+    validation_errors.extend(_dependency_cycles(document))
     if geometry_material_refs:
-        available = {name.lower() for name in enabled_names}
-        available.update(name.lower() for name in NIST_QUICK_LIST)
         for ref in sorted(geometry_material_refs):
             if not ref:
                 continue
-            key = ref.lower()
-            if key in available:
+            status = material_reference_status(ref, enabled_names)
+            if status in {"custom", "nist"}:
                 continue
-            if ref.startswith("G4_"):
+            if status == "g4":
                 document.warnings.append(f"Geometry references possible NIST material '{ref}', not in quick list.")
             else:
                 validation_errors.append(f"Geometry references custom material '{ref}' but it is not defined in edited materials.")
@@ -234,6 +235,29 @@ def validate_material_document(document: MaterialDocument, *, geometry_material_
     return document
 
 
+def _dependency_cycles(document: MaterialDocument) -> list[str]:
+    """Materials built from each other in a loop, which the backend refuses (MaterialManager::BuildMaterial)."""
+    rows = {row.name.lower(): row for row in document.rows if row.enabled and row.name and row.mode != "nist"}
+    uses = {key: [c.name.lower() for c in row.components if c.name.lower() in rows] for key, row in rows.items()}
+    errors: list[str] = []
+    state: dict[str, str] = {}
+
+    def visit(key: str, path: list[str]) -> None:
+        state[key] = "open"
+        for used in uses[key]:
+            if state.get(used) == "open":
+                loop = path[path.index(used):] + [used]
+                errors.append("Circular material dependency: " + " -> ".join(rows[k].name for k in loop))
+            elif used not in state:
+                visit(used, path + [used])
+        state[key] = "done"
+
+    for key in rows:
+        if key not in state:
+            visit(key, [key])
+    return errors
+
+
 def _deduplicate(items: list[str]) -> list[str]:
     return list(dict.fromkeys(items))
 
@@ -243,8 +267,8 @@ def _validate_density(row: MaterialRow) -> None:
         if row.density:
             row.warnings.append("density is ignored for nist rows")
         return
-    if row.mode == "volume_fraction" and row.density.lower() == "auto":
-        return
+    if row.mode == "volume_fraction" and row.density.lower() in {"", "auto"}:
+        return   # the backend computes it from the components (no density means auto, as in MaterialIniReader)
     if not row.density:
         row.errors.append("density is required")
         return
@@ -316,6 +340,8 @@ def generate_materials_ini_text(document: MaterialDocument) -> str:
         "# Source materials.ini is not overwritten.",
         "",
     ]
+    for text in document.preserved_sections:   # elements and isotopes first: materials may use them
+        lines.extend([text, ""])
     for row in document.rows:
         if not row.enabled:
             continue
@@ -380,6 +406,7 @@ def clone_document(document: MaterialDocument) -> MaterialDocument:
         raw_source_text=document.raw_source_text,
         source_errors=list(document.source_errors),
         validation_errors=list(document.validation_errors),
+        preserved_sections=list(document.preserved_sections),
     )
     for row in document.rows:
         clone.rows.append(

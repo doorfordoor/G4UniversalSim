@@ -136,6 +136,36 @@ def check_window(app: QApplication, temp: Path, executable: str) -> None:
     window.close()
 
 
+def check_demo_project(app: QApplication, temp: Path, executable: str) -> None:
+    """Roadmap E1: the default demo project validates, generates a package and shows backend geometry.
+
+    The demo geometry names its materials in lower case (silicon, iron, water); the GUI used
+    to compare names case-sensitively and to pair it with a materials file without iron, so
+    no package could be generated and Show Backend Geometry failed although Geant4 builds it.
+    """
+    from PySide6.QtWidgets import QMessageBox   # noqa: PLC0415
+    QMessageBox.warning = staticmethod(lambda *args, **kwargs: QMessageBox.Ok)
+    QMessageBox.information = staticmethod(lambda *args, **kwargs: QMessageBox.Ok)
+    window = MainWindow()
+    page = window.project_page
+    page.executable.setText(executable)
+    page.runs_root.setText(str(temp / "runs"))
+    page.output_dir.setText(str(temp / "runs" / "demo" / "output"))
+    builder = window.config_builder_page
+    assert builder.materials_config.text().replace("\\", "/").endswith("test/materials/test_materials.ini")
+    assert not builder.geometry_document.errors, builder.geometry_document.errors
+    assert not builder.material_document.errors, builder.material_document.errors
+    window.generate_package(run_after_generate=False)
+    assert window.project.configPath and Path(window.project.configPath).is_file(), "demo package not generated"
+    window.export_backend_geometry()
+    assert window._geometry_export.waitForFinished(300000), "backend export timed out"
+    app.processEvents()
+    status = builder.preview3d_status.text()
+    assert "volume copies" in status, (status, builder.preview3d_messages.toPlainText()[-2000:])
+    print(f"demo project: package generated, {status}")
+    window.close()
+
+
 def main() -> int:
     app = QApplication.instance() or QApplication(sys.argv)
     with tempfile.TemporaryDirectory(prefix="g4usim_backend_geometry_") as directory:
@@ -144,6 +174,7 @@ def main() -> int:
         executable = os.environ.get("G4USIM_EXE", str(ROOT / "build_vs2026/Release/G4UniversalSim.exe"))
         if Path(executable).is_file():
             check_window(app, temp, executable)
+            check_demo_project(app, temp, executable)
         else:
             print(f"SKIP backend part: executable not found ({executable})")
     print("smoke_backend_geometry: OK")

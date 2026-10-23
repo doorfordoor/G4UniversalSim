@@ -6,7 +6,23 @@ Short, user-facing record of notable changes. Detailed support status lives in
 
 ## Unreleased
 
+### Fixed
+- **GUI checks now match the backend for geometry and materials** (roadmap E1). The
+  default demo project could not generate a package or show backend geometry: the GUI
+  compared material names case-sensitively and paired the demo geometry with a
+  materials file without `iron`. Also fixed in the GUI: `[material.X]` read as a
+  material named `material.X`, `[element.*]`/`[isotope.*]`/`[NIST]` sections read as
+  materials (and dropped from generated materials files), component counts and
+  fractions lost when a materials file was loaded, volume-fraction materials without a
+  density rejected (the backend uses `auto`), circular material definitions accepted,
+  and backend-supported shapes outside the editor (trap, torus, polycone, ...) reported
+  as invalid instead of pointing to source copy mode.
+
 ### Added
+- `scripts/test_gui_backend_agreement.py` (suite case `gui_backend_agreement`): every
+  geometry/material fixture, the repository's main INIs and the wizard scenarios go
+  through both the GUI validators and the backend (Geant4 initialisation plus mesh
+  export); any disagreement fails, and the GUI writers' output must also be accepted.
 - **GUI refresh and examples gallery**: a Start page (new simulation, open project, recent
   projects) with five examples that open with results Geant4 already computed (proton
   Bragg peak, shielding slab, silicon Landau distribution, NaI gamma spectrum, proton

@@ -25,6 +25,55 @@ from g4usim_gui.parsers.materials_parser import parse_materials
 from g4usim_gui.writers.package_writer import create_run_package
 
 
+def check_backend_rules(root: Path) -> None:
+    """Roadmap E1: the GUI reads and checks materials the way the backend's MaterialIniReader does."""
+    from g4usim_gui.editors.geometry_editor_model import (   # noqa: PLC0415
+        GeometryDocument, HierarchicalVolumeRow, validate_geometry_document)
+    from g4usim_gui.parsers.materials_parser import material_reference_status   # noqa: PLC0415
+
+    summary = parse_materials(root / "test" / "materials" / "test_materials.ini")
+    names = {entry.name for entry in summary.materials}
+    assert {"silicon", "iron", "water", "test_polymer"} <= names, names   # [material.X] defines X
+    assert not any(name.lower().startswith(("element.", "isotope.", "material.")) for name in names), names
+    assert any(text.startswith("[element.TestCarbon]") for text in summary.preserved_sections)
+    document = material_document_from_summary(summary)
+    assert not document.errors, document.errors
+    polymer = next(row for row in document.rows if row.name == "test_polymer")
+    assert [(c.name, c.value) for c in polymer.components] == [("TestCarbon", "2")]   # counts kept
+    text = generate_materials_ini_text(document)
+    assert "[element.TestCarbon]" in text and "[material.test_polymer]" in text and "material.material." not in text
+    assert text.index("[element.TestCarbon]") < text.index("[material.test_polymer]")
+
+    # names: custom ones case-insensitive, NIST ones exact (MaterialManager::GetMaterial)
+    assert material_reference_status("SILICON", {"silicon"}) == "custom"
+    assert material_reference_status("G4_WATER", set()) == "nist"
+    assert material_reference_status("G4_lAr", set()) == "g4"
+    assert material_reference_status("unobtainium", {"silicon"}) == "missing"
+
+    # volume_fraction without density is auto; material loops are refused
+    vf = MaterialDocument(rows=[MaterialRow(name="Mix", mode="volume_fraction", density="",
+                                            components_text="G4_WATER:0.5, G4_Pb:0.5")])
+    assert not validate_material_document(vf).errors, vf.errors
+    loop = MaterialDocument(rows=[
+        MaterialRow(name="A", mode="volume_fraction", density="auto", components_text="B:1"),
+        MaterialRow(name="B", mode="volume_fraction", density="auto", components_text="A:1")])
+    assert any("Circular material dependency: A -> B -> A" in e for e in validate_material_document(loop).errors)
+
+    # geometry: lower-case reference to a capitalised material; a backend-only shape is an editor limit
+    geometry = GeometryDocument(mode="hierarchical", volumes=[
+        HierarchicalVolumeRow(name="world", shape="box", size="1 m, 1 m, 1 m", material="G4_AIR"),
+        HierarchicalVolumeRow(name="Pad", parent="world", shape="box", size="1 cm, 1 cm, 1 cm", material="silicon",
+                              position="0 mm, 0 mm, 0 mm", rotation="0 deg, 0 deg, 0 deg")])
+    validate_geometry_document(geometry, material_names={"Silicon"})
+    assert not geometry.errors, geometry.errors
+    geometry.volumes[1].shape = "torus"
+    validate_geometry_document(geometry, material_names={"Silicon"})
+    assert any("supported by the backend but not by the Geometry Editor" in e for e in geometry.errors), geometry.errors
+    geometry.source_copy_mode = True
+    validate_geometry_document(geometry, material_names={"Silicon"})
+    assert not any("not by the Geometry Editor" in e for e in geometry.errors), geometry.errors
+
+
 def main() -> int:
     root = Path(__file__).resolve().parents[2]
     source_materials = root / "config" / "materials" / "material.ini"
@@ -153,6 +202,7 @@ def main() -> int:
     assert any(row.name.endswith("_copy") for row in document.rows)
     add_default_row(document, "volume_fraction")
     assert any(row.mode == "volume_fraction" for row in document.rows)
+    check_backend_rules(root)
     print("smoke_materials_editor: ok")
     return 0
 

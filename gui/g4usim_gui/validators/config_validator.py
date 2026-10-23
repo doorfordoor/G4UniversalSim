@@ -28,7 +28,7 @@ from g4usim_gui.editors.source_physics_scoring_model import (
     validate_source_model,
 )
 from g4usim_gui.parsers.geometry_parser import GeometrySummary, parse_geometry
-from g4usim_gui.parsers.materials_parser import NIST_QUICK_LIST, MaterialsSummary, parse_materials
+from g4usim_gui.parsers.materials_parser import MaterialsSummary, material_reference_status, parse_materials
 
 
 @dataclass
@@ -330,11 +330,11 @@ def _validate_template_consistency(template: str, summary: GeometrySummary, repo
 
 
 def _validate_material_refs(materials: MaterialsSummary, geometry: GeometrySummary, report: ValidationReport) -> None:
-    material_names = materials.names | NIST_QUICK_LIST
     for material in sorted(ref for ref in geometry.material_refs if ref):
-        if material in material_names:
+        status = material_reference_status(material, materials.names)
+        if status in {"custom", "nist"}:
             continue
-        if material.startswith("G4_"):
+        if status == "g4":
             report.warnings.append(f"Geometry references possible NIST material '{material}', not in GUI quick list. Verify Geant4 support.")
         else:
             report.errors.append(f"Geometry references custom material '{material}' but it is not defined in selected materials config.")

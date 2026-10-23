@@ -24,6 +24,8 @@
 
 2026-10-22 界面刷新：主题色只在 `core/theme.py`（样式表 + `build_palette` 的 Qt palette；“系统”主题读 `styleHints().colorScheme()`，因为应用 palette 已是自定义的）；图标只用 `core/icons.py` 的 SVG 线条图标，主题切换时由 `MainWindow._refresh_icons` 和各页 `refresh_theme` 重绘，样式表中的箭头图片由 `_svg_url` 写到临时目录。matplotlib 图用 `plot_panel.style_axes`/`draw_empty`，字体族列表带 CJK 回退（`font.family` 而非 `font.sans-serif`，否则不逐字回退）。开始页 `widgets/start_page.py` 的示例在 `core/examples.py`（无 Qt）登记：示例 = 向导 spec + `examples/gallery/<id>/` 附带结果，载入走 `apply_simulation_wizard`，附带文件只读、输出仍写运行目录；附带结果只能由 `examples/gallery/build_gallery.py` 用真实后端生成，卡片描述须与数据一致（`smoke_start_page.py` 核对）。`core/scan.load_manifest` 支持相对路径与目录移动后的改基；运行包缺失的扫描只读（`ScanPage.is_read_only`）。页序：开始、项目、配置、运行、结果、历史、扫描；结果页分组为 `tabs`（概览、图表、表格、文件、工具）及 `data_tabs`/`file_tabs`/`tool_tabs`，配置页消息/原始文件/NIST 在 `details_tabs`。Tab 文字不能含 `&`（会被当作助记符）。
 
+2026-10-23 E1 GUI/后端规则一致：材料名一律经 `parsers/materials_parser.material_reference_status`（自定义名去空白后不区分大小写，NIST 名区分大小写，其他 `G4_` 名只警告），与后端 `MaterialManager::GetMaterial` 一致；`[material.X]` 定义 X，`[NIST]`/`[element.*]`/`[isotope.*]` 不是材料行，原文保存在 `preserved_sections` 并由 writer 写在材料之前；组分保留 `名称:数值`；体积分数材料无 density 即 auto；材料循环引用报错。后端支持而编辑器不支持的形状（`geometry_editor_model.BACKEND_SHAPES`，与 `GeometryUtils.cc` 的 `ParseShape` 同步）是编辑器限制：提示原始文件复制模式，勾选后降为警告。默认演示项目用 `test/materials/test_materials.ini`。新规则差异由 `scripts/test_gui_backend_agreement.py`（统一平台 `gui_backend_agreement`）发现：新增几何/材料夹具会自动加入，判定不一致必须修正 GUI 或在 `EXPECTED` 中写明原因。
+
 本文件适用于 gui/。GUI 是 PySide6 外部运行器和配置编辑器，后端 C++/Geant4 的实际实现仍是功能支持的唯一依据。
 
 ## 1. 分层和数据流

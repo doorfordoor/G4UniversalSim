@@ -309,7 +309,8 @@ class MainWindow(QMainWindow):
             executable=executable,
             workspace_root=str(root),
             runs_root=str(runs_root),
-            materials_config=str(root / "config" / "materials" / "material.ini"),
+            # the materials the demo geometry uses (silicon, iron, water, ...), as test/main_hierarchical.ini
+            materials_config=str(root / "test" / "materials" / "test_materials.ini"),
             geometry_config=str(root / "test" / "geometry" / "hierarchical_test.ini"),
         )
         project.geometrySettings.config_path = project.pathSettings.geometry_config

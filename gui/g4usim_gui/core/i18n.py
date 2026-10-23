@@ -556,6 +556,8 @@ ZH_CN: dict[str, str] = {
     'Messages and files': '消息与文件',
     'Example {name} loaded with its bundled scan results; Create scan makes new run packages.':
         '已载入示例“{name}”及其附带扫描结果；“创建扫描”会生成新的运行包。',
+    "Shape '{shape}' is supported by the backend but not by the Geometry Editor; use original source copy mode.":
+        "形状 '{shape}' 由后端支持，但几何编辑器尚不能编辑；请勾选 “Copy original geometry source unchanged” 使用原始文件复制模式。",
 }
 
 

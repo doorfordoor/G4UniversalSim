@@ -95,6 +95,7 @@ CASES = (
     Case("gui_new_simulation_backend", "gui/smoke_tests/smoke_new_simulation_backend.py", "integration",
          ("exe", "qt")),
     Case("gui_scans_backend", "gui/smoke_tests/smoke_scans_backend.py", "integration", ("exe", "qt")),
+    Case("gui_backend_agreement", "scripts/test_gui_backend_agreement.py", "integration", ("exe", "qt")),
 )
 
 

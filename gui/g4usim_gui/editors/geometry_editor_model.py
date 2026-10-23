@@ -6,7 +6,7 @@ from dataclasses import asdict, dataclass, field
 
 from g4usim_gui.editors.editable_models import EditableDocument
 from g4usim_gui.core.i18n import ui_format, ui_text
-from g4usim_gui.parsers.materials_parser import NIST_QUICK_LIST
+from g4usim_gui.parsers.materials_parser import NIST_QUICK_LIST, material_reference_status
 from g4usim_gui.parsers.geometry_parser import GeometrySummary
 from g4usim_gui.parsers.geometry_parser import PRODUCTION_CUT_KEYS, TRD_PROPERTY_KEYS, VISUAL_KEYS
 from g4usim_gui.preview3d.units import parse_length_to_mm
@@ -16,6 +16,10 @@ EDITABLE_GEOMETRY_MODES = {"simple_box", "layered_device", "hierarchical", "hier
 HIERARCHICAL_GEOMETRY_MODES = {"hierarchical", "hierarchical_boolean", "boolean_hierarchical", "boolean"}
 SUPPORTED_HIERARCHICAL_SHAPES = {"box", "tubs", "sphere", "orb", "cone", "trd"}
 SUPPORTED_BOOLEAN_TOOL_SHAPES = {"box", "tubs", "sphere", "orb", "cone"}
+# every name the backend's ParseShape accepts (GeometryUtils.cc), aliases included
+BACKEND_SHAPES = {"box", "cube", "tubs", "tube", "cylinder", "sphere", "orb", "cone", "cons", "trd", "trapezoid",
+                  "trap", "ellipsoid", "eltube", "elliptical_tube", "torus", "para", "parallelepiped", "hype",
+                  "polycone", "polyhedra", "tessellated", "stl"}
 SUPPORTED_VISUAL_COLORS = {
     "white", "black", "red", "green", "blue", "yellow", "cyan", "aqua",
     "magenta", "gray", "grey", "darkgray", "lime", "brown",
@@ -465,7 +469,12 @@ def _validate_hierarchical(document: GeometryDocument, known_materials: set[str]
                 row.errors.append("Volume parent cannot point to itself.")
             elif parent.lower() not in by_key:
                 row.errors.append(f"Parent volume does not exist: {parent}")
-        if shape not in SUPPORTED_HIERARCHICAL_SHAPES:
+        if shape in BACKEND_SHAPES and shape not in SUPPORTED_HIERARCHICAL_SHAPES:
+            # valid for Geant4, but the editor cannot check or write it: an editor limit, not an input error
+            message = ui_format("Shape '{shape}' is supported by the backend but not by the Geometry Editor; "
+                                "use original source copy mode.", shape=row.shape)
+            (row.warnings if document.source_copy_mode else row.errors).append(message)
+        elif shape not in SUPPORTED_HIERARCHICAL_SHAPES:
             row.errors.append(ui_format("Unsupported shape '{shape}'. Supported in the editor: box, tubs, sphere, orb, cone, trd.", shape=row.shape))
         elif shape not in STABLE_GUI_SHAPES:
             row.warnings.append(f"Shape '{row.shape}' is backend-supported but preview/editor validation is approximate.")
@@ -491,7 +500,8 @@ def _validate_hierarchical(document: GeometryDocument, known_materials: set[str]
             for field in row.shape_properties:
                 if field not in TRD_PROPERTY_KEYS:
                     row.errors.append(ui_format("Unsupported trd shape field '{field}'.", field=field))
-        if shape != "trd" and row.shape_properties:
+        backend_only = shape in BACKEND_SHAPES and shape not in SUPPORTED_HIERARCHICAL_SHAPES
+        if shape != "trd" and row.shape_properties and not backend_only:   # backend-only: the limit above says it
             row.errors.append(ui_text("Shape-specific fields are present but the selected shape is not trd."))
         _require_material(row.material, f"[volume.{name}]/material", known_materials, document)
         if row.position.strip():
@@ -615,9 +625,10 @@ def _require_material(value: str, label: str, known_materials: set[str], documen
     if not material:
         document.errors.append(f"{label} is required.")
         return
-    if material in known_materials:
+    status = material_reference_status(material, known_materials)
+    if status in {"custom", "nist"}:
         return
-    if material.startswith("G4_"):
+    if status == "g4":
         document.warnings.append(f"{label} references possible NIST material '{material}', not in GUI quick list.")
     else:
         document.errors.append(f"{label} references undefined custom material '{material}'.")
