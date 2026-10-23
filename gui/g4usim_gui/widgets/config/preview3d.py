@@ -16,6 +16,7 @@ from g4usim_gui.core.i18n import ui_format, ui_text
 from g4usim_gui.preview3d.fallback_preview_widget import FallbackPreviewWidget
 from g4usim_gui.preview3d.pyvista_preview_widget import PyVistaPreviewWidget, pyvista_available
 from g4usim_gui.preview3d.scene_builder import build_preview_scene
+from g4usim_gui.preview3d.source_builder import build_preview_source
 
 
 class Preview3DPanel(QWidget):
@@ -123,8 +124,7 @@ class Preview3DMixin:
         if hasattr(self.preview3d_widget, "set_show_source"):
             self.preview3d_widget.set_show_source(self.preview3d_show_source.isChecked())
         if hasattr(self.preview3d_widget, "set_show_labels"):
-            self.preview3d_widget.set_show_labels(self.preview3d_show_labels.isChecked())
-        self._mark_preview_stale()
+            self.preview3d_widget.set_show_labels(self.preview3d_show_labels.isChecked())   # redraws at once
 
     def refresh_3d_preview(self) -> None:
         try:
@@ -161,9 +161,16 @@ class Preview3DMixin:
             "Geant4 geometry not available; the editor sketch (approximate) is shown. Reason below."))
         self.preview3d_messages.setPlainText(message)
 
-    def show_backend_geometry(self, mesh, cached: bool = False) -> None:
-        """Display the exportMesh result; the editor preview is replaced until the next Refresh."""
-        self.preview3d_widget.render_backend_mesh(mesh)
+    def show_backend_geometry(self, mesh, cached: bool = False, *, with_source: bool = True) -> None:
+        """Display the exportMesh result; the editor preview is replaced until the next Refresh.
+
+        with_source: draw the Source editor's source over it (the run's source in generated mode)."""
+        source = None
+        if with_source:
+            source = build_preview_source(self.source_editor, [], [])
+        if hasattr(self.preview3d_widget, "set_show_source"):
+            self.preview3d_widget.set_show_source(self.preview3d_show_source.isChecked())
+        self.preview3d_widget.render_backend_mesh(mesh, source)
         solids = sorted({volume.solid for volume in mesh.volumes})
         self.preview3d_status.setText(ui_format(
             "Backend geometry: {count} volume copies from Geant4.", count=len(mesh.volumes))

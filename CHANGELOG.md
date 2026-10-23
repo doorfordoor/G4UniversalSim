@@ -7,6 +7,22 @@ Short, user-facing record of notable changes. Detailed support status lives in
 ## Unreleased
 
 ### Added
+- **Accurate editor sketch** (roadmap G4). The sketch places each volume inside its parent
+  the way Geant4 does (`G4PVPlacement`: positions relative to the mother, rotations X then
+  Y then Z of the frame, unitless angles in radians) and draws every backend solid with
+  its phi/theta segments: box, tubs, cons, sphere, orb, trd, trap, ellipsoid, eltube,
+  torus, para, hype, polycone, polyhedra and STL files. What it cannot draw (replica and
+  parameterised copies, boolean results) is listed with the reason. The bounding box of
+  every volume matches the mesh Geant4 builds for all repository geometry files and
+  three written fixtures (`scripts/test_sketch_accuracy.py`, 130 volumes).
+- **Source display** (roadmap G5): the 3D view draws the source as GPS samples it: a dot
+  for a point source, the disc or rectangle of a plane source in the XY plane, an arrow
+  for a fixed direction (with parallel arrows from the plane's edge), rays in all
+  directions for isotropic emission, and a cone, a hemisphere or a focus arrow for the
+  preview-only modes (drawn faint and marked "preview only"). The source is drawn over the
+  Geant4 geometry as well (in generated mode) and described below the view. Checked
+  against real primaries: 4 sources x 200 geantinos start inside their glyphs and leave
+  along the drawn directions (`gui/smoke_tests/smoke_source_glyphs.py`).
 - **Particle tracks in the 3D view** (roadmap G6). Run Config > Scoring has "Particle
   tracks of the first events" (writes `[output] trajectories = N`); after such a run the
   3D view overlays its tracks, or **Load Tracks...** reads any run folder. Each particle
@@ -47,6 +63,14 @@ Short, user-facing record of notable changes. Detailed support status lives in
   GDML) keep resolving.
 
 ### Fixed
+- The editor sketch placed every volume as if its position were absolute (daughters of
+  a moved or rotated mother were in the wrong place) and turned rotated volumes the
+  wrong way; partial tubs, cones and spheres were drawn whole.
+- The plane source was drawn tilted by the editor's normal, but Geant4 always samples it
+  in the XY plane; the normal is now ignored with a warning, as in the backend.
+- Polycone, polyhedra and STL keys (`z_planes`, `r_inner`, `r_outer`, `file`,
+  `file_unit`) and replica/parameterised keys were reported as legacy metadata.
+- "Show Source" and "Show Labels" take effect at once instead of marking the view stale.
 - The Configuration tabs overlapped when the window was smaller than they need (the
   Materials table ran under the "Selected material" box, toolbar buttons were clipped):
   the editors now scroll, long status lines wrap, the Materials toolbar has two rows and

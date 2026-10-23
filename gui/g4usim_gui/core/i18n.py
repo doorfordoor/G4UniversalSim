@@ -615,6 +615,22 @@ ZH_CN: dict[str, str] = {
         '未找到径迹文件。请在 Run Config 页设置“前若干事件的粒子径迹”后重新运行。',
     'Cannot load tracks: {error}': '无法加载径迹：{error}',
     'Tracks of {count} events loaded in the 3D view (run {run}).': '已在 3D 视图中加载 {count} 个事件的径迹（run {run}）。',
+    '{particle} {energy}, {where}, {how}': '{particle} {energy}，{where}，{how}',
+    '{particle} {energy}, {where}, {how} (preview only, not generated)':
+        '{particle} {energy}，{where}，{how}（仅预览，不写入运行包）',
+    'point at {position} mm': '点源，位于 {position} mm',
+    'plane {shape} r = {radius} mm at {position} mm (XY plane)': '平面 {shape}，半径 {radius} mm，中心 {position} mm（XY 平面）',
+    'plane {shape} {width} x {height} mm at {position} mm (XY plane)':
+        '平面 {shape}，{width} x {height} mm，中心 {position} mm（XY 平面）',
+    'plane {shape} at {position} mm (size not set)': '平面 {shape}，中心 {position} mm（未设置尺寸）',
+    'isotropic emission': '各向同性发射',
+    'cosine-law about {direction}': '绕 {direction} 的余弦分布',
+    'cone of {angle} deg about {direction}': '绕 {direction} 的 {angle} 度圆锥',
+    'focused on {position} mm': '聚焦于 {position} mm',
+    'fixed direction {direction}': '固定方向 {direction}',
+    'no valid direction': '无有效方向',
+    'Source: {description}': '源：{description}',
+    '{count} volume(s) not drawn (see the messages).': '{count} 个体积未绘制（见消息）。',
 }
 
 

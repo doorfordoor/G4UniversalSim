@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from typing import Any
 
 
 Vec3 = tuple[float, float, float]
@@ -20,6 +21,32 @@ class PreviewVolume:
     sensitive: bool = False
     bias: bool = False
     role: str = "ordinary"
+    # the solid in world coordinates (roadmap G4: placements composed as in Geant4);
+    # None when it cannot be drawn, with the reason in not_drawn
+    vertices: Any = None
+    faces: list[tuple[int, ...]] = field(default_factory=list)
+    not_drawn: str = ""
+    note: str = ""            # drawn, but not exactly (a boolean target shows its solid before the operations)
+
+
+@dataclass
+class SourceGlyph:
+    """One mark of the source drawing (roadmap G5); lengths that depend on the scene size are the widget's.
+
+    kind: "point" (a dot), "disc" (plane circle/annulus), "rectangle" (plane rectangle/square),
+    "arrow" (a fixed direction), "isotropic" (rays in all directions, or a hemisphere about
+    ``direction``), "cone" (directions inside ``half_angle_deg`` of ``direction``).
+    """
+    kind: str
+    center: Vec3
+    direction: Vec3 | None = None
+    radius_mm: float = 0.0
+    inner_radius_mm: float = 0.0
+    halfx_mm: float = 0.0
+    halfy_mm: float = 0.0
+    half_angle_deg: float = 0.0
+    length_mm: float | None = None      # fixed length (focused: to the focus point); None: scaled to the scene
+    secondary: bool = False             # extra beam lines from the plane's edge, drawn fainter
 
 
 @dataclass
@@ -38,6 +65,9 @@ class PreviewSource:
     normal: Vec3 | None = None
     cone_half_angle_deg: float | None = None
     preview_rays: list[tuple[Vec3, Vec3]] = field(default_factory=list)
+    glyphs: list[SourceGlyph] = field(default_factory=list)
+    generated: bool = True              # False: a preview-only setting the GUI does not write to a run package
+    description: tuple[str, dict] = ("", {})    # (template, values) for ui_format
 
 
 @dataclass
@@ -65,10 +95,11 @@ class PreviewScene:
             if volume.bias:
                 flags.append("bias")
             flag_text = f" [{' '.join(flags)}]" if flags else ""
+            drawn = f", not drawn: {volume.not_drawn}" if volume.not_drawn else ""
             lines.append(
                 f"- {volume.name or '<unnamed>'}: role={volume.role}, shape={volume.shape}, "
                 f"material={volume.material or '<none>'}, size_mm={volume.size_mm}, params_mm={volume.parameters_mm}, "
-                f"pos_mm={volume.position_mm}{flag_text}"
+                f"pos_mm={volume.position_mm}{flag_text}{drawn}"
             )
         lines.extend(
             [

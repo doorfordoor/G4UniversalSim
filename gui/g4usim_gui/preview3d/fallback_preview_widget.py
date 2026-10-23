@@ -32,7 +32,7 @@ class FallbackPreviewWidget(QWidget):
     def render_scene(self, scene: PreviewScene) -> None:
         self.text.setPlainText("\n".join(scene.summary_lines()))
 
-    def render_backend_mesh(self, mesh: BackendMesh) -> None:
+    def render_backend_mesh(self, mesh: BackendMesh, source=None) -> None:
         lines = [ui_format("Backend geometry: {count} volume copies from Geant4.", count=len(mesh.volumes))]
         for volume in mesh.volumes:
             lines.append(f"{'  ' * volume.depth}{volume.path}  {volume.solid}  {volume.material}  "

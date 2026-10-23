@@ -1,9 +1,12 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 from g4usim_gui.editors.geometry_editor_model import GeometryDocument
 from g4usim_gui.editors.source_physics_scoring_model import SourceEditableModel
 from g4usim_gui.preview3d.geometry_primitives import combine_bounds
 from g4usim_gui.preview3d.scene_model import PreviewScene, PreviewVolume
+from g4usim_gui.preview3d.sketch_geometry import Placement, SketchError, angle_vec3, length_vec3, solid_mesh
 from g4usim_gui.preview3d.source_builder import build_preview_source
 from g4usim_gui.preview3d.units import parse_angle_list_deg, parse_length_list_to_mm, parse_vec3_deg, parse_vec3_to_mm, parse_length_to_mm
 
@@ -23,6 +26,9 @@ def build_preview_scene(geometry: GeometryDocument, source: SourceEditableModel)
         _build_hierarchical(scene, geometry)
     else:
         _build_preview_only(scene, geometry)
+    for volume in scene.volumes:
+        if volume.not_drawn and volume.role != "boolean_tool":
+            scene.warnings.append(f"{volume.name}: not drawn in the sketch ({volume.not_drawn}).")
     scene.bounds_mm = combine_bounds(scene.volumes)
     scene.source = build_preview_source(source, scene.warnings, scene.errors)
     return scene
@@ -62,6 +68,11 @@ def _build_simple_box(scene: PreviewScene, geometry: GeometryDocument) -> None:
             role="target",
         )
     )
+    world, target = scene.volumes[-2], scene.volumes[-1]
+    _place(world, "box", model.world_size, "", {}, None, Placement.identity())
+    _place(target, "box", model.target_size, "", {}, None,
+           _placement(model.target_position or "0 mm, 0 mm, 0 mm", model.target_rotation or "0 deg, 0 deg, 0 deg",
+                      target))
 
 
 def _build_layered_device(scene: PreviewScene, geometry: GeometryDocument) -> None:
@@ -78,6 +89,7 @@ def _build_layered_device(scene: PreviewScene, geometry: GeometryDocument) -> No
             role="world",
         )
     )
+    _place(scene.volumes[-1], "box", model.world_size, "", {}, None, Placement.identity())
     if model.axis.strip().lower() != "z":
         scene.warnings.append("Layered Device preview currently supports axis=z only.")
     enabled_layers = [layer for layer in model.layers if layer.enabled]
@@ -102,7 +114,8 @@ def _build_layered_device(scene: PreviewScene, geometry: GeometryDocument) -> No
     for layer, thickness in zip(enabled_layers, thicknesses):
         xy = _xy(layer.xy, f"layer '{layer.name}' xy", scene)
         position = (0.0, 0.0, edge + 0.5 * thickness)
-        edge += thickness + gap
+        if model.auto_stack:     # as LayeredDeviceTemplate: stacked, or at each layer's own position
+            edge += thickness + gap
         scene.volumes.append(
             PreviewVolume(
                 name=layer.name,
@@ -116,10 +129,15 @@ def _build_layered_device(scene: PreviewScene, geometry: GeometryDocument) -> No
                 role="layer",
             )
         )
+        layer_volume = scene.volumes[-1]
+        stacked = f"0 mm, 0 mm, {position[2]} mm"
+        _place(layer_volume, "box", f"{xy[0]} mm, {xy[1]} mm, {thickness} mm", "", {}, None,
+               _placement(stacked if model.auto_stack else layer.position, layer.rotation or "0 deg, 0 deg, 0 deg",
+                          layer_volume))
 
 
 def _build_preview_only(scene: PreviewScene, geometry: GeometryDocument) -> None:
-    scene.warnings.append("This template is preview-only. 3D preview is approximate and may show only parsed bounding boxes.")
+    scene.warnings.append(f"The sketch does not draw the {geometry.mode} template; the Geant4 geometry shows it.")
     for row in geometry.volumes:
         scene.volumes.append(
             PreviewVolume(
@@ -137,41 +155,82 @@ def _build_preview_only(scene: PreviewScene, geometry: GeometryDocument) -> None
 
 
 def _build_hierarchical(scene: PreviewScene, geometry: GeometryDocument) -> None:
-    scene.warnings.append("Hierarchical preview uses approximate absolute transforms.")
-    if geometry.boolean_ops:
-        scene.warnings.append("Boolean preview is approximate; Geant4 backend is authoritative.")
-    for row in geometry.volumes:
-        if not row.enabled:
-            continue
+    rows = [row for row in geometry.volumes if row.enabled]
+    by_name = {row.name.strip().lower(): row for row in rows}
+    base_dir = Path(geometry.source_path).parent if geometry.source_path else None
+    targets = {op.target_volume.strip().lower() for op in geometry.boolean_ops if op.enabled}
+    placements: dict[str, Placement | SketchError] = {}
+
+    def world_placement(row, chain: tuple[str, ...] = ()) -> Placement:
+        """World <- volume, composed through the parents as Geant4 does (the world stays at the origin)."""
+        key = row.name.strip().lower()
+        if key in placements:
+            known = placements[key]
+            if isinstance(known, SketchError):
+                raise known
+            return known
+        try:
+            if key in chain:
+                raise SketchError("its parent chain is circular")
+            if key == "world":
+                placement = Placement.identity()
+            else:
+                mode = row.preview_properties.get("placement", "").strip().lower()
+                if mode in {"replica", "parameterised", "parametrised"}:
+                    raise SketchError(f"placement={mode} copies are drawn only by the Geant4 geometry")
+                parent = by_name.get((row.parent or "world").strip().lower())
+                if parent is None:
+                    raise SketchError(f"its parent {row.parent!r} is not a volume")
+                try:
+                    mother = world_placement(parent, chain + (key,))
+                except SketchError as error:
+                    raise SketchError(f"its parent {parent.name} is not drawn") from error
+                local = Placement.from_g4(length_vec3(row.position) if row.position.strip() else (0.0, 0.0, 0.0),
+                                          angle_vec3(row.rotation) if row.rotation.strip() else (0.0, 0.0, 0.0))
+                placement = mother.then(local)
+        except SketchError as error:
+            placements[key] = error
+            raise
+        placements[key] = placement
+        return placement
+
+    ignored = PreviewScene()       # the old size/parameter readers' messages: the mesh reports problems itself
+    for row in rows:
         shape = row.shape.strip().lower() or "box"
         size, params_mm, params_deg = _volume_parameters_for_preview(
-            row.size,
-            row.parameters,
-            shape,
-            scene,
-            row.name,
-            shape_properties=row.shape_properties,
+            row.size, row.parameters, shape, ignored, row.name, shape_properties=row.shape_properties)
+        volume = PreviewVolume(
+            name=row.name,
+            shape=shape,
+            size_mm=size,
+            parameters_mm=params_mm,
+            parameters_deg=params_deg,
+            position_mm=parse_vec3_to_mm(row.position) if row.position else (0.0, 0.0, 0.0),
+            rotation_deg=parse_vec3_deg(row.rotation) if row.rotation else (0.0, 0.0, 0.0),
+            material=row.material,
+            sensitive=row.sensitive,
+            bias=row.bias,
+            role="world" if row.name.strip().lower() == "world" else "ordinary",
         )
-        scene.volumes.append(
-            PreviewVolume(
-                name=row.name,
-                shape=shape,
-                size_mm=size,
-                parameters_mm=params_mm,
-                parameters_deg=params_deg,
-                position_mm=parse_vec3_to_mm(row.position) if row.position else (0.0, 0.0, 0.0),
-                rotation_deg=parse_vec3_deg(row.rotation) if row.rotation else (0.0, 0.0, 0.0),
-                material=row.material,
-                sensitive=row.sensitive,
-                bias=row.bias,
-                role="world" if row.name.strip().lower() == "world" else "ordinary",
-            )
-        )
+        scene.volumes.append(volume)
+        try:
+            placement = world_placement(row)
+        except SketchError as error:
+            volume.not_drawn = str(error)
+            continue
+        _place(volume, shape, row.size, row.parameters, {**row.shape_properties, **row.preview_properties},
+               base_dir, placement)
+        if row.name.strip().lower() in targets:
+            volume.note = "boolean operations not applied: the solid is drawn before them"
+    if targets:
+        scene.warnings.append("Boolean results are not drawn: boolean targets show their solid before the "
+                              "operations; the Geant4 geometry shows the result.")
     for op in geometry.boolean_ops:
         if not op.enabled:
             continue
         shape = op.tool_shape.strip().lower() or "box"
-        size, params_mm, params_deg = _volume_parameters_for_preview(op.tool_size, op.tool_parameters, shape, scene, f"boolean:{op.name or op.target_volume}")
+        size, params_mm, params_deg = _volume_parameters_for_preview(
+            op.tool_size, op.tool_parameters, shape, ignored, f"boolean:{op.name or op.target_volume}")
         scene.volumes.append(
             PreviewVolume(
                 name=f"{op.target_volume}.{op.index}.{op.operation}",
@@ -185,8 +244,31 @@ def _build_hierarchical(scene: PreviewScene, geometry: GeometryDocument) -> None
                 sensitive=False,
                 bias=False,
                 role="boolean_tool",
+                not_drawn="boolean tool",
             )
         )
+
+
+def _placement(position: str, rotation: str, volume: PreviewVolume) -> Placement | None:
+    try:
+        return Placement.from_g4(length_vec3(position), angle_vec3(rotation))
+    except SketchError as error:
+        volume.not_drawn = str(error)
+        return None
+
+
+def _place(volume: PreviewVolume, shape: str, size: str, parameters: str, properties: dict[str, str],
+           base_dir: Path | None, placement: Placement | None) -> None:
+    """The volume's solid in world coordinates, or the reason it cannot be drawn."""
+    if placement is None:
+        return
+    try:
+        vertices, faces = solid_mesh(shape, size=size, parameters=parameters, properties=properties,
+                                     base_dir=base_dir)
+    except (SketchError, ValueError, ZeroDivisionError) as error:
+        volume.not_drawn = str(error)
+        return
+    volume.vertices, volume.faces = placement.apply(vertices), faces
 
 
 def _volume_parameters_for_preview(

@@ -4,7 +4,10 @@ from g4usim_gui.preview3d.scene_model import Bounds, PreviewVolume, Vec3
 
 
 def volume_bounds(volume: PreviewVolume) -> Bounds | None:
-    if not volume.size_mm or not volume.position_mm:
+    if volume.vertices is not None and len(volume.vertices):
+        low, high = volume.vertices.min(axis=0), volume.vertices.max(axis=0)
+        return (float(low[0]), float(high[0]), float(low[1]), float(high[1]), float(low[2]), float(high[2]))
+    if volume.not_drawn or not volume.size_mm or not volume.position_mm:
         return None
     sx, sy, sz = volume.size_mm
     px, py, pz = volume.position_mm

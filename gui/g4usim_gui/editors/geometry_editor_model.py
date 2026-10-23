@@ -45,6 +45,7 @@ class HierarchicalVolumeRow:
     copy_no: str = ""
     metadata: str = ""
     shape_properties: dict[str, str] = field(default_factory=dict)
+    preview_properties: dict[str, str] = field(default_factory=dict)   # read-only, for the 3D sketch
     visual: dict[str, str] = field(default_factory=dict)
     production_cuts: dict[str, str] = field(default_factory=dict)
     notes: str = ""
@@ -172,6 +173,7 @@ def geometry_document_from_summary(summary: GeometrySummary | None, template_nam
                 copy_no=volume.copy_no,
                 metadata=volume.metadata,
                 shape_properties=dict(volume.shape_properties),
+                preview_properties=dict(volume.preview_properties),
                 visual=dict(volume.visual),
                 production_cuts=dict(volume.production_cuts),
             )

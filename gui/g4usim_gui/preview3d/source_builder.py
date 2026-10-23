@@ -5,7 +5,7 @@ import random
 
 from g4usim_gui.editors.source_physics_scoring_model import SourceEditableModel
 from g4usim_gui.preview3d.geometry_primitives import add_vec3, scale_vec3
-from g4usim_gui.preview3d.scene_model import PreviewSource, Vec3
+from g4usim_gui.preview3d.scene_model import PreviewSource, SourceGlyph, Vec3
 from g4usim_gui.preview3d.units import (
     parse_angle_deg,
     parse_direction,
@@ -53,7 +53,93 @@ def build_preview_source(source: SourceEditableModel, warnings: list[str], error
     )
     if position and direction:
         preview.preview_rays = _build_rays(preview, source.preview_ray_count, source.random_seed_preview)
+    focus = parse_vec3_to_mm(source.focus_point) if mode == "focused" else None
+    _build_glyphs(preview, focus, warnings)
     return preview
+
+
+# what the GUI writes to a run package (main_ini_writer._source_lines; anything else is blocked)
+GENERATED_SHAPES = {"point", "circle", "rectangle"}
+GENERATED_MODES = {"fixed", "isotropic"}
+STARBURST = [(1, 0, 0), (-1, 0, 0), (0, 1, 0), (0, -1, 0), (0, 0, 1), (0, 0, -1)] + [
+    (x, y, z) for x in (-1, 1) for y in (-1, 1) for z in (-1, 1)]
+
+
+def _build_glyphs(source: PreviewSource, focus: Vec3 | None, warnings: list[str]) -> None:
+    """The source as Geant4's GPS samples it (roadmap G5).
+
+    The backend's plane source lies in the XY plane (GPS rot1 = x, rot2 = y), whatever the
+    editor's normal; a fixed direction is the same for every particle; isotropic emission
+    covers all directions. Preview-only settings are drawn too but marked as not generated.
+    """
+    center = source.position_mm
+    if center is None:
+        return
+    plane = source.position_mode == "plane"
+    shape = source.source_shape if plane else "point"
+    source.generated = source.position_mode in {"point", "plane"} and shape in GENERATED_SHAPES \
+        and source.mode in GENERATED_MODES
+    if plane and source.normal and abs(abs(source.normal[2]) - 1.0) > 1e-9:
+        warnings.append("Source: the plane source lies in the XY plane in Geant4 (GPS); the editor's normal is "
+                        "not used, so the plane is drawn in the XY plane.")
+    glyphs = source.glyphs
+    rim: list[Vec3] = []
+    if not plane:
+        glyphs.append(SourceGlyph("point", center))
+        where = ("point at {position} mm", {"position": _vec(center)})
+    elif shape in {"circle", "annulus"} and source.radius_mm:
+        inner = source.inner_radius_mm if shape == "annulus" and source.inner_radius_mm else 0.0
+        glyphs.append(SourceGlyph("disc", center, radius_mm=source.radius_mm, inner_radius_mm=inner))
+        rim = [add_vec3(center, (source.radius_mm * c, source.radius_mm * s_, 0.0))
+               for c, s_ in ((1, 0), (0, 1), (-1, 0), (0, -1))]
+        where = ("plane {shape} r = {radius} mm at {position} mm (XY plane)",
+                 {"shape": shape, "radius": _num(source.radius_mm), "position": _vec(center)})
+    elif shape in {"rectangle", "square"} and source.halfx_mm:
+        hx = source.halfx_mm
+        hy = source.halfy_mm if shape == "rectangle" and source.halfy_mm else hx
+        glyphs.append(SourceGlyph("rectangle", center, halfx_mm=hx, halfy_mm=hy))
+        rim = [add_vec3(center, (x, y, 0.0)) for x, y in ((hx, hy), (-hx, hy), (-hx, -hy), (hx, -hy))]
+        where = ("plane {shape} {width} x {height} mm at {position} mm (XY plane)",
+                 {"shape": shape, "width": _num(2 * hx), "height": _num(2 * hy), "position": _vec(center)})
+    else:
+        glyphs.append(SourceGlyph("point", center))
+        where = ("plane {shape} at {position} mm (size not set)", {"shape": shape, "position": _vec(center)})
+    direction = source.direction
+    if source.mode == "isotropic":
+        glyphs.append(SourceGlyph("isotropic", center))
+        how = ("isotropic emission", {})
+    elif source.mode == "cosine" and direction:
+        glyphs.append(SourceGlyph("isotropic", center, direction=direction))
+        how = ("cosine-law about {direction}", {"direction": _vec(direction)})
+    elif source.mode == "cone" and direction:
+        half = source.cone_half_angle_deg if source.cone_half_angle_deg is not None else 5.0
+        glyphs.append(SourceGlyph("cone", center, direction=direction, half_angle_deg=half))
+        how = ("cone of {angle} deg about {direction}", {"angle": _num(half), "direction": _vec(direction)})
+    elif source.mode == "focused" and focus is not None:
+        offset = tuple(f - c for f, c in zip(focus, center))
+        distance = math.sqrt(sum(v * v for v in offset))
+        if distance > 0:
+            glyphs.append(SourceGlyph("arrow", center, direction=scale_vec3(offset, 1.0 / distance),  # type: ignore[arg-type]
+                                      length_mm=distance))
+        how = ("focused on {position} mm", {"position": _vec(focus)})
+    elif direction:
+        glyphs.append(SourceGlyph("arrow", center, direction=direction))
+        # a parallel beam: the same direction from the plane's edge shows its footprint
+        glyphs.extend(SourceGlyph("arrow", point, direction=direction, secondary=True) for point in rim)
+        how = ("fixed direction {direction}", {"direction": _vec(direction)})
+    else:
+        how = ("no valid direction", {})
+    template = "{particle} {energy}, {where}, {how}" + ("" if source.generated else " (preview only, not generated)")
+    source.description = (template, {"particle": source.particle, "energy": source.energy,
+                                     "where": where, "how": how})
+
+
+def _num(value: float) -> str:
+    return f"{value:.4g}"
+
+
+def _vec(value: Vec3) -> str:
+    return "(" + ", ".join(_num(v) for v in value) + ")"
 
 
 def _build_rays(source: PreviewSource, count: int, seed: int) -> list[tuple[Vec3, Vec3]]:

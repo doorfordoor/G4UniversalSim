@@ -54,9 +54,23 @@ def test_primitives_keep_shape() -> None:
 
 
 def test_unsupported_fallback_warning() -> None:
+    # a polycone without its planes cannot be drawn: listed with the reason, not silently missing
     scene = _scene_for("polycone", size="1 mm,1 mm,1 mm")
     assert scene.volumes[1].shape == "polycone"
-    assert any("unsupported" in item.lower() for item in scene.warnings)
+    assert scene.volumes[1].vertices is None and "z_planes" in scene.volumes[1].not_drawn
+    assert any("not drawn" in item for item in scene.warnings)
+    # with its planes it is drawn (roadmap G4)
+    geometry = GeometryDocument(mode="hierarchical", is_dirty=True)
+    geometry.volumes = [
+        HierarchicalVolumeRow(name="world", parent="", shape="box", size="10 cm,10 cm,10 cm", material="G4_AIR"),
+        HierarchicalVolumeRow(name="Bottle", parent="world", shape="polycone", parameters="0 deg, 360 deg",
+                              material="G4_Si", preview_properties={"z_planes": "-1 cm, 1 cm",
+                                                                    "r_inner": "0 cm, 0 cm",
+                                                                    "r_outer": "1 cm, 2 cm"}),
+    ]
+    bottle = build_preview_scene(geometry, SourceEditableModel()).volumes[1]
+    assert bottle.vertices is not None and not bottle.not_drawn
+    assert abs(bottle.vertices[:, 0].max() - 20.0) < 1e-9 and abs(bottle.vertices[:, 2].min() + 10.0) < 1e-9
 
 
 def test_boolean_tool_tubs_not_box() -> None:
@@ -128,38 +142,33 @@ def test_bad_direction_warning() -> None:
     assert any("direction" in item.lower() for item in scene.warnings)
 
 
+def _closed(faces) -> bool:
+    """Every edge is shared by exactly two faces."""
+    edges: dict[tuple[int, int], int] = {}
+    for face in faces:
+        for a, b in zip(face, face[1:] + face[:1]):
+            if a != b:
+                key = (min(a, b), max(a, b))
+                edges[key] = edges.get(key, 0) + 1
+    return all(count == 2 for count in edges.values())
+
+
 def test_hollow_tubs_mesh_is_closed() -> None:
-    try:
-        import pyvista as pv
-    except ImportError:
-        return
-    from g4usim_gui.preview3d.pyvista_preview_widget import make_trd_mesh, make_tubs_mesh
+    import math
 
-    mesh = make_tubs_mesh(
-        pv,
-        center=(0.0, 0.0, 0.0),
-        inner_radius=2.0,
-        outer_radius=4.0,
-        half_z=5.0,
-        resolution=32,
-    )
-    radial_values = {(round((x * x + y * y) ** 0.5, 6)) for x, y, _z in mesh.points}
-    assert radial_values == {2.0, 4.0}
-    assert mesh.n_open_edges == 0
-    assert mesh.n_cells == 128
+    from g4usim_gui.preview3d.sketch_geometry import sphere_mesh, trd_mesh, tubs_mesh
 
-    trd = make_trd_mesh(
-        pv,
-        center=(0.0, 0.0, 0.0),
-        dx1=8.0,
-        dx2=10.0,
-        dy1=8.0,
-        dy2=10.0,
-        half_z=2.0,
-    )
-    assert trd.n_points == 8
-    assert trd.n_cells == 6
-    assert trd.n_open_edges == 0
+    vertices, faces = tubs_mesh(2.0, 4.0, 5.0, 0.0, 2.0 * math.pi)
+    assert {round(float(math.hypot(x, y)), 6) for x, y, _z in vertices} == {2.0, 4.0}
+    assert _closed(faces)
+    vertices, faces = tubs_mesh(2.0, 4.0, 5.0, math.radians(30), math.radians(90))   # a segment, with end caps
+    assert _closed(faces)
+    angles = {round(math.degrees(math.atan2(y, x)), 6) for x, y, _z in vertices}
+    assert min(angles) == 30.0 and max(angles) == 120.0
+    _vertices, faces = sphere_mesh(1.0, 3.0, 0.0, math.radians(120), math.radians(30), math.radians(60))
+    assert _closed(faces)
+    vertices, faces = trd_mesh(8.0, 10.0, 8.0, 10.0, 2.0)
+    assert len(vertices) == 8 and len(faces) == 6 and _closed(faces)
 
 
 def test_hierarchical_fixture_keeps_hollow_tubs_and_trd() -> None:

@@ -132,7 +132,9 @@ class ContentMixin:
 
     def _on_backend_mesh(self, mesh, cached: bool) -> None:
         self.config_builder_page.set_backend_geometry_busy(False)
-        self.config_builder_page.show_backend_geometry(mesh, cached)
+        # the Source editor's source is the run's only when the package is generated from the Configuration page
+        self.config_builder_page.show_backend_geometry(
+            mesh, cached, with_source=(self.project.runInputMode or "generated") == "generated")
 
     def _on_backend_geometry_failed(self, reason: str) -> None:
         self.config_builder_page.set_backend_geometry_busy(False)

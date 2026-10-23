@@ -12,6 +12,12 @@ SHAPE_PROPERTY_KEYS = {
     "theta", "phi", "alpha1", "alpha2",
 }
 TRD_PROPERTY_KEYS = ("dx1", "dx2", "dy1", "dy2", "dz")
+# backend keys the editor cannot write (A5 solids, replica/parameterised placement): kept read-only so
+# the 3D sketch can draw the solid or say why it does not (roadmap G4)
+PREVIEW_PROPERTY_KEYS = {
+    "z_planes", "r_inner", "r_outer", "file", "file_unit", "placement",
+    "replica_axis", "replica_count", "replica_width", "replica_offset", "copies_file", "copies", "copy_step",
+}
 VISUAL_KEYS = {"vis.color", "vis.alpha", "vis.visible", "vis.wireframe"}
 PRODUCTION_CUT_KEYS = {"cut.gamma", "cut.e-", "cut.e+", "cut.proton"}
 
@@ -48,6 +54,7 @@ class VolumeEntry:
     copy_no: str = ""
     metadata: str = ""
     shape_properties: dict[str, str] = field(default_factory=dict)
+    preview_properties: dict[str, str] = field(default_factory=dict)
     visual: dict[str, str] = field(default_factory=dict)
     production_cuts: dict[str, str] = field(default_factory=dict)
     section: str = ""
@@ -147,6 +154,7 @@ def _parse_volume(section: IniSection) -> VolumeEntry:
 
     metadata_lines = [f"{key} = {value}" for key, value in section.values.items() if key.lower().startswith("metadata.")]
     shape_properties = {key: value for key, value in values.items() if key in SHAPE_PROPERTY_KEYS}
+    preview_properties = {key: value for key, value in values.items() if key in PREVIEW_PROPERTY_KEYS}
     visual = {key: value for key, value in values.items() if key in VISUAL_KEYS}
     production_cuts = {key: value for key, value in values.items() if key in PRODUCTION_CUT_KEYS}
     return VolumeEntry(
@@ -164,6 +172,7 @@ def _parse_volume(section: IniSection) -> VolumeEntry:
         copy_no=values.get("copyno", values.get("copy_no", "")),
         metadata="\n".join(metadata_lines),
         shape_properties=shape_properties,
+        preview_properties=preview_properties,
         visual=visual,
         production_cuts=production_cuts,
         section=section.name,
@@ -308,7 +317,7 @@ def _detect_round_trip_blockers(sections: list[IniSection], summary: GeometrySum
                 "dy1", "dy2", "dz", "theta", "phi", "alpha1", "alpha2", "shape", "copyno",
                 "name", "material", "size", "parameters", "sensitive", "bias", "region", "parent",
                 "operation", "count", "names", "axis", "gap", "z_start", "thickness", "xy",
-            }:
+            } and key not in PREVIEW_PROPERTY_KEYS:
                 legacy = True
 
             message = (
