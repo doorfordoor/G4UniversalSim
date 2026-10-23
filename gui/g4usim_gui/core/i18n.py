@@ -354,7 +354,8 @@ ZH_CN: dict[str, str] = {
     "Generate and Run": "生成并运行",
     "Generated package: <none>": "已生成运行包：<无>",
     "Materials Editor": "材料编辑器",
-    "Load from selected materials.ini": "从所选 materials.ini 加载",
+    "Load from file": "从文件加载",
+    "Load the selected materials.ini into the editor": "把所选 materials.ini 载入编辑器",
     "Add NIST": "添加 NIST 材料",
     "Add mass_fraction": "添加质量分数材料",
     "Add volume_fraction": "添加体积分数材料",
@@ -557,7 +558,7 @@ ZH_CN: dict[str, str] = {
     'Example {name} loaded with its bundled scan results; Create scan makes new run packages.':
         '已载入示例“{name}”及其附带扫描结果；“创建扫描”会生成新的运行包。',
     "Shape '{shape}' is supported by the backend but not by the Geometry Editor; use original source copy mode.":
-        "形状 '{shape}' 由后端支持，但几何编辑器尚不能编辑；请勾选 “Copy original geometry source unchanged” 使用原始文件复制模式。",
+        "形状 '{shape}' 由后端支持，但几何编辑器尚不能编辑；请勾选“Copy the original geometry file”（复制原始几何文件）。",
     'Geant4 geometry automatically': '自动显示 Geant4 几何',
     'While this tab is open, rebuild the Geant4 geometry a moment after each change (about 3 s; unchanged geometry is shown from the cache).':
         '此页打开时，每次修改后稍候自动重建 Geant4 几何（约 3 秒；未改变的几何直接从缓存显示）。',
@@ -587,6 +588,33 @@ ZH_CN: dict[str, str] = {
     'Materials in the view; untick one to hide its volumes': '视图中的材料；取消勾选可隐藏对应体积',
     'Selected: {volume}': '已选中：{volume}',
     'Hover a volume to name it; click to select it.': '鼠标悬停显示体积名称，单击选中。',
+    'Load Tracks...': '加载径迹...',
+    "Overlay the particle tracks of a run (trajectories_tN.json; set 'Particle tracks of the first events' on the Run Config tab before running)":
+        '叠加显示一次运行的粒子径迹（trajectories_tN.json；运行前在 Run Config 页设置“前若干事件的粒子径迹”）',
+    'Particles': '粒子',
+    'Particles of the loaded tracks; untick one to hide its tracks': '已加载径迹中的粒子；取消勾选可隐藏其径迹',
+    'Previous event': '上一事件',
+    'Next event': '下一事件',
+    'Primaries only': '仅初级粒子',
+    'Hide secondary tracks that start below this kinetic energy': '隐藏初始动能低于此值的次级径迹',
+    'Clear tracks': '清除径迹',
+    'Tracks': '径迹',
+    'min': '最低',
+    'Event {event}': '事件 {event}',
+    'All events': '全部事件',
+    'all events': '全部事件',
+    'event {event} ({position} of {count})': '事件 {event}（第 {position}/{count} 个）',
+    ' (file truncated)': '（文件已截断）',
+    '{count} tracks, {where}{note}': '{count} 条径迹，{where}{note}',
+    'Particle tracks of the first events': '前若干事件的粒子径迹',
+    'off': '关闭',
+    'Write every track of the first N events (trajectories_tN.json) for the 3D view; 0 = off':
+        '为 3D 视图写出前 N 个事件的全部径迹（trajectories_tN.json）；0 表示关闭',
+    'Choose a run output folder with trajectory files': '选择含径迹文件的运行输出目录',
+    "No trajectory files found. Set 'Particle tracks of the first events' on the Run Config tab and run again.":
+        '未找到径迹文件。请在 Run Config 页设置“前若干事件的粒子径迹”后重新运行。',
+    'Cannot load tracks: {error}': '无法加载径迹：{error}',
+    'Tracks of {count} events loaded in the 3D view (run {run}).': '已在 3D 视图中加载 {count} 个事件的径迹（run {run}）。',
 }
 
 

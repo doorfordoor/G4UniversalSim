@@ -136,7 +136,7 @@ def check_window(app: QApplication, temp: Path) -> None:
     def idle() -> bool:
         return controller.process.state() == QProcess.NotRunning and not controller._pending
 
-    preview_index = page.workspace_tabs.indexOf(page.preview3d_widget.parentWidget())
+    preview_index = page.preview3d_tab_index()
     page.workspace_tabs.setCurrentIndex(preview_index)   # opening the 3D tab asks for the Geant4 world
     assert wait_until(app, lambda: controller.exports == 1), "opening the 3D tab did not start an export"
     assert wait_until(app, idle), "export did not finish"

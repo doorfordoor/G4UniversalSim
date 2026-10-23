@@ -81,6 +81,7 @@ class ViewState:
     selected: str | None = None                               # volume name
     section_axis: str = ""                                    # "", "x", "y", "z"
     section_fraction: float = 0.5                             # 0..1 across the visible bounds
+    tracks_shown: bool = False                                # particle tracks drawn: volumes become glass (G6)
 
     def set_items(self, items: list[ViewItem]) -> None:
         """New geometry: keep choices that still apply (same volumes/materials), drop the rest."""
@@ -101,6 +102,13 @@ class ViewState:
         if self.isolated is not None:
             return item.name == self.isolated
         return item.name not in self.hidden and item.material not in self.hidden_materials
+
+    def track_glass_opacity(self) -> float:
+        """Opacity of volumes while tracks are shown: a line of sight crosses about two surfaces
+        per visible volume, so with many volumes (a stack of 40 slabs) each must be fainter for
+        the stack to stay at most half opaque."""
+        surfaces = 2 * max(1, sum(1 for item in self.items if not item.world and self.visible(item)))
+        return min(0.15, max(0.01, 1.0 - 0.5 ** (1.0 / surfaces)))
 
     def colours(self) -> dict[str, str]:
         """Material -> colour; known materials fixed, others from the palette in name order."""
@@ -128,6 +136,8 @@ class ViewState:
             opacity = max(opacity, 0.85)
         elif self.selected is not None:
             opacity *= 0.45      # the others fade while a volume is selected
+        if self.tracks_shown and not selected:
+            opacity = min(opacity, self.track_glass_opacity())   # tracks inside volumes stay visible
         return {"colour": self.colours().get(item.material, "#9aa6b2"), "opacity": opacity,
                 "wireframe": False, "selected": selected}
 

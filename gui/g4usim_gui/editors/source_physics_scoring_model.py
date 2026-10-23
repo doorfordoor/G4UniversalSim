@@ -135,6 +135,7 @@ class ScoringEditableModel:
     let: bool = False
     dose: bool = False
     fluence: bool = False
+    trajectory_events: int = 0     # [output] trajectories (0 = off)
     auto_create_default_scorers: bool = True
     verbose: int = 1
     is_dirty: bool = False
@@ -150,6 +151,7 @@ class ScoringEditableModel:
             edep=settings.edep,
             dose=settings.dose,
             fluence=settings.fluence,
+            trajectory_events=settings.trajectory_events,
             hist_bins=settings.hist_bins,
             hist_min=settings.hist_min,
             hist_max=settings.hist_max,
@@ -165,6 +167,7 @@ class ScoringEditableModel:
             edep=self.edep,
             dose=self.dose,
             fluence=self.fluence,
+            trajectory_events=self.trajectory_events,
             hist_bins=self.hist_bins,
             hist_min=self.hist_min,
             hist_max=self.hist_max,
@@ -302,6 +305,10 @@ def validate_scoring_model(model: ScoringEditableModel) -> ScoringEditableModel:
         model.errors.append("Dose requires auto-create default scorers")
     if model.fluence and not model.auto_create_default_scorers:
         model.errors.append("Fluence requires auto-create default scorers")
+    if not isinstance(model.trajectory_events, int) or not 0 <= model.trajectory_events <= 1000:
+        model.errors.append("trajectories must be 0 (off) to 1000 events")
+    elif model.trajectory_events > 100:
+        model.warnings.append("trajectory files grow quickly with secondaries; use a few events")
     return model
 
 

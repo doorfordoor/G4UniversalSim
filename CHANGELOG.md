@@ -7,6 +7,12 @@ Short, user-facing record of notable changes. Detailed support status lives in
 ## Unreleased
 
 ### Added
+- **Particle tracks in the 3D view** (roadmap G6). Run Config > Scoring has "Particle
+  tracks of the first events" (writes `[output] trajectories = N`); after such a run the
+  3D view overlays its tracks, or **Load Tracks...** reads any run folder. Each particle
+  has a fixed colour with a legend whose check boxes hide it; one event at a time with
+  previous/next or all events; "Primaries only" and a minimum starting energy for
+  secondaries. Volumes turn to faint glass while tracks are shown.
 - **Particle trajectories** (roadmap H1): `[output] trajectories = N` writes every track
   of events 0..N-1 per worker to `trajectories_tN[_rR].json` (schema
   `g4usim_trajectories_v1`: particle, parent, creator and end process, initial energy,
@@ -41,6 +47,11 @@ Short, user-facing record of notable changes. Detailed support status lives in
   GDML) keep resolving.
 
 ### Fixed
+- The Configuration tabs overlapped when the window was smaller than they need (the
+  Materials table ran under the "Selected material" box, toolbar buttons were clipped):
+  the editors now scroll, long status lines wrap, the Materials toolbar has two rows and
+  the source-copy check box is shorter ("Copy the original geometry file", details in its
+  tooltip).
 - The Geometry tab's **Add Volume** also added a volume-fraction material, and the Materials
   tab had no **Add volume_fraction** button: both used one shared attribute. They are
   separate buttons again.

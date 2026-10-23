@@ -100,6 +100,7 @@ CASES = (
     Case("gui_backend_geometry_auto", "gui/smoke_tests/smoke_backend_geometry_auto.py", "integration", ("exe", "qt")),
     Case("gui_3d_view", "gui/smoke_tests/smoke_3d_view.py", "gui", ("qt",)),
     Case("gui_config_editors", "gui/smoke_tests/smoke_config_editors.py", "gui", ("qt",)),
+    Case("gui_trajectory_view", "gui/smoke_tests/smoke_trajectory_view.py", "integration", ("exe", "qt")),
 )
 
 

@@ -11,6 +11,7 @@ class ScoringSettings:
     edep: bool = True
     dose: bool = False
     fluence: bool = False
+    trajectory_events: int = 0     # [output] trajectories: tracks of the first N events (roadmap H1/G6)
     hist_bins: int = 100
     hist_min: str = "0 eV"
     hist_max: str = "10 MeV"

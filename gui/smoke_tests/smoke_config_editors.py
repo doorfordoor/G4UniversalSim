@@ -67,13 +67,26 @@ def main() -> int:
     page = window.config_builder_page
     tabs = page.workspace_tabs
     assert tab_texts(tabs) == ["Materials", "Geometry", "Boolean Ops", "3D Preview", "Run Config", "Messages and files"]
-    assert [tabs.widget(i) for i in range(tabs.count())] == [
-        page.materials_editor, page.geometry_editor, page.boolean_tab, page.preview3d_panel, page.run_config_editor,
-        page.details_tabs]
+    shown = [tabs.widget(i) for i in range(tabs.count())]
+    shown = [w.widget() for w in shown]           # every tab is a scroll area (it scrolls instead of overlapping)
+    assert shown == [page.materials_editor, page.geometry_editor, page.boolean_tab, page.preview3d_panel,
+                     page.run_config_editor, page.details_tabs], shown
     assert page.materials_table is page.materials_editor.materials_table
     assert page.geometry_table is page.geometry_editor.geometry_table
     assert page.preview3d_widget is page.preview3d_panel.preview3d_widget
     assert page.boolean_table.parentWidget() is page.boolean_tab   # shown in the Boolean Ops tab, as always
+
+    # nothing overlaps: every tab's content gets at least its minimum size, or scrolls (window 1280 x 800)
+    window.resize(1280, 800)
+    window.show()
+    window.page_stack.setCurrentWidget(page)
+    for index in range(tabs.count()):
+        tabs.setCurrentIndex(index)
+        app.processEvents()
+        content = shown[index]
+        assert content.height() >= content.minimumSizeHint().height() - 1, (tabs.tabText(index), content.height())
+        assert content.width() >= content.minimumSizeHint().width() - 1, (tabs.tabText(index), content.width())
+    print("layout: at 1280 x 800 every tab's content has its minimum size (scrolling where needed)")
     assert page.preview3d_messages.window() is window
     print("page: composed of the editor widgets, controls adopted")
 

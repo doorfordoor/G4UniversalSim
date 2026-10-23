@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from PySide6.QtCore import QTimer, Signal
 from PySide6.QtWidgets import (
+    QFrame,
+    QScrollArea,
     QComboBox,
     QLabel,
     QSplitter,
@@ -50,6 +52,7 @@ class ConfigBuilderPage(SetupMixin, MaterialsMixin, GeometryMixin, LayersMixin, 
     generatePackageRequested = Signal(bool)
     settingsChanged = Signal()
     backendGeometryRequested = Signal()
+    tracksRequested = Signal()                # overlay a run's particle tracks in the 3D view (G6)
     autoBackendGeometryRequested = Signal()   # the 3D tab wants the Geant4 world after a change (G1)
 
     GEOMETRY_PRIMARY_OPTIONS = (
@@ -143,13 +146,14 @@ class ConfigBuilderPage(SetupMixin, MaterialsMixin, GeometryMixin, LayersMixin, 
 
         tabs = QTabWidget()
         self.workspace_tabs = tabs
-        tabs.addTab(self.materials_editor, "Materials")
-        tabs.addTab(self.geometry_editor, "Geometry")
-        tabs.addTab(self.boolean_tab, "Boolean Ops")
-        tabs.addTab(self.preview3d_panel, "3D Preview")
-        tabs.addTab(self.run_config_editor, "Run Config")
+        # tabs scroll when the window is smaller than they need (they used to overlap)
+        tabs.addTab(self._scrolled(self.materials_editor), "Materials")
+        tabs.addTab(self._scrolled(self.geometry_editor), "Geometry")
+        tabs.addTab(self._scrolled(self.boolean_tab), "Boolean Ops")
+        tabs.addTab(self._scrolled(self.preview3d_panel), "3D Preview")
+        tabs.addTab(self._scrolled(self.run_config_editor), "Run Config")
         # messages, raw/generated files and the NIST list are reference views: one tab with sub-tabs
-        tabs.addTab(self.details_tabs, "Messages and files")
+        tabs.addTab(self._scrolled(self.details_tabs), "Messages and files")
         layout.addWidget(tabs, 1)
         return panel
 
@@ -159,6 +163,15 @@ class ConfigBuilderPage(SetupMixin, MaterialsMixin, GeometryMixin, LayersMixin, 
         layout.addWidget(label)
         layout.addWidget(table, 1)
         return tab
+
+    @staticmethod
+    def _scrolled(editor: QWidget) -> QScrollArea:
+        scroll = QScrollArea()
+        scroll.setObjectName("editorScroll")
+        scroll.setWidgetResizable(True)
+        scroll.setFrameShape(QFrame.NoFrame)
+        scroll.setWidget(editor)
+        return scroll
 
     def _connect_signals(self) -> None:
         # in the order they were always connected (slots of one signal run in this order)

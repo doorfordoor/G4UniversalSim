@@ -43,6 +43,7 @@ class GeometryEditor(QWidget):
         self.geometry_table.setHorizontalHeaderLabels(["enabled", "name", "parent", "shape", "material", "position", "size/parameters", "rotation", "sensitive", "bias", "region", "dx1", "dx2", "dy1", "dy2", "dz", "status"])
         set_table_minimum_rows(self.geometry_table, 8)
         self.geometry_count_label = QLabel("Volumes: 0 entries | Preview only")
+        self.geometry_count_label.setWordWrap(True)
         self.add_volume_button = QPushButton("Add Volume")
         self.duplicate_volume_button = QPushButton("Duplicate Volume")
         self.delete_volume_button = QPushButton("Delete Volume")
@@ -54,6 +55,7 @@ class GeometryEditor(QWidget):
         self.boolean_table.setHorizontalHeaderLabels(["enabled", "target", "index", "operation", "tool shape", "tool size", "tool parameters", "position", "rotation", "status"])
         set_table_minimum_rows(self.boolean_table, 8)
         self.boolean_count_label = QLabel("Boolean ops: 0 entries | Preview only")
+        self.boolean_count_label.setWordWrap(True)
         self.add_boolean_button = QPushButton("Add Boolean Operation")
         self.duplicate_boolean_button = QPushButton("Duplicate Operation")
         self.delete_boolean_button = QPushButton("Delete Operation")
@@ -63,7 +65,10 @@ class GeometryEditor(QWidget):
         self.geometry_editor_tabs = QTabWidget()
         self.geometry_mode_label = QLabel("Geometry editor: preview-only")
         self.geometry_mode_label.setWordWrap(True)
-        self.geometry_source_copy = QCheckBox("Copy original geometry source unchanged (editor validation bypassed)")
+        self.geometry_source_copy = QCheckBox("Copy the original geometry file")
+        self.geometry_source_copy.setToolTip(
+            "Use the source geometry file unchanged in the run package; the Geometry Editor's validation is "
+            "bypassed for it")
         self.simple_world_size = QLineEdit("10 cm, 10 cm, 10 cm")
         self.simple_world_material = QComboBox()
         self.simple_world_material.setEditable(True)

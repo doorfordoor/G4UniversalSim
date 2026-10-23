@@ -4,11 +4,12 @@ from __future__ import annotations
 
 import copy
 
-from PySide6.QtWidgets import QMessageBox
+from PySide6.QtWidgets import QFileDialog, QMessageBox
 
 from g4usim_gui.core import examples as gallery, scan as parameter_scan, wizard as simulation_wizard
 from g4usim_gui.core.i18n import ui_format, ui_text
 from g4usim_gui.preview3d.backend_inputs import external_inputs, generated_inputs
+from g4usim_gui.preview3d.trajectories import available_runs, load_trajectories
 from g4usim_gui.widgets.new_simulation_wizard import NewSimulationWizard
 
 
@@ -103,6 +104,31 @@ class ContentMixin:
             page.show_backend_geometry_message(ui_text(str(exc)))
             return
         self.geometry_controller.request(inputs, executable, self.project.workspaceRoot)
+
+    def load_tracks(self, directory: str = "", *, quiet: bool = False) -> bool:
+        """Overlay a run's particle tracks (roadmap G6): the given folder, else the last run's output."""
+        page = self.config_builder_page
+        candidates = [directory] if directory else [self.project.outputDir, self.output_page._output_dir]
+        folder = next((c for c in candidates if c and available_runs(c)), "")
+        if not folder and not quiet and not directory:
+            folder = QFileDialog.getExistingDirectory(self, ui_text("Choose a run output folder with trajectory files"),
+                                                      self.project.outputDir or "")
+        if not folder:
+            if not quiet:
+                page.preview3d_messages.setPlainText(ui_text(
+                    "No trajectory files found. Set 'Particle tracks of the first events' on the Run Config tab "
+                    "and run again."))
+            return False
+        try:
+            trajectories = load_trajectories(folder)
+        except ValueError as error:
+            if not quiet:
+                page.preview3d_messages.setPlainText(ui_format("Cannot load tracks: {error}", error=error))
+            return False
+        page.preview3d_widget.show_trajectories(trajectories)
+        self.statusBar().showMessage(ui_format("Tracks of {count} events loaded in the 3D view (run {run}).",
+                                               count=len(trajectories.events), run=trajectories.run), 8000)
+        return True
 
     def _on_backend_mesh(self, mesh, cached: bool) -> None:
         self.config_builder_page.set_backend_geometry_busy(False)

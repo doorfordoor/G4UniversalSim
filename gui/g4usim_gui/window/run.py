@@ -247,6 +247,7 @@ class RunMixin:
         self.output_page.set_output_dir(self.project.outputDir)
         self.output_page.refresh()
         self.run_history_page.refresh()
+        self.load_tracks(self.project.outputDir, quiet=True)   # a run with trajectories shows them (G6)
         self._set_run_chip(state, {"success": "success", "failed": "failed"}.get(state, ""))
         self.statusBar().showMessage(ui_format("Run result: {state}. {reason}", state=ui_text(state), reason=ui_text(reason)), 8000)
 

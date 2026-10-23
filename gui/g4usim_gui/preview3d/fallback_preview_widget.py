@@ -54,3 +54,12 @@ class FallbackPreviewWidget(QWidget):
 
     def select_volume(self, name: str) -> None:
         return
+
+    def show_trajectories(self, trajectories) -> None:
+        """Without 3D: a text summary of the loaded tracks."""
+        lines = [f"Tracks of run {trajectories.run}: {len(trajectories.events)} events"]
+        lines += [f"  {particle}: {count} tracks" for particle, count in trajectories.particles().items()]
+        self.text.appendPlainText("\n".join(lines))
+
+    def clear_trajectories(self) -> None:
+        return

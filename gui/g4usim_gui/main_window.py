@@ -76,6 +76,7 @@ class MainWindow(ShellMixin, ProjectMixin, RunMixin, ContentMixin, QMainWindow):
         self.config_builder_page.generatePackageRequested.connect(self.generate_package)
         self.config_builder_page.backendGeometryRequested.connect(self.export_backend_geometry)
         self.config_builder_page.autoBackendGeometryRequested.connect(lambda: self.export_backend_geometry(auto=True))
+        self.config_builder_page.tracksRequested.connect(lambda: self.load_tracks())
         self.config_builder_page.workspace_tabs.currentChanged.connect(
             lambda _index: self.config_builder_page.schedule_backend_geometry(100))
         controller = self.geometry_controller

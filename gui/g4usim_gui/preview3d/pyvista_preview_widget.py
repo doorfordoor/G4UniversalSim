@@ -20,6 +20,7 @@ from PySide6.QtGui import QColor, QIcon, QPixmap
 from PySide6.QtWidgets import (
     QCheckBox,
     QComboBox,
+    QDoubleSpinBox,
     QHBoxLayout,
     QLabel,
     QListWidget,
@@ -37,6 +38,7 @@ from g4usim_gui.preview3d.backend_mesh import BackendMesh
 from g4usim_gui.preview3d.geometry_primitives import add_vec3, scale_vec3, scene_extent
 from g4usim_gui.preview3d.scene_model import PreviewScene, PreviewVolume
 from g4usim_gui.preview3d.units import perpendicular_basis
+from g4usim_gui.preview3d.trajectories import TrackFilter, TrajectorySet
 from g4usim_gui.preview3d.view_model import CAMERA_PRESETS, ViewItem, ViewState, backend_items, mark_containers
 
 CLICK_TOLERANCE_PX = 4
@@ -135,6 +137,57 @@ class PyVistaPreviewWidget(QWidget):
         legend_title.setProperty("uiRole", "sectionTitle")
         legend_box.addWidget(legend_title)
         legend_box.addWidget(self.legend, 1)
+
+        # particle tracks (roadmap G6): hidden until a trajectory file is loaded
+        self.trajectories: TrajectorySet | None = None
+        self.track_filter = TrackFilter()
+        self._track_actors: list = []
+        self.particle_legend = QListWidget()
+        self.particle_legend.setFixedWidth(190)
+        self.particle_legend.setIconSize(QSize(14, 14))
+        self.particle_legend.setToolTip("Particles of the loaded tracks; untick one to hide its tracks")
+        self.particle_title = QLabel("Particles")
+        self.particle_title.setProperty("uiRole", "sectionTitle")
+        legend_box.addWidget(self.particle_title)
+        legend_box.addWidget(self.particle_legend, 1)
+        self.track_previous = QToolButton()
+        self.track_previous.setText("<")
+        self.track_previous.setToolTip("Previous event")
+        self.track_event = QComboBox()
+        self.track_next = QToolButton()
+        self.track_next.setText(">")
+        self.track_next.setToolTip("Next event")
+        for button in (self.track_previous, self.track_next):
+            button.setProperty("toolbarButton", True)
+        self.track_primaries = QCheckBox("Primaries only")
+        self.track_min_energy = QDoubleSpinBox()
+        self.track_min_energy.setRange(0.0, 1.0e7)
+        self.track_min_energy.setDecimals(3)
+        self.track_min_energy.setSuffix(" MeV")
+        self.track_min_energy.setToolTip("Hide secondary tracks that start below this kinetic energy")
+        self.track_clear = QToolButton()
+        self.track_clear.setText("Clear tracks")
+        self.track_clear.setProperty("toolbarButton", True)
+        self.track_info = QLabel()
+        self.track_info.setProperty("uiRole", "hint")
+        self.track_row = QWidget()
+        track_box = QVBoxLayout(self.track_row)
+        track_box.setContentsMargins(0, 0, 0, 0)
+        track_box.setSpacing(2)
+        track_layout = QHBoxLayout()
+        track_layout.setSpacing(4)
+        track_box.addLayout(track_layout)
+        track_layout.addWidget(QLabel("Tracks"))
+        for widget in (self.track_previous, self.track_event, self.track_next):
+            track_layout.addWidget(widget)
+        track_layout.addSpacing(6)
+        track_layout.addWidget(self.track_primaries)
+        track_layout.addWidget(QLabel("min"))
+        track_layout.addWidget(self.track_min_energy)
+        track_layout.addWidget(self.track_clear)
+        track_layout.addStretch(1)
+        track_box.addWidget(self.track_info)
+        self._show_track_controls(False)
         view_row = QHBoxLayout()
         view_row.addWidget(self.stack, 1)
         view_row.addLayout(legend_box)
@@ -142,6 +195,7 @@ class PyVistaPreviewWidget(QWidget):
         layout.setContentsMargins(0, 0, 0, 0)
         layout.addLayout(controls)
         layout.addLayout(tools)
+        layout.addWidget(self.track_row)
         layout.addLayout(view_row, 1)
         layout.addWidget(self.status)
 
@@ -153,6 +207,13 @@ class PyVistaPreviewWidget(QWidget):
         self.hide_button.clicked.connect(self.hide_selected)
         self.show_all_button.clicked.connect(self.show_all)
         self.legend.itemChanged.connect(self._on_legend_item)
+        self.particle_legend.itemChanged.connect(self._on_particle_item)
+        self.track_event.currentIndexChanged.connect(self._on_track_event)
+        self.track_previous.clicked.connect(lambda: self.step_event(-1))
+        self.track_next.clicked.connect(lambda: self.step_event(1))
+        self.track_primaries.toggled.connect(self._on_track_options)
+        self.track_min_energy.valueChanged.connect(self._on_track_options)
+        self.track_clear.clicked.connect(self.clear_trajectories)
         self._hover_timer = QTimer(self)
         self._hover_timer.setSingleShot(True)
         self._hover_timer.setInterval(40)
@@ -179,7 +240,119 @@ class PyVistaPreviewWidget(QWidget):
     def clear(self) -> None:
         self._plotter.clear()
         self._meshes, self._actors, self._items, self._actor_keys = {}, {}, {}, {}
+        self._track_actors = []
         self.status.clear()
+
+    # --- particle tracks (roadmap G6) ---------------------------------------------------
+    def show_trajectories(self, trajectories: TrajectorySet) -> None:
+        """Overlay the tracks of a run's trajectory files; the first event is shown."""
+        self.trajectories = trajectories
+        self.track_filter = TrackFilter(event_index=0, min_energy=self.track_min_energy.value(),
+                                        primaries_only=self.track_primaries.isChecked())
+        self.track_event.blockSignals(True)
+        self.track_event.clear()
+        for event in trajectories.events:
+            self.track_event.addItem(ui_format("Event {event}", event=event.event), event.event)
+        self.track_event.addItem(ui_text("All events"), -1)
+        self.track_event.setCurrentIndex(0)
+        self.track_event.blockSignals(False)
+        self._fill_particle_legend()
+        self._show_track_controls(True)
+        if self.stack.currentWidget() is not self._plotter:
+            self.stack.setCurrentWidget(self._plotter)
+        self._draw_tracks()
+
+    def clear_trajectories(self) -> None:
+        self.trajectories = None
+        self._remove_track_actors()
+        self._show_track_controls(False)
+        self._plotter.render()
+
+    def step_event(self, delta: int) -> None:
+        if self.trajectories and self.trajectories.events:
+            count = len(self.trajectories.events)
+            current = self.track_event.currentIndex()
+            self.track_event.setCurrentIndex(0 if current >= count else (current + delta) % count)
+
+    def shown_tracks(self) -> list:
+        return self.track_filter.tracks(self.trajectories) if self.trajectories else []
+
+    def _show_track_controls(self, shown: bool) -> None:
+        if self.state.tracks_shown != shown:
+            self.state.tracks_shown = shown
+            self._apply_styles(render=False)
+        self.track_row.setVisible(shown)
+        self.particle_title.setVisible(shown)
+        self.particle_legend.setVisible(shown)
+
+    def _fill_particle_legend(self) -> None:
+        self.particle_legend.blockSignals(True)
+        self.particle_legend.clear()
+        if self.trajectories:
+            colours = self.trajectories.colours()
+            for particle, count in self.trajectories.particles().items():
+                swatch = QPixmap(14, 14)
+                swatch.fill(QColor(colours[particle]))
+                item = QListWidgetItem(QIcon(swatch), f"{particle}  ({count})")
+                item.setData(Qt.UserRole, particle)
+                item.setFlags(item.flags() | Qt.ItemIsUserCheckable)
+                item.setCheckState(Qt.Unchecked if particle in self.track_filter.hidden_particles else Qt.Checked)
+                self.particle_legend.addItem(item)
+        self.particle_legend.blockSignals(False)
+
+    def _remove_track_actors(self) -> None:
+        for actor in self._track_actors:
+            self._plotter.remove_actor(actor, render=False)
+        self._track_actors = []
+
+    def _draw_tracks(self, render: bool = True) -> None:
+        self._remove_track_actors()
+        tracks = self.shown_tracks()
+        if self.trajectories:
+            colours = self.trajectories.colours()
+            by_particle: dict[str, list] = {}
+            for track in tracks:
+                if len(track.points) >= 2:
+                    by_particle.setdefault(track.particle, []).append(track)
+            for particle, group in sorted(by_particle.items()):
+                points, lines = [], []
+                for track in group:
+                    start = len(points)
+                    points.extend(track.points)
+                    lines.extend([len(track.points), *range(start, start + len(track.points))])
+                poly = self._pv.PolyData(np.asarray(points, dtype=float), lines=np.asarray(lines))
+                actor = self._plotter.add_mesh(poly, color=colours[particle], line_width=2.0, pickable=False,
+                                               reset_camera=False, render_lines_as_tubes=False)
+                self._track_actors.append(actor)
+            events = self.trajectories.events
+            index = self.track_filter.event_index
+            where = (ui_text("all events") if index is None
+                     else ui_format("event {event} ({position} of {count})", event=events[index].event,
+                                    position=index + 1, count=len(events)) if events else "")
+            note = ui_text(" (file truncated)") if self.trajectories.truncated else ""
+            self.track_info.setText(ui_format("{count} tracks, {where}{note}", count=len(tracks), where=where,
+                                              note=note))
+        if render:
+            self._plotter.render()
+
+    def _on_track_event(self, index: int) -> None:
+        if self.trajectories is None:
+            return
+        self.track_filter.event_index = None if self.track_event.itemData(index) == -1 else index
+        self._draw_tracks()
+
+    def _on_track_options(self) -> None:
+        self.track_filter.primaries_only = self.track_primaries.isChecked()
+        self.track_filter.min_energy = self.track_min_energy.value()
+        self._draw_tracks()
+
+    def _on_particle_item(self, item: QListWidgetItem) -> None:
+        particle = item.data(Qt.UserRole)
+        if item.checkState() == Qt.Checked:
+            self.track_filter.hidden_particles.discard(particle)
+        else:
+            self.track_filter.hidden_particles.add(particle)
+        self._draw_tracks()
 
     def reset_camera(self) -> None:
         self.set_camera("iso")
@@ -299,6 +472,9 @@ class PyVistaPreviewWidget(QWidget):
                 self._plotter.add_point_labels([((b[0] + b[1]) / 2, (b[2] + b[3]) / 2, (b[4] + b[5]) / 2)],
                                                [item.name], point_size=0, font_size=11, pickable=False)
         self._plotter.add_axes()
+        self._track_actors = []          # cleared with the scene: draw the loaded tracks again
+        if self.trajectories is not None:
+            self._draw_tracks(render=False)
         self._apply_visibility(render=False)
         self._apply_styles(render=False)
         self._fill_legend()

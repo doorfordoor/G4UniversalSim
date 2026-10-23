@@ -42,7 +42,9 @@ class MaterialsEditor(QWidget):
         set_table_compact_readonly(self.materials_table)
         set_table_minimum_rows(self.materials_table, 8)
         self.materials_count_label = QLabel("Materials: 0 entries | Preview only")
-        self.load_materials_editor_button = QPushButton("Load from selected materials.ini")
+        self.materials_count_label.setWordWrap(True)
+        self.load_materials_editor_button = QPushButton("Load from file")
+        self.load_materials_editor_button.setToolTip("Load the selected materials.ini into the editor")
         self.add_nist_button = QPushButton("Add NIST")
         self.add_mass_button = QPushButton("Add mass_fraction")
         self.add_volume_fraction_button = QPushButton("Add volume_fraction")
@@ -63,19 +65,23 @@ class MaterialsEditor(QWidget):
         layout = QVBoxLayout(self)
         layout.addWidget(QLabel("Materials Editor"))
         layout.addWidget(self.materials_count_label)
-        layout.addWidget(QLabel("Generated target: run package config/materials/material.ini. Source file is never overwritten."))
-        toolbar = toolbar_grid([
-            self.load_materials_editor_button,
+        target = QLabel("Generated target: run package config/materials/material.ini. Source file is never overwritten.")
+        target.setWordWrap(True)
+        layout.addWidget(target)
+        # two rows: adding materials, then file and edit actions (one row of five was too wide)
+        layout.addLayout(toolbar_grid([
             self.add_nist_button,
             self.add_mass_button,
             self.add_volume_fraction_button,
             self.add_atom_button,
+        ], 4))
+        layout.addLayout(toolbar_grid([
+            self.load_materials_editor_button,
             self.duplicate_material_button,
             self.delete_material_button,
             self.validate_materials_button,
             self.revert_materials_button,
-        ], 5)
-        layout.addLayout(toolbar)
+        ], 5))
         layout.addWidget(self.materials_table, 2)
 
         detail = QGroupBox("Selected material")

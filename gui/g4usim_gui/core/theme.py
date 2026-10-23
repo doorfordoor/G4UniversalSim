@@ -350,6 +350,7 @@ QGroupBox::title {{
     padding: 0 5px;
     color: {c.text};
 }}
+QScrollArea#editorScroll, QScrollArea#editorScroll > QWidget#qt_scrollarea_viewport,
 QScrollArea#sourceEditorScroll,
 QScrollArea#sourceEditorScroll > QWidget > QWidget#sourceEditorContent {{
     background: {c.surface};

@@ -25,6 +25,10 @@ class Preview3DPanel(QWidget):
         super().__init__(parent)
         self.preview3d_refresh_button = QPushButton("Refresh Preview")
         self.preview3d_reset_button = QPushButton("Reset Camera")
+        self.preview3d_tracks_button = QPushButton("Load Tracks...")
+        self.preview3d_tracks_button.setToolTip(
+            "Overlay the particle tracks of a run (trajectories_tN.json; set 'Particle tracks of the first "
+            "events' on the Run Config tab before running)")
         self.preview3d_backend_button = QPushButton("Show Backend Geometry")
         self.preview3d_backend_button.setToolTip(
             "Run the backend with /run/initialize only and show the geometry Geant4 actually built "
@@ -49,6 +53,7 @@ class Preview3DPanel(QWidget):
         toolbar = QHBoxLayout()
         toolbar.addWidget(self.preview3d_refresh_button)
         toolbar.addWidget(self.preview3d_backend_button)
+        toolbar.addWidget(self.preview3d_tracks_button)
         self.preview3d_reset_button.hide()   # the view's own Iso camera button does this now (G2)
         toolbar.addStretch(1)
         options = QHBoxLayout()
@@ -81,6 +86,7 @@ class Preview3DMixin:
         self.preview3d_refresh_button.clicked.connect(self.refresh_3d_preview)
         self.preview3d_reset_button.clicked.connect(lambda: self.preview3d_widget.reset_camera())
         self.preview3d_backend_button.clicked.connect(self.backendGeometryRequested.emit)
+        self.preview3d_tracks_button.clicked.connect(self.tracksRequested.emit)
         self.preview3d_auto_backend.toggled.connect(lambda on: on and self.schedule_backend_geometry(100))
         # selection follows between the 3D view and the volume table (G3)
         self.preview3d_widget.volumeSelected.connect(self.select_geometry_row)
@@ -89,8 +95,12 @@ class Preview3DMixin:
         self.preview3d_show_labels.stateChanged.connect(self._update_preview_display_options)
 
     def preview3d_tab_visible(self) -> bool:
-        tab = self.preview3d_widget.parentWidget()
-        return bool(self.isVisible() and tab is not None and self.workspace_tabs.currentWidget() is tab)
+        current = self.workspace_tabs.currentWidget()   # the 3D tab's scroll area
+        return bool(self.isVisible() and current is not None and current.isAncestorOf(self.preview3d_widget))
+
+    def preview3d_tab_index(self) -> int:
+        return next(i for i in range(self.workspace_tabs.count())
+                    if self.workspace_tabs.widget(i).isAncestorOf(self.preview3d_widget))
 
     def schedule_backend_geometry(self, delay_ms: int | None = None) -> None:
         """Ask for the Geant4 world a moment after the last change, while the 3D tab is shown."""

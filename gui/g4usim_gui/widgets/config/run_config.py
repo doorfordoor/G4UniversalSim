@@ -99,6 +99,11 @@ class RunConfigEditor(QWidget):
         self.scoring_editor_raw_hist.setChecked(True)
         self.scoring_editor_weighted_hist = QCheckBox("Weighted edep histogram")
         self.scoring_editor_weighted_hist.setChecked(True)
+        self.scoring_editor_trajectories = QSpinBox()
+        self.scoring_editor_trajectories.setRange(0, 1000)
+        self.scoring_editor_trajectories.setSpecialValueText(ui_text("off"))
+        self.scoring_editor_trajectories.setToolTip(
+            ui_text("Write every track of the first N events (trajectories_tN.json) for the 3D view; 0 = off"))
         self.scoring_editor_bins = QSpinBox()
         self.scoring_editor_bins.setRange(0, 10_000_000)
         self.scoring_editor_min = QLineEdit("0 eV")
@@ -204,6 +209,11 @@ class RunConfigEditor(QWidget):
             self.scoring_editor_fluence,
         ]:
             switch_layout.addWidget(widget)
+        trajectories_row = QHBoxLayout()
+        trajectories_row.addWidget(QLabel("Particle tracks of the first events"))
+        trajectories_row.addWidget(self.scoring_editor_trajectories)
+        trajectories_row.addStretch(1)
+        switch_layout.addLayout(trajectories_row)
         hist = QGroupBox("Edep histogram")
         hist_form = QFormLayout(hist)
         hist_form.addRow("", self.scoring_editor_raw_hist)
@@ -277,6 +287,7 @@ class RunConfigMixin:
         ]:
             widget.stateChanged.connect(self._update_sps_from_widgets)
         self.scoring_editor_bins.valueChanged.connect(self._update_sps_from_widgets)
+        self.scoring_editor_trajectories.valueChanged.connect(self._update_sps_from_widgets)
         self.source_editor_preview_rays.valueChanged.connect(self._update_sps_from_widgets)
         self.source_editor_preview_seed.valueChanged.connect(self._update_sps_from_widgets)
 
@@ -340,6 +351,7 @@ class RunConfigMixin:
         self.scoring_editor_edep.setChecked(self.scoring_editor.edep)
         self.scoring_editor_dose.setChecked(self.scoring_editor.dose)
         self.scoring_editor_fluence.setChecked(self.scoring_editor.fluence)
+        self.scoring_editor_trajectories.setValue(self.scoring_editor.trajectory_events)
         self.scoring_editor_raw_hist.setChecked(self.scoring_editor.raw_histogram)
         self.scoring_editor_weighted_hist.setChecked(self.scoring_editor.weighted_histogram)
         self.scoring_editor_bins.setValue(self.scoring_editor.hist_bins)
@@ -392,6 +404,7 @@ class RunConfigMixin:
         self.scoring_editor.edep = self.scoring_editor_edep.isChecked()
         self.scoring_editor.dose = self.scoring_editor_dose.isChecked()
         self.scoring_editor.fluence = self.scoring_editor_fluence.isChecked()
+        self.scoring_editor.trajectory_events = self.scoring_editor_trajectories.value()
         self.scoring_editor.raw_histogram = self.scoring_editor_raw_hist.isChecked()
         self.scoring_editor.weighted_histogram = self.scoring_editor_weighted_hist.isChecked()
         self.scoring_editor.hist_bins = self.scoring_editor_bins.value()
