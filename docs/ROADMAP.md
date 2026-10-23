@@ -19,6 +19,10 @@ This file is the single source of truth for progress. Every work session updates
 | B Scenario packs + benchmarks | Done (B1 benchmarks, B2 shielding/coating, B3 semiconductor, B4 detector response) | see log |
 | C Wizard + built-in plotting | Done (C1 built-in plots, C2 wizard, C3 parameter scans) | see log |
 | D Installer | Done (portable ZIP + Inno Setup installer; uses an existing Geant4 data folder) | see log |
+| E Fixes and foundations | Planned (2026-10-23) | |
+| F System optimisation (backend + GUI) | Planned | |
+| G 3D view redesign | Planned | |
+| H Geant4 capability increments | Planned | |
 
 ## Data storage decision
 
@@ -66,6 +70,141 @@ Done (D): `packaging/build_package.py` builds a portable folder, a ZIP and an In
 ## GUI refresh (after Phase D)
 
 Done: Start page with an examples gallery (five examples with bundled results that open in Results / Plots or Parameter Scans), line icons, refined light/dark theme with a matching Qt palette, status chips, grouped tabs, collapsible Configuration setup sections, theme-coloured plots with an icon toolbar, empty states; fixes for stale validation after the wizard, plot theming, untranslated scan text and CJK text in plots. Follow-ups: a "run session" mode for adjusting whitelisted settings between runs, a GUI page for the Geant4 data folder, high-DPI and accessibility review by a person.
+
+## Next phase plan (agreed 2026-10-23): E fixes, F optimisation, G 3D view, H Geant4 increments
+
+Built from the 2026-10-23 project review. Items are numbered for reference; the
+**order of work** below interleaves the phases so the user-visible 3D problems are
+fixed first and foundations land before the features that depend on them. Every item
+follows the working agreement (branch, Release build, real Geant4 regression, full
+suite, CHANGELOG, support matrix). "Done when" lists the evidence, not just the code.
+
+### Phase E: fix the known weaknesses
+
+- **E1 GUI/backend rule mismatch (3D blocker).** The GUI checks material names
+  case-sensitively, the backend (`MaterialFactory`) does not, so the default demo
+  geometry (`silicon`, `iron`, `water`) is rejected by the GUI, no package is generated
+  and "Show Backend Geometry" fails although the backend builds it in ~3 s. Make the GUI
+  match the backend, then add a **differential test**: every geometry/material/main INI
+  fixture in the repo and every wizard/gallery package goes through both the GUI
+  validator and `--inspect-run`; any disagreement fails. Done when: the demo project
+  generates a package and shows backend geometry; the differential test is in the suite
+  and lists zero mismatches (or each remaining one is documented and blocked on purpose).
+- **E2 Single configuration schema.** One machine-readable schema (sections, keys,
+  types, units, defaults, allowed values, support level, since-version) as the source
+  for the Python validators, GUI form hints and the support-matrix field tables; the
+  C++ side gets a generated key/type table that its existing validators consult, and a
+  test fails if C++ parsing and the schema disagree. Migrate module by module
+  ([run]/[output] → [source] → [physics] → [scoring] → geometry/material files).
+  Done when: E1's differential test passes from the schema for the migrated modules and
+  the matrix tables are generated.
+- **E3 Continuous integration.** GitHub Actions on Linux with Geant4 11.3 (conda-forge
+  or the official Docker image): configure, build, static + GUI offscreen + backend
+  suites; Windows stays local (no Geant4 on hosted runners). Later: Geant4 11.2/11.4
+  matrix. Done when: every push to `codex` runs it green, and a Linux build is
+  documented. (Decision needed: hosted runners on the public repo.)
+- **E4 Lighter process docs.** Move the dated entries of `AGENTS.md` / `gui/AGENTS.md`
+  into `docs/agent-history.md`; keep the rules short and current. Add an English
+  quick start next to the Chinese one (human docs stay Chinese-first). Done when:
+  each AGENTS.md is mostly rules and links, and no rule is lost (checked line by line).
+- **E5 Split the large GUI files.** `config_builder_page.py` (~2300 lines) into one
+  widget per editor (materials, geometry, boolean ops, 3D, source, physics, scoring,
+  details) and `main_window.py` into controllers (run, inspection, geometry export,
+  examples). No behaviour change: all GUI smokes pass unchanged, plus a smoke that every
+  editor widget can be built alone.
+
+### Phase F: system optimisation
+
+Backend:
+- **F1 Output and provenance.** `[output] format = auto` (ROOT when hits or per-event
+  data are on, CSV otherwise), git commit and config hash in `run_metadata.json`
+  (A1 follow-up), buffered CSV writers; measure hits-heavy runs before/after.
+  (Decision needed before changing any default.)
+- **F2 Run session (adjust between runs).** An interactive session driven by the GUI
+  (the audited `csh` session over a pipe): a whitelist of settings that are safe while
+  Geant4 is Idle (source particle/energy/position/direction/shape, beamOn, run name,
+  output toggles that are per-run), every change logged per run in `run_summary.txt`
+  with its origin, and a replay macro written at the end; anything else (geometry,
+  physics, threads) is refused with the reason. Done when: a real session with three
+  runs and changes between them reproduces bit-for-bit from the replay macro.
+- **F3 Performance.** Profile a hits-heavy and a mesh-heavy run; optional
+  `G4TaskRunManager` (`[run] run_manager = mt|tasking`) with identical results to MT
+  for fixed seeds per event.
+
+GUI:
+- **F4 Validation that leads to the field.** Every message carries its location
+  (editor, row, field); clicking it selects the tab/row and highlights the control.
+- **F5 Undo/redo and autosave.** Command-based undo in the editors; autosave of the
+  project to a recovery file and an offer to restore after a crash.
+- **F6 Live run progress.** The backend prints a progress line (events done, rate)
+  at a fixed interval; the Run Console shows a progress bar, rate and time left.
+- **F7 Better scans.** Two-parameter grids with a 2D map plot; several points at once
+  within a thread budget; scans of scenario-pack generators.
+- **F8 Smaller GUI follow-ups.** A page for the Geant4 data folder (D follow-up),
+  re-opening the wizard on an existing project, a human high-DPI/accessibility pass.
+
+### Phase G: 3D view redesign
+
+- **G1 The real geometry by default.** "Show Backend Geometry" no longer needs a
+  generated package: it writes a temporary one (same validation), caches the mesh by a
+  hash of the inputs and refreshes it automatically a moment after geometry edits
+  (export measured at ~2.5-3 s). While it runs, the editor sketch is shown and labelled
+  approximate; failures show the backend's own message with file and line.
+- **G2 Visual design.** Theme-coloured background, one colour per material with a
+  legend, sensitive volumes highlighted, the world hidden by default, subtle edges,
+  labels on hover instead of always on, camera presets (front/side/top/isometric),
+  perspective/orthographic toggle, image export.
+- **G3 Interaction.** Click a volume to select its table row and back; isolate/hide
+  volumes; a section (clipping) plane with a slider; opacity control.
+- **G4 Accurate editor sketch.** Exact nested transforms (composed like Geant4),
+  segments of spheres/tubs/cones, the A5 solids drawn or listed as "not drawn" instead
+  of silently missing. Done when: for every geometry fixture the sketch's volume
+  bounding boxes match the backend mesh within tolerance (automated).
+- **G5 Source display.** Glyphs that match the GPS settings: point, plane shape,
+  direction cone, isotropic marker.
+- **G6 Particle tracks.** Overlay trajectories from H1 (colour by particle, filter by
+  particle/energy, step through events).
+
+### Phase H: Geant4 capability increments
+
+Each item ships with a benchmark against an independent reference, default off, and
+is marked experimental in the support matrix until benchmarked.
+
+- **H1 Trajectory export.** `[output] trajectories = <n events>` writes a small JSON
+  (`g4usim_trajectories_v1`: particle, parent, step points, energy). Benchmark: step
+  points lie in the volumes the navigator reports; primary range matches CSDA.
+- **H2 Filtered scoring and spectra.** Particle and kinetic-energy filters on the
+  volume scorers and meshes; energy spectra per volume. Benchmark: filtered parts add
+  up to the unfiltered total; a mono beam's spectrum peaks at the expected energy.
+- **H3 Parallel-world scoring.** Meshes and scoring volumes in a parallel world
+  (`G4ParallelWorldPhysics`), independent of the mass geometry. Benchmark: same dose as
+  scoring slabs placed in the mass world.
+- **H4 Variance reduction.** Geometry importance sampling and weight windows.
+  Benchmark: deep-shielding transmission equals the analog result within errors, with
+  the figure of merit gain reported.
+- **H5 Optical physics.** Scintillation (light yield, Birks), Cherenkov, optical
+  surfaces, photon counting at a sensitive surface. Benchmark: photons per MeV equal the
+  configured yield; Cherenkov photon count per mm against the Frank-Tamm formula.
+- **H6 Activation and thermal neutrons.** `G4Radioactivation` with time windows and
+  thermal scattering data (e.g. `G4_WATER_TS`). Benchmark: activity against the Bateman
+  solution; thermalised neutron spectrum against a Maxwellian at room temperature.
+- **H7 Track-structure physics.** Geant4-DNA in one region. Benchmark: values from the
+  published Geant4-DNA examples for the same configuration.
+- **H8 Voxel phantoms.** `G4PhantomParameterisation` (later DICOM). Benchmark: a voxel
+  water phantom gives the same depth dose as the homogeneous phantom.
+- **H9 Generic histograms and ntuples.** `G4AnalysisManager` H1/H2/ntuple definitions
+  from INI, replacing hand-written writers where they overlap.
+
+### Order of work
+
+1. E1 (unblocks the 3D view) → 2. G1 → 3. G2 + G3 → 4. E5 (before more GUI work) →
+5. H1 → G6 → 6. G4 + G5 → 7. E2 (schema; modules migrate over several sessions) →
+8. F6 → F2 → 9. F4 + F5 → 10. F7 → 11. H2 → H3 → H4 → H5 → H6 → H8 → H7 → H9 →
+12. E3, E4, F1, F3, F8 fit in between when a session is short.
+
+Decisions to ask the user when the item comes up: hosted CI runners (E3), any change of
+an output default (F1), which session protocol to expose (F2), and the priority among
+H4–H8 if the user's applications favour some of them.
 
 ## Working agreement for each work session
 
