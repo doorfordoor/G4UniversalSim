@@ -76,6 +76,7 @@ CASES = (
     Case("shielding_coating", "scripts/test_shielding_coating.py", "backend", ("exe",)),
     Case("semiconductor_device", "scripts/test_semiconductor_device.py", "backend", ("exe",)),
     Case("detector_response", "scripts/test_detector_response.py", "backend", ("exe",)),
+    Case("trajectories", "scripts/test_trajectories.py", "backend", ("exe",)),
     Case("geant4_data_locator", "scripts/test_geant4_data_locator.py", "backend", ("exe",)),
     Case("benchmarks", "scripts/run_benchmarks.py", "backend", ("exe",), args=("--quick",)),
     Case("interactive_commands", "scripts/test_interactive_commands.py", "backend", ("exe",)),

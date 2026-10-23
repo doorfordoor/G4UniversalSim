@@ -68,6 +68,7 @@ std::unique_ptr<ScoringManager> ScoringManager::CloneForThread(OutputManager* ou
     clone->phaseSpaceVolume_ = phaseSpaceVolume_;
     clone->phaseSpaceParticles_ = phaseSpaceParticles_;
     clone->phaseSpaceKill_ = phaseSpaceKill_;
+    clone->trajectories_ = TrajectoryRecorder(trajectories_.GetSettings());
     if (clone->autoCreateDefaultScorers_) {
         clone->EnsureDefaultScorers();
     }
@@ -340,6 +341,11 @@ void ScoringManager::BeginRun(int runID)
     }
     currentRunID_ = runID;
     BeginPhaseSpaceRun();
+    if (trajectories_.IsEnabled() && outputManager_) {
+        outputManager_->Initialize();
+        trajectories_.BeginRun(outputManager_->MakeOutputPath(outputManager_->MakeThreadFilename("trajectories.json")),
+                               runID, outputManager_->GetThreadId());
+    }
     if (autoCreateDefaultScorers_) EnsureDefaultScorers();
     if (!enabled_) return;
     for (ScorerBase* scorer : EnabledScorers()) scorer->BeginRun(runID);
@@ -348,6 +354,8 @@ void ScoringManager::BeginRun(int runID)
 void ScoringManager::EndRun(int runID)
 {
     EndPhaseSpaceRun();
+    const std::string trajectoryFile = trajectories_.EndRun();
+    if (!trajectoryFile.empty() && outputManager_) outputManager_->RegisterGeneratedFile(trajectoryFile);
     if (!enabled_) return;
     for (ScorerBase* scorer : EnabledScorers()) scorer->EndRun(runID);
 }
@@ -357,6 +365,7 @@ void ScoringManager::BeginEvent(int eventID)
     currentEventID_ = eventID;
     currentEventRawEdep_ = 0.0;
     currentEventWeightedEdep_ = 0.0;
+    trajectories_.BeginEvent(eventID);
     if (!enabled_) return;
     for (ScorerBase* scorer : EnabledScorers()) scorer->BeginEvent(eventID);
 }
@@ -370,6 +379,17 @@ void ScoringManager::EndEvent(int eventID)
 
     if (enabled_) {
         for (ScorerBase* scorer : EnabledScorers()) scorer->EndEvent(eventID);
+    }
+    if (trajectories_.IsRecording()) {
+        try {
+            if (outputManager_ && outputManager_->HasOutputFailure()) {
+                trajectories_.BeginEvent(-1);   // drop it: the run is being aborted
+            }
+            trajectories_.EndEvent();
+        } catch (const std::exception& error) {
+            if (outputManager_) outputManager_->RecordOutputFailure("trajectory_write", error.what());
+            if (auto* runManager = G4RunManager::GetRunManager()) runManager->AbortRun(true);
+        }
     }
 
     // ROOT histograms are filled per event (the CSV path bins inside EdepScorer
@@ -501,6 +521,19 @@ void ScoringManager::WriteAll()
 
 void ScoringManager::LoadFromConfig(const ConfigManager& config)
 {
+    if (config.HasKey("output", "trajectories") || config.HasKey("output", "trajectory_min_energy") ||
+        config.HasKey("output", "trajectory_max_points")) {
+        TrajectorySettings settings;
+        settings.events = config.GetInt("output", "trajectories", 0);
+        if (settings.events < 0) throw std::runtime_error("[output]/trajectories must be >= 0 (events whose tracks are written)");
+        const std::string minimum = StringUtils::Trim(config.GetString("output", "trajectory_min_energy", "0 MeV"));
+        settings.minEnergy = UnitParser::ParseEnergy(minimum);
+        if (settings.minEnergy < 0.0) throw std::runtime_error("[output]/trajectory_min_energy must be >= 0");
+        const int maxPoints = config.GetInt("output", "trajectory_max_points", 2000000);
+        if (maxPoints < 1) throw std::runtime_error("[output]/trajectory_max_points must be >= 1");
+        settings.maxPoints = static_cast<std::size_t>(maxPoints);
+        trajectories_ = TrajectoryRecorder(settings);
+    }
     if (config.HasSection("phase_space")) {
         phaseSpaceVolume_ = StringUtils::Trim(config.GetString("phase_space", "volume", ""));
         if (phaseSpaceVolume_.empty()) {
@@ -616,6 +649,21 @@ void ScoringManager::PrintSummary() const
                   << " enabled=" << (scorer->IsEnabled() ? "true" : "false")
                   << '\n';
     }
+}
+
+const TrajectorySettings& ScoringManager::GetTrajectorySettings() const
+{
+    return trajectories_.GetSettings();
+}
+
+bool ScoringManager::RecordsTrajectories() const
+{
+    return trajectories_.IsRecording();
+}
+
+void ScoringManager::RecordTrajectoryStep(const G4Step* step)
+{
+    trajectories_.RecordStep(step);
 }
 
 bool ScoringManager::IsPhaseSpaceEnabled() const

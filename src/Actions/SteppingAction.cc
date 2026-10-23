@@ -44,12 +44,16 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
         volumeName = pre->GetPhysicalVolume()->GetName();
     }
 
+    ScoringManager* scoringManager = ActiveScoringManager();
+    if (scoringManager && scoringManager->RecordsTrajectories()) {
+        scoringManager->RecordTrajectoryStep(step);
+    }
+
     if (!volumeName.empty() && IsKillVolume(volumeName)) {
         track->SetTrackStatus(fStopAndKill);
         return;
     }
 
-    ScoringManager* scoringManager = ActiveScoringManager();
     // Phase space: a step that ends on a boundary into the volume carries the
     // entry state at its post-step point (before anything happens inside).
     const G4VPhysicalVolume* next = post ? post->GetPhysicalVolume() : nullptr;

@@ -3,6 +3,7 @@
 #include "Output/OutputRecord.hh"
 #include "Scoring/PhaseSpace.hh"
 #include "Scoring/ScorerBase.hh"
+#include "Scoring/TrajectoryRecorder.hh"
 
 #include <map>
 #include <memory>
@@ -11,6 +12,7 @@
 #include <vector>
 
 class ConfigManager;
+class G4Step;
 class CsvWriter;
 class EdepScorer;
 class NielTable;
@@ -111,6 +113,11 @@ public:
 
     // Phase-space recording ([phase_space] in the main INI): particles entering
     // the named physical volume are written to phase_space_tN[_rR].csv.
+    // Trajectories of the first N events ([output] trajectories, roadmap H1).
+    const TrajectorySettings& GetTrajectorySettings() const;
+    bool RecordsTrajectories() const;      // the current event is recorded
+    void RecordTrajectoryStep(const G4Step* step);
+
     bool IsPhaseSpaceEnabled() const;
     const std::string& GetPhaseSpaceVolume() const;
     bool AcceptsPhaseSpaceParticle(const std::string& particle) const;
@@ -164,6 +171,7 @@ private:
     double currentEventWeightedEdep_ = 0.0;
     std::vector<std::unique_ptr<ScorerBase>> scorers_;
 
+    TrajectoryRecorder trajectories_;       // [output] trajectories (roadmap H1)
     std::string phaseSpaceVolume_;          // empty = disabled
     std::set<std::string> phaseSpaceParticles_;  // empty = all
     bool phaseSpaceKill_ = false;

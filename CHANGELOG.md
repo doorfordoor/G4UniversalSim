@@ -6,6 +6,16 @@ Short, user-facing record of notable changes. Detailed support status lives in
 
 ## Unreleased
 
+### Added
+- **Particle trajectories** (roadmap H1): `[output] trajectories = N` writes every track
+  of events 0..N-1 per worker to `trajectories_tN[_rR].json` (schema
+  `g4usim_trajectories_v1`: particle, parent, creator and end process, initial energy,
+  length, and per-step end points with kinetic energy and the volume of each segment);
+  `trajectory_min_energy` drops low-energy secondaries, `trajectory_max_points` caps a
+  file. Checked by `scripts/test_trajectories.py`: segments lie in their volumes,
+  primary lengths equal the hits file's step sums, and the mean primary path of 100 MeV
+  protons in water agrees with the PSTAR CSDA range (+0.58 %).
+
 ### Changed
 - **GUI code split by editor** (roadmap E5): the Configuration page (2,400 lines) is now
   `widgets/config/` with one widget per editor (setup column, Materials, Geometry, 3D

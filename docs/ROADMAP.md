@@ -22,7 +22,7 @@ This file is the single source of truth for progress. Every work session updates
 | E Fixes and foundations | In progress: E1, E5 done | see log |
 | F System optimisation (backend + GUI) | Planned | |
 | G 3D view redesign | In progress: G1-G3 done | see log |
-| H Geant4 capability increments | Planned | |
+| H Geant4 capability increments | In progress: H1 done | see log |
 
 ## Data storage decision
 
@@ -217,6 +217,7 @@ H4–H8 if the user's applications favour some of them.
 
 ## Progress log
 
+- 2026-10-23: H1 done: `[output] trajectories` writes `trajectories_tN[_rR].json` (g4usim_trajectories_v1); real-run test: 7657 segments of 3408 tracks inside their volumes, primary length = hits step sum, 100 MeV proton mean path +0.58 % vs PSTAR CSDA (the B1 offset), filter and point cap, two runs; suite case `trajectories`.
 - 2026-10-23: E5 done: `config_builder_page.py` 2411 -> 383 lines plus `widgets/config/` (one widget and one logic module per editor), `main_window.py` 997 -> 115 lines plus `window/` (shell, project, run, content). Moved code was copied by line range and method body; a widget/text/placement/signal-receiver fingerprint of the page and window is identical except one fix (Add Volume also added a volume-fraction material). New smoke `gui_config_editors`.
 - 2026-10-23: G2/G3 done: material colours and legend, glass containers, camera presets, hover info, click-to-select linked with the volume table, isolate/hide/show all, section plane; Qt-free view model plus a real-window VTK smoke (`gui_3d_view`: click vs drag picking, visibility, clipping planes, table link).
 - 2026-10-23: G1 done: the 3D tab builds the Geant4 world without a run package (demo project: 15 volume copies), re-exports after edits with a 1.2 s debounce, serves unchanged inputs from the cache, collapses a burst of edits into one export, and reports editor and backend errors; real-backend smoke `gui_backend_geometry_auto`. Also fixed the geometry writer erasing the editor's material errors.
