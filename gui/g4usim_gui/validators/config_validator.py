@@ -4,6 +4,7 @@ import re
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from g4usim_gui.core.config_schema import check_value
 from g4usim_gui.core.i18n import ui_text
 from g4usim_gui.core.capability_messages import capability_message
 from g4usim_gui.models.package_model import GeometrySettings, PathSettings
@@ -160,8 +161,13 @@ def validate_config_builder(
         _validate_geometry_text(Path(geometry.config_path).expanduser(), report)
         _validate_template_consistency(geometry.template, geometry_summary, report)
 
+    # [run] fields the package writes, checked as the backend reads them (configuration schema, E2)
     if run.threads <= 0:
         report.errors.append("Threads must be a positive integer.")
+    for key, value in (("threads", run.threads), ("seed", run.seed), ("name", run.run_name)):
+        problem = check_value("run", key, str(value)) if value is not None else None
+        if problem and not (key == "threads" and run.threads <= 0):
+            report.errors.append(problem)
     if run.beam_on < 0:
         report.errors.append("BeamOn must be >= 0.")
     if not run.run_name.strip():

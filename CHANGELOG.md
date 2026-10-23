@@ -7,6 +7,16 @@ Short, user-facing record of notable changes. Detailed support status lives in
 ## Unreleased
 
 ### Added
+- **Configuration schema** (roadmap E2, first modules `[run]`, `[general]`, `[output]`):
+  `schema/config_schema.json` describes each field (type, limits, allowed values,
+  aliases, default, what an empty value means, support level, since, description in
+  English and Chinese). `scripts/generate_config_schema.py` generates the backend's key
+  table (`include/Config/ConfigSchemaTable.hh`, used by the unknown-field warnings), the
+  GUI's validator data and the field tables in `docs/功能支持矩阵.md` (section 5). The
+  GUI checks run settings and trajectory events with it, and the controls' tooltips are
+  its hints. `scripts/test_config_schema.py` runs 255 values through both the GUI check
+  and the backend (`--inspect-run`) and checks that every field and alias is read,
+  unknown keys are reported, and defaults and alias precedence are as described.
 - **Accurate editor sketch** (roadmap G4). The sketch places each volume inside its parent
   the way Geant4 does (`G4PVPlacement`: positions relative to the mother, rotations X then
   Y then Z of the frame, unitless angles in radians) and draws every backend solid with
@@ -63,6 +73,10 @@ Short, user-facing record of notable changes. Detailed support status lives in
   GDML) keep resolving.
 
 ### Fixed
+- Integer fields above 2147483647 (for example `seed = 99999999999`) were silently clamped
+  to 2147483647 on Windows; they are now rejected as out of range.
+- The GUI accepted a negative seed or one above 2147483647, which the backend rejects or
+  clamped; it now checks the seed as the backend does.
 - The editor sketch placed every volume as if its position were absolute (daughters of
   a moved or rotated mother were in the wrong place) and turned rotated volumes the
   wrong way; partial tubs, cones and spheres were drawn whole.

@@ -631,6 +631,8 @@ ZH_CN: dict[str, str] = {
     'no valid direction': '无有效方向',
     'Source: {description}': '源：{description}',
     '{count} volume(s) not drawn (see the messages).': '{count} 个体积未绘制（见消息）。',
+    'Seed must be an integer from 0 to 2147483647 ({problem}).': '随机种子必须是 0 到 2147483647 的整数（{problem}）。',
+    'The seed must be an integer from 0 to 2147483647.': '随机种子必须是 0 到 2147483647 的整数。',
 }
 
 
@@ -676,7 +678,10 @@ def apply_language(root: QWidget, language: LanguageCode) -> None:
             _translate_getter_setter(obj, "actionText", obj.text, obj.setText, language)
             _translate_getter_setter(obj, "actionTip", obj.toolTip, obj.setToolTip, language)
         if isinstance(obj, QWidget):
-            _translate_getter_setter(obj, "toolTip", obj.toolTip, obj.setToolTip, language)
+            if obj.property("schemaField"):
+                _apply_schema_tooltip(obj, language)
+            else:
+                _translate_getter_setter(obj, "toolTip", obj.toolTip, obj.setToolTip, language)
         if isinstance(obj, QLineEdit):
             _translate_getter_setter(
                 obj,
@@ -687,6 +692,21 @@ def apply_language(root: QWidget, language: LanguageCode) -> None:
             )
         if isinstance(obj, QTabWidget):
             _translate_tabs(obj, language)
+
+
+def set_schema_tooltip(widget: QWidget, section: str, key: str) -> None:
+    """The widget edits an INI field: its tooltip is the schema's hint, in the current language (E2)."""
+    widget.setProperty("schemaField", f"{section}/{key}")
+    _apply_schema_tooltip(widget, current_language())
+
+
+def _apply_schema_tooltip(widget: QWidget, language: LanguageCode) -> None:
+    from g4usim_gui.core.config_schema import spec   # noqa: PLC0415  (schema data is only needed here)
+
+    section, key = str(widget.property("schemaField")).split("/", 1)
+    field = spec(section, key)
+    if field is not None:
+        widget.setToolTip(field.hint(language))
 
 
 def _translate_getter_setter(obj: QObject, key: str, getter, setter, language: LanguageCode) -> None:

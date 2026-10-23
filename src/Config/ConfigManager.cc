@@ -1,5 +1,6 @@
 #include "Config/ConfigManager.hh"
 
+#include "Config/ConfigSchemaTable.hh"
 #include "Utils/StringUtils.hh"
 
 #include <stdexcept>
@@ -18,12 +19,11 @@ bool StartsWith(const std::string& value, const std::string& prefix)
     return value.size() >= prefix.size() && value.compare(0, prefix.size(), prefix) == 0;
 }
 
-const std::map<std::string, std::vector<std::string>>& KnownKeys()
+// Keys of the sections not yet migrated to schema/config_schema.json (roadmap E2); the
+// migrated sections ([run], [general], [output]) come from the generated table below.
+std::map<std::string, std::vector<std::string>> BuildKnownKeys()
 {
-    static const std::map<std::string, std::vector<std::string>> keys = {
-        {"run", {"threads", "seed", "randomseed", "interactive", "macro", "dry_run", "dryrun", "verbose", "check_overlaps", "checkoverlaps", "name", "run_name", "runname"}},
-        {"general", {"seed", "randomseed", "verbose"}},
-        {"output", {"dir", "outputdir", "format", "trajectories", "trajectory_min_energy", "trajectory_max_points"}},
+    std::map<std::string, std::vector<std::string>> keys = {
         {"materials", {"file", "materialfile", "config", "configfile"}},
         {"geometry", {"template", "templatename", "check_overlaps", "checkoverlaps", "default_world_material", "defaultworldmaterial", "config", "configfile"}},
         {"physics", {"reference", "em", "list", "modules", "extra_modules", "default_cut", "biasing", "verbose"}},
@@ -44,6 +44,23 @@ const std::map<std::string, std::vector<std::string>>& KnownKeys()
                     "phase_space_file", "phase_space_recycle"}},
         {"phase_space", {"volume", "particles", "kill"}},
     };
+    for (const char* section : ConfigSchema::kMainIniSections) {
+        if (keys.count(section)) throw std::logic_error(std::string("section [") + section + "] is in the schema and the hand list");
+        keys[section];
+    }
+    for (const auto& spec : ConfigSchema::kMainIniKeys) {
+        auto& names = keys[spec.section];
+        names.push_back(spec.key);
+        for (const std::string& alias : StringUtils::Split(spec.aliases, ',', true)) {
+            if (!StringUtils::Trim(alias).empty()) names.push_back(StringUtils::Trim(alias));
+        }
+    }
+    return keys;
+}
+
+const std::map<std::string, std::vector<std::string>>& KnownKeys()
+{
+    static const std::map<std::string, std::vector<std::string>> keys = BuildKnownKeys();
     return keys;
 }
 

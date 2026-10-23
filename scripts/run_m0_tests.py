@@ -103,6 +103,7 @@ CASES = (
     Case("gui_trajectory_view", "gui/smoke_tests/smoke_trajectory_view.py", "integration", ("exe", "qt")),
     Case("gui_sketch_accuracy", "scripts/test_sketch_accuracy.py", "integration", ("exe", "qt")),
     Case("gui_source_glyphs", "gui/smoke_tests/smoke_source_glyphs.py", "integration", ("exe", "qt")),
+    Case("config_schema", "scripts/test_config_schema.py", "integration", ("exe", "qt")),
 )
 
 

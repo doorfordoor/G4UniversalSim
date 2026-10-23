@@ -13,6 +13,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from g4usim_gui.core.config_schema import check_value
 from g4usim_gui.core.i18n import ui_format, ui_text
 from g4usim_gui.core.project import G4USimProject
 from g4usim_gui.editors.geometry_editor_model import GeometryDocument
@@ -271,10 +272,10 @@ class ConfigBuilderPage(SetupMixin, MaterialsMixin, GeometryMixin, LayersMixin, 
         )
         seed_text = self.seed.text().strip()
         if seed_text:
-            try:
-                int(seed_text)
-            except ValueError:
-                report.errors.append("Seed must be an integer when provided.")
+            problem = check_value("run", "seed", seed_text)   # as the backend reads it: 0..2147483647
+            if problem:
+                report.errors.append(ui_format("Seed must be an integer from 0 to 2147483647 ({problem}).",
+                                               problem=problem))
         return report
 
     def set_validation_text(self, text: str) -> None:

@@ -23,6 +23,7 @@ from __future__ import annotations
 import math
 from dataclasses import dataclass, field, replace
 
+from g4usim_gui.core.config_schema import check_value
 from g4usim_gui.core.project import G4USimProject
 from g4usim_gui.editors.geometry_editor_model import GeometryDocument, HierarchicalVolumeRow
 from g4usim_gui.editors.source_physics_scoring_model import (
@@ -123,6 +124,8 @@ def validate_spec(spec: WizardSpec) -> list[str]:
         errors.append(("At least one event is required.", {}))
     if spec.threads < 1:
         errors.append(("At least one thread is required.", {}))
+    if spec.seed is not None and check_value("run", "seed", str(spec.seed)):
+        errors.append(("The seed must be an integer from 0 to 2147483647.", {}))
     if not any((spec.hits, spec.event_edep, spec.dose, spec.fluence)):
         errors.append(("Choose at least one output.", {}))
     if spec.target_material == spec.world_material:

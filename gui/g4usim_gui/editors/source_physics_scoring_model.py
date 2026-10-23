@@ -5,6 +5,7 @@ import re
 from dataclasses import asdict, dataclass, field
 
 from g4usim_gui.core.capability_messages import capability_message
+from g4usim_gui.core.config_schema import check_value, spec
 from g4usim_gui.models.physics_model import PhysicsSettings
 from g4usim_gui.models.scoring_model import ScoringSettings
 from g4usim_gui.models.source_model import SourceSettings
@@ -305,8 +306,13 @@ def validate_scoring_model(model: ScoringEditableModel) -> ScoringEditableModel:
         model.errors.append("Dose requires auto-create default scorers")
     if model.fluence and not model.auto_create_default_scorers:
         model.errors.append("Fluence requires auto-create default scorers")
-    if not isinstance(model.trajectory_events, int) or not 0 <= model.trajectory_events <= 1000:
-        model.errors.append("trajectories must be 0 (off) to 1000 events")
+    # the backend's limits come from the configuration schema; the GUI keeps its own lower maximum
+    trajectories = spec("output", "trajectories")
+    gui_max = trajectories.data.get("gui", {}).get("max")
+    problem = (check_value("output", "trajectories", str(model.trajectory_events))
+               if isinstance(model.trajectory_events, int) else "[output]/trajectories must be an integer")
+    if problem or (gui_max is not None and model.trajectory_events > gui_max):
+        model.errors.append(f"trajectories must be 0 (off) to {gui_max} events")
     elif model.trajectory_events > 100:
         model.warnings.append("trajectory files grow quickly with secondaries; use a few events")
     return model

@@ -2,7 +2,9 @@
 
 #include "Utils/StringUtils.hh"
 
+#include <cerrno>
 #include <cstdlib>
+#include <limits>
 #include <stdexcept>
 
 namespace {
@@ -33,9 +35,14 @@ int ParseStrictInt(const std::string& value)
     }
 
     char* end = nullptr;
-    const long parsed = std::strtol(trimmed.c_str(), &end, 10);
+    errno = 0;
+    const long long parsed = std::strtoll(trimmed.c_str(), &end, 10);
     if (end == trimmed.c_str() || !StringUtils::Trim(std::string(end)).empty()) {
         throw std::runtime_error("Cannot parse config value '" + value + "' as int");
+    }
+    // a long is 32 bits on Windows: strtol clamped 99999999999 to 2147483647 without an error
+    if (errno == ERANGE || parsed < std::numeric_limits<int>::min() || parsed > std::numeric_limits<int>::max()) {
+        throw std::runtime_error("Config value '" + value + "' is out of range for a 32-bit int");
     }
 
     return static_cast<int>(parsed);

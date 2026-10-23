@@ -21,7 +21,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from g4usim_gui.core.i18n import ui_text
+from g4usim_gui.core.i18n import set_schema_tooltip, ui_text
 from g4usim_gui.editors.source_physics_scoring_model import (
     REFERENCE_LIST_CANDIDATES,
     SOURCE_PRESETS,
@@ -102,8 +102,7 @@ class RunConfigEditor(QWidget):
         self.scoring_editor_trajectories = QSpinBox()
         self.scoring_editor_trajectories.setRange(0, 1000)
         self.scoring_editor_trajectories.setSpecialValueText(ui_text("off"))
-        self.scoring_editor_trajectories.setToolTip(
-            ui_text("Write every track of the first N events (trajectories_tN.json) for the 3D view; 0 = off"))
+        set_schema_tooltip(self.scoring_editor_trajectories, "output", "trajectories")
         self.scoring_editor_bins = QSpinBox()
         self.scoring_editor_bins.setRange(0, 10_000_000)
         self.scoring_editor_min = QLineEdit("0 eV")

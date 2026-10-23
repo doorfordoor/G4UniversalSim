@@ -1,0 +1,89 @@
+{
+  "schema": "g4usim_config_schema_v1",
+  "about": "The configuration schema (roadmap E2): one machine-readable description of the INI fields, the source of the backend's key table (include/Config/ConfigSchemaTable.hh), the GUI's validator data (gui/g4usim_gui/core/config_schema_data.py) and the field tables in docs/功能支持矩阵.md. Regenerate with scripts/generate_config_schema.py; scripts/test_config_schema.py checks that the backend parses every field as written here. Sections are migrated one by one; the backend's own validators stay authoritative.",
+  "types": {
+    "int": "a signed 32-bit decimal integer (leading + allowed), checked against min/max",
+    "bool": "true/yes/on/1 or false/no/off/0, any case",
+    "string": "any single-line text; empty is allowed unless min_length is set",
+    "enum": "one of 'allowed' (or a value_aliases key), any case",
+    "energy": "a number with an optional energy unit (eV, keV, MeV, GeV; '*' between them allowed); unitless means MeV",
+    "existing_file": "empty (none) or a file that exists; relative paths are resolved against the process working directory"
+  },
+  "fields": {
+    "empty": "\"default\": an empty value counts as absent (the backend reads it with its string helpers), so the default applies"
+  },
+  "files": {
+    "main_ini": {
+      "title": "主配置 INI，--config",
+      "sections": {
+        "run": {
+          "migrated": true,
+          "description_zh": "运行参数。CLI 参数（--threads、--seed、--output、--macro 等）优先于这里的值。",
+          "keys": {
+            "threads": {"type": "int", "min": 1, "max": 2147483647, "default": "1", "support": "supported", "since": "M0",
+                        "description": "Number of worker threads; set before Geant4 is initialised",
+                        "description_zh": "worker 线程数；只能在 Geant4 初始化前设置"},
+            "seed": {"type": "int", "aliases": ["randomSeed"], "min": 0, "max": 2147483647, "default": null,
+                     "support": "supported", "since": "M0",
+                     "description": "Random seed; when unset the engine chooses (the summary says unknown). Wins over [general] seed",
+                     "description_zh": "随机数种子；未设置时由引擎决定（摘要写 unknown）。优先于 [general] seed"},
+            "interactive": {"type": "bool", "default": "false", "support": "supported", "since": "M0",
+                            "description": "Start an interactive session (as --ui)",
+                            "description_zh": "进入交互会话（等同 --ui）"},
+            "macro": {"type": "existing_file", "default": "", "support": "supported", "since": "M0",
+                      "description": "Macro to execute; a relative path is resolved against the working directory and must exist",
+                      "description_zh": "要执行的 macro；相对路径按进程工作目录解析，文件必须存在"},
+            "dry_run": {"type": "bool", "aliases": ["dryRun"], "default": "false", "support": "supported", "since": "M0",
+                        "description": "Check the configuration and write the summary without running events",
+                        "description_zh": "只检查配置并写摘要，不运行事件"},
+            "verbose": {"type": "int", "min": -2147483648, "max": 2147483647, "default": "0", "support": "supported",
+                        "since": "M0", "description": "Program output level; wins over [general] verbose",
+                        "description_zh": "程序输出详细程度；优先于 [general] verbose"},
+            "check_overlaps": {"type": "bool", "aliases": ["checkOverlaps"], "default": "true", "support": "supported",
+                               "since": "M0", "description": "Check overlaps when volumes are placed; [geometry] check_overlaps overrides it",
+                        "description_zh": "放置体积时检查重叠；[geometry] check_overlaps 会覆盖它"},
+            "name": {"type": "string", "aliases": ["run_name", "runName"], "default": "", "empty": "default", "support": "supported",
+                     "since": "M0", "description": "Run name, written to the summary and metadata",
+                        "description_zh": "运行名称，写入摘要与元数据"}
+          }
+        },
+        "general": {
+          "migrated": true,
+          "description_zh": "旧版节，仅为兼容保留；请改用 [run]。",
+          "keys": {
+            "seed": {"type": "int", "aliases": ["randomSeed"], "min": 0, "max": 2147483647, "default": null,
+                     "support": "deprecated", "since": "M0", "description": "Old spelling; ignored when [run] seed is set",
+                        "description_zh": "旧写法，[run] seed 存在时被忽略"},
+            "verbose": {"type": "int", "min": -2147483648, "max": 2147483647, "default": "0", "support": "deprecated",
+                        "since": "M0", "description": "Old spelling; ignored when [run] verbose is set",
+                        "description_zh": "旧写法，[run] verbose 存在时被忽略"}
+          }
+        },
+        "output": {
+          "migrated": true,
+          "description_zh": "输出位置、格式与粒子径迹。",
+          "keys": {
+            "dir": {"type": "string", "aliases": ["outputDir"], "default": "output", "empty": "default", "support": "supported", "since": "M0",
+                    "description": "Output folder; empty means output. The --output option wins",
+                    "description_zh": "输出目录；为空时使用 output。CLI --output 优先"},
+            "format": {"type": "enum", "allowed": ["csv", "root", "both"], "value_aliases": {"csv+root": "both", "root+csv": "both"},
+                       "default": "csv", "empty": "default", "support": "supported", "since": "M0",
+                       "description": "Scorer output format; root needs a build with ROOT output",
+                       "description_zh": "计分输出格式；root 需要以 ROOT 输出支持构建"},
+            "trajectories": {"type": "int", "min": 0, "max": 2147483647, "default": "0", "support": "experimental",
+                             "since": "H1", "gui": {"max": 1000},
+                             "description": "Write every track of the first N events (trajectories_tN.json); 0 = off",
+                             "description_zh": "写出前 N 个事件的全部径迹（trajectories_tN.json）；0 为关闭"},
+            "trajectory_min_energy": {"type": "energy", "min": 0, "default": "0 MeV", "support": "experimental",
+                                      "since": "H1", "description": "Secondary tracks that start below this kinetic energy are not written (primaries always are)",
+                        "description_zh": "低于此初始动能的次级径迹不写出（初级总是写出）"},
+            "trajectory_max_points": {"type": "int", "min": 1, "max": 2147483647, "default": "2000000",
+                                      "support": "experimental", "since": "H1",
+                                      "description": "Point limit per trajectory file; the file is truncated and marked beyond it",
+                                      "description_zh": "每个径迹文件的点数上限，超过后截断并标记"}
+          }
+        }
+      }
+    }
+  }
+}

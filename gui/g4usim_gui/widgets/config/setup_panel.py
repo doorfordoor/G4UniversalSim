@@ -20,7 +20,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from g4usim_gui.core.i18n import ui_format, ui_text
+from g4usim_gui.core.i18n import set_schema_tooltip, ui_format, ui_text
 from g4usim_gui.core.project import G4USimProject
 from g4usim_gui.editors.source_physics_scoring_model import SOURCE_PRESETS
 from g4usim_gui.models.package_model import GeometrySettings, PathSettings
@@ -51,6 +51,10 @@ class SetupPanel(QScrollArea):
         self.check_overlaps = QCheckBox()
         self.check_overlaps.setChecked(True)
         self.dry_run = QCheckBox()
+        # the INI field each control writes: its tooltip comes from the configuration schema (E2)
+        for widget, field in ((self.run_name, "name"), (self.threads, "threads"), (self.seed, "seed"),
+                              (self.check_overlaps, "check_overlaps"), (self.dry_run, "dry_run")):
+            set_schema_tooltip(widget, "run", field)
 
         self.materials_config = QLineEdit()
         self.geometry_config = QLineEdit()
