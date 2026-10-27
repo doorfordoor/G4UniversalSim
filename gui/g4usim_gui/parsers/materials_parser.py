@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from g4usim_gui.core.config_schema_data import SCHEMA
+
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -143,12 +145,9 @@ def _raw_section_texts(raw_text: str) -> dict[str, str]:
 
 def _validate_material_schema(summary: MaterialsSummary) -> None:
     """Reject material fields that the C++ MaterialIniReader cannot consume."""
-    allowed = {
-        "nist": {"materials"},
-        "isotope": {"symbol", "z", "n", "a"},
-        "element": {"symbol", "isotopes", "z", "a"},
-        "material": {"type", "mode", "density", "components", "state", "temperature", "pressure"},
-    }
+    allowed = {name: set(SCHEMA["materials_ini"][pattern]["keys"])
+               for name, pattern in (("nist", "nist"), ("isotope", "isotope.<name>"),
+                                     ("element", "element.<name>"), ("material", "material.<name>"))}
     section_seen = False
     current_section = "global"
     section_lines: dict[str, int] = {}

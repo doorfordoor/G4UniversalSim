@@ -1,3 +1,4 @@
+#include "Config/ConfigSchemaTable.hh"
 #include "Geometry/GeometryConfig.hh"
 
 #include "Config/ConfigManager.hh"
@@ -22,10 +23,7 @@ namespace {
 
 bool IsKnownBooleanKey(const std::string& key)
 {
-    static const std::set<std::string> keys = {
-        "name", "operation", "shape", "size", "parameters", "position", "rotation"
-    };
-    return keys.count(key) > 0;
+    return ConfigSchema::HasKey("geometry_hierarchical_ini", "volume.<name>.boolean.<index>", key);
 }
 
 bool IsForbiddenBooleanKey(const std::string& key)
@@ -350,17 +348,8 @@ bool GeometryConfig::IsCutKey(const std::string& key)
 
 bool GeometryConfig::IsKnownKey(const std::string& key)
 {
-    static const std::set<std::string> keys = {
-        "name", "parent", "shape", "size", "parameters", "material", "position", "rotation",
-        "sensitive", "bias", "region", "placement", "copyNo", "copyno", "vis.color", "vis.alpha",
-        "vis.visible", "vis.wireframe",
-        "dx1", "dx2", "dx3", "dx4", "dy1", "dy2", "dz",
-        "theta", "phi", "alpha1", "alpha2",
-        "z_planes", "r_inner", "r_outer", "file", "file_unit",
-        "replica_axis", "replica_count", "replica_width", "replica_offset",
-        "copies_file", "copies", "copy_step"
-    };
-    return keys.count(key) || IsCutKey(key);
+    // Metadata stays in userProperties, including a literally named <name> key.
+    return (key != "metadata.<name>" && ConfigSchema::HasKey("geometry_hierarchical_ini", "volume.<name>", key)) || IsCutKey(key);
 }
 
 bool GeometryConfig::IsBooleanSectionName(const std::string& sectionName)

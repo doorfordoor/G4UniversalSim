@@ -7,6 +7,8 @@ Short, user-facing record of notable changes. Detailed support status lives in
 ## Unreleased
 
 ### Added
+- **E2 配置 schema 接续**：源（含高级 GPS/多源/相空间）、物理、计分、六种几何模板和材料文件进入统一字段登记；生成逐字段解析入口/校验阶段/GUI范围/测试覆盖清单。保留上下文及运行时校验、历史警告与元数据行为；field/biasing 不在本次迁移内。GUI 当前生成字段复用标量约束，停止输出未消费的 physics.mode；未开放高级编辑器。详见 docs/配置schema说明.md。
+
 - **Configuration schema** (roadmap E2, first modules `[run]`, `[general]`, `[output]`):
   `schema/config_schema.json` describes each field (type, limits, allowed values,
   aliases, default, what an empty value means, support level, since, description in

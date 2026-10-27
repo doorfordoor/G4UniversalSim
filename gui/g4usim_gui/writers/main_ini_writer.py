@@ -100,7 +100,6 @@ check_overlaps = {_bool(run.check_overlaps)}
 default_world_material = G4_AIR
 
 [physics]
-mode = reference
 reference = {physics_model.reference_list}
 default_cut = {physics_model.default_cut}
 biasing = {_bool(physics_model.enable_biasing_physics)}

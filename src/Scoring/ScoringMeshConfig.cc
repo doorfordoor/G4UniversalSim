@@ -1,3 +1,4 @@
+#include "Config/ConfigSchemaTable.hh"
 #include "Scoring/ScoringMeshConfig.hh"
 
 #include "Config/ConfigManager.hh"
@@ -134,13 +135,13 @@ namespace ScoringMeshConfig {
 
 const std::vector<std::string>& MeshKeys()
 {
-    static const std::vector<std::string> keys = {"shape", "size", "bins", "center"};
+    static const auto keys = ConfigSchema::Keys("main_ini", "scoring.mesh.<name>");
     return keys;
 }
 
 const std::vector<std::string>& QuantityKeys()
 {
-    static const std::vector<std::string> keys = {"type", "unit", "particles", "energy_min", "energy_max"};
+    static const auto keys = ConfigSchema::Keys("main_ini", "scoring.mesh.<name>.<quantity>");
     return keys;
 }
 

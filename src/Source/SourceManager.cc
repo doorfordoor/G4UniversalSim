@@ -1,3 +1,4 @@
+#include "Config/ConfigSchemaTable.hh"
 #include "Source/SourceManager.hh"
 
 #include "Config/ConfigManager.hh"
@@ -150,13 +151,8 @@ std::string Lower(const std::string& text)
 // source section are errors (the legacy [source] keeps the warning-only check).
 const std::set<std::string>& SourceKeys()
 {
-    static const std::set<std::string> keys = {
-        "preset", "particle", "energy", "verbose", "isotropic", "position_type", "position", "radius",
-        "center", "z", "direction", "shape", "halfx", "halfy", "inner_radius",
-        // roadmap A4
-        "intensity", "ion", "energy_type", "energy_sigma", "energy_min", "energy_max", "alpha", "ezero",
-        "spectrum_file", "halfz", "beam_sigma", "beam_sigma_x", "beam_sigma_y", "rot1", "rot2", "confine",
-        "angular", "min_theta", "max_theta", "angular_sigma", "angular_sigma_x", "angular_sigma_y", "focus"};
+    static const auto names = ConfigSchema::Keys("main_ini", "source.<name>");
+    static const std::set<std::string> keys(names.begin(), names.end());
     // phase_space_file / phase_space_recycle are only valid in [source].
     return keys;
 }

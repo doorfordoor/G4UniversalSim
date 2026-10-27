@@ -1,0 +1,1680 @@
+[
+  {
+    "name": "source-default",
+    "sections": {
+      "source": {
+        "preset": "gamma_beam",
+        "particle": "gamma",
+        "energy": "1 MeV",
+        "position_type": "point",
+        "position": "0,0,0",
+        "direction": "0,0,1"
+      }
+    },
+    "accept": true,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "source-empty-preset",
+    "sections": {
+      "source": {
+        "preset": "",
+        "particle": "gamma",
+        "energy": "1 MeV",
+        "position_type": "point",
+        "position": "0,0,0",
+        "direction": "0,0,1"
+      }
+    },
+    "accept": false,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "source-empty-particle",
+    "sections": {
+      "source": {
+        "preset": "gamma_beam",
+        "particle": "",
+        "energy": "1 MeV",
+        "position_type": "point",
+        "position": "0,0,0",
+        "direction": "0,0,1"
+      }
+    },
+    "accept": false,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "source-empty-energy",
+    "sections": {
+      "source": {
+        "preset": "gamma_beam",
+        "particle": "gamma",
+        "energy": "",
+        "position_type": "point",
+        "position": "0,0,0",
+        "direction": "0,0,1"
+      }
+    },
+    "accept": false,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "source-empty-position_type",
+    "sections": {
+      "source": {
+        "preset": "gamma_beam",
+        "particle": "gamma",
+        "energy": "1 MeV",
+        "position_type": "",
+        "position": "0,0,0",
+        "direction": "0,0,1"
+      }
+    },
+    "accept": false,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "source-empty-position",
+    "sections": {
+      "source": {
+        "preset": "gamma_beam",
+        "particle": "gamma",
+        "energy": "1 MeV",
+        "position_type": "point",
+        "position": "",
+        "direction": "0,0,1"
+      }
+    },
+    "accept": false,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "source-empty-direction",
+    "sections": {
+      "source": {
+        "preset": "gamma_beam",
+        "particle": "gamma",
+        "energy": "1 MeV",
+        "position_type": "point",
+        "position": "0,0,0",
+        "direction": ""
+      }
+    },
+    "accept": false,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "source-z-known-unconsumed",
+    "sections": {
+      "source": {
+        "preset": "gamma_beam",
+        "particle": "gamma",
+        "energy": "1 MeV",
+        "position_type": "point",
+        "position": "0,0,0",
+        "direction": "0,0,1",
+        "z": "5 mm"
+      }
+    },
+    "accept": true,
+    "files": {},
+    "scalar": null,
+    "warnings": [
+      "[source]/z"
+    ]
+  },
+  {
+    "name": "source-isotropic",
+    "sections": {
+      "source": {
+        "preset": "gamma_beam",
+        "particle": "gamma",
+        "energy": "1 MeV",
+        "position_type": "point",
+        "position": "0,0,0",
+        "isotropic": "true"
+      }
+    },
+    "accept": true,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "source-isotropic-conflict",
+    "sections": {
+      "source": {
+        "preset": "gamma_beam",
+        "particle": "gamma",
+        "energy": "1 MeV",
+        "position_type": "point",
+        "position": "0,0,0",
+        "direction": "0,0,1",
+        "isotropic": "true"
+      }
+    },
+    "accept": false,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "source-preset-explicit-false",
+    "sections": {
+      "source": {
+        "preset": "isotropic_neutron",
+        "particle": "gamma",
+        "energy": "1 MeV",
+        "position_type": "point",
+        "position": "0,0,0",
+        "isotropic": "false"
+      }
+    },
+    "accept": false,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "source-plane-default",
+    "sections": {
+      "source": {
+        "preset": "gamma_beam",
+        "particle": "gamma",
+        "energy": "1 MeV",
+        "position_type": "plane",
+        "direction": "0,0,1"
+      }
+    },
+    "accept": true,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "plane-circle",
+    "sections": {
+      "source": {
+        "preset": "gamma_beam",
+        "particle": "gamma",
+        "energy": "1 MeV",
+        "position_type": "plane",
+        "direction": "0,0,1",
+        "shape": "circle",
+        "center": "1 mm,2 mm,3 mm",
+        "radius": "2 mm"
+      }
+    },
+    "accept": true,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "plane-rectangle",
+    "sections": {
+      "source": {
+        "preset": "gamma_beam",
+        "particle": "gamma",
+        "energy": "1 MeV",
+        "position_type": "plane",
+        "direction": "0,0,1",
+        "shape": "rectangle",
+        "center": "1 mm,2 mm,3 mm",
+        "halfx": "2 mm",
+        "halfy": "3 mm"
+      }
+    },
+    "accept": true,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "plane-square",
+    "sections": {
+      "source": {
+        "preset": "gamma_beam",
+        "particle": "gamma",
+        "energy": "1 MeV",
+        "position_type": "plane",
+        "direction": "0,0,1",
+        "shape": "square",
+        "center": "1 mm,2 mm,3 mm",
+        "halfx": "2 mm"
+      }
+    },
+    "accept": true,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "plane-ellipse",
+    "sections": {
+      "source": {
+        "preset": "gamma_beam",
+        "particle": "gamma",
+        "energy": "1 MeV",
+        "position_type": "plane",
+        "direction": "0,0,1",
+        "shape": "ellipse",
+        "center": "1 mm,2 mm,3 mm",
+        "halfx": "2 mm",
+        "halfy": "3 mm"
+      }
+    },
+    "accept": true,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "plane-annulus",
+    "sections": {
+      "source": {
+        "preset": "gamma_beam",
+        "particle": "gamma",
+        "energy": "1 MeV",
+        "position_type": "plane",
+        "direction": "0,0,1",
+        "shape": "annulus",
+        "center": "1 mm,2 mm,3 mm",
+        "radius": "2 mm",
+        "inner_radius": "1 mm"
+      }
+    },
+    "accept": true,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "plane-zero-radius",
+    "sections": {
+      "source": {
+        "preset": "gamma_beam",
+        "particle": "gamma",
+        "energy": "1 MeV",
+        "position_type": "plane",
+        "direction": "0,0,1",
+        "radius": "0"
+      }
+    },
+    "accept": false,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "plane-bad-annulus",
+    "sections": {
+      "source": {
+        "preset": "gamma_beam",
+        "particle": "gamma",
+        "energy": "1 MeV",
+        "position_type": "plane",
+        "direction": "0,0,1",
+        "shape": "annulus",
+        "radius": "1 mm",
+        "inner_radius": "2 mm"
+      }
+    },
+    "accept": false,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "volume-sphere",
+    "sections": {
+      "source": {
+        "preset": "gamma_beam",
+        "particle": "gamma",
+        "energy": "1 MeV",
+        "position_type": "volume",
+        "direction": "0,0,1",
+        "shape": "sphere",
+        "center": "0,0,0",
+        "radius": "2 mm"
+      }
+    },
+    "accept": true,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "volume-cylinder",
+    "sections": {
+      "source": {
+        "preset": "gamma_beam",
+        "particle": "gamma",
+        "energy": "1 MeV",
+        "position_type": "volume",
+        "direction": "0,0,1",
+        "shape": "cylinder",
+        "center": "0,0,0",
+        "radius": "2 mm",
+        "halfz": "3 mm"
+      }
+    },
+    "accept": true,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "volume-box",
+    "sections": {
+      "source": {
+        "preset": "gamma_beam",
+        "particle": "gamma",
+        "energy": "1 MeV",
+        "position_type": "volume",
+        "direction": "0,0,1",
+        "shape": "box",
+        "center": "0,0,0",
+        "halfx": "1 mm",
+        "halfy": "2 mm",
+        "halfz": "3 mm"
+      }
+    },
+    "accept": true,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "volume-ellipsoid",
+    "sections": {
+      "source": {
+        "preset": "gamma_beam",
+        "particle": "gamma",
+        "energy": "1 MeV",
+        "position_type": "volume",
+        "direction": "0,0,1",
+        "shape": "ellipsoid",
+        "center": "0,0,0",
+        "halfx": "1 mm",
+        "halfy": "2 mm",
+        "halfz": "3 mm"
+      }
+    },
+    "accept": true,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "volume-confine-prepare-only",
+    "sections": {
+      "source": {
+        "preset": "gamma_beam",
+        "particle": "gamma",
+        "energy": "1 MeV",
+        "position_type": "volume",
+        "direction": "0,0,1",
+        "shape": "sphere",
+        "radius": "1 mm",
+        "confine": "MissingVolume"
+      }
+    },
+    "accept": true,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "beam-circle",
+    "sections": {
+      "source": {
+        "preset": "gamma_beam",
+        "particle": "gamma",
+        "energy": "1 MeV",
+        "position_type": "beam",
+        "direction": "0,0,1",
+        "shape": "circle",
+        "beam_sigma": "1 mm"
+      }
+    },
+    "accept": true,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "beam-ellipse",
+    "sections": {
+      "source": {
+        "preset": "gamma_beam",
+        "particle": "gamma",
+        "energy": "1 MeV",
+        "position_type": "beam",
+        "direction": "0,0,1",
+        "shape": "ellipse",
+        "beam_sigma_x": "1 mm",
+        "beam_sigma_y": "2 mm"
+      }
+    },
+    "accept": true,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "source-rotation",
+    "sections": {
+      "source": {
+        "preset": "gamma_beam",
+        "particle": "gamma",
+        "energy": "1 MeV",
+        "position_type": "plane",
+        "direction": "0,0,1",
+        "rot1": "1,0,0",
+        "rot2": "0,1,0"
+      }
+    },
+    "accept": true,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "source-parallel-rotation",
+    "sections": {
+      "source": {
+        "preset": "gamma_beam",
+        "particle": "gamma",
+        "energy": "1 MeV",
+        "position_type": "plane",
+        "direction": "0,0,1",
+        "rot1": "1,0,0",
+        "rot2": "2,0,0"
+      }
+    },
+    "accept": false,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "angular-fixed-28",
+    "sections": {
+      "source": {
+        "preset": "gamma_beam",
+        "particle": "gamma",
+        "energy": "1 MeV",
+        "position_type": "point",
+        "position": "0,0,0",
+        "direction": "0,0,1",
+        "angular": "fixed"
+      }
+    },
+    "accept": true,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "angular-isotropic-29",
+    "sections": {
+      "source": {
+        "preset": "gamma_beam",
+        "particle": "gamma",
+        "energy": "1 MeV",
+        "position_type": "point",
+        "position": "0,0,0",
+        "angular": "isotropic"
+      }
+    },
+    "accept": true,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "angular-cos-30",
+    "sections": {
+      "source": {
+        "preset": "gamma_beam",
+        "particle": "gamma",
+        "energy": "1 MeV",
+        "position_type": "point",
+        "position": "0,0,0",
+        "direction": "0,0,1",
+        "angular": "cos",
+        "max_theta": "60 deg"
+      }
+    },
+    "accept": true,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "angular-isotropic-31",
+    "sections": {
+      "source": {
+        "preset": "gamma_beam",
+        "particle": "gamma",
+        "energy": "1 MeV",
+        "position_type": "point",
+        "position": "0,0,0",
+        "direction": "0,0,1",
+        "angular": "isotropic",
+        "min_theta": "10 deg",
+        "max_theta": "30 deg"
+      }
+    },
+    "accept": true,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "angular-beam1d-32",
+    "sections": {
+      "source": {
+        "preset": "gamma_beam",
+        "particle": "gamma",
+        "energy": "1 MeV",
+        "position_type": "point",
+        "position": "0,0,0",
+        "direction": "0,0,1",
+        "angular": "beam1d",
+        "angular_sigma": "1 deg"
+      }
+    },
+    "accept": true,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "angular-beam2d-33",
+    "sections": {
+      "source": {
+        "preset": "gamma_beam",
+        "particle": "gamma",
+        "energy": "1 MeV",
+        "position_type": "point",
+        "position": "0,0,0",
+        "direction": "0,0,1",
+        "angular": "beam2d",
+        "angular_sigma_x": "1 deg",
+        "angular_sigma_y": "2 deg"
+      }
+    },
+    "accept": true,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "angular-focused-34",
+    "sections": {
+      "source": {
+        "preset": "gamma_beam",
+        "particle": "gamma",
+        "energy": "1 MeV",
+        "position_type": "point",
+        "position": "0,0,0",
+        "angular": "focused",
+        "focus": "0,0,1 mm"
+      }
+    },
+    "accept": true,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "angular-invalid-range",
+    "sections": {
+      "source": {
+        "preset": "gamma_beam",
+        "particle": "gamma",
+        "energy": "1 MeV",
+        "position_type": "point",
+        "position": "0,0,0",
+        "direction": "0,0,1",
+        "angular": "cos",
+        "max_theta": "100 deg"
+      }
+    },
+    "accept": false,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "energy-mono",
+    "sections": {
+      "source": {
+        "preset": "gamma_beam",
+        "particle": "gamma",
+        "position_type": "point",
+        "position": "0,0,0",
+        "direction": "0,0,1",
+        "energy_type": "mono",
+        "energy": "2 MeV"
+      }
+    },
+    "accept": true,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "energy-gauss",
+    "sections": {
+      "source": {
+        "preset": "gamma_beam",
+        "particle": "gamma",
+        "position_type": "point",
+        "position": "0,0,0",
+        "direction": "0,0,1",
+        "energy_type": "gauss",
+        "energy": "2 MeV",
+        "energy_sigma": "0.1 MeV"
+      }
+    },
+    "accept": true,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "energy-uniform",
+    "sections": {
+      "source": {
+        "preset": "gamma_beam",
+        "particle": "gamma",
+        "position_type": "point",
+        "position": "0,0,0",
+        "direction": "0,0,1",
+        "energy_type": "uniform",
+        "energy_min": "1 MeV",
+        "energy_max": "2 MeV"
+      }
+    },
+    "accept": true,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "energy-power",
+    "sections": {
+      "source": {
+        "preset": "gamma_beam",
+        "particle": "gamma",
+        "position_type": "point",
+        "position": "0,0,0",
+        "direction": "0,0,1",
+        "energy_type": "power",
+        "energy_min": "1 MeV",
+        "energy_max": "2 MeV",
+        "alpha": "-2"
+      }
+    },
+    "accept": true,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "energy-exp",
+    "sections": {
+      "source": {
+        "preset": "gamma_beam",
+        "particle": "gamma",
+        "position_type": "point",
+        "position": "0,0,0",
+        "direction": "0,0,1",
+        "energy_type": "exp",
+        "energy_min": "0 MeV",
+        "energy_max": "2 MeV",
+        "ezero": "1 MeV"
+      }
+    },
+    "accept": true,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "energy-bad-range",
+    "sections": {
+      "source": {
+        "preset": "gamma_beam",
+        "particle": "gamma",
+        "position_type": "point",
+        "position": "0,0,0",
+        "direction": "0,0,1",
+        "energy_type": "uniform",
+        "energy_min": "2 MeV",
+        "energy_max": "1 MeV"
+      }
+    },
+    "accept": false,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "source-ion",
+    "sections": {
+      "source": {
+        "preset": "gamma_beam",
+        "particle": "ion",
+        "energy": "0 MeV",
+        "position_type": "point",
+        "position": "0,0,0",
+        "direction": "0,0,1",
+        "ion": "27 60"
+      }
+    },
+    "accept": true,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "source-ion-bad",
+    "sections": {
+      "source": {
+        "preset": "gamma_beam",
+        "particle": "ion",
+        "energy": "0 MeV",
+        "position_type": "point",
+        "position": "0,0,0",
+        "direction": "0,0,1",
+        "ion": "61 60"
+      }
+    },
+    "accept": false,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "named-source",
+    "sections": {
+      "source.alpha": {
+        "preset": "gamma_beam",
+        "particle": "gamma",
+        "energy": "1 MeV",
+        "position_type": "point",
+        "position": "0,0,0",
+        "direction": "0,0,1",
+        "intensity": "2",
+        "verbose": "0"
+      }
+    },
+    "accept": false,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "named-source-valid",
+    "sections": {
+      "source.alpha": {
+        "preset": "gamma_beam",
+        "particle": "gamma",
+        "energy": "1 MeV",
+        "position_type": "point",
+        "position": "0,0,0",
+        "direction": "0,0,1",
+        "intensity": "2"
+      }
+    },
+    "accept": true,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "named-source-zero-intensity",
+    "sections": {
+      "source.alpha": {
+        "preset": "gamma_beam",
+        "particle": "gamma",
+        "energy": "1 MeV",
+        "position_type": "point",
+        "position": "0,0,0",
+        "direction": "0,0,1",
+        "intensity": "0"
+      }
+    },
+    "accept": false,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "named-source-legacy-conflict",
+    "sections": {
+      "source": {
+        "preset": "gamma_beam",
+        "particle": "gamma",
+        "energy": "1 MeV",
+        "position_type": "point",
+        "position": "0,0,0",
+        "direction": "0,0,1"
+      },
+      "source.alpha": {
+        "preset": "gamma_beam",
+        "particle": "gamma",
+        "energy": "1 MeV",
+        "position_type": "point",
+        "position": "0,0,0",
+        "direction": "0,0,1"
+      }
+    },
+    "accept": false,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "recycle-without-file",
+    "sections": {
+      "source": {
+        "phase_space_recycle": "true"
+      }
+    },
+    "accept": false,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "missing-phase-space",
+    "sections": {
+      "source": {
+        "phase_space_file": "@WORK@/不存在.csv",
+        "phase_space_recycle": "true"
+      }
+    },
+    "accept": false,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "phase-space-record",
+    "sections": {
+      "phase_space": {
+        "volume": "World",
+        "particles": "gamma,e-",
+        "kill": "true"
+      }
+    },
+    "accept": true,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "phase-space-empty-volume",
+    "sections": {
+      "phase_space": {
+        "volume": ""
+      }
+    },
+    "accept": false,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "scalar-source-energy-True",
+    "sections": {
+      "source": {
+        "energy": "2 MeV"
+      }
+    },
+    "accept": true,
+    "files": {},
+    "scalar": [
+      "source",
+      "energy",
+      "2 MeV"
+    ]
+  },
+  {
+    "name": "scalar-source-energy-False",
+    "sections": {
+      "source": {
+        "energy": "nan"
+      }
+    },
+    "accept": false,
+    "files": {},
+    "scalar": [
+      "source",
+      "energy",
+      "nan"
+    ]
+  },
+  {
+    "name": "scalar-source-verbose-True",
+    "sections": {
+      "source": {
+        "verbose": "0"
+      }
+    },
+    "accept": true,
+    "files": {},
+    "scalar": [
+      "source",
+      "verbose",
+      "0"
+    ]
+  },
+  {
+    "name": "scalar-source-verbose-False",
+    "sections": {
+      "source": {
+        "verbose": "-1"
+      }
+    },
+    "accept": false,
+    "files": {},
+    "scalar": [
+      "source",
+      "verbose",
+      "-1"
+    ]
+  },
+  {
+    "name": "scalar-physics-default_cut-True",
+    "sections": {
+      "physics": {
+        "default_cut": "1 um"
+      }
+    },
+    "accept": true,
+    "files": {},
+    "scalar": [
+      "physics",
+      "default_cut",
+      "1 um"
+    ]
+  },
+  {
+    "name": "scalar-physics-default_cut-False",
+    "sections": {
+      "physics": {
+        "default_cut": "0 mm"
+      }
+    },
+    "accept": false,
+    "files": {},
+    "scalar": [
+      "physics",
+      "default_cut",
+      "0 mm"
+    ]
+  },
+  {
+    "name": "scalar-physics-verbose-True",
+    "sections": {
+      "physics": {
+        "verbose": "1"
+      }
+    },
+    "accept": true,
+    "files": {},
+    "scalar": [
+      "physics",
+      "verbose",
+      "1"
+    ]
+  },
+  {
+    "name": "scalar-physics-verbose-False",
+    "sections": {
+      "physics": {
+        "verbose": "-1"
+      }
+    },
+    "accept": false,
+    "files": {},
+    "scalar": [
+      "physics",
+      "verbose",
+      "-1"
+    ]
+  },
+  {
+    "name": "scalar-physics.microelec-electron_capture_threshold-True",
+    "sections": {
+      "physics.microelec": {
+        "electron_capture_threshold": "16.7 eV"
+      }
+    },
+    "accept": true,
+    "files": {},
+    "scalar": [
+      "physics.microelec",
+      "electron_capture_threshold",
+      "16.7 eV"
+    ]
+  },
+  {
+    "name": "scalar-physics.microelec-electron_capture_threshold-False",
+    "sections": {
+      "physics.microelec": {
+        "electron_capture_threshold": "0"
+      }
+    },
+    "accept": false,
+    "files": {},
+    "scalar": [
+      "physics.microelec",
+      "electron_capture_threshold",
+      "0"
+    ]
+  },
+  {
+    "name": "scalar-physics.cuts-gamma-True",
+    "sections": {
+      "physics.cuts": {
+        "gamma": "1 mm"
+      }
+    },
+    "accept": true,
+    "files": {},
+    "scalar": [
+      "physics.cuts",
+      "gamma",
+      "1 mm"
+    ]
+  },
+  {
+    "name": "scalar-physics.cuts-gamma-False",
+    "sections": {
+      "physics.cuts": {
+        "gamma": "-1"
+      }
+    },
+    "accept": false,
+    "files": {},
+    "scalar": [
+      "physics.cuts",
+      "gamma",
+      "-1"
+    ]
+  },
+  {
+    "name": "scalar-physics.radioactive_decay-time_threshold-True",
+    "sections": {
+      "physics.radioactive_decay": {
+        "time_threshold": "1 year"
+      }
+    },
+    "accept": true,
+    "files": {},
+    "scalar": [
+      "physics.radioactive_decay",
+      "time_threshold",
+      "1 year"
+    ]
+  },
+  {
+    "name": "scalar-physics.radioactive_decay-time_threshold-False",
+    "sections": {
+      "physics.radioactive_decay": {
+        "time_threshold": "0"
+      }
+    },
+    "accept": false,
+    "files": {},
+    "scalar": [
+      "physics.radioactive_decay",
+      "time_threshold",
+      "0"
+    ]
+  },
+  {
+    "name": "scalar-scoring-verbose-True",
+    "sections": {
+      "scoring": {
+        "verbose": "1"
+      }
+    },
+    "accept": true,
+    "files": {},
+    "scalar": [
+      "scoring",
+      "verbose",
+      "1"
+    ]
+  },
+  {
+    "name": "scalar-scoring-verbose-False",
+    "sections": {
+      "scoring": {
+        "verbose": "-1"
+      }
+    },
+    "accept": false,
+    "files": {},
+    "scalar": [
+      "scoring",
+      "verbose",
+      "-1"
+    ]
+  },
+  {
+    "name": "scalar-scoring.edep-bins-True",
+    "sections": {
+      "scoring.edep": {
+        "bins": "10"
+      },
+      "scoring": {
+        "enabled": "true"
+      }
+    },
+    "accept": true,
+    "files": {},
+    "scalar": [
+      "scoring.edep",
+      "bins",
+      "10"
+    ]
+  },
+  {
+    "name": "scalar-scoring.edep-bins-False",
+    "sections": {
+      "scoring.edep": {
+        "bins": "0"
+      },
+      "scoring": {
+        "enabled": "true"
+      }
+    },
+    "accept": false,
+    "files": {},
+    "scalar": [
+      "scoring.edep",
+      "bins",
+      "0"
+    ]
+  },
+  {
+    "name": "scalar-scoring.edep-max-True",
+    "sections": {
+      "scoring.edep": {
+        "max": "2 MeV"
+      },
+      "scoring": {
+        "enabled": "true"
+      }
+    },
+    "accept": true,
+    "files": {},
+    "scalar": [
+      "scoring.edep",
+      "max",
+      "2 MeV"
+    ]
+  },
+  {
+    "name": "scoring-edep-range-conflict",
+    "sections": {
+      "scoring.edep": {
+        "max": "-1 MeV"
+      },
+      "scoring": {
+        "enabled": "true"
+      }
+    },
+    "accept": false,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "physics-modules",
+    "sections": {
+      "physics": {
+        "reference": "FTFP_BERT",
+        "em": "option4",
+        "extra_modules": "decay",
+        "default_cut": "1 mm",
+        "biasing": "false",
+        "verbose": "0"
+      }
+    },
+    "accept": true,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "physics-legacy",
+    "sections": {
+      "physics": {
+        "list": "option4",
+        "modules": "decay"
+      }
+    },
+    "accept": true,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "physics-microelec",
+    "sections": {
+      "physics.microelec": {
+        "enabled": "false",
+        "region": "SV",
+        "electron_capture": "false",
+        "electron_capture_threshold": "16.7 eV"
+      }
+    },
+    "accept": true,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "physics-radioactive",
+    "sections": {
+      "physics.radioactive_decay": {
+        "enabled": "true",
+        "time_threshold": "10 year"
+      }
+    },
+    "accept": true,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "physics-radioactive-unknown",
+    "sections": {
+      "physics.radioactive_decay": {
+        "unknown": "1"
+      }
+    },
+    "accept": false,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "physics-cuts",
+    "sections": {
+      "physics.cuts": {
+        "gamma": "1 mm",
+        "e-": "1 mm",
+        "e+": "1 mm",
+        "proton": "1 mm",
+        "alpha": "1 mm"
+      }
+    },
+    "accept": true,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "scoring-all-off",
+    "sections": {
+      "scoring": {
+        "enabled": "false",
+        "hits": "false",
+        "event_edep": "false",
+        "edep": "false",
+        "let": "false",
+        "dose": "false",
+        "fluence": "false",
+        "displacement": "false",
+        "auto_create_default_scorers": "false"
+      }
+    },
+    "accept": true,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "scoring-all-basic",
+    "sections": {
+      "scoring": {
+        "enabled": "true",
+        "hits": "true",
+        "event_edep": "true",
+        "edep": "true",
+        "let": "true",
+        "dose": "true",
+        "fluence": "true",
+        "auto_create_default_scorers": "true"
+      },
+      "scoring.let": {
+        "particles": "gamma,e-"
+      },
+      "scoring.edep": {
+        "raw_histogram": "true",
+        "weighted_histogram": "false",
+        "volume_summary": "true",
+        "particle_summary": "false",
+        "bins": "20",
+        "min": "0",
+        "max": "10 MeV"
+      }
+    },
+    "accept": true,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "scoring-default-required",
+    "sections": {
+      "scoring": {
+        "dose": "true",
+        "auto_create_default_scorers": "false"
+      }
+    },
+    "accept": false,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "scoring-missing-niel",
+    "sections": {
+      "scoring": {
+        "displacement": "true"
+      }
+    },
+    "accept": false,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "scoring-niel-relative",
+    "sections": {
+      "scoring": {
+        "displacement": "true"
+      },
+      "scoring.displacement": {
+        "proton": "参考表.csv"
+      }
+    },
+    "accept": true,
+    "files": {},
+    "scalar": null,
+    "copies": {
+      "参考表.csv": "scenarios/semiconductor/niel/si_proton.csv"
+    }
+  },
+  {
+    "name": "mesh-box",
+    "sections": {
+      "scoring.mesh.mesh": {
+        "shape": "box",
+        "size": "10 mm,10 mm,10 mm",
+        "bins": "2,2,2",
+        "center": "0,0,0"
+      },
+      "scoring.mesh.mesh.dose": {
+        "type": "doseDeposit",
+        "unit": "Gy",
+        "particles": "proton",
+        "energy_min": "0",
+        "energy_max": "10 MeV"
+      }
+    },
+    "accept": true,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "mesh-cylinder",
+    "sections": {
+      "scoring.mesh.mesh": {
+        "shape": "cylinder",
+        "size": "10 mm,10 mm",
+        "bins": "2,2,2",
+        "center": "0,0,0"
+      },
+      "scoring.mesh.mesh.dose": {
+        "type": "doseDeposit",
+        "unit": "Gy",
+        "particles": "proton",
+        "energy_min": "0",
+        "energy_max": "10 MeV"
+      }
+    },
+    "accept": true,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "mesh-no-quantity",
+    "sections": {
+      "scoring.mesh.m": {
+        "shape": "box",
+        "size": "1,1,1",
+        "bins": "1,1,1"
+      }
+    },
+    "accept": false,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "defaults",
+    "sections": {},
+    "accept": true,
+    "files": {},
+    "scalar": null
+  },
+  {
+    "name": "geometry-v1-unknown-False",
+    "sections": {
+      "geometry": {
+        "template": "hierarchical",
+        "config": "@WORK@/几何.ini"
+      }
+    },
+    "accept": true,
+    "files": {
+      "几何.ini": "[global]\nversion=1\n[world]\nshape=box\nsize=100 mm,100 mm,100 mm\nmaterial=G4_AIR\n[volume.Target]\nparent=world\nshape=box\nsize=10 mm,10 mm,10 mm\nmaterial=G4_Si\nregion=SV\nsensitive=true\n"
+    },
+    "scalar": null
+  },
+  {
+    "name": "geometry-v1-unknown-True",
+    "sections": {
+      "geometry": {
+        "template": "hierarchical",
+        "config": "@WORK@/几何.ini"
+      }
+    },
+    "accept": true,
+    "files": {
+      "几何.ini": "[global]\nversion=1\n[world]\nshape=box\nsize=100 mm,100 mm,100 mm\nmaterial=G4_AIR\n[volume.Target]\nparent=world\nshape=box\nsize=10 mm,10 mm,10 mm\nmaterial=G4_Si\nregion=SV\nsensitive=true\nunknown=1\n"
+    },
+    "scalar": null,
+    "warnings": [
+      "legacy unprefixed metadata"
+    ]
+  },
+  {
+    "name": "geometry-v2-unknown-False",
+    "sections": {
+      "geometry": {
+        "template": "hierarchical",
+        "config": "@WORK@/几何.ini"
+      }
+    },
+    "accept": true,
+    "files": {
+      "几何.ini": "[global]\nversion=2\n[world]\nshape=box\nsize=100 mm,100 mm,100 mm\nmaterial=G4_AIR\n[volume.Target]\nparent=world\nshape=box\nsize=10 mm,10 mm,10 mm\nmaterial=G4_Si\nregion=SV\nsensitive=true\n"
+    },
+    "scalar": null
+  },
+  {
+    "name": "geometry-v2-unknown-True",
+    "sections": {
+      "geometry": {
+        "template": "hierarchical",
+        "config": "@WORK@/几何.ini"
+      }
+    },
+    "accept": false,
+    "files": {
+      "几何.ini": "[global]\nversion=2\n[world]\nshape=box\nsize=100 mm,100 mm,100 mm\nmaterial=G4_AIR\n[volume.Target]\nparent=world\nshape=box\nsize=10 mm,10 mm,10 mm\nmaterial=G4_Si\nregion=SV\nsensitive=true\nunknown=1\n"
+    },
+    "scalar": null
+  },
+  {
+    "name": "physics-region",
+    "sections": {
+      "geometry": {
+        "template": "hierarchical",
+        "config": "@WORK@/几何.ini"
+      },
+      "physics.region.SV": {
+        "gamma": "1 mm",
+        "e-": "1 mm",
+        "e+": "1 mm",
+        "proton": "1 mm",
+        "max_step": "1 mm",
+        "max_track_length": "1 mm",
+        "max_time": "1 ns",
+        "min_kinetic_energy": "1 eV",
+        "volumes": "Target"
+      }
+    },
+    "accept": true,
+    "files": {
+      "几何.ini": "[world]\nshape=box\nsize=100 mm,100 mm,100 mm\nmaterial=G4_AIR\n[volume.Target]\nparent=world\nshape=box\nsize=10 mm,10 mm,10 mm\nmaterial=G4_Si\nregion=SV\nsensitive=true\n"
+    },
+    "scalar": null
+  },
+  {
+    "name": "materials-nist",
+    "sections": {
+      "materials": {
+        "file": "@WORK@/材料.ini"
+      }
+    },
+    "accept": true,
+    "files": {
+      "材料.ini": "[nist]\nmaterials=G4_AIR,G4_Si\n"
+    },
+    "scalar": null
+  },
+  {
+    "name": "materials-material",
+    "sections": {
+      "materials": {
+        "file": "@WORK@/材料.ini"
+      }
+    },
+    "accept": true,
+    "files": {
+      "材料.ini": "[material.Water]\nmode=atom_count\ndensity=1 g/cm3\ncomponents=H:2,O:1\nstate=liquid\ntype=material\n"
+    },
+    "scalar": null
+  },
+  {
+    "name": "materials-alias",
+    "sections": {
+      "materials": {
+        "file": "@WORK@/材料.ini"
+      }
+    },
+    "accept": true,
+    "files": {
+      "材料.ini": "[Alias]\nmaterial=G4_AIR\n"
+    },
+    "scalar": null
+  },
+  {
+    "name": "materials-temperature",
+    "sections": {
+      "materials": {
+        "file": "@WORK@/材料.ini"
+      }
+    },
+    "accept": false,
+    "files": {
+      "材料.ini": "[material.Bad]\ndensity=1 g/cm3\ncomponents=H:1\ntemperature=300 K\n"
+    },
+    "scalar": null
+  },
+  {
+    "name": "materials-unknown",
+    "sections": {
+      "materials": {
+        "file": "@WORK@/材料.ini"
+      }
+    },
+    "accept": false,
+    "files": {
+      "材料.ini": "[nist]\nunknown=1\n"
+    },
+    "scalar": null
+  },
+  {
+    "name": "spectrum-histogram",
+    "sections": {
+      "source": {
+        "particle": "proton",
+        "position_type": "point",
+        "position": "0,0,0",
+        "direction": "+z",
+        "energy_type": "histogram",
+        "spectrum_file": "能谱.csv"
+      }
+    },
+    "accept": true,
+    "files": {
+      "能谱.csv": "e_low_MeV,e_high_MeV,weight\n1,2,1\n2,3,2\n"
+    },
+    "scalar": null
+  },
+  {
+    "name": "spectrum-points",
+    "sections": {
+      "source": {
+        "particle": "proton",
+        "position_type": "point",
+        "position": "0,0,0",
+        "direction": "+z",
+        "energy_type": "points",
+        "spectrum_file": "能谱.csv"
+      }
+    },
+    "accept": true,
+    "files": {
+      "能谱.csv": "energy_keV,density\n1000,0\n2000,1\n"
+    },
+    "scalar": null
+  },
+  {
+    "name": "named-source-z-unconsumed",
+    "sections": {
+      "source.a": {
+        "particle": "proton",
+        "position_type": "point",
+        "position": "0,0,0",
+        "direction": "+z",
+        "energy": "1 MeV",
+        "z": "1 mm"
+      }
+    },
+    "accept": true,
+    "files": {},
+    "scalar": null,
+    "warnings": [
+      "[source.a]/z"
+    ]
+  },
+  {
+    "name": "stl-unit-mm",
+    "sections": {
+      "geometry": {
+        "template": "hierarchical",
+        "config": "@WORK@/geometry.ini"
+      }
+    },
+    "files": {
+      "geometry.ini": "[world]\nshape=box\nsize=100 mm,100 mm,100 mm\nmaterial=G4_AIR\n[volume.T]\nparent=world\nshape=tessellated\nmaterial=G4_Si\nfile=四面体.stl\nfile_unit=mm\n",
+      "四面体.stl": "solid tetra\nfacet normal 0 0 0\nouter loop\nvertex 0 0 0\nvertex 0 1 0\nvertex 1 0 0\nendloop\nendfacet\nfacet normal 0 0 0\nouter loop\nvertex 0 0 0\nvertex 1 0 0\nvertex 0 0 1\nendloop\nendfacet\nfacet normal 0 0 0\nouter loop\nvertex 0 0 0\nvertex 0 0 1\nvertex 0 1 0\nendloop\nendfacet\nfacet normal 0 0 0\nouter loop\nvertex 1 0 0\nvertex 0 1 0\nvertex 0 0 1\nendloop\nendfacet\nendsolid tetra\n"
+    },
+    "accept": true,
+    "scalar": [
+      "volume.T",
+      "file_unit",
+      "mm",
+      "geometry_hierarchical_ini"
+    ]
+  },
+  {
+    "name": "stl-unit-MM",
+    "sections": {
+      "geometry": {
+        "template": "hierarchical",
+        "config": "@WORK@/geometry.ini"
+      }
+    },
+    "files": {
+      "geometry.ini": "[world]\nshape=box\nsize=100 mm,100 mm,100 mm\nmaterial=G4_AIR\n[volume.T]\nparent=world\nshape=tessellated\nmaterial=G4_Si\nfile=四面体.stl\nfile_unit=MM\n",
+      "四面体.stl": "solid tetra\nfacet normal 0 0 0\nouter loop\nvertex 0 0 0\nvertex 0 1 0\nvertex 1 0 0\nendloop\nendfacet\nfacet normal 0 0 0\nouter loop\nvertex 0 0 0\nvertex 1 0 0\nvertex 0 0 1\nendloop\nendfacet\nfacet normal 0 0 0\nouter loop\nvertex 0 0 0\nvertex 0 0 1\nvertex 0 1 0\nendloop\nendfacet\nfacet normal 0 0 0\nouter loop\nvertex 1 0 0\nvertex 0 1 0\nvertex 0 0 1\nendloop\nendfacet\nendsolid tetra\n"
+    },
+    "accept": false,
+    "scalar": [
+      "volume.T",
+      "file_unit",
+      "MM",
+      "geometry_hierarchical_ini"
+    ]
+  }
+]

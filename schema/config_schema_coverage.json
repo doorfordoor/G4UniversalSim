@@ -1,0 +1,5805 @@
+{
+  "generated_by": "scripts/generate_config_schema.py",
+  "fields": [
+    {
+      "file": "main_ini",
+      "section": "run",
+      "key": "threads",
+      "scalar_check": true,
+      "parser": "src/Core/SimulationManager.cc:Configure",
+      "validation": "configure",
+      "gui": {
+        "editable": "generated_subset"
+      },
+      "tests": [
+        "scripts/test_config_schema.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "run",
+      "key": "seed",
+      "scalar_check": true,
+      "parser": "src/Core/SimulationManager.cc:Configure",
+      "validation": "configure",
+      "gui": {
+        "editable": "generated_subset"
+      },
+      "tests": [
+        "scripts/test_config_schema.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "run",
+      "key": "interactive",
+      "scalar_check": true,
+      "parser": "src/Core/SimulationManager.cc:Configure",
+      "validation": "configure",
+      "gui": {
+        "editable": "generated_subset"
+      },
+      "tests": [
+        "scripts/test_config_schema.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "run",
+      "key": "macro",
+      "scalar_check": true,
+      "parser": "src/Core/SimulationManager.cc:Configure",
+      "validation": "configure",
+      "gui": {
+        "editable": "generated_subset"
+      },
+      "tests": [
+        "scripts/test_config_schema.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "run",
+      "key": "dry_run",
+      "scalar_check": true,
+      "parser": "src/Core/SimulationManager.cc:Configure",
+      "validation": "configure",
+      "gui": {
+        "editable": "generated_subset"
+      },
+      "tests": [
+        "scripts/test_config_schema.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "run",
+      "key": "verbose",
+      "scalar_check": true,
+      "parser": "src/Core/SimulationManager.cc:Configure",
+      "validation": "configure",
+      "gui": {
+        "editable": "generated_subset"
+      },
+      "tests": [
+        "scripts/test_config_schema.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "run",
+      "key": "check_overlaps",
+      "scalar_check": true,
+      "parser": "src/Core/SimulationManager.cc:Configure",
+      "validation": "configure",
+      "gui": {
+        "editable": "generated_subset"
+      },
+      "tests": [
+        "scripts/test_config_schema.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "run",
+      "key": "name",
+      "scalar_check": true,
+      "parser": "src/Core/SimulationManager.cc:Configure",
+      "validation": "configure",
+      "gui": {
+        "editable": "generated_subset"
+      },
+      "tests": [
+        "scripts/test_config_schema.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "general",
+      "key": "seed",
+      "scalar_check": true,
+      "parser": "src/Core/SimulationManager.cc:Configure",
+      "validation": "configure",
+      "gui": {
+        "editable": "legacy_external"
+      },
+      "tests": [
+        "scripts/test_config_schema.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "general",
+      "key": "verbose",
+      "scalar_check": true,
+      "parser": "src/Core/SimulationManager.cc:Configure",
+      "validation": "configure",
+      "gui": {
+        "editable": "legacy_external"
+      },
+      "tests": [
+        "scripts/test_config_schema.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "output",
+      "key": "dir",
+      "scalar_check": true,
+      "parser": "src/Core/SimulationManager.cc:Configure",
+      "validation": "configure",
+      "gui": {
+        "editable": "generated_subset"
+      },
+      "tests": [
+        "scripts/test_config_schema.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "output",
+      "key": "format",
+      "scalar_check": true,
+      "parser": "src/Core/SimulationManager.cc:Configure",
+      "validation": "configure",
+      "gui": {
+        "editable": "generated_subset"
+      },
+      "tests": [
+        "scripts/test_config_schema.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "output",
+      "key": "trajectories",
+      "scalar_check": true,
+      "parser": "src/Core/SimulationManager.cc:Configure",
+      "validation": "configure",
+      "gui": {
+        "max": 1000,
+        "editable": "generated_subset"
+      },
+      "tests": [
+        "scripts/test_config_schema.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "output",
+      "key": "trajectory_min_energy",
+      "scalar_check": true,
+      "parser": "src/Core/SimulationManager.cc:Configure",
+      "validation": "configure",
+      "gui": {
+        "editable": "generated_subset"
+      },
+      "tests": [
+        "scripts/test_config_schema.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "output",
+      "key": "trajectory_max_points",
+      "scalar_check": true,
+      "parser": "src/Core/SimulationManager.cc:Configure",
+      "validation": "configure",
+      "gui": {
+        "editable": "generated_subset"
+      },
+      "tests": [
+        "scripts/test_config_schema.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source",
+      "key": "preset",
+      "scalar_check": true,
+      "parser": "src/Source/SourceManager.cc:LoadFromConfig",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "仅 point/circle/rectangle × fixed/isotropic；高级形状与离子不因此开放"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source",
+      "key": "particle",
+      "scalar_check": true,
+      "parser": "src/Source/SourceManager.cc:LoadFromConfig",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "仅 point/circle/rectangle × fixed/isotropic；高级形状与离子不因此开放"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source",
+      "key": "energy",
+      "scalar_check": true,
+      "parser": "src/Source/SourceManager.cc:LoadFromConfig",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "仅 point/circle/rectangle × fixed/isotropic；高级形状与离子不因此开放"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source",
+      "key": "verbose",
+      "scalar_check": true,
+      "parser": "src/Source/SourceManager.cc:LoadFromConfig",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source",
+      "key": "isotropic",
+      "scalar_check": true,
+      "parser": "src/Source/SourceManager.cc:LoadFromConfig",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "仅 point/circle/rectangle × fixed/isotropic；高级形状与离子不因此开放"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source",
+      "key": "position_type",
+      "scalar_check": true,
+      "parser": "src/Source/SourceManager.cc:LoadFromConfig",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "仅 point/circle/rectangle × fixed/isotropic；高级形状与离子不因此开放"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source",
+      "key": "position",
+      "scalar_check": false,
+      "parser": "src/Source/SourceManager.cc:LoadFromConfig",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "仅 point/circle/rectangle × fixed/isotropic；高级形状与离子不因此开放"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source",
+      "key": "center",
+      "scalar_check": false,
+      "parser": "src/Source/SourceManager.cc:LoadFromConfig",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "仅 point/circle/rectangle × fixed/isotropic；高级形状与离子不因此开放"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source",
+      "key": "z",
+      "scalar_check": false,
+      "parser": "src/Source/SourceManager.cc:LoadFromConfig",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source",
+      "key": "direction",
+      "scalar_check": false,
+      "parser": "src/Source/SourceManager.cc:LoadFromConfig",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "仅 point/circle/rectangle × fixed/isotropic；高级形状与离子不因此开放"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source",
+      "key": "shape",
+      "scalar_check": false,
+      "parser": "src/Source/SourceManager.cc:LoadFromConfig",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "仅 point/circle/rectangle × fixed/isotropic；高级形状与离子不因此开放"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source",
+      "key": "ion",
+      "scalar_check": false,
+      "parser": "src/Source/SourceManager.cc:LoadFromConfig",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source",
+      "key": "energy_type",
+      "scalar_check": true,
+      "parser": "src/Source/SourceManager.cc:LoadFromConfig",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source",
+      "key": "energy_sigma",
+      "scalar_check": true,
+      "parser": "src/Source/SourceManager.cc:LoadFromConfig",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source",
+      "key": "energy_min",
+      "scalar_check": true,
+      "parser": "src/Source/SourceManager.cc:LoadFromConfig",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source",
+      "key": "energy_max",
+      "scalar_check": true,
+      "parser": "src/Source/SourceManager.cc:LoadFromConfig",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source",
+      "key": "alpha",
+      "scalar_check": true,
+      "parser": "src/Source/SourceManager.cc:LoadFromConfig",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source",
+      "key": "ezero",
+      "scalar_check": true,
+      "parser": "src/Source/SourceManager.cc:LoadFromConfig",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source",
+      "key": "spectrum_file",
+      "scalar_check": false,
+      "parser": "src/Source/SourceManager.cc:LoadFromConfig",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source",
+      "key": "rot1",
+      "scalar_check": false,
+      "parser": "src/Source/SourceManager.cc:LoadFromConfig",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source",
+      "key": "rot2",
+      "scalar_check": false,
+      "parser": "src/Source/SourceManager.cc:LoadFromConfig",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source",
+      "key": "confine",
+      "scalar_check": true,
+      "parser": "src/Source/SourceManager.cc:LoadFromConfig",
+      "validation": "configure; prepare_run",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source",
+      "key": "angular",
+      "scalar_check": true,
+      "parser": "src/Source/SourceManager.cc:LoadFromConfig",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source",
+      "key": "min_theta",
+      "scalar_check": true,
+      "parser": "src/Source/SourceManager.cc:LoadFromConfig",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source",
+      "key": "max_theta",
+      "scalar_check": true,
+      "parser": "src/Source/SourceManager.cc:LoadFromConfig",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source",
+      "key": "focus",
+      "scalar_check": false,
+      "parser": "src/Source/SourceManager.cc:LoadFromConfig",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source",
+      "key": "phase_space_file",
+      "scalar_check": false,
+      "parser": "src/Source/SourceManager.cc:LoadFromConfig",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source",
+      "key": "phase_space_recycle",
+      "scalar_check": true,
+      "parser": "src/Source/SourceManager.cc:LoadFromConfig",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source",
+      "key": "radius",
+      "scalar_check": true,
+      "parser": "src/Source/SourceManager.cc:LoadFromConfig",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "仅 point/circle/rectangle × fixed/isotropic；高级形状与离子不因此开放"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source",
+      "key": "halfx",
+      "scalar_check": true,
+      "parser": "src/Source/SourceManager.cc:LoadFromConfig",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "仅 point/circle/rectangle × fixed/isotropic；高级形状与离子不因此开放"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source",
+      "key": "halfy",
+      "scalar_check": true,
+      "parser": "src/Source/SourceManager.cc:LoadFromConfig",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "仅 point/circle/rectangle × fixed/isotropic；高级形状与离子不因此开放"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source",
+      "key": "inner_radius",
+      "scalar_check": true,
+      "parser": "src/Source/SourceManager.cc:LoadFromConfig",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source",
+      "key": "halfz",
+      "scalar_check": true,
+      "parser": "src/Source/SourceManager.cc:LoadFromConfig",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source",
+      "key": "beam_sigma",
+      "scalar_check": true,
+      "parser": "src/Source/SourceManager.cc:LoadFromConfig",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source",
+      "key": "beam_sigma_x",
+      "scalar_check": true,
+      "parser": "src/Source/SourceManager.cc:LoadFromConfig",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source",
+      "key": "beam_sigma_y",
+      "scalar_check": true,
+      "parser": "src/Source/SourceManager.cc:LoadFromConfig",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source",
+      "key": "angular_sigma",
+      "scalar_check": true,
+      "parser": "src/Source/SourceManager.cc:LoadFromConfig",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source",
+      "key": "angular_sigma_x",
+      "scalar_check": true,
+      "parser": "src/Source/SourceManager.cc:LoadFromConfig",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source",
+      "key": "angular_sigma_y",
+      "scalar_check": true,
+      "parser": "src/Source/SourceManager.cc:LoadFromConfig",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source.<name>",
+      "key": "preset",
+      "scalar_check": true,
+      "parser": "src/Source/SourceManager.cc:LoadSection",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source.<name>",
+      "key": "particle",
+      "scalar_check": true,
+      "parser": "src/Source/SourceManager.cc:LoadSection",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source.<name>",
+      "key": "energy",
+      "scalar_check": true,
+      "parser": "src/Source/SourceManager.cc:LoadSection",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source.<name>",
+      "key": "isotropic",
+      "scalar_check": true,
+      "parser": "src/Source/SourceManager.cc:LoadSection",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source.<name>",
+      "key": "position_type",
+      "scalar_check": true,
+      "parser": "src/Source/SourceManager.cc:LoadSection",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source.<name>",
+      "key": "position",
+      "scalar_check": false,
+      "parser": "src/Source/SourceManager.cc:LoadSection",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source.<name>",
+      "key": "center",
+      "scalar_check": false,
+      "parser": "src/Source/SourceManager.cc:LoadSection",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source.<name>",
+      "key": "z",
+      "scalar_check": false,
+      "parser": "src/Source/SourceManager.cc:LoadSection",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source.<name>",
+      "key": "direction",
+      "scalar_check": false,
+      "parser": "src/Source/SourceManager.cc:LoadSection",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source.<name>",
+      "key": "shape",
+      "scalar_check": false,
+      "parser": "src/Source/SourceManager.cc:LoadSection",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source.<name>",
+      "key": "ion",
+      "scalar_check": false,
+      "parser": "src/Source/SourceManager.cc:LoadSection",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source.<name>",
+      "key": "energy_type",
+      "scalar_check": true,
+      "parser": "src/Source/SourceManager.cc:LoadSection",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source.<name>",
+      "key": "energy_sigma",
+      "scalar_check": true,
+      "parser": "src/Source/SourceManager.cc:LoadSection",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source.<name>",
+      "key": "energy_min",
+      "scalar_check": true,
+      "parser": "src/Source/SourceManager.cc:LoadSection",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source.<name>",
+      "key": "energy_max",
+      "scalar_check": true,
+      "parser": "src/Source/SourceManager.cc:LoadSection",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source.<name>",
+      "key": "alpha",
+      "scalar_check": true,
+      "parser": "src/Source/SourceManager.cc:LoadSection",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source.<name>",
+      "key": "ezero",
+      "scalar_check": true,
+      "parser": "src/Source/SourceManager.cc:LoadSection",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source.<name>",
+      "key": "spectrum_file",
+      "scalar_check": false,
+      "parser": "src/Source/SourceManager.cc:LoadSection",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source.<name>",
+      "key": "rot1",
+      "scalar_check": false,
+      "parser": "src/Source/SourceManager.cc:LoadSection",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source.<name>",
+      "key": "rot2",
+      "scalar_check": false,
+      "parser": "src/Source/SourceManager.cc:LoadSection",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source.<name>",
+      "key": "confine",
+      "scalar_check": true,
+      "parser": "src/Source/SourceManager.cc:LoadSection",
+      "validation": "configure; prepare_run",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source.<name>",
+      "key": "angular",
+      "scalar_check": true,
+      "parser": "src/Source/SourceManager.cc:LoadSection",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source.<name>",
+      "key": "min_theta",
+      "scalar_check": true,
+      "parser": "src/Source/SourceManager.cc:LoadSection",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source.<name>",
+      "key": "max_theta",
+      "scalar_check": true,
+      "parser": "src/Source/SourceManager.cc:LoadSection",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source.<name>",
+      "key": "focus",
+      "scalar_check": false,
+      "parser": "src/Source/SourceManager.cc:LoadSection",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source.<name>",
+      "key": "radius",
+      "scalar_check": true,
+      "parser": "src/Source/SourceManager.cc:LoadSection",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source.<name>",
+      "key": "halfx",
+      "scalar_check": true,
+      "parser": "src/Source/SourceManager.cc:LoadSection",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source.<name>",
+      "key": "halfy",
+      "scalar_check": true,
+      "parser": "src/Source/SourceManager.cc:LoadSection",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source.<name>",
+      "key": "inner_radius",
+      "scalar_check": true,
+      "parser": "src/Source/SourceManager.cc:LoadSection",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source.<name>",
+      "key": "halfz",
+      "scalar_check": true,
+      "parser": "src/Source/SourceManager.cc:LoadSection",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source.<name>",
+      "key": "beam_sigma",
+      "scalar_check": true,
+      "parser": "src/Source/SourceManager.cc:LoadSection",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source.<name>",
+      "key": "beam_sigma_x",
+      "scalar_check": true,
+      "parser": "src/Source/SourceManager.cc:LoadSection",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source.<name>",
+      "key": "beam_sigma_y",
+      "scalar_check": true,
+      "parser": "src/Source/SourceManager.cc:LoadSection",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source.<name>",
+      "key": "angular_sigma",
+      "scalar_check": true,
+      "parser": "src/Source/SourceManager.cc:LoadSection",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source.<name>",
+      "key": "angular_sigma_x",
+      "scalar_check": true,
+      "parser": "src/Source/SourceManager.cc:LoadSection",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source.<name>",
+      "key": "angular_sigma_y",
+      "scalar_check": true,
+      "parser": "src/Source/SourceManager.cc:LoadSection",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "source.<name>",
+      "key": "intensity",
+      "scalar_check": true,
+      "parser": "src/Source/SourceManager.cc:LoadSection",
+      "validation": "configure; prepare_run; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py",
+        "scripts/test_run_summary.py",
+        "gui/smoke_tests/smoke_source_editor_v2.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "phase_space",
+      "key": "volume",
+      "scalar_check": true,
+      "parser": "src/Scoring/ScoringManager.cc:LoadFromConfig",
+      "validation": "configure; transport; output",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "phase_space",
+      "key": "particles",
+      "scalar_check": false,
+      "parser": "src/Scoring/ScoringManager.cc:LoadFromConfig",
+      "validation": "configure; transport; output",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "phase_space",
+      "key": "kill",
+      "scalar_check": true,
+      "parser": "src/Scoring/ScoringManager.cc:LoadFromConfig",
+      "validation": "configure; transport; output",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_gps_sources.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "physics",
+      "key": "reference",
+      "scalar_check": true,
+      "parser": "src/Physics/PhysicsManager.cc:LoadFromConfig",
+      "validation": "configure; initialize",
+      "gui": {
+        "editable": "generated"
+      },
+      "tests": [
+        "scripts/test_physics_a6.py",
+        "scripts/test_backend_capabilities.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "physics",
+      "key": "em",
+      "scalar_check": false,
+      "parser": "src/Physics/PhysicsManager.cc:LoadFromConfig",
+      "validation": "configure; initialize",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_physics_a6.py",
+        "scripts/test_backend_capabilities.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "physics",
+      "key": "list",
+      "scalar_check": false,
+      "parser": "src/Physics/PhysicsManager.cc:LoadFromConfig",
+      "validation": "configure; initialize",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_physics_a6.py",
+        "scripts/test_backend_capabilities.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "physics",
+      "key": "modules",
+      "scalar_check": false,
+      "parser": "src/Physics/PhysicsManager.cc:LoadFromConfig",
+      "validation": "configure; initialize",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_physics_a6.py",
+        "scripts/test_backend_capabilities.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "physics",
+      "key": "extra_modules",
+      "scalar_check": false,
+      "parser": "src/Physics/PhysicsManager.cc:LoadFromConfig",
+      "validation": "configure; initialize",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_physics_a6.py",
+        "scripts/test_backend_capabilities.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "physics",
+      "key": "default_cut",
+      "scalar_check": true,
+      "parser": "src/Physics/PhysicsManager.cc:LoadFromConfig",
+      "validation": "configure; initialize",
+      "gui": {
+        "editable": "generated"
+      },
+      "tests": [
+        "scripts/test_physics_a6.py",
+        "scripts/test_backend_capabilities.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "physics",
+      "key": "biasing",
+      "scalar_check": true,
+      "parser": "src/Physics/PhysicsManager.cc:LoadFromConfig",
+      "validation": "configure; initialize",
+      "gui": {
+        "editable": "fixed_or_blocked"
+      },
+      "tests": [
+        "scripts/test_physics_a6.py",
+        "scripts/test_backend_capabilities.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "physics",
+      "key": "verbose",
+      "scalar_check": true,
+      "parser": "src/Physics/PhysicsManager.cc:LoadFromConfig",
+      "validation": "configure; initialize",
+      "gui": {
+        "editable": "fixed_or_blocked"
+      },
+      "tests": [
+        "scripts/test_physics_a6.py",
+        "scripts/test_backend_capabilities.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "physics.microelec",
+      "key": "enabled",
+      "scalar_check": true,
+      "parser": "src/Physics/PhysicsManager.cc:LoadFromConfig",
+      "validation": "configure; initialize",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_physics_a6.py",
+        "scripts/test_backend_capabilities.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "physics.microelec",
+      "key": "region",
+      "scalar_check": true,
+      "parser": "src/Physics/PhysicsManager.cc:LoadFromConfig",
+      "validation": "configure; initialize",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_physics_a6.py",
+        "scripts/test_backend_capabilities.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "physics.microelec",
+      "key": "electron_capture",
+      "scalar_check": true,
+      "parser": "src/Physics/PhysicsManager.cc:LoadFromConfig",
+      "validation": "configure; initialize",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_physics_a6.py",
+        "scripts/test_backend_capabilities.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "physics.microelec",
+      "key": "electron_capture_threshold",
+      "scalar_check": true,
+      "parser": "src/Physics/PhysicsManager.cc:LoadFromConfig",
+      "validation": "configure; initialize",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_physics_a6.py",
+        "scripts/test_backend_capabilities.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "physics.cuts",
+      "key": "gamma",
+      "scalar_check": true,
+      "parser": "src/Physics/PhysicsManager.cc:SetParticleCut",
+      "validation": "configure",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_physics_a6.py",
+        "scripts/test_backend_capabilities.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "physics.cuts",
+      "key": "e-",
+      "scalar_check": true,
+      "parser": "src/Physics/PhysicsManager.cc:SetParticleCut",
+      "validation": "configure",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_physics_a6.py",
+        "scripts/test_backend_capabilities.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "physics.cuts",
+      "key": "e+",
+      "scalar_check": true,
+      "parser": "src/Physics/PhysicsManager.cc:SetParticleCut",
+      "validation": "configure",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_physics_a6.py",
+        "scripts/test_backend_capabilities.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "physics.cuts",
+      "key": "proton",
+      "scalar_check": true,
+      "parser": "src/Physics/PhysicsManager.cc:SetParticleCut",
+      "validation": "configure",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_physics_a6.py",
+        "scripts/test_backend_capabilities.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "physics.cuts",
+      "key": "alpha",
+      "scalar_check": true,
+      "parser": "src/Physics/PhysicsManager.cc:SetParticleCut",
+      "validation": "configure",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_physics_a6.py",
+        "scripts/test_backend_capabilities.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "physics.cuts",
+      "key": "<particle>",
+      "scalar_check": true,
+      "parser": "src/Physics/PhysicsManager.cc:SetParticleCut",
+      "validation": "configure",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_physics_a6.py",
+        "scripts/test_backend_capabilities.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "physics.region.<name>",
+      "key": "gamma",
+      "scalar_check": true,
+      "parser": "src/Physics/PhysicsManager.cc:LoadFromConfig",
+      "validation": "configure; initialize; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_physics_a6.py",
+        "scripts/test_backend_capabilities.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "physics.region.<name>",
+      "key": "e-",
+      "scalar_check": true,
+      "parser": "src/Physics/PhysicsManager.cc:LoadFromConfig",
+      "validation": "configure; initialize; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_physics_a6.py",
+        "scripts/test_backend_capabilities.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "physics.region.<name>",
+      "key": "e+",
+      "scalar_check": true,
+      "parser": "src/Physics/PhysicsManager.cc:LoadFromConfig",
+      "validation": "configure; initialize; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_physics_a6.py",
+        "scripts/test_backend_capabilities.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "physics.region.<name>",
+      "key": "proton",
+      "scalar_check": true,
+      "parser": "src/Physics/PhysicsManager.cc:LoadFromConfig",
+      "validation": "configure; initialize; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_physics_a6.py",
+        "scripts/test_backend_capabilities.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "physics.region.<name>",
+      "key": "max_step",
+      "scalar_check": true,
+      "parser": "src/Physics/PhysicsManager.cc:LoadFromConfig",
+      "validation": "configure; initialize; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_physics_a6.py",
+        "scripts/test_backend_capabilities.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "physics.region.<name>",
+      "key": "max_track_length",
+      "scalar_check": true,
+      "parser": "src/Physics/PhysicsManager.cc:LoadFromConfig",
+      "validation": "configure; initialize; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_physics_a6.py",
+        "scripts/test_backend_capabilities.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "physics.region.<name>",
+      "key": "max_time",
+      "scalar_check": true,
+      "parser": "src/Physics/PhysicsManager.cc:LoadFromConfig",
+      "validation": "configure; initialize; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_physics_a6.py",
+        "scripts/test_backend_capabilities.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "physics.region.<name>",
+      "key": "min_kinetic_energy",
+      "scalar_check": true,
+      "parser": "src/Physics/PhysicsManager.cc:LoadFromConfig",
+      "validation": "configure; initialize; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_physics_a6.py",
+        "scripts/test_backend_capabilities.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "physics.region.<name>",
+      "key": "volumes",
+      "scalar_check": false,
+      "parser": "src/Physics/PhysicsManager.cc:LoadFromConfig",
+      "validation": "configure; initialize; transport",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_physics_a6.py",
+        "scripts/test_backend_capabilities.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "physics.radioactive_decay",
+      "key": "enabled",
+      "scalar_check": true,
+      "parser": "src/Physics/PhysicsManager.cc:LoadFromConfig",
+      "validation": "configure; initialize",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_physics_a6.py",
+        "scripts/test_backend_capabilities.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "physics.radioactive_decay",
+      "key": "time_threshold",
+      "scalar_check": true,
+      "parser": "src/Physics/PhysicsManager.cc:LoadFromConfig",
+      "validation": "configure; initialize",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_physics_a6.py",
+        "scripts/test_backend_capabilities.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "scoring",
+      "key": "enabled",
+      "scalar_check": true,
+      "parser": "src/Scoring/ScoringManager.cc:LoadFromConfig",
+      "validation": "configure; initialize; transport; output",
+      "gui": {
+        "editable": "generated"
+      },
+      "tests": [
+        "scripts/test_dose_scoring.py",
+        "scripts/test_fluence_scoring.py",
+        "scripts/test_let_scoring.py",
+        "scripts/test_displacement_damage.py",
+        "scripts/test_statistical_uncertainty.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "scoring",
+      "key": "hits",
+      "scalar_check": true,
+      "parser": "src/Scoring/ScoringManager.cc:LoadFromConfig",
+      "validation": "configure; initialize; transport; output",
+      "gui": {
+        "editable": "generated"
+      },
+      "tests": [
+        "scripts/test_dose_scoring.py",
+        "scripts/test_fluence_scoring.py",
+        "scripts/test_let_scoring.py",
+        "scripts/test_displacement_damage.py",
+        "scripts/test_statistical_uncertainty.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "scoring",
+      "key": "event_edep",
+      "scalar_check": true,
+      "parser": "src/Scoring/ScoringManager.cc:LoadFromConfig",
+      "validation": "configure; initialize; transport; output",
+      "gui": {
+        "editable": "generated"
+      },
+      "tests": [
+        "scripts/test_dose_scoring.py",
+        "scripts/test_fluence_scoring.py",
+        "scripts/test_let_scoring.py",
+        "scripts/test_displacement_damage.py",
+        "scripts/test_statistical_uncertainty.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "scoring",
+      "key": "edep",
+      "scalar_check": true,
+      "parser": "src/Scoring/ScoringManager.cc:LoadFromConfig",
+      "validation": "configure; initialize; transport; output",
+      "gui": {
+        "editable": "generated"
+      },
+      "tests": [
+        "scripts/test_dose_scoring.py",
+        "scripts/test_fluence_scoring.py",
+        "scripts/test_let_scoring.py",
+        "scripts/test_displacement_damage.py",
+        "scripts/test_statistical_uncertainty.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "scoring",
+      "key": "let",
+      "scalar_check": true,
+      "parser": "src/Scoring/ScoringManager.cc:LoadFromConfig",
+      "validation": "configure; initialize; transport; output",
+      "gui": {
+        "editable": "fixed_false"
+      },
+      "tests": [
+        "scripts/test_dose_scoring.py",
+        "scripts/test_fluence_scoring.py",
+        "scripts/test_let_scoring.py",
+        "scripts/test_displacement_damage.py",
+        "scripts/test_statistical_uncertainty.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "scoring",
+      "key": "dose",
+      "scalar_check": true,
+      "parser": "src/Scoring/ScoringManager.cc:LoadFromConfig",
+      "validation": "configure; initialize; transport; output",
+      "gui": {
+        "editable": "generated"
+      },
+      "tests": [
+        "scripts/test_dose_scoring.py",
+        "scripts/test_fluence_scoring.py",
+        "scripts/test_let_scoring.py",
+        "scripts/test_displacement_damage.py",
+        "scripts/test_statistical_uncertainty.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "scoring",
+      "key": "fluence",
+      "scalar_check": true,
+      "parser": "src/Scoring/ScoringManager.cc:LoadFromConfig",
+      "validation": "configure; initialize; transport; output",
+      "gui": {
+        "editable": "generated"
+      },
+      "tests": [
+        "scripts/test_dose_scoring.py",
+        "scripts/test_fluence_scoring.py",
+        "scripts/test_let_scoring.py",
+        "scripts/test_displacement_damage.py",
+        "scripts/test_statistical_uncertainty.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "scoring",
+      "key": "displacement",
+      "scalar_check": true,
+      "parser": "src/Scoring/ScoringManager.cc:LoadFromConfig",
+      "validation": "configure; initialize; transport; output",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_dose_scoring.py",
+        "scripts/test_fluence_scoring.py",
+        "scripts/test_let_scoring.py",
+        "scripts/test_displacement_damage.py",
+        "scripts/test_statistical_uncertainty.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "scoring",
+      "key": "auto_create_default_scorers",
+      "scalar_check": true,
+      "parser": "src/Scoring/ScoringManager.cc:LoadFromConfig",
+      "validation": "configure; initialize; transport; output",
+      "gui": {
+        "editable": "generated"
+      },
+      "tests": [
+        "scripts/test_dose_scoring.py",
+        "scripts/test_fluence_scoring.py",
+        "scripts/test_let_scoring.py",
+        "scripts/test_displacement_damage.py",
+        "scripts/test_statistical_uncertainty.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "scoring",
+      "key": "verbose",
+      "scalar_check": true,
+      "parser": "src/Scoring/ScoringManager.cc:LoadFromConfig",
+      "validation": "configure; initialize; transport; output",
+      "gui": {
+        "editable": "generated"
+      },
+      "tests": [
+        "scripts/test_dose_scoring.py",
+        "scripts/test_fluence_scoring.py",
+        "scripts/test_let_scoring.py",
+        "scripts/test_displacement_damage.py",
+        "scripts/test_statistical_uncertainty.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "scoring.edep",
+      "key": "raw_histogram",
+      "scalar_check": true,
+      "parser": "src/Scoring/ScoringManager.cc:LoadFromConfig",
+      "validation": "configure",
+      "gui": {
+        "editable": "generated"
+      },
+      "tests": [
+        "scripts/test_dose_scoring.py",
+        "scripts/test_fluence_scoring.py",
+        "scripts/test_let_scoring.py",
+        "scripts/test_displacement_damage.py",
+        "scripts/test_statistical_uncertainty.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "scoring.edep",
+      "key": "weighted_histogram",
+      "scalar_check": true,
+      "parser": "src/Scoring/ScoringManager.cc:LoadFromConfig",
+      "validation": "configure",
+      "gui": {
+        "editable": "generated"
+      },
+      "tests": [
+        "scripts/test_dose_scoring.py",
+        "scripts/test_fluence_scoring.py",
+        "scripts/test_let_scoring.py",
+        "scripts/test_displacement_damage.py",
+        "scripts/test_statistical_uncertainty.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "scoring.edep",
+      "key": "volume_summary",
+      "scalar_check": true,
+      "parser": "src/Scoring/ScoringManager.cc:LoadFromConfig",
+      "validation": "configure",
+      "gui": {
+        "editable": "generated"
+      },
+      "tests": [
+        "scripts/test_dose_scoring.py",
+        "scripts/test_fluence_scoring.py",
+        "scripts/test_let_scoring.py",
+        "scripts/test_displacement_damage.py",
+        "scripts/test_statistical_uncertainty.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "scoring.edep",
+      "key": "particle_summary",
+      "scalar_check": true,
+      "parser": "src/Scoring/ScoringManager.cc:LoadFromConfig",
+      "validation": "configure",
+      "gui": {
+        "editable": "generated"
+      },
+      "tests": [
+        "scripts/test_dose_scoring.py",
+        "scripts/test_fluence_scoring.py",
+        "scripts/test_let_scoring.py",
+        "scripts/test_displacement_damage.py",
+        "scripts/test_statistical_uncertainty.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "scoring.edep",
+      "key": "bins",
+      "scalar_check": true,
+      "parser": "src/Scoring/ScoringManager.cc:LoadFromConfig",
+      "validation": "configure",
+      "gui": {
+        "editable": "generated"
+      },
+      "tests": [
+        "scripts/test_dose_scoring.py",
+        "scripts/test_fluence_scoring.py",
+        "scripts/test_let_scoring.py",
+        "scripts/test_displacement_damage.py",
+        "scripts/test_statistical_uncertainty.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "scoring.edep",
+      "key": "min",
+      "scalar_check": true,
+      "parser": "src/Scoring/ScoringManager.cc:LoadFromConfig",
+      "validation": "configure",
+      "gui": {
+        "editable": "generated"
+      },
+      "tests": [
+        "scripts/test_dose_scoring.py",
+        "scripts/test_fluence_scoring.py",
+        "scripts/test_let_scoring.py",
+        "scripts/test_displacement_damage.py",
+        "scripts/test_statistical_uncertainty.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "scoring.edep",
+      "key": "max",
+      "scalar_check": true,
+      "parser": "src/Scoring/ScoringManager.cc:LoadFromConfig",
+      "validation": "configure",
+      "gui": {
+        "editable": "generated"
+      },
+      "tests": [
+        "scripts/test_dose_scoring.py",
+        "scripts/test_fluence_scoring.py",
+        "scripts/test_let_scoring.py",
+        "scripts/test_displacement_damage.py",
+        "scripts/test_statistical_uncertainty.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "scoring.let",
+      "key": "particles",
+      "scalar_check": false,
+      "parser": "src/Scoring/ScoringManager.cc:LoadFromConfig",
+      "validation": "configure",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_dose_scoring.py",
+        "scripts/test_fluence_scoring.py",
+        "scripts/test_let_scoring.py",
+        "scripts/test_displacement_damage.py",
+        "scripts/test_statistical_uncertainty.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "scoring.displacement",
+      "key": "<particle>",
+      "scalar_check": false,
+      "parser": "src/Scoring/ScoringManager.cc:LoadFromConfig",
+      "validation": "configure",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_dose_scoring.py",
+        "scripts/test_fluence_scoring.py",
+        "scripts/test_let_scoring.py",
+        "scripts/test_displacement_damage.py",
+        "scripts/test_statistical_uncertainty.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "scoring.mesh.<name>",
+      "key": "shape",
+      "scalar_check": true,
+      "parser": "src/Scoring/ScoringMeshConfig.cc:BuildCommands",
+      "validation": "configure; initialize; transport; output",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_scoring_mesh.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "scoring.mesh.<name>",
+      "key": "size",
+      "scalar_check": false,
+      "parser": "src/Scoring/ScoringMeshConfig.cc:BuildCommands",
+      "validation": "configure; initialize; transport; output",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_scoring_mesh.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "scoring.mesh.<name>",
+      "key": "bins",
+      "scalar_check": false,
+      "parser": "src/Scoring/ScoringMeshConfig.cc:BuildCommands",
+      "validation": "configure; initialize; transport; output",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_scoring_mesh.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "scoring.mesh.<name>",
+      "key": "center",
+      "scalar_check": false,
+      "parser": "src/Scoring/ScoringMeshConfig.cc:BuildCommands",
+      "validation": "configure; initialize; transport; output",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_scoring_mesh.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "scoring.mesh.<name>.<quantity>",
+      "key": "type",
+      "scalar_check": false,
+      "parser": "src/Scoring/ScoringMeshConfig.cc:BuildCommands",
+      "validation": "configure; initialize",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_scoring_mesh.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "scoring.mesh.<name>.<quantity>",
+      "key": "unit",
+      "scalar_check": false,
+      "parser": "src/Scoring/ScoringMeshConfig.cc:BuildCommands",
+      "validation": "configure; initialize",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_scoring_mesh.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "scoring.mesh.<name>.<quantity>",
+      "key": "particles",
+      "scalar_check": false,
+      "parser": "src/Scoring/ScoringMeshConfig.cc:BuildCommands",
+      "validation": "configure; initialize",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_scoring_mesh.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "scoring.mesh.<name>.<quantity>",
+      "key": "energy_min",
+      "scalar_check": true,
+      "parser": "src/Scoring/ScoringMeshConfig.cc:BuildCommands",
+      "validation": "configure; initialize",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_scoring_mesh.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "scoring.mesh.<name>.<quantity>",
+      "key": "energy_max",
+      "scalar_check": true,
+      "parser": "src/Scoring/ScoringMeshConfig.cc:BuildCommands",
+      "validation": "configure; initialize",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_scoring_mesh.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "materials",
+      "key": "file",
+      "scalar_check": true,
+      "parser": "src/Core/SimulationManager.cc:Configure",
+      "validation": "configure",
+      "gui": {
+        "editable": "generated_subset"
+      },
+      "tests": [
+        "scripts/test_material_config_schema.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "geometry",
+      "key": "template",
+      "scalar_check": false,
+      "parser": "src/Core/SimulationManager.cc:Configure",
+      "validation": "configure",
+      "gui": {
+        "editable": "generated_subset"
+      },
+      "tests": [
+        "scripts/test_geometry_a5.py",
+        "scripts/test_geometry_config_diagnostics.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "geometry",
+      "key": "check_overlaps",
+      "scalar_check": true,
+      "parser": "src/Core/SimulationManager.cc:Configure",
+      "validation": "configure",
+      "gui": {
+        "editable": "generated_subset"
+      },
+      "tests": [
+        "scripts/test_geometry_a5.py",
+        "scripts/test_geometry_config_diagnostics.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "geometry",
+      "key": "default_world_material",
+      "scalar_check": true,
+      "parser": "src/Core/SimulationManager.cc:Configure",
+      "validation": "configure",
+      "gui": {
+        "editable": "generated_subset"
+      },
+      "tests": [
+        "scripts/test_geometry_a5.py",
+        "scripts/test_geometry_config_diagnostics.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "geometry",
+      "key": "config",
+      "scalar_check": true,
+      "parser": "src/Core/SimulationManager.cc:Configure",
+      "validation": "configure",
+      "gui": {
+        "editable": "generated_subset"
+      },
+      "tests": [
+        "scripts/test_geometry_a5.py",
+        "scripts/test_geometry_config_diagnostics.py"
+      ]
+    },
+    {
+      "file": "materials_ini",
+      "section": "nist",
+      "key": "materials",
+      "scalar_check": false,
+      "parser": "src/Materials/MaterialIniReader.cc:ParseSections",
+      "validation": "configure; material_build",
+      "gui": {
+        "editable": "preserved_raw",
+        "note": "温度/压力不可用，type 不再生成；元素/同位素原文保留"
+      },
+      "tests": [
+        "scripts/test_material_config_schema.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "materials_ini",
+      "section": "isotope.<name>",
+      "key": "symbol",
+      "scalar_check": false,
+      "parser": "src/Materials/MaterialIniReader.cc:ParseSections",
+      "validation": "configure",
+      "gui": {
+        "editable": "preserved_raw",
+        "note": "温度/压力不可用，type 不再生成；元素/同位素原文保留"
+      },
+      "tests": [
+        "scripts/test_material_config_schema.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "materials_ini",
+      "section": "isotope.<name>",
+      "key": "z",
+      "scalar_check": true,
+      "parser": "src/Materials/MaterialIniReader.cc:ParseSections",
+      "validation": "configure",
+      "gui": {
+        "editable": "preserved_raw",
+        "note": "温度/压力不可用，type 不再生成；元素/同位素原文保留"
+      },
+      "tests": [
+        "scripts/test_material_config_schema.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "materials_ini",
+      "section": "isotope.<name>",
+      "key": "n",
+      "scalar_check": true,
+      "parser": "src/Materials/MaterialIniReader.cc:ParseSections",
+      "validation": "configure",
+      "gui": {
+        "editable": "preserved_raw",
+        "note": "温度/压力不可用，type 不再生成；元素/同位素原文保留"
+      },
+      "tests": [
+        "scripts/test_material_config_schema.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "materials_ini",
+      "section": "isotope.<name>",
+      "key": "a",
+      "scalar_check": false,
+      "parser": "src/Materials/MaterialIniReader.cc:ParseSections",
+      "validation": "configure",
+      "gui": {
+        "editable": "preserved_raw",
+        "note": "温度/压力不可用，type 不再生成；元素/同位素原文保留"
+      },
+      "tests": [
+        "scripts/test_material_config_schema.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "materials_ini",
+      "section": "element.<name>",
+      "key": "symbol",
+      "scalar_check": false,
+      "parser": "src/Materials/MaterialIniReader.cc:ParseSections",
+      "validation": "configure; material_build",
+      "gui": {
+        "editable": "preserved_raw",
+        "note": "温度/压力不可用，type 不再生成；元素/同位素原文保留"
+      },
+      "tests": [
+        "scripts/test_material_config_schema.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "materials_ini",
+      "section": "element.<name>",
+      "key": "isotopes",
+      "scalar_check": false,
+      "parser": "src/Materials/MaterialIniReader.cc:ParseSections",
+      "validation": "configure; material_build",
+      "gui": {
+        "editable": "preserved_raw",
+        "note": "温度/压力不可用，type 不再生成；元素/同位素原文保留"
+      },
+      "tests": [
+        "scripts/test_material_config_schema.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "materials_ini",
+      "section": "element.<name>",
+      "key": "z",
+      "scalar_check": false,
+      "parser": "src/Materials/MaterialIniReader.cc:ParseSections",
+      "validation": "configure; material_build",
+      "gui": {
+        "editable": "preserved_raw",
+        "note": "温度/压力不可用，type 不再生成；元素/同位素原文保留"
+      },
+      "tests": [
+        "scripts/test_material_config_schema.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "materials_ini",
+      "section": "element.<name>",
+      "key": "a",
+      "scalar_check": false,
+      "parser": "src/Materials/MaterialIniReader.cc:ParseSections",
+      "validation": "configure; material_build",
+      "gui": {
+        "editable": "preserved_raw",
+        "note": "温度/压力不可用，type 不再生成；元素/同位素原文保留"
+      },
+      "tests": [
+        "scripts/test_material_config_schema.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "materials_ini",
+      "section": "material.<name>",
+      "key": "type",
+      "scalar_check": true,
+      "parser": "src/Materials/MaterialIniReader.cc:ParseSections",
+      "validation": "configure; material_build",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "温度/压力不可用，type 不再生成；元素/同位素原文保留"
+      },
+      "tests": [
+        "scripts/test_material_config_schema.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "materials_ini",
+      "section": "material.<name>",
+      "key": "mode",
+      "scalar_check": true,
+      "parser": "src/Materials/MaterialIniReader.cc:ParseSections",
+      "validation": "configure; material_build",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "温度/压力不可用，type 不再生成；元素/同位素原文保留"
+      },
+      "tests": [
+        "scripts/test_material_config_schema.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "materials_ini",
+      "section": "material.<name>",
+      "key": "density",
+      "scalar_check": false,
+      "parser": "src/Materials/MaterialIniReader.cc:ParseSections",
+      "validation": "configure; material_build",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "温度/压力不可用，type 不再生成；元素/同位素原文保留"
+      },
+      "tests": [
+        "scripts/test_material_config_schema.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "materials_ini",
+      "section": "material.<name>",
+      "key": "components",
+      "scalar_check": false,
+      "parser": "src/Materials/MaterialIniReader.cc:ParseSections",
+      "validation": "configure; material_build",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "温度/压力不可用，type 不再生成；元素/同位素原文保留"
+      },
+      "tests": [
+        "scripts/test_material_config_schema.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "materials_ini",
+      "section": "material.<name>",
+      "key": "state",
+      "scalar_check": false,
+      "parser": "src/Materials/MaterialIniReader.cc:ParseSections",
+      "validation": "configure; material_build",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "温度/压力不可用，type 不再生成；元素/同位素原文保留"
+      },
+      "tests": [
+        "scripts/test_material_config_schema.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "materials_ini",
+      "section": "material.<name>",
+      "key": "temperature",
+      "scalar_check": false,
+      "parser": "src/Materials/MaterialIniReader.cc:ParseSections",
+      "validation": "configure; material_build",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "温度/压力不可用，type 不再生成；元素/同位素原文保留"
+      },
+      "tests": [
+        "scripts/test_material_config_schema.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "materials_ini",
+      "section": "material.<name>",
+      "key": "pressure",
+      "scalar_check": false,
+      "parser": "src/Materials/MaterialIniReader.cc:ParseSections",
+      "validation": "configure; material_build",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "温度/压力不可用，type 不再生成；元素/同位素原文保留"
+      },
+      "tests": [
+        "scripts/test_material_config_schema.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "materials_ini",
+      "section": "<alias>",
+      "key": "material",
+      "scalar_check": false,
+      "parser": "src/Materials/MaterialIniReader.cc:ParseSections",
+      "validation": "configure; material_build",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "温度/压力不可用，type 不再生成；元素/同位素原文保留"
+      },
+      "tests": [
+        "scripts/test_material_config_schema.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "global",
+      "key": "version",
+      "scalar_check": true,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "world",
+      "key": "name",
+      "scalar_check": false,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "world",
+      "key": "parent",
+      "scalar_check": false,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "world",
+      "key": "shape",
+      "scalar_check": false,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "world",
+      "key": "size",
+      "scalar_check": false,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "world",
+      "key": "parameters",
+      "scalar_check": false,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "world",
+      "key": "material",
+      "scalar_check": false,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "world",
+      "key": "position",
+      "scalar_check": false,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "world",
+      "key": "rotation",
+      "scalar_check": false,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "world",
+      "key": "sensitive",
+      "scalar_check": true,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "world",
+      "key": "bias",
+      "scalar_check": true,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "world",
+      "key": "region",
+      "scalar_check": false,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "world",
+      "key": "placement",
+      "scalar_check": false,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "world",
+      "key": "copyno",
+      "scalar_check": true,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "world",
+      "key": "vis.color",
+      "scalar_check": false,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "world",
+      "key": "vis.alpha",
+      "scalar_check": false,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "world",
+      "key": "vis.visible",
+      "scalar_check": true,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "world",
+      "key": "vis.wireframe",
+      "scalar_check": true,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "world",
+      "key": "cut.<particle>",
+      "scalar_check": true,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "world",
+      "key": "metadata.<name>",
+      "scalar_check": false,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "world",
+      "key": "dx1",
+      "scalar_check": true,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "world",
+      "key": "dx2",
+      "scalar_check": true,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "world",
+      "key": "dx3",
+      "scalar_check": true,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "world",
+      "key": "dx4",
+      "scalar_check": true,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "world",
+      "key": "dy1",
+      "scalar_check": true,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "world",
+      "key": "dy2",
+      "scalar_check": true,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "world",
+      "key": "dz",
+      "scalar_check": true,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "world",
+      "key": "theta",
+      "scalar_check": true,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "world",
+      "key": "phi",
+      "scalar_check": true,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "world",
+      "key": "alpha1",
+      "scalar_check": true,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "world",
+      "key": "alpha2",
+      "scalar_check": true,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "world",
+      "key": "z_planes",
+      "scalar_check": false,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "world",
+      "key": "r_inner",
+      "scalar_check": false,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "world",
+      "key": "r_outer",
+      "scalar_check": false,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "world",
+      "key": "file",
+      "scalar_check": false,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "world",
+      "key": "file_unit",
+      "scalar_check": true,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "world",
+      "key": "replica_axis",
+      "scalar_check": true,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "world",
+      "key": "replica_count",
+      "scalar_check": true,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "world",
+      "key": "replica_width",
+      "scalar_check": false,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "world",
+      "key": "replica_offset",
+      "scalar_check": false,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "world",
+      "key": "copies_file",
+      "scalar_check": false,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "world",
+      "key": "copies",
+      "scalar_check": true,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "world",
+      "key": "copy_step",
+      "scalar_check": false,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "volume.<name>",
+      "key": "name",
+      "scalar_check": false,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "volume.<name>",
+      "key": "parent",
+      "scalar_check": false,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "volume.<name>",
+      "key": "shape",
+      "scalar_check": false,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "volume.<name>",
+      "key": "size",
+      "scalar_check": false,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "volume.<name>",
+      "key": "parameters",
+      "scalar_check": false,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "volume.<name>",
+      "key": "material",
+      "scalar_check": false,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "volume.<name>",
+      "key": "position",
+      "scalar_check": false,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "volume.<name>",
+      "key": "rotation",
+      "scalar_check": false,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "volume.<name>",
+      "key": "sensitive",
+      "scalar_check": true,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "volume.<name>",
+      "key": "bias",
+      "scalar_check": true,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "volume.<name>",
+      "key": "region",
+      "scalar_check": false,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "volume.<name>",
+      "key": "placement",
+      "scalar_check": false,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "volume.<name>",
+      "key": "copyno",
+      "scalar_check": true,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "volume.<name>",
+      "key": "vis.color",
+      "scalar_check": false,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "volume.<name>",
+      "key": "vis.alpha",
+      "scalar_check": false,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "volume.<name>",
+      "key": "vis.visible",
+      "scalar_check": true,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "volume.<name>",
+      "key": "vis.wireframe",
+      "scalar_check": true,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "volume.<name>",
+      "key": "cut.<particle>",
+      "scalar_check": true,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "volume.<name>",
+      "key": "metadata.<name>",
+      "scalar_check": false,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "volume.<name>",
+      "key": "dx1",
+      "scalar_check": true,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "volume.<name>",
+      "key": "dx2",
+      "scalar_check": true,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "volume.<name>",
+      "key": "dx3",
+      "scalar_check": true,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "volume.<name>",
+      "key": "dx4",
+      "scalar_check": true,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "volume.<name>",
+      "key": "dy1",
+      "scalar_check": true,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "volume.<name>",
+      "key": "dy2",
+      "scalar_check": true,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "volume.<name>",
+      "key": "dz",
+      "scalar_check": true,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "volume.<name>",
+      "key": "theta",
+      "scalar_check": true,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "volume.<name>",
+      "key": "phi",
+      "scalar_check": true,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "volume.<name>",
+      "key": "alpha1",
+      "scalar_check": true,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "volume.<name>",
+      "key": "alpha2",
+      "scalar_check": true,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "volume.<name>",
+      "key": "z_planes",
+      "scalar_check": false,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "volume.<name>",
+      "key": "r_inner",
+      "scalar_check": false,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "volume.<name>",
+      "key": "r_outer",
+      "scalar_check": false,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "volume.<name>",
+      "key": "file",
+      "scalar_check": false,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "volume.<name>",
+      "key": "file_unit",
+      "scalar_check": true,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "volume.<name>",
+      "key": "replica_axis",
+      "scalar_check": true,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "volume.<name>",
+      "key": "replica_count",
+      "scalar_check": true,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "volume.<name>",
+      "key": "replica_width",
+      "scalar_check": false,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "volume.<name>",
+      "key": "replica_offset",
+      "scalar_check": false,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "volume.<name>",
+      "key": "copies_file",
+      "scalar_check": false,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "volume.<name>",
+      "key": "copies",
+      "scalar_check": true,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "volume.<name>",
+      "key": "copy_step",
+      "scalar_check": false,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "volume.<name>.boolean.<index>",
+      "key": "name",
+      "scalar_check": false,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "volume.<name>.boolean.<index>",
+      "key": "operation",
+      "scalar_check": false,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "volume.<name>.boolean.<index>",
+      "key": "shape",
+      "scalar_check": false,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "volume.<name>.boolean.<index>",
+      "key": "size",
+      "scalar_check": false,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "volume.<name>.boolean.<index>",
+      "key": "parameters",
+      "scalar_check": false,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "volume.<name>.boolean.<index>",
+      "key": "position",
+      "scalar_check": false,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_hierarchical_ini",
+      "section": "volume.<name>.boolean.<index>",
+      "key": "rotation",
+      "scalar_check": false,
+      "parser": "src/Geometry/GeometryConfig.cc:Load",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_simple_box_ini",
+      "section": "global",
+      "key": "version",
+      "scalar_check": true,
+      "parser": "src/Templates/SimpleBoxTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_simple_box_ini",
+      "section": "world",
+      "key": "size",
+      "scalar_check": false,
+      "parser": "src/Templates/SimpleBoxTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_simple_box_ini",
+      "section": "world",
+      "key": "material",
+      "scalar_check": false,
+      "parser": "src/Templates/SimpleBoxTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_simple_box_ini",
+      "section": "world",
+      "key": "shape",
+      "scalar_check": true,
+      "parser": "src/Templates/SimpleBoxTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_simple_box_ini",
+      "section": "target",
+      "key": "name",
+      "scalar_check": false,
+      "parser": "src/Templates/SimpleBoxTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_simple_box_ini",
+      "section": "target",
+      "key": "shape",
+      "scalar_check": false,
+      "parser": "src/Templates/SimpleBoxTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_simple_box_ini",
+      "section": "target",
+      "key": "size",
+      "scalar_check": false,
+      "parser": "src/Templates/SimpleBoxTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_simple_box_ini",
+      "section": "target",
+      "key": "material",
+      "scalar_check": false,
+      "parser": "src/Templates/SimpleBoxTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_simple_box_ini",
+      "section": "target",
+      "key": "position",
+      "scalar_check": false,
+      "parser": "src/Templates/SimpleBoxTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_simple_box_ini",
+      "section": "target",
+      "key": "rotation",
+      "scalar_check": false,
+      "parser": "src/Templates/SimpleBoxTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_simple_box_ini",
+      "section": "target",
+      "key": "sensitive",
+      "scalar_check": true,
+      "parser": "src/Templates/SimpleBoxTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_simple_box_ini",
+      "section": "target",
+      "key": "bias",
+      "scalar_check": true,
+      "parser": "src/Templates/SimpleBoxTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_simple_box_ini",
+      "section": "target",
+      "key": "region",
+      "scalar_check": false,
+      "parser": "src/Templates/SimpleBoxTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_simple_box_ini",
+      "section": "target",
+      "key": "cut.<particle>",
+      "scalar_check": true,
+      "parser": "src/Templates/SimpleBoxTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_simple_box_ini",
+      "section": "visual.world",
+      "key": "color",
+      "scalar_check": false,
+      "parser": "src/Templates/SimpleBoxTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_simple_box_ini",
+      "section": "visual.world",
+      "key": "alpha",
+      "scalar_check": false,
+      "parser": "src/Templates/SimpleBoxTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_simple_box_ini",
+      "section": "visual.world",
+      "key": "visible",
+      "scalar_check": true,
+      "parser": "src/Templates/SimpleBoxTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_simple_box_ini",
+      "section": "visual.world",
+      "key": "wireframe",
+      "scalar_check": true,
+      "parser": "src/Templates/SimpleBoxTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_simple_box_ini",
+      "section": "visual.target",
+      "key": "color",
+      "scalar_check": false,
+      "parser": "src/Templates/SimpleBoxTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_simple_box_ini",
+      "section": "visual.target",
+      "key": "alpha",
+      "scalar_check": false,
+      "parser": "src/Templates/SimpleBoxTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_simple_box_ini",
+      "section": "visual.target",
+      "key": "visible",
+      "scalar_check": true,
+      "parser": "src/Templates/SimpleBoxTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_simple_box_ini",
+      "section": "visual.target",
+      "key": "wireframe",
+      "scalar_check": true,
+      "parser": "src/Templates/SimpleBoxTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_layered_device_ini",
+      "section": "global",
+      "key": "version",
+      "scalar_check": true,
+      "parser": "src/Templates/LayeredDeviceTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_layered_device_ini",
+      "section": "world",
+      "key": "size",
+      "scalar_check": false,
+      "parser": "src/Templates/LayeredDeviceTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_layered_device_ini",
+      "section": "world",
+      "key": "material",
+      "scalar_check": false,
+      "parser": "src/Templates/LayeredDeviceTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_layered_device_ini",
+      "section": "world",
+      "key": "shape",
+      "scalar_check": false,
+      "parser": "src/Templates/LayeredDeviceTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_layered_device_ini",
+      "section": "layers",
+      "key": "count",
+      "scalar_check": true,
+      "parser": "src/Templates/LayeredDeviceTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_layered_device_ini",
+      "section": "layers",
+      "key": "names",
+      "scalar_check": false,
+      "parser": "src/Templates/LayeredDeviceTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_layered_device_ini",
+      "section": "layers",
+      "key": "auto_stack",
+      "scalar_check": true,
+      "parser": "src/Templates/LayeredDeviceTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_layered_device_ini",
+      "section": "layers",
+      "key": "axis",
+      "scalar_check": false,
+      "parser": "src/Templates/LayeredDeviceTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_layered_device_ini",
+      "section": "layers",
+      "key": "gap",
+      "scalar_check": true,
+      "parser": "src/Templates/LayeredDeviceTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_layered_device_ini",
+      "section": "layers",
+      "key": "z_start",
+      "scalar_check": true,
+      "parser": "src/Templates/LayeredDeviceTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_layered_device_ini",
+      "section": "layer.<name>",
+      "key": "thickness",
+      "scalar_check": true,
+      "parser": "src/Templates/LayeredDeviceTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_layered_device_ini",
+      "section": "layer.<name>",
+      "key": "xy",
+      "scalar_check": false,
+      "parser": "src/Templates/LayeredDeviceTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_layered_device_ini",
+      "section": "layer.<name>",
+      "key": "material",
+      "scalar_check": false,
+      "parser": "src/Templates/LayeredDeviceTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_layered_device_ini",
+      "section": "layer.<name>",
+      "key": "position",
+      "scalar_check": false,
+      "parser": "src/Templates/LayeredDeviceTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_layered_device_ini",
+      "section": "layer.<name>",
+      "key": "rotation",
+      "scalar_check": false,
+      "parser": "src/Templates/LayeredDeviceTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_layered_device_ini",
+      "section": "layer.<name>",
+      "key": "sensitive",
+      "scalar_check": true,
+      "parser": "src/Templates/LayeredDeviceTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_layered_device_ini",
+      "section": "layer.<name>",
+      "key": "bias",
+      "scalar_check": true,
+      "parser": "src/Templates/LayeredDeviceTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_layered_device_ini",
+      "section": "layer.<name>",
+      "key": "region",
+      "scalar_check": false,
+      "parser": "src/Templates/LayeredDeviceTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_layered_device_ini",
+      "section": "layer.<name>",
+      "key": "copyno",
+      "scalar_check": true,
+      "parser": "src/Templates/LayeredDeviceTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_layered_device_ini",
+      "section": "layer.<name>",
+      "key": "cut.<particle>",
+      "scalar_check": true,
+      "parser": "src/Templates/LayeredDeviceTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_layered_device_ini",
+      "section": "layer.<name>",
+      "key": "vis.color",
+      "scalar_check": false,
+      "parser": "src/Templates/LayeredDeviceTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_layered_device_ini",
+      "section": "layer.<name>",
+      "key": "vis.alpha",
+      "scalar_check": false,
+      "parser": "src/Templates/LayeredDeviceTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_layered_device_ini",
+      "section": "layer.<name>",
+      "key": "vis.visible",
+      "scalar_check": true,
+      "parser": "src/Templates/LayeredDeviceTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_layered_device_ini",
+      "section": "layer.<name>",
+      "key": "vis.wireframe",
+      "scalar_check": true,
+      "parser": "src/Templates/LayeredDeviceTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_layered_device_ini",
+      "section": "layer.<name>",
+      "key": "metadata.<name>",
+      "scalar_check": false,
+      "parser": "src/Templates/LayeredDeviceTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "generated_subset",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_array_ini",
+      "section": "global",
+      "key": "version",
+      "scalar_check": true,
+      "parser": "src/Templates/ArrayTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "preview_or_external_copy",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_array_ini",
+      "section": "world",
+      "key": "size",
+      "scalar_check": false,
+      "parser": "src/Templates/ArrayTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "preview_or_external_copy",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_array_ini",
+      "section": "world",
+      "key": "material",
+      "scalar_check": false,
+      "parser": "src/Templates/ArrayTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "preview_or_external_copy",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_array_ini",
+      "section": "world",
+      "key": "shape",
+      "scalar_check": false,
+      "parser": "src/Templates/ArrayTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "preview_or_external_copy",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_array_ini",
+      "section": "array",
+      "key": "name",
+      "scalar_check": false,
+      "parser": "src/Templates/ArrayTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "preview_or_external_copy",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_array_ini",
+      "section": "array",
+      "key": "shape",
+      "scalar_check": false,
+      "parser": "src/Templates/ArrayTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "preview_or_external_copy",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_array_ini",
+      "section": "array",
+      "key": "material",
+      "scalar_check": false,
+      "parser": "src/Templates/ArrayTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "preview_or_external_copy",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_array_ini",
+      "section": "array",
+      "key": "element_size",
+      "scalar_check": false,
+      "parser": "src/Templates/ArrayTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "preview_or_external_copy",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_array_ini",
+      "section": "array",
+      "key": "counts",
+      "scalar_check": false,
+      "parser": "src/Templates/ArrayTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "preview_or_external_copy",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_array_ini",
+      "section": "array",
+      "key": "pitch",
+      "scalar_check": false,
+      "parser": "src/Templates/ArrayTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "preview_or_external_copy",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_array_ini",
+      "section": "array",
+      "key": "center",
+      "scalar_check": false,
+      "parser": "src/Templates/ArrayTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "preview_or_external_copy",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_array_ini",
+      "section": "array",
+      "key": "sensitive",
+      "scalar_check": true,
+      "parser": "src/Templates/ArrayTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "preview_or_external_copy",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_array_ini",
+      "section": "array",
+      "key": "bias",
+      "scalar_check": true,
+      "parser": "src/Templates/ArrayTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "preview_or_external_copy",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_array_ini",
+      "section": "array",
+      "key": "region",
+      "scalar_check": false,
+      "parser": "src/Templates/ArrayTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "preview_or_external_copy",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_shielding_ini",
+      "section": "global",
+      "key": "version",
+      "scalar_check": true,
+      "parser": "src/Templates/ShieldingTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "preview_or_external_copy",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_shielding_ini",
+      "section": "world",
+      "key": "size",
+      "scalar_check": false,
+      "parser": "src/Templates/ShieldingTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "preview_or_external_copy",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_shielding_ini",
+      "section": "world",
+      "key": "material",
+      "scalar_check": false,
+      "parser": "src/Templates/ShieldingTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "preview_or_external_copy",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_shielding_ini",
+      "section": "world",
+      "key": "shape",
+      "scalar_check": false,
+      "parser": "src/Templates/ShieldingTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "preview_or_external_copy",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_shielding_ini",
+      "section": "shielding",
+      "key": "axis",
+      "scalar_check": false,
+      "parser": "src/Templates/ShieldingTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "preview_or_external_copy",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_shielding_ini",
+      "section": "shielding",
+      "key": "area",
+      "scalar_check": false,
+      "parser": "src/Templates/ShieldingTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "preview_or_external_copy",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_shielding_ini",
+      "section": "shielding",
+      "key": "start",
+      "scalar_check": true,
+      "parser": "src/Templates/ShieldingTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "preview_or_external_copy",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_shielding_ini",
+      "section": "shielding",
+      "key": "gap",
+      "scalar_check": true,
+      "parser": "src/Templates/ShieldingTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "preview_or_external_copy",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_shielding_ini",
+      "section": "shielding",
+      "key": "layers",
+      "scalar_check": false,
+      "parser": "src/Templates/ShieldingTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "preview_or_external_copy",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_shielding_ini",
+      "section": "shield.<name>",
+      "key": "thickness",
+      "scalar_check": true,
+      "parser": "src/Templates/ShieldingTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "preview_or_external_copy",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_shielding_ini",
+      "section": "shield.<name>",
+      "key": "material",
+      "scalar_check": false,
+      "parser": "src/Templates/ShieldingTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "preview_or_external_copy",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_shielding_ini",
+      "section": "shield.<name>",
+      "key": "bias",
+      "scalar_check": true,
+      "parser": "src/Templates/ShieldingTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "preview_or_external_copy",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_shielding_ini",
+      "section": "shield.<name>",
+      "key": "sensitive",
+      "scalar_check": true,
+      "parser": "src/Templates/ShieldingTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "preview_or_external_copy",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_shielding_ini",
+      "section": "shield.<name>",
+      "key": "region",
+      "scalar_check": false,
+      "parser": "src/Templates/ShieldingTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "preview_or_external_copy",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_shielding_ini",
+      "section": "shield.<name>",
+      "key": "shape",
+      "scalar_check": true,
+      "parser": "src/Templates/ShieldingTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "preview_or_external_copy",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_shielding_ini",
+      "section": "detector",
+      "key": "size",
+      "scalar_check": false,
+      "parser": "src/Templates/ShieldingTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "preview_or_external_copy",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_shielding_ini",
+      "section": "detector",
+      "key": "material",
+      "scalar_check": false,
+      "parser": "src/Templates/ShieldingTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "preview_or_external_copy",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_shielding_ini",
+      "section": "detector",
+      "key": "position",
+      "scalar_check": false,
+      "parser": "src/Templates/ShieldingTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "preview_or_external_copy",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_shielding_ini",
+      "section": "detector",
+      "key": "sensitive",
+      "scalar_check": true,
+      "parser": "src/Templates/ShieldingTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "preview_or_external_copy",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_shielding_ini",
+      "section": "detector",
+      "key": "region",
+      "scalar_check": false,
+      "parser": "src/Templates/ShieldingTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "preview_or_external_copy",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_shielding_ini",
+      "section": "detector",
+      "key": "shape",
+      "scalar_check": true,
+      "parser": "src/Templates/ShieldingTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "preview_or_external_copy",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_gdml_ini",
+      "section": "global",
+      "key": "version",
+      "scalar_check": true,
+      "parser": "src/Templates/GDMLTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "preview_or_external_copy",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_gdml_ini",
+      "section": "gdml",
+      "key": "file",
+      "scalar_check": false,
+      "parser": "src/Templates/GDMLTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "preview_or_external_copy",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_gdml_ini",
+      "section": "gdml",
+      "key": "validate",
+      "scalar_check": true,
+      "parser": "src/Templates/GDMLTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "preview_or_external_copy",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_gdml_ini",
+      "section": "gdml",
+      "key": "sensitive_volumes",
+      "scalar_check": false,
+      "parser": "src/Templates/GDMLTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "preview_or_external_copy",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_gdml_ini",
+      "section": "gdml",
+      "key": "bias_volumes",
+      "scalar_check": false,
+      "parser": "src/Templates/GDMLTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "preview_or_external_copy",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    },
+    {
+      "file": "geometry_gdml_ini",
+      "section": "gdml",
+      "key": "world_name",
+      "scalar_check": false,
+      "parser": "src/Templates/GDMLTemplate.cc:BuildNodes",
+      "validation": "configure; geometry_build; transport",
+      "gui": {
+        "editable": "preview_or_external_copy",
+        "note": "以 geometry editor/writer 白名单为准；A5实体与放置字段仅预览/原文复制，trd 普通体积已开放"
+      },
+      "tests": [
+        "scripts/test_geometry_config_diagnostics.py",
+        "scripts/test_geometry_a5.py",
+        "scripts/test_gui_backend_agreement.py"
+      ]
+    }
+  ],
+  "excluded": {
+    "main_ini": [
+      "field",
+      "field.<name>",
+      "biasing",
+      "biasing.xs",
+      "biasing.xs.<particle>.<process>"
+    ],
+    "reason": "场与偏置不属于本次约定迁移；保持现有解析与已知键表。"
+  }
+}

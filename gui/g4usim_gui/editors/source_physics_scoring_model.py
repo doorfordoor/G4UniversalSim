@@ -5,7 +5,7 @@ import re
 from dataclasses import asdict, dataclass, field
 
 from g4usim_gui.core.capability_messages import capability_message
-from g4usim_gui.core.config_schema import check_value, spec
+from g4usim_gui.core.config_schema import check_value, spec, quantity
 from g4usim_gui.models.physics_model import PhysicsSettings
 from g4usim_gui.models.scoring_model import ScoringSettings
 from g4usim_gui.models.source_model import SourceSettings
@@ -189,6 +189,10 @@ def validate_source_model(model: SourceEditableModel) -> SourceEditableModel:
         model.errors.append("particle is required")
     if not model.energy.strip():
         model.errors.append("energy is required")
+    else:
+        problem = check_value("source", "energy", model.energy)
+        if problem:
+            model.errors.append(problem)
     for name, text in (("energy", model.energy), ("position", model.position),
                        ("direction", model.direction), ("radius", model.radius),
                        ("halfx", model.halfx), ("halfy", model.halfy)):
@@ -206,6 +210,10 @@ def validate_source_model(model: SourceEditableModel) -> SourceEditableModel:
     if mode == "point" and shape != "point":
         model.warnings.append("point source mode ignores source_shape; it will be treated as a point")
     if mode == "plane":
+        if shape == "circle" and model.radius.strip():
+            problem = check_value("source", "radius", model.radius)
+            if problem:
+                model.errors.append(problem)
         if not _has_three_components(model.normal):
             model.errors.append("plane normal should contain 3 components")
         elif not _direction_is_nonzero(model.normal):
@@ -274,6 +282,8 @@ def validate_physics_model(model: PhysicsEditableModel) -> PhysicsEditableModel:
         model.warnings.append("reference list is not in the GUI quick list; Geant4 validates it at initialization")
     if not model.default_cut.strip():
         model.errors.append("default cut is required")
+    elif check_value("physics", "default_cut", model.default_cut):
+        model.errors.append(check_value("physics", "default_cut", model.default_cut))
     elif not _looks_like_value_with_unit(model.default_cut):
         model.warnings.append("default cut should include a value and unit, for example '1 mm'")
     if model.enable_biasing_physics:
@@ -296,6 +306,14 @@ def validate_scoring_model(model: ScoringEditableModel) -> ScoringEditableModel:
         model.errors.append("histogram min is required")
     if not model.hist_max.strip():
         model.errors.append("histogram max is required")
+    for key, value in (("bins", str(model.hist_bins)), ("min", model.hist_min), ("max", model.hist_max)):
+        if value.strip():
+            problem = check_value("scoring.edep", key, value)
+            if problem:
+                model.errors.append(problem)
+    low, high = quantity(model.hist_min, "energy"), quantity(model.hist_max, "energy")
+    if low is not None and high is not None and high <= low:
+        model.errors.append("histogram max must be greater than min")
     if not model.edep and (model.raw_histogram or model.weighted_histogram):
         model.warnings.append("edep scorer is disabled; edep histogram settings will not produce output")
     if model.edep and not (model.raw_histogram or model.weighted_histogram):
@@ -358,15 +376,7 @@ def _looks_like_value_with_unit(value: str) -> bool:
 
 
 def _is_positive_length(value: str) -> bool:
-    # Match the C++ UnitParser length vocabulary before package generation.
-    match = re.fullmatch(
-        r"\s*([+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?)\s*(?:\*\s*)?(?:nm|um|mm|cm|m)?\s*",
-        value,
-    )
-    if not match:
-        return False
-    number = float(match.group(1))
-    return math.isfinite(number) and number > 0.0
+    return check_value("source", "halfx", value) is None
 
 
 def _looks_like_angle(value: str) -> bool:

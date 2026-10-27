@@ -1,4 +1,5 @@
 #include "Physics/PhysicsManager.hh"
+#include "Config/ConfigSchemaTable.hh"
 
 #include "Biasing/BiasingManager.hh"
 #include "Config/ConfigManager.hh"
@@ -604,7 +605,7 @@ void PhysicsManager::LoadFromConfig(const ConfigManager& config)
         const std::string section = "physics.radioactive_decay";
         for (const auto& key : config.GetKeys(section)) {
             const std::string name = StringUtils::ToLower(StringUtils::Trim(key));
-            if (name != "enabled" && name != "time_threshold") {
+            if (!ConfigSchema::HasKey("main_ini", "physics.radioactive_decay", name)) {
                 throw std::runtime_error("unknown key [" + section + "]/" + key + "; supported: enabled, time_threshold");
             }
         }

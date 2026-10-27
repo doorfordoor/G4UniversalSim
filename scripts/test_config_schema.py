@@ -2,7 +2,7 @@
 
 1. The generated files (C++ key table, GUI data module, support-matrix tables) are up to
    date with schema/config_schema.json.
-2. For every field of the migrated sections, and every alias, a set of values derived
+2. For every field of the independent startup sections, and every alias, a set of values derived
    from its type and limits (valid ones, boundary ones, and wrong ones: bad syntax, out
    of range, unknown unit, not allowed) goes through the GUI's schema check
    (g4usim_gui.core.config_schema.check_value) and through the backend
@@ -62,7 +62,7 @@ def candidates(data: dict, work: Path) -> list[str]:
                 "xml", ""]
     if kind == "energy":
         return ["5", "5 GeV", "5*keV", "0 MeV", "1e-3 MeV", "0x10 MeV", ".5 eV", "-1 MeV", "5 kg", "5 Me V",
-                "nan MeV", "inf", "", "1 TeV", "5 mev"]
+                "nan MeV", "inf", "", "1 TeV", "5 mev", "1e308 GeV", "١ MeV"]
     if kind == "existing_file":
         existing = work / "exists.mac"
         existing.write_text("# empty\n", encoding="utf-8")
@@ -119,6 +119,18 @@ def check_gui(failures: list[str]) -> None:
     apply_language(panel, "en")
     if not english.startswith("[run] seed: Random seed") or "随机数种子" not in chinese or panel.seed.toolTip() != english:
         failures.append(f"GUI tooltips: {english!r} / {chinese!r}")
+    from g4usim_gui.widgets.config.run_config import RunConfigEditor
+    editor = RunConfigEditor()
+    apply_language(editor, "en")
+    energy_en = editor.source_editor_energy.toolTip()
+    apply_language(editor, "zh_CN")
+    energy_zh = editor.source_editor_energy.toolTip()
+    apply_language(editor, "en")
+    if "Mono energy" not in energy_en or "单能" not in energy_zh or editor.source_editor_energy.toolTip() != energy_en:
+        failures.append("Source schema tooltip does not follow language changes")
+    if "Positive default production cut" not in editor.physics_editor_default_cut.toolTip():
+        failures.append("Physics default-cut tooltip does not come from the schema")
+    editor.deleteLater()
     panel.deleteLater()
     app.processEvents()
     print("GUI: validators and tooltips follow the schema")
@@ -141,6 +153,8 @@ def main() -> int:
         work = Path(temp)
         jobs = []          # (label, section, key, value)
         for section, section_spec in SCHEMA["main_ini"].items():
+            if not section_spec.get("independent"):
+                continue
             for key, data in section_spec["keys"].items():
                 for name in [key, *data.get("aliases", [])]:
                     for value in candidates(data, work):
@@ -173,6 +187,8 @@ def main() -> int:
         # 3. every field and alias is consumed; unknown keys are reported
         consumed = 0
         for section, section_spec in SCHEMA["main_ini"].items():
+            if not section_spec.get("independent"):
+                continue
             for key, data in section_spec["keys"].items():
                 value = next(v for v in candidates(data, work) if v and check_value(section, key, v, base_dir=ROOT) is None)
                 for name in [key, *data.get("aliases", [])]:
@@ -184,7 +200,7 @@ def main() -> int:
             accepted, stderr, _ = inspect(work, "unknown", f"[{section}]\nnot_a_field = 1\n")
             if f"[{section}]/not_a_field" not in stderr:
                 failures.append(f"[{section}]/not_a_field: the backend does not report an unknown key")
-        print(f"keys: {consumed} fields and aliases consumed; unknown keys reported in {len(SCHEMA['main_ini'])} sections")
+        print(f"keys: {consumed} fields and aliases consumed; unknown keys reported in {sum(bool(s.get('independent')) for s in SCHEMA['main_ini'].values())} independent sections")
 
         # 4. defaults and alias precedence, where --inspect-run reports the value
         accepted, _, defaults = inspect(work, "defaults", "[run]\n")
@@ -205,6 +221,9 @@ def main() -> int:
                 failures.append(f"[{section}]/{alias}: alias alone gives {only_alias.get(name, {}).get('value')!r}, "
                                 f"with {key} it gives {both.get(name, {}).get('value')!r} (expected 42 and 43)")
         print("defaults and alias precedence checked")
+
+    from test_config_schema_context import check_contexts
+    failures.extend(check_contexts(EXE))
 
     if failures:
         print("\nFAILURES:")

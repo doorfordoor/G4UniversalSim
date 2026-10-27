@@ -1,5 +1,7 @@
 # G4UniversalSim GUI Agent 开发约束
 
+2026-10-26 E2：`core/config_schema.py` 只做字段描述/标量必要条件；`structured` 会要求上下文校验，不能吞掉这个结果并当作可运行。动态源/区域/网格及独立几何模板可查询描述，但不扩大 editor/writer 白名单。源长度/能量、physics.default_cut 和 Edep 直方图复用 schema；跨字段 max>min 等仍由 editor 验证。材料已知键从生成数据读取，元素/同位素仍原文保留。writer 不再生成未消费的 physics.mode，参考模式仍由 reference 决定。四份生成产物一律由 scripts/generate_config_schema.py 更新。
+
 2026-10-22 D 安装包：源码与安装包路径只经 `core/install_layout.py` 判断（冻结时 `sys.executable` 是 GUI 本身）：应用根、默认后端（包内 `bin/` 或 `build_vs2026/Release`）、运行包目录（冻结时为“文档\G4UniversalSim\gui_runs”）、脚本目录与运行辅助脚本的 Python（冻结时找 `G4USIM_PYTHON` 或 PATH 中的 python，找不到则禁用并说明）。不要再用 `Path(__file__).parents[...]` 或 `sys.executable` 定位仓库与 Python。`app.py --self-test <报告.json>` 供打包验证，冻结窗口程序没有控制台，必须写文件。
 
 2026-10-22 C3 参数扫描：`core/scan.py`（无 Qt）只扫描配置页编辑器能生成的设置，逐点 `apply_value` 深拷贝基准，先 `validate_scan` 全部通过再写任何文件，再用 `create_run_package` 生成普通运行包并写 `scan.json`（G4UniversalSimScan v1）；`core/scan_runner.py` 逐点复用 `G4USimRunner`（日志、`run_status.json`、`evaluate_run_result` 判定一致），以 attempt 令牌保证每点只结束一次（启动失败只有 errorOccurred、崩溃两者都有），并传入该点自己的 seed，不能用基准 seed 覆盖 `run.seed` 扫描。结果只读该点合并的 `scorer_statistics.csv`。QWidget 子类属性不得与 Qt 虚方法同名（`metric` 曾覆盖 `QPaintDevice.metric()` 导致绘制时访问违例）。冒烟测试中的计时器要可停止，退出前在 QApplication 仍存在时删除带 QProcess 的页面。专项 `smoke_scans.py`、`smoke_scans_backend.py`。

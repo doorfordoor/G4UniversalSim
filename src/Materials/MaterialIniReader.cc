@@ -1,3 +1,4 @@
+#include "Config/ConfigSchemaTable.hh"
 #include "Materials/MaterialIniReader.hh"
 
 #include "Materials/MaterialCommandParser.hh"
@@ -277,11 +278,11 @@ void MaterialIniReader::ParseSections(
     const std::map<std::string, std::size_t>& sectionLines
 )
 {
-    const std::vector<std::string> nistKeys = {"materials"};
-    const std::vector<std::string> isotopeKeys = {"symbol", "z", "n", "a"};
-    const std::vector<std::string> elementKeys = {"symbol", "isotopes", "z", "a"};
-    const std::vector<std::string> materialKeys = {"type", "mode", "density", "components", "state", "temperature", "pressure"};
-    const std::vector<std::string> aliasKeys = {"material"};
+    const auto nistKeys = ConfigSchema::Keys("materials_ini", "nist");
+    const auto isotopeKeys = ConfigSchema::Keys("materials_ini", "isotope.<name>");
+    const auto elementKeys = ConfigSchema::Keys("materials_ini", "element.<name>");
+    const auto materialKeys = ConfigSchema::Keys("materials_ini", "material.<name>");
+    const auto aliasKeys = ConfigSchema::Keys("materials_ini", "<alias>");
 
     for (const auto& sectionPair : sections) {
         const std::string& section = sectionPair.first;

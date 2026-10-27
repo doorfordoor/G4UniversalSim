@@ -1,3 +1,4 @@
+#include "Config/ConfigSchemaTable.hh"
 #include "Geometry/GeometryConfigDiagnostic.hh"
 
 #include "Config/IniReader.hh"
@@ -91,11 +92,6 @@ std::set<std::string> SplitNames(const std::vector<IniFieldInfo>& fields, const 
 bool IsCut(const std::string& key)
 {
     return StringUtils::StartsWith(key, "cut.");
-}
-
-bool IsKnownVisual(const std::string& key)
-{
-    return key == "vis.color" || key == "vis.alpha" || key == "vis.visible" || key == "vis.wireframe";
 }
 
 void RejectDuplicateGeometryVersion(const std::string& filename)
@@ -239,56 +235,22 @@ void CollectGeometryConfigDiagnostics(
     const auto layerNames = SplitNames(fields, "layers", "names");
     const auto shieldNames = SplitNames(fields, "shielding", "layers");
     const auto known = [&](const std::string& section, const std::string& key) {
-        if (mode == "simple_box") {
-            if (section == "world") return std::set<std::string>{"size", "material"}.count(key) > 0;
-            if (section == "target") return key == "name" || key == "shape" || key == "size" || key == "material"
-                || key == "position" || key == "rotation" || key == "sensitive" || key == "bias" || key == "region" || IsCut(key);
-            if (section == "visual.world" || section == "visual.target") return key == "color" || key == "alpha" || key == "visible" || key == "wireframe";
-            return false;
+        std::string selected = mode;
+        if (mode == "hierarchical_boolean" || mode == "boolean_hierarchical" || mode == "boolean") selected = "hierarchical";
+        const std::string file = "geometry_" + selected + "_ini";
+        std::string pattern = section;
+        if (selected == "hierarchical") {
+            if (IsBooleanSection(section)) pattern = "volume.<name>.boolean.<index>";
+            else if (IsOrdinaryHierarchicalSection(section) && section != "world") pattern = "volume.<name>";
+        } else if (selected == "layered_device" && StringUtils::StartsWith(section, "layer.") && layerNames.count(section.substr(6))) {
+            pattern = "layer.<name>";
+        } else if (selected == "shielding" && StringUtils::StartsWith(section, "shield.") && shieldNames.count(section.substr(7))) {
+            pattern = "shield.<name>";
         }
-        if (mode == "layered_device") {
-            if (section == "world") return key == "size" || key == "material" || key == "shape";
-            if (section == "layers") return key == "count" || key == "names" || key == "auto_stack" || key == "axis" || key == "gap" || key == "z_start";
-            if (StringUtils::StartsWith(section, "layer.") && layerNames.count(section.substr(6))) {
-                return key == "thickness" || key == "xy" || key == "material" || key == "position" || key == "rotation"
-                    || key == "sensitive" || key == "bias" || key == "region" || key == "copyno" || IsCut(key)
-                    || IsKnownVisual(key) || IsCanonicalMetadata(key);
-            }
-            return false;
-        }
-        if (mode == "array") {
-            if (section == "world") return key == "size" || key == "material" || key == "shape";
-            if (section == "array") return key == "name" || key == "shape" || key == "material" || key == "element_size"
-                || key == "counts" || key == "pitch" || key == "center" || key == "sensitive" || key == "bias" || key == "region";
-            return false;
-        }
-        if (mode == "shielding") {
-            if (section == "world") return key == "size" || key == "material" || key == "shape";
-            if (section == "shielding") return key == "axis" || key == "area" || key == "start" || key == "gap" || key == "layers";
-            if (StringUtils::StartsWith(section, "shield.") && shieldNames.count(section.substr(7))) {
-                return key == "thickness" || key == "material" || key == "bias" || key == "sensitive" || key == "region";
-            }
-            if (section == "detector") return key == "size" || key == "material" || key == "position" || key == "sensitive" || key == "region";
-            return false;
-        }
-        if (mode == "gdml") {
-            return section == "gdml" && (key == "file" || key == "validate" || key == "sensitive_volumes"
-                                         || key == "bias_volumes" || key == "world_name");
-        }
-        if (mode == "hierarchical" || mode == "hierarchical_boolean" || mode == "boolean_hierarchical" || mode == "boolean") {
-            if (IsBooleanSection(section)) return key == "name" || key == "operation" || key == "shape" || key == "size" || key == "parameters" || key == "position" || key == "rotation";
-            if (IsOrdinaryHierarchicalSection(section)) {
-                return key == "name" || key == "parent" || key == "shape" || key == "size" || key == "parameters" || key == "material"
-                    || key == "position" || key == "rotation" || key == "sensitive" || key == "bias" || key == "region"
-                    || key == "placement" || key == "copyno" || key == "copyNo" || IsKnownVisual(key)
-                    || IsCut(key) || IsCanonicalMetadata(key)
-                    // roadmap A5 shape and placement fields
-                    || key == "z_planes" || key == "r_inner" || key == "r_outer" || key == "file" || key == "file_unit"
-                    || key == "replica_axis" || key == "replica_count" || key == "replica_width" || key == "replica_offset"
-                    || key == "copies_file" || key == "copies" || key == "copy_step";
-            }
-        }
-        return false;
+        std::string field = key;
+        if (IsCut(key)) field = "cut.<particle>";
+        else if (IsCanonicalMetadata(key)) field = "metadata.<name>";
+        return ConfigSchema::HasKey(file, pattern, field, true);
     };
 
     const auto validSection = [&](const std::string& section) {

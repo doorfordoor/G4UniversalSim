@@ -1,3 +1,4 @@
+#include "Config/ConfigSchemaTable.hh"
 #include "Templates/LayeredDeviceTemplate.hh"
 
 #include "Config/ConfigManager.hh"
@@ -45,13 +46,11 @@ void ApplyVisual(const ConfigManager& config, const std::string& section, Volume
 
 bool IsKnownLayerKey(const std::string& key)
 {
-    static const std::set<std::string> keys = {
-        "thickness", "xy", "material", "position", "rotation", "sensitive", "bias", "region",
-        "cut.gamma", "cut.e-", "cut.e+", "cut.proton",
-        "vis.color", "vis.alpha", "vis.visible", "vis.wireframe",
-        "copyno"
-    };
-    return keys.count(StringUtils::ToLower(StringUtils::Trim(key))) > 0;
+    const std::string name = StringUtils::ToLower(StringUtils::Trim(key));
+    if (name == "cut.gamma" || name == "cut.e-" || name == "cut.e+" || name == "cut.proton") return true;
+    // Metadata must still be retained as user properties, not consumed here.
+    return name != "metadata.<name>" && name != "cut.<particle>"
+        && ConfigSchema::HasKey("geometry_layered_device_ini", "layer.<name>", name);
 }
 
 std::string ValidateCopyNo(const std::string& text, const std::string& section)

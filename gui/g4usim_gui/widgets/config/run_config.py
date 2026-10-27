@@ -113,6 +113,22 @@ class RunConfigEditor(QWidget):
         self.scoring_editor_particle_summary.setChecked(True)
         self.scoring_editor_auto_create = QCheckBox("Auto-create default scorers")
         self.scoring_editor_auto_create.setChecked(True)
+        # Use the same field hints in Setup and Run Config, including language changes.
+        for widget, section, key in (
+            (self.source_editor_energy, "source", "energy"),
+            (self.source_editor_preset, "source", "preset"),
+            (self.source_editor_particle, "source", "particle"),
+            (self.source_editor_direction, "source", "direction"),
+            (self.source_editor_radius, "source", "radius"),
+            (self.source_editor_halfx, "source", "halfx"),
+            (self.source_editor_halfy, "source", "halfy"),
+            (self.physics_editor_reference, "physics", "reference"),
+            (self.physics_editor_default_cut, "physics", "default_cut"),
+            (self.scoring_editor_bins, "scoring.edep", "bins"),
+            (self.scoring_editor_min, "scoring.edep", "min"),
+            (self.scoring_editor_max, "scoring.edep", "max"),
+        ):
+            set_schema_tooltip(widget, section, key)
         self.scoring_editor_messages = QPlainTextEdit()
         self.scoring_editor_messages.setReadOnly(True)
         layout = QVBoxLayout(self)

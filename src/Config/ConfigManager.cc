@@ -20,29 +20,14 @@ bool StartsWith(const std::string& value, const std::string& prefix)
 }
 
 // Keys of the sections not yet migrated to schema/config_schema.json (roadmap E2); the
-// migrated sections ([run], [general], [output]) come from the generated table below.
+// migrated static sections come from the generated table below.
 std::map<std::string, std::vector<std::string>> BuildKnownKeys()
 {
     std::map<std::string, std::vector<std::string>> keys = {
-        {"materials", {"file", "materialfile", "config", "configfile"}},
-        {"geometry", {"template", "templatename", "check_overlaps", "checkoverlaps", "default_world_material", "defaultworldmaterial", "config", "configfile"}},
-        {"physics", {"reference", "em", "list", "modules", "extra_modules", "default_cut", "biasing", "verbose"}},
-        {"physics.microelec", {"enabled", "region", "electron_capture", "electron_capture_threshold"}},
-        {"physics.radioactive_decay", {"enabled", "time_threshold"}},
         {"field", {"magnetic", "electric", "magnetic_map", "electric_map", "min_step", "delta_chord", "delta_one_step",
                    "delta_intersection"}},
-        {"scoring", {"enabled", "hits", "event_edep", "edep", "let", "dose", "fluence", "displacement",
-                     "auto_create_default_scorers", "verbose"}},
-        {"scoring.edep", {"raw_histogram", "weighted_histogram", "bins", "min", "max", "volume_summary", "particle_summary"}},
-        {"scoring.let", {"particles"}},
         {"biasing", {"enabled"}},
         {"biasing.xs", {"particles", "processes", "volumes", "factor", "only_primary", "apply_to_secondaries", "min_weight", "max_interactions"}},
-        {"source", {"preset", "particle", "energy", "verbose", "isotropic", "position_type", "position", "radius", "center", "z", "direction",
-                    "shape", "halfx", "halfy", "inner_radius", "ion", "energy_type", "energy_sigma", "energy_min", "energy_max", "alpha",
-                    "ezero", "spectrum_file", "halfz", "beam_sigma", "beam_sigma_x", "beam_sigma_y", "rot1", "rot2", "confine", "angular",
-                    "min_theta", "max_theta", "angular_sigma", "angular_sigma_x", "angular_sigma_y", "focus",
-                    "phase_space_file", "phase_space_recycle"}},
-        {"phase_space", {"volume", "particles", "kill"}},
     };
     for (const char* section : ConfigSchema::kMainIniSections) {
         if (keys.count(section)) throw std::logic_error(std::string("section [") + section + "] is in the schema and the hand list");
@@ -99,25 +84,21 @@ bool IsKnownDynamicSection(const std::string& section)
 
 std::vector<std::string> DynamicKeys(const std::string& section)
 {
-    if (StartsWith(section, "physics.cuts")) return {"gamma", "e-", "e+", "proton", "alpha"};
+    if (StartsWith(section, "physics.cuts")) return ConfigSchema::Keys("main_ini", "physics.cuts", true);
     if (StartsWith(section, "physics.region.")) {
-        return {"gamma", "e-", "e+", "proton", "max_step", "max_track_length", "max_time", "min_kinetic_energy", "volumes"};
+        return ConfigSchema::Keys("main_ini", "physics.region.<name>");
     }
     if (StartsWith(section, "scoring.mesh.")) {
         const std::string suffix = section.substr(std::string("scoring.mesh.").size());
-        if (suffix.find('.') == std::string::npos) return {"shape", "size", "bins", "center"};
-        return {"type", "unit", "particles", "energy_min", "energy_max"};
+        if (suffix.find('.') == std::string::npos) return ConfigSchema::Keys("main_ini", "scoring.mesh.<name>");
+        return ConfigSchema::Keys("main_ini", "scoring.mesh.<name>.<quantity>");
     }
     if (StartsWith(section, "field.")) {
         return {"magnetic", "electric", "magnetic_map", "electric_map", "volumes", "min_step", "delta_chord",
                 "delta_one_step", "delta_intersection"};
     }
     if (StartsWith(section, "source.")) {
-        return {"preset", "particle", "energy", "isotropic", "position_type", "position", "radius", "center", "direction",
-                "shape", "halfx", "halfy", "inner_radius", "intensity", "ion", "energy_type", "energy_sigma", "energy_min",
-                "energy_max", "alpha", "ezero", "spectrum_file", "halfz", "beam_sigma", "beam_sigma_x", "beam_sigma_y",
-                "rot1", "rot2", "confine", "angular", "min_theta", "max_theta", "angular_sigma", "angular_sigma_x",
-                "angular_sigma_y", "focus"};
+        return ConfigSchema::Keys("main_ini", "source.<name>", true);
     }
     if (StartsWith(section, "biasing.xs.")) return {"particle", "process", "name", "enabled", "factor", "only_primary", "apply_to_secondaries", "min_weight", "max_interactions", "volumes"};
     return {};

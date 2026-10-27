@@ -4,6 +4,10 @@ Agreed 2026-10-21. Order of work: **Phase A core functions → Phase B scenario 
 
 This file is the single source of truth for progress. Every work session updates the status table and the progress log at the end.
 
+2026-10-24 接续计划：见[开发接续计划](开发接续计划.md)。该计划细化 E2 余项、F6/F2 依赖、阶段验收及历史证据边界；本文件继续维护唯一的阶段状态。E2 已于 2026-10-25 启动整阶段实施，验收证据见 [E2接续检查点](E2接续检查点.md)。
+
+2026-10-24 交付节奏：按用户要求，以 E2、F6、F2 等完整工作项持续推进并交付。模块拆分与中间测试属于内部实施步骤，不要求用户逐项发出继续指令；必要决策和真实阻塞仍需明确报告。
+
 ## Status
 
 | Item | Status | Commit |
@@ -216,6 +220,8 @@ H4–H8 if the user's applications favour some of them.
 - Stop and ask the user instead of guessing when a choice is hard to undo or changes physics results or defaults.
 
 ## Progress log
+
+- 2026-10-24：根据 Claude 项目记录、会话及当前提交 `7640721` 整理中文接续计划。下一开发项为 E2 的 `[source]` 迁移，先复核本机基线，再逐模块推进。F2 的可变参数以生命周期实测建立白名单；E3 补充现有静态/GUI CI 未覆盖的 Geant4 后端。仅规划，未新增功能、未重新执行全套验收。
 
 - 2026-10-23: E2 started: `schema/config_schema.json` with `[run]`, `[general]`, `[output]`; generator for the C++ key table (ConfigManager's known keys for migrated sections), the GUI data module and the matrix field tables (`--check` in the test); GUI run-settings/trajectory validation and tooltips from the schema. `scripts/test_config_schema.py` (suite `config_schema`): 255 values agree between the schema check and `--inspect-run`, 22 fields/aliases consumed, unknown keys reported, defaults and alias precedence. Found and fixed: 32-bit int overflow clamped silently (seed), empty `format`/`name`/`dir` mean the default, GUI seed range. Next modules: [source], [physics], [scoring], then geometry/material files.
 - 2026-10-23: G4 + G5 done: `preview3d/sketch_geometry.py` (Qt-free) parses values as the backend (unitless = mm/rad), composes `G4PVPlacement` transforms through the parent chain and tessellates every backend solid with segments; replica/parameterised copies and boolean results are listed as not drawn. `scripts/test_sketch_accuracy.py` (suite `gui_sketch_accuracy`): 50 fixtures, 130 volume boxes within 1.5 % of the Geant4 mesh, 20 boolean targets by containment; a wrong rotation convention fails it. Source glyphs from the GPS settings (XY plane, fixed/isotropic, preview-only modes faint), also over the Geant4 geometry; `smoke_source_glyphs.py` (suite `gui_source_glyphs`) checks 4 x 200 real primaries against the glyphs via H1 trajectories.

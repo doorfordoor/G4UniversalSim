@@ -83,6 +83,19 @@ class SetupPanel(QScrollArea):
         self.hist_bins.setValue(100)
         self.hist_min = QLineEdit("0 eV")
         self.hist_max = QLineEdit("10 MeV")
+        # Use the same field hints in Setup and Run Config, including language changes.
+        for widget, section, key in (
+            (self.source_energy, "source", "energy"),
+            (self.source_particle, "source", "particle"),
+            (self.source_preset, "source", "preset"),
+            (self.source_direction, "source", "direction"),
+            (self.physics_reference, "physics", "reference"),
+            (self.default_cut, "physics", "default_cut"),
+            (self.hist_bins, "scoring.edep", "bins"),
+            (self.hist_min, "scoring.edep", "min"),
+            (self.hist_max, "scoring.edep", "max"),
+        ):
+            set_schema_tooltip(widget, section, key)
         self.validate_button = QPushButton("Validate")
         self.generate_button = QPushButton("Generate Package")
         self.generate_run_button = QPushButton("Generate and Run")

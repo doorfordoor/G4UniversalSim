@@ -75,7 +75,8 @@ def main() -> int:
     assert "[source]" in text
     assert "position_type = point" in text
     assert "[physics]" in text
-    assert "mode = reference" in text
+    assert "mode = reference" not in text  # not consumed by the backend
+    assert "[physics]" in text and "reference = " in text
     assert "[scoring.edep]" in text
     assert "let = false" in text
     assert "dose = false" in text
