@@ -1,0 +1,163 @@
+{
+  "pairs": [
+    {
+      "iteration": 0,
+      "order": [
+        "baseline",
+        "candidate"
+      ],
+      "baseline_seconds": 5.34789069999988,
+      "candidate_seconds": 5.433700399999907,
+      "ratio": 1.01604552239634,
+      "candidate_running_updates": 8
+    },
+    {
+      "iteration": 1,
+      "order": [
+        "candidate",
+        "baseline"
+      ],
+      "baseline_seconds": 5.272270299999946,
+      "candidate_seconds": 5.3228807999998935,
+      "ratio": 1.0095993750547934,
+      "candidate_running_updates": 8
+    },
+    {
+      "iteration": 2,
+      "order": [
+        "baseline",
+        "candidate"
+      ],
+      "baseline_seconds": 5.476441100000102,
+      "candidate_seconds": 5.760465999999724,
+      "ratio": 1.0518630429531355,
+      "candidate_running_updates": 9
+    },
+    {
+      "iteration": 3,
+      "order": [
+        "candidate",
+        "baseline"
+      ],
+      "baseline_seconds": 5.298539500000061,
+      "candidate_seconds": 5.495840900000076,
+      "ratio": 1.0372369404814312,
+      "candidate_running_updates": 8
+    },
+    {
+      "iteration": 4,
+      "order": [
+        "baseline",
+        "candidate"
+      ],
+      "baseline_seconds": 5.289480199999616,
+      "candidate_seconds": 5.391795699999875,
+      "ratio": 1.0193432050280227,
+      "candidate_running_updates": 8
+    },
+    {
+      "iteration": 5,
+      "order": [
+        "candidate",
+        "baseline"
+      ],
+      "baseline_seconds": 5.487515000000258,
+      "candidate_seconds": 5.32607710000002,
+      "ratio": 0.970580873127412,
+      "candidate_running_updates": 8
+    },
+    {
+      "iteration": 6,
+      "order": [
+        "baseline",
+        "candidate"
+      ],
+      "baseline_seconds": 5.354405500000212,
+      "candidate_seconds": 5.421633500000098,
+      "ratio": 1.0125556422650253,
+      "candidate_running_updates": 8
+    },
+    {
+      "iteration": 7,
+      "order": [
+        "candidate",
+        "baseline"
+      ],
+      "baseline_seconds": 5.4495042000003195,
+      "candidate_seconds": 5.325836499999696,
+      "ratio": 0.9773066144254707,
+      "candidate_running_updates": 8
+    },
+    {
+      "iteration": 8,
+      "order": [
+        "baseline",
+        "candidate"
+      ],
+      "baseline_seconds": 5.473671199999899,
+      "candidate_seconds": 5.387297299999773,
+      "ratio": 0.9842201153770201,
+      "candidate_running_updates": 8
+    },
+    {
+      "iteration": 9,
+      "order": [
+        "candidate",
+        "baseline"
+      ],
+      "baseline_seconds": 5.464925599999788,
+      "candidate_seconds": 5.333525400000326,
+      "ratio": 0.9759557202389971,
+      "candidate_running_updates": 8
+    },
+    {
+      "iteration": 10,
+      "order": [
+        "baseline",
+        "candidate"
+      ],
+      "baseline_seconds": 5.555722199999764,
+      "candidate_seconds": 5.409878299999946,
+      "ratio": 0.9737488854284644,
+      "candidate_running_updates": 8
+    },
+    {
+      "iteration": 11,
+      "order": [
+        "candidate",
+        "baseline"
+      ],
+      "baseline_seconds": 5.265538099999958,
+      "candidate_seconds": 5.264147800000046,
+      "ratio": 0.9997359624081132,
+      "candidate_running_updates": 8
+    }
+  ],
+  "median_ratio": 1.0046676687314533,
+  "min_ratio": 0.970580873127412,
+  "max_ratio": 1.0518630429531355,
+  "median_seconds": {
+    "baseline": 5.401954850000266,
+    "candidate": 5.389546499999824
+  },
+  "drift_check": {
+    "note": "median per-pair ratio of the first third vs the last third; a large difference means machine drift dominates and the single median ratio must not be read as binary overhead",
+    "first_third_median_ratio": 1.0266412314388855,
+    "last_third_median_ratio": 0.9800879178080086
+  },
+  "candidate_running_updates": [
+    8,
+    8,
+    9,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8
+  ],
+  "scope": "12 paired alternating process wall-time samples after one warm-up run per binary, 300000 protons, 2 workers; paired ratio controls monotonic machine drift; includes initialization and IO; measured with no other project test job running; not a universal overhead bound"
+}

@@ -24,7 +24,7 @@ This file is the single source of truth for progress. Every work session updates
 | C Wizard + built-in plotting | Done (C1 built-in plots, C2 wizard, C3 parameter scans) | see log |
 | D Installer | Done (portable ZIP + Inno Setup installer; uses an existing Geant4 data folder) | see log |
 | E Fixes and foundations | In progress: E1, E2, E5 done | see log |
-| F System optimisation (backend + GUI) | In progress: F6 implementation, acceptance running | |
+| F System optimisation (backend + GUI) | In progress: F6 done (2026-10-27); F1–F5, F7, F8 pending | see log |
 | G 3D view redesign | Done (G1-G6) | see log |
 | H Geant4 capability increments | In progress: H1 done | see log |
 
@@ -221,7 +221,9 @@ H4–H8 if the user's applications favour some of them.
 
 ## Progress log
 
-- 2026-10-27：启动 F6 整阶段，分支 roadmap/F6-live-progress。版本化后端遥测、GUI 解析与进度显示已实现，真实专项通过，完整回归进行中。见 [F6接续检查点](F6接续检查点.md)。F2 尚未启动。
+- 2026-10-27：完成 F6 整阶段（分支 roadmap/F6-live-progress，提交 `2e87f18`）。版本化后端遥测、GUI 解析与进度显示；真实 1/2/4 worker、多 run、失败/强杀与摘要对账通过，性能以成对设计重测（中位比值 1.0047，本机漂移 ±3 %，只能称开销低于噪声）。见 [F6接续检查点](F6接续检查点.md)。
+
+- 2026-10-27：阶段 0 只读审计修复（提交 `2e87f18`，前一个快照为 `67ce037`）。B1 位移损伤粒子名大小写解析、B2 主 INI 重复声明可见化、B3 敏感探测器名字一致性 + detector 命令 PreInit 门禁、B4 seed 生命周期门禁、GUI 源字段保留与进度/日志修正；新增 3 个回归用例，统一测试平台 76 PASS / 0 FAIL / 0 SKIP、`tracked_source_gate=pass`（报告 out/verification/stage0-20261027/20261027-225818-646efeac/report.json，副本见 [docs/verification/stage0-20261027](verification/stage0-20261027/README.md)）。README／手册中“LET/GDML/STL/自动合并未实现”等与后端相反的表述、状态文档多头、证据目录被 gitignore 等问题仍在阶段 1 处理。
 
 - 2026-10-27：完成 E2 多模型只读审计试运行：Astra 审查架构与兼容边界，Sol 审查 GUI 校验/生成，主负责人复核证据及复现；未发现可确认功能缺陷。当前提交上 4 项专项通过，补充 writer 边界检查 7/7；未重跑整套物理回归。建立 [多模型协作约定](多模型协作约定.md)，范围、调用记录及一项非阻断回归保护建议见 [E2多模型审计试运行](E2多模型审计试运行.md)。E2 状态不变，F6 未启动。
 

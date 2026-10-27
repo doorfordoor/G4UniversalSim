@@ -1,0 +1,711 @@
+{
+  "schema": "G4UniversalSimM0TestReport",
+  "version": 1,
+  "profile": "all",
+  "platform": "Windows-10-10.0.26200-SP0",
+  "python": "3.11.9",
+  "git_head": "2e87f18ef2b45b0d6e928c37d2e58bee51720af7",
+  "source_fingerprint": "9ea49a045ec58d9aef6164f24a181150bef36091608b799cf12bf08ecec991a7",
+  "git_dirty": true,
+  "backend_executable": "D:\\Geant4\\G4UniversalSim\\build_vs2026\\Release\\G4UniversalSim.exe",
+  "backend_provenance": "source_sha256_manifest_matches_executable",
+  "backend_build_identity": {
+    "build_configuration": "Release",
+    "compiler_id": "MSVC",
+    "compiler_version": "19.51.36246.0",
+    "geant4_version_number": 1132,
+    "multithreaded": true
+  },
+  "merge_executable": "D:\\Geant4\\G4UniversalSim\\build_vs2026\\Release\\mergeHistograms.exe",
+  "merge_source_fingerprint": "ebfde9055d9a82cc855562869ff425a02f63e4346174dd2b9977e50f19c84106",
+  "merge_provenance": "source_sha256_matches_executable",
+  "optional_pyvista_coverage": "not_proven_by_this_runner",
+  "untracked_source_files": [],
+  "tracked_source_gate": "pass",
+  "results": [
+    {
+      "name": "merge_outputs",
+      "layer": "static",
+      "script": "scripts/test_merge_outputs.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 0.219,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\merge_outputs.log"
+    },
+    {
+      "name": "output_extensions",
+      "layer": "static",
+      "script": "scripts/test_output_extensions.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 0.625,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\output_extensions.log"
+    },
+    {
+      "name": "runner_contract",
+      "layer": "static",
+      "script": "scripts/test_m0_runner.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 0.203,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\runner_contract.log"
+    },
+    {
+      "name": "merge_histograms",
+      "layer": "backend",
+      "script": "scripts/test_merge_histograms.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 0.141,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\merge_histograms.log"
+    },
+    {
+      "name": "gui_parsers",
+      "layer": "gui",
+      "script": "gui/smoke_tests/smoke_parsers.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 0.188,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\gui_parsers.log"
+    },
+    {
+      "name": "gui_materials",
+      "layer": "gui",
+      "script": "gui/smoke_tests/smoke_materials_editor.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 0.234,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\gui_materials.log"
+    },
+    {
+      "name": "gui_geometry",
+      "layer": "gui",
+      "script": "gui/smoke_tests/smoke_geometry_editor.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 0.531,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\gui_geometry.log"
+    },
+    {
+      "name": "gui_preview",
+      "layer": "gui",
+      "script": "gui/smoke_tests/smoke_preview3d.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 0.391,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\gui_preview.log"
+    },
+    {
+      "name": "gui_preview_primitives",
+      "layer": "gui",
+      "script": "gui/smoke_tests/smoke_preview3d_primitives.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 0.359,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\gui_preview_primitives.log"
+    },
+    {
+      "name": "gui_project_io",
+      "layer": "gui",
+      "script": "gui/smoke_tests/smoke_project_io.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 0.203,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\gui_project_io.log"
+    },
+    {
+      "name": "gui_source",
+      "layer": "gui",
+      "script": "gui/smoke_tests/smoke_source_editor_v2.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 0.203,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\gui_source.log"
+    },
+    {
+      "name": "gui_source_field_preservation",
+      "layer": "gui",
+      "script": "gui/smoke_tests/smoke_source_field_preservation.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 0.485,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\gui_source_field_preservation.log"
+    },
+    {
+      "name": "gui_run_config",
+      "layer": "gui",
+      "script": "gui/smoke_tests/smoke_run_config_editors.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 0.234,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\gui_run_config.log"
+    },
+    {
+      "name": "gui_dose_results",
+      "layer": "gui",
+      "script": "gui/smoke_tests/smoke_dose_results.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 0.875,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\gui_dose_results.log"
+    },
+    {
+      "name": "gui_plots",
+      "layer": "gui",
+      "script": "gui/smoke_tests/smoke_plots.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 1.031,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\gui_plots.log"
+    },
+    {
+      "name": "gui_new_simulation_wizard",
+      "layer": "gui",
+      "script": "gui/smoke_tests/smoke_new_simulation_wizard.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 1.172,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\gui_new_simulation_wizard.log"
+    },
+    {
+      "name": "gui_scans",
+      "layer": "gui",
+      "script": "gui/smoke_tests/smoke_scans.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 1.157,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\gui_scans.log"
+    },
+    {
+      "name": "gui_start_page",
+      "layer": "gui",
+      "script": "gui/smoke_tests/smoke_start_page.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 4.218,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\gui_start_page.log"
+    },
+    {
+      "name": "gui_fluence_results",
+      "layer": "gui",
+      "script": "gui/smoke_tests/smoke_fluence_results.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 1.11,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\gui_fluence_results.log"
+    },
+    {
+      "name": "gui_output_extensions",
+      "layer": "gui",
+      "script": "gui/smoke_tests/smoke_output_extensions_gui.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 1.343,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\gui_output_extensions.log"
+    },
+    {
+      "name": "gui_output",
+      "layer": "gui",
+      "script": "gui/smoke_tests/smoke_output_tools.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 0.063,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\gui_output.log"
+    },
+    {
+      "name": "gui_history",
+      "layer": "gui",
+      "script": "gui/smoke_tests/smoke_history.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 0.109,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\gui_history.log"
+    },
+    {
+      "name": "gui_run_result",
+      "layer": "gui",
+      "script": "gui/smoke_tests/smoke_run_result.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 0.125,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\gui_run_result.log"
+    },
+    {
+      "name": "gui_live_progress",
+      "layer": "gui",
+      "script": "gui/smoke_tests/smoke_live_progress.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 0.797,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\gui_live_progress.log"
+    },
+    {
+      "name": "gui_live_progress_backend",
+      "layer": "integration",
+      "script": "gui/smoke_tests/smoke_live_progress_backend.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 3.64,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\gui_live_progress_backend.log"
+    },
+    {
+      "name": "live_progress",
+      "layer": "backend",
+      "script": "scripts/test_live_progress.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 9.797,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\live_progress.log"
+    },
+    {
+      "name": "gui_main_window",
+      "layer": "gui",
+      "script": "gui/smoke_tests/smoke_main_window_ui.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 3.141,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\gui_main_window.log"
+    },
+    {
+      "name": "gui_unsupported_features",
+      "layer": "gui",
+      "script": "scripts/test_unsupported_features.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 0.203,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\gui_unsupported_features.log"
+    },
+    {
+      "name": "gui_geometry_safety",
+      "layer": "gui",
+      "script": "scripts/test_geometry_safety_contract.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 0.328,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\gui_geometry_safety.log"
+    },
+    {
+      "name": "gui_geometry_diagnostics",
+      "layer": "gui",
+      "script": "scripts/test_geometry_config_diagnostics.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 0.36,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\gui_geometry_diagnostics.log"
+    },
+    {
+      "name": "backend_capabilities",
+      "layer": "backend",
+      "script": "scripts/test_backend_capabilities.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 0.39,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\backend_capabilities.log"
+    },
+    {
+      "name": "config_precedence",
+      "layer": "backend",
+      "script": "scripts/test_config_precedence.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 13.969,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\config_precedence.log"
+    },
+    {
+      "name": "config_duplicate_declarations",
+      "layer": "backend",
+      "script": "scripts/test_config_duplicate_declarations.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 0.641,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\config_duplicate_declarations.log"
+    },
+    {
+      "name": "run_summary",
+      "layer": "backend",
+      "script": "scripts/test_run_summary.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 153.687,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\run_summary.log"
+    },
+    {
+      "name": "command_state_gating",
+      "layer": "backend",
+      "script": "scripts/test_command_state_gating.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 9.078,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\command_state_gating.log"
+    },
+    {
+      "name": "dose_scoring",
+      "layer": "backend",
+      "script": "scripts/test_dose_scoring.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 16.86,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\dose_scoring.log"
+    },
+    {
+      "name": "fluence_scoring",
+      "layer": "backend",
+      "script": "scripts/test_fluence_scoring.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 8.171,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\fluence_scoring.log"
+    },
+    {
+      "name": "root_output",
+      "layer": "backend",
+      "script": "scripts/test_root_output.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 10.891,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\root_output.log"
+    },
+    {
+      "name": "scoring_mesh",
+      "layer": "backend",
+      "script": "scripts/test_scoring_mesh.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 7.141,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\scoring_mesh.log"
+    },
+    {
+      "name": "let_scoring",
+      "layer": "backend",
+      "script": "scripts/test_let_scoring.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 9.609,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\let_scoring.log"
+    },
+    {
+      "name": "statistical_uncertainty",
+      "layer": "backend",
+      "script": "scripts/test_statistical_uncertainty.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 7.422,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\statistical_uncertainty.log"
+    },
+    {
+      "name": "gps_sources",
+      "layer": "backend",
+      "script": "scripts/test_gps_sources.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 48.172,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\gps_sources.log"
+    },
+    {
+      "name": "geometry_a5",
+      "layer": "backend",
+      "script": "scripts/test_geometry_a5.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 19.844,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\geometry_a5.log"
+    },
+    {
+      "name": "physics_a6",
+      "layer": "backend",
+      "script": "scripts/test_physics_a6.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 77.796,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\physics_a6.log"
+    },
+    {
+      "name": "fields_a7",
+      "layer": "backend",
+      "script": "scripts/test_fields_a7.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 11.516,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\fields_a7.log"
+    },
+    {
+      "name": "displacement_damage",
+      "layer": "backend",
+      "script": "scripts/test_displacement_damage.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 7.828,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\displacement_damage.log"
+    },
+    {
+      "name": "shielding_coating",
+      "layer": "backend",
+      "script": "scripts/test_shielding_coating.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 21.063,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\shielding_coating.log"
+    },
+    {
+      "name": "semiconductor_device",
+      "layer": "backend",
+      "script": "scripts/test_semiconductor_device.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 16.766,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\semiconductor_device.log"
+    },
+    {
+      "name": "detector_response",
+      "layer": "backend",
+      "script": "scripts/test_detector_response.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 7.031,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\detector_response.log"
+    },
+    {
+      "name": "trajectories",
+      "layer": "backend",
+      "script": "scripts/test_trajectories.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 9.485,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\trajectories.log"
+    },
+    {
+      "name": "geant4_data_locator",
+      "layer": "backend",
+      "script": "scripts/test_geant4_data_locator.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 0.687,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\geant4_data_locator.log"
+    },
+    {
+      "name": "benchmarks",
+      "layer": "backend",
+      "script": "scripts/run_benchmarks.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 37.156,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\benchmarks.log"
+    },
+    {
+      "name": "interactive_commands",
+      "layer": "backend",
+      "script": "scripts/test_interactive_commands.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 32.938,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\interactive_commands.log"
+    },
+    {
+      "name": "unsupported_features",
+      "layer": "backend",
+      "script": "scripts/test_unsupported_features.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 1.297,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\unsupported_features.log"
+    },
+    {
+      "name": "unconsumed_config",
+      "layer": "backend",
+      "script": "scripts/test_unconsumed_config.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 1.656,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\unconsumed_config.log"
+    },
+    {
+      "name": "material_schema",
+      "layer": "backend",
+      "script": "scripts/test_material_config_schema.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 3.266,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\material_schema.log"
+    },
+    {
+      "name": "geometry_safety",
+      "layer": "backend",
+      "script": "scripts/test_geometry_safety_contract.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 10.406,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\geometry_safety.log"
+    },
+    {
+      "name": "geometry_diagnostics",
+      "layer": "backend",
+      "script": "scripts/test_geometry_config_diagnostics.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 6.734,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\geometry_diagnostics.log"
+    },
+    {
+      "name": "macro_plan",
+      "layer": "backend",
+      "script": "scripts/test_macro_plan.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 1.047,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\macro_plan.log"
+    },
+    {
+      "name": "default_geometry",
+      "layer": "backend",
+      "script": "scripts/test_default_geometry_batch.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 11.297,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\default_geometry.log"
+    },
+    {
+      "name": "geometry_roundtrip",
+      "layer": "integration",
+      "script": "scripts/test_geometry_roundtrip_backend.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 12.094,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\geometry_roundtrip.log"
+    },
+    {
+      "name": "biasing_targets",
+      "layer": "backend",
+      "script": "scripts/test_biasing_target_contract.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 26.031,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\biasing_targets.log"
+    },
+    {
+      "name": "gui_run_inputs",
+      "layer": "integration",
+      "script": "gui/smoke_tests/smoke_run_input_modes.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 5.437,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\gui_run_inputs.log"
+    },
+    {
+      "name": "gui_backend_geometry",
+      "layer": "integration",
+      "script": "gui/smoke_tests/smoke_backend_geometry.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 4.594,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\gui_backend_geometry.log"
+    },
+    {
+      "name": "gui_backend_package",
+      "layer": "integration",
+      "script": "gui/smoke_tests/smoke_geometry_backend_package.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 9.547,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\gui_backend_package.log"
+    },
+    {
+      "name": "gui_plots_backend",
+      "layer": "integration",
+      "script": "gui/smoke_tests/smoke_plots_backend.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 6.656,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\gui_plots_backend.log"
+    },
+    {
+      "name": "gui_new_simulation_backend",
+      "layer": "integration",
+      "script": "gui/smoke_tests/smoke_new_simulation_backend.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 10.641,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\gui_new_simulation_backend.log"
+    },
+    {
+      "name": "gui_scans_backend",
+      "layer": "integration",
+      "script": "gui/smoke_tests/smoke_scans_backend.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 10.703,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\gui_scans_backend.log"
+    },
+    {
+      "name": "gui_backend_agreement",
+      "layer": "integration",
+      "script": "scripts/test_gui_backend_agreement.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 38.109,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\gui_backend_agreement.log"
+    },
+    {
+      "name": "gui_backend_geometry_auto",
+      "layer": "integration",
+      "script": "gui/smoke_tests/smoke_backend_geometry_auto.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 13.609,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\gui_backend_geometry_auto.log"
+    },
+    {
+      "name": "gui_3d_view",
+      "layer": "gui",
+      "script": "gui/smoke_tests/smoke_3d_view.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 0.36,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\gui_3d_view.log"
+    },
+    {
+      "name": "gui_config_editors",
+      "layer": "gui",
+      "script": "gui/smoke_tests/smoke_config_editors.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 1.407,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\gui_config_editors.log"
+    },
+    {
+      "name": "gui_trajectory_view",
+      "layer": "integration",
+      "script": "gui/smoke_tests/smoke_trajectory_view.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 4.515,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\gui_trajectory_view.log"
+    },
+    {
+      "name": "gui_sketch_accuracy",
+      "layer": "integration",
+      "script": "scripts/test_sketch_accuracy.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 17.125,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\gui_sketch_accuracy.log"
+    },
+    {
+      "name": "gui_source_glyphs",
+      "layer": "integration",
+      "script": "gui/smoke_tests/smoke_source_glyphs.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 8.625,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\gui_source_glyphs.log"
+    },
+    {
+      "name": "config_schema",
+      "layer": "integration",
+      "script": "scripts/test_config_schema.py",
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 15.891,
+      "log": "out\\verification\\stage0-20261027\\20261027-225818-646efeac\\config_schema.log"
+    }
+  ]
+}
