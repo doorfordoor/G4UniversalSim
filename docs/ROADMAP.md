@@ -23,7 +23,7 @@ This file is the single source of truth for progress. Every work session updates
 | B Scenario packs + benchmarks | Done (B1 benchmarks, B2 shielding/coating, B3 semiconductor, B4 detector response) | see log |
 | C Wizard + built-in plotting | Done (C1 built-in plots, C2 wizard, C3 parameter scans) | see log |
 | D Installer | Done (portable ZIP + Inno Setup installer; uses an existing Geant4 data folder) | see log |
-| E Fixes and foundations | In progress: E1, E5 done; E2 started ([run]/[general]/[output]) | see log |
+| E Fixes and foundations | In progress: E1, E2, E5 done | see log |
 | F System optimisation (backend + GUI) | Planned | |
 | G 3D view redesign | Done (G1-G6) | see log |
 | H Geant4 capability increments | In progress: H1 done | see log |
@@ -94,7 +94,7 @@ suite, CHANGELOG, support matrix). "Done when" lists the evidence, not just the 
   validator and `--inspect-run`; any disagreement fails. Done when: the demo project
   generates a package and shows backend geometry; the differential test is in the suite
   and lists zero mismatches (or each remaining one is documented and blocked on purpose).
-- **E2 Single configuration schema.** One machine-readable schema (sections, keys,
+- **E2 Single configuration schema — done (`aaa9c1d`, agreed modules).** One machine-readable schema (sections, keys,
   types, units, defaults, allowed values, support level, since-version) as the source
   for the Python validators, GUI form hints and the support-matrix field tables; the
   C++ side gets a generated key/type table that its existing validators consult, and a
@@ -220,6 +220,8 @@ H4–H8 if the user's applications favour some of them.
 - Stop and ask the user instead of guessing when a choice is hard to undo or changes physics results or defaults.
 
 ## Progress log
+
+- 2026-10-27：E2 约定模块完成，实现提交 `aaa9c1d`。统一登记 source/physics/scoring、六种几何模板及材料独立文件，8 个文件/模板上下文、48 类 section、353 个字段定义；field/biasing 明确留待后续。完整验收 70 PASS / 0 FAIL / 0 SKIP；最终 GUI 提示与单位枚举调整后 4 项专项通过；257 个启动标量、102 个上下文配置、510 组原后端对照通过，tracked_source_gate 和 Release 源码指纹均通过。详见 [E2接续检查点](E2接续检查点.md) 与 [配置schema说明](配置schema说明.md)。未重建安装包；下一项 F6，等待用户启动。
 
 - 2026-10-24：根据 Claude 项目记录、会话及当前提交 `7640721` 整理中文接续计划。下一开发项为 E2 的 `[source]` 迁移，先复核本机基线，再逐模块推进。F2 的可变参数以生命周期实测建立白名单；E3 补充现有静态/GUI CI 未覆盖的 Geant4 后端。仅规划，未新增功能、未重新执行全套验收。
 
