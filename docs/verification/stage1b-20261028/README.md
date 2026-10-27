@@ -2,7 +2,7 @@
 
 本目录保存阶段 1b（零断言用例迁移 + E2-S1 editor→writer 边界用例入库 + 线程感知探针）的完整回归报告副本。
 `out/` 与 `build*/` 被 `.gitignore` 忽略，原始报告不可复核，因此把关键文件复制进来作为可 review 的验收记录。
-报告记录的 `git_head` 是改动前的 `5c6ea1d`，`git_dirty=true` 表示工作区包含本轮改动（本轮尚未提交）。
+报告记录的 `git_head` 是改动前的基提交 `5c6ea1d`，`git_dirty=true` 表示工作区包含本轮改动；本轮改动提交为 `f1dad9d`（本条目的链接与 STATUS.md 在该提交内同步）。
 
 ## 内容
 
