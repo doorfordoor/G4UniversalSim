@@ -10,7 +10,7 @@
 ## 当前快照
 
 - 分支 `roadmap/F6-live-progress`，集成分支 `codex`（快进合并后推送）；`main` 为早期历史分支。
-- 阶段 0 审计修复已交付：提交 `67ce037`（工作区快照）→ `2e87f18`（静默失败路径）→ `02c0dc6`（验收证据与状态）→ `48f566b`（跨代理协作信箱）→ `8b7721b`（阶段 1 文档与仓库卫生）→ `c80a9cf`（历史审计对照表）→ `5c6ea1d`（阶段 1.4 报告 v2 与证据门禁）→ `e44d88f`（阶段 1b 零断言清零与 writer 边界用例）。
+- 阶段 0 审计修复已交付：提交 `67ce037`（工作区快照）→ `2e87f18`（静默失败路径）→ `02c0dc6`（验收证据与状态）→ `48f566b`（跨代理协作信箱）→ `8b7721b`（阶段 1 文档与仓库卫生）→ `c80a9cf`（历史审计对照表）→ `5c6ea1d`（阶段 1.4 报告 v2 与证据门禁）→ `f1dad9d`（阶段 1b 零断言清零与 writer 边界用例）。此后只收尾文档的提交不再逐一登记，HEAD 以 `git log` 为准。
 - 最近一次完整回归（阶段 1b 报告 v2，源码指纹见下）：**79 PASS / 0 FAIL / 0 SKIP**，`profile=all`，`version=2`，`assertions_executed_total=116133`、`cases_with_zero_assertions=[]`、`assert_probe=settrace_assert_lines_v2`，`skip_policy=failure`，`tracked_source_gate=pass`，`backend_provenance=source_sha256_manifest_matches_executable`。
   - 报告与 79 个逐用例日志：[docs/verification/stage1b-20261028/README.md](docs/verification/stage1b-20261028/README.md)；阶段 1.4 证据见 [docs/verification/stage1-20261028/README.md](docs/verification/stage1-20261028/README.md)，阶段 0 证据见 [docs/verification/stage0-20261027/README.md](docs/verification/stage0-20261027/README.md)。
   - 源码指纹 `ba493e735b11ca414fa63bbd9d5c219766a5bb60c838482fa69a884cef558d93`、测试内容指纹 `497be13f4d545909ee637f060add8959adebdceef08c0109dc6798efcb65593b`；后端 `G4UniversalSim.exe` SHA-256 `c446ed5e…d315`；构建身份 MSVC 19.51.36246.0 + Geant4 1132 + MT。
