@@ -83,7 +83,7 @@ def inspect(work: Path, name: str, body: str) -> tuple[bool, str, dict]:
     return process.returncode == 0, process.stderr, values
 
 
-def check_gui(failures: list[str]) -> None:
+def check_gui() -> None:
     os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
     from PySide6.QtWidgets import QApplication   # noqa: PLC0415
     from g4usim_gui.core.i18n import apply_language   # noqa: PLC0415
@@ -106,19 +106,19 @@ def check_gui(failures: list[str]) -> None:
 
     for run, bad in ((RunSettings(seed=99999999999), True), (RunSettings(seed=-5), True),
                      (RunSettings(run_name="a\nb"), True), (RunSettings(seed=2147483647), False)):
-        if bool(run_errors(run)) != bad:
-            failures.append(f"GUI run settings {run.seed!r}/{run.run_name!r}: expected {'an error' if bad else 'none'}")
+        assert bool(run_errors(run)) == bad, (
+            f"GUI run settings {run.seed!r}/{run.run_name!r}: expected {'an error' if bad else 'none'}")
     model = validate_scoring_model(ScoringEditableModel(trajectory_events=1001))
-    if not any("trajectories" in e for e in model.errors):
-        failures.append("GUI: 1001 trajectory events (above the schema's GUI maximum) is not refused")
+    assert any("trajectories" in e for e in model.errors), (
+        "GUI: 1001 trajectory events (above the schema's GUI maximum) is not refused")
     app = QApplication.instance() or QApplication([])
     panel = SetupPanel(lambda: None, lambda: None)
     english = panel.seed.toolTip()
     apply_language(panel, "zh_CN")
     chinese = panel.seed.toolTip()
     apply_language(panel, "en")
-    if not english.startswith("[run] seed: Random seed") or "随机数种子" not in chinese or panel.seed.toolTip() != english:
-        failures.append(f"GUI tooltips: {english!r} / {chinese!r}")
+    assert (english.startswith("[run] seed: Random seed") and "随机数种子" in chinese
+            and panel.seed.toolTip() == english), f"GUI tooltips: {english!r} / {chinese!r}"
     from g4usim_gui.widgets.config.run_config import RunConfigEditor
     editor = RunConfigEditor()
     apply_language(editor, "en")
@@ -126,10 +126,11 @@ def check_gui(failures: list[str]) -> None:
     apply_language(editor, "zh_CN")
     energy_zh = editor.source_editor_energy.toolTip()
     apply_language(editor, "en")
-    if "Mono energy" not in energy_en or "单能" not in energy_zh or editor.source_editor_energy.toolTip() != energy_en:
-        failures.append("Source schema tooltip does not follow language changes")
-    if "Positive default production cut" not in editor.physics_editor_default_cut.toolTip():
-        failures.append("Physics default-cut tooltip does not come from the schema")
+    assert ("Mono energy" in energy_en and "单能" in energy_zh
+            and editor.source_editor_energy.toolTip() == energy_en), (
+        "Source schema tooltip does not follow language changes")
+    assert "Positive default production cut" in editor.physics_editor_default_cut.toolTip(), (
+        "Physics default-cut tooltip does not come from the schema")
     editor.deleteLater()
     panel.deleteLater()
     app.processEvents()
@@ -138,16 +139,14 @@ def check_gui(failures: list[str]) -> None:
 
 def main() -> int:
     verbose = "-v" in sys.argv
-    failures: list[str] = []
-    check_gui(failures)
+    check_gui()
     generated = subprocess.run([sys.executable, str(ROOT / "scripts/generate_config_schema.py"), "--check"],
                                capture_output=True, text=True)
-    if generated.returncode != 0:
-        failures.append(generated.stdout.strip())
     print(f"generated files: {'up to date' if generated.returncode == 0 else 'OUT OF DATE'}")
+    assert generated.returncode == 0, f"generated files are out of date:\n{generated.stdout.strip()}"
     if not EXE.is_file():
         print(f"SKIP backend part: {EXE} missing")
-        return 1 if failures else 0
+        return 0
 
     with tempfile.TemporaryDirectory(prefix="g4usim-schema-") as temp:
         work = Path(temp)
@@ -174,14 +173,13 @@ def main() -> int:
             results = list(pool.map(run, enumerate(jobs)))
         agree = 0
         for label, accepted, gui, stderr in results:
-            if accepted == (gui is None):
-                agree += 1
-                if verbose:
-                    print(f"  ok {label}: {'accept' if accepted else 'reject'}")
-            else:
-                reason = stderr.strip().splitlines()[-1] if stderr.strip() else ""
-                failures.append(f"{label}: backend {'accepts' if accepted else 'rejects'}, schema "
-                                f"{'accepts' if gui is None else 'rejects (' + gui + ')'}; backend says: {reason}")
+            reason = stderr.strip().splitlines()[-1] if stderr.strip() else ""
+            assert accepted == (gui is None), (
+                f"{label}: backend {'accepts' if accepted else 'rejects'}, schema "
+                f"{'accepts' if gui is None else 'rejects (' + gui + ')'}; backend says: {reason}")
+            agree += 1
+            if verbose:
+                print(f"  ok {label}: {'accept' if accepted else 'reject'}")
         print(f"values: {agree} of {len(results)} verdicts agree")
 
         # 3. every field and alias is consumed; unknown keys are reported
@@ -193,13 +191,12 @@ def main() -> int:
                 value = next(v for v in candidates(data, work) if v and check_value(section, key, v, base_dir=ROOT) is None)
                 for name in [key, *data.get("aliases", [])]:
                     accepted, stderr, _ = inspect(work, "consumed", f"[{section}]\n{name} = {value}\n")
-                    if not accepted or "unconsumed field" in stderr:
-                        failures.append(f"[{section}]/{name} = {value}: not consumed by the backend ({stderr.strip()[:200]})")
-                    else:
-                        consumed += 1
+                    assert accepted and "unconsumed field" not in stderr, (
+                        f"[{section}]/{name} = {value}: not consumed by the backend ({stderr.strip()[:200]})")
+                    consumed += 1
             accepted, stderr, _ = inspect(work, "unknown", f"[{section}]\nnot_a_field = 1\n")
-            if f"[{section}]/not_a_field" not in stderr:
-                failures.append(f"[{section}]/not_a_field: the backend does not report an unknown key")
+            assert f"[{section}]/not_a_field" in stderr, (
+                f"[{section}]/not_a_field: the backend does not report an unknown key")
         print(f"keys: {consumed} fields and aliases consumed; unknown keys reported in {sum(bool(s.get('independent')) for s in SCHEMA['main_ini'].values())} independent sections")
 
         # 4. defaults and alias precedence, where --inspect-run reports the value
@@ -211,25 +208,22 @@ def main() -> int:
                 if got not in ("", "unset", None, "unknown"):
                     print(f"  note: {name} has no schema default; the backend reports {got!r}")
                 continue
-            if got != default:
-                failures.append(f"default of [{section}]/{key}: schema {default!r}, backend {got!r}")
+            assert got == default, f"default of [{section}]/{key}: schema {default!r}, backend {got!r}"
         for section, key, alias, name in (("run", "name", "run_name", "run_name"), ("run", "seed", "randomSeed", "seed"),
                                           ("output", "dir", "outputDir", "output_dir")):
             _, _, only_alias = inspect(work, "alias", f"[{section}]\n{alias} = 42\n")
             _, _, both = inspect(work, "both", f"[{section}]\n{alias} = 41\n{key} = 43\n")
-            if only_alias.get(name, {}).get("value") != "42" or both.get(name, {}).get("value") != "43":
-                failures.append(f"[{section}]/{alias}: alias alone gives {only_alias.get(name, {}).get('value')!r}, "
-                                f"with {key} it gives {both.get(name, {}).get('value')!r} (expected 42 and 43)")
+            assert (only_alias.get(name, {}).get("value") == "42"
+                    and both.get(name, {}).get("value") == "43"), (
+                f"[{section}]/{alias}: alias alone gives {only_alias.get(name, {}).get('value')!r}, "
+                f"with {key} it gives {both.get(name, {}).get('value')!r} (expected 42 and 43)")
         print("defaults and alias precedence checked")
 
     from test_config_schema_context import check_contexts
-    failures.extend(check_contexts(EXE))
+    context_failures = check_contexts(EXE)
+    assert not context_failures, (
+        "config schema context checks failed:\n  " + "\n  ".join(context_failures))
 
-    if failures:
-        print("\nFAILURES:")
-        for line in failures:
-            print("  " + line)
-        return 1
     print("test_config_schema: OK")
     return 0
 

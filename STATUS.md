@@ -10,13 +10,13 @@
 ## 当前快照
 
 - 分支 `roadmap/F6-live-progress`，集成分支 `codex`（快进合并后推送）；`main` 为早期历史分支。
-- 阶段 0 审计修复已交付：提交 `67ce037`（工作区快照）→ `2e87f18`（静默失败路径）→ `02c0dc6`（验收证据与状态）→ `48f566b`（跨代理协作信箱）→ `8b7721b`（阶段 1 文档与仓库卫生）→ `c80a9cf`（历史审计对照表）→ `4c81a74`（阶段 1.4 报告 v2 与证据门禁）。
-- 最近一次完整回归（阶段 1.4 报告 v2，源码指纹见下）：**78 PASS / 0 FAIL / 0 SKIP**，`profile=all`，`version=2`，`assertions_executed_total=115305`，`skip_policy=failure`，`tracked_source_gate=pass`，`backend_provenance=source_sha256_manifest_matches_executable`。
-  - 报告与 78 个逐用例日志：[docs/verification/stage1-20261028/README.md](docs/verification/stage1-20261028/README.md)；阶段 0 证据仍在 [docs/verification/stage0-20261027/README.md](docs/verification/stage0-20261027/README.md)。
-  - 源码指纹 `ba493e735b11ca414fa63bbd9d5c219766a5bb60c838482fa69a884cef558d93`、测试内容指纹 `8438d98fef5aa67e1000879277c5a204dfcb6ce07bcad7686cc68a65d08dece5`；后端 `G4UniversalSim.exe` SHA-256 `c446ed5e…d315`；构建身份 MSVC 19.51.36246.0 + Geant4 1132 + MT。
-  - 报告运行时 `git_head=c80a9cf`、`git_dirty=true`，运行时源码即提交 `4c81a74` 的内容；报告与证据副本已随该提交入库，未在提交后重跑。
-- 测试平台：`python -B scripts/run_m0_tests.py --profile all --require-tracked-sources --fail-on-skip`；78 个用例 = static 5 / gui 26 / backend 33 / integration 14；报告是 `version: 2` 证据（逐用例断言数、双指纹、`log_sha256`），`scripts/check_report_evidence.py` 为 CI 门禁。
-- CI 现状：GitHub Actions 只跑 static+gui（31/78），不构建 C++、不跑 backend/integration；两个 profile 步骤已带 `--fail-on-skip`；Linux+Geant4 CI 仍未建立（E3）。
+- 阶段 0 审计修复已交付：提交 `67ce037`（工作区快照）→ `2e87f18`（静默失败路径）→ `02c0dc6`（验收证据与状态）→ `48f566b`（跨代理协作信箱）→ `8b7721b`（阶段 1 文档与仓库卫生）→ `c80a9cf`（历史审计对照表）→ `5c6ea1d`（阶段 1.4 报告 v2 与证据门禁）→ `e44d88f`（阶段 1b 零断言清零与 writer 边界用例）。
+- 最近一次完整回归（阶段 1b 报告 v2，源码指纹见下）：**79 PASS / 0 FAIL / 0 SKIP**，`profile=all`，`version=2`，`assertions_executed_total=116133`、`cases_with_zero_assertions=[]`、`assert_probe=settrace_assert_lines_v2`，`skip_policy=failure`，`tracked_source_gate=pass`，`backend_provenance=source_sha256_manifest_matches_executable`。
+  - 报告与 79 个逐用例日志：[docs/verification/stage1b-20261028/README.md](docs/verification/stage1b-20261028/README.md)；阶段 1.4 证据见 [docs/verification/stage1-20261028/README.md](docs/verification/stage1-20261028/README.md)，阶段 0 证据见 [docs/verification/stage0-20261027/README.md](docs/verification/stage0-20261027/README.md)。
+  - 源码指纹 `ba493e735b11ca414fa63bbd9d5c219766a5bb60c838482fa69a884cef558d93`、测试内容指纹 `497be13f4d545909ee637f060add8959adebdceef08c0109dc6798efcb65593b`；后端 `G4UniversalSim.exe` SHA-256 `c446ed5e…d315`；构建身份 MSVC 19.51.36246.0 + Geant4 1132 + MT。
+  - 报告运行时 `git_head=5c6ea1d`、`git_dirty=true`，运行时源码即本轮提交的内容；报告与证据副本已随该提交入库，未在提交后重跑。
+- 测试平台：`python -B scripts/run_m0_tests.py --profile all --require-tracked-sources --fail-on-skip`；79 个用例 = static 6 / gui 26 / backend 33 / integration 14，所有用例都报告非零断言数；报告是 `version: 2` 证据（逐用例断言数、双指纹、`log_sha256`），`scripts/check_report_evidence.py` 为 CI 门禁。
+- CI 现状：GitHub Actions 只跑 static+gui（32/79），不构建 C++、不跑 backend/integration；两个 profile 步骤已带 `--fail-on-skip`；Linux+Geant4 CI 仍未建立（E3）。
 
 ## 阶段状态（摘要，详表见 ROADMAP）
 
@@ -37,7 +37,7 @@
 5. 已完成：历史审计结论对照表 [docs/collab/outbox/20261028-0120-deepseek-legacy-audit-crosscheck.md](docs/collab/outbox/20261028-0120-deepseek-legacy-audit-crosscheck.md)（`总体判断.md`、2026-10-03 现场审计、E2、F6、阶段 0 逐条判定为仍成立/已修复/部分成立/已过时，仍成立的 9 条按阶段归位）；
 6. 已完成：报告加断言级计数与工作区/测试内容双哈希、默认报告目录改 `out/verification`、CI 把 skip 当失败（`--fail-on-skip` + `check_report_evidence.py` 门禁）；顺带修复 `.gitattributes` 让 checkout 换行改变源码指纹的真实缺陷；
 7. 已完成：支持矩阵第 2–3 节每条功能标注证据类型（外部表 / 解析式 / 同源自洽 / 自测 / 未验证），第 1 节给出判定口径；
-8. 待做（来自 Astra 旧审查）：把 E2-S1 六个 editor→writer 边界探针从被忽略的 `out/verification/` 提升为正式用例；9 个零断言用例逐步改成 `assert` 表达。
+8. 已完成：E2-S1 六个 editor→writer 边界升级为 static 用例 `writer_boundary`；9 个零断言用例改写成 `assert` 表达（断言证据从 115305 增至 116133，零断言列表清空）。
 
 阶段 2（待阶段 1 收尾，2B 场景已定为**屏蔽 shielding_coating**）：
 

@@ -257,33 +257,32 @@ def main() -> int:
         with ThreadPoolExecutor(max_workers=4) as pool:
             list(pool.map(lambda item: backend_verdict(item[1], work, item[0]), enumerate(cases)))
 
-    mismatches, expected, limited = [], [], []
+    expected, limited = [], []
     for case in cases:
         line = f"{case.name} [{case.template}]: GUI {case.gui}, backend {case.backend}"
         if case.gui == "limited":
             limited.append(f"{line} ({case.gui_reason})")
-        elif case.gui != case.backend:
+        else:
             detail = f"{line}\n    GUI: {case.gui_reason or '-'}\n    backend: {case.backend_reason or '-'}"
             reason = EXPECTED.get((case.geometry, case.materials))
-            (expected if reason else mismatches).append(detail + (f"\n    expected: {reason}" if reason else ""))
-        if case.roundtrip == "reject":
-            mismatches.append(f"{case.name}: the GUI writer's materials/geometry are rejected by the backend\n"
-                              f"    backend: {case.roundtrip_reason}")
+            assert case.gui == case.backend or reason is not None, detail
+            if case.gui != case.backend:
+                expected.append(detail + f"\n    expected: {reason}")
+        assert case.roundtrip != "reject", (
+            f"{case.name}: the GUI writer's materials/geometry are rejected by the backend\n"
+            f"    backend: {case.roundtrip_reason}")
         if verbose:
             print(line + (f" | GUI: {case.gui_reason}" if case.gui_reason else "")
                   + (f" | backend: {case.backend_reason}" if case.backend_reason else ""))
     agree = sum(1 for c in cases if c.gui == c.backend)
     trips = sum(1 for c in cases if c.roundtrip == "accept")
     print(f"{len(cases)} cases: {agree} agree, {len(limited)} GUI-limited, {len(expected)} expected differences, "
-          f"{trips} writer round trips accepted, {len(mismatches)} mismatches")
-    for title, items in (("GUI-limited (not judged)", limited), ("Expected differences", expected),
-                         ("MISMATCHES", mismatches)):
+          f"{trips} writer round trips accepted")
+    for title, items in (("GUI-limited (not judged)", limited), ("Expected differences", expected)):
         if items:
             print(f"\n{title}:")
             for item in items:
                 print("  " + item)
-    if mismatches:
-        return 1
     print("\ntest_gui_backend_agreement: OK")
     return 0
 

@@ -6,8 +6,11 @@ Usage::
 
 The probe executes the target script with :func:`runpy.run_path`, installs a line
 tracer restricted to the target file, and counts how many lines that hold an
-``assert`` statement are actually executed. After the script returns (or raises
-``SystemExit``) it prints exactly one marker line::
+``assert`` statement are actually executed. Threads started by the script are traced
+too (:func:`threading.settrace`), so assertions that run inside a
+``ThreadPoolExecutor`` worker are counted; threads that existed before the probe
+installed the tracer are not. After the script returns (or raises ``SystemExit``) it
+prints exactly one marker line::
 
     G4USIM_ASSERTS=<n>
 
@@ -28,9 +31,11 @@ import ast
 import os
 import runpy
 import sys
+import threading
 from pathlib import Path
 
 MARKER = "G4USIM_ASSERTS="
+PROBE_ID = "settrace_assert_lines_v2"
 
 
 def collect_assert_lines(path: Path) -> set[int]:
@@ -50,10 +55,12 @@ def main(argv: list[str]) -> int:
     assert_lines = collect_assert_lines(target)
     target_name = os.path.normcase(str(target))
     executed = [0]
+    counter_lock = threading.Lock()
 
     def local_tracer(frame, event, arg):
         if event == "line" and frame.f_lineno in assert_lines:
-            executed[0] += 1
+            with counter_lock:
+                executed[0] += 1
         return local_tracer
 
     def tracer(frame, event, arg):
@@ -71,6 +78,9 @@ def main(argv: list[str]) -> int:
     status = 0
     message: str | None = None
     sys.settrace(tracer)
+    # Worker threads would otherwise be invisible to the probe; only threads that
+    # the script starts after this point are traced.
+    threading.settrace(tracer)
     try:
         runpy.run_path(str(target), run_name="__main__")
     except SystemExit as error:
@@ -83,10 +93,12 @@ def main(argv: list[str]) -> int:
             status = 1
     except BaseException:
         sys.settrace(None)
+        threading.settrace(None)
         print(f"{MARKER}{executed[0]}", flush=True)
         raise
     finally:
         sys.settrace(None)
+        threading.settrace(None)
     print(f"{MARKER}{executed[0]}", flush=True)
     if message is not None:
         print(message, file=sys.stderr, flush=True)

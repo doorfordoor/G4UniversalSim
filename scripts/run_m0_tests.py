@@ -30,6 +30,9 @@ TEST_CONTENT_DIRECTORIES = (
 )
 ASSERT_PROBE = ROOT / "tools" / "test_assert_probe.py"
 ASSERT_MARKER = "G4USIM_ASSERTS="
+# Probe implementation id written into every report; v2 also traces threads that the
+# test script starts, so assertions executed in worker pools are counted.
+ASSERT_PROBE_ID = "settrace_assert_lines_v2"
 
 
 @dataclass(frozen=True)
@@ -48,6 +51,7 @@ CASES = (
     Case("runner_contract", "scripts/test_m0_runner.py", "static"),
     Case("doc_links", "scripts/check_doc_links.py", "static"),
     Case("report_evidence", "scripts/test_report_evidence.py", "static"),
+    Case("writer_boundary", "scripts/test_writer_boundary.py", "static"),
     Case("merge_histograms", "scripts/test_merge_histograms.py", "backend", ("merge",)),
     Case("gui_parsers", "gui/smoke_tests/smoke_parsers.py", "gui", ("qt",)),
     Case("gui_materials", "gui/smoke_tests/smoke_materials_editor.py", "gui", ("qt",)),
@@ -337,7 +341,7 @@ def main() -> int:
             if not args.no_assert_probe and record["status"] != "skip":
                 executed = parse_assert_marker(log)
                 record["assertions_executed"] = executed
-                record["assert_probe"] = "settrace_assert_lines_v1" if executed is not None else "marker_missing"
+                record["assert_probe"] = ASSERT_PROBE_ID if executed is not None else "marker_missing"
                 if record["status"] == "pass" and executed is None:
                     # A passing case whose probe marker vanished would otherwise report
                     # "0 assertions" without anyone noticing; treat it as a runner defect.
@@ -369,7 +373,7 @@ def main() -> int:
         "optional_pyvista_coverage": "not_proven_by_this_runner",
         "untracked_source_files": missing_tracked_sources,
         "tracked_source_gate": "fail" if missing_tracked_sources else "pass",
-        "assert_probe": "disabled" if args.no_assert_probe else "settrace_assert_lines_v1",
+        "assert_probe": "disabled" if args.no_assert_probe else ASSERT_PROBE_ID,
         "assertions_executed_total": sum(record["assertions_executed"] for record in executed_cases),
         "assert_sites_total": sum(record.get("assert_sites", 0) for record in results),
         "cases_with_assertion_counts": len(executed_cases),

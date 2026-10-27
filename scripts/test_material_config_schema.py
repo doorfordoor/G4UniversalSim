@@ -25,8 +25,7 @@ def run(executable: Path, config: Path, expected: int) -> str:
         env=environment,
     )
     output = result.stdout + result.stderr
-    if result.returncode != expected:
-        raise AssertionError(f"Expected {expected}, got {result.returncode}\n{output}")
+    assert result.returncode == expected, f"Expected {expected}, got {result.returncode}\n{output}"
     return output
 
 
@@ -92,16 +91,15 @@ def write_case(temp: Path, name: str, material_text: str | Path) -> Path:
 def expect_failure(executable: Path, temp: Path, name: str, material_text: str, *markers: str) -> None:
     output = run(executable, write_case(temp, name, material_text), 1)
     for marker in markers:
-        if marker not in output:
-            raise AssertionError(f"Missing marker {marker!r}\n{output}")
-    if "[MaterialLifecycle] build_started" in output:
-        raise AssertionError(f"Schema failure reached material object construction:\n{output}")
+        assert marker in output, f"Missing marker {marker!r}\n{output}"
+    assert "[MaterialLifecycle] build_started" not in output, (
+        f"Schema failure reached material object construction:\n{output}")
 
 
 def expect_success(executable: Path, temp: Path, name: str, material_text: str | Path) -> str:
     output = run(executable, write_case(temp, name, material_text), 0)
-    if "[MaterialLifecycle] build_started" not in output:
-        raise AssertionError(f"Successful material load did not reach object construction:\n{output}")
+    assert "[MaterialLifecycle] build_started" in output, (
+        f"Successful material load did not reach object construction:\n{output}")
     return output
 
 
@@ -154,8 +152,7 @@ def test_gui_writer(temp: Path, executable: Path) -> None:
     from g4usim_gui.parsers.materials_parser import parse_materials
 
     legacy_summary = parse_materials(LEGACY_GUI_FIXTURE)
-    if legacy_summary.errors:
-        raise AssertionError(f"GUI parser rejected legacy type fixture: {legacy_summary.errors}")
+    assert not legacy_summary.errors, f"GUI parser rejected legacy type fixture: {legacy_summary.errors}"
 
     document = MaterialDocument(rows=[
         MaterialRow(name="G4_AIR", mode="nist", nist_name="G4_AIR"),
@@ -163,11 +160,11 @@ def test_gui_writer(temp: Path, executable: Path) -> None:
     ])
     generated = temp / "gui-generated-materials.ini"
     generated.write_text(generate_materials_ini_text(document), encoding="utf-8")
-    if "type =" in generated.read_text(encoding="utf-8").lower():
-        raise AssertionError("Current GUI writer must not emit deprecated material type fields")
+    assert "type =" not in generated.read_text(encoding="utf-8").lower(), (
+        "Current GUI writer must not emit deprecated material type fields")
     output = run(executable, write_case(temp, "gui-generated", generated), 0)
-    if "[ConfigWarning]" in output:
-        raise AssertionError(f"GUI-generated material file produced main-config warnings:\n{output}")
+    assert "[ConfigWarning]" not in output, (
+        f"GUI-generated material file produced main-config warnings:\n{output}")
 
 
 def main() -> int:
@@ -219,8 +216,8 @@ def main() -> int:
 
         case_config = write_case(temp, "case-comments", "[nIsT]\nMATERIALS = G4_AIR # compatible comment\n[Alias]\nMATERIAL = G4_WATER ; legacy comment\n")
         output = run(executable, case_config, 0)
-        if "[MaterialLifecycle] build_started" not in output:
-            raise AssertionError("Case-insensitive legal configuration did not build materials")
+        assert "[MaterialLifecycle] build_started" in output, (
+            "Case-insensitive legal configuration did not build materials")
         test_gui_writer(temp, executable)
 
     print("M0-3B2A material schema tests passed")

@@ -400,34 +400,29 @@ def main() -> int:
         cases = fixtures(work)
         with ThreadPoolExecutor(max_workers=4) as pool:
             list(pool.map(lambda item: check(item[1], work, item[0]), enumerate(cases)))
-    failures = 0
     for case in cases:
         skipped = case.problems and case.problems[0].startswith("SKIP")
         bad = [p for p in case.problems if not p.startswith("SKIP")]
-        failures += bool(bad)
         if verbose or bad:
             state = "SKIP" if skipped else "FAIL" if bad else "ok"
             print(f"{state} {case.name}: {case.compared} volumes match, {case.boolean} boolean targets, "
                   f"{len(case.not_drawn)} not drawn")
             for line in bad + (case.not_drawn if verbose else []):
                 print("    " + line)
+        assert not bad, f"FAIL {case.name}:\n    " + "\n    ".join(bad)
     compared = sum(c.compared for c in cases)
     written = [c for c in cases if c.name.startswith("written:")]
     print(f"{len(cases)} fixtures, {compared} volume boxes compared, "
-          f"{sum(c.boolean for c in cases)} boolean targets checked, {failures} failing")
+          f"{sum(c.boolean for c in cases)} boolean targets checked")
     # the written fixtures must really have been compared (a backend rejection would hide a regression)
     for case in written:
-        if case.problems and case.problems[0].startswith("SKIP") or case.compared == 0:
-            print(f"FAIL {case.name}: not compared")
-            failures += 1
+        assert not (case.problems and case.problems[0].startswith("SKIP") or case.compared == 0), (
+            f"FAIL {case.name}: not compared")
     rotated = next(c for c in written if c.name == "written:rotated")
     a5 = next(c for c in written if c.name == "written:a5_solids")
-    if rotated.compared != 9 or a5.compared != 10 or not any("Slice" in n for n in a5.not_drawn):
-        print(f"FAIL: expected 9 + 10 compared volumes and the replica listed as not drawn, got "
-              f"{rotated.compared} + {a5.compared}, not drawn {a5.not_drawn}")
-        failures += 1
-    if failures:
-        return 1
+    assert rotated.compared == 9 and a5.compared == 10 and any("Slice" in n for n in a5.not_drawn), (
+        f"FAIL: expected 9 + 10 compared volumes and the replica listed as not drawn, got "
+        f"{rotated.compared} + {a5.compared}, not drawn {a5.not_drawn}")
     print("test_sketch_accuracy: OK")
     return 0
 

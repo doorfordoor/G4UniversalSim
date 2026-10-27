@@ -199,7 +199,7 @@ python -B scripts/run_m0_tests.py --profile all --require-tracked-sources --fail
 python -B scripts/check_report_evidence.py          # 校验最新报告，CI 必跑
 ```
 
-- 每个用例经 `tools/test_assert_probe.py` 运行：探针用 `runpy` 执行脚本、`sys.settrace` 统计目标文件内已执行 `assert` 行数，打印 `G4USIM_ASSERTS=<n>`；退出 0 却缺少该 marker 会被判 fail。
+- 每个用例经 `tools/test_assert_probe.py` 运行：探针用 `runpy` 执行脚本、`sys.settrace` 统计目标文件内已执行 `assert` 行数，打印 `G4USIM_ASSERTS=<n>`；退出 0 却缺少该 marker 会被判 fail。探针 id 为 `settrace_assert_lines_v2`：它用 `threading.settrace` 同时跟踪脚本启动的线程，因此 `ThreadPoolExecutor` worker 里的 `assert` 也会计数；脚本运行前已存在的线程不计，worker 里用 `problems` 列表收集再在主线程 assert 聚合的写法只能计聚合那一处。
 - `report.json` 是 `version: 2`，逐用例含 `assertions_executed`、`assert_sites`、`assert_probe`、`log_sha256`，报告级含 `tests_content_fingerprint`（scripts/tools/gui smoke/config/scenarios/schema/macros/test，哈希前归一 CRLF）与 `cases_with_zero_assertions`。
 - 验证 helper 必须用 `assert` 表达；写成 `raise AssertionError` 时探针看不见，该用例会出现在 `cases_with_zero_assertions` 里（表示"尚未迁移"，不是"未验证"）。
 - `--report-root` 默认 `out/verification`（Git 忽略）；要入库的证据需另复制到 `docs/verification/<批次>/`。CI 两个 profile 步骤带 `--fail-on-skip`，缺失 Qt/uproot/后端不得以 skip 变绿。

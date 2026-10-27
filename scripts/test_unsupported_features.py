@@ -24,11 +24,10 @@ def run(executable: Path, args: list[str], expected: int) -> str:
         timeout=120,
     )
     output = result.stdout + result.stderr
-    if result.returncode != expected:
-        raise AssertionError(
-            f"Unexpected exit code for {' '.join(args)}: expected {expected}, "
-            f"got {result.returncode}\n{output}"
-        )
+    assert result.returncode == expected, (
+        f"Unexpected exit code for {' '.join(args)}: expected {expected}, "
+        f"got {result.returncode}\n{output}"
+    )
     return output
 
 
@@ -41,8 +40,7 @@ def run_nonzero(executable: Path, args: list[str]) -> str:
         timeout=120,
     )
     output = result.stdout + result.stderr
-    if result.returncode == 0:
-        raise AssertionError(f"Expected non-zero exit code for {' '.join(args)}\n{output}")
+    assert result.returncode != 0, f"Expected non-zero exit code for {' '.join(args)}\n{output}"
     return output
 
 
@@ -117,8 +115,7 @@ verbose = 0
 
 def assert_failure(text: str, *markers: str) -> None:
     for marker in markers:
-        if marker not in text:
-            raise AssertionError(f"Missing failure marker {marker!r}\n{text}")
+        assert marker in text, f"Missing failure marker {marker!r}\n{text}"
 
 
 def test_gui_validation(temp: Path) -> None:
@@ -139,13 +136,15 @@ def test_gui_validation(temp: Path) -> None:
     geometry.write_text("[volume.target]\nplacement = assembly\n", encoding="utf-8")
     report = ValidationReport()
     _validate_geometry_text(geometry, report)
-    if report.can_run or not any("placement=assembly" in item for item in report.errors):
-        raise AssertionError(f"GUI geometry validation did not block unsupported placement: {report.errors}")
+    assert not report.can_run and any("placement=assembly" in item for item in report.errors), (
+        f"GUI geometry validation did not block unsupported placement: {report.errors}"
+    )
 
     report = ValidationReport()
     _validate_template_consistency("gdml", GeometrySummary(path="valid.ini"), report)
-    if report.can_run or not any("GDML" in item for item in report.errors):
-        raise AssertionError(f"GUI template validation did not block GDML: {report.errors}")
+    assert not report.can_run and any("GDML" in item for item in report.errors), (
+        f"GUI template validation did not block GDML: {report.errors}"
+    )
 
     comment_only = temp / "gui-gdml-comment-only.ini"
     comment_only.write_text(
@@ -154,25 +153,27 @@ def test_gui_validation(temp: Path) -> None:
     )
     report = ValidationReport()
     _validate_geometry_text(comment_only, report)
-    if any("GDML" in item for item in report.errors):
-        raise AssertionError(f"GUI treated a GDML comment as an enabled capability: {report.errors}")
+    assert not any("GDML" in item for item in report.errors), (
+        f"GUI treated a GDML comment as an enabled capability: {report.errors}"
+    )
 
     materials = temp / "gui-unsupported-materials.ini"
     materials.write_text("[material.test]\ntemperature = 300 K\n", encoding="utf-8")
     report = ValidationReport()
     _validate_material_text(materials, report)
-    if report.can_run or not any("temperature" in item for item in report.errors):
-        raise AssertionError(f"GUI material validation did not block temperature: {report.errors}")
+    assert not report.can_run and any("temperature" in item for item in report.errors), (
+        f"GUI material validation did not block temperature: {report.errors}"
+    )
 
     scoring = ScoringEditableModel(dose=True, auto_create_default_scorers=False)
     validate_scoring_model(scoring)
-    if not scoring.errors or not any("Dose" in item for item in scoring.errors):
-        raise AssertionError("GUI scoring validation did not enforce Dose scorer prerequisites")
+    assert scoring.errors and any("Dose" in item for item in scoring.errors), (
+        "GUI scoring validation did not enforce Dose scorer prerequisites"
+    )
 
     scoring.auto_create_default_scorers = True
     validate_scoring_model(scoring)
-    if scoring.errors:
-        raise AssertionError(f"GUI scoring validation rejected supported Dose MVP: {scoring.errors}")
+    assert not scoring.errors, f"GUI scoring validation rejected supported Dose MVP: {scoring.errors}"
 
 
 def main() -> int:

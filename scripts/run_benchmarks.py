@@ -421,6 +421,11 @@ def main() -> int:
         report["failed"] = len(everything) - report["passed"]
         write_report(output, report)
         print(f"report: {output / 'benchmark_report.md'}")
+        failed = [(name, r) for name, results in report["benchmarks"].items() for r in results if not r["passed"]]
+        assert not failed, "benchmark failures: " + "; ".join(
+            f"{name} {r['case']} {r['quantity']} = {r['simulated']:.5g} +- {r['sigma']:.2g}, "
+            f"reference {r['reference']:.5g}, deviation {100 * r['relative_deviation']:+.2f} %, "
+            f"allowed +-{r['allowed']:.3g}" for name, r in failed)
     finally:
         if not args.output:
             print("(temporary report removed; pass --output to keep it)")

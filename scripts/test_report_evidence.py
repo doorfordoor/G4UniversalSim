@@ -17,7 +17,7 @@ def sample_report() -> dict:
     return {
         "schema": "G4UniversalSimM0TestReport",
         "version": 2,
-        "assert_probe": "settrace_assert_lines_v1",
+        "assert_probe": "settrace_assert_lines_v2",
         "source_fingerprint": "a" * 64,
         "tests_content_fingerprint": "b" * 64,
         "backend_provenance": "source_sha256_manifest_matches_executable",

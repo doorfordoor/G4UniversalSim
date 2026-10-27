@@ -40,7 +40,7 @@ def validate_report(report: dict) -> None:
     assert int(report.get("version", 0)) >= MIN_VERSION, (
         f"report version {report.get('version')!r} predates assertion-level evidence (need >= {MIN_VERSION})"
     )
-    assert report.get("assert_probe") in ("settrace_assert_lines_v1", "disabled"), (
+    assert report.get("assert_probe") in ("settrace_assert_lines_v1", "settrace_assert_lines_v2", "disabled"), (
         f"unknown assert probe: {report.get('assert_probe')!r}"
     )
     total = report.get("assertions_executed_total")

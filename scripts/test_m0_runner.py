@@ -12,6 +12,7 @@ from unittest.mock import patch
 
 from run_m0_tests import (
     ASSERT_PROBE,
+    ASSERT_PROBE_ID,
     ROOT,
     count_assert_sites,
     executable_freshness,
@@ -36,6 +37,9 @@ def main() -> int:
     fingerprint = workspace_source_fingerprint()
     assert len(fingerprint) == 64
     assert len(tests_content_fingerprint()) == 64
+    # The report id distinguishes the thread-aware probe from the older one;
+    # a silent downgrade would undercount assertions executed in worker pools.
+    assert ASSERT_PROBE_ID == "settrace_assert_lines_v2", ASSERT_PROBE_ID
     missing_sources = untracked_source_files()
     assert missing_sources == sorted(set(missing_sources))
     assert all((ROOT / source).is_file() for source in missing_sources)
@@ -95,6 +99,23 @@ def main() -> int:
         assert crashing.returncode != 0
         assert "boom" in crashing.stderr
         assert parse_assert_marker(crashing.stdout) == 1
+        # sys.settrace only covers the calling thread; the probe must also install a
+        # threading trace so assertions inside the script's own workers are counted.
+        threaded_source = chr(10).join([
+            "import threading",
+            "def worker():",
+            "    for index in range(3):",
+            "        assert index < 3, 'worker assertion'",
+            "thread = threading.Thread(target=worker)",
+            "thread.start()",
+            "thread.join()",
+            "assert thread.is_alive() is False",
+            "",
+        ])
+        threaded = run_probe(workspace, "threaded_case.py", threaded_source)
+        assert threaded.returncode == 0, threaded.stdout + threaded.stderr
+        assert parse_assert_marker(threaded.stdout) == 4, (
+            "worker-thread assertions must be counted as well: " + str(threaded.stdout))
         broken = workspace / "broken_syntax.py"
         broken.write_text("def broken(:\n", encoding="utf-8")
         assert count_assert_sites(broken) == 0

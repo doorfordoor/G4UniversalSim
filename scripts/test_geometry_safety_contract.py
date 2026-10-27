@@ -78,18 +78,17 @@ def run_case(exe: Path, temp: Path, label: str, template: str, geometry_text: st
     )
     output = completed.stdout + completed.stderr
     expected = 0 if success else 1
-    if completed.returncode != expected:
-        raise AssertionError(f"{label}: expected exit {expected}, got {completed.returncode}\n{output}")
-    if not success and "created_geometry_object_count=0" not in output:
-        raise AssertionError(f"{label}: failure was not proven pre-object\n{output}")
+    assert completed.returncode == expected, (
+        f"{label}: expected exit {expected}, got {completed.returncode}\n{output}")
+    assert success or "created_geometry_object_count=0" in output, (
+        f"{label}: failure was not proven pre-object\n{output}")
     return output
 
 
 def fail(exe: Path, temp: Path, label: str, template: str, text: str, *markers: str) -> None:
     output = run_case(exe, temp, label, template, text, False)
     for marker in markers:
-        if marker not in output:
-            raise AssertionError(f"{label}: missing marker {marker!r}\n{output}")
+        assert marker in output, f"{label}: missing marker {marker!r}\n{output}"
 
 
 def hierarchical(child: str, boolean: str = "") -> str:
@@ -179,7 +178,7 @@ def gui_contract(temp: Path) -> None:
     except ValueError as error:
         assert "round-trip" in str(error).lower()
     else:
-        raise AssertionError("round-trip blocker did not stop editable writer")
+        assert False, "round-trip blocker did not stop editable writer"
 
     metadata_document = geometry_document_from_summary(parse_geometry(ROOT / "config" / "geometry" / "hierarchical_volume.ini"), "hierarchical")
     metadata_document.volumes[0].metadata = "placement = replica\nmetadata.role = world"

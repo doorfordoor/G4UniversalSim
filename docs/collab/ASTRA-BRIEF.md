@@ -41,11 +41,11 @@
 
 ## 验收数据（可直接复核）
 
-- 阶段 0 全量回归：**76 PASS / 0 FAIL / 0 SKIP**（static 3 / gui 26 / backend 33 / integration 14）
-- 阶段 1 新增 static 用例 `doc_links` 后共 **77 例**（static 4 / gui 26 / backend 33 / integration 14）：`--profile static` 4/4 与 `--profile gui` 26/26 已单独 PASS，**尚未用 77 例跑全量报告**（阶段 1 收尾时补跑并入库）
-- 报告：`docs/verification/stage0-20261027/report.json`（原始位置 `out/verification/stage0-20261027/20261027-225818-646efeac/`）
+- 阶段 0 全量回归：**76 PASS / 0 FAIL / 0 SKIP**
+- 阶段 1b 全量回归（基提交 `5c6ea1d`，本轮改动工作区未提交）：**79 PASS / 0 FAIL / 0 SKIP**（static 6 / gui 26 / backend 33 / integration 14），报告 v2：`assertions_executed_total=116133`、`assert_sites_total=2387`、`cases_with_zero_assertions=[]`（阶段 1.4 的 9 个零断言用例已改成 `assert` 表达）、`assert_probe=settrace_assert_lines_v2`（跟踪脚本启动的线程）、`tests_content_fingerprint=497be13f…`；证据 `docs/verification/stage1b-20261028/README.md`；
+- 报告：`docs/verification/stage1-20261028/report.json`（原始位置 `out/verification/stage1-20261028/20261027-234830-ac6ae94c/`），阶段 0 的旧报告仍在 `docs/verification/stage0-20261027/`
 - `tracked_source_gate=pass`、`untracked_source_files=[]`、`backend_provenance=source_sha256_manifest_matches_executable`
-- 源码指纹 `9ea49a045ec58d9aef6164f24a181150bef36091608b799cf12bf08ecec991a7`，exe SHA-256 `8f6df0fe…20e22`
+- 源码指纹 `ba493e735b11ca414fa63bbd9d5c219766a5bb60c838482fa69a884cef558d93`，测试/夹具内容指纹 `8438d98fef5aa67e1000879277c5a204dfcb6ce07bcad7686cc68a65d08dece5`，exe SHA-256 `c446ed5e…d315`
 - 构建：MSVC 19.51.36246.0、Geant4 11.3.2、MT
 - F6 性能（成对设计）：中位比值 1.0047，本机漂移 ±3 % → 只能声明“低于测量噪声”
 
@@ -54,8 +54,9 @@
 - B1 校验在 `BeginRun`，`--inspect-run` 查不出来（文档已如实写明）
 - `SetSeed` 守卫从 UI 不可达、未单独覆盖
 - 阶段 0 **没有**做改前/改后固定种子逐位对照（B1 只改解析、B3 默认名未变、B4 只拒绝非法状态）
-- Linux/GitHub Actions 后端 CI 仍未覆盖（CI 只跑 static+gui）
+- Linux/GitHub Actions 后端 CI 仍未覆盖（CI 只跑 static+gui，但已带 `--fail-on-skip` 与报告证据门禁 `check_report_evidence.py`）
 - Detector/Material/Source 之外的命令族是否还有“改缓存、内核没变、退出码 0”的路径，未系统盘点
+- 报告的断言数是**已执行 `assert` 的下界**（`sys.settrace` 计数），不是覆盖率；9 个用例曾只用 `raise AssertionError`/`return 1` 表达判定，正在改成 assert 表达（改完仍不等于覆盖率）
 
 ## 历史审计对照（新增，先看这个）
 
@@ -72,7 +73,9 @@
 4. 阶段 2 的 **2C**（完整 `EffectiveConfig` + 模块 off/auto/on）由你出设计；注意现有 `effective_config_source_coverage` 只有 6 个启动字段 + 3 个几何字段 + 源粒子/能量 + physics reference，别把过渡层当完整方案。
 5. 你在旧审计里提过的、如果你认为仍然成立的问题，请核对是否已被上述提交覆盖；不成立就明确撤回，不要沿用过期结论。
 6. 请回答对照表 §G 的三条（E2 结论限定、命令族分类表时间、2B 屏蔽场景验收标准）。
-7. 阶段 1 剩下的两项（报告断言级计数 + 工作区内容哈希 + CI 把 skip 当失败；矩阵每条“部分支持”标注证据类型）是否需要你参与设计？我的判断是不需要，只需你复核判定口径。
+7. 阶段 1 剩下的两项（报告断言级计数 + 工作区内容哈希 + CI 把 skip 当失败；矩阵每条“部分支持”标注证据类型）**已完成**（提交 `5c6ea1d`），请复核判定口径，不必参与设计。
+8. **F6 进度协议缺 `sequence`**（你的 2026-10-27 审查遗留项）：现在 `g4usim_progress_v1` 没有任何单调序号，GUI 无法拒绝重复/乱序/上一轮 run 残留的消息。是否需要加 `run_id`/`sequence`，加在哪里（master 聚合层还是 worker 原样转发）、旧 GUI 如何兼容？请给结论（我按你的结论实现，不擅改协议）。
+9. E2-S1 的六个 editor→writer 边界探针已从被忽略的 `out/verification/e2-audit-20261027/writer_boundary_probe.py` 提升为正式 static 用例 `scripts/test_writer_boundary.py`（不需要 Qt/后端，24 条断言行）。若你认为该层选择（static 而不是 gui/integration）或断言强度不够，请指出。
 
 ## 通信方式
 
