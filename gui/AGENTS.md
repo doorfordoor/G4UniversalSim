@@ -1,5 +1,7 @@
 # G4UniversalSim GUI Agent 开发约束
 
+2026-10-27 F6：`core/run_progress.py` 有界增量解析版本化 stdout 进度；runner 每次启动重置，分别增量解码 stdout/stderr，退出先排空尾流再判最终结果。RunPage 未知进度不造百分比，计数全到但未 end 显示收尾中；停止/强杀/失败冻结最后观察值。end 不代表成功，最终状态仍由 run_result.py 决定。新消息版本、噪声前缀、坏 JSON、非有限数、超长行、倒序、跨 run、无换行 EOF 必须保留测试；smoke_live_progress.py 和 smoke_live_progress_backend.py 分别验证协议/Qt 与真实 Geant4，契约见 docs/实时运行进度.md。
+
 2026-10-26 E2：`core/config_schema.py` 只做字段描述/标量必要条件；`structured` 会要求上下文校验，不能吞掉这个结果并当作可运行。动态源/区域/网格及独立几何模板可查询描述，但不扩大 editor/writer 白名单。源长度/能量、physics.default_cut 和 Edep 直方图复用 schema；跨字段 max>min 等仍由 editor 验证。材料已知键从生成数据读取，元素/同位素仍原文保留。writer 不再生成未消费的 physics.mode，参考模式仍由 reference 决定。四份生成产物一律由 scripts/generate_config_schema.py 更新。
 
 2026-10-22 D 安装包：源码与安装包路径只经 `core/install_layout.py` 判断（冻结时 `sys.executable` 是 GUI 本身）：应用根、默认后端（包内 `bin/` 或 `build_vs2026/Release`）、运行包目录（冻结时为“文档\G4UniversalSim\gui_runs”）、脚本目录与运行辅助脚本的 Python（冻结时找 `G4USIM_PYTHON` 或 PATH 中的 python，找不到则禁用并说明）。不要再用 `Path(__file__).parents[...]` 或 `sys.executable` 定位仓库与 Python。`app.py --self-test <报告.json>` 供打包验证，冻结窗口程序没有控制台，必须写文件。

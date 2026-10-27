@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 import json
+import codecs
 from datetime import datetime
 from pathlib import Path
 
 from PySide6.QtCore import QObject, QProcess, Signal
 
+from g4usim_gui.core.run_progress import ProgressParser
 from g4usim_gui.core.log_parser import parse_log_line
 from g4usim_gui.core.paths import ensure_directory
 from g4usim_gui.core.i18n import ui_format, ui_text
@@ -14,6 +16,8 @@ from g4usim_gui.core.run_result import RunResult, evaluate_run_result, summary_f
 
 
 class G4USimRunner(QObject):
+    progressReceived = Signal(object)
+    progressStateChanged = Signal(str)
     stdoutReceived = Signal(str)
     stderrReceived = Signal(str)
     stateChanged = Signal(str)
@@ -34,6 +38,10 @@ class G4USimRunner(QObject):
         self._summary_path: Path | None = None
         self._summary_before: tuple[int, int] | None = None
         self.last_result: RunResult | None = None
+        self._progress = ProgressParser()
+        self._stdout_decoder = codecs.getincrementaldecoder("utf-8")("replace")
+        self._stderr_decoder = codecs.getincrementaldecoder("utf-8")("replace")
+        self._progress_frozen = False
 
         self._process.readyReadStandardOutput.connect(self._read_stdout)
         self._process.readyReadStandardError.connect(self._read_stderr)
@@ -142,6 +150,11 @@ class G4USimRunner(QObject):
         self._summary_path = self._output_dir / "run_summary.txt"
         self._summary_before = summary_fingerprint(self._summary_path)
         self.last_result = None
+        self._progress = ProgressParser()
+        self._stdout_decoder.reset()
+        self._stderr_decoder.reset()
+        self._progress_frozen = False
+        self.progressStateChanged.emit("starting")
         self._requested_state = ""
         self._status_data = {
             "state": "running",
@@ -163,6 +176,8 @@ class G4USimRunner(QObject):
     def terminate(self) -> None:
         if self.is_running():
             self._requested_state = "stopped"
+            self._progress_frozen = True
+            self.progressStateChanged.emit("stopped")
             self._status_data["state"] = "stopping"
             self._status_data["stopRequestedAt"] = _now_iso()
             self._write_run_status()
@@ -171,6 +186,8 @@ class G4USimRunner(QObject):
     def kill(self) -> None:
         if self.is_running():
             self._requested_state = "killed"
+            self._progress_frozen = True
+            self.progressStateChanged.emit("killed")
             self._status_data["state"] = "killed"
             self._status_data["killedAt"] = _now_iso()
             self._write_run_status()
@@ -183,11 +200,14 @@ class G4USimRunner(QObject):
             self._stderr_file.flush()
 
     def _read_stdout(self) -> None:
-        data = bytes(self._process.readAllStandardOutput()).decode("utf-8", errors="replace")
+        data = self._stdout_decoder.decode(bytes(self._process.readAllStandardOutput()))
+        for message in self._progress.feed(data):
+            if not self._progress_frozen:
+                self.progressReceived.emit(message)
         self._write_and_emit(data, is_stdout=True)
 
     def _read_stderr(self) -> None:
-        data = bytes(self._process.readAllStandardError()).decode("utf-8", errors="replace")
+        data = self._stderr_decoder.decode(bytes(self._process.readAllStandardError()))
         self._write_and_emit(data, is_stdout=False)
 
     def _write_and_emit(self, text: str, *, is_stdout: bool) -> None:
@@ -207,6 +227,17 @@ class G4USimRunner(QObject):
                 self.logTagDetected.emit(tag.level, tag.message, tag.advice)
 
     def _on_finished(self, exit_code: int, exit_status: QProcess.ExitStatus) -> None:
+        self._read_stdout()
+        self._read_stderr()
+        stderr_tail = self._stderr_decoder.decode(b"", final=True)
+        if stderr_tail:
+            self._write_and_emit(stderr_tail, is_stdout=False)
+        tail = self._stdout_decoder.decode(b"", final=True)
+        if tail:
+            self._write_and_emit(tail, is_stdout=True)
+        for message in self._progress.feed(tail, final=True):
+            if not self._progress_frozen:
+                self.progressReceived.emit(message)
         assert self._summary_path is not None
         after = summary_fingerprint(self._summary_path)
         fresh = after is not None and after != self._summary_before
@@ -217,6 +248,8 @@ class G4USimRunner(QObject):
             requested_state=self._requested_state,
             summary_fresh=fresh,
         )
+        self._progress_frozen = True
+        self.progressStateChanged.emit(self.last_result.state)
         self._status_data["state"] = self.last_result.state
         self._status_data["exitCode"] = exit_code
         self._status_data["exitStatus"] = "normal" if exit_status == QProcess.NormalExit else "crashed"
@@ -241,11 +274,20 @@ class G4USimRunner(QObject):
         self.finished.emit(exit_code)
 
     def _on_error(self, error: QProcess.ProcessError) -> None:
+        self._progress_frozen = True
+        self.progressStateChanged.emit("failed")
         message = f"QProcess error: {getattr(error, 'name', str(error))}"
         self._status_data["state"] = "error"
         self._status_data["errorMessage"] = message
         self._status_data["errorAt"] = _now_iso()
         self._write_run_status()
+        if error == QProcess.FailedToStart:
+            self.save_logs()
+            for name in ("_stdout_file", "_stderr_file"):
+                handle = getattr(self, name)
+                if handle:
+                    handle.close()
+                    setattr(self, name, None)
         self.errorOccurred.emit(message)
 
     def _on_state_changed(self, state: QProcess.ProcessState) -> None:

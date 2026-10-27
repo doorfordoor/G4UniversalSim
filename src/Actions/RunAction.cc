@@ -1,4 +1,5 @@
 #include "Actions/RunAction.hh"
+#include "Actions/RunProgress.hh"
 
 #include "Actions/WorkerRunContext.hh"
 #include "Biasing/BiasingManager.hh"
@@ -48,6 +49,10 @@ void RunAction::BeginOfRunAction(const G4Run* run)
 {
     if (!run) {
         throw std::runtime_error("RunAction::BeginOfRunAction failed: G4Run is null");
+    }
+
+    if (role_ != Role::Worker) {
+        RunProgress::Begin(run->GetRunID(), run->GetNumberOfEventToBeProcessed());
     }
 
     if (role_ != Role::Worker && biasingManager_ && biasingManager_->IsEnabled()) {
@@ -232,6 +237,10 @@ void RunAction::EndOfRunAction(const G4Run* run)
         }
     } else if (verboseLevel_ > 0) {
         G4cout << "[RunAction] OutputManager is null; final output skipped." << G4endl;
+    }
+    if (role_ != Role::Worker) {
+        RunProgress::End(runID, run->GetNumberOfEventToBeProcessed(), run->GetNumberOfEvent(),
+                         outputManager && outputManager->HasOutputFailure());
     }
 }
 

@@ -24,7 +24,7 @@ This file is the single source of truth for progress. Every work session updates
 | C Wizard + built-in plotting | Done (C1 built-in plots, C2 wizard, C3 parameter scans) | see log |
 | D Installer | Done (portable ZIP + Inno Setup installer; uses an existing Geant4 data folder) | see log |
 | E Fixes and foundations | In progress: E1, E2, E5 done | see log |
-| F System optimisation (backend + GUI) | Planned | |
+| F System optimisation (backend + GUI) | In progress: F6 implementation, acceptance running | |
 | G 3D view redesign | Done (G1-G6) | see log |
 | H Geant4 capability increments | In progress: H1 done | see log |
 
@@ -220,6 +220,8 @@ H4–H8 if the user's applications favour some of them.
 - Stop and ask the user instead of guessing when a choice is hard to undo or changes physics results or defaults.
 
 ## Progress log
+
+- 2026-10-27：启动 F6 整阶段，分支 roadmap/F6-live-progress。版本化后端遥测、GUI 解析与进度显示已实现，真实专项通过，完整回归进行中。见 [F6接续检查点](F6接续检查点.md)。F2 尚未启动。
 
 - 2026-10-27：完成 E2 多模型只读审计试运行：Astra 审查架构与兼容边界，Sol 审查 GUI 校验/生成，主负责人复核证据及复现；未发现可确认功能缺陷。当前提交上 4 项专项通过，补充 writer 边界检查 7/7；未重跑整套物理回归。建立 [多模型协作约定](多模型协作约定.md)，范围、调用记录及一项非阻断回归保护建议见 [E2多模型审计试运行](E2多模型审计试运行.md)。E2 状态不变，F6 未启动。
 

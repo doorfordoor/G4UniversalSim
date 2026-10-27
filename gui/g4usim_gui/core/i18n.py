@@ -20,6 +20,19 @@ LanguageCode = Literal["en", "zh_CN"]
 
 
 ZH_CN: dict[str, str] = {
+    "Unknown": "未知",
+    "starting": "正在启动",
+    "Unknown progress": "进度未知",
+    "Waiting for backend progress; older backends may not report it.": "等待后端进度；旧版后端可能不报告进度。",
+    "Run {run}: {completed}/{planned} events | {phase} | {rate} events/s | ETA {eta}": "运行 {run}：{completed}/{planned} 事件 | {phase} | {rate} 事件/秒 | 预计剩余 {eta}",
+    "Progress frozen: {state}; see final result.": "进度已冻结：{state}；请查看最终结果。",
+    "Progress begin": "开始",
+    "Progress running": "运行中",
+    "Progress finishing": "收尾中",
+    "Progress end": "本轮事件处理结束",
+    "Progress aborted": "本轮已中止",
+    "{seconds} s": "{seconds} 秒",
+
     "Export Dose JSON...": "导出 Dose JSON...",
     "Export Fluence JSON...": "导出 Fluence JSON...",
     "Cancel export": "取消导出",

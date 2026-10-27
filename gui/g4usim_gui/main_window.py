@@ -91,6 +91,8 @@ class MainWindow(ShellMixin, ProjectMixin, RunMixin, ContentMixin, QMainWindow):
         self.run_page.killRequested.connect(self.runner.kill)
         self.run_page.saveLogsRequested.connect(self.runner.save_logs)
 
+        self.runner.progressReceived.connect(self.run_page.set_progress)
+        self.runner.progressStateChanged.connect(self.run_page.set_progress_state)
         self.runner.stdoutReceived.connect(self.run_page.append_stdout)
         self.runner.stderrReceived.connect(self.run_page.append_stderr)
         self.runner.stateChanged.connect(self._on_state_changed)

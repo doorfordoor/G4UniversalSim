@@ -1,7 +1,10 @@
 #include "Actions/EventAction.hh"
+#include "Actions/RunProgress.hh"
 
 #include "Actions/WorkerRunContext.hh"
 #include "G4Event.hh"
+#include "G4Run.hh"
+#include "G4RunManager.hh"
 #include "G4ios.hh"
 #include "Scoring/ScoringManager.hh"
 
@@ -44,6 +47,11 @@ void EventAction::EndOfEventAction(const G4Event* event)
     const int eventID = event->GetEventID();
     if (ScoringManager* scoringManager = ActiveScoringManager()) {
         scoringManager->EndEvent(eventID);
+    }
+    if (auto* manager = G4RunManager::GetRunManager()) {
+        if (const auto* run = manager->GetCurrentRun()) {
+            RunProgress::EventCompleted(run->GetRunID(), event->IsAborted());
+        }
     }
     if (verboseLevel_ > 1) {
         G4cout << "[EventAction] End event " << eventID << G4endl;

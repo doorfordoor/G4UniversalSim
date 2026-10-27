@@ -6,6 +6,7 @@ from PySide6.QtWidgets import (
     QLabel,
     QPlainTextEdit,
     QPushButton,
+    QProgressBar,
     QTabWidget,
     QVBoxLayout,
     QWidget,
@@ -30,6 +31,8 @@ class RunPage(QWidget):
         self._current_state = "Not running"
         self._exit_code: int | None = None
         self._result_state = ""
+        self._progress_data = None
+        self._progress_state = "idle"
 
         self.command_preview = QPlainTextEdit()
         self.command_preview.setReadOnly(True)
@@ -51,6 +54,11 @@ class RunPage(QWidget):
         tabs.addTab(self.stderr_view, "stderr")
         tabs.addTab(self.merged_view, "merged log")
         tabs.addTab(self.macro_plan_view, "Run plan")
+
+        self.progress_bar = QProgressBar()
+        self.progress_label = QLabel()
+        self.progress_label.setWordWrap(True)
+        self._render_progress()
 
         self.state_label = QLabel("State: Not running")
         self.exit_label = QLabel("Exit code: -")
@@ -100,7 +108,55 @@ class RunPage(QWidget):
         layout.addWidget(self.command_preview)
         layout.addLayout(buttons)
         layout.addLayout(status)
+        layout.addWidget(self.progress_bar)
+        layout.addWidget(self.progress_label)
         layout.addWidget(tabs, 1)
+
+    def set_progress(self, message: dict) -> None:
+        if self._progress_state not in {"starting", "active"}:
+            return
+        self._progress_data = message
+        self._progress_state = "active"
+        self._render_progress()
+
+    def set_progress_state(self, state: str) -> None:
+        if state == "starting":
+            self._progress_data = None
+        self._progress_state = state
+        self._render_progress()
+
+    def _render_progress(self) -> None:
+        data = self._progress_data
+        active = self._progress_state in {"starting", "active"}
+        planned = data.get("planned_events") if data else None
+        completed = data.get("completed_events") if data else None
+        if planned and completed is not None:
+            self.progress_bar.setRange(0, 1000)
+            self.progress_bar.setValue(min(1000, completed * 1000 // planned))
+            # Keep the machine count readable even when the OS locale selects
+            # non-decimal display glyphs (e.g. zh_HK Suzhou numerals).
+            self.progress_bar.setFormat(f"{min(100, completed * 100 // planned)}%")
+        else:
+            self.progress_bar.setRange(0, 0 if active else 1000)
+            self.progress_bar.setValue(0)
+            self.progress_bar.setFormat(ui_text("Unknown progress"))
+        if data:
+            unknown = ui_text("Unknown")
+            rate = data.get("rate_eps")
+            eta = data.get("eta_s")
+            text = ui_format(
+                "Run {run}: {completed}/{planned} events | {phase} | {rate} events/s | ETA {eta}",
+                run=data["run_id"], completed=completed if completed is not None else unknown,
+                planned=planned if planned is not None else unknown,
+                phase=ui_text("Progress finishing" if data["phase"] == "running" and planned is not None and completed == planned else "Progress " + data["phase"]),
+                rate=f"{rate:.1f}" if rate is not None else unknown,
+                eta=ui_format("{seconds} s", seconds=f"{eta:.1f}") if eta is not None else unknown,
+            )
+        else:
+            text = ui_text("Waiting for backend progress; older backends may not report it.")
+        if not active and self._progress_state != "idle":
+            text += " | " + ui_format("Progress frozen: {state}; see final result.", state=ui_text(self._progress_state))
+        self.progress_label.setText(text)
 
     def set_command(self, command: list[str]) -> None:
         self.command_preview.setPlainText("\n".join(command))
@@ -144,6 +200,7 @@ class RunPage(QWidget):
         self.result_label.setText(ui_format("Result: {state}", state=ui_text(state)) if state else "")
 
     def refresh_language(self) -> None:
+        self._render_progress()
         self.state_label.setText(ui_format("State: {state}", state=ui_text(self._current_state)))
         code = "-" if self._exit_code is None else self._exit_code
         self.exit_label.setText(ui_format("Exit code: {code}", code=code))
