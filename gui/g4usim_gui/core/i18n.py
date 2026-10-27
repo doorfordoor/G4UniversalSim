@@ -25,7 +25,6 @@ ZH_CN: dict[str, str] = {
     "Unknown progress": "进度未知",
     "Waiting for backend progress; older backends may not report it.": "等待后端进度；旧版后端可能不报告进度。",
     "Run {run}: {completed}/{planned} events | {phase} | {rate} events/s | ETA {eta}": "运行 {run}：{completed}/{planned} 事件 | {phase} | {rate} 事件/秒 | 预计剩余 {eta}",
-    "Progress frozen: {state}; see final result.": "进度已冻结：{state}；请查看最终结果。",
     "Progress begin": "开始",
     "Progress running": "运行中",
     "Progress finishing": "收尾中",

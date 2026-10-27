@@ -42,6 +42,10 @@ class G4USimRunner(QObject):
         self._stdout_decoder = codecs.getincrementaldecoder("utf-8")("replace")
         self._stderr_decoder = codecs.getincrementaldecoder("utf-8")("replace")
         self._progress_frozen = False
+        # readyRead delivers whatever bytes arrived, so a log line can be split across
+        # chunks. ``parse_log_line`` needs whole lines, so keep the unterminated tail of
+        # each stream here and feed it with the next chunk (flushed when the run ends).
+        self._log_tails: dict[str, str] = {"stdout": "", "stderr": ""}
 
         self._process.readyReadStandardOutput.connect(self._read_stdout)
         self._process.readyReadStandardError.connect(self._read_stderr)
@@ -154,6 +158,7 @@ class G4USimRunner(QObject):
         self._stdout_decoder.reset()
         self._stderr_decoder.reset()
         self._progress_frozen = False
+        self._log_tails = {"stdout": "", "stderr": ""}
         self.progressStateChanged.emit("starting")
         self._requested_state = ""
         self._status_data = {
@@ -222,9 +227,35 @@ class G4USimRunner(QObject):
                 self._stderr_file.flush()
             self.stderrReceived.emit(text)
 
-        for line in text.splitlines():
-            for tag in parse_log_line(line):
-                self.logTagDetected.emit(tag.level, tag.message, tag.advice)
+        self._emit_log_tags(text, "stdout" if is_stdout else "stderr")
+
+    # A line without a newline longer than this is parsed as-is instead of buffered
+    # without bound (the raw text still goes to the log file).
+    _MAX_LOG_LINE = 65536
+
+    def _emit_log_tags(self, text: str, stream: str) -> None:
+        pending = self._log_tails.get(stream, "") + text
+        pieces = pending.splitlines(keepends=True)
+        tail = ""
+        if pieces and not pieces[-1].endswith(("\n", "\r")):
+            tail = pieces.pop()
+        for piece in pieces:
+            self._emit_log_line(piece.rstrip("\r\n"))
+        if len(tail) > self._MAX_LOG_LINE:
+            self._emit_log_line(tail)
+            tail = ""
+        self._log_tails[stream] = tail
+
+    def _flush_log_lines(self) -> None:
+        for stream in ("stdout", "stderr"):
+            tail = self._log_tails.get(stream, "")
+            self._log_tails[stream] = ""
+            if tail:
+                self._emit_log_line(tail.rstrip("\r\n"))
+
+    def _emit_log_line(self, line: str) -> None:
+        for tag in parse_log_line(line):
+            self.logTagDetected.emit(tag.level, tag.message, tag.advice)
 
     def _on_finished(self, exit_code: int, exit_status: QProcess.ExitStatus) -> None:
         self._read_stdout()
@@ -238,6 +269,7 @@ class G4USimRunner(QObject):
         for message in self._progress.feed(tail, final=True):
             if not self._progress_frozen:
                 self.progressReceived.emit(message)
+        self._flush_log_lines()
         assert self._summary_path is not None
         after = summary_fingerprint(self._summary_path)
         fresh = after is not None and after != self._summary_before

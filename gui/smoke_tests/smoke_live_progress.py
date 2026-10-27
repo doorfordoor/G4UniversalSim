@@ -69,7 +69,34 @@ def main():
     page.set_progress(json.loads(message(phase="running", completed=5)[len(PREFIX):]))
     page.set_progress_state("stopped")
     page.set_progress(json.loads(message(phase="end", completed=10)[len(PREFIX):]))
-    assert page.progress_bar.value() == 500 and "冻结" in page.progress_label.text()
+    stopped_text = page.progress_label.text()
+    assert page.progress_bar.value() == 500 and "用户停止" in stopped_text and "冻结" not in stopped_text, stopped_text
+    # B1: a terminal state is shown as the final result, not as "frozen" progress.
+    page.set_progress_state("success")
+    final_text = page.progress_label.text()
+    assert "模拟成功" in final_text and "冻结" not in final_text, final_text
+    # B2: the log views are bounded so a long run cannot grow memory without limit.
+    assert page.stdout_view.maximumBlockCount() == 5000
+    assert page.stderr_view.maximumBlockCount() == 5000
+    assert page.merged_view.maximumBlockCount() == 5000
+    assert page.command_preview.maximumBlockCount() == 1000
+    assert page.macro_plan_view.maximumBlockCount() == 5000
+    # B3: the merged log inserts a stream prefix once per line, also when a chunk
+    # boundary splits the line, and flushes a tail that never got a newline.
+    page.clear_logs()
+    page.append_stdout("hello wo")
+    page.append_stdout("rld\nsecond line\n")
+    page.append_stdout("tail without newline")
+    page.append_stderr("stderr line\n")
+    merged = page.merged_view.toPlainText()
+    assert merged == ("[stdout] hello world\n[stdout] second line\n"
+                      "[stdout] tail without newline\n[stderr] stderr line\n"), merged
+    page.append_stdout("final without newline")
+    page.set_exit_code(0)
+    merged = page.merged_view.toPlainText()
+    assert merged.endswith("[stdout] final without newline\n"), merged
+    page.clear_logs()
+    assert page.merged_view.toPlainText() == ""
     with tempfile.TemporaryDirectory() as directory:
         root = Path(directory)
         config = root / "dummy.ini"
@@ -85,6 +112,17 @@ def main():
         runner.stderrReceived.connect(stderr_seen.append)
         done = []
         runner.finished.connect(done.append)
+        tag_seen = []
+        runner.logTagDetected.connect(lambda level, message, advice: tag_seen.append((level, message)))
+        # B4: readyRead may split a log line; the tag must still be detected.
+        runner._write_and_emit("noise G4Exc", is_stdout=False)
+        assert not tag_seen, tag_seen          # an incomplete line does not match yet
+        runner._write_and_emit("eption split\n", is_stdout=False)
+        assert tag_seen and tag_seen[-1][0] == "error" and "exception" in tag_seen[-1][1].lower(), tag_seen
+        tag_seen.clear()
+        runner._write_and_emit("tail G4Exception", is_stdout=False)
+        runner._flush_log_lines()
+        assert tag_seen and tag_seen[-1][0] == "error", tag_seen
         def execute(code):
             done.clear()
             runner.start(project, [sys.executable, "-u", "-c", code])
@@ -97,7 +135,8 @@ def main():
         execute("import sys; sys.stdout.write(" + repr(wire) + "); sys.stdout.flush()")
         assert len(received) == 3 and received[-1]["phase"] == "end"
         assert runner.last_result.state != "success"  # Full progress cannot replace a fresh summary.
-        assert "冻结" in page.progress_label.text()
+        incomplete_text = page.progress_label.text()
+        assert "结果未证实" in incomplete_text and "冻结" not in incomplete_text, incomplete_text
         assert (root / "output/logs/stdout.log").read_text() == wire
         stderr_seen.clear()
         # Separate byte writes plus sleeps force UTF-8 codepoints across readyRead chunks.
@@ -105,6 +144,11 @@ def main():
                 "[(os.write(2, bytes([v])),time.sleep(.02)) for v in b]; os.write(2,b'\\xe4')")
         assert "".join(stderr_seen) == "中文\ufffd"
         assert (root / "output/logs/stderr.log").read_text(encoding="utf-8") == "中文\ufffd"
+        # A real process that writes one tagged line in two chunks is still detected.
+        tag_seen.clear()
+        execute("import sys,time; sys.stdout.write('prefix G4Exc'); sys.stdout.flush(); "
+                "time.sleep(.2); sys.stdout.write('eption split\\n'); sys.stdout.flush()")
+        assert any(tag[0] == "error" and "exception" in tag[1].lower() for tag in tag_seen), tag_seen
         execute("print('legacy backend')")
         assert page._progress_data is None and page.progress_bar.maximum() != 0
         execute("import sys; print(" + repr(message(phase="running", completed=2).rstrip()) + "); sys.exit(3)")

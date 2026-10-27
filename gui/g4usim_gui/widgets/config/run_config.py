@@ -434,6 +434,20 @@ class RunConfigMixin:
         self._emit_changed()
 
     def _update_sps_from_summary_widgets(self) -> None:
+        """Mirror the setup column's quick fields into the Source/Physics/Scoring models.
+
+        The setup column only exposes the scalar source fields written below (preset,
+        particle, energy, position, direction) plus physics/scoring fields. It has no
+        control for the source geometry (``position_mode``/``position_type``/
+        ``source_shape``) or for the angular distribution (``angular_mode``/``theta``/
+        ``phi``): those belong to the Source editor, and ``main_ini_writer`` derives
+        ``position_type``, ``center``, ``halfx``/``halfy`` and ``isotropic`` from them.
+        This slot used to force ``point`` geometry and a fixed direction unconditionally,
+        so editing e.g. the energy here silently collapsed a configured plane/rectangle
+        isotropic source back to a point source with a fixed beam (the run still
+        "succeeded", with the wrong physics). Only fields that a setup control actually
+        mirrors may be written here; a forced reset would need an explicit condition.
+        """
         if self._building:
             return
         self.source_editor.preset = self.source_preset.currentText().strip()
@@ -441,10 +455,6 @@ class RunConfigMixin:
         self.source_editor.energy = self.source_energy.text().strip()
         self.source_editor.position = self.source_position.text().strip()
         self.source_editor.direction = self.source_direction.text().strip()
-        self.source_editor.position_mode = "point"
-        self.source_editor.position_type = "point"
-        self.source_editor.source_shape = "point"
-        self.source_editor.angular_mode = "fixed"
         self.physics_editor.reference_list = self.physics_reference.text().strip()
         self.physics_editor.default_cut = self.default_cut.text().strip()
         self.physics_editor.enable_biasing_physics = self.enable_biasing.isChecked()

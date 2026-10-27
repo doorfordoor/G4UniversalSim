@@ -96,7 +96,7 @@ public:
     std::unique_ptr<G4VModularPhysicsList> CreatePhysicsList() const;
     std::unique_ptr<PrimaryGeneratorAction> CreatePrimaryGeneratorAction() const;
     std::unique_ptr<ActionInitialization> CreateActionInitialization() const;
-    std::function<G4VSensitiveDetector*()> CreateSensitiveDetectorFactory() const;
+    std::function<G4VSensitiveDetector*(const std::string&)> CreateSensitiveDetectorFactory() const;
     std::function<void(const GeometryRegistry&)> CreateGeometryPostBuildCallback() const;
     void InitializeSourceAfterPhysicsListRegistered();
     void ValidateBiasingProcessTargets();

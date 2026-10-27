@@ -27,6 +27,12 @@ void IniReader::Load(const std::string& filename)
         throw std::runtime_error("Failed to open INI file: '" + filename + "'");
     }
 
+    // Loading a second file into the same reader replaces the parsed data; drop the bookkeeping
+    // of the previous file so duplicate reports never mix two files.
+    duplicates_.clear();
+    sectionFirstLine_.clear();
+    keyFirstLine_.clear();
+
     std::string currentSection = kDefaultSection;
     std::string currentOriginalSection = kDefaultSection;
     data_[currentSection];
@@ -57,6 +63,12 @@ void IniReader::Load(const std::string& filename)
             currentOriginalSection = sectionName;
             currentSection = NormalizeName(sectionName);
             data_[currentSection];
+            const auto seenSection = sectionFirstLine_.find(currentSection);
+            if (seenSection != sectionFirstLine_.end()) {
+                duplicates_.push_back({currentSection, "", seenSection->second, lineNumber});
+            } else {
+                sectionFirstLine_[currentSection] = lineNumber;
+            }
             sectionInfo_[currentSection] = {currentSection, lineNumber, true, currentOriginalSection, currentSection};
             continue;
         }
@@ -72,7 +84,14 @@ void IniReader::Load(const std::string& filename)
             throw ParseError(filename, lineNumber, "empty key");
         }
 
-        data_[currentSection][NormalizeName(key)] = {value, lineNumber, currentOriginalSection, key};
+        const std::string normalizedKey = NormalizeName(key);
+        const auto seenKey = keyFirstLine_[currentSection].find(normalizedKey);
+        if (seenKey != keyFirstLine_[currentSection].end()) {
+            duplicates_.push_back({currentSection, normalizedKey, seenKey->second, lineNumber});
+        } else {
+            keyFirstLine_[currentSection][normalizedKey] = lineNumber;
+        }
+        data_[currentSection][normalizedKey] = {value, lineNumber, currentOriginalSection, key};
     }
 
     if (input.bad()) {
@@ -168,6 +187,11 @@ std::vector<IniFieldInfo> IniReader::GetFields() const
     return fields;
 }
 
+std::vector<IniDuplicateInfo> IniReader::GetDuplicates() const
+{
+    return duplicates_;
+}
+
 std::vector<IniSectionInfo> IniReader::GetSectionInfo() const
 {
     std::vector<IniSectionInfo> sections;
@@ -185,6 +209,9 @@ void IniReader::Clear()
     filename_.clear();
     data_.clear();
     sectionInfo_.clear();
+    duplicates_.clear();
+    sectionFirstLine_.clear();
+    keyFirstLine_.clear();
 }
 
 std::string IniReader::NormalizeName(const std::string& name)

@@ -202,6 +202,25 @@ def main() -> int:
             _, log = r.run("proton", 10, 1, {"proton": flat}, expect_ok=False, **options)
             assert message in log, (message, log[-2000:])
         print(f"  {len(bad)} invalid settings rejected")
+
+        print("particle names: case-insensitive resolution and unknown names")
+        # IniReader lower-cases every key, so "he3" is the only way to spell the Geant4
+        # particle "He3" in the INI. The table must be stored under the canonical name,
+        # otherwise no hit ever matches and the DDD stays at zero without any warning.
+        # 10 MeV He3 range in Si is ~65 um, so the slab must stay thinner than that.
+        output, _ = r.run("He3", 10.0, 200, {"he3": flat}, thickness=0.01, hits=False)
+        he3 = [row for row in rows(output, "displacement_volume_summary") if row["particle"] == "He3"]
+        assert he3, "no 'He3' row: the lower-case table key was not resolved to the Geant4 name"
+        he3_length = sum(float(row["track_length_mm"]) for row in he3)
+        close("He3 track length [mm]", he3_length, 0.01 * 200, 0.02)
+
+        # An unknown name must fail before any event instead of leaving the DDD at zero,
+        # and it must name the configuration line and suggest the intended particle.
+        output, log = r.run("proton", 10, 1, {"protom": flat}, expect_ok=False)
+        for message in ("is not a Geant4 particle name", "line ", "did you mean 'proton'"):
+            assert message in log, (message, log[-2000:])
+        assert not [row for row in rows(output, "displacement_volume_summary")], "DDD rows for a rejected name"
+        print("  unknown name rejected before events, He3 resolved")
     finally:
         shutil.rmtree(work, ignore_errors=True)
     print("test_displacement_damage: OK")

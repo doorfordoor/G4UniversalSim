@@ -359,6 +359,38 @@ std::vector<ConfigWarning> ConfigManager::GetUnconsumedWarnings() const
     return warnings;
 }
 
+std::vector<ConfigWarning> ConfigManager::GetDuplicateWarnings() const
+{
+    EnsureMainConfigLoaded();
+    std::vector<ConfigWarning> warnings;
+    const std::string& filename = mainConfig_.GetFilename();
+    for (const auto& duplicate : mainConfig_.GetDuplicates()) {
+        ConfigWarning warning;
+        warning.filename = filename;
+        warning.section = duplicate.section;
+        warning.key = duplicate.key;
+        warning.lineNumber = duplicate.lineNumber;
+        warning.suggestion =
+            "earlier declaration at line " + std::to_string(duplicate.firstLine) +
+            " is overridden by this one; remove one of the declarations";
+        if (duplicate.key.empty()) {
+            warning.value = "";
+        } else {
+            // The repeated key's value in the map is the later one; report it so the
+            // warning states which value actually wins.
+            warning.value = mainConfig_.GetString(duplicate.section, duplicate.key);
+        }
+        warnings.push_back(std::move(warning));
+    }
+    std::sort(warnings.begin(), warnings.end(), [](const ConfigWarning& left, const ConfigWarning& right) {
+        if (left.filename != right.filename) return left.filename < right.filename;
+        if (left.lineNumber != right.lineNumber) return left.lineNumber < right.lineNumber;
+        if (left.section != right.section) return left.section < right.section;
+        return left.key < right.key;
+    });
+    return warnings;
+}
+
 void ConfigManager::MarkKeyConsumed(const std::string& section, const std::string& key) const
 {
     EnsureMainConfigLoaded();

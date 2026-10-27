@@ -76,6 +76,11 @@ Short, user-facing record of notable changes. Detailed support status lives in
   GDML) keep resolving.
 
 ### Fixed
+- **位移损伤粒子名（2026-10-27 B1）**：`[scoring.displacement]` 的键被 INI 读取器转成小写，旧实现按小写查表，导致 `he3` 一类名字永远不匹配、DDD 静默为 0 且退出码 0。现在按 Geant4 粒子表大小写不敏感解析为规范名（`he3` → `He3`），不匹配任何粒子时在首个事件前失败，并报出主 INI 文件、行号和候选。
+- **主 INI 重复声明（2026-10-27 B2）**：同一 section 或同一 key 重复声明此前被静默覆盖。现在输出 `[ConfigWarning] duplicate declaration <file>:<line> [<section>]/<key> = <value>` 并在摘要记录 `config_duplicate_count`；实际生效值仍是最后一次声明（兼容行为不变）。几何文件 `version = 2` 的严格拒绝与此独立。
+- **命令状态门禁（2026-10-27 B3/B4）**：`/AIHL/detector/enableSD`、`/AIHL/detector/setSDName`、`/AIHL/app/setSeed` 在 `/run/initialize` 之后只打印 warning 并改动 Manager 缓存，Geant4 内核仍用旧状态而进程返回 0。三条命令现在只在 `PreInit` 可用，非法状态使 batch 失败、写 `status=failed` 摘要并非零退出。敏感探测器改为按配置的探测器名创建（原先硬编码 `AIHLParticleSD`，改名后会重复注册）。
+- **GUI 源字段保留（2026-10-27）**：在 Setup 栏修改源粒子/能量/预设或计分选项时，GUI 会把已配置的平面/矩形/各向同性源静默重置为点源 + 固定束流，生成的 main.ini 随之丢字段而运行仍“成功”。现在源几何只由 Source editor 决定，Setup 栏只镜像它真正暴露的标量字段。
+- **GUI 进度与日志（2026-10-27）**：进度终态不再显示“进度已冻结”，改用“结果：模拟成功／用户停止／强制结束／结果未证实”；stdout/stderr/merged 三个日志视图加行数上限，merged 前缀只在行首插入，GUI 与 runner 的日志解析都按完整行跨 chunk 缓冲（同时修掉 `[gui] [gui]` 双前缀）。
 - Integer fields above 2147483647 (for example `seed = 99999999999`) were silently clamped
   to 2147483647 on Windows; they are now rejected as out of range.
 - The GUI accepted a negative seed or one above 2147483647, which the backend rejects or

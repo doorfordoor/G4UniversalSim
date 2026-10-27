@@ -98,6 +98,12 @@ public:
 
     std::vector<ConfigWarning> GetUnconsumedWarnings() const;
 
+    // Repeated [section] headers and repeated keys in the main INI. The parser keeps the
+    // historical last-value-wins behavior (geometry version=2 has its own strict rejection),
+    // so these are reported as warnings: the earlier declaration is silently dropped for
+    // every consumer, which must not stay invisible.
+    std::vector<ConfigWarning> GetDuplicateWarnings() const;
+
     // Mark a known compatibility alias consumed after a higher-priority alias wins.
     void MarkKeyConsumed(const std::string& section, const std::string& key) const;
 
@@ -105,10 +111,14 @@ public:
 
     void Clear();
 
-private:
-    static std::string NormalizeConfigName(const std::string& name);
+    // Closest candidate (edit distance <= 5) for a "did you mean" message; shared by
+    // the unconsumed-key warnings and by modules that validate a name against an
+    // external table at configuration time (for example [scoring.displacement]).
     static std::string Suggestion(const std::string& value,
                                   const std::vector<std::string>& candidates);
+
+private:
+    static std::string NormalizeConfigName(const std::string& name);
 
     const IniReader& RequireConfigFile(const std::string& name) const;
     void EnsureMainConfigLoaded() const;

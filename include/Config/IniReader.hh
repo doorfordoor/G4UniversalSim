@@ -17,6 +17,16 @@ struct IniFieldInfo {
     std::string normalizedKey;
 };
 
+// A repeated [section] header or repeated key inside one section. The parser keeps its
+// historical last-value-wins behavior, but records every repetition so callers can report
+// it instead of silently dropping the earlier declaration.
+struct IniDuplicateInfo {
+    std::string section;      // normalized section name
+    std::string key;          // normalized key; empty for a repeated section header
+    std::size_t firstLine = 0;
+    std::size_t lineNumber = 0;  // line of the repeated declaration
+};
+
 struct IniSectionInfo {
     std::string section;
     std::size_t lineNumber = 0;
@@ -51,6 +61,8 @@ public:
 
     std::vector<IniSectionInfo> GetSectionInfo() const;
 
+    std::vector<IniDuplicateInfo> GetDuplicates() const;
+
     const std::string& GetFilename() const;
 
     void Clear();
@@ -76,4 +88,7 @@ private:
     std::string filename_;
     std::map<std::string, Section> data_;
     std::map<std::string, IniSectionInfo> sectionInfo_;
+    std::vector<IniDuplicateInfo> duplicates_;
+    std::map<std::string, std::size_t> sectionFirstLine_;
+    std::map<std::string, std::map<std::string, std::size_t>> keyFirstLine_;
 };

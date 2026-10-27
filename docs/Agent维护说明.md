@@ -105,7 +105,7 @@ M0-3A 最初只增加误导防护。`placement=replica|parameterised|assembly`�
 
 ### 3.3 M0-3B1 主配置字段消费追踪
 
-主配置只经过 `IniReader`/`ConfigManager` 链路追踪。成功的 `GetString`、`GetInt`、`GetDouble`、`GetBool`、`GetVector` 会标记实际字段已消费；`HasKey` 和 `HasSection` 仅探测，不会掩盖未消费字段。`SimulationManager::Configure()` 在各 Manager 完成后按文件和行号输出 `[ConfigWarning]`，未知 section 也会报告；warning 不改变退出码或既有运行结果。`run_summary.txt` 的 `config_warning_count` 和 `[Warnings]` 保存同一明细。材料文件和几何文件的独立解析器不在本轮范围内。
+主配置只经过 `IniReader`/`ConfigManager` 链路追踪。成功的 `GetString`、`GetInt`、`GetDouble`、`GetBool`、`GetVector` 会标记实际字段已消费；`HasKey` 和 `HasSection` 仅探测，不会掩盖未消费字段。`SimulationManager::Configure()` 在各 Manager 完成后按文件和行号输出 `[ConfigWarning]`，未知 section 也会报告；warning 不改变退出码或既有运行结果。`run_summary.txt` 的 `config_warning_count` 和 `[Warnings]` 保存同一明细。`IniReader` 还记录重复 section 头与同一 section 内重复键的首次声明行号（`IniDuplicateInfo`），`ConfigManager::GetDuplicateWarnings()` 把它们转成同格式 warning（`suggestion` 说明后值覆盖前值、删除其中一处），摘要另计 `config_duplicate_count`；重复声明仍按最后值生效，几何文件 `version = 2` 的严格拒绝与此独立。材料文件和几何文件的独立解析器不在本轮范围内。
 
 ### 3.6 M0-3B2B2 几何来源诊断
 

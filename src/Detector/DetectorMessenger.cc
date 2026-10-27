@@ -22,12 +22,16 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* detector)
     directory_->SetGuidance("Detector construction commands for G4UniversalSim.");
 
     enableSDCmd_ = new G4UIcmdWithABool("/AIHL/detector/enableSD", this);
-    enableSDCmd_->SetGuidance("Enable or disable sensitive detector binding in ConstructSDandField().");
+    enableSDCmd_->SetGuidance("Enable or disable sensitive detector binding in ConstructSDandField(); "
+                              "pre-initialisation only, restart or edit the configuration afterwards.");
     enableSDCmd_->SetParameterName("enable", false);
+    enableSDCmd_->AvailableForStates(G4State_PreInit);
 
     setSDNameCmd_ = new G4UIcmdWithAString("/AIHL/detector/setSDName", this);
-    setSDNameCmd_->SetGuidance("Set the logical sensitive detector name reserved for the future Hits module.");
+    setSDNameCmd_->SetGuidance("Set the logical sensitive detector name; the sensitive detector is created with "
+                               "this name. Pre-initialisation only, restart or edit the configuration afterwards.");
     setSDNameCmd_->SetParameterName("name", false);
+    setSDNameCmd_->AvailableForStates(G4State_PreInit);
 
     printRegistryCmd_ = new G4UIcmdWithoutParameter("/AIHL/detector/printRegistry", this);
     printRegistryCmd_->SetGuidance("Print GeometryRegistry summary.");
@@ -63,13 +67,11 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     try {
         if (command == enableSDCmd_) {
             EnsureDetector("/AIHL/detector/enableSD");
-            WarnIfWorldBuilt("/AIHL/detector/enableSD");
             detector_->SetSensitiveDetectorEnabled(enableSDCmd_->GetNewBoolValue(newValue));
             return;
         }
         if (command == setSDNameCmd_) {
             EnsureDetector("/AIHL/detector/setSDName");
-            WarnIfWorldBuilt("/AIHL/detector/setSDName");
             detector_->SetSensitiveDetectorName(newValue);
             return;
         }
@@ -118,15 +120,6 @@ void DetectorMessenger::EnsureDetector(const char* commandName) const
     if (!detector_) {
         throw std::runtime_error(std::string(commandName) + " failed: DetectorConstruction pointer is null");
     }
-}
-
-void DetectorMessenger::WarnIfWorldBuilt(const char* commandName) const
-{
-    if (!detector_ || !detector_->GetWorldVolume()) return;
-    const std::string message =
-        std::string(commandName) +
-        " is recommended before /run/initialize. If sensitive detector settings are changed after geometry construction, call /run/reinitializeGeometry before the next run.";
-    G4Exception("DetectorMessenger", "AIHLDetectorCmdWarn001", JustWarning, message.c_str());
 }
 
 void DetectorMessenger::ReportCommandError(const char* commandName, const G4String& value, const std::exception& error) const

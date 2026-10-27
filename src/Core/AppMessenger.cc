@@ -49,9 +49,10 @@ AppMessenger::AppMessenger(SimulationManager* manager)
     setNumThreadsCmd_->AvailableForStates(G4State_PreInit);
 
     setSeedCmd_ = std::make_unique<G4UIcmdWithAnInteger>("/AIHL/app/setSeed", this);
-    setSeedCmd_->SetGuidance("Set random seed stored in SimulationContext.");
+    setSeedCmd_->SetGuidance("Set the random seed before /run/initialize; restart to change it afterwards.");
     setSeedCmd_->SetParameterName("seed", false);
     setSeedCmd_->SetRange("seed >= 0");
+    setSeedCmd_->AvailableForStates(G4State_PreInit);
 
     setVerboseCmd_ = std::make_unique<G4UIcmdWithAnInteger>("/AIHL/app/setVerbose", this);
     setVerboseCmd_->SetGuidance("Set application verbose level.");

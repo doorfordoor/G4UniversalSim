@@ -12,6 +12,8 @@
 #include "Scoring/NielTable.hh"
 #include "Utils/StringUtils.hh"
 #include "Utils/UnitParser.hh"
+#include "G4ParticleDefinition.hh"
+#include "G4ParticleTable.hh"
 #include "G4PhysicalVolumeStore.hh"
 #include "G4RunManager.hh"
 
@@ -36,6 +38,64 @@ bool InjectBeginScoringFailure(int runID, const OutputManager* output)
     return value && std::string(value) == "begin_scoring_t0";
 #endif
 }
+
+// [scoring.displacement] keys are particle names, and IniReader lower-cases every key,
+// so a user cannot write the Geant4 spelling "He3" verbatim. A misspelled or wrongly
+// cased name used to load a table that no hit can ever match: the DDD stayed at zero
+// and the run reported success. The keys are therefore resolved to canonical particle
+// names and an unknown name becomes a hard failure with file, line and a candidate.
+//
+// The Geant4 particle table is empty before the physics list is constructed, so the
+// configuration phase usually cannot resolve anything; in that case the raw key is kept
+// and ResolvePendingNielNames() finishes the job in BeginRun, before the first event.
+struct ParticleNameLookup {
+    std::string canonical;                 // empty when no particle matches
+    std::vector<std::string> candidates;   // names in the table (empty: table not built yet)
+};
+
+ParticleNameLookup LookupParticleName(const std::string& rawKey)
+{
+    ParticleNameLookup result;
+    auto* table = G4ParticleTable::GetParticleTable();
+    const std::string key = StringUtils::Trim(rawKey);
+    if (G4ParticleDefinition* exact = table->FindParticle(key)) {
+        result.canonical = exact->GetParticleName();
+        return result;
+    }
+    const std::string lower = StringUtils::ToLower(key);
+    for (G4int index = 0; index < table->entries(); ++index) {
+        const std::string name = table->GetParticleName(index);
+        result.candidates.push_back(name);
+        if (result.canonical.empty() && StringUtils::ToLower(name) == lower) result.canonical = name;
+    }
+    return result;
+}
+
+[[noreturn]] void ThrowUnknownParticleName(const std::string& rawKey, const std::string& location,
+                                           const std::vector<std::string>& candidates)
+{
+    const std::string key = StringUtils::Trim(rawKey);
+    std::string message = "[scoring.displacement]/" + key + " (" + location + "): '" + key +
+                          "' is not a Geant4 particle name";
+    const std::string suggestion = ConfigManager::Suggestion(key, candidates);
+    if (!suggestion.empty()) message += "; did you mean '" + suggestion + "'?";
+    message += " Particle names are matched case-insensitively against the Geant4 particle table "
+               "(for example proton, neutron, e-, gamma, alpha, He3); a name that no particle can produce "
+               "would silently keep the displacement damage dose at zero.";
+    throw std::runtime_error(message);
+}
+
+std::string NielKeyLocation(const ConfigManager& config, const std::string& rawKey)
+{
+    const std::string lower = StringUtils::ToLower(StringUtils::Trim(rawKey));
+    for (const IniFieldInfo& field : config.GetFields()) {
+        if (field.normalizedSection != "scoring.displacement") continue;
+        if (field.normalizedKey != lower) continue;
+        return config.GetMainConfigPath() + " line " + std::to_string(field.lineNumber);
+    }
+    return "main config";
+}
+
 }  // namespace
 
 ScoringManager::ScoringManager() = default;
@@ -57,6 +117,8 @@ std::unique_ptr<ScoringManager> ScoringManager::CloneForThread(OutputManager* ou
     clone->fluenceScoringEnabled_ = fluenceScoringEnabled_;
     clone->displacementScoringEnabled_ = displacementScoringEnabled_;
     clone->nielTables_ = nielTables_;
+    clone->nielNamesPending_ = nielNamesPending_;
+    clone->nielPendingLocations_ = nielPendingLocations_;
     clone->autoCreateDefaultScorers_ = autoCreateDefaultScorers_;
     clone->edepRawHistogramEnabled_ = edepRawHistogramEnabled_;
     clone->edepWeightedHistogramEnabled_ = edepWeightedHistogramEnabled_;
@@ -197,6 +259,34 @@ const std::map<std::string, std::shared_ptr<const NielTable>>& ScoringManager::G
     return nielTables_;
 }
 
+void ScoringManager::ResolvePendingNielNames()
+{
+    if (!nielNamesPending_) return;
+    std::map<std::string, std::shared_ptr<const NielTable>> resolved;
+    for (const auto& entry : nielTables_) {
+        const ParticleNameLookup lookup = LookupParticleName(entry.first);
+        if (lookup.canonical.empty()) {
+            if (lookup.candidates.empty()) {
+                throw std::runtime_error("[scoring.displacement]/" + entry.first +
+                                         ": the Geant4 particle table is empty when the run starts, so the "
+                                         "NIEL table key cannot be validated");
+            }
+            const auto location = nielPendingLocations_.find(entry.first);
+            ThrowUnknownParticleName(entry.first,
+                                     location == nielPendingLocations_.end() ? "main config" : location->second,
+                                     lookup.candidates);
+        }
+        if (resolved.count(lookup.canonical) != 0) {
+            throw std::runtime_error("[scoring.displacement]/" + entry.first + " and another key both resolve "
+                                     "to the Geant4 particle '" + lookup.canonical + "'");
+        }
+        resolved[lookup.canonical] = entry.second;
+    }
+    nielNamesPending_ = false;
+    nielPendingLocations_.clear();
+    SetNielTables(resolved);
+}
+
 void ScoringManager::SetAutoCreateDefaultScorers(bool enable)
 {
     autoCreateDefaultScorers_ = enable;
@@ -243,6 +333,9 @@ int ScoringManager::GetVerboseLevel() const
 void ScoringManager::Clear()
 {
     scorers_.clear();
+    nielTables_.clear();
+    nielNamesPending_ = false;
+    nielPendingLocations_.clear();
     currentRunID_ = -1;
     currentEventID_ = -1;
     currentEventRawEdep_ = 0.0;
@@ -339,6 +432,9 @@ void ScoringManager::BeginRun(int runID)
     if (InjectBeginScoringFailure(runID, outputManager_)) {
         throw std::runtime_error("Injected ScoringManager::BeginRun failure");
     }
+    // The particle table exists by now, so an unresolvable [scoring.displacement] key can be
+    // rejected before the first event instead of leaving the DDD silently at zero.
+    ResolvePendingNielNames();
     currentRunID_ = runID;
     BeginPhaseSpaceRun();
     if (trajectories_.IsEnabled() && outputManager_) {
@@ -567,21 +663,37 @@ void ScoringManager::LoadFromConfig(const ConfigManager& config)
     }
     if (config.HasSection("scoring.displacement")) {
         std::map<std::string, std::shared_ptr<const NielTable>> tables;
+        std::map<std::string, std::string> pendingLocations;
         for (const std::string& key : config.GetKeys("scoring.displacement")) {
-            const std::string particle = StringUtils::Trim(key);
+            const std::string location = NielKeyLocation(config, key);
+            const ParticleNameLookup lookup = LookupParticleName(key);
+            std::string particle = lookup.canonical;
+            if (particle.empty()) {
+                // Nothing is in the particle table before the physics list is built, so only a
+                // populated table proves the name wrong here; otherwise BeginRun decides.
+                if (!lookup.candidates.empty()) ThrowUnknownParticleName(key, location, lookup.candidates);
+                particle = StringUtils::Trim(key);
+                pendingLocations[particle] = location;
+            }
             std::filesystem::path file = std::filesystem::u8path(
                 StringUtils::Trim(config.GetString("scoring.displacement", key)));
-            if (file.empty()) throw std::runtime_error("[scoring.displacement]/" + particle + " needs a NIEL table file");
+            if (file.empty()) {
+                throw std::runtime_error("[scoring.displacement]/" + particle + " (" + location +
+                                         ") needs a NIEL table file");
+            }
             if (file.is_relative() && !config.GetMainConfigPath().empty()) {
                 file = std::filesystem::u8path(config.GetMainConfigPath()).parent_path() / file;
             }
             try {
                 tables[particle] = NielTable::Load(file.u8string());
             } catch (const std::exception& error) {
-                throw std::runtime_error("[scoring.displacement]/" + particle + ": " + error.what());
+                throw std::runtime_error("[scoring.displacement]/" + particle + " (" + location + "): " +
+                                         error.what());
             }
         }
         SetNielTables(tables);
+        nielPendingLocations_ = pendingLocations;
+        nielNamesPending_ = !pendingLocations.empty();
     }
     if (enabled_ && displacementScoringEnabled_ && nielTables_.empty()) {
         throw std::runtime_error("[scoring]/displacement = true needs [scoring.displacement] with "

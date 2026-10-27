@@ -143,6 +143,10 @@ private:
     void SetScorerEnabledIfExists(const std::string& name, bool enable);
     void BeginPhaseSpaceRun();
     void EndPhaseSpaceRun();
+    // Turn the raw [scoring.displacement] keys into canonical Geant4 particle names.
+    // The particle table is empty during Configure(), so this runs at the start of a run
+    // (before the first event) and throws with the configuration file and line.
+    void ResolvePendingNielNames();
 
     OutputManager* outputManager_ = nullptr;
     bool enabled_ = true;
@@ -154,6 +158,10 @@ private:
     bool fluenceScoringEnabled_ = false;
     bool displacementScoringEnabled_ = false;
     std::map<std::string, std::shared_ptr<const NielTable>> nielTables_;
+    // Set when [scoring.displacement] keys could not be resolved in Configure() because the
+    // Geant4 particle table is still empty; resolved in BeginRun before the first event.
+    bool nielNamesPending_ = false;
+    std::map<std::string, std::string> nielPendingLocations_;  // raw key -> "file line N"
     std::set<std::string> letParticles_;
     bool autoCreateDefaultScorers_ = true;
 

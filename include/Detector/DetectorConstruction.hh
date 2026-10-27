@@ -16,6 +16,11 @@ class GeometryRegistry;
 class DetectorConstruction : public G4VUserDetectorConstruction {
 public:
     using GeometryPostBuildCallback = std::function<void(const GeometryRegistry&)>;
+    // The factory must create the sensitive detector with the name passed in (the configured
+    // sensitiveDetectorName_), otherwise the SD registered with G4SDManager and the name this
+    // class looks up differ: re-initialisation would register a second SD and the configured
+    // name would never be found.
+    using SensitiveDetectorFactory = std::function<G4VSensitiveDetector*(const std::string&)>;
 
     explicit DetectorConstruction(GeometryManager* geometryManager);
     ~DetectorConstruction() override;
@@ -44,7 +49,7 @@ public:
     void PrintSensitiveVolumes() const;
     void PrintBiasVolumes() const;
 
-    void SetSensitiveDetectorFactory(std::function<G4VSensitiveDetector*()> factory);
+    void SetSensitiveDetectorFactory(SensitiveDetectorFactory factory);
     void SetGeometryPostBuildCallback(GeometryPostBuildCallback callback);
     // Roadmap A7: fields are built per thread in ConstructSDandField.
     void SetFieldConfig(const FieldConfig* fieldConfig);
@@ -56,7 +61,7 @@ private:
     bool sensitiveDetectorEnabled_ = true;
     std::string sensitiveDetectorName_ = "AIHLParticleSD";
     int verboseLevel_ = 1;
-    std::function<G4VSensitiveDetector*()> sensitiveDetectorFactory_;
+    SensitiveDetectorFactory sensitiveDetectorFactory_;
     GeometryPostBuildCallback postBuildCallback_;
     const FieldConfig* fieldConfig_ = nullptr;  // not owned
 };

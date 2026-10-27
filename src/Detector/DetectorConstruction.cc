@@ -96,7 +96,7 @@ void DetectorConstruction::ConstructSDandField()
 
     G4VSensitiveDetector* sd = sdManager->FindSensitiveDetector(sensitiveDetectorName_, false);
     if (!sd) {
-        sd = sensitiveDetectorFactory_();
+        sd = sensitiveDetectorFactory_(sensitiveDetectorName_);
         if (!sd) {
             throw std::runtime_error("DetectorConstruction::ConstructSDandField failed: sensitiveDetectorFactory returned null");
         }
@@ -220,7 +220,7 @@ void DetectorConstruction::PrintBiasVolumes() const
     for (const std::string& name : names) G4cout << "  - " << name << G4endl;
 }
 
-void DetectorConstruction::SetSensitiveDetectorFactory(std::function<G4VSensitiveDetector*()> factory)
+void DetectorConstruction::SetSensitiveDetectorFactory(SensitiveDetectorFactory factory)
 {
     sensitiveDetectorFactory_ = std::move(factory);
 }

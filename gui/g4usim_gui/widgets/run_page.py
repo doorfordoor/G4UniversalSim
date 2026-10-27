@@ -33,6 +33,12 @@ class RunPage(QWidget):
         self._result_state = ""
         self._progress_data = None
         self._progress_state = "idle"
+        # The merged log interleaves chunks from stdout, stderr and [gui] messages, and a
+        # chunk may end in the middle of a line. The stream prefix may only be inserted at
+        # a line start, so complete lines are emitted here and the trailing partial line is
+        # kept until its next chunk (or flushed when the run ends).
+        self._merged_pending = ""
+        self._merged_pending_stream = ""
 
         self.command_preview = QPlainTextEdit()
         self.command_preview.setReadOnly(True)
@@ -41,10 +47,13 @@ class RunPage(QWidget):
 
         self.stdout_view = QPlainTextEdit()
         self.stdout_view.setReadOnly(True)
+        self.stdout_view.setMaximumBlockCount(5000)
         self.stderr_view = QPlainTextEdit()
         self.stderr_view.setReadOnly(True)
+        self.stderr_view.setMaximumBlockCount(5000)
         self.merged_view = QPlainTextEdit()
         self.merged_view.setReadOnly(True)
+        self.merged_view.setMaximumBlockCount(5000)
         self.macro_plan_view = QPlainTextEdit()
         self.macro_plan_view.setReadOnly(True)
         self.macro_plan_view.setMaximumBlockCount(5000)
@@ -155,7 +164,10 @@ class RunPage(QWidget):
         else:
             text = ui_text("Waiting for backend progress; older backends may not report it.")
         if not active and self._progress_state != "idle":
-            text += " | " + ui_format("Progress frozen: {state}; see final result.", state=ui_text(self._progress_state))
+            # A finished run is not "frozen" progress: show the terminal state instead.
+            # The bar keeps the last observed counts (that is what "see final result"
+            # refers to) and the final outcome is also stated by ``set_result``.
+            text += " | " + ui_format("Result: {state}", state=ui_text(self._progress_state))
         self.progress_label.setText(text)
 
     def set_command(self, command: list[str]) -> None:
@@ -175,7 +187,8 @@ class RunPage(QWidget):
         self._append_merged(text, "stderr")
 
     def append_status_message(self, text: str) -> None:
-        self._append_merged(f"[gui] {text}\n", "gui")
+        # The merged log adds the "[gui]" prefix itself, once per line.
+        self._append_merged(f"{text}\n", "gui")
 
     def set_state(self, state: str) -> None:
         self._current_state = state
@@ -191,6 +204,9 @@ class RunPage(QWidget):
             self._timer.stop()
 
     def set_exit_code(self, code: int) -> None:
+        # The process may end in the middle of a line; show the tail before its last
+        # "[gui]" result line so the merged log stays readable and nothing is dropped.
+        self.flush_merged_lines()
         self._exit_code = code
         self.exit_label.setText(ui_format("Exit code: {code}", code=code))
         self.set_state("Not running")
@@ -212,12 +228,37 @@ class RunPage(QWidget):
         self.stdout_view.clear()
         self.stderr_view.clear()
         self.merged_view.clear()
+        self._merged_pending = ""
+        self._merged_pending_stream = ""
 
     def _append_merged(self, text: str, stream: str) -> None:
+        """Append a chunk to the merged log, prefixing complete lines only."""
+        if not text:
+            return
+        if self._merged_pending and stream != self._merged_pending_stream:
+            # Another stream starts while a line is still incomplete: close the visible
+            # line first, otherwise its prefix would no longer be at the line start.
+            self._flush_merged_pending()
+        self._merged_pending_stream = stream
+        lines = (self._merged_pending + text).split("\n")
+        self._merged_pending = lines.pop()
         prefix = f"[{stream}] "
-        for line in text.splitlines(True):
-            self.merged_view.insertPlainText(prefix + line)
+        for line in lines:
+            self.merged_view.insertPlainText(prefix + line.rstrip("\r") + "\n")
         self.merged_view.ensureCursorVisible()
+
+    def flush_merged_lines(self) -> None:
+        """Emit a trailing partial line; a run may end without a final newline."""
+        self._flush_merged_pending()
+        self.merged_view.ensureCursorVisible()
+
+    def _flush_merged_pending(self) -> None:
+        if not self._merged_pending:
+            return
+        prefix = f"[{self._merged_pending_stream}] "
+        self.merged_view.insertPlainText(prefix + self._merged_pending.rstrip("\r") + "\n")
+        self._merged_pending = ""
+        self._merged_pending_stream = ""
 
     def _update_elapsed(self) -> None:
         seconds = self._elapsed.elapsed() // 1000 if self._elapsed.isValid() else 0

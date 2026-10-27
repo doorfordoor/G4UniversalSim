@@ -294,6 +294,15 @@ void SimulationManager::SetNumThreads(int n)
 
 void SimulationManager::SetSeed(unsigned long seed)
 {
+    // Re-seeding after initialisation would only touch the master engine: worker engines are
+    // already created with the configured seed, so the run would be neither reproducible nor
+    // described by the summary's configured_seed.
+    if (G4StateManager::GetStateManager()->GetCurrentState() != G4State_PreInit) {
+        throw std::runtime_error(
+            "Random seed cannot be changed after Geant4 initialization; restart with --seed <n> "
+            "or set /AIHL/app/setSeed before /run/initialize"
+        );
+    }
     if (commandLineOverrides_.seed) {
         WarnIgnoredCommandLineOverride("random seed");
         return;
@@ -766,8 +775,10 @@ void SimulationManager::ReportConfigWarnings()
     if (!configLoaded_ || configWarningsReported_) return;
 
     const auto warnings = configManager_->GetUnconsumedWarnings();
+    const auto duplicates = configManager_->GetDuplicateWarnings();
     RunSummary& summary = outputManager_->GetRunSummary();
     summary.Set("config_warning_count", static_cast<int>(warnings.size()));
+    summary.Set("config_duplicate_count", static_cast<int>(duplicates.size()));
     const auto& geometryWarnings = geometryManager_->GetConfigDiagnostics();
     summary.Set("geometry_config_warning_count", static_cast<int>(geometryWarnings.size()));
     for (const auto& warning : warnings) {
@@ -782,6 +793,20 @@ void SimulationManager::ReportConfigWarnings()
         if (!warning.suggestion.empty()) {
             message << "; did you mean '" << warning.suggestion << "'?";
         }
+        const std::string text = message.str();
+        std::cerr << text << '\n';
+        summary.AddWarning(text);
+    }
+    for (const auto& duplicate : duplicates) {
+        std::ostringstream message;
+        message << "[ConfigWarning] duplicate declaration " << duplicate.filename << ":"
+                << duplicate.lineNumber << " [" << duplicate.section << "]";
+        if (duplicate.key.empty()) {
+            message << " repeated section header";
+        } else {
+            message << "/" << duplicate.key << " = " << duplicate.value;
+        }
+        message << "; " << duplicate.suggestion;
         const std::string text = message.str();
         std::cerr << text << '\n';
         summary.AddWarning(text);
@@ -986,16 +1011,16 @@ std::unique_ptr<ActionInitialization> SimulationManager::CreateActionInitializat
         biasingManager_.get());
 }
 
-std::function<G4VSensitiveDetector*()> SimulationManager::CreateSensitiveDetectorFactory() const
+std::function<G4VSensitiveDetector*(const std::string&)> SimulationManager::CreateSensitiveDetectorFactory() const
 {
     if (!scoringManager_) {
         throw std::runtime_error("SimulationManager::CreateSensitiveDetectorFactory failed: ScoringManager is null");
     }
 
-    return [this]() -> G4VSensitiveDetector* {
+    return [this](const std::string& name) -> G4VSensitiveDetector* {
         ScoringManager* threadScoringManager = AIHL::GetCurrentThreadScoringManager();
         return new SensitiveDetector(
-            "AIHLParticleSD",
+            name,
             threadScoringManager ? threadScoringManager : scoringManager_.get());
     };
 }
@@ -1215,6 +1240,7 @@ void SimulationManager::WriteBaseRunSummary()
     summary.SetBool("check_overlaps", context_.GetCheckOverlaps());
     summary.SetBool("dry_run", context_.IsDryRun());
     if (!summary.Has("config_warning_count")) summary.Set("config_warning_count", 0);
+    if (!summary.Has("config_duplicate_count")) summary.Set("config_duplicate_count", 0);
     if (!summary.Has("geometry_config_warning_count")) summary.Set("geometry_config_warning_count", 0);
     summary.SetPath("materials_file", materialsFile_);
     summary.Set("geometry_template", geometryTemplate_);

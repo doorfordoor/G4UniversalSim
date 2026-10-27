@@ -1,6 +1,8 @@
 # G4UniversalSim GUI Agent 开发约束
 
-2026-10-27 F6：`core/run_progress.py` 有界增量解析版本化 stdout 进度；runner 每次启动重置，分别增量解码 stdout/stderr，退出先排空尾流再判最终结果。RunPage 未知进度不造百分比，计数全到但未 end 显示收尾中；停止/强杀/失败冻结最后观察值。end 不代表成功，最终状态仍由 run_result.py 决定。新消息版本、噪声前缀、坏 JSON、非有限数、超长行、倒序、跨 run、无换行 EOF 必须保留测试；smoke_live_progress.py 和 smoke_live_progress_backend.py 分别验证协议/Qt 与真实 Geant4，契约见 docs/实时运行进度.md。
+2026-10-27 GUI 源字段保留：Setup 栏的 summary widgets 只能镜像它真正暴露的标量源字段（preset/particle/energy/position/direction）与 physics/scoring 字段；源几何与角分布（`position_mode`/`position_type`/`source_shape`/`center`/`halfx`/`halfy`/`radius`/`isotropic`/`angular_mode`）属于 Source editor，任何槽都不得无条件重置为 `point`/`fixed`——`widgets/config/run_config.py` 曾这么做，导致 plane/rectangle/isotropic 源在用户改一个数字后静默退回点源+固定束流、生成的 main.ini 丢字段而运行仍“成功”。回归 `gui/smoke_tests/smoke_source_field_preservation.py`（端到端写 main.ini 后断言字段仍在，含 point 反向 sanity）；同类重置只允许带明确条件（空值补默认、旧别名归一化）。进度终态文案走既有 `Result: {state}`；stdout/stderr/merged 三个日志视图必须有行数上限，merged 前缀只在行首插入，runner 的日志 tag 解析必须跨 chunk 缓冲完整行。
+
+2026-10-27 F6：`core/run_progress.py` 有界增量解析版本化 stdout 进度；runner 每次启动重置，分别增量解码 stdout/stderr，退出先排空尾流再判最终结果。RunPage 未知进度不造百分比，计数全到但未 end 显示收尾中；停止/强杀/失败时进度条保留最后观察值，状态文字改用终态文案（结果：模拟成功／用户停止／强制结束／结果未证实），不再输出“进度已冻结”。end 不代表成功，最终状态仍由 run_result.py 决定。新消息版本、噪声前缀、坏 JSON、非有限数、超长行、倒序、跨 run、无换行 EOF 必须保留测试；smoke_live_progress.py 和 smoke_live_progress_backend.py 分别验证协议/Qt 与真实 Geant4，契约见 docs/实时运行进度.md。
 
 2026-10-26 E2：`core/config_schema.py` 只做字段描述/标量必要条件；`structured` 会要求上下文校验，不能吞掉这个结果并当作可运行。动态源/区域/网格及独立几何模板可查询描述，但不扩大 editor/writer 白名单。源长度/能量、physics.default_cut 和 Edep 直方图复用 schema；跨字段 max>min 等仍由 editor 验证。材料已知键从生成数据读取，元素/同位素仍原文保留。writer 不再生成未消费的 physics.mode，参考模式仍由 reference 决定。四份生成产物一律由 scripts/generate_config_schema.py 更新。
 
