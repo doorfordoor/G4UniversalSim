@@ -22,7 +22,13 @@ jobs:
           python-version: '3.11'
       - name: Install GUI dependency
         run: python -m pip install -r gui/requirements.txt
+      # --fail-on-skip: a missing Qt/uproot/backend must fail the job instead of
+      # producing the distinct skip exit status that a green build used to hide.
       - name: Verify tracked source inventory and static tests
-        run: python -B scripts/run_m0_tests.py --profile static --require-tracked-sources
+        run: python -B scripts/run_m0_tests.py --profile static --require-tracked-sources --fail-on-skip
       - name: Run offscreen GUI tests
-        run: python -B scripts/run_m0_tests.py --profile gui --require-tracked-sources
+        run: python -B scripts/run_m0_tests.py --profile gui --require-tracked-sources --fail-on-skip
+      # A green job must leave a report that carries per-case assertion counts,
+      # the compiled-source fingerprint and the test/fixture content fingerprint.
+      - name: Validate the newest report evidence
+        run: python -B scripts/check_report_evidence.py

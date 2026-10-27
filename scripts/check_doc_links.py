@@ -59,9 +59,17 @@ def main() -> int:
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     os.chdir(root)
     files = tracked_markdown()
-    if not files:
-        print("doc_links: no tracked Markdown files")
-        return 1
+    assert files, "doc_links: no tracked Markdown files"
+    # Behavioural self-checks: a silent regex or fence-handling regression must fail here
+    # instead of quietly shrinking the checked-link count.
+    assert LINK_RE.findall("[a](x.md) ![b](y.png)") == ["x.md", "y.png"]
+    assert strip_fenced_blocks("a\n```\n[b](missing.md)\n```\n").count("missing.md") == 0
+    # An unterminated fence runs to end of file (CommonMark), so links after it are
+    # intentionally not checked; documented here so the narrowing is explicit.
+    assert strip_fenced_blocks("a\n```\n[b](missing.md)\n").count("missing.md") == 0
+    assert repo_relative(os.path.join(root, "docs", "a.md"), root) == "docs/a.md"
+    assert repo_relative("docs/a.md", root) is None
+    assert LINE_SUFFIX_RE.sub("", "src/Core/AppMessenger.cc:99") == "src/Core/AppMessenger.cc"
     broken: list[tuple[str, int, str]] = []
     checked = 0
     for path in files:
@@ -90,7 +98,9 @@ def main() -> int:
     for path, lineno, target in broken:
         print(f"{path}:{lineno}: broken relative link '{target}'")
     print(f"doc_links: {checked} relative links in {len(files)} files, {len(broken)} broken")
-    return 1 if broken else 0
+    assert checked > 0, "doc_links: no relative links were found, so the check verified nothing"
+    assert not broken, f"doc_links: {len(broken)} broken relative link(s); see the lines above"
+    return 0
 
 
 if __name__ == "__main__":

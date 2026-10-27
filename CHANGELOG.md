@@ -5,6 +5,17 @@ Short, user-facing record of notable changes. Detailed support status lives in
 
 ## Unreleased
 
+### Added
+
+- 测试平台报告 v2：每个用例经 `tools/test_assert_probe.py` 记录已执行 `assert` 数（`G4USIM_ASSERTS` marker），报告新增 `tests_content_fingerprint`、逐用例 `assert_sites`/`assertions_executed`/`log_sha256`；新增 `scripts/check_report_evidence.py` 作为 CI 证据门禁，`scripts/test_report_evidence.py`（static）覆盖其拒绝路径。
+- 测试平台 `--fail-on-skip`：CI 的 static/gui 步骤不再让缺失 Qt/uproot/后端的 skip 以退出码 2 变绿；`--report-root` 默认改为 `out/verification`。
+- 支持矩阵第 2–3 节每条功能的事实列末尾标注证据类型（外部表 / 解析式 / 同源自洽 / 自测 / 未验证），并在第 1 节给出判定口径；`.gitattributes` 对 `docs/verification/**` 关闭换行归一，证据副本与生成产物保持字节一致。
+
+### Fixed
+
+- `.gitattributes` 的 `* text=auto` 导致 Windows 检出写入 CRLF，使按原始字节哈希的工作区指纹漂移、backend 用例全部 SKIP；现对 `*.cc`/`*.hh`/`*.h`/`*.in`/`*.py`/`*.json`/`*.ini`/`*.mac`/`*.csv` 与 `CMakeLists.txt` 固定 `text eol=lf`，并重新物化受影响的跟踪文件。
+- `scripts/test_config_duplicate_declarations.py`、`scripts/test_command_state_gating.py` 的验证 helper 改用 `assert` 表达，使断言级证据可被探针计数（此前 `raise AssertionError` 对探针不可见）。
+
 ### Changed
 - **状态入口收敛**：新增仓库根 `STATUS.md` 作为当前快照/阶段进度/证据/已知缺口的唯一入口；`docs/ROADMAP.md` 是阶段状态唯一登记处；5 份带日期的过期状态文档（`持续开发执行规划`、`当前开发交接`、`开发审计与阶段目标`、`M0-接续检查点`、`M0-M5-原型推进看板`）移入 `docs/archive/` 并加归档说明与索引。
 - **AGENTS.md 瘦身**：29 条逐日实施契约全文迁入 `docs/agent-history.md`，`AGENTS.md` 只保留规则与一行式索引（48.5 KB → 33.5 KB）。

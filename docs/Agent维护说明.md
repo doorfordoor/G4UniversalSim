@@ -192,6 +192,19 @@ python gui/smoke_tests/smoke_hier_boolean_geometry_editor.py
 .\build_vs2026\Release\G4UniversalSim.exe --macro macros/run_volume_fraction_test.mac --threads 1 --output test/output/volume_fraction_test
 ```
 
+### 统一测试入口的证据链（报告 v2）
+
+```powershell
+python -B scripts/run_m0_tests.py --profile all --require-tracked-sources --fail-on-skip
+python -B scripts/check_report_evidence.py          # 校验最新报告，CI 必跑
+```
+
+- 每个用例经 `tools/test_assert_probe.py` 运行：探针用 `runpy` 执行脚本、`sys.settrace` 统计目标文件内已执行 `assert` 行数，打印 `G4USIM_ASSERTS=<n>`；退出 0 却缺少该 marker 会被判 fail。
+- `report.json` 是 `version: 2`，逐用例含 `assertions_executed`、`assert_sites`、`assert_probe`、`log_sha256`，报告级含 `tests_content_fingerprint`（scripts/tools/gui smoke/config/scenarios/schema/macros/test，哈希前归一 CRLF）与 `cases_with_zero_assertions`。
+- 验证 helper 必须用 `assert` 表达；写成 `raise AssertionError` 时探针看不见，该用例会出现在 `cases_with_zero_assertions` 里（表示"尚未迁移"，不是"未验证"）。
+- `--report-root` 默认 `out/verification`（Git 忽略）；要入库的证据需另复制到 `docs/verification/<批次>/`。CI 两个 profile 步骤带 `--fail-on-skip`，缺失 Qt/uproot/后端不得以 skip 变绿。
+- 被原始字节哈希的输入不能受 checkout 换行影响：`.gitattributes` 对 `*.cc`/`*.hh`/`*.h`/`*.in`/`*.py`/`*.json`/`*.ini`/`*.mac`/`*.csv` 与 `CMakeLists.txt` 固定 `text eol=lf`。
+
 ## 6. 目录整理说明
 
 本次整理删除了旧的英文参考、阶段审计、P0-P3 路线图、Round checkpoint 和 GUI 补充文档。它们的稳定信息已合并进三份中文手册；开发路线和历史状态不再作为用户文档保留，避免后续误读为当前能力。

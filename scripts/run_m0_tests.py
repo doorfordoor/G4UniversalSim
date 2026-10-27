@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import ast
 import hashlib
 import importlib.util
 import json
@@ -10,7 +11,6 @@ import os
 import platform
 import subprocess
 import sys
-import tempfile
 import time
 import uuid
 from dataclasses import dataclass
@@ -20,6 +20,16 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE_DIRECTORIES = ("src", "include", "gui/g4usim_gui", "gui/smoke_tests", "scripts", "tools")
 SOURCE_SUFFIXES = (".py", ".cc", ".hh", ".h", ".in")
+# Test code, fixtures and schema inputs a green report must be tied to. ``src`` and
+# ``include`` keep their own compiled-source fingerprint; this fingerprint covers what
+# a case actually reads, so a report cannot silently mix today's binary with
+# yesterday's test script or fixture.
+TEST_CONTENT_DIRECTORIES = (
+    "scripts", "tools", "gui/smoke_tests", "gui/g4usim_gui",
+    "config", "scenarios", "schema", "macros", "test",
+)
+ASSERT_PROBE = ROOT / "tools" / "test_assert_probe.py"
+ASSERT_MARKER = "G4USIM_ASSERTS="
 
 
 @dataclass(frozen=True)
@@ -37,6 +47,7 @@ CASES = (
     Case("output_extensions", "scripts/test_output_extensions.py", "static"),
     Case("runner_contract", "scripts/test_m0_runner.py", "static"),
     Case("doc_links", "scripts/check_doc_links.py", "static"),
+    Case("report_evidence", "scripts/test_report_evidence.py", "static"),
     Case("merge_histograms", "scripts/test_merge_histograms.py", "backend", ("merge",)),
     Case("gui_parsers", "gui/smoke_tests/smoke_parsers.py", "gui", ("qt",)),
     Case("gui_materials", "gui/smoke_tests/smoke_materials_editor.py", "gui", ("qt",)),
@@ -150,6 +161,49 @@ def workspace_source_fingerprint() -> str:
     return hashlib.sha256(manifest.encode("utf-8")).hexdigest()
 
 
+def tests_content_fingerprint() -> str:
+    """Hash the test code, fixtures and schema inputs a case may read.
+
+    Line endings are normalized before hashing: the working tree EOL of a fixture
+    is a checkout artefact, not content, and a plain ``git checkout`` must not
+    change the identity of the evidence.
+    """
+    manifest_parts: list[str] = []
+    for directory in TEST_CONTENT_DIRECTORIES:
+        base = ROOT / directory
+        if not base.is_dir():
+            continue
+        for path in base.rglob("*"):
+            if not path.is_file() or "__pycache__" in path.parts or path.suffix == ".pyc":
+                continue
+            relative = path.relative_to(ROOT).as_posix()
+            content = path.read_bytes().replace(b"\r\n", b"\n")
+            manifest_parts.append(f"{relative}:{hashlib.sha256(content).hexdigest()}\n")
+    manifest = "".join(sorted(manifest_parts))
+    return hashlib.sha256(manifest.encode("utf-8")).hexdigest()
+
+
+def count_assert_sites(script: Path) -> int:
+    """Count ``assert`` statements in a test script (static, no execution)."""
+    try:
+        tree = ast.parse(script.read_text(encoding="utf-8", errors="replace"), filename=str(script))
+    except SyntaxError:
+        return 0
+    return sum(isinstance(node, ast.Assert) for node in ast.walk(tree))
+
+
+def parse_assert_marker(log: str) -> int | None:
+    """Read the executed-assert count emitted by ``tools/test_assert_probe.py``."""
+    count: int | None = None
+    for line in log.splitlines():
+        if line.startswith(ASSERT_MARKER):
+            try:
+                count = int(line[len(ASSERT_MARKER):].strip())
+            except ValueError:
+                return None
+    return count
+
+
 def executable_freshness(executable: Path) -> str:
     if not executable.is_file():
         return "backend executable is missing"
@@ -197,13 +251,22 @@ def main() -> int:
                         help="Run only this named case within the selected profile (repeatable).")
     parser.add_argument("--executable", type=Path, default=ROOT / "build_vs2026/Release/G4UniversalSim.exe")
     parser.add_argument("--merge-executable", type=Path, default=ROOT / "build_vs2026/Release/mergeHistograms.exe")
-    parser.add_argument("--report-root", type=Path, default=Path(tempfile.gettempdir()) / "g4usim-m0-tests")
+    parser.add_argument("--report-root", type=Path, default=ROOT / "out" / "verification",
+                        help="Directory that receives one timestamped evidence folder per run "
+                             "(default: out/verification, which Git ignores).")
     parser.add_argument("--require-tracked-sources", action="store_true",
                         help="Fail when runtime or test source files are absent from Git's index.")
+    parser.add_argument("--fail-on-skip", action="store_true",
+                        help="Treat a missing prerequisite (Qt/uproot/executable) as a failure "
+                             "instead of the distinct skip exit status. CI must pass this flag so a "
+                             "green build cannot hide an unexercised layer.")
+    parser.add_argument("--no-assert-probe", action="store_true",
+                        help="Run cases directly instead of through tools/test_assert_probe.py; "
+                             "assertion counts are then recorded as unknown.")
     args = parser.parse_args()
 
     report_dir = args.report_root / f"{time.strftime('%Y%m%d-%H%M%S')}-{uuid.uuid4().hex[:8]}"
-    report_dir.mkdir(parents=True, exist_ok=False)
+    report_dir.mkdir(parents=True, exist_ok=True)
     requirements = {
         "qt": "" if importlib.util.find_spec("PySide6") else "PySide6 is unavailable",
         "uproot": "" if importlib.util.find_spec("uproot") else "uproot is unavailable (pip install uproot)",
@@ -244,7 +307,10 @@ def main() -> int:
         elif missing:
             record.update(status="skip", reason="; ".join(missing))
         else:
+            record["assert_sites"] = count_assert_sites(source)
             command = [sys.executable, "-B", str(source)]
+            if not args.no_assert_probe:
+                command = [sys.executable, "-B", str(ASSERT_PROBE), str(source)]
             if case.name == "merge_histograms":
                 command.extend(["--executable", str(args.merge_executable.resolve())])
             command.extend(case.args)
@@ -267,16 +333,32 @@ def main() -> int:
             log_path = report_dir / f"{case.name}.log"
             log_path.write_text(log, encoding="utf-8")
             record["log"] = str(log_path)
+            record["log_sha256"] = hashlib.sha256(log.encode("utf-8", errors="replace")).hexdigest()
+            if not args.no_assert_probe and record["status"] != "skip":
+                executed = parse_assert_marker(log)
+                record["assertions_executed"] = executed
+                record["assert_probe"] = "settrace_assert_lines_v1" if executed is not None else "marker_missing"
+                if record["status"] == "pass" and executed is None:
+                    # A passing case whose probe marker vanished would otherwise report
+                    # "0 assertions" without anyone noticing; treat it as a runner defect.
+                    record["status"] = "fail"
+                    record["reason"] = "assert probe marker is missing from a passing case"
             if record["status"] == "fail":
                 record["tail"] = log[-1500:]
         results.append(record)
-        print(f"{record['status'].upper():4} {case.name}: {record.get('reason', record.get('tail', ''))}", flush=True)
+        summary = record.get("reason", record.get("tail", ""))
+        if "assertions_executed" in record:
+            summary = f"{summary} asserts={record['assertions_executed']}/{record['assert_sites']}".strip()
+        print(f"{record['status'].upper():4} {case.name}: {summary}", flush=True)
 
+    executed_cases = [record for record in results if record.get("assertions_executed") is not None]
+    zero_assert_cases = [record["name"] for record in executed_cases if not record["assertions_executed"]]
     report = {
-        "schema": "G4UniversalSimM0TestReport", "version": 1,
+        "schema": "G4UniversalSimM0TestReport", "version": 2,
         "profile": args.profile, "platform": platform.platform(),
         "python": sys.version.split()[0], "git_head": git_value("rev-parse", "HEAD"),
         "source_fingerprint": workspace_source_fingerprint(),
+        "tests_content_fingerprint": tests_content_fingerprint(),
         "git_dirty": bool(git_value("status", "--porcelain")),
         "backend_executable": str(args.executable.resolve()),
         "backend_provenance": requirements["exe"] or "source_sha256_manifest_matches_executable",
@@ -287,11 +369,26 @@ def main() -> int:
         "optional_pyvista_coverage": "not_proven_by_this_runner",
         "untracked_source_files": missing_tracked_sources,
         "tracked_source_gate": "fail" if missing_tracked_sources else "pass",
+        "assert_probe": "disabled" if args.no_assert_probe else "settrace_assert_lines_v1",
+        "assertions_executed_total": sum(record["assertions_executed"] for record in executed_cases),
+        "assert_sites_total": sum(record.get("assert_sites", 0) for record in results),
+        "cases_with_assertion_counts": len(executed_cases),
+        "cases_with_zero_assertions": zero_assert_cases,
+        "skip_policy": "failure" if args.fail_on_skip else "distinct_exit_status",
         "results": results,
     }
     report_path = report_dir / "report.json"
     report_path.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(f"Report: {report_path}")
+    passed = sum(1 for record in results if record["status"] == "pass")
+    skipped = sum(1 for record in results if record["status"] == "skip")
+    failed = sum(1 for record in results if record["status"] == "fail")
+    print(
+        f"{passed} pass / {failed} fail / {skipped} skip of {len(results)} cases; "
+        f"assertions executed {report['assertions_executed_total']} "
+        f"({report['cases_with_assertion_counts']} cases reported counts, "
+        f"{len(zero_assert_cases)} cases asserted nothing)"
+    )
     if any(record["status"] == "fail" for record in results):
         return 1
     if args.require_tracked_sources and missing_tracked_sources:
@@ -299,7 +396,10 @@ def main() -> int:
         for source in missing_tracked_sources:
             print(f"  {source}")
         return 1
-    return 2 if any(record["status"] == "skip" for record in results) else 0
+    if skipped and args.fail_on_skip:
+        print(f"FAIL skip policy: {skipped} case(s) could not run because prerequisites are missing")
+        return 1
+    return 2 if skipped else 0
 
 
 if __name__ == "__main__":

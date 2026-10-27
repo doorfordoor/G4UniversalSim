@@ -6,6 +6,7 @@
 
 2026-10-19 → 2026-10-27 的 29 条实施契约全文（含文件路径、行号、反例与回归入口）在 [docs/agent-history.md](docs/agent-history.md)。下表只列**仍然有效的操作规则**；改动相关模块前必须先读对应历史条目全文，只读索引不足以动手。新增条目：全文追加到 `docs/agent-history.md`，本表加一行，不要再在本文件堆长段落。
 
+- 2026-10-28 测试平台报告 v2：每个用例经 `tools/test_assert_probe.py` 记录已执行 `assert` 数（helper 必须用 `assert` 表达；退出 0 但无 `G4USIM_ASSERTS=` marker 判 fail）；`report.json` v2 带 `tests_content_fingerprint`（scripts/tools/gui smoke/config/scenarios/schema/macros/test，哈希前归一 CRLF）与逐用例 `log_sha256`；`scripts/check_report_evidence.py` 是 CI 证据门禁，`--fail-on-skip` 不得让 skip 冒充绿色；被原始字节哈希的输入固定 `text eol=lf`。
 - 2026-10-27 B1 位移损伤粒子名：`[scoring.displacement]` 键按 `G4ParticleTable` 大小写不敏感解析为规范名，在 `BeginRun`（首个事件前）校验（配置期粒子表为空）；未知名字报主 INI 文件、行号与候选后失败，不得静默让 DDD 恒为 0；回归 `scripts/test_displacement_damage.py`。
 - 2026-10-27 B2/B3/B4：主 INI 重复 section/键只告警 `[ConfigWarning] duplicate declaration` 并写摘要 `config_duplicate_count`，后值生效、不得改成拒绝；敏感探测器按配置名创建（禁硬编码 `AIHLParticleSD`）；`enableSD`/`setSDName`/`setSeed` 仅 `PreInit`，初始化后必须失败而非改缓存；回归 `test_config_duplicate_declarations.py`、`test_command_state_gating.py`。
 - 2026-10-27 F6：`Actions/RunProgress` 输出 `[G4USimProgress] ` + `g4usim_progress_v1` JSON，约 0.5 s 限频，终值取 `G4Run::GetNumberOfEvent()`；零事件不补造消息，进度不替代 `run_result` 判定；契约 `docs/实时运行进度.md`、回归 `test_live_progress.py`。
@@ -111,6 +112,8 @@
 - 测试失败时先区分代码失败、环境缺失和未覆盖场景，不得把“命令成功退出”当作物理正确性证明。
 - M0-5 工作区统一测试入口为 `scripts/run_m0_tests.py`，按 static/GUI/backend/integration 分层，报告 pass/fail/skip 和日志；后端用例必须核对 `--capabilities.source_fingerprint` 与当前 C++ 工作区。CTest skipped 不等于完整通过，不能只看总退出码；详情见 `docs/测试平台说明.md`。
 - 若真实 Geant4 可执行文件、Qt/PySide6、3D 依赖或特定工具链不可用，必须明确记录未验证部分和复现命令。
+- 统一测试入口的报告是 `version: 2` 证据：每用例经 `tools/test_assert_probe.py` 记录 `assertions_executed`，报告带 `tests_content_fingerprint` 与逐用例 `log_sha256`；`scripts/check_report_evidence.py` 必须对最新报告通过。验证 helper 写成 `assert`，`raise AssertionError` 不会被计数。CI 的 profile 步骤必须带 `--fail-on-skip`，缺失 Qt/uproot/后端的 skip 不得以退出码 2 变绿。
+- 被指纹按原始字节哈希的输入（`src/`、`include/`、`main.cc`、`CMakeLists.txt`）与测试内容指纹覆盖的目录，任何改动都不得让 `git checkout`/`merge` 改变磁盘字节：`.gitattributes` 已对 `*.cc`/`*.hh`/`*.h`/`*.in`/`*.py`/`*.json`/`*.ini`/`*.mac`/`*.csv` 与 `CMakeLists.txt` 固定 `text eol=lf`；新增被哈希的文件类型必须同时加 eol 规则或先归一化。
 - 完成前复核 git diff、 新增文件编码、文档中的支持等级和工作区状态，确保没有把用户已有改动混入本任务。
 
 ## 7. M0-3B2B1 几何安全闭环

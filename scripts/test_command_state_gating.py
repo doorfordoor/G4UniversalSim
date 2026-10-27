@@ -34,18 +34,16 @@ def run(executable: Path, args: list[str], cwd: Path, expected: int = 0) -> str:
         timeout=300,
     )
     output = result.stdout + result.stderr
-    if result.returncode != expected:
-        raise AssertionError(
-            f"Unexpected exit code for {' '.join(args)}: expected {expected}, "
-            f"got {result.returncode}\n{output}"
-        )
+    assert result.returncode == expected, (
+        f"Unexpected exit code for {' '.join(args)}: expected {expected}, "
+        f"got {result.returncode}\n{output}"
+    )
     return output
 
 
 def read_summary(output_dir: Path) -> dict[str, str]:
     summary = output_dir / "run_summary.txt"
-    if not summary.is_file():
-        raise AssertionError(f"run_summary.txt was not created: {summary}")
+    assert summary.is_file(), f"run_summary.txt was not created: {summary}"
     values: dict[str, str] = {}
     in_values = False
     for line in summary.read_text(encoding="utf-8").splitlines():
@@ -58,9 +56,9 @@ def read_summary(output_dir: Path) -> dict[str, str]:
     return values
 
 
+# Verification helpers use assert so tools/test_assert_probe.py counts every check.
 def require(text: str, expected: str) -> None:
-    if expected not in text:
-        raise AssertionError(f"Expected marker not found: {expected}\n{text}")
+    assert expected in text, f"Expected marker not found: {expected}\n{text}"
 
 
 def write_macro(path: Path, body: str) -> Path:
@@ -105,13 +103,13 @@ def main() -> int:
         )
         require(pre_init_text, "Attached sensitive detector 'SensorA'")
         pre_init_values = read_summary(pre_init_output)
-        if pre_init_values.get("configured_seed") != "4242":
-            raise AssertionError(
-                f"pre-initialisation seed not applied, configured_seed="
-                f"{pre_init_values.get('configured_seed')!r}"
-            )
-        if pre_init_values.get("status") != "completed":
-            raise AssertionError(f"pre-initialisation run failed, status={pre_init_values.get('status')!r}")
+        assert pre_init_values.get("configured_seed") == "4242", (
+            f"pre-initialisation seed not applied, configured_seed="
+            f"{pre_init_values.get('configured_seed')!r}"
+        )
+        assert pre_init_values.get("status") == "completed", (
+            f"pre-initialisation run failed, status={pre_init_values.get('status')!r}"
+        )
 
         # B) The same commands after /run/initialize must fail the batch and the summary.
         for command, output_suffix in (
@@ -148,11 +146,10 @@ def main() -> int:
             require(text, "G4UImanager status=200")
             require(text, command)
             values = read_summary(output_dir)
-            if values.get("status") != "failed":
-                raise AssertionError(
-                    f"{command!r} after /run/initialize did not fail the run, "
-                    f"status={values.get('status')!r}\n{text}"
-                )
+            assert values.get("status") == "failed", (
+                f"{command!r} after /run/initialize did not fail the run, "
+                f"status={values.get('status')!r}\n{text}"
+            )
 
     print("test_command_state_gating: OK")
     return 0

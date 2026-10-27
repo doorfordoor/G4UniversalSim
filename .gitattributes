@@ -8,6 +8,22 @@
 *.ps1  text eol=crlf
 *.sln  text eol=crlf
 
+# Inputs that the build and test evidence fingerprints hash as raw bytes.
+# On Windows the default `text=auto` checkout writes CRLF into the worktree, so a
+# plain `git checkout`/`git merge` changed on-disk bytes without a Git diff and
+# invalidated the compiled source fingerprint, turning every backend case into
+# "rebuild required". Pin these to LF so the fingerprints track real content.
+*.cc           text eol=lf
+*.hh           text eol=lf
+*.h            text eol=lf
+*.in           text eol=lf
+*.py           text eol=lf
+*.json         text eol=lf
+*.ini          text eol=lf
+*.mac          text eol=lf
+*.csv          text eol=lf
+CMakeLists.txt text eol=lf
+
 # Binary files
 *.png  binary
 *.jpg  binary
@@ -17,3 +33,5 @@
 *.pdf  binary
 *.root binary
 *.gdml text
+# Evidence copies must stay byte-identical to the generated artifacts.
+docs/verification/** -text

@@ -29,18 +29,16 @@ def run(executable: Path, args: list[str], cwd: Path, expected: int = 0) -> str:
         timeout=180,
     )
     output = result.stdout + result.stderr
-    if result.returncode != expected:
-        raise AssertionError(
-            f"Unexpected exit code for {' '.join(args)}: expected {expected}, "
-            f"got {result.returncode}\n{output}"
-        )
+    assert result.returncode == expected, (
+        f"Unexpected exit code for {' '.join(args)}: expected {expected}, "
+        f"got {result.returncode}\n{output}"
+    )
     return output
 
 
 def read_summary(output_dir: Path) -> dict[str, str]:
     summary = output_dir / "run_summary.txt"
-    if not summary.is_file():
-        raise AssertionError(f"run_summary.txt was not created: {summary}")
+    assert summary.is_file(), f"run_summary.txt was not created: {summary}"
     values: dict[str, str] = {}
     in_values = False
     for line in summary.read_text(encoding="utf-8").splitlines():
@@ -53,14 +51,13 @@ def read_summary(output_dir: Path) -> dict[str, str]:
     return values
 
 
+# Verification helpers use assert so tools/test_assert_probe.py counts every check.
 def require(text: str, expected: str) -> None:
-    if expected not in text:
-        raise AssertionError(f"Expected marker not found: {expected}\n{text}")
+    assert expected in text, f"Expected marker not found: {expected}\n{text}"
 
 
 def require_absent(text: str, unexpected: str) -> None:
-    if unexpected in text:
-        raise AssertionError(f"Unexpected marker found: {unexpected}\n{text}")
+    assert unexpected not in text, f"Unexpected marker found: {unexpected}\n{text}"
 
 
 def main() -> int:
@@ -93,15 +90,13 @@ def main() -> int:
         require(text, "is overridden by this one; remove one of the declarations")
         values = read_summary(dup_output)
         count = int(values.get("config_duplicate_count", "-1"))
-        if count != 2:
-            raise AssertionError(
-                f"expected 2 duplicate declarations (repeated section + repeated key), got {count}"
-            )
+        assert count == 2, (
+            f"expected 2 duplicate declarations (repeated section + repeated key), got {count}"
+        )
         # The earlier value really is dropped: the later declaration wins for consumers.
-        if values.get("run_name") != "duplicate_should_win":
-            raise AssertionError(
-                f"later duplicate value did not win, run_name={values.get('run_name')!r}"
-            )
+        assert values.get("run_name") == "duplicate_should_win", (
+            f"later duplicate value did not win, run_name={values.get('run_name')!r}"
+        )
 
         # 2) No repetition: the count must be 0 and no duplicate warning may be printed.
         clean_output = temp / "out-clean"
@@ -112,24 +107,21 @@ def main() -> int:
         )
         require_absent(clean_text, "duplicate declaration")
         clean_values = read_summary(clean_output)
-        if clean_values.get("config_duplicate_count") != "0":
-            raise AssertionError(
-                f"expected config_duplicate_count=0 without repetitions, "
-                f"got {clean_values.get('config_duplicate_count')!r}"
-            )
+        assert clean_values.get("config_duplicate_count") == "0", (
+            f"expected config_duplicate_count=0 without repetitions, "
+            f"got {clean_values.get('config_duplicate_count')!r}"
+        )
 
         # 3) A duplicate inside a section only (no repeated header) is still reported once.
         key_only = original.replace("[output]", "[output]", 1)  # keep file untouched
         key_only = original + "\n"
-        if "[output]" not in key_only:
-            raise AssertionError("fixture main.ini has no [output] section")
+        assert "[output]" in key_only, "fixture main.ini has no [output] section"
         key_only = key_only.replace(
             "[output]\ndir = output/simple_test",
             "[output]\ndir = output/simple_test\ndir = output/duplicate_key_should_win",
             1,
         )
-        if key_only == original + "\n":
-            raise AssertionError("could not build the duplicate-key fixture")
+        assert key_only != original + "\n", "could not build the duplicate-key fixture"
         key_ini = config_dir / "duplicate_key.ini"
         key_ini.write_text(key_only, encoding="utf-8")
         key_output = temp / "out-duplicate-key"
@@ -142,13 +134,10 @@ def main() -> int:
         require(key_text, "[output]/dir = output/duplicate_key_should_win")
         require_absent(key_text, "repeated section header")
         key_values = read_summary(key_output)
-        if key_values.get("config_duplicate_count") != "1":
-            raise AssertionError(
-                f"expected 1 duplicate declaration, got "
-                f"{key_values.get('config_duplicate_count')!r}"
-            )
-        if key_values.get("actual_output_dir") == "":
-            raise AssertionError("summary does not report actual_output_dir")
+        assert key_values.get("config_duplicate_count") == "1", (
+            f"expected 1 duplicate declaration, got {key_values.get('config_duplicate_count')!r}"
+        )
+        assert key_values.get("actual_output_dir") != "", "summary does not report actual_output_dir"
 
     print("test_config_duplicate_declarations: OK")
     return 0
