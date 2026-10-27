@@ -10,7 +10,7 @@
 ## 当前快照
 
 - 分支 `roadmap/F6-live-progress`，集成分支 `codex`（快进合并后推送）；`main` 为早期历史分支。
-- 阶段 0 审计修复已交付：提交 `67ce037`（工作区快照）→ `2e87f18`（静默失败路径）→ `02c0dc6`（验收证据与状态）→ `48f566b`（跨代理协作信箱）。
+- 阶段 0 审计修复已交付：提交 `67ce037`（工作区快照）→ `2e87f18`（静默失败路径）→ `02c0dc6`（验收证据与状态）→ `48f566b`（跨代理协作信箱）→ `8b7721b`（阶段 1 文档与仓库卫生）。
 - 最近一次完整回归（阶段 0，`2e87f18` 源码 + Release 构建）：**76 PASS / 0 FAIL / 0 SKIP**，`profile=all`，`tracked_source_gate=pass`，`backend_provenance=source_sha256_manifest_matches_executable`。
   - 报告与逐用例日志：[docs/verification/stage0-20261027/README.md](docs/verification/stage0-20261027/README.md)
   - 源码指纹 `9ea49a04…91a7`；后端 `G4UniversalSim.exe` SHA-256 `8f6df0fe…20e22`；构建身份 MSVC 19.51.36246.0 + Geant4 1132 + MT。
@@ -30,12 +30,13 @@
 
 阶段 1（文档与仓库卫生，进行中）：
 
-1. 修文档里的反向错误（已完成：README 与中文使用手册中"LET/GDML/STL/自动合并未实现"的旧说法）；
-2. `STATUS.md` 单一入口 + 5 份过期快照归档 `docs/archive/`（本页与归档索引）；
-3. `_backup_git_*` 进 `.gitignore`、25 个本地分支推远端（已完成，CI 从零变为逐分支可触发）；
-6. 已完成：`AGENTS.md` 48.5 KB → 33.5 KB（29 条日期条目全文迁入 `docs/agent-history.md`，只留索引）、`docs/Agent维护说明.md` 文档地图重写、新增 static 用例 `doc_links`（50 个 Markdown 文件 76 条相对链接全部可解析）；
-4. 待做：报告加断言级计数、默认报告目录改 `out/verification`、CI 把 skip 当失败；
-5. 待做：支持矩阵每条"部分支持"标注证据类型（外部独立表 / 解析式 / 同源自洽）。
+1. 已完成：修文档里的反向错误（README 与中文使用手册中“LET/GDML/STL/自动合并未实现”的旧说法）；
+2. 已完成：`STATUS.md` 单一入口 + 5 份过期快照归档 `docs/archive/`（含 [归档索引](docs/archive/README.md)）；
+3. 已完成：`_backup_git_*` 进 `.gitignore`、25 个本地分支推远端（CI 从零变为逐分支可触发）；
+4. 已完成：`AGENTS.md` 48.5 KB → 33.5 KB（29 条日期条目全文迁入 `docs/agent-history.md`，只留索引）、`docs/Agent维护说明.md` 文档地图重写、新增 static 用例 `doc_links`（53 个 Markdown 文件 100 条相对链接全部可解析）；
+5. 已完成：历史审计结论对照表 [docs/collab/outbox/20261028-0120-deepseek-legacy-audit-crosscheck.md](docs/collab/outbox/20261028-0120-deepseek-legacy-audit-crosscheck.md)（`总体判断.md`、2026-10-03 现场审计、E2、F6、阶段 0 逐条判定为仍成立/已修复/部分成立/已过时，仍成立的 9 条按阶段归位）；
+6. 待做：报告加断言级计数、工作区内容哈希、默认报告目录改 `out/verification`、CI 把 skip 当失败；
+7. 待做：支持矩阵每条“部分支持”标注证据类型（外部独立表 / 解析式 / 同源自洽）。
 
 阶段 2（待阶段 1 收尾，2B 场景已定为**屏蔽 shielding_coating**）：
 
@@ -47,7 +48,7 @@
 ## 已知缺口（不要把以下当作已完成）
 
 - 后端名字校验类错误可能在"首个事件前"才发现（例如 `[scoring.displacement]` 的粒子名在 `BeginRun` 校验，`--inspect-run` 查不出）。
-- 配置面 353 个字段中 supported 59 / experimental 287 / deprecated 5 / unsupported 2；有 GUI 元数据的仅 47 个字段，GUI 覆盖远小于后端子集。
+- 配置面 353 个字段中 supported 59 / experimental 287 / deprecated 5 / unsupported 2；有 `gui` 元数据的 57 个字段（generated 17 / generated_subset 30 / external_only 5 / legacy_external 2 / fixed_or_blocked 2 / fixed_false 1），其余 296 个字段没有任何 GUI 编辑路径。
 - 探测器响应、Dose/Fluence/DDD 等基准多为"同源自洽"或"解析式"，缺少第三方独立数据与实测效率对照。
 - 偏置只有 process-level XS 路径；importance、weight-window、splitting、Russian roulette 未实现。
 - 交互命令审计只覆盖 `--ui --ui-session csh`；Qt UI 与部分嵌套/动态命令不受审计保证。

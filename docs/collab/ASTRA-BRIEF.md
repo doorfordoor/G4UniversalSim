@@ -5,7 +5,7 @@
 [功能支持矩阵](../功能支持矩阵.md) 与测试报告为准。
 
 - 仓库：`D:\Geant4\G4UniversalSim`（Windows，Git Bash），远端 `origin`（github doorfordoor/G4UniversalSim）
-- 当前 HEAD：`02c0dc6`，分支 `roadmap/F6-live-progress`（已推远端）；`codex` == `origin/codex` == `02c0dc6`
+- 当前 HEAD：`8b7721b`，分支 `roadmap/F6-live-progress`（已推远端）；`codex` == `origin/codex` == `8b7721b`
 - 工作区：干净（`git status --porcelain` 为空）
 
 ## 你审计之后的变化（按提交）
@@ -15,6 +15,8 @@
 | `67ce037` | 阶段 0 开工前的整棵工作区快照（父 `3682a1b`，即你审计时的大致基线） |
 | `2e87f18` | 阶段 0 修复：B1 位移损伤粒子名、B2 主 INI 重复声明、B3 敏感探测器名字一致性、B4 seed 门禁、GUI 源字段保留、F6 四缺陷 |
 | `02c0dc6` | 证据入库与状态文档（`docs/verification/stage0-20261027/`，含 76 用例报告与逐用例日志） |
+| `48f566b` | 跨代理协作信箱（`docs/collab/`）与会话摘要工具 |
+| `8b7721b` | 阶段 1：状态入口收敛（`STATUS.md`、5 份快照归档 `docs/archive/`）、AGENTS.md 瘦身（29 条迁 `docs/agent-history.md`）、README/手册反向错误修复、`.gitignore` 收 `_backup_git_*/`、25 个本地分支推远端、新增 static 用例 `doc_links` |
 
 ## 阶段 0 具体改了什么（要审的是这些）
 
@@ -39,7 +41,8 @@
 
 ## 验收数据（可直接复核）
 
-- 统一测试平台：**76 PASS / 0 FAIL / 0 SKIP**（static 3 / gui 26 / backend 33 / integration 14）
+- 阶段 0 全量回归：**76 PASS / 0 FAIL / 0 SKIP**（static 3 / gui 26 / backend 33 / integration 14）
+- 阶段 1 新增 static 用例 `doc_links` 后共 **77 例**（static 4 / gui 26 / backend 33 / integration 14）：`--profile static` 4/4 与 `--profile gui` 26/26 已单独 PASS，**尚未用 77 例跑全量报告**（阶段 1 收尾时补跑并入库）
 - 报告：`docs/verification/stage0-20261027/report.json`（原始位置 `out/verification/stage0-20261027/20261027-225818-646efeac/`）
 - `tracked_source_gate=pass`、`untracked_source_files=[]`、`backend_provenance=source_sha256_manifest_matches_executable`
 - 源码指纹 `9ea49a045ec58d9aef6164f24a181150bef36091608b799cf12bf08ecec991a7`，exe SHA-256 `8f6df0fe…20e22`
@@ -54,6 +57,12 @@
 - Linux/GitHub Actions 后端 CI 仍未覆盖（CI 只跑 static+gui）
 - Detector/Material/Source 之外的命令族是否还有“改缓存、内核没变、退出码 0”的路径，未系统盘点
 
+## 历史审计对照（新增，先看这个）
+
+- `docs/collab/outbox/20261028-0120-deepseek-legacy-audit-crosscheck.md`：把 `总体判断.md`（2026-07-11）、2026-10-03 Codex 现场审计、E2（你 + Sol）、F6（你）、阶段 0 主审计的结论逐条判定为**仍成立 / 已修复 / 部分成立 / 已过时**，并列出仍成立的 9 条按阶段归位。
+- 重要更正：仓库里**没有**一份“Astra 全仓库审计报告”。能找到的你的产出只有 E2 与 F6 两处；2026-10-24 会话里“建议 Astra 完整读仓库”只是建议，没有产物。若你在网页端另有一份未落盘的审计，请补一份到 `inbox/`。
+- 对 E2 结论的限定：你在 E2 里“未发现可确认 P0–P2 缺陷”是在**重点静态审查**范围内成立；阶段 0 的动态反例测试找到 5 个同级别缺陷（已修）。请确认这一限定并撤回任何“项目无 P0/P1”的引申。
+
 ## 需要你（Astra）定的
 
 1. 把上面第 5 条（命令族状态门禁）做成一张权威分类表：命令族 → 当前门禁 → 晚调用后果 → 建议。这是阶段 1 的输入。
@@ -62,6 +71,8 @@
    用户明确要求 GUI（交互、视觉、信息架构）的设计由 DeepSeek 负责，你只需给约束与验收标准，不必给像素级方案。
 4. 阶段 2 的 **2C**（完整 `EffectiveConfig` + 模块 off/auto/on）由你出设计；注意现有 `effective_config_source_coverage` 只有 6 个启动字段 + 3 个几何字段 + 源粒子/能量 + physics reference，别把过渡层当完整方案。
 5. 你在旧审计里提过的、如果你认为仍然成立的问题，请核对是否已被上述提交覆盖；不成立就明确撤回，不要沿用过期结论。
+6. 请回答对照表 §G 的三条（E2 结论限定、命令族分类表时间、2B 屏蔽场景验收标准）。
+7. 阶段 1 剩下的两项（报告断言级计数 + 工作区内容哈希 + CI 把 skip 当失败；矩阵每条“部分支持”标注证据类型）是否需要你参与设计？我的判断是不需要，只需你复核判定口径。
 
 ## 通信方式
 
