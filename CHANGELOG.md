@@ -1,11 +1,17 @@
 # Changelog
 
 Short, user-facing record of notable changes. Detailed support status lives in
-`docs/功能支持矩阵.md`; the roadmap lives in the claude.ai project
-"G4UniversalSim Development Roadmap".
+`docs/功能支持矩阵.md`; the roadmap and phase status live in `docs/ROADMAP.md`.
 
 ## Unreleased
 
+### Changed
+- **状态入口收敛**：新增仓库根 `STATUS.md` 作为当前快照/阶段进度/证据/已知缺口的唯一入口；`docs/ROADMAP.md` 是阶段状态唯一登记处；5 份带日期的过期状态文档（`持续开发执行规划`、`当前开发交接`、`开发审计与阶段目标`、`M0-接续检查点`、`M0-M5-原型推进看板`）移入 `docs/archive/` 并加归档说明与索引。
+- **AGENTS.md 瘦身**：29 条逐日实施契约全文迁入 `docs/agent-history.md`，`AGENTS.md` 只保留规则与一行式索引（48.5 KB → 33.5 KB）。
+- **文档反向错误修复**：`README.md` 与 `docs/中文使用手册.md` 不再声称 LET/GDML/STL/自动合并未实现（这些能力早已存在，只是实验性或部分支持）；`CHANGELOG.md` 头部不再指向外部 claude.ai 项目。
+
+### Added
+- **static 用例 `doc_links`**：`scripts/check_doc_links.py` 校验仓库内 Markdown 相对链接与图片路径存在（跳过代码块、外链与锚点，支持 `file.cc:123` 与仓库内绝对路径），当前 50 个文件 76 条链接 0 断链；用例总数 77。
 ### Added
 - **多模型协作试运行**：新增协作约定与 E2 独立审计记录；当前 4 项专项及 7 个临时 writer 边界检查通过，未发现可确认功能缺陷。保留一项正式回归补强建议；没有修改生产代码或启动 F6。
 - **E2 配置 schema 接续**：源（含高级 GPS/多源/相空间）、物理、计分、六种几何模板和材料文件进入统一字段登记；生成逐字段解析入口/校验阶段/GUI范围/测试覆盖清单。保留上下文及运行时校验、历史警告与元数据行为；field/biasing 不在本次迁移内。GUI 当前生成字段复用标量约束，停止输出未消费的 physics.mode；未开放高级编辑器。实现提交 aaa9c1d；70 项完整回归与最后 4 项专项通过。详见 docs/配置schema说明.md。

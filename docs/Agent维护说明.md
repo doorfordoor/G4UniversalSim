@@ -6,13 +6,17 @@
 
 ## 1. 当前文档结构
 
-仓库级开发约束见根目录 AGENTS.md，GUI 专项约束见 gui/AGENTS.md。功能状态见 docs/功能支持矩阵.md，开发顺序见 docs/开发路线图.md。
+仓库级开发约束见根目录 AGENTS.md（条目索引 + `docs/agent-history.md` 历史全文），GUI 专项约束见 gui/AGENTS.md。**当前快照与阶段进度先看仓库根 `STATUS.md`**；阶段状态登记见 `docs/ROADMAP.md`（唯一），长期目标见 `docs/开发路线图.md`；功能支持等级见 `docs/功能支持矩阵.md`。
 
 - `docs/中文使用手册.md`：后端命令行、主配置、材料、源、物理、计分、biasing、macro 命令和常见问题。
 - `docs/中文几何配置说明.md`：几何模板、层级几何、形状参数、布尔操作和几何常见错误。
 - `gui/docs/中文快速使用说明.md`：PySide6 GUI 的安装、页面、生成包、运行、输出和限制。
 - `docs/Agent维护说明.md`：本文件，记录维护索引和易错点。
-- `docs/当前开发交接.md`：当前 Git 基线、未提交工作区、开放问题、总体路线和新 Agent 接手步骤；它是带日期的现场快照，接手时必须重新核对 Git。
+- `STATUS.md`（仓库根）：当前分支/提交/回归证据/阶段进度/已知缺口/文档地图的唯一入口页，接手先读它。
+- `docs/ROADMAP.md`：阶段状态与进度日志的唯一登记处；`docs/开发路线图.md` 记录 M0–M5 长期目标。
+- `docs/agent-history.md`：AGENTS.md 原逐日条目全文（含反例与回归入口），改模块前必读；新增条目追加到这里并在 AGENTS.md 索引加一行。
+- `docs/collab/README.md`：跨代理（Astra/Codex/本机）协作信箱规则与单写者约定。
+- `docs/archive/`：已过期的带日期状态快照（执行规划、交接、检查点），只作历史参考、不再维护；索引见 `docs/archive/README.md`。当前 Git 基线与未提交状态一律以 `git log`/`git status` 和 `STATUS.md` 为准，接手时必须重新核对。
 
 原则：面向人类阅读的整理后文档使用中文。代码标识符、命令、文件名和配置 key 保留原样。
 
@@ -58,7 +62,7 @@
 - process-level XS biasing 是推荐路径。旧 `[biasing.xs]` 和部分 `/AIHL/biasing/xs/...` 命令仍兼容但会提示 legacy。
 - GUI 的 source rectangle 已允许生成 XY 平面 `shape=rectangle`、`center`、`halfx`、`halfy` 的实验性子集；annulus、cone、cosine、focused 仍会阻止生成。矩形方向与平面旋转是不同概念，目前不支持旋转平面。
 - GUI 项目 JSON schema 在 HEAD `018345c` 中为 version 5；当前 C0A 工作区为 version 6，新增 `runInputMode=generated|external`，尚未提交。缺少该字段的旧项目按 config/macro 是否存在迁移，专项入口为 `gui/smoke_tests/smoke_run_input_modes.py`；设置 `G4USIM_EXE` 时还验证真实 QProcess 运行和实际事件数。
-- 2026-10-03 审计发现 `gui/g4usim_gui/output/` 和部分 boolean fixture 尚未跟踪且被用户 staged `.gitignore` 忽略。本机 smoke 通过不能作为全新检出证据；独立审查所需源文件，不得修改保护 index blob。阶段现场以 `docs/开发审计与阶段目标.md` 为准，旧交接快照不自动更新。
+- 2026-10-03 审计发现 `gui/g4usim_gui/output/` 和部分 boolean fixture 尚未跟踪且被用户 staged `.gitignore` 忽略。本机 smoke 通过不能作为全新检出证据；独立审查所需源文件，不得修改保护 index blob。阶段现场以 `docs/archive/开发审计与阶段目标.md` 为准，旧交接快照不自动更新。
 - GUI 生成包不会覆盖原始 `materials.ini` 或 `geometry.ini`，只写入 run package。
 
 ### 3.1 M0-1/M0-1b 配置优先级

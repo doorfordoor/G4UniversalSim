@@ -14,18 +14,18 @@ The current project is intended to build into a runnable Geant4 executable with 
 4. Run `/run/initialize` and `/run/beamOn`.
 5. Write CSV outputs and `run_summary.txt`.
 
-Advanced MicroElec/ElectronCapture support is optional and experimental. LET, dose, and fluence scorers currently expose stubs or light interfaces; `EdepScorer` is the first usable scorer.
+Advanced MicroElec/ElectronCapture support is optional and experimental. `EdepScorer` is the most validated scorer; LET, dose, fluence and displacement-damage scoring are experimental and only partially validated - check [docs/功能支持矩阵.md](docs/功能支持矩阵.md) for the exact limits of each.
 
 ## Current Safety Notes
 
 - `mode = volume_fraction` is supported for material components. Volume fractions are converted to mass fractions using component densities; `density = auto` uses ideal additive-volume density, while explicit density overrides the final mixture density.
-- `gdml` is a placeholder template only. It does not call `G4GDMLParser`; do not run `/run/initialize` with `macros/run_gdml.mac` until real GDML import is implemented.
-- STL import is not implemented.
+- `template = gdml` imports a GDML file through `G4GDMLParser` (`[gdml]/file`, `validate`, `sensitive_volumes`, `bias_volumes`; export with `/AIHL/geometry/exportGDML`) when Geant4 is built with GDML support; without it the configuration is rejected before any geometry object is built. The import does not preserve world/replica/parameterised physical-volume names or per-copy materials, and the GUI cannot generate a GDML run package (external runs can use one).
+- STL import is available as the experimental `shape = tessellated`; the reader requires a closed, consistently oriented manifold (see [docs/中文几何配置说明.md](docs/中文几何配置说明.md)).
 - Hierarchical geometry supports `trd` / `trapezoid` through `G4Trd`, and full `trap` through `G4Trap`; all `trd` / `trap` length parameters are half-lengths.
 - `layered_device` propagates `copyNo`, `metadata.*`, and unknown layer keys to `VolumeNode::userProperties`; metadata is not written to hit CSV files yet.
 - `/AIHL/output/...`, `/AIHL/app/...`, and `/AIHL/detector/...` are registered by the default executable. Output commands do not include hits/scoring switches; use `/AIHL/scoring/...` for those.
 - Importance biasing, weight-window, splitting, and Russian roulette are future work. The currently usable biasing path is process-level XS biasing.
-- Multi-thread CSV output uses per-worker `OutputManager` / `ScoringManager` instances and writes `_tN` files. Automatic merge is not implemented; merge per-thread CSV/histogram files explicitly.
+- Multi-thread CSV output uses per-worker `OutputManager` / `ScoringManager` instances and writes `_tN` files; per-thread CSV files still need an explicit merge (`scripts/merge_outputs.py` or `mergeHistograms`). With `[output]/format = root` (or `both`) G4AnalysisManager merges histograms and ntuples into one ROOT file per run, so ROOT output needs no manual merge.
 
 ## Features
 
@@ -39,6 +39,8 @@ Advanced MicroElec/ElectronCapture support is optional and experimental. LET, do
 - Raw and weighted event energy deposition output.
 - Optional cross-section biasing using `G4GenericBiasingPhysics` plus geometry post-build operator attachment.
 - Standalone histogram merge tool and Python helper scripts.
+
+Phase status and the support baseline: `docs/ROADMAP.md` and `docs/功能支持矩阵.md`. The single status page is `STATUS.md`.
 
 ## Requirements
 
@@ -108,7 +110,7 @@ Only material components are supported for `mode = volume_fraction`; direct elem
 
 Select the data format with `[output] format = csv | root | both` (default `csv`) or `/AIHL/output/setFormat` before `/run/initialize`.
 
-**ROOT** (`format = root`): one `g4usim.root` per run (`g4usim_rR.root` for later runs) written through Geant4's `G4AnalysisManager`. Worker threads are merged automatically. It contains the `edep_raw`/`edep_weighted` histograms and the `hits`, `events`, `edep_volume`, `edep_particle`, `dose` and `fluence` ntuples. No ROOT installation is needed to run; read it with `uproot` (`pip install uproot`) or ROOT. Every run also writes `run_metadata.json`. See `docs/输出数据契约.md`.
+**ROOT** (`format = root`): one `g4usim.root` per run (`g4usim_rR.root` for later runs) written through Geant4's `G4AnalysisManager`. Worker threads are merged automatically. It contains the `edep_raw`/`edep_weighted` histograms and the `hits`, `events`, `edep_volume`, `edep_particle`, `dose`, `fluence`, `mesh` and `let` ntuples. No ROOT installation is needed to run; read it with `uproot` (`pip install uproot`) or ROOT. Every run also writes `run_metadata.json`. See `docs/输出数据契约.md`.
 
 **CSV** (default):
 

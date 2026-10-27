@@ -36,6 +36,7 @@ CASES = (
     Case("merge_outputs", "scripts/test_merge_outputs.py", "static"),
     Case("output_extensions", "scripts/test_output_extensions.py", "static"),
     Case("runner_contract", "scripts/test_m0_runner.py", "static"),
+    Case("doc_links", "scripts/check_doc_links.py", "static"),
     Case("merge_histograms", "scripts/test_merge_histograms.py", "backend", ("merge",)),
     Case("gui_parsers", "gui/smoke_tests/smoke_parsers.py", "gui", ("qt",)),
     Case("gui_materials", "gui/smoke_tests/smoke_materials_editor.py", "gui", ("qt",)),
