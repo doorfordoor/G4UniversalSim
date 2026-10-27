@@ -7,6 +7,7 @@ Short, user-facing record of notable changes. Detailed support status lives in
 ## Unreleased
 
 ### Added
+- **多模型协作试运行**：新增协作约定与 E2 独立审计记录；当前 4 项专项及 7 个临时 writer 边界检查通过，未发现可确认功能缺陷。保留一项正式回归补强建议；没有修改生产代码或启动 F6。
 - **E2 配置 schema 接续**：源（含高级 GPS/多源/相空间）、物理、计分、六种几何模板和材料文件进入统一字段登记；生成逐字段解析入口/校验阶段/GUI范围/测试覆盖清单。保留上下文及运行时校验、历史警告与元数据行为；field/biasing 不在本次迁移内。GUI 当前生成字段复用标量约束，停止输出未消费的 physics.mode；未开放高级编辑器。实现提交 aaa9c1d；70 项完整回归与最后 4 项专项通过。详见 docs/配置schema说明.md。
 
 - **Configuration schema** (roadmap E2, first modules `[run]`, `[general]`, `[output]`):
