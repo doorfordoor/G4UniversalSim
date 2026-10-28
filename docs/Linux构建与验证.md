@@ -165,6 +165,10 @@ Geant4 11.2/11.4 矩阵与非 Ubuntu 发行版仍未验证。
 
 原因：`repo_relative()` 只剥离“当前工作区前缀”，Windows 上 `D:/Geant4/G4UniversalSim/...` 命中该前缀；POSIX 上同一字符串既不是绝对路径也不是当前前缀，于是按相对路径查找而失败。修法是再补一条跨平台回退——剥离仓库目录名（`G4UniversalSim/`）后的部分，并用自检断言两种斜杠形式；修后 Windows 与 WSL 都是 116 链接 / 68 文件 / 0 断链，Linux static profile 7/7 通过。教训同样写进 `docs/agent-history.md`：**只在 Windows 跑过的 static 用例不能算跨平台通过**。
 
+### 7.3 第三、四轮：四个 profile 全绿
+
+第三轮（`81391e9`）static 与 static 门禁通过后，GUI profile 失败在 `smoke_main_window_ui` 的 Windows 路径分隔符断言；修掉之后第四轮（`3291145`）**四 profile 全绿**：`3291145` 的 `codex` run [40640355033](https://github.com/doorfordoor/G4UniversalSim/actions/runs/40640355033) 与 roadmap run [40640350911](https://github.com/doorfordoor/G4UniversalSim/actions/runs/40640350911)（各约 12–13 分钟，18 步 + 注解 + 篡改负向对照 + artifact 上传）。至此 E3 的 Linux 部分在真实 Actions 上闭环；仍未完成的是 Windows 的 `m0-static-gui.yml`（被手动禁用）与 Geant4 11.2/11.4 矩阵。
+
 ## 8. 不证明什么
 
 - 不证明 Linux 上任何物理结果与 Windows 一致——测试只覆盖配置、生命周期、文件契约与物理量在给定容差内的既有断言；

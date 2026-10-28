@@ -109,8 +109,9 @@ suite, CHANGELOG, support matrix). "Done when" lists the evidence, not just the 
   documented. (Decision needed: hosted runners on the public repo.)
   Status 2026-10-28: **done for Linux.** `.github/workflows/linux-geant4.yml` runs on
   `ubuntu-24.04` with conda-forge Geant4 11.3.2 (micromamba) and is green on both
-  branches: `codex` run 40634469313 and `roadmap/F6-live-progress` run 40634465977 for
-  commit `a5970ff`, ~12m38s each. The job configures and builds the backend, checks the
+  branches with all four profiles: `codex` run 40640355033 and
+  `roadmap/F6-live-progress` run 40640350911 for commit `3291145` (~12-13 min each; the
+  earlier `a5970ff` runs were green for backend and integration only). The job configures and builds the backend, checks the
   Geant4 data lookup, then runs the static, offscreen GUI, backend and integration
   profiles on Linux, validates each report with `scripts/check_report_evidence.py`, and
   proves the evidence gate rejects a tampered report. The Linux build process (two
