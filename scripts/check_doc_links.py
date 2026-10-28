@@ -47,11 +47,21 @@ def strip_fenced_blocks(text: str) -> str:
 
 
 def repo_relative(target: str, root: str) -> str | None:
-    """Map an absolute path under the repository root back to a relative path."""
+    """Map an absolute path under the repository root back to a relative path.
+
+    Historical documents (for example the user's 总体判断.md audit) embed Windows
+    absolute paths such as ``D:/Geant4/G4UniversalSim/main.cc:170``. Those resolve on
+    Windows through the worktree prefix but not on Linux, where the same string is a
+    plain relative path, so the repository directory name is stripped as a fallback.
+    """
     normalized = target.replace("\\", "/")
     root_slash = root.replace("\\", "/").rstrip("/")
     if len(normalized) > len(root_slash) and normalized.lower().startswith(root_slash.lower() + "/"):
         return normalized[len(root_slash) + 1 :]
+    name = root_slash.rsplit("/", 1)[-1]
+    marker = f"/{name}/"
+    if marker in normalized:
+        return normalized.split(marker, 1)[1]
     return None
 
 
@@ -69,6 +79,10 @@ def main() -> int:
     assert strip_fenced_blocks("a\n```\n[b](missing.md)\n").count("missing.md") == 0
     assert repo_relative(os.path.join(root, "docs", "a.md"), root) == "docs/a.md"
     assert repo_relative("docs/a.md", root) is None
+    # Windows absolute paths inside historical documents must resolve on every OS.
+    assert repo_relative("D:/Geant4/G4UniversalSim/main.cc", root) == "main.cc", "windows path fallback"
+    backslash_path = "C:" + '\\' + "repo" + '\\' + "G4UniversalSim" + '\\' + "src" + '\\' + "a.cc"
+    assert repo_relative(backslash_path, root) == "src/a.cc", "backslash fallback"
     assert LINE_SUFFIX_RE.sub("", "src/Core/AppMessenger.cc:99") == "src/Core/AppMessenger.cc"
     broken: list[tuple[str, int, str]] = []
     checked = 0

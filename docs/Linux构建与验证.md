@@ -153,6 +153,18 @@ GUI → Linux backend → Linux integration → 四份报告各自过证据门�
 历史（2026-10-23）它们失败在 "Run offscreen GUI tests" 步骤，原因尚未取得（需要日志）。
 Geant4 11.2/11.4 矩阵与非 Ubuntu 发行版仍未验证。
 
+### 7.2 第二轮：static 用例 `doc_links` 只在 Linux 失败
+
+第二轮真跑（提交 `7c317e6`，把 static 与 offscreen GUI 也加进同一个 job）在 `Run static tests on Linux` 失败，注解只给出 `AssertionError: doc_links: 5 broken relative link(s)`。本机 WSL 复现得到 5 条断链全部来自历史审计文件 `总体判断.md`：
+
+```
+总体判断.md:26: broken relative link 'D:/Geant4/G4UniversalSim/main.cc:170'
+总体判断.md:26: broken relative link 'D:/Geant4/G4UniversalSim/src/Core/SimulationManager.cc:247'
+...
+```
+
+原因：`repo_relative()` 只剥离“当前工作区前缀”，Windows 上 `D:/Geant4/G4UniversalSim/...` 命中该前缀；POSIX 上同一字符串既不是绝对路径也不是当前前缀，于是按相对路径查找而失败。修法是再补一条跨平台回退——剥离仓库目录名（`G4UniversalSim/`）后的部分，并用自检断言两种斜杠形式；修后 Windows 与 WSL 都是 116 链接 / 68 文件 / 0 断链，Linux static profile 7/7 通过。教训同样写进 `docs/agent-history.md`：**只在 Windows 跑过的 static 用例不能算跨平台通过**。
+
 ## 8. 不证明什么
 
 - 不证明 Linux 上任何物理结果与 Windows 一致——测试只覆盖配置、生命周期、文件契约与物理量在给定容差内的既有断言；

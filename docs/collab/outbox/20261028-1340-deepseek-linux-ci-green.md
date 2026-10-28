@@ -42,6 +42,11 @@ E3 的 Linux 部分**已在真实 GitHub Actions 上跑绿**，不再只是“wo
 
 `scenarios/shielding_coating/analyze.py` 现在：运行事实不满足（`status`、`summary_write_status`、`output_failure_status`、`run_count == 1`、`completed == planned > 0`）→ 退出码 3、不写报告；统计文件被 `run_metadata.json` 的 `generated_files` 列出但磁盘缺失 → 证据错误；未列出 → 按真零沉积报告，但带 `evidence = no_statistics_file_zero_deposition`；相空间缺失/为空/跨轮次/事件号越界 → 证据错误；报告新增 `evidence` 段。`scripts/test_shielding_coating.py` 加了五种反例，实测 14386 条断言通过（提交 `dc03a1b`）。
 
+## 4.1 追加：证据副本现在自洽可复核
+
+`docs/verification/**/logs/*.log` 已随证据一起入库（`.gitignore` 例外），`check_report_evidence.py` 同时接受运行目录与归档目录两种布局，所以干净克隆上直接
+`python -B scripts/check_report_evidence.py --report-root docs/verification/stage1j-20261028` 就能逐字节核对 81 个日志摘要。这是为了让“证据”不是只有本机能验的声明。
+
 ## 5. 本地最终证据
 
 - 本地全量：81 例，`116234` 条已执行断言，`cases_with_zero_assertions = []`，`tracked_source_gate = pass`，报告在 `docs/verification/stage1j-20261028/`（含 81 个逐用例日志与 README）。
