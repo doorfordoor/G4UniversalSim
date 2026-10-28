@@ -22,8 +22,11 @@ jobs:
     name: ubuntu-24.04 / Geant4 11.3.2
     runs-on: ubuntu-24.04
     env:
-      MAMBA_ROOT_PREFIX: ${{ runner.temp }}/micromamba
-      G4_PREFIX: ${{ runner.temp }}/g4env
+      # job-level env cannot use the runner context; keep both prefixes inside the
+      # workspace instead (they are not source files, so the tracked-source gate
+      # does not care about them).
+      MAMBA_ROOT_PREFIX: ${{ github.workspace }}/.micromamba
+      G4_PREFIX: ${{ github.workspace }}/.g4env
       GEANT4_VERSION: '11.3.2'
       REPORT_ROOT: ${{ github.workspace }}/out/verification
       # The integration suite imports the desktop application; a headless runner has no display.
