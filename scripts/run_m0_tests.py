@@ -33,6 +33,11 @@ ASSERT_MARKER = "G4USIM_ASSERTS="
 # Probe implementation id written into every report; v2 also traces threads that the
 # test script starts, so assertions executed in worker pools are counted.
 ASSERT_PROBE_ID = "settrace_assert_lines_v2"
+# Digests describe bytes a reader can re-hash from disk. Text-mode writes translate
+# "\n" to "\r\n" on Windows, so hashing the in-memory string would store a digest for
+# a byte sequence no reader can reproduce. Logs and the report are written as
+# UTF-8/LF bytes and hashed after that write.
+LOG_DIGEST_ALGORITHM = "sha256_raw_bytes_lf_v2"
 
 
 @dataclass(frozen=True)
@@ -335,9 +340,14 @@ def main() -> int:
                 record.update(status="fail", reason=f"timeout after {case.timeout}s", duration_seconds=case.timeout)
                 log = str(error)
             log_path = report_dir / f"{case.name}.log"
-            log_path.write_text(log, encoding="utf-8")
+            # Store and hash the same bytes: UTF-8 with LF endings. Both halves matter —
+            # a text-mode write would leave CRLF on disk while the digest described the
+            # LF string, so every archived log failed a byte-level re-hash.
+            log_bytes = log.replace("\r\n", "\n").replace("\r", "\n").encode("utf-8", errors="replace")
+            log_path.write_bytes(log_bytes)
             record["log"] = str(log_path)
-            record["log_sha256"] = hashlib.sha256(log.encode("utf-8", errors="replace")).hexdigest()
+            record["log_sha256"] = hashlib.sha256(log_bytes).hexdigest()
+            record["log_digest_algorithm"] = LOG_DIGEST_ALGORITHM
             if not args.no_assert_probe and record["status"] != "skip":
                 executed = parse_assert_marker(log)
                 record["assertions_executed"] = executed
@@ -374,6 +384,7 @@ def main() -> int:
         "untracked_source_files": missing_tracked_sources,
         "tracked_source_gate": "fail" if missing_tracked_sources else "pass",
         "assert_probe": "disabled" if args.no_assert_probe else ASSERT_PROBE_ID,
+        "log_digest_algorithm": LOG_DIGEST_ALGORITHM,
         "assertions_executed_total": sum(record["assertions_executed"] for record in executed_cases),
         "assert_sites_total": sum(record.get("assert_sites", 0) for record in results),
         "cases_with_assertion_counts": len(executed_cases),
@@ -382,7 +393,10 @@ def main() -> int:
         "results": results,
     }
     report_path = report_dir / "report.json"
-    report_path.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    # Same rule as the logs: write LF bytes so a copy of the evidence (and a re-hash by
+    # a reviewer on any platform) reproduces these exact bytes.
+    report_bytes = (json.dumps(report, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
+    report_path.write_bytes(report_bytes)
     print(f"Report: {report_path}")
     passed = sum(1 for record in results if record["status"] == "pass")
     skipped = sum(1 for record in results if record["status"] == "skip")

@@ -140,3 +140,18 @@ E2-S1 的六个 editor→writer 边界从被忽略的 `out/verification/e2-audit
 结果（报告 `out/verification/stage1c-20261028/20261028-002802-d6dbf2ee/report.json`）：79 PASS / 0 FAIL / 0 SKIP（static 6 / gui 26 / backend 33 / integration 14）、`assertions_executed_total=116133`、`assert_sites_total=2387`、`cases_with_zero_assertions=[]`、`assert_probe=settrace_assert_lines_v2`；`source_fingerprint=ba493e73…`（exe 内嵌一致）、`tests_content_fingerprint=497be13f…`、`tracked_source_gate=pass`、`untracked_source_files=[]`。报告与 79 个逐用例日志复制在 `docs/verification/stage1b-20261028/`（`README.md` 如实写明断言数是已执行断言的下界、不证明物理正确性、不覆盖 Linux CI）。
 
 验收口径：断言总数不得下降，且 `cases_with_zero_assertions` 必须为空；新增测试用例时若 helper 用 `raise` 表达失败，报告会显示 0 断言，视为未完成迁移。
+
+### 2026-10-28 证据门禁自洽性加强、日志摘要按落盘字节计算
+
+阶段 1b 的报告 v2 把"逐用例断言数"写进了报告，但门禁只检查了"总数 > 0"和"哈希字段非空"两类弱条件。Astra 2026-10-28 审查把这条判为缺陷，实测可复现：把任一通过项 `assertions_executed` 改成 0 并补进 `cases_with_zero_assertions`，或把某个 `log_sha256` 换成 64 个 `0`、把 `assertions_executed_total` 改成 999999，`scripts/check_report_evidence.py` 仍然输出 `report evidence: OK`。
+
+同一轮暴露第二个缺陷：日志摘要与磁盘字节不符。`scripts/run_m0_tests.py` 曾用 `log_path.write_text(...)` 落盘、却对写前内存里的 LF 字符串做 SHA-256；Windows 文本模式把换行写成 CRLF，于是 79 个归档日志**原始字节 0/79 匹配、CRLF→LF 归一后 79/79 匹配**。摘要描述的是读者无法复现的字节序列，证据链在此断开。
+
+现行契约（必须遵守）：
+
+- 日志与 `report.json` 都用 `write_bytes` 写 UTF-8/LF 字节，摘要对**落盘字节**计算；报告级与逐用例都写 `log_digest_algorithm = "sha256_raw_bytes_lf_v2"`。新增任何"带摘要的证据文件"都必须遵守"先定字节、再算摘要"，不得对内存字符串算摘要。
+- 门禁顺序：schema/version → `assert_probe` 不得为 `disabled` → `log_digest_algorithm`（严格模式只认 v2）→ `profile` 合法 → 双指纹 64 位小写 hex → `backend_provenance` → 逐用例字段完整、名称唯一、层合法、状态合法 → 发布报告不得含 `fail`/`skip`（`--allow-incomplete` 仅供排查）→ 通过用例 `exit_code == 0` 且 `assertions_executed >= 1` 且 `assert_sites` 合法 → `log_sha256` 64 位 hex 且与实际日志字节一致（先按 `log` 路径找，找不到再找报告目录同名与 `logs/` 同名，供证据副本复核）→ `assertions_executed_total` 等于逐项求和 → `cases_with_assertion_counts` 等于带计数记录数 → `cases_with_zero_assertions` 等于实际零断言列表 → 可选 `--baseline` 比对总数、逐项计数与用例集合（旧用例不得消失）。
+- 归档报告（阶段 0/1/1b/1c 之前）保留原样、**不追改**：复核时必须加 `--allow-legacy-digest`（对文件做 CRLF→LF 归一后再比对）与 `--allow-legacy-probe`（v1 探针），并在结论里写明"按 legacy 口径复核"。默认严格模式拒绝它们，避免把旧摘要当成当前口径。
+- CI 的 static 与 gui 两个步骤在各自跑完后**分别**调 `scripts/check_report_evidence.py`（每次都校验最新报告），不再只在最后校验一次；`scripts/test_report_evidence.py` 必须覆盖篡改反例（逐项 0 断言、求和不符、计数不符、零断言列表不符、摘要不符、日志缺失、fail/skip、重名、非法层、基线回归、legacy 摘要与 legacy 探针的放行/拒绝、CLI OK/FAIL/无报告/带 baseline）。
+
+回归入口：`python -B scripts/check_report_evidence.py --report <report.json>`、`python -B scripts/test_report_evidence.py`（static 用例 `report_evidence`，38 条断言）。

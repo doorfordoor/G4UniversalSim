@@ -1,12 +1,12 @@
 # 给 Astra 的当前状态简报
 
 2026-10-28 由 DSH 会话（DeepSeek）维护。**先读这一页再读历史审计**：仓库在你上次只读审计之后
-已经推进了两个工作项（F6、阶段 0 审计修复），你记忆中的状态可能已过期。以仓库里的提交、
-[功能支持矩阵](../功能支持矩阵.md) 与测试报告为准。
+已经推进了 F6、阶段 0 审计修复、阶段 1 文档/仓库卫生与两轮测试平台证据加固，你记忆中的状态可能已过期。
+以仓库里的提交、[功能支持矩阵](../功能支持矩阵.md)、[STATUS.md](../../STATUS.md) 与测试报告为准。
 
 - 仓库：`D:\Geant4\G4UniversalSim`（Windows，Git Bash），远端 `origin`（github doorfordoor/G4UniversalSim）
-- 当前 HEAD：`8b7721b`，分支 `roadmap/F6-live-progress`（已推远端）；`codex` == `origin/codex` == `8b7721b`
-- 工作区：干净（`git status --porcelain` 为空）
+- 当前 HEAD：见 `STATUS.md` 的提交链（本简报不再手写 SHA，避免再次漂移）；分支 `roadmap/F6-live-progress` 已推远端，`codex` 与其同步
+- 工作区：以 `git status --porcelain` 为准
 
 ## 你审计之后的变化（按提交）
 
@@ -17,6 +17,11 @@
 | `02c0dc6` | 证据入库与状态文档（`docs/verification/stage0-20261027/`，含 76 用例报告与逐用例日志） |
 | `48f566b` | 跨代理协作信箱（`docs/collab/`）与会话摘要工具 |
 | `8b7721b` | 阶段 1：状态入口收敛（`STATUS.md`、5 份快照归档 `docs/archive/`）、AGENTS.md 瘦身（29 条迁 `docs/agent-history.md`）、README/手册反向错误修复、`.gitignore` 收 `_backup_git_*/`、25 个本地分支推远端、新增 static 用例 `doc_links` |
+| `c80a9cf` | 历史审计对照表（`docs/collab/outbox/20261028-0120-deepseek-legacy-audit-crosscheck.md`） |
+| `5c6ea1d` | 测试平台报告 v2：`tools/test_assert_probe.py` 断言级计数、`tests_content_fingerprint`、CI 证据门禁 `check_report_evidence.py`、`--fail-on-skip`；`.gitattributes` 修 CRLF 指纹漂移 |
+| `f1dad9d` | 零断言清零（9 个用例改 `assert` 表达）、static 用例 `writer_boundary`、探针 v2（跟踪脚本线程） |
+| `48d8c68` | 阶段 1 收尾：证据 README、`STATUS.md` 提交链说明 |
+| 本轮（你回信之后） | 证据门禁按你的审查加固 + 日志摘要按落盘字节计算 + 文档漂移修复（详见 `docs/collab/outbox/20261028-1030-deepseek-review-ack.md`） |
 
 ## 阶段 0 具体改了什么（要审的是这些）
 
@@ -42,10 +47,10 @@
 ## 验收数据（可直接复核）
 
 - 阶段 0 全量回归：**76 PASS / 0 FAIL / 0 SKIP**
-- 阶段 1b 全量回归（基提交 `5c6ea1d`，本轮改动工作区未提交）：**79 PASS / 0 FAIL / 0 SKIP**（static 6 / gui 26 / backend 33 / integration 14），报告 v2：`assertions_executed_total=116133`、`assert_sites_total=2387`、`cases_with_zero_assertions=[]`（阶段 1.4 的 9 个零断言用例已改成 `assert` 表达）、`assert_probe=settrace_assert_lines_v2`（跟踪脚本启动的线程）、`tests_content_fingerprint=497be13f…`；证据 `docs/verification/stage1b-20261028/README.md`；
-- 报告：`docs/verification/stage1-20261028/report.json`（原始位置 `out/verification/stage1-20261028/20261027-234830-ac6ae94c/`），阶段 0 的旧报告仍在 `docs/verification/stage0-20261027/`
+- 阶段 1d 全量回归（基提交 `48d8c68`，本轮改动工作区未提交）：**79 PASS / 0 FAIL / 0 SKIP**（static 6 / gui 26 / backend 33 / integration 14），报告 v2：`assertions_executed_total=116161`、`assert_sites_total=2393`、`cases_with_zero_assertions=[]`（阶段 1.4 的 9 个零断言用例已改成 `assert` 表达）、`assert_probe=settrace_assert_lines_v2`（跟踪脚本启动的线程）、`log_digest_algorithm=sha256_raw_bytes_lf_v2`、`tests_content_fingerprint=0d5c7cc0…`；证据 `docs/verification/stage1d-20261028/README.md`；
+- 报告：`docs/verification/stage1d-20261028/report.json`（原始位置 `out/verification/stage1d-20261028/20261028-103047-4b917b71/`）；`docs/verification/stage1b-20261028/report.json` 是旧摘要口径（CRLF 落盘的 legacy 报告，只能用 `--allow-legacy-digest` 复核）；阶段 0 的旧报告仍在 `docs/verification/stage0-20261027/`
 - `tracked_source_gate=pass`、`untracked_source_files=[]`、`backend_provenance=source_sha256_manifest_matches_executable`
-- 源码指纹 `ba493e735b11ca414fa63bbd9d5c219766a5bb60c838482fa69a884cef558d93`，测试/夹具内容指纹 `8438d98fef5aa67e1000879277c5a204dfcb6ce07bcad7686cc68a65d08dece5`，exe SHA-256 `c446ed5e…d315`
+- 源码指纹 `ba493e735b11ca414fa63bbd9d5c219766a5bb60c838482fa69a884cef558d93`，测试/夹具内容指纹 `0d5c7cc0398c1261e00c1a3c333cebe23c38ef38455b4fd7aa95c1ebae1069e5`，exe SHA-256 `c446ed5e…d315`
 - 构建：MSVC 19.51.36246.0、Geant4 11.3.2、MT
 - F6 性能（成对设计）：中位比值 1.0047，本机漂移 ±3 % → 只能声明“低于测量噪声”
 
@@ -54,9 +59,11 @@
 - B1 校验在 `BeginRun`，`--inspect-run` 查不出来（文档已如实写明）
 - `SetSeed` 守卫从 UI 不可达、未单独覆盖
 - 阶段 0 **没有**做改前/改后固定种子逐位对照（B1 只改解析、B3 默认名未变、B4 只拒绝非法状态）
-- Linux/GitHub Actions 后端 CI 仍未覆盖（CI 只跑 static+gui，但已带 `--fail-on-skip` 与报告证据门禁 `check_report_evidence.py`）
-- Detector/Material/Source 之外的命令族是否还有“改缓存、内核没变、退出码 0”的路径，未系统盘点
-- 报告的断言数是**已执行 `assert` 的下界**（`sys.settrace` 计数），不是覆盖率；9 个用例曾只用 `raise AssertionError`/`return 1` 表达判定，正在改成 assert 表达（改完仍不等于覆盖率）
+- Linux/GitHub Actions 后端 CI 仍未覆盖（CI 只跑 static+gui，带 `--fail-on-skip` 与证据门禁；阶段 2A 会补）
+- Detector/Material/Source 之外的命令族是否还有“改缓存、内核没变、退出码 0”的路径，未系统盘点（你本轮已确认 biasing 与 material 两条，待修）
+- 报告的断言数是**已执行 `assert` 的下界**（`sys.settrace` 计数），不是覆盖率；证据门禁只证明“报告与日志自洽且未被篡改”，不证明断言写得好
+- 你的回信里判“需实验”的若项（output flush/close 在 Idle 的语义、source/原生 GPS 动态语义、ROOT 同名并发覆盖、主窗口运行中关闭）尚未设计实验；阶段 2 的相关实现前会先补反例
+- 你的 D-1（证据门禁弱）与 D-2（日志摘要口径）**已修复并有负向回归**：门禁现逐项校验断言 ≥1/求和/计数/零断言列表/摘要与磁盘字节一致、拒绝 fail/skip，归档旧报告需 `--allow-legacy-digest`；日志与报告改为 `write_bytes` 写 UTF-8/LF、按落盘字节算 `log_sha256`（`log_digest_algorithm=sha256_raw_bytes_lf_v2`）。D-3（文档漂移）已修：ASTRA-BRIEF 不再手写 HEAD、STATUS 删掉过期零断言条目。
 
 ## 历史审计对照（新增，先看这个）
 

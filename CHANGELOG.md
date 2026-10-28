@@ -11,11 +11,14 @@ Short, user-facing record of notable changes. Detailed support status lives in
 - 测试平台 `--fail-on-skip`：CI 的 static/gui 步骤不再让缺失 Qt/uproot/后端的 skip 以退出码 2 变绿；`--report-root` 默认改为 `out/verification`。
 - 支持矩阵第 2–3 节每条功能的事实列末尾标注证据类型（外部表 / 解析式 / 同源自洽 / 自测 / 未验证），并在第 1 节给出判定口径；`.gitattributes` 对 `docs/verification/**` 关闭换行归一，证据副本与生成产物保持字节一致。
 - 九个零断言用例改为 `assert` 表达（`config_schema`、`geometry_safety`、`gui_backend_agreement`、`material_schema`、`gui_sketch_accuracy`、`unsupported_features`、`unconsumed_config`、`benchmarks`），`report.json` 的 `cases_with_zero_assertions` 现在为空数组。
+- `scripts/check_report_evidence.py` 新增 `--baseline`（断言总数、逐项计数、用例集合不下降）、`--allow-legacy-digest`/`--allow-legacy-probe`（仅用于复核归档报告）、`--allow-incomplete`（仅用于排查），并让 CI 的 static/gui 两个步骤各自跑完后分别过门禁。
 - 新增 static 用例 `writer_boundary`（`scripts/test_writer_boundary.py`）：把 Astra E2-S1 的六个 editor→writer 边界（非有限能量、非有限半径、零半径、非有限截断、直方图上下限倒置）从被忽略的临时探针提升为正式回归。
 - 断言探针升级为 `settrace_assert_lines_v2`：同时安装 `threading.settrace`，脚本自己启动的线程里执行的 `assert` 也计入 `G4USIM_ASSERTS`。
 
 ### Fixed
 
+- 证据门禁可被篡改绕过（Astra 2026-10-28 审查 D-1）：`scripts/check_report_evidence.py` 现在校验逐用例断言 ≥ 1、`exit_code == 0`、逐项求和与总数一致、`cases_with_assertion_counts`/`cases_with_zero_assertions` 与实际记录一致、`log_sha256` 与磁盘日志字节一致、发布报告无 fail/skip，并支持 `--baseline` 校验不下降；实测"把通过项断言改成 0""把日志摘要换成 0 并放大总数"两种篡改均被拒绝。
+- 日志摘要与磁盘字节不符（Astra 2026-10-28 审查 D-2）：`scripts/run_m0_tests.py` 改为写 UTF-8/LF 字节并对落盘字节计算 SHA-256（`log_digest_algorithm=sha256_raw_bytes_lf_v2`），`report.json` 同样按字节写出；此前 Windows 文本模式写 CRLF、摘要却算 LF 字符串，归档的 79 个日志原始字节 0/79 可复现。
 - `.gitattributes` 的 `* text=auto` 导致 Windows 检出写入 CRLF，使按原始字节哈希的工作区指纹漂移、backend 用例全部 SKIP；现对 `*.cc`/`*.hh`/`*.h`/`*.in`/`*.py`/`*.json`/`*.ini`/`*.mac`/`*.csv` 与 `CMakeLists.txt` 固定 `text eol=lf`，并重新物化受影响的跟踪文件。
 - `scripts/test_config_duplicate_declarations.py`、`scripts/test_command_state_gating.py` 的验证 helper 改用 `assert` 表达，使断言级证据可被探针计数（此前 `raise AssertionError` 对探针不可见）。
 - `scripts/run_benchmarks.py` 的断言从逐基准循环内移到 `write_report()` 之后：原先位置在单个基准失败时会中止后续基准并跳过报告写出，属于行为回归。
