@@ -7,6 +7,19 @@ Short, user-facing record of notable changes. Detailed support status lives in
 
 ### Added
 
+- 屏蔽/涂层场景（路线图 2B）从命令行搬进 GUI：新增 Scenario 页（15 个字段，基础 7 + 高级 8，三层校验）与 headless 驱动
+  `gui/g4usim_gui/core/scenario_shielding.py`；生成走 `scenarios/shielding_coating/scenario_model.py` 的纯函数
+  `render()/generate()`（`make_scenario.py` 只是 CLI 包装，二者逐字节一致），分析走 `analyze.py` 的 `analyze(output_dir)`。
+  结果表 TID/DDD/透射/反照每行带证据列，DDD 行显示所用 NIEL 表路径与 sha256。`docs/屏蔽涂层场景端到端.md` 记录字段、
+  生成文件、运行核对、证据语义与限制。
+
+- NIEL 溯源：`scenario.json` 记录每张 `[scoring.displacement]` 表的 particle/绝对路径/sha256，分析结果在
+  `report["evidence"]["niel_tables"]` 里原样带出，界面按模板显示“NIEL table: <particle> from <path> (sha256 …)”；
+  缺失记录或哈希为空时如实写 `not recorded`。
+
+- 场景回归四件套：`scripts/test_shielding_scenario_model.py`（生成器行为与兄弟场景兼容）、
+  `scripts/test_scenario_shielding_core.py`（headless 校验/生成/真跑/证据）、`gui/smoke_tests/smoke_scenario_page.py`（Qt）、
+  `gui/smoke_tests/smoke_scenario_backend.py`（12 步真实后端 200 事件）。
 - Linux workflow 现在在同一 job 内跑 static 与 offscreen GUI profile（连同 backend/integration 共四个 profile，各自过证据门禁），首次在 Actions 上全绿：`codex` run 40634469313、`roadmap/F6-live-progress` run 40634465977（提交 `a5970ff`，约 12m38s）。
 - `scripts/ci_annotate_failures.py`：把失败/跳过用例发成公开的 Actions 注解（含 layer、脚本与日志尾部），配套 static 用例 `ci_annotations`；公开仓库的 job 日志需要登录，注解是外部可读的失败诊断入口。
 - 测试平台报告 v2：每个用例经 `tools/test_assert_probe.py` 记录已执行 `assert` 数（`G4USIM_ASSERTS` marker），报告新增 `tests_content_fingerprint`、逐用例 `assert_sites`/`assertions_executed`/`log_sha256`；新增 `scripts/check_report_evidence.py` 作为 CI 证据门禁，`scripts/test_report_evidence.py`（static）覆盖其拒绝路径。
@@ -21,6 +34,19 @@ Short, user-facing record of notable changes. Detailed support status lives in
 
 ### Fixed
 
+- `scripts/test_scenario_shielding_core.py` 直接写死 `build_vs2026/Release/G4UniversalSim.exe`，Linux CI 的 backend profile
+  因此报 `backend executable not found`（runner 其实已导出 `G4USIM_EXE` 并传 `--executable`）。现按其它后端用例的约定读
+  `G4USIM_EXE`、缺省才回落到 Windows 默认构建目录；新增 static 用例 `platform_paths`（`scripts/check_test_platform_paths.py`）
+  扫描 `scripts/` 与 `gui/smoke_tests/`：提到 `build_vs2026` 就必须同时读 `G4USIM_EXE`，且不得写死盘符路径（`check_doc_links.py`
+  的样例字符串除外）。
+- 2B-1 把 `make_scenario.py` 收薄成 CLI 包装时丢了兄弟场景脚本依赖的模块级 helper，`scenarios/detector_response/make_detector.py`
+  与 `scenarios/semiconductor/make_device.py` 在 Linux CI 上 `ImportError`（`benchmarks`/`detector_response`/`semiconductor_device` 失败）。
+  现从 `scenario_model` 显式再导出 `CUSTOM`/`ENVIRONMENT`/`NIST_DENSITY`/`UNITS`/`length_mm`/`density`/`pore_centres`/
+  `spectrum_from_integral_flux`/`spectrum_points` 并加 `__all__`，回归断言这些名字可导入且两个兄弟生成器模块能加载。
+
+- Windows CI（`m0-static-gui.yml`）两个 GUI 用例的路径比较依赖本机拼写：`gui_start_page` 在 8.3 短临时路径下
+  `_rebase` 的 `relative_to` 失败后静默保留旧路径，`gui_output_extensions` 只比原始 JSON 路径文本。现在 `scan._rebase`
+  同时尝试原路径与 `.resolve()` 后的路径，两个 smoke 用 `.resolve()` 比较并在失败消息里打印两侧实际值。
 - GUI 冒烟 `smoke_main_window_ui.py` 在 Linux 上失败：配置页显示的几何配置路径断言写死了 Windows 分隔符（`test\geometry\hierarchical_test.ini`），现改为把两侧路径归一成 `/` 再比较；Windows 与 WSL 上该用例都是 62 条断言通过。
 - `scripts/check_doc_links.py` 在 Linux 上失败：`总体判断.md` 里的历史链接写成 Windows 绝对路径（`D:/.../G4UniversalSim/main.cc:170`），Windows 靠工作区前缀能解析、Linux 上当相对路径就断链；`repo_relative()` 现增加“剥离仓库目录名”的跨平台回退，并在自检中断言该行为。
 - Linux workflow 在 GitHub Actions 上首次真跑暴露的三个缺陷：job 级 `env` 使用 `${{ runner.temp }}` 导致 workflow 校验阶段失败（零 job）→ 改用 `${{ github.workspace }}` 下的前缀；conda 前缀的 Qt5 插件目录遮蔽 PySide6 自带的 Qt6 插件 → workflow 计算并导出 `QT_PLUGIN_PATH`；公开仓库的 Actions 日志需登录 → 失败用例改发公开注解。

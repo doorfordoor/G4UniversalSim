@@ -23,7 +23,7 @@ This file is the single source of truth for progress. Every work session updates
 | B Scenario packs + benchmarks | Done (B1 benchmarks, B2 shielding/coating, B3 semiconductor, B4 detector response) | see log |
 | C Wizard + built-in plotting | Done (C1 built-in plots, C2 wizard, C3 parameter scans) | see log |
 | D Installer | Done (portable ZIP + Inno Setup installer; uses an existing Geant4 data folder) | see log |
-| E Fixes and foundations | In progress: E1, E2, E5 done | see log |
+| E Fixes and foundations | In progress: E1, E2, E3 (Linux, done 2026-10-28), E5 done; E4 pending | see log |
 | F System optimisation (backend + GUI) | In progress: F6 done (2026-10-27); F1–F5, F7, F8 pending | see log |
 | G 3D view redesign | Done (G1-G6) | see log |
 | H Geant4 capability increments | In progress: H1 done | see log |
@@ -234,6 +234,16 @@ H4–H8 if the user's applications favour some of them.
 
 ## Progress log
 
+- 2026-10-28：阶段 2B（屏蔽/涂层场景 GUI 端到端）完成，提交 `402a9f2`（链：`960d683` 场景模型 → `f00bb30` headless 驱动 +
+  `analyze(output_dir)` → `a96d957` 场景页 → `719f1df` 端到端 smoke → `7834784` NIEL 溯源 → `402a9f2` CI 回归修复）。
+  命令行生成器提炼为可导入 `scenarios/shielding_coating/scenario_model.py`（`ShieldingSpec`、纯函数 `render()`、`generate()`），
+  `make_scenario.py` 保持原 CLI 契约并继续导出兄弟场景脚本依赖的 helper；分析侧 `analyze.analyze(output_dir)` 供 GUI 复用；
+  新增 Scenario 页（15 字段三层校验、生成、QProcess 运行、结果表五列带证据、DDD 行显示 NIEL 表路径与 sha256、中英切换）与
+  headless 驱动 `gui/g4usim_gui/core/scenario_shielding.py`；新增用例 `shielding_scenario_model`、`shielding_analysis`、
+  `scenario_shielding_core`、`scenario_page`、`gui_scenario_backend`，并把 `platform_paths` 加入 static（测试不得写死构建路径）。
+  统一测试平台 87 例（static 10 / gui 27 / backend 35 / integration 15），证据见 [docs/verification/stage2b-20261028](verification/stage2b-20261028/README.md)；
+  契约见 [屏蔽涂层场景端到端](屏蔽涂层场景端到端.md)。CI：M0 workflow 在 ubuntu 与 windows 均绿（`402a9f2`，run 40675415994 / 40675409885），
+  Linux workflow 的 static 与 offscreen GUI 已绿，backend 的一个写死路径失败已修复、等待下一轮确认。
 - 2026-10-27：完成 F6 整阶段（分支 roadmap/F6-live-progress，提交 `2e87f18`）。版本化后端遥测、GUI 解析与进度显示；真实 1/2/4 worker、多 run、失败/强杀与摘要对账通过，性能以成对设计重测（中位比值 1.0047，本机漂移 ±3 %，只能称开销低于噪声）。见 [F6接续检查点](F6接续检查点.md)。
 
 - 2026-10-27：阶段 0 只读审计修复（提交 `2e87f18`，前一个快照为 `67ce037`）。B1 位移损伤粒子名大小写解析、B2 主 INI 重复声明可见化、B3 敏感探测器名字一致性 + detector 命令 PreInit 门禁、B4 seed 生命周期门禁、GUI 源字段保留与进度/日志修正；新增 3 个回归用例，统一测试平台 76 PASS / 0 FAIL / 0 SKIP、`tracked_source_gate=pass`（报告 out/verification/stage0-20261027/20261027-225818-646efeac/report.json，副本见 [docs/verification/stage0-20261027](verification/stage0-20261027/README.md)）。README／手册中“LET/GDML/STL/自动合并未实现”等与后端相反的表述、状态文档多头、证据目录被 gitignore 等问题仍在阶段 1 处理。

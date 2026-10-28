@@ -236,3 +236,35 @@ Astra 的 2026-10-28 审查把 `scenarios/shielding_coating/analyze.py` 判为�
 - CI 第三次真跑（提交 `81391e9`）static 已绿、GUI 层失败：`gui/smoke_tests/smoke_main_window_ui.py` 断言配置页几何路径以 `test\geometry\hierarchical_test.ini` 结尾，Windows 分隔符在 POSIX 上不成立。修法：把控件文本与期望都归一成 `/` 再比较（`replace("\\", "/")`），并在断言消息里回显实际值；Windows 与 WSL 上该用例 62 条断言通过、Linux GUI profile 26/26。教训：GUI 冒烟里凡比较路径/文件名字符串，必须归一分隔符或使用 `Path` 比较，不能假设 Windows。
 - Linux CI 第四轮（提交 `3291145`）**四 profile 全绿**：`3291145` 的 `codex` run [40640355033](https://github.com/doorfordoor/G4UniversalSim/actions/runs/40640355033) 与 roadmap run [40640350911](https://github.com/doorfordoor/G4UniversalSim/actions/runs/40640350911)，static / offscreen GUI / backend / integration 全部 success，各自门禁通过，篡改副本负向对照与 artifact 上传也执行成功。此前三轮分别暴露 job 级 `env` 的 `runner` 上下文、conda Qt5 插件遮蔽 PySide6 Qt6 插件、doc_links 的 Windows 绝对路径与 GUI 冒烟的 Windows 分隔符四个 CI-only 缺陷。引用“Linux CI 全绿”时必须同时给提交与 run id，并说明它只覆盖 Linux。
 - 归档证据自洽（2026-10-28 补）：`docs/verification/**/logs/*.log` 现随证据一起入库（`.gitignore` 例外），`scripts/check_report_evidence.py` 的 `find_latest_report()` 同时接受运行目录（`<root>/<run-id>/report.json`）与归档目录（`<root>/report.json`），因此干净克隆上 `--report-root docs/verification/<dir>` 也能逐字节核对 `log_sha256`；回归用例覆盖归档布局。
+
+## 2026-10-28 屏蔽/涂层场景 GUI 端到端（路线图 2B）
+
+- **目标**：把 `scenarios/shielding_coating/` 的生成、运行、分析链路搬进 GUI，并让每个数字都带可核查证据。
+- **模型层**：`scenario_model.py` 提供 frozen dataclass `ShieldingSpec`（15 个字段，与 CLI 一一对应）与纯函数
+  `render()`/`generate()`；`make_scenario.py` 只保留 argparse 与 `main()`，并把 `CUSTOM`/`ENVIRONMENT`/`NIST_DENSITY`/`UNITS`/
+  `length_mm`/`density`/`pore_centres`/`spectrum_from_integral_flux`/`spectrum_points` 再导出——阶段 2B-1 收薄时漏了这一步，
+  导致 `scenarios/detector_response/make_detector.py` 与 `scenarios/semiconductor/make_device.py` 在 Linux CI 上 ImportError，
+  由 CI 的 backend profile 抓到（本机 WSL 与 Windows 全量回归当时都还没跑到这些用例）。
+- **分析层**：`analyze.py` 拆成可导入 `analyze(output_dir) -> dict` 与 `main(argv=None) -> int`，CLI 行为/消息/退出码不变；
+  证据语义沿用 D-7（缺证据退出 3、真零沉积带 `no_statistics_file_zero_deposition`）；证据段新增 `niel_tables`。
+- **NIEL 溯源**：`render()` 把 `[scoring.displacement]` 表写成 `scenario.json` 的 `niel = [{particle, path, sha256}]`
+  （`path` 为 resolve 后的绝对 POSIX 路径，哈希为文件字节的 SHA-256；文件缺失时 `sha256 = None`）；分析把该列表原样带进
+  报告的 `evidence.niel_tables`；`scenario_shielding.evidence_items()` 用模板 + 值的形式交给界面翻译，缺记录写 `not recorded`。
+- **界面**：`widgets/scenario_page.py` 分基础/高级两组共 15 个字段，三层校验后才允许生成；运行用 QProcess，日志写场景目录
+  `backend.log`（视图有行数上限），结束后核对摘要并把 TID/DDD/透射/反照填入五列表格（Group/Label/Value/Unit/Evidence）；
+  失败显示 `describe_failure()` 原因，缺证据显示标签而不是零。页序：开始、项目、配置、场景、运行、结果、历史、扫描。
+- **新增 GUI 页面时必须同步**：`smoke_main_window_ui.py` 的 `expected_titles` 与 `_nav_buttons` 索引断言、`i18n.ZH_CN`
+  （标题/描述/按钮/表头/字段标签与帮助）、`main_window.py` 的页面实例化、`shell.py` 的 `_page_specs` 与 `_set_language`/`_set_theme`
+  元组、`icons._PATHS` 的图标键；否则壳层会少图标或断言失败。
+- **跨平台教训**：Windows CI 的临时目录可能是 8.3 短路径，`Path.relative_to()` 对未 resolve 的路径失败后不要静默保留旧值
+  （`scan._rebase` 现同时尝试原路径与 resolve 后的路径）；比较路径一律 `.resolve()` 或归一成 `/`；只在本机 Windows 跑过的
+  smoke 不算跨平台通过。
+- **回归入口**：`scripts/test_shielding_scenario_model.py`（生成器与兄弟场景兼容）、`scripts/test_scenario_shielding_core.py`
+  （headless 校验/生成/200 事件真跑/证据）、`gui/smoke_tests/smoke_scenario_page.py`（Qt）、`gui/smoke_tests/smoke_scenario_backend.py`
+  （12 步端到端真后端）、`scripts/test_shielding_coating.py`（命令行链路与五种证据反例）。
+- **限制**：只有法向入射平板几何与这 15 个字段；不做角度分布、非平板几何、光核/活化；本场景不是新物理基准。
+- **第二个 CI-only 缺陷（同轮）**：`scripts/test_scenario_shielding_core.py` 写死 `build_vs2026/Release/G4UniversalSim.exe`，
+  Linux CI 的 backend profile 因此失败（`backend executable not found`）；runner 已导出 `G4USIM_EXE` 并传 `--executable`。
+  新后端/集成测试必须 `Path(os.environ.get("G4USIM_EXE", "") or ROOT / "build_vs2026" / "Release" / ...)`，
+  并由 static 用例 `platform_paths`（`scripts/check_test_platform_paths.py`）防止复发：提到 `build_vs2026` 必须同时读 `G4USIM_EXE`，
+  不得写死盘符路径（`scripts/check_doc_links.py` 的自检样例除外）。

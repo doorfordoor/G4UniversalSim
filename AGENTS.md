@@ -6,6 +6,16 @@
 
 2026-10-19 → 2026-10-27 的 29 条实施契约全文（含文件路径、行号、反例与回归入口）在 [docs/agent-history.md](docs/agent-history.md)。下表只列**仍然有效的操作规则**；改动相关模块前必须先读对应历史条目全文，只读索引不足以动手。新增条目：全文追加到 `docs/agent-history.md`，本表加一行，不要再在本文件堆长段落。
 
+- 2026-10-28 2B 屏蔽/涂层场景 GUI 端到端：场景页 `gui/g4usim_gui/widgets/scenario_page.py` 与 headless 驱动
+  `gui/g4usim_gui/core/scenario_shielding.py` 只能调用 `scenario_model.render()/generate()` 与 `analyze.analyze(output_dir)`，
+  不得在 GUI 里拼 INI、重算 TID/DDD 或把缺证据写成零；生成前必须三层校验（字段解析 → `problems()` → `config_schema`），
+  运行后必须核对 `run_summary.txt` 的 `status`/完成事件数并显示证据列与 NIEL 表 sha256；新增页面要同步
+  `gui/smoke_tests/smoke_main_window_ui.py` 的页数/导航索引断言与 `core/i18n.py` 的 `ZH_CN`。`make_scenario.py` 必须继续导出
+  `CUSTOM`/`ENVIRONMENT`/`NIST_DENSITY`/`UNITS`/`length_mm`/`density`/`pore_centres`/`spectrum_from_integral_flux`/`spectrum_points`
+  （兄弟场景生成器从它导入，漏掉会在 Linux CI 的 backend profile 暴露）。回归 `scripts/test_shielding_scenario_model.py`、
+  `scripts/test_scenario_shielding_core.py`、`gui/smoke_tests/smoke_scenario_page.py`、`gui/smoke_tests/smoke_scenario_backend.py`；
+  新增后端/集成测试必须读 `G4USIM_EXE`（runner 注入；`--executable` 指向 Linux `build_linux/G4UniversalSim`），
+  不得写死 `build_vs2026` 或盘符路径——static 用例 `platform_paths` 会检查。  契约见 `docs/屏蔽涂层场景端到端.md`。
 - 2026-10-28 D-7 屏蔽场景证据语义：`scenarios/shielding_coating/analyze.py` 不得把缺证据当零结果——运行事实（`status`/`summary_write_status`/`output_failure_status`/`run_count`/`completed_events == planned_events > 0`）不满足即退出码 3 且不写报告；统计文件用 `run_metadata.json`（`schema = run_metadata_json_v1`）的 `generated_files` 区分"被删"（退出码 3）与"这一轮确实没统计"（按零报告但带 `evidence = no_statistics_file_zero_deposition`）；相空间缺失/为空/跨轮次/事件号超出完成事件数为证据错误；报告新增 `evidence` 段。回归 `scripts/test_shielding_coating.py` 覆盖五种反例（删统计文件、失败摘要、零事件、陈旧相空间、真零沉积）。全文见 `docs/agent-history.md`。
 
 - 2026-10-28 命令失败传播：`/AIHL/biasing/*` 修改类命令在交互会话里被拒绝时必须计入交互失败（`interactive_command_failure_kind = biasing`）、停止会话、写 `status=failed` 并非零退出，不得只 `JustWarning` 后继续跑未偏置物理；`/AIHL/material/*` 的 9 个修改命令只允许 `PreInit`（`print`/`list` 只读不受限），初始化后调用由 Geant4 拒绝并让会话失败（`geant4_illegal_application_state`），batch 的 `main.cc` 守卫保留为纵深防御；`ParseStrictDouble` 拒绝 `inf`/`nan`/溢出值（`Config value '<v>' is not a finite double`），数值配置字段不得以非有限值进入偏置权重或可视化属性。回归 `scripts/test_interactive_commands.py`（biasing/material 两个新用例）、`scripts/test_config_value_finiteness.py`。

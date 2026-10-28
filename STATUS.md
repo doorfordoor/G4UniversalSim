@@ -10,14 +10,14 @@
 ## 当前快照
 
 - 分支 `roadmap/F6-live-progress`，集成分支 `codex`（快进合并后推送）；`main` 为早期历史分支。
-- 阶段 0 审计修复已交付：提交 `67ce037`（工作区快照）→ `2e87f18`（静默失败路径）→ `02c0dc6`（验收证据与状态）→ `48f566b`（跨代理协作信箱）→ `8b7721b`（阶段 1 文档与仓库卫生）→ `c80a9cf`（历史审计对照表）→ `5c6ea1d`（阶段 1.4 报告 v2 与证据门禁）→ `f1dad9d`（阶段 1b 零断言清零与 writer 边界用例）→ `48d8c68`（阶段 1b 证据与状态收尾）→ `7f5dc48`（阶段 1d 证据门禁自洽性与日志摘要按落盘字节）→ `32736c9`（阶段 1e 命令失败传播 D-4/D-5/D-6）→ `de1ea93`（Linux 构建与 CI workflow、双平台验证）→ `976ce9e`（CI workflow 的 `runner` 上下文修复）→ `dc03a1b`（D-7 屏蔽场景证据语义）→ `dbd72cf`（失败用例公开注解）→ `a5970ff`（Qt 插件修复，GitHub Actions 转绿）。HEAD 以 `git log` 为准。
-- 最近一次完整回归（阶段 1j 报告 v2 + 严格证据门禁）：**81 PASS / 0 FAIL / 0 SKIP**，`profile=all`，`version=2`，`assertions_executed_total=116226`、`assert_sites_total=2440`、`cases_with_zero_assertions=[]`、`assert_probe=settrace_assert_lines_v2`、`log_digest_algorithm=sha256_raw_bytes_lf_v2`、`skip_policy=failure`、`tracked_source_gate=pass`、`untracked_source_files=[]`、`backend_provenance=source_sha256_manifest_matches_executable`。
-  - 报告与 81 个逐用例日志：[docs/verification/stage1j-20261028/README.md](docs/verification/stage1j-20261028/README.md)；更早证据见 [stage1f](docs/verification/stage1f-20261028/README.md)、[stage1e](docs/verification/stage1e-20261028/README.md)、[stage1d](docs/verification/stage1d-20261028/README.md)、[stage1b](docs/verification/stage1b-20261028/README.md)（旧摘要口径，只能加 `--allow-legacy-digest` 复核）、[stage1](docs/verification/stage1-20261028/README.md)、[stage0-20261027](docs/verification/stage0-20261027/README.md)。
-  - 源码指纹 `5bd97ec5e96e85f83b35b6d33d82ea12493e9d2eb4d78902c8d2ba5165d13206`、测试/夹具内容指纹 `637f211e5944ebdc726fac091b08bc6c52e3aaaef4a4ef8b2022e8c90a9b31e8`；后端 `G4UniversalSim.exe` SHA-256 `dd62fd8748fba532a12842881b0a680dff11816a6031724fd4caf9ecd83cde1f`（1734656 B）；构建身份 MSVC 19.51.36246.0 + Geant4 1132 + MT。
-  - 报告运行时 `git_head=a5970ff`、`git_dirty=true`（同一批改动已暂存未提交时运行，提交内容与运行内容一致；`src/` 自 `a5970ff` 起未变）；Linux 报告与 Windows 报告的 `source_fingerprint` 相同，测试/夹具指纹按各自目录内容独立计算。
-- Linux 验证：①本机 WSL（Ubuntu 24.04.4 + conda-forge Geant4 11.3.2 + g++ 13.3）backend **34/34**、integration **14/14** 全通过，证据 [docs/verification/linux-wsl-20261028/README.md](docs/verification/linux-wsl-20261028/README.md)；②**GitHub Actions 四 profile 全绿**（`3291145` 的 `codex` run [40640355033](https://github.com/doorfordoor/G4UniversalSim/actions/runs/40640355033) 与 roadmap run [40640350911](https://github.com/doorfordoor/G4UniversalSim/actions/runs/40640350911)，`ubuntu-24.04` 上 static / offscreen GUI / backend / integration 各自过证据门禁，另有篡改副本负向对照；更早的 `a5970ff` 只覆盖 backend+integration），构建过程、两个 GCC-only 缺陷、PySide 退出 `SIGSEGV` 与五个 CI-only 缺陷的修法见 [docs/Linux构建与验证.md](docs/Linux构建与验证.md)。
-- 测试平台：`python -B scripts/run_m0_tests.py --profile all --require-tracked-sources --fail-on-skip`；81 个用例 = static 7 / gui 26 / backend 34 / integration 14，所有用例都报告非零断言数；报告是 `version: 2` 证据（逐用例断言数、双指纹、`log_sha256` 按落盘字节），`scripts/check_report_evidence.py` 为 CI 门禁（逐项断言 ≥1、求和/计数/零断言列表一致、摘要与磁盘字节一致、发布报告无 fail/skip，归档旧报告需 `--allow-legacy-digest`）。
-- CI 现状：`.github/workflows/linux-geant4.yml` 在真实 Actions 上转绿——`ubuntu-24.04` + conda-forge Geant4 11.3.2，构建后依次跑 static / offscreen GUI / backend / integration 四个 profile（各自 `--report-root`、`--fail-on-skip`、证据门禁、`if: failure()` 注解），随后用篡改副本验证门禁必须拒绝，最后 `if: always()` 上传 artifact；跨平台指纹一致。`.github/workflows/m0-static-gui.yml`（Windows/Ubuntu 的 static+gui）仍是 `disabled_manually`——10-28 之前所有 push 只触发 Linux workflow，历史 2026-10-23 的 M0 runs 在 ubuntu 与 windows 上都失败在 `Run offscreen GUI tests` 步骤（需 job 日志才能定位，公开仓库日志需登录），恢复需仓库所有者启用。
+- 阶段 0 审计修复已交付：提交 `67ce037`（工作区快照）→ `2e87f18`（静默失败路径）→ `02c0dc6`（验收证据与状态）→ `48f566b`（跨代理协作信箱）→ `8b7721b`（阶段 1 文档与仓库卫生）→ `c80a9cf`（历史审计对照表）→ `5c6ea1d`（阶段 1.4 报告 v2 与证据门禁）→ `f1dad9d`（阶段 1b 零断言清零与 writer 边界用例）→ `48d8c68`（阶段 1b 证据与状态收尾）→ `7f5dc48`（阶段 1d 证据门禁自洽性与日志摘要按落盘字节）→ `32736c9`（阶段 1e 命令失败传播 D-4/D-5/D-6）→ `de1ea93`（Linux 构建与 CI workflow、双平台验证）→ `976ce9e`（CI workflow 的 `runner` 上下文修复）→ `dc03a1b`（D-7 屏蔽场景证据语义）→ `dbd72cf`（失败用例公开注解）→ `a5970ff`（Qt 插件修复，GitHub Actions 转绿）→ `3291145`（GUI 路径比较）→ `b45d325`/`088761d`（四 profile 绿记录与 Astra 信）→ `960d683`（2B 场景模型）→ `f00bb30`（headless 驱动 + `analyze(output_dir)`）→ `a96d957`（Scenario 页）→ `719f1df`（端到端 smoke）→ `7834784`（NIEL 溯源）→ `402a9f2`（2B CI 回归修复）。HEAD 以 `git log` 为准。
+- 最近一次完整回归（阶段 2B 报告 v2 + 严格证据门禁）：**87 PASS / 0 FAIL / 0 SKIP**，`profile=all`，`version=2`，`assertions_executed_total=116636`、`assert_sites_total=2688`、`cases_with_zero_assertions=[]`、`assert_probe=settrace_assert_lines_v2`、`log_digest_algorithm=sha256_raw_bytes_lf_v2`、`skip_policy=failure`、`tracked_source_gate=pass`、`untracked_source_files=[]`、`backend_provenance=source_sha256_manifest_matches_executable`。
+  - 报告与 87 个逐用例日志：[docs/verification/stage2b-20261028/README.md](docs/verification/stage2b-20261028/README.md)；更早证据见 [stage1j](docs/verification/stage1j-20261028/README.md)、 [stage1f](docs/verification/stage1f-20261028/README.md)、[stage1e](docs/verification/stage1e-20261028/README.md)、[stage1d](docs/verification/stage1d-20261028/README.md)、[stage1b](docs/verification/stage1b-20261028/README.md)（旧摘要口径，只能加 `--allow-legacy-digest` 复核）、[stage1](docs/verification/stage1-20261028/README.md)、[stage0-20261027](docs/verification/stage0-20261027/README.md)。
+  - 源码指纹 `5bd97ec5e96e85f83b35b6d33d82ea12493e9d2eb4d78902c8d2ba5165d13206`、测试/夹具内容指纹 `dcc894598eaa69df33ccc87acfbf98e27160640f6e31bc76d2257d2d99d7449a`；后端 `G4UniversalSim.exe` SHA-256 `dd62fd8748fba532a12842881b0a680dff11816a6031724fd4caf9ecd83cde1f`（1734656 B）；构建身份 MSVC 19.51.36246.0 + Geant4 1132 + MT。
+  - 报告运行时 `git_head=402a9f2`、`git_dirty=true`（同一批改动已暂存未提交时运行，提交内容与运行内容一致；`src/` 自 `402a9f2` 起未变）；Linux 报告与 Windows 报告的 `source_fingerprint` 相同，测试/夹具指纹按各自目录内容独立计算。
+- Linux 验证：①本机 WSL（Ubuntu 24.04.4 + conda-forge Geant4 11.3.2 + g++ 13.3）backend **35/35**、integration **14/14** 全通过（backend 在 2B 后按 `G4USIM_EXE` 修复重跑，109970 断言），证据 [docs/verification/linux-wsl-20261028/README.md](docs/verification/linux-wsl-20261028/README.md)；②**GitHub Actions 四 profile 全绿**（`3291145` 的 `codex` run [40640355033](https://github.com/doorfordoor/G4UniversalSim/actions/runs/40640355033) 与 roadmap run [40640350911](https://github.com/doorfordoor/G4UniversalSim/actions/runs/40640350911)，`ubuntu-24.04` 上 static / offscreen GUI / backend / integration 各自过证据门禁，另有篡改副本负向对照；更早的 `a5970ff` 只覆盖 backend+integration），构建过程、两个 GCC-only 缺陷、PySide 退出 `SIGSEGV` 与五个 CI-only 缺陷的修法见 [docs/Linux构建与验证.md](docs/Linux构建与验证.md)。
+- 测试平台：`python -B scripts/run_m0_tests.py --profile all --require-tracked-sources --fail-on-skip`；87 个用例 = static 10 / gui 27 / backend 35 / integration 15，所有用例都报告非零断言数；报告是 `version: 2` 证据（逐用例断言数、双指纹、`log_sha256` 按落盘字节），`scripts/check_report_evidence.py` 为 CI 门禁（逐项断言 ≥1、求和/计数/零断言列表一致、摘要与磁盘字节一致、发布报告无 fail/skip，归档旧报告需 `--allow-legacy-digest`）。
+- CI 现状：`.github/workflows/linux-geant4.yml` 在真实 Actions 上转绿——`ubuntu-24.04` + conda-forge Geant4 11.3.2，构建后依次跑 static / offscreen GUI / backend / integration 四个 profile（各自 `--report-root`、`--fail-on-skip`、证据门禁、`if: failure()` 注解），随后用篡改副本验证门禁必须拒绝，最后 `if: always()` 上传 artifact；跨平台指纹一致。`.github/workflows/m0-static-gui.yml`（Windows/Ubuntu 的 static+gui）已由仓库所有者启用，`402a9f2` 上 **ubuntu 与 windows 双平台全绿**（run [40675415994](https://github.com/doorfordoor/G4UniversalSim/actions/runs/40675415994) / [40675409885](https://github.com/doorfordoor/G4UniversalSim/actions/runs/40675409885)，各 15 步）；此前 2026-10-23 的失败是 Windows-only GUI 断言比较错误，已由 `402a9f2` 修好。Linux workflow 在 `402a9f2` 上 static 与 offscreen GUI 已绿，backend 一个写死构建路径的用例已修、待下一轮确认四 profile 全绿。
 
 ## 阶段状态（摘要，详表见 ROADMAP）
 
@@ -26,6 +26,13 @@
 - F 优化：F6（实时运行进度）已完成；F1 输出与来源、F2 运行会话、F3 性能/tasking、F4 校验定位、F5 undo/autosave、F7 二维扫描、F8 GUI 收尾未做。
 - H 增量：H1（径迹输出）已完成；H2–H9（过滤计分、平行世界、方差降低、光学、活化、DNA、体素体模、通用直方图）未做。
 - M0 全模块 EffectiveConfig / 模块开关 / SolidRegistry 仍未实现（长期欠账）。
+
+## 阶段 2B（屏蔽/涂层场景 GUI 端到端，已完成 2026-10-28）
+
+- 命令行生成器提炼为 `scenarios/shielding_coating/scenario_model.py`（`ShieldingSpec`、`problems()`、`render()`、`generate()`），`make_scenario.py` 保持 CLI 契约；分析侧 `analyze.analyze(output_dir)` 供 GUI 复用。
+- 新增 Scenario 页（15 字段三层校验、生成、QProcess 运行、结果表五列带证据、DDD 行显示 NIEL 表路径与 sha256、中英切换）与 headless 驱动 `gui/g4usim_gui/core/scenario_shielding.py`；12 步端到端 smoke 走 offscreen Qt + 真后端 200 事件。
+- NIEL 溯源写入 `scenario.json` 的 `niel: [{particle, path, sha256}]` 并进入分析报告 `evidence.niel_tables`；缺证据仍沿用 D-7 语义（退出码 3，不写零报告）。
+- 新增用例 `shielding_scenario_model`、`shielding_analysis`、`scenario_shielding_core`、`scenario_page`、`gui_scenario_backend`，并加 static 守门 `platform_paths`。契约与限制见 [docs/屏蔽涂层场景端到端.md](docs/屏蔽涂层场景端到端.md)。
 
 ## 正在做 / 下一步
 
@@ -46,7 +53,7 @@
 阶段 2（2B 场景已定为**屏蔽 shielding_coating**）：
 
 - 2A：Linux + Geant4 11.3 CI（E3）——已完成（Actions 绿，见上）；遗留 M0 workflow 恢复与 11.2/11.4 矩阵；
-- 2B：屏蔽场景 GUI 端到端 + schema 驱动编辑器（GUI 设计归我）；
+- 2B：屏蔽场景 GUI 端到端 + schema 驱动编辑器——**已完成（2026-10-28，见上节）**；
 - 2C：完整 EffectiveConfig + 模块 off/auto/on（Astra 主导设计）。
 - 铁律：阶段 2 冻结新功能，目标是压低 `experimental` 比例，而不是扩大分母。
 
@@ -58,6 +65,8 @@
 - 偏置只有 process-level XS 路径；importance、weight-window、splitting、Russian roulette 未实现。
 - 交互命令审计只覆盖 `--ui --ui-session csh`；Qt UI 与部分嵌套/动态命令不受审计保证。
 - 安装包 `out/` 中 1.0.0 早于 F6/阶段 0 改动，不可作为当前版本引用。
+- 屏蔽/涂层场景只覆盖法向入射平板几何与 15 个字段：未做角度分布、非平板几何、光核/活化；TID/DDD 沿用 B2/B3 定义，不是新的物理基准。
+- 测试脚本的跨平台约束靠 static 用例 `platform_paths` 守门（提到 `build_vs2026` 必须同时读 `G4USIM_EXE`），不保证其它手工脚本。
 - 命令族的“改了缓存、内核没变、退出码 0”三条路径已闭合（Astra 2026-10-28 审查 D-4/D-5/D-6）：交互会话里的 biasing 修改被拒绝时计入 csh 失败（`interactive_command_failure_kind = biasing`）并停止会话、material 的 9 个变更命令只允许 `PreInit`（初始化后由 Geant4 拒绝 → `geant4_illegal_application_state`）、`ParseStrictDouble` 拒绝 `inf`/`nan`/溢出。只覆盖脚本化 `--ui --ui-session csh`；Qt UI 内的同类操作仍未自动化验收。
 - `M0 static and GUI regression` workflow（Windows/Ubuntu 的 static+gui）仍 `disabled_manually`：没有 Windows CI 绿灯，历史 2026-10-23 的 GUI offscreen 失败原因仍未定位（需要所有者启用后读日志）；Geant4 11.2/11.4 兼容矩阵未开始。
 - Actions 日志需登录才能下载：失败用例只能靠公开注解（`scripts/ci_annotate_failures.py`）与 artifact 诊断，注解不是完整日志。

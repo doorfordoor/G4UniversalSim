@@ -1,5 +1,17 @@
 # G4UniversalSim GUI Agent 开发约束
 
+2026-10-28 2B 场景页：`widgets/scenario_page.py` 是屏蔽/涂层场景的端到端入口，不是通用编辑器；字段来自
+`core/scenario_shielding.py` 的 `ShieldingSpec`（基础 7 + 高级 8），校验三层（字段解析 → `problems()` → `config_schema`），
+有任一问题不得生成或运行。页面不重复实现物理与文件格式：生成走 `scenarios/shielding_coating/scenario_model.py` 的纯函数
+`render()/generate()`（`make_scenario.py` 只是 CLI 包装，二者逐字节一致），分析走 `analyze.py` 的 `analyze(output_dir)`；
+不得在页面里拼 INI 或重算 TID/DDD。运行必须核对 `run_summary.txt` 的 `status` 与完成事件数，缺证据时按 `evidence_items()`
+显示标签（`no_statistics_file_zero_deposition` 等）或失败原因，不得把缺失写成零。结果表五列（Group/Label/Value/Unit/Evidence）
+必须每行带证据；DDD 行必须显示 NIEL 表路径与 sha256。进程生命周期：`start_run()` 用 QProcess、`stop_run()` kill、`closeEvent` kill；
+日志写入场景目录 `backend.log` 且视图有行数上限。新增页面必须同步 `smoke_main_window_ui.py` 的页数/导航索引断言与
+`core/i18n.py` 的 `ZH_CN` 键（表头与动态文本走页面自己的 `refresh_language()`）。回归：`smoke_scenario_page.py`（Qt）、
+`smoke_scenario_backend.py`（12 步真后端）、`scripts/test_scenario_shielding_core.py`、`scripts/test_shielding_scenario_model.py`、
+`scripts/test_shielding_analysis.py`。
+
 2026-10-27 GUI 源字段保留：Setup 栏的 summary widgets 只能镜像它真正暴露的标量源字段（preset/particle/energy/position/direction）与 physics/scoring 字段；源几何与角分布（`position_mode`/`position_type`/`source_shape`/`center`/`halfx`/`halfy`/`radius`/`isotropic`/`angular_mode`）属于 Source editor，任何槽都不得无条件重置为 `point`/`fixed`——`widgets/config/run_config.py` 曾这么做，导致 plane/rectangle/isotropic 源在用户改一个数字后静默退回点源+固定束流、生成的 main.ini 丢字段而运行仍“成功”。回归 `gui/smoke_tests/smoke_source_field_preservation.py`（端到端写 main.ini 后断言字段仍在，含 point 反向 sanity）；同类重置只允许带明确条件（空值补默认、旧别名归一化）。进度终态文案走既有 `Result: {state}`；stdout/stderr/merged 三个日志视图必须有行数上限，merged 前缀只在行首插入，runner 的日志 tag 解析必须跨 chunk 缓冲完整行。
 
 2026-10-27 F6：`core/run_progress.py` 有界增量解析版本化 stdout 进度；runner 每次启动重置，分别增量解码 stdout/stderr，退出先排空尾流再判最终结果。RunPage 未知进度不造百分比，计数全到但未 end 显示收尾中；停止/强杀/失败时进度条保留最后观察值，状态文字改用终态文案（结果：模拟成功／用户停止／强制结束／结果未证实），不再输出“进度已冻结”。end 不代表成功，最终状态仍由 run_result.py 决定。新消息版本、噪声前缀、坏 JSON、非有限数、超长行、倒序、跨 run、无换行 EOF 必须保留测试；smoke_live_progress.py 和 smoke_live_progress_backend.py 分别验证协议/Qt 与真实 Geant4，契约见 docs/实时运行进度.md。

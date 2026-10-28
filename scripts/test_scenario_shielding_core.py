@@ -11,6 +11,7 @@ Backend layer: needs the real executable (200 events, two worker threads).
 from __future__ import annotations
 
 import sys
+import os
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -18,7 +19,10 @@ sys.path.insert(0, str(ROOT / "gui"))
 
 from g4usim_gui.core import scenario_shielding  # noqa: E402
 
-EXE = ROOT / "build_vs2026" / "Release" / "G4UniversalSim.exe"
+# The runner passes --executable and exports G4USIM_EXE, so the same case
+# works against a Linux build (build_linux/G4UniversalSim) as well as the
+# Windows default build directory.
+EXE = Path(os.environ.get("G4USIM_EXE", "") or ROOT / "build_vs2026" / "Release" / "G4UniversalSim.exe")
 
 
 def main() -> int:
