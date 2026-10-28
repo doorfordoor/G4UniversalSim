@@ -94,6 +94,13 @@ jobs:
       - name: Validate the Linux backend report
         run: python -B scripts/check_report_evidence.py --report-root "$REPORT_ROOT/linux-backend"
 
+      # The job log needs authentication on a public repository; surface the
+      # failing cases in the (public) annotations instead so the run stays
+      # diagnosable from outside.
+      - name: Annotate failing backend cases
+        if: failure()
+        run: python -B scripts/ci_annotate_failures.py --report-root "$REPORT_ROOT/linux-backend"
+
       - name: Run integration tests on Linux
         run: |
           python -B scripts/run_m0_tests.py --profile integration --require-tracked-sources --fail-on-skip \
@@ -103,6 +110,10 @@ jobs:
 
       - name: Validate the Linux integration report
         run: python -B scripts/check_report_evidence.py --report-root "$REPORT_ROOT/linux-integration"
+
+      - name: Annotate failing integration cases
+        if: failure()
+        run: python -B scripts/ci_annotate_failures.py --report-root "$REPORT_ROOT/linux-integration"
 
       # Negative control: a tampered log digest must be rejected by the evidence
       # gate. A gate that only checks field presence would accept this copy.
