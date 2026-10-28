@@ -58,6 +58,7 @@ CASES = (
     Case("ci_annotations", "scripts/test_ci_annotations.py", "static"),
     Case("report_evidence", "scripts/test_report_evidence.py", "static"),
     Case("writer_boundary", "scripts/test_writer_boundary.py", "static"),
+    Case("shielding_scenario_model", "scripts/test_shielding_scenario_model.py", "static"),
     Case("merge_histograms", "scripts/test_merge_histograms.py", "backend", ("merge",)),
     Case("gui_parsers", "gui/smoke_tests/smoke_parsers.py", "gui", ("qt",)),
     Case("gui_materials", "gui/smoke_tests/smoke_materials_editor.py", "gui", ("qt",)),
