@@ -81,7 +81,10 @@ def main() -> None:
         volume = fluence["data"]["volumes"][0]
         assert volume["thread_ids"] == [0, 1] and volume["volume_mm3"] == 100
         assert math.isclose(volume["raw_fluence_mm-2"], 0.05)
-        assert str(fluence_json) in page.extension_log.toPlainText()
+        log_text = page.extension_log.toPlainText()
+        # CI may resolve the temporary directory to a different (8.3 or long) spelling
+        # than the one used to request the export, so accept either spelling.
+        assert str(fluence_json) in log_text or str(fluence_json.resolve()) in log_text, log_text
         assert page.export_dose_button.isEnabled()
 
         # No silent overwrite or deletion of an already published JSON file.

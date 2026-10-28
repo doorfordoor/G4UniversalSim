@@ -287,10 +287,13 @@ def _rebase(value: str, old_dir: Path | None, new_dir: Path) -> str:
     if not target.is_absolute():
         return str(new_dir / target)
     if not target.exists() and old_dir is not None:
-        try:
-            return str(new_dir / target.relative_to(old_dir))
-        except ValueError:
-            pass
+        # CI hands out short (8.3) temporary paths: the manifest may spell the base
+        # one way while resolve() expands it, so accept either spelling.
+        for candidate, base in ((target, old_dir), (target.resolve(), old_dir.resolve())):
+            try:
+                return str(new_dir / candidate.relative_to(base))
+            except ValueError:
+                continue
     return value
 
 

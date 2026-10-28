@@ -100,7 +100,9 @@ def check_moved_scan() -> None:
         (old / "scan.json").write_text(json.dumps(data), encoding="utf-8")
         shutil.move(str(old), str(new))
         point = scan.load_manifest(new).points[0]
-        assert Path(point.output_dir) == new / "p000" / "output" and Path(point.main_ini) == new / "p000" / "main.ini"
+        expected_output = (new / "p000" / "output").resolve()
+        expected_main_ini = (new / "p000" / "main.ini").resolve()
+        assert Path(point.output_dir).resolve() == expected_output and Path(point.main_ini).resolve() == expected_main_ini,             (point.output_dir, point.main_ini, str(expected_output), str(expected_main_ini))
         assert point.macro == ""
 
 

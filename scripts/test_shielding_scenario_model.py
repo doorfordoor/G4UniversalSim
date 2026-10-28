@@ -10,6 +10,7 @@ Static layer: no Qt, no backend executable needed.
 
 from __future__ import annotations
 
+import importlib.util
 import hashlib
 import json
 import shutil
@@ -23,6 +24,27 @@ sys.path.insert(0, str(SCENARIO))
 
 import make_scenario  # noqa: E402  (import after sys.path setup)
 import scenario_model  # noqa: E402
+
+# The sibling scenario generators import helpers from make_scenario; keep them working.
+for _name in ("CUSTOM", "ENVIRONMENT", "NIST_DENSITY", "UNITS", "density", "length_mm",
+              "pore_centres", "spectrum_from_integral_flux", "spectrum_points"):
+    assert hasattr(make_scenario, _name), _name
+
+
+def import_by_path(path: Path, name: str):
+    """Import a sibling scenario generator the way the CLI would run it."""
+    spec = importlib.util.spec_from_file_location(name, path)
+    assert spec is not None and spec.loader is not None, path
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+# The sibling generators import helpers from make_scenario: a refactor that drops one
+# of those names breaks them even though this file keeps working (CI caught it once).
+for _sibling in (ROOT / "scenarios" / "detector_response" / "make_detector.py",
+                 ROOT / "scenarios" / "semiconductor" / "make_device.py"):
+    assert callable(import_by_path(_sibling, _sibling.stem).main), _sibling
 
 FILES_DEFAULT = {"materials.ini", "geometry.ini", "main.ini", "run.mac", "scenario.json", "spectrum_proton.csv"}
 LEN_START = "bad length '"

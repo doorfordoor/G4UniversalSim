@@ -29,7 +29,26 @@ import argparse
 import sys
 from pathlib import Path
 
-from scenario_model import ENVIRONMENT, ScenarioError, ShieldingSpec
+# The sibling scenario generators (detector_response, semiconductor) import helpers
+# from this module, so keep the historical names importable here even though the
+# implementation now lives in scenario_model.
+from scenario_model import (  # noqa: F401  (re-exported for make_detector/make_device)
+    CUSTOM,
+    ENVIRONMENT,
+    NIST_DENSITY,
+    UNITS,
+    ScenarioError,
+    ShieldingSpec,
+    density,
+    length_mm,
+    pore_centres,
+    spectrum_from_integral_flux,
+    spectrum_points,
+)
+
+__all__ = ["CUSTOM", "ENVIRONMENT", "NIST_DENSITY", "UNITS", "ScenarioError", "ShieldingSpec",
+           "build_spec", "density", "length_mm", "main", "parse_args", "pore_centres",
+           "spectrum_from_integral_flux", "spectrum_points"]
 
 
 def build_spec(args: argparse.Namespace) -> ShieldingSpec:
