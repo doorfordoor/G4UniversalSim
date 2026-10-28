@@ -172,87 +172,117 @@ def phase_space(output: Path, completed: int) -> tuple[list[dict[str, str]], lis
     return rows, [p.name for p in paths]
 
 
-def main() -> int:
-    if len(sys.argv) != 2:
+def _build_report(output: Path) -> tuple[dict, dict[str, list[float]], list[float]]:
+    """Read one output directory and build the report plus the spectra accumulator.
+
+    Nothing is written here; evidence failures raise EvidenceError. The CLI serialises
+    the report and writes the spectrum rows, library callers use analyze() and ignore
+    the spectrum accumulator.
+    """
+    scenario_path = output.parent / "scenario.json"
+    if not scenario_path.is_file():
+        fail(f"{scenario_path} is missing")
+    meta = json.loads(scenario_path.read_text(encoding="utf-8"))
+    summary = parse_summary(output)
+    metadata = load_metadata(output)
+    events, warnings = check_run(summary, metadata)
+    if meta.get("events") not in (None, events):
+        warnings.append(f"scenario.json planned {meta.get('events')} events, "
+                        f"the run completed {events}")
+    stats, stats_evidence = statistics(output, metadata)
+    phase_rows, phase_files = phase_space(output, events)
+    area = float(meta["source_area_cm2"])
+    flux = sum(v for v in meta.get("sampled_integral_flux_cm2_s", {}).values() if v) or None
+    report: dict = {"scenario": meta, "events": events}
+
+    def quantity(key, unit, enabled):
+        if not enabled:
+            return None
+        row = stats.get(key)
+        if row is None:
+            if stats_evidence == STATISTICS_NAME:
+                label = f"no_device_row_for_{key[0]}_{key[1]}"
+                warnings.append(f"scorer_statistics.csv has no Device row for {key}; "
+                                "the quantity is reported as zero with that evidence label")
+            else:
+                label = stats_evidence
+            total = 0.0
+            rel_error = None
+        else:
+            total = float(row["value"])
+            rel_error = float(row["rel_error"])
+            label = stats_evidence
+        per_primary = total / events
+        result = {"total": total, "unit": unit, "rel_error": rel_error, "evidence": label,
+                  "per_primary": per_primary, f"per_fluence_{unit}_cm2": per_primary * area}
+        if flux:
+            result[f"rate_{unit}_per_s"] = per_primary * area * flux
+            result[f"per_year_{unit}"] = per_primary * area * flux * SECONDS_PER_YEAR
+        return result
+
+    report["tid"] = quantity(("dose", "weighted_dose"), "Gy", True)
+    report["ddd"] = quantity(("displacement", "ddd_total"), "MeV_g", meta.get("displacement", False))
+
+    direction = 1.0 if meta["mode"] == "transmission" else -1.0
+    edges = [E_MIN * 10 ** (i / BINS_PER_DECADE)
+             for i in range(int(BINS_PER_DECADE * math.log10(E_MAX / E_MIN)) + 1)]
+    counts = defaultdict(lambda: [0.0] * (len(edges) - 1))
+    totals = defaultdict(lambda: [0.0, 0.0])
+    primaries = set()
+    for p in phase_rows:
+        if float(p["w"]) * direction <= 0:
+            continue
+        name, energy, weight = p["particle"], float(p["kineticEnergy_MeV"]), float(p["weight"])
+        totals[name][0] += weight
+        totals[name][1] += weight * energy
+        if p["trackID"] == "1":
+            primaries.add((p["runID"], p["eventID"]))
+        if E_MIN <= energy < E_MAX:
+            counts[name][int(BINS_PER_DECADE * math.log10(energy / E_MIN))] += weight
+    report["particles"] = {name: {"per_primary": n / events, "mean_energy_MeV": e / n if n else 0.0}
+                           for name, (n, e) in sorted(totals.items())}
+    if meta["mode"] == "transmission":
+        report["primary_transmission"] = len(primaries) / events
+    report["evidence"] = {
+        "run_summary": "run_summary.txt",
+        "run_status": "completed",
+        "run_count": 1,
+        "planned_events": int(meta.get("events") or events),
+        "completed_events": events,
+        "run_metadata_schema": RUN_METADATA_SCHEMA,
+        "scorer_statistics": stats_evidence,
+        "phase_space_files": phase_files,
+        "warnings": warnings,
+    }
+    return report, counts, edges
+
+
+def analyze(output_dir: str | Path) -> dict:
+    """Analyse one completed scenario output directory and return its report dict.
+
+    Reads scenario.json, run_summary.txt, run_metadata.json, scorer_statistics.csv and
+    the phase-space files under ``output_dir`` and returns exactly the dict the CLI
+    writes to shielding_report.json. Nothing is written or printed by this function;
+    evidence failures raise EvidenceError.
+    """
+    report, _counts, _edges = _build_report(Path(output_dir).resolve())
+    return report
+
+
+def main(argv: list[str] | None = None) -> int:
+    """Command-line wrapper: ``main([output_dir])`` writes the report and spectra.
+
+    ``argv`` is the argument list without the program name; ``None`` means
+    ``sys.argv[1:]``. Returns the process exit code (0, 2 for usage, 3 for evidence).
+    """
+    args = sys.argv[1:] if argv is None else argv
+    if len(args) != 1:
         print(__doc__)
         return 2
-    output = Path(sys.argv[1]).resolve()
+    output = Path(args[0]).resolve()
     try:
-        scenario_path = output.parent / "scenario.json"
-        if not scenario_path.is_file():
-            fail(f"{scenario_path} is missing")
-        meta = json.loads(scenario_path.read_text(encoding="utf-8"))
-        summary = parse_summary(output)
-        metadata = load_metadata(output)
-        events, warnings = check_run(summary, metadata)
-        if meta.get("events") not in (None, events):
-            warnings.append(f"scenario.json planned {meta.get('events')} events, "
-                            f"the run completed {events}")
-        stats, stats_evidence = statistics(output, metadata)
-        phase_rows, phase_files = phase_space(output, events)
-        area = float(meta["source_area_cm2"])
-        flux = sum(v for v in meta.get("sampled_integral_flux_cm2_s", {}).values() if v) or None
-        report: dict = {"scenario": meta, "events": events}
-
-        def quantity(key, unit, enabled):
-            if not enabled:
-                return None
-            row = stats.get(key)
-            if row is None:
-                if stats_evidence == STATISTICS_NAME:
-                    label = f"no_device_row_for_{key[0]}_{key[1]}"
-                    warnings.append(f"scorer_statistics.csv has no Device row for {key}; "
-                                    "the quantity is reported as zero with that evidence label")
-                else:
-                    label = stats_evidence
-                total = 0.0
-                rel_error = None
-            else:
-                total = float(row["value"])
-                rel_error = float(row["rel_error"])
-                label = stats_evidence
-            per_primary = total / events
-            result = {"total": total, "unit": unit, "rel_error": rel_error, "evidence": label,
-                      "per_primary": per_primary, f"per_fluence_{unit}_cm2": per_primary * area}
-            if flux:
-                result[f"rate_{unit}_per_s"] = per_primary * area * flux
-                result[f"per_year_{unit}"] = per_primary * area * flux * SECONDS_PER_YEAR
-            return result
-
-        report["tid"] = quantity(("dose", "weighted_dose"), "Gy", True)
-        report["ddd"] = quantity(("displacement", "ddd_total"), "MeV_g", meta.get("displacement", False))
-
-        direction = 1.0 if meta["mode"] == "transmission" else -1.0
-        edges = [E_MIN * 10 ** (i / BINS_PER_DECADE)
-                 for i in range(int(BINS_PER_DECADE * math.log10(E_MAX / E_MIN)) + 1)]
-        counts = defaultdict(lambda: [0.0] * (len(edges) - 1))
-        totals = defaultdict(lambda: [0.0, 0.0])
-        primaries = set()
-        for p in phase_rows:
-            if float(p["w"]) * direction <= 0:
-                continue
-            name, energy, weight = p["particle"], float(p["kineticEnergy_MeV"]), float(p["weight"])
-            totals[name][0] += weight
-            totals[name][1] += weight * energy
-            if p["trackID"] == "1":
-                primaries.add((p["runID"], p["eventID"]))
-            if E_MIN <= energy < E_MAX:
-                counts[name][int(BINS_PER_DECADE * math.log10(energy / E_MIN))] += weight
-        report["particles"] = {name: {"per_primary": n / events, "mean_energy_MeV": e / n if n else 0.0}
-                               for name, (n, e) in sorted(totals.items())}
-        if meta["mode"] == "transmission":
-            report["primary_transmission"] = len(primaries) / events
-        report["evidence"] = {
-            "run_summary": "run_summary.txt",
-            "run_status": "completed",
-            "run_count": 1,
-            "planned_events": int(meta.get("events") or events),
-            "completed_events": events,
-            "run_metadata_schema": RUN_METADATA_SCHEMA,
-            "scorer_statistics": stats_evidence,
-            "phase_space_files": phase_files,
-            "warnings": warnings,
-        }
+        report, counts, edges = _build_report(output)
+        events = report["events"]
         with (output / "spectra.csv").open("w", newline="", encoding="utf-8") as handle:
             writer = csv.writer(handle)
             writer.writerow(["particle", "e_low_MeV", "e_high_MeV", "count_per_primary"])
@@ -263,6 +293,10 @@ def main() -> int:
                                          f"{value / events:.6g}"])
         (output / "shielding_report.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
 
+        meta = report["scenario"]
+        warnings = report["evidence"]["warnings"]
+        stats_evidence = report["evidence"]["scorer_statistics"]
+        flux = sum(v for v in meta.get("sampled_integral_flux_cm2_s", {}).values() if v) or None
         print(f"{meta['mode']} run, {events} primaries ({meta['particle']}), layers "
               + ", ".join(f"{l['material']} {1000 * l['thickness_mm']:g} um" for l in meta["layers"]))
         if stats_evidence != STATISTICS_NAME:

@@ -43,6 +43,8 @@ python scenarios/shielding_coating/make_scenario.py --out work/shield --layers B
 **证据规则（2026-10-28）**：缺失的文件不等于零结果。`analyze.py` 先核对运行本身——`run_summary.txt` 的 `status` 必须是 `completed`、`summary_write_status` 必须是 `completed`、`output_failure_status` 必须是 `none`/`not_applicable`、`run_count` 必须为 1，`run_metadata.json`（`schema = run_metadata_json_v1`）里必须正好一轮且 `completed_events == planned_events > 0`，否则以退出码 3 拒绝分析且不写报告。统计文件缺失时用 `run_metadata.json` 的 `generated_files` 判定：**列出但磁盘上没有 → 证据被删/移位，退出码 3**；**根本没列出 → 这一轮确实没有统计（零沉积），按零报告但每个量都带 `evidence = no_statistics_file_zero_deposition` 标签**。相空间文件缺失、为空、出现非 0 轮次或事件号超出完成事件数（陈旧文件）同样是证据错误。报告新增 `evidence` 段（运行事实、统计证据、相空间文件、警告）。`scripts/test_shielding_coating.py` 的真实反例覆盖这五种情形（删统计文件、失败摘要、零事件、陈旧相空间、真零沉积）。
 - **能谱**：进入记录平面的各类粒子每个初级粒子的个数、平均能量和对数分箱能谱（每十倍 5 箱，1 keV–10 GeV）；透射模式另给出穿过叠层的初级粒子比例。
 
+分析逻辑同时作为库提供（GUI 阶段 2B 的导入入口）：`from analyze import EvidenceError, analyze` 后调用 `analyze(output_dir)`，返回的 dict 与 `shielding_report.json` 完全相同，证据不足时抛 `EvidenceError` 而不会打印或退出，函数本身不写任何文件；`main(argv=None)` 接收不含程序名的参数列表，返回进程退出码（0 成功、2 用法错误、3 证据错误），命令行入口只是它的包装。上面的 CLI 输出文件、消息文本和退出码保持不变。
+
 **归一化前提**：剂量率假设环境通量以**法向**入射到叠层，与原工程相同；这不是全向（各向同性）辐射下的屏蔽结果。能谱只在表中第一个与最后一个能量之间抽样（箱内均匀抽样，等价于原工程对积分通量的线性插值），最后一个能量以上的通量不抽样，`scenario.json` 记录了被略去的部分。原工程的厚硅灵敏体（1×1×50 cm）改为 300 µm 硅器件，更接近器件级 TID/DDD。
 
 2026-10-22 默认叠层（B4C 300 µm + W 100 µm + Al 300 µm，`QGSP_BERT_HP` + `option4`，各 20000 个初级粒子）示例结果：质子能谱 TID 2.9×10⁻¹¹ Gy·cm²/注量、26 Gy/年（法向，±7%），1.9% 的初级质子穿过叠层，平均 90 MeV；电子能谱 7.0×10⁻¹³ Gy·cm²、43 Gy/年（±19%），0.2% 的初级电子穿过。统计误差较大时请增加事件数；这些数值只说明场景可运行，不是验证结论。
@@ -56,6 +58,7 @@ python scenarios/shielding_coating/make_scenario.py --out work/shield --layers B
 ## 验证
 
 - `scripts/test_shielding_coating.py`（真实 Geant4）：混合源中电子份额等于 F_e/(F_e+F_p)；质子能谱 >10 MeV 的份额等于积分通量表给出的比例；1 MeV 电子厚 W 的反照率（0.36）远大于厚 B4C（0.01）；Geant4 世界中的孔隙副本数与生成数一致且都在层内、材料为真空，20 MeV 质子在 20% 孔隙率 B4C 层中的平均能损为致密层的 0.793 倍（材料份额 0.800 ± 0.03）；界面薄层的厚度、材料和密度正确；`analyze.py` 的各种归一化相互一致。
+- `scripts/test_shielding_analysis.py`（static，不需要后端或 Qt）：在临时目录里用合成输出覆盖 `analyze()` 的数值（TID/DDD 每初级粒子、每单位注量、剂量率与年剂量、透射率、逐粒子能谱）和 `evidence` 段，并检查五种证据错误（统计文件被删、`status = failed`、零事件、陈旧相空间、混入其他轮次统计）抛 `EvidenceError` 且不写报告，同时验证 `main()` 的退出码与成功/失败两条命令行路径。
 - `scripts/test_displacement_damage.py`：DDD 计分器与由 hits 独立重算的结果一致（相对差 2×10⁻⁴，来自步内能量变化），中子零沉积步按 NIEL·N/A 计入，表外能量与非法表在事件前拒绝。
 - 屏蔽输运的参考数据基准见 `scenarios/benchmarks/shielding_range`：质子/电子在 Al、Si 中的 CSDA 射程与 NIST PSTAR/ESTAR，质子穿过 Al/Si 平板后的平均能量与 PSTAR 射程反演（`python scripts/run_benchmarks.py --only shielding_range`）。
 
