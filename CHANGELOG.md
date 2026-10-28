@@ -7,6 +7,8 @@ Short, user-facing record of notable changes. Detailed support status lives in
 
 ### Added
 
+- Geant4 11.4 支持：`src/Core/Geant4DataLocator.cc` 的数据集表新增 11.4 分支（12 个数据集，`G4EMLOW8.8`/`PhotonEvaporation6.1.2`/`RadioactiveDecay6.1.2`/`G4PARTICLEXS4.2`/`G4ENSDFSTATE3.0` 等），按 `G4VERSION_NUMBER` 选择。本机 WSL 实测 11.4.3 构建成功、四个 profile 87/87 全过（与 11.3 用例覆盖一致）；构建门槛（expat ≥2.8.5、zlib ≥1.3.2、freetype ≥2.14.3 与六个 `-D*` 参数）与环境变量坑见 `docs/Linux构建与验证.md` §8。
+- `.github/workflows/linux-geant4.yml` 加入 Geant4 版本矩阵（`11.3.2` / `11.4.3`），每版本独立前缀与报告根、独立 artifact；GDML 期望值改为从构建出的可执行文件 `--capabilities` 读取。
 - 实时进度协议加可选 `sequence`：`src/Actions/RunProgress.cc` 的 `Emit()` 在 `run_id` 后写进程级单调序号（只在 telemetry mutex 下自增，`Begin()` 不重置，跨 run 递增）；`gui/g4usim_gui/core/run_progress.py` 在字段出现时要求非负整数且严格递增，重复或回退的行丢弃，字段缺失时保持旧行为（旧后端仍可用）。回归：`smoke_live_progress` 增加重复/回退/非整数/缺失四类断言，`test_live_progress` 断言真实消息严格递增且跨 run 单调；契约见 `docs/实时运行进度.md`。该字段只是顺序证据，不改变成功判定。
 - 屏蔽/涂层场景（路线图 2B）从命令行搬进 GUI：新增 Scenario 页（15 个字段，基础 7 + 高级 8，三层校验）与 headless 驱动
   `gui/g4usim_gui/core/scenario_shielding.py`；生成走 `scenarios/shielding_coating/scenario_model.py` 的纯函数
@@ -35,6 +37,7 @@ Short, user-facing record of notable changes. Detailed support status lives in
 
 ### Fixed
 
+- 三个 Geant4 版本相关测试缺陷：`scripts/test_geant4_data_locator.py` 不再写死 `G4EMLOW8.6.1`（改为从 `--check-geant4-data` 的 discovery 取文件夹名）；`scripts/test_physics_a6.py` 与 `scripts/test_gps_sources.py` 的激发态核名改为按能级数值容差匹配（11.3 `Ni60[2505.753]` 与 11.4 `Ni60[2505.75300]` 只是格式化差异）。
 - `scripts/test_scenario_shielding_core.py` 直接写死 `build_vs2026/Release/G4UniversalSim.exe`，Linux CI 的 backend profile
   因此报 `backend executable not found`（runner 其实已导出 `G4USIM_EXE` 并传 `--executable`）。现按其它后端用例的约定读
   `G4USIM_EXE`、缺省才回落到 Windows 默认构建目录；新增 static 用例 `platform_paths`（`scripts/check_test_platform_paths.py`）

@@ -6,6 +6,15 @@
 
 2026-10-19 → 2026-10-27 的 29 条实施契约全文（含文件路径、行号、反例与回归入口）在 [docs/agent-history.md](docs/agent-history.md)。下表只列**仍然有效的操作规则**；改动相关模块前必须先读对应历史条目全文，只读索引不足以动手。新增条目：全文追加到 `docs/agent-history.md`，本表加一行，不要再在本文件堆长段落。
 
+- 2026-10-28 Geant4 11.4 支持与版本矩阵：`src/Core/Geant4DataLocator.cc` 的数据集表按 `G4VERSION_NUMBER` 分段，新增
+  `>= 1140 && < 1150` 分支（12 个数据集，前 5 个 required）；升级 Geant4 小版本必须同步这张表，否则构建期 `#error`。
+  11.4 的构建门槛是 expat ≥ 2.8.5、zlib ≥ 1.3.2、freetype ≥ 2.14.3（Ubuntu 24.04 的系统库都不够），CMake 必须显式传
+  `-DEXPAT_INCLUDE_DIR/-DEXPAT_LIBRARY/-DZLIB_INCLUDE_DIR/-DZLIB_LIBRARY/-DFREETYPE_INCLUDE_DIRS/-DFREETYPE_LIBRARY`
+  指向安装前缀；`.github/workflows/linux-geant4.yml` 用 `matrix.geant4: ['11.3.2', '11.4.3']` 双版本构建，只有 11.4 leg 传这些参数。
+  测试脚本不得断言 Geant4 版本相关的字面量：数据文件夹从 `--check-geant4-data` 的 discovery 取（`datasets[0].folder`），
+  激发态核名用数值容差匹配（11.3 `Ni60[2505.753]` vs 11.4 `Ni60[2505.75300]` 只是格式化差异），不得按字符串精确相等。
+  回归 `scripts/test_geant4_data_locator.py`、`scripts/test_physics_a6.py`、`scripts/test_gps_sources.py`；
+  环境细节见 [docs/Linux构建与验证.md](docs/Linux构建与验证.md) §8。
 - 2026-10-28 F6 进度协议 `sequence`：`src/Actions/RunProgress.cc` 的 `Emit()` 在 `run_id` 后写进程级单调 `sequence`
   （只在 telemetry mutex 下自增，`Begin()` 不重置，跨 run 递增）；`gui/g4usim_gui/core/run_progress.py` 的 `ProgressParser` 必须在字段出现时
   要求非负整数且严格递增、重复或回退即丢弃，字段缺失时保持旧行为（旧后端仍可解析）。该字段只是顺序证据，不得用来判定模拟成功或物理完整。

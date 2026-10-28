@@ -225,11 +225,16 @@ cmake -S /mnt/d/Geant4/G4UniversalSim -B $HOME/g4build114   -DCMAKE_BUILD_TYPE=R
 
 ### 8.5 尚未覆盖
 
-- 11.4 需要额外的 expat/zlib/freetype 依赖与 `-D*_LIBRARY` 参数；`linux-geant4.yml` 的版本矩阵是否加入见 `docs/ROADMAP.md` 的 E3 记录，本节只记录本机实测；
 - Geant4 11.2 未测；
 - 11.4 下的真实桌面 GUI（非 offscreen）、ROOT 输出与 uproot 读取、打包流程未验证；
 - Windows + 11.4 未验证（本机 Windows 只有 11.3.2）；
-- 结论只到"11.4.3 在本机 Linux 上可构建、四个 profile 回归通过"，不能把 11.3 的物理结论直接搬到 11.4，也不构成对用户的版本支持承诺。
+- 结论只到"11.4.3 可构建、四个 profile 回归通过"，不能把 11.3 的物理结论直接搬到 11.4，也不构成对用户的版本支持承诺。
+
+### 8.6 CI 版本矩阵（已进入真实 Actions）
+
+`.github/workflows/linux-geant4.yml` 现用 `strategy.matrix.geant4: ['11.3.2', '11.4.3']`：job 名带版本，`G4_PREFIX`（`.g4env-<version>`）与 `REPORT_ROOT`（`out/verification/geant4-<version>`）每版本独立，artifact 名带版本；create env 步骤固定安装 `expat zlib freetype`，只有 11.4 leg 的 configure 传六个 `-D*` 参数；GDML 期望值改为问构建出的可执行文件的 `--capabilities`（`templates` 里是否有 `gdml` 且 `runtime`），不再 grep `Geant4Config.cmake`。
+
+实测（提交 `6a8b237`，两个分支各一次）：`Linux build and backend regression` 的 `ubuntu-24.04 / Geant4 11.3.2` 与 `ubuntu-24.04 / Geant4 11.4.3` 两个 job **各 26 步全绿**——run [40690078563](https://github.com/doorfordoor/G4UniversalSim/actions/runs/40690078563)（codex）与 [40690070991](https://github.com/doorfordoor/G4UniversalSim/actions/runs/40690070991)（roadmap/F6-live-progress）。同一推送的 `M0 static and GUI regression`（ubuntu + windows 的 static 与 offscreen GUI）也全绿（[40690078519](https://github.com/doorfordoor/G4UniversalSim/actions/runs/40690078519)、[40690071129](https://github.com/doorfordoor/G4UniversalSim/actions/runs/40690071129)）。
 
 ## 9. 不证明什么
 

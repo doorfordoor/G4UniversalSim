@@ -23,7 +23,7 @@ This file is the single source of truth for progress. Every work session updates
 | B Scenario packs + benchmarks | Done (B1 benchmarks, B2 shielding/coating, B3 semiconductor, B4 detector response) | see log |
 | C Wizard + built-in plotting | Done (C1 built-in plots, C2 wizard, C3 parameter scans) | see log |
 | D Installer | Done (portable ZIP + Inno Setup installer; uses an existing Geant4 data folder) | see log |
-| E Fixes and foundations | In progress: E1, E2, E3 (Linux, done 2026-10-28), E5 done; E4 pending | see log |
+| E Fixes and foundations | In progress: E1, E2, E3 (Linux incl. Geant4 11.3.2/11.4.3 matrix, done 2026-10-28), E5 done; E4 pending | see log |
 | F System optimisation (backend + GUI) | In progress: F6 done (2026-10-27); F1–F5, F7, F8 pending | see log |
 | G 3D view redesign | Done (G1-G6) | see log |
 | H Geant4 capability increments | In progress: H1 done | see log |
@@ -116,10 +116,15 @@ suite, CHANGELOG, support matrix). "Done when" lists the evidence, not just the 
   profiles on Linux, validates each report with `scripts/check_report_evidence.py`, and
   proves the evidence gate rejects a tampered report. The Linux build process (two
   GCC-only defects, the PySide6 teardown SIGSEGV and the conda Qt plugin-path trap) is
-  documented in `docs/Linux构建与验证.md`. Remaining, tracked separately from E3's Linux
-  deliverable: the `m0-static-gui.yml` workflow is `disabled_manually` in the repository
-  settings (its historical 2026-10-23 runs failed at "Run offscreen GUI tests" on both
-  runners; the reason needs a log), and the Geant4 11.2/11.4 matrix is not started.
+  documented in `docs/Linux构建与验证.md`. Status 2026-10-28 (later): the Geant4 matrix is in
+  place — `linux-geant4.yml` builds and runs all four profiles twice, once with Geant4 11.3.2
+  and once with 11.4.3 (the 11.4 leg receives the expat/zlib/freetype `-D*` paths; 11.4 was
+  probed locally first, see `docs/Linux构建与验证.md` §8). Both legs are green on commit
+  `6a8b237`: run 40690078563 (`codex`) and 40690070991 (roadmap) with 26 steps per job, and
+  the `m0-static-gui.yml` workflow was enabled by the repository owner and is green on ubuntu
+  and windows (run 40690078519 / 40690071129 for the same commit; 40675415994 / 40675409885
+  for the first green at `402a9f2`). Remaining: Geant4 11.2 is untested; Windows + 11.4 and
+  the 11.4 desktop GUI/ROOT/packaging paths are not verified.
 - **E4 Lighter process docs.** Move the dated entries of `AGENTS.md` / `gui/AGENTS.md`
   into `docs/agent-history.md`; keep the rules short and current. Add an English
   quick start next to the Chinese one (human docs stay Chinese-first). Done when:
@@ -234,6 +239,17 @@ H4–H8 if the user's applications favour some of them.
 
 ## Progress log
 
+- 2026-10-28：Geant4 11.4 支持与 CI 版本矩阵。`src/Core/Geant4DataLocator.cc` 的数据集表新增 11.4 分支（12 个数据集，
+  `G4EMLOW8.8`/`PhotonEvaporation6.1.2`/`RadioactiveDecay6.1.2`/`G4PARTICLEXS4.2`/`G4ENSDFSTATE3.0` 等，前 5 个 required）；
+  本机 WSL 11.4.3 实测构建成功、四个 profile 87/87 全过（backend 109,942、static 391、GUI 1,877、integration 4,364 断言），
+  构建门槛（Ubuntu 24.04 的 expat/zlib/freetype 都低于 11.4 下限，CMake 需六个 `-D*` 参数）写进
+  [Linux构建与验证](Linux构建与验证.md) §8。三个版本相关测试缺陷改为版本无关：数据文件夹从 `--check-geant4-data` 的 discovery 取、
+  激发态核名按能级数值容差匹配（11.3 `Ni60[2505.753]` 与 11.4 `Ni60[2505.75300]` 只是格式化差异）。
+  `linux-geant4.yml` 加入 `matrix.geant4: ['11.3.2', '11.4.3']`（每版本独立前缀/报告根/artifact，GDML 期望值改问可执行文件 `--capabilities`），
+  `6a8b237` 上两个 job 各 26 步全绿（run 40690078563 / 40690070991），同一推送的 M0 workflow 也全绿（run 40690078519 / 40690071129）。
+  提交链：`97036df`（数据集表 + 版本无关测试）→ `6a8b237`（CI 矩阵）→ 本轮证据与文档。统一测试平台 87 例 / 116,677 断言，
+  证据见 [docs/verification/stage-11d4-20261028](verification/stage-11d4-20261028/README.md)。边界：11.2 未测，Windows + 11.4、
+  11.4 下的真实桌面 GUI/ROOT/打包未验证。
 - 2026-10-28：阶段 2B（屏蔽/涂层场景 GUI 端到端）完成，提交 `402a9f2`（链：`960d683` 场景模型 → `f00bb30` headless 驱动 +
   `analyze(output_dir)` → `a96d957` 场景页 → `719f1df` 端到端 smoke → `7834784` NIEL 溯源 → `402a9f2` CI 回归修复）。
   命令行生成器提炼为可导入 `scenarios/shielding_coating/scenario_model.py`（`ShieldingSpec`、纯函数 `render()`、`generate()`），

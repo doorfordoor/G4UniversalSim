@@ -272,3 +272,31 @@ Astra 的 2026-10-28 审查把 `scenarios/shielding_coating/analyze.py` 判为�
 ### 2026-10-28 F6 进度协议加可选 sequence
 
 `[G4USimProgress]` 消息新增可选 `sequence`：`src/Actions/RunProgress.cc` 的 `State` 增加进程级 `long long sequence`（只在 telemetry mutex 下自增），`Emit()` 在 `run_id` 之后写 `"sequence":<n>`；`Begin()` 不重置它，因此同一进程内序号跨 run 单调递增。`gui/g4usim_gui/core/run_progress.py` 的 `ProgressParser` 记录 `_last_sequence`：字段缺失时保持旧行为（兼容旧后端），出现时必须是非负整数且严格递增，重复或回退的行被丢弃；解析器仍保留原有 run_id、计数不回退、终态后拒绝更新等规则。回归：`gui/smoke_tests/smoke_live_progress.py` 增加"重复/回退/非整数/缺失"四类断言，`scripts/test_live_progress.py` 的 `validate()` 断言所有真实消息都带 sequence、严格递增、跨 run 单调（第二轮 begin 大于第一轮 end）。文档 `docs/实时运行进度.md` 的字段表、示例与解析说明同步更新；`scripts/check_report_evidence.py` 等证据链不受影响（消息不进报告）。该字段是顺序证据，不是物理或性能证据，不改变最终结果判定。
+
+### 2026-10-28 Geant4 11.4 兼容性探测与版本矩阵
+
+**动机**：ROADMAP 的 E3 遗留"11.2/11.4 矩阵"。11.4 是当前 conda-forge 的稳定线（`geant4=11.4.3`），需要回答：项目能不能在 11.4 上构建、回归是否成立、需要改什么。
+
+**工具链门槛（本机 WSL Ubuntu 24.04.4）**：Geant4 11.4 的 CMake 检查比 11.3 严，系统库三个都低于下限——
+
+| 依赖 | 系统版本 | Geant4 11.4 下限 | 做法 |
+| --- | --- | --- | --- |
+| expat | 2.6.1 | 2.8.5 | conda-forge `expat` 2.9.0（`libexpat.so.1.13.0`） |
+| zlib | 1.3 | 1.3.2 | conda-forge `zlib` 1.3.2 |
+| freetype | 2.13.2 | 2.14.3 | conda-forge `freetype` 2.14.3 |
+
+CMake 需要显式 `-DEXPAT_INCLUDE_DIR=$PREFIX/include -DEXPAT_LIBRARY=$PREFIX/lib/libexpat.so`、`-DZLIB_INCLUDE_DIR`/`-DZLIB_LIBRARY`、`-DFREETYPE_INCLUDE_DIRS=$PREFIX/include/freetype2`/`-DFREETYPE_LIBRARY`；否则 find 模块先命中系统旧库，configure 阶段失败。
+
+**代码改动**：`src/Core/Geant4DataLocator.cc` 的数据集表按 `G4VERSION_NUMBER` 分段，新增 `>= 1140 && < 1150` 分支，12 项：`G4LEDATA=G4EMLOW8.8`、`G4LEVELGAMMADATA=PhotonEvaporation6.1.2`、`G4RADIOACTIVEDATA=RadioactiveDecay6.1.2`、`G4PARTICLEXSDATA=G4PARTICLEXS4.2`、`G4ENSDFSTATEDATA=G4ENSDFSTATE3.0`（前 5 个 required）、`G4NEUTRONHPDATA=G4NDL4.7.1`、`G4PIIDATA=G4PII1.3`、`G4REALSURFACEDATA=RealSurface2.2`、`G4SAIDXSDATA=G4SAIDDATA2.0`、`G4ABLADATA=G4ABLA3.3`、`G4INCLDATA=G4INCL1.3`、`G4CHANNELINGDATA=G4CHANNELING2.0`。升级小版本必须补表，否则构建期 `#error "Update the Geant4 dataset list in Geant4DataLocator.cc for this Geant4 version"`。
+
+**环境变量坑**：`$HOME/g4env114/etc/conda/activate.d/*.sh` 里写的是 `export G4LEDATA=${CONDA_PREFIX}/share/...`；手工 `source` 前必须先 `export CONDA_PREFIX=<prefix>`（或用 `micromamba run -p`），否则 `${CONDA_PREFIX}` 展开成空串，路径变成 `/share/...`，Geant4 初始化报 `G4NuclideTable: ENSDFSTATE.dat is not found`——这是环境问题，不是 11.4 不兼容。
+
+**三个版本相关测试缺陷（都在测试侧修，不是物理差异）**：
+1. `scripts/test_geant4_data_locator.py` 写死 `DATASET = "G4EMLOW8.6.1"`（11.3 的文件夹名），11.4 是 `G4EMLOW8.8`。改为先 `discovery = discover(EXE)`、`dataset_folder = discovery["datasets"][0]["folder"]`，用后端报告的事实断言。
+2. `scripts/test_physics_a6.py` 与 `scripts/test_gps_sources.py` 用方括号能级精确匹配激发态核名。实测 11.3 是 `Ni60[2505.753]`（3 位小数），11.4 是 `Ni60[2505.75300]`（5 位小数）——同一能级、不同格式化。加 `level_name(particle, nucleus, energy_keV)`：`startswith(nucleus + "[")`、取括号内 `float()`、与期望能级差 ≤ 0.01 keV；断言改为按数值计数。
+
+**结果（本机 WSL，11.4.3）**：构建成功（`$HOME/g4build114/G4UniversalSim`，3,194,760 B），`--check-geant4-data` 报告 `geant4_version` 为 `geant4-11-04-patch-03`、12 个数据集全部 found、`required_complete: true`。四个 profile 全过：backend 35/35（109,942 断言）、static 10/10（391）、GUI 27/27（1,877）、integration 15/15（4,364），合计 87 例 / 116,574 条断言，与 11.3 的用例覆盖一致。
+
+**CI 矩阵**：`.github/workflows/linux-geant4.yml` 加 `strategy.matrix.geant4: ['11.3.2', '11.4.3']`，job 名带版本、`G4_PREFIX`/`REPORT_ROOT` 每版本独立、artifact 名带版本；create env 步骤固定装 `expat zlib freetype`，只有 11.4 leg 的 configure 传六个 `-D*` 参数。GDML 期望值改为问构建出的可执行文件 `--capabilities`（`templates` 里是否有 `gdml` 且 `runtime`），不再 grep `Geant4Config.cmake`（该文件写法跨版本会变）。
+
+**边界**：11.2 未测；Windows + 11.4 未验证（本机 Windows 只有 11.3.2）；11.4 下的真实桌面 GUI、ROOT/uproot、打包流程未验证；不能把 11.3 的物理结论直接搬到 11.4。
