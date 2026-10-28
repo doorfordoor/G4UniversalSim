@@ -155,3 +155,21 @@ E2-S1 的六个 editor→writer 边界从被忽略的 `out/verification/e2-audit
 - CI 的 static 与 gui 两个步骤在各自跑完后**分别**调 `scripts/check_report_evidence.py`（每次都校验最新报告），不再只在最后校验一次；`scripts/test_report_evidence.py` 必须覆盖篡改反例（逐项 0 断言、求和不符、计数不符、零断言列表不符、摘要不符、日志缺失、fail/skip、重名、非法层、基线回归、legacy 摘要与 legacy 探针的放行/拒绝、CLI OK/FAIL/无报告/带 baseline）。
 
 回归入口：`python -B scripts/check_report_evidence.py --report <report.json>`、`python -B scripts/test_report_evidence.py`（static 用例 `report_evidence`，38 条断言）。
+
+### 2026-10-28 命令失败传播：交互偏置拒绝、材料生命周期门禁与配置值有限性
+
+来源：Astra 2026-10-28 审查（`docs/collab/inbox/20261028-0947-astra-stage2-design-review.md`）判定为"确定为缺陷"的 D-4/D-5/D-6；反例先实测、再改代码、再补回归。
+
+D-4 交互偏置拒绝只告警：`src/Biasing/BiasingMessenger.cc:214` 在交互会话里对修改类命令只发 `G4Exception(..., JustWarning, ...)`，命令被忽略、会话继续、`/run/beamOn` 照常执行、进程退出 0。反例（实测退出码 0、`status = completed`、`run_count = 1`、`interactive_command_failure_kind = none`，且 `/control/echo BIASING_CONTINUED` 照常打印）：`printf '/AIHL/biasing/enable true
+/control/echo BIASING_CONTINUED
+/run/initialize
+/run/beamOn 1
+exit
+' | build_vs2026/Release/G4UniversalSim.exe --ui --ui-session csh --config config/main.ini --output <tmp> --threads 1`。修法：`include/Biasing/BiasingManager.hh` 新增 `RecordInteractiveReject`/`GetInteractiveRejectCount`/`GetLastInteractiveReject` 与成员 `interactiveRejectCount_`、`lastInteractiveReject_`；`src/Biasing/BiasingMessenger.cc` 在发 warning 前调用 `manager_->RecordInteractiveReject(command->GetCommandPath(), message + " Command ignored.")`；`main.cc` 交互段记录会话前计数、把它加入 `hasHandlerFailure` 与失败 kinds，`biasing` 作为独立 kind 进入 `interactive_command_failure_kind`，并把最后一条拒绝写进 `interactive_command_failure_message`。修后实测：退出码 1、`status = failed`、`run_count = 0`、`interactive_command_failure_kind = biasing`、`BIASING_CONTINUED` 不再出现。
+
+D-5 材料命令缺生命周期门禁：反例 `/run/initialize` 后执行 `/AIHL/material/addNist nist=G4_WATER name=late_water` 静默成功、会话继续、`status = completed`、`effective_materials_source_status = non_file_mutation`、退出码 0，但几何已建、新材质不被任何体积使用。根因是 `MaterialManager::locked_` 只由 `/AIHL/material/setLocked` 手动设置（`src/Materials/MaterialMessenger.cc` 里是唯一调用点），交互路径没有 `main.cc` 的初始化守卫。修法：`MaterialMessenger` 构造函数对 9 个修改命令（`load`、`addNist`、`addIsotope`、`addElement`、`addElementFromIsotopes`、`addMaterial`、`buildAll`、`setLocked`、`clear`）调用 `AvailableForStates(G4State_PreInit)`；`print`/`list` 保持只读不限状态。修后实测：`/run/initialize` 后调用退出码 1、`status = failed`、`run_count = 0`、`interactive_command_failure_kind = geant4_illegal_application_state`、后续 `/control/echo` 不再执行。注意：Geant4 对非法状态命令同时给出"illegal application state"诊断与非零 UI 状态，`main.cc` 的 kind 计算必须优先报具体诊断，不能让 `geant4_command_status` 把它降级成 `multiple`。
+
+D-6 配置值有限性：`src/Config/ConfigValue.cc` 的 `ParseStrictDouble` 使用 `std::strtod`，接受 `inf`/`nan` 并静默溢出为 `HUGE_VAL`；`ParseStrictInt` 一直有 ERANGE 与 32 位范围检查，double 没有任何检查。反例（`[biasing] enabled = true` + `[biasing.xs.proton.elastic] factor = inf`、`min_weight = nan`，`--dry-run` 曾退出 0 且无警告）。可达字段：`BiasingManager::LoadFromConfig` 的 `factor`/`min_weight`（`config.GetDouble`）与 `SimpleBoxTemplate`/`LayeredDeviceTemplate` 的 `visual.alpha`；几何配置文件的 `vis.alpha` 走 `UnitParser::ParseDouble`（一直拒绝非有限值），不受影响。修法：`strtod` 前 `errno = 0`，解析后 `if (errno == ERANGE || !std::isfinite(parsed))` 抛 `Config value '<v>' is not a finite <type>`；`#include <cmath>`。修后实测：`--dry-run` 退出 1、输出 `G4UniversalSim fatal error: Config value 'inf' is not a finite double`，合法配置仍退出 0。
+
+回归：`scripts/test_interactive_commands.py` 新增 `biasing_interactive_reject`（断言非零退出、`status = failed`、`BIASING_CONTINUED` 不出现、`kind = biasing`、`run_count = 0`）与 `material_after_initialize`（断言非零退出、`MATERIAL_CONTINUED` 不出现、`kind = geant4_illegal_application_state`、`run_count = 0`），原有 `material_failure`（初始化前材料命令异常）仍断言 `kind = material`；新增 backend 用例 `scripts/test_config_value_finiteness.py`（合法配置通过、`factor = inf` 与 `min_weight = nan` 各自非零退出并匹配 `is not a finite double`）。本轮同时把 `main.cc` 的 kind 计算从嵌套三元改成显式 kinds 列表，保留历史 `material_and_output` 映射，并把 `geant4_command_status` 降级为仅在无具体诊断时使用的兜底。
+

@@ -87,6 +87,7 @@ CASES = (
     Case("backend_capabilities", "scripts/test_backend_capabilities.py", "backend", ("exe",)),
     Case("config_precedence", "scripts/test_config_precedence.py", "backend", ("exe",)),
     Case("config_duplicate_declarations", "scripts/test_config_duplicate_declarations.py", "backend", ("exe",)),
+    Case("config_value_finiteness", "scripts/test_config_value_finiteness.py", "backend", ("exe",)),
     Case("run_summary", "scripts/test_run_summary.py", "backend", ("exe",)),
     Case("command_state_gating", "scripts/test_command_state_gating.py", "backend", ("exe",)),
     Case("dose_scoring", "scripts/test_dose_scoring.py", "backend", ("exe",)),

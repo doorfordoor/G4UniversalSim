@@ -86,6 +86,22 @@ bool BiasingManager::IsInteractiveSessionMode() const
     return interactiveSessionMode_;
 }
 
+void BiasingManager::RecordInteractiveReject(const std::string& command, const std::string& message)
+{
+    ++interactiveRejectCount_;
+    lastInteractiveReject_ = command.empty() ? message : command + ": " + message;
+}
+
+std::size_t BiasingManager::GetInteractiveRejectCount() const
+{
+    return interactiveRejectCount_;
+}
+
+const std::string& BiasingManager::GetLastInteractiveReject() const
+{
+    return lastInteractiveReject_;
+}
+
 void BiasingManager::Clear()
 {
     ClearOperators();

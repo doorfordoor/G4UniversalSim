@@ -47,8 +47,8 @@
 ## 验收数据（可直接复核）
 
 - 阶段 0 全量回归：**76 PASS / 0 FAIL / 0 SKIP**
-- 阶段 1d 全量回归（基提交 `48d8c68`，本轮改动工作区未提交）：**79 PASS / 0 FAIL / 0 SKIP**（static 6 / gui 26 / backend 33 / integration 14），报告 v2：`assertions_executed_total=116161`、`assert_sites_total=2393`、`cases_with_zero_assertions=[]`（阶段 1.4 的 9 个零断言用例已改成 `assert` 表达）、`assert_probe=settrace_assert_lines_v2`（跟踪脚本启动的线程）、`log_digest_algorithm=sha256_raw_bytes_lf_v2`、`tests_content_fingerprint=0d5c7cc0…`；证据 `docs/verification/stage1d-20261028/README.md`；
-- 报告：`docs/verification/stage1d-20261028/report.json`（原始位置 `out/verification/stage1d-20261028/20261028-103047-4b917b71/`）；`docs/verification/stage1b-20261028/report.json` 是旧摘要口径（CRLF 落盘的 legacy 报告，只能用 `--allow-legacy-digest` 复核）；阶段 0 的旧报告仍在 `docs/verification/stage0-20261027/`
+- 阶段 1e 全量回归（基提交 `7f5dc48`，本轮改动工作区未提交）：**80 PASS / 0 FAIL / 0 SKIP**（static 6 / gui 26 / backend 34 / integration 14），报告 v2：`assertions_executed_total=116183`、`assert_sites_total=2412`、`cases_with_zero_assertions=[]`、`assert_probe=settrace_assert_lines_v2`（跟踪脚本启动的线程）、`log_digest_algorithm=sha256_raw_bytes_lf_v2`、`source_fingerprint=ab87d6ef…`、`tests_content_fingerprint=09d94586…`、exe SHA-256 `eb2a3747…3072`；证据 `docs/verification/stage1e-20261028/README.md`；阶段 1d 的 79 例证据仍在 `docs/verification/stage1d-20261028/`（当时 79 例/116161 断言）；
+- 报告：`docs/verification/stage1e-20261028/report.json`（原始位置 `out/verification/stage1e-20261028/20261028-105759-a98a13a7/`）；`docs/verification/stage1b-20261028/report.json` 是旧摘要口径（CRLF 落盘的 legacy 报告，只能用 `--allow-legacy-digest` 复核）；阶段 0 的旧报告仍在 `docs/verification/stage0-20261027/`
 - `tracked_source_gate=pass`、`untracked_source_files=[]`、`backend_provenance=source_sha256_manifest_matches_executable`
 - 源码指纹 `ba493e735b11ca414fa63bbd9d5c219766a5bb60c838482fa69a884cef558d93`，测试/夹具内容指纹 `0d5c7cc0398c1261e00c1a3c333cebe23c38ef38455b4fd7aa95c1ebae1069e5`，exe SHA-256 `c446ed5e…d315`
 - 构建：MSVC 19.51.36246.0、Geant4 11.3.2、MT
@@ -63,6 +63,7 @@
 - Detector/Material/Source 之外的命令族是否还有“改缓存、内核没变、退出码 0”的路径，未系统盘点（你本轮已确认 biasing 与 material 两条，待修）
 - 报告的断言数是**已执行 `assert` 的下界**（`sys.settrace` 计数），不是覆盖率；证据门禁只证明“报告与日志自洽且未被篡改”，不证明断言写得好
 - 你的回信里判“需实验”的若项（output flush/close 在 Idle 的语义、source/原生 GPS 动态语义、ROOT 同名并发覆盖、主窗口运行中关闭）尚未设计实验；阶段 2 的相关实现前会先补反例
+- 你的 D-4（交互偏置拒绝只 `JustWarning`）、D-5（material 交互命令无生命周期门禁）、D-6（`ParseStrictDouble` 不查有限性）已按“先反例、再改、再固化成回归”闭合：三条反例实测原本都是退出码 0 + `status=completed`；现在分别是退出码 1 + `status=failed` + kind `biasing` / `geant4_illegal_application_state`，以及 `Config value '<v>' is not a finite double`。新增 session 用例 `biasing_interactive_reject`、`material_after_initialize` 与新 backend 用例 `config_value_finiteness`（用例总数 79 → 80）。D-7（`analyze.py` 缺证据当零结果）仍在 2B 阶段做。
 - 你的 D-1（证据门禁弱）与 D-2（日志摘要口径）**已修复并有负向回归**：门禁现逐项校验断言 ≥1/求和/计数/零断言列表/摘要与磁盘字节一致、拒绝 fail/skip，归档旧报告需 `--allow-legacy-digest`；日志与报告改为 `write_bytes` 写 UTF-8/LF、按落盘字节算 `log_sha256`（`log_digest_algorithm=sha256_raw_bytes_lf_v2`）。D-3（文档漂移）已修：ASTRA-BRIEF 不再手写 HEAD、STATUS 删掉过期零断言条目。
 
 ## 历史审计对照（新增，先看这个）

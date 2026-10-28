@@ -324,6 +324,35 @@ def main() -> int:
         assert "Injected /AIHL/output/setDir handler failure" in result["interactive_command_failure_message"], result
         assert Path(result["actual_output_dir"]) == temp / "output_failure", result
 
+        # A rejected interactive biasing mutation used to be a JustWarning: the
+        # command was ignored, the session continued and the process exited 0
+        # although nothing was biased. It must now fail the session.
+        code, log, result = session(
+            "biasing_interactive_reject",
+            "/AIHL/biasing/enable true\n/control/echo BIASING_CONTINUED\n/run/initialize\n/run/beamOn 1",
+            config=True, threads=1,
+        )
+        assert code != 0 and "Interactive command failure" in log, log[-4000:]
+        assert "BIASING_CONTINUED" not in log, log[-4000:]
+        assert result["status"] == "failed" and result["program_exit_code"] != "0", result
+        assert result["interactive_command_failure_kind"] == "biasing", result
+        assert "Interactive XS biasing" in result["interactive_command_failure_message"], result
+        assert result["run_count"] == "0", result
+
+        # Materials mutated after /run/initialize never reach a built volume:
+        # the command must be refused by the lifecycle gate instead of applying
+        # an effectless mutation and reporting success.
+        code, log, result = session(
+            "material_after_initialize",
+            "/run/initialize\n/AIHL/material/addNist nist=G4_WATER name=late_water\n/control/echo MATERIAL_CONTINUED",
+            config=True, threads=1,
+        )
+        assert code != 0 and "Interactive command failure" in log, log[-4000:]
+        assert "MATERIAL_CONTINUED" not in log, log[-4000:]
+        assert result["status"] == "failed" and result["program_exit_code"] != "0", result
+        assert result["interactive_command_failure_kind"] == "geant4_illegal_application_state", result
+        assert result["run_count"] == "0", result
+
         invalid = subprocess.run(
             [str(executable), "--ui-session", "csh"], cwd=ROOT,
             capture_output=True, text=True, timeout=30, check=False,

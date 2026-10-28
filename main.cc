@@ -839,6 +839,10 @@ int main(int argc, char** argv) {
       const auto physicsFailuresBefore = sim.GetInteractivePhysicsFailureCount();
       const auto materialFailuresBefore = sim.GetMaterialManager()->GetCommandFailureCount();
       const auto outputFailuresBefore = sim.GetOutputManager()->GetCommandFailureCount();
+      // Rejected interactive biasing mutations used to be warnings only: the
+      // command was ignored, the session continued and the process exited 0
+      // while the user believed biasing was configured.
+      const auto biasingRejectsBefore = sim.GetBiasingManager()->GetInteractiveRejectCount();
       RunSummary& summary = sim.GetOutputManager()->GetRunSummary();
       summary.Set("interactive_command_failure_kind", "none");
       summary.Set("interactive_command_failure_message", "not_applicable");
@@ -854,6 +858,7 @@ int main(int argc, char** argv) {
           return sim.GetInteractivePhysicsFailureCount() != physicsFailuresBefore ||
                  sim.GetMaterialManager()->GetCommandFailureCount() != materialFailuresBefore ||
                  sim.GetOutputManager()->GetCommandFailureCount() != outputFailuresBefore ||
+                 sim.GetBiasingManager()->GetInteractiveRejectCount() != biasingRejectsBefore ||
                  sim.GetOutputManager()->HasOutputFailure();
         };
         AuditedCshSession ui(stopAfterFailure, hasHandlerFailure);
@@ -871,20 +876,33 @@ int main(int argc, char** argv) {
       const bool materialFailed = sim.GetMaterialManager()->GetCommandFailureCount() != materialFailuresBefore;
       const bool outputFailed = sim.GetOutputManager()->GetCommandFailureCount() != outputFailuresBefore;
       const bool physicsFailed = sim.GetInteractivePhysicsFailureCount() != physicsFailuresBefore;
+      const bool biasingFailed = sim.GetBiasingManager()->GetInteractiveRejectCount() != biasingRejectsBefore;
       const bool uiCommandFailed = failedCommandStatus != fCommandSucceeded;
       if (materialFailed || outputFailed || !unrecognizedCommand.empty() || !invalidParameter.empty() ||
-          !parameterOutOfRange.empty() || !illegalApplicationState.empty() || physicsFailed || uiCommandFailed) {
-        const bool otherFailed = materialFailed || outputFailed || !unrecognizedCommand.empty() ||
-                                 !invalidParameter.empty() || !parameterOutOfRange.empty() ||
-                                 !illegalApplicationState.empty() || uiCommandFailed;
-        const std::string kind = physicsFailed ? (otherFailed ? "multiple" : "physics") :
-            (materialFailed && outputFailed ? "material_and_output" :
-            (materialFailed ? "material" : (outputFailed ? "output" :
-            (!unrecognizedCommand.empty() ? "geant4_command_not_found" :
-             (!invalidParameter.empty() ? "geant4_invalid_parameter" :
-             (!parameterOutOfRange.empty() ? "geant4_parameter_out_of_range" :
-             (!illegalApplicationState.empty() ? "geant4_illegal_application_state" :
-              "geant4_command_status")))))));
+          !parameterOutOfRange.empty() || !illegalApplicationState.empty() || physicsFailed ||
+          biasingFailed || uiCommandFailed) {
+        std::vector<std::string> kinds;
+        if (physicsFailed) kinds.push_back("physics");
+        if (biasingFailed) kinds.push_back("biasing");
+        if (materialFailed) kinds.push_back("material");
+        if (outputFailed) kinds.push_back("output");
+        if (!unrecognizedCommand.empty()) kinds.push_back("geant4_command_not_found");
+        if (!invalidParameter.empty()) kinds.push_back("geant4_invalid_parameter");
+        if (!parameterOutOfRange.empty()) kinds.push_back("geant4_parameter_out_of_range");
+        if (!illegalApplicationState.empty()) kinds.push_back("geant4_illegal_application_state");
+        // A refused command also reports a non-zero UI status; keep the specific
+        // diagnostic as the reported kind instead of degrading it to "multiple".
+        if (uiCommandFailed && kinds.empty()) kinds.push_back("geant4_command_status");
+        std::string kind;
+        if (kinds.size() == 1) {
+          kind = kinds.front();
+        } else if (kinds.size() == 2 && materialFailed && outputFailed) {
+          // Historical summary value: material and output failures were
+          // reported together before the other kinds existed.
+          kind = "material_and_output";
+        } else {
+          kind = "multiple";
+        }
         std::vector<std::string> messages;
         const auto appendDiagnostic = [&](const std::string& diagnostic) {
           if (diagnostic.empty()) return;
@@ -904,6 +922,7 @@ int main(int argc, char** argv) {
           if (!singleLine.empty()) messages.push_back(std::move(singleLine));
         };
         if (physicsFailed) appendDiagnostic(sim.GetLastInteractivePhysicsFailure());
+        if (biasingFailed) appendDiagnostic(sim.GetBiasingManager()->GetLastInteractiveReject());
         if (materialFailed) appendDiagnostic(sim.GetMaterialManager()->GetLastCommandFailure());
         if (outputFailed) appendDiagnostic(sim.GetOutputManager()->GetLastCommandFailure());
         appendDiagnostic(unrecognizedCommand);

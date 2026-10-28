@@ -17,6 +17,9 @@ Short, user-facing record of notable changes. Detailed support status lives in
 
 ### Fixed
 
+- 交互偏置拒绝只是 `JustWarning`（Astra 2026-10-28 审查 D-4）：`/AIHL/biasing/*` 修改类命令在 `--ui --ui-session csh` 下被拒绝后，会话继续、`/run/beamOn` 照常执行、进程退出 0，用户以为配置了偏置但物理未偏置。现在 `BiasingManager` 记录拒绝次数，`main.cc` 在会话后把 `biasing` 计入交互失败、停止会话、写 `status=failed` 与非零退出。
+- 初始化后的材料修改无生命周期门禁（Astra 2026-10-28 审查 D-5）：`/AIHL/material/*` 的 9 个修改命令现在只在 `PreInit` 可用（只读 `print`/`list` 不变），交互会话内初始化后调用会被 Geant4 拒绝并让会话失败（`geant4_illegal_application_state`），batch 路径的守卫保留。
+- `ParseStrictDouble` 不检查有限性（Astra 2026-10-28 审查 D-6）：`inf`/`nan`/溢出值现在报 `Config value '<v>' is not a finite double` 并在创建 Geant4 对象前失败。
 - 证据门禁可被篡改绕过（Astra 2026-10-28 审查 D-1）：`scripts/check_report_evidence.py` 现在校验逐用例断言 ≥ 1、`exit_code == 0`、逐项求和与总数一致、`cases_with_assertion_counts`/`cases_with_zero_assertions` 与实际记录一致、`log_sha256` 与磁盘日志字节一致、发布报告无 fail/skip，并支持 `--baseline` 校验不下降；实测"把通过项断言改成 0""把日志摘要换成 0 并放大总数"两种篡改均被拒绝。
 - 日志摘要与磁盘字节不符（Astra 2026-10-28 审查 D-2）：`scripts/run_m0_tests.py` 改为写 UTF-8/LF 字节并对落盘字节计算 SHA-256（`log_digest_algorithm=sha256_raw_bytes_lf_v2`），`report.json` 同样按字节写出；此前 Windows 文本模式写 CRLF、摘要却算 LF 字符串，归档的 79 个日志原始字节 0/79 可复现。
 - `.gitattributes` 的 `* text=auto` 导致 Windows 检出写入 CRLF，使按原始字节哈希的工作区指纹漂移、backend 用例全部 SKIP；现对 `*.cc`/`*.hh`/`*.h`/`*.in`/`*.py`/`*.json`/`*.ini`/`*.mac`/`*.csv` 与 `CMakeLists.txt` 固定 `text eol=lf`，并重新物化受影响的跟踪文件。

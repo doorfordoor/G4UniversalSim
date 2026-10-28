@@ -21,6 +21,13 @@ public:
     bool IsEnabled() const;
     void SetInteractiveSessionMode(bool interactive);
     bool IsInteractiveSessionMode() const;
+    // A rejected mutation in an interactive session used to be a JustWarning:
+    // the command was silently ignored, the session continued and the process
+    // still exited 0. Record every rejection so main.cc can stop the session
+    // and fail the process instead.
+    void RecordInteractiveReject(const std::string& command, const std::string& message);
+    std::size_t GetInteractiveRejectCount() const;
+    const std::string& GetLastInteractiveReject() const;
 
     void Clear();
 
@@ -121,6 +128,8 @@ private:
     std::vector<std::unique_ptr<BiasingMultiParticleXS>> xsOperators_;
     bool operatorsAttached_ = false;
     bool interactiveSessionMode_ = false;
+    std::size_t interactiveRejectCount_ = 0;
+    std::string lastInteractiveReject_;
     std::size_t matchedProcessRuleCount_ = 0;
     mutable bool legacyWarningEmitted_ = false;
     mutable std::set<std::string> legacyDetailWarnings_;

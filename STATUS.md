@@ -10,13 +10,13 @@
 ## 当前快照
 
 - 分支 `roadmap/F6-live-progress`，集成分支 `codex`（快进合并后推送）；`main` 为早期历史分支。
-- 阶段 0 审计修复已交付：提交 `67ce037`（工作区快照）→ `2e87f18`（静默失败路径）→ `02c0dc6`（验收证据与状态）→ `48f566b`（跨代理协作信箱）→ `8b7721b`（阶段 1 文档与仓库卫生）→ `c80a9cf`（历史审计对照表）→ `5c6ea1d`（阶段 1.4 报告 v2 与证据门禁）→ `f1dad9d`（阶段 1b 零断言清零与 writer 边界用例）→ `48d8c68`（阶段 1b 证据与状态收尾）。本轮阶段 1d（证据门禁自洽性 + 日志摘要按落盘字节）提交后未逐一登记在此，HEAD 以 `git log` 为准。
-- 最近一次完整回归（阶段 1d 报告 v2 + 严格证据门禁）：**79 PASS / 0 FAIL / 0 SKIP**，`profile=all`，`version=2`，`assertions_executed_total=116161`、`assert_sites_total=2393`、`cases_with_zero_assertions=[]`、`assert_probe=settrace_assert_lines_v2`、`log_digest_algorithm=sha256_raw_bytes_lf_v2`、`skip_policy=failure`、`tracked_source_gate=pass`、`backend_provenance=source_sha256_manifest_matches_executable`。
-  - 报告与 79 个逐用例日志：[docs/verification/stage1d-20261028/README.md](docs/verification/stage1d-20261028/README.md)；更早证据见 [docs/verification/stage1b-20261028/README.md](docs/verification/stage1b-20261028/README.md)（旧摘要口径，只能加 `--allow-legacy-digest` 复核）、[docs/verification/stage1-20261028/README.md](docs/verification/stage1-20261028/README.md)、[docs/verification/stage0-20261027/README.md](docs/verification/stage0-20261027/README.md)。
-  - 源码指纹 `ba493e735b11ca414fa63bbd9d5c219766a5bb60c838482fa69a884cef558d93`、测试/夹具内容指纹 `0d5c7cc0398c1261e00c1a3c333cebe23c38ef38455b4fd7aa95c1ebae1069e5`；后端 `G4UniversalSim.exe` SHA-256 `c446ed5e…d315`；构建身份 MSVC 19.51.36246.0 + Geant4 1132 + MT。
-  - 报告运行时 `git_head=48d8c68`、`git_dirty=true`（本轮改动未提交时运行），运行时源码与本轮提交内容一致；报告与证据副本随本轮提交入库，未在提交后重跑。
-- 测试平台：`python -B scripts/run_m0_tests.py --profile all --require-tracked-sources --fail-on-skip`；79 个用例 = static 6 / gui 26 / backend 33 / integration 14，所有用例都报告非零断言数；报告是 `version: 2` 证据（逐用例断言数、双指纹、`log_sha256` 按落盘字节），`scripts/check_report_evidence.py` 为 CI 门禁（逐项断言 ≥1、求和/计数/零断言列表一致、摘要与磁盘字节一致、发布报告无 fail/skip，归档旧报告需 `--allow-legacy-digest`）。
-- CI 现状：GitHub Actions 只跑 static+gui（32/79），不构建 C++、不跑 backend/integration；两个 profile 步骤已带 `--fail-on-skip`；Linux+Geant4 CI 仍未建立（E3）。
+- 阶段 0 审计修复已交付：提交 `67ce037`（工作区快照）→ `2e87f18`（静默失败路径）→ `02c0dc6`（验收证据与状态）→ `48f566b`（跨代理协作信箱）→ `8b7721b`（阶段 1 文档与仓库卫生）→ `c80a9cf`（历史审计对照表）→ `5c6ea1d`（阶段 1.4 报告 v2 与证据门禁）→ `f1dad9d`（阶段 1b 零断言清零与 writer 边界用例）→ `48d8c68`（阶段 1b 证据与状态收尾）→ `7f5dc48`（阶段 1d 证据门禁自洽性与日志摘要按落盘字节）。本轮阶段 1e（命令失败传播 D-4/D-5/D-6）提交后未逐一登记在此，HEAD 以 `git log` 为准。
+- 最近一次完整回归（阶段 1e 报告 v2 + 严格证据门禁）：**80 PASS / 0 FAIL / 0 SKIP**，`profile=all`，`version=2`，`assertions_executed_total=116183`、`assert_sites_total=2412`、`cases_with_zero_assertions=[]`、`assert_probe=settrace_assert_lines_v2`、`log_digest_algorithm=sha256_raw_bytes_lf_v2`、`skip_policy=failure`、`tracked_source_gate=pass`、`backend_provenance=source_sha256_manifest_matches_executable`。
+  - 报告与 80 个逐用例日志：[docs/verification/stage1e-20261028/README.md](docs/verification/stage1e-20261028/README.md)；更早证据见 [docs/verification/stage1d-20261028/README.md](docs/verification/stage1d-20261028/README.md)、[docs/verification/stage1b-20261028/README.md](docs/verification/stage1b-20261028/README.md)（旧摘要口径，只能加 `--allow-legacy-digest` 复核）、[docs/verification/stage1-20261028/README.md](docs/verification/stage1-20261028/README.md)、[docs/verification/stage0-20261027/README.md](docs/verification/stage0-20261027/README.md)。
+  - 源码指纹 `ab87d6ef696da23ad31460ccedf53e2d3e295beb78b0ae195479431267a8fca5`、测试/夹具内容指纹 `09d94586b54b56e3f930c96f58afa9a164cbf2a0e589ef864ec4c0e77b9cc2ab`；后端 `G4UniversalSim.exe` SHA-256 `eb2a3747…3072`（1735168 B）；构建身份 MSVC 19.51.36246.0 + Geant4 1132 + MT。
+  - 报告运行时 `git_head=7f5dc48`、`git_dirty=true`（本轮改动未提交时运行），运行时源码与本轮提交内容一致；报告与证据副本随本轮提交入库，未在提交后重跑。
+- 测试平台：`python -B scripts/run_m0_tests.py --profile all --require-tracked-sources --fail-on-skip`；80 个用例 = static 6 / gui 26 / backend 34 / integration 14，所有用例都报告非零断言数；报告是 `version: 2` 证据（逐用例断言数、双指纹、`log_sha256` 按落盘字节），`scripts/check_report_evidence.py` 为 CI 门禁（逐项断言 ≥1、求和/计数/零断言列表一致、摘要与磁盘字节一致、发布报告无 fail/skip，归档旧报告需 `--allow-legacy-digest`）。
+- CI 现状：GitHub Actions 只跑 static+gui（32/80），不构建 C++、不跑 backend/integration；两个 profile 步骤已带 `--fail-on-skip`；Linux+Geant4 CI 仍未建立（E3）。
 
 ## 阶段状态（摘要，详表见 ROADMAP）
 
@@ -38,6 +38,7 @@
 6. 已完成：报告加断言级计数与工作区/测试内容双哈希、默认报告目录改 `out/verification`、CI 把 skip 当失败（`--fail-on-skip` + `check_report_evidence.py` 门禁）；顺带修复 `.gitattributes` 让 checkout 换行改变源码指纹的真实缺陷；
 7. 已完成：支持矩阵第 2–3 节每条功能标注证据类型（外部表 / 解析式 / 同源自洽 / 自测 / 未验证），第 1 节给出判定口径；
 8. 已完成：E2-S1 六个 editor→writer 边界升级为 static 用例 `writer_boundary`；9 个零断言用例改写成 `assert` 表达（断言证据从 115305 增至 116133，零断言列表清空）。
+9. 已完成：Astra 2026-10-28 审查的 6 条缺陷全部闭合（D-1 证据门禁可篡改绕过、D-2 日志摘要与磁盘字节不符、D-3 文档漂移、D-4 交互偏置拒绝只告警、D-5 材料交互无生命周期门禁、D-6 `ParseStrictDouble` 接受 inf/nan）；D-7（`analyze.py` 缺证据当零结果）留到 2B。
 
 阶段 2（待阶段 1 收尾，2B 场景已定为**屏蔽 shielding_coating**）：
 
@@ -54,7 +55,7 @@
 - 偏置只有 process-level XS 路径；importance、weight-window、splitting、Russian roulette 未实现。
 - 交互命令审计只覆盖 `--ui --ui-session csh`；Qt UI 与部分嵌套/动态命令不受审计保证。
 - 安装包 `out/` 中 1.0.0 早于 F6/阶段 0 改动，不可作为当前版本引用。
-- 命令族的“改了缓存、内核没变、退出码 0”路径仍有三处待闭合（Astra 2026-10-28 审查 D-4/D-5/D-6）：biasing 交互拒绝只 `JustWarning` 未进 csh 失败汇总、material 交互修改缺统一生命周期门禁、`ParseStrictDouble` 未查有限性；改之前先做真实 `--ui --ui-session csh` 反例。
+- 命令族的“改了缓存、内核没变、退出码 0”三条路径已闭合（Astra 2026-10-28 审查 D-4/D-5/D-6）：交互会话里的 biasing 修改被拒绝时计入 csh 失败（`interactive_command_failure_kind = biasing`）并停止会话、material 的 9 个变更命令只允许 `PreInit`（初始化后由 Geant4 拒绝 → `geant4_illegal_application_state`）、`ParseStrictDouble` 拒绝 `inf`/`nan`/溢出。只覆盖脚本化 `--ui --ui-session csh`；Qt UI 内的同类操作仍未自动化验收。
 - `scenarios/shielding_coating/analyze.py` 仍把“缺证据”当“零结果”（Astra D-7）：缺统计文件返回空 dict、缺行给 0、未验 `status`/完整运行、未防零事件；2B 阶段修补并加五种对照反例。
 - 断言证据是**已执行 `assert` 的下界**（`sys.settrace` 计数），不是覆盖率；证据门禁只证明“报告与日志自洽且未被篡改”，不证明断言写得好。
 - F6 进度协议缺 `sequence` 字段，无法拒绝重复/乱序/上一轮残留的进度消息（待 Astra 决策，未擅改协议）。

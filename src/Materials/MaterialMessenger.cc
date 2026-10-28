@@ -50,6 +50,23 @@ MaterialMessenger::MaterialMessenger(MaterialManager* manager)
     buildAllCmd_ = std::make_unique<G4UIcmdWithoutParameter>("/AIHL/material/buildAll", this);
     setLockedCmd_ = std::make_unique<G4UIcmdWithABool>("/AIHL/material/setLocked", this);
     clearCmd_ = std::make_unique<G4UIcmdWithoutParameter>("/AIHL/material/clear", this);
+
+    // Mutating materials after the geometry is built silently changes nothing:
+    // volumes keep the materials they were created with. The batch path is
+    // rejected in main.cc after kernel initialisation; these state gates close
+    // the interactive path (Geant4 then rejects the command with an illegal
+    // application state instead of applying an effectless mutation).
+    for (G4UIcommand* command : {static_cast<G4UIcommand*>(loadCmd_.get()),
+                                 static_cast<G4UIcommand*>(addNistCmd_.get()),
+                                 static_cast<G4UIcommand*>(addIsotopeCmd_.get()),
+                                 static_cast<G4UIcommand*>(addElementCmd_.get()),
+                                 static_cast<G4UIcommand*>(addElementFromIsotopesCmd_.get()),
+                                 static_cast<G4UIcommand*>(addMaterialCmd_.get()),
+                                 static_cast<G4UIcommand*>(buildAllCmd_.get()),
+                                 static_cast<G4UIcommand*>(setLockedCmd_.get()),
+                                 static_cast<G4UIcommand*>(clearCmd_.get())}) {
+        command->AvailableForStates(G4State_PreInit);
+    }
 }
 
 MaterialMessenger::~MaterialMessenger() = default;

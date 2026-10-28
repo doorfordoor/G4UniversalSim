@@ -213,8 +213,12 @@ void BiasingMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     try {
         if (manager_ && manager_->IsInteractiveSessionMode() &&
             command != validateCmd_ && command != printRulesCmd_ && command != printCmd_) {
+            const std::string message =
+                "Interactive XS biasing configuration is unavailable because geometry reinitialization "
+                "can invalidate attached operators. Use a batch macro in a fresh process instead.";
+            manager_->RecordInteractiveReject(command->GetCommandPath(), message + " Command ignored.");
             G4ExceptionDescription desc;
-            desc << "Interactive XS biasing configuration is unavailable because geometry reinitialization can invalidate attached operators. Use a batch macro in a fresh process instead. Command ignored.";
+            desc << message << " Command ignored.";
             G4Exception("BiasingMessenger::SetNewValue", "AIHLBiasingInteractive001", JustWarning, desc);
             return;
         }

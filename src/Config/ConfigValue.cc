@@ -3,6 +3,7 @@
 #include "Utils/StringUtils.hh"
 
 #include <cerrno>
+#include <cmath>
 #include <cstdlib>
 #include <limits>
 #include <stdexcept>
@@ -16,11 +17,20 @@ double ParseStrictDouble(const std::string& value, const std::string& typeName)
         throw std::runtime_error("Cannot parse empty config value as " + typeName);
     }
 
+    errno = 0;
     char* end = nullptr;
     const double parsed = std::strtod(trimmed.c_str(), &end);
     if (end == trimmed.c_str() || !StringUtils::Trim(std::string(end)).empty()) {
         throw std::runtime_error(
             "Cannot parse config value '" + value + "' as " + typeName
+        );
+    }
+    // strtod accepts "inf", "nan" and silently overflows to HUGE_VAL: a
+    // non-finite value must be rejected here, otherwise it reaches biasing
+    // weights and visual attributes without any warning.
+    if (errno == ERANGE || !std::isfinite(parsed)) {
+        throw std::runtime_error(
+            "Config value '" + value + "' is not a finite " + typeName
         );
     }
 
