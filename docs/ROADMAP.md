@@ -243,7 +243,7 @@ H4–H8 if the user's applications favour some of them.
   `scenario_shielding_core`、`scenario_page`、`gui_scenario_backend`，并把 `platform_paths` 加入 static（测试不得写死构建路径）。
   统一测试平台 87 例（static 10 / gui 27 / backend 35 / integration 15），证据见 [docs/verification/stage2b-20261028](verification/stage2b-20261028/README.md)；
   契约见 [屏蔽涂层场景端到端](屏蔽涂层场景端到端.md)。CI：M0 workflow 在 ubuntu 与 windows 均绿（`402a9f2`，run 40675415994 / 40675409885），
-  Linux workflow 的 static 与 offscreen GUI 已绿，backend 的一个写死路径失败已修复、等待下一轮确认。
+  Linux workflow 的 static 与 offscreen GUI 已绿，backend 的一个写死路径失败已修复；`45891c3` 上 **M0（ubuntu+windows）与 Linux 四 profile 同时全绿**（M0 run 40680571889/40680563877，Linux run 40680571833/40680563958）。
 - 2026-10-27：完成 F6 整阶段（分支 roadmap/F6-live-progress，提交 `2e87f18`）。版本化后端遥测、GUI 解析与进度显示；真实 1/2/4 worker、多 run、失败/强杀与摘要对账通过，性能以成对设计重测（中位比值 1.0047，本机漂移 ±3 %，只能称开销低于噪声）。见 [F6接续检查点](F6接续检查点.md)。
 
 - 2026-10-27：阶段 0 只读审计修复（提交 `2e87f18`，前一个快照为 `67ce037`）。B1 位移损伤粒子名大小写解析、B2 主 INI 重复声明可见化、B3 敏感探测器名字一致性 + detector 命令 PreInit 门禁、B4 seed 生命周期门禁、GUI 源字段保留与进度/日志修正；新增 3 个回归用例，统一测试平台 76 PASS / 0 FAIL / 0 SKIP、`tracked_source_gate=pass`（报告 out/verification/stage0-20261027/20261027-225818-646efeac/report.json，副本见 [docs/verification/stage0-20261027](verification/stage0-20261027/README.md)）。README／手册中“LET/GDML/STL/自动合并未实现”等与后端相反的表述、状态文档多头、证据目录被 gitignore 等问题仍在阶段 1 处理。

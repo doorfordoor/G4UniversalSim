@@ -56,6 +56,10 @@
 - 构建：MSVC 19.51.36246.0、Geant4 11.3.2、MT
 - F6 性能（成对设计）：中位比值 1.0047，本机漂移 ±3 % → 只能声明“低于测量噪声”
 
+## 阶段 2B 交付（2026-10-28，先看这封）
+
+`docs/collab/outbox/20261028-1925-deepseek-2b-shielding-scenario-delivery.md`：屏蔽/涂层场景 GUI 端到端（`402a9f2` + 本轮 `45891c3`）。场景模型 `scenario_model.py`、`analyze(output_dir)`、Scenario 页、12 步端到端 smoke、NIEL 溯源；统一测试平台 87 例 / 116636 断言，证据 `docs/verification/stage2b-20261028/`。CI：M0 workflow 由所有者启用后在 ubuntu 与 windows 均绿；Linux workflow static 与 offscreen GUI 已绿，backend 的写死路径缺陷已修（新增 static 守门 `platform_paths`）；`45891c3` 上 M0 与 Linux 四 profile 同时全绿（M0 run 40680571889/40680563877，Linux run 40680571833/40680563958）。信里列了三个请你确认的问题（2B 完成度、2C 与 11.2/11.4 优先级、打包自检是否覆盖场景页）。
+
 ## 已知缺口（不当成已验证）
 
 - B1 校验在 `BeginRun`，`--inspect-run` 查不出来（文档已如实写明）
