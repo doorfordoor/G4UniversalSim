@@ -54,7 +54,10 @@
 
 - 2A：Linux + Geant4 11.3 CI（E3）——已完成（Actions 绿，见上）；遗留 M0 workflow 恢复与 11.2/11.4 矩阵；
 - 2B：屏蔽场景 GUI 端到端 + schema 驱动编辑器——**已完成（2026-10-28，见上节）**；
-- 2C：完整 EffectiveConfig + 模块 off/auto/on（Astra 主导设计）。
+- 2C：完整 EffectiveConfig + 模块 off/auto/on（Astra 主导设计）——**已提交只读测绘**，见 [docs/collab/outbox/20261028-2000-deepseek-effectiveconfig-survey.md](docs/collab/outbox/20261028-2000-deepseek-effectiveconfig-survey.md)：
+  现状（13 个 `effective_*` 标量、11 个来源字段、materials 六态、19 个 main_ini section、散落布尔开关、缺 `--dump-effective-config`）、
+  六条缺口（无对象 ID、无 requested/resolved/applied 四元组、缺 BeginOfRun 快照、无 off/auto/on 语义、GUI 无结构化入口、验收只能数 353 字段），
+  以及 S1–S6 切片建议与五个待 Astra 决定的问题；**未写任何 2C 代码**。
 - 铁律：阶段 2 冻结新功能，目标是压低 `experimental` 比例，而不是扩大分母。
 
 ## 已知缺口（不要把以下当作已完成）
