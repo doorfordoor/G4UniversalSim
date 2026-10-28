@@ -52,6 +52,7 @@ class ProjectMixin:
 
     def _set_project(self, project: G4USimProject) -> None:
         self.project = project
+        self.scenario_page.set_executable(project.executable)
         self.run_page.set_macro_plan("")
         self._generated_package_stale = project.runInputMode == "generated"
         self._generated_package_dir = ""

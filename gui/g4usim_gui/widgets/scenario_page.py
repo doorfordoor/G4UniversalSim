@@ -52,49 +52,47 @@ class ScenarioPage(QWidget):
         self._outcome: shielding.ScenarioOutcome | None = None
         self._rows: list[dict[str, str]] = []
         self._process: QProcess | None = None
-        self._log_buffer = ""
         self._fields: dict[str, QWidget] = {}
+        self._field_labels: dict[str, QLabel] = {}
 
-        title = QLabel(ui_text("Shielding and coating scenario"))
-        title.setObjectName("pageSectionTitle")
-        description = QLabel(ui_text(
-            "Set the layer stack, run the real backend and read TID, DDD, transmission "
-            "and albedo together with the evidence each number comes from."))
-        description.setWordWrap(True)
-        description.setObjectName("pageHint")
+        self._title_label = QLabel()
+        self._title_label.setObjectName("pageSectionTitle")
+        self._description_label = QLabel()
+        self._description_label.setWordWrap(True)
+        self._description_label.setObjectName("pageHint")
 
         self.directory_edit = QLineEdit()
         self.directory_edit.setText(str(default_runs_root() / "scenario_shielding"))
-        self.directory_edit.setToolTip(ui_text("Working directory for the generated scenario and its output."))
-        self.browse_button = QPushButton(ui_text("Browse..."))
+        self.browse_button = QPushButton()
         self.browse_button.clicked.connect(self._browse_directory)
+        self._directory_label = QLabel()
 
         directory_row = QHBoxLayout()
-        directory_row.addWidget(QLabel(ui_text("Working directory")))
+        directory_row.addWidget(self._directory_label)
         directory_row.addWidget(self.directory_edit, 1)
         directory_row.addWidget(self.browse_button)
 
-        self.basic_group = QGroupBox(ui_text("Scenario"))
+        self.basic_group = QGroupBox()
         self.basic_form = QFormLayout(self.basic_group)
         for field in shielding.visible_fields():
             self._add_field(self.basic_form, field)
 
-        self.advanced_check = QCheckBox(ui_text("Show advanced fields"))
+        self.advanced_check = QCheckBox()
         self.advanced_check.toggled.connect(self._toggle_advanced)
-        self.advanced_group = QGroupBox(ui_text("Advanced"))
+        self.advanced_group = QGroupBox()
         self.advanced_form = QFormLayout(self.advanced_group)
         for field in shielding.visible_fields(advanced=True):
             self._add_field(self.advanced_form, field)
         self.advanced_group.setVisible(False)
 
-        self.validate_button = QPushButton(ui_text("Validate"))
+        self.validate_button = QPushButton()
         self.validate_button.clicked.connect(self.validate_form)
-        self.generate_button = QPushButton(ui_text("Generate scenario files"))
+        self.generate_button = QPushButton()
         self.generate_button.clicked.connect(self.generate_scenario)
-        self.run_button = QPushButton(ui_text("Run scenario"))
+        self.run_button = QPushButton()
         self.run_button.setProperty("buttonRole", "primary")
         self.run_button.clicked.connect(self.start_run)
-        self.stop_button = QPushButton(ui_text("Stop"))
+        self.stop_button = QPushButton()
         self.stop_button.setProperty("buttonRole", "danger")
         self.stop_button.setEnabled(False)
         self.stop_button.clicked.connect(self.stop_run)
@@ -105,17 +103,15 @@ class ScenarioPage(QWidget):
         buttons.addStretch(1)
         buttons.addWidget(self.stop_button)
 
-        self.status_label = QLabel(ui_text("Not run yet."))
+        self.status_label = QLabel()
         self.status_label.setObjectName("statusChip")
 
         self.problems_view = QPlainTextEdit()
         self.problems_view.setReadOnly(True)
         self.problems_view.setMaximumBlockCount(200)
-        self.problems_view.setPlaceholderText(ui_text("Validation messages"))
         self.problems_view.setFixedHeight(64)
 
         self.results_table = QTableWidget(0, len(_COLUMNS))
-        self.results_table.setHorizontalHeaderLabels([ui_text(text) for text in _COLUMNS])
         self.results_table.verticalHeader().setVisible(False)
         self.results_table.setEditTriggers(QTableWidget.NoEditTriggers)
         self.results_table.setSelectionBehavior(QTableWidget.SelectRows)
@@ -126,26 +122,29 @@ class ScenarioPage(QWidget):
         self.evidence_view = QPlainTextEdit()
         self.evidence_view.setReadOnly(True)
         self.evidence_view.setMaximumBlockCount(200)
-        self.evidence_view.setPlaceholderText(ui_text("Evidence and warnings"))
 
         self.log_view = QPlainTextEdit()
         self.log_view.setReadOnly(True)
         self.log_view.setMaximumBlockCount(_MAX_LOG_LINES)
         self.log_view.setObjectName("scenarioLog")
 
+        self._results_label = QLabel()
+        self._evidence_label = QLabel()
+        self._log_label = QLabel()
+
         results_split = QSplitter()
         results_panel = QWidget()
         results_layout = QVBoxLayout(results_panel)
         results_layout.setContentsMargins(0, 0, 0, 0)
-        results_layout.addWidget(QLabel(ui_text("Results")))
+        results_layout.addWidget(self._results_label)
         results_layout.addWidget(self.results_table, 1)
-        results_layout.addWidget(QLabel(ui_text("Evidence and warnings")))
+        results_layout.addWidget(self._evidence_label)
         results_layout.addWidget(self.evidence_view, 1)
         results_split.addWidget(results_panel)
         log_panel = QWidget()
         log_layout = QVBoxLayout(log_panel)
         log_layout.setContentsMargins(0, 0, 0, 0)
-        log_layout.addWidget(QLabel(ui_text("Backend log")))
+        log_layout.addWidget(self._log_label)
         log_layout.addWidget(self.log_view, 1)
         results_split.addWidget(log_panel)
         results_split.setSizes([900, 500])
@@ -153,8 +152,8 @@ class ScenarioPage(QWidget):
         left = QWidget()
         left_layout = QVBoxLayout(left)
         left_layout.setContentsMargins(0, 0, 0, 0)
-        left_layout.addWidget(title)
-        left_layout.addWidget(description)
+        left_layout.addWidget(self._title_label)
+        left_layout.addWidget(self._description_label)
         left_layout.addLayout(directory_row)
         left_layout.addWidget(self.basic_group)
         left_layout.addWidget(self.advanced_check)
@@ -168,25 +167,24 @@ class ScenarioPage(QWidget):
         main.addWidget(left, 1)
         main.addWidget(results_split, 2)
 
+        self.refresh_language()
+        self._parse_problems = []
+        self.status_label.setText(ui_text("Not run yet."))
         self._refresh_field_states()
 
     # ------------------------------------------------------------------ form fields
 
     def _add_field(self, form: QFormLayout, field: shielding.ScenarioField) -> None:
-        label = QLabel(ui_text(field.label))
-        if field.help:
-            label.setToolTip(ui_text(field.help))
+        label = QLabel()
+        self._field_labels[field.key] = label
         if field.kind == "choice":
             widget: QWidget = QComboBox()
             for choice in field.choices:
                 widget.addItem(choice, choice)
-            widget.setToolTip(ui_text(field.help) if field.help else "")
             widget.currentIndexChanged.connect(self._refresh_field_states)
         else:
             widget = QLineEdit()
             widget.setText(field.default)
-            widget.setPlaceholderText(ui_text(field.help) if field.help else "")
-            widget.setToolTip(ui_text(field.help) if field.help else "")
             widget.textEdited.connect(self._refresh_field_states)
         self._fields[field.key] = widget
         form.addRow(label, widget)
@@ -230,9 +228,10 @@ class ScenarioPage(QWidget):
 
     def _refresh_field_states(self) -> None:
         problems = self.validate_form(update_ui=False)
-        self.run_button.setEnabled(not problems and self._process is None)
-        self.generate_button.setEnabled(self._process is None)
-        self.validate_button.setEnabled(self._process is None)
+        busy = self._process is not None
+        self.run_button.setEnabled(not problems and not busy)
+        self.generate_button.setEnabled(not busy)
+        self.validate_button.setEnabled(not busy)
 
     # --------------------------------------------------------------------- validation
 
@@ -245,6 +244,7 @@ class ScenarioPage(QWidget):
         return problems
 
     def _show_problems(self, problems: list[str]) -> None:
+        self._parse_problems = list(problems)
         self.problems_view.setPlainText("\n".join(ui_text(problem) for problem in problems))
         self.problems_view.setVisible(bool(problems))
 
@@ -274,6 +274,7 @@ class ScenarioPage(QWidget):
             self.status_label.setText(ui_text("The scenario was not generated."))
             return None
         self.problems_view.clear()
+        self._parse_problems = []
         self.status_label.setText(ui_format("Scenario files written to {path}", path=str(directory)))
         self._rows = []
         self._fill_rows()
@@ -303,7 +304,6 @@ class ScenarioPage(QWidget):
         if generated is None:
             return False
         self._outcome = None
-        self._log_buffer = ""
         self.log_view.clear()
         process = QProcess(self)
         self._process = process
@@ -388,6 +388,7 @@ class ScenarioPage(QWidget):
                       events=outcome.summary.get("run_0_completed_events", "?"),
                       status=outcome.summary.get("status", "unknown")))
         self.problems_view.clear()
+        self._parse_problems = []
         self._outcome = outcome
         self._rows = shielding.result_rows(outcome.report)
         self._fill_rows()
@@ -423,6 +424,10 @@ class ScenarioPage(QWidget):
     def outcome(self) -> shielding.ScenarioOutcome | None:
         return self._outcome
 
+    @property
+    def field_labels(self) -> dict[str, QLabel]:
+        return dict(self._field_labels)
+
     # ------------------------------------------------------------------ misc / i18n
 
     def _browse_directory(self) -> None:
@@ -432,6 +437,36 @@ class ScenarioPage(QWidget):
             self.directory_edit.setText(directory)
 
     def refresh_language(self) -> None:
+        """Retranslate everything this page owns; ``apply_language`` only walks static setters."""
+        self._title_label.setText(ui_text("Shielding and coating scenario"))
+        self._description_label.setText(ui_text(
+            "Set the layer stack, run the real backend and read TID, DDD, transmission "
+            "and albedo together with the evidence each number comes from."))
+        self._directory_label.setText(ui_text("Working directory"))
+        self.directory_edit.setToolTip(ui_text("Working directory for the generated scenario and its output."))
+        self.browse_button.setText(ui_text("Browse..."))
+        self.basic_group.setTitle(ui_text("Scenario"))
+        self.advanced_group.setTitle(ui_text("Advanced"))
+        self.advanced_check.setText(ui_text("Show advanced fields"))
+        self.validate_button.setText(ui_text("Validate"))
+        self.generate_button.setText(ui_text("Generate scenario files"))
+        self.run_button.setText(ui_text("Run scenario"))
+        self.stop_button.setText(ui_text("Stop"))
+        self.problems_view.setPlaceholderText(ui_text("Validation messages"))
+        self.evidence_view.setPlaceholderText(ui_text("Evidence and warnings"))
+        self._results_label.setText(ui_text("Results"))
+        self._evidence_label.setText(ui_text("Evidence and warnings"))
+        self._log_label.setText(ui_text("Backend log"))
+        for field in shielding.FIELDS:
+            label = self._field_labels.get(field.key)
+            if label is None:
+                continue
+            label.setText(ui_text(field.label))
+            tooltip = ui_text(field.help) if field.help else ""
+            label.setToolTip(tooltip)
+            widget = self._fields.get(field.key)
+            if widget is not None:
+                widget.setToolTip(tooltip)
         self.results_table.setHorizontalHeaderLabels([ui_text(text) for text in _COLUMNS])
 
     def refresh_theme(self) -> None:

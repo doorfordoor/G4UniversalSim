@@ -33,6 +33,7 @@ BODIES = {
     "scans": '<path d="M4 18 L9 12.5 L13 14.5 L20 6.5" {s}/><circle cx="4" cy="18" r="1.7" fill="{c}"/>'
              '<circle cx="9" cy="12.5" r="1.7" fill="{c}"/><circle cx="13" cy="14.5" r="1.7" fill="{c}"/>'
              '<circle cx="20" cy="6.5" r="1.7" fill="{c}"/>',
+    "scenario": '<path d="M12 3.2 L19 6 V11.6 C19 16 15.8 19.3 12 20.8 C8.2 19.3 5 16 5 11.6 V6 Z" {s}/><path d="M8.6 11.8 L11 14.2 L15.6 9.6" {s}/>',
     "theme": '<circle cx="12" cy="12" r="8" {s}/><path d="M12 4 A8 8 0 0 1 12 20 Z" fill="{c}"/>',
     "language": '<circle cx="12" cy="12" r="8.5" {s}/><ellipse cx="12" cy="12" rx="3.8" ry="8.5" {s}/><path d="M3.5 12 H20.5" {s}/>',
     "plus": '<path d="M12 5 V19 M5 12 H19" {s}/>',

@@ -27,7 +27,7 @@ def main() -> None:
     window.show()
     app.processEvents()
 
-    expected_titles = ["Start", "Project", "Configuration", "Run Console", "Results", "Run History", "Parameter Scans"]
+    expected_titles = ["Start", "Project", "Configuration", "Scenario", "Run Console", "Results", "Run History", "Parameter Scans"]
     assert window.page_stack.count() == len(expected_titles)
     for index, title in enumerate(expected_titles):
         window.page_stack.setCurrentIndex(index)
@@ -59,7 +59,7 @@ def main() -> None:
     app.processEvents()
     assert window.page_title.text() == "配置"
     assert window._nav_buttons[0].text() == "开始" and window._nav_buttons[1].text() == "项目"
-    assert window._nav_buttons[6].text() == "参数扫描"
+    assert window._nav_buttons[7].text() == "参数扫描"
     assert window.config_builder_page.workspace_tabs.tabText(0) == "材料"
     assert window.config_builder_page.geometry_template.currentData() == "hierarchical"
     assert window.config_builder_page.geometry_template.currentText() == "通用层级模型"

@@ -14,6 +14,7 @@ from g4usim_gui.widgets.project_page import ProjectPage
 from g4usim_gui.widgets.run_page import RunPage
 from g4usim_gui.widgets.run_history_page import RunHistoryPage
 from g4usim_gui.widgets.scan_page import ScanPage
+from g4usim_gui.widgets.scenario_page import ScenarioPage
 from g4usim_gui.widgets.start_page import StartPage
 from g4usim_gui.window.shell import ShellMixin
 from g4usim_gui.window.project import ProjectMixin
@@ -49,6 +50,7 @@ class MainWindow(ShellMixin, ProjectMixin, RunMixin, ContentMixin, QMainWindow):
         self.run_page = RunPage()
         self.output_page = OutputPage()
         self.run_history_page = RunHistoryPage()
+        self.scenario_page = ScenarioPage()
         self.scan_page = ScanPage()
         self.scan_page.set_base_provider(self.scan_base)
 
