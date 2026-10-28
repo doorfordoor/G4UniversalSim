@@ -63,7 +63,10 @@ def main() -> None:
     assert window.config_builder_page.workspace_tabs.tabText(0) == "材料"
     assert window.config_builder_page.geometry_template.currentData() == "hierarchical"
     assert window.config_builder_page.geometry_template.currentText() == "通用层级模型"
-    assert window.config_builder_page.geometry_config.text().endswith("test\\geometry\\hierarchical_test.ini")
+    # Project paths are rendered with the host separator: compare normalized ones so
+    # the same assertion holds on Windows and on POSIX runners.
+    geometry_config = window.config_builder_page.geometry_config.text().replace("\\", "/")
+    assert geometry_config.endswith("test/geometry/hierarchical_test.ini"), geometry_config
     assert window.config_builder_page.material_mode.currentText() == "nist"
     assert QSettings().value("appearance/language") == "zh_CN"
 

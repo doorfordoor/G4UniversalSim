@@ -21,6 +21,7 @@ Short, user-facing record of notable changes. Detailed support status lives in
 
 ### Fixed
 
+- GUI 冒烟 `smoke_main_window_ui.py` 在 Linux 上失败：配置页显示的几何配置路径断言写死了 Windows 分隔符（`test\geometry\hierarchical_test.ini`），现改为把两侧路径归一成 `/` 再比较；Windows 与 WSL 上该用例都是 62 条断言通过。
 - `scripts/check_doc_links.py` 在 Linux 上失败：`总体判断.md` 里的历史链接写成 Windows 绝对路径（`D:/.../G4UniversalSim/main.cc:170`），Windows 靠工作区前缀能解析、Linux 上当相对路径就断链；`repo_relative()` 现增加“剥离仓库目录名”的跨平台回退，并在自检中断言该行为。
 - Linux workflow 在 GitHub Actions 上首次真跑暴露的三个缺陷：job 级 `env` 使用 `${{ runner.temp }}` 导致 workflow 校验阶段失败（零 job）→ 改用 `${{ github.workspace }}` 下的前缀；conda 前缀的 Qt5 插件目录遮蔽 PySide6 自带的 Qt6 插件 → workflow 计算并导出 `QT_PLUGIN_PATH`；公开仓库的 Actions 日志需登录 → 失败用例改发公开注解。
 - `scenarios/shielding_coating/analyze.py` 不再把缺证据当零结果（Astra 审查 D-7）：运行未完成、事件数为零、
