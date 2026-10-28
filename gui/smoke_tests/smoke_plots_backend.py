@@ -158,6 +158,15 @@ def main() -> None:
         png = work / "plot.png"
         panel.export_png(str(png))
         assert png.stat().st_size > 1000
+
+        # Destroy the widget tree (matplotlib canvas included) while the
+        # QApplication still exists. PySide's cleanup at interpreter exit walks
+        # every object it still owns and can double-delete a canvas/child pair,
+        # which is a SIGSEGV in QObject::~QObject on Linux (offscreen platform).
+        panel.close()
+        panel.deleteLater()
+        app.processEvents()
+        del panel
     print("smoke_plots_backend: OK")
 
 

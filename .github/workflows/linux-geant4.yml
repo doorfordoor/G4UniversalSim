@@ -1,0 +1,141 @@
+name: Linux build and backend regression
+
+# Stage 2A: prove that the backend builds and its Geant4-dependent suites pass on
+# Linux, which the Windows-only developer machine cannot show. The Geant4 version
+# is pinned to 11.3.2 (the version this project targets); the environment is
+# created with micromamba from conda-forge so the Geant4 datasets are installed
+# together with the libraries instead of being downloaded by hand.
+#
+# The static and GUI suites stay in m0-static-gui.yml (no Geant4 needed); this
+# workflow adds the backend and integration profiles on Linux and validates each
+# profile's own report before it can be considered green.
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  linux-geant4:
+    name: ubuntu-24.04 / Geant4 11.3.2
+    runs-on: ubuntu-24.04
+    env:
+      MAMBA_ROOT_PREFIX: ${{ runner.temp }}/micromamba
+      G4_PREFIX: ${{ runner.temp }}/g4env
+      GEANT4_VERSION: '11.3.2'
+      REPORT_ROOT: ${{ github.workspace }}/out/verification
+      # The integration suite imports the desktop application; a headless runner has no display.
+      QT_QPA_PLATFORM: offscreen
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install micromamba
+        run: |
+          set -euo pipefail
+          curl -Ls https://micro.mamba.pm/api/micromamba/linux-64/latest | tar -xj bin/micromamba
+          ./bin/micromamba --version
+
+      - name: Create pinned Geant4 environment
+        run: |
+          set -euo pipefail
+          ./bin/micromamba create -y -p "$G4_PREFIX" -c conda-forge \
+            "geant4=$GEANT4_VERSION" "python=3.11" pip
+          "$G4_PREFIX/bin/geant4-config" --version
+          # The integration suite imports the desktop application, so the full GUI
+          # requirements are needed; uproot is what reads ROOT from the backend.
+          ./bin/micromamba run -p "$G4_PREFIX" -- python -m pip install --quiet\
+            -r gui/requirements.txt
+
+      # A missing dataset must fail the job instead of surfacing as a Geant4 abort
+      # in the middle of an unrelated test.
+      - name: Export the Geant4 dataset environment
+        run: |
+          set -euo pipefail
+          ./bin/micromamba run -p "$G4_PREFIX" -- printenv \
+            | grep -E '^(G4[A-Z0-9_]*DATA|GEANT4[A-Z0-9_]*)=' >> "$GITHUB_ENV"
+          echo "LD_LIBRARY_PATH=$G4_PREFIX/lib:${LD_LIBRARY_PATH:-}" >> "$GITHUB_ENV"
+          echo "$G4_PREFIX/bin" >> "$GITHUB_PATH"
+
+      - name: Configure the backend
+        run: cmake -S . -B build_linux -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="$G4_PREFIX"
+
+      - name: Build the backend
+        run: cmake --build build_linux -j"$(nproc)"
+
+      - name: Verify the Geant4 data lookup of the built executable
+        run: ./build_linux/G4UniversalSim --check-geant4-data
+
+      # The executable decides GDML availability from its own Geant4; the
+      # capabilities regression must be told the expectation for this build
+      # directory rather than assuming build_vs2026 exists.
+      - name: Record GDML availability of this Geant4
+        run: |
+          set -euo pipefail
+          if grep -q 'set(Geant4_gdml_FOUND ON)' "$G4_PREFIX/lib/cmake/Geant4/Geant4Config.cmake"; then
+            echo "G4USIM_EXPECT_GDML=1" >> "$GITHUB_ENV"
+          else
+            echo "G4USIM_EXPECT_GDML=0" >> "$GITHUB_ENV"
+          fi
+
+      # --fail-on-skip: a missing backend/uproot/Qt must fail the job instead of
+      # producing the skip exit status that a green run used to hide.
+      - name: Run backend tests on Linux
+        run: |
+          python -B scripts/run_m0_tests.py --profile backend --require-tracked-sources --fail-on-skip \
+            --executable build_linux/G4UniversalSim \
+            --merge-executable build_linux/mergeHistograms \
+            --report-root "$REPORT_ROOT/linux-backend"
+
+      - name: Validate the Linux backend report
+        run: python -B scripts/check_report_evidence.py --report-root "$REPORT_ROOT/linux-backend"
+
+      - name: Run integration tests on Linux
+        run: |
+          python -B scripts/run_m0_tests.py --profile integration --require-tracked-sources --fail-on-skip \
+            --executable build_linux/G4UniversalSim \
+            --merge-executable build_linux/mergeHistograms \
+            --report-root "$REPORT_ROOT/linux-integration"
+
+      - name: Validate the Linux integration report
+        run: python -B scripts/check_report_evidence.py --report-root "$REPORT_ROOT/linux-integration"
+
+      # Negative control: a tampered log digest must be rejected by the evidence
+      # gate. A gate that only checks field presence would accept this copy.
+      - name: Verify the evidence gate rejects a tampered report
+        run: |
+          set -euo pipefail
+          cp -r "$REPORT_ROOT/linux-backend" "$RUNNER_TEMP/tampered"
+          python - "$RUNNER_TEMP/tampered" <<'PY'
+          import json, sys
+          from pathlib import Path
+
+          root = Path(sys.argv[1])
+          report = sorted(root.glob("*/report.json"), key=lambda p: p.stat().st_mtime)[-1]
+          data = json.loads(report.read_text(encoding="utf-8"))
+          record = next(item for item in data["results"] if item["status"] == "pass")
+          # Tamper the copy: the gate resolves logs relative to the report directory,
+          # so the original evidence stays untouched and the copy must be rejected.
+          log = report.parent / Path(record["log"]).name
+          if not log.is_file():
+              log = report.parent / "logs" / Path(record["log"]).name
+          if not log.is_file():
+              raise SystemExit(f"cannot locate the log of {record['name']} in the copied report")
+          log.write_bytes(log.read_bytes() + b"\n# tampered\n")
+          print("tampered", log)
+          PY
+          if python -B scripts/check_report_evidence.py --report-root "$RUNNER_TEMP/tampered"; then
+            echo "evidence gate accepted a tampered log digest"; exit 1
+          fi
+          echo "evidence gate rejected the tampered log digest"
+
+      - name: Upload Linux evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-evidence
+          path: |
+            out/verification/linux-backend
+            out/verification/linux-integration
+          if-no-files-found: warn

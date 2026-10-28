@@ -141,6 +141,23 @@ E2-S1 的六个 editor→writer 边界从被忽略的 `out/verification/e2-audit
 
 验收口径：断言总数不得下降，且 `cases_with_zero_assertions` 必须为空；新增测试用例时若 helper 用 `raise` 表达失败，报告会显示 0 断言，视为未完成迁移。
 
+### 2026-10-28 E3 Linux 构建、可移植性缺陷与 CI workflow（本机 WSL 验证，Actions 未运行）
+
+**做了什么**：在 WSL Ubuntu 24.04.4 + conda-forge `geant4=11.3.2`（micromamba 装到 `$HOME`，免 sudo）上完成配置、构建（`cmake -S . -B ~/g4build -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=~/g4env`，cmake 3.28.3 / g++ 13.3），跑通 `--help`、`--capabilities`、`--check-geant4-data`、`--dry-run` 冒烟，并用统一 runner 跑 `--profile backend`（34/34，109853 断言）与 `--profile integration`（14/14，4324 断言）；两份报告通过严格证据门禁，`source_fingerprint=5bd97ec5…`、`tests_content_fingerprint=6fb23039…` 与 Windows 全量报告相同。
+
+**Linux 才暴露、已修复的缺陷**：
+1. `src/Geometry/GeometryExport.cc`：`Escape(material ? material->GetName() : std::string())` —— GCC 报 `operands to '?:' have different types 'const G4String' and 'std::string'`，MSVC 会隐式转换。改为先 `const std::string materialName = material ? std::string(material->GetName()) : std::string();` 再使用。
+2. `src/Scoring/TrajectoryRecorder.cc`：`return volume ? volume->GetName() : std::string("OutOfWorld");` 同类问题，改为显式 `std::string(...)`。全仓复查无其它同类三元（`src/Biasing/BiasingMultiParticleXS.cc` 是 G4String:G4String，合法）。
+3. PySide6 解释器收尾 `SIGSEGV`（约 4/5 复现）：`gui_plots_backend` 打印 OK、断言全过，但进程以 -11 退出。gdb 栈为 `PySide::runCleanupFunctions()` → `destroyQCoreApplication()` → `Shiboken::BindingManager::visitAllPyObjects()` → `QObject::~QObject()`——PySide 在收尾时统一析构仍存活的 Qt 对象，matplotlib canvas/父子控件被二次删除。修法：`QApplication` 存活时显式 `close()`/`deleteLater()`/`processEvents()`/`del` 控件树（`gui/smoke_tests/smoke_plots.py`、`smoke_plots_backend.py`；产品入口 `gui/g4usim_gui/app.py` 的 `run_app` 同样在 `app.exec()` 后销毁主窗口）。`fsspec`/`asyncio` 线程关闭不能修复此问题。
+
+**测试侧的平台假设（均已修）**：`scripts/test_geant4_data_locator.py` 原写死 `D:/ProgramFiles/Geant4/share/Geant4/data`，Linux 上打印 SKIP 并 exit 0（runner 记为 pass、0 断言）；现改为 `discover()` 先用当前环境跑 `--check-geant4-data` 拿到 `datasets[*].folder/path`，在临时目录按这些名字建符号链接构造数据根，再跑五个子用例；空目录用例只断言“不得 required_complete、缺失项 path 为 None”，不写死缺失数量（conda 布局下 Geant4 仍从编译前缀找到 `PhotonEvaporation6.1` 等）。`scripts/test_backend_capabilities.py` 的 GDML 期望值改为 `G4USIM_EXPECT_GDML` 或扫描 `build*/CMakeCache.txt`。`scripts/check_report_evidence.py` 的 `resolve_log()` 改为报告目录副本优先（报告目录同名 → `logs/` 同名 → 记录里的绝对路径），否则复制证据目录再篡改副本日志会被原始日志掩盖；`--allow-incomplete` 接受没有 `exit_code` 的 skip 记录（未运行没有退出状态）。
+
+**CI**：新增 `.github/workflows/linux-geant4.yml`（`ubuntu-24.04`、`GEANT4_VERSION=11.3.2`、micromamba、`pip install -r gui/requirements.txt`、构建 `build_linux`、`--check-geant4-data`、按 `Geant4Config.cmake` 写 `G4USIM_EXPECT_GDML`、backend/integration 各自报告目录与门禁、篡改副本日志负向对照、`upload-artifact@v4` `if: always()`）。
+
+**未验证 / 不得宣称**：GitHub Actions 上的实际运行（本机无 `gh` CLI）；Geant4 11.2/11.4 矩阵；非 Ubuntu 发行版；GUI 在真实桌面环境（非 offscreen）。E3 因此仍为“进行中”，不得写成 Done。
+
+**环境要点**：conda 的 Geant4 数据在 `$G4_PREFIX/share/Geant4/data/<folder>`，环境变量由 `activate.d/*.sh` 设置，只有 `micromamba run -p <env> -- <cmd>` 才会注入；`LD_LIBRARY_PATH=$G4_PREFIX/lib` 是运行必需。WSL 里 `nohup ... &` 的长跑任务会在实例空闲重启时被杀，长跑必须让 `wsl.exe` 会话保持连接（Windows 侧后台 job），日志/报告写到 `$HOME/reports/` 而不是 `/tmp`。
+
 ### 2026-10-28 证据门禁自洽性加强、日志摘要按落盘字节计算
 
 阶段 1b 的报告 v2 把"逐用例断言数"写进了报告，但门禁只检查了"总数 > 0"和"哈希字段非空"两类弱条件。Astra 2026-10-28 审查把这条判为缺陷，实测可复现：把任一通过项 `assertions_executed` 改成 0 并补进 `cases_with_zero_assertions`，或把某个 `log_sha256` 换成 64 个 `0`、把 `assertions_executed_total` 改成 999999，`scripts/check_report_evidence.py` 仍然输出 `report evidence: OK`。

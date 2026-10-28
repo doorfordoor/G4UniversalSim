@@ -99,6 +99,25 @@ def main() -> int:
         assert resolve_log(report["results"][1], report_path) is not None, "logs/ fallback must resolve"
         assert log_digest(report_path.parent / "one.log", legacy=False)
 
+        # A relocated evidence copy must be validated against its own logs. The
+        # recorded absolute path still points at the original run, so resolving that
+        # first would let a tampered copy pass.
+        copy_dir = root / "copy" / "run"
+        copy_dir.mkdir(parents=True)
+        copy_report_path = copy_dir / "report.json"
+        report_path.write_bytes(json.dumps(report, ensure_ascii=False, indent=2).encode("utf-8"))
+        copy_report_path.write_bytes(report_path.read_bytes())
+        for source in report_path.parent.glob("*.log"):
+            (copy_dir / source.name).write_bytes(source.read_bytes())
+        (copy_dir / "logs").mkdir()
+        for source in (report_path.parent / "logs").glob("*.log"):
+            (copy_dir / "logs" / source.name).write_bytes(source.read_bytes())
+        copied = json.loads(copy_report_path.read_text(encoding="utf-8"))
+        copied_log = copy_dir / "one.log"
+        assert resolve_log(copied["results"][0], copy_report_path) == copied_log
+        copied_log.write_bytes(copied_log.read_bytes() + b"\n# tampered\n")
+        expect_rejected(copied, "log digest mismatch", report_path=copy_report_path)
+
         version_one = sample_report()
         version_one["version"] = 1
         expect_rejected(version_one, "predates assertion-level evidence")
@@ -200,6 +219,24 @@ def main() -> int:
         write_logs(skipped, report_path.parent)
         skipped["results"][1]["status"] = "skip"
         expect_rejected(skipped, "did not pass", report_path=report_path)
+
+        # A case that could not run has no exit status: the runner records a reason
+        # instead. Triage mode must accept that shape, otherwise the gate rejects
+        # every report produced on a machine that lacks an optional prerequisite.
+        triage = sample_report()
+        write_logs(triage, report_path.parent)
+        triage["results"][1]["status"] = "skip"
+        triage["results"][1].pop("exit_code", None)
+        triage["results"][1].pop("assertions_executed", None)
+        triage["results"][1]["reason"] = "prerequisites are missing"
+        triage["assertions_executed_total"] = 7
+        triage["cases_with_assertion_counts"] = 1
+        validate_report(triage, report_path=report_path, allow_incomplete=True)
+        # A skipping case that *does* claim a count must still be counted in the totals.
+        with_counts = sample_report()
+        write_logs(with_counts, report_path.parent)
+        with_counts["results"][1]["status"] = "skip"
+        validate_report(with_counts, report_path=report_path, allow_incomplete=True)
 
         duplicate = sample_report()
         duplicate["results"][1]["name"] = "one"

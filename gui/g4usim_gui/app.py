@@ -27,7 +27,15 @@ def run_app(argv: list[str]) -> int:
 
     window = MainWindow()
     window.show()
-    return app.exec()
+    exit_code = app.exec()
+    # Destroy the window tree while the QApplication is still alive. PySide runs
+    # destroyQCoreApplication() during interpreter finalisation and walks every
+    # object it still owns; a widget tree that contains a matplotlib canvas can be
+    # double-deleted there (observed as SIGSEGV in QObject::~QObject on Linux).
+    window.close()
+    window.deleteLater()
+    app.processEvents()
+    return exit_code
 
 
 def self_test(argv: list[str]) -> int:

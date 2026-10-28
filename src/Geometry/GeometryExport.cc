@@ -83,11 +83,14 @@ private:
               const std::string& path, const G4Transform3D& global)
     {
         G4Polyhedron* polyhedron = solid->GetPolyhedron();
+        // GCC rejects a ternary mixing G4String and std::string; MSVC converts
+        // implicitly. Keep the conversion explicit so both toolchains agree.
+        const std::string materialName = material ? std::string(material->GetName()) : std::string();
         out_ << (count_ ? ",\n" : "\n") << "  {\"path\": \"" << Escape(path) << "\", \"name\": \""
              << Escape(physical->GetName()) << "\", \"copy\": " << copyNo << ", \"depth\": " << depth
              << ", \"logical\": \"" << Escape(logical->GetName()) << "\", \"solid\": \""
              << Escape(solid->GetEntityType()) << "\", \"material\": \""
-             << Escape(material ? material->GetName() : std::string()) << "\", \"sensitive\": "
+             << Escape(materialName) << "\", \"sensitive\": "
              << (logical->GetSensitiveDetector() ? "true" : "false") << ", \"cubic_volume_mm3\": "
              << solid->GetCubicVolume() / (mm * mm * mm);
         out_ << ", \"vertices\": [";

@@ -150,6 +150,15 @@ def main() -> None:
         page.set_output_dir(str(root))
         assert page.plot_panel is not None and len(page.plot_panel.datasets()) == len(expected)
         assert "Plots" in [page.tabs.tabText(i) for i in range(page.tabs.count())]
+
+        # Destroy the widget tree (matplotlib canvas included) while the
+        # QApplication still exists. PySide's cleanup at interpreter exit walks
+        # every object it still owns and can double-delete a canvas/child pair,
+        # which is a SIGSEGV in QObject::~QObject on Linux (offscreen platform).
+        panel.close()
+        panel.deleteLater()
+        app.processEvents()
+        del panel
     print("smoke_plots: OK")
 
 

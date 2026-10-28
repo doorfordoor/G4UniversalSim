@@ -29,7 +29,8 @@ std::string Quote(const std::string& text)
 std::string VolumeName(const G4StepPoint* point)
 {
     const G4VPhysicalVolume* volume = point ? point->GetPhysicalVolume() : nullptr;
-    return volume ? volume->GetName() : std::string("OutOfWorld");
+    // G4String and std::string have no common ternary type under GCC.
+    return volume ? std::string(volume->GetName()) : std::string("OutOfWorld");
 }
 
 }  // namespace

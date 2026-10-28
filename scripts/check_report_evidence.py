@@ -71,14 +71,18 @@ def log_digest(path: Path, *, legacy: bool) -> str:
 
 
 def resolve_log(record: dict, report_path: Path) -> Path | None:
-    """Find the log file for a case, allowing evidence copies to relocate it."""
+    """Find the log file for a case, allowing evidence copies to relocate it.
+
+    The report directory wins over the recorded absolute path: an evidence copy is
+    self-contained, and validating the copy must not silently read the log that
+    still sits next to the original report (that would hide a tampered copy).
+    """
     log = record.get("log")
     if not isinstance(log, str) or not log:
         return None
-    candidates = [Path(log)]
     name = Path(log).name
     report_dir = report_path.parent
-    candidates.extend([report_dir / name, report_dir / "logs" / name])
+    candidates = [report_dir / name, report_dir / "logs" / name, Path(log)]
     for candidate in candidates:
         if candidate.is_file():
             return candidate
@@ -127,8 +131,14 @@ def validate_report(
     names = []
     for record in results:
         assert isinstance(record, dict), f"case record is not an object: {record!r}"
-        for key in ("name", "layer", "script", "status", "exit_code"):
+        for key in ("name", "layer", "script", "status"):
             assert key in record, f"case record {record.get('name')!r} lacks {key!r}"
+        if record["status"] != "skip":
+            # A case that could not run has no exit status; the runner records the
+            # reason instead. Cases that did run must carry their exit code.
+            assert isinstance(record.get("exit_code"), int), (
+                f"case {record['name']!r} has no usable exit_code: {record.get('exit_code')!r}"
+            )
         assert isinstance(record["name"], str) and record["name"], f"case record has no usable name: {record!r}"
         assert isinstance(record["script"], str) and record["script"], f"case {record['name']!r} has no script"
         assert record["layer"] in LAYERS, f"case {record['name']!r} has unknown layer {record['layer']!r}"

@@ -13,14 +13,26 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def _geant4_has_gdml() -> bool:
-    """GDML availability of the Geant4 that build_vs2026 was configured with."""
-    cache = ROOT / "build_vs2026" / "CMakeCache.txt"
-    if not cache.is_file():
-        return False
-    for line in cache.read_text(encoding="utf-8", errors="replace").splitlines():
-        if line.startswith("Geant4_DIR:"):
-            config = Path(line.split("=", 1)[1]) / "Geant4Config.cmake"
-            return config.is_file() and "set(Geant4_gdml_FOUND ON)" in config.read_text(encoding="utf-8", errors="replace")
+    """GDML availability of the Geant4 that the tested executable was built with.
+
+    G4USIM_EXPECT_GDML takes precedence so a Linux CI (or any build directory
+    whose name is not build_vs2026) can state the expectation explicitly; the
+    fallback scans every build*/CMakeCache.txt in the repository, which keeps the
+    Windows developer workflow unchanged.
+    """
+    explicit = os.environ.get("G4USIM_EXPECT_GDML")
+    if explicit is not None and explicit.strip() != "":
+        return explicit.strip().lower() not in ("0", "false", "no", "off")
+    caches = sorted(ROOT.glob("build*/CMakeCache.txt"))
+    windows_cache = ROOT / "build_vs2026" / "CMakeCache.txt"
+    if windows_cache.is_file() and windows_cache not in caches:
+        caches.append(windows_cache)
+    for cache in caches:
+        for line in cache.read_text(encoding="utf-8", errors="replace").splitlines():
+            if line.startswith("Geant4_DIR:"):
+                config = Path(line.split("=", 1)[1]) / "Geant4Config.cmake"
+                if config.is_file():
+                    return "set(Geant4_gdml_FOUND ON)" in config.read_text(encoding="utf-8", errors="replace")
     return False
 
 

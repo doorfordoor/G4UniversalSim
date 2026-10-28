@@ -14,13 +14,17 @@ Short, user-facing record of notable changes. Detailed support status lives in
 - `scripts/check_report_evidence.py` 新增 `--baseline`（断言总数、逐项计数、用例集合不下降）、`--allow-legacy-digest`/`--allow-legacy-probe`（仅用于复核归档报告）、`--allow-incomplete`（仅用于排查），并让 CI 的 static/gui 两个步骤各自跑完后分别过门禁。
 - 新增 static 用例 `writer_boundary`（`scripts/test_writer_boundary.py`）：把 Astra E2-S1 的六个 editor→writer 边界（非有限能量、非有限半径、零半径、非有限截断、直方图上下限倒置）从被忽略的临时探针提升为正式回归。
 - 断言探针升级为 `settrace_assert_lines_v2`：同时安装 `threading.settrace`，脚本自己启动的线程里执行的 `assert` 也计入 `G4USIM_ASSERTS`。
+- Linux CI workflow `.github/workflows/linux-geant4.yml`（Ubuntu 24.04 + micromamba + conda-forge Geant4 11.3.2）：构建、backend 与 integration profile、每 profile 独立报告与证据门禁、被篡改副本日志的负向对照、失败也上传 artifact；`docs/Linux构建与验证.md` 记录本机 WSL 实测过程。尚未在 GitHub Actions 运行。
+- `scripts/check_report_evidence.py` 的 `--allow-incomplete` 现在接受没有退出码的 skip 记录（未运行没有退出状态，runner 写的是 reason）；`--profile all --fail-on-skip` 在缺后端时会先产生 skip 报告，门禁不再因缺字段报错。
 
 ### Fixed
 
+- GCC 上两处 `G4String`/`std::string` 三目混用无法编译（`src/Geometry/GeometryExport.cc`、`src/Scoring/TrajectoryRecorder.cc`）：改为显式 `std::string(...)` 转换；MSVC 会隐式转换，Linux CI 才暴露。
+- PySide6 在解释器收尾统一析构 Qt 对象导致 GUI 冒烟在 Linux/offscreen 以 `SIGSEGV` 退出：`gui/smoke_tests/smoke_plots*.py` 与 `gui/g4usim_gui/app.py` 改为在 QApplication 存活时显式销毁控件树。
 - 交互偏置拒绝只是 `JustWarning`（Astra 2026-10-28 审查 D-4）：`/AIHL/biasing/*` 修改类命令在 `--ui --ui-session csh` 下被拒绝后，会话继续、`/run/beamOn` 照常执行、进程退出 0，用户以为配置了偏置但物理未偏置。现在 `BiasingManager` 记录拒绝次数，`main.cc` 在会话后把 `biasing` 计入交互失败、停止会话、写 `status=failed` 与非零退出。
 - 初始化后的材料修改无生命周期门禁（Astra 2026-10-28 审查 D-5）：`/AIHL/material/*` 的 9 个修改命令现在只在 `PreInit` 可用（只读 `print`/`list` 不变），交互会话内初始化后调用会被 Geant4 拒绝并让会话失败（`geant4_illegal_application_state`），batch 路径的守卫保留。
 - `ParseStrictDouble` 不检查有限性（Astra 2026-10-28 审查 D-6）：`inf`/`nan`/溢出值现在报 `Config value '<v>' is not a finite double` 并在创建 Geant4 对象前失败。
-- 证据门禁可被篡改绕过（Astra 2026-10-28 审查 D-1）：`scripts/check_report_evidence.py` 现在校验逐用例断言 ≥ 1、`exit_code == 0`、逐项求和与总数一致、`cases_with_assertion_counts`/`cases_with_zero_assertions` 与实际记录一致、`log_sha256` 与磁盘日志字节一致、发布报告无 fail/skip，并支持 `--baseline` 校验不下降；实测"把通过项断言改成 0""把日志摘要换成 0 并放大总数"两种篡改均被拒绝。
+- 证据门禁可被篡改绕过（Astra 2026-10-28 审查 D-1）：`scripts/check_report_evidence.py` 现在校验逐用例断言 ≥ 1、`exit_code == 0`、逐项求和与总数一致、`cases_with_assertion_counts`/`cases_with_zero_assertions` 与实际记录一致、`log_sha256` 与磁盘日志字节一致（优先解析报告目录内的副本）、发布报告无 fail/skip，并支持 `--baseline` 校验不下降；实测"把通过项断言改成 0""把日志摘要换成 0 并放大总数"两种篡改均被拒绝。
 - 日志摘要与磁盘字节不符（Astra 2026-10-28 审查 D-2）：`scripts/run_m0_tests.py` 改为写 UTF-8/LF 字节并对落盘字节计算 SHA-256（`log_digest_algorithm=sha256_raw_bytes_lf_v2`），`report.json` 同样按字节写出；此前 Windows 文本模式写 CRLF、摘要却算 LF 字符串，归档的 79 个日志原始字节 0/79 可复现。
 - `.gitattributes` 的 `* text=auto` 导致 Windows 检出写入 CRLF，使按原始字节哈希的工作区指纹漂移、backend 用例全部 SKIP；现对 `*.cc`/`*.hh`/`*.h`/`*.in`/`*.py`/`*.json`/`*.ini`/`*.mac`/`*.csv` 与 `CMakeLists.txt` 固定 `text eol=lf`，并重新物化受影响的跟踪文件。
 - `scripts/test_config_duplicate_declarations.py`、`scripts/test_command_state_gating.py` 的验证 helper 改用 `assert` 表达，使断言级证据可被探针计数（此前 `raise AssertionError` 对探针不可见）。
