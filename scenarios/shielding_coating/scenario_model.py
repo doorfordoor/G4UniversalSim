@@ -24,6 +24,7 @@ command line wrapper turns that into the same ``SystemExit`` text as before.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import math
 import os
@@ -361,13 +362,23 @@ class ShieldingSpec:
                     f"kill = {kill}", ""]
         files["main.ini"] = "\n".join(main_ini)
         files["run.mac"] = f"/run/initialize\n/run/beamOn {self.events}\n"
+        niel_meta = []
+        for particle, table in tables.items():
+            table_path = Path(table)
+            digest = None
+            try:
+                digest = hashlib.sha256(table_path.read_bytes()).hexdigest()
+            except OSError:
+                digest = None   # the backend reports a missing table; keep the path here
+            niel_meta.append({"particle": particle, "path": str(table), "sha256": digest})
         meta = {"mode": self.mode, "particle": self.particle, "events": self.events,
                 "source_area_cm2": (2 * length_mm(self.source_half) / 10) ** 2,
                 "sampled_integral_flux_cm2_s": {k: (v[0] if v else None) for k, v in sampled.items()},
                 "unsampled_flux_above_last_energy_cm2_s": {k: (v[1] if v else None) for k, v in sampled.items()},
                 "layers": [{"material": m, "thickness_mm": t} for m, t in layers], "pores": len(pores),
                 "junction_density": self.junction_density, "device_thickness_mm": device,
-                "displacement": bool(tables), "coating_volumes": len(coating_volumes)}
+                "displacement": bool(tables), "coating_volumes": len(coating_volumes),
+                "niel": niel_meta}
         files["scenario.json"] = json.dumps(meta, indent=2)
         return files
 

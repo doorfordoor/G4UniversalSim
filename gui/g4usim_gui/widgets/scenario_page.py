@@ -392,8 +392,8 @@ class ScenarioPage(QWidget):
         self._outcome = outcome
         self._rows = shielding.result_rows(outcome.report)
         self._fill_rows()
-        lines = shielding.evidence_summary(outcome.report)
-        self.evidence_view.setPlainText("\n".join(ui_text(line) for line in lines))
+        lines = [ui_format(template, **values) for template, values in shielding.evidence_items(outcome.report)]
+        self.evidence_view.setPlainText(chr(10).join(lines))
         for warning in outcome.warnings:
             self.log_view.appendPlainText("[warning] " + ui_text(warning))
         self._refresh_field_states()

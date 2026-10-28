@@ -10,6 +10,7 @@ Static layer: no Qt, no backend executable needed.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import shutil
 import sys
@@ -108,6 +109,14 @@ def main() -> int:
         assert "[material.Junction" not in materials  # junction copies use the _J suffix
         assert "_J]" in materials
         assert result["meta"]["displacement"] is True
+
+        # 6. scenario.json records which NIEL table fed the DDD numbers, with its digest.
+        niel_path = tmp / "si_niel.csv"
+        niel_path.write_text("energy_MeV,niel_MeV_cm2_g" + chr(10) + "1,0.1" + chr(10), encoding="utf-8")
+        spec = scenario_model.ShieldingSpec(events=5, niel=(f"proton={niel_path}",))
+        meta = spec.generate(tmp / "niel")["meta"]
+        assert meta["niel"] == [{"particle": "proton", "path": niel_path.resolve().as_posix(),
+                                 "sha256": hashlib.sha256(niel_path.read_bytes()).hexdigest()}], meta["niel"]
 
         # 5. run_from: the generated paths are relative to the backend working directory.
         spec = scenario_model.ShieldingSpec(events=5)

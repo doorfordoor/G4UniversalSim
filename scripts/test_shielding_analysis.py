@@ -262,7 +262,7 @@ def check_report(report: dict) -> None:
     evidence = report["evidence"]
     assert set(evidence) == {"run_summary", "run_status", "run_count", "planned_events",
                              "completed_events", "run_metadata_schema", "scorer_statistics",
-                             "phase_space_files", "warnings"}, sorted(evidence)
+                             "phase_space_files", "niel_tables", "warnings"}, sorted(evidence)
     assert evidence["run_summary"] == "run_summary.txt"
     assert evidence["run_status"] == "completed"
     assert evidence["run_count"] == 1
@@ -271,6 +271,7 @@ def check_report(report: dict) -> None:
     assert evidence["run_metadata_schema"] == "run_metadata_json_v1"
     assert evidence["scorer_statistics"] == STATISTICS_NAME
     assert evidence["phase_space_files"] == ["phase_space_t0.csv", "phase_space_t1.csv"]
+    assert evidence["niel_tables"] == []   # no NIEL table in this fixture
     assert evidence["warnings"] == [WARNING], evidence["warnings"]
 
 

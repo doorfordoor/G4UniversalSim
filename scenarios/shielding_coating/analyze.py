@@ -252,6 +252,7 @@ def _build_report(output: Path) -> tuple[dict, dict[str, list[float]], list[floa
         "run_metadata_schema": RUN_METADATA_SCHEMA,
         "scorer_statistics": stats_evidence,
         "phase_space_files": phase_files,
+        "niel_tables": meta.get("niel") or [],
         "warnings": warnings,
     }
     return report, counts, edges

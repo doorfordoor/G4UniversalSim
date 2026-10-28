@@ -482,17 +482,29 @@ def format_number(value: object) -> str:
     return f"{number:.6g}"
 
 
-def evidence_summary(report: dict | None) -> list[str]:
-    """Evidence statements for the results panel (rendered through ui_format)."""
+def evidence_items(report: dict | None) -> list[tuple[str, dict[str, str]]]:
+    """Evidence statements as (i18n template, values) so the page can translate them."""
     if not report:
         return []
     evidence = report.get("evidence", {})
-    return [
-        f"Run status: {evidence.get('run_status', 'unknown')}",
-        f"Completed events: {evidence.get('completed_events', 'unknown')}",
-        f"Statistics evidence: {evidence.get('scorer_statistics', 'unknown')}",
-        f"Run metadata schema: {evidence.get('run_metadata_schema', 'unknown')}",
-    ] + [f"Warning: {item}" for item in evidence.get("warnings", [])]
+    items: list[tuple[str, dict[str, str]]] = [
+        ("Run status: {status}", {"status": str(evidence.get("run_status", "unknown"))}),
+        ("Completed events: {events}", {"events": str(evidence.get("completed_events", "unknown"))}),
+        ("Statistics evidence: {evidence}", {"evidence": str(evidence.get("scorer_statistics", "unknown"))}),
+        ("Run metadata schema: {schema}", {"schema": str(evidence.get("run_metadata_schema", "unknown"))}),
+    ]
+    for table in evidence.get("niel_tables") or []:
+        digest = table.get("sha256") or ""
+        items.append(("NIEL table: {particle} from {path} (sha256 {sha256})",
+                      {"particle": str(table.get("particle", "?")), "path": str(table.get("path", "?")),
+                       "sha256": digest[:16] if digest else "not recorded"}))
+    items.extend(("Warning: {warning}", {"warning": str(item)}) for item in evidence.get("warnings", []))
+    return items
+
+
+def evidence_summary(report: dict | None) -> list[str]:
+    """Evidence statements for callers that do not need translations (tests, CLI helpers)."""
+    return [template.format(**values) for template, values in evidence_items(report)]
 
 
 def cleanup_directory(directory: str | Path) -> None:
