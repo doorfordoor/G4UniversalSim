@@ -116,6 +116,23 @@ def first_steps(output: Path, select):
     return list(first.values())
 
 
+def level_name(particle: str, nucleus: str, energy_keV: float) -> bool:
+    """Return True when ``particle`` is ``nucleus`` in the excited level at ``energy_keV``.
+
+    Geant4 prints the level energy with a version-dependent number of decimals
+    (``Ni60[2505.753]`` under 11.3, ``Ni60[2505.75300]`` under 11.4), so compare the
+    value instead of the formatted string.
+    """
+    prefix = f"{nucleus}["
+    if not particle.startswith(prefix) or not particle.endswith("]"):
+        return False
+    try:
+        value = float(particle[len(prefix):-1])
+    except ValueError:
+        return False
+    return abs(value - energy_keV) <= 0.01
+
+
 def models(data, particle: str, process: str):
     proc = next(p for p in next(x for x in data["particles"] if x["name"] == particle)["processes"]
                 if p["name"] == process)
@@ -242,7 +259,7 @@ def decay_cases(r: Runner) -> None:
     out, dump, _ = r.run(WORLD + box, source, n, hits=True, physics=physics)
     assert abs(dump["radioactive_decay"]["time_threshold_years"] - 1000) < 1e-6
     daughters = [x["particle"] for x in first_steps(out, lambda x: x["parentID"] == "1" and x["particle"].startswith("Ni60"))]
-    level = sum(name == "Ni60[2505.753]" for name in daughters)
+    level = sum(level_name(name, "Ni60", 2505.753) for name in daughters)
     betas = [float(x["kineticEnergy_MeV"]) for x in first_steps(out, lambda x: x["particle"] == "e-" and x["parentID"] == "1")]
     mean_beta = sum(betas) / len(betas)
     print(f"  time_threshold = 1000 y: {len(daughters)} Ni-60 recoils, {level} in the 2505.7 keV level; "

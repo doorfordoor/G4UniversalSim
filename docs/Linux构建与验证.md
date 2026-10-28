@@ -169,7 +169,69 @@ Geant4 11.2/11.4 矩阵与非 Ubuntu 发行版仍未验证。
 
 第三轮（`81391e9`）static 与 static 门禁通过后，GUI profile 失败在 `smoke_main_window_ui` 的 Windows 路径分隔符断言；修掉之后第四轮（`3291145`）**四 profile 全绿**：`3291145` 的 `codex` run [40640355033](https://github.com/doorfordoor/G4UniversalSim/actions/runs/40640355033) 与 roadmap run [40640350911](https://github.com/doorfordoor/G4UniversalSim/actions/runs/40640350911)（各约 12–13 分钟，18 步 + 注解 + 篡改负向对照 + artifact 上传）。至此 E3 的 Linux 部分在真实 Actions 上闭环；仍未完成的是 Windows 的 `m0-static-gui.yml`（被手动禁用）与 Geant4 11.2/11.4 矩阵。
 
-## 8. 不证明什么
+## 8. Geant4 11.4 兼容性探测（实验性，2026-10-28）
+
+E3 的遗留项之一是 Geant4 11.2–11.4 的兼容矩阵。先做 11.4 的可构建性与后端回归探测，**结论是 11.4.3 可以构建并通过完整 backend profile，但尚未进入 CI 矩阵，不构成"支持 11.4"的声明**。
+
+### 8.1 工具链门槛（Ubuntu 24.04 的系统库不够新）
+
+conda-forge 的 `geant4=11.4.3` 对三个库有更高版本要求，Ubuntu 24.04 自带的都不满足，必须指向 conda 前缀里的库：
+
+| 依赖 | 系统版本 | 11.4 要求 | 本机处理 |
+| --- | --- | --- | --- |
+| EXPAT | 2.6.1 | ≥ 2.8.5 | conda `expat 2.9.0`（`libexpat.so.1.13.0`） |
+| ZLIB | 1.3 | ≥ 1.3.2 | conda `zlib 1.3.2` |
+| Freetype | 2.13.2 | ≥ 2.14.3 | conda `freetype 2.14.3` |
+
+因此 configure 时必须显式传入：
+
+```bash
+cmake -S /mnt/d/Geant4/G4UniversalSim -B $HOME/g4build114   -DCMAKE_BUILD_TYPE=Release   -DCMAKE_PREFIX_PATH=$HOME/g4env114   -DEXPAT_INCLUDE_DIR=$HOME/g4env114/include -DEXPAT_LIBRARY=$HOME/g4env114/lib/libexpat.so   -DZLIB_INCLUDE_DIR=$HOME/g4env114/include -DZLIB_LIBRARY=$HOME/g4env114/lib/libz.so   -DFREETYPE_INCLUDE_DIRS=$HOME/g4env114/include/freetype2 -DFREETYPE_LIBRARY=$HOME/g4env114/lib/libfreetype.so
+```
+
+### 8.2 数据集表（`src/Core/Geant4DataLocator.cc`）
+
+`Geant4DataLocator` 的数据集文件夹名按 Geant4 版本写死，并用 `G4VERSION_NUMBER` 守卫：旧代码在 11.4 下直接 `#error`（"Update the Geant4 dataset list … for this Geant4 version"）。本次新增 `G4VERSION_NUMBER >= 1140 && < 1150` 分支：
+
+| 变量 | 11.3 文件夹 | 11.4 文件夹 | required |
+| --- | --- | --- | --- |
+| `G4LEDATA` | `G4EMLOW8.6.1` | `G4EMLOW8.8` | 是 |
+| `G4PARTICLEXSDATA` | `G4PARTICLEXS4.1` | `G4PARTICLEXS4.2` | 是 |
+| `G4ENSDFSTATEDATA` | `G4ENSDFSTATE3.0` | `G4ENSDFSTATE3.0` | 是 |
+| `G4NEUTRONHPDATA` | `G4NDL4.7.1` | `G4NDL4.7.1` | 是 |
+| `G4PIIDATA` | `G4PII1.3` | `G4PII1.3` | 是 |
+| `G4LEVELGAMMADATA` | `PhotonEvaporation6.1` | `PhotonEvaporation6.1.2` | 否 |
+| `G4RADIOACTIVEDATA` | `RadioactiveDecay6.1.2` | `RadioactiveDecay6.1.2` | 否 |
+| `G4REALSURFACEDATA` | `RealSurface2.2` | `RealSurface2.2` | 否 |
+| `G4SAIDXSDATA` | `G4SAIDDATA2.0` | `G4SAIDDATA2.0` | 否 |
+| `G4ABLADATA` | `G4ABLA3.3` | `G4ABLA3.3` | 否 |
+| `G4INCLDATA` | `G4INCL1.2` | `G4INCL1.3` | 否 |
+| `G4CHANNELINGDATA` | `G4CHANNELING1.0` | `G4CHANNELING2.0` | 否 |
+
+`--check-geant4-data` 在 11.4 构建上报告 `geant4_version = "$Name: geant4-11-04-patch-03 [MT]$"`、12 个数据集全部 `found: true`、`required_complete: true`。
+
+### 8.3 结果
+
+- 构建：`$HOME/g4build114/G4UniversalSim`（3,194,760 B）与 `mergeHistograms` 成功；`--capabilities` 正常输出（GDML 可用）。
+- **backend profile：35 / 35 通过，109,942 条断言**（报告 `~/reports/g4-114b/20261028-202951-2f870106/report.json`）。其中 `gps_sources` 45,643、`geometry_a5` 20,357、`run_summary` 2,020、`geant4_data_locator` 52 等用例与 11.3 逐项一致。
+- **static / GUI / integration 也全部通过**：static 10/10（391 断言）、GUI 27/27（1,877 断言）、integration 15/15（4,364 断言）。即在本机 WSL 上 **11.4.3 四个 profile 合计 87/87、116,574 条断言全部通过**，与 11.3 的 87 例覆盖一致。
+
+### 8.4 探测中发现并修复的版本相关缺陷（都在测试侧）
+
+1. `scripts/test_geant4_data_locator.py` 把必需数据集文件夹写死成 `G4EMLOW8.6.1`（11.3 的名字），11.4 下必然失败。修法：先让后端 `--check-geant4-data` 自己报告文件夹名，再用它做断言——版本相关的事实只能来自后端，不能写死在测试里。
+2. 11.4 把激发态核名里的能级打印成 5 位小数（`Ni60[2505.75300]`、`Mg24[4122.85300]`），11.3 是 3 位（`Ni60[2505.753]`、`Mg24[4122.853]`）。`scripts/test_physics_a6.py` 与 `scripts/test_gps_sources.py` 原来按字符串精确匹配，11.4 下"能级布居"恒为 0。修法：新增 `level_name(particle, nucleus, energy_keV)` 按数值比较（容差 0.01 keV），不依赖格式化精度。修后两用例在 11.3（71 / 45,643 断言）与 11.4（71 / 45,643 断言）都通过——**属于命名格式差异，不是物理差异**。
+
+另一个操作坑（不是代码缺陷）：`$HOME/g4env114/etc/conda/activate.d/*.sh` 里的导出写成 `export G4LEDATA=${CONDA_PREFIX}/share/...`，如果在没有 `CONDA_PREFIX` 的 shell 里直接 `source`，变量会展开成 `/share/...`，后端报 `G4NuclideTable: ENSDFSTATE.dat is not found`，看起来像 11.4 不兼容。正确做法是先 `export CONDA_PREFIX=$HOME/g4env114` 再 source，或统一用 `micromamba run -p …`。
+
+### 8.5 尚未覆盖
+
+- 11.4 需要额外的 expat/zlib/freetype 依赖与 `-D*_LIBRARY` 参数；`linux-geant4.yml` 的版本矩阵是否加入见 `docs/ROADMAP.md` 的 E3 记录，本节只记录本机实测；
+- Geant4 11.2 未测；
+- 11.4 下的真实桌面 GUI（非 offscreen）、ROOT 输出与 uproot 读取、打包流程未验证；
+- Windows + 11.4 未验证（本机 Windows 只有 11.3.2）；
+- 结论只到"11.4.3 在本机 Linux 上可构建、四个 profile 回归通过"，不能把 11.3 的物理结论直接搬到 11.4，也不构成对用户的版本支持承诺。
+
+## 9. 不证明什么
 
 - 不证明 Linux 上任何物理结果与 Windows 一致——测试只覆盖配置、生命周期、文件契约与物理量在给定容差内的既有断言；
 - 不证明 GUI 在真实桌面环境（X11/Wayland 非 offscreen）可用；

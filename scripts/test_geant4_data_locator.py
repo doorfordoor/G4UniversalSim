@@ -32,7 +32,6 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 EXE = Path(os.environ.get("G4USIM_EXE", ROOT / "build_vs2026/Release/G4UniversalSim.exe"))
-DATASET = "G4EMLOW8.6.1"
 
 
 def check(exe: Path, env: dict[str, str]) -> tuple[int, dict]:
@@ -70,17 +69,21 @@ def main() -> int:
         return 1
     work = Path(tempfile.mkdtemp(prefix="g4usim-data-"))
     try:
+        # The required dataset folder is version-specific (11.3 ships
+        # G4EMLOW8.6.1, 11.4 G4EMLOW8.8), so take it from the backend itself
+        # instead of pinning one Geant4 release in the test.
+        discovery = discover(EXE)
+        dataset_folder = discovery["datasets"][0]["folder"]
         env = {k: v for k, v in os.environ.items() if not k.startswith("G4") and k != "GEANT4_DATA_DIR"}
         exe = work / "G4UniversalSim.exe"
         shutil.copy2(EXE, exe)
         data_file = work / "geant4-data.txt"
 
         provided = os.environ.get("G4USIM_GEANT4_DATA")
-        if provided and (Path(provided) / DATASET).is_dir():
+        if provided and (Path(provided) / dataset_folder).is_dir():
             data = Path(provided)
             print(f"data root from G4USIM_GEANT4_DATA: {data}")
         else:
-            discovery = discover(EXE)
             data = work / "data"
             data.mkdir()
             linked = build_data_root(discovery, data)
@@ -120,9 +123,9 @@ def main() -> int:
         assert "missing directory" in report["note"] and report["geant4_data_dir"] is None, report
 
         data_file.write_text(f"{empty}\n", encoding="utf-8")
-        code, report = check(exe, {**env, "G4LEDATA": str(data / DATASET)})
+        code, report = check(exe, {**env, "G4LEDATA": str(data / dataset_folder)})
         assert report["note"] == "" and report["geant4_data_dir"] is None, report
-        assert report["datasets"][0]["path"] == str(data / DATASET), report["datasets"][0]
+        assert report["datasets"][0]["path"] == str(data / dataset_folder), report["datasets"][0]
         print("G4LEDATA set: geant4-data.txt ignored")
     finally:
         shutil.rmtree(work, ignore_errors=True)

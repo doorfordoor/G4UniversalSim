@@ -337,6 +337,23 @@ def multi_source_case(case: Case) -> None:
     print("  /AIHL/source/energy rejected with several sources")
 
 
+def level_name(particle: str, nucleus: str, energy_keV: float) -> bool:
+    """Return True when ``particle`` is ``nucleus`` in the excited level at ``energy_keV``.
+
+    Geant4 prints the level energy with a version-dependent number of decimals
+    (``Ni60[2505.753]`` under 11.3, ``Ni60[2505.75300]`` under 11.4), so compare the
+    value instead of the formatted string.
+    """
+    prefix = f"{nucleus}["
+    if not particle.startswith(prefix) or not particle.endswith("]"):
+        return False
+    try:
+        value = float(particle[len(prefix):-1])
+    except ValueError:
+        return False
+    return abs(value - energy_keV) <= 0.01
+
+
 def ion_cases(case: Case) -> None:
     print("ions")
     n = 2000
@@ -348,7 +365,7 @@ def ion_cases(case: Case) -> None:
     # 99.86 % of Na-24 decays feed the 4122.9 keV level of Mg-24, which
     # de-excites by the 2754.0 + 1368.6 keV cascade.
     daughters = [r["particle"] for r in first_steps(output, lambda r: r["parentID"] == "1" and r["particle"].startswith("Mg24"))]
-    level = sum(name == "Mg24[4122.853]" for name in daughters)
+    level = sum(level_name(name, "Mg24", 4122.853) for name in daughters)
     print(f"  Na-24: {len(daughters)} Mg-24 recoils, {level} in the 4122.9 keV level")
     assert len(daughters) > 0.98 * n and level > 0.99 * len(daughters), (len(daughters), level)
     betas = [float(r["kineticEnergy_MeV"])
