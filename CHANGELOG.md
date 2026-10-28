@@ -19,6 +19,11 @@ Short, user-facing record of notable changes. Detailed support status lives in
 
 ### Fixed
 
+- `scenarios/shielding_coating/analyze.py` 不再把缺证据当零结果（Astra 审查 D-7）：运行未完成、事件数为零、
+  `output_failure_status` 非 none、多轮目录、相空间缺失/为空/陈旧一律退出码 3 且不写报告；统计文件用
+  `run_metadata.json` 的 `generated_files` 区分"被删"与"这一轮确实没统计"，真零沉积按零报告但带
+  `evidence = no_statistics_file_zero_deposition` 标签；报告新增 `evidence` 段。`scripts/test_shielding_coating.py`
+  增加五种反例回归。
 - GCC 上两处 `G4String`/`std::string` 三目混用无法编译（`src/Geometry/GeometryExport.cc`、`src/Scoring/TrajectoryRecorder.cc`）：改为显式 `std::string(...)` 转换；MSVC 会隐式转换，Linux CI 才暴露。
 - PySide6 在解释器收尾统一析构 Qt 对象导致 GUI 冒烟在 Linux/offscreen 以 `SIGSEGV` 退出：`gui/smoke_tests/smoke_plots*.py` 与 `gui/g4usim_gui/app.py` 改为在 QApplication 存活时显式销毁控件树。
 - 交互偏置拒绝只是 `JustWarning`（Astra 2026-10-28 审查 D-4）：`/AIHL/biasing/*` 修改类命令在 `--ui --ui-session csh` 下被拒绝后，会话继续、`/run/beamOn` 照常执行、进程退出 0，用户以为配置了偏置但物理未偏置。现在 `BiasingManager` 记录拒绝次数，`main.cc` 在会话后把 `biasing` 计入交互失败、停止会话、写 `status=failed` 与非零退出。

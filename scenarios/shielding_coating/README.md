@@ -39,6 +39,8 @@ python scenarios/shielding_coating/make_scenario.py --out work/shield --layers B
 
 - **TID**：器件剂量（Gy）每个初级粒子、每单位入射注量（Gy·cm²，乘源面积），以及能谱源时乘能谱积分通量得到的剂量率和年剂量；附 A3 相对统计误差。
 - **DDD**：开启 `--niel` 时同样给出（MeV/g）。
+
+**证据规则（2026-10-28）**：缺失的文件不等于零结果。`analyze.py` 先核对运行本身——`run_summary.txt` 的 `status` 必须是 `completed`、`summary_write_status` 必须是 `completed`、`output_failure_status` 必须是 `none`/`not_applicable`、`run_count` 必须为 1，`run_metadata.json`（`schema = run_metadata_json_v1`）里必须正好一轮且 `completed_events == planned_events > 0`，否则以退出码 3 拒绝分析且不写报告。统计文件缺失时用 `run_metadata.json` 的 `generated_files` 判定：**列出但磁盘上没有 → 证据被删/移位，退出码 3**；**根本没列出 → 这一轮确实没有统计（零沉积），按零报告但每个量都带 `evidence = no_statistics_file_zero_deposition` 标签**。相空间文件缺失、为空、出现非 0 轮次或事件号超出完成事件数（陈旧文件）同样是证据错误。报告新增 `evidence` 段（运行事实、统计证据、相空间文件、警告）。`scripts/test_shielding_coating.py` 的真实反例覆盖这五种情形（删统计文件、失败摘要、零事件、陈旧相空间、真零沉积）。
 - **能谱**：进入记录平面的各类粒子每个初级粒子的个数、平均能量和对数分箱能谱（每十倍 5 箱，1 keV–10 GeV）；透射模式另给出穿过叠层的初级粒子比例。
 
 **归一化前提**：剂量率假设环境通量以**法向**入射到叠层，与原工程相同；这不是全向（各向同性）辐射下的屏蔽结果。能谱只在表中第一个与最后一个能量之间抽样（箱内均匀抽样，等价于原工程对积分通量的线性插值），最后一个能量以上的通量不抽样，`scenario.json` 记录了被略去的部分。原工程的厚硅灵敏体（1×1×50 cm）改为 300 µm 硅器件，更接近器件级 TID/DDD。

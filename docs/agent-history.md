@@ -190,3 +190,32 @@ D-6 配置值有限性：`src/Config/ConfigValue.cc` 的 `ParseStrictDouble` 使
 
 回归：`scripts/test_interactive_commands.py` 新增 `biasing_interactive_reject`（断言非零退出、`status = failed`、`BIASING_CONTINUED` 不出现、`kind = biasing`、`run_count = 0`）与 `material_after_initialize`（断言非零退出、`MATERIAL_CONTINUED` 不出现、`kind = geant4_illegal_application_state`、`run_count = 0`），原有 `material_failure`（初始化前材料命令异常）仍断言 `kind = material`；新增 backend 用例 `scripts/test_config_value_finiteness.py`（合法配置通过、`factor = inf` 与 `min_weight = nan` 各自非零退出并匹配 `is not a finite double`）。本轮同时把 `main.cc` 的 kind 计算从嵌套三元改成显式 kinds 列表，保留历史 `material_and_output` 映射，并把 `geant4_command_status` 降级为仅在无具体诊断时使用的兜底。
 
+### 2026-10-28 屏蔽场景证据语义（Astra 审查 D-7）
+
+Astra 的 2026-10-28 审查把 `scenarios/shielding_coating/analyze.py` 判为缺陷：缺证据被混作零结果。
+复现（真实输出目录）：`statistics()` 在 `scorer_statistics.csv` 不存在时返回空字典，`quantity()` 于是写 `total = 0.0`、
+`rel_error = None` 进 `shielding_report.json`；`run_summary.txt` 的 `status` 从未检查（`status = failed` 仍会被分析）；
+`events = int(summary["run_0_completed_events"])` 在零事件时除零；相空间文件缺失时静默产出空 `particles` 与
+`primary_transmission = 0.0`，与"确实没有粒子穿过"不可区分；陈旧文件与多轮目录同样不报错。
+
+修法（现行契约）：
+
+- 运行事实：`status` 必须是 `completed`，`summary_write_status` 必须是 `completed`，`output_failure_status` 必须是
+  `none`/`not_applicable`，`run_count` 必须为 1；`run_metadata.json`（`schema = run_metadata_json_v1`）必须正好列出
+  一轮且 `completed_events == planned_events > 0`，并与 `run_0_completed_events` 一致。任一不满足：打印原因、退出码 3、
+  **不写** `shielding_report.json`（避免留下看似有效的零结果）。
+- 统计证据：`scorer_statistics.csv` 缺失时查 `run_metadata.json` 的 `generated_files`——列出但磁盘没有 = 证据被删/移位
+  （退出码 3）；没列出 = 这一轮确实没有统计（零沉积），报告零但每个量带 `evidence = no_statistics_file_zero_deposition`，
+  且 `evidence` 段记录该状态与警告。存在其他轮次的 `scorer_statistics_r*.csv` 视为混轮次（退出码 3）。
+- 相空间：没有 `phase_space_t*.csv`、文件为空、出现非 0 `runID`、或 `eventID` 超出完成事件数（陈旧文件）都是证据错误。
+- 报告新增 `evidence` 段（`run_summary`/`run_status`/`run_count`/`planned_events`/`completed_events`/
+  `run_metadata_schema`/`scorer_statistics`/`phase_space_files`/`warnings`），`tid`/`ddd` 各自带 `evidence` 标签。
+
+回归：`scripts/test_shielding_coating.py` 的 `analysis` 用例在原有归一化断言之后新增五种反例——删统计文件、
+`status = failed`、零事件、陈旧相空间（完成事件数改成 10 但相空间仍到 199）、真零沉积（删统计文件并从 `generated_files`
+移除该项，必须 `exit 0` 且 `tid.total == 0.0`、`tid.evidence == no_statistics_file_zero_deposition`），
+每种反例额外断言未写报告。实测 `G4USIM_ASSERTS=14386`、`test_shielding_coating: OK`。
+
+边界：这仍不证明 TID/DDD 的物理正确性（法向入射、涂层阻止本领与 NIEL 数据本身未验证）；证据规则只覆盖本场景包的
+`analyze.py`，其他分析脚本与 GUI 结果页不在本契约内。
+

@@ -12,7 +12,12 @@ checks physical or exact properties:
      the layer, and the mean energy loss of 20 MeV protons in a B4C layer with
      20 % porosity is 0.80 of the dense layer (energy loss ~ areal density);
   4. junction layers have the requested thickness, material and density;
-  5. analyze.py writes TID/DDD per primary and per fluence consistently.
+  5. analyze.py writes TID/DDD per primary and per fluence consistently;
+  6. analyze.py never turns missing evidence into a zero result: a statistics file
+     that run_metadata.json lists but that is gone, a failed summary, a zero-event
+     run and stale phase-space rows are all rejected with exit code 3 and no
+     report, while a run that genuinely scored nothing is accepted with an explicit
+     evidence label on every quantity.
 """
 
 from __future__ import annotations
@@ -164,6 +169,90 @@ def main() -> int:
                   meta["source_area_cm2"], 1e-12)
         assert report["primary_transmission"] > 0.95, report["primary_transmission"]
         assert (out / "output" / "spectra.csv").stat().st_size > 0
+        assert report["evidence"]["scorer_statistics"] == "scorer_statistics.csv", report["evidence"]
+        assert report["tid"]["evidence"] == "scorer_statistics.csv", report["tid"]["evidence"]
+
+        print("analysis evidence controls")
+
+        def copy_case(name):
+            target = work / name
+            shutil.copytree(out, target)
+            for stale in ("shielding_report.json", "spectra.csv"):
+                (target / "output" / stale).unlink(missing_ok=True)
+            return target
+
+        def analyze(case):
+            return subprocess.run([sys.executable, str(PACK / "analyze.py"), str(case / "output")],
+                                  capture_output=True, text=True, errors="replace")
+
+        def expect_evidence_error(case, fragment):
+            result = analyze(case)
+            assert result.returncode == 3, (case.name, result.returncode, result.stderr[-800:])
+            assert fragment in result.stderr, (case.name, fragment, result.stderr[-800:])
+            assert not (case / "output" / "shielding_report.json").exists(), \
+                f"{case.name}: a report was written for missing evidence"
+            print(f"  {case.name}: rejected")
+
+        def metadata_of(case):
+            return json.loads((case / "output" / "run_metadata.json").read_text(encoding="utf-8"))
+
+        def write_metadata(case, metadata):
+            (case / "output" / "run_metadata.json").write_text(
+                json.dumps(metadata, indent=2), encoding="utf-8")
+
+        def edit_summary(case, edits):
+            path = case / "output" / "run_summary.txt"
+            lines = path.read_text(encoding="utf-8").splitlines()
+            for index, line in enumerate(lines):
+                for old, new in edits.items():
+                    if line.startswith(old + " = "):
+                        lines[index] = f"{old} = {new}"
+            newline = chr(10)
+            path.write_text(newline.join(lines) + newline, encoding="utf-8")
+
+        # 1. the statistics file that the run listed is gone: missing evidence, not zero
+        case = copy_case("evidence_missing_statistics")
+        assert "scorer_statistics.csv" in (case / "output" / "run_metadata.json").read_text(encoding="utf-8")
+        (case / "output" / "scorer_statistics.csv").unlink()
+        expect_evidence_error(case, "was listed in run_metadata.json generated_files but is missing")
+
+        # 2. a failed run summary
+        case = copy_case("evidence_failed_run")
+        edit_summary(case, {"status": "failed"})
+        expect_evidence_error(case, "only a completed run can be analysed")
+
+        # 3. a run that completed no events
+        case = copy_case("evidence_zero_events")
+        edit_summary(case, {"run_0_completed_events": 0})
+        metadata = metadata_of(case)
+        metadata["runs"][0]["completed_events"] = 0
+        metadata["runs"][0]["planned_events"] = 0
+        write_metadata(case, metadata)
+        expect_evidence_error(case, "no rate can be derived from an empty run")
+
+        # 4. stale phase-space rows from a longer earlier run
+        case = copy_case("evidence_stale_phase_space")
+        edit_summary(case, {"run_0_completed_events": 10})
+        metadata = metadata_of(case)
+        metadata["runs"][0]["completed_events"] = 10
+        metadata["runs"][0]["planned_events"] = 10
+        write_metadata(case, metadata)
+        expect_evidence_error(case, "the files look stale")
+
+        # 5. a run that genuinely wrote no statistics: zero is accepted, but labelled
+        case = copy_case("evidence_zero_deposition")
+        (case / "output" / "scorer_statistics.csv").unlink()
+        metadata = metadata_of(case)
+        metadata["generated_files"] = [entry for entry in metadata["generated_files"]
+                                       if not entry["path"].endswith("scorer_statistics.csv")]
+        write_metadata(case, metadata)
+        result = analyze(case)
+        assert result.returncode == 0, result.stderr[-800:]
+        zero_report = json.loads((case / "output" / "shielding_report.json").read_text(encoding="utf-8"))
+        assert zero_report["tid"]["total"] == 0.0, zero_report["tid"]
+        assert zero_report["tid"]["evidence"] == "no_statistics_file_zero_deposition", zero_report["tid"]
+        assert zero_report["evidence"]["scorer_statistics"] == "no_statistics_file_zero_deposition"
+        print("  evidence_zero_deposition: accepted with an explicit evidence label")
     finally:
         shutil.rmtree(work, ignore_errors=True)
     print("test_shielding_coating: OK")
