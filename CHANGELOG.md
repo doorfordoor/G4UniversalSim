@@ -7,6 +7,7 @@ Short, user-facing record of notable changes. Detailed support status lives in
 
 ### Added
 
+- 实时进度协议加可选 `sequence`：`src/Actions/RunProgress.cc` 的 `Emit()` 在 `run_id` 后写进程级单调序号（只在 telemetry mutex 下自增，`Begin()` 不重置，跨 run 递增）；`gui/g4usim_gui/core/run_progress.py` 在字段出现时要求非负整数且严格递增，重复或回退的行丢弃，字段缺失时保持旧行为（旧后端仍可用）。回归：`smoke_live_progress` 增加重复/回退/非整数/缺失四类断言，`test_live_progress` 断言真实消息严格递增且跨 run 单调；契约见 `docs/实时运行进度.md`。该字段只是顺序证据，不改变成功判定。
 - 屏蔽/涂层场景（路线图 2B）从命令行搬进 GUI：新增 Scenario 页（15 个字段，基础 7 + 高级 8，三层校验）与 headless 驱动
   `gui/g4usim_gui/core/scenario_shielding.py`；生成走 `scenarios/shielding_coating/scenario_model.py` 的纯函数
   `render()/generate()`（`make_scenario.py` 只是 CLI 包装，二者逐字节一致），分析走 `analyze.py` 的 `analyze(output_dir)`。

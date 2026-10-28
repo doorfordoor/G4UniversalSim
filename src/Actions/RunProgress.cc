@@ -21,6 +21,10 @@ struct State {
     std::atomic<bool> eventAborted{false};
     int planned = 0;
     Clock::time_point started;
+    // Process-wide emission counter; never reset across runs. Consumers use it
+    // to reject duplicated or reordered lines when stdout is chunked or a
+    // message from an earlier run arrives late.
+    long long sequence = 0;
 };
 
 State& Shared()
@@ -41,10 +45,12 @@ void Emit(State& state, int runId, const char* phase, long long completed, Clock
 {
     const double elapsed = std::max(0.0, std::chrono::duration<double>(now - state.started).count());
     const double rate = elapsed > 0.0 ? completed / elapsed : 0.0;
+    const long long sequence = ++state.sequence;
     std::ostringstream line;
     line.imbue(std::locale::classic());
     line << std::setprecision(10)
          << "[G4USimProgress] {\"schema\":\"g4usim_progress_v1\",\"run_id\":" << runId
+         << ",\"sequence\":" << sequence
          << ",\"phase\":\"" << phase << "\",\"planned_events\":" << state.planned
          << ",\"completed_events\":" << completed << ",\"elapsed_s\":" << elapsed
          << ",\"rate_eps\":";

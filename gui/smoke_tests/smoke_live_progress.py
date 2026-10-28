@@ -42,6 +42,24 @@ def main():
     assert parser.feed(message(run=1))
     assert not parser.feed(message(run=0))
     assert parser.feed(message(run=1, phase="aborted", completed=1).rstrip(), final=True)
+    # F6 sequence: the backend numbers every line, so a duplicated or reordered
+    # line is rejected instead of rewinding the progress display.
+    parser = ProgressParser()
+    assert parser.feed(message(sequence=7))
+    assert parser.feed(message(phase="running", completed=5, sequence=9))
+    assert not parser.feed(message(phase="running", completed=5, sequence=9))
+    assert not parser.feed(message(phase="running", completed=6, sequence=8))
+    assert parser.feed(message(phase="end", completed=10, sequence=10))
+    # A sequence must be a non-negative integer, not a float or a boolean.
+    parser = ProgressParser()
+    assert not parser.feed(message(sequence=1.5))
+    assert not parser.feed(message(sequence=True))
+    assert not parser.feed(message(sequence=-1))
+    # Older binaries emit no sequence at all; messages stay accepted so a new GUI
+    # keeps working with an old executable.
+    parser = ProgressParser()
+    assert parser.feed(message())
+    assert parser.feed(message(phase="running", completed=5))
     parser = ProgressParser()
     assert not parser.feed(PREFIX + "[" * 2000 + "0" + "]" * 2000 + "\n")
     assert parser.feed(message(planned_events=None, completed_events=None, elapsed_s=None))

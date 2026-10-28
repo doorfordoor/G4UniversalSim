@@ -119,6 +119,11 @@ def validate(items: list[dict], summary: dict[str, str], expected: tuple[int, ..
         running = [x for x in group if x["phase"] == "running"]
         assert len(running) <= int(group[-1]["elapsed_s"] / 0.5) + 2, group
         assert all(x["elapsed_s"] >= 0 for x in group), group
+    sequences = [x.get("sequence") for x in items]
+    assert all(type(seq) is int and seq >= 0 for seq in sequences), sequences
+    assert sequences == sorted(sequences), sequences
+    assert len(set(sequences)) == len(sequences), sequences
+    assert sequences[-1] > sequences[0], sequences
 
 
 def event_rows(work: Path, pattern="event_edep_t*.csv"):

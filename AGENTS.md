@@ -6,6 +6,11 @@
 
 2026-10-19 → 2026-10-27 的 29 条实施契约全文（含文件路径、行号、反例与回归入口）在 [docs/agent-history.md](docs/agent-history.md)。下表只列**仍然有效的操作规则**；改动相关模块前必须先读对应历史条目全文，只读索引不足以动手。新增条目：全文追加到 `docs/agent-history.md`，本表加一行，不要再在本文件堆长段落。
 
+- 2026-10-28 F6 进度协议 `sequence`：`src/Actions/RunProgress.cc` 的 `Emit()` 在 `run_id` 后写进程级单调 `sequence`
+  （只在 telemetry mutex 下自增，`Begin()` 不重置，跨 run 递增）；`gui/g4usim_gui/core/run_progress.py` 的 `ProgressParser` 必须在字段出现时
+  要求非负整数且严格递增、重复或回退即丢弃，字段缺失时保持旧行为（旧后端仍可解析）。该字段只是顺序证据，不得用来判定模拟成功或物理完整。
+  回归 `gui/smoke_tests/smoke_live_progress.py`（重复/回退/非整数/缺失四类断言）与 `scripts/test_live_progress.py`（所有真实消息严格递增、跨 run 单调）；
+  契约见 [docs/实时运行进度.md](docs/实时运行进度.md)。
 - 2026-10-28 2B 屏蔽/涂层场景 GUI 端到端：场景页 `gui/g4usim_gui/widgets/scenario_page.py` 与 headless 驱动
   `gui/g4usim_gui/core/scenario_shielding.py` 只能调用 `scenario_model.render()/generate()` 与 `analyze.analyze(output_dir)`，
   不得在 GUI 里拼 INI、重算 TID/DDD 或把缺证据写成零；生成前必须三层校验（字段解析 → `problems()` → `config_schema`），

@@ -268,3 +268,7 @@ Astra 的 2026-10-28 审查把 `scenarios/shielding_coating/analyze.py` 判为�
   新后端/集成测试必须 `Path(os.environ.get("G4USIM_EXE", "") or ROOT / "build_vs2026" / "Release" / ...)`，
   并由 static 用例 `platform_paths`（`scripts/check_test_platform_paths.py`）防止复发：提到 `build_vs2026` 必须同时读 `G4USIM_EXE`，
   不得写死盘符路径（`scripts/check_doc_links.py` 的自检样例除外）。
+
+### 2026-10-28 F6 进度协议加可选 sequence
+
+`[G4USimProgress]` 消息新增可选 `sequence`：`src/Actions/RunProgress.cc` 的 `State` 增加进程级 `long long sequence`（只在 telemetry mutex 下自增），`Emit()` 在 `run_id` 之后写 `"sequence":<n>`；`Begin()` 不重置它，因此同一进程内序号跨 run 单调递增。`gui/g4usim_gui/core/run_progress.py` 的 `ProgressParser` 记录 `_last_sequence`：字段缺失时保持旧行为（兼容旧后端），出现时必须是非负整数且严格递增，重复或回退的行被丢弃；解析器仍保留原有 run_id、计数不回退、终态后拒绝更新等规则。回归：`gui/smoke_tests/smoke_live_progress.py` 增加"重复/回退/非整数/缺失"四类断言，`scripts/test_live_progress.py` 的 `validate()` 断言所有真实消息都带 sequence、严格递增、跨 run 单调（第二轮 begin 大于第一轮 end）。文档 `docs/实时运行进度.md` 的字段表、示例与解析说明同步更新；`scripts/check_report_evidence.py` 等证据链不受影响（消息不进报告）。该字段是顺序证据，不是物理或性能证据，不改变最终结果判定。
