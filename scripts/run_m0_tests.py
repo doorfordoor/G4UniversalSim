@@ -55,6 +55,7 @@ CASES = (
     Case("output_extensions", "scripts/test_output_extensions.py", "static"),
     Case("runner_contract", "scripts/test_m0_runner.py", "static"),
     Case("doc_links", "scripts/check_doc_links.py", "static"),
+    Case("ci_annotations", "scripts/test_ci_annotations.py", "static"),
     Case("report_evidence", "scripts/test_report_evidence.py", "static"),
     Case("writer_boundary", "scripts/test_writer_boundary.py", "static"),
     Case("merge_histograms", "scripts/test_merge_histograms.py", "backend", ("merge",)),

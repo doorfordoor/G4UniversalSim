@@ -47,8 +47,9 @@
 ## 验收数据（可直接复核）
 
 - 阶段 0 全量回归：**76 PASS / 0 FAIL / 0 SKIP**
-- 阶段 2A 全量回归（基提交 `32736c9`，E3 可移植性修复工作区未提交）：Windows **80 PASS / 0 FAIL / 0 SKIP**（static 6 / gui 26 / backend 34 / integration 14），`assertions_executed_total=116201`、`assert_sites_total=2417`、`cases_with_zero_assertions=[]`、`source_fingerprint=5bd97ec5e96e85f83b35b6d33d82ea12493e9d2eb4d78902c8d2ba5165d13206`、`tests_content_fingerprint=6fb2303906a4c1f29b3c26d052f3a938532d9a6ef3ae57433aa87f4ab107fda8`、exe SHA-256 `dd62fd8748fba532a12842881b0a680dff11816a6031724fd4caf9ecd83cde1f`；证据 `docs/verification/stage1f-20261028/README.md`。
-- Linux（本机 WSL Ubuntu 24.04.4 + conda-forge Geant4 11.3.2 + g++ 13.3）：backend **34/34**（109853 断言）、integration **14/14**（4324 断言），两份报告通过严格门禁，`source_fingerprint`/`tests_content_fingerprint` 与 Windows 报告**完全相同**；证据 `docs/verification/linux-wsl-20261028/README.md`，过程见 `docs/Linux构建与验证.md`。**GitHub Actions 尚未运行**。
+- 阶段 2A/E3 全量回归（基提交 `a5970ff`，工作区改动已暂存未提交时运行）：Windows **81 PASS / 0 FAIL / 0 SKIP**（static 7 / gui 26 / backend 34 / integration 14），`assertions_executed_total=116226`、`assert_sites_total=2440`、`cases_with_zero_assertions=[]`、`source_fingerprint=5bd97ec5e96e85f83b35b6d33d82ea12493e9d2eb4d78902c8d2ba5165d13206`、`tests_content_fingerprint=637f211e5944ebdc726fac091b08bc6c52e3aaaef4a4ef8b2022e8c90a9b31e8`、exe SHA-256 `dd62fd8748fba532a12842881b0a680dff11816a6031724fd4caf9ecd83cde1f`；证据 `docs/verification/stage1j-20261028/README.md`。
+- Linux（本机 WSL Ubuntu 24.04.4 + conda-forge Geant4 11.3.2 + g++ 13.3）：backend **34/34**（109853 断言）、integration **14/14**（4324 断言），两份报告通过严格门禁，`source_fingerprint`/`tests_content_fingerprint` 与 Windows 报告**完全相同**；证据 `docs/verification/linux-wsl-20261028/README.md`，过程见 `docs/Linux构建与验证.md`。
+- **GitHub Actions 已真跑并转绿**（提交 `a5970ff`）：`codex` run 40634469313（12m38s）与 roadmap run 40634465977 均 `success`，`ubuntu-24.04` 上 static / offscreen GUI / backend / integration 四个 profile 各自过证据门禁，另有“篡改副本日志必须被拒”的负向步骤；三个只在该环境出现的缺陷（job 级 `env` 里的 `${{ runner.temp }}` 让 workflow 零 job、conda 前缀的 Qt5 插件遮蔽 PySide6 自带 Qt6 offscreen 插件、公开仓库 job 日志需登录）已修，失败用例改发公开注解 `scripts/ci_annotate_failures.py`。**`m0-static-gui.yml` 仍是 `disabled_manually`，没有 Windows CI 绿灯**。
 - 阶段 1e 的证据仍在 `docs/verification/stage1e-20261028/`（80 例/116183 断言），阶段 1d 为 79 例/116161 断言；更早报告为 legacy 摘要口径（只能 `--allow-legacy-digest` 复核）。
 - 报告：`docs/verification/stage1e-20261028/report.json`（原始位置 `out/verification/stage1e-20261028/20261028-105759-a98a13a7/`）；`docs/verification/stage1b-20261028/report.json` 是旧摘要口径（CRLF 落盘的 legacy 报告，只能用 `--allow-legacy-digest` 复核）；阶段 0 的旧报告仍在 `docs/verification/stage0-20261027/`
 - `tracked_source_gate=pass`、`untracked_source_files=[]`、`backend_provenance=source_sha256_manifest_matches_executable`（Windows 与 Linux 报告相同）
@@ -60,7 +61,9 @@
 - B1 校验在 `BeginRun`，`--inspect-run` 查不出来（文档已如实写明）
 - `SetSeed` 守卫从 UI 不可达、未单独覆盖
 - 阶段 0 **没有**做改前/改后固定种子逐位对照（B1 只改解析、B3 默认名未变、B4 只拒绝非法状态）
-- Linux/GitHub Actions 后端 CI：workflow `.github/workflows/linux-geant4.yml` 已写、本机 WSL 等价拓扑已通过（backend 34/34、integration 14/14），但 **Actions 从未运行**（本机无 `gh` CLI），E3 仍未 Done；Geant4 11.2/11.4 与非 Ubuntu 发行版未验证。
+- `m0-static-gui.yml` 仍 `disabled_manually`（Windows/Ubuntu 的 static+gui 不跑）：历史 2026-10-23 的失败点在 `Run offscreen GUI tests`，原因需 job 日志（公开仓库需登录），恢复需仓库所有者启用；**因此没有任何 Windows CI 绿灯**。
+- Geant4 11.2 / 11.4 兼容矩阵未开始；Actions 只在 `ubuntu-24.04` 上跑过。
+- Actions 的 job 日志需登录下载，失败诊断依赖公开注解（`scripts/ci_annotate_failures.py`）与 artifact，注解不是完整日志。
 - Detector/Material/Source 之外的命令族是否还有“改缓存、内核没变、退出码 0”的路径：biasing 与 material 两条已按你的 D-4/D-5 闭合，其余命令族仍未系统盘点（等你给权威分类表）
 - 报告的断言数是**已执行 `assert` 的下界**（`sys.settrace` 计数），不是覆盖率；证据门禁只证明“报告与日志自洽且未被篡改”，不证明断言写得好
 - 你的回信里判“需实验”的若项（output flush/close 在 Idle 的语义、source/原生 GPS 动态语义、ROOT 同名并发覆盖、主窗口运行中关闭）尚未设计实验；阶段 2 的相关实现前会先补反例

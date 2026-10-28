@@ -54,8 +54,17 @@ HEX64 = re.compile(r"\A[0-9a-f]{64}\Z")
 
 
 def find_latest_report(report_root: Path) -> Path:
+    """Newest report under a run layout, or the archived report at the root.
+
+    A fresh run writes ``<report-root>/<run-id>/report.json``. The copies under
+    ``docs/verification/`` keep ``report.json`` at the top of the directory, so a
+    reviewer can point either kind of root at this function.
+    """
     candidates = sorted(report_root.glob("*/report.json"), key=lambda item: item.stat().st_mtime)
     if not candidates:
+        archived = report_root / "report.json"
+        if archived.is_file():
+            return archived
         raise AssertionError(f"no report.json found under {report_root}")
     return candidates[-1]
 

@@ -304,6 +304,15 @@ def main() -> int:
         newer_report.write_text(json.dumps(sample_report()), encoding="utf-8")
         assert find_latest_report(root) == newer_report, "newest report folder must win"
 
+        # An archived evidence directory keeps report.json at its top level (that is
+        # how docs/verification copies are committed), so the gate and the annotate
+        # helper must find it without a run subdirectory.
+        archived_root = root / "archived"
+        archived_root.mkdir()
+        archived_report = archived_root / "report.json"
+        archived_report.write_bytes((newer_report).read_bytes())
+        assert find_latest_report(archived_root) == archived_report, "archived layout must be found"
+
         empty_root = root / "empty"
         empty_root.mkdir()
         completed = subprocess.run(command + ["--report-root", str(empty_root)], capture_output=True,

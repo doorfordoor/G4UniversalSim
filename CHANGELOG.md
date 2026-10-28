@@ -7,6 +7,8 @@ Short, user-facing record of notable changes. Detailed support status lives in
 
 ### Added
 
+- Linux workflow 现在在同一 job 内跑 static 与 offscreen GUI profile（连同 backend/integration 共四个 profile，各自过证据门禁），首次在 Actions 上全绿：`codex` run 40634469313、`roadmap/F6-live-progress` run 40634465977（提交 `a5970ff`，约 12m38s）。
+- `scripts/ci_annotate_failures.py`：把失败/跳过用例发成公开的 Actions 注解（含 layer、脚本与日志尾部），配套 static 用例 `ci_annotations`；公开仓库的 job 日志需要登录，注解是外部可读的失败诊断入口。
 - 测试平台报告 v2：每个用例经 `tools/test_assert_probe.py` 记录已执行 `assert` 数（`G4USIM_ASSERTS` marker），报告新增 `tests_content_fingerprint`、逐用例 `assert_sites`/`assertions_executed`/`log_sha256`；新增 `scripts/check_report_evidence.py` 作为 CI 证据门禁，`scripts/test_report_evidence.py`（static）覆盖其拒绝路径。
 - 测试平台 `--fail-on-skip`：CI 的 static/gui 步骤不再让缺失 Qt/uproot/后端的 skip 以退出码 2 变绿；`--report-root` 默认改为 `out/verification`。
 - 支持矩阵第 2–3 节每条功能的事实列末尾标注证据类型（外部表 / 解析式 / 同源自洽 / 自测 / 未验证），并在第 1 节给出判定口径；`.gitattributes` 对 `docs/verification/**` 关闭换行归一，证据副本与生成产物保持字节一致。
@@ -19,6 +21,7 @@ Short, user-facing record of notable changes. Detailed support status lives in
 
 ### Fixed
 
+- Linux workflow 在 GitHub Actions 上首次真跑暴露的三个缺陷：job 级 `env` 使用 `${{ runner.temp }}` 导致 workflow 校验阶段失败（零 job）→ 改用 `${{ github.workspace }}` 下的前缀；conda 前缀的 Qt5 插件目录遮蔽 PySide6 自带的 Qt6 插件 → workflow 计算并导出 `QT_PLUGIN_PATH`；公开仓库的 Actions 日志需登录 → 失败用例改发公开注解。
 - `scenarios/shielding_coating/analyze.py` 不再把缺证据当零结果（Astra 审查 D-7）：运行未完成、事件数为零、
   `output_failure_status` 非 none、多轮目录、相空间缺失/为空/陈旧一律退出码 3 且不写报告；统计文件用
   `run_metadata.json` 的 `generated_files` 区分"被删"与"这一轮确实没统计"，真零沉积按零报告但带

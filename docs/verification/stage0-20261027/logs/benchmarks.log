@@ -1,0 +1,32 @@
+pass  csda_range         proton 10 MeV in water                        CSDA range [g/cm2]   0.12398 +- 0.00012  ref 0.123  (+0.80 %, allowed +-0.0022)
+pass  csda_range         proton 100 MeV in water                       CSDA range [g/cm2]   7.7552 +- 0.0058  ref 7.718  (+0.48 %, allowed +-0.133)
+pass  csda_range         proton 200 MeV in water                       CSDA range [g/cm2]   26.116 +- 0.022  ref 25.96  (+0.60 %, allowed +-0.454)
+pass  csda_range         e- 1 MeV in water                             CSDA range [g/cm2]   0.43835 +- 0.0036  ref 0.4367  (+0.38 %, allowed +-0.0238)
+pass  csda_range         e- 10 MeV in water                            CSDA range [g/cm2]   5.0054 +- 0.042  ref 4.975  (+0.61 %, allowed +-0.276)
+      csda_range: 6 s
+pass  bragg_peak         proton 150 MeV pencil beam in water           R80 [mm]             158.65 +- 0.1  ref 157.38  (+0.80 %, allowed +-1.87)
+      bragg_peak: 2 s
+pass  gamma_attenuation  0.1 MeV photons through 40 mm G4_WATER        mu/rho [cm2/g]       0.16614 +- 0.0038  ref 0.1707  (-2.67 %, allowed +-0.0149)
+pass  gamma_attenuation  1 MeV photons through 100 mm G4_WATER         mu/rho [cm2/g]       0.069315 +- 0.0016  ref 0.07072  (-1.99 %, allowed +-0.00616)
+pass  gamma_attenuation  10 MeV photons through 300 mm G4_WATER        mu/rho [cm2/g]       0.021606 +- 0.0005  ref 0.02219  (-2.63 %, allowed +-0.00195)
+pass  gamma_attenuation  1 MeV photons through 40 mm G4_Al             mu/rho [cm2/g]       0.060216 +- 0.0014  ref 0.06146  (-2.02 %, allowed +-0.00543)
+pass  gamma_attenuation  0.1 MeV photons through 0.1 mm G4_Pb          mu/rho [cm2/g]       5.4986 +- 0.13  ref 5.549  (-0.91 %, allowed +-0.5)
+pass  gamma_attenuation  1 MeV photons through 10 mm G4_Pb             mu/rho [cm2/g]       0.071041 +- 0.0016  ref 0.07102  (+0.03 %, allowed +-0.00607)
+      gamma_attenuation: 14 s
+pass  shielding_range    proton 100 MeV in G4_Al                       CSDA range [g/cm2]   10.028 +- 0.0095  ref 10.01  (+0.18 %, allowed +-0.179)
+pass  shielding_range    proton 100 MeV in G4_Si                       CSDA range [g/cm2]   9.7642 +- 0.0095  ref 9.737  (+0.28 %, allowed +-0.175)
+pass  shielding_range    e- 1 MeV in G4_Al                             CSDA range [g/cm2]   0.56087 +- 0.0044  ref 0.5546  (+1.13 %, allowed +-0.0299)
+pass  shielding_range    e- 1 MeV in G4_Si                             CSDA range [g/cm2]   0.54456 +- 0.004  ref 0.5386  (+1.11 %, allowed +-0.0282)
+pass  shielding_range    proton 50 MeV behind 5 mm G4_Al               mean exit energy [MeV] 35.331 +- 0.021  ref 35.335  (-0.01 %, allowed +-0.417)
+pass  shielding_range    proton 30 MeV behind 2 mm G4_Si               mean exit energy [MeV] 22.428 +- 0.012  ref 22.376  (+0.23 %, allowed +-0.26)
+      shielding_range: 6 s
+pass  device_dose        proton 10 MeV, 20 um Si slab behind 50 um Si  TID / fluence [Gy cm2] 5.707e-09 +- 6.2e-11  ref 5.7594e-09  (-0.91 %, allowed +-3.01e-10)
+pass  device_dose        proton 100 MeV, 100 um Si slab behind 600 um Si TID / fluence [Gy cm2] 9.4222e-10 +- 1.1e-11  ref 9.4114e-10  (+0.11 %, allowed +-5.24e-11)
+pass  device_dose        proton 100 MeV, 100 um Si slab behind 600 um Si DDD / fluence [MeV cm2/g] 0.0029574 +- 3.2e-05  ref 0.0029929  (-1.19 %, allowed +-0.000125)
+      device_dose: 3 s
+pass  detector_response  gamma 0.662 MeV, plastic 12.7mm 25.4mm        Compton edge [MeV]   0.479 +- 0.00029  ref 0.47765  (+0.28 %, allowed +-0.00564)
+pass  detector_response  gamma 4.44 MeV, HPGe 30mm 50mm                escape peak [MeV]    3.9295 +- 0.00029  ref 3.929  (+0.01 %, allowed +-0.000866)
+pass  detector_response  mu- 4000 MeV, Si 300um                        most probable deposit [MeV] 0.085983 +- 0.00076  ref 0.082532  (+4.18 %, allowed +-0.00476)
+      detector_response: 6 s
+report: D:\Temp\g4usim_bench_yzjwexql\report\benchmark_report.md
+(temporary report removed; pass --output to keep it)

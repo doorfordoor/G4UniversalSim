@@ -97,6 +97,32 @@ jobs:
             echo "G4USIM_EXPECT_GDML=0" >> "$GITHUB_ENV"
           fi
 
+      # E3 also asks for the platform-independent suites on this runner: static
+      # needs no Geant4, and the GUI suite runs headless through the offscreen
+      # platform (the Windows workflow is still disabled in the repository
+      # settings, so a Linux run is what proves those profiles on CI today).
+      - name: Run static tests on Linux
+        run: |
+          python -B scripts/run_m0_tests.py --profile static --require-tracked-sources --fail-on-skip --report-root "$REPORT_ROOT/linux-static"
+
+      - name: Validate the Linux static report
+        run: python -B scripts/check_report_evidence.py --report-root "$REPORT_ROOT/linux-static"
+
+      - name: Annotate failing static cases
+        if: failure()
+        run: python -B scripts/ci_annotate_failures.py --report-root "$REPORT_ROOT/linux-static"
+
+      - name: Run offscreen GUI tests on Linux
+        run: |
+          python -B scripts/run_m0_tests.py --profile gui --require-tracked-sources --fail-on-skip --report-root "$REPORT_ROOT/linux-gui"
+
+      - name: Validate the Linux GUI report
+        run: python -B scripts/check_report_evidence.py --report-root "$REPORT_ROOT/linux-gui"
+
+      - name: Annotate failing GUI cases
+        if: failure()
+        run: python -B scripts/ci_annotate_failures.py --report-root "$REPORT_ROOT/linux-gui"
+
       # --fail-on-skip: a missing backend/uproot/Qt must fail the job instead of
       # producing the skip exit status that a green run used to hide.
       - name: Run backend tests on Linux

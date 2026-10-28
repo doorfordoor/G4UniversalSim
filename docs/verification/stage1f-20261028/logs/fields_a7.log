@@ -1,0 +1,21 @@
+uniform magnetic field
+  crossing y [mm]: -193.944936 (expected -193.944925, tolerance 0.01)
+  direction v: -0.674322 (expected -0.674322, tolerance 1e-05)
+  kinetic energy [MeV]: 100.000000 (expected 100.000000, tolerance 1e-06)
+uniform electric fields
+  energy after 0.5 m along E [MeV]: 1.500000 (expected 1.500000, tolerance 1e-06)
+  transverse direction: 0.000000 (expected 0.000000, tolerance 1e-09)
+  energy gain = work q E y [MeV]: 0.006283 (expected 0.006283, tolerance 1e-06)
+crossed fields (Wien filter)
+  Wien filter crossing y [mm]: -0.000004 (expected 0.000000, tolerance 0.05)
+  B alone crossing y [mm]: -89.238863 (expected -89.238859, tolerance 0.05)
+field maps
+  constant map crossing y vs uniform [mm]: -193.944936 (expected -193.944936, tolerance 1e-06)
+  gradient map direction v (canonical momentum): -0.505742 (expected -0.505742, tolerance 1e-05)
+local field
+  direction after the field box: -0.269729 (expected -0.269729, tolerance 1e-05)
+  crossing y [mm]: -83.504348 (expected -83.504344, tolerance 0.01)
+failures
+  9 invalid field definitions rejected
+test_fields_a7: OK
+G4USIM_ASSERTS=58

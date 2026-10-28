@@ -1,0 +1,11 @@
+hits recomputation: 400 events with edep, edep=375.2329 MeV, R=0.00251, dose=1.2024e-07 Gy
+per-thread CSV, ROOT (g4usim_io) and merged statistics agree; FOM = 1/(R^2 T)
+dose/raw_dose: observed run spread 0.00785, reported R 0.00744, ratio 1.056
+  R(100 events) / R(pooled 2000) = 4.399 (sqrt(20) = 4.472)
+fluence/raw_fluence: observed run spread 0.02261, reported R 0.02076, ratio 1.089
+  R(100 events) / R(pooled 2000) = 4.087 (sqrt(20) = 4.472)
+let/let_t: observed run spread 0.00541, reported R 0.00529, ratio 1.024
+let/let_d: observed run spread 0.02370, reported R 0.02093, ratio 1.132
+format = root: scorer_statistics.csv written, no per-thread CSVs
+test_statistical_uncertainty: OK
+G4USIM_ASSERTS=575

@@ -1,0 +1,30 @@
+solids: analytic volumes and masses
+  Ell      volume     25132.74 mm3 (analytic     25132.74, -7.30e-13); mass 25.1327 g
+  ElCut    volume     20502.03 mm3 (analytic     20502.03, -1.32e-12); mass 20.5020 g
+  ElTube   volume     18849.56 mm3 (analytic     18849.56, -2.06e-12); mass 18.8496 g
+  Torus    volume     44413.22 mm3 (analytic     44413.22, -4.75e-14); mass 44.4132 g
+  Para     volume     48000.00 mm3 (analytic     48000.00, +0.00e+00); mass 48.0000 g
+  Hype     volume     26047.53 mm3 (analytic     26047.53, +7.37e-13); mass 26.0475 g
+  Pcone    volume     28274.33 mm3 (analytic     28274.33, -2.88e-13); mass 28.2743 g
+  Phedra   volume      6928.20 mm3 (analytic      6928.20, +6.48e-13); mass 6.9282 g
+  Octa     volume      4500.00 mm3 (analytic      4500.00, +0.00e+00); mass 4.5000 g
+  StlCube  volume      8000.00 mm3 (analytic      8000.00, +0.00e+00); mass 8.0000 g
+STL navigation: every geantino leaves the cube on its surface along its direction
+  STL  : 2000 exits, max |surface offset| 0.0e+00 mm, max direction deviation 1.4e-15, sum of chords 23546.386534 mm = scored 23546.386534 mm
+  G4Box: 2000 exits, max |surface offset| 0.0e+00 mm, max direction deviation 1.3e-15, sum of chords 23558.346257 mm = scored 23558.346257 mm
+replica placement
+  10 slices: masses 25 g each; per-slice dose matches explicit slabs (|pull| < 5)
+  phi replica: a beam in sector 1 scores only copy 1; exported sectors lie in their phi ranges
+parameterised placement
+  per-copy materials: masses 1.00 / 2.33 / 11.35 g (water, Si, Pb)
+  exported copies: positions, 45 deg rotation and linear row (z = 0, 20, 40, 60 mm) as configured
+mesh export of a nested, rotated geometry
+  daughter centre in world frame (10.0, 0.0, 30.0) = expected (10.0, 0.0, 30.0)
+GDML export and re-import
+  20 volume copies re-imported with identical solids, materials and mesh (max vertex difference 0.0e+00 mm)
+  masses identical; per-slice dose of original and re-imported geometry agree (5 sigma)
+  hand-written GDML: <auxiliary auxtype="SensDet"> makes Det_LV sensitive (8 g of water)
+  missing file, unknown sensitive volume and overwriting an existing GDML file are rejected
+failures before Geant4 geometry objects
+  13 invalid geometries rejected
+test_geometry_a5: OK

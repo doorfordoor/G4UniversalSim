@@ -30,3 +30,7 @@ __pycache__/
 /gui_runs/
 *.root
 *.log
+
+# The archived evidence keeps its per-case logs so the gate can verify
+# log_sha256 from a fresh clone instead of the original worktree.
+!docs/verification/**/logs/*.log

@@ -121,7 +121,37 @@ python -B scripts/check_report_evidence.py --report-root "$HOME/reports/linux-ba
 | 显示 | 无（`offscreen`） | 无（`QT_QPA_PLATFORM=offscreen`） |
 | 负向对照 | 手动复现 | workflow 内篡改副本日志，断言门禁必须拒绝 |
 
-**未验证**：GitHub Actions 上的实际运行（本机没有 `gh` CLI，无法读取 Actions 日志）；Geant4 11.2/11.4 矩阵；非 Ubuntu 发行版。首次 push 后请以 Actions 页面为准，不要用本文档替代 CI 状态。
+### 7.1 真实 GitHub Actions 运行（2026-10-28，已在托管 runner 上绿）
+
+`a5970ff` 的两次 push（`codex` run `40634469313`、`roadmap/F6-live-progress` run
+`40634465977`）都在 `ubuntu-24.04` 上成功，单次约 12 分 38 秒，18 个步骤全绿：安装
+micromamba → 创建固定 Geant4 11.3.2 环境 → 导出数据集变量 → 指向 PySide6 插件 →
+cmake 配置/构建 → `--check-geant4-data` → 记录 GDML → Linux static → Linux offscreen
+GUI → Linux backend → Linux integration → 四份报告各自过证据门禁 → 篡改报告负向对照
+（门禁必须拒绝）→ 上传 artifact。
+
+要让第一次真跑起来，先后修掉三个只在 CI 出现的问题，全部有本地复现：
+
+1. **workflow 级失败（零 job）**：job 级 `env` 里用了 `${{ runner.temp }}`，GitHub 在
+   workflow 校验阶段直接判失败（`actionlint` 报 `context "runner" is not allowed here`）。
+   改为 `${{ github.workspace }}/.micromamba` 与 `${{ github.workspace }}/.g4env`。
+2. **集成套件全灭（Qt 平台插件缺失）**：日志只能看到
+   `qt.qpa.plugin: Could not find the Qt platform plugin "offscreen" in ""`。根因是
+   conda 环境里 `qt-main`（Qt5）在 `<prefix>/plugins` 放了 Qt5 插件，Qt6 由 python 的
+   可执行文件位置推导插件搜索路径，结果只查 `<prefix>/bin/platforms` 与
+   `<prefix>/plugins/platforms`（都是 Qt 5.15 插件，被判定 incompatible），
+   site-packages 里 PySide6 自带的 Qt6 offscreen 插件从未被搜索。修复：把
+   `QT_PLUGIN_PATH` 指向 `PySide6/Qt/plugins`。本机用 conda 环境
+   （Geant4 11.3.2 + python 3.11 + PySide6 6.12.0）复现了同样的空搜索路径，并验证
+   `QT_QPA_PLATFORM=offscreen` + 该变量后 `QApplication` 正常创建。
+3. **公开仓库的 Actions 日志要登录**：直接读日志 403。改为失败时把每个失败用例重发成
+   `::error` 注解（`scripts/ci_annotate_failures.py`），run 页面的 Annotations 是公开的；
+   正是靠它定位了第 2 条。
+
+仍未验证/未完成：`M0 static and GUI regression`（`m0-static-gui.yml`）在仓库设置里是
+`disabled_manually`，所以 Windows/Ubuntu 上那两条 static+GUI 历史 job 不会随 push 触发；
+历史（2026-10-23）它们失败在 "Run offscreen GUI tests" 步骤，原因尚未取得（需要日志）。
+Geant4 11.2/11.4 矩阵与非 Ubuntu 发行版仍未验证。
 
 ## 8. 不证明什么
 

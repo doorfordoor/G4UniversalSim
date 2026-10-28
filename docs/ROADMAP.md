@@ -107,12 +107,18 @@ suite, CHANGELOG, support matrix). "Done when" lists the evidence, not just the 
   suites; Windows stays local (no Geant4 on hosted runners). Later: Geant4 11.2/11.4
   matrix. Done when: every push to `codex` runs it green, and a Linux build is
   documented. (Decision needed: hosted runners on the public repo.)
-  Status 2026-10-28: `.github/workflows/linux-geant4.yml` is written and the same
-  topology (Ubuntu 24.04 + conda-forge Geant4 11.3.2 + micromamba) was verified on a
-  local WSL Ubuntu, see `docs/Linux构建与验证.md`; backend and integration suites pass
-  there. **Not yet done**: the workflow has not produced a green GitHub Actions run
-  (this machine has no `gh` CLI, so the Actions log can only be read in the browser).
-  Two GCC-only defects were found and fixed by that verification (see the same doc).
+  Status 2026-10-28: **done for Linux.** `.github/workflows/linux-geant4.yml` runs on
+  `ubuntu-24.04` with conda-forge Geant4 11.3.2 (micromamba) and is green on both
+  branches: `codex` run 40634469313 and `roadmap/F6-live-progress` run 40634465977 for
+  commit `a5970ff`, ~12m38s each. The job configures and builds the backend, checks the
+  Geant4 data lookup, then runs the static, offscreen GUI, backend and integration
+  profiles on Linux, validates each report with `scripts/check_report_evidence.py`, and
+  proves the evidence gate rejects a tampered report. The Linux build process (two
+  GCC-only defects, the PySide6 teardown SIGSEGV and the conda Qt plugin-path trap) is
+  documented in `docs/Linux构建与验证.md`. Remaining, tracked separately from E3's Linux
+  deliverable: the `m0-static-gui.yml` workflow is `disabled_manually` in the repository
+  settings (its historical 2026-10-23 runs failed at "Run offscreen GUI tests" on both
+  runners; the reason needs a log), and the Geant4 11.2/11.4 matrix is not started.
 - **E4 Lighter process docs.** Move the dated entries of `AGENTS.md` / `gui/AGENTS.md`
   into `docs/agent-history.md`; keep the rules short and current. Add an English
   quick start next to the Chinese one (human docs stay Chinese-first). Done when:
@@ -235,7 +241,13 @@ H4–H8 if the user's applications favour some of them.
 
 - 2026-10-27：E2 约定模块完成，实现提交 `aaa9c1d`。统一登记 source/physics/scoring、六种几何模板及材料独立文件，8 个文件/模板上下文、48 类 section、353 个字段定义；field/biasing 明确留待后续。完整验收 70 PASS / 0 FAIL / 0 SKIP；最终 GUI 提示与单位枚举调整后 4 项专项通过；257 个启动标量、102 个上下文配置、510 组原后端对照通过，tracked_source_gate 和 Release 源码指纹均通过。详见 [E2接续检查点](E2接续检查点.md) 与 [配置schema说明](配置schema说明.md)。未重建安装包；下一项 F6，等待用户启动。
 
-- 2026-10-28：\n  - 测试平台报告 v2：每个用例经 `tools/test_assert_probe.py`（`settrace_assert_lines_v2`，含线程）记录已执行 `assert` 数；`report.json` v2 带 `tests_content_fingerprint` 与逐用例 `log_sha256`；`scripts/check_report_evidence.py` 成为 CI 证据门禁（逐项断言数、求和、零断言列表、日志字节摘要、`--baseline`）。\n  - 证据门禁自洽性与日志摘要口径按 Astra 审查 D-1/D-2 修复（篡改报告实测可绕过 → 现被拒绝；日志改为按落盘字节计算摘要，`log_digest_algorithm=sha256_raw_bytes_lf_v2`）。\n  - 命令失败传播 D-4/D-5/D-6：交互偏置拒绝进入会话失败汇总并非零退出、material 变更命令 PreInit 门禁、`ParseStrictDouble` 拒绝 inf/nan；新增 `scripts/test_config_value_finiteness.py`，用例总数 80。\n  - E3 Linux：`.github/workflows/linux-geant4.yml` + `docs/Linux构建与验证.md`；本机 WSL 验证 Ubuntu 24.04 + conda-forge Geant4 11.3.2 的构建、backend 与 integration 套件；修掉两个 GCC-only 三目类型缺陷与 PySide 退出 SIGSEGV。未在 GitHub Actions 运行 → E3 仍为进行中。\n- 2026-10-24：根据 Claude 项目记录、会话及当前提交 `7640721` 整理中文接续计划。下一开发项为 E2 的 `[source]` 迁移，先复核本机基线，再逐模块推进。F2 的可变参数以生命周期实测建立白名单；E3 补充现有静态/GUI CI 未覆盖的 Geant4 后端。仅规划，未新增功能、未重新执行全套验收。
+- 2026-10-28：
+  - 测试平台报告 v2：每个用例经 `tools/test_assert_probe.py`（`settrace_assert_lines_v2`，含线程）记录已执行 `assert` 数；`report.json` v2 带 `tests_content_fingerprint` 与逐用例 `log_sha256`；`scripts/check_report_evidence.py` 成为 CI 证据门禁（逐项断言数、求和、零断言列表、日志字节摘要、`--baseline`）。
+  - 证据门禁自洽性与日志摘要口径按 Astra 审查 D-1/D-2 修复（篡改报告实测可绕过 → 现被拒绝；日志改为按落盘字节计算摘要，`log_digest_algorithm=sha256_raw_bytes_lf_v2`）。
+  - 命令失败传播 D-4/D-5/D-6：交互偏置拒绝进入会话失败汇总并非零退出、material 变更命令 PreInit 门禁、`ParseStrictDouble` 拒绝 inf/nan；新增 `scripts/test_config_value_finiteness.py`，用例总数 80。
+  - E3 Linux：`.github/workflows/linux-geant4.yml` + `docs/Linux构建与验证.md`；本机 WSL 验证 Ubuntu 24.04 + conda-forge Geant4 11.3.2 的构建、backend 与 integration 套件；修掉两个 GCC-only 三目类型缺陷与 PySide 退出 SIGSEGV。
+  - E3 在真实 Actions 上转绿（`a5970ff`，run 40634469313 / 40634465977）：workflow 级失败（job 级 env 用了 `runner` 上下文）、Linux 集成套件的 Qt offscreen 插件缺失（conda Qt5 插件目录遮蔽，`QT_PLUGIN_PATH` 指向 PySide6 插件）、公开仓库日志需登录（新增失败用例 `::error` 注解 + `scripts/ci_annotate_failures.py`）三个问题逐一定位修复；Linux 上 static / offscreen GUI / backend / integration 四个 profile 全绿。`m0-static-gui.yml` 仍被仓库设置手动禁用，是另一件事。
+- 2026-10-24：根据 Claude 项目记录、会话及当前提交 `7640721` 整理中文接续计划。下一开发项为 E2 的 `[source]` 迁移，先复核本机基线，再逐模块推进。F2 的可变参数以生命周期实测建立白名单；E3 补充现有静态/GUI CI 未覆盖的 Geant4 后端。仅规划，未新增功能、未重新执行全套验收。
 
 - 2026-10-23: E2 started: `schema/config_schema.json` with `[run]`, `[general]`, `[output]`; generator for the C++ key table (ConfigManager's known keys for migrated sections), the GUI data module and the matrix field tables (`--check` in the test); GUI run-settings/trajectory validation and tooltips from the schema. `scripts/test_config_schema.py` (suite `config_schema`): 255 values agree between the schema check and `--inspect-run`, 22 fields/aliases consumed, unknown keys reported, defaults and alias precedence. Found and fixed: 32-bit int overflow clamped silently (seed), empty `format`/`name`/`dir` mean the default, GUI seed range. Next modules: [source], [physics], [scoring], then geometry/material files.
 - 2026-10-23: G4 + G5 done: `preview3d/sketch_geometry.py` (Qt-free) parses values as the backend (unitless = mm/rad), composes `G4PVPlacement` transforms through the parent chain and tessellates every backend solid with segments; replica/parameterised copies and boolean results are listed as not drawn. `scripts/test_sketch_accuracy.py` (suite `gui_sketch_accuracy`): 50 fixtures, 130 volume boxes within 1.5 % of the Geant4 mesh, 20 boolean targets by containment; a wrong rotation convention fails it. Source glyphs from the GPS settings (XY plane, fixed/isotropic, preview-only modes faint), also over the Geant4 geometry; `smoke_source_glyphs.py` (suite `gui_source_glyphs`) checks 4 x 200 real primaries against the glyphs via H1 trajectories.

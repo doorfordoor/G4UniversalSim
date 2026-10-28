@@ -1,0 +1,20 @@
+EM presets: models and 1 MeV photon transmission through 10 cm water (NIST XCOM)
+  standard : G4EmStandard       Compton Klein-Nishina      T = 0.4930 (XCOM 0.4930 +- 0.0079)
+  option3  : G4EmStandard_opt3  Compton KleinNishina       T = 0.4930 (XCOM 0.4930 +- 0.0079)
+  option4  : G4EmStandard_opt4  Compton LowEPComptonModel  T = 0.4975 (XCOM 0.4930 +- 0.0079)
+  livermore: G4EmLivermore      Compton LivermoreCompton   T = 0.5005 (XCOM 0.4930 +- 0.0079)
+  penelope : G4EmPenelope       Compton PenCompton         T = 0.5005 (XCOM 0.4930 +- 0.0079)
+region physics
+  DetRegion cuts e- 1 um -> 990 eV, e+ 1 mm -> 341.7 keV in water
+  delta electrons from the primaries: 1350470 with 1 um cut, 0 with 1 mm cut
+  longest primary step: 0.1968 mm with max_step = 0.2 mm (15.67 mm without)
+  min_kinetic_energy = 50 MeV: 50 primaries killed by UserSpecialCut, 0 steps transported below 50 MeV (without the limit primaries reach 0.001 MeV)
+  max_track_length = 30 mm: primary path in the region 30.00-30.00 mm
+  volumes = Det creates region MadeHere with Det_LV as root
+radioactive decay
+  Geant4 default threshold: 0 Co-60 decays in 1000 events
+  time_threshold = 1000 y: 1000 Ni-60 recoils, 998 in the 2505.7 keV level; mean beta 95.3 keV (NNDC 95.8 keV)
+  Shielding + enabled = true: one radioactive-decay constructor (G4RadioactiveDecay)
+failures
+  9 invalid physics settings rejected
+test_physics_a6: OK

@@ -219,3 +219,17 @@ Astra 的 2026-10-28 审查把 `scenarios/shielding_coating/analyze.py` 判为�
 边界：这仍不证明 TID/DDD 的物理正确性（法向入射、涂层阻止本领与 NIEL 数据本身未验证）；证据规则只覆盖本场景包的
 `analyze.py`，其他分析脚本与 GUI 结果页不在本契约内。
 
+### 2026-10-28 E3 在 GitHub Actions 上转绿（Linux 四 profile）
+
+**结果**：`a5970ff` 的两次 push 在 `ubuntu-24.04` 上各跑约 12m38s，18 步全绿（`codex` run `40634469313`、`roadmap/F6-live-progress` run `40634465977`）：micromamba → conda-forge `geant4=11.3.2` → 导出数据集变量 → 指向 PySide6 插件 → cmake 配置/构建 → `--check-geant4-data` → 记录 GDML → Linux static → Linux offscreen GUI → Linux backend → Linux integration → 四份报告各自过 `scripts/check_report_evidence.py` → 篡改报告负向对照 → artifact 上传。
+
+**三个只在 CI 出现的失败（均已复现并修复）**：
+
+1. workflow 校验阶段失败、`jobs.total_count = 0`：job 级 `env` 用了 `${{ runner.temp }}`；`actionlint` 报 `context "runner" is not allowed here`。job 级 env 只允许 `github/inputs/matrix/needs/secrets/strategy/vars`。改用 `${{ github.workspace }}/.micromamba` 与 `${{ github.workspace }}/.g4env`（不在 tracked-source 扫描范围内）。
+2. 集成套件全部失败：日志为 `qt.qpa.plugin: Could not find the Qt platform plugin "offscreen" in ""`。根因：conda 环境下 `qt-main`（Qt5）把插件放在 `<prefix>/plugins`，Qt6 从 python 可执行文件位置推导搜索路径后只查 `<prefix>/bin/platforms` 与 `<prefix>/plugins/platforms`（Qt 5.15，incompatible），site-packages 里 PySide6 自带的 Qt6 `libqoffscreen.so` 从未被搜索。修复：`QT_PLUGIN_PATH=<site-packages>/PySide6/Qt/plugins`（workflow 中由 `$G4_PREFIX/bin/python` 计算并写 `$GITHUB_ENV`）。本机用 conda 环境（Geant4 11.3.2 + python 3.11 + PySide6 6.12.0）复现了同样的空搜索路径，`QT_QPA_PLATFORM=offscreen` + 该变量后 `QApplication` 正常创建；`QT_QPA_PLATFORM_PLUGIN_PATH` 与 `QT_PLUGIN_PATH` 两种写法都有效。
+3. 公开仓库的 Actions 日志需要登录（`GET /actions/runs/{id}/logs` 403，check-runs 也拿不到）。改为失败时把每个失败/跳过用例重发成 `::error`/`::warning` 注解（`scripts/ci_annotate_failures.py`，workflow 中 `if: failure()` 步骤；run 页面的 Annotations 公开可见），日志尾部一并带上；`scripts/test_ci_annotations.py` 用临时报告覆盖"有失败/有跳过/日志缺失/无报告/归档副本"五种情况。定位第 2 条正是靠这个注解。
+
+**未完成、不得混淆**：`M0 static and GUI regression`（`.github/workflows/m0-static-gui.yml`，workflow id 391892216）在仓库设置中是 `disabled_manually`，所以 Windows/Ubuntu 上的 static+GUI 旧 job 不会随 push 触发；其 2026-10-23 的历史运行在 "Run offscreen GUI tests" 步骤失败（步骤 1–5 成功），原因尚需日志才能确认。恢复它需要仓库所有者操作网页或 token（`PUT /repos/{owner}/{repo}/actions/workflows/391892216/enable`）。Geant4 11.2/11.4 矩阵未开始。
+
+**规则**：CI 绿必须引用具体 run id 与提交，不得把"workflow 已写"或"本机等价拓扑验证"说成 Actions 已绿；Linux workflow 只覆盖 Geant4 11.3.2 + Ubuntu 24.04（外加本 PR 起在同一 job 内跑 static 与 offscreen GUI）；失败用例注解是公开日志的替代品，不得把它当成完整日志。
+- 归档证据自洽（2026-10-28 补）：`docs/verification/**/logs/*.log` 现随证据一起入库（`.gitignore` 例外），`scripts/check_report_evidence.py` 的 `find_latest_report()` 同时接受运行目录（`<root>/<run-id>/report.json`）与归档目录（`<root>/report.json`），因此干净克隆上 `--report-root docs/verification/<dir>` 也能逐字节核对 `log_sha256`；回归用例覆盖归档布局。
