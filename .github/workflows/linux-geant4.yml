@@ -61,6 +61,21 @@ jobs:
           echo "LD_LIBRARY_PATH=$G4_PREFIX/lib:${LD_LIBRARY_PATH:-}" >> "$GITHUB_ENV"
           echo "$G4_PREFIX/bin" >> "$GITHUB_PATH"
 
+      # PySide6 ships its own Qt6 plugins inside site-packages, but a conda prefix
+      # has <prefix>/plugins (the Qt5 plugins of qt-main) next to python's bin
+      # directory, and Qt derives its search path from that layout. The Qt6
+      # offscreen plugin is then never found and every GUI test dies with
+      # 'Could not find the Qt platform plugin "offscreen"'. Point Qt at the
+      # PySide6 plugins explicitly; verified locally in a conda env with the same
+      # Geant4 11.3.2 + python 3.11 + PySide6 6.12.0 combination.
+      - name: Point Qt at the PySide6 plugins
+        run: |
+          set -euo pipefail
+          plugins="$("$G4_PREFIX/bin/python" -c 'import pathlib, PySide6; print(pathlib.Path(PySide6.__file__).resolve().parent / "Qt" / "plugins")')"
+          test -d "$plugins/platforms"
+          test -f "$plugins/platforms/libqoffscreen.so"
+          echo "QT_PLUGIN_PATH=$plugins" >> "$GITHUB_ENV"
+
       - name: Configure the backend
         run: cmake -S . -B build_linux -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="$G4_PREFIX"
 
