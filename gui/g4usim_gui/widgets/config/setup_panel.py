@@ -265,7 +265,7 @@ class SetupMixin:
         except ValueError:
             seed_value = None
         return RunSettings(
-            run_name=self.run_name.text().strip() or "gui_run",
+            run_name=self.run_name.text().strip(" \t\r\n\v\f") or "gui_run",
             threads=self.threads.value(),
             seed=seed_value,
             beam_on=self.beam_on.value(),

@@ -107,6 +107,16 @@ def normalize_project_data(data: dict[str, Any]) -> dict[str, Any]:
     result = copy.deepcopy(data)
     if isinstance(result.get("geometryEditor"), dict):
         result["geometryEditor"] = normalize_geometry_data(result["geometryEditor"])
+    source = result.get("sourceEditor")
+    if isinstance(source, dict):
+        has_mode, has_type = "position_mode" in source, "position_type" in source
+        if has_mode and has_type:
+            if not same_json_value(source["position_mode"], source["position_type"]):
+                raise ValueError("Conflicting project fields: project.sourceEditor.position_mode / position_type")
+        elif has_mode:
+            source["position_type"] = source["position_mode"]
+        elif has_type:
+            source["position_mode"] = source["position_type"]
     # These two flat Round-7B compatibility conversions predate E6. Do not
     # extend them to nested fields, fractional numbers, booleans or null paths.
     if type(result.get("threads")) is str:
@@ -127,8 +137,11 @@ def plan_project_migration(source: str | Path) -> MigrationPlan:
     project = project_from_dict(original)
     result = project_to_dict(project)
     changes = [f"Project version {original.get('version', 1)} -> {SCHEMA_VERSION}"]
-    if original != normalize_project_data(original):
+    normalized = normalize_project_data(original)
+    if not same_json_value(original.get("geometryEditor"), normalized.get("geometryEditor")):
         changes.append("Normalize enumerated geometry aliases and legacy preview rows")
+    if not same_json_value(original.get("sourceEditor"), normalized.get("sourceEditor")):
+        changes.append("Derive the missing source position alias from the explicitly supplied position field")
     if "runInputMode" not in original:
         changes.append("Record the existing generated/external compatibility decision")
     changes.append("Serialize the supported project model; retain existing path strings and loading semantics")

@@ -401,3 +401,21 @@ Geant4 `ApplyCommand()` 返回 0 不足以确认命令成功；沿用材料命�
 迁移计划只读源并带实际字节SHA，publish复核源身份后以同目录临时文件flush/fsync及exclusive hard link发布，不覆盖已有目标/链接；失败不改源。发布是提交点，之后清理临时链接失败返回warning，不能将已成功目标报告为失败或删除目标。主INI副本限定同目录以保留相对资源；几何相对STL/GDML/copies路径确定性转成原资源绝对路径；K1资源包仍未实现。项目兼容1–6/缺省及列明的旧preview/别名，未知/冲突/重复JSON/nonfinite拒绝；正常保存保持原子替换，Save As成功后才切project_file。迁移不自动启source-copy，不解除原编辑blocker，格式检查不等于后端/物理验证。
 
 诊断C++排序和相等共用完整字段身份，GUI源问题以位置/类别/严重度识别，避免重复校验/重载累加。专项为`test_main_config_version`（含component）、`test_main_ini_migration`、`test_field_biasing_schema`、`test_config_migration`、`test_config_migration_backend`、`test_geometry_diagnostic_identity`、`smoke_config_migration_ui`；旧schema/几何/项目/来源及平台全量继续保留。独立审查发现的类型静默转换和preview类型等值问题已修复并由不同写者用原始5例、14组合法旧版本复核，见`docs/collab/reviews/20261030-e6-migration-cross-review.md`；完整冻结验收仍待后续证据，不因本文写入而视为完成。
+
+### 2026-10-30 E6 首轮回归修复边界
+
+首轮冻结cb837e6的Windows全量126pass/1fail/0skip，41462个v3入口；最近项目缺失文件触发critical模态，本机经核验只停止该用例进程后完成报告，退出4294967295，不能写成本机timeout。真实Linux40911355023/M040911355092四job均GUI同例600秒timeout，static各19/19、GUI各32/33，Linux后端/集成未执行。原报告/日志和官方归档摘要保留，不覆盖或声称通过。
+
+修复候选保持Open critical、Recent/Snapshot warning及原标题；文件导入在发布对象/路径/页面/运行包状态前，读取实际SpinBox上下界检查真实投影字段，越界明确拒绝，不让Qt静默限幅或OverflowError后留下半更新对象。未投影的scoringSettings.trajectory_events不单独套上限；GUI上限不改变INI/CLI范围。向导先对候选副本预检，以免新增guard在原位应用后拒绝。空combo清除当前选择，未知选项仍保留，不新增枚举白名单；已有物理量文本校验继续负责无效单位/数值。
+
+独立复核还发现此前已存在的显式editor空锚点整对象回退：现在只在editor对象缺失时from_settings；显式空particle/reference或bins<=0不丢其他标量。原始JSON的sourceEditor.position_mode/type同时给出且不同则拒绝，只有一个时复制原值补另一个；程序内历史SourceEditableModel(position_mode='plane')构造仍可保存，project_to_dict仅在导出副本按既有mode权威语义对齐别名，不修改caller。保证针对已覆盖的解析/兼容/GUI投影错误，不宣称任意IO/Qt异常全部可回滚。不同写者复核与新的完整冻结证据后续单独登记。
+
+### 2026-10-30 E6 真实运行包恢复与复制候选
+
+真实writer快照包含runPackage、材料/几何摘要等专用envelope，不能直接用普通项目loader或全局丢弃unknown字段。core/project_snapshot专用读取严格校验已知结构、版本、类型、标准同包layout与资源；恢复包内当前材料/几何及快照编辑参数。材料摘要只有组分计数，不重建草稿；清config/macro/output进入generated待生成，旧success/运行期EffectiveConfig/手改main-macro不恢复。无envelope的legacy普通项目分支保留；一旦出现envelope键，缺项不能降级。旧duplicate的材料/几何路径仅接受同旧包标准后缀成对遗留值，并完全不读取旧位置。当前文件SHA不是历史运行身份。
+
+标准duplicate修复材料file、几何config和output dir三个主INI路径及完整包路径，只支持明确定义的标准生成资源集合/宏，外部依赖或歧义拒绝；日志/输出不复制。write/JSON失败不吞掉返回成功；已写出但GUI无法载入时须明确副本路径与未运行状态。新main writer显式格式1，旧缺失仍兼容。
+
+复制并运行的CLI线程/seed/name必须读取副本当前main，而非当前项目或陈旧snapshot。read_generated_run_settings只读这三字段，严格ASCII整数；seed缺省None、显式0保留。前端在候选副本对齐flat/runSettings并投影预检后才发布；保留用户已选择的backend。runName两处GUI trim仅去ASCII空白，尾NBSP等Unicode字符不得被额外去掉。无一般INI反向导入或物理验证承诺。
+
+不同写者29导入载荷/42版本alias、88控件边界、13snapshot路径、duplicate核心与最后8组CLI状态原反例复核均已通过；原失败证据保留。新增正式用例包含project_snapshot_compat、duplicate_generated_package_model/backend、gui_project_import_projection、gui_project_snapshot_restore、gui_duplicate_history_cli。最终清单133项，下一步新冻结全量/真实CI，实窗仍等待解锁，不能把此条当作阶段关闭。

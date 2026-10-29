@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import copy
+
 from PySide6.QtWidgets import QFileDialog, QMessageBox
 
 from pathlib import Path
@@ -14,7 +16,7 @@ from g4usim_gui.history.run_history_store import (
     get_recent_projects,
     load_state,
 )
-from g4usim_gui.history.run_package_actions import duplicate_package
+from g4usim_gui.history.run_package_actions import duplicate_package, read_generated_run_settings
 from g4usim_gui.models.package_model import PathSettings
 
 
@@ -50,7 +52,30 @@ class ProjectMixin:
         project.geometrySettings.template = "hierarchical"
         return project
 
+    def _check_project_projection(self, project: G4USimProject) -> None:
+        """Reject values the current editors would overflow or silently clamp."""
+        page = self.config_builder_page
+        bindings = (
+            ("project.threads", project.threads, self.project_page.threads),
+            ("project.threads", project.threads, page.threads),
+            ("project.runSettings.threads", project.runSettings.threads, page.threads),
+            ("project.runSettings.beam_on", project.runSettings.beam_on, page.beam_on),
+            ("project.scoringSettings.hist_bins", project.scoringSettings.hist_bins, page.hist_bins),
+            ("project.scoringEditor.hist_bins", project.scoringEditor.hist_bins, page.scoring_editor_bins),
+            ("project.scoringEditor.hist_bins", project.scoringEditor.hist_bins, page.hist_bins),
+            ("project.scoringEditor.trajectory_events", project.scoringEditor.trajectory_events, page.scoring_editor_trajectories),
+            ("project.sourceEditor.preview_ray_count", project.sourceEditor.preview_ray_count, page.source_editor_preview_rays),
+            ("project.sourceEditor.random_seed_preview", project.sourceEditor.random_seed_preview, page.source_editor_preview_seed),
+        )
+        for path, value, widget in bindings:
+            if type(value) is not int or not widget.minimum() <= value <= widget.maximum():
+                raise ValueError(ui_format(
+                    "Project field {path} = {value} is outside the editable GUI range [{minimum}, {maximum}].",
+                    path=path, value=value, minimum=widget.minimum(), maximum=widget.maximum(),
+                ))
+
     def _set_project(self, project: G4USimProject) -> None:
+        self._check_project_projection(project)
         self.project = project
         self.scenario_page.set_executable(project.executable)
         self.run_page.set_macro_plan("")
@@ -137,19 +162,62 @@ class ProjectMixin:
             return
         self._load_project_path(path)
 
-    def _load_project_path(self, path: str, *, snapshot: bool = False) -> bool:
+    def _load_project_path(self, path: str, *, snapshot: bool = False, recent: bool = False) -> bool:
         try:
-            project = load_project(path)
-        except Exception as exc:  # noqa: BLE001 - user-facing project load errors.
-            QMessageBox.critical(self, ui_text("Open project failed"), str(exc))
+            restored = None
+            if snapshot:
+                from g4usim_gui.core.project import load_project_snapshot
+
+                restored = load_project_snapshot(path)
+                project = restored.project
+            else:
+                project = load_project(path)
+            self._check_project_projection(project)
+        except Exception as exc:  # noqa: BLE001 - reject predictable failures before publishing.
+            if snapshot:
+                QMessageBox.warning(self, ui_text("Load snapshot failed"), str(exc))
+            elif recent:
+                QMessageBox.warning(self, ui_text("Open recent project failed"), str(exc))
+            else:
+                QMessageBox.critical(self, ui_text("Open project failed"), str(exc))
             return False
         self._set_project(project)
         if not snapshot:
             self.project_file = Path(path)
             add_recent_project(path)
             self._refresh_recent_menu()
-        self.statusBar().showMessage(ui_format("Loaded project: {path}", path=path), 5000)
+        if restored is not None:
+            self._show_snapshot_restore_notes(restored)
+        else:
+            self.statusBar().showMessage(ui_format("Loaded project: {path}", path=path), 5000)
         return True
+
+    def _show_snapshot_restore_notes(self, restored) -> None:
+        if restored.package_root:
+            scope = ui_text(
+                "Restored the package's current materials and geometry, together with the editing parameters recorded in the snapshot. "
+                "Validate them again and generate a new run package. Hand-edited main/macro files, unsaved drafts and historical run success were not restored."
+            )
+            context = ui_format("Package: {path}", path=restored.package_root)
+            status = "Package inputs restored; review the details and generate a new package."
+        else:
+            scope = ui_text("Loaded legacy saved project settings. Original input files and historical results were not verified; validate the settings and generate a new package.")
+            context = ""
+            status = "Legacy project settings loaded; validate and generate a new package."
+        details = "\n\n".join(part for part in (
+            scope, context, "\n".join(ui_text(note) for note in restored.notes),
+        ) if part)
+        page = self.config_builder_page
+        page.set_validation_text(details)
+        self.run_page.append_status_message(details)
+        self.page_stack.setCurrentWidget(page)
+        for index in range(page.workspace_tabs.count()):
+            container = page.workspace_tabs.widget(index)
+            if container is page.details_tabs or container.isAncestorOf(page.details_tabs):
+                page.workspace_tabs.setCurrentIndex(index)
+                break
+        page.details_tabs.setCurrentIndex(0)
+        self.statusBar().showMessage(ui_text(status), 8000)
 
     def save_project(self) -> None:
         if self.project_file is None:
@@ -186,29 +254,42 @@ class ProjectMixin:
         dialog.exec()
 
     def load_snapshot_into_project(self, snapshot_path: str) -> None:
-        # Keep historical package paths visible, but users can generate a new package before running.
-        if self._load_project_path(snapshot_path, snapshot=True):
-            self.statusBar().showMessage(ui_text("Snapshot loaded. You can generate a new package or rerun with the existing package."), 8000)
+        self._load_project_path(snapshot_path, snapshot=True)
 
     def open_history_output(self, package_dir: str, output_dir: str) -> None:
         self.output_page.set_package_dir(package_dir, output_dir)
         self.tabs.setCurrentWidget(self.output_page)
 
     def duplicate_history_package(self, package_dir: str, *, run_after: bool) -> None:
+        new_package = ""
         try:
-            new_package = duplicate_package(package_dir, self.project.runsRoot)
+            candidate = copy.deepcopy(self.project)
+            self.project_page.apply_to_project(candidate)
+            new_package = duplicate_package(package_dir, candidate.runsRoot)
+            package = Path(new_package)
+            startup = read_generated_run_settings(package)
+            candidate.configPath = str(package / "config" / "main.ini")
+            candidate.macroPath = str(package / "macros" / "run.mac")
+            candidate.outputDir = str(package / "output")
+            candidate.workspaceRoot = str(package)
+            candidate.pathSettings.workspace_root = str(package)
+            candidate.pathSettings.executable = candidate.executable
+            candidate.pathSettings.runs_root = candidate.runsRoot
+            candidate.runInputMode = "external"
+            candidate.threads = candidate.runSettings.threads = startup.threads
+            candidate.seed = "" if startup.seed is None else str(startup.seed)
+            candidate.runSettings.seed = startup.seed
+            candidate.runName = candidate.runSettings.run_name = startup.run_name
+            self._check_project_projection(candidate)
         except Exception as exc:  # noqa: BLE001
-            QMessageBox.warning(self, "Duplicate failed", str(exc))
+            message = (ui_format("Copy created at {path}, but it was not loaded and no run was started: {error}", path=new_package, error=exc)
+                       if new_package else str(exc))
+            title = "Copy created; not loaded or run" if new_package else "Duplicate failed"
+            QMessageBox.warning(self, ui_text(title), message)
             return
-        package = Path(new_package)
-        self.project.configPath = str(package / "config" / "main.ini")
-        self.project.macroPath = str(package / "macros" / "run.mac")
-        self.project.outputDir = str(package / "output")
-        self.project.runInputMode = "external"
-        self.project_page.set_project(self.project)
+        self._set_project(candidate)
         self.output_page.set_package_dir(str(package), self.project.outputDir)
         self.run_history_page.refresh()
-        self.build_command_preview(show_errors=False)
         self.tabs.setCurrentWidget(self.run_page)
         if run_after:
             self.start_run()
@@ -233,7 +314,7 @@ class ProjectMixin:
             action.triggered.connect(lambda _checked=False, p=path: self._open_recent_project(p))
 
     def _open_recent_project(self, path: str) -> None:
-        self._load_project_path(path)
+        self._load_project_path(path, recent=True)
 
     def clear_recent_projects(self) -> None:
         clear_recent_projects()

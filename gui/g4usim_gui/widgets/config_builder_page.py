@@ -286,6 +286,7 @@ class ConfigBuilderPage(SetupMixin, MaterialsMixin, GeometryMixin, LayersMixin, 
 
     def _set_combo_text(self, combo: QComboBox, value: str) -> None:
         if not value:
+            combo.setCurrentIndex(-1)
             return
         index = combo.findText(value)
         if index < 0:

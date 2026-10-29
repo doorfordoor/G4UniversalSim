@@ -17,7 +17,7 @@
 
 ## E6 进行中（2026-10-30）
 
-基于已交付 `c6bf8ad`，在同一隔离工作区的新分支 `roadmap/E6-config-compat` 推进字段补齐与配置兼容。范围、单写者归属、内部提交及验收节点见 [E6 开工契约](docs/collab/inbox/20261029-2355-astra-e6-execution.md)。DeepSeek 已完成一次真实前端设计咨询，采纳/纠偏见 [设计记录](docs/collab/outbox/20261029-deepseek-e6-design.md)。主 INI 版本候选拒绝的独立组件检查通过；schema、迁移服务及前端正在实现，全量/跨平台/实窗验收尚未执行，不能标记阶段完成。
+基于已交付 `c6bf8ad`，在同一隔离工作区的新分支 `roadmap/E6-config-compat` 推进字段补齐与配置兼容。范围、单写者归属、内部提交及验收节点见 [E6 开工契约](docs/collab/inbox/20261029-2355-astra-e6-execution.md)。DeepSeek 已完成一次真实前端设计咨询，采纳/纠偏见 [设计记录](docs/collab/outbox/20261029-deepseek-e6-design.md)。394 项 schema、主 INI 版本、迁移副本与诊断实现已完成专项审查；首轮冻结 `cb837e6` 的 Windows 全量为 126 pass / 1 fail / 0 skip，实际 CI 四个 job 均因最近项目错误弹窗阻塞失败。原始失败证据保留，正在修复弹窗和项目导入的整数投影/显式字段保留边界，之后重新冻结验收。实窗检查仍等待桌面解锁，不能标记阶段完成。
 
 ## 完整 2C 已完成（2026-10-29）
 
@@ -101,7 +101,7 @@ R03–R32现已完成修复与回归，旧[反例证据](docs/verification/r03-r
 ## 已知缺口（不要把以下当作已完成）
 
 - 后端名字校验类错误可能在"首个事件前"才发现（例如 `[scoring.displacement]` 的粒子名在 `BeginRun` 校验，`--inspect-run` 查不出）。
-- 当前schema 357个字段中 supported 59 / experimental 291 / deprecated 5 / unsupported 2；61项有 `gui` 元数据（原57项分类保留，新增4项 `editable=false`），296项无GUI元数据。新增模块策略不开放GUI编辑；字段数不等于全配置或物理验证。
+- E6候选当前schema 394个字段中 supported 60 / experimental 319 / deprecated 13 / unsupported 2；62项有 `gui` 元数据，332项无GUI元数据。字段登记及 `gui` 元数据不等于可编辑；新增模块策略、场/偏置登记与版本标记均未开放对应编辑器。字段数不等于全配置或物理验证。
 - 探测器响应、Dose/Fluence/DDD 等基准多为"同源自洽"或"解析式"，缺少第三方独立数据与实测效率对照。
 - 偏置只有 process-level XS 路径；importance、weight-window、splitting、Russian roulette 未实现。
 - 交互命令审计只覆盖 `--ui --ui-session csh`；Qt UI 与部分嵌套/动态命令不受审计保证。

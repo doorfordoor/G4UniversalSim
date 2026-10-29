@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import csv
 import json
 import os
 from pathlib import Path
@@ -13,12 +14,13 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "gui"))
 from g4usim_gui.core.config_migration import digest, publish_migration
 from g4usim_gui.core.geometry_migration import plan_geometry_migration
-from g4usim_gui.core.project import G4USimProject, load_project, save_project
+from g4usim_gui.core.project import G4USimProject, load_project, load_project_snapshot, save_project
 from g4usim_gui.editors.geometry_editor_model import geometry_document_from_summary, validate_geometry_document
 from g4usim_gui.parsers.geometry_parser import parse_geometry
 from g4usim_gui.writers.geometry_ini_writer import generate_geometry_ini_text
 from test_geometry_config_diagnostics import SIMPLE, LAYERED, ARRAY, SHIELDING, HIERARCHICAL
 from test_geometry_a5 import GDML_SENSDET, octahedron, write_binary_stl
+from test_project_snapshot_compat import build_package_fixture, regenerate_project
 
 
 def summary_values(path):
@@ -69,6 +71,52 @@ enabled = false
     data = json.loads(mesh.read_text(encoding="utf-8"))
     assert data["schema"] == "g4usim_geometry_mesh_v1" and data["volume_count"] > 0
     return data
+
+
+def snapshot_backend_roundtrip(executable, work):
+    folder = work / "snapshot-roundtrip"
+    folder.mkdir()
+    package, originals = build_package_fixture(folder, executable)
+    # The external originals are deliberately unusable. Both runs must consume
+    # package inputs, including the generated material recipe and edited solid.
+    for original in originals:
+        original.write_text("external input changed after package creation", encoding="utf-8")
+    loaded = load_project_snapshot(package.project_snapshot_path)
+    saved = folder / "restored-project.json"
+    save_project(loaded.project, saved)
+    restored = load_project(saved)
+    rebuilt = regenerate_project(restored)
+    assert Path(package.materials_ini_path).read_bytes() == Path(rebuilt.materials_ini_path).read_bytes()
+    assert Path(package.geometry_ini_path).read_bytes() == Path(rebuilt.geometry_ini_path).read_bytes()
+    parsed = parse_geometry(rebuilt.geometry_ini_path, "hierarchical")
+    target = next(row for row in parsed.volumes if row.name == "Target")
+    assert target.size == "12 mm,14 mm,16 mm" and target.material == "ActiveMix"
+    assert restored.sourceEditor.particle == "proton" and restored.sourceEditor.energy == "5 MeV"
+    assert restored.threads == restored.runSettings.threads == 1 and restored.runSettings.seed == 12345
+    observed = []
+    for label, current in (("original", package), ("restored", rebuilt)):
+        result = subprocess.run([str(executable), "--config", current.main_ini_path, "--macro", current.run_macro_path],
+                                cwd=ROOT, capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=120)
+        assert result.returncode == 0, (label, (result.stdout + result.stderr)[-6000:])
+        output = Path(current.output_dir)
+        values = summary_values(output / "run_summary.txt")
+        assert values["status"] == "completed" and values["macro_execution_status"] == "completed", values
+        assert values["planned_event_count"] == values["actual_completed_event_count"] == "2", values
+        assert values["run_count"] == "1" and values["effective_source_particle"] == "proton", values
+        assert float(values["effective_source_energy_MeV"]) == 5
+        events = []
+        for path in sorted(output.glob("event_edep_t*.csv")):
+            with path.open(encoding="utf-8", newline="") as stream:
+                events.extend(csv.DictReader(stream))
+        assert len(events) == 2 and sum(float(row["raw_edep_MeV"]) for row in events) > 0, events
+        dose = []
+        for path in sorted(output.glob("dose_volume_summary_t*.csv")):
+            with path.open(encoding="utf-8", newline="") as stream:
+                dose.extend(csv.DictReader(stream))
+        assert dose and all(float(row["mass_kg"]) > 0 for row in dose), dose
+        observed.append((events, dose))
+    assert observed[0] == observed[1], "same seed/current package inputs must retain event and dose outputs"
+    print("package snapshot: real writer -> dedicated load -> ordinary save/reload -> regenerate -> two 2-event runs agree")
 
 
 def main():
@@ -138,6 +186,7 @@ def main():
         invalid = sources / "duplicate.ini"
         invalid.write_text("[global]\nversion=2\n" + HIERARCHICAL + "Material=G4_Si\n", encoding="utf-8")
         backend(executable, work, "strict-duplicate", "hierarchical", invalid, expected=False)
+        snapshot_backend_roundtrip(executable, work)
     print("E6 real-backend migration equivalence passed (engineering checks, not a physics benchmark)")
     return 0
 

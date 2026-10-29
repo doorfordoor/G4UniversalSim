@@ -10,6 +10,13 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from g4usim_gui.history.run_history_scanner import scan_runs_root
 from g4usim_gui.core.run_result import summary_fingerprint
 from g4usim_gui.history.run_package_actions import duplicate_package
+from g4usim_gui.core.project import G4USimProject
+from g4usim_gui.models.package_model import GeometrySettings, PathSettings
+from g4usim_gui.models.run_model import RunSettings
+from g4usim_gui.models.source_model import SourceSettings
+from g4usim_gui.models.physics_model import PhysicsSettings
+from g4usim_gui.models.scoring_model import ScoringSettings
+from g4usim_gui.writers.package_writer import create_run_package
 
 
 def _make_package(root: Path, name: str, status: dict | None = None, summary: bool = False) -> Path:
@@ -61,7 +68,26 @@ def main() -> int:
         assert statuses["incomplete"] == "incomplete"
         assert statuses["old"] == "incomplete"
 
-        copy = Path(duplicate_package(str(success), str(root)))
+        # Scanner fixtures above deliberately isolate result-state semantics.
+        # Duplication must use a real generated input package with its path table.
+        repository = Path(__file__).resolve().parents[2]
+        selected_geometry = root / "selected-geometry.ini"
+        selected_geometry.write_text(
+            "[world]\nshape=box\nsize=100 mm,100 mm,100 mm\nmaterial=G4_AIR\n"
+            "[volume.Target]\nparent=world\nshape=box\nsize=10 mm,10 mm,10 mm\nmaterial=G4_Si\nsensitive=true\n",
+            encoding="utf-8",
+        )
+        generated, _ = create_run_package(
+            project=G4USimProject(),
+            paths=PathSettings(executable=sys.executable, workspace_root=str(repository),
+                               runs_root=str(root / "generated"),
+                               materials_config=str(repository / "config/materials/material.ini"),
+                               geometry_config=str(selected_geometry)),
+            run=RunSettings(beam_on=3),
+            geometry=GeometrySettings(template="hierarchical", config_path=str(selected_geometry)),
+            source=SourceSettings(), physics=PhysicsSettings(), scoring=ScoringSettings(),
+        )
+        copy = Path(duplicate_package(generated.package_dir, str(root / "copies")))
         assert (copy / "config").exists()
         assert (copy / "macros").exists()
         assert not list((copy / "output").glob("*.csv"))

@@ -65,6 +65,15 @@ def project_to_dict(project: G4USimProject) -> dict[str, Any]:
     data["schema"] = SCHEMA_NAME
     data["version"] = SCHEMA_VERSION
     data["geometryEditor"] = geometry_document_to_snapshot(project.geometryEditor)
+    # In-memory SourceEditableModel historically accepts position_mode alone;
+    # its runtime validator treats that field as authoritative. Export the same
+    # established alias meaning without mutating the caller or running validation.
+    # Raw JSON declaring two different aliases is rejected before construction.
+    source = data["sourceEditor"]
+    if source["position_mode"].strip():
+        source["position_type"] = source["position_mode"]
+    elif source["position_type"].strip():
+        source["position_mode"] = source["position_type"]
     return data
 
 
@@ -122,11 +131,11 @@ def project_from_dict(data: dict[str, Any]) -> G4USimProject:
         project.runSettings.threads = project.threads
     if project.runSettings.seed is None and project.seed:
         project.runSettings.seed = int(project.seed)
-    if not has_source_editor or not project.sourceEditor.particle:
+    if not has_source_editor:
         project.sourceEditor = SourceEditableModel.from_settings(project.sourceSettings)
-    if not has_physics_editor or not project.physicsEditor.reference_list:
+    if not has_physics_editor:
         project.physicsEditor = PhysicsEditableModel.from_settings(project.physicsSettings)
-    if not has_scoring_editor or project.scoringEditor.hist_bins <= 0:
+    if not has_scoring_editor:
         project.scoringEditor = ScoringEditableModel.from_settings(project.scoringSettings)
     _check_supported_fields(data, project_to_dict(project))
     project.version = SCHEMA_VERSION
@@ -163,6 +172,12 @@ def load_project(path: str | Path) -> G4USimProject:
     if not isinstance(data, dict):
         raise ValueError("Project JSON root must be an object")
     return project_from_dict(data)
+
+
+def load_project_snapshot(path: str | Path):
+    """Restore the explicit known run-package envelope; normal load stays strict."""
+    from g4usim_gui.core.project_snapshot import load_snapshot
+    return load_snapshot(path)
 
 
 def save_project(project: G4USimProject, path: str | Path) -> None:

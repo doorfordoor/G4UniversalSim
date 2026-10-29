@@ -42,6 +42,10 @@ class ContentMixin:
         """Put a wizard result into the current project (in place) and show the Configuration page."""
         try:
             result = simulation_wizard.build(spec)
+            candidate = copy.deepcopy(self.project)
+            self.project_page.apply_to_project(candidate)
+            simulation_wizard.apply_to_project(candidate, result)
+            self._check_project_projection(candidate)
         except ValueError as error:
             QMessageBox.warning(self, ui_text("New simulation"), str(error))
             return False

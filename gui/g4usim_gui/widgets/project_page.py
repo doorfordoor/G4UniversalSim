@@ -143,7 +143,7 @@ class ProjectPage(QWidget):
         project.runsRoot = self.runs_root.text().strip()
         project.threads = self.threads.value()
         project.seed = self.seed.text().strip()
-        project.runName = self.run_name.text().strip()
+        project.runName = self.run_name.text().strip(" \t\r\n\v\f")
         return project
 
     def to_project(self, existing_project: G4USimProject | None = None) -> G4USimProject:
