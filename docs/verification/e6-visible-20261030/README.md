@@ -35,3 +35,7 @@
 Linux原报告保留git_dirty=true：指纹覆盖内容匹配，但完整dirty清单未采集，不能声称整个检出clean。迁移格式接受、运行完成与物理正确性仍分别解释；不增加Q2科研验证、J2高级编辑、K1任意资源包或全DPI/原生Linux桌面支持。GUI旧threads=0现在明确拒绝，其他兼容差异见使用说明。
 
 下一完整阶段为 **F1 输出身份与来源**，其后F4/F5/K1；I1按既定依赖可并行。
+
+## 已发生的集成
+
+阶段关闭交付 `b7c6a4c8a8aaadda455c93d4f93672f56130579e` 已正常推送至 `roadmap/E6-config-compat`；独立 `q1-final` 工作区的 `codex` 从 `c6bf8ad` 快进到同一提交并普通推送，远端两分支已核对一致。见[集成收据](integration-receipt.json)。本补记只登记已发生事实，原D盘DSH检出保持独立，无强推或产品改动。
