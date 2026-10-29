@@ -1,0 +1,264 @@
+{
+  "test_exit_code": 0,
+  "case_count": 26,
+  "exe_sha256": "72b6ac1c69e8ba5e82bbc7e32dae2ba645f209a236660adb51fa4804ee82b49a",
+  "script_sha256": "531a52e6cd938069c5900886b62298555a30798ef836ecb2ee8a9d169c109db6",
+  "cases": [
+    {
+      "case": "t1-biasFalse-cshFalse-early",
+      "biasing_worker_coverage_complete": "false",
+      "macro_failure_command": "",
+      "macro_failure_line": "0",
+      "run_count": "2",
+      "status": "completed",
+      "run_0_id": "0",
+      "run_1_id": "1"
+    },
+    {
+      "case": "t1-biasFalse-cshFalse-geometryModified",
+      "biasing_worker_coverage_complete": "false",
+      "macro_failure_command": "/run/geometryModified",
+      "macro_failure_line": "3",
+      "run_count": "1",
+      "status": "failed",
+      "run_0_id": "0"
+    },
+    {
+      "case": "t1-biasFalse-cshFalse-initialize",
+      "biasing_worker_coverage_complete": "false",
+      "macro_failure_command": "/run/initialize",
+      "macro_failure_line": "3",
+      "run_count": "1",
+      "status": "failed",
+      "run_0_id": "0"
+    },
+    {
+      "case": "t1-biasFalse-cshFalse-ordinary",
+      "biasing_worker_coverage_complete": "false",
+      "macro_failure_command": "",
+      "macro_failure_line": "0",
+      "run_count": "2",
+      "status": "completed",
+      "run_0_id": "0",
+      "run_1_id": "1"
+    },
+    {
+      "case": "t1-biasFalse-cshFalse-physicsModified",
+      "biasing_worker_coverage_complete": "false",
+      "macro_failure_command": "/run/physicsModified",
+      "macro_failure_line": "3",
+      "run_count": "1",
+      "status": "failed",
+      "run_0_id": "0"
+    },
+    {
+      "case": "t1-biasFalse-cshFalse-reinitializeGeometry",
+      "biasing_worker_coverage_complete": "false",
+      "macro_failure_command": "/run/reinitializeGeometry",
+      "macro_failure_line": "3",
+      "run_count": "1",
+      "status": "failed",
+      "run_0_id": "0"
+    },
+    {
+      "case": "t1-biasFalse-cshTrue-early",
+      "biasing_worker_coverage_complete": "false",
+      "interactive_command_failure_kind": "none",
+      "macro_failure_command": "",
+      "macro_failure_line": "0",
+      "run_count": "2",
+      "status": "completed",
+      "run_0_id": "0",
+      "run_1_id": "1"
+    },
+    {
+      "case": "t1-biasFalse-cshTrue-geometryModified",
+      "biasing_worker_coverage_complete": "false",
+      "interactive_command_failure_kind": "run_lifecycle",
+      "macro_failure_command": "",
+      "macro_failure_line": "0",
+      "run_count": "1",
+      "status": "failed",
+      "run_0_id": "0"
+    },
+    {
+      "case": "t1-biasFalse-cshTrue-initialize",
+      "biasing_worker_coverage_complete": "false",
+      "interactive_command_failure_kind": "run_lifecycle",
+      "macro_failure_command": "",
+      "macro_failure_line": "0",
+      "run_count": "1",
+      "status": "failed",
+      "run_0_id": "0"
+    },
+    {
+      "case": "t1-biasFalse-cshTrue-ordinary",
+      "biasing_worker_coverage_complete": "false",
+      "interactive_command_failure_kind": "none",
+      "macro_failure_command": "",
+      "macro_failure_line": "0",
+      "run_count": "2",
+      "status": "completed",
+      "run_0_id": "0",
+      "run_1_id": "1"
+    },
+    {
+      "case": "t1-biasFalse-cshTrue-physicsModified",
+      "biasing_worker_coverage_complete": "false",
+      "interactive_command_failure_kind": "run_lifecycle",
+      "macro_failure_command": "",
+      "macro_failure_line": "0",
+      "run_count": "1",
+      "status": "failed",
+      "run_0_id": "0"
+    },
+    {
+      "case": "t1-biasFalse-cshTrue-reinitializeGeometry",
+      "biasing_worker_coverage_complete": "false",
+      "interactive_command_failure_kind": "run_lifecycle",
+      "macro_failure_command": "",
+      "macro_failure_line": "0",
+      "run_count": "1",
+      "status": "failed",
+      "run_0_id": "0"
+    },
+    {
+      "case": "t1-biasTrue-cshFalse-ordinary",
+      "biasing_worker_coverage_complete": "true",
+      "macro_failure_command": "",
+      "macro_failure_line": "0",
+      "run_count": "2",
+      "status": "completed",
+      "run_0_id": "0",
+      "run_1_id": "1"
+    },
+    {
+      "case": "t2-biasFalse-cshFalse-early",
+      "biasing_worker_coverage_complete": "false",
+      "macro_failure_command": "",
+      "macro_failure_line": "0",
+      "run_count": "2",
+      "status": "completed",
+      "run_0_id": "0",
+      "run_1_id": "1"
+    },
+    {
+      "case": "t2-biasFalse-cshFalse-geometryModified",
+      "biasing_worker_coverage_complete": "false",
+      "macro_failure_command": "/run/geometryModified",
+      "macro_failure_line": "3",
+      "run_count": "1",
+      "status": "failed",
+      "run_0_id": "0"
+    },
+    {
+      "case": "t2-biasFalse-cshFalse-initialize",
+      "biasing_worker_coverage_complete": "false",
+      "macro_failure_command": "/run/initialize",
+      "macro_failure_line": "3",
+      "run_count": "1",
+      "status": "failed",
+      "run_0_id": "0"
+    },
+    {
+      "case": "t2-biasFalse-cshFalse-ordinary",
+      "biasing_worker_coverage_complete": "false",
+      "macro_failure_command": "",
+      "macro_failure_line": "0",
+      "run_count": "2",
+      "status": "completed",
+      "run_0_id": "0",
+      "run_1_id": "1"
+    },
+    {
+      "case": "t2-biasFalse-cshFalse-physicsModified",
+      "biasing_worker_coverage_complete": "false",
+      "macro_failure_command": "/run/physicsModified",
+      "macro_failure_line": "3",
+      "run_count": "1",
+      "status": "failed",
+      "run_0_id": "0"
+    },
+    {
+      "case": "t2-biasFalse-cshFalse-reinitializeGeometry",
+      "biasing_worker_coverage_complete": "false",
+      "macro_failure_command": "/run/reinitializeGeometry",
+      "macro_failure_line": "3",
+      "run_count": "1",
+      "status": "failed",
+      "run_0_id": "0"
+    },
+    {
+      "case": "t2-biasFalse-cshTrue-early",
+      "biasing_worker_coverage_complete": "false",
+      "interactive_command_failure_kind": "none",
+      "macro_failure_command": "",
+      "macro_failure_line": "0",
+      "run_count": "2",
+      "status": "completed",
+      "run_0_id": "0",
+      "run_1_id": "1"
+    },
+    {
+      "case": "t2-biasFalse-cshTrue-geometryModified",
+      "biasing_worker_coverage_complete": "false",
+      "interactive_command_failure_kind": "run_lifecycle",
+      "macro_failure_command": "",
+      "macro_failure_line": "0",
+      "run_count": "1",
+      "status": "failed",
+      "run_0_id": "0"
+    },
+    {
+      "case": "t2-biasFalse-cshTrue-initialize",
+      "biasing_worker_coverage_complete": "false",
+      "interactive_command_failure_kind": "run_lifecycle",
+      "macro_failure_command": "",
+      "macro_failure_line": "0",
+      "run_count": "1",
+      "status": "failed",
+      "run_0_id": "0"
+    },
+    {
+      "case": "t2-biasFalse-cshTrue-ordinary",
+      "biasing_worker_coverage_complete": "false",
+      "interactive_command_failure_kind": "none",
+      "macro_failure_command": "",
+      "macro_failure_line": "0",
+      "run_count": "2",
+      "status": "completed",
+      "run_0_id": "0",
+      "run_1_id": "1"
+    },
+    {
+      "case": "t2-biasFalse-cshTrue-physicsModified",
+      "biasing_worker_coverage_complete": "false",
+      "interactive_command_failure_kind": "run_lifecycle",
+      "macro_failure_command": "",
+      "macro_failure_line": "0",
+      "run_count": "1",
+      "status": "failed",
+      "run_0_id": "0"
+    },
+    {
+      "case": "t2-biasFalse-cshTrue-reinitializeGeometry",
+      "biasing_worker_coverage_complete": "false",
+      "interactive_command_failure_kind": "run_lifecycle",
+      "macro_failure_command": "",
+      "macro_failure_line": "0",
+      "run_count": "1",
+      "status": "failed",
+      "run_0_id": "0"
+    },
+    {
+      "case": "t2-biasTrue-cshFalse-ordinary",
+      "biasing_worker_coverage_complete": "true",
+      "macro_failure_command": "",
+      "macro_failure_line": "0",
+      "run_count": "2",
+      "status": "completed",
+      "run_0_id": "0",
+      "run_1_id": "1"
+    }
+  ]
+}

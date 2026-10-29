@@ -1,0 +1,15 @@
+runID,scorer,quantity,key,name,unit,estimator,n_events,entries,value,mean_per_event,std_error,rel_error,fom_per_s,run_wall_time_s,sum,sum_sq,uncertainty_estimator,uncertainty_status
+0,dose,raw_dose,/world_PV#0/Target_PV#0,Target_PV,Gy,total,40,40,4.21543645924e-09,1.05385911481e-10,2.66318237623e-10,0.0631769071123,3868.65207234,0.0647625,4.21543645924e-09,5.15173017238e-19,uncorrected_event_moments_v1,approximate
+0,dose,weighted_dose,/world_PV#0/Target_PV#0,Target_PV,Gy,total,40,40,9.793672637e-10,2.44841815925e-11,2.38080408239e-10,0.243096146934,261.288468907,0.0647625,9.793672637e-10,8.06612867173e-20,uncorrected_event_moments_v1,approximate
+0,edep,raw_edep,total,total,MeV,total,40,40,298.626273764,7.46565684411,18.8662843589,0.0631769071123,3868.65207234,0.0647625,298.626273764,2585.37797007,uncorrected_event_moments_v1,approximate
+0,edep,weighted_edep,total,total,MeV,total,40,40,69.379481682,1.73448704205,16.8658846732,0.243096146934,261.288468907,0.0647625,69.379481682,404.795877771,uncorrected_event_moments_v1,approximate
+0,edep_particle,raw_edep,e+,e+,MeV,total,40,6,9.30848911651,0.232712227913,4.17511887215,0.448528093001,76.7533067604,0.0647625,9.30848911651,19.5978168374,uncorrected_event_moments_v1,approximate
+0,edep_particle,raw_edep,e-,e-,MeV,total,40,40,278.888472648,6.9722118162,17.0762468392,0.0612296617248,4118.62901323,0.0647625,278.888472648,2236.06771051,uncorrected_event_moments_v1,approximate
+0,edep_particle,raw_edep,gamma,gamma,MeV,total,40,39,10.429312,0.2607328,0.880672752261,0.0844420755905,2165.50203013,0.0647625,10.429312,3.49484821641,uncorrected_event_moments_v1,approximate
+0,edep_particle,weighted_edep,e+,e+,MeV,total,40,6,8.95806883572,0.223951720893,4.11780063984,0.459675038824,73.0759637787,0.0647625,8.95806883572,18.9624570411,uncorrected_event_moments_v1,approximate
+0,edep_particle,weighted_edep,e-,e-,MeV,total,40,40,57.9390554409,1.44847638602,14.8223634995,0.255826806058,235.930613553,0.0647625,57.9390554409,303.625813345,uncorrected_event_moments_v1,approximate
+0,edep_particle,weighted_edep,gamma,gamma,MeV,total,40,39,2.48235740544,0.0620589351361,0.761556857055,0.306787755617,164.059109617,0.0647625,2.48235740544,0.734021303737,uncorrected_event_moments_v1,approximate
+0,edep_volume,raw_edep,Target_PV,Target_PV,MeV,total,40,40,298.626273764,7.46565684411,18.8662843589,0.0631769071123,3868.65207234,0.0647625,298.626273764,2585.37797007,uncorrected_event_moments_v1,approximate
+0,edep_volume,weighted_edep,Target_PV,Target_PV,MeV,total,40,40,69.379481682,1.73448704205,16.8658846732,0.243096146934,261.288468907,0.0647625,69.379481682,404.795877771,uncorrected_event_moments_v1,approximate
+0,fluence,raw_fluence,/world_PV#0/Target_PV#0,Target_PV,mm-2,total,40,40,1.03732934794,0.0259332336986,0.042396323615,0.0408706489401,9243.85932777,0.0647625,1.03732934794,0.0286987526587,uncorrected_event_moments_v1,approximate
+0,fluence,weighted_fluence,/world_PV#0/Target_PV#0,Target_PV,mm-2,total,40,40,0.423253593658,0.0105813398414,0.0632353956647,0.14940309217,691.762829767,0.0647625,0.423253593658,0.00847730537847,uncorrected_event_moments_v1,approximate

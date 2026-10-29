@@ -1,5 +1,7 @@
 # G4UniversalSim Agent 维护说明
 
+2026-10-29 Q1 当前契约：交互执行只开放显式 `--ui --ui-session csh`；裸 UI/INI interactive 未选 csh 在执行前拒绝，dry-run 例外。已有 run 后四类重新初始化命令拒绝，连续运行使用 beamOn。旧段落中“拒绝偏置命令仅 warning”“可重复初始化”等为历史记录，以根 AGENTS 与 `docs/agent-history.md` 当前条目为准。Python 桌面 GUI 正常运行/预览不依赖该原生 UI 入口。
+
 2026-10-21 M5 Python 后处理扩展：`scripts/output_extension_registry.py`（API v1 注册/装载）、`scripts/run_output_extension.py`（CLI/独占写出）、`scripts/extensions/dose_json_extension.py`（借用 `gui/g4usim_gui/output/dose_summary.py` 聚合）。`scripts/test_output_extensions.py` 为受控数据专项，`scripts/test_dose_scoring.py` 执行真实 Geant4 worker CSV → JSON 的双 run 核对；统一入口添加 `output_extensions`。加载 `.py` 即执行任意 Python 代码，当前只允许显式可信来源，无沙箱、无内核 C++ 扩展。人类文档见 `docs/输出扩展原型说明.md`。
 
 整理日期：2026-07-11。本文件面向 Codex 这类代码 Agent，用于后续修改时快速找到事实来源。普通用户请优先读 `docs/中文使用手册.md`、`docs/中文几何配置说明.md` 和 `gui/docs/中文快速使用说明.md`。

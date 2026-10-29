@@ -1,5 +1,13 @@
 # G4UniversalSim GUI Agent 开发约束
 
+2026-10-29 R32：执行原生 Geant4 交互会话仅允许显式 `--ui --ui-session csh`；裸 `--ui` 或 INI `interactive=true` 未选择 csh 时在初始化及 macro 执行前明确拒绝并写失败摘要，不自动降级。dry-run 不开启会话，仍可使用裸 `--ui`。Python 桌面 GUI 正常 Run/后端几何预览继续使用 batch config/macro，不受此限制；不要把桌面 GUI 与原生 Qt UI 会话混称。修复真实回归待 build7，不据静态改动宣称通过。
+
+2026-10-29 Q1 R25–R30 当前边界：后端偏置算符按 worker 私有创建；GUI 解读摘要必须区分 master 几何挂接计划与逐 `(runID, threadID)` 的真实 wrapped process、绑定和 EndRun 完成收据，缺收据失败，proposal/applied 计数只证明调用。hits/HitRecord 的 `weight` 已纠正为步前统计权重，Edep/Dose/Fluence/LET/DDD 使用同一口径；相空间保留边界采样权重。历史偏置计分须重算；同次运行与原生 energyDeposit/cellFlux 的有限专项对照不等于一般无偏性、方差收益或全自动物理验证。generated 模式仍无 biasing 规则编辑器。
+
+目录结果读取、绘图与后处理必须复用 `output/provenance.py`：存在 `run_metadata.json` 时仅使用合法 `generated_files` 清单，校验自身/摘要登记、缺失、重复、路径逃逸及 run 归属；搬移目录按清单原根重定位，不能回读旧路径或自动混入未登记旧文件。缺 metadata 才允许 legacy/unverified 降级并显示警告；清单无内容哈希，不保证文件未被篡改或物理正确。显式文件/list 离线分析保留，但不能借无效清单获取可信运行证据。
+
+external batch/csh 的随机恢复须经过后端守卫，仅支持当前 MixMax/James 原生格式；每事件 restore enable 明确拒绝，MT 不宣称恢复全部 worker。已有 run 后 `/run/initialize`、`/run/reinitializeGeometry`、`/run/physicsModified`、`/run/geometryModified` 拒绝并建议新进程；普通连续 run 保留真实 ID 与文件。测试探针 v3 是保守 assert 入口计数，不是独立命题数量；旧代计数不得直接比较。当前 runner 登记 105 组（static 11 / backend 46 / gui 31 / integration 17），最终统一验收仍在进行，登记数不等于通过数。
+
 2026-10-29 Q1：项目保存须同目录临时文件写完并原子替换，失败保留原文件；未来版本/未知字段须拒绝并指出路径，不能静默丢弃。刷新结果先清旧证据；扫描 success 必须有正完成数与逐 run 一致性；后端预览仅发布最后请求。主窗口关闭只停止其持有的主 run/scan/geometry/inspect/merge/extension/scenario 进程与队列，有界等待后确认停止；不能按进程名杀其他任务。完整回归 `smoke_q1_public_paths.py`，真实 Windows 窗口另见 `smoke_q1_windows.py`。绘图总量按完成事件数归一化，LET 比值不再归一化；旧 per_primary API 弃用但保留旧数值。小样本/零分母/零总量误差不可用，网格跨 cell 投影无协方差不画误差。全文与迁移见 `docs/输出数据契约.md` 和 `docs/agent-history.md`。
 
 2026-10-29 2C 只读有效配置页：`core/effective_config.py` 读取 `g4usim_effective_config_v1`，上限 4 MiB，

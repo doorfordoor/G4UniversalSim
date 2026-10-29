@@ -81,6 +81,8 @@ The same macro can also self-load the minimal material, geometry, physics, sourc
 
 ## Validation Smoke Tests
 
+交互执行请使用 `--ui --ui-session csh`。裸 `--ui` 和未选择 csh 的 INI `interactive=true` 会在执行前明确拒绝；原生 Qt/其他会话不能实施当前的命令与生命周期守卫。Python 桌面 GUI 的正常运行和预览仍可使用。旧偏置结果需要以 Q1 修复后的版本重新运行，worker 实际偏置与步前权重修复会改变结果；运行通过不等于物理基准通过。
+
 Use `macros/run_hit_smoke.mac` when you specifically need to verify the sensitive-detector hit chain. It places a 1 MeV electron source inside a sensitive silicon target so `hits_tN.csv`, event edep, and edep histograms are expected to be produced:
 
 ```powershell

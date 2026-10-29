@@ -1,5 +1,7 @@
 # Changelog
 
+Q1兼容变化：原生交互执行必须选择 `--ui --ui-session csh`，裸UI/INI interactive未选csh明确失败；Python桌面GUI继续可用。极值测试按实际worker/master数值捕获阶段验收，不再假设事件固定分配。
+
 Short, user-facing record of notable changes. Detailed support status lives in
 `docs/功能支持矩阵.md`; the roadmap and phase status live in `docs/ROADMAP.md`.
 
@@ -12,6 +14,12 @@ Short, user-facing record of notable changes. Detailed support status lives in
 - 局部场遵守最近显式祖先，拒绝共享体继承冲突；修复源角范围残留、延迟 GPS 配置覆盖直接原生命令及偏置 process 后缀大小写。无法可靠审计的动态 GPS 修改明确拒绝。
 - 统计 CSV v2 追加方法与可用状态，保持原近似公式；稀疏 ROOT 必须有可靠完成事件数。绘图按事件归一化，LET 比值不再重复归一化，缺协方差的网格投影不显示合成误差。
 - 项目保存失败保留原文件，未来格式/未知字段拒绝；修正旧结果残留、零事件扫描假成功和预览竞态。关窗清理自身进程，合并工具优先使用显式路径或所选后端同目录工具。
+
+- 修正多轮偏置重复初始化重置master run ID；已有run后内核重初始化明确拒绝，普通连续运行保留。
+- 偏置算符改为每个worker实际挂接，摘要核对全部run/thread与EndRun收据；同LV别名去重，派生截面溢出/下溢明确失败。命中及Dose/Fluence等改用步前统计权重；历史偏置结果应重新运行。
+- 原生随机种子/恢复命令增加语义校验与安全状态读取，坏参数/坏文件不再被当作成功；条件派发和未经审计的恢复入口明确拒绝。
+- 自动结果目录读取遵循本轮manifest并支持复制重定位，旧worker文件不混入统计；legacy目录显式未验证。
+- 测试计数探针升级v3，排除表达式帧造成的虚增；保留旧报告，用同代探针重建基线比较。Linux CI归档补齐static/gui两个profile。
 
 ### Added
 

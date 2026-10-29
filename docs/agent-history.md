@@ -338,3 +338,23 @@ CMake 需要显式 `-DEXPAT_INCLUDE_DIR=$PREFIX/include -DEXPAT_LIBRARY=$PREFIX/
 - R12：isotropic重设完整theta/phi范围，不能继承旧cone窗口。R13：延迟ion/confine以实际G4SingleParticleSource身份管理，受审计直接原生GPS命令可取消对应旧配置；删除/增加/clear不能靠列表索引重放。pending期间非csh UI及csh无法审计的alias引用/定义、execute/loop/foreach、条件动态派发明确拒绝；getEnv生成的已有alias引用也必须拦截。宏仍依既有静态preflight。配置缓存不是原生GPS实际状态。R14：biasing动态section的process后缀从originalSection保留大小写；不能把hIoni改成hioni。test_gps_sources.py读取实际初级、能量与confinement顶点，test_biasing_target_contract.py核对真实wrapped process。
 - R23：SD Initialize/ProcessHits捕获std与unknown异常，scoring_sd_initialize/scoring_transport_context经共享首因锁存并中止；collection/命中对象在成功移交前使用局部独占所有权。G4USIM_TEST_OUTPUT_FAULT的sd_initialize_t0、sd_initialize_unknown_t0、sd_context_t0、sd_context_unknown_t0仅在测试构造时读，worker0第二run单次注入。test_sd_context_failure.py检查首轮保留/第三轮停止/失败轮无合并统计；不代表真实内存耗尽、磁盘故障或Geant4原生致命异常都可恢复。
 - 以上是当前代码契约；完整验收状态、平台与证据指纹以ROADMAP/STATUS为准。
+
+## 2026-10-29 Q1：worker偏置、随机语义、来源与计分权重
+
+- R25：master几何挂接只冻结按真实LV身份合并的计划，不证明worker生效。worker在ConstructSDandField建立线程私有算符并一次G4AutoDelete登记，不能每run删除（Geant4 TLS列表不注销）；BeginRun检查真实wrapped process与TLS绑定，EndRun提交按run/thread的完成收据。最终摘要须覆盖实际线程数×每个run且所有EndRun完成，缺收据必须失败，旧master字段另有scope。proposal/applied只是调用证据，不是无偏性或方差收益。派生factor*XS非有限/非正锁存失败并AbortRun，不得静默analog成功。
+- R26：batch preflight/csh直接命令校验setSeeds为2–99个完整非零long且拒绝LONG_MIN；原生ApplyCommand=0不能作为忽略命令的成功证据。安全restore只支持当前MixMax/James原生格式，读一次快照→独立引擎验证→提交，坏文件不触碰真实状态；unsupported engine/legacy格式明确拒绝，建议setSeeds。每事件restore enable暂拒绝。csh命令alias展开后规范化重复斜杠，守卫与执行同一路径；动态/条件/嵌套csh拒绝，batch递归execute使用预检序列。非csh原生UI执行入口按R32明确拒绝，MT恢复只证明master状态。
+- R27：有run_metadata.json时，GUI/目录后处理以合法generated_files为唯一自动输入；必须登记自身、run_summary，名单文件缺失/重复/逃逸/损坏失败。复制目录按manifest原根重定位，不能读取旧机器路径；旧文件不删除。无metadata保留legacy/unverified提示；显式单文件/list离线分析仍可用。无JSON依赖的mergeHistograms对有metadata的--input目录拒绝，改用GUI或明确文件列表；没有metadata目录明确legacy警告。
+- R28：探针v3按AST作用域和行入口计数，表达式frame不能冒充assert，用户generator真实assert仍计；这是保守入口下界，不是独立命题数。v1/v2旧报告仅显式legacy复核，不改写；跨probe baseline禁止比较，必须重建同代基线后比较总数和逐例。不能通过排序fixture或增加无意义断言填补计数差异。
+- R29：ParticleHit和HitRecord的weight是步前统计权重，与Geant4原生energyDeposit/cellFlux和项目fallback一致。不能用track当前/步后weight为同一步Edep、Dose、Fluence计分。phase_space是其边界采样权重，不能一并改为步前。CSV表头版本不变，此处是原有weight语义错误的修复；历史偏置结果须重算。
+
+回归：biasing_worker_runtime、biasing_step_weight、random_command_semantics（含98检查C++组件）、output_provenance/backend/GUI、merge_histograms、report_evidence。专项与最终平台验收分开记录，阶段是否关闭以ROADMAP和正式证据为准。
+
+### R30：已有run后的内核重初始化
+
+Geant4 MT Initialize执行内部BeamOn(0)后将master runIDCounter重置0。旧main在每个偏置beamOn之前重复Initialize，导致master run0/run0而worker run0/run1，覆盖摘要及master统计。自动初始化仅允许首次（!kernelInitialized），普通连续beamOn保留。已有run后batch/csh明确拒绝/run/initialize、/run/reinitializeGeometry、/run/physicsModified、/run/geometryModified，建议新进程；首run前物理初始化仍允许。csh错误类型run_lifecycle，不伪造Geant4返回码。新回归run_reinitialization，保留多run真正ID/worker/统计一致性验证，不以总事件数相等替代。
+
+### R31/R32：验收调度假设与原生UI旁路
+
+R31是测试缺陷：不同history工作量不能保证分配到不同worker。ROOT-only极值回归须保留失败/有限性首因/禁止统计发布判据，允许worker先检出或master合并时检出并记录实际分支；不能每次冒称master分支已覆盖。历史修前成功反例与修后master实测保留，不用调度hook改变产品行为。
+
+R32关闭绕过R26/R30的非csh默认UI入口。最终context为interactive且非dry-run时，若未显式选择csh，在现有biasing预检之后、Initialize和macro执行之前失败；CLI裸--ui与INI interactive=true均覆盖。原G4UIExecutive分支删除并保留防御拒绝，不提供unsafe开关，不静默改默认。迁移为--ui --ui-session csh；Python桌面GUI正常运行/几何预览不依赖原生UI。dry-run和只读配置检查不启动会话。测试覆盖CLI/INI/带合法macro均零run且sentinel未执行，以及dry-run正例。完整任意原生Qt命令审计不被宣称完成。

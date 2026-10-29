@@ -81,6 +81,10 @@
 
 本文件是仓库级约束，适用于根目录及其子目录。更具体的目录约束可以由更深层的 AGENTS.md 补充；gui/AGENTS.md 适用于 GUI 目录。
 
+- 2026-10-29 Q1 R25–R30：偏置须worker TLS私有算符、真实绑定与逐run/thread完整EndRun收据，master挂接不证明运行；派生XS溢出/下溢锁存失败。RNG命令须语义守卫，setSeeds 2–99非零long、safe restore仅受支持格式，不能以原生返回0确认忽略命令。目录后处理以metadata名单为准并支持复制重定位，legacy明确未验证；原生mergeHistograms有metadata时只允许显式输入。v3断言探针不计表达式frame，旧报告不改、跨probe不比较；ParticleHit权重必须步前，phase_space边界权重保持。已有run后拒绝会重置MT主线程run ID的内核重初始化，偏置自动Initialize只做首次；普通多run须保留master/worker相同ID。完整契约及回归见docs/agent-history.md同日条目。
+
+- 2026-10-29 Q1 R32：交互执行必须显式 `--ui --ui-session csh`；裸 `--ui` 或 INI interactive 未选 csh 在 macro 执行前拒绝（dry-run 例外），不能恢复未经审计的 G4UIExecutive 旁路。Python 桌面 GUI 不依赖此入口。R31 极值测试不得把工作量差当作 worker 分配证明，须记录实际溢出捕获阶段。全文见 `docs/agent-history.md`。
+
 ## 1. 事实来源和支持判定
 
 - 后端实际实现是功能支持情况的唯一依据。优先检查 src/、include/、main.cc、配置解析器和可运行测试；不要根据旧文档、类名、配置字段名、GUI 控件或空接口推断功能已经支持。

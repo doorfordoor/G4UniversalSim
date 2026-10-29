@@ -1,0 +1,33 @@
+{
+  "threads": 2,
+  "factor": 1.0,
+  "proposals": 273,
+  "secondary_hit_rows": 798,
+  "comparisons": {
+    "weighted_edep_vs_native": {
+      "project": 362.068038695,
+      "reference": 362.068038695,
+      "difference": 0.0,
+      "rounding_bound": 1.507717944442369e-09
+    },
+    "weighted_fluence_vs_native": {
+      "project": 1.038786417972,
+      "reference": 1.03878641797,
+      "difference": 2.000177801164682e-12,
+      "rounding_bound": 6.022143064298873e-12
+    },
+    "event_edep_vs_dose": {
+      "project": 362.06803869501,
+      "reference": 362.068038695,
+      "difference": 1.000444171950221e-11,
+      "rounding_bound": 1.7580512221931714e-09
+    },
+    "hits_vs_dose": {
+      "project": 362.06803869494524,
+      "reference": 362.068038695,
+      "difference": 5.474021236295812e-11,
+      "rounding_bound": 8.378718798556049e-09
+    }
+  },
+  "mismatches": []
+}
