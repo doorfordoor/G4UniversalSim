@@ -111,6 +111,11 @@ void ConfigManager::LoadMainConfig(const std::string& filename)
     mainConfig_.Load(filename);
 }
 
+void ConfigManager::LoadMainConfigBytes(const std::string& filename, const std::string& bytes)
+{
+    mainConfig_.LoadBytes(filename, bytes);
+}
+
 void ConfigManager::LoadConfigFile(const std::string& name, const std::string& filename)
 {
     const std::string normalizedName = NormalizeConfigName(name);

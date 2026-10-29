@@ -68,6 +68,56 @@ int main() {
  const auto runJson=registry.Capture("run_begin",0).ToJson();
  z.requested_known=false; z.resolved_known=false;
  registry.Commit({z});
+ // Module replacement removes mode-specific fields without touching neighbors.
+ Registry replacement;
+ Field first; first.path=FieldPath("source", "particle");first.resolved="proton";
+ Field neighbor;neighbor.path=FieldPath("source_extra", "particle");neighbor.resolved="gamma";
+ require(replacement.Commit({first,neighbor})==1);
+ require(replacement.Commit({first})==1);
+ require(replacement.Commit({})==1);
+ const auto beforeReplace=replacement.Capture("configure");
+ Field named;named.path=ObjectFieldPath("source","A/~B","intensity");named.resolved=1.0;
+ require(replacement.ReplaceModule("source",{named})==2);
+ require(replacement.Capture("configure").Fields().count(first.path)==0);
+ require(replacement.Capture("configure").Fields().count(neighbor.path)==1);
+ require(beforeReplace.Fields().count(first.path)==1);
+ require(replacement.ReplaceModule("source",{named})==2);
+ auto rejectTransaction=[&](auto operation) {
+   const auto saved=replacement.Capture("configure").ToJson();bool rejected=false;
+   try {operation();}catch(const std::exception&){rejected=true;}
+   require(rejected && replacement.Revision()==2 && replacement.Capture("configure").ToJson()==saved);
+ };
+ rejectTransaction([&](){replacement.Commit({named},{named.path});});
+ rejectTransaction([&](){replacement.Commit({}, {neighbor.path,neighbor.path});});
+ rejectTransaction([&](){replacement.ReplaceModule("source",{neighbor});});
+ Field invalid=named;invalid.resolved=std::numeric_limits<double>::infinity();
+ rejectTransaction([&](){replacement.Commit({invalid},{neighbor.path});});
+ require(replacement.ReplaceModule("source",{})==3);
+ require(replacement.ReplaceModule("source",{})==3);
+ require(replacement.Commit({}, {neighbor.path})==4);
+ require(replacement.Commit({}, {neighbor.path})==4);
+ require(replacement.Capture("configure").Fields().empty());
+ // Idempotent runtime evidence preserves its original applied revision.
+ require(registry.Commit({a})==4);
+ require(registry.Capture("run_begin",1).Revision()==4);
+ // Runtime receipts annotate immutable views without mutating configuration history.
+ Field applied=old.Fields().begin()->second;
+ applied.application_status=ApplicationStatus::Applied;
+ applied.evidence_level=EvidenceLevel::ThreadApplied;
+ applied.evidence_source="independent runtime readback fixture";
+ const auto observed=old.WithApplicationEvidence({applied}).WithMetadata({{"thread_id",0}});
+ require(observed.Revision()==old.Revision() && old.ToJson()==oldJson);
+ require(observed.Fields().begin()->second.applied_revision==1);
+ require(registry.Revision()==4);
+ auto rejectEvidence=[&](Field receipt){bool rejected=false;try{old.WithApplicationEvidence({receipt});}catch(const std::exception&){rejected=true;}require(rejected && old.ToJson()==oldJson);};
+ Field stale=applied;stale.revision=2;rejectEvidence(stale);
+ Field mismatch=applied;mismatch.resolved=0.003;rejectEvidence(mismatch);
+ Field managerOnly=applied;managerOnly.evidence_level=EvidenceLevel::ManagerAccepted;rejectEvidence(managerOnly);
+ Field staleApplication=applied;staleApplication.applied_revision=2;rejectEvidence(staleApplication);
+ Field absent=applied;absent.path="/source/absent";rejectEvidence(absent);
+ bool duplicateEvidence=false;try{old.WithApplicationEvidence({applied,applied});}catch(const std::exception&){duplicateEvidence=true;}require(duplicateEvidence);
+ bool reserved=false;try{old.WithMetadata({{"fields",Value::Array{}}});}catch(const std::exception&){reserved=true;}require(reserved);
+ bool nonfiniteMetadata=false;try{old.WithMetadata({{"inputs",std::numeric_limits<double>::infinity()}});}catch(const std::exception&){nonfiniteMetadata=true;}require(nonfiniteMetadata);
  std::cout << oldJson << '\n' << runJson << '\n' << registry.Capture("finalization").ToJson() << '\n';
 }
 '''

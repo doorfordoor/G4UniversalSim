@@ -21,6 +21,7 @@ public:
     ConfigManager() = default;
 
     void LoadMainConfig(const std::string& filename);
+    void LoadMainConfigBytes(const std::string& filename, const std::string& bytes);
 
     void LoadConfigFile(const std::string& name, const std::string& filename);
 
@@ -108,6 +109,9 @@ public:
     void MarkKeyConsumed(const std::string& section, const std::string& key) const;
 
     std::string GetMainConfigPath() const;
+
+    // Read-only provenance: never marks keys consumed or reparses the input.
+    const IniReader& GetMainReader() const { return mainConfig_; }
 
     void Clear();
 

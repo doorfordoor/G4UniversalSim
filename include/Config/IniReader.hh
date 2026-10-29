@@ -15,6 +15,7 @@ struct IniFieldInfo {
     std::string normalizedSection;
     std::string originalKey;
     std::string normalizedKey;
+    std::string rawLine; // exact line content excluding LF, retains comments/spacing/CR
 };
 
 // A repeated [section] header or repeated key inside one section. The parser keeps its
@@ -40,6 +41,7 @@ public:
     IniReader() = default;
 
     void Load(const std::string& filename);
+    void LoadBytes(const std::string& filename, const std::string& bytes);
 
     bool HasSection(const std::string& section) const;
 
@@ -65,6 +67,10 @@ public:
 
     const std::string& GetFilename() const;
 
+    // Full source order, including overridden declarations; no consumption side effects.
+    std::vector<IniFieldInfo> GetDeclarations() const;
+    std::vector<IniSectionInfo> GetSectionDeclarations() const { return sectionDeclarations_; }
+    const std::string& GetInputSha256() const { return inputSha256_; }
     void Clear();
 
 private:
@@ -85,6 +91,10 @@ private:
         const std::string& message
     );
 
+    void ParseBytes(const std::string& filename, const std::string& bytes);
+    std::string inputSha256_;
+    std::vector<IniFieldInfo> declarations_;
+    std::vector<IniSectionInfo> sectionDeclarations_;
     std::string filename_;
     std::map<std::string, Section> data_;
     std::map<std::string, IniSectionInfo> sectionInfo_;

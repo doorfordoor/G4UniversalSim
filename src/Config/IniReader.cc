@@ -1,6 +1,6 @@
 #include "Config/IniReader.hh"
 
-#include "Utils/FileUtils.hh"
+#include "Config/InputProvenance.hh"
 #include "Utils/StringUtils.hh"
 
 #include <fstream>
@@ -15,18 +15,24 @@ constexpr const char* kDefaultSection = "global";
 
 void IniReader::Load(const std::string& filename)
 {
-    Clear();
+    const auto input = input_provenance::ReadFile(filename);
+    LoadBytes(filename, input.bytes);
+}
 
-    if (!FileUtils::IsFile(filename)) {
-        throw std::runtime_error("INI file does not exist: '" + filename + "'");
-    }
+void IniReader::LoadBytes(const std::string& filename, const std::string& bytes)
+{
+    IniReader candidate;
+    candidate.ParseBytes(filename, bytes);
+    candidate.inputSha256_ = input_provenance::Sha256(bytes);
+    // All allocations/parse validation complete before replacing accepted state.
+    using std::swap;
+    swap(*this, candidate);
+}
 
+void IniReader::ParseBytes(const std::string& filename, const std::string& bytes)
+{
     filename_ = filename;
-    std::ifstream input(filename);
-    if (!input) {
-        throw std::runtime_error("Failed to open INI file: '" + filename + "'");
-    }
-
+    std::istringstream input(bytes);
     // Loading a second file into the same reader replaces the parsed data; drop the bookkeeping
     // of the previous file so duplicate reports never mix two files.
     duplicates_.clear();
@@ -70,6 +76,7 @@ void IniReader::Load(const std::string& filename)
                 sectionFirstLine_[currentSection] = lineNumber;
             }
             sectionInfo_[currentSection] = {currentSection, lineNumber, true, currentOriginalSection, currentSection};
+            sectionDeclarations_.push_back(sectionInfo_[currentSection]);
             continue;
         }
 
@@ -92,6 +99,8 @@ void IniReader::Load(const std::string& filename)
             keyFirstLine_[currentSection][normalizedKey] = lineNumber;
         }
         data_[currentSection][normalizedKey] = {value, lineNumber, currentOriginalSection, key};
+        declarations_.push_back({currentSection, key, value, lineNumber, false,
+                                 currentOriginalSection, currentSection, key, normalizedKey, line});
     }
 
     if (input.bad()) {
@@ -204,8 +213,25 @@ const std::string& IniReader::GetFilename() const
     return filename_;
 }
 
+std::vector<IniFieldInfo> IniReader::GetDeclarations() const
+{
+    auto result = declarations_;
+    for (auto& field : result) {
+        const auto section = data_.find(field.normalizedSection);
+        if (section != data_.end()) {
+            const auto key = section->second.find(field.normalizedKey);
+            if (key != section->second.end() && key->second.lineNumber == field.lineNumber)
+                field.consumed = key->second.consumed;
+        }
+    }
+    return result;
+}
+
 void IniReader::Clear()
 {
+    inputSha256_.clear();
+    declarations_.clear();
+    sectionDeclarations_.clear();
     filename_.clear();
     data_.clear();
     sectionInfo_.clear();

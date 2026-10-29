@@ -89,13 +89,14 @@ Value FieldValue(const Field& field)
     for (const auto& origin : field.origins) {
         origins.emplace_back(Value::Object{{"kind", origin.kind}, {"file", origin.file},
             {"line", Number(origin.line)}, {"section", origin.section}, {"key", origin.key},
-            {"raw", origin.raw}, {"alias", origin.alias}, {"input_sha256", origin.input_sha256}});
+            {"raw", origin.raw}, {"alias", origin.alias}, {"input_sha256", origin.input_sha256}, {"disposition", origin.disposition}});
     }
     Value::Object result{{"path", field.path},
         {"unit", field.unit}, {"origins", origins},
         {"application_status", Name(field.application_status)},
         {"evidence_level", Name(field.evidence_level)}, {"reason", field.reason},
         {"evidence_source", field.evidence_source}, {"revision", Number(field.revision)},
+        {"configuration_generation", Number(field.configuration_generation)},
         {"applied_revision", field.applied_revision ? Number(*field.applied_revision) : Value()}};
     if (field.requested_known) result["requested"] = field.requested;
     if (field.resolved_known) result["resolved"] = field.resolved;
@@ -155,14 +156,19 @@ std::string ObjectFieldPath(const std::string& module, const std::string& object
     return '/' + EscapePointerToken(module) + "/objects/" + EscapePointerToken(object)
          + '/' + EscapePointerToken(field);
 }
-std::uint64_t Registry::Commit(std::vector<Field> fields)
+std::uint64_t Registry::Commit(std::vector<Field> fields,
+                               const std::vector<std::string>& erasedPaths)
 {
-    if (fields.empty()) throw std::invalid_argument("Empty EffectiveConfig transaction");
     if (revision_ >= static_cast<std::uint64_t>(std::numeric_limits<std::int64_t>::max()))
         throw std::overflow_error("EffectiveConfig revision exhausted");
     const auto next = revision_ + 1;
     auto candidate = fields_; // publication only after all validation and allocation
     std::set<std::string> seen;
+    for (const auto& path : erasedPaths) {
+        ValidatePath(path);
+        if (!seen.insert(path).second) throw std::invalid_argument("Duplicate removal in transaction");
+        candidate.erase(path);
+    }
     for (auto& field : fields) {
         ValidatePath(field.path);
         if (!seen.insert(field.path).second) throw std::invalid_argument("Duplicate field in transaction");
@@ -170,21 +176,63 @@ std::uint64_t Registry::Commit(std::vector<Field> fields)
         Name(field.evidence_level);
         if (field.applied_revision && (*field.applied_revision == 0 || *field.applied_revision > next))
             throw std::invalid_argument("Applied revision is outside committed revision history");
+        const auto previous = fields_.find(field.path);
         if (field.application_status == ApplicationStatus::Applied) {
             if (field.evidence_level == EvidenceLevel::None || field.evidence_level == EvidenceLevel::ManagerAccepted
                 || field.evidence_source.empty())
                 throw std::invalid_argument("Applied requires runtime evidence, not Manager acceptance");
-            if (!field.applied_revision) field.applied_revision = next;
+            if (!field.applied_revision) {
+                // Re-submitting identical runtime evidence must not create a
+                // new application event merely because the caller omitted it.
+                Field comparable = field;
+                if (previous != fields_.end()) {
+                    comparable.revision = previous->second.revision;
+                    comparable.applied_revision = previous->second.applied_revision;
+                }
+                if (previous != fields_.end() && FieldValue(comparable).ToJson() == FieldValue(previous->second).ToJson())
+                    field.applied_revision = previous->second.applied_revision;
+                else field.applied_revision = next;
+            }
         } else if (field.applied_revision) {
             throw std::invalid_argument("Non-applied status cannot claim an applied revision");
         }
-        field.revision = next;
-        FieldValue(field).ToJson(); // recursive finite-number and counter validation
-        candidate[field.path] = std::move(field);
+        field.revision = previous == fields_.end() ? 0 : previous->second.revision;
+        const auto serialized = FieldValue(field).ToJson(); // validate before publication
+        if (previous == fields_.end() || serialized != FieldValue(previous->second).ToJson()) {
+            field.revision = next;
+            candidate[field.path] = std::move(field);
+        }
     }
+    bool changed = candidate.size() != fields_.size();
+    if (!changed) {
+        for (const auto& item : candidate) {
+            const auto old = fields_.find(item.first);
+            if (old == fields_.end() || FieldValue(item.second).ToJson() != FieldValue(old->second).ToJson()) {
+                changed = true; break;
+            }
+        }
+    }
+    if (!changed) return revision_;
     fields_.swap(candidate);
     revision_ = next;
     return revision_;
+}
+std::uint64_t Registry::ReplaceModule(const std::string& module, std::vector<Field> fields)
+{
+    const auto prefix = '/' + EscapePointerToken(module) + '/';
+    std::set<std::string> incoming;
+    for (const auto& field : fields) {
+        ValidatePath(field.path);
+        if (field.path.compare(0, prefix.size(), prefix) != 0)
+            throw std::invalid_argument("Replacement field belongs to another module");
+        if (!incoming.insert(field.path).second)
+            throw std::invalid_argument("Duplicate field in module replacement");
+    }
+    std::vector<std::string> removed;
+    for (const auto& item : fields_)
+        if (item.first.compare(0, prefix.size(), prefix) == 0 && !incoming.count(item.first))
+            removed.push_back(item.first);
+    return Commit(std::move(fields), removed);
 }
 Snapshot Registry::Capture(const std::string& stage, std::optional<std::int64_t> run_id) const
 {
@@ -199,12 +247,62 @@ Snapshot Registry::Capture(const std::string& stage, std::optional<std::int64_t>
     result.run_id_ = run_id;
     return result;
 }
+Snapshot Snapshot::WithMetadata(Value::Object metadata) const
+{
+    for (const auto& item : metadata) {
+        if (item.first == "schema" || item.first == "stage" || item.first == "revision" ||
+            item.first == "run_id" || item.first == "fields")
+            throw std::invalid_argument("EffectiveConfig metadata cannot replace reserved snapshot fields");
+    }
+    Value(metadata).ToJson();
+    Snapshot result = *this;
+    result.metadata_ = std::move(metadata);
+    return result;
+}
+
+Snapshot Snapshot::WithApplicationEvidence(const std::vector<Field>& evidence) const
+{
+    Snapshot result = *this;
+    std::set<std::string> seen;
+    for (const auto& receipt : evidence) {
+        const auto found = result.fields_.find(receipt.path);
+        if (found == result.fields_.end() || !seen.insert(receipt.path).second)
+            throw std::invalid_argument("Application evidence needs a unique existing configuration field");
+        auto& field = found->second;
+        if (receipt.revision != field.revision)
+            throw std::invalid_argument("Application evidence belongs to a different configuration revision");
+        Name(receipt.application_status);
+        Name(receipt.evidence_level);
+        if (receipt.application_status == ApplicationStatus::Applied) {
+            if (receipt.applied_revision && *receipt.applied_revision != field.revision)
+                throw std::invalid_argument("Application evidence applied revision is stale");
+            if (receipt.evidence_level == EvidenceLevel::None || receipt.evidence_level == EvidenceLevel::ManagerAccepted ||
+                receipt.evidence_source.empty() || !receipt.resolved_known || !field.resolved_known ||
+                receipt.resolved.ToJson() != field.resolved.ToJson())
+                throw std::invalid_argument("Applied evidence must observe this field's resolved value");
+            field.applied_revision = field.revision;
+        } else {
+            if (receipt.applied_revision) throw std::invalid_argument("Non-applied evidence claims an applied revision");
+            field.applied_revision.reset();
+        }
+        field.application_status = receipt.application_status;
+        field.evidence_level = receipt.evidence_level;
+        field.evidence_source = receipt.evidence_source;
+        field.reason = receipt.reason;
+    }
+    return result;
+}
+
 std::string Snapshot::ToJson() const
 {
     Value::Array fields;
     for (const auto& item : fields_) fields.push_back(FieldValue(item.second));
-    return Value(Value::Object{{"schema", "g4usim_effective_config_v1"},
-        {"stage", stage_}, {"revision", Number(revision_)},
-        {"run_id", run_id_ ? Value(*run_id_) : Value()}, {"fields", fields}}).ToJson();
+    auto value = metadata_;
+    value["schema"] = "g4usim_effective_config_v1";
+    value["stage"] = stage_;
+    value["revision"] = Number(revision_);
+    value["run_id"] = run_id_ ? Value(*run_id_) : Value();
+    value["fields"] = std::move(fields);
+    return Value(value).ToJson();
 }
 } // namespace effective_config
