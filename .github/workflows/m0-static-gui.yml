@@ -26,6 +26,30 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: '3.11'
+      # Independent EffectiveConfig static gates compile C++17 without Geant4.
+      # Use the runner's installed VS toolchain instead of assuming cl is on PATH.
+      - name: Initialize Windows MSVC x64 compiler
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $vswhere = Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio/Installer/vswhere.exe'
+          if (-not (Test-Path -LiteralPath $vswhere)) { throw 'Visual Studio locator is unavailable' }
+          $vsRoot = & $vswhere -latest -products '*' -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
+          if ($LASTEXITCODE -ne 0 -or -not $vsRoot) { throw 'Visual Studio C++ x64 tools are unavailable' }
+          $devCmd = Join-Path $vsRoot 'Common7/Tools/VsDevCmd.bat'
+          if (-not (Test-Path -LiteralPath $devCmd)) { throw 'Visual Studio developer environment is unavailable' }
+          $toolEnvironment = & cmd.exe /d /s /c "`"$devCmd`" -no_logo -arch=x64 -host_arch=x64 >nul && set"
+          if ($LASTEXITCODE -ne 0) { throw 'Failed to initialize Visual Studio x64 tools' }
+          foreach ($entry in $toolEnvironment) {
+            if ($entry -match '^(PATH|INCLUDE|LIB|LIBPATH)=(.*)$') {
+              $key = $Matches[1]
+              $value = $Matches[2]
+              [Environment]::SetEnvironmentVariable($key, $value, 'Process')
+              "$key=$value" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+            }
+          }
+          if (-not (Get-Command cl.exe -ErrorAction SilentlyContinue)) { throw 'cl.exe is unavailable after initialization' }
+          'CXX=cl' | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
       # PySide6 wheels dlopen libEGL/libGL/libxkbcommon when Qt initialises. The
       # runner images usually ship them, but pinning the minimum set keeps a runner
       # image change from turning into a silent GUI failure.

@@ -358,3 +358,21 @@ Geant4 MT Initialize执行内部BeamOn(0)后将master runIDCounter重置0。旧m
 R31是测试缺陷：不同history工作量不能保证分配到不同worker。ROOT-only极值回归须保留失败/有限性首因/禁止统计发布判据，允许worker先检出或master合并时检出并记录实际分支；不能每次冒称master分支已覆盖。历史修前成功反例与修后master实测保留，不用调度hook改变产品行为。
 
 R32关闭绕过R26/R30的非csh默认UI入口。最终context为interactive且非dry-run时，若未显式选择csh，在现有biasing预检之后、Initialize和macro执行之前失败；CLI裸--ui与INI interactive=true均覆盖。原G4UIExecutive分支删除并保留防御拒绝，不提供unsafe开关，不静默改默认。迁移为--ui --ui-session csh；Python桌面GUI正常运行/几何预览不依赖原生UI。dry-run和只读配置检查不启动会话。测试覆盖CLI/INI/带合法macro均零run且sentinel未执行，以及dry-run正例。完整任意原生Qt命令审计不被宣称完成。
+
+
+## 2026-10-29 完整 2C 工作区候选补充（in_progress）
+
+完整消费者、三阶段与模块策略的当前说明见 [EffectiveConfig](EffectiveConfig.md)。这是对同日“配置阶段 Manager 子集”和 source 待实现描述的后续实现补充，不追改历史证据、不扩大旧子集验收结论。11 类消费者适配已落盘，requested/resolved、registry revision、consumer configuration_generation 与内核/worker applied 收据必须分别解释；收据不能增加配置 revision，同值新来源不得继承旧代次收据，未知原生命令须保持 unknown。
+
+configure 为冻结的配置阶段快照，run_begin/finalization 按实际 run/thread 产生；不得在无 run/失败路径补造运行事实。模块 scoring/biasing/field/trajectories 的 off/auto/on 不改变缺失 mode 的旧语义，不创造规则或物理参数，基础模块不能关闭。输入哈希须来自实际解析字节，文件关闭成功后才登记。GUI 集合/差异是只读审查，DeepSeek 参与设计不等于验收。完整阶段仍进行中，最终 Windows/Linux/GUI 与证据门禁待主任务裁决，Q1 拒绝边界继续有效。
+
+完整 2C 本轮文档/runner 审查补充（随候选修正更新）：此前 off 静默覆盖活跃请求的缺口已由 `ApplyModuleModes()` 严格冲突判定和 `test_effective_modules.py` 矩阵修正，仍待真实后端矩阵验收。缺失 mode 保留 legacy 默认，显式 auto 只据明确活跃请求及依赖启用；mesh-only 不启独立 SD gate，phase_space 与 trajectories 不受 SD scoring 抑制，trajectory 另由自身模块策略处理。auto/on 与显式 false 旧开关冲突拒绝，空 biasing hook/wrapper 不代替规则；不将缺失 mode 记录成用户请求 auto。静态 CI 的 Windows job 已通过 vswhere/VsDevCmd 显式初始化 MSVC x64 并设置 CXX=cl，独立 C++17 static 前提仍须满足，不放宽 fail-on-skip；workflow 静态校验不是云端运行通过证据。
+
+
+### 完整 2C 新反例：偏置 macro 非法数值的受控失败链（待修后验收）
+
+本轮 build03 真实负例见 `out/verification/2c-bias-negative/run.log`：`BiasingMessenger::SetNewValue` 对 `proton hIoni -1` 报 `AIHLBiasingMessenger002`，随后 `Fatal Exception` / `Aborting execution`，进程直接中止而未产生受控失败摘要。此病例未被旧 Q1 冻结测试范围覆盖；保留原 Q1 已验证范围，不追改或撤销其冻结证据，但此新反例必须在完整 2C 中闭合。
+
+修复契约：非法 biasing macro 必须进入受控失败路径，停止后续输入，输出 `status=failed`、非零退出和可取得的 macro 文件/行/命令位置；交互 csh 保留其可取得的失败来源，不能虚构 batch 行号。失败命令不得发布 EffectiveConfig 值、来源、configuration_generation 或 revision。BiasingMessenger 的 ParseDouble 必须拒绝 NaN/Inf、数值溢出及非有限结果；非法 factor 等 Manager 校验错误不得通过 FatalException 直接 abort 来绕过摘要和最终化。
+
+Geant4 `ApplyCommand()` 返回 0 不足以确认命令成功；沿用材料命令模式，由 BiasingManager 的受控内部失败计数/错误记录捕获 Messenger 失败，main 的 batch/csh 链在命令后检查，先拒绝再停止后续命令，不登记成功来源。内部失败与实际 Geant4 非零返回须保持各自证据，不能伪造返回码。当前为修前证明与修复约束，修后真实 macro/csh、非有限数值、未执行 sentinel、失败摘要和不发布 revision 的验收结果由主任务统一补录；本条不宣称已通过。

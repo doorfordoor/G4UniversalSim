@@ -15,6 +15,12 @@
 
 2026-10-29 Q1已完成：九域审查、R01–R32闭合并交叉复核；验收代码 `8ecad66`。干净Windows **105 PASS / 0 FAIL / 0 SKIP**，83770个v3入口；旧同代98项基线79303，逐例/总数与原始日志门禁通过。Linux11.3.2/11.4.3真实CI各105（run40855144863），Windows/Ubuntu static+GUI各42（run40855144672），Windows实窗保存/生成/运行/取消/关窗通过。[完整收据](docs/verification/q1-final-20261029/README.md)；旧失败证据保留，历史偏置结果须重跑，原生交互迁移显式csh。
 
+## 当前2C实施（2026-10-29启动）
+
+用户已启动完整2C，基线f25da40。实施范围、单写者分工与整阶段验收见[本轮开工信](docs/collab/inbox/20261029-1959-astra-full-2c-execution.md)。当前先补事务/输入来源基础、11消费者真实适配和DeepSeek前端方案，再接三时点及线程证据；既有configured子集不算完整完成。无新的后端构建或测试结论，Q1验收记录保留。
+
+实施检查点：基础事务/同字节来源已提交d422e63，全消费者/运行快照已提交2bb9d0b。build05已成功，真实专项 Source/Physics/Field、Output/mesh、Scoring、modules、生命周期、Geometry/Materials、GDML均已通过；新增Biasing非法命令Fatal abort反例已改成受控失败，6类负例及正例通过（out/verification/2c-consumers-repair，792 v3入口）。空em来源误归属和连续不同命令requested回退已修复；模块缺省legacy与显式auto分开，冲突拒绝。修前日志与失败报告原样保留。DeepSeek参与前端设计/实现，独立审核后真实Windows可见主窗口完成2run×4事件、2worker、14快照集合/差异/中英明暗/损坏保留，6张原生截图实际查看（out/verification/2c-visible），其sourcefp为build03，最终冻结还需补最终后端关联。统一runner已注册118项（static15/backend52/gui32/integration19），Windows静态CI补MSVC初始化且本机独立模型用cl实测通过。完整2C尚未验收；当前冻结后准备干净Release、Windows全量/Q1同v3门禁与真实双版本LinuxCI，再归档、阶段裁决和集成。
+
 ## 2026-10-29 隔离开发工作区与2C子集历史
 
 用户授权 Astra 主导 2C 实现。当前工作区 `C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim`，基线 `5465dbd`，分支 `roadmap/2c-effective-config`；原 D 盘工作区由 DSH 保留，禁止并发合并。实施契约见 [2C 开工回信](docs/collab/inbox/20261029-1010-astra-2c-execution.md)。DeepSeek 已通过 API 提供前端设计，采纳范围与纠偏见 [前端设计建议](docs/collab/outbox/20261029-1010-deepseek-effectiveconfig-ui-design.md)。

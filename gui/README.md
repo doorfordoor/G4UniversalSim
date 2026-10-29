@@ -337,3 +337,8 @@ The JSON file is not an input to `G4UniversalSim.exe`; config and macro files re
 - Merge is limited to existing `merge_outputs.py` and `mergeHistograms.exe`; no physics analysis is performed by the GUI.
 - Delete/archive is not implemented; packages are never hard-deleted by the GUI MVP.
 - No packaging into a standalone executable.
+
+
+## 有效配置集合（完整 2C 候选）
+
+“有效配置”页可只读加载后端 v1 JSON 集合，按阶段/run/thread 选择，检查对象摘要、类型、单位、来源链、应用证据，或比较两份快照的新增、删除和值/类型/来源差异。加载错误保留旧数据并标陈旧，单文件上限 4 MiB，集合另有累计上限。它不更改项目，不判定模拟成功；manager 已接受不等于 Geant4 已应用，跨进程 revision 不表示先后。后端只读入口 `--dump-effective-config <新文件|->` 只展示 configure，正常运行另有逐线程和最终化快照。完整 2C 仍进行中，真实桌面及全量验收以主任务报告为准；数据与限制见 [EffectiveConfig](../docs/EffectiveConfig.md)，DeepSeek 参与方案见 [设计记录](../docs/collab/outbox/20261029-deepseek-full2c-design.md)。

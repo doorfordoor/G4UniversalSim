@@ -1521,7 +1521,67 @@ SCHEMA = {'main_ini': {'run': {'migrated': True,
                                                'path_base': 'cwd',
                                                'gui': {'editable': 'generated_subset'}}},
                            'gui': {'editable': 'existing_subset_only',
-                                   'note': '字段登记不是 GUI 生成白名单；仍由各 editor/writer 的受支持子集决定'}}},
+                                   'note': '字段登记不是 GUI 生成白名单；仍由各 editor/writer 的受支持子集决定'}},
+              'modules': {'migrated': True,
+                          'description_zh': '可选模块执行策略；auto及缺省保持原有行为，off显式抑制，on要求已有有效配置，不补造物理参数。',
+                          'parser': 'src/Core/EffectiveSimulation.cc:ApplyModuleModes',
+                          'validation': 'enum plus configured-module dependencies; required '
+                                        'geometry/source/physics are not optional',
+                          'tests': ['scripts/test_effective_modules.py'],
+                          'gui': 'read-only effective configuration; external INI input only',
+                          'keys': {'scoring': {'type': 'enum',
+                                               'allowed': ['off', 'auto', 'on'],
+                                               'default': None,
+                                               'support': 'experimental',
+                                               'since': '2C',
+                                               'description': 'Optional scoring policy: absent preserves '
+                                                              'legacy behavior; explicit auto follows valid '
+                                                              'requests; on requires valid configuration; '
+                                                              'off rejects active requests',
+                                               'description_zh': 'scoring模块策略：缺省保留旧行为；显式auto按有效请求决定；on要求有效配置；off与活跃请求冲突时拒绝',
+                                               'validation': 'requires module context; does not imply '
+                                                             'physics validation',
+                                               'gui': {'editable': False}},
+                                   'biasing': {'type': 'enum',
+                                               'allowed': ['off', 'auto', 'on'],
+                                               'default': None,
+                                               'support': 'experimental',
+                                               'since': '2C',
+                                               'description': 'Optional biasing policy: absent preserves '
+                                                              'legacy behavior; explicit auto follows valid '
+                                                              'requests; on requires valid configuration; '
+                                                              'off rejects active requests',
+                                               'description_zh': 'biasing模块策略：缺省保留旧行为；显式auto按有效请求决定；on要求有效配置；off与活跃请求冲突时拒绝',
+                                               'validation': 'requires module context; does not imply '
+                                                             'physics validation',
+                                               'gui': {'editable': False}},
+                                   'field': {'type': 'enum',
+                                             'allowed': ['off', 'auto', 'on'],
+                                             'default': None,
+                                             'support': 'experimental',
+                                             'since': '2C',
+                                             'description': 'Optional field policy: absent preserves legacy '
+                                                            'behavior; explicit auto follows valid requests; '
+                                                            'on requires valid configuration; off rejects '
+                                                            'active requests',
+                                             'description_zh': 'field模块策略：缺省保留旧行为；显式auto按有效请求决定；on要求有效配置；off与活跃请求冲突时拒绝',
+                                             'validation': 'requires module context; does not imply physics '
+                                                           'validation',
+                                             'gui': {'editable': False}},
+                                   'trajectories': {'type': 'enum',
+                                                    'allowed': ['off', 'auto', 'on'],
+                                                    'default': None,
+                                                    'support': 'experimental',
+                                                    'since': '2C',
+                                                    'description': 'Optional trajectories policy: absent '
+                                                                   'preserves legacy behavior; explicit auto '
+                                                                   'follows valid requests; on requires '
+                                                                   'valid configuration; off rejects active '
+                                                                   'requests',
+                                                    'description_zh': 'trajectories模块策略：缺省保留旧行为；显式auto按有效请求决定；on要求有效配置；off与活跃请求冲突时拒绝',
+                                                    'validation': 'requires module context; does not imply '
+                                                                  'physics validation',
+                                                    'gui': {'editable': False}}}}},
  'materials_ini': {'global': {'migrated': True,
                               'independent': False,
                               'description_zh': '隐式 global 不允许任何字段。',

@@ -1,0 +1,19 @@
+# 2C Biasing / Output 独立审查与补修
+
+q1_field接手另一执行者容量失败后的Biasing适配及Output；仅修改两目录实现、test_effective_output_mesh.py，新增test_effective_biasing.py。本记录不是物理效果验证。Core/Action/Config/Scoring及此前冻结模块未改。
+
+## 确认并补修
+
+Output原实现将requested覆盖为resolved，Configure前CLI已生效时会把CLI路径归给旧INI请求。现保留实际INI原文（含format别名），dir按真实canonical-first非空规则选择请求；CLI成功通知后requested为原始argv值，origin.raw也为原始CLI参数，旧INI声明完整保留并shadowed。macro同值setter仍有新来源，thread_suffix无INI消费者所以默认requested unknown。Accept用候选state发布，不能继承其他reader旧来源。Q1 writer/失败/登记代码未改。
+
+Biasing现有JSON tuple身份对particle/process成对注入，display name重复不合并；保留process大小写与JSON Pointer转义。配置load原子回滚、同pair后section重置属性默认、legacy到expanded/explicit覆盖链经审查。新增缺失particle/process/name时真实section header来源（旧header shadowed、最终header derived），不能将header派生名字伪为默认字面请求。only_primary被apply_to_secondaries覆盖时保留原请求并记录派生原因。成功macro仅显式目标保留typed请求，新增规则的默认属性、legacy展开和相互排斥标志的连带变化记derived且requested unknown；不再用resolved伪造用户请求。derived enabled解析保留旧显式请求。重复同值命令依具体target记录来源。
+
+## 实际运行证据
+
+逐worker BeginRun已核对真实TLS映射并验证实际wrapped process；随后从thread-owned BiasingXS/GetProcessRules逐属性读取，收据带run/thread/role/generation/resolved hash、实际target、EndRun完成及聚合计数scope。没有将聚合matched/proposal/applied计数复制成每规则物理效果；physical_effect_status保持unknown。enabled观察改用TLS/operator/matched实际事实。master挂接观察使用独立binding path，不让单个LV名字冒充完整volumes配置列表应用。失败收据statusfailed，无成功规则收据，原Q1挂接/首因/AbortRun/初始化守卫未改。
+
+## 验证和交接
+
+EffectiveBiasing.cc、BiasingManager.cc、EffectiveOutput.cc独立C++17 -fsyntax-only通过，无链接/构建/后端运行；日志out/verification/2c-foundation/biasing-output-syntax.log。两个Python专项py_compile通过、git diff --check通过。
+
+已有test_effective_output_mesh.py新增CLI与INI不同路径（含空canonical、别名、重复声明）及format原始拼写/默认unknown反例；不放松旧mesh断言。新test_effective_biasing.py需root新G4USIM_EXE：同display name两规则、重复factor、section派生身份、同pair后section省略值恢复默认、legacy显式覆盖、flag原请求/派生、ST/MT两run真实worker TLS/规则readback/EndRun收据，以及同值macro与失败不发布来源。当前仅准备专项，不拿旧exe宣称运行通过。源码及测试冻结供root增量build/专项；公开Manager API无变化，无需额外Core接线。

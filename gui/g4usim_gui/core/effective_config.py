@@ -33,6 +33,8 @@ def _pairs(items):
 
 
 def parse_snapshot(text: str) -> dict:
+    if len(text.encode("utf-8")) > MAX_BYTES:
+        _reject("Snapshot exceeds 4 MiB limit")
     try:
         data = json.loads(text, object_pairs_hook=_pairs,
                           parse_constant=lambda v: _reject(f"Non-finite JSON number: {v}"))
@@ -87,6 +89,8 @@ def parse_snapshot(text: str) -> dict:
             _reject(f"Invalid evidence_level: {path}")
         if not _integer(field.get("revision"), 1) or field["revision"] > data["revision"]:
             _reject(f"Invalid field revision: {path}")
+        if "configuration_generation" in field and not _integer(field["configuration_generation"]):
+            _reject(f"Invalid configuration_generation: {path}")
         applied = field.get("applied_revision")
         if applied is not None and (not _integer(applied, 1) or applied > field["revision"]):
             _reject(f"Invalid applied_revision: {path}")
@@ -101,7 +105,7 @@ def parse_snapshot(text: str) -> dict:
         for origin in origins:
             if not isinstance(origin, dict):
                 _reject(f"Invalid origin: {path}")
-            for key in ("kind", "file", "section", "key", "raw", "alias", "input_sha256"):
+            for key in ("kind", "file", "section", "key", "raw", "alias", "input_sha256", "disposition"):
                 if key in origin and not isinstance(origin[key], str):
                     _reject(f"Invalid origin {key}: {path}")
             if "line" in origin and not _integer(origin["line"]):
@@ -109,14 +113,55 @@ def parse_snapshot(text: str) -> dict:
     return data
 
 
-def load_snapshot(path: str | Path) -> tuple[dict, str]:
+def load_snapshot_document(path: str | Path) -> tuple[dict, str, bytes]:
+    """Read once: validation and document identity refer to these exact bytes."""
     with Path(path).open("rb") as stream:
         content = stream.read(MAX_BYTES + 1)
     if len(content) > MAX_BYTES:
         _reject("Snapshot exceeds 4 MiB limit")
     text = content.decode("utf-8-sig")
-    return parse_snapshot(text), text
+    return parse_snapshot(text), text, content
+
+
+def load_snapshot(path: str | Path) -> tuple[dict, str]:
+    data, text, _ = load_snapshot_document(path)
+    return data, text
 
 
 def value_text(value: object = MISSING) -> str:
     return "Unknown (not provided)" if value is MISSING else json.dumps(value, ensure_ascii=False, allow_nan=False)
+
+
+def decoded_path(path: str) -> list[str]:
+    return [token.replace("~1", "/").replace("~0", "~") for token in path.split("/")[1:]]
+
+
+def object_summaries(snapshot: dict) -> list[dict]:
+    """Summarize recorded fields only; counts never establish coverage/success."""
+    groups = {}
+    for field in snapshot["fields"]:
+        parts = field["path"].split("/")
+        key = "/".join(parts[:4] if len(parts) == 5 else parts[:2])
+        group = groups.setdefault(key, {"path": key, "fields": 0, "statuses": {}, "evidence": {}})
+        group["fields"] += 1
+        for target, source in (("statuses", "application_status"), ("evidence", "evidence_level")):
+            value = field.get(source, "unknown")
+            group[target][value] = group[target].get(value, 0) + 1
+    return [groups[key] for key in sorted(groups)]
+
+
+def snapshot_diff(before: dict, after: dict) -> list[dict]:
+    """Canonical-path, type-sensitive diff. Missing, null, bool and number differ."""
+    left = {field["path"]: field for field in before["fields"]}
+    right = {field["path"]: field for field in after["fields"]}
+    changes = []
+    for path in sorted(left.keys() | right.keys()):
+        a, b = left.get(path), right.get(path)
+        if a is None or b is None:
+            changes.append({"path": path, "kind": "added" if a is None else "removed", "before": a, "after": b})
+            continue
+        keys = sorted(key for key in a.keys() | b.keys() if key not in a or key not in b or
+                      json.dumps(a[key], sort_keys=True, ensure_ascii=False) != json.dumps(b[key], sort_keys=True, ensure_ascii=False))
+        if keys:
+            changes.append({"path": path, "kind": "changed", "keys": keys, "before": a, "after": b})
+    return changes

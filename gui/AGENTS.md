@@ -157,3 +157,8 @@ external batch/csh 的随机恢复须经过后端守卫，仅支持当前 MixMax
 - metadata 编辑框只允许 `metadata.<非空名称>`。runtime 字段和旧式无前缀未知字段不得从 metadata 写出；legacy 字段本阶段只保留并阻断，不能自动改名或删除。
 - B3 工作区的后端 `version = 2` 严格几何标记须由 parser、`GeometryDocument`、项目快照和 writer 保留，不得误报为 legacy metadata 或静默删去。已验证的 hierarchical 编辑子集可写回严格标记；其他未知字段与不支持的模式仍保持 round-trip blocker 或 preview-only，source-copy 必须由用户显式选择。
 - 即使 section 为空，未知 section 也不能在 editable writer 中静默消失；`[layer.*]` 必须出现在 `[layers]/names`。重复 section 或大小写归一后重复的 key 也须设置 round-trip blocker，用户应先消歧并重新加载源文件。
+
+
+## 2026-10-29 完整 2C 查看器候选补充
+
+前述 Manager 子集描述保留为历史验收边界；当前集合候选支持阶段/run/thread、对象摘要与两快照差异，继续使用 v1、4 MiB 单文件限制及累计集合限制，损坏加载保留旧数据并标陈旧。requested/resolved 缺失与 null 分开，configuration_generation/revision 不混用，manager_accepted 不译为内核已应用，跨进程 revision 不推断先后。DeepSeek 实际设计参与见 `../docs/collab/outbox/20261029-deepseek-full2c-design.md`。专项增加 `smoke_effective_config_collection.py`；真实后端驱动窗口与整阶段验收仍待主任务确认，不提升为完整 2C 已完成。

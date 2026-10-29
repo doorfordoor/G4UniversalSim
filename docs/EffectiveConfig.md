@@ -1,55 +1,57 @@
-# 有效配置快照（2C 开发中）
+# 有效配置快照（完整 2C 实施中）
 
-当前实现是配置阶段的 **Manager 状态子集**。它用于审查来源与值，不证明 Geant4 内核已应用，也不判定模拟成功。完整模块覆盖、运行开始/最终化快照、模块 off/auto/on 尚未交付。
+完整 2C 的消费者、三阶段快照、模块策略和只读 GUI 已有工作区候选实现；状态仍为 **in_progress**。当前不能将独立编译、局部专项、旧 configured 子集或 Q1 的绿色报告称作完整 2C 验收。最终结论由主任务在冻结源码后完成干净 Release、Windows 全量、Linux 11.3.2/11.4.3 真实 CI 和严格证据门禁后记录。实施边界见 [开工信](collab/inbox/20261029-1959-astra-full-2c-execution.md)，状态以 [ROADMAP](ROADMAP.md) 为准。
 
-## 使用路径
+## 使用路径与只读边界
 
-后端提供 `--dump-effective-config <JSON路径|->` 只读检查入口，复用真实配置与 macro preflight；不执行 macro、不初始化物理、不启动事件、不创建运行输出目录。显式 JSON 路径是唯一导出目标，必须为不存在的新文件（独占创建，拒绝覆盖输入及已有导出），`-` 写标准输出。与其他独立检查模式同时指定应拒绝，缺失参数/不可写目标/无效配置/宏预检失败应非零退出。
+`--dump-effective-config <新JSON文件|->` 复用真实 Configure 和递归 macro preflight；不执行 macro、不初始化 Geant4、不启动事件、不创建运行输出目录。指定文件必须不存在，包括不得覆盖已有硬链接；`-` 写标准输出。配置、预检或写入失败返回非零。此入口只展示 configure 阶段，不能据此宣称宏命令或内核已应用。
 
-GUI 的“有效配置”页加载后端导出的 JSON。文件最多 4 MiB，页面只读；对象树展示字段，详情展示请求值、解析值、单位、应用状态、证据与来源，原始 JSON 可核对。加载损坏文件时保留上份有效快照并标“陈旧”，不会拼接两份文件。它不会同步修改项目、运行器或物理参数。
+正常运行的候选实现写出 `effective_config_configure.json`、逐 run/thread 的 `effective_config_run_<R>_t<T>.json`、线程最终化 `effective_config_final_r<R>_t<T>.json` 和进程 `effective_config_finalization.json`。文件成功关闭后才登记到本轮输出清单，写出失败走输出失败锁存。配置快照保持最初接受的 configure 状态；后续 macro 不反写它。失败、dry-run 和无 run 路径不得补造 run_begin；文件是否产生应结合摘要、manifest 和实际执行路径检查。
 
-## 数据契约
+GUI 第 9 页“有效配置”只读取快照或快照集合。可选择阶段/run/thread、查看对象摘要、类型化值、单位、来源链和应用证据，并比较两份快照的新增、删除和值/类型/来源变化。单文件上限 4 MiB，集合另有累计大小限制；损坏加载保留旧数据并标陈旧。页面不修改项目或运行参数，不能用差异方向、时间字符串或跨进程 revision 推断配置新旧。前端由 DeepSeek 实际 API 参与设计，采纳与纠偏见 [设计记录](collab/outbox/20261029-deepseek-full2c-design.md)；该设计输入不是运行验收。
 
-- schema 为 `g4usim_effective_config_v1`；字段身份采用 JSON Pointer 风格，保留名称大小写，转义 `~` 和 `/`。
-- `requested`、`resolved` 为 JSON 类型化值。显式 `null` 与字段缺失分别显示；应用未知不代表数值必然未知。
-- `revision` 是本 registry 成功事务计数，不是 Git 提交，也不表示运行成功。失败事务不发布新值或来源，旧快照不随之后的变更变化。
-- `application_status` 与 `evidence_level` 分离；`manager_accepted` 不能满足 `applied`。只有相应内核/线程/运行应用证据才能声明应用。检查模式不具有这些证据。
-- 输入来源链不完整时须说明限制，不能将默认或解析值伪造为用户请求；未知外部命令影响保留 unknown。
-- 同一快照稳定排序，但它不是随机引擎检查点，不保证跨机器逐位重放。
+## 数据与应用证据
 
-## 验证与边界
+- 保留 `g4usim_effective_config_v1`，增量扩展，旧 `effective_*` 摘要和 `run_summary_schema_version=1` 兼容。JSON Pointer 稳定身份保留名称大小写，`~`/`/` 分别转义。
+- `requested` 是已记录的请求，`resolved` 是消费者接受的解析值；都是 JSON 类型，缺失与显式 null 不同。未知请求不能从默认值倒推。模式不使用的旧缓存字段不得导出为当前生效值。
+- `origins` 按覆盖顺序记录 default/preset/INI/CLI/成功命令及派生原因，保留原始文件/行/别名、shadowed/accepted/derived。输入 SHA-256 来自实际解析的同一份字节；导出时重开文件的哈希不能冒充该证据。
+- `revision` 是同一个 registry 成功配置事务的计数；原子替换/删除拒绝时不发布新值或来源，旧快照不可变；空或完全相同事务不加 revision。查看、导出和添加应用收据不增加它，跨进程不能比较先后。
+- `configuration_generation` 是模块消费者的配置事务身份，与 registry revision 不同。同值但新来源仍须区分代次，旧收据不能借同值沿用。
+- `application_status`、`evidence_level` 与配置值分开。`manager_accepted` 不足以支持 applied；观察证据须绑定对应字段、代次、解析值摘要及真实 run/thread。master 计划不能证明 worker 已应用，进程最终化也不能把单 worker 观察提升为全 worker 结论。
+- 三阶段为 configure、run_begin、finalization。未知原生 GPS/Geant4 命令影响必须撤销相关应用确定性并保留命令来源；ApplyCommand 返回 0 本身不足以证明实际生效。
 
-独立 C++ 模型测试：`python -B scripts/test_effective_config_model.py`（需要 C++17 编译器，支持 CXX）。真实导出测试：`scripts/test_effective_config_export.py` 读取 `G4USIM_EXE`；GUI 测试为 `gui/smoke_tests/smoke_effective_config.py`。新增代码的实际验证结果以 STATUS / ROADMAP 引用的报告为准，本页列入口不等于已经通过。
+快照不是随机引擎检查点，不保证跨机器逐位重放，不证明物理正确，也不放开 Q1 的命令状态与热重建拒绝边界。
 
-旧 `effective_*` 摘要字段与 `run_summary_schema_version=1` 保持不变。schema 353 字段不是本快照的完整覆盖承诺；field/biasing、独立材料/几何、多源、逐 run 证据仍须按消费者清单逐项闭合。
+## 11 类真实消费者候选覆盖
 
-## 消费者覆盖清单与后续验收
+下表描述已落盘的适配入口及审查要求，不表示这些病例已经全部通过。字段范围以真实消费者模式投影为准，schema 条数不能替代覆盖判定。
 
-以下按当前实际源码入口测绘，行号对应本次开发工作区，不是完整 2C 已交付声明。`SimulationManager::ExportEffectiveConfigJson()`（`src/Core/SimulationManager.cc:1313`）最多导出 15 个 Manager 字段；命名源或相空间模式省略不适用的两个旧源字段，非 mono 分布省略单能缓存。所有这些字段只记录 configure 时点，未执行 macro、未取得内核/worker 应用证据。表中“后续病例”是待闭合的验收要求，不表示本次已运行。
+| 消费者 | 候选实现与核验边界 |
+| --- | --- |
+| 启动参数/主 INI | ConfigManager、SimulationManager 合并默认/INI/CLI，记录输入身份和已接受字段；CLI 锁定及拒绝事务须保持原语义。 |
+| 旧式单源 | SourceManager 导出实际源模式适用的位置、角度、能量、粒子/离子和 preset 来源；单能缓存不得冒充所有能谱。 |
+| 命名源/相空间 | 使用稳定源对象名和输入文件身份、强度/recycle；相空间实际读取与 GPS 默认分离，核对 histories/particles 和耗尽路径。 |
+| 几何 | GeometryManager/模板、STL/GDML 输入捕获、真实构建对象观察；独立文件来源、单位及对象身份需一致，预览不能替代内核证据。 |
+| 材料 | MaterialIniReader/MaterialManager 记录元素/同位素/材料定义、同字节输入与实际 G4Material 观察；失败加载不得污染旧状态。 |
+| 物理 | PhysicsManager 记录 reference/EM/构造器、cuts 与限制条件，结合真实初始化观察；过程存在不等于物理基准通过。 |
+| 计分与 mesh | ScoringManager、ScoringMeshConfig、NIEL/相空间输入记录模式适用设置及 worker 观察；逐线程克隆、统计与 mesh 实际应用分开。 |
+| 场 | FieldConfig/FieldSetup 记录均匀场、场图输入及实际每线程挂接；局部最近祖先和冲突拒绝保留。 |
+| 偏置 | BiasingManager 记录逐规则配置、真实 worker TLS 算符/绑定和逐 run 收据；master 挂接、proposal/applied 次数不证明一般无偏性。 |
+| 输出与径迹 | OutputManager 与 ScoringManager 共同覆盖格式、文件策略、径迹上限和实际线程输出观察；登记只证明组件报告写出。 |
+| macro/交互 | MacroPreflight 和成功命令确认接来源事务、三阶段快照；失败命令不提交，原生命令不可观测时明确 unknown。 |
 
-| 实际消费者及入口 | 当前子集覆盖与缺口 | 后续真实验收病例 |
-| --- | --- | --- |
-| 主 INI 与启动参数：`src/Config/ConfigManager.cc:109`；`src/Core/SimulationManager.cc:659`、`:1197`；CLI `main.cc:285` | 已读回输出目录、run 名称、线程、seed、macro 路径；主配置身份、全部别名覆盖链、输入指纹、interactive/dry-run/verbose 尚无字段。现有来源只保留获胜入口，revision 不是持久运行历史。 | 默认→INI→显式 CLI 同字段覆盖；别名同存、重复键后值生效；拒绝事务不改 revision；中文路径及输入内容变化；保存旧快照后再次改配置仍保持旧内容。 |
-| 旧式单源：`src/Source/SourceManager.cc:407`、`:532`、`:728`；GPS 应用 `:1206`；运行准备 `:344` | 仅普通单源 `/source/particle` 与 mono 模式的 `/source/energy` 的 Manager 缓存；缺位置、角分布、能谱、离子与限制条件，缓存不代表 GPS 当前采样状态。 | 点源/矩形面源、fixed/isotropic、preset 后显式覆盖；原生 GPS 与项目命令交错；离子初始化前后及能量分布，分别核对请求、解析与实际应用，不用首条 hit 代替源顶点。 |
-| 命名源与相空间：`src/Source/SourceManager.cc:407`（命名分支）、`:455`（相空间分支） | 两个 legacy 源字段被省略；未导出具名对象、强度、相空间文件/内容指纹/recycle，不能把缺项当默认源。 | 名称含 `/`、`~` 的稳定对象身份；两具名源跨 run 身份与强度；相空间合法/空/损坏文件及历史耗尽，核对实际生成顶点与输入指纹。 |
-| 几何与独立几何文件：`src/Core/SimulationManager.cc:697`、`:711`；`src/Geometry/GeometryManager.cc:223`（模板 `BuildNodesFromFile`）、`:525`（world）、`:558`（region） | 已覆盖 template、config 路径、default world material、check_overlaps；缺各模板对象、形状/放置/布尔/STL/GDML/可视化/region 参数及独立文件字段来源。 | 层级与分层模板、布尔和外部 mesh 的稳定对象映射；单位归一、未知字段与非法几何前置失败；构建后的尺寸/材料/region 与请求一致；初始化后拒绝修改，不把预览当内核证据。 |
-| 材料独立配置与命令：`src/Core/SimulationManager.cc:689`；`src/Materials/MaterialManager.cc:52`；`src/Materials/MaterialIniReader.cc:90`；构建 `MaterialManager.cc:138`、`:152`、`:179` | 未覆盖材料文件路径、元素/同位素/材料对象、组分、密度、NIST 选择及来源。主 INI 消费追踪不能替代独立 reader。 | NIST、自定义混合物、同位素组成与单位；未知 section/key 和不支持参数拒绝；macro 材料命令成功/失败保留来源；核对实际 G4Material 密度和组成。 |
-| 物理：`src/Physics/PhysicsManager.cc:477`；region 应用 `src/Geometry/GeometryManager.cc:558` | 仅 reference 列表读回；缺 EM 选择来源链、构造器、cuts、限步/限程、region 及偏置包装后的过程。 | reference+EM 的最终列表、各粒子 cut 与 region 覆盖；macro 修改后物理列表重绑；初始化后拒绝修改；区分列表配置、实际 process 构造和物理基准。 |
-| 计分与 mesh：`src/Scoring/ScoringManager.cc:618`；线程克隆 `:104`；mesh `src/Scoring/ScoringMeshConfig.cc:148`，由 `src/Core/SimulationManager.cc:733` 保存命令 | 仅 scoring enabled 与 event_edep；这两项没有来源链。缺 hits、直方图、Dose/Fluence/LET/DDD、NIEL、相空间输出及 mesh 对象和各 worker 应用。 | 默认 scorer 依赖、各计分开关与直方图范围；NIEL 路径/哈希和未知粒子名；box/cylinder mesh 命令真正应用；ST/MT 双 run 克隆及输出一致性，计分误差不等于物理验证。 |
-| 场及外部场图：`src/Field/FieldConfig.cc:231`、`:145`；`src/Detector/DetectorConstruction.cc:53`；`src/Field/FieldSetup.cc:99` | 完全未覆盖；独立 field parser、场图文件、体积挂接与每线程 field setup 不能用 schema 字段数量代替。 | 均匀磁/电场、场图插值及越界、错误体积；核对各 worker 构造/挂接证据与确定性轨迹弯曲；重复 run 生命周期和失败清理。 |
-| 偏置：`src/Biasing/BiasingManager.cc:451`；挂接 `:530`；`src/Core/SimulationManager.cc:735` 启用物理包装 | 仅 biasing enabled 且来源未追踪；缺逐规则粒子/process/因子/体积、operator 挂接和 wrapped process 匹配。 | 显式规则与不存在的粒子/process/体积；配置→物理包装→operator 挂接→匹配逐层证据；初始化后及交互修改拒绝；独立权重/效果验证，不将目标匹配称实际偏置验证。 |
-| 输出格式与径迹：`src/Core/SimulationManager.cc:684`；`src/Output/OutputManager.cc:59`、`:125`；径迹配置 `src/Scoring/ScoringManager.cc:618`，运行写出 `:440`、`:453` | 输出仅覆盖目录；缺 csv/root/both、线程/轮次文件名、写出失败和轨迹 events/min_energy/max_points。径迹由 ScoringManager 消费，不能仅审查 OutputManager。 | 格式与依赖拒绝、ST/MT 多 run 后缀、输出失败锁存；轨迹 0/正上限与能量阈值/点数上限、worker 写入与登记；不得把文件登记当设备持久化或物理正确。 |
-| macro 与交互命令：预检 `main.cc:635`，执行 `:798`，成功来源记录 `:852` / `src/Core/SimulationManager.cc:432`；csh `main.cc:95` | 当前导出只做递归 preflight，不执行命令；不含 macro 后快照、run_begin/finalization、交互原生命令变化、跨 run/worker 的 revision。 | 嵌套 macro 相对路径、CLI 锁冲突、失败命令不提交来源；两轮 run 间合法变更与被拒绝的非法状态变更；原生命令无法观测时明确 unknown；失败最终化保留真实已完成事实，独立 run_result 判成功。 |
+## 模块策略
 
-闭合顺序应是：各真实消费者记录已接受的请求/解析值与稳定对象身份，保留完整来源和输入内容指纹；随后在实际内核/线程生命周期记录应用证据；最后把 configure、run_begin、finalization 接入统一 registry。只有独立模型、配置导出或 GUI 字符串回归通过，都不足以宣称上述运行链路完成。
+可选 `[modules]` 键为 `scoring`、`biasing`、`field`、`trajectories`，取 `off|auto|on`。**缺失 mode 与显式 auto 分开**：缺失保留 legacy 默认（包括默认 SD scoring），显式 `auto` 只依据明确活跃请求或确定性依赖决定，没有请求时禁用；快照保留这一区别，不能把缺失伪造成用户请求 auto。geometry/source/physics 为基础模块，禁止关闭。
 
+当前候选中，`off` 与显式活跃请求冲突即拒绝；`on` 要求已有有效活跃配置，空 hook 或只有 physics wrapper 不是完整 biasing 规则；`auto/on` 与相关显式 false 旧开关冲突也拒绝。不创造规则、场定义或轨迹上限。biasing 新旧规则语法的候选解析与最终策略分开，缺失 mode 保留旧门控语义。
 
-## 下一批接入约束：source（待实现）
+scoring 策略覆盖 sensitive scorer 和 mesh 请求，但 mesh-only 不启用独立 SD scoring 门控；`[scoring]/enabled=false` 可与有效 mesh 共存。phase_space 边界输出和 trajectories 不依赖 sensitive scorer 门控；scoring off/auto 的抑制不得清除两者。trajectories 按独立模块策略处理，需要显式正事件上限才构成活跃请求；有效场定义才构成 field 请求。后续命令不能绕过已锁定 off，GUI 不因此获得完整配置编辑能力。
 
-先闭合 source 的配置阶段消费者，再接应用证据。沿用 `GetSources()` 只读读取，增加一次性返回源模式、各源配置副本及来源元数据的接口；导出不得调用 `GetGPS()`、setter 或 `IniReader::GetString()`，后者会改变 consumed 状态。具名对象使用配置名称，旧 `[source]` 使用明确固定身份。
+此前 off 静默覆盖请求的候选缺口已由严格判定与模块矩阵更新替换；本段是源码审查结论，**仍待本轮真实模块矩阵和完整平台验收**，不能以脚本存在或静态审查宣称通过。
 
-字段必须按实际模式投影：gauss 的 monoEnergy 是均值，uniform/points 等不能输出这个未使用成员；位置/角分布同时依据类型与 presence flags；相空间单独导出文件顺序、recycle、实际读取 histories/particles，禁止补入已重置的 GPS 默认值。全局 `presetName_` 不能重建逐源 preset 覆盖链。
+## 测试入口与交付门槛
 
-来源记录须在真实成功解析/赋值处随配置事务发布，保留 default→preset→显式覆盖及派生原因。现有 `GetFields()` 只保存获胜声明，完整重复声明链需要 reader 保留历史；主 INI、谱文件、相空间文件的哈希必须来自实际解析的同一份字节，不能解析后重新打开文件计算并冒充已接受输入。解析失败不提交来源或 revision。源模式切换时还须事务性移除已不适用的旧字段；当前 registry 的增量合并接口尚未提供模块替换/删除契约，不能把残留字段当成本轮配置。
+统一入口 `scripts/run_m0_tests.py`：static 注册 `test_effective_config_model.py`、`test_input_provenance.py`、`test_effective_consumer_state.py`，需要可用 C++17 编译器（支持 CXX）；backend 注册原有导出与 geometry/materials（显式 `--backend`）、source/physics、output/mesh、biasing、scoring、modules；integration 注册生命周期和 GDML 捕获 helper；gui 注册旧查看器和集合专项。后端用 `G4USIM_EXE` 指向本轮新二进制；GDML helper 必须随构建生成，不能借旧二进制或独立 Xerces 编译代替完整 GDML 运行验收。
 
-后续验收包含八类：无副作用导出；带 `/`/`~` 的多源稳定身份；preset/重复键完整覆盖链；七种能量分布适用字段；离子解析与表准备分离；位置/角分布依赖；多文件相空间哈希/耗尽/回收；成功/失败项目命令、原生 GPS 未知状态及跨 run/worker 独立证据。`gpsConfigDirty_` 与 `deferredApplied_` 不自动成为逐字段应用证明。这些是设计要求，当前尚未实现或验收。
+这些注册只使测试进入平台，不意味着已通过。最终需 ST/MT、多 run、失败/无 run/dry-run、未知原生命令、输入变化与拒绝事务反例，真实 GUI 中英/明暗/小窗检查，以及本轮完整平台报告和同 v3 基线证据门禁。历史子集清单与 source“待实现”说明已由本页当前候选说明取代，其旧验收范围不追溯扩大。

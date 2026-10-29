@@ -9,6 +9,8 @@ import importlib.util
 import json
 import os
 import platform
+import shlex
+import shutil
 import subprocess
 import sys
 import time
@@ -61,6 +63,19 @@ CASES = (
     Case("writer_boundary", "scripts/test_writer_boundary.py", "static"),
     Case("shielding_scenario_model", "scripts/test_shielding_scenario_model.py", "static"),
     Case("shielding_analysis", "scripts/test_shielding_analysis.py", "static"),
+    Case("effective_config_model", "scripts/test_effective_config_model.py", "static", ("cxx",)),
+    Case("input_provenance", "scripts/test_input_provenance.py", "static", ("cxx",)),
+    Case("effective_consumer_state", "scripts/test_effective_consumer_state.py", "static", ("cxx",)),
+    Case("effective_geometry_materials", "scripts/test_effective_geometry_materials.py", "backend", ("exe",), args=("--backend",)),
+    Case("effective_source_physics", "scripts/test_effective_source_physics.py", "backend", ("exe",)),
+    Case("effective_output_mesh", "scripts/test_effective_output_mesh.py", "backend", ("exe",)),
+    Case("effective_biasing", "scripts/test_effective_biasing.py", "backend", ("exe",)),
+    Case("effective_scoring", "scripts/test_effective_scoring.py", "backend", ("exe",)),
+    Case("effective_modules", "scripts/test_effective_modules.py", "backend", ("exe",)),
+    Case("effective_receipt_view", "scripts/test_effective_lifecycle.py", "static", ("cxx",), args=("--component",)),
+    Case("effective_lifecycle", "scripts/test_effective_lifecycle.py", "integration", ("exe",)),
+    Case("effective_gdml", "scripts/test_effective_gdml.py", "integration", ("exe",)),
+    Case("effective_config_collection", "gui/smoke_tests/smoke_effective_config_collection.py", "gui", ("qt",)),
     Case("effective_config_export", "scripts/test_effective_config_export.py", "backend", ("exe",)),
     Case("effective_config_viewer", "gui/smoke_tests/smoke_effective_config.py", "gui", ("qt",)),
     Case("merge_histograms", "scripts/test_merge_histograms.py", "backend", ("merge",)),
@@ -302,7 +317,14 @@ def main() -> int:
 
     report_dir = args.report_root / f"{time.strftime('%Y%m%d-%H%M%S')}-{uuid.uuid4().hex[:8]}"
     report_dir.mkdir(parents=True, exist_ok=True)
+    # Match the standalone tests' compiler selection. Missing tools remain explicit
+    # prerequisites; --fail-on-skip turns their absence into a failed gate.
+    configured_cxx = os.environ.get("CXX")
+    cxx = shlex.split(configured_cxx, posix=os.name != "nt") if configured_cxx else []
+    cxx_available = bool(cxx and shutil.which(cxx[0])) if configured_cxx else any(
+        shutil.which(name) for name in ("g++", "clang++", "cl"))
     requirements = {
+        "cxx": "" if cxx_available else "C++17 compiler unavailable (set CXX or initialize the compiler PATH)",
         "qt": "" if importlib.util.find_spec("PySide6") else "PySide6 is unavailable",
         "uproot": "" if importlib.util.find_spec("uproot") else "uproot is unavailable (pip install uproot)",
         "exe": executable_freshness(args.executable.resolve()),
