@@ -8,6 +8,8 @@
 
 正常运行的候选实现写出 `effective_config_configure.json`、逐 run/thread 的 `effective_config_run_<R>_t<T>.json`、线程最终化 `effective_config_final_r<R>_t<T>.json` 和进程 `effective_config_finalization.json`。文件成功关闭后才登记到本轮输出清单，写出失败走输出失败锁存。配置快照保持最初接受的 configure 状态；后续 macro 不反写它。失败、dry-run 和无 run 路径不得补造 run_begin；文件是否产生应结合摘要、manifest 和实际执行路径检查。
 
+上述已登记的快照在摘要与 metadata 的文件格式清单中标注 `g4usim_effective_config_v1`。dry-run 也可生成 configure/finalization 配置证据，但必须为 `execution_performed=false`、`run_id=null`，不能把这些文件计为已执行模拟或运行成功。格式登记仅说明 writer 的协议，不证明文件未被外部篡改。
+
 GUI 第 9 页“有效配置”只读取快照或快照集合。可选择阶段/run/thread、查看对象摘要、类型化值、单位、来源链和应用证据，并比较两份快照的新增、删除和值/类型/来源变化。单文件上限 4 MiB，集合另有累计大小限制；损坏加载保留旧数据并标陈旧。页面不修改项目或运行参数，不能用差异方向、时间字符串或跨进程 revision 推断配置新旧。前端由 DeepSeek 实际 API 参与设计，采纳与纠偏见 [设计记录](collab/outbox/20261029-deepseek-full2c-design.md)；该设计输入不是运行验收。
 
 ## 数据与应用证据

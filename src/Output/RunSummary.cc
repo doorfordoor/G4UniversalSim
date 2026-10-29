@@ -28,6 +28,10 @@ std::string GeneratedFileSchema(const std::string& path)
     };
     if (name == "run_summary.txt") return "run_summary_v1";
     if (name == "run_metadata.json") return "run_metadata_json_v1";
+    if (name == "effective_config_configure.json" || name == "effective_config_finalization.json" ||
+        ((name.rfind("effective_config_run_", 0) == 0 || name.rfind("effective_config_final_r", 0) == 0) &&
+         name.size() > 5 && name.compare(name.size() - 5, 5, ".json") == 0))
+        return "g4usim_effective_config_v1";
     if (name == "scoring_mesh.csv" || (name.rfind("scoring_mesh_r", 0) == 0 &&
                                        name.size() > 4 && name.compare(name.size() - 4, 4, ".csv") == 0))
         return "scoring_mesh_csv_v2";

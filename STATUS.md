@@ -17,6 +17,10 @@
 
 ## 当前2C实施（2026-10-29启动）
 
+22:28接续：首轮五项失败及Linux额外live_progress现均由修后专项闭合（run_summary 1570、interactive 309、其余4项通过）。发现四项旧测试按worker输出行重复assert导致计数不稳定，已保留逐记录数值/身份检查并改为固定独立不变量断言、另记真实记录覆盖；[同口径控制提案](docs/collab/inbox/20261029-2223-astra-2c-counter-control.md)要求Q1生产代码+同五份测试重测全105，再与当前118走原门禁。旧Q1原始报告及门禁不改。控制在独立q1-counter-control工作区，原q1-final及DSH目录保持原样。当前将冻结修复版本并并行跑控制、候选全量及新真实CI；完整2C仍未验收。
+
+最新检查点（22:10）：冻结`fee88d2`干净Windows全量118项已完成，113 PASS/5 FAIL/0 SKIP；Linux11.3.2/11.4.3真实CI `40884097773` backend失败，integration未执行；M0 `40884097335`两平台static/gui通过。原始证据分别在`out/verification/2c-full-windows/20261029-214410-a8c2b6e8`与`out/verification/2c-ci`，不能称完整2C已验收。已修快照格式登记、线程调度依赖的故障注入/稀疏分母用例、NIEL诊断及交互来源旧预期；修后构建成功，6项专项在跑（`out/verification/2c-regression-repair`）。下一步：专项闭合→新冻结/干净构建→Windows118项与Q1同v3基线门禁→新双版本真实CI→实窗关联与证据归档→阶段裁决/集成。最终可见GUI旧冻结证据另在`out/verification/2c-visible-final`，不得冒充修后版本。
+
 用户已启动完整2C，基线f25da40。实施范围、单写者分工与整阶段验收见[本轮开工信](docs/collab/inbox/20261029-1959-astra-full-2c-execution.md)。当前先补事务/输入来源基础、11消费者真实适配和DeepSeek前端方案，再接三时点及线程证据；既有configured子集不算完整完成。无新的后端构建或测试结论，Q1验收记录保留。
 
 实施检查点：基础事务/同字节来源已提交d422e63，全消费者/运行快照已提交2bb9d0b。build05已成功，真实专项 Source/Physics/Field、Output/mesh、Scoring、modules、生命周期、Geometry/Materials、GDML均已通过；新增Biasing非法命令Fatal abort反例已改成受控失败，6类负例及正例通过（out/verification/2c-consumers-repair，792 v3入口）。空em来源误归属和连续不同命令requested回退已修复；模块缺省legacy与显式auto分开，冲突拒绝。修前日志与失败报告原样保留。DeepSeek参与前端设计/实现，独立审核后真实Windows可见主窗口完成2run×4事件、2worker、14快照集合/差异/中英明暗/损坏保留，6张原生截图实际查看（out/verification/2c-visible），其sourcefp为build03，最终冻结还需补最终后端关联。统一runner已注册118项（static15/backend52/gui32/integration19），Windows静态CI补MSVC初始化且本机独立模型用cl实测通过。完整2C尚未验收；当前冻结后准备干净Release、Windows全量/Q1同v3门禁与真实双版本LinuxCI，再归档、阶段裁决和集成。

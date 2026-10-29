@@ -60,7 +60,12 @@ def run_case(work: Path, threads: int, fault: str | None) -> None:
         assert completed.returncode == 1, (name, completed.returncode, log[-3000:])
         expected_stage = "scoring_sd_initialize" if "initialize" in fault else "scoring_transport_context"
         assert facts["status"] == "failed" and facts["output_failure_stage"] == expected_stage, facts
-        assert facts["output_failure_run_id"] == "1" and facts["output_failure_thread_id"] == "0", facts
+        assert facts["output_failure_run_id"] == "1", facts
+        failure_thread = int(facts["output_failure_thread_id"])
+        assert 0 <= failure_thread < threads, facts
+        if threads == 1:
+            assert failure_thread == 0, facts
+        print(f"{name}: actual failure worker={failure_thread}")
         assert facts["run_count"] == "2" and "run_2_id" not in facts, facts
         expected_message = "unknown exception" if "unknown" in fault else "test-only SD"
         assert expected_message in facts["output_failure_message"], facts
@@ -79,7 +84,7 @@ def main() -> None:
         for threads in (1, 2):
             run_case(work, threads, None)
             for fault in ("sd_context_t0", "sd_context_unknown_t0", "sd_initialize_t0", "sd_initialize_unknown_t0"):
-                run_case(work, threads, fault)
+                run_case(work, threads, fault if threads == 1 else fault.removesuffix("_t0") + "_any_worker")
     print("SD callback context/initialization failure: PASS")
 
 

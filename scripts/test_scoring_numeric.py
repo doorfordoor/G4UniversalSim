@@ -18,15 +18,23 @@ def summary(path: Path) -> dict[str, str]:
 
 
 def finite_outputs(output: Path) -> None:
+    # Each original invariant is checked for every record; counts are independent of worker partition.
+    record_errors = {'invalid_numeric_spelling': [], 'finite_csv_cell': [], 'finite_root_array': []}
+    coverage = {"rows": 0, "cells": 0, "arrays": 0}
     for path in output.glob("*.csv"):
         for row in csv.DictReader(path.open(encoding="utf-8")):
+            coverage['rows'] += 1
+
             for text in row.values():
+                coverage['cells'] += 1
                 try:
                     value = float(text)
                 except (TypeError, ValueError):
-                    assert not (text and any(x in text.lower() for x in ("nan(ind)", "#inf", "#qnan"))), (path, text)
+                    if text and any(x in text.lower() for x in ("nan(ind)", "#inf", "#qnan")):
+                        record_errors['invalid_numeric_spelling'].append((path, text))
                     continue
-                assert math.isfinite(value), (path, text)
+                if not (math.isfinite(value)):
+                    record_errors['finite_csv_cell'].append((path, text))
     import numpy as np
     import uproot
     for path in output.glob("*.root"):
@@ -34,8 +42,15 @@ def finite_outputs(output: Path) -> None:
             for obj in handle.values():
                 if hasattr(obj, "arrays"):
                     for array in obj.arrays(library="np").values():
+                        coverage['arrays'] += 1
                         if array.dtype.kind in "fci":
-                            assert np.isfinite(array).all(), path
+                            if not (np.isfinite(array).all()):
+                                record_errors['finite_root_array'].append(path)
+
+    print('finite_outputs: coverage=', coverage)
+    assert not record_errors['invalid_numeric_spelling'], ('finite_outputs: invariant invalid_numeric_spelling', record_errors['invalid_numeric_spelling'])
+    assert not record_errors['finite_csv_cell'], ('finite_outputs: invariant finite_csv_cell', record_errors['finite_csv_cell'])
+    assert not record_errors['finite_root_array'], ('finite_outputs: invariant finite_root_array', record_errors['finite_root_array'])
 
 
 def run_case(work: Path, fmt: str, threads: int, weight: float, events: int,

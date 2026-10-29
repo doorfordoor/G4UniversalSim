@@ -206,9 +206,15 @@ def main():
         assert run.returncode == 0, run.stderr[-2000:]
         validate(progress, summary, (50,))
         report["checks"].append("4 workers with event/tracking log noise: valid progress messages")
-        for fault in ("event_row_t0", "begin_scoring_t0", "final_close_master"):
-            run, progress, summary, _ = execute(exe, work / fault, events=(200, 137), fault=fault)
+        for fault, threads in (("event_row_t0", 1), ("event_row_any_worker", 2),
+                               ("begin_scoring_t0", 2), ("final_close_master", 2)):
+            run, progress, summary, _ = execute(exe, work / fault, events=(200, 137), threads=threads, fault=fault)
             assert run.returncode != 0 and summary["status"] == "failed", (fault, run.stderr[-3000:])
+            if fault.startswith("event_row_"):
+                assert summary["output_failure_stage"] == "event_edep_write", summary
+                failure_thread = int(summary["output_failure_thread_id"])
+                assert 0 <= failure_thread < threads, summary
+                report["checks"].append(f"{fault}: actual failure worker={failure_thread}")
             for item in progress:
                 if item["phase"] in ("end", "aborted"):
                     key = f"run_{item['run_id']}_completed_events"

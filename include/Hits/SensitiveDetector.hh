@@ -69,6 +69,7 @@ private:
     enum class BoundaryFault { None, Context, ContextUnknown, Initialize, InitializeUnknown };
     BoundaryFault boundaryFault_ = BoundaryFault::None;
     bool boundaryFaultInjected_ = false;
+    bool boundaryFaultAnyWorker_ = false;
     G4EmCalculator emCalculator_;
     int hitsThisEvent_ = 0;
     double rawEdepThisEvent_ = 0.0;

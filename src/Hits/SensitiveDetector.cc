@@ -19,6 +19,7 @@
 #include "G4Threading.hh"
 #endif
 
+#include <atomic>
 #include <cmath>
 #include <memory>
 #include <stdexcept>
@@ -32,7 +33,12 @@ SensitiveDetector::SensitiveDetector(const G4String& name,
 {
     collectionName.insert(collectionName_);
     const char* fault = std::getenv("G4USIM_TEST_OUTPUT_FAULT");
-    const std::string selected = fault ? fault : "";
+    std::string selected = fault ? fault : "";
+    const std::string suffix = "_any_worker";
+    if (selected.size() >= suffix.size() && selected.compare(selected.size() - suffix.size(), suffix.size(), suffix) == 0) {
+        boundaryFaultAnyWorker_ = true;
+        selected.replace(selected.size() - suffix.size(), suffix.size(), "_t0");
+    }
     if (selected == "sd_context_t0") boundaryFault_ = BoundaryFault::Context;
     else if (selected == "sd_context_unknown_t0") boundaryFault_ = BoundaryFault::ContextUnknown;
     else if (selected == "sd_initialize_t0") boundaryFault_ = BoundaryFault::Initialize;
@@ -159,11 +165,17 @@ void SensitiveDetector::InjectBoundaryFault(bool initialize)
     const bool initializationFault = boundaryFault_ == BoundaryFault::Initialize || boundaryFault_ == BoundaryFault::InitializeUnknown;
     if (initializationFault != initialize) return;
 #ifdef G4MULTITHREADED
-    if (G4Threading::G4GetThreadId() != 0) return;
+    const int thread = G4Threading::G4GetThreadId();
+    if (boundaryFaultAnyWorker_ ? thread < 0 : thread != 0) return;
 #endif
     auto* manager = G4RunManager::GetRunManager();
     const auto* run = manager ? manager->GetCurrentRun() : nullptr;
     if (!run || run->GetRunID() != 1) return;
+    // Test-only arbitration: only a worker reaching the selected boundary claims it.
+    if (boundaryFaultAnyWorker_) {
+        static std::atomic<bool> claimed{false};
+        if (claimed.exchange(true, std::memory_order_relaxed)) return;
+    }
     boundaryFaultInjected_ = true;
     if (boundaryFault_ == BoundaryFault::ContextUnknown || boundaryFault_ == BoundaryFault::InitializeUnknown) throw 23;
     throw std::runtime_error(initialize ? "test-only SD initialization failure" : "test-only SD transport context failure");

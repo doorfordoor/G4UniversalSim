@@ -623,10 +623,16 @@ def main() -> int:
         assert dry_values["effective_config_geant4_applied"] == "unknown"
         assert any(Path(file).name == "run_summary.txt" for file in dry_files)
         assert any(Path(file).name == "run_metadata.json" for file in dry_files)
-        assert read_generated_file_schemas(dry_output) == {
-            file: "run_metadata_json_v1" if Path(file).name == "run_metadata.json" else "run_summary_v1"
-            for file in dry_files
-        }
+        dry_schemas = {"run_summary.txt": "run_summary_v1", "run_metadata.json": "run_metadata_json_v1",
+                       "effective_config_configure.json": "g4usim_effective_config_v1",
+                       "effective_config_finalization.json": "g4usim_effective_config_v1"}
+        assert {Path(file).name for file in dry_files} == set(dry_schemas), dry_files
+        assert read_generated_file_schemas(dry_output) == {file: dry_schemas[Path(file).name] for file in dry_files}
+        for stage in ("configure", "finalization"):
+            snapshot = json.loads((dry_output / f"effective_config_{stage}.json").read_text(encoding="utf-8"))
+            assert snapshot["schema"] == "g4usim_effective_config_v1" and snapshot["stage"] == stage
+            assert snapshot["execution_performed"] is False and snapshot["run_id"] is None
+        assert not list(dry_output.glob("effective_config_run_*.json"))
 
         # A single real run reports completed events and generated files.
         run(executable, ["--config", "config/main.ini", "--macro", str(single_macro), "--output", str(single_output), "--seed", "77"])
@@ -842,6 +848,11 @@ def main() -> int:
         single_schemas = read_generated_file_schemas(single_output)
         assert set(single_schemas) == set(single_files)
         assert single_schemas[str((single_output / "event_edep_t0.csv").resolve())] == "event_edep_csv_v3"
+        snapshots = [file for file in single_files if Path(file).name.startswith("effective_config_")]
+        assert len(snapshots) >= 6, snapshots
+        for file in snapshots:
+            assert single_schemas[file] == "g4usim_effective_config_v1", (file, single_schemas[file])
+            assert json.loads(Path(file).read_text(encoding="utf-8"))["schema"] == single_schemas[file]
         second_material_output = temp / "second-material-output"
         run(executable, ["--config", "config/main.ini", "--macro", str(second_material_macro),
                          "--output", str(second_material_output)])
@@ -1179,15 +1190,17 @@ def main() -> int:
 
         # Inject faults inside real Geant4 worker callbacks (after beamOn has
         # started), not via the pre-run path/directory collision check.
-        for fault, target, expected_stage, failed_file in (
-            ("event_row_t0", event_fault_output, "event_edep_write", "event_edep_t0.csv"),
-            ("summary_close_t0", finalize_fault_output, "scoring_write_all", "edep_volume_summary_t0.csv"),
+        for fault, target, expected_stage, failed_stem, threads in (
+            ("event_row_t0", temp / "event-fault-single", "event_edep_write", "event_edep", 1),
+            ("summary_close_t0", temp / "close-fault-single", "scoring_write_all", "edep_volume_summary", 1),
+            ("event_row_any_worker", event_fault_output, "event_edep_write", "event_edep", 2),
+            ("summary_close_any_worker", finalize_fault_output, "scoring_write_all", "edep_volume_summary", 2),
         ):
             environment = os.environ.copy()
             environment["G4USIM_TEST_OUTPUT_FAULT"] = fault
             worker_failure = subprocess.run(
                 [str(executable), "--config", str(manifest_config), "--macro", str(manifest_macro),
-                 "--output", str(target), "--threads", "2"],
+                 "--output", str(target), "--threads", str(threads)],
                 cwd=TEST_CWD, capture_output=True, text=True, timeout=120, env=environment,
             )
             failure_log = worker_failure.stdout + worker_failure.stderr
@@ -1197,7 +1210,21 @@ def main() -> int:
             assert fault_values["program_exit_code"] != "0", fault_values
             assert fault_values["output_failure_status"] == "failed", fault_values
             assert fault_values["output_failure_stage"] == expected_stage, fault_values
-            assert fault_values["output_failure_thread_id"] == "0", fault_values
+            failed_thread = int(fault_values["output_failure_thread_id"])
+            # Batch failure may finalize after the run manager is destroyed;
+            # unknown is honest then. Independently observe the workers that
+            # actually reached this run's BeginRun snapshot before callbacks.
+            worker_ids = {snapshot["thread_id"] for snapshot in (
+                json.loads(path.read_text(encoding="utf-8"))
+                for path in target.glob("effective_config_run_0_t*.json"))
+                if snapshot["thread_id"] >= 0}
+            assert worker_ids == set(range(threads)), worker_ids
+            assert failed_thread in worker_ids, fault_values
+            assert fault_values["actual_threads"] in (str(threads), "unknown"), fault_values
+            if threads == 1:
+                assert failed_thread == 0, fault_values
+            failed_file = f"{failed_stem}_t{failed_thread}.csv"
+            assert failed_file in fault_values["output_failure_message"], fault_values
             assert fault_values["macro_failure_command"] == "/run/beamOn 5000", fault_values
             assert fault_values["macro_failure_code_available"] == "false", fault_values
             assert not any(Path(file).name == failed_file for file in fault_files), fault_files
@@ -1403,8 +1430,12 @@ def main() -> int:
             assert suffix_values["macro_failure_line"] == "1"
             assert suffix_values["macro_failure_code_available"] == "false"
             assert suffix_values["run_count"] == "0"
-            assert all(Path(path).name in {"run_summary.txt", "run_metadata.json"}
-                       for path in suffix_generated), suffix_generated
+            assert {Path(path).name for path in suffix_generated} == set(dry_schemas), suffix_generated
+            assert read_generated_file_schemas(suffix_output) == {
+                path: dry_schemas[Path(path).name] for path in suffix_generated}
+            for stage in ("configure", "finalization"):
+                snapshot = json.loads((suffix_output / f"effective_config_{stage}.json").read_text(encoding="utf-8"))
+                assert snapshot["execution_performed"] is False and snapshot["run_id"] is None
 
         suffix_true_output = temp / "suffix-enabled-two-workers"
         suffix_true_macro = temp / "suffix-enabled-two-workers.mac"

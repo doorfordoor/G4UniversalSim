@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import os
 import csv
+import json
 import subprocess
 import tempfile
 from pathlib import Path
@@ -168,7 +169,22 @@ def main() -> int:
         )
         assert code == 0 and result["status"] == "completed", log[-4000:]
         assert result["actual_threads"] == "2", result
-        assert result["effective_threads_origin_kind"] == "runtime_unattributed", result
+        # The audited csh success callback now confirms this actual command.
+        # The legacy summary keeps its macro enum; the full snapshot identifies
+        # interactive input without inventing a macro filename or source line.
+        assert result["effective_threads_origin_kind"] == "macro", result
+        assert result["effective_threads_origin_key"] == "/aihl/app/setnumthreads", result
+        assert result["effective_threads_origin_file"] == "not_applicable", result
+        assert result["effective_threads_origin_line"] == "0", result
+        snapshot_path = temp / "threads_before_init" / "effective_config_finalization.json"
+        assert snapshot_path.is_file(), snapshot_path
+        snapshot = json.loads(snapshot_path.read_text(encoding="utf-8"))
+        thread_field = next(field for field in snapshot["fields"] if field["path"] == "/run/threads")
+        assert thread_field["resolved"] == 2, thread_field
+        origin = thread_field["origins"][-1]
+        assert origin["kind"] == "interactive" and origin["disposition"] == "accepted", origin
+        assert origin["raw"].lower() == "/aihl/app/setnumthreads 2", origin
+        assert origin["file"] == "" and origin["line"] == 0, origin
 
         code, log, result = session(
             "threads_after_init", "/run/initialize\n/AIHL/app/setNumThreads 3\n"
@@ -367,10 +383,20 @@ def main() -> int:
         assert result["interactive_command_failure_kind"] == "none", result
 
         code, log, result = session("worker_write_failure", "/run/initialize\n/run/beamOn 5",
-                                    "event_row_t0", config=True, threads=2)
+                                    "event_row_any_worker", config=True, threads=2)
         assert code != 0 and "Interactive output failure" in log, log[-4000:]
         assert result["status"] == "failed" and result["program_exit_code"] != "0", result
         assert result["run_count"] == "1" and result["output_failure_stage"] == "event_edep_write", result
+        failure_thread = int(result["output_failure_thread_id"])
+        # Shutdown may make the run-manager thread count unavailable. Use the
+        # actual run_begin receipts instead of inventing a count at finalization.
+        worker_ids = {snapshot["thread_id"] for snapshot in (
+            json.loads(path.read_text(encoding="utf-8"))
+            for path in (temp / "worker_write_failure").glob("effective_config_run_0_t*.json"))
+            if snapshot["thread_id"] >= 0}
+        assert worker_ids == {0, 1}, worker_ids
+        assert failure_thread in worker_ids, (result, worker_ids)
+        assert result["actual_threads"] in ("2", "unknown"), result
         assert result["macro_execution_status"] == "not_run", result
 
         code, log, result = session(

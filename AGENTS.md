@@ -4,6 +4,8 @@
 
 ## 0. 条目索引与历史全文
 
+- 2026-10-29 完整 2C 回归衔接：有效配置文件按 `g4usim_effective_config_v1` 登记；dry-run 配置证据不是模拟执行。故障注入的 `_t0` 仅用于单 worker 确定性覆盖，多 worker 使用 `_any_worker` 在实际回调原子竞争一次，不能假定 worker0 分到事件。稀疏 ROOT 总 N 必须来自可靠 metadata，不能假定所有 worker 都工作。全文及正反例见 `docs/agent-history.md` 的“完整 2C 首轮全量回归衔接”。
+
 - 2026-10-29 Q1 运行边界：Dose 用扣 daughter 的本体质量；GDML SD 保留真实对象，无法表达的 bias 名碰撞和持久 touchable 路径歧义须拒绝；材料解析/实际构造都检查数值及版本壳层范围；局部场最近显式祖先、冲突在 master 拒绝；延迟 GPS 按真实源身份管理，pending 动态/别名命令必须拒绝；SD 回调异常锁存并中止。更改这些路径前读 `docs/agent-history.md` 的 Q1 几何、材料、源与场条目及其回归。
 
 - 2026-10-29 Q1 数值与统计口径：非有限值/事件矩/worker 合并溢出须锁存失败，不限幅伪造结果；仅 ROOT 也检查 master mesh。scorer/mesh CSV v2 追加估计方法与可用状态，N<2/零分母/零总量不能显示零误差条；ROOT 稀疏行不提供完整 N。保持原近似公式，按事件归一化不得标为按初级粒子；LET 比值不得再除 N，网格投影无协方差不得画合成误差。全文与回归见 `docs/agent-history.md` 的 Q1 条目。

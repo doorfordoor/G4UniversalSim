@@ -4,6 +4,7 @@ from __future__ import annotations
 import contextlib
 import csv
 import math
+import json
 import os
 from pathlib import Path
 import subprocess
@@ -88,12 +89,23 @@ def run_case(work: Path, kind: str, threads: int) -> None:
     else:
         assert result.returncode == 0 and facts["status"] == "completed", (facts, log[-3000:])
         energies = {}
+        mass_errors=[]
+        records_by_file={}
         for path in output.glob("dose_volume_summary_t*.csv"):
             with path.open(newline="", encoding="utf-8") as stream:
+                records_by_file[path.name]=0
                 for row in csv.DictReader(stream):
+                    records_by_file[path.name]+=1
                     key = row["volume_path"]
                     energies[key] = energies.get(key, 0.0) + float(row["raw_edep_MeV"])
-                    assert math.isclose(float(row["mass_kg"]), .008, rel_tol=1e-9), row
+                    if not math.isclose(float(row["mass_kg"]), .008, rel_tol=1e-9):
+                        mass_errors.append(row)
+        # All original row predicates are evaluated; worker row multiplicity
+        # is coverage evidence, not the number of independent assertion entries.
+        assert not mass_errors, mass_errors
+        print("G4USIM_RECORD_COVERAGE="+json.dumps({"case":kind,"threads":threads,
+            "mass_records_checked":sum(records_by_file.values()),"records_by_file":records_by_file,
+            "physical_paths":sorted(energies)},sort_keys=True))
         assert len(energies) == 2, energies
         for path, energy in energies.items():
             assert math.isclose(energy, 8.0, rel_tol=1e-8), (path, energy)

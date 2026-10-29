@@ -3,6 +3,8 @@
 #include "Utils/FileUtils.hh"
 
 #include <iomanip>
+#include <atomic>
+#include "G4Threading.hh"
 #include <cstdlib>
 #include <filesystem>
 #include <sstream>
@@ -23,6 +25,22 @@ std::string TestOutputFault()
     const char* value = std::getenv("G4USIM_TEST_OUTPUT_FAULT");
     return value ? value : "";
 #endif
+}
+
+// Opt-in fault tokens claim only a real worker operation, never a master writer.
+bool ClaimWorkerFault(const std::string& token, const char* selected,
+                      const std::string& filename, const char* stem,
+                      std::atomic<bool>& claimed)
+{
+    if (token != selected) return false;
+#ifdef G4MULTITHREADED
+    if (G4Threading::G4GetThreadId() < 0) return false;
+#endif
+    const std::string name = std::filesystem::path(filename).filename().string();
+    const std::string prefix = std::string(stem) + "_t";
+    if (name.compare(0, prefix.size(), prefix) != 0 ||
+        name.size() <= prefix.size() + 4 || name.substr(name.size() - 4) != ".csv") return false;
+    return !claimed.exchange(true, std::memory_order_relaxed);
 }
 
 }  // namespace
@@ -134,8 +152,11 @@ void CsvWriter::Close()
 {
     if (stream_.is_open()) {
         // Test-only, opt-in fault injection exercises the real worker finalization path.
-        const bool injected = TestOutputFault() == "summary_close_t0" &&
-            std::filesystem::path(filename_).filename() == "edep_volume_summary_t0.csv";
+        static std::atomic<bool> claimed{false};
+        const auto fault = TestOutputFault();
+        const bool injected = (fault == "summary_close_t0" &&
+            std::filesystem::path(filename_).filename() == "edep_volume_summary_t0.csv") ||
+            ClaimWorkerFault(fault, "summary_close_any_worker", filename_, "edep_volume_summary", claimed);
         stream_.flush();
         const bool flushFailed = !stream_ || writeFailed_ || injected;
         stream_.close();
@@ -187,8 +208,11 @@ std::string CsvWriter::Escape(const std::string& value) const
 
 void CsvWriter::WriteEscapedRow(const std::vector<std::string>& values)
 {
-    if (headerWritten_ && TestOutputFault() == "event_row_t0" &&
-        std::filesystem::path(filename_).filename() == "event_edep_t0.csv") {
+    static std::atomic<bool> claimed{false};
+    const auto fault = TestOutputFault();
+    if (headerWritten_ && ((fault == "event_row_t0" &&
+        std::filesystem::path(filename_).filename() == "event_edep_t0.csv") ||
+        ClaimWorkerFault(fault, "event_row_any_worker", filename_, "event_edep", claimed))) {
         writeFailed_ = true;
         throw std::runtime_error("Injected CSV row write failure: '" + filename_ + "'");
     }

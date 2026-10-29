@@ -7,6 +7,7 @@ import json
 import os
 from pathlib import Path
 import subprocess
+import shutil
 import sys
 from collections import defaultdict
 import numpy as np
@@ -137,8 +138,30 @@ def main():
         output = run(exe, work / f"sparse-{enabled}", [1]*32, threads=2, event_edep=enabled, sparse=True)
         with uproot.open(output / "g4usim.root") as root:
             data = root["edep_volume"].arrays(library="np")
+            assert "events" in root
+            event_rows=root["events"].num_entries
+            assert event_rows==(32 if enabled else 0),event_rows
         workers = {int(t): int(n) for t,n in zip(data["threadID"],data["n_events"])}
-        assert len(workers) == 1 and sum(workers.values()) < 32, workers
+        # Only event 0 crosses the target, so exactly one worker contributes.
+        # Geant4 does not promise that the other worker receives any histories;
+        # the contributing worker may legitimately own all 32 events (R31).
+        worker_events=sum(workers.values())
+        assert len(workers) == 1 and 1 <= worker_events <= 32, workers
+        # Preserve a real, unmodified ROOT copy as explicit offline input. Even
+        # an event ntuple and rows whose counter happens to equal 32 do not
+        # establish a trustworthy completed-event denominator without metadata.
+        offline=work/f"offline-root-{enabled}"
+        offline.mkdir()
+        offline_root=offline/"g4usim.root"
+        shutil.copy2(output/"g4usim.root",offline_root)
+        assert hashlib.sha256(offline_root.read_bytes()).digest()==hashlib.sha256((output/"g4usim.root").read_bytes()).digest()
+        assert not (offline/"run_metadata.json").exists()
+        try:
+            g4usim_io.load_scorer_statistics(offline_root)
+        except ValueError as error:
+            assert "no reliable completed event count" in str(error),error
+        else:
+            assert False,"ROOT rows/event ntuples bypassed the metadata denominator requirement"
         values = g4usim_io.load_scorer_statistics(output / "g4usim.root")
         assert values and all(v.n_events == 32 for v in values)
         csv_stats = {(r["scorer"],r["quantity"],r["key"]):r for r in rows(output / "scorer_statistics.csv")}
@@ -146,7 +169,10 @@ def main():
             ref = csv_stats[(value.scorer,value.quantity,value.key)]
             assert np.isclose(value.value,float(ref["value"]),rtol=1e-5)
             assert np.isclose(value.rel_error,float(ref["rel_error"]),rtol=1e-5)
-        report["checks"].append({"sparse_worker": workers, "events":32, "event_edep":enabled})
+        report["checks"].append({"sparse_worker": workers, "events":32, "event_edep":enabled,
+            "contributing_worker_events":worker_events, "observed_sparse_denominator_gap":worker_events<32,
+            "offline_root_without_metadata_rejected":True, "event_ntuple_rows":event_rows,
+            "sparse_gap_numeric_counterexample":"deterministic test_q1_postprocessing fixture; no worker scheduling guarantee"})
     for enabled in (True, False):
         zero = run(exe, work / f"zero-{enabled}", [1]*8, threads=2, event_edep=enabled, sparse="all")
         assert g4usim_io.load_scorer_statistics(zero / "g4usim.root") == []

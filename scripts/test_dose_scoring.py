@@ -39,6 +39,18 @@ def execute(root: Path, name: str, main_text: str, macro: str, threads: int = 1,
 
 
 def check_output(output: Path, threads: int, runs: int) -> None:
+    # Each original invariant is checked for every record; counts are independent of worker partition.
+    record_errors = {
+        'csv_header': [],
+        'nonempty_worker_csv': [],
+        'row_run_identity': [],
+        'target_path': [],
+        'analytic_mass': [],
+        'finite_energy_and_dose': [],
+        'dose_conversion': [],
+        'manifest_registration': [],
+    }
+    coverage = {"rows": 0, "cells": 0, "arrays": 0}
     paths = sorted(path for path in output.glob("dose_volume_summary*.csv") if DOSE_NAME.fullmatch(path.name))
     assert len(paths) == threads * runs, f"Dose output count: {paths}"
     total_raw = 0.0
@@ -48,22 +60,32 @@ def check_output(output: Path, threads: int, runs: int) -> None:
     for path in paths:
         with path.open(newline="", encoding="utf-8") as stream:
             reader = csv.DictReader(stream)
-            assert reader.fieldnames == HEADER, (path, reader.fieldnames)
+            if not (reader.fieldnames == HEADER):
+                record_errors['csv_header'].append((path, reader.fieldnames))
             rows = list(reader)
-        assert rows, f"Expected positive target deposit and nonempty Dose CSV: {path}"
+        if not (rows):
+            record_errors['nonempty_worker_csv'].append(f"Expected positive target deposit and nonempty Dose CSV: {path}")
         run_match = re.search(r"_r(\d+)\.csv$", path.name)
         run_id = int(run_match.group(1)) if run_match else 0
         run_names.add(run_id)
         for row in rows:
-            assert int(row["runID"]) == run_id, (path, row)
-            assert row["volume_path"].endswith("/Target_PV#0"), row
+            coverage['rows'] += 1
+            coverage['cells'] += len(row)
+
+            if not (int(row["runID"]) == run_id):
+                record_errors['row_run_identity'].append((path, row))
+            if not (row["volume_path"].endswith("/Target_PV#0")):
+                record_errors['target_path'].append(row)
             mass = float(row["mass_kg"])
-            assert math.isfinite(mass) and math.isclose(mass, expected_mass, rel_tol=0.015), (path, mass)
+            if not (math.isfinite(mass) and math.isclose(mass, expected_mass, rel_tol=0.015)):
+                record_errors['analytic_mass'].append((path, mass))
             for prefix in ("raw", "weighted"):
                 energy = float(row[f"{prefix}_edep_MeV"])
                 dose = float(row[f"{prefix}_dose_Gy"])
-                assert math.isfinite(energy) and math.isfinite(dose)
-                assert math.isclose(dose, energy * MEV_J / mass, rel_tol=2e-9, abs_tol=1e-15), (path, row)
+                if not (math.isfinite(energy) and math.isfinite(dose)):
+                    record_errors['finite_energy_and_dose'].append((path, row, prefix, energy, dose))
+                if not (math.isclose(dose, energy * MEV_J / mass, rel_tol=2e-9, abs_tol=1e-15)):
+                    record_errors['dose_conversion'].append((path, row))
             total_raw += float(row["raw_edep_MeV"])
     assert total_raw > 0, f"No energy deposited: {output}"
     assert run_names == set(range(runs)), run_names
@@ -71,11 +93,33 @@ def check_output(output: Path, threads: int, runs: int) -> None:
     assert "status = completed" in summary, summary[-1000:]
     assert "dose_volume_summary" in summary and "dose_volume_csv_v2" in summary, summary[-1500:]
     for path in paths:
-        assert path.name in summary, f"Missing output registration: {path}"
+        if not (path.name in summary):
+            record_errors['manifest_registration'].append(f"Missing output registration: {path}")
+
+    print('check_output: coverage=', coverage)
+    assert not record_errors['csv_header'], ('check_output: invariant csv_header', record_errors['csv_header'])
+    assert not record_errors['nonempty_worker_csv'], ('check_output: invariant nonempty_worker_csv', record_errors['nonempty_worker_csv'])
+    assert not record_errors['row_run_identity'], ('check_output: invariant row_run_identity', record_errors['row_run_identity'])
+    assert not record_errors['target_path'], ('check_output: invariant target_path', record_errors['target_path'])
+    assert not record_errors['analytic_mass'], ('check_output: invariant analytic_mass', record_errors['analytic_mass'])
+    assert not record_errors['finite_energy_and_dose'], ('check_output: invariant finite_energy_and_dose', record_errors['finite_energy_and_dose'])
+    assert not record_errors['dose_conversion'], ('check_output: invariant dose_conversion', record_errors['dose_conversion'])
+    assert not record_errors['manifest_registration'], ('check_output: invariant manifest_registration', record_errors['manifest_registration'])
 
 
 def check_output_extension(output: Path, root: Path) -> None:
     """Exercise the M5 JSON extension against actual ST/MT Geant4 Dose files."""
+    # Each original invariant is checked for every record; counts are independent of worker partition.
+    record_errors = {
+        'worker_filename': [],
+        'extension_run_identity': [],
+        'consistent_volume_mass': [],
+        'extension_worker_identity': [],
+        'extension_mass': [],
+        'extension_energy_sum': [],
+        'extension_dose_conversion': [],
+    }
+    coverage = {"rows": 0, "cells": 0, "arrays": 0}
     destination = root / "dose-real-output.json"
     command = [sys.executable, "-B", str(ROOT / "scripts/run_output_extension.py"),
                "--run", "dose_json", "--input-dir", str(output),
@@ -95,17 +139,23 @@ def check_output_extension(output: Path, root: Path) -> None:
     reference: dict[tuple[int, str], dict] = {}
     for path in sorted(output.glob("dose_volume_summary*.csv")):
         match = re.fullmatch(r"dose_volume_summary_t(\d+)(?:_r(\d+))?\.csv", path.name)
-        assert match is not None, path
+        if not (match is not None):
+            record_errors['worker_filename'].append(path)
         thread_id, run_id = int(match.group(1)), int(match.group(2) or 0)
         with path.open(newline="", encoding="utf-8") as stream:
             for row in csv.DictReader(stream):
-                assert int(row["runID"]) == run_id
+                coverage['rows'] += 1
+                coverage['cells'] += len(row)
+
+                if not (int(row["runID"]) == run_id):
+                    record_errors['extension_run_identity'].append((path, row, run_id))
                 key = (run_id, row["volume_path"])
                 record = reference.setdefault(key, {
                     "threads": set(), "mass": float(row["mass_kg"]),
                     "raw": 0.0, "weighted": 0.0,
                 })
-                assert math.isclose(record["mass"], float(row["mass_kg"]), rel_tol=1e-9)
+                if not (math.isclose(record["mass"], float(row["mass_kg"]), rel_tol=1e-9)):
+                    record_errors['consistent_volume_mass'].append((path, row, record["mass"]))
                 record["threads"].add(thread_id)
                 record["raw"] += float(row["raw_edep_MeV"])
                 record["weighted"] += float(row["weighted_edep_MeV"])
@@ -114,18 +164,41 @@ def check_output_extension(output: Path, root: Path) -> None:
     assert len(data["volumes"]) == len(reference)
     for item in data["volumes"]:
         expected = reference.pop((item["runID"], item["volume_path"]))
-        assert item["thread_ids"] == sorted(expected["threads"]) == [0, 1]
-        assert math.isclose(item["mass_kg"], expected["mass"], rel_tol=1e-9)
+        if not (item["thread_ids"] == sorted(expected["threads"]) == [0, 1]):
+            record_errors['extension_worker_identity'].append((item, sorted(expected["threads"])))
+        if not (math.isclose(item["mass_kg"], expected["mass"], rel_tol=1e-9)):
+            record_errors['extension_mass'].append((item, expected))
         for prefix in ("raw", "weighted"):
             energy = item[f"{prefix}_edep_MeV"]
-            assert math.isclose(energy, expected[prefix], rel_tol=1e-9, abs_tol=1e-12)
-            assert math.isclose(item[f"{prefix}_dose_Gy"],
-                                energy * MEV_J / expected["mass"], rel_tol=1e-9)
+            if not (math.isclose(energy, expected[prefix], rel_tol=1e-9, abs_tol=1e-12)):
+                record_errors['extension_energy_sum'].append((item, prefix, energy, expected[prefix]))
+            if not (math.isclose(item[f"{prefix}_dose_Gy"],
+                                energy * MEV_J / expected["mass"], rel_tol=1e-9)):
+                record_errors['extension_dose_conversion'].append((item, prefix, energy, expected["mass"]))
     assert not reference
+
+    print('check_output_extension: coverage=', coverage)
+    assert not record_errors['worker_filename'], ('check_output_extension: invariant worker_filename', record_errors['worker_filename'])
+    assert not record_errors['extension_run_identity'], ('check_output_extension: invariant extension_run_identity', record_errors['extension_run_identity'])
+    assert not record_errors['consistent_volume_mass'], ('check_output_extension: invariant consistent_volume_mass', record_errors['consistent_volume_mass'])
+    assert not record_errors['extension_worker_identity'], ('check_output_extension: invariant extension_worker_identity', record_errors['extension_worker_identity'])
+    assert not record_errors['extension_mass'], ('check_output_extension: invariant extension_mass', record_errors['extension_mass'])
+    assert not record_errors['extension_energy_sum'], ('check_output_extension: invariant extension_energy_sum', record_errors['extension_energy_sum'])
+    assert not record_errors['extension_dose_conversion'], ('check_output_extension: invariant extension_dose_conversion', record_errors['extension_dose_conversion'])
 
 
 def check_mother_mass(root: Path) -> None:
     """Independent analytic masses and raw-hit sums for sensitive mother/child."""
+    # Each original invariant is checked for every record; counts are independent of worker partition.
+    record_errors = {
+        'mother_child_identity': [],
+        'mother_child_mass': [],
+        'mother_child_dose_conversion': [],
+        'complete_run_volume_keys': [],
+        'positive_volume_energies': [],
+        'dose_matches_raw_hits': [],
+    }
+    coverage = {"rows": 0, "cells": 0, "arrays": 0}
     for material, child_mass in (("G4_WATER", .001), ("G4_Pb", .01135)):
         geo = root / f"mother_{material}.ini"
         geo.write_text("[world]\nshape = box\nsize = 1 m,1 m,1 m\nmaterial = G4_Galactic\n"
@@ -146,6 +219,9 @@ def check_mother_mass(root: Path) -> None:
             for path in output.glob("hits_t*.csv"):
                 with path.open(newline="", encoding="utf-8") as stream:
                     for row in csv.DictReader(stream):
+                        coverage['rows'] += 1
+                        coverage['cells'] += len(row)
+
                         key = (int(row["runID"]), row["volume"])
                         raw, weighted = hits.get(key, (0.0, 0.0))
                         energy = float(row["edep_MeV"])
@@ -154,28 +230,54 @@ def check_mother_mass(root: Path) -> None:
             for path in output.glob("dose_volume_summary_t*.csv"):
                 with path.open(newline="", encoding="utf-8") as stream:
                     for row in csv.DictReader(stream):
+                        coverage['rows'] += 1
+                        coverage['cells'] += len(row)
+
                         name = row["volume_path"].rsplit("/", 1)[1].split("#")[0]
                         key = (int(row["runID"]), name)
                         expected_mass = .007 if name == "Mother_PV" else child_mass
-                        assert name in ("Mother_PV", "Child_PV"), row
+                        if not (name in ("Mother_PV", "Child_PV")):
+                            record_errors['mother_child_identity'].append(row)
                         mass = float(row["mass_kg"])
                         # Mother water: 8 cm3 minus child's displaced 1 cm3 = 7 g.
-                        assert math.isclose(mass, expected_mass, rel_tol=1e-9), row
+                        if not (math.isclose(mass, expected_mass, rel_tol=1e-9)):
+                            record_errors['mother_child_mass'].append(row)
                         raw, weighted = dose.get(key, (0.0, 0.0))
                         dose[key] = (raw + float(row["raw_edep_MeV"]),
                                      weighted + float(row["weighted_edep_MeV"]))
                         for prefix in ("raw", "weighted"):
-                            assert math.isclose(float(row[f"{prefix}_dose_Gy"]),
+                            if not (math.isclose(float(row[f"{prefix}_dose_Gy"]),
                                                 float(row[f"{prefix}_edep_MeV"]) * MEV_J / expected_mass,
-                                                rel_tol=2e-9, abs_tol=1e-18), row
-            assert set(dose) == {(run, name) for run in (0, 1) for name in ("Mother_PV", "Child_PV")}, dose
+                                                rel_tol=2e-9, abs_tol=1e-18)):
+                                record_errors['mother_child_dose_conversion'].append(row)
+            if not (set(dose) == {(run, name) for run in (0, 1) for name in ("Mother_PV", "Child_PV")}):
+                record_errors['complete_run_volume_keys'].append(dose)
             for key, energies in dose.items():
-                assert all(value > 0 for value in energies), (key, energies)
+                if not (all(value > 0 for value in energies)):
+                    record_errors['positive_volume_energies'].append((key, energies))
                 for observed, expected in zip(energies, hits[key]):
-                    assert math.isclose(observed, expected, rel_tol=2e-9, abs_tol=1e-9), (key, observed, expected)
+                    if not (math.isclose(observed, expected, rel_tol=2e-9, abs_tol=1e-9)):
+                        record_errors['dose_matches_raw_hits'].append((key, observed, expected))
+
+    print('check_mother_mass: coverage=', coverage)
+    assert not record_errors['mother_child_identity'], ('check_mother_mass: invariant mother_child_identity', record_errors['mother_child_identity'])
+    assert not record_errors['mother_child_mass'], ('check_mother_mass: invariant mother_child_mass', record_errors['mother_child_mass'])
+    assert not record_errors['mother_child_dose_conversion'], ('check_mother_mass: invariant mother_child_dose_conversion', record_errors['mother_child_dose_conversion'])
+    assert not record_errors['complete_run_volume_keys'], ('check_mother_mass: invariant complete_run_volume_keys', record_errors['complete_run_volume_keys'])
+    assert not record_errors['positive_volume_energies'], ('check_mother_mass: invariant positive_volume_energies', record_errors['positive_volume_energies'])
+    assert not record_errors['dose_matches_raw_hits'], ('check_mother_mass: invariant dose_matches_raw_hits', record_errors['dose_matches_raw_hits'])
 
 
 def check_nested_and_invalid_mass(root: Path) -> None:
+    # Each original invariant is checked for every record; counts are independent of worker partition.
+    record_errors = {
+        'nested_nonempty_run_coverage': [],
+        'nested_analytic_mass': [],
+        'invalid_mass_failed_status': [],
+        'invalid_mass_diagnostic': [],
+        'invalid_mass_failure_stage': [],
+    }
+    coverage = {"rows": 0, "cells": 0, "arrays": 0}
     import test_geometry_a5 as a5
     original = a5.MAIN
     a5.MAIN = a5.MAIN.replace("fluence = true", "fluence = false")
@@ -193,10 +295,15 @@ def check_nested_and_invalid_mass(root: Path) -> None:
                 source = f"[source]\nparticle = proton\nenergy = 100 MeV\nposition_type = point\nposition = {x},0,-9 mm\ndirection = +z\n"
                 output, _ = r.run(nested, source, 20, macro_extra="/run/beamOn 20\n")
                 observed = a5.rows(output, "dose_volume_summary")
-                assert observed and {int(row["runID"]) for row in observed} == {0, 1}, observed
+                if not (observed and {int(row["runID"]) for row in observed} == {0, 1}):
+                    record_errors['nested_nonempty_run_coverage'].append(observed)
                 for row in observed:
+                    coverage['rows'] += 1
+                    coverage['cells'] += len(row)
+
                     expected = .01135 if "/Child_PV#" in row["volume_path"] else expected_mass
-                    assert math.isclose(float(row["mass_kg"]), expected, rel_tol=1e-9), row
+                    if not (math.isclose(float(row["mass_kg"]), expected, rel_tol=1e-9)):
+                        record_errors['nested_analytic_mass'].append(row)
         # Deliberately overlapping daughters exhaust/exceed mother volume while
         # leaving the starting point in exposed mother material. Overlap checks
         # are disabled solely to exercise zero/negative-mass transport failure.
@@ -211,11 +318,21 @@ def check_nested_and_invalid_mass(root: Path) -> None:
                 output, log = r.run(invalid, source, 10, expect_ok=False)
                 (root / f"invalid_mass_{depth}_{threads}.log").write_text(log, encoding="utf-8")
                 summary = (output / "run_summary.txt").read_text(encoding="utf-8")
-                assert "status = failed" in summary, summary
-                assert "DoseScorer requires a positive Geant4 physical-volume mass" in summary, summary
-                assert "output_failure_stage = scoring_dose" in summary, summary
+                if not ("status = failed" in summary):
+                    record_errors['invalid_mass_failed_status'].append(summary)
+                if not ("DoseScorer requires a positive Geant4 physical-volume mass" in summary):
+                    record_errors['invalid_mass_diagnostic'].append(summary)
+                if not ("output_failure_stage = scoring_dose" in summary):
+                    record_errors['invalid_mass_failure_stage'].append(summary)
     finally:
         a5.MAIN = original
+
+    print('check_nested_and_invalid_mass: coverage=', coverage)
+    assert not record_errors['nested_nonempty_run_coverage'], ('check_nested_and_invalid_mass: invariant nested_nonempty_run_coverage', record_errors['nested_nonempty_run_coverage'])
+    assert not record_errors['nested_analytic_mass'], ('check_nested_and_invalid_mass: invariant nested_analytic_mass', record_errors['nested_analytic_mass'])
+    assert not record_errors['invalid_mass_failed_status'], ('check_nested_and_invalid_mass: invariant invalid_mass_failed_status', record_errors['invalid_mass_failed_status'])
+    assert not record_errors['invalid_mass_diagnostic'], ('check_nested_and_invalid_mass: invariant invalid_mass_diagnostic', record_errors['invalid_mass_diagnostic'])
+    assert not record_errors['invalid_mass_failure_stage'], ('check_nested_and_invalid_mass: invariant invalid_mass_failure_stage', record_errors['invalid_mass_failure_stage'])
 
 
 def main() -> None:

@@ -376,3 +376,13 @@ configure 为冻结的配置阶段快照，run_begin/finalization 按实际 run/
 修复契约：非法 biasing macro 必须进入受控失败路径，停止后续输入，输出 `status=failed`、非零退出和可取得的 macro 文件/行/命令位置；交互 csh 保留其可取得的失败来源，不能虚构 batch 行号。失败命令不得发布 EffectiveConfig 值、来源、configuration_generation 或 revision。BiasingMessenger 的 ParseDouble 必须拒绝 NaN/Inf、数值溢出及非有限结果；非法 factor 等 Manager 校验错误不得通过 FatalException 直接 abort 来绕过摘要和最终化。
 
 Geant4 `ApplyCommand()` 返回 0 不足以确认命令成功；沿用材料命令模式，由 BiasingManager 的受控内部失败计数/错误记录捕获 Messenger 失败，main 的 batch/csh 链在命令后检查，先拒绝再停止后续命令，不登记成功来源。内部失败与实际 Geant4 非零返回须保持各自证据，不能伪造返回码。当前为修前证明与修复约束，修后真实 macro/csh、非有限数值、未执行 sentinel、失败摘要和不发布 revision 的验收结果由主任务统一补录；本条不宣称已通过。
+
+### 2026-10-29 完整 2C 首轮全量回归衔接
+
+冻结 fee88d2 的 Windows 全量为113 PASS/5 FAIL/0 SKIP（118项）；真实 Linux run40884097773 的11.3.2/11.4.3均未过backend，integration未执行；M0 run40884097335两平台static/gui通过。原始报告保留，不能用局部绿覆盖失败。以下为修复契约，最终验收仍看STATUS/ROADMAP：
+
+- RunSummary为已登记的configure/run_begin/thread-final/process-final快照标注g4usim_effective_config_v1。dry-run仅四种本轮产物（摘要、metadata、configure/finalization），两个快照均execution_performed=false且run_id=null，不产生run_begin；真实run快照的manifest/schema和JSON协议相符。
+- SD Initialize/ProcessHits及CSV数据行是否被调用取决于实际worker分配。保留sd_*_t0、event_row_t0、summary_close_t0用于单worker；对应*_any_worker仅在测试环境变量显式启用后，由实际非master线程到达所选回调时atomic-once竞争。SD仍限run1，event row不在表头注入，summary close不在其他文件注入。不改变生产调度、不加barrier/sleep、不用更多事件冒称确定触发。
+- test_sd_context_failure/test_live_progress/test_run_summary/test_interactive_commands核对真实失败worker范围、stage、非零退出、失败摘要；保留首轮结果、后续停止、失败文件不登记、失败轮无合并统计等原保证。这是受控回调异常，不代表真实磁盘满或内存耗尽验收。
+- ROOT稀疏几何只保证单个worker有贡献，不保证它处理的历史少于总数。test_q1_results_backend保留N=32与CSV逐值/误差一致，报告本轮是否观察到稀疏分母缺口；确定性数值反例由test_q1_postprocessing提供。原ROOT副本缺metadata必须拒绝推断N，即使存在events ntuple也不可绕过。
+- 同字节NIEL读取的缺文件错误必须保留[scoring.displacement]/粒子、INI路径及准确行号、解析后的缺文件绝对路径并在事件前拒绝。受审计csh成功命令现在具有真实interactive来源；旧摘要兼容枚举macro，不伪造macro文件或行号，完整快照必须明确interactive及原命令。不得再测试其必为runtime_unattributed。

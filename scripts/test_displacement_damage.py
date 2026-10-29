@@ -186,7 +186,7 @@ def main() -> int:
         print("failures")
         bad = [
             (dict(extra=""), "needs [scoring.displacement]"),
-            (dict(extra="[scoring.displacement]\nproton = missing.csv\n"), "cannot open NIEL table"),
+            (dict(extra="[scoring.displacement]\nproton = missing.csv\n"), "Input file does not exist or is not regular"),
             (dict(extra=f"[scoring.displacement]\nproton = {table(work / 'hdr.csv', [])}\n".replace(
                 "energy_MeV,niel_MeV_cm2_g", "E,niel")), "header must be"),
             (dict(extra=f"[scoring.displacement]\nproton = {table(work / 'dec.csv', [(2, 1), (1, 1)])}\n"),
@@ -199,8 +199,20 @@ def main() -> int:
         ]
         (work / "hdr.csv").write_text("E,niel\n1,1\n2,1\n", encoding="utf-8")
         for options, message in bad:
-            _, log = r.run("proton", 10, 1, {"proton": flat}, expect_ok=False, **options)
+            output, log = r.run("proton", 10, 1, {"proton": flat}, expect_ok=False, **options)
             assert message in log, (message, log[-2000:])
+            if "missing.csv" in options.get("extra", ""):
+                # The exact-byte reader's error must retain the NIEL binding and
+                # both the declaration location and resolved missing input path.
+                ini = output.with_suffix(".ini")
+                declaration_line = next(index for index, line in enumerate(
+                    ini.read_text(encoding="utf-8").splitlines(), 1)
+                    if re.fullmatch(r"proton\s*=\s*missing\.csv", line.strip()))
+                normalized_log = log.replace("\\", "/")
+                assert "[scoring.displacement]/proton" in log, log
+                assert f"{ini.as_posix()} line {declaration_line}" in normalized_log, log
+                assert (work / "missing.csv").resolve().as_posix() in normalized_log, log
+                assert "[G4USimProgress]" not in log, log
         print(f"  {len(bad)} invalid settings rejected")
 
         print("particle names: case-insensitive resolution and unknown names")

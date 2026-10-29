@@ -561,8 +561,19 @@ def gdml_case_sensitive_sd(r: Runner) -> None:
                 dose = rows(output, "dose_volume_summary")
                 assert dose and {int(row["runID"]) for row in dose} == {0, 1}, dose
                 assert all(row["volume_path"].endswith(f"/{expected}#0") for row in dose), dose
+                # Validate every recorded mass, but keep the assertion site
+                # independent of how Geant4 distributes these histories across
+                # workers. A zero-event worker contributes no dose row.
+                mass_errors=[]
                 for row in dose:
-                    assert abs(float(row["mass_kg"]) / .008 - 1) < 1e-9, row
+                    if not (abs(float(row["mass_kg"]) / .008 - 1) < 1e-9):
+                        mass_errors.append(row)
+                assert not mass_errors, mass_errors
+                print("G4USIM_RECORD_COVERAGE="+json.dumps({
+                    "case":"gdml_case_sensitive_sd","auxiliary":auxiliary,"threads":threads,
+                    "expected_physical_volume":expected,"mass_records_checked":len(dose),
+                    "recorded_runs":sorted({int(row["runID"]) for row in dose}),
+                    "dose_csv_files_scanned":len(list(output.glob("dose_volume_summary_t*.csv")))},sort_keys=True))
                 # No duplicated SD counting: each run deposits at most its injected energy.
                 for run in (0, 1):
                     energy = sum(float(row["raw_edep_MeV"]) for row in dose if int(row["runID"]) == run)
