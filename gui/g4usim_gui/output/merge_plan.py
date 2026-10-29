@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from g4usim_gui.core import install_layout
+from .provenance import output_evidence, ProvenanceError
 
 
 @dataclass
@@ -20,6 +21,9 @@ class MergeTask:
     reason: str
     matched_files: list[str]
     log_prefix: str
+    automatic_inputs: bool = False
+    provenance_status: str | None = None
+    manifest_digest: str | None = None
 
 
 @dataclass
@@ -41,18 +45,28 @@ def build_merge_plan(output_dir: str, workspace_root: str = "", merge_histograms
         ("Merge weighted histogram", "hist_weighted", "hist_edep_weighted_t*.csv", "hist_edep_weighted_merged.csv", "executable", hist_tool, "merge_hist_weighted"),
     ]
     tasks: list[MergeTask] = []
+    provenance_error = ""
+    try:
+        evidence = output_evidence(output)
+    except ProvenanceError as error:
+        evidence = None
+        provenance_error = str(error)
     for name, kind, pattern, output_name, tool_type, tool_path, log_prefix in specs:
-        matched = sorted(str(path) for path in output.glob(pattern)) if output.is_dir() else []
+        matched = [str(path) for path in evidence.matching(pattern)] if evidence else []
         out_file = output / output_name
         available, reason = _availability(output, matched, tool_type, Path(tool_path), out_file)
+        if provenance_error:
+            available, reason = False, provenance_error
+        elif evidence.warnings:
+            reason = "; ".join([reason, *evidence.warnings])
         if tool_type == "python_script":
             program = install_layout.script_python() or ""
             if not program and available:
                 available, reason = False, "Python 3 is needed for this merge (install it or set G4USIM_PYTHON)"
-            args = [str(tool_path), "--input", str(output), "--pattern", pattern, "--output", str(out_file)]
+            args = [str(tool_path), "--output", str(out_file), *matched]
         else:
             program = str(tool_path)
-            args = ["--input", str(output), "--pattern", pattern, "--output", str(out_file)]
+            args = ["--output", str(out_file), *matched]
         tasks.append(
             MergeTask(
                 name=name,
@@ -67,6 +81,9 @@ def build_merge_plan(output_dir: str, workspace_root: str = "", merge_histograms
                 reason=reason,
                 matched_files=matched,
                 log_prefix=log_prefix,
+                automatic_inputs=True,
+                provenance_status=evidence.status if evidence else None,
+                manifest_digest=evidence.manifest_digest if evidence else None,
             )
         )
     return MergePlan(tasks)

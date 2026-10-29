@@ -20,13 +20,15 @@ import re
 import sys
 from collections import defaultdict
 from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "gui"))
+from g4usim_gui.output.provenance import output_evidence, output_files
 
 NIEL_1MEV_NEUTRON_SI = 95e-27 * 6.02214076e23 / 28.0855   # MeV cm2/g (ASTM E722: 95 MeV mb)
 SECONDS_PER_YEAR = 365.25 * 86400
 
 
 def worker_rows(output: Path, stem: str):
-    for path in sorted(output.glob(f"{stem}_t*.csv")):
+    for path in sorted(output_files(output, f"{stem}_t*.csv")):
         if re.fullmatch(rf"{stem}_t\d+\.csv", path.name):
             with path.open(newline="", encoding="utf-8") as handle:
                 yield from csv.DictReader(handle)
@@ -46,7 +48,7 @@ def main() -> int:
     area = meta["source_area_cm2"]
     flux = sum(v for v in meta["sampled_integral_flux_cm2_s"].values() if v) or None
     stats = {}
-    if (output / "scorer_statistics.csv").is_file():
+    if output / "scorer_statistics.csv" in output_evidence(output).files:
         with (output / "scorer_statistics.csv").open(newline="", encoding="utf-8") as handle:
             stats = {(r["scorer"], r["quantity"], r["key"]): r for r in csv.DictReader(handle)}
 
@@ -56,7 +58,7 @@ def main() -> int:
 
     regions = [(l["name"], f"/world_PV#0/{l['name']}_PV#0", l) for l in meta["layers"]]
     regions += [(f"Slice{s['copy']}", f"/world_PV#0/Substrate_PV#0/Slice_PV#{s['copy']}", s) for s in meta["slices"]]
-    report = {"scenario": meta, "events": events, "niel_1MeV_neutron_MeV_cm2_g": NIEL_1MEV_NEUTRON_SI, "regions": {}}
+    report = {"provenance": output_evidence(output).status, "scenario": meta, "events": events, "niel_1MeV_neutron_MeV_cm2_g": NIEL_1MEV_NEUTRON_SI, "regions": {}}
     for name, key, info in regions:
         dose, dose_err = value("dose", "weighted_dose", key)
         ddd, ddd_err = value("displacement", "ddd_total", key)

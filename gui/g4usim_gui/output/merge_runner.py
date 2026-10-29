@@ -5,6 +5,7 @@ from pathlib import Path
 from PySide6.QtCore import QObject, QProcess, Signal
 
 from g4usim_gui.output.merge_plan import MergeTask
+from g4usim_gui.output.provenance import output_evidence
 
 
 class MergeRunner(QObject):
@@ -65,6 +66,21 @@ class MergeRunner(QObject):
             self.allFinished.emit()
             return
         self._current = self._queue.pop(0)
+        if self._current.automatic_inputs:
+            try:
+                evidence = output_evidence(self._current.input_dir)
+                if (evidence.status != self._current.provenance_status or
+                        evidence.manifest_digest != self._current.manifest_digest):
+                    raise ValueError("Output provenance changed after the merge plan was created; refresh the plan.")
+                current = [str(p) for p in evidence.matching(self._current.pattern)]
+                if current != self._current.matched_files:
+                    raise ValueError("Output inputs changed after the merge plan was created; refresh the plan.")
+            except ValueError as error:
+                self._queue.clear()
+                self._current = None
+                self.errorOccurred.emit(str(error))
+                self.allFinished.emit()
+                return
         self._close_logs()
         self._stdout_file = (self._logs_dir / f"{self._current.log_prefix}_stdout.log").open("w", encoding="utf-8", newline="\n")
         self._stderr_file = (self._logs_dir / f"{self._current.log_prefix}_stderr.log").open("w", encoding="utf-8", newline="\n")

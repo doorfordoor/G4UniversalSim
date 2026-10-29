@@ -317,6 +317,7 @@ def _summary_values(path: Path) -> dict[str, str]:
 def collect(manifest: ScanManifest) -> list[PointResult]:
     """State, completed events and every scorer_statistics quantity of each point."""
     from g4usim_gui.core.run_result import evaluate_run_result
+    from g4usim_gui.output.provenance import output_evidence
     results = []
     for point in manifest.points:
         output = Path(point.output_dir)
@@ -344,8 +345,15 @@ def collect(manifest: ScanManifest) -> list[PointResult]:
         except (KeyError, ValueError):
             events = None
         metrics = {}
+        try:
+            evidence = output_evidence(output)
+        except ValueError as error:
+            results.append(PointResult(point.index, point.value, "incomplete", str(error), events, {}))
+            continue
+        if evidence.warnings:
+            reason += "; " + "; ".join(evidence.warnings)
         stats = output / "scorer_statistics.csv"
-        if stats.is_file():
+        if stats in evidence.files:
             with stats.open(newline="", encoding="utf-8") as handle:
                 for row in csv.DictReader(handle):
                     if row.get("runID", "0") != "0":

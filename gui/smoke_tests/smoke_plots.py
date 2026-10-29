@@ -71,6 +71,13 @@ def fixture(root: Path, scale: float = 1.0) -> None:
            [0, 2, 2, 1, "e-", 11, 0, 0, 0, 0, 0, 1, 0.01, 0, 1.0]])
 
 
+    meta_path = root / "run_metadata.json"
+    meta = json.loads(meta_path.read_text())
+    meta.update(schema="run_metadata_json_v1", runs=[{"run_id":0,"completed_events":5},{"run_id":1,"completed_events":10}],
+                generated_files=[{"path":p.name,"schema":"fixture"} for p in root.iterdir() if p.is_file()])
+    meta_path.write_text(json.dumps(meta), encoding="utf-8")
+
+
 def main() -> None:
     app = QApplication.instance() or QApplication([])
     with tempfile.TemporaryDirectory(prefix="g4usim-plots-") as temp:
@@ -99,6 +106,10 @@ def main() -> None:
         edep = plot_data.build_plot(root, datasets["hist_edep_raw/r0"])
         assert np.allclose(edep.series[0].y, [11, 22, 33]) and np.allclose(edep.series[0].x, [0, 0.5, 1, 1.5])
         write(root / "hist_edep_raw_t2.csv", HIST, [[0, 0, 1, 0.5, 1]])
+        assert np.allclose(plot_data.build_plot(root, datasets["hist_edep_raw/r0"]).series[0].y, [11, 22, 33])
+        manifest = json.loads((root / "run_metadata.json").read_text())
+        manifest["generated_files"].append({"path":"hist_edep_raw_t2.csv","schema":"fixture"})
+        (root / "run_metadata.json").write_text(json.dumps(manifest))
         try:
             plot_data.build_plot(root, datasets["hist_edep_raw/r0"])
         except ValueError as error:
@@ -106,6 +117,8 @@ def main() -> None:
         else:
             raise AssertionError("binning mismatch accepted")
         (root / "hist_edep_raw_t2.csv").unlink()
+        manifest["generated_files"].pop()
+        (root / "run_metadata.json").write_text(json.dumps(manifest))
 
         pulse = plot_data.build_plot(root, datasets["event_edep/r0"], bins=4, top=0.4)
         assert np.allclose(pulse.series[0].y * 5, [0, 1, 2, 1]), pulse.series[0].y

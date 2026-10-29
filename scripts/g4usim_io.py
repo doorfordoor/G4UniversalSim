@@ -13,7 +13,7 @@ Requires `uproot` and `numpy`.
 
 from __future__ import annotations
 
-import json
+import sys
 import re
 from numbers import Integral
 from dataclasses import dataclass
@@ -21,6 +21,9 @@ from pathlib import Path
 
 import numpy as np
 import uproot
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "gui"))
+from g4usim_gui.output.provenance import output_evidence
 
 
 @dataclass
@@ -60,10 +63,10 @@ class MeshQuantity:
 
 
 def _mesh_bins_from_metadata(root_path: Path, mesh: str) -> tuple[int, int, int] | None:
-    metadata = root_path.with_name("run_metadata.json")
-    if not metadata.is_file():
+    evidence = output_evidence(root_path.parent)
+    if evidence.document is None or root_path not in evidence.files:
         return None
-    values = json.loads(metadata.read_text(encoding="utf-8")).get("values", {})
+    values = evidence.document.get("values", {})
     text = values.get(f"scoring_mesh_{mesh}_bins")
     if not text:
         return None
@@ -157,31 +160,17 @@ def _event_count(value, source: str) -> int:
 
 
 def _run_events(root_path: Path) -> int | None:
-    metadata = root_path.with_name("run_metadata.json")
-    if not metadata.is_file():
+    # Validate a present manifest even for explicit offline input. Invalid evidence
+    # must never fall back to legacy or lend another run's event denominator.
+    evidence = output_evidence(root_path.parent)
+    if evidence.document is None or root_path not in evidence.files:
         return None
     match = re.fullmatch(r"g4usim(?:_r([0-9]+))?", root_path.stem)
     if match is None:
-        raise ValueError(f"{root_path}: cannot identify the run for adjacent metadata")
+        return None
     run_id = int(match.group(1) or 0)
-    try:
-        document = json.loads(metadata.read_text(encoding="utf-8"))
-        if not isinstance(document, dict) or document.get("schema") != "run_metadata_json_v1":
-            raise ValueError("unsupported or missing metadata schema")
-        runs = document.get("runs")
-        if not isinstance(runs, list):
-            raise ValueError("metadata runs must be a list")
-        counts = {}
-        for run in runs:
-            if not isinstance(run, dict):
-                raise ValueError("invalid metadata run")
-            identifier = _event_count(run.get("run_id"), "metadata run_id")
-            if identifier in counts:
-                raise ValueError("duplicate metadata run_id")
-            counts[identifier] = _event_count(run.get("completed_events"), "metadata completed_events")
-        return counts.get(run_id)
-    except (OSError, ValueError, TypeError) as error:
-        raise ValueError(f"{metadata}: invalid event-count metadata: {error}") from error
+    return next((run["completed_events"] for run in evidence.document["runs"]
+                 if run["run_id"] == run_id), None)
 
 
 def _resolve_events(root_path: Path, explicit, tables) -> int:
@@ -220,7 +209,8 @@ def load_scorer_statistics(root_path: str | Path, n_events: int | None = None) -
     """Merge the per-worker rows of edep_volume, edep_particle, dose, fluence and let.
 
     Mirrors scorer_statistics[_rR].csv (written by the backend for every output
-    format). n_events defaults to the run's completed events in run_metadata.json.
+    format). n_events defaults to the run's completed events only when the ROOT file
+    is registered in the validated adjacent run_metadata.json.
     Without same-run metadata an explicit non-negative integer is required; sparse
     scorer rows and optional event ntuples are not proof of all completed histories.
     """

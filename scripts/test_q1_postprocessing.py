@@ -3,6 +3,7 @@ from pathlib import Path
 import csv
 import json
 import sys
+import shutil
 import tempfile
 import warnings
 
@@ -52,8 +53,11 @@ def main():
         work = Path(temp)
         metadata = work / "run_metadata.json"
         def record(count=4):
+            (work / "run_summary.txt").write_text("status = completed\n", encoding="utf-8")
+            names = ["run_metadata.json", "run_summary.txt"] + [p.name for p in work.glob("g4usim*.root")]
             metadata.write_text(json.dumps({"schema": "run_metadata_json_v1", "runs": [
-                {"run_id": 0, "completed_events": count}, {"run_id": 1, "completed_events": 8}]}), encoding="utf-8")
+                {"run_id": 0, "completed_events": count}, {"run_id": 1, "completed_events": 8}],
+                "generated_files": [{"path": name, "schema": "fixture"} for name in names]}), encoding="utf-8")
         for event_table in (False, True):
             path = work / "g4usim.root"
             root_file(path, events=event_table)
@@ -74,12 +78,13 @@ def main():
             assert g4usim_io.load_scorer_statistics(path, np.int64(4))[0].n_events == 4
             rejects(lambda: g4usim_io.load_scorer_statistics(path, 1), "smaller")
             metadata.write_text("{broken", encoding="utf-8")
-            rejects(lambda: g4usim_io.load_scorer_statistics(path, 4), "invalid event-count metadata")
+            rejects(lambda: g4usim_io.load_scorer_statistics(path, 4), "Invalid output provenance")
             record(4.5)
-            rejects(lambda: g4usim_io.load_scorer_statistics(path), "non-negative integer")
+            rejects(lambda: g4usim_io.load_scorer_statistics(path), "invalid completed event count")
         record()
         second = work / "g4usim_r1.root"
         root_file(second)
+        record()
         assert g4usim_io.load_scorer_statistics(second)[0].n_events == 8
         rejects(lambda: g4usim_io.load_scorer_statistics(second, 4), "conflicts")
         root_file(path, worker_events=1)
@@ -101,6 +106,10 @@ def main():
             for scorer, quantity, unit in (("edep", "raw_edep", "MeV"), ("dose", "raw_dose", "Gy"), ("fluence", "raw_fluence", "mm-2")):
                 writer.writerow([scorer, quantity, "target", unit, 12, 2, 4, "total"])
         (work / "run_summary.txt").write_text("run_0_completed_events = 4\n", encoding="utf-8")
+        (work / "run_metadata.json").write_text(json.dumps({
+            "schema":"run_metadata_json_v1", "runs":[{"run_id":0,"completed_events":4}],
+            "generated_files":[{"path":name,"schema":"fixture"} for name in
+                               ("run_metadata.json","run_summary.txt","scorer_statistics.csv")]}), encoding="utf-8")
         for dataset in plot_data.discover(work):
             if dataset.kind != "scorer":
                 continue
@@ -118,6 +127,8 @@ def main():
                 row = next(csv.DictReader(stream))
             assert row["normalization"] == "per_event" and row["value_label"].endswith(" / event")
         (work / "run_summary.txt").unlink()
+        rejects(lambda: plot_data.build_plot(work, dataset, normalization="per_event"), "registered file is missing")
+        (work / "run_metadata.json").unlink()
         rejects(lambda: plot_data.build_plot(work, dataset, normalization="per_event"), "no positive")
     # V01 keeps old numbers while explicitly marking unavailable uncertainty.
     for count in (0, 1, 2):
@@ -157,6 +168,46 @@ def main():
         assert plot_data.uncertainty(zero)[1] == "zero_total"
         assert plot_data.uncertainty({**zero,"estimator":"ratio"})[1] == "undefined_ratio"
         assert plot_data.uncertainty({**zero,"estimator":"ratio","uncertainty_status":"zero_total"})[1] == "zero_total"
+
+    with tempfile.TemporaryDirectory(prefix="q1-root-provenance-") as temp:
+        folder = Path(temp)
+        path = folder / "g4usim.root"
+        root_file(path, worker_events=2)
+        (folder / "run_summary.txt").write_text("status = completed\n", encoding="utf-8")
+        doc = {"schema": "run_metadata_json_v1", "runs": [{"run_id": 0, "completed_events": 100}],
+               "generated_files": [{"path": name, "schema": "fixture"} for name in
+                                   ("run_metadata.json", "run_summary.txt")]}
+        doc["values"] = {"scoring_mesh_m_bins": "2,2,2"}
+        manifest = folder / "run_metadata.json"
+        manifest.write_text(json.dumps(doc), encoding="utf-8")
+        rejects(lambda: g4usim_io.load_scorer_statistics(path), "no reliable")
+        rejects(lambda: g4usim_io.load_mesh(path, "m", "dose"), "no reliable")
+        assert all(v.n_events == 2 for v in g4usim_io.load_scorer_statistics(path, 2))
+        independent_mesh = g4usim_io.load_mesh(path, "m", "dose", n_events=2)
+        assert independent_mesh.n_events == 2 and independent_mesh.bins == (1, 1, 1)
+        doc["generated_files"].append({"path": path.name, "schema": "fixture"})
+        manifest.write_text(json.dumps(doc), encoding="utf-8")
+        assert g4usim_io.load_scorer_statistics(path)[0].n_events == 100
+        rejects(lambda: g4usim_io.load_scorer_statistics(path, 2), "conflicts")
+        assert g4usim_io.load_mesh(path, "m", "dose").bins == (2, 2, 2)
+        # Absolute recorded paths relocate through the manifest's own anchor.
+        copied = folder / "copied"
+        absolute_doc = {**doc, "generated_files": [
+            {**row, "path": str(folder / row["path"])} for row in doc["generated_files"]]}
+        manifest.write_text(json.dumps(absolute_doc), encoding="utf-8")
+        copied.mkdir()
+        for name in ("g4usim.root", "run_metadata.json", "run_summary.txt"):
+            shutil.copy2(folder / name, copied / name)
+        assert g4usim_io.load_scorer_statistics(copied / path.name)[0].n_events == 100
+        assert g4usim_io.load_mesh(copied / path.name, "m", "dose").bins == (2, 2, 2)
+        # Canonical filename run must match a registered run; explicit N cannot
+        # disguise a malformed manifest referencing a nonexistent run.
+        doc["runs"][0]["run_id"] = 1
+        manifest.write_text(json.dumps(doc), encoding="utf-8")
+        rejects(lambda: g4usim_io.load_scorer_statistics(path, 2), "absent run 0")
+        manifest.write_text("{broken", encoding="utf-8")
+        rejects(lambda: g4usim_io.load_scorer_statistics(path, 2), "Invalid output provenance")
+        rejects(lambda: g4usim_io.load_mesh(path, "m", "dose", n_events=2), "Invalid output provenance")
 
     print("test_q1_postprocessing: OK")
 

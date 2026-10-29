@@ -19,6 +19,9 @@ import math
 import os
 import sys
 from collections import defaultdict
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "gui"))
+from g4usim_gui.output.provenance import output_evidence, output_files
 
 try:
     import uproot
@@ -34,7 +37,7 @@ def run_suffix(run: int) -> str:
 
 
 def csv_files(directory: str, stem: str, run: int) -> list[str]:
-    files = sorted(glob.glob(os.path.join(directory, f"{stem}_t*.csv")))
+    files = [str(p) for p in output_files(directory, f"{stem}_t*.csv")]
     suffix = run_suffix(run)
     selected = []
     for path in files:
@@ -59,7 +62,7 @@ def close(a: float, b: float, label: str) -> None:
 
 
 def check(directory: str, run: int) -> list[str]:
-    root_path = os.path.join(directory, f"g4usim{run_suffix(run)}.root")
+    root_path = str(output_evidence(directory).require(f"g4usim{run_suffix(run)}.root"))
     report = []
     with uproot.open(root_path) as root:
         keys = {key.split(";")[0] for key in root.keys()}
@@ -137,10 +140,12 @@ def main() -> int:
     parser.add_argument("--run", type=int, action="append", help="run ID(s) to check (default: all found)")
     args = parser.parse_args()
 
+    for warning in output_evidence(args.dir).warnings:
+        print(warning, file=sys.stderr)
     runs = args.run
     if not runs:
         runs = []
-        for path in glob.glob(os.path.join(args.dir, "g4usim*.root")):
+        for path in output_files(args.dir, "g4usim*.root"):
             stem = os.path.basename(path)[:-5]
             runs.append(0 if stem == "g4usim" else int(stem.split("_r")[-1]))
         runs.sort()

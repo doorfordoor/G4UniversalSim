@@ -113,6 +113,7 @@ Options ParseArgs(int argc, char** argv) {
           << "  mergeHistograms --input output/run1 --pattern "
              "hist_edep_raw_t*.csv --output merged.csv\n"
           << "  mergeHistograms --output merged.csv file1.csv file2.csv\n";
+      std::cout << "Directories with run_metadata.json require GUI manifest selection or an explicit file list.\n";
       std::exit(0);
     } else {
       options.files.emplace_back(arg);
@@ -134,6 +135,12 @@ std::vector<fs::path> ResolveInputFiles(const Options& options) {
       throw std::runtime_error("Input directory does not exist: " +
                                options.inputDir.string());
     }
+    if (fs::exists(options.inputDir / "run_metadata.json")) {
+      throw std::runtime_error("Automatic directory merge cannot validate run_metadata.json; "
+                               "use GUI manifest selection or pass an explicit verified file list instead of --input");
+    }
+    std::cerr << "Legacy/unverified directory: run_metadata.json is absent; "
+                 "file ownership and completeness are unverified.\n";
     for (const auto& entry : fs::directory_iterator(options.inputDir)) {
       if (!entry.is_regular_file()) continue;
       const auto name = entry.path().filename().string();

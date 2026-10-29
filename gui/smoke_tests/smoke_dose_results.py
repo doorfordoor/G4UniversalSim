@@ -48,7 +48,7 @@ def main() -> None:
         assert classify_file(first).file_type == OutputFileType.DOSE_VOLUME_THREAD_CSV
 
         records, warnings = read_dose_summaries(root)
-        assert not warnings, warnings
+        assert len(warnings) == 1 and "Legacy/unverified" in warnings[0], warnings
         assert len(records) == 2
         run_zero, run_one = records
         assert run_zero.run_id == 0 and run_zero.thread_ids == {0, 1}
@@ -73,7 +73,7 @@ def main() -> None:
         write_csv(root, "dose_volume_summary_t8.csv", [invalid])
 
         records, warnings = read_dose_summaries(root)
-        assert len(warnings) == 5, warnings
+        assert len(warnings) == 6, warnings
         assert records[0].raw_edep_MeV == 314  # Valid workers 0, 1, 4, 5.
         assert records[1].raw_edep_MeV == 50
         assert records[0].mass_kg == MASS

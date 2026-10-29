@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from gui.g4usim_gui.output.provenance import output_evidence
 
 from gui.g4usim_gui.output.fluence_summary import read_fluence_summaries
 
@@ -17,6 +18,7 @@ def process(input_dir: Path) -> dict:
     if not volumes:
         raise ValueError("No valid fluence_volume_summary worker records found")
     return {
+        "provenance": output_evidence(input_dir).status,
         "kind": "fluence_volume_aggregate",
         "units": {"volume": "mm^3", "track_length": "mm", "fluence": "mm^-2"},
         "physical_validation": "not_established",

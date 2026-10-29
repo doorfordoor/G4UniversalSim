@@ -30,6 +30,7 @@ from g4usim_gui.output.fluence_summary import read_fluence_summaries
 from g4usim_gui.output.file_classifier import OutputFileInfo, OutputFileType, classify_files
 from g4usim_gui.output.merge_plan import MergePlan, MergeTask, build_merge_plan
 from g4usim_gui.output.merge_runner import MergeRunner
+from g4usim_gui.output.provenance import output_evidence
 from g4usim_gui.output.run_summary_parser import parse_run_summary
 
 try:   # built-in plots (roadmap C1) need matplotlib; the rest of the page does not
@@ -460,7 +461,10 @@ class OutputPage(QWidget):
 
     def _update_dose_summary(self) -> None:
         self.dose_table.setRowCount(0)
-        records, warnings = read_dose_summaries(self._output_dir) if self._output_dir else ([], [])
+        try:
+            records, warnings = read_dose_summaries(self._output_dir) if self._output_dir else ([], [])
+        except ValueError as error:
+            records, warnings = [], [str(error)]
         explanation = ("每行是同一 run 和 physical touchable 在已发现线程中的累计吸收剂量。"
                        "线程的沉积能量相加、质量只取一次；未证明线程文件完整。"
                        "结果未按粒子注量、源强、照射时间或事件数归一化，尚无物理基准验收。")
@@ -483,7 +487,10 @@ class OutputPage(QWidget):
 
     def _update_fluence_summary(self) -> None:
         self.fluence_table.setRowCount(0)
-        records, warnings = read_fluence_summaries(self._output_dir) if self._output_dir else ([], [])
+        try:
+            records, warnings = read_fluence_summaries(self._output_dir) if self._output_dir else ([], [])
+        except ValueError as error:
+            records, warnings = [], [str(error)]
         explanation = ("实验性 Track-Length Fluence：各线程对同一 physical touchable 的步长求和，"
                        "再除以仅计一次的实体体积；单位 mm^-2。"
                        "raw 未加权，weighted 使用 Geant4 step weight。"
@@ -550,12 +557,22 @@ class OutputPage(QWidget):
         self.overview_text.setPlainText("\n".join(lines))
 
     def _update_run_summary(self) -> None:
+        try:
+            evidence = output_evidence(self._output_dir) if self._output_dir else None
+        except ValueError as error:
+            self.summary_text.setPlainText(str(error))
+            return
         path = self._find_first(OutputFileType.RUN_SUMMARY)
+        if evidence and evidence.document is not None and path and Path(path) not in evidence.files:
+            self.summary_text.setPlainText("run_summary.txt is not registered for this output.")
+            return
         if not path:
             self.summary_text.setPlainText("run_summary.txt not found.")
             return
         summary = parse_run_summary(path)
         lines = [f"path = {summary.path}", f"exists = {str(summary.exists).lower()}", "", "[key values]"]
+        if evidence:
+            lines = ["provenance = " + evidence.status, *evidence.warnings, *lines]
         if summary.key_values:
             lines.extend(f"{key} = {value}" for key, value in sorted(summary.key_values.items()))
         else:

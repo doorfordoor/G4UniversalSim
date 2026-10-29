@@ -76,6 +76,22 @@ def main() -> int:
         with mixed_output.open(newline="", encoding="utf-8") as stream:
             assert next(csv.reader(stream))[:2] == ["bin_low", "bin_high"]
 
+        directory_output = root / "directory-legacy.csv"
+        args = [str(executable), "--input", str(root), "--pattern", "hist_edep_raw_t*.csv",
+                "--output", str(directory_output)]
+        result = subprocess.run(args, capture_output=True, text=True, timeout=20)
+        assert result.returncode == 0 and "Legacy/unverified" in result.stderr, result.stderr
+        assert read_histogram(directory_output) == ([0.0, 0.5], [0.5, 1.0], [7.0, 10.0])
+        for i, metadata in enumerate(('{"schema":"run_metadata_json_v1"}', '{broken')):
+            (root / "run_metadata.json").write_text(metadata, encoding="utf-8")
+            blocked = root / f"directory-blocked-{i}.csv"
+            result = subprocess.run(args[:-1] + [str(blocked)], capture_output=True, text=True, timeout=20)
+            assert result.returncode != 0 and "explicit verified file list" in result.stderr, result.stderr
+            assert not blocked.exists()
+        explicit = root / "explicit-after-metadata.csv"
+        run(executable, explicit, [first, second])
+        assert read_histogram(explicit) == ([0.0, 0.5], [0.5, 1.0], [7.0, 10.0])
+
     print("test_merge_histograms: OK")
     return 0
 

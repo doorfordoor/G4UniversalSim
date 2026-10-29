@@ -170,7 +170,12 @@ class PlotPanel(QWidget):
     def set_output_dir(self, output_dir: str) -> None:
         self._output_dir = output_dir or ""
         current = self.current_dataset()
-        self._datasets = plot_data.discover(self._output_dir) if self._output_dir else []
+        discovery_error = ""
+        try:
+            self._datasets = plot_data.discover(self._output_dir) if self._output_dir else []
+        except ValueError as error:
+            self._datasets = []
+            discovery_error = str(error)
         self.dataset_combo.blockSignals(True)
         self.dataset_combo.clear()
         for dataset in self._datasets:
@@ -186,6 +191,8 @@ class PlotPanel(QWidget):
             self.message.setText(ui_text("No plottable data in this output directory.") if self._output_dir
                                  else ui_text("Select an output directory to plot results."))
             self._update_buttons()
+            if discovery_error:
+                self.message.setText(discovery_error)
             return
         self._on_dataset_changed()
 

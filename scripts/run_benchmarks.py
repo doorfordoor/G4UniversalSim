@@ -45,6 +45,8 @@ from collections import defaultdict
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "gui"))
+from g4usim_gui.output.provenance import output_files
 PACKS = ROOT / "scenarios" / "benchmarks"
 EXE = Path(os.environ.get("G4USIM_EXE", ROOT / "build_vs2026/Release/G4UniversalSim.exe"))
 
@@ -103,7 +105,7 @@ class Backend:
 
 
 def worker_rows(output: Path, stem: str):
-    for path in sorted(output.glob(f"{stem}_t*.csv")):
+    for path in sorted(output_files(output, f"{stem}_t*.csv")):
         if re.fullmatch(rf"{stem}_t\d+\.csv", path.name):
             with path.open(newline="", encoding="utf-8") as handle:
                 yield from csv.DictReader(handle)

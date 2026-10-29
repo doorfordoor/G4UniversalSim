@@ -21,6 +21,8 @@ Values are run totals; normalization="per_event" divides them by the run's compl
 
 from __future__ import annotations
 
+from .provenance import output_evidence, output_files
+
 import csv
 import json
 import math
@@ -84,10 +86,11 @@ def _read_csv(path: Path) -> list[dict[str, str]]:
 def _worker_files(output: Path, stem: str, run_id: int) -> list[Path]:
     suffix = "" if run_id == 0 else f"_r{run_id}"
     pattern = re.compile(rf"{re.escape(stem)}_t\d+{suffix}\.csv")
-    return sorted(p for p in output.glob(f"{stem}_t*.csv") if pattern.fullmatch(p.name))
+    return sorted(p for p in output_files(output, f"{stem}_t*.csv") if pattern.fullmatch(p.name))
 
 
 def metadata_values(output: Path) -> dict[str, str]:
+    output_evidence(output)  # A present but damaged manifest must not become a legacy fallback.
     path = output / "run_metadata.json"
     if not path.is_file():
         return {}
@@ -102,7 +105,7 @@ def discover(output_dir: str | Path) -> list[DataSet]:
     if not output.is_dir():
         return []
     found: list[DataSet] = []
-    for path in sorted(output.glob("scorer_statistics*.csv")):
+    for path in sorted(output_files(output, "scorer_statistics*.csv")):
         if path.stem != "scorer_statistics" and not RUN_SUFFIX.search(path.stem):
             continue
         run_id = _run_of(path.stem)
@@ -111,13 +114,13 @@ def discover(output_dir: str | Path) -> list[DataSet]:
             found.append(DataSet("scorer", f"scorer/{scorer}/{quantity}/r{run_id}",
                                  f"{scorer} {quantity} [{unit}] (run {run_id})", run_id, (scorer, quantity)))
     meshes: dict[tuple[str, str, int], str] = {}
-    for path in sorted(output.glob("scoring_mesh*.csv")):
+    for path in sorted(output_files(output, "scoring_mesh*.csv")):
         if path.stem != "scoring_mesh" and not RUN_SUFFIX.search(path.stem):
             continue
         run_id = _run_of(path.stem)
         for mesh, quantity in sorted({(r["mesh"], r["quantity"]) for r in _read_csv(path)}):
             meshes[(mesh, quantity, run_id)] = "csv"
-    for path in sorted(output.glob("g4usim*.root")):
+    for path in sorted(output_files(output, "g4usim*.root")):
         if path.stem != "g4usim" and not RUN_SUFFIX.search(path.stem):
             continue
         run_id = _run_of(path.stem)
@@ -138,7 +141,7 @@ def discover(output_dir: str | Path) -> list[DataSet]:
                               ("hist_edep_weighted", "edep", "Edep histogram (weighted)"),
                               ("event_edep", "pulse", "Per-event deposit"),
                               ("phase_space", "phase", "Phase-space energy spectra")):
-        runs = sorted({_run_of(p.stem) for p in output.glob(f"{stem}_t*.csv")})
+        runs = sorted({_run_of(p.stem) for p in output_files(output, f"{stem}_t*.csv")})
         for run_id in runs:
             if _worker_files(output, stem, run_id):
                 found.append(DataSet(kind, f"{stem}/r{run_id}", f"{label} (run {run_id})", run_id, (stem,)))
@@ -170,7 +173,7 @@ def uncertainty(row: dict[str, str]) -> tuple[str, str]:
 
 def statistic_uncertainty(output_dir: str | Path, metric: tuple[str, str, str]) -> tuple[str, str]:
     path = Path(output_dir) / "scorer_statistics.csv"
-    if path.is_file():
+    if path in output_evidence(output_dir).files:
         for row in _read_csv(path):
             if (row.get("scorer"), row.get("quantity"), row.get("key")) == metric:
                 return uncertainty(row)
@@ -181,7 +184,7 @@ def scorer_plot(output_dir: str | Path, dataset: DataSet) -> Plot:
     output = Path(output_dir)
     name = "scorer_statistics.csv" if dataset.run_id == 0 else f"scorer_statistics_r{dataset.run_id}.csv"
     scorer, quantity = dataset.detail
-    rows = [r for r in _read_csv(output / name) if r["scorer"] == scorer and r["quantity"] == quantity]
+    rows = [r for r in _read_csv(output_evidence(output).require(name)) if r["scorer"] == scorer and r["quantity"] == quantity]
     rows.sort(key=lambda r: r["key"])
     values = np.array([float(r["value"]) for r in rows])
     evidence = [uncertainty(row) for row in rows]
@@ -221,7 +224,7 @@ def load_mesh(output_dir: str | Path, dataset: DataSet) -> MeshData:
     bins = tuple(int(v) for v in meta[prefix + "bins"].split(",")) if prefix + "bins" in meta else None
     if source == "csv":
         name = "scoring_mesh.csv" if dataset.run_id == 0 else f"scoring_mesh_r{dataset.run_id}.csv"
-        rows = [r for r in _read_csv(output / name) if r["mesh"] == mesh and r["quantity"] == quantity]
+        rows = [r for r in _read_csv(output_evidence(output).require(name)) if r["mesh"] == mesh and r["quantity"] == quantity]
         index = np.array([[int(r["i0"]), int(r["i1"]), int(r["i2"])] for r in rows], dtype=int).reshape(-1, 3)
         sums = np.array([float(r["sum"]) for r in rows])
         rel = np.array([float(r["rel_error"]) for r in rows])
@@ -238,7 +241,7 @@ def load_mesh(output_dir: str | Path, dataset: DataSet) -> MeshData:
         sys.path.insert(0, str(install_layout.scripts_dir()))
         import g4usim_io   # noqa: E402  (repository helper, needs uproot)
         name = "g4usim.root" if dataset.run_id == 0 else f"g4usim_r{dataset.run_id}.root"
-        data = g4usim_io.load_mesh(output / name, mesh, quantity, bins)
+        data = g4usim_io.load_mesh(output_evidence(output).require(name), mesh, quantity, bins)
         bins, unit, value = data.bins, data.unit, data.value
         error = np.ma.array(np.abs(value) * data.rel_error, mask=~data.uncertainty_available)
     axes = tuple(meta.get(prefix + "axes", "i0,i1,i2").split(","))
@@ -326,6 +329,12 @@ def pulse_plot(output_dir: str | Path, dataset: DataSet, bins: int = 200, top: f
         values.extend(float(r["raw_edep_MeV"]) for r in _read_csv(path))
     values = np.array(values)
     events = len(values)
+    evidence = output_evidence(output)
+    if evidence.document is not None:
+        run = next(r for r in evidence.document["runs"] if r["run_id"] == dataset.run_id)
+        expected = run.get("completed_events")
+        if type(expected) is not int or expected < 0 or events != expected:
+            raise ValueError(f"Event rows ({events}) conflict with recorded completed events ({expected})")
     positive = values[values > 0]
     top = top or (float(positive.max()) * 1.05 if len(positive) else 1.0)
     counts, edges = np.histogram(positive, bins=bins, range=(0.0, top))
@@ -361,6 +370,9 @@ def phase_plot(output_dir: str | Path, dataset: DataSet, per_decade: int = 10) -
 
 def run_events(output_dir: str | Path, run_id: int) -> int | None:
     """Completed events of a run from run_summary.txt (run_<R>_completed_events)."""
+    evidence = output_evidence(output_dir)
+    if evidence.document is not None:
+        return next((r["completed_events"] for r in evidence.document["runs"] if r["run_id"] == run_id), None)
     path = Path(output_dir) / "run_summary.txt"
     if not path.is_file():
         return None
@@ -412,6 +424,8 @@ def build_plot(output_dir: str | Path, dataset: DataSet, per_primary: bool | Non
             plot.ylabel += " / event"
         plot.notes.append(("Divided by the {events} completed events of run {run} (run_summary.txt).",
                            {"events": events, "run": dataset.run_id}))
+    for warning in output_evidence(output_dir).warnings:
+        plot.notes.append((warning, {}))
     plot.normalization = "per_event" if dataset.kind == "pulse" else normalization
     if normalization == "per_event" and plot.kind == "image":
         plot.value_label += " / event"

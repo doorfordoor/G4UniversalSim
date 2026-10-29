@@ -32,6 +32,8 @@ import random
 import re
 import sys
 from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "gui"))
+from g4usim_gui.output.provenance import output_evidence, output_files
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
@@ -40,7 +42,7 @@ import response_physics as rp  # noqa: E402
 
 def deposits(output: Path) -> list[float]:
     values = []
-    for path in sorted(output.glob("event_edep_t*.csv")):
+    for path in sorted(output_files(output, "event_edep_t*.csv")):
         if re.fullmatch(r"event_edep_t\d+\.csv", path.name):
             with path.open(newline="", encoding="utf-8") as handle:
                 values.extend(float(r["raw_edep_MeV"]) for r in csv.DictReader(handle))
@@ -104,7 +106,7 @@ def main() -> int:
         smeared = [max(0.0, v + rng.gauss(0.0, (a + b * math.sqrt(v + c * v * v)) / 2.3548)) if v > 0 else 0.0
                    for v in values]
 
-    report = {"scenario": meta, "events": events, "resolution": resolution}
+    report = {"provenance": output_evidence(output).status, "scenario": meta, "events": events, "resolution": resolution}
     if meta["kind"] == "gamma":
         width = (args.bin or 1.0) / 1000.0
         top = energy * 1.1 + 0.05

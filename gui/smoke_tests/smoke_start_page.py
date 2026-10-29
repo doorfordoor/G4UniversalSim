@@ -80,9 +80,14 @@ def check_bundles() -> None:
     energy = examples.find("energy_scan")
     manifest = scan.load_manifest(energy.scan_dir())
     results = scan.collect(manifest)
-    assert all(r.state == "success" and r.completed_events == energy.spec().events for r in results), results
-    per_primary = [next(v for k, v in r.metrics.items() if k[:2] == energy.scan_quantity)[0] / r.completed_events
-                   for r in results]
+    # This bundled historical gallery intentionally omits files named by its
+    # original manifest. Automatic analysis must not call that complete.
+    assert all(r.state == "incomplete" and "registered file is missing" in r.reason and not r.metrics
+               for r in results), results
+    # Explicit single-file inspection still checks the retained example numbers.
+    per_primary = [next(float(r["value"]) for r in plot_data._read_csv(Path(p.output_dir)/"scorer_statistics.csv")
+                        if (r["scorer"],r["quantity"]) == energy.scan_quantity) / energy.spec().events
+                   for p in manifest.points]
     assert all(a > b for a, b in zip(per_primary, per_primary[1:])), per_primary
     assert all(Path(p.output_dir).is_dir() and Path(p.output_dir).is_relative_to(energy.scan_dir())
                for p in manifest.points)
@@ -156,7 +161,8 @@ def main() -> None:
     page = window.scan_page
     assert window.page_stack.currentWidget() is page and page.is_read_only()
     assert not page.run_button.isEnabled() and not page.rerun_button.isEnabled() and page.export_button.isEnabled()
-    assert page.current_metric()[:2] == ("edep", "raw_edep") and len(page.plotted()[0]) == 5
+    assert page.current_metric() is None and not page.plotted()[0]
+    assert all(r.state == "incomplete" for r in page._results)
     assert page.values.text() == examples.find("energy_scan").scan_values and page.name.text() == "energy_scan"
 
     panel = window.output_page.plot_panel

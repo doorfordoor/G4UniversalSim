@@ -56,7 +56,7 @@ def main() -> None:
         assert set(HEADER) == COLUMNS
         assert classify_file(first).file_type == OutputFileType.FLUENCE_VOLUME_THREAD_CSV
         records, warnings = read_fluence_summaries(root)
-        assert not warnings and len(records) == 2, warnings
+        assert len(warnings) == 1 and "Legacy/unverified" in warnings[0] and len(records) == 2, warnings
         assert records[0].thread_ids == {0, 1} and records[0].volume_mm3 == 100
         assert records[0].raw_track_length_mm == 30
         assert math.isclose(records[0].weighted_fluence_mm2, .30)
@@ -72,7 +72,7 @@ def main() -> None:
         write(root, "fluence_volume_summary_t6_r1.csv", [row(0, 1, 1)])
         write(root, "fluence_volume_summary_t7.csv", [row(0, 1, 1), row(0, 2, 2)])
         records, warnings = read_fluence_summaries(root)
-        assert len(warnings) == 5, warnings
+        assert len(warnings) == 6, warnings
         assert records[0].raw_track_length_mm == 32
         assert records[0].volume_mm3 == 100
 
@@ -85,7 +85,7 @@ def main() -> None:
         records_overflow, warnings_overflow = read_fluence_summaries(overflow)
         assert len(records_overflow) == 1 and records_overflow[0].thread_ids == {0}
         assert records_overflow[0].raw_track_length_mm == 1e308
-        assert len(warnings_overflow) == 1 and "Nonfinite accumulated" in warnings_overflow[0]
+        assert len(warnings_overflow) == 2 and "Nonfinite accumulated" in warnings_overflow[1]
         bad_ratio = row(0, 1, 1)
         bad_ratio.update(volume_mm3=1e-308, raw_track_length_mm=1e308,
                          weighted_track_length_mm=1e308)

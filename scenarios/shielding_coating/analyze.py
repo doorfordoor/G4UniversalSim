@@ -39,6 +39,8 @@ import re
 import sys
 from collections import defaultdict
 from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "gui"))
+from g4usim_gui.output.provenance import output_evidence, output_files, ProvenanceError
 
 SECONDS_PER_YEAR = 365.25 * 86400
 BINS_PER_DECADE = 5
@@ -132,14 +134,14 @@ def statistics(output: Path, metadata: dict) -> tuple[dict[tuple[str, str], dict
     """
     path = output / STATISTICS_NAME
     listed = STATISTICS_NAME in generated_names(metadata)
-    if path.is_file():
+    if path in output_evidence(output).files:
         with path.open(newline="", encoding="utf-8") as handle:
             rows = {(r["scorer"], r["quantity"]): r for r in csv.DictReader(handle) if "Device" in r["key"]}
         return rows, STATISTICS_NAME
     if listed:
         fail(f"{path} was listed in run_metadata.json generated_files but is missing; "
              "the statistics evidence was removed or moved, refusing to report zero")
-    stale = sorted(p.name for p in output.glob("scorer_statistics_r*.csv"))
+    stale = sorted(p.name for p in output_files(output, "scorer_statistics_r*.csv"))
     if stale:
         fail(f"found statistics of another run ({', '.join(stale)}) but no {STATISTICS_NAME}; "
              "the output directory mixes runs")
@@ -147,7 +149,7 @@ def statistics(output: Path, metadata: dict) -> tuple[dict[tuple[str, str], dict
 
 
 def phase_space(output: Path, completed: int) -> tuple[list[dict[str, str]], list[str]]:
-    paths = sorted(p for p in output.glob("phase_space_t*.csv")
+    paths = sorted(p for p in output_files(output, "phase_space_t*.csv")
                    if re.fullmatch(r"phase_space_t\d+\.csv", p.name))
     if not paths:
         fail("no phase_space_t*.csv files were found; make_scenario always requests a "
@@ -322,7 +324,7 @@ def main(argv: list[str] | None = None) -> int:
             print(f"  warning: {warning}")
         print(f"report: {output / 'shielding_report.json'}, spectra: {output / 'spectra.csv'}")
         return 0
-    except EvidenceError as error:
+    except (EvidenceError, ProvenanceError) as error:
         print(f"analyze.py: evidence error: {error}", file=sys.stderr)
         print("analyze.py: no report was written; fix the run or its files instead of "
               "reading a zero from missing evidence", file=sys.stderr)

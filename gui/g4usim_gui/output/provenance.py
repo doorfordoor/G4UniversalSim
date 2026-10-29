@@ -1,0 +1,122 @@
+"""One provenance policy for automatic output-directory consumers; no Qt imports."""
+from __future__ import annotations
+
+from dataclasses import dataclass
+from fnmatch import fnmatchcase
+import hashlib
+import json
+from pathlib import Path, PurePosixPath, PureWindowsPath
+import re
+import warnings
+
+LEGACY_WARNING = "Legacy/unverified directory: run_metadata.json is absent; file ownership and completeness are unverified."
+
+
+class ProvenanceError(ValueError):
+    pass
+
+
+@dataclass(frozen=True)
+class OutputEvidence:
+    root: Path
+    files: tuple[Path, ...]
+    document: dict | None
+    manifest_digest: str | None = None
+
+    @property
+    def status(self) -> str:
+        return "registered_manifest" if self.document is not None else "legacy_unverified"
+
+    @property
+    def warnings(self) -> list[str]:
+        return [] if self.document is not None else [LEGACY_WARNING]
+
+    def matching(self, pattern: str) -> list[Path]:
+        return sorted(p for p in self.files if fnmatchcase(p.name, pattern))
+
+    def require(self, name: str) -> Path:
+        path = self.root / name
+        if path not in self.files:
+            raise ProvenanceError(f"File is not registered for this output: {name}")
+        return path
+
+
+def _path(value: str):
+    return PureWindowsPath(value) if "\\" in value or re.match(r"^[A-Za-z]:", value) else PurePosixPath(value)
+
+
+def output_evidence(directory: str | Path) -> OutputEvidence:
+    root = Path(directory)
+    manifest = root / "run_metadata.json"
+    if not manifest.exists():
+        return OutputEvidence(root, tuple(sorted(p for p in root.glob("*") if p.is_file())), None)
+    try:
+        manifest_bytes = manifest.read_bytes()
+        document = json.loads(manifest_bytes.decode("utf-8"))
+        if not isinstance(document, dict) or document.get("schema") != "run_metadata_json_v1":
+            raise ValueError("unsupported metadata schema")
+        records = document.get("generated_files")
+        if not isinstance(records, list):
+            raise ValueError("generated_files must be a list")
+        paths = []
+        for row in records:
+            if not isinstance(row, dict) or not isinstance(row.get("path"), str) or not row["path"]:
+                raise ValueError("invalid generated file record")
+            if not isinstance(row.get("schema"), str) or not row["schema"]:
+                raise ValueError("missing generated file schema")
+            paths.append(_path(row["path"]))
+        anchors = [p.parent for p in paths if p.name == "run_metadata.json" and p.is_absolute()]
+        if len(anchors) > 1:
+            raise ValueError("ambiguous manifest anchor")
+        runs = document.get("runs")
+        if not isinstance(runs, list):
+            raise ValueError("runs must be a list")
+        run_ids = set()
+        for run in runs:
+            if not isinstance(run, dict) or type(run.get("run_id")) is not int or run["run_id"] < 0:
+                raise ValueError("invalid run ID")
+            if run["run_id"] in run_ids:
+                raise ValueError("duplicate run ID")
+            if type(run.get("completed_events")) is not int or run["completed_events"] < 0:
+                raise ValueError("invalid completed event count")
+            run_ids.add(run["run_id"])
+        files = []
+        seen = set()
+        for recorded in paths:
+            if recorded.is_absolute():
+                if not anchors:
+                    raise ValueError("absolute file list lacks its manifest anchor")
+                relative = recorded.relative_to(anchors[0])
+            else:
+                relative = recorded
+            if not relative.parts or relative.drive or any(p in {"..", "."} for p in relative.parts):
+                raise ValueError("invalid or escaping file path")
+            local = root.joinpath(*relative.parts)
+            canonical = local.resolve()
+            if not canonical.is_relative_to(root.resolve()):
+                raise ValueError("file escapes current output directory")
+            if canonical in seen:
+                raise ValueError("duplicate generated file")
+            seen.add(canonical)
+            if not local.is_file():
+                raise ValueError(f"registered file is missing: {relative}; was listed in run_metadata.json generated_files but is missing")
+            name = local.name
+            if re.match(r"(?:hits|event_edep|.*_summary|hist_edep_\w+|phase_space|trajectories)_t\d+", name) or name.startswith(("scorer_statistics", "scoring_mesh", "g4usim")):
+                suffix = re.search(r"_r(\d+)\.[^.]+$", name)
+                run_id = int(suffix.group(1)) if suffix else 0
+                if run_id not in run_ids:
+                    raise ValueError(f"file references absent run {run_id}: {name}")
+            files.append(local)
+        for required in ("run_metadata.json", "run_summary.txt"):
+            if root / required not in files:
+                raise ValueError(f"required generated file is not registered: {required}")
+        return OutputEvidence(root, tuple(sorted(files)), document, hashlib.sha256(manifest_bytes).hexdigest())
+    except (ValueError, OSError, TypeError) as error:
+        raise ProvenanceError(f"Invalid output provenance in {manifest}: {error}") from error
+
+
+def output_files(directory: str | Path, pattern: str) -> list[Path]:
+    evidence = output_evidence(directory)
+    for message in evidence.warnings:
+        warnings.warn(message, RuntimeWarning, stacklevel=2)
+    return evidence.matching(pattern)

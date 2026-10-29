@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from gui.g4usim_gui.output.provenance import output_evidence
 
 from gui.g4usim_gui.output.dose_summary import read_dose_summaries
 
@@ -16,6 +17,7 @@ def process(input_dir: Path) -> dict:
     if not volumes:
         raise ValueError("No valid dose_volume_summary worker records found")
     return {
+        "provenance": output_evidence(input_dir).status,
         "kind": "dose_volume_aggregate", "units": {"mass": "kg", "edep": "MeV", "dose": "Gy"},
         "physical_validation": "not_established",
         "normalization": "simulated histories only; no time/fluence/source strength",

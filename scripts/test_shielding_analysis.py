@@ -13,7 +13,7 @@ dose summary CSV and the phase-space files). The test checks that
      scenario/run event-count warning;
   3. a run that genuinely wrote no statistics is accepted and labelled
      ``no_statistics_file_zero_deposition`` (zero is a result, not missing evidence);
-  4. five incomplete-evidence cases raise EvidenceError and leave neither a report nor
+  4. incomplete-evidence cases raise EvidenceError or ProvenanceError and leave neither a report nor
      spectra behind: statistics file listed in generated_files but missing, failed run,
      zero events, stale phase space and statistics of another run (mixed runs);
   5. main([output_dir]) keeps the CLI behaviour in-process: exit 0 plus
@@ -133,6 +133,8 @@ def base_metadata(output: Path) -> dict:
         },
         "runs": [{"run_id": 0, "planned_events": EVENTS, "completed_events": EVENTS}],
         "generated_files": [
+            {"path": str(output / "run_metadata.json"), "schema": "run_metadata_json_v1"},
+            {"path": str(output / "run_summary.txt"), "schema": "run_summary_v1"},
             {"path": str(output / STATISTICS_NAME), "schema": "scorer_statistics_csv_v1"},
             {"path": str(output / "dose_volume_summary_t0.csv"), "schema": "dose_volume_csv_v2"},
             {"path": str(output / "phase_space_t0.csv"), "schema": "phase_space_csv_v1"},
@@ -309,7 +311,7 @@ def expect_evidence_error(output: Path, fragment: str) -> None:
     with redirect_stdout(stdout), redirect_stderr(stderr):
         try:
             shielding_analysis.analyze(output)
-        except EvidenceError as error:
+        except (EvidenceError, shielding_analysis.ProvenanceError) as error:
             raised = True
             message = str(error)
     assert raised, f"analyze() accepted incomplete evidence in {output}"
@@ -412,7 +414,14 @@ def run() -> None:
                                        if Path(entry["path"]).name != STATISTICS_NAME]
         save_metadata(mixed, metadata)
         write_lf(mixed / "scorer_statistics_r1.csv", STATISTICS_HEADER + "\n")
-        expect_evidence_error(mixed, "the output directory mixes runs")
+        # Unregistered leftovers are not inputs under the manifest contract.
+        ignored = shielding_analysis.analyze(mixed)
+        assert ignored["evidence"]["scorer_statistics"] == "no_statistics_file_zero_deposition"
+        # Once registered, a later-run file must have its run in the manifest.
+        metadata["generated_files"].append({"path": "scorer_statistics_r1.csv",
+                                            "schema": "scorer_statistics_csv_v1"})
+        save_metadata(mixed, metadata)
+        expect_evidence_error(mixed, "file references absent run 1")
 
         status, stdout, stderr = run_main([str(missing)])
         assert status == 3, (status, stderr)

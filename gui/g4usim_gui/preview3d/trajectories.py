@@ -13,6 +13,7 @@ import json
 import re
 from dataclasses import dataclass, field
 from pathlib import Path
+from g4usim_gui.output.provenance import output_files, output_evidence
 
 SCHEMA = "g4usim_trajectories_v1"
 FILE = re.compile(r"trajectories_t(\d+)(?:_r(\d+))?\.json$")
@@ -110,7 +111,7 @@ class TrackFilter:
 def trajectory_files(output_dir: str | Path, run: int = 0) -> list[Path]:
     """The worker files of one run (run 0: trajectories_tN.json; run R: trajectories_tN_rR.json)."""
     files = []
-    for path in Path(output_dir).glob("trajectories_t*.json"):
+    for path in output_files(output_dir, "trajectories_t*.json"):
         match = FILE.fullmatch(path.name)
         if match and int(match.group(2) or 0) == run:
             files.append(path)
@@ -119,7 +120,7 @@ def trajectory_files(output_dir: str | Path, run: int = 0) -> list[Path]:
 
 def available_runs(output_dir: str | Path) -> list[int]:
     runs = set()
-    for path in Path(output_dir).glob("trajectories_t*.json"):
+    for path in output_files(output_dir, "trajectories_t*.json"):
         match = FILE.fullmatch(path.name)
         if match:
             runs.add(int(match.group(2) or 0))
@@ -132,7 +133,7 @@ def load_trajectories(output_dir: str | Path, run: int | None = None) -> Traject
     if not runs:
         raise ValueError(f"no trajectory files (trajectories_tN.json) in {output_dir}")
     run = runs[-1] if run is None else run
-    result = TrajectorySet(source=str(output_dir), run=run)
+    result = TrajectorySet(source=str(output_dir) + " [" + output_evidence(output_dir).status + "]", run=run)
     seen: set[int] = set()
     for path in trajectory_files(output_dir, run):
         try:

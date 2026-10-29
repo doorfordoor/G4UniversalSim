@@ -3,6 +3,7 @@ import argparse
 import csv
 import os
 import tempfile
+import sys
 from pathlib import Path
 
 
@@ -12,7 +13,12 @@ def resolve_files(input_dir, pattern, files):
         root = Path(input_dir)
         if not root.is_dir():
             raise FileNotFoundError(f"Input directory does not exist: {root}")
-        resolved.extend(sorted(root.glob(pattern)))
+        sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "gui"))
+        from g4usim_gui.output.provenance import output_evidence
+        evidence = output_evidence(root)
+        for message in evidence.warnings:
+            print(message, file=sys.stderr)
+        resolved.extend(evidence.matching(pattern))
     if not resolved:
         raise RuntimeError("No input files found")
     return sorted(resolved, key=lambda path: str(path.resolve()))

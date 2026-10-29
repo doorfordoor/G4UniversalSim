@@ -109,7 +109,11 @@ class ContentMixin:
         """Overlay a run's particle tracks (roadmap G6): the given folder, else the last run's output."""
         page = self.config_builder_page
         candidates = [directory] if directory else [self.project.outputDir, self.output_page._output_dir]
-        folder = next((c for c in candidates if c and available_runs(c)), "")
+        try:
+            folder = next((c for c in candidates if c and available_runs(c)), "")
+        except ValueError as error:
+            page.preview3d_messages.setPlainText(ui_format("Cannot load tracks: {error}", error=error))
+            return False
         if not folder and not quiet and not directory:
             folder = QFileDialog.getExistingDirectory(self, ui_text("Choose a run output folder with trajectory files"),
                                                       self.project.outputDir or "")

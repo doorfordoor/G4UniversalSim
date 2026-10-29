@@ -6,6 +6,8 @@ shared denominator. Missing files are never treated as zero measurements.
 
 from __future__ import annotations
 
+from .provenance import output_evidence
+
 import csv
 import math
 import re
@@ -45,7 +47,9 @@ def read_fluence_summaries(output_dir: str | Path) -> tuple[list[FluenceVolumeSu
     warnings: list[str] = []
     if not directory.is_dir():
         return [], []
-    for filename in sorted(directory.glob("fluence_volume_summary*.csv")):
+    evidence = output_evidence(directory)
+    warnings.extend(evidence.warnings)
+    for filename in evidence.matching("fluence_volume_summary*.csv"):
         match = NAME.fullmatch(filename.name)
         if not match:
             warnings.append(f"Unknown Fluence filename: {filename.name}")
