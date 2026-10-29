@@ -1,0 +1,6 @@
+run 0: events=80 edep=158.657 MeV; box mesh == events; native dose/flux == DoseScorer/FluenceScorer; e- share 0.9996, gamma share 4.12e-04; cylinder share 1.000
+run 1: events=30 edep=58.6407 MeV; box mesh == events; native dose/flux == DoseScorer/FluenceScorer; e- share 0.9996, gamma share 4.13e-04; cylinder share 1.000
+INI meshes reproduce macro meshes cell by cell (46 cells in last run)
+invalid [scoring.mesh.*] rejected: bad_type, missing_bins, orphan_quantity, bad_shape
+test_scoring_mesh: OK
+G4USIM_ASSERTS=618

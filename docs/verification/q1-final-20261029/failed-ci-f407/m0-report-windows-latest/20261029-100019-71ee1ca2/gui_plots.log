@@ -1,0 +1,31 @@
+G4USIM_ASSERTS=0
+Traceback (most recent call last):
+  File "D:\a\G4UniversalSim\G4UniversalSim\gui\g4usim_gui\output\provenance.py", line 112, in output_evidence
+    raise ValueError(f"required generated file is not registered: {required}")
+ValueError: required generated file is not registered: run_summary.txt
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\a\G4UniversalSim\G4UniversalSim\tools\test_assert_probe.py", line 177, in <module>
+    raise SystemExit(main(sys.argv))
+                     ^^^^^^^^^^^^^^
+  File "D:\a\G4UniversalSim\G4UniversalSim\tools\test_assert_probe.py", line 153, in main
+    runpy.run_path(str(target), run_name="__main__")
+  File "<frozen runpy>", line 291, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "D:\a\G4UniversalSim\G4UniversalSim\gui\smoke_tests\smoke_plots.py", line 188, in <module>
+    main()
+  File "D:\a\G4UniversalSim\G4UniversalSim\gui\smoke_tests\smoke_plots.py", line 87, in main
+    datasets = {d.key: d for d in plot_data.discover(root)}
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\a\G4UniversalSim\G4UniversalSim\gui\g4usim_gui\output\plot_data.py", line 108, in discover
+    for path in sorted(output_files(output, "scorer_statistics*.csv")):
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\a\G4UniversalSim\G4UniversalSim\gui\g4usim_gui\output\provenance.py", line 119, in output_files
+    evidence = output_evidence(directory)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\a\G4UniversalSim\G4UniversalSim\gui\g4usim_gui\output\provenance.py", line 115, in output_evidence
+    raise ProvenanceError(f"Invalid output provenance in {manifest}: {error}") from error
+g4usim_gui.output.provenance.ProvenanceError: Invalid output provenance in C:\Users\RUNNER~1\AppData\Local\Temp\g4usim-plots-jyrmlmse\main\run_metadata.json: required generated file is not registered: run_summary.txt

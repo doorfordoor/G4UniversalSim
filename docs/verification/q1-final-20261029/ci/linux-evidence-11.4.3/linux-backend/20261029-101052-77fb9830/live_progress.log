@@ -1,0 +1,29 @@
+{
+  "backend": "/home/runner/work/G4UniversalSim/G4UniversalSim/build_linux/G4UniversalSim",
+  "checks": [
+    "1 workers, two runs: counts match summary",
+    "2 workers, two runs: counts match summary",
+    "4 workers, two runs: counts match summary",
+    "zero requested events: no fabricated completed run",
+    "configuration failure: no fabricated run progress",
+    "4 workers with event/tracking log noise: valid progress messages",
+    "event_row_t0: nonzero failed summary; terminal counts agree",
+    "begin_scoring_t0: nonzero failed summary; terminal counts agree",
+    "final_close_master: nonzero failed summary; terminal counts agree",
+    "real process killed after receiving live completed-event update"
+  ],
+  "performance": {},
+  "cancel_last_progress": {
+    "schema": "g4usim_progress_v1",
+    "run_id": 0,
+    "sequence": 2,
+    "phase": "running",
+    "planned_events": 10000000,
+    "completed_events": 20382,
+    "elapsed_s": 0.500034006,
+    "rate_eps": 40761.22775,
+    "eta_s": 244.8311435
+  }
+}
+test_live_progress: OK
+G4USIM_ASSERTS=128

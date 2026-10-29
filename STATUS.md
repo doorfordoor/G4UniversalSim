@@ -9,25 +9,25 @@
 
 ## 当前计划入口（2026-10-29 编号整理）
 
-统一工作项、排期波次、依赖、Q1 审查范围与提交节点均在 [ROADMAP](docs/ROADMAP.md) 的“统一代号与排期”一节。本对话作为 **Q1 完整可靠性审查、修复与验收**的主负责人；隔壁审查作为独立证据来源，不必等它全部结束。已有反例按代码基线复用，完整 Q1 尚未验收。
+统一工作项、排期波次、依赖、Q1 审查范围与提交节点均在 [ROADMAP](docs/ROADMAP.md) 的“统一代号与排期”一节。本对话作为 **Q1 完整可靠性审查、修复与验收**的主负责人；隔壁审查作为独立证据来源，不必等它全部结束。已有反例按代码基线复用；Q1 已在冻结范围完成验收，见[最终报告](docs/verification/q1-final-20261029/README.md)。
 
-当前顺序：Q1 → 2C/E6 → F1/F4/F5/K1（I1 可并行）→ I2/J1/F8 → L1/F2；其后科研波次 Q2/H2/H3、F3/F7、E7/J2，与 K2/L2 按依赖安排；H4–H9 和 M5 保留后续独立阶段。这是导航摘要，具体状态与默认顺序以 ROADMAP 为准。用户一次启动一个完整代号，阶段内的提交和专项测试由负责人连续推进。
+当前顺序：Q1（已完成）→ 2C/E6 → F1/F4/F5/K1（I1 可并行）→ I2/J1/F8 → L1/F2；其后科研波次 Q2/H2/H3、F3/F7、E7/J2，与 K2/L2 按依赖安排；H4–H9 和 M5 保留后续独立阶段。这是导航摘要，具体状态与默认顺序以 ROADMAP 为准。用户一次启动一个完整代号，阶段内的提交和专项测试由负责人连续推进。
 
-2026-10-29 用户已正式启动 Q1，按 [开工分工](docs/collab/inbox/20261029-1314-astra-q1-execution.md) 连续推进；实现和审查记录见 [核心检查点](docs/collab/reviews/20261029-q1-core.md)。`4e6fa7a` 的98项旧候选证据保留。后续R25–R32修复/测试已提交为 `4ed7233`、`cb54669`、`5ffe9b6`，当前正式清单105组，最终干净Windows/双版本CI与同v3门禁仍待完成，不外推为Q1验收。阶段状态以ROADMAP为准。
+2026-10-29 Q1已完成：九域审查、R01–R32闭合并交叉复核；验收代码 `8ecad66`。干净Windows **105 PASS / 0 FAIL / 0 SKIP**，83770个v3入口；旧同代98项基线79303，逐例/总数与原始日志门禁通过。Linux11.3.2/11.4.3真实CI各105（run40855144863），Windows/Ubuntu static+GUI各42（run40855144672），Windows实窗保存/生成/运行/取消/关窗通过。[完整收据](docs/verification/q1-final-20261029/README.md)；旧失败证据保留，历史偏置结果须重跑，原生交互迁移显式csh。
 
-## 2026-10-29 隔离开发工作区
+## 2026-10-29 隔离开发工作区与2C子集历史
 
 用户授权 Astra 主导 2C 实现。当前工作区 `C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim`，基线 `5465dbd`，分支 `roadmap/2c-effective-config`；原 D 盘工作区由 DSH 保留，禁止并发合并。实施契约见 [2C 开工回信](docs/collab/inbox/20261029-1010-astra-2c-execution.md)。DeepSeek 已通过 API 提供前端设计，采纳范围与纠偏见 [前端设计建议](docs/collab/outbox/20261029-1010-deepseek-effectiveconfig-ui-design.md)。
 
 独立数据模型、配置阶段导出与只读查看器已接通；完整消费者覆盖、三阶段应用证据与 off/auto/on 尚未完成，不提升支持等级。原基线 87 项归档报告已在本轮通过严格证据门禁复核。
 
-本轮基础链路验收：MSVC + Geant4 11.3.2 构建成功；最终两组覆盖统一平台全部 **89 PASS / 0 FAIL / 0 SKIP，117149 条断言**，另有独立模型 24 条。两组报告源码/测试指纹一致，逐用例断言非零，归档日志 SHA-256 与严格门禁通过；见 [验收记录](docs/verification/2c-configured-20261029/README.md)。初轮两项环境失败原样保留，已使用已有 GDML/数据根参数复测，未放宽测试。真实导出数据的浅色/深色/小窗口 offscreen 图已查看，不等同桌面与高 DPI 验收。
+2C子集历史验收（旧探针计数，不与Q1 v3直接比较）：MSVC + Geant4 11.3.2 构建成功；最终两组覆盖统一平台全部 **89 PASS / 0 FAIL / 0 SKIP，117149 条断言**，另有独立模型 24 条。两组报告源码/测试指纹一致，逐用例断言非零，归档日志 SHA-256 与严格门禁通过；见 [验收记录](docs/verification/2c-configured-20261029/README.md)。初轮两项环境失败原样保留，已使用已有 GDML/数据根参数复测，未放宽测试。真实导出数据的浅色/深色/小窗口 offscreen 图已查看，不等同桌面与高 DPI 验收。
 
 当前 2C 代码范围：`Config/EffectiveConfig` 类型化事务与不可变快照、`--dump-effective-config` 独占新文件/标准输出、GUI 第 9 页只读查看器；完整 2C 继续进行中。上轮收尾收到独立审查，csh 拒绝主配置切换后仍报成功（R-01，P1）、元数据写失败但文本摘要仍成功（R-02，P2）在 70a1aba 重新复现；旧反例见 [修前证据](docs/verification/m0-known-defects-20261029/README.md)。它们当时未被已有 89 项覆盖，本轮已补正式回归并修复，见下段。
 
-2026-10-29 本轮 R-01/R-02 修复验收：Release 构建、**89 PASS / 0 FAIL / 0 SKIP，117833 条断言**，严格证据门禁通过，见 [修复报告与日志](docs/verification/reliability-r01-r02-20261029/README.md)。维持拒绝配置热切换；metadata 异常纠正可写文本摘要并排除失败产物，不承诺跨文件原子性。没有后台运行任务，原 DSH 代码未合并；新改动的 Linux/11.4/安装包尚未验证。
+2026-10-29 R-01/R-02阶段历史验收：Release 构建、**89 PASS / 0 FAIL / 0 SKIP，117833 条断言**，严格证据门禁通过，见 [修复报告与日志](docs/verification/reliability-r01-r02-20261029/README.md)。维持拒绝配置热切换；metadata 异常纠正可写文本摘要并排除失败产物，不承诺跨文件原子性。该节点当时未做Linux/11.4/安装包验收；后续当前源码Linux/11.4证据见上方Q1，安装器扩展仍归I2。
 
-接下来优先处理 R-03/R-04，二者已在本轮新构建独立复现且尚未修复，见 [当前证据](docs/verification/r03-r04-current-20261029/README.md) 与 [Dose/GDML 提案](docs/collab/inbox/20261029-1200-astra-dose-gdml-repair.md)。R-05–R-07 仍是原审查真实证据加本分支静态确认，见 [结果修复提案](docs/collab/inbox/20261029-1203-astra-results-repair.md)；V-01 单列方法决策。修复队列后继续 [完整 2C](docs/EffectiveConfig.md)。五项产品目标的必要性、价值、完整阶段与验收已写入 [产品裁决](docs/collab/inbox/20261029-1140-astra-product-roadmap.md)，唯一状态与顺序在 [ROADMAP](docs/ROADMAP.md)；DeepSeek 已实际通过 API 提供工作区设计并由 Astra 纠偏。本轮没有安装环境或引入 Agent 框架。
+R03–R32现已完成修复与回归，旧[反例证据](docs/verification/r03-r04-current-20261029/README.md)和提案保留为历史。V01方法边界已裁决，统计适用范围后续归Q2。下一完整工作项是[2C](docs/EffectiveConfig.md)，五项新增目标与E/F/H依赖继续遵循[ROADMAP](docs/ROADMAP.md)；不因Q1通过宣布这些阶段完成。
 
 ## 原 DSH 集成基线（2026-10-28 归档，2C 新工作区见上节）
 

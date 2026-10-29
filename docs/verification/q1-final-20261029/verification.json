@@ -1,0 +1,81 @@
+{
+  "stage": "Q1",
+  "status": "accepted_with_documented_scope",
+  "date": "2026-10-29",
+  "tested_commit": "8ecad66a5a3d1e9151cec4ed9a9035e70464577f",
+  "source_fingerprint": "d9c4378a03052a05cc59b55259ba5e99c32a056e0a7d87b92257ca21948bec4b",
+  "tests_content_fingerprint": "5bcb7ac101df9d3cdcb71e9915b4f68e8eeed4d178f556793367a126f4d8bae8",
+  "windows": {
+    "checkout": "C:/Users/123/.codex/worktrees/q1-final/G4UniversalSim",
+    "clean_at_run": true,
+    "runner_exit_code": 0,
+    "build": {
+      "build_configuration": "Release",
+      "compiler_id": "MSVC",
+      "compiler_version": "19.51.36246.0",
+      "geant4_version_number": 1132,
+      "multithreaded": true
+    },
+    "backend_sha256": "688f1a454583006d713c6aad93f78b9690acf29bc16dfe79bddc7f1d38804998",
+    "report": "windows-full/report.json",
+    "counts": {
+      "pass": 105
+    },
+    "layers": {
+      "static": 11,
+      "backend": 46,
+      "gui": 31,
+      "integration": 17
+    },
+    "assert_probe": "settrace_assert_lines_v3",
+    "assertions_executed_total": 83770,
+    "gate": "windows-full/evidence-baseline-gate.log",
+    "gate_exit_code": 0
+  },
+  "same_probe_baseline": {
+    "product_commit": "4e6fa7a3885b67ae74b8ff549d893a24ce27b6ff",
+    "measurement_overlay": "baseline-diagnostics/measurement-overlay-final.json",
+    "report": "baseline-v3/report.json",
+    "cases": 98,
+    "assertions_executed_total": 79303,
+    "per_case_and_total_nonregression": "pass"
+  },
+  "visible_windows": {
+    "report": "windows-visible/report.json",
+    "reviewer": "f6_design",
+    "screenshots_visually_inspected": true,
+    "run_result": "success",
+    "completed_events": 20,
+    "cancel_result": "killed",
+    "close_result": "killed",
+    "owned_processes_stopped": true
+  },
+  "ci": {
+    "linux_run": 40855144863,
+    "m0_run": 40855144672,
+    "linux_versions": [
+      "11.3.2",
+      "11.4.3"
+    ],
+    "linux_cases_each": 105,
+    "m0_cases_each": 42,
+    "reports": 12,
+    "matching_fingerprints": true,
+    "artifact_sha256": "4 of 4 verified",
+    "strict_report_gates": "12 of 12 passed",
+    "linux_tampered_report_negative_gates": "both passed",
+    "receipt": "ci/ci-evidence.json"
+  },
+  "reviews": [
+    "../../collab/reviews/20261029-q1-findings.md",
+    "../../collab/reviews/20261029-q1-closure-review.md"
+  ],
+  "limitations": [
+    "Engineering reliability at the frozen code baseline; not a proof of absence of all bugs.",
+    "Historical biased simulation results must be regenerated.",
+    "Native interactive execution requires explicit --ui --ui-session csh; Python GUI batch execution remains supported.",
+    "Full EffectiveConfig 2C and Q2 independent physical/statistical validation remain open.",
+    "Windows Geant4 11.4, native Linux desktop and installer expansion remain I2.",
+    "Manifest provenance is not result-content integrity signing."
+  ]
+}

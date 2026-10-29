@@ -1,0 +1,32 @@
+{
+  "baseline_commit": "4e6fa7a3885b67ae74b8ff549d893a24ce27b6ff",
+  "binary_unchanged": true,
+  "reason": "v3 same-probe measurement; R31 scheduling-independent expected failure; UUID output fixture avoids overwrite. No product source changes. Earlier two failed reports retained.",
+  "overlays": [
+    {
+      "path": "tools/test_assert_probe.py",
+      "baseline_git_blob_sha256": "56047893ee0c66dd2df84b3cf8b395e44138569e97a9b503b20b03a956d2018e",
+      "measurement_file_sha256": "fd6515504cdec5ab86046e53e390cb366f49ee5facbf7acbe21314943ad8568c"
+    },
+    {
+      "path": "scripts/run_m0_tests.py",
+      "baseline_git_blob_sha256": "35953e0ee2b34af79123b62e97cef3a4b6c879d0881456284ffeddd04094d37d",
+      "measurement_file_sha256": "d705f40aa562a1c0ea9446cb12e3056b109c639c8b0234a1c3ceb37f3208b35a"
+    },
+    {
+      "path": "scripts/test_m0_runner.py",
+      "baseline_git_blob_sha256": "757e109b8bc95805bf23ae6b2fcdb1f4575475f2807336b62024ea1b9ac61180",
+      "measurement_file_sha256": "de63659c465b1f28ea487649909de7e2a6de7d9650b9488f56cc822bf12ad96e"
+    },
+    {
+      "path": "scripts/test_scoring_numeric.py",
+      "baseline_git_blob_sha256": "132e836bec9b5829c5195085ea17cd91a234fe32887f82c81df586aef45910d9",
+      "measurement_file_sha256": "f887f31ae3736f90b41dad4ad41434e5a84544b719a11403d95242db01ae7417"
+    },
+    {
+      "path": "scripts/test_q1_results_backend.py",
+      "baseline_git_blob_sha256": "c51dc1d05fbfb913958438b57e13a813035637d6236a2327bd70cad7f4c574f2",
+      "measurement_file_sha256": "c6d915db7cf61b226cb386de15bc354f355fabad09bc26e973b37bc9ea1a77c5"
+    }
+  ]
+}

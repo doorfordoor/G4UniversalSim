@@ -1,0 +1,558 @@
+{
+  "sha": "8ecad66a5a3d1e9151cec4ed9a9035e70464577f",
+  "runs": [
+    40855144863,
+    40855144672
+  ],
+  "jobs": [
+    {
+      "id": 123384116268,
+      "run_id": 40855144863,
+      "name": "ubuntu-24.04 / Geant4 11.4.3",
+      "status": "completed",
+      "result": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "result": "success"
+        },
+        {
+          "name": "Run actions/checkout@v7",
+          "result": "success"
+        },
+        {
+          "name": "Install micromamba",
+          "result": "success"
+        },
+        {
+          "name": "Create pinned Geant4 environment",
+          "result": "success"
+        },
+        {
+          "name": "Export the Geant4 dataset environment",
+          "result": "success"
+        },
+        {
+          "name": "Point Qt at the PySide6 plugins",
+          "result": "success"
+        },
+        {
+          "name": "Configure the backend",
+          "result": "success"
+        },
+        {
+          "name": "Build the backend",
+          "result": "success"
+        },
+        {
+          "name": "Verify the Geant4 data lookup of the built executable",
+          "result": "success"
+        },
+        {
+          "name": "Record GDML availability of this Geant4",
+          "result": "success"
+        },
+        {
+          "name": "Run static tests on Linux",
+          "result": "success"
+        },
+        {
+          "name": "Validate the Linux static report",
+          "result": "success"
+        },
+        {
+          "name": "Annotate failing static cases",
+          "result": "skipped"
+        },
+        {
+          "name": "Run offscreen GUI tests on Linux",
+          "result": "success"
+        },
+        {
+          "name": "Validate the Linux GUI report",
+          "result": "success"
+        },
+        {
+          "name": "Annotate failing GUI cases",
+          "result": "skipped"
+        },
+        {
+          "name": "Run backend tests on Linux",
+          "result": "success"
+        },
+        {
+          "name": "Validate the Linux backend report",
+          "result": "success"
+        },
+        {
+          "name": "Annotate failing backend cases",
+          "result": "skipped"
+        },
+        {
+          "name": "Run integration tests on Linux",
+          "result": "success"
+        },
+        {
+          "name": "Validate the Linux integration report",
+          "result": "success"
+        },
+        {
+          "name": "Annotate failing integration cases",
+          "result": "skipped"
+        },
+        {
+          "name": "Verify the evidence gate rejects a tampered report",
+          "result": "success"
+        },
+        {
+          "name": "Upload Linux evidence",
+          "result": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v7",
+          "result": "success"
+        },
+        {
+          "name": "Complete job",
+          "result": "success"
+        }
+      ]
+    },
+    {
+      "id": 123384116761,
+      "run_id": 40855144863,
+      "name": "ubuntu-24.04 / Geant4 11.3.2",
+      "status": "completed",
+      "result": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "result": "success"
+        },
+        {
+          "name": "Run actions/checkout@v7",
+          "result": "success"
+        },
+        {
+          "name": "Install micromamba",
+          "result": "success"
+        },
+        {
+          "name": "Create pinned Geant4 environment",
+          "result": "success"
+        },
+        {
+          "name": "Export the Geant4 dataset environment",
+          "result": "success"
+        },
+        {
+          "name": "Point Qt at the PySide6 plugins",
+          "result": "success"
+        },
+        {
+          "name": "Configure the backend",
+          "result": "success"
+        },
+        {
+          "name": "Build the backend",
+          "result": "success"
+        },
+        {
+          "name": "Verify the Geant4 data lookup of the built executable",
+          "result": "success"
+        },
+        {
+          "name": "Record GDML availability of this Geant4",
+          "result": "success"
+        },
+        {
+          "name": "Run static tests on Linux",
+          "result": "success"
+        },
+        {
+          "name": "Validate the Linux static report",
+          "result": "success"
+        },
+        {
+          "name": "Annotate failing static cases",
+          "result": "skipped"
+        },
+        {
+          "name": "Run offscreen GUI tests on Linux",
+          "result": "success"
+        },
+        {
+          "name": "Validate the Linux GUI report",
+          "result": "success"
+        },
+        {
+          "name": "Annotate failing GUI cases",
+          "result": "skipped"
+        },
+        {
+          "name": "Run backend tests on Linux",
+          "result": "success"
+        },
+        {
+          "name": "Validate the Linux backend report",
+          "result": "success"
+        },
+        {
+          "name": "Annotate failing backend cases",
+          "result": "skipped"
+        },
+        {
+          "name": "Run integration tests on Linux",
+          "result": "success"
+        },
+        {
+          "name": "Validate the Linux integration report",
+          "result": "success"
+        },
+        {
+          "name": "Annotate failing integration cases",
+          "result": "skipped"
+        },
+        {
+          "name": "Verify the evidence gate rejects a tampered report",
+          "result": "success"
+        },
+        {
+          "name": "Upload Linux evidence",
+          "result": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v7",
+          "result": "success"
+        },
+        {
+          "name": "Complete job",
+          "result": "success"
+        }
+      ]
+    },
+    {
+      "id": 123384115601,
+      "run_id": 40855144672,
+      "name": "ubuntu-latest / Python 3.11",
+      "status": "completed",
+      "result": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "result": "success"
+        },
+        {
+          "name": "Run actions/checkout@v7",
+          "result": "success"
+        },
+        {
+          "name": "Run actions/setup-python@v7",
+          "result": "success"
+        },
+        {
+          "name": "Install Linux GUI runtime libraries",
+          "result": "success"
+        },
+        {
+          "name": "Install GUI dependency",
+          "result": "success"
+        },
+        {
+          "name": "Verify tracked source inventory and static tests",
+          "result": "success"
+        },
+        {
+          "name": "Validate static report evidence",
+          "result": "success"
+        },
+        {
+          "name": "Annotate failing static cases",
+          "result": "skipped"
+        },
+        {
+          "name": "Run offscreen GUI tests",
+          "result": "success"
+        },
+        {
+          "name": "Validate GUI report evidence",
+          "result": "success"
+        },
+        {
+          "name": "Annotate failing GUI cases",
+          "result": "skipped"
+        },
+        {
+          "name": "Upload M0 reports",
+          "result": "success"
+        },
+        {
+          "name": "Post Run actions/setup-python@v7",
+          "result": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v7",
+          "result": "success"
+        },
+        {
+          "name": "Complete job",
+          "result": "success"
+        }
+      ]
+    },
+    {
+      "id": 123384116199,
+      "run_id": 40855144672,
+      "name": "windows-latest / Python 3.11",
+      "status": "completed",
+      "result": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "result": "success"
+        },
+        {
+          "name": "Run actions/checkout@v7",
+          "result": "success"
+        },
+        {
+          "name": "Run actions/setup-python@v7",
+          "result": "success"
+        },
+        {
+          "name": "Install Linux GUI runtime libraries",
+          "result": "skipped"
+        },
+        {
+          "name": "Install GUI dependency",
+          "result": "success"
+        },
+        {
+          "name": "Verify tracked source inventory and static tests",
+          "result": "success"
+        },
+        {
+          "name": "Validate static report evidence",
+          "result": "success"
+        },
+        {
+          "name": "Annotate failing static cases",
+          "result": "skipped"
+        },
+        {
+          "name": "Run offscreen GUI tests",
+          "result": "success"
+        },
+        {
+          "name": "Validate GUI report evidence",
+          "result": "success"
+        },
+        {
+          "name": "Annotate failing GUI cases",
+          "result": "skipped"
+        },
+        {
+          "name": "Upload M0 reports",
+          "result": "success"
+        },
+        {
+          "name": "Post Run actions/setup-python@v7",
+          "result": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v7",
+          "result": "success"
+        },
+        {
+          "name": "Complete job",
+          "result": "success"
+        }
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "id": 12890615053,
+      "name": "linux-evidence-11.3.2",
+      "digest": "sha256:a1177d67ac6d47266e3d519d4ba509de420a4a4ba6668d4cbfc37e213050e7d8",
+      "run_id": 40855144863,
+      "sha": "8ecad66a5a3d1e9151cec4ed9a9035e70464577f",
+      "local_sha256": "a1177d67ac6d47266e3d519d4ba509de420a4a4ba6668d4cbfc37e213050e7d8",
+      "digest_matches": true
+    },
+    {
+      "id": 12889519357,
+      "name": "linux-evidence-11.4.3",
+      "digest": "sha256:c8dc52b8918f5ea8e3f8c8a671c04bd8267bc76b1e8aeabdc33ec09ffa4263c6",
+      "run_id": 40855144863,
+      "sha": "8ecad66a5a3d1e9151cec4ed9a9035e70464577f",
+      "local_sha256": "c8dc52b8918f5ea8e3f8c8a671c04bd8267bc76b1e8aeabdc33ec09ffa4263c6",
+      "digest_matches": true
+    },
+    {
+      "id": 12888537861,
+      "name": "m0-report-ubuntu-latest",
+      "digest": "sha256:7f1b5177a045edf37d535b03590f42f847002b485dc6a785ebd303e796197431",
+      "run_id": 40855144672,
+      "sha": "8ecad66a5a3d1e9151cec4ed9a9035e70464577f",
+      "local_sha256": "7f1b5177a045edf37d535b03590f42f847002b485dc6a785ebd303e796197431",
+      "digest_matches": true
+    },
+    {
+      "id": 12888254470,
+      "name": "m0-report-windows-latest",
+      "digest": "sha256:08e4ba5c632f32953e47cda6d564ebc17f6e969a0666185cfeb504bb31333728",
+      "run_id": 40855144672,
+      "sha": "8ecad66a5a3d1e9151cec4ed9a9035e70464577f",
+      "local_sha256": "08e4ba5c632f32953e47cda6d564ebc17f6e969a0666185cfeb504bb31333728",
+      "digest_matches": true
+    }
+  ],
+  "reports": [
+    {
+      "report": "out\\verification\\q1-final-ci-r2\\linux-evidence-11.3.2\\linux-backend\\20261029-101051-a9052fdc\\report.json",
+      "profile": "backend",
+      "head": "8ecad66a5a3d1e9151cec4ed9a9035e70464577f",
+      "source_fingerprint": "d9c4378a03052a05cc59b55259ba5e99c32a056e0a7d87b92257ca21948bec4b",
+      "tests_content_fingerprint": "5bcb7ac101df9d3cdcb71e9915b4f68e8eeed4d178f556793367a126f4d8bae8",
+      "probe": "settrace_assert_lines_v3",
+      "cases": 46,
+      "pass": 46,
+      "assertions_executed_total": 84786,
+      "gate_exit": 0
+    },
+    {
+      "report": "out\\verification\\q1-final-ci-r2\\linux-evidence-11.3.2\\linux-gui\\20261029-101015-b6a3c9d3\\report.json",
+      "profile": "gui",
+      "head": "8ecad66a5a3d1e9151cec4ed9a9035e70464577f",
+      "source_fingerprint": "d9c4378a03052a05cc59b55259ba5e99c32a056e0a7d87b92257ca21948bec4b",
+      "tests_content_fingerprint": "5bcb7ac101df9d3cdcb71e9915b4f68e8eeed4d178f556793367a126f4d8bae8",
+      "probe": "settrace_assert_lines_v3",
+      "cases": 31,
+      "pass": 31,
+      "assertions_executed_total": 1418,
+      "gate_exit": 0
+    },
+    {
+      "report": "out\\verification\\q1-final-ci-r2\\linux-evidence-11.3.2\\linux-integration\\20261029-102303-693be5e2\\report.json",
+      "profile": "integration",
+      "head": "8ecad66a5a3d1e9151cec4ed9a9035e70464577f",
+      "source_fingerprint": "d9c4378a03052a05cc59b55259ba5e99c32a056e0a7d87b92257ca21948bec4b",
+      "tests_content_fingerprint": "5bcb7ac101df9d3cdcb71e9915b4f68e8eeed4d178f556793367a126f4d8bae8",
+      "probe": "settrace_assert_lines_v3",
+      "cases": 17,
+      "pass": 17,
+      "assertions_executed_total": 1071,
+      "gate_exit": 0
+    },
+    {
+      "report": "out\\verification\\q1-final-ci-r2\\linux-evidence-11.3.2\\linux-static\\20261029-101011-07860c9f\\report.json",
+      "profile": "static",
+      "head": "8ecad66a5a3d1e9151cec4ed9a9035e70464577f",
+      "source_fingerprint": "d9c4378a03052a05cc59b55259ba5e99c32a056e0a7d87b92257ca21948bec4b",
+      "tests_content_fingerprint": "5bcb7ac101df9d3cdcb71e9915b4f68e8eeed4d178f556793367a126f4d8bae8",
+      "probe": "settrace_assert_lines_v3",
+      "cases": 11,
+      "pass": 11,
+      "assertions_executed_total": 453,
+      "gate_exit": 0
+    },
+    {
+      "report": "out\\verification\\q1-final-ci-r2\\linux-evidence-11.4.3\\linux-backend\\20261029-101052-77fb9830\\report.json",
+      "profile": "backend",
+      "head": "8ecad66a5a3d1e9151cec4ed9a9035e70464577f",
+      "source_fingerprint": "d9c4378a03052a05cc59b55259ba5e99c32a056e0a7d87b92257ca21948bec4b",
+      "tests_content_fingerprint": "5bcb7ac101df9d3cdcb71e9915b4f68e8eeed4d178f556793367a126f4d8bae8",
+      "probe": "settrace_assert_lines_v3",
+      "cases": 46,
+      "pass": 46,
+      "assertions_executed_total": 80194,
+      "gate_exit": 0
+    },
+    {
+      "report": "out\\verification\\q1-final-ci-r2\\linux-evidence-11.4.3\\linux-gui\\20261029-101016-80c988c4\\report.json",
+      "profile": "gui",
+      "head": "8ecad66a5a3d1e9151cec4ed9a9035e70464577f",
+      "source_fingerprint": "d9c4378a03052a05cc59b55259ba5e99c32a056e0a7d87b92257ca21948bec4b",
+      "tests_content_fingerprint": "5bcb7ac101df9d3cdcb71e9915b4f68e8eeed4d178f556793367a126f4d8bae8",
+      "probe": "settrace_assert_lines_v3",
+      "cases": 31,
+      "pass": 31,
+      "assertions_executed_total": 1418,
+      "gate_exit": 0
+    },
+    {
+      "report": "out\\verification\\q1-final-ci-r2\\linux-evidence-11.4.3\\linux-integration\\20261029-102245-6b4ebbc5\\report.json",
+      "profile": "integration",
+      "head": "8ecad66a5a3d1e9151cec4ed9a9035e70464577f",
+      "source_fingerprint": "d9c4378a03052a05cc59b55259ba5e99c32a056e0a7d87b92257ca21948bec4b",
+      "tests_content_fingerprint": "5bcb7ac101df9d3cdcb71e9915b4f68e8eeed4d178f556793367a126f4d8bae8",
+      "probe": "settrace_assert_lines_v3",
+      "cases": 17,
+      "pass": 17,
+      "assertions_executed_total": 1071,
+      "gate_exit": 0
+    },
+    {
+      "report": "out\\verification\\q1-final-ci-r2\\linux-evidence-11.4.3\\linux-static\\20261029-101013-1f118cbb\\report.json",
+      "profile": "static",
+      "head": "8ecad66a5a3d1e9151cec4ed9a9035e70464577f",
+      "source_fingerprint": "d9c4378a03052a05cc59b55259ba5e99c32a056e0a7d87b92257ca21948bec4b",
+      "tests_content_fingerprint": "5bcb7ac101df9d3cdcb71e9915b4f68e8eeed4d178f556793367a126f4d8bae8",
+      "probe": "settrace_assert_lines_v3",
+      "cases": 11,
+      "pass": 11,
+      "assertions_executed_total": 453,
+      "gate_exit": 0
+    },
+    {
+      "report": "out\\verification\\q1-final-ci-r2\\m0-report-ubuntu-latest\\20261029-100846-ae358739\\report.json",
+      "profile": "static",
+      "head": "8ecad66a5a3d1e9151cec4ed9a9035e70464577f",
+      "source_fingerprint": "d9c4378a03052a05cc59b55259ba5e99c32a056e0a7d87b92257ca21948bec4b",
+      "tests_content_fingerprint": "5bcb7ac101df9d3cdcb71e9915b4f68e8eeed4d178f556793367a126f4d8bae8",
+      "probe": "settrace_assert_lines_v3",
+      "cases": 11,
+      "pass": 11,
+      "assertions_executed_total": 453,
+      "gate_exit": 0
+    },
+    {
+      "report": "out\\verification\\q1-final-ci-r2\\m0-report-ubuntu-latest\\20261029-100849-377944d3\\report.json",
+      "profile": "gui",
+      "head": "8ecad66a5a3d1e9151cec4ed9a9035e70464577f",
+      "source_fingerprint": "d9c4378a03052a05cc59b55259ba5e99c32a056e0a7d87b92257ca21948bec4b",
+      "tests_content_fingerprint": "5bcb7ac101df9d3cdcb71e9915b4f68e8eeed4d178f556793367a126f4d8bae8",
+      "probe": "settrace_assert_lines_v3",
+      "cases": 31,
+      "pass": 31,
+      "assertions_executed_total": 1418,
+      "gate_exit": 0
+    },
+    {
+      "report": "out\\verification\\q1-final-ci-r2\\m0-report-windows-latest\\20261029-100913-b2cc3864\\report.json",
+      "profile": "static",
+      "head": "8ecad66a5a3d1e9151cec4ed9a9035e70464577f",
+      "source_fingerprint": "d9c4378a03052a05cc59b55259ba5e99c32a056e0a7d87b92257ca21948bec4b",
+      "tests_content_fingerprint": "5bcb7ac101df9d3cdcb71e9915b4f68e8eeed4d178f556793367a126f4d8bae8",
+      "probe": "settrace_assert_lines_v3",
+      "cases": 11,
+      "pass": 11,
+      "assertions_executed_total": 453,
+      "gate_exit": 0
+    },
+    {
+      "report": "out\\verification\\q1-final-ci-r2\\m0-report-windows-latest\\20261029-100921-49af0bf0\\report.json",
+      "profile": "gui",
+      "head": "8ecad66a5a3d1e9151cec4ed9a9035e70464577f",
+      "source_fingerprint": "d9c4378a03052a05cc59b55259ba5e99c32a056e0a7d87b92257ca21948bec4b",
+      "tests_content_fingerprint": "5bcb7ac101df9d3cdcb71e9915b4f68e8eeed4d178f556793367a126f4d8bae8",
+      "probe": "settrace_assert_lines_v3",
+      "cases": 31,
+      "pass": 31,
+      "assertions_executed_total": 1418,
+      "gate_exit": 0
+    }
+  ],
+  "result": "all_jobs_and_report_gates_pass"
+}

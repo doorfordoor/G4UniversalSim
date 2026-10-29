@@ -7,7 +7,9 @@ Short, user-facing record of notable changes. Detailed support status lives in
 
 ## Unreleased
 
-### Q1 可靠性修复（完整平台验收以 ROADMAP 为准）
+### Q1 可靠性修复（2026-10-29 已验收，未发布）
+
+验收代码 `8ecad66`：Windows105/105、真实Linux Geant4 11.3.2/11.4.3各105、Windows实窗及同v3基线门禁通过；[完整证据与限制](docs/verification/q1-final-20261029/README.md)。完整2C、Q2和I2扩展保持后续阶段。
 
 - 修正敏感母体剂量的本体质量、GDML 敏感对象绑定与计分路径身份；无法安全表示的名称冲突明确拒绝。最终摘要记录真实偏置挂接事实。
 - 数值累计、事件平方矩和跨线程合并溢出会终止并记录失败，包含仅 ROOT 的 master 网格；材料非有限值、整数/构造范围错误提前拒绝。SD 初始化与上下文异常进入共享失败收尾。

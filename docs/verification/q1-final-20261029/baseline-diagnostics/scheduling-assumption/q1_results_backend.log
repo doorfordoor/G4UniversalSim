@@ -1,0 +1,73 @@
+{
+  "backend": "C:\\Users\\123\\.codex\\worktrees\\q1-validation\\G4UniversalSim\\out\\build-q1-clean\\Release\\G4UniversalSim.exe",
+  "binary_sha256": "97590cf8eafb2f42c36bcd526b84ff6b0e29569432ef477240d7d025038fb75a",
+  "backend_scope": "candidate binary",
+  "checks": [
+    {
+      "history_case": "single",
+      "events": 4,
+      "primary_particles": 4
+    },
+    {
+      "history_case": "double",
+      "events": 4,
+      "primary_particles": 8
+    },
+    {
+      "history_case": "variable",
+      "events": 4,
+      "primary_particles": 7
+    },
+    {
+      "sparse_worker": {
+        "1": 4
+      },
+      "events": 32,
+      "event_edep": true
+    },
+    {
+      "sparse_worker": {
+        "1": 4
+      },
+      "events": 32,
+      "event_edep": false
+    },
+    {
+      "all_workers_zero": true,
+      "event_edep": true,
+      "events": 8
+    },
+    {
+      "all_workers_zero": true,
+      "event_edep": false,
+      "events": 8
+    }
+  ],
+  "R10_ratio_rejected": [
+    {
+      "case": "single",
+      "backend_ratio": 1.37366056669
+    },
+    {
+      "case": "double",
+      "backend_ratio": 1.37398869647
+    },
+    {
+      "case": "variable",
+      "backend_ratio": 1.37408037316
+    }
+  ],
+  "R11_covariance_evidence": {
+    "raw_event_weighted_lengths": {
+      "0": 2.00004548459,
+      "1": 4.00017656238,
+      "2": 6.00022554864,
+      "3": 8.00024156868
+    },
+    "mesh_sum": 20.0006891643,
+    "displayed_error_independent_cells": 3.1623784172182297,
+    "event_recomputed_projection_error": 4.472278446250174
+  }
+}
+test_q1_results_backend: OK (R10 rejected; R11 missing covariance marked unavailable)
+G4USIM_ASSERTS=115

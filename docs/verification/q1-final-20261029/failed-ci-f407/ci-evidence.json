@@ -1,0 +1,231 @@
+{
+  "sha": "f40747a865ce46e23a850920bad23c1f0767e711",
+  "runs": [
+    40853939918,
+    40853939864
+  ],
+  "jobs": [
+    {
+      "id": 123380078117,
+      "run_id": 40853939918,
+      "name": "ubuntu-24.04 / Geant4 11.3.2",
+      "status": "completed",
+      "result": "failure",
+      "failed_steps": [
+        "Run offscreen GUI tests on Linux"
+      ]
+    },
+    {
+      "id": 123380078603,
+      "run_id": 40853939918,
+      "name": "ubuntu-24.04 / Geant4 11.4.3",
+      "status": "completed",
+      "result": "failure",
+      "failed_steps": [
+        "Run offscreen GUI tests on Linux"
+      ]
+    },
+    {
+      "id": 123380078289,
+      "run_id": 40853939864,
+      "name": "ubuntu-latest / Python 3.11",
+      "status": "completed",
+      "result": "failure",
+      "failed_steps": [
+        "Run offscreen GUI tests"
+      ]
+    },
+    {
+      "id": 123380078604,
+      "run_id": 40853939864,
+      "name": "windows-latest / Python 3.11",
+      "status": "completed",
+      "result": "failure",
+      "failed_steps": [
+        "Run offscreen GUI tests"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "id": 12888686243,
+      "name": "linux-evidence-11.3.2",
+      "digest": "sha256:b9fe35d49d63f0f90872674ce3a2b5e49c74fcd24d5f59810b5d73665d8bdc36",
+      "local_sha256": "b9fe35d49d63f0f90872674ce3a2b5e49c74fcd24d5f59810b5d73665d8bdc36",
+      "digest_matches": true
+    },
+    {
+      "id": 12888302877,
+      "name": "linux-evidence-11.4.3",
+      "digest": "sha256:53cfcf28bb602bbd711aeb230d753b83188fb678338c42dbd308943b55d18a6c",
+      "local_sha256": "53cfcf28bb602bbd711aeb230d753b83188fb678338c42dbd308943b55d18a6c",
+      "digest_matches": true
+    },
+    {
+      "id": 12888222199,
+      "name": "m0-report-ubuntu-latest",
+      "digest": "sha256:68d45f1dbe4a045274336066ac29922426cbbc68177a627c28b303d44a8a0327",
+      "local_sha256": "68d45f1dbe4a045274336066ac29922426cbbc68177a627c28b303d44a8a0327",
+      "digest_matches": true
+    },
+    {
+      "id": 12888562122,
+      "name": "m0-report-windows-latest",
+      "digest": "sha256:3b5e24d48b68d2264639a72358d84e4dc910f3474288c78085ba4c598be6545a",
+      "local_sha256": "3b5e24d48b68d2264639a72358d84e4dc910f3474288c78085ba4c598be6545a",
+      "digest_matches": true
+    }
+  ],
+  "reports": [
+    {
+      "report": "out\\verification\\q1-final-ci\\linux-evidence-11.3.2\\linux-gui\\20261029-100112-6d826b61\\report.json",
+      "profile": "gui",
+      "head": "f40747a865ce46e23a850920bad23c1f0767e711",
+      "source_fingerprint": "d9c4378a03052a05cc59b55259ba5e99c32a056e0a7d87b92257ca21948bec4b",
+      "tests_content_fingerprint": "63e3bbee34e4770a800b2d6a57fe82b761a53671e14e59f2abf371fd11512a01",
+      "probe": "settrace_assert_lines_v3",
+      "counts": {
+        "pass": 30,
+        "fail": 1
+      },
+      "gate_exit": 1,
+      "failures": [
+        {
+          "name": "gui_plots",
+          "status": "fail",
+          "tail": " \"/home/runner/work/G4UniversalSim/G4UniversalSim/gui/smoke_tests/smoke_plots.py\", line 188, in <module>\n    main()\n  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/gui/smoke_tests/smoke_plots.py\", line 87, in main\n    datasets = {d.key: d for d in plot_data.discover(root)}\n                                  ^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/gui/g4usim_gui/output/plot_data.py\", line 108, in discover\n    for path in sorted(output_files(output, \"scorer_statistics*.csv\")):\n                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/gui/g4usim_gui/output/provenance.py\", line 119, in output_files\n    evidence = output_evidence(directory)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/gui/g4usim_gui/output/provenance.py\", line 115, in output_evidence\n    raise ProvenanceError(f\"Invalid output provenance in {manifest}: {error}\") from error\ng4usim_gui.output.provenance.ProvenanceError: Invalid output provenance in /tmp/g4usim-plots-8voja2ce/main/run_metadata.json: required generated file is not registered: run_summary.txt\n"
+        }
+      ],
+      "triage_gate_exit": 0
+    },
+    {
+      "report": "out\\verification\\q1-final-ci\\linux-evidence-11.3.2\\linux-static\\20261029-100109-98d54fa6\\report.json",
+      "profile": "static",
+      "head": "f40747a865ce46e23a850920bad23c1f0767e711",
+      "source_fingerprint": "d9c4378a03052a05cc59b55259ba5e99c32a056e0a7d87b92257ca21948bec4b",
+      "tests_content_fingerprint": "63e3bbee34e4770a800b2d6a57fe82b761a53671e14e59f2abf371fd11512a01",
+      "probe": "settrace_assert_lines_v3",
+      "counts": {
+        "pass": 11,
+        "fail": 0
+      },
+      "gate_exit": 0,
+      "failures": [],
+      "triage_gate_exit": 0
+    },
+    {
+      "report": "out\\verification\\q1-final-ci\\linux-evidence-11.4.3\\linux-gui\\20261029-100115-98ddc292\\report.json",
+      "profile": "gui",
+      "head": "f40747a865ce46e23a850920bad23c1f0767e711",
+      "source_fingerprint": "d9c4378a03052a05cc59b55259ba5e99c32a056e0a7d87b92257ca21948bec4b",
+      "tests_content_fingerprint": "63e3bbee34e4770a800b2d6a57fe82b761a53671e14e59f2abf371fd11512a01",
+      "probe": "settrace_assert_lines_v3",
+      "counts": {
+        "pass": 30,
+        "fail": 1
+      },
+      "gate_exit": 1,
+      "failures": [
+        {
+          "name": "gui_plots",
+          "status": "fail",
+          "tail": " \"/home/runner/work/G4UniversalSim/G4UniversalSim/gui/smoke_tests/smoke_plots.py\", line 188, in <module>\n    main()\n  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/gui/smoke_tests/smoke_plots.py\", line 87, in main\n    datasets = {d.key: d for d in plot_data.discover(root)}\n                                  ^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/gui/g4usim_gui/output/plot_data.py\", line 108, in discover\n    for path in sorted(output_files(output, \"scorer_statistics*.csv\")):\n                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/gui/g4usim_gui/output/provenance.py\", line 119, in output_files\n    evidence = output_evidence(directory)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/gui/g4usim_gui/output/provenance.py\", line 115, in output_evidence\n    raise ProvenanceError(f\"Invalid output provenance in {manifest}: {error}\") from error\ng4usim_gui.output.provenance.ProvenanceError: Invalid output provenance in /tmp/g4usim-plots-xytqi92s/main/run_metadata.json: required generated file is not registered: run_summary.txt\n"
+        }
+      ],
+      "triage_gate_exit": 0
+    },
+    {
+      "report": "out\\verification\\q1-final-ci\\linux-evidence-11.4.3\\linux-static\\20261029-100112-f9d64bf2\\report.json",
+      "profile": "static",
+      "head": "f40747a865ce46e23a850920bad23c1f0767e711",
+      "source_fingerprint": "d9c4378a03052a05cc59b55259ba5e99c32a056e0a7d87b92257ca21948bec4b",
+      "tests_content_fingerprint": "63e3bbee34e4770a800b2d6a57fe82b761a53671e14e59f2abf371fd11512a01",
+      "probe": "settrace_assert_lines_v3",
+      "counts": {
+        "pass": 11,
+        "fail": 0
+      },
+      "gate_exit": 0,
+      "failures": [],
+      "triage_gate_exit": 0
+    },
+    {
+      "report": "out\\verification\\q1-final-ci\\m0-report-ubuntu-latest\\20261029-095953-379d7ce7\\report.json",
+      "profile": "static",
+      "head": "f40747a865ce46e23a850920bad23c1f0767e711",
+      "source_fingerprint": "d9c4378a03052a05cc59b55259ba5e99c32a056e0a7d87b92257ca21948bec4b",
+      "tests_content_fingerprint": "63e3bbee34e4770a800b2d6a57fe82b761a53671e14e59f2abf371fd11512a01",
+      "probe": "settrace_assert_lines_v3",
+      "counts": {
+        "pass": 11,
+        "fail": 0
+      },
+      "gate_exit": 0,
+      "failures": [],
+      "triage_gate_exit": 0
+    },
+    {
+      "report": "out\\verification\\q1-final-ci\\m0-report-ubuntu-latest\\20261029-095955-9bc13efb\\report.json",
+      "profile": "gui",
+      "head": "f40747a865ce46e23a850920bad23c1f0767e711",
+      "source_fingerprint": "d9c4378a03052a05cc59b55259ba5e99c32a056e0a7d87b92257ca21948bec4b",
+      "tests_content_fingerprint": "63e3bbee34e4770a800b2d6a57fe82b761a53671e14e59f2abf371fd11512a01",
+      "probe": "settrace_assert_lines_v3",
+      "counts": {
+        "pass": 30,
+        "fail": 1
+      },
+      "gate_exit": 1,
+      "failures": [
+        {
+          "name": "gui_plots",
+          "status": "fail",
+          "tail": " \"/home/runner/work/G4UniversalSim/G4UniversalSim/gui/smoke_tests/smoke_plots.py\", line 188, in <module>\n    main()\n  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/gui/smoke_tests/smoke_plots.py\", line 87, in main\n    datasets = {d.key: d for d in plot_data.discover(root)}\n                                  ^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/gui/g4usim_gui/output/plot_data.py\", line 108, in discover\n    for path in sorted(output_files(output, \"scorer_statistics*.csv\")):\n                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/gui/g4usim_gui/output/provenance.py\", line 119, in output_files\n    evidence = output_evidence(directory)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/G4UniversalSim/G4UniversalSim/gui/g4usim_gui/output/provenance.py\", line 115, in output_evidence\n    raise ProvenanceError(f\"Invalid output provenance in {manifest}: {error}\") from error\ng4usim_gui.output.provenance.ProvenanceError: Invalid output provenance in /tmp/g4usim-plots-2jbqdng8/main/run_metadata.json: required generated file is not registered: run_summary.txt\n"
+        }
+      ],
+      "triage_gate_exit": 0
+    },
+    {
+      "report": "out\\verification\\q1-final-ci\\m0-report-windows-latest\\20261029-100013-edb28892\\report.json",
+      "profile": "static",
+      "head": "f40747a865ce46e23a850920bad23c1f0767e711",
+      "source_fingerprint": "d9c4378a03052a05cc59b55259ba5e99c32a056e0a7d87b92257ca21948bec4b",
+      "tests_content_fingerprint": "63e3bbee34e4770a800b2d6a57fe82b761a53671e14e59f2abf371fd11512a01",
+      "probe": "settrace_assert_lines_v3",
+      "counts": {
+        "pass": 11,
+        "fail": 0
+      },
+      "gate_exit": 0,
+      "failures": [],
+      "triage_gate_exit": 0
+    },
+    {
+      "report": "out\\verification\\q1-final-ci\\m0-report-windows-latest\\20261029-100019-71ee1ca2\\report.json",
+      "profile": "gui",
+      "head": "f40747a865ce46e23a850920bad23c1f0767e711",
+      "source_fingerprint": "d9c4378a03052a05cc59b55259ba5e99c32a056e0a7d87b92257ca21948bec4b",
+      "tests_content_fingerprint": "63e3bbee34e4770a800b2d6a57fe82b761a53671e14e59f2abf371fd11512a01",
+      "probe": "settrace_assert_lines_v3",
+      "counts": {
+        "pass": 30,
+        "fail": 1
+      },
+      "gate_exit": 1,
+      "failures": [
+        {
+          "name": "gui_plots",
+          "status": "fail",
+          "tail": "y>\", line 88, in _run_code\n  File \"D:\\a\\G4UniversalSim\\G4UniversalSim\\gui\\smoke_tests\\smoke_plots.py\", line 188, in <module>\n    main()\n  File \"D:\\a\\G4UniversalSim\\G4UniversalSim\\gui\\smoke_tests\\smoke_plots.py\", line 87, in main\n    datasets = {d.key: d for d in plot_data.discover(root)}\n                                  ^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"D:\\a\\G4UniversalSim\\G4UniversalSim\\gui\\g4usim_gui\\output\\plot_data.py\", line 108, in discover\n    for path in sorted(output_files(output, \"scorer_statistics*.csv\")):\n                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"D:\\a\\G4UniversalSim\\G4UniversalSim\\gui\\g4usim_gui\\output\\provenance.py\", line 119, in output_files\n    evidence = output_evidence(directory)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"D:\\a\\G4UniversalSim\\G4UniversalSim\\gui\\g4usim_gui\\output\\provenance.py\", line 115, in output_evidence\n    raise ProvenanceError(f\"Invalid output provenance in {manifest}: {error}\") from error\ng4usim_gui.output.provenance.ProvenanceError: Invalid output provenance in C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\g4usim-plots-jyrmlmse\\main\\run_metadata.json: required generated file is not registered: run_summary.txt\n"
+        }
+      ],
+      "triage_gate_exit": 0
+    }
+  ],
+  "linux_missing_profiles": [
+    "backend",
+    "integration"
+  ],
+  "result": "failed_gui_fixture",
+  "failure": "gui_plots: required generated file is not registered: run_summary.txt"
+}

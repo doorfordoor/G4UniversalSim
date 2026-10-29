@@ -1,0 +1,53 @@
+PASS merge_outputs: asserts=18/12
+PASS output_extensions: asserts=25/21
+PASS runner_contract: asserts=31/31
+PASS doc_links: asserts=11/11
+PASS platform_paths: asserts=3/3
+PASS ci_annotations: asserts=12/13
+PASS report_evidence: asserts=77/21
+PASS writer_boundary: asserts=24/7
+PASS shielding_scenario_model: asserts=93/61
+PASS shielding_analysis: asserts=113/73
+PASS effective_config_export: asserts=109/41
+PASS effective_config_viewer: asserts=22/23
+PASS merge_histograms: asserts=29/21
+PASS gui_parsers: asserts=8/8
+PASS gui_materials: asserts=42/42
+PASS gui_geometry: asserts=69/63
+PASS gui_preview: asserts=22/22
+PASS gui_preview_primitives: asserts=37/37
+PASS gui_project_io: asserts=6/6
+PASS gui_source: asserts=50/39
+PASS gui_source_field_preservation: asserts=340/48
+PASS gui_run_config: asserts=34/34
+PASS gui_dose_results: asserts=21/21
+FAIL gui_plots: UniversalSim\tools\test_assert_probe.py", line 153, in main
+    runpy.run_path(str(target), run_name="__main__")
+  File "<frozen runpy>", line 291, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\123\.codex\worktrees\q1-final\G4UniversalSim\gui\smoke_tests\smoke_plots.py", line 188, in <module>
+    main()
+  File "C:\Users\123\.codex\worktrees\q1-final\G4UniversalSim\gui\smoke_tests\smoke_plots.py", line 87, in main
+    datasets = {d.key: d for d in plot_data.discover(root)}
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\q1-final\G4UniversalSim\gui\g4usim_gui\output\plot_data.py", line 108, in discover
+    for path in sorted(output_files(output, "scorer_statistics*.csv")):
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\q1-final\G4UniversalSim\gui\g4usim_gui\output\provenance.py", line 119, in output_files
+    evidence = output_evidence(directory)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\q1-final\G4UniversalSim\gui\g4usim_gui\output\provenance.py", line 115, in output_evidence
+    raise ProvenanceError(f"Invalid output provenance in {manifest}: {error}") from error
+g4usim_gui.output.provenance.ProvenanceError: Invalid output provenance in D:\Temp\g4usim-plots-ezgqe_gf\main\run_metadata.json: required generated file is not registered: run_summary.txt
+ asserts=0/34
+PASS gui_new_simulation_wizard: asserts=60/37
+PASS scenario_page: asserts=31/31
+PASS gui_scans: asserts=58/40
+PASS gui_start_page: asserts=74/41
+PASS gui_fluence_results: asserts=31/31
+PASS gui_output_extensions: asserts=61/50
+PASS gui_output: asserts=15/15
+PASS gui_history: asserts=7/7
+PASS gui_run_result: asserts=20/20
+PASS gui_live_progress: asserts=71/66

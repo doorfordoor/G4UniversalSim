@@ -1,0 +1,18 @@
+loader and filters: events merged in order, particles, colours, filters, bad files refused, glass
+setting: written only when on, validated, kept in projects (older projects: off)
+SKIP widget part: PyVistaQt preview is disabled for QT_QPA_PLATFORM=offscreen; using text fallback.
+backend: run finished; the 3D view is the text fallback (no PyVista)
+smoke_trajectory_view: OK
+G4USIM_ASSERTS=23
+/home/runner/work/G4UniversalSim/G4UniversalSim/gui/g4usim_gui/preview3d/trajectories.py:123: RuntimeWarning: Legacy/unverified directory: run_metadata.json is absent; file ownership and completeness are unverified.
+  for path in output_files(output_dir, "trajectories_t*.json"):
+/home/runner/work/G4UniversalSim/G4UniversalSim/gui/g4usim_gui/preview3d/trajectories.py:114: RuntimeWarning: Legacy/unverified directory: run_metadata.json is absent; file ownership and completeness are unverified.
+  for path in output_files(output_dir, "trajectories_t*.json"):
+/home/runner/work/G4UniversalSim/G4UniversalSim/gui/g4usim_gui/output/plot_data.py:108: RuntimeWarning: Legacy/unverified directory: run_metadata.json is absent; file ownership and completeness are unverified.
+  for path in sorted(output_files(output, "scorer_statistics*.csv")):
+/home/runner/work/G4UniversalSim/G4UniversalSim/gui/g4usim_gui/output/plot_data.py:117: RuntimeWarning: Legacy/unverified directory: run_metadata.json is absent; file ownership and completeness are unverified.
+  for path in sorted(output_files(output, "scoring_mesh*.csv")):
+/home/runner/work/G4UniversalSim/G4UniversalSim/gui/g4usim_gui/output/plot_data.py:123: RuntimeWarning: Legacy/unverified directory: run_metadata.json is absent; file ownership and completeness are unverified.
+  for path in sorted(output_files(output, "g4usim*.root")):
+/home/runner/work/G4UniversalSim/G4UniversalSim/gui/g4usim_gui/output/plot_data.py:144: RuntimeWarning: Legacy/unverified directory: run_metadata.json is absent; file ownership and completeness are unverified.
+  runs = sorted({_run_of(p.stem) for p in output_files(output, f"{stem}_t*.csv")})
