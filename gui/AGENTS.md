@@ -1,5 +1,7 @@
 # G4UniversalSim GUI Agent 开发约束
 
+2026-10-30 E6 Qt空数据回归：当前Linux Python3.11/PySide6 6.12缺失combo UserRole读取有实证引用损耗，项目标准模型的空数据读取使用widgets/qt_data.combo_data；保持root/column和0/False/空字符串语义。不得用os._exit、忽略非零退出或补造None引用绕过；原GUI导入393断言全部保留。诊断和适用边界见 `../docs/agent-history.md` 的“E6 第二轮平台失败与 Qt 空数据读取”，正式回归smoke_qt_combo_data与smoke_project_import_projection。
+
 2026-10-30 E6候选：迁移副本由core计划/发布，窗口不重写格式规则。未知/冲突/重复JSON/非有限/不合法类型拒绝；旧项目仍可按已知兼容规则打开，不强制旧版只读。显式editor不能因空锚点被整对象默认重置；原始JSON位置双别名冲突拒绝，缺失单别名可派生。导入发布前按实际控件范围检查整数，禁止静默限幅；空选项明确显示空，未知选项保留。不得将GUI范围升级为后端物理限制。Recent/Snapshot错误保持warning，普通Open为critical。主INI新副本限同目录；几何资源保持原目标，不自动启source-copy或解除J2编辑blocker。已有目标/链接绝不能覆盖；发布后cleanup_warning须显示为成功附警告。只有保存成功后才切project_file，打开副本必须显式；格式检查不称模拟成功。完整契约见 `../docs/配置兼容与迁移.md` 和agent-history，候选不等于阶段已验收。
 
 2026-10-29 R32：执行原生 Geant4 交互会话仅允许显式 `--ui --ui-session csh`；裸 `--ui` 或 INI `interactive=true` 未选择 csh 时在初始化及 macro 执行前明确拒绝并写失败摘要，不自动降级。dry-run 不开启会话，仍可使用裸 `--ui`。Python 桌面 GUI 正常 Run/后端几何预览继续使用 batch config/macro，不受此限制；不要把桌面 GUI 与原生 Qt UI 会话混称。修复已在8ecad66真实Windows及Linux双版本回归通过，证据见 `docs/verification/q1-final-20261029/README.md`。

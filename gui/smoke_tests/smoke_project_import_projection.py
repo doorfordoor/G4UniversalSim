@@ -25,6 +25,7 @@ from g4usim_gui.core.wizard import WizardSpec
 from g4usim_gui.history import run_history_store
 from g4usim_gui.main_window import MainWindow
 from g4usim_gui.widgets.migration_dialog import MigrationDialog
+from g4usim_gui.widgets.qt_data import combo_data
 from g4usim_gui.window import project as project_window
 
 
@@ -39,8 +40,8 @@ def widget_state(widgets):
         if isinstance(widget, QSpinBox):
             value.extend((widget.value(), widget.minimum(), widget.maximum()))
         if isinstance(widget, QComboBox):
-            value.extend((widget.currentIndex(), widget.currentData(),
-                          tuple((widget.itemText(i), widget.itemData(i)) for i in range(widget.count()))))
+            value.extend((widget.currentIndex(), combo_data(widget),
+                          tuple((widget.itemText(i), combo_data(widget, i)) for i in range(widget.count()))))
         if isinstance(widget, (QPlainTextEdit, QTextEdit)):
             value.append(widget.toPlainText())
         if isinstance(widget, QTableWidget):

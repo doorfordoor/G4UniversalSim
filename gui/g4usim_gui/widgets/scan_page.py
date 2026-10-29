@@ -41,6 +41,7 @@ from g4usim_gui.core.i18n import ui_format, ui_text
 from g4usim_gui.core.scan_runner import ScanRunner
 from g4usim_gui.core.theme import current_colors
 from g4usim_gui.widgets.plot_panel import draw_empty, style_axes
+from g4usim_gui.widgets.qt_data import combo_data
 
 # (base, runs root, executable, workspace root) for the current configuration; raises ValueError
 BaseProvider = Callable[[], tuple[scan.ScanBase, str, str, str]]
@@ -164,7 +165,7 @@ class ScanPage(QWidget):
             self.status.setText(ui_format("Cannot use the current configuration: {error}", error=error))
             self._update_buttons()
             return False
-        current = self.parameter.currentData()
+        current = combo_data(self.parameter)
         self._parameters = scan.parameters(self._base)
         self.parameter.clear()
         for parameter in self._parameters:
@@ -232,7 +233,7 @@ class ScanPage(QWidget):
 
     def refresh_results(self) -> None:
         self._results = scan.collect(self._manifest) if self._manifest else []
-        current = self.quantity.currentData()
+        current = combo_data(self.quantity)
         self.quantity.blockSignals(True)
         self.quantity.clear()
         for key in scan.metric_keys(self._results):
@@ -257,7 +258,7 @@ class ScanPage(QWidget):
                                                   for point in self._manifest.points)
 
     def current_metric(self) -> tuple[str, str, str] | None:
-        data = self.quantity.currentData()
+        data = combo_data(self.quantity)
         return tuple(data.split("|")) if data else None
 
     def _uncertainty(self, result):

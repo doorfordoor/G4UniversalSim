@@ -33,6 +33,7 @@ from g4usim_gui.core import icons
 from g4usim_gui.core.i18n import ui_format, ui_text
 from g4usim_gui.core.theme import ThemeColors, current_colors
 from g4usim_gui.output import plot_data
+from g4usim_gui.widgets.qt_data import combo_data
 
 AXES = ("0", "1", "2")
 # Chinese hints and labels in figures need a CJK font after DejaVu Sans (per-glyph fallback)
@@ -200,7 +201,7 @@ class PlotPanel(QWidget):
         return list(self._datasets)
 
     def current_dataset(self) -> plot_data.DataSet | None:
-        key = self.dataset_combo.currentData()
+        key = combo_data(self.dataset_combo)
         return next((d for d in self._datasets if d.key == key), None)
 
     def select(self, key: str) -> bool:

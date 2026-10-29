@@ -17,7 +17,7 @@
 
 ## E6 进行中（2026-10-30）
 
-基于已交付 `c6bf8ad`，在同一隔离工作区的新分支 `roadmap/E6-config-compat` 推进字段补齐与配置兼容。范围、单写者归属、内部提交及验收节点见 [E6 开工契约](docs/collab/inbox/20261029-2355-astra-e6-execution.md)。DeepSeek 已完成一次真实前端设计咨询，采纳/纠偏见 [设计记录](docs/collab/outbox/20261029-deepseek-e6-design.md)。394 项 schema、主 INI 版本、迁移副本与诊断实现已完成专项审查；首轮冻结 `cb837e6` 的 Windows 全量为 126 pass / 1 fail / 0 skip，实际 CI 四个 job 均因最近项目错误弹窗阻塞失败。原始失败证据保留，正在修复弹窗和项目导入的整数投影/显式字段保留边界，之后重新冻结验收。实窗检查仍等待桌面解锁，不能标记阶段完成。
+基于已交付 `c6bf8ad`，在隔离分支 `roadmap/E6-config-compat` 推进字段补齐与配置兼容。范围与验收节点见 [E6 开工契约](docs/collab/inbox/20261029-2355-astra-e6-execution.md)；DeepSeek 的真实前端设计咨询见 [设计记录](docs/collab/outbox/20261029-deepseek-e6-design.md)。394 项 schema、主 INI 版本、迁移副本、诊断及标准运行包恢复/复制已实现并交叉审查。首轮 `cb837e6` 的弹窗阻塞和导入参数丢失问题已修复；第二轮 `5bf479d` Windows 全量 **133/133、42786 个 v3 入口**及 2C 基线门禁通过，但 Linux CI 在 GUI 导入测试结束后出现 Python `none_dealloc` 崩溃。独立实验已确认当前 PySide6 空数据读取的引用计数问题，正在修复测试和实际受影响的绘图/扫描路径；两轮证据各自保留，下一候选须重新冻结验收。实窗仍等待桌面解锁，E6 未关闭。
 
 ## 完整 2C 已完成（2026-10-29）
 

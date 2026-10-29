@@ -11,6 +11,7 @@ from PySide6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushB
 from ..core.effective_config import (MISSING, load_snapshot_document, value_text,
     decoded_path, snapshot_diff)
 from ..core.i18n import ui_text, ui_format
+from .qt_data import combo_data
 
 
 MAX_FILES = 64
@@ -256,13 +257,13 @@ class EffectiveConfigPage(QWidget):
             self.baseline_combo.blockSignals(False)
 
     def _snapshot_selected(self, combo_index):
-        data = self.snapshot_combo.itemData(combo_index)
+        data = combo_data(self.snapshot_combo, combo_index)
         if data is None or data < 0 or data >= len(self._snapshots):
             return
         self._commit_selection(data, self._baseline)
 
     def _baseline_selected(self, combo_index):
-        data = self.baseline_combo.itemData(combo_index)
+        data = combo_data(self.baseline_combo, combo_index)
         self._baseline = -1 if data is None else data
         self._populate_diff()
         self._populate()
@@ -272,7 +273,7 @@ class EffectiveConfigPage(QWidget):
     def _refresh_module_filter(self):
         self.module_filter.blockSignals(True)
         try:
-            previous = self.module_filter.currentData()
+            previous = combo_data(self.module_filter)
             self.module_filter.clear()
             self.module_filter.addItem(ui_text("All modules"), "")
             modules = set()

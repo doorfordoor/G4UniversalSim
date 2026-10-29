@@ -419,3 +419,11 @@ Geant4 `ApplyCommand()` 返回 0 不足以确认命令成功；沿用材料命�
 复制并运行的CLI线程/seed/name必须读取副本当前main，而非当前项目或陈旧snapshot。read_generated_run_settings只读这三字段，严格ASCII整数；seed缺省None、显式0保留。前端在候选副本对齐flat/runSettings并投影预检后才发布；保留用户已选择的backend。runName两处GUI trim仅去ASCII空白，尾NBSP等Unicode字符不得被额外去掉。无一般INI反向导入或物理验证承诺。
 
 不同写者29导入载荷/42版本alias、88控件边界、13snapshot路径、duplicate核心与最后8组CLI状态原反例复核均已通过；原失败证据保留。新增正式用例包含project_snapshot_compat、duplicate_generated_package_model/backend、gui_project_import_projection、gui_project_snapshot_restore、gui_duplicate_history_cli。最终清单133项，下一步新冻结全量/真实CI，实窗仍等待解锁，不能把此条当作阶段关闭。
+
+### 2026-10-30 E6 第二轮平台失败与 Qt 空数据读取
+
+冻结 `5bf479d` Windows全量133/133、42786个v3入口、2C基线40628门禁通过；Linux真实run40926120374两版本和M0 run40926120368的Ubuntu均在gui_project_import_projection的393个断言后以Python `none_dealloc`、exit -6失败。M0 Windows通过；实际只产生8/12份报告，Linux backend/integration未执行。原始报告与日志保留，不能用打印ok或断言数改称成功。
+
+原有WSL Python3.11.18/PySide6-shiboken6 6.12.0复现：没有MainWindow的QComboBox在缺失UserRole时反复currentData/itemData，使None引用计数随调用下降，正常解释器收尾可崩溃；有字符串userdata/currentText对照稳定。PlotPanel.current_dataset与ScanPage.current_metric默认无数据状态的1000次实际调用各下降999，但该有限调用实验正常退出，因此不能夸大为单击必崩。历史QObject析构-11另有旧证据，不能用旧栈替代本次原因。
+
+窄修通过widgets/qt_data.py读取项目使用的标准模型role map，以Python处理缺失键，保留rootModelIndex、modelColumn、0/False/空字符串等值；不改变数据、不补造None引用、不强退、不忽略退出码或锁定未经验证的依赖版本。用于已确认的绘图/扫描空数据路径、明确可能为空的初始化/选择入口及测试状态快照；没有将所有字符串选项机械替换。该接口不宣称解决任意自定义模型或嵌套QVariant的所有绑定问题。原导入assert AST保持一致；gui_qt_combo_data登记标准模型语义及空数据重复读取回归，清单增至134项。新冻结的平台和实窗验收仍须单独完成。

@@ -25,6 +25,7 @@ from g4usim_gui.core.project import G4USimProject
 from g4usim_gui.editors.source_physics_scoring_model import SOURCE_PRESETS
 from g4usim_gui.models.package_model import GeometrySettings, PathSettings
 from g4usim_gui.models.physics_model import PhysicsSettings
+from g4usim_gui.widgets.qt_data import combo_data
 from g4usim_gui.models.run_model import RunSettings
 from g4usim_gui.models.scoring_model import ScoringSettings
 from g4usim_gui.models.source_model import SourceSettings
@@ -301,7 +302,7 @@ class SetupMixin:
             self.reload_geometry()
 
     def _geometry_template_token(self) -> str:
-        return str(self.geometry_template.currentData() or "").strip()
+        return str(combo_data(self.geometry_template) or "").strip()
 
     def _set_geometry_template_token(self, token: str) -> None:
         normalized = token.strip() or "hierarchical"
