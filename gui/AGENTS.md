@@ -1,5 +1,12 @@
 # G4UniversalSim GUI Agent 开发约束
 
+2026-10-29 2C 只读有效配置页：`core/effective_config.py` 读取 `g4usim_effective_config_v1`，上限 4 MiB，
+拒绝重复 key/path、非有限值及无运行证据的 applied；缺失 requested/resolved 显示未知，显式 JSON null 保持 null。
+`widgets/effective_config_page.py` 仅加载与查看文件，不运行后端、不编辑项目、不推断模拟成功；失败加载保留旧快照并标陈旧。
+搜索同时匹配 canonical path 与解码对象名；语言切换按 canonical path 保留选择。当前数据是 Manager 子集，
+不能把 manager_accepted 译为已在 Geant4 生效。页序新增“有效配置”在场景与运行之间，共 9 页；导航、i18n、
+`smoke_main_window_ui.py` 必须同步。专项 `smoke_effective_config.py` 和真实导出 `scripts/test_effective_config_export.py`。
+
 2026-10-28 2B 场景页：`widgets/scenario_page.py` 是屏蔽/涂层场景的端到端入口，不是通用编辑器；字段来自
 `core/scenario_shielding.py` 的 `ShieldingSpec`（基础 7 + 高级 8），校验三层（字段解析 → `problems()` → `config_schema`），
 有任一问题不得生成或运行。页面不重复实现物理与文件格式：生成走 `scenarios/shielding_coating/scenario_model.py` 的纯函数

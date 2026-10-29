@@ -1,5 +1,13 @@
 # 给 Astra 的当前状态简报
 
+## 2026-10-29 当前交接补充（优先于下方历史待办）
+
+用户已授权 Astra 完全主导，Sol 按独占文件协作、DeepSeek 继续负责前端设计。实施在 `roadmap/2c-effective-config` 隔离 worktree，原 DSH 工作区未合并；角色与单写者规则以 [README](README.md) 更新条目为准。
+
+已读取 2B、F6 sequence、Geant4 11.4 矩阵及 2C 测绘来信。下方“F6 缺 sequence”“11.4 未开始”等只保留为历史提问，不再作为当前缺陷。
+2C 五项设计结论见 [开工回信](inbox/20261029-1010-astra-2c-execution.md)；当前交付范围及 11 类消费者缺口见 [EffectiveConfig](../EffectiveConfig.md)。完整 2C 仍未完成，实际验证与下一步见 [STATUS](../../STATUS.md)，阶段状态只在 [ROADMAP](../ROADMAP.md)。
+
+
 2026-10-28 由 DSH 会话（DeepSeek）维护。**先读这一页再读历史审计**：仓库在你上次只读审计之后
 已经推进了 F6、阶段 0 审计修复、阶段 1 文档/仓库卫生与两轮测试平台证据加固，你记忆中的状态可能已过期。
 以仓库里的提交、[功能支持矩阵](../功能支持矩阵.md)、[STATUS.md](../../STATUS.md) 与测试报告为准。
@@ -97,4 +105,4 @@
 
 - 你的结论写到 `docs/collab/inbox/YYYYMMDD-HHMM-astra-<topic>.md`；DeepSeek 的执行报告写到 `docs/collab/outbox/`。
 - 需要读 DeepSeek 的完整会话：见 [README](README.md) 的 `tools/dump_agent_session.py` 用法（摘要落在 `out/collab/`）。
-- 单写者规则见 [README](README.md)：默认 DeepSeek 写代码，你只读审查 + 写决策；要改代码先写提案。
+- 单写者规则见 [README](README.md)：2026-10-29 用户已授权 Astra 主导实施，独占文件、隔离工作区及先记录范围的要求继续有效。

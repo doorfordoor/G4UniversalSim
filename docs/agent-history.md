@@ -300,3 +300,13 @@ CMake 需要显式 `-DEXPAT_INCLUDE_DIR=$PREFIX/include -DEXPAT_LIBRARY=$PREFIX/
 **CI 矩阵**：`.github/workflows/linux-geant4.yml` 加 `strategy.matrix.geant4: ['11.3.2', '11.4.3']`，job 名带版本、`G4_PREFIX`/`REPORT_ROOT` 每版本独立、artifact 名带版本；create env 步骤固定装 `expat zlib freetype`，只有 11.4 leg 的 configure 传六个 `-D*` 参数。GDML 期望值改为问构建出的可执行文件 `--capabilities`（`templates` 里是否有 `gdml` 且 `runtime`），不再 grep `Geant4Config.cmake`（该文件写法跨版本会变）。
 
 **边界**：11.2 未测；Windows + 11.4 未验证（本机 Windows 只有 11.3.2）；11.4 下的真实桌面 GUI、ROOT/uproot、打包流程未验证；不能把 11.3 的物理结论直接搬到 11.4。
+
+
+## 2026-10-29 2C 配置阶段快照与只读查看器（子集）
+
+- **契约**：`include/Config/EffectiveConfig.hh` / `src/Config/EffectiveConfig.cc` 提供 C++17 类型化值、JSON Pointer 字段/对象路径、来源链、事务 revision 与不可变快照。拒绝非有限值、非法路径、重复事务字段及不充分的 applied 证据；失败不发布候选。requested/resolved 各自可以缺失，与显式 null 分开。revision 不是 Git SHA，序列化稳定不等于随机运行逐位复现。
+- **真实接线**：`SimulationManager::ExportEffectiveConfigJson()` 在 Configure + 显式 CLI 覆盖后读取 Manager，仅覆盖启动/几何标量、物理参考、普通单源粒子/mono 能量以及少量计分开关。来源只保留获胜项，未记录输入内容哈希；命名源和相空间源省略单源粒子/能量，非 mono 分布省略缓存 mono 能量。来源缺失不能写成用户请求或 default 的假证据。
+- **入口**：`main.cc` 的 `--dump-effective-config <新 JSON 文件|->` 复用真实 Configure 与递归 macro preflight，随后退出；不执行宏、不初始化内核、不写模拟目录。显式导出只允许独占创建，不覆盖已存在文件、输入 INI/macro 或它们的硬链接；写入失败非零退出，新文件可能不完整。与其他检查模式、help、UI、dry-run 互斥。原有 `--inspect-run` 与 `effective_*` 摘要接口不变。
+- **GUI**：最多读取 4 MiB；拒绝重复 JSON key/path、无效 revision、非有限值和无相应证据的 applied。整个候选验证成功后才替换；失败保留原快照并显示陈旧。原始 JSON 保留作核对，路径和解码对象名都可搜索，语言切换保留选择。页面不启动 QProcess、不生成配置、不重算或改变物理，不把进度或 Manager 接受当成成功。
+- **反例**：已有输出/输入/硬链接目标、缺父目录、坏宏、命名源、相空间源、非 mono 能量、损坏 JSON、重复字段、未知与 null、对象名带斜杠、语言切换。`scripts/test_effective_config_export.py` 用真实后端且读 G4USIM_EXE，并将真实输出交给 GUI parser；`gui/smoke_tests/smoke_effective_config.py` 测页面和读取器；`scripts/test_effective_config_model.py` 需 C++17 编译器，独立验证事务与不可变性。模型测试是独立附加证据，不混入 Python-only static profile。
+- **未交付**：运行开始/最终化接线、所有模块/对象消费者、完整来源链与输入哈希、内核/worker 应用证据、off/auto/on、GUI 快照差异。数据模型能表示三个阶段不等于真实接入三个阶段；2C 保持进行中，验证报告入口以 STATUS 为准。

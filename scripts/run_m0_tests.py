@@ -61,6 +61,8 @@ CASES = (
     Case("writer_boundary", "scripts/test_writer_boundary.py", "static"),
     Case("shielding_scenario_model", "scripts/test_shielding_scenario_model.py", "static"),
     Case("shielding_analysis", "scripts/test_shielding_analysis.py", "static"),
+    Case("effective_config_export", "scripts/test_effective_config_export.py", "backend", ("exe",)),
+    Case("effective_config_viewer", "gui/smoke_tests/smoke_effective_config.py", "gui", ("qt",)),
     Case("merge_histograms", "scripts/test_merge_histograms.py", "backend", ("merge",)),
     Case("gui_parsers", "gui/smoke_tests/smoke_parsers.py", "gui", ("qt",)),
     Case("gui_materials", "gui/smoke_tests/smoke_materials_editor.py", "gui", ("qt",)),

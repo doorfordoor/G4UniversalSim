@@ -27,6 +27,7 @@
 
 #include <cstdlib>
 #include <cctype>
+#include <cstdio>
 #include <exception>
 #include <functional>
 #include <filesystem>
@@ -190,6 +191,7 @@ struct CommandLineOptions {
   bool checkGeant4Data = false;
   bool inspectMacro = false;
   bool inspectRun = false;
+  std::string dumpEffectiveConfig;
 };
 
 void PrintUsage(const char* program) {
@@ -226,6 +228,7 @@ void PrintUsage(const char* program) {
       << "                      folder into geant4-data.txt next to the executable).\n\n"
       << "  --inspect-macro     Print recursive macro preflight as JSON; requires --macro; does not evaluate --config.\n\n"
       << "  --inspect-run       Configure and preflight inputs as JSON without initialization or execution.\n\n"
+      << "  --dump-effective-config <path|->  Export configured Manager subset; preflight only, no execution.\n\n"
       << "If the final configuration has no macro/UI and is not dry-run, "
          "usage is shown.\n";
 }
@@ -294,6 +297,11 @@ CommandLineOptions ParseCommandLine(int argc, char** argv) {
       options.inspectMacro = true;
     } else if (arg == "--inspect-run") {
       options.inspectRun = true;
+    } else if (arg == "--dump-effective-config") {
+      if (!options.dumpEffectiveConfig.empty()) throw std::runtime_error("Duplicate --dump-effective-config");
+      options.dumpEffectiveConfig = RequireNonEmptyValue(i, argc, argv, arg);
+      if (options.dumpEffectiveConfig != "-" && options.dumpEffectiveConfig.front() == '-')
+        throw std::runtime_error("--dump-effective-config requires <path|->");
     } else if (arg == "--config" || arg == "-c") {
       options.configFile = RequireNonEmptyValue(i, argc, argv, arg);
     } else if (arg == "--macro" || arg == "-m") {
@@ -331,6 +339,10 @@ CommandLineOptions ParseCommandLine(int argc, char** argv) {
   }
   if (!options.uiSession.empty() && !options.interactive) {
     throw std::runtime_error("--ui-session requires --ui");
+  }
+  if (!options.dumpEffectiveConfig.empty() && (options.inspectRun || options.inspectMacro ||
+      options.capabilities || options.checkGeant4Data || options.help || options.interactive || options.dryRun)) {
+    throw std::runtime_error("--dump-effective-config is mutually exclusive with inspection, help, capabilities, data checks, --ui and --dry-run");
   }
   return options;
 }
@@ -559,7 +571,7 @@ int main(int argc, char** argv) {
     cliOverrides.seed = options.seed;
     sim.SetCommandLineOverrides(cliOverrides);
 
-    if (options.inspectRun) {
+    if (options.inspectRun || !options.dumpEffectiveConfig.empty()) {
       try {
         std::ostringstream configurationLog;
         {
@@ -569,7 +581,7 @@ int main(int argc, char** argv) {
         std::cerr << configurationLog.str();
         MacroPreflightResult plan;
         const auto& context = sim.GetContext();
-        if (!context.IsDryRun() && context.HasMacroFile()) {
+        if ((!context.IsDryRun() || !options.dumpEffectiveConfig.empty()) && context.HasMacroFile()) {
           MacroPreflightLocks locks;
           locks.outputDir = cliOverrides.outputDir.has_value();
           locks.numThreads = cliOverrides.numThreads.has_value();
@@ -577,7 +589,26 @@ int main(int argc, char** argv) {
           locks.checkOverlaps = cliOverrides.checkOverlaps.has_value();
           plan = PreflightMacro(context.GetMacroFile(), locks);
         }
-        WriteRunPlan(sim, options, plan, std::cout);
+        if (options.dumpEffectiveConfig.empty()) {
+          WriteRunPlan(sim, options, plan, std::cout);
+        } else {
+          const std::string json = sim.ExportEffectiveConfigJson() + '\n';
+          if (options.dumpEffectiveConfig == "-") {
+            std::cout << json;
+            if (!std::cout) throw std::runtime_error("EffectiveConfig stdout write failed");
+          } else {
+            const std::filesystem::path destination(options.dumpEffectiveConfig);
+#ifdef _WIN32
+            std::FILE* output = _wfopen(destination.c_str(), L"wbx");
+#else
+            std::FILE* output = std::fopen(destination.c_str(), "wbx");
+#endif
+            if (!output) throw std::runtime_error("Cannot create new EffectiveConfig export (target must not exist): " + options.dumpEffectiveConfig);
+            const bool written = std::fwrite(json.data(), 1, json.size(), output) == json.size();
+            const bool closed = std::fclose(output) == 0;
+            if (!written || !closed) throw std::runtime_error("EffectiveConfig export write failed: " + options.dumpEffectiveConfig);
+          }
+        }
         return EXIT_SUCCESS;
       } catch (const std::exception& error) {
         std::cerr << "G4UniversalSim run inspection failed: " << error.what() << '\n';

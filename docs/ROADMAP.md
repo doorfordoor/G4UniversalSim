@@ -302,3 +302,7 @@ H4–H8 if the user's applications favour some of them.
 - 2026-10-22: Phase B4 detector response pack done, completing Phase B: 7 detector_response cases within tolerance; Geant4 option4 thin-Si MPV found +2.7 % (300 um, MIP) to ~+5 % (100 um) above the PDG LVB formula.
 - 2026-10-22: Phase B3 semiconductor pack done: SR-NIEL Si tables obtained from the public calculators (user-approved), device generator/analysis, 7 device_dose cases within tolerance (TID vs PSTAR, DDD vs SR-NIEL).
 - 2026-10-22: Phase B2 shielding/coating pack done: generator, analysis, displacement damage scorer (exact against a hits recomputation), and 11 Al/Si range/residual-energy cases within tolerance of the user-supplied NIST PSTAR/ESTAR tables.
+
+- 2026-10-29：2C 在隔离 worktree 启动，Astra 主导、Sol 实现、DeepSeek API 参与前端设计。独立配置模型、configured 导出与只读查看器开发中；全模块来源/运行应用证据/三态开关未完成，保持进行中。契约见 collab/inbox/20261029-1010-astra-2c-execution.md。
+
+- 2026-10-29：2C 配置阶段基础链路在隔离分支完成本机验收：统一平台 89 项全过、117149 条断言，独立模型另 24 条；报告见 [2C 子集证据](verification/2c-configured-20261029/README.md)。类型化模型、配置导出、只读 GUI 已接通；全模块来源/输入哈希、运行开始/最终化、off/auto/on 未完成，2C 保持进行中。未将新代码合入原 DSH 工作区，未声称新代码 Linux/CI 已验证。

@@ -2,6 +2,7 @@
 
 #include "Actions/ActionInitialization.hh"
 #include "Config/ConfigManager.hh"
+#include "Config/EffectiveConfig.hh"
 #include "Core/AppMessenger.hh"
 #include "Detector/DetectorConstruction.hh"
 #include "Geometry/GeometryManager.hh"
@@ -1307,6 +1308,90 @@ void SimulationManager::WriteBaseRunSummary()
     summary.Set("scoring_scorer_count", static_cast<int>(scoringManager_ ? scoringManager_->GetScorerNames().size() : 0));
     summary.SetBool("initialized", initialized_);
     summary.AddMessage("Core initialization completed");
+}
+
+std::string SimulationManager::ExportEffectiveConfigJson() const
+{
+    using namespace effective_config;
+    if (!configured_) throw std::logic_error("EffectiveConfig export requires successful Configure");
+    Registry registry;
+    std::vector<Field> fields;
+    const auto iniFields = configLoaded_ ? configManager_->GetFields() : std::vector<IniFieldInfo>{};
+    const auto add = [&](const std::string& module, const std::string& key,
+                         const std::string& legacyKey, Value resolved, const std::string& unit = "") {
+        Field field;
+        field.requested_known = false;
+        field.path = FieldPath(module, key);
+        field.resolved = std::move(resolved);
+        field.unit = unit;
+        field.evidence_level = EvidenceLevel::ManagerAccepted;
+        field.evidence_source = "SimulationManager::Configure live Manager readback";
+        field.reason = "Manager accepted; kernel not initialized. Original request unavailable; requested omitted.";
+        const auto found = effectiveValueOrigins_.find(legacyKey);
+        if (found != effectiveValueOrigins_.end()) {
+            const auto& old = found->second;
+            Origin origin;
+            origin.kind = old.kind; origin.file = old.file;
+            origin.line = static_cast<std::uint64_t>(old.line);
+            origin.section = old.section; origin.key = old.key;
+            if (old.kind == "main_ini") {
+                for (const auto& input : iniFields) {
+                    if (static_cast<int>(input.lineNumber) == old.line) {
+                        origin.raw = input.value;
+                        field.requested = input.value;
+                        field.requested_known = true;
+                        field.reason = "Manager accepted; kernel not initialized. Requested is raw INI text; origin chain contains only the winning source.";
+                        break;
+                    }
+                }
+            } else if (old.kind == "cli") {
+                // These options are typed at their real CLI parser, before Configure.
+                if (legacyKey == "output_dir" && commandLineOverrides_.outputDir) field.requested = *commandLineOverrides_.outputDir;
+                else if (legacyKey == "run_name" && commandLineOverrides_.runName) field.requested = *commandLineOverrides_.runName;
+                else if (legacyKey == "macro_file" && commandLineOverrides_.macroFile) field.requested = *commandLineOverrides_.macroFile;
+                else if (legacyKey == "threads" && commandLineOverrides_.numThreads) field.requested = *commandLineOverrides_.numThreads;
+                else if (legacyKey == "seed" && commandLineOverrides_.seed) field.requested = std::to_string(*commandLineOverrides_.seed);
+                else if (legacyKey == "check_overlaps" && commandLineOverrides_.checkOverlaps) field.requested = *commandLineOverrides_.checkOverlaps;
+                field.requested_known = true;
+                field.reason = "Manager accepted; kernel not initialized. Winning CLI request retained; earlier override chain unavailable.";
+            }
+            field.origins.push_back(std::move(origin));
+        } else {
+            field.reason += " Origin is untracked in this subset.";
+        }
+        fields.push_back(std::move(field));
+    };
+    add("output", "dir", "output_dir", outputManager_->GetOutputDir());
+    add("run", "name", "run_name", context_.GetRunName());
+    add("run", "threads", "threads", context_.GetNumThreads());
+    add("run", "seed", "seed", context_.HasSeed() ? Value(std::to_string(context_.GetSeed())) : Value());
+    add("run", "macro", "macro_file", context_.GetMacroFile());
+    add("geometry", "check_overlaps", "check_overlaps", geometryManager_->GetCheckOverlaps());
+    add("geometry", "template", "geometry_template", geometryManager_->GetTemplateName());
+    add("geometry", "config", "geometry_config", geometryManager_->GetGeometryConfigFile());
+    add("geometry", "default_world_material", "geometry_default_world_material", geometryManager_->GetDefaultWorldMaterial());
+    add("physics", "reference", "physics_reference", physicsManager_->GetReferenceList());
+    bool namedSource = false;
+    for (const auto& section : configManager_->GetSections())
+        if (section.rfind("source.", 0) == 0) namedSource = true;
+    if (!namedSource && !sourceManager_->UsesPhaseSpace()) {
+        add("source", "particle", "source_particle", sourceManager_->GetParticleName());
+        const auto& sources = sourceManager_->GetSources();
+        if (sources.size() == 1 && sources.front().energyType == "mono")
+            add("source", "energy", "source_energy", sourceManager_->GetMonoEnergy() / CLHEP::MeV, "MeV");
+    }
+    add("scoring", "enabled", "scoring_enabled", scoringManager_->IsEnabled());
+    add("scoring", "event_edep", "scoring_event_edep_enabled", scoringManager_->IsEventEdepOutputEnabled());
+    add("biasing", "enabled", "biasing_enabled", biasingManager_->IsEnabled());
+    registry.Commit(std::move(fields));
+    const std::string snapshot = registry.Capture("configure").ToJson();
+    // Add explicit export coverage metadata to the same snapshot schema consumed
+    // by the read-only viewer. No kernel snapshot or macro outcome is fabricated.
+    return "{\"scope\":\"manager_state_subset\",\"coverage\":\"startup_geometry_source_and_physics_reference_plus_unattributed_flags\","
+           "\"origin_chain_coverage\":\"winning_source_only\",\"input_hash_coverage\":\"not_recorded\","
+           "\"macro_execution_status\":\"not_executed\",\"execution_performed\":false,"
+           "\"limitations\":[\"Not complete consumer coverage\",\"Legacy single-source Manager cache only; named and phase-space source fields and non-mono energy omitted\","
+           "\"Missing original requests are omitted and explained in field reason\",\"No Geant4 application evidence\"]," + snapshot.substr(1);
 }
 
 void SimulationManager::WriteFinalConfigSnapshot(const std::string& macroStatus)

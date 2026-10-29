@@ -87,6 +87,12 @@ class ShellMixin:
                 "scenario",
             ),
             (
+                self.effective_config_page,
+                self.tr("Effective Configuration"),
+                self.tr("Inspect backend configuration snapshots and their evidence without editing them."),
+                "configuration",
+            ),
+            (
                 self.run_page,
                 self.tr("Run Console"),
                 self.tr("Validate the launch command and monitor backend execution."),
@@ -292,7 +298,7 @@ class ShellMixin:
         apply_theme(app, mode)
         self._refresh_icons()
         # matplotlib figures, icons and other custom-painted views keep their colours until redrawn
-        for page in (self.start_page, self.config_builder_page, self.output_page, self.scenario_page, self.scan_page):
+        for page in (self.start_page, self.config_builder_page, self.output_page, self.scenario_page, self.effective_config_page, self.scan_page):
             refresh_theme = getattr(page, "refresh_theme", None)
             if refresh_theme is not None:
                 refresh_theme()
@@ -308,7 +314,7 @@ class ShellMixin:
         app.setProperty("languageCode", language)
         apply_language(self, language)
         for page in (self.start_page, self.project_page, self.config_builder_page, self.run_page, self.output_page,
-                     self.scenario_page, self.scan_page):
+                     self.scenario_page, self.effective_config_page, self.scan_page):
             refresh_language = getattr(page, "refresh_language", None)
             if refresh_language is not None:
                 refresh_language()

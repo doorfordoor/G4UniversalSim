@@ -10,6 +10,7 @@ from g4usim_gui.history.run_history_store import load_state, save_state
 from g4usim_gui.preview3d.backend_geometry_controller import BackendGeometryController
 from g4usim_gui.widgets.config_builder_page import ConfigBuilderPage
 from g4usim_gui.widgets.output_page import OutputPage
+from g4usim_gui.widgets.effective_config_page import EffectiveConfigPage
 from g4usim_gui.widgets.project_page import ProjectPage
 from g4usim_gui.widgets.run_page import RunPage
 from g4usim_gui.widgets.run_history_page import RunHistoryPage
@@ -51,6 +52,7 @@ class MainWindow(ShellMixin, ProjectMixin, RunMixin, ContentMixin, QMainWindow):
         self.output_page = OutputPage()
         self.run_history_page = RunHistoryPage()
         self.scenario_page = ScenarioPage()
+        self.effective_config_page = EffectiveConfigPage()
         self.scan_page = ScanPage()
         self.scan_page.set_base_provider(self.scan_base)
 

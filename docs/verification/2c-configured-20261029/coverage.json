@@ -1,0 +1,43 @@
+{
+  "schema": "g4usim_evidence_set_v1",
+  "scope": "2C_configure_subset_not_complete_phase",
+  "cases": 89,
+  "counts": {
+    "backend": 36,
+    "static": 10,
+    "gui": 28,
+    "integration": 15
+  },
+  "assertions_executed_total": 117149,
+  "additional_standalone_model_assertions": 24,
+  "reports": [
+    {
+      "path": "backend/report.json",
+      "sha256": "71b4f36d6edf06ef43c4c44314c354fac066094c1382f5508eef70b275f3de27",
+      "cases": 36,
+      "assertions": 110404
+    },
+    {
+      "path": "ui-integration/report.json",
+      "sha256": "9b013f930f150a3a69732338b8a7678cd787531649c2ad9f022b7210dab593e9",
+      "cases": 53,
+      "assertions": 6745
+    }
+  ],
+  "source_fingerprint": "00900102950df94a4a31b61ab7f9c3f9b6ac3ca7e5d2074b8f2e0bcb09d1456e",
+  "tests_content_fingerprint": "14191c3262b0d81614fb542f8bcea8313989124fcc539da590b73766e8d44b2c",
+  "backend_sha256": "2f0bb10490078360a4fcdb13f624ac3237a9521f5a6cd2c262d8486023fe15d6",
+  "backend_bytes": 1785856,
+  "backend_build_identity": {
+    "build_configuration": "Release",
+    "compiler_id": "MSVC",
+    "compiler_version": "19.51.36246.0",
+    "geant4_version_number": 1132,
+    "multithreaded": true
+  },
+  "known_environment": {
+    "G4USIM_EXPECT_GDML": "1",
+    "G4USIM_GEANT4_DATA": "D:/ProgramFiles/Geant4/share/Geant4/data"
+  },
+  "visual_scope": "offscreen Qt render of real backend JSON; not desktop or high-DPI acceptance"
+}

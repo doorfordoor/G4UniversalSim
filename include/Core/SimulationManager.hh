@@ -88,6 +88,8 @@ public:
     void Configure();
     void BuildManagers();
     void PrintSummary() const;
+    // Read-only configured Manager subset; no kernel/application claim.
+    std::string ExportEffectiveConfigJson() const;
 
     bool IsConfigured() const;
     bool IsInitialized() const;

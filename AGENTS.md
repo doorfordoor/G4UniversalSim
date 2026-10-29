@@ -4,6 +4,11 @@
 
 ## 0. 条目索引与历史全文
 
+- 2026-10-29 2C 配置快照子集：`Config/EffectiveConfig` 区分缺失值与显式 null，事务拒绝不得改变 revision；
+  `--dump-effective-config <新文件|->` 只 Configure + preflight，不执行 macro/事件、不创建运行输出目录，拒绝覆盖已有文件（含硬链接）。
+  当前仅配置阶段 Manager 子集；命名源/相空间源不导出旧单源缓存，非 mono 不导出 mono energy；禁止据此宣称完整 2C 或内核已应用。
+  回归 `test_effective_config_model.py`、`test_effective_config_export.py`、`smoke_effective_config.py`；全文见 `docs/agent-history.md`。
+
 2026-10-19 → 2026-10-27 的 29 条实施契约全文（含文件路径、行号、反例与回归入口）在 [docs/agent-history.md](docs/agent-history.md)。下表只列**仍然有效的操作规则**；改动相关模块前必须先读对应历史条目全文，只读索引不足以动手。新增条目：全文追加到 `docs/agent-history.md`，本表加一行，不要再在本文件堆长段落。
 
 - 2026-10-28 Geant4 11.4 支持与版本矩阵：`src/Core/Geant4DataLocator.cc` 的数据集表按 `G4VERSION_NUMBER` 分段，新增
