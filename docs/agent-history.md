@@ -431,3 +431,9 @@ Geant4 `ApplyCommand()` 返回 0 不足以确认命令成功；沿用材料命�
 ### 2026-10-30 E6 自动验收完成，实窗待验
 
 验收代码a779634：Windows134/134、42815个v3入口，2C基线40628逐例/总数门禁通过；真实Linux40931653660两版本各134、M040931654093两平台各58，12份CI严格门禁、4官方ZIP摘要与384日志SHA通过。三轮原件按字节归档；2711文件及13份release门禁经不同写者复核。Linux git_dirty=true的依赖路径与未知完整状态边界保留，不能冒称整个检出clean。见[E6自动验收报告](verification/e6-full-20261030/README.md)及[独立复核](verification/e6-full-20261030/independent/README.md)。实窗因锁屏待解锁，stage_complete=false，未合主线；原始报告不可用后续证据覆盖。
+
+### 2026-10-30 E6 实窗补验与阶段关闭
+
+用户解锁后，在838e2e3文档检出上执行a779634同产品/测试：Windows原生12个状态、20张截图由主审实际查看；迁移取消/新副本/拒绝、当前包snapshot恢复与再生成、六组合法duplicate最终命令及1025拒绝，另有真实Inspect→Run的1轮2线程2/2事件。合成Inspect/截获命令仅验证命令构造，独立真实运行另有正常退出0、GUI success、新摘要和metadata。普通Open/Recent/Snapshot越界及普通Open拒绝包envelope的四个真实模态均拒绝并保持完整状态；Open为critical、Recent/Snapshot为warning。主审原生输入负责取消及切换/关闭，其他步骤为程序化Qt，不冒称真人点击。
+
+独立155项证据检查通过，58原资源/13专项源码/完整双指纹/exe身份不变；135份新证据4749003字节逐一SHA核对，旧2711原件及旧README/manifest保持。首个GUI host因一次性launcher未保留退出码记unknown，仅closed+进程消失；补充GUI host执行会话与app.exec均0，不能追改前者。不同写者检查及实际窗口观察共同支持阶段关闭，不新增Q2物理、J2编辑、K1任意资源导出或全DPI/原生Linux桌面承诺。见[E6最终报告](verification/e6-visible-20261030/README.md)；合入事实以机器状态与集成收据为准。

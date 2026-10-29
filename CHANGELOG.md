@@ -7,9 +7,9 @@ Short, user-facing record of notable changes. Detailed support status lives in
 
 ## Unreleased
 
-### E6 配置兼容（2026-10-30 自动验收通过，实窗待验）
+### E6 配置兼容（2026-10-30 已验收，未发布）
 
-代码 `a779634`：Windows134/134、真实Linux Geant4 11.3.2/11.4.3各134及M0双平台各58通过；[完整证据与限制](docs/verification/e6-full-20261030/README.md)。实窗等待解锁，阶段尚未关闭或合入主线。
+代码 `a779634`：Windows134/134、真实Linux Geant4 11.3.2/11.4.3各134及M0双平台各58通过；Windows实窗12状态与真实2/2事件补验通过，阶段已关闭；[完整证据、集成状态与限制](docs/verification/e6-visible-20261030/README.md)。
 
 - 补齐场与偏置的schema登记，现有394项；新增主INI版本标记，缺省旧文件继续兼容，非法或未来版本提前拒绝。
 - 提供主配置、几何与项目的迁移预览及独占新副本，保留源文件；修复导入时整数限幅、显式编辑字段重置和重复诊断。

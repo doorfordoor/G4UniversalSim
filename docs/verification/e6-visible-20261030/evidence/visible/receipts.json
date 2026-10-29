@@ -1,0 +1,373 @@
+[
+  {
+    "stage": "migration-preview",
+    "time": 1793316525.5047634,
+    "pid": 10188,
+    "title": "E6 Windows acceptance a779634",
+    "programmatic_qt_test": true,
+    "native_visibility": "root must observe independently",
+    "version": "项目 JSON：输入版本 5 → 输出版本 6",
+    "boundary": "仅检查文件格式；尚未执行模拟，也未验证物理正确性。"
+  },
+  {
+    "stage": "migration-refusals",
+    "time": 1793316628.9788125,
+    "pid": 10188,
+    "title": "E6 Windows acceptance a779634",
+    "programmatic_qt_test": true,
+    "native_visibility": "root must observe independently",
+    "results": [
+      "迁移副本写入失败：Migration destination already exists: C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-acceptance-a779634\\resources\\migration\\legacy-v5.json",
+      "迁移副本写入失败：Migration destination already exists: C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-acceptance-a779634\\resources\\migration\\occupied-target.json",
+      "迁移副本写入失败：Migration destination already exists: C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-acceptance-a779634\\resources\\migration\\source-hardlink.json"
+    ],
+    "diagnostics": "已阻断：Expecting property name enclosed in double quotes: line 1 column 14 (char 13)"
+  },
+  {
+    "stage": "snapshot-restored",
+    "time": 1793316648.7447343,
+    "pid": 10188,
+    "title": "E6 Windows acceptance a779634",
+    "programmatic_qt_test": true,
+    "native_visibility": "root must observe independently",
+    "notes": "已恢复运行包内当前的材料、几何及快照记录的编辑参数。请重新校验并生成新的运行包；未恢复手改的主配置/宏文件、未输出的编辑草稿或历史运行成功状态。\n\n运行包：C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-acceptance-a779634\\resources\\snapshot\\runs\\20261030_023830_snapshot_restore\n\n已恢复当前运行包内的材料、几何文件，以及快照记录的运行、源、物理和计分编辑参数；运行前须重新校验并生成新的运行包。\n未恢复未输出的禁用行或编辑草稿；材料摘要只记录组分数量，不能用来复原完整配方草稿。\n未恢复或核验当前主配置/宏文件的手工改动、运行时最终配置或历史运行成功状态。\n旧快照未记录原始资源内容哈希；当前输入的哈希不能证明其与历史运行使用的字节相同。",
+    "materials": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-acceptance-a779634\\resources\\snapshot\\runs\\20261030_023830_snapshot_restore\\config\\materials\\material.ini",
+    "geometry": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-acceptance-a779634\\resources\\snapshot\\runs\\20261030_023830_snapshot_restore\\config\\geometry\\geometry.ini"
+  },
+  {
+    "stage": "snapshot-regenerated",
+    "time": 1793316705.059172,
+    "pid": 10188,
+    "title": "E6 Windows acceptance a779634",
+    "programmatic_qt_test": true,
+    "native_visibility": "root must observe independently",
+    "package": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-20261030\\runs\\20261030_073144_snapshot_restore"
+  },
+  {
+    "stage": "duplicate-seed43",
+    "time": 1793316730.936522,
+    "pid": 10188,
+    "title": "E6 Windows acceptance a779634",
+    "programmatic_qt_test": true,
+    "native_visibility": "root must observe independently",
+    "command": [
+      [
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-e6\\Release\\G4UniversalSim.exe",
+        "--config",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-20261030\\runs\\20261030_073210_writer_run_copy\\config\\main.ini",
+        "--macro",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-20261030\\runs\\20261030_073210_writer_run_copy\\macros\\run.mac",
+        "--output",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-20261030\\runs\\20261030_073210_writer_run_copy\\output",
+        "--threads",
+        "2",
+        "--seed",
+        "43",
+        "--run-name",
+        "writer_run"
+      ]
+    ],
+    "inspection": [
+      [
+        "--inspect-run",
+        "--config",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-20261030\\runs\\20261030_073210_writer_run_copy\\config\\main.ini",
+        "--macro",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-20261030\\runs\\20261030_073210_writer_run_copy\\macros\\run.mac",
+        "--output",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-20261030\\runs\\20261030_073210_writer_run_copy\\output",
+        "--threads",
+        "2",
+        "--seed",
+        "43",
+        "--run-name",
+        "writer_run"
+      ]
+    ],
+    "boxes": [],
+    "scope": "synthetic Inspect; intercepted final Run command; no simulation"
+  },
+  {
+    "stage": "duplicate-seed_omitted",
+    "time": 1793316732.144693,
+    "pid": 10188,
+    "title": "E6 Windows acceptance a779634",
+    "programmatic_qt_test": true,
+    "native_visibility": "root must observe independently",
+    "command": [
+      [
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-e6\\Release\\G4UniversalSim.exe",
+        "--config",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-20261030\\runs\\20261030_073211_writer_run_copy\\config\\main.ini",
+        "--macro",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-20261030\\runs\\20261030_073211_writer_run_copy\\macros\\run.mac",
+        "--output",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-20261030\\runs\\20261030_073211_writer_run_copy\\output",
+        "--threads",
+        "2",
+        "--run-name",
+        "writer_run"
+      ]
+    ],
+    "inspection": [
+      [
+        "--inspect-run",
+        "--config",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-20261030\\runs\\20261030_073211_writer_run_copy\\config\\main.ini",
+        "--macro",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-20261030\\runs\\20261030_073211_writer_run_copy\\macros\\run.mac",
+        "--output",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-20261030\\runs\\20261030_073211_writer_run_copy\\output",
+        "--threads",
+        "2",
+        "--run-name",
+        "writer_run"
+      ]
+    ],
+    "boxes": [],
+    "scope": "synthetic Inspect; intercepted final Run command; no simulation"
+  },
+  {
+    "stage": "duplicate-seed_zero",
+    "time": 1793316733.3854365,
+    "pid": 10188,
+    "title": "E6 Windows acceptance a779634",
+    "programmatic_qt_test": true,
+    "native_visibility": "root must observe independently",
+    "command": [
+      [
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-e6\\Release\\G4UniversalSim.exe",
+        "--config",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-20261030\\runs\\20261030_073213_writer_run_copy\\config\\main.ini",
+        "--macro",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-20261030\\runs\\20261030_073213_writer_run_copy\\macros\\run.mac",
+        "--output",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-20261030\\runs\\20261030_073213_writer_run_copy\\output",
+        "--threads",
+        "2",
+        "--seed",
+        "0",
+        "--run-name",
+        "writer_run"
+      ]
+    ],
+    "inspection": [
+      [
+        "--inspect-run",
+        "--config",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-20261030\\runs\\20261030_073213_writer_run_copy\\config\\main.ini",
+        "--macro",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-20261030\\runs\\20261030_073213_writer_run_copy\\macros\\run.mac",
+        "--output",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-20261030\\runs\\20261030_073213_writer_run_copy\\output",
+        "--threads",
+        "2",
+        "--seed",
+        "0",
+        "--run-name",
+        "writer_run"
+      ]
+    ],
+    "boxes": [],
+    "scope": "synthetic Inspect; intercepted final Run command; no simulation"
+  },
+  {
+    "stage": "duplicate-stale_snapshot",
+    "time": 1793316734.6382535,
+    "pid": 10188,
+    "title": "E6 Windows acceptance a779634",
+    "programmatic_qt_test": true,
+    "native_visibility": "root must observe independently",
+    "command": [
+      [
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-e6\\Release\\G4UniversalSim.exe",
+        "--config",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-20261030\\runs\\20261030_073214_writer_run_copy\\config\\main.ini",
+        "--macro",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-20261030\\runs\\20261030_073214_writer_run_copy\\macros\\run.mac",
+        "--output",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-20261030\\runs\\20261030_073214_writer_run_copy\\output",
+        "--threads",
+        "3",
+        "--seed",
+        "83",
+        "--run-name",
+        "actual_main_run"
+      ]
+    ],
+    "inspection": [
+      [
+        "--inspect-run",
+        "--config",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-20261030\\runs\\20261030_073214_writer_run_copy\\config\\main.ini",
+        "--macro",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-20261030\\runs\\20261030_073214_writer_run_copy\\macros\\run.mac",
+        "--output",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-20261030\\runs\\20261030_073214_writer_run_copy\\output",
+        "--threads",
+        "3",
+        "--seed",
+        "83",
+        "--run-name",
+        "actual_main_run"
+      ]
+    ],
+    "boxes": [],
+    "scope": "synthetic Inspect; intercepted final Run command; no simulation"
+  },
+  {
+    "stage": "duplicate-unicode_name",
+    "time": 1793316735.8809536,
+    "pid": 10188,
+    "title": "E6 Windows acceptance a779634",
+    "programmatic_qt_test": true,
+    "native_visibility": "root must observe independently",
+    "command": [
+      [
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-e6\\Release\\G4UniversalSim.exe",
+        "--config",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-20261030\\runs\\20261030_073215_writer_run_copy\\config\\main.ini",
+        "--macro",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-20261030\\runs\\20261030_073215_writer_run_copy\\macros\\run.mac",
+        "--output",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-20261030\\runs\\20261030_073215_writer_run_copy\\output",
+        "--threads",
+        "2",
+        "--seed",
+        "43",
+        "--run-name",
+        "Alpha 名称　Tail "
+      ]
+    ],
+    "inspection": [
+      [
+        "--inspect-run",
+        "--config",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-20261030\\runs\\20261030_073215_writer_run_copy\\config\\main.ini",
+        "--macro",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-20261030\\runs\\20261030_073215_writer_run_copy\\macros\\run.mac",
+        "--output",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-20261030\\runs\\20261030_073215_writer_run_copy\\output",
+        "--threads",
+        "2",
+        "--seed",
+        "43",
+        "--run-name",
+        "Alpha 名称　Tail "
+      ]
+    ],
+    "boxes": [],
+    "scope": "synthetic Inspect; intercepted final Run command; no simulation"
+  },
+  {
+    "stage": "duplicate-ascii_name",
+    "time": 1793316737.1285486,
+    "pid": 10188,
+    "title": "E6 Windows acceptance a779634",
+    "programmatic_qt_test": true,
+    "native_visibility": "root must observe independently",
+    "command": [
+      [
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-e6\\Release\\G4UniversalSim.exe",
+        "--config",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-20261030\\runs\\20261030_073216_writer_run_copy\\config\\main.ini",
+        "--macro",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-20261030\\runs\\20261030_073216_writer_run_copy\\macros\\run.mac",
+        "--output",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-20261030\\runs\\20261030_073216_writer_run_copy\\output",
+        "--threads",
+        "2",
+        "--seed",
+        "43",
+        "--run-name",
+        "ordinary name"
+      ]
+    ],
+    "inspection": [
+      [
+        "--inspect-run",
+        "--config",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-20261030\\runs\\20261030_073216_writer_run_copy\\config\\main.ini",
+        "--macro",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-20261030\\runs\\20261030_073216_writer_run_copy\\macros\\run.mac",
+        "--output",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-20261030\\runs\\20261030_073216_writer_run_copy\\output",
+        "--threads",
+        "2",
+        "--seed",
+        "43",
+        "--run-name",
+        "ordinary name"
+      ]
+    ],
+    "boxes": [],
+    "scope": "synthetic Inspect; intercepted final Run command; no simulation"
+  },
+  {
+    "stage": "duplicate-projection1025",
+    "time": 1793316738.2510922,
+    "pid": 10188,
+    "title": "E6 Windows acceptance a779634",
+    "programmatic_qt_test": true,
+    "native_visibility": "root must observe independently",
+    "command": [],
+    "inspection": [],
+    "boxes": [
+      [
+        "副本已创建，未载入、未运行",
+        "副本已创建于 C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-20261030\\runs\\20261030_073218_writer_run_copy，但未载入，也未启动运行：项目字段 project.threads = 1025 超出当前 GUI 可准确编辑的范围 [1, 1024]。"
+      ]
+    ],
+    "scope": "synthetic Inspect; intercepted final Run command; no simulation"
+  },
+  {
+    "stage": "real-run-started",
+    "time": 1793316791.9178665,
+    "pid": 10188,
+    "title": "E6 Windows acceptance a779634",
+    "programmatic_qt_test": true,
+    "native_visibility": "root must observe independently",
+    "command": [
+      "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-e6\\Release\\G4UniversalSim.exe",
+      "--config",
+      "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-20261030\\runs\\20261030_073310_writer_run_copy\\config\\main.ini",
+      "--macro",
+      "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-20261030\\runs\\20261030_073310_writer_run_copy\\macros\\run.mac",
+      "--output",
+      "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-20261030\\runs\\20261030_073310_writer_run_copy\\output",
+      "--threads",
+      "2",
+      "--seed",
+      "43",
+      "--run-name",
+      "writer_run"
+    ],
+    "cwd": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-20261030\\runs\\20261030_073310_writer_run_copy",
+    "output": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-20261030\\runs\\20261030_073310_writer_run_copy\\output"
+  },
+  {
+    "stage": "real-run-result",
+    "time": 1793316816.277327,
+    "pid": 10188,
+    "title": "E6 Windows acceptance a779634",
+    "programmatic_qt_test": true,
+    "native_visibility": "root must observe independently",
+    "result": {
+      "state": "success",
+      "reason": "Events completed as planned.",
+      "summary_status": "completed",
+      "run_count": 1,
+      "planned_events": 2,
+      "completed_events": 2
+    },
+    "output": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-20261030\\runs\\20261030_073310_writer_run_copy\\output"
+  },
+  {
+    "stage": "closed",
+    "time": 1793316859.5650759,
+    "pid": 10188,
+    "title": "E6 Windows acceptance a779634",
+    "programmatic_qt_test": true,
+    "native_visibility": "root must observe independently"
+  }
+]

@@ -4,6 +4,8 @@
 
 ## 0. 条目索引与历史全文
 
+- 2026-10-30 E6阶段关闭：实现a779634的自动矩阵与12状态实窗补验通过；合成Inspect命令检查、真实运行与原生截图观察分开计证，旧自动归档pending不得追改。完整范围与首个GUI host退出码unknown边界见 `docs/agent-history.md` 同日“E6 实窗补验与阶段关闭”及 `docs/verification/e6-visible-20261030/README.md`。
+
 - 2026-10-30 E6候选：主INI版本标记与独立几何版本严格分开，版本拒绝须保持旧reader；迁移副本源SHA复核/exclusive发布，发布后清理失败仅warning；旧项目已知兼容、未知/类型冲突拒绝；schema394项，GUI编辑范围不扩。改动前读 `docs/agent-history.md` 同日E6条目与 `docs/配置兼容与迁移.md`，阶段证据以STATUS/ROADMAP为准。
 
 - 2026-10-29 完整 2C 回归衔接：有效配置文件按 `g4usim_effective_config_v1` 登记；dry-run 配置证据不是模拟执行。故障注入的 `_t0` 仅用于单 worker 确定性覆盖，多 worker 使用 `_any_worker` 在实际回调原子竞争一次，不能假定 worker0 分到事件。稀疏 ROOT 总 N 必须来自可靠 metadata，不能假定所有 worker 都工作。全文及正反例见 `docs/agent-history.md` 的“完整 2C 首轮全量回归衔接”。

@@ -11,15 +11,15 @@
 
 统一工作项、排期波次、依赖、Q1 审查范围与提交节点均在 [ROADMAP](docs/ROADMAP.md) 的“统一代号与排期”一节。本对话作为 **Q1 完整可靠性审查、修复与验收**的主负责人；隔壁审查作为独立证据来源，不必等它全部结束。已有反例按代码基线复用；Q1 已在冻结范围完成验收，见[最终报告](docs/verification/q1-final-20261029/README.md)。
 
-当前顺序：Q1（已完成）→ 2C（已完成）→ E6 → F1/F4/F5/K1（I1 可并行）→ I2/J1/F8 → L1/F2；其后科研波次 Q2/H2/H3、F3/F7、E7/J2，与 K2/L2 按依赖安排；H4–H9 和 M5 保留后续独立阶段。这是导航摘要，具体状态与默认顺序以 ROADMAP 为准。用户一次启动一个完整代号，阶段内的提交和专项测试由负责人连续推进。
+当前顺序：Q1（已完成）→ 2C（已完成）→ E6（已完成）→ F1/F4/F5/K1（I1 可并行）→ I2/J1/F8 → L1/F2；其后科研波次 Q2/H2/H3、F3/F7、E7/J2，与 K2/L2 按依赖安排；H4–H9 和 M5 保留后续独立阶段。这是导航摘要，具体状态与默认顺序以 ROADMAP 为准。用户一次启动一个完整代号，阶段内的提交和专项测试由负责人连续推进。
 
 2026-10-29 Q1已完成：九域审查、R01–R32闭合并交叉复核；验收代码 `8ecad66`。干净Windows **105 PASS / 0 FAIL / 0 SKIP**，83770个v3入口；旧同代98项基线79303，逐例/总数与原始日志门禁通过。Linux11.3.2/11.4.3真实CI各105（run40855144863），Windows/Ubuntu static+GUI各42（run40855144672），Windows实窗保存/生成/运行/取消/关窗通过。[完整收据](docs/verification/q1-final-20261029/README.md)；旧失败证据保留，历史偏置结果须重跑，原生交互迁移显式csh。
 
-## E6 实现与自动验收通过，实窗待验（2026-10-30）
+## E6 已完成（2026-10-30）
 
-验收代码 `a779634`，隔离分支 `roadmap/E6-config-compat`。394 项 schema、主 INI 版本、迁移副本、诊断及标准运行包恢复/复制已实现并交叉审查；DeepSeek 真实参与前端设计，见 [设计记录](docs/collab/outbox/20261029-deepseek-e6-design.md)。导入参数丢失、弹窗回归及 Linux Qt 空数据读取问题均已修复。Windows **134/134、42815 个 v3 入口**与 2C 基线门禁通过；真实 Linux 11.3.2/11.4.3 各134项、M0 两平台各58项通过，12份CI报告严格门禁、4份官方归档摘要、384份用例日志哈希匹配。三轮证据按原字节保留，见 [E6 自动验收报告](docs/verification/e6-full-20261030/README.md)。Linux依赖在仓库内生成使报告dirty，完整状态清单未采集，范围与内容指纹证据见报告，不能称其整个检出clean。**实窗仍等待桌面解锁，E6保持进行中，尚未合入主线**；高级编辑与任意资源打包仍归J2/K1。
+验收代码 `a779634`，隔离分支 `roadmap/E6-config-compat`。394 项 schema、主 INI 版本、迁移副本、诊断及标准运行包恢复/复制已实现并交叉审查；DeepSeek 真实参与前端设计，见 [设计记录](docs/collab/outbox/20261029-deepseek-e6-design.md)。导入参数丢失、弹窗回归及 Linux Qt 空数据读取问题均已修复。Windows **134/134、42815 个 v3 入口**与 2C 基线门禁通过；真实 Linux 11.3.2/11.4.3 各134项、M0 两平台各58项通过，12份CI报告严格门禁、4份官方归档摘要、384份用例日志哈希匹配。三轮原证据见 [自动验收报告](docs/verification/e6-full-20261030/README.md)。解锁后补齐12个实窗状态、20张原生截图观察、真实Inspect→Run的2/2事件与独立复核，见 [E6最终报告](docs/verification/e6-visible-20261030/README.md)。Linux报告dirty的完整状态清单未采集，不能称整个检出clean；高级编辑、任意资源打包与科研验证仍分别归J2/K1/Q2。
 
-E6补充导航：[不同写者归档复核](docs/verification/e6-full-20261030/independent/README.md)、[阶段机器状态](docs/verification/e6-full-20261030/acceptance-state.json)。原始证据与复核分别保存；实窗准备不等于已经执行。
+E6补充导航：[不同写者归档复核](docs/verification/e6-full-20261030/independent/README.md)、[阶段及集成状态](docs/verification/e6-full-20261030/acceptance-state.json)。原自动归档保持当时的pending记录和字节；本次实际完成证据独立追加，不追改历史报告。
 
 ## 完整 2C 已完成（2026-10-29）
 
@@ -31,7 +31,7 @@ E6补充导航：[不同写者归档复核](docs/verification/e6-full-20261030/i
 
 原始首轮失败 `out/verification/2c-full-windows/20261029-214410-a8c2b6e8`、旧CI `out/verification/2c-ci`、修后专项 `out/verification/2c-regression-repair`、build03/fee88d2可见检查 `out/verification/2c-visible` / `out/verification/2c-visible-final` 继续保留，不能冒充最终证据。实施与DeepSeek设计裁决见[开工信](docs/collab/inbox/20261029-1959-astra-full-2c-execution.md)和[设计记录](docs/collab/outbox/20261029-deepseek-full2c-design.md)。
 
-2C 后续 E6 已启动；F1、Q2、安装包及完整GUI编辑等保持各自未完成状态，按ROADMAP依赖推进。
+2C 后续 E6 已完成；下一完整阶段为 F1，Q2、安装包及完整GUI编辑等保持各自未完成状态，按ROADMAP依赖推进。
 
 ## 2026-10-29 隔离开发工作区与2C子集历史
 
@@ -103,7 +103,7 @@ R03–R32现已完成修复与回归，旧[反例证据](docs/verification/r03-r
 ## 已知缺口（不要把以下当作已完成）
 
 - 后端名字校验类错误可能在"首个事件前"才发现（例如 `[scoring.displacement]` 的粒子名在 `BeginRun` 校验，`--inspect-run` 查不出）。
-- E6候选当前schema 394个字段中 supported 60 / experimental 319 / deprecated 13 / unsupported 2；62项有 `gui` 元数据，332项无GUI元数据。字段登记及 `gui` 元数据不等于可编辑；新增模块策略、场/偏置登记与版本标记均未开放对应编辑器。字段数不等于全配置或物理验证。
+- E6当前schema 394个字段中 supported 60 / experimental 319 / deprecated 13 / unsupported 2；62项有 `gui` 元数据，332项无GUI元数据。字段登记及 `gui` 元数据不等于可编辑；新增模块策略、场/偏置登记与版本标记均未开放对应编辑器。字段数不等于全配置或物理验证。
 - 探测器响应、Dose/Fluence/DDD 等基准多为"同源自洽"或"解析式"，缺少第三方独立数据与实测效率对照。
 - 偏置只有 process-level XS 路径；importance、weight-window、splitting、Russian roulette 未实现。
 - 交互命令审计只覆盖 `--ui --ui-session csh`；Qt UI 与部分嵌套/动态命令不受审计保证。

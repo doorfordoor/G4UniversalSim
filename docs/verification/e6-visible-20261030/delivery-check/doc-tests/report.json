@@ -1,0 +1,63 @@
+{
+  "schema": "G4UniversalSimM0TestReport",
+  "version": 2,
+  "profile": "static",
+  "platform": "Windows-10-10.0.26200-SP0",
+  "python": "3.11.9",
+  "git_head": "838e2e366f433037f85b07cd6cfb7c76ba87b6fe",
+  "source_fingerprint": "ab79c6c2227518bd7f38d5109998ed0998d8fd53ad500cfbe714d544eb19a474",
+  "tests_content_fingerprint": "e9b4f852e36dca85971d40da2c63ed6fd184055358ca965116babba6b16fafd4",
+  "git_dirty": true,
+  "backend_executable": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-e6\\Release\\G4UniversalSim.exe",
+  "backend_provenance": "source_sha256_manifest_matches_executable",
+  "backend_build_identity": {
+    "build_configuration": "Release",
+    "compiler_id": "MSVC",
+    "compiler_version": "19.51.36246.0",
+    "geant4_version_number": 1132,
+    "multithreaded": true
+  },
+  "merge_executable": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-e6\\Release\\mergeHistograms.exe",
+  "merge_source_fingerprint": "49708e1b6b554af6bb0ad42688f447cf254f528f71614074309f75170964682d",
+  "merge_provenance": "source_sha256_matches_executable",
+  "optional_pyvista_coverage": "not_proven_by_this_runner",
+  "untracked_source_files": [],
+  "tracked_source_gate": "pass",
+  "assert_probe": "settrace_assert_lines_v3",
+  "log_digest_algorithm": "sha256_raw_bytes_lf_v2",
+  "assertions_executed_total": 14,
+  "assert_sites_total": 14,
+  "cases_with_assertion_counts": 2,
+  "cases_with_zero_assertions": [],
+  "skip_policy": "failure",
+  "results": [
+    {
+      "name": "doc_links",
+      "layer": "static",
+      "script": "scripts/check_doc_links.py",
+      "assert_sites": 11,
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 1.079,
+      "log": "out\\verification\\e6-closure-doc-check\\20261030-074216-256128d7\\doc_links.log",
+      "log_sha256": "535a81eb9f5b528c7f667308ebf1e1f24c686b174efa7f27e756c366879f8bf8",
+      "log_digest_algorithm": "sha256_raw_bytes_lf_v2",
+      "assertions_executed": 11,
+      "assert_probe": "settrace_assert_lines_v3"
+    },
+    {
+      "name": "platform_paths",
+      "layer": "static",
+      "script": "scripts/check_test_platform_paths.py",
+      "assert_sites": 3,
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 0.25,
+      "log": "out\\verification\\e6-closure-doc-check\\20261030-074216-256128d7\\platform_paths.log",
+      "log_sha256": "6809e0fb6b932964152d2a9265b311e9bf7e459698305183ee238f72343b699d",
+      "log_digest_algorithm": "sha256_raw_bytes_lf_v2",
+      "assertions_executed": 3,
+      "assert_probe": "settrace_assert_lines_v3"
+    }
+  ]
+}

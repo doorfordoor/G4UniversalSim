@@ -2,12 +2,46 @@
   "stage": "E6",
   "implementation_head": "a779634483d1f077357433c532ccb0d9e3dc5517",
   "automatic_acceptance": "automatic_acceptance_passed",
-  "visible_acceptance": "pending_user_unlock_and_real_window_check",
-  "stage_acceptance": "stage_acceptance_pending_visible",
-  "stage_complete": false,
+  "visible_acceptance": "passed_real_windows_and_backend",
+  "stage_acceptance": "passed",
+  "stage_complete": true,
   "merged_to_integration": false,
-  "windows": {"cases": 134, "passed": 134, "failed": 0, "skipped": 0, "v3_assertion_entries": 42815, "baseline_gate": "passed"},
-  "ci": {"linux_run": 40931653660, "m0_run": 40931654093, "strict_reports_passed": 12, "official_archives_digest_matched": 4, "case_logs_sha256_matched": 384},
-  "archive": {"manifest_files_byte_verified": 2711, "release_reports_strict_passed": 13},
-  "limits": ["Linux reports retain git_dirty=true; exact full dirty set was not captured; see ci/git-dirty-audit.json", "Visible acceptance preparation is not an executed window check", "Engineering acceptance does not add physical validation or expand J2/K1 scope"]
+  "windows": {
+    "cases": 134,
+    "passed": 134,
+    "failed": 0,
+    "skipped": 0,
+    "v3_assertion_entries": 42815,
+    "baseline_gate": "passed"
+  },
+  "ci": {
+    "linux_run": 40931653660,
+    "m0_run": 40931654093,
+    "strict_reports_passed": 12,
+    "official_archives_digest_matched": 4,
+    "case_logs_sha256_matched": 384
+  },
+  "archive": {
+    "manifest_files_byte_verified": 2711,
+    "release_reports_strict_passed": 13
+  },
+  "limits": [
+    "Linux reports retain git_dirty=true; exact full dirty set was not captured; see ci/git-dirty-audit.json",
+    "Engineering acceptance does not add physical validation or expand J2/K1 scope",
+    "Synthetic Inspect and intercepted commands are not simulation; only separate real-run receipts demonstrate execution"
+  ],
+  "visible_report": "../e6-visible-20261030/README.md",
+  "visible_execution_checkout": "838e2e366f433037f85b07cd6cfb7c76ba87b6fe",
+  "visible": {
+    "native_observed_states": 12,
+    "native_png_files": 20,
+    "real_backend_runs": 1,
+    "real_backend_planned_events": 2,
+    "real_backend_completed_events": 2,
+    "independent_checks_passed": 155,
+    "archived_files": 135,
+    "archived_bytes": 4749003,
+    "first_gui_host_exit_code": "unknown",
+    "import_supplement_host_exit_code": 0
+  }
 }
