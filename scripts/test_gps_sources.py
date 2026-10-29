@@ -84,7 +84,8 @@ class Case:
         self.count = 0
 
     def run(self, source: str, events: int = 3000, size: str = "40 cm", physics: str = "",
-            macro_extra: str = "", expect_ok: bool = True, files: dict[str, str] | None = None):
+            macro_extra: str = "", expect_ok: bool = True, files: dict[str, str] | None = None,
+            macro_text: str | None = None):
         self.count += 1
         name = f"case{self.count:02d}"
         geometry = self.work / f"{name}_geometry.ini"
@@ -95,7 +96,8 @@ class Case:
         ini.write_text(MAIN.format(seed=1000 + self.count, root=ROOT.as_posix(), geometry=geometry.as_posix(),
                                    physics=physics, source=source), encoding="utf-8")
         macro = self.work / f"{name}.mac"
-        macro.write_text(f"/run/initialize\n{macro_extra}/run/beamOn {events}\n", encoding="utf-8")
+        macro.write_text(macro_text if macro_text is not None else
+                         f"/run/initialize\n{macro_extra}/run/beamOn {events}\n", encoding="utf-8")
         output = self.work / name
         result = subprocess.run([str(EXE), "--config", str(ini), "--macro", str(macro), "--output", str(output)],
                                 cwd=self.work, capture_output=True, text=True, errors="replace", timeout=1200)
@@ -498,6 +500,118 @@ def failure_cases(case: Case) -> None:
     print(f"  {len(bad)} invalid source definitions rejected")
 
 
+def source_interleave_cases(case: Case) -> None:
+    """R12/R13: native commands win over pending fields without cache fabrication."""
+    base = "[source]\nparticle=proton\nenergy=1 MeV\nposition_type=point\nposition=0,0,0 mm\n"
+    out, _ = case.run(base + "direction=+z\nangular=isotropic\nmax_theta=30 deg\n", 128,
+                      macro_extra="/gps/ang/minphi 0 deg\n/gps/ang/maxphi 5 deg\n/AIHL/source/isotropic\n")
+    p = primaries(out, 128)
+    assert min(q["w"] for q in p) < -0.5 and max(q["w"] for q in p) > 0.5
+    assert min(q["u"] for q in p) < -0.5 and min(q["v"] for q in p) < -0.5
+    assert all(abs(q["E"] - 1) < 1e-9 and abs(q["x"]) + abs(q["y"]) + abs(q["z"]) < 1e-9 for q in p)
+
+    ion = ("[source]\nparticle=ion\nion=6 12 2\nenergy=12 MeV\nposition_type=point\n"
+           "position=0,0,0 mm\ndirection=+z\n")
+    for before_initialize in (True, False):
+        commands = "/gps/particle proton\n"
+        initialize = "/run/initialize\n"
+        macro = (commands + initialize if before_initialize else initialize + commands)
+        macro += "/run/beamOn 4\n/gps/ene/mono 5 MeV\n/run/beamOn 4\n"
+        out, _ = case.run(ion, 8, macro_text=macro)
+        starts = first_steps(out)
+        # Include the second run's worker files (the helper intentionally reads r0).
+        later = []
+        for path in out.glob("hits_t*_r1.csv"):
+            with path.open(newline="", encoding="utf-8") as handle:
+                first = {}
+                for row in csv.DictReader(handle):
+                    if row["trackID"] == "1": first.setdefault(row["eventID"], row)
+                later.extend(first.values())
+        assert len(starts) == len(later) == 4
+        assert all(r["particle"] == "proton" and float(r["kineticEnergy_MeV"]) == 12 for r in starts)
+        assert all(r["particle"] == "proton" and float(r["kineticEnergy_MeV"]) == 5 for r in later)
+
+    named = ("[source.a]\nparticle=ion\nion=6 12\nenergy=12 MeV\nposition=-5,0,0 mm\ndirection=+z\n"
+             "[source.b]\nparticle=ion\nion=2 4\nenergy=8 MeV\nposition=5,0,0 mm\ndirection=+z\n")
+    for mutation in ("/gps/source/set 1\n/gps/particle proton\n",
+                     "/gps/source/delete 1\n/gps/source/add 1\n/gps/particle proton\n/gps/ene/mono 3 MeV\n"):
+        out, _ = case.run(named, 8, macro_text=mutation +
+                          "/gps/source/multiplevertex true\n/run/initialize\n/run/beamOn 4\n"
+                          "/gps/ene/mono 9 MeV\n/run/beamOn 4\n")
+        starts = first_steps(out, lambda row: row["parentID"] == "0")
+        per_event = defaultdict(list)
+        for row in starts: per_event[row["eventID"]].append(row)
+        assert len(per_event) == 4 and all(len(rows) == 2 for rows in per_event.values())
+        expected = ["C12", "proton"]
+        assert all(sorted(r["particle"] for r in rows) == expected for rows in per_event.values()), starts
+        later = {}
+        for path in out.glob("hits_t*_r1.csv"):
+            with path.open(newline="", encoding="utf-8") as handle:
+                for row in csv.DictReader(handle):
+                    if row["parentID"] == "0": later.setdefault((row["eventID"], row["trackID"]), row)
+        assert len(later) == 8
+        assert all(float(row["kineticEnergy_MeV"]) == (12 if row["particle"] == "C12" else 9)
+                   for row in later.values()), later
+
+    out, _ = case.run(ion, 4, macro_text="/gps/source/clear\n/gps/source/add 1\n/gps/particle proton\n"
+                      "/gps/ene/mono 3 MeV\n/gps/pos/type Point\n/gps/pos/centre 0 0 0 mm\n/gps/direction 0 0 1\n"
+                      "/run/initialize\n/run/beamOn 4\n")
+    starts = first_steps(out)
+    assert len(starts) == 4
+    assert all(r["particle"] == "proton" and float(r["kineticEnergy_MeV"]) == 3 for r in starts)
+
+    # Csh goes through the same command audit. Other UI paths are explicitly
+    # refused while deferred settings remain, rather than silently overriding GPS.
+    ini = case.work / "deferred_ui.ini"
+    geometry = case.work / "deferred_ui_geometry.ini"
+    geometry.write_text(GEOMETRY.format(size="40 cm"), encoding="utf-8")
+    ini.write_text(MAIN.format(seed=19, root=ROOT.as_posix(), geometry=geometry.as_posix(),
+                               physics="", source=ion), encoding="utf-8")
+    for label, commands, ok in (
+        ("direct", "/gps/particle proton\n/run/initialize\n/run/beamOn 4\nexit\n", True),
+        ("nested", "/control/execute missing.mac\n/control/echo MUST_NOT_CONTINUE\nexit\n", False),
+        ("alias_definition", "/control/alias pc /gps/particle\n{pc} proton\n/control/echo MUST_NOT_CONTINUE\nexit\n", False),
+        ("existing_alias", "/control/getEnv Q1_GPS_COMMAND\n{Q1_GPS_COMMAND} proton\n/control/echo MUST_NOT_CONTINUE\nexit\n", False),
+    ):
+        output = case.work / f"deferred_ui_{label}"
+        environment = os.environ.copy()
+        environment["Q1_GPS_COMMAND"] = "/gps/particle"
+        result = subprocess.run([str(EXE), "--config", str(ini), "--ui", "--ui-session", "csh",
+                                 "--output", str(output)], input=commands, cwd=case.work,
+                                capture_output=True, text=True, errors="replace", timeout=120, env=environment)
+        log = result.stdout + result.stderr
+        if ok:
+            assert result.returncode == 0, log[-3000:]
+            starts = first_steps(output)
+            assert len(starts) == 4 and all(r["particle"] == "proton" for r in starts)
+        else:
+            assert result.returncode != 0 and "pending ion/confinement" in log, log[-3000:]
+            assert "MUST_NOT_CONTINUE" not in log
+    result = subprocess.run([str(EXE), "--config", str(ini), "--ui", "--output",
+                             str(case.work / "deferred_ui_unaudited")], cwd=case.work,
+                            capture_output=True, text=True, errors="replace", timeout=120)
+    assert result.returncode != 0 and "requires --ui-session csh" in result.stdout + result.stderr
+    # The native NULL confinement command must also override the delayed INI
+    # confinement. Inspect initial trajectory vertices, including misses of SD.
+    confined = ("[source]\nparticle=proton\nenergy=1 MeV\nposition_type=volume\nshape=sphere\n"
+                "center=0,0,0 mm\nradius=40 mm\nisotropic=true\nconfine=Water_PV\n"
+                "[output]\ntrajectories=128\n")
+    for before_initialize in (True, False):
+        command = "/gps/pos/confine NULL\n"
+        initialize = "/run/initialize\n"
+        macro = command + initialize if before_initialize else initialize + command
+        out, _ = case.run(confined, 128, size="40 mm", macro_text=macro + "/run/beamOn 128\n")
+        import json
+        vertices = []
+        for path in out.glob("trajectories_t*.json"):
+            data = json.loads(path.read_text(encoding="utf-8"))
+            vertices.extend(track["points"][0][:3] for event in data["events"] for track in event["tracks"]
+                            if track["parent"] == 0)
+        assert len(vertices) == 128, len(vertices)
+        assert any(max(abs(v) for v in point) > 20.0 + 1e-6 for point in vertices), vertices
+    print("  R12/R13 isotropic reset, deferred ions/native overrides, multi-run and source identity: OK")
+
+
 def main() -> int:
     assert EXE.is_file(), f"backend executable missing: {EXE}"
     work = Path(tempfile.mkdtemp(prefix="g4usim_gps_"))
@@ -510,6 +624,7 @@ def main() -> int:
         ion_cases(case)
         phase_space_cases(case)
         failure_cases(case)
+        source_interleave_cases(case)
     finally:
         shutil.rmtree(work, ignore_errors=True)
     print("test_gps_sources: OK")

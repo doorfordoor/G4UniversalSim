@@ -14,9 +14,14 @@
 #include "G4MagneticField.hh"
 #include "G4Mag_UsualEqRhs.hh"
 #include "G4TransportationManager.hh"
+#include "G4VPhysicalVolume.hh"
 
+#include <functional>
+#include <map>
+#include <set>
 #include <stdexcept>
 #include <string>
+#include <vector>
 
 namespace {
 
@@ -96,24 +101,91 @@ G4FieldManager* MakeFieldManager(const FieldSpec& spec, G4FieldManager* existing
 
 namespace FieldSetup {
 
-void Construct(const FieldConfig& config)
+void ConstructImpl(const FieldConfig& config, bool validateOnly)
 {
+    if (config.GetFields().empty()) return;
+    auto* store = G4LogicalVolumeStore::GetInstance();
+    std::map<G4LogicalVolume*, const FieldSpec*> explicitFields;
+    const FieldSpec* global = nullptr;
     for (const FieldSpec& spec : config.GetFields()) {
         if (spec.IsGlobal()) {
-            MakeFieldManager(spec, G4TransportationManager::GetTransportationManager()->GetFieldManager());
+            global = &spec;
             continue;
         }
-        G4FieldManager* manager = MakeFieldManager(spec, nullptr);
         for (const std::string& volume : spec.volumes) {
-            G4LogicalVolume* logical = G4LogicalVolumeStore::GetInstance()->GetVolume(volume, false);
-            if (!logical) logical = G4LogicalVolumeStore::GetInstance()->GetVolume(volume + "_LV", false);
+            const auto unique = [&](const std::string& name) {
+                G4LogicalVolume* selected = nullptr;
+                for (auto* candidate : *store) {
+                    if (candidate->GetName() != name) continue;
+                    if (selected && selected != candidate)
+                        throw std::runtime_error("ambiguous local field logical volume name '" + name + "'");
+                    selected = candidate;
+                }
+                return selected;
+            };
+            G4LogicalVolume* logical = unique(volume);
+            if (!logical) logical = unique(volume + "_LV");
             if (!logical) {
                 throw std::runtime_error("[field." + spec.name + "]/volumes names unknown logical volume '" + volume + "'");
             }
-            // Also applies to daughters that do not have a field manager of their own.
-            logical->SetFieldManager(manager, false);
+            const auto inserted = explicitFields.emplace(logical, &spec);
+            if (!inserted.second && inserted.first->second != &spec) {
+                throw std::runtime_error("conflicting explicit local fields for logical volume '" +
+                                         std::string(logical->GetName()) + "': [field." +
+                                         inserted.first->second->name + "] and [field." + spec.name + "]");
+            }
         }
     }
+
+    // Resolve scope before touching Geant4 managers. Logical volumes may be shared
+    // by multiple placements; a single thread-local manager cannot represent two
+    // different inherited fields on the same logical volume.
+    std::set<G4LogicalVolume*> daughters;
+    for (auto* logical : *store) {
+        for (G4int i = 0; i < logical->GetNoDaughters(); ++i)
+            daughters.insert(logical->GetDaughter(i)->GetLogicalVolume());
+    }
+    std::map<G4LogicalVolume*, const FieldSpec*> resolved;
+    std::set<G4LogicalVolume*> active;
+    std::vector<G4LogicalVolume*> postorder;
+    std::function<void(G4LogicalVolume*, const FieldSpec*)> visit =
+        [&](G4LogicalVolume* logical, const FieldSpec* inherited) {
+            const auto explicitIt = explicitFields.find(logical);
+            const FieldSpec* selected = explicitIt == explicitFields.end() ? inherited : explicitIt->second;
+            if (active.count(logical)) throw std::runtime_error("cyclic logical-volume field hierarchy");
+            const auto inserted = resolved.emplace(logical, selected);
+            if (!inserted.second) {
+                if (inserted.first->second != selected)
+                    throw std::runtime_error("conflicting inherited local fields for reused logical volume '" +
+                                             std::string(logical->GetName()) + "'; bind an explicit field to this volume");
+                return;
+            }
+            active.insert(logical);
+            for (G4int i = 0; i < logical->GetNoDaughters(); ++i)
+                visit(logical->GetDaughter(i)->GetLogicalVolume(), selected);
+            active.erase(logical);
+            postorder.push_back(logical);
+        };
+    for (auto* logical : *store) {
+        if (!daughters.count(logical)) visit(logical, nullptr);
+    }
+    if (resolved.size() != store->size()) throw std::runtime_error("cyclic logical-volume field hierarchy");
+    if (validateOnly) return;
+
+    if (global) MakeFieldManager(*global, G4TransportationManager::GetTransportationManager()->GetFieldManager());
+    std::map<const FieldSpec*, G4FieldManager*> managers;
+    for (const auto& binding : explicitFields) {
+        if (!managers.count(binding.second)) managers.emplace(binding.second, MakeFieldManager(*binding.second, nullptr));
+    }
+    // Descendants are assigned first: false must never preserve an accidental
+    // parent inheritance instead of their already resolved nearest explicit field.
+    for (auto* logical : postorder) {
+        const auto* selected = resolved.at(logical);
+        logical->SetFieldManager(selected ? managers.at(selected) : nullptr, false);
+    }
 }
+
+void Validate(const FieldConfig& config) { ConstructImpl(config, true); }
+void Construct(const FieldConfig& config) { ConstructImpl(config, false); }
 
 }  // namespace FieldSetup

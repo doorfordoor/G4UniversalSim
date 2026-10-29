@@ -139,6 +139,34 @@ def main() -> int:
         assert log.count("Legacy particle-level XS bias syntax is used") == 1, log[-6000:]
         assert log.count("[BiasingMessenger] Biasing configuration changed") == 1, log[-6000:]
 
+        # R14: omitted particle/process keys use the original section spelling,
+        # including case-sensitive Geant4 process names (the documented syntax).
+        for particle, process in (("proton", "hIoni"), ("proton", "protonInelastic"), ("e-", "eIoni")):
+            for explicit_bad in (False, True):
+                label = f"section_{particle}_{process}_{explicit_bad}"
+                ini = temp / f"{label}.ini"
+                ini.write_text(
+                    "[run]\nthreads=2\n[output]\nformat=csv\n"
+                    f"[geometry]\ntemplate=simple_box\nconfig={(ROOT / 'config/geometry/hit_smoke_box.ini').as_posix()}\n"
+                    "[physics]\nreference=FTFP_BERT_EMZ\n[scoring]\nenabled=false\n"
+                    f"[source]\nparticle={particle}\nenergy=1 MeV\nposition=0,0,-9 mm\ndirection=+z\n"
+                    f"[biasing]\nenabled=true\n[biasing.xs.{particle}.{process}]\nfactor=2\nvolumes=Target\n"
+                    + ("process=notARealProcess\n" if explicit_bad else ""), encoding="utf-8")
+                macro = temp / f"{label}.mac"
+                macro.write_text("/run/initialize\n/run/beamOn 2\n", encoding="utf-8")
+                output = temp / label
+                result = subprocess.run([str(executable), "--config", str(ini), "--macro", str(macro),
+                                         "--output", str(output)], cwd=ROOT, capture_output=True,
+                                        text=True, errors="replace", timeout=120)
+                summary = facts(output)
+                if explicit_bad:
+                    assert result.returncode != 0 and summary["status"] == "failed"
+                    assert "notARealProcess" in result.stdout + result.stderr
+                else:
+                    assert result.returncode == 0, result.stdout + result.stderr
+                    assert summary["status"] == "completed" and summary["actual_completed_event_count"] == "2"
+                    assert summary["biasing_process_match_status"] == "validated"
+
     print("M0-3E biasing target contract regression passed")
     return 0
 

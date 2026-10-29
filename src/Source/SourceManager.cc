@@ -7,6 +7,7 @@
 
 #include "G4Event.hh"
 #include "G4GeneralParticleSource.hh"
+#include "G4GeneralParticleSourceData.hh"
 #include "G4PrimaryParticle.hh"
 #include "G4PrimaryVertex.hh"
 #include "G4IonTable.hh"
@@ -367,30 +368,84 @@ void SourceManager::PrepareForRun(long long plannedEvents)
     }
     GetGPS();
     if (deferredApplied_) return;  // keep native /gps/... changes made between runs
-    deferredApplied_ = true;
-    bool needed = false;
-    for (const auto& spec : sources_) needed = needed || spec.ion || !spec.confineVolume.empty();
-    if (!needed) return;
     // Volume confinement and ions need the built geometry / ion table; GPS
     // silently drops an unknown confinement volume, so check it here.
-    for (std::size_t index = 0; index < sources_.size(); ++index) {
-        const SourceSpec& spec = sources_[index];
-        if (!spec.confineVolume.empty() &&
+    auto* data = G4GeneralParticleSourceData::Instance();
+    for (G4int index = 0; index < data->GetSourceVectorSize(); ++index) {
+        auto* source = data->GetCurrentSource(index);
+        const auto pending = deferredSources_.find(source);
+        if (pending == deferredSources_.end()) continue;  // native source, no INI replay
+        const auto& overrides = pending->second;
+        const SourceSpec& spec = sources_.at(overrides.index);
+        if (!overrides.confineOverridden && !spec.confineVolume.empty() &&
             !G4PhysicalVolumeStore::GetInstance()->GetVolume(spec.confineVolume, false)) {
             throw std::runtime_error("SourceManager confine volume '" + spec.confineVolume +
                                      "' is not a physical volume of the built geometry; use a physical volume name "
                                      "(see /AIHL/geometry/listUserVolumes, usually <name>_PV).");
         }
-        if (sources_.size() > 1) gps_->SetCurrentSourceto(static_cast<G4int>(index));
-        G4SingleParticleSource& source = *gps_->GetCurrentSource();
-        if (spec.ion) ApplyParticle(spec, source);
-        if (!spec.confineVolume.empty()) source.GetPosDist()->ConfineSourceToVolume(spec.confineVolume);
+        if (spec.ion && !overrides.particleOverridden) {
+            ApplyParticle(spec, *source);
+        }
+        if (!overrides.confineOverridden && !spec.confineVolume.empty())
+            source->GetPosDist()->ConfineSourceToVolume(spec.confineVolume);
     }
-    if (sources_.size() > 1) gps_->SetCurrentSourceto(0);
+    deferredSources_.clear();
+    deferredApplied_ = true;
+}
+
+bool SourceManager::HasPendingDeferredConfiguration() const
+{
+    if (deferredApplied_) return false;
+    for (const auto& item : deferredSources_) {
+        const auto& pending = item.second;
+        const auto& spec = sources_.at(pending.index);
+        if ((spec.ion && !pending.particleOverridden) ||
+            (!spec.confineVolume.empty() && !pending.confineOverridden)) return true;
+    }
+    return false;
+}
+
+void SourceManager::BeforeNativeGPSCommand(const std::string& command)
+{
+    if (!HasPendingDeferredConfiguration()) return;
+    std::istringstream input(command);
+    std::string name;
+    input >> name;
+    if (command.find('{') != std::string::npos || command.find('}') != std::string::npos ||
+        name == "/control/alias" || name == "/control/if" || name == "/control/doif" ||
+        name == "/control/strif" || name == "/control/strdoif") {
+        throw std::runtime_error("Alias references/dynamic UI dispatch with pending ion/confinement configuration "
+                                 "cannot be audited; use literal direct GPS commands or a batch macro without aliases");
+    }
+    if (name == "/control/execute" || name == "/control/loop" || name == "/control/foreach") {
+        throw std::runtime_error("Nested/dynamic UI commands with pending ion/confinement configuration are unsupported; "
+                                 "use a batch --macro (static execute is expanded) or initialize and run first");
+    }
+    if (name.rfind("/gps/", 0) != 0) return;
+    if (name == "/gps/source/clear") {
+        deferredSources_.clear();
+        return;
+    }
+    if (name == "/gps/source/delete") {
+        G4int index = -1;
+        input >> index;
+        auto* data = G4GeneralParticleSourceData::Instance();
+        if (index >= 0 && index < data->GetSourceVectorSize())
+            deferredSources_.erase(data->GetCurrentSource(index));
+        return;
+    }
+    const auto found = deferredSources_.find(gps_->GetCurrentSource());
+    if (found == deferredSources_.end()) return;
+    if (name == "/gps/particle" || name == "/gps/ion" || name == "/gps/ionLvl") {
+        found->second.particleOverridden = true;
+    } else if (name == "/gps/pos/confine") {
+        found->second.confineOverridden = true;
+    }
 }
 
 void SourceManager::ResetGPS()
 {
+    deferredSources_.clear();
     gps_.reset();
     phaseSpaceFiles_.clear();
     phaseSpace_.reset();
@@ -1106,6 +1161,9 @@ void SourceManager::SetIsotropic()
     spec.hasDirection = false;
     spec.direction.clear();
     spec.angular.clear();
+    spec.hasThetaRange = false;
+    spec.minTheta = 0.0;
+    spec.maxTheta = 180.0 * deg;
     if (gps_) ApplyAngularDistributionToGPS();
     else MarkGPSConfigDirty();
     configured_ = true;
@@ -1206,17 +1264,22 @@ G4SingleParticleSource* SourceManager::CurrentGPSSource() const
 void SourceManager::ApplyCurrentConfigurationToGPS() const
 {
     if (!gps_ || !gpsConfigDirty_) return;
+    deferredSources_.clear();
     if (sources_.size() > 1) {
         // One GPS source per [source.<name>]; GPS picks one per event with
         // probability intensity / sum(intensity).
         gps_->ClearAll();
-        for (const SourceSpec& spec : sources_) {
+        for (std::size_t index = 0; index < sources_.size(); ++index) {
+            const auto& spec = sources_[index];
             gps_->AddaSource(spec.intensity);
             ApplySpec(spec, *gps_->GetCurrentSource());
+            if (spec.ion || !spec.confineVolume.empty()) deferredSources_[gps_->GetCurrentSource()].index = index;
         }
         gps_->SetCurrentSourceto(0);
     } else {
         ApplySpec(sources_.front(), *gps_->GetCurrentSource());
+        if (sources_.front().ion || !sources_.front().confineVolume.empty())
+            deferredSources_[gps_->GetCurrentSource()].index = 0;
     }
     gpsConfigDirty_ = false;
     deferredApplied_ = false;
@@ -1364,6 +1427,10 @@ void SourceManager::ApplyAngular(const SourceSpec& spec, G4SingleParticleSource&
     if (angular.empty() || angular == "fixed") {
         if (spec.isotropic) {
             ang->SetAngDistType("iso");
+            ang->SetMinTheta(0.0);
+            ang->SetMaxTheta(180.0 * deg);
+            ang->SetMinPhi(0.0);
+            ang->SetMaxPhi(360.0 * deg);
             return;
         }
         if (spec.hasDirection && spec.direction.size() == 3) {

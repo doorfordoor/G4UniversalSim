@@ -1120,8 +1120,11 @@ SCHEMA = {'main_ini': {'run': {'migrated': True,
                                                               'default': None,
                                                               'support': 'experimental',
                                                               'since': 'E2 inventory',
-                                                              'description': '正产生阈值/步长/总径迹长度',
-                                                              'description_zh': '正产生阈值/步长/总径迹长度',
+                                                              'description': '带电粒子的正最大步长；默认不为 gamma/neutron '
+                                                                             '等中性粒子注册 StepLimiter',
+                                                              'description_zh': '带电粒子的正最大步长；默认不为 '
+                                                                                'gamma/neutron 等中性粒子注册 '
+                                                                                'StepLimiter',
                                                               'exclusive_min': 0},
                                                  'max_track_length': {'type': 'length',
                                                                       'default': None,

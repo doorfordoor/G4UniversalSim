@@ -85,6 +85,10 @@ public:
     // Throws if a confinement volume is missing or a phase-space file is too
     // short for plannedEvents without recycling.
     void PrepareForRun(long long plannedEvents = 0);
+    // Called immediately before direct native commands on the master. Keeps
+    // pending configuration separate from GPS state; does not rewrite SourceSpec.
+    void BeforeNativeGPSCommand(const std::string& command);
+    bool HasPendingDeferredConfiguration() const;
 
     // Phase-space source ([source] phase_space_file): event k replays history
     // k (modulo the number of histories when recycling), so the result does
@@ -152,6 +156,12 @@ private:
     mutable std::unique_ptr<G4GeneralParticleSource> gps_;
     mutable bool gpsConfigDirty_ = true;
     mutable bool deferredApplied_ = false;  // ions / confinement applied for this configuration
+    struct DeferredSource {
+        std::size_t index = 0;
+        bool particleOverridden = false;
+        bool confineOverridden = false;
+    };
+    mutable std::map<G4SingleParticleSource*, DeferredSource> deferredSources_;
     std::vector<SourceSpec> sources_{1};
     std::size_t current_ = 0;
     bool loadingNamedSources_ = false;

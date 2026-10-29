@@ -7,6 +7,7 @@
 #include "Config/ConfigManager.hh"
 #include "Geometry/GeometryManager.hh"
 #include "Materials/MaterialManager.hh"
+#include "Source/SourceManager.hh"
 #include "Utils/StringUtils.hh"
 #include "Detector/DetectorConstruction.hh"
 #include "G4RunManager.hh"
@@ -62,9 +63,11 @@ class FailFastCshShell final : public G4UIcsh {
 
 class AuditedCshSession final : public G4UIterminal {
  public:
-  AuditedCshSession(bool& stopAfterFailure, std::function<bool()> hasHandlerFailure)
+  AuditedCshSession(bool& stopAfterFailure, std::function<bool()> hasHandlerFailure,
+                    std::function<void(const std::string&)> beforeCommand)
       : G4UIterminal(new FailFastCshShell(stopAfterFailure)),
-        stopAfterFailure_(stopAfterFailure), hasHandlerFailure_(std::move(hasHandlerFailure)) {}
+        stopAfterFailure_(stopAfterFailure), hasHandlerFailure_(std::move(hasHandlerFailure)),
+        beforeCommand_(std::move(beforeCommand)) {}
 
   G4int ReceiveG4cerr(const G4String& message) override {
     RecordDiagnostic(message);
@@ -92,6 +95,16 @@ class AuditedCshSession final : public G4UIterminal {
     auto* ui = G4UImanager::GetUIpointer();
     if (!ui) return;
 
+    try {
+      beforeCommand_(command);
+    } catch (const std::exception& error) {
+      stopAfterFailure_ = true;
+      failedCommand_ = command;
+      failedCommandStatus_ = fIllegalApplicationState;
+      illegalApplicationState_ = error.what();
+      G4cerr << error.what() << G4endl;
+      return;
+    }
     const G4int result = ui->ApplyCommand(command);
     // Finish the current command's diagnostics, then stop reading later input.
     // Messenger failures can occur even when ApplyCommand returns zero.
@@ -159,6 +172,7 @@ class AuditedCshSession final : public G4UIterminal {
 
   bool& stopAfterFailure_;
   std::function<bool()> hasHandlerFailure_;
+  std::function<void(const std::string&)> beforeCommand_;
   std::string unrecognizedCommand_;
   std::string invalidParameter_;
   std::string parameterOutOfRange_;
@@ -795,6 +809,13 @@ int main(int argc, char** argv) {
         const auto materialFailuresBefore = sim.GetMaterialManager()->GetCommandFailureCount();
         const auto outputFailuresBefore = sim.GetOutputManager()->GetCommandFailureCount();
         const bool seedStateChanged = sim.NoteMacroCommand(command.text);
+        try {
+          sim.GetSourceManager()->BeforeNativeGPSCommand(command.text);
+        } catch (...) {
+          macroFailure = MacroFailureInfo{command.sourceFile.string(), static_cast<int>(command.lineNumber), command.text, 0, false};
+          macroStatus = "failed";
+          throw;
+        }
         const int status = uiManager->ApplyCommand(command.text.c_str());
         if (status != 0) {
           macroFailure = MacroFailureInfo{
@@ -866,6 +887,10 @@ int main(int argc, char** argv) {
         std::cout << "[PhysicsLifecycle] Rebound physics list from batch macro before interactive UI.\n";
       }
       // Interactive PhysicsMessenger mutations are rejected after registration.
+      if (options.uiSession != "csh" && sim.GetSourceManager()->HasPendingDeferredConfiguration()) {
+        throw std::runtime_error("Interactive ion/confinement configuration before its first run requires --ui-session csh "
+                                 "to track native GPS overrides; use csh or a batch macro in a fresh process");
+      }
       sim.EnableInteractivePhysicsGuard();
       const auto physicsFailuresBefore = sim.GetInteractivePhysicsFailureCount();
       const auto appFailuresBefore = sim.GetAppCommandFailureCount();
@@ -894,7 +919,9 @@ int main(int argc, char** argv) {
                  sim.GetBiasingManager()->GetInteractiveRejectCount() != biasingRejectsBefore ||
                  sim.GetOutputManager()->HasOutputFailure();
         };
-        AuditedCshSession ui(stopAfterFailure, hasHandlerFailure);
+        AuditedCshSession ui(stopAfterFailure, hasHandlerFailure, [&](const std::string& command) {
+          sim.GetSourceManager()->BeforeNativeGPSCommand(command);
+        });
         ui.SessionStart();
         unrecognizedCommand = ui.UnrecognizedCommandDiagnostic();
         invalidParameter = ui.InvalidParameterDiagnostic();

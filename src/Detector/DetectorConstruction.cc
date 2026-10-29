@@ -39,6 +39,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         throw std::runtime_error("DetectorConstruction::Construct failed: GeometryManager::BuildWorld returned null");
     }
 
+    if (fieldConfig_ && !fieldConfig_->Empty()) FieldSetup::Validate(*fieldConfig_);
     if (postBuildCallback_) {
         postBuildCallback_(geometryManager_->GetRegistry());
     }

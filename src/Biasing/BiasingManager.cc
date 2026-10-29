@@ -460,10 +460,11 @@ void BiasingManager::LoadFromConfig(const ConfigManager& config)
     if (!IsEnabled()) return;
 
     // New process-level syntax: [biasing.xs.<particle>.<process>].
-    for (const std::string& section : config.GetSections()) {
+    for (const auto& info : config.GetSectionInfo()) {
+        const std::string& section = info.section;
         const std::string lower = StringUtils::ToLower(StringUtils::Trim(section));
         if (!StringUtils::StartsWith(lower, "biasing.xs.") || lower == "biasing.xs") continue;
-        const auto parts = SplitSectionName(section);
+        const auto parts = SplitSectionName(info.originalSection.empty() ? section : info.originalSection);
         if (parts.size() != 4) {
             throw std::runtime_error(
                 "BiasingManager::LoadFromConfig failed: section '" + section
