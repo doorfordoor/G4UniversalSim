@@ -319,3 +319,22 @@ CMake 需要显式 `-DEXPAT_INCLUDE_DIR=$PREFIX/include -DEXPAT_LIBRARY=$PREFIX/
 - **纠正摘要**：`FinalizeRunSummary` 捕获 metadata 异常，更新 status=failed、program_exit_code 非零和 output_failure_*，从成功产物列表剔除 metadata，尽力重写文本摘要；文本本身失败仍抛出并走真实 summary failure 路径。`summary_write_status=completed` 仅指文本成功关闭；不代表 metadata 或模拟成功。没有跨文件原子提交/断电恢复保证，失败的 JSON 可能残缺或看似完整，均不可作为成功产物。
 - **反例回归**：`scripts/test_interactive_commands.py` 覆盖单/双线程 × PreInit/已初始化拒绝、停止后续命令、零 run、原来源保持；`scripts/test_run_summary.py` 覆盖真实目录碰撞与 `G4USIM_TEST_OUTPUT_FAULT=metadata_write_master|metadata_close_master`、单/双线程、多 run 保留、已有输出保留、正常 text/JSON 一致、首因不被覆盖。注入只是规定分支测试，不是实际磁盘故障。生产环境禁止设置该变量。
 - **验收范围**：构建/真实回归结果见 STATUS 链接的本轮证据；不能把这两个修复当作 R-03–R-07 或完整 2C 已完成。
+
+
+## 2026-10-29 Q1 数值、统计证据与 GUI 数据安全
+
+- NumericChecks 对事件累计、平方矩与跨 worker 合并检查有限性；HistoryTally/Submit 先构造候选再提交。ScoringManager 在 BeginEvent/EndEvent/聚合回调锁存首因并中止；失败事件不再发布最终统计。LET 必须先检查有限性再处理零长度/中性哨兵。仅 ROOT 模式同样在 master 检查合并后的 mesh，worker 有限不代表合并有限。组件回归 tools/scoringNumericCheck.cc；真实单/双 worker、CSV/ROOT/both、多 run 与 LET/DDD 压力反例 scripts/test_scoring_numeric.py。极值反例验证错误传播，不是物理模型基准。
+- V01 保持原未修正事件矩近似与 delta 比值公式，scorer/mesh CSV v2 末尾追加 uncertainty_estimator、uncertainty_status；N<2、分母零、总量零分别不可用，旧零数值只为兼容。ROOT 布局仍 v4；稀疏 scorer/mesh 的完整 N 只能来自同 run 元数据或显式可靠计数，损坏/矛盾不得猜测。详见 docs/输出数据契约.md 与 docs/collab/decisions/20261029-q1-uncertainty.md。
+- 绘图和扫描使用 per_event，旧 per_primary API 保留数值并弃用警告，冲突参数拒绝；LET ratio 不得再除 N，跨 cell 投影缺协方差不画合成误差。scripts/test_q1_postprocessing.py 与 test_q1_results_backend.py 分别验证合成和真实多初级/稀疏 worker/跨 cell 反例。
+- 项目保存用同目录临时文件 flush/fsync 后原子替换；失败保留原字节，未来版本和未知字段拒绝，不提供 E6 自动迁移。结果刷新清旧证据，扫描成功核对正事件数和逐轮一致；预览只发布最后请求。主窗口关闭只清理自己持有的各类 QProcess 和队列；不能按名称结束其他应用。合并工具显式指定优先，其次选定后端同目录精确文件名，再沿用原搜索。回归 smoke_q1_public_paths.py、smoke_output_tools.py；Windows 实际窗口另有 smoke_q1_windows.py，不用 offscreen 冒充。
+- 本条记录实现契约；阶段关闭与平台证据仅看 ROADMAP/STATUS 链接，不以文档存在宣布 Q1 完成。
+
+
+## 2026-10-29 Q1 几何、材料、源与场运行边界
+
+- R03：Dose 本体质量用 GetMass(true,false,步前材料)，扣除 daughter 体积而不包括其质量；普通/参数化母体、不同副本材料和子体按真实 touchable 分开，零/负质量经 scoring_dose 失败。R04：GDML auxiliary SD 绑定按实际 LV 指针，显式名称限当前 world 且拒绝完全同名歧义。R15：现有 biasing 名称接口无法表达大小写碰撞时明确拒绝，不能丢掉一个对象继续成功；最终摘要刷新实际 attached/count，不能残留配置期零值。R24：导入时拒绝同母普通 placement 重复(name,copyNo)和daughter名称含斜线，保持不同副本号/不同父路径及已有replica/parameterised行为。回归 test_dose_scoring.py、test_geometry_a5.py、test_gdml_bias_identity.py、test_gdml_touchable_identity.py。
+- R09：材料数字解析拒绝NaN/Inf/ERANGE/整数窄化溢出，构造前再检查量纲换算、质量、组分累加；简单与同位素元素在当前Geant4 11.3/11.4壳层表允许的舍入Z=1..104范围内，版本升级须重审，不能把118当此构造函数的支持上限。独立isotope与元素构造的范围分开；同位素混Z、重复真实元素atom计数int溢出、分子质量溢出均拒绝。test_material_numeric.py要求普通失败而非原生崩溃。
+- R08：局部场按最近显式祖先解析完整图，以后代优先SetFieldManager(false)安装；完全同名LV、多个显式场、共享LV继承冲突先在master建world后验证并正常失败，不以worker FatalException代替可追踪摘要。V02：默认StepLimiter只对带电粒子生效，不改gamma/neutron物理。test_fields_a7.py和test_max_step_scope.py核对真实径迹/做功/过程。
+- R12：isotropic重设完整theta/phi范围，不能继承旧cone窗口。R13：延迟ion/confine以实际G4SingleParticleSource身份管理，受审计直接原生GPS命令可取消对应旧配置；删除/增加/clear不能靠列表索引重放。pending期间非csh UI及csh无法审计的alias引用/定义、execute/loop/foreach、条件动态派发明确拒绝；getEnv生成的已有alias引用也必须拦截。宏仍依既有静态preflight。配置缓存不是原生GPS实际状态。R14：biasing动态section的process后缀从originalSection保留大小写；不能把hIoni改成hioni。test_gps_sources.py读取实际初级、能量与confinement顶点，test_biasing_target_contract.py核对真实wrapped process。
+- R23：SD Initialize/ProcessHits捕获std与unknown异常，scoring_sd_initialize/scoring_transport_context经共享首因锁存并中止；collection/命中对象在成功移交前使用局部独占所有权。G4USIM_TEST_OUTPUT_FAULT的sd_initialize_t0、sd_initialize_unknown_t0、sd_context_t0、sd_context_unknown_t0仅在测试构造时读，worker0第二run单次注入。test_sd_context_failure.py检查首轮保留/第三轮停止/失败轮无合并统计；不代表真实内存耗尽、磁盘故障或Geant4原生致命异常都可恢复。
+- 以上是当前代码契约；完整验收状态、平台与证据指纹以ROADMAP/STATUS为准。

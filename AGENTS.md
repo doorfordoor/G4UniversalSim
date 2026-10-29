@@ -4,6 +4,10 @@
 
 ## 0. 条目索引与历史全文
 
+- 2026-10-29 Q1 运行边界：Dose 用扣 daughter 的本体质量；GDML SD 保留真实对象，无法表达的 bias 名碰撞和持久 touchable 路径歧义须拒绝；材料解析/实际构造都检查数值及版本壳层范围；局部场最近显式祖先、冲突在 master 拒绝；延迟 GPS 按真实源身份管理，pending 动态/别名命令必须拒绝；SD 回调异常锁存并中止。更改这些路径前读 `docs/agent-history.md` 的 Q1 几何、材料、源与场条目及其回归。
+
+- 2026-10-29 Q1 数值与统计口径：非有限值/事件矩/worker 合并溢出须锁存失败，不限幅伪造结果；仅 ROOT 也检查 master mesh。scorer/mesh CSV v2 追加估计方法与可用状态，N<2/零分母/零总量不能显示零误差条；ROOT 稀疏行不提供完整 N。保持原近似公式，按事件归一化不得标为按初级粒子；LET 比值不得再除 N，网格投影无协方差不得画合成误差。全文与回归见 `docs/agent-history.md` 的 Q1 条目。
+
 - 2026-10-29 R-01/R-02 失败证据：csh 中配置后 `setMainConfig` 拒绝必须登记 app 失败、停止后续输入并非零退出；不实现热重载。
   metadata 打开/写入/关闭失败锁存 `run_metadata_open/write/close`，可写文本摘要纠正为 failed，失败 JSON 不列入产物；
   `summary_write_status=completed` 仅指文本摘要成功关闭，不等于 JSON/模拟成功。回归 `test_interactive_commands.py`、`test_run_summary.py`；全文见 `docs/agent-history.md`。

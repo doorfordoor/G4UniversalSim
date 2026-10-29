@@ -5,6 +5,14 @@ Short, user-facing record of notable changes. Detailed support status lives in
 
 ## Unreleased
 
+### Q1 可靠性修复（完整平台验收以 ROADMAP 为准）
+
+- 修正敏感母体剂量的本体质量、GDML 敏感对象绑定与计分路径身份；无法安全表示的名称冲突明确拒绝。最终摘要记录真实偏置挂接事实。
+- 数值累计、事件平方矩和跨线程合并溢出会终止并记录失败，包含仅 ROOT 的 master 网格；材料非有限值、整数/构造范围错误提前拒绝。SD 初始化与上下文异常进入共享失败收尾。
+- 局部场遵守最近显式祖先，拒绝共享体继承冲突；修复源角范围残留、延迟 GPS 配置覆盖直接原生命令及偏置 process 后缀大小写。无法可靠审计的动态 GPS 修改明确拒绝。
+- 统计 CSV v2 追加方法与可用状态，保持原近似公式；稀疏 ROOT 必须有可靠完成事件数。绘图按事件归一化，LET 比值不再重复归一化，缺协方差的网格投影不显示合成误差。
+- 项目保存失败保留原文件，未来格式/未知字段拒绝；修正旧结果残留、零事件扫描假成功和预览竞态。关窗清理自身进程，合并工具优先使用显式路径或所选后端同目录工具。
+
 ### Added
 
 - Geant4 11.4 支持：`src/Core/Geant4DataLocator.cc` 的数据集表新增 11.4 分支（12 个数据集，`G4EMLOW8.8`/`PhotonEvaporation6.1.2`/`RadioactiveDecay6.1.2`/`G4PARTICLEXS4.2`/`G4ENSDFSTATE3.0` 等），按 `G4VERSION_NUMBER` 选择。本机 WSL 实测 11.4.3 构建成功、四个 profile 87/87 全过（与 11.3 用例覆盖一致）；构建门槛（expat ≥2.8.5、zlib ≥1.3.2、freetype ≥2.14.3 与六个 `-D*` 参数）与环境变量坑见 `docs/Linux构建与验证.md` §8。
