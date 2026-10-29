@@ -39,7 +39,7 @@ def finite_outputs(output: Path) -> None:
 
 
 def run_case(work: Path, fmt: str, threads: int, weight: float, events: int,
-             fail: bool, expected_stage: str | None = None, runs: int = 1, mesh: bool = False,
+             fail: bool, expected_stage: str | tuple[str, ...] | None = None, runs: int = 1, mesh: bool = False,
              particles_per_event: tuple[int, ...] | None = None, scorer: str = "edep",
              niel_value: float = 1.0) -> None:
     name = f"{fmt}-{threads}-{weight}-{events}-{runs}-mesh{mesh}-{scorer}"
@@ -111,7 +111,12 @@ phase_space_file = {phase.as_posix()}
         assert values["output_failure_status"] != "none", values
         assert "finite" in values["output_failure_message"].lower(), values
         if expected_stage:
-            assert values["output_failure_stage"] == expected_stage, values
+            stages = (expected_stage,) if isinstance(expected_stage, str) else expected_stage
+            assert values["output_failure_stage"] in stages, values
+            if len(stages) > 1:
+                branch = {"scoring_mesh_root": "worker_root", "scoring_mesh_csv": "master_merged_mesh"}[values["output_failure_stage"]]
+                print(f"{name}: actual_numeric_failure_branch={branch} "
+                      f"stage={values['output_failure_stage']} thread={values.get('output_failure_thread_id', 'unknown')}")
         assert not (output / "scorer_statistics.csv").exists(), name
     else:
         assert process.returncode == 0, (name, process.stderr[-2000:])
@@ -155,9 +160,11 @@ def main() -> None:
         run_case(work, "root", 4, 4e153, 8, True)
         for fmt in ("csv", "root", "both"):
             run_case(work, fmt, 2, 1e200, 2, True, mesh=True)
-        # Equal event moments, but one long history ensures both workers receive
-        # a history. Each worker's square is finite; only the master merge overflows.
-        run_case(work, "root", 2, 6e153, 2, True, "scoring_mesh_csv", mesh=True,
+        # Equal event moments overflow when combined. Unequal history costs do
+        # not guarantee worker assignment: one worker may receive both histories.
+        # Record the observed boundary; this run alone cannot promise master coverage.
+        run_case(work, "root", 2, 6e153, 2, True,
+                 ("scoring_mesh_root", "scoring_mesh_csv"), mesh=True,
                  particles_per_event=(100, 1))
         for threads in (1, 2):
             for scorer in ("let", "displacement"):

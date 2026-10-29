@@ -220,6 +220,8 @@ jobs:
         with:
           name: linux-evidence-${{ matrix.geant4 }}
           path: |
+            out/verification/geant4-${{ matrix.geant4 }}/linux-static
+            out/verification/geant4-${{ matrix.geant4 }}/linux-gui
             out/verification/geant4-${{ matrix.geant4 }}/linux-backend
             out/verification/geant4-${{ matrix.geant4 }}/linux-integration
           if-no-files-found: warn

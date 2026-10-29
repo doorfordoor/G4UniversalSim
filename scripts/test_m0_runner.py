@@ -39,7 +39,7 @@ def main() -> int:
     assert len(tests_content_fingerprint()) == 64
     # The report id distinguishes the thread-aware probe from the older one;
     # a silent downgrade would undercount assertions executed in worker pools.
-    assert ASSERT_PROBE_ID == "settrace_assert_lines_v2", ASSERT_PROBE_ID
+    assert ASSERT_PROBE_ID == "settrace_assert_lines_v3", ASSERT_PROBE_ID
     missing_sources = untracked_source_files()
     assert missing_sources == sorted(set(missing_sources))
     assert all((ROOT / source).is_file() for source in missing_sources)

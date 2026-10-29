@@ -96,7 +96,9 @@ def main():
     executable = os.environ.get("G4USIM_EXE")
     assert executable, "Set G4USIM_EXE to the backend under test"
     exe = Path(executable).resolve()
-    work = (args.work_dir or ROOT / "out/verification/q1-results-backend").resolve()
+    # Keep prior evidence intact and permit repeated full-suite runs.
+    import uuid
+    work = (args.work_dir or ROOT / "out/verification/q1-results-backend" / uuid.uuid4().hex).resolve()
     work.mkdir(parents=True, exist_ok=False)
     report = {"backend": str(exe), "binary_sha256": hashlib.sha256(exe.read_bytes()).hexdigest(),
               "backend_scope": "baseline binary; Python candidate only" if args.baseline else "candidate binary",

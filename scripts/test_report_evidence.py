@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 import subprocess
 import sys
 import tempfile
@@ -87,14 +88,63 @@ def expect_rejected(report: dict, needle: str, *, report_path: Path | None = Non
         raise AssertionError(f"report should have been rejected because of {needle!r}")
 
 
+def check_probe_runtime(root: Path) -> None:
+    fixtures = {
+        "short_first": ("values=[True,False,False,False,False]\nassert any(x for x in values)\n", 1, 0),
+        "short_last": ("values=[False,False,False,False,True]\nassert any(x for x in values)\n", 1, 0),
+        "expressions": ("assert [x for x in range(5)] == list(range(5))\n"
+                        "assert {x for x in range(5)} == set(range(5))\n"
+                        "assert {x:x for x in range(5)} == dict(zip(range(5),range(5)))\n"
+                        "assert (lambda: sum(x for x in range(5)))() == 10\n", 4, 0),
+        "multiline": ("assert (\n all(\n  x >= 0\n  for x in range(8)\n )\n)\n", 1, 0),
+        "nested_checks": ("def predicate(x):\n assert x >= 0\n return True\n"
+                          "assert all(predicate(x) for x in range(4))\n", 5, 0),
+        "generator": ("def values():\n for x in range(3):\n  assert x >= 0\n  yield x\n"
+                      "result=list(values())\nassert result == [0,1,2]\n", 4, 0),
+        "resumed_generator": ("def values():\n assert True; yield 1\n assert True; yield 2\n"
+                              "result=list(values())\nassert result == [1,2]\n", 3, 0),
+        "yield_in_assert": ("def check():\n assert (yield 1)\ng=check()\nnext(g)\n"
+                            "try:\n g.send(True)\nexcept StopIteration:\n pass\n", 1, 0),
+        "same_line": ("assert True; assert True\nif False: assert False\n"
+                      "for x in []: assert False\nx=1; assert x==1\n"
+                      "def never(): assert False\ndef called(): assert True\ncalled()\n", 2, 0),
+        "decorator_class": ("def decorate(fn): return fn\n@decorate\ndef check():\n assert True\n"
+                            "class Checked:\n assert True\n def method(self):\n  assert True\n"
+                            "check()\nChecked().method()\n", 3, 0),
+        "threaded": ("import threading\ndef worker():\n for x in range(3):\n  assert x < 3\n"
+                     "threads=[threading.Thread(target=worker) for _ in range(2)]\n"
+                     "for thread in threads: thread.start()\nfor thread in threads: thread.join()\n"
+                     "assert not any(thread.is_alive() for thread in threads)\n", 7, 0),
+        "assertion_failure": ("assert True\nassert False, 'specific assertion failure'\n", 2, 1),
+        "exception": ("assert True\nraise RuntimeError('specific runtime failure')\n", 1, 1),
+        "exit": ("assert True\nraise SystemExit(7)\n", 1, 7),
+        "string_exit": ("assert True\nraise SystemExit('specific exit message')\n", 1, 1),
+    }
+    for name, (source, expected, exit_code) in fixtures.items():
+        path = root / f"probe_{name}.py"
+        path.write_text(source, encoding="utf-8")
+        result = subprocess.run([sys.executable, "-B", str(ROOT / "tools/test_assert_probe.py"), str(path)],
+                                capture_output=True, text=True, timeout=30)
+        markers = re.findall(r"^G4USIM_ASSERTS=(\d+)$", result.stdout, re.MULTILINE)
+        assert result.returncode == exit_code, (name, result.stdout, result.stderr)
+        assert markers == [str(expected)], (name, expected, result.stdout, result.stderr)
+        if name == "assertion_failure": assert "specific assertion failure" in result.stderr
+        if name == "exception": assert "specific runtime failure" in result.stderr
+        if name == "string_exit": assert "specific exit message" in result.stderr
+
+
 def main() -> int:
     with tempfile.TemporaryDirectory(prefix="g4usim-evidence-") as directory:
         root = Path(directory)
+        check_probe_runtime(root)
         report_path = root / "run" / "report.json"
         report_path.parent.mkdir(parents=True)
         report = sample_report()
         write_logs(report, report_path.parent)
         validate_report(report, report_path=report_path)
+        mixed_probe = sample_report()
+        mixed_probe["results"][0]["assert_probe"] = "settrace_assert_lines_v2"
+        expect_rejected(mixed_probe, "differs from report probe")
         assert resolve_log(report["results"][0], report_path) is not None
         assert resolve_log(report["results"][1], report_path) is not None, "logs/ fallback must resolve"
         assert log_digest(report_path.parent / "one.log", legacy=False)
@@ -126,10 +176,16 @@ def main() -> int:
         no_probe["assert_probe"] = "disabled"
         expect_rejected(no_probe, "assert probe is disabled")
 
-        legacy_probe = sample_report()
-        legacy_probe["assert_probe"] = "settrace_assert_lines_v1"
-        expect_rejected(legacy_probe, "archived reports need --allow-legacy-probe")
-        validate_report(legacy_probe, allow_legacy_probe=True)
+        for old_probe in ("settrace_assert_lines_v1", "settrace_assert_lines_v2"):
+            legacy_probe = sample_report()
+            legacy_probe["assert_probe"] = old_probe
+            for record in legacy_probe["results"]: record["assert_probe"] = old_probe
+            expect_rejected(legacy_probe, "archived reports need --allow-legacy-probe")
+            validate_report(legacy_probe, allow_legacy_probe=True)
+            expect_rejected(report, "cross-probe baseline", report_path=report_path,
+                            baseline=legacy_probe, allow_legacy_probe=True)
+            expect_rejected(legacy_probe, "cross-probe baseline", baseline=sample_report(), allow_legacy_probe=True)
+            validate_report(legacy_probe, baseline=legacy_probe, allow_legacy_probe=True)
 
         missing_algorithm = sample_report()
         missing_algorithm.pop("log_digest_algorithm")
@@ -266,7 +322,7 @@ def main() -> int:
 
         dropped_case = sample_report()
         write_logs(dropped_case, report_path.parent)
-        dropped = {"schema": baseline["schema"], "assertions_executed_total": 12,
+        dropped = {"schema": baseline["schema"], "assert_probe": PROBE_ID, "assertions_executed_total": 12,
                    "results": baseline["results"] + [case_payload("three", "gui", 0)]}
         expect_rejected(dropped_case, "missing now", report_path=report_path, baseline=dropped)
 

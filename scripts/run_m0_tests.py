@@ -32,7 +32,7 @@ ASSERT_PROBE = ROOT / "tools" / "test_assert_probe.py"
 ASSERT_MARKER = "G4USIM_ASSERTS="
 # Probe implementation id written into every report; v2 also traces threads that the
 # test script starts, so assertions executed in worker pools are counted.
-ASSERT_PROBE_ID = "settrace_assert_lines_v2"
+ASSERT_PROBE_ID = "settrace_assert_lines_v3"
 # Digests describe bytes a reader can re-hash from disk. Text-mode writes translate
 # "\n" to "\r\n" on Windows, so hashing the in-memory string would store a digest for
 # a byte sequence no reader can reproduce. Logs and the report are written as
@@ -107,6 +107,9 @@ CASES = (
     Case("scoring_numeric", "scripts/test_scoring_numeric.py", "backend", ("exe", "uproot")),
     Case("sd_context_failure", "scripts/test_sd_context_failure.py", "backend", ("exe",)),
     Case("q1_postprocessing", "scripts/test_q1_postprocessing.py", "gui", ("qt", "uproot")),
+    Case("output_provenance", "scripts/test_output_provenance.py", "static"),
+    Case("output_provenance_backend", "scripts/test_output_provenance.py", "integration", ("exe",), args=("--backend",)),
+    Case("gui_output_provenance", "gui/smoke_tests/smoke_output_provenance.py", "gui", ("qt",)),
     Case("q1_public_paths", "gui/smoke_tests/smoke_q1_public_paths.py", "gui", ("qt",)),
     Case("gps_sources", "scripts/test_gps_sources.py", "backend", ("exe",)),
     Case("geometry_a5", "scripts/test_geometry_a5.py", "backend", ("exe",)),
@@ -135,6 +138,10 @@ CASES = (
     Case("default_geometry", "scripts/test_default_geometry_batch.py", "backend", ("exe",)),
     Case("geometry_roundtrip", "scripts/test_geometry_roundtrip_backend.py", "integration", ("exe", "qt")),
     Case("biasing_targets", "scripts/test_biasing_target_contract.py", "backend", ("exe",)),
+    Case("biasing_worker_runtime", "scripts/test_biasing_worker_runtime.py", "backend", ("exe",)),
+    Case("biasing_step_weight", "scripts/test_biasing_step_weight.py", "backend", ("exe",)),
+    Case("random_command_semantics", "scripts/test_random_command_semantics.py", "backend", ("exe",)),
+    Case("run_reinitialization", "scripts/test_run_reinitialization.py", "backend", ("exe",)),
     Case("gui_run_inputs", "gui/smoke_tests/smoke_run_input_modes.py", "integration", ("exe", "qt")),
     Case("gui_backend_geometry", "gui/smoke_tests/smoke_backend_geometry.py", "integration", ("exe", "qt")),
     Case("gui_backend_package", "gui/smoke_tests/smoke_geometry_backend_package.py", "integration", ("exe", "qt")),

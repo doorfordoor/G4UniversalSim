@@ -45,8 +45,8 @@ from pathlib import Path
 
 REPORT_SCHEMA = "G4UniversalSimM0TestReport"
 MIN_VERSION = 2
-PROBE_ID = "settrace_assert_lines_v2"
-LEGACY_PROBE_IDS = ("settrace_assert_lines_v1",)
+PROBE_ID = "settrace_assert_lines_v3"
+LEGACY_PROBE_IDS = ("settrace_assert_lines_v1", "settrace_assert_lines_v2")
 LOG_DIGEST_ALGORITHM = "sha256_raw_bytes_lf_v2"
 LAYERS = ("static", "gui", "backend", "integration")
 PROFILES = ("all", "static", "gui", "backend", "integration")
@@ -174,6 +174,9 @@ def validate_report(
         )
         count = record.get("assertions_executed")
         assert isinstance(count, int), f"passing case {record['name']!r} has no assertion count"
+        assert record.get("assert_probe") == probe, (
+            f"case {record['name']!r} probe {record.get('assert_probe')!r} differs from report probe {probe!r}"
+        )
         assert count >= 1, (
             f"passing case {record['name']!r} executed no assertions; a PASS without assertion evidence "
             f"is only an exit code"
@@ -228,6 +231,12 @@ def validate_report(
 
     if baseline is not None:
         assert baseline.get("schema") == REPORT_SCHEMA, "baseline report has an unexpected schema"
+        assert baseline.get("assert_probe") == probe, (
+            f"cross-probe baseline comparison is not valid: current {probe!r}, baseline {baseline.get('assert_probe')!r}; "
+            "rebuild the baseline with the same probe, never reinterpret archived assertion totals"
+        )
+        assert all(record.get("assert_probe") == probe for record in baseline.get("results", [])
+                   if isinstance(record.get("assertions_executed"), int)), "baseline case probe differs from its report probe"
         base_total = baseline.get("assertions_executed_total")
         assert isinstance(base_total, int) and base_total > 0, "baseline report has no assertion total"
         assert total >= base_total, (
