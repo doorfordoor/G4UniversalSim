@@ -15,7 +15,9 @@
 
 本轮基础链路验收：MSVC + Geant4 11.3.2 构建成功；最终两组覆盖统一平台全部 **89 PASS / 0 FAIL / 0 SKIP，117149 条断言**，另有独立模型 24 条。两组报告源码/测试指纹一致，逐用例断言非零，归档日志 SHA-256 与严格门禁通过；见 [验收记录](docs/verification/2c-configured-20261029/README.md)。初轮两项环境失败原样保留，已使用已有 GDML/数据根参数复测，未放宽测试。真实导出数据的浅色/深色/小窗口 offscreen 图已查看，不等同桌面与高 DPI 验收。
 
-当前代码范围：`Config/EffectiveConfig` 类型化事务与不可变快照、`--dump-effective-config` 独占新文件/标准输出、GUI 第 9 页只读查看器；完整 2C 继续进行中。没有后台运行任务，原 DSH 目录未合并。下一步按 [实际消费者清单与 source 接入约束](docs/EffectiveConfig.md) 闭合来源/解析字节哈希/对象身份，再接运行时证据和三态开关；不得把本子集提升为全模块配置真值。
+当前代码范围：`Config/EffectiveConfig` 类型化事务与不可变快照、`--dump-effective-config` 独占新文件/标准输出、GUI 第 9 页只读查看器；完整 2C 继续进行中。没有后台运行任务，原 DSH 目录未合并。收尾收到新的独立审查，两个遗留缺陷已在当前 70a1aba 代码重新复现且**尚未修复**：csh 拒绝主配置切换后仍报成功（P1），元数据写失败但文本摘要仍成功（P2）；见 [当前分支复现证据](docs/verification/m0-known-defects-20261029/README.md) 与 [独立审查](docs/collab/reviews/20261029-1051-astra-5465dbd-m0-review.md)。现有 89 项未覆盖这些反例。
+
+下一步优先修复上述失败传播与最终化证据一致性，保留拒绝配置热切换的现有契约；完整热切换另行设计，不重复 Configure 冒充支持。随后按 [实际消费者清单与 source 接入约束](docs/EffectiveConfig.md) 闭合来源/解析字节哈希/对象身份，再接运行时证据和三态开关。
 
 ## 原 DSH 集成基线（2026-10-28 归档，2C 新工作区见上节）
 
