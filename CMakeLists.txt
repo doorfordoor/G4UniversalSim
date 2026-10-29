@@ -94,6 +94,9 @@ target_compile_definitions(mergeHistograms PRIVATE
 # static/GUI profiles also work on hosts where Geant4 cannot be configured.
 include(CTest)
 if(BUILD_TESTING)
+    # Exercise real numeric accumulation/merge code independently of transport.
+    add_executable(scoringNumericCheck tools/scoringNumericCheck.cc src/Scoring/HistoryStatistics.cc)
+    target_compile_features(scoringNumericCheck PRIVATE cxx_std_17)
     find_package(Python3 COMPONENTS Interpreter QUIET)
     if(Python3_Interpreter_FOUND)
         foreach(profile static gui backend integration)

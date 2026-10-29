@@ -1,4 +1,5 @@
 #include "Scoring/LETScorer.hh"
+#include "Scoring/NumericChecks.hh"
 
 #include "Output/AnalysisOutput.hh"
 #include "Output/CsvWriter.hh"
@@ -48,17 +49,22 @@ void LETScorer::EndEvent(int)
 {
     ++events_;
     for (VolumeLET* v : touched_) {
-        v->sumWL += v->eventWL;
-        v->sumWSL += v->eventWSL;
-        v->sumWS2L += v->eventWS2L;
-        v->sumSqWL += v->eventWL * v->eventWL;
-        v->sumSqWSL += v->eventWSL * v->eventWSL;
-        v->sumSqWS2L += v->eventWS2L * v->eventWS2L;
-        v->sumWLxWSL += v->eventWL * v->eventWSL;
-        v->sumWSLxWS2L += v->eventWSL * v->eventWS2L;
-        ++v->entries;
-        v->eventWL = v->eventWSL = v->eventWS2L = 0.0;
-        v->pending = false;
+        VolumeLET next = *v;
+        next.sumWL = ScoringNumeric::Add(v->sumWL, v->eventWL, "LET WL sum");
+        next.sumWSL = ScoringNumeric::Add(v->sumWSL, v->eventWSL, "LET WSL sum");
+        next.sumWS2L = ScoringNumeric::Add(v->sumWS2L, v->eventWS2L, "LET WS2L sum");
+        const auto moment = [](double sum, double a, double b) {
+            return ScoringNumeric::Add(sum, ScoringNumeric::Multiply(a, b, "LET event moment"), "LET moment sum");
+        };
+        next.sumSqWL = moment(v->sumSqWL, v->eventWL, v->eventWL);
+        next.sumSqWSL = moment(v->sumSqWSL, v->eventWSL, v->eventWSL);
+        next.sumSqWS2L = moment(v->sumSqWS2L, v->eventWS2L, v->eventWS2L);
+        next.sumWLxWSL = moment(v->sumWLxWSL, v->eventWL, v->eventWSL);
+        next.sumWSLxWS2L = moment(v->sumWSLxWS2L, v->eventWSL, v->eventWS2L);
+        next.entries = ScoringNumeric::AddCount(v->entries, 1, "LET entries");
+        next.eventWL = next.eventWSL = next.eventWS2L = 0.0;
+        next.pending = false;
+        *v = std::move(next);
     }
     touched_.clear();
 }
@@ -66,26 +72,29 @@ void LETScorer::EndEvent(int)
 void LETScorer::ScoreHit(const HitRecord& hit)
 {
     // LETstep <= 0 marks neutral particles or steps without a stopping power.
-    if (!(hit.LETstep > 0.0) || !(hit.stepLength > 0.0)) return;
+    if (!ScoringNumeric::PositiveLETStep(hit.LETstep, hit.stepLength, hit.weight)) return;
     if (!particles_.empty() && particles_.count(hit.particleName) == 0) return;
     if (hit.doseVolumePath.empty()) {
         throw std::runtime_error("LETScorer requires a sensitive touchable path for " + hit.volumeName);
     }
-    if (!std::isfinite(hit.LETstep) || !std::isfinite(hit.stepLength) || !std::isfinite(hit.weight)) {
-        throw std::runtime_error("LETScorer rejects nonfinite stopping power, step length or weight");
-    }
     const double s = hit.LETstep / (MeV / mm);
     const double l = hit.stepLength / mm;
     auto& volume = volumes_[hit.doseVolumePath];
+    const double wl = ScoringNumeric::Multiply(hit.weight, l, "LET weighted length");
+    const double wsl = ScoringNumeric::Multiply(wl, s, "LET weighted stopping power");
+    const double ws2l = ScoringNumeric::Multiply(wsl, s, "LET weighted squared stopping power");
+    const double nextWL = ScoringNumeric::Add(volume.eventWL, wl, "LET event WL");
+    const double nextWSL = ScoringNumeric::Add(volume.eventWSL, wsl, "LET event WSL");
+    const double nextWS2L = ScoringNumeric::Add(volume.eventWS2L, ws2l, "LET event WS2L");
     if (volume.name.empty()) volume.name = hit.volumeName;
     if (!volume.pending) {
         volume.pending = true;
         touched_.push_back(&volume);
     }
     ++volume.steps;
-    volume.eventWL += hit.weight * l;
-    volume.eventWSL += hit.weight * s * l;
-    volume.eventWS2L += hit.weight * s * s * l;
+    volume.eventWL = nextWL;
+    volume.eventWSL = nextWSL;
+    volume.eventWS2L = nextWS2L;
 }
 
 void LETScorer::Write(OutputManager& output)

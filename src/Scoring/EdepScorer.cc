@@ -1,4 +1,5 @@
 #include "Scoring/EdepScorer.hh"
+#include "Scoring/NumericChecks.hh"
 
 #include "Output/AnalysisOutput.hh"
 #include "Output/CsvWriter.hh"
@@ -45,13 +46,17 @@ void EdepScorer::BeginEvent(int eventID)
 
 void EdepScorer::EndEvent(int)
 {
-    runRawEdep_ += currentEventRawEdep_;
-    runWeightedEdep_ += currentEventWeightedEdep_;
-    runTotal_.raw.event = currentEventRawEdep_;
-    runTotal_.weighted.event = currentEventWeightedEdep_;
-    runTotal_.raw.Close();
-    runTotal_.weighted.Close();
+    const double nextRaw = ScoringNumeric::Add(runRawEdep_, currentEventRawEdep_, "run raw Edep");
+    const double nextWeighted = ScoringNumeric::Add(runWeightedEdep_, currentEventWeightedEdep_, "run weighted Edep");
+    auto nextTotal = runTotal_;
+    nextTotal.raw.event = currentEventRawEdep_;
+    nextTotal.weighted.event = currentEventWeightedEdep_;
+    nextTotal.raw.Close();
+    nextTotal.weighted.Close();
     touched_.EndEvent();
+    runRawEdep_ = nextRaw;
+    runWeightedEdep_ = nextWeighted;
+    runTotal_ = nextTotal;
     ++events_;
     if (rawHistogramEnabled_) rawEdepHist_.Fill(currentEventRawEdep_);
     if (weightedHistogramEnabled_) weightedEdepHist_.Fill(currentEventWeightedEdep_);
@@ -59,11 +64,12 @@ void EdepScorer::EndEvent(int)
 
 void EdepScorer::ScoreHit(const HitRecord& hit)
 {
-    const double raw = hit.edep;
-    const double weighted = hit.edep * hit.weight;
-
-    currentEventRawEdep_ += raw;
-    currentEventWeightedEdep_ += weighted;
+    const double raw = ScoringNumeric::Finite(hit.edep, "hit Edep");
+    const double weighted = ScoringNumeric::Multiply(hit.edep, hit.weight, "weighted hit Edep");
+    const double nextRaw = ScoringNumeric::Add(currentEventRawEdep_, raw, "event raw Edep");
+    const double nextWeighted = ScoringNumeric::Add(currentEventWeightedEdep_, weighted, "event weighted Edep");
+    currentEventRawEdep_ = nextRaw;
+    currentEventWeightedEdep_ = nextWeighted;
 
     if (volumeSummaryEnabled_) {
         const std::string key = SummaryKey(hit.volumeName);

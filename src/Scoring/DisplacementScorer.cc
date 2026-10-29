@@ -1,4 +1,5 @@
 #include "Scoring/DisplacementScorer.hh"
+#include "Scoring/NumericChecks.hh"
 
 #include "Output/CsvWriter.hh"
 #include "Output/OutputManager.hh"
@@ -67,13 +68,13 @@ void DisplacementScorer::ScoreHit(const HitRecord& hit)
         throw std::runtime_error("DisplacementScorer detected changing volume for touchable " + hit.doseVolumePath);
     }
     auto& particle = volume.particles[hit.particleName];
-    const double lengthMm = hit.weight * hit.stepLength / mm;
+    const double lengthMm = ScoringNumeric::Multiply(hit.weight, hit.stepLength / mm, "DDD weighted length");
     double niel = 0.0;
     if (!table->second->Evaluate(hit.meanKineticEnergy, niel)) {
-        particle.outOfRangeLength += lengthMm;
+        particle.outOfRangeLength = ScoringNumeric::Add(particle.outOfRangeLength, lengthMm, "DDD out-of-range length");
         return;
     }
-    particle.trackLength += lengthMm;
+    particle.trackLength = ScoringNumeric::Add(particle.trackLength, lengthMm, "DDD track length");
     const double ddd = lengthMm * niel * kMm2PerCm2 / (volume.volume / (mm * mm * mm));
     if (!std::isfinite(ddd)) throw std::runtime_error("DisplacementScorer accumulated nonfinite DDD");
     if (ddd > 0.0) {

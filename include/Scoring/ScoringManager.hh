@@ -125,6 +125,10 @@ public:
     // Worker: fills runID/eventID and writes one row; failures abort the run.
     void RecordPhaseSpace(PhaseSpaceParticle particle);
 
+    // Worker callbacks must report transport/context errors through the same
+    // shared failure latch instead of allowing exceptions to escape Geant4.
+    void ReportScoringFailure(const std::string& stage, const std::string& message);
+
 private:
     struct HistogramConfig {
         int bins = 200;

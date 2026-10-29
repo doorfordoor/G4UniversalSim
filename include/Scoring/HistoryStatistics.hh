@@ -9,7 +9,10 @@
 //   mean per event = sum / N
 //   R   = sqrt(sumSq / sum^2 - 1/N)          relative error of the run total/mean
 //   FOM = 1 / (R^2 T)                        T = run wall time in seconds
-// This is the estimator used for Geant4 scoring meshes (G4StatDouble) and MCNP.
+// This is the project's uncorrected event-moment approximation. It omits the
+// N/(N-1) finite-sample variance correction; it is not G4StatDouble::rms().
+// N<2 or a zero total cannot establish a relative uncertainty. Numerical zero
+// is retained for legacy consumers; UncertaintyStatus must accompany it.
 // For a ratio of two per-event tallies Q = B/A (track/dose-averaged LET) the
 // first-order (delta-method) relative error is
 //   R_Q^2 = sumSq_B/B^2 + sumSq_A/A^2 - 2 sum_AB/(A B),
@@ -48,6 +51,7 @@ namespace HistoryStatistics {
 double RelativeError(double sum, double sumSq, long long events);
 double RatioRelativeError(double sumNum, double sumSqNum, double sumDen, double sumSqDen, double sumCross);
 double FigureOfMerit(double relativeError, double seconds);
+const char* UncertaintyStatus(long long events, double numerator, bool ratio = false, double denominator = 0.0);
 
 // One merged quantity of one scorer key. For estimator "total" only sum/sumSq
 // are used; for "ratio" the value is num/den with the delta-method error.

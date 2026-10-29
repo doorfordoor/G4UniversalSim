@@ -46,6 +46,8 @@ public:
     G4int GetCollectionID() const;
 
 private:
+    void InjectBoundaryFault(bool initialize);
+    void ReportBoundaryFailure(const char* stage, const char* message);
     int GetCurrentEventID() const;
     ScoringManager* ResolveScoringManager();
     // Unrestricted electronic stopping power at the step's mean kinetic energy
@@ -63,6 +65,10 @@ private:
 
     int verboseLevel_ = 0;
     bool fallbackWarningIssued_ = false;
+    bool callbackFailed_ = false;
+    enum class BoundaryFault { None, Context, ContextUnknown, Initialize, InitializeUnknown };
+    BoundaryFault boundaryFault_ = BoundaryFault::None;
+    bool boundaryFaultInjected_ = false;
     G4EmCalculator emCalculator_;
     int hitsThisEvent_ = 0;
     double rawEdepThisEvent_ = 0.0;

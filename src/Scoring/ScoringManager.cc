@@ -10,6 +10,7 @@
 #include "Scoring/FluenceScorer.hh"
 #include "Scoring/LETScorer.hh"
 #include "Scoring/NielTable.hh"
+#include "Scoring/NumericChecks.hh"
 #include "Utils/StringUtils.hh"
 #include "Utils/UnitParser.hh"
 #include "G4ParticleDefinition.hh"
@@ -458,61 +459,76 @@ void ScoringManager::EndRun(int runID)
 
 void ScoringManager::BeginEvent(int eventID)
 {
-    currentEventID_ = eventID;
-    currentEventRawEdep_ = 0.0;
-    currentEventWeightedEdep_ = 0.0;
-    trajectories_.BeginEvent(eventID);
-    if (!enabled_) return;
-    for (ScorerBase* scorer : EnabledScorers()) scorer->BeginEvent(eventID);
+    if (outputManager_ && outputManager_->HasOutputFailure()) return;
+    try {
+        currentEventID_ = eventID;
+        currentEventRawEdep_ = 0.0;
+        currentEventWeightedEdep_ = 0.0;
+        trajectories_.BeginEvent(eventID);
+        if (!enabled_) return;
+        for (ScorerBase* scorer : EnabledScorers()) scorer->BeginEvent(eventID);
+    } catch (const std::exception& error) {
+        ReportScoringFailure("scoring_begin_event", error.what());
+    } catch (...) {
+        ReportScoringFailure("scoring_begin_event", "unknown exception");
+    }
 }
 
 void ScoringManager::EndEvent(int eventID)
 {
-    if (eventID != currentEventID_ && verboseLevel_ > 0) {
-        std::cerr << "[ScoringManager] EndEvent eventID mismatch: current="
-                  << currentEventID_ << ", input=" << eventID << '\n';
-    }
+    // A failed event must not be folded into statistics or published as valid.
+    if (outputManager_ && outputManager_->HasOutputFailure()) return;
+    try {
+        if (eventID != currentEventID_ && verboseLevel_ > 0) {
+            std::cerr << "[ScoringManager] EndEvent eventID mismatch: current="
+                      << currentEventID_ << ", input=" << eventID << '\n';
+        }
 
-    if (enabled_) {
-        for (ScorerBase* scorer : EnabledScorers()) scorer->EndEvent(eventID);
-    }
-    if (trajectories_.IsRecording()) {
-        try {
-            if (outputManager_ && outputManager_->HasOutputFailure()) {
-                trajectories_.BeginEvent(-1);   // drop it: the run is being aborted
+        if (enabled_) {
+            for (ScorerBase* scorer : EnabledScorers()) scorer->EndEvent(eventID);
+        }
+        if (trajectories_.IsRecording()) {
+            try {
+                if (outputManager_ && outputManager_->HasOutputFailure()) {
+                    trajectories_.BeginEvent(-1);   // drop it: the run is being aborted
+                }
+                trajectories_.EndEvent();
+            } catch (const std::exception& error) {
+                if (outputManager_) outputManager_->RecordOutputFailure("trajectory_write", error.what());
+                if (auto* runManager = G4RunManager::GetRunManager()) runManager->AbortRun(true);
             }
-            trajectories_.EndEvent();
-        } catch (const std::exception& error) {
-            if (outputManager_) outputManager_->RecordOutputFailure("trajectory_write", error.what());
-            if (auto* runManager = G4RunManager::GetRunManager()) runManager->AbortRun(true);
         }
-    }
 
-    // ROOT histograms are filled per event (the CSV path bins inside EdepScorer
-    // and writes at end of run); Geant4 merges them across worker threads.
-    if (enabled_ && outputManager_ && outputManager_->WritesRoot() &&
-        !outputManager_->HasOutputFailure()) {
-        const EdepScorer* edep = GetEdepScorer();
-        if (edep && edep->IsEnabled()) {
-            AnalysisOutput::FillEdepHistograms(
-                edep->IsRawHistogramEnabled(), edep->GetCurrentEventRawEdep(),
-                edep->IsWeightedHistogramEnabled(), edep->GetCurrentEventWeightedEdep());
+        // ROOT histograms are filled per event (the CSV path bins inside EdepScorer
+        // and writes at end of run); Geant4 merges them across worker threads.
+        if (enabled_ && outputManager_ && outputManager_->WritesRoot() &&
+            !outputManager_->HasOutputFailure()) {
+            const EdepScorer* edep = GetEdepScorer();
+            if (edep && edep->IsEnabled()) {
+                AnalysisOutput::FillEdepHistograms(
+                    edep->IsRawHistogramEnabled(), edep->GetCurrentEventRawEdep(),
+                    edep->IsWeightedHistogramEnabled(), edep->GetCurrentEventWeightedEdep());
+            }
         }
-    }
 
-    if (enabled_ && eventEdepOutputEnabled_ && outputManager_ &&
-        !outputManager_->HasOutputFailure()) {
-        EventEdepRecord record;
-        record.runID = currentRunID_;
-        record.eventID = currentEventID_;
-        record.rawEdep = currentEventRawEdep_;
-        record.weightedEdep = currentEventWeightedEdep_;
-        try {
-            outputManager_->WriteEventEdep(record);
-        } catch (const std::exception& error) {
-            outputManager_->RecordOutputFailure("event_edep_write", error.what());
-            if (auto* runManager = G4RunManager::GetRunManager()) runManager->AbortRun(true);
+        if (enabled_ && eventEdepOutputEnabled_ && outputManager_ &&
+            !outputManager_->HasOutputFailure()) {
+            EventEdepRecord record;
+            record.runID = currentRunID_;
+            record.eventID = currentEventID_;
+            record.rawEdep = currentEventRawEdep_;
+            record.weightedEdep = currentEventWeightedEdep_;
+            try {
+                outputManager_->WriteEventEdep(record);
+            } catch (const std::exception& error) {
+                outputManager_->RecordOutputFailure("event_edep_write", error.what());
+                if (auto* runManager = G4RunManager::GetRunManager()) runManager->AbortRun(true);
+            }
         }
+    } catch (const std::exception& error) {
+        ReportScoringFailure("scoring_end_event", error.what());
+    } catch (...) {
+        ReportScoringFailure("scoring_end_event", "unknown exception");
     }
 }
 
@@ -521,8 +537,16 @@ void ScoringManager::ScoreHit(const HitRecord& hit)
     if (!enabled_) return;
     if (outputManager_ && outputManager_->HasOutputFailure()) return;
 
-    currentEventRawEdep_ += hit.edep;
-    currentEventWeightedEdep_ += hit.edep * hit.weight;
+    try {
+        const double weighted = ScoringNumeric::Multiply(hit.edep, hit.weight, "weighted hit Edep");
+        const double nextRaw = ScoringNumeric::Add(currentEventRawEdep_, hit.edep, "event raw Edep");
+        const double nextWeighted = ScoringNumeric::Add(currentEventWeightedEdep_, weighted, "event weighted Edep");
+        currentEventRawEdep_ = nextRaw;
+        currentEventWeightedEdep_ = nextWeighted;
+    } catch (const std::exception& error) {
+        ReportScoringFailure("scoring_event_accumulate", error.what());
+        return;
+    }
 
     if (hitOutputEnabled_ && outputManager_) {
         HitRecord row = hit;
@@ -591,6 +615,13 @@ void ScoringManager::ScoreDisplacementStep(const HitRecord& hit)
 void ScoringManager::ReportFluenceTransportFailure(const std::string& message)
 {
     if (outputManager_) outputManager_->RecordOutputFailure("scoring_fluence", message);
+    if (auto* runManager = G4RunManager::GetRunManager()) runManager->AbortRun(true);
+}
+
+void ScoringManager::ReportScoringFailure(const std::string& stage, const std::string& message)
+{
+    if (outputManager_) outputManager_->RecordOutputFailure(stage, message);
+    std::cerr << "[ScoringFailure] " << stage << ": " << message << '\n';
     if (auto* runManager = G4RunManager::GetRunManager()) runManager->AbortRun(true);
 }
 

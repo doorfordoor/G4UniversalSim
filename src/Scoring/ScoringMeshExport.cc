@@ -2,6 +2,7 @@
 
 #include "Output/RunSummary.hh"
 #include "Scoring/HistoryStatistics.hh"
+#include "Scoring/NumericChecks.hh"
 
 #include "G4ScoringManager.hh"
 #include "G4StatDouble.hh"
@@ -100,8 +101,9 @@ std::vector<Cell> CollectCells()
                 cell.i0 = key / stride0;
                 cell.i1 = (key % stride0) / stride1;
                 cell.i2 = key % stride1;
-                cell.sum = stat.sum_wx() * scale;
-                cell.sumSquares = stat.sum_wx2() * scale * scale;
+                cell.sum = ScoringNumeric::Multiply(stat.sum_wx(), scale, "mesh sum");
+                cell.sumSquares = ScoringNumeric::Multiply(
+                    ScoringNumeric::Multiply(stat.sum_wx2(), scale, "mesh square sum"), scale, "mesh scaled square sum");
                 cell.entries = stat.n();
                 cells.push_back(cell);
             }

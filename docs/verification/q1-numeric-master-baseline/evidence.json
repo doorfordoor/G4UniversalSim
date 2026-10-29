@@ -1,0 +1,23 @@
+{
+  "scope": "构建2修复前：仅ROOT的master合并溢出反例",
+  "exe_build": "Windows build1",
+  "root_sha256": "66562c4a4d9752443c21de1fd20cd2c4974afca82c7958d1fd3d1c750c295cc7",
+  "root_artifact_local": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\q1-numeric-master-baseline\\root-2-6e+153-2-1-meshTrue\\output\\g4usim.root",
+  "worker_rows": [
+    {
+      "thread": 0,
+      "events": 1,
+      "sum": 1.2e+154,
+      "sum_sq": 1.4400000000000002e+308
+    },
+    {
+      "thread": 1,
+      "events": 1,
+      "sum": 1.1999999999999998e+154,
+      "sum_sq": 1.4399999999999994e+308
+    }
+  ],
+  "expected": "merged square is not representable in double; reject with failed summary",
+  "observed": "completed and exit0",
+  "regression": "scripts/test_scoring_numeric.py"
+}

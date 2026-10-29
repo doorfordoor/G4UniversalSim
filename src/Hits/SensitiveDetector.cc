@@ -10,6 +10,7 @@
 #include "G4Exception.hh"
 #include "G4HCofThisEvent.hh"
 #include "G4RunManager.hh"
+#include "G4Run.hh"
 #include "G4SDManager.hh"
 #include "G4Step.hh"
 #include "G4TouchableHistory.hh"
@@ -21,6 +22,8 @@
 #include <cmath>
 #include <memory>
 #include <stdexcept>
+#include <cstdlib>
+#include <string>
 
 SensitiveDetector::SensitiveDetector(const G4String& name,
                                      ScoringManager* scoringManager)
@@ -28,88 +31,142 @@ SensitiveDetector::SensitiveDetector(const G4String& name,
       scoringManager_(scoringManager)
 {
     collectionName.insert(collectionName_);
+    const char* fault = std::getenv("G4USIM_TEST_OUTPUT_FAULT");
+    const std::string selected = fault ? fault : "";
+    if (selected == "sd_context_t0") boundaryFault_ = BoundaryFault::Context;
+    else if (selected == "sd_context_unknown_t0") boundaryFault_ = BoundaryFault::ContextUnknown;
+    else if (selected == "sd_initialize_t0") boundaryFault_ = BoundaryFault::Initialize;
+    else if (selected == "sd_initialize_unknown_t0") boundaryFault_ = BoundaryFault::InitializeUnknown;
 }
 
 SensitiveDetector::~SensitiveDetector() = default;
 
 void SensitiveDetector::Initialize(G4HCofThisEvent* hce)
 {
-    hitsThisEvent_ = 0;
-    rawEdepThisEvent_ = 0.0;
-    weightedEdepThisEvent_ = 0.0;
-    hitsCollection_ = nullptr;
+    callbackFailed_ = false;
+    try {
+        hitsThisEvent_ = 0;
+        rawEdepThisEvent_ = 0.0;
+        weightedEdepThisEvent_ = 0.0;
+        hitsCollection_ = nullptr;
+        InjectBoundaryFault(true);
 
-    if (!hitCollectionEnabled_) return;
+        if (!hitCollectionEnabled_) return;
 
-    if (!hce) {
-        throw std::runtime_error("SensitiveDetector::Initialize failed: G4HCofThisEvent is null while hit collection is enabled");
-    }
-
-    hitsCollection_ = new ParticleHitCollection(SensitiveDetectorName, collectionName_);
-    if (collectionID_ < 0) {
-        G4SDManager* sdManager = G4SDManager::GetSDMpointer();
-        if (!sdManager) {
-            throw std::runtime_error("SensitiveDetector::Initialize failed: G4SDManager is null");
+        if (!hce) {
+            throw std::runtime_error("SensitiveDetector::Initialize failed: G4HCofThisEvent is null while hit collection is enabled");
         }
-        collectionID_ = sdManager->GetCollectionID(hitsCollection_);
+
+        auto collection = std::make_unique<ParticleHitCollection>(SensitiveDetectorName, collectionName_);
+        if (collectionID_ < 0) {
+            G4SDManager* sdManager = G4SDManager::GetSDMpointer();
+            if (!sdManager) {
+                throw std::runtime_error("SensitiveDetector::Initialize failed: G4SDManager is null");
+            }
+            collectionID_ = sdManager->GetCollectionID(collection.get());
+        }
+        if (collectionID_ < 0) throw std::runtime_error("SensitiveDetector::Initialize failed: invalid collection ID");
+        hce->AddHitsCollection(collectionID_, collection.get());
+        hitsCollection_ = collection.release();
+    } catch (const std::exception& error) {
+        ReportBoundaryFailure("scoring_sd_initialize", error.what());
+    } catch (...) {
+        ReportBoundaryFailure("scoring_sd_initialize", "unknown exception");
     }
-    hce->AddHitsCollection(collectionID_, hitsCollection_);
 }
 
 G4bool SensitiveDetector::ProcessHits(G4Step* step, G4TouchableHistory* history)
 {
     (void)history;
-    if (!step) return false;
+    if (!step || callbackFailed_) return false;
+    try {
 
-    const G4double edep = step->GetTotalEnergyDeposit();
-    const G4double ndep = step->GetNonIonizingEnergyDeposit();
-    if (!zeroEdepHitsEnabled_ && edep <= 0.0 && ndep <= 0.0) {
-        if (scoringEnabled_) {
-            if (ScoringManager* manager = ResolveScoringManager();
-                manager && (manager->IsFluenceScoringEnabled() || manager->IsLETScoringEnabled() ||
-                            manager->IsDisplacementScoringEnabled()) &&
-                step->GetStepLength() > 0.0) {
-                try {
-                    std::unique_ptr<ParticleHit> particle(ParticleHit::FromStep(step, GetCurrentEventID()));
-                    auto record = particle->ToHitRecord();
-                    PopulateDoseContext(step, record);
-                    if (manager->IsFluenceScoringEnabled()) manager->ScoreFluenceStep(record);
-                    if (manager->IsDisplacementScoringEnabled()) manager->ScoreDisplacementStep(record);
-                    if (manager->IsLETScoringEnabled()) {
-                        record.LETstep = ElectronicStoppingPower(step);
-                        manager->ScoreLETStep(record);
+        const G4double edep = step->GetTotalEnergyDeposit();
+        const G4double ndep = step->GetNonIonizingEnergyDeposit();
+        if (!zeroEdepHitsEnabled_ && edep <= 0.0 && ndep <= 0.0) {
+            if (scoringEnabled_) {
+                if (ScoringManager* manager = ResolveScoringManager();
+                    manager && (manager->IsFluenceScoringEnabled() || manager->IsLETScoringEnabled() ||
+                                manager->IsDisplacementScoringEnabled()) &&
+                    step->GetStepLength() > 0.0) {
+                    try {
+                        std::unique_ptr<ParticleHit> particle(ParticleHit::FromStep(step, GetCurrentEventID()));
+                        auto record = particle->ToHitRecord();
+                        InjectBoundaryFault(false);
+                        PopulateDoseContext(step, record);
+                        if (manager->IsFluenceScoringEnabled()) manager->ScoreFluenceStep(record);
+                        if (manager->IsDisplacementScoringEnabled()) manager->ScoreDisplacementStep(record);
+                        if (manager->IsLETScoringEnabled()) {
+                            record.LETstep = ElectronicStoppingPower(step);
+                            manager->ScoreLETStep(record);
+                        }
+                    } catch (const std::exception& error) {
+                        ReportBoundaryFailure("scoring_transport_context", error.what());
+                    } catch (...) {
+                        ReportBoundaryFailure("scoring_transport_context", "unknown exception");
                     }
-                } catch (const std::exception& error) {
-                    manager->ReportFluenceTransportFailure(error.what());
                 }
             }
+            return false;
         }
-        return false;
-    }
 
-    std::unique_ptr<ParticleHit> hit(ParticleHit::FromStep(step, GetCurrentEventID()));
+        std::unique_ptr<ParticleHit> hit(ParticleHit::FromStep(step, GetCurrentEventID()));
 
-    ++hitsThisEvent_;
-    rawEdepThisEvent_ += hit->GetEdep();
-    weightedEdepThisEvent_ += hit->GetEdep() * hit->GetWeight();
+        ++hitsThisEvent_;
+        rawEdepThisEvent_ += hit->GetEdep();
+        weightedEdepThisEvent_ += hit->GetEdep() * hit->GetWeight();
 
-    if (scoringEnabled_) {
-        if (ScoringManager* scoringManager = ResolveScoringManager()) {
-            auto record = hit->ToHitRecord();
-            if (scoringManager->IsDoseScoringEnabled() || scoringManager->IsFluenceScoringEnabled() ||
-                scoringManager->IsLETScoringEnabled() || scoringManager->IsDisplacementScoringEnabled()) {
-                PopulateDoseContext(step, record);
+        if (scoringEnabled_) {
+            if (ScoringManager* scoringManager = ResolveScoringManager()) {
+                auto record = hit->ToHitRecord();
+                InjectBoundaryFault(false);
+                if (scoringManager->IsDoseScoringEnabled() || scoringManager->IsFluenceScoringEnabled() ||
+                    scoringManager->IsLETScoringEnabled() || scoringManager->IsDisplacementScoringEnabled()) {
+                    PopulateDoseContext(step, record);
+                }
+                if (scoringManager->IsLETScoringEnabled()) record.LETstep = ElectronicStoppingPower(step);
+                scoringManager->ScoreHit(record);
             }
-            if (scoringManager->IsLETScoringEnabled()) record.LETstep = ElectronicStoppingPower(step);
-            scoringManager->ScoreHit(record);
         }
-    }
 
-    if (hitCollectionEnabled_ && hitsCollection_) {
-        hitsCollection_->insert(hit.release());
-    }
+        if (hitCollectionEnabled_ && hitsCollection_) {
+            hitsCollection_->insert(hit.get());
+            hit.release();
+        }
 
-    return true;
+        return true;
+    } catch (const std::exception& error) {
+        ReportBoundaryFailure("scoring_transport_context", error.what());
+    } catch (...) {
+        ReportBoundaryFailure("scoring_transport_context", "unknown exception");
+    }
+    return false;
+}
+
+void SensitiveDetector::ReportBoundaryFailure(const char* stage, const char* message)
+{
+    callbackFailed_ = true;
+    if (auto* manager = ResolveScoringManager()) manager->ReportScoringFailure(stage, message);
+    else {
+        G4cerr << "[ScoringFailure] " << stage << ": " << message << G4endl;
+        if (auto* runManager = G4RunManager::GetRunManager()) runManager->AbortRun(true);
+    }
+}
+
+void SensitiveDetector::InjectBoundaryFault(bool initialize)
+{
+    if (boundaryFault_ == BoundaryFault::None || boundaryFaultInjected_) return;
+    const bool initializationFault = boundaryFault_ == BoundaryFault::Initialize || boundaryFault_ == BoundaryFault::InitializeUnknown;
+    if (initializationFault != initialize) return;
+#ifdef G4MULTITHREADED
+    if (G4Threading::G4GetThreadId() != 0) return;
+#endif
+    auto* manager = G4RunManager::GetRunManager();
+    const auto* run = manager ? manager->GetCurrentRun() : nullptr;
+    if (!run || run->GetRunID() != 1) return;
+    boundaryFaultInjected_ = true;
+    if (boundaryFault_ == BoundaryFault::ContextUnknown || boundaryFault_ == BoundaryFault::InitializeUnknown) throw 23;
+    throw std::runtime_error(initialize ? "test-only SD initialization failure" : "test-only SD transport context failure");
 }
 
 void SensitiveDetector::EndOfEvent(G4HCofThisEvent* hce)

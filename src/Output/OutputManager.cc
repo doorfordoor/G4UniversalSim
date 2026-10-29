@@ -2,6 +2,7 @@
 
 #include "Output/AnalysisOutput.hh"
 #include "Scoring/HistoryStatistics.hh"
+#include "Scoring/NumericChecks.hh"
 #include "Scoring/ScoringMeshExport.hh"
 #include "Utils/FileUtils.hh"
 #include "Utils/StringUtils.hh"
@@ -205,19 +206,22 @@ void OutputManager::WriteScoringMeshesCsv(int runId, long long events)
 {
     if (!ScoringMeshExport::HasMeshes()) return;
     ScoringMeshExport::RecordInSummary(runSummary_);
-    if (!WritesCsv()) return;
+    // This is the master publication boundary for every format. Worker ROOT
+    // rows can be finite while merging their moments overflows on the master.
     const auto cells = ScoringMeshExport::CollectCells();
+    if (!WritesCsv()) return;
     Initialize();
     const std::string filename = MakeOutputPath(
         runId > 0 ? "scoring_mesh_r" + std::to_string(runId) + ".csv" : "scoring_mesh.csv");
     CsvWriter writer(filename);
     writer.WriteHeader({"runID", "mesh", "quantity", "unit", "i0", "i1", "i2", "sum", "sum_sq",
-                        "entries", "n_events", "rel_error"});
+                        "entries", "n_events", "rel_error", "uncertainty_estimator", "uncertainty_status"});
     for (const auto& c : cells) {
         writer.WriteRow({std::to_string(runId), c.mesh, c.quantity, c.unit, std::to_string(c.i0),
                          std::to_string(c.i1), std::to_string(c.i2), ToString(c.sum), ToString(c.sumSquares),
                          std::to_string(c.entries), std::to_string(events),
-                         ToString(ScoringMeshExport::RelativeError(c.sum, c.sumSquares, events))});
+                         ToString(ScoringMeshExport::RelativeError(c.sum, c.sumSquares, events)),
+                         "uncorrected_event_moments_v1", HistoryStatistics::UncertaintyStatus(events, c.sum)});
     }
     writer.Close();
     RegisterGeneratedFile(filename);
@@ -233,7 +237,7 @@ void OutputManager::WriteScorerStatisticsCsv(int runId, long long events, double
     CsvWriter writer(filename);
     writer.WriteHeader({"runID", "scorer", "quantity", "key", "name", "unit", "estimator", "n_events",
                         "entries", "value", "mean_per_event", "std_error", "rel_error", "fom_per_s",
-                        "run_wall_time_s", "sum", "sum_sq"});
+                        "run_wall_time_s", "sum", "sum_sq", "uncertainty_estimator", "uncertainty_status"});
     for (const auto& item : entries) {
         const auto& [scorer, quantity, key] = item.first;
         const HistoryStatistics::Entry& e = item.second;
@@ -252,11 +256,15 @@ void OutputManager::WriteScorerStatisticsCsv(int runId, long long events, double
             sum = ToString(e.sum);
             sumSq = ToString(e.sumSq);
         }
+        ScoringNumeric::Finite(value, "published statistics value");
+        const double standardError = ScoringNumeric::Multiply(relError, std::abs(value), "published standard error");
         writer.WriteRow({std::to_string(runId), scorer, quantity, key, e.name, e.unit,
                          e.ratio ? "ratio" : "total", std::to_string(events), std::to_string(e.entries),
-                         ToString(value), mean, ToString(relError * std::abs(value)), ToString(relError),
+                         ToString(value), mean, ToString(standardError), ToString(relError),
                          ToString(HistoryStatistics::FigureOfMerit(relError, wallSeconds)),
-                         ToString(wallSeconds), sum, sumSq});
+                         ToString(wallSeconds), sum, sumSq,
+                         e.ratio ? "uncorrected_delta_ratio_v1" : "uncorrected_event_moments_v1",
+                         HistoryStatistics::UncertaintyStatus(events, e.sum, e.ratio, e.denSum)});
     }
     writer.Close();
     RegisterGeneratedFile(filename);
@@ -399,6 +407,11 @@ void OutputManager::OpenEventEdepFile()
 
 void OutputManager::WriteHit(const HitRecord& record)
 {
+    for (double value : {record.edep, record.ndep, record.stepLength, record.x0, record.y0,
+                         record.z0, record.x1, record.y1, record.z1, record.px, record.py,
+                         record.pz, record.kineticEnergy, record.weight}) {
+        ScoringNumeric::Finite(value, "published hit");
+    }
     if (WritesRoot()) AnalysisOutput::FillHit(record, threadId_);
     if (!WritesCsv()) return;
     if (!hitWriter_ || !hitWriter_->IsOpen()) {
@@ -432,6 +445,8 @@ void OutputManager::WriteHit(const HitRecord& record)
 
 void OutputManager::WriteEventEdep(const EventEdepRecord& record)
 {
+    ScoringNumeric::Finite(record.rawEdep, "published event raw Edep");
+    ScoringNumeric::Finite(record.weightedEdep, "published event weighted Edep");
     if (WritesRoot()) AnalysisOutput::FillEvent(record, threadId_);
     if (!WritesCsv()) return;
     if (!eventEdepWriter_ || !eventEdepWriter_->IsOpen()) {

@@ -30,10 +30,10 @@ std::string GeneratedFileSchema(const std::string& path)
     if (name == "run_metadata.json") return "run_metadata_json_v1";
     if (name == "scoring_mesh.csv" || (name.rfind("scoring_mesh_r", 0) == 0 &&
                                        name.size() > 4 && name.compare(name.size() - 4, 4, ".csv") == 0))
-        return "scoring_mesh_csv_v1";
+        return "scoring_mesh_csv_v2";
     if (name == "scorer_statistics.csv" || (name.rfind("scorer_statistics_r", 0) == 0 &&
                                             name.size() > 4 && name.compare(name.size() - 4, 4, ".csv") == 0))
-        return "scorer_statistics_csv_v1";
+        return "scorer_statistics_csv_v2";
     if (name.size() > 5 && name.compare(name.size() - 5, 5, ".root") == 0 &&
         name.rfind("g4usim", 0) == 0) return "g4usim_root_v" + std::to_string(AnalysisOutput::kRootSchemaVersion);
     std::ifstream input(path);
