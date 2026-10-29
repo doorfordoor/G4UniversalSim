@@ -6,6 +6,20 @@
 
 namespace StringUtils {
 
+// Geant4 collapses repeated slashes in command paths before dispatch. Apply
+// that same normalization to guards, without rewriting any parameter/path.
+inline std::string NormalizeCommandSlashes(const std::string& line)
+{
+    std::string result;
+    bool arguments = false;
+    for (char ch : line) {
+        if (ch == ' ' || ch == '\t' || ch == '\r' || ch == '\n') arguments = true;
+        if (!arguments && ch == '/' && !result.empty() && result.back() == '/') continue;
+        result.push_back(ch);
+    }
+    return result;
+}
+
 std::string Trim(const std::string& s);
 
 std::string LTrim(const std::string& s);

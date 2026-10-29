@@ -55,6 +55,9 @@ public:
     const G4String& GetParticleName() const;
 
     void StartRun() override;
+    void ResetRunDiagnostics();
+    unsigned long long GetProposalCount() const { return proposals_; }
+    unsigned long long GetAppliedCount() const { return applied_; }
     void StartTracking(const G4Track* track) override;
 
     G4VBiasingOperation* ProposeOccurenceBiasingOperation(
@@ -92,6 +95,8 @@ private:
     G4double minWeight_ = 0.05;
     G4int maxInteractions_ = 5;
     G4int currentTrackBiasInteractions_ = 0;
+    unsigned long long proposals_ = 0;
+    unsigned long long applied_ = 0;
 
     std::map<std::string, XSProcessBiasRule> processRules_;
     std::map<std::string, G4int> currentTrackBiasInteractionsByProcess_;

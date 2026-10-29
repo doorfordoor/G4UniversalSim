@@ -154,7 +154,10 @@ ParticleHit* ParticleHit::FromStep(const G4Step* step, int eventID)
     hit->SetEdep(step->GetTotalEnergyDeposit());
     hit->SetNdep(step->GetNonIonizingEnergyDeposit());
     hit->SetStepLength(step->GetStepLength());
-    hit->SetWeight(track->GetWeight());
+    // A hit describes the step's deposition and track length. Match Geant4
+    // primitive scorers: occurrence biasing can change the track's weight
+    // during this step, so its final/current value is not the scoring weight.
+    hit->SetWeight(pre ? pre->GetWeight() : track->GetWeight());
 
     const G4ParticleDefinition* particle = track->GetDefinition();
     if (particle) {

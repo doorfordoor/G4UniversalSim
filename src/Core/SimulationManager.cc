@@ -578,6 +578,37 @@ bool SimulationManager::FinalizeRunSummary(const std::string& status,
         incompleteRun = incompleteRun || run.completedEvents != run.plannedEvents;
     }
 
+    auto workerEvidence = biasingManager_ ? biasingManager_->GetWorkerEvidence()
+                                         : std::vector<BiasingManager::WorkerEvidence>{};
+    // These two injections test the receipt coverage gate, not transport.
+    if (injectedFault == "biasing_missing_worker_receipt" && !workerEvidence.empty())
+        workerEvidence.erase(workerEvidence.begin());
+    if (injectedFault == "biasing_missing_end_receipt" && !workerEvidence.empty())
+        workerEvidence.front().endRunCompleted = false;
+    auto* actualRunManager = G4RunManager::GetRunManager();
+    const int executionThreads = actualRunManager ? std::max(1, actualRunManager->GetNumberOfThreads()) : 0;
+    std::map<std::pair<int, int>, bool> expectedWorkers;
+    if (biasingManager_ && biasingManager_->IsEnabled()) {
+        for (const auto& run : runs)
+            for (int worker = 0; worker < executionThreads; ++worker)
+                expectedWorkers[{run.runId, worker}] = false;
+    }
+    bool workerCoverageComplete = !expectedWorkers.empty() && workerEvidence.size() == expectedWorkers.size();
+    bool workersValidated = workerCoverageComplete;
+    for (const auto& evidence : workerEvidence) {
+        const auto found = expectedWorkers.find({evidence.runId, evidence.threadId});
+        if (found == expectedWorkers.end() || found->second || !evidence.endRunCompleted)
+            workerCoverageComplete = false;
+        else found->second = true;
+        workersValidated = workersValidated && evidence.tlsVerified && evidence.operators > 0 &&
+                           evidence.matchedRules > 0 && evidence.failure.empty();
+    }
+    for (const auto& expected : expectedWorkers) workerCoverageComplete = workerCoverageComplete && expected.second;
+    workersValidated = workersValidated && workerCoverageComplete;
+    if (biasingManager_ && biasingManager_->IsEnabled() && !runs.empty() && !workersValidated)
+        outputManager_->RecordOutputFailure("biasing_worker_evidence",
+            "Incomplete or failed execution-thread biasing receipts (run/thread/EndRun coverage)");
+
     std::string finalStatus = status;
     const bool outputFailed = outputManager_->HasOutputFailure();
     const auto outputFailure = outputManager_->GetOutputFailure();
@@ -614,6 +645,25 @@ bool SimulationManager::FinalizeRunSummary(const std::string& status,
     summary.Set("biasing_process_match_status", !biasingManager_ || !biasingManager_->IsEnabled() ? "not_applicable" :
                 (biasingManager_->GetMatchedProcessRuleCount() > 0 ? "validated" : "not_validated"));
     summary.Set("biasing_effect_observed", "unknown");
+    summary.Set("biasing_attachment_scope", "master_geometry");
+    summary.Set("biasing_worker_evidence_count", static_cast<int>(workerEvidence.size()));
+    summary.Set("biasing_expected_worker_evidence_count", static_cast<int>(expectedWorkers.size()));
+    summary.SetBool("biasing_worker_coverage_complete", workerCoverageComplete);
+    for (std::size_t i = 0; i < workerEvidence.size(); ++i) {
+        const auto& evidence = workerEvidence[i];
+        const std::string prefix = "biasing_worker_" + std::to_string(i) + "_";
+        summary.Set(prefix + "run_id", evidence.runId);
+        summary.Set(prefix + "thread_id", evidence.threadId);
+        summary.Set(prefix + "operators", std::to_string(evidence.operators));
+        summary.Set(prefix + "matched_rules", std::to_string(evidence.matchedRules));
+        summary.SetBool(prefix + "tls_verified", evidence.tlsVerified);
+        summary.SetBool(prefix + "end_run_completed", evidence.endRunCompleted);
+        summary.Set(prefix + "proposals", std::to_string(evidence.proposals));
+        summary.Set(prefix + "applied_callbacks", std::to_string(evidence.applied));
+        summary.Set(prefix + "failure", evidence.failure.empty() ? "none" : evidence.failure);
+    }
+    summary.Set("biasing_worker_validation_status", runs.empty() || !biasingManager_ || !biasingManager_->IsEnabled() ? "not_observed" :
+                (workersValidated ? "validated" : "failed"));
     summary.SetPath("actual_output_dir", outputManager_->GetOutputDir());
     summary.Set("output_format", OutputManager::FormatName(outputManager_->GetFormat()));
     summary.Set("scoring_mesh_ini_command_count", static_cast<int>(scoringMeshCommands_.size()));
@@ -975,6 +1025,9 @@ std::unique_ptr<DetectorConstruction> SimulationManager::CreateDetectorConstruct
     detector->SetFieldConfig(&fieldConfig_);
     detector->SetSensitiveDetectorFactory(CreateSensitiveDetectorFactory());
     detector->SetGeometryPostBuildCallback(CreateGeometryPostBuildCallback());
+    detector->SetThreadBiasingCallback([this](const GeometryRegistry& registry) {
+        if (biasingManager_) biasingManager_->ConstructThreadOperators(registry);
+    });
     return detector;
 }
 

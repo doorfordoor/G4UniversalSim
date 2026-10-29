@@ -89,6 +89,25 @@ void BiasingMultiParticleXS::StartRun()
     for (auto& item : particleOperators_) item.second->StartRun();
 }
 
+void BiasingMultiParticleXS::ResetRunDiagnostics()
+{
+    for (auto& item : particleOperators_) item.second->ResetRunDiagnostics();
+}
+
+unsigned long long BiasingMultiParticleXS::GetProposalCount() const
+{
+    unsigned long long result = 0;
+    for (const auto& item : particleOperators_) result += item.second->GetProposalCount();
+    return result;
+}
+
+unsigned long long BiasingMultiParticleXS::GetAppliedCount() const
+{
+    unsigned long long result = 0;
+    for (const auto& item : particleOperators_) result += item.second->GetAppliedCount();
+    return result;
+}
+
 void BiasingMultiParticleXS::StartTracking(const G4Track* track)
 {
     currentOperator_ = nullptr;

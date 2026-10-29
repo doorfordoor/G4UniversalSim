@@ -1,4 +1,5 @@
 #include "Core/MacroPreflight.hh"
+#include "Core/RandomCommandGuard.hh"
 
 #include "Geometry/GdmlIO.hh"
 
@@ -113,6 +114,7 @@ MacroLine ParseMacroLine(
         value.erase(0, 3);
     }
     value = Trim(StripTrailingComment(value));
+    value = StringUtils::NormalizeCommandSlashes(value);
     if (value.empty() || value[0] == '#') return {};
 
     const std::size_t separator = value.find_first_of(" \t\r\n");
@@ -224,6 +226,14 @@ private:
             );
         }
 
+        // Native random commands can return success after ignoring malformed
+        // arguments. Validate semantics before any command from this macro runs.
+        try {
+            RandomCommandGuard::Validate(line.text);
+        } catch (const std::exception& error) {
+            ThrowMacroError(filename, lineNumber, error.what(), line.text);
+        }
+
         const std::string arguments = Lower(Trim(line.arguments));
         const bool enableValue = arguments == "true" || arguments == "1"
             || arguments == "on" || arguments == "yes";
@@ -251,7 +261,9 @@ private:
 
         if (line.command == "/control/alias" ||
             line.command == "/control/loop" ||
-            line.command == "/control/foreach") {
+            line.command == "/control/foreach" ||
+            line.command == "/control/if" || line.command == "/control/doif" ||
+            line.command == "/control/strif" || line.command == "/control/strdoif") {
             ThrowMacroError(
                 filename,
                 lineNumber,

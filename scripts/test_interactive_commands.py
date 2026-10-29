@@ -30,6 +30,44 @@ def main() -> int:
     with tempfile.TemporaryDirectory(prefix="g4usim-interactive-") as directory:
         temp = Path(directory)
 
+        # Native non-csh sessions bypass the audited random/run callbacks.
+        # Reject before initialization or even the first supplied macro command.
+        native_ini = temp / "native-ui.ini"
+        native_ini.write_text("[run]\ninteractive=true\nthreads=1\n", encoding="utf-8")
+        native_macro = temp / "native-ui.mac"
+        sentinel = "R32_NATIVE_UI_MACRO_EXECUTED"
+        native_macro.write_text(f"/control/echo {sentinel}\n/run/beamOn 1\n", encoding="utf-8")
+        native_cases = (
+            ("native_cli", ["--ui"]),
+            ("native_ini", ["--config", str(native_ini)]),
+            ("native_macro", ["--ui", "--macro", str(native_macro)]),
+            ("native_dry", ["--ui", "--macro", str(native_macro), "--dry-run"]),
+        )
+        environment = os.environ.copy()
+        environment.pop("G4USIM_TEST_OUTPUT_FAULT", None)
+        for name, extra in native_cases:
+            output_dir = temp / name
+            completed = subprocess.run(
+                [str(executable), "--output", str(output_dir), *extra],
+                cwd=ROOT, input="exit\n", capture_output=True, text=True,
+                encoding="utf-8", errors="replace", timeout=60,
+                env=environment, check=False,
+            )
+            log = completed.stdout + completed.stderr
+            result = facts(output_dir)
+            assert result["run_count"] == "0", result
+            assert sentinel not in log, log[-4000:]
+            assert not list(output_dir.glob("event_edep*.csv")), result
+            if name == "native_dry":
+                assert completed.returncode == 0, log[-4000:]
+                assert result["status"] == "dry_run", result
+                assert result["macro_execution_status"] == "skipped_dry_run", result
+            else:
+                assert completed.returncode != 0, log[-4000:]
+                assert "requires --ui-session csh" in log, log[-4000:]
+                assert result["status"] == "failed", result
+                assert result["program_exit_code"] != "0", result
+
         def session(name: str, commands: str, fault: str | None = None,
                     config: bool = False, threads: int | None = None,
                     macro: Path | None = None) -> tuple[int, str, dict[str, str]]:

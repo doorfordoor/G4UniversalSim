@@ -7,11 +7,15 @@
 #include "Utils/StringUtils.hh"
 
 #include "G4LogicalVolume.hh"
+#include "G4AutoDelete.hh"
+#include "G4Threading.hh"
 
 #include <algorithm>
+#include <cstdlib>
 #include <iostream>
 #include <map>
 #include <set>
+#include <sstream>
 #include <stdexcept>
 
 namespace {
@@ -56,6 +60,14 @@ std::vector<std::string> SplitSectionName(const std::string& section)
 }
 
 }  // namespace
+
+struct BiasingManager::ThreadState {
+    std::vector<std::unique_ptr<BiasingMultiParticleXS>> owned;
+    std::vector<BiasingMultiParticleXS*> active;
+    std::vector<G4LogicalVolume*> targets;
+    std::string failure;
+    WorkerEvidence current;
+};
 
 BiasingManager::BiasingManager() = default;
 BiasingManager::~BiasingManager() = default;
@@ -583,6 +595,7 @@ void BiasingManager::AttachOperators(const GeometryRegistry& registry)
         return;
     }
 
+    std::map<G4LogicalVolume*, std::vector<XSProcessBiasRule>> rulesByLogical;
     for (const auto& item : rulesByVolume) {
         const std::string& volumeName = item.first;
         if (!registry.HasLogicalVolume(volumeName)) {
@@ -596,13 +609,20 @@ void BiasingManager::AttachOperators(const GeometryRegistry& registry)
                                      volumeName + "'");
         }
 
-        auto op = std::make_unique<BiasingMultiParticleXS>(G4String("AIHL_XS_Bias_") + G4String(volumeName));
-        for (const XSProcessBiasRule& rule : item.second) {
-            op->AddProcessRule(rule);
+        auto& merged = rulesByLogical[logicalVolume];
+        for (const auto& rule : item.second) {
+            const auto key = ProcessRuleKey(rule.particleName, rule.processName);
+            if (std::none_of(merged.begin(), merged.end(), [&](const XSProcessBiasRule& existing) {
+                    return ProcessRuleKey(existing.particleName, existing.processName) == key;
+                })) merged.push_back(rule);
         }
-
-        op->AttachToVolume(logicalVolume);
+    }
+    for (const auto& item : rulesByLogical) {
+        auto op = std::make_unique<BiasingMultiParticleXS>("AIHL_XS_Bias");
+        for (const auto& rule : item.second) op->AddProcessRule(rule);
+        op->AttachToVolume(item.first);
         xsOperators_.push_back(std::move(op));
+        attachmentPlan_.push_back({item.first, item.second});
     }
 
     operatorsAttached_ = !xsOperators_.empty();
@@ -616,8 +636,144 @@ void BiasingManager::ClearOperators()
     // geometry rebuild or before attaching to freshly rebuilt volumes. Do not
     // use it as a live run-time detach operation.
     xsOperators_.clear();
+    attachmentPlan_.clear();
+    {
+        std::lock_guard<std::mutex> lock(evidenceMutex_);
+        workerEvidence_.clear();
+        firstConstructionFailure_.clear();
+    }
     operatorsAttached_ = false;
     matchedProcessRuleCount_ = 0;
+}
+
+void BiasingManager::ConstructThreadOperators(const GeometryRegistry&) const
+{
+    if (!IsEnabled() || !G4Threading::IsWorkerThread()) return;
+    if (threadState_.Get()) return; // never delete registered operators between runs
+    const int threadId = G4Threading::G4GetThreadId();
+    try {
+        auto* state = new ThreadState();
+        threadState_.Put(state);
+        G4AutoDelete::Register(state); // one owner; destructor never dereferences Manager/LV
+        state->owned.reserve(attachmentPlan_.size());
+        state->active.reserve(attachmentPlan_.size());
+        state->targets.reserve(attachmentPlan_.size());
+        const char* fault = std::getenv("G4USIM_TEST_OUTPUT_FAULT");
+        if (threadId == 0 && fault && std::string(fault) == "biasing_thread_construct_t0")
+            throw std::runtime_error("test-injected worker bias construction failure");
+        for (const auto& attachment : attachmentPlan_) {
+            // Retain each constructed operator even if a later setup step fails:
+            // G4VBiasingOperator has no unregistering destructor.
+            state->owned.emplace_back(std::make_unique<BiasingMultiParticleXS>("AIHL_XS_Worker"));
+            auto* op = state->owned.back().get();
+            for (const auto& rule : attachment.rules) op->AddProcessRule(rule);
+            op->AttachToVolume(attachment.logical);
+            if (G4VBiasingOperator::GetBiasingOperator(attachment.logical) != op)
+                throw std::runtime_error("Worker biasing TLS attachment verification failed");
+            state->active.push_back(op);
+            state->targets.push_back(attachment.logical);
+        }
+        if (state->active.empty()) throw std::runtime_error("Worker has no configured bias operators");
+    } catch (const std::exception& error) {
+        if (auto* state = threadState_.Get()) state->failure = error.what();
+        std::lock_guard<std::mutex> lock(evidenceMutex_);
+        if (firstConstructionFailure_.empty())
+            firstConstructionFailure_ = "worker " + std::to_string(threadId) + ": " + error.what();
+    } catch (...) {
+        if (auto* state = threadState_.Get()) state->failure = "unknown worker bias construction exception";
+        std::lock_guard<std::mutex> lock(evidenceMutex_);
+        if (firstConstructionFailure_.empty())
+            firstConstructionFailure_ = "worker " + std::to_string(threadId) + ": unknown bias construction exception";
+    }
+}
+
+void BiasingManager::BeginThreadRun(int runId) const
+{
+    if (!IsEnabled()) return;
+    const bool worker = G4Threading::IsWorkerThread();
+    const int threadId = worker ? G4Threading::G4GetThreadId() : 0;
+    auto* state = threadState_.Get();
+    if (!state && !worker) {
+        state = new ThreadState();
+        threadState_.Put(state);
+        G4AutoDelete::Register(state);
+        for (std::size_t i = 0; i < xsOperators_.size(); ++i) {
+            state->active.push_back(xsOperators_[i].get());
+            state->targets.push_back(attachmentPlan_.at(i).logical);
+        }
+    }
+    WorkerEvidence evidence;
+    evidence.runId = runId;
+    evidence.threadId = threadId;
+    try {
+        {
+            std::lock_guard<std::mutex> lock(evidenceMutex_);
+            if (!firstConstructionFailure_.empty()) throw std::runtime_error(firstConstructionFailure_);
+        }
+        if (!state || !state->failure.empty() || state->active.empty())
+            throw std::runtime_error(state && !state->failure.empty() ? state->failure : "Execution thread has no bias operator state");
+        evidence.operators = state->active.size();
+        for (std::size_t i = 0; i < state->active.size(); ++i) {
+            if (G4VBiasingOperator::GetBiasingOperator(state->targets[i]) != state->active[i])
+                throw std::runtime_error("Execution thread bias operator TLS mapping changed");
+            state->active[i]->ResetRunDiagnostics();
+        }
+        evidence.tlsVerified = true;
+        std::set<std::string> matched;
+        for (const auto& rule : GetEnabledXSProcessBiasRules()) {
+            if (matched.insert(ProcessRuleKey(rule.particleName, rule.processName)).second) {
+                BiasingXS::ValidateActiveProcessRule(rule); // this thread's actual process manager
+            }
+        }
+        evidence.matchedRules = matched.size();
+        if (evidence.matchedRules == 0) throw std::runtime_error("Execution thread has no active wrapped bias rule");
+    } catch (const std::exception& error) {
+        evidence.failure = error.what();
+        if (state) state->current = evidence;
+        std::lock_guard<std::mutex> lock(evidenceMutex_);
+        workerEvidence_[{runId, threadId}] = evidence;
+        throw;
+    } catch (...) {
+        evidence.failure = "unknown execution-thread bias validation exception";
+        if (state) state->current = evidence;
+        std::lock_guard<std::mutex> lock(evidenceMutex_);
+        workerEvidence_[{runId, threadId}] = evidence;
+        throw;
+    }
+    state->current = evidence;
+    std::lock_guard<std::mutex> lock(evidenceMutex_);
+    workerEvidence_[{runId, threadId}] = evidence;
+}
+
+void BiasingManager::EndThreadRun(int runId) const
+{
+    if (!IsEnabled()) return;
+    auto* state = threadState_.Get();
+    if (!state || state->current.runId != runId) return;
+    auto evidence = state->current;
+    evidence.endRunCompleted = true;
+    for (auto* op : state->active) {
+        evidence.proposals += op->GetProposalCount();
+        evidence.applied += op->GetAppliedCount();
+    }
+    std::lock_guard<std::mutex> lock(evidenceMutex_);
+    workerEvidence_[{evidence.runId, evidence.threadId}] = evidence;
+    std::ostringstream line;
+    line << "[G4USimBiasing] {\"schema\":\"g4usim_biasing_worker_v1\",\"run_id\":" << evidence.runId
+         << ",\"thread_id\":" << evidence.threadId << ",\"operators\":" << evidence.operators
+         << ",\"matched_rules\":" << evidence.matchedRules << ",\"tls_verified\":"
+         << (evidence.tlsVerified ? "true" : "false") << ",\"proposals\":" << evidence.proposals
+         << ",\"end_run_completed\":true,\"applied_callbacks\":" << evidence.applied << ",\"failed\":"
+         << (evidence.failure.empty() ? "false" : "true") << "}\n";
+    std::cout << line.str();
+}
+
+std::vector<BiasingManager::WorkerEvidence> BiasingManager::GetWorkerEvidence() const
+{
+    std::lock_guard<std::mutex> lock(evidenceMutex_);
+    std::vector<WorkerEvidence> result;
+    for (const auto& item : workerEvidence_) result.push_back(item.second);
+    return result;
 }
 
 bool BiasingManager::AreOperatorsAttached() const

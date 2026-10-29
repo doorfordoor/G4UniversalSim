@@ -1,6 +1,9 @@
 #include "Biasing/BiasingXS.hh"
 
 #include "Utils/StringUtils.hh"
+#include "Scoring/ThreadLocalScoringContext.hh"
+#include "Scoring/ScoringManager.hh"
+#include "G4RunManager.hh"
 
 #include "G4BOptnChangeCrossSection.hh"
 #include "G4BiasingProcessInterface.hh"
@@ -15,6 +18,7 @@
 
 #include <algorithm>
 #include <cfloat>
+#include <cmath>
 #include <set>
 #include <sstream>
 #include <stdexcept>
@@ -269,6 +273,11 @@ void BiasingXS::StartRun()
     // and before /run/beamOn; per-volume callbacks would duplicate diagnostics.
 }
 
+void BiasingXS::ResetRunDiagnostics()
+{
+    proposals_ = applied_ = 0;
+}
+
 void BiasingXS::StartTracking(const G4Track*)
 {
     currentTrackBiasInteractions_ = 0;
@@ -293,12 +302,24 @@ G4VBiasingOperation* BiasingXS::ProposeOccurenceBiasingOperation(
     }
 
     const G4double analogXS = 1.0 / analogInteractionLength;
+    const G4double biasedXS = rule->factor * analogXS;
+    if (!std::isfinite(biasedXS) || biasedXS <= 0.0) {
+        // This is a failed run, never a successful analog fallback. Do not
+        // allow reporting exceptions to escape the Geant4 transport callback.
+        try {
+            if (auto* scoring = AIHL::GetCurrentThreadScoringManager())
+                scoring->ReportScoringFailure("biasing_cross_section",
+                    "factor * analogXS is nonfinite or nonpositive for " + std::string(processName));
+        } catch (...) {}
+        if (auto* manager = G4RunManager::GetRunManager()) manager->AbortRun(true);
+        return nullptr;
+    }
     G4BOptnChangeCrossSection* operation = GetOrCreateOperation(processName);
     G4VBiasingOperation* previousOperation =
         callingProcess->GetPreviousOccurenceBiasingOperation();
 
     if (!previousOperation) {
-        operation->SetBiasedCrossSection(rule->factor * analogXS);
+        operation->SetBiasedCrossSection(biasedXS);
         operation->Sample();
     } else {
         if (previousOperation != operation) {
@@ -311,15 +332,16 @@ G4VBiasingOperation* BiasingXS::ProposeOccurenceBiasingOperation(
         }
 
         if (operation->GetInteractionOccured()) {
-            operation->SetBiasedCrossSection(rule->factor * analogXS);
+            operation->SetBiasedCrossSection(biasedXS);
             operation->Sample();
         } else {
             operation->UpdateForStep(callingProcess->GetPreviousStepSize());
-            operation->SetBiasedCrossSection(rule->factor * analogXS);
+            operation->SetBiasedCrossSection(biasedXS);
             operation->UpdateForStep(0.0);
         }
     }
 
+    ++proposals_;
     return operation;
 }
 
@@ -350,6 +372,7 @@ void BiasingXS::OperationApplied(
     const G4String processName = callingProcess->GetWrappedProcess()->GetProcessName();
     auto iter = operations_.find(processName);
     if (iter != operations_.end() && iter->second.get() == occurenceOperationApplied) {
+        ++applied_;
         iter->second->SetInteractionOccured();
         ++currentTrackBiasInteractions_;
         ++currentTrackBiasInteractionsByProcess_[NormalizeProcessKey(std::string(processName))];

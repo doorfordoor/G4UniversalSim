@@ -65,6 +65,8 @@ public:
     void SetVolume(const G4String& volume);
     const G4String& GetVolume() const;
 
+    // FromStep supplies the pre-step statistical weight (not the boundary or
+    // post-interaction weight). Explicit setters keep caller-supplied values.
     void SetWeight(G4double value);
     G4double GetWeight() const;
 

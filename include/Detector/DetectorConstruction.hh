@@ -51,6 +51,7 @@ public:
 
     void SetSensitiveDetectorFactory(SensitiveDetectorFactory factory);
     void SetGeometryPostBuildCallback(GeometryPostBuildCallback callback);
+    void SetThreadBiasingCallback(GeometryPostBuildCallback callback);
     // Roadmap A7: fields are built per thread in ConstructSDandField.
     void SetFieldConfig(const FieldConfig* fieldConfig);
 
@@ -63,5 +64,6 @@ private:
     int verboseLevel_ = 1;
     SensitiveDetectorFactory sensitiveDetectorFactory_;
     GeometryPostBuildCallback postBuildCallback_;
+    GeometryPostBuildCallback threadBiasingCallback_;
     const FieldConfig* fieldConfig_ = nullptr;  // not owned
 };

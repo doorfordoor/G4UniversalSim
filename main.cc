@@ -1,6 +1,7 @@
 ﻿#include "Actions/ActionInitialization.hh"
 #include "Biasing/BiasingManager.hh"
 #include "Core/MacroPreflight.hh"
+#include "Core/RandomCommandGuard.hh"
 #include "Core/BackendCapabilities.hh"
 #include "Core/Geant4DataLocator.hh"
 #include "Core/SimulationManager.hh"
@@ -11,7 +12,6 @@
 #include "Utils/StringUtils.hh"
 #include "Detector/DetectorConstruction.hh"
 #include "G4RunManager.hh"
-#include "G4UIExecutive.hh"
 #include "G4UIterminal.hh"
 #include "G4UIcsh.hh"
 #include "G4UImanager.hh"
@@ -46,6 +46,23 @@
 
 namespace {
 
+class SemanticCommandError : public std::runtime_error {
+ public:
+  explicit SemanticCommandError(const std::string& message, std::string kind = "random_command_validation")
+      : std::runtime_error(message), kind_(std::move(kind)) {}
+  const std::string& Kind() const { return kind_; }
+ private:
+  std::string kind_;
+};
+
+bool RestartsExecutedKernel(const std::string& commandName) {
+  return commandName == "/run/initialize" || commandName == "/run/reinitializegeometry" ||
+         commandName == "/run/physicsmodified" || commandName == "/run/geometrymodified";
+}
+
+const char* const kRunRestartError = "Kernel reinitialization after an executed run is unsupported: "
+    "Geant4 MT initialization can reset master run IDs while workers continue; start a new process instead";
+
 // G4UIterminal prints unrecognized commands but does not propagate their
 // failure to the exit code of the enclosing interactive session.
 class FailFastCshShell final : public G4UIcsh {
@@ -64,10 +81,11 @@ class FailFastCshShell final : public G4UIcsh {
 class AuditedCshSession final : public G4UIterminal {
  public:
   AuditedCshSession(bool& stopAfterFailure, std::function<bool()> hasHandlerFailure,
-                    std::function<void(const std::string&)> beforeCommand)
+                    std::function<bool(const std::string&)> beforeCommand,
+                    std::function<void(const std::string&)> afterCommand)
       : G4UIterminal(new FailFastCshShell(stopAfterFailure)),
         stopAfterFailure_(stopAfterFailure), hasHandlerFailure_(std::move(hasHandlerFailure)),
-        beforeCommand_(std::move(beforeCommand)) {}
+        beforeCommand_(std::move(beforeCommand)), afterCommand_(std::move(afterCommand)) {}
 
   G4int ReceiveG4cerr(const G4String& message) override {
     RecordDiagnostic(message);
@@ -84,6 +102,8 @@ class AuditedCshSession final : public G4UIterminal {
   const std::string& ParameterOutOfRangeDiagnostic() const { return parameterOutOfRange_; }
   const std::string& IllegalApplicationStateDiagnostic() const { return illegalApplicationState_; }
   const std::string& FailedCommand() const { return failedCommand_; }
+  const std::string& SemanticFailureDiagnostic() const { return semanticFailure_; }
+  const std::string& SemanticFailureKind() const { return semanticFailureKind_; }
   G4int FailedCommandStatus() const { return failedCommandStatus_; }
 
  private:
@@ -94,9 +114,20 @@ class AuditedCshSession final : public G4UIterminal {
     if (command.length() < 2) return;
     auto* ui = G4UImanager::GetUIpointer();
     if (!ui) return;
+    // Validate the same alias-expanded direct command that Geant4 executes.
+    const G4String auditedCommand = StringUtils::NormalizeCommandSlashes(
+        StringUtils::Trim(ui->SolveAlias(command)));
 
+    bool handled = false;
     try {
-      beforeCommand_(command);
+      handled = beforeCommand_(command);
+    } catch (const SemanticCommandError& error) {
+      stopAfterFailure_ = true;
+      failedCommand_ = command;
+      semanticFailure_ = error.what();
+      semanticFailureKind_ = error.Kind();
+      G4cerr << error.what() << G4endl;
+      return;
     } catch (const std::exception& error) {
       stopAfterFailure_ = true;
       failedCommand_ = command;
@@ -105,10 +136,11 @@ class AuditedCshSession final : public G4UIterminal {
       G4cerr << error.what() << G4endl;
       return;
     }
-    const G4int result = ui->ApplyCommand(command);
+    const G4int result = handled ? fCommandSucceeded : ui->ApplyCommand(auditedCommand);
     // Finish the current command's diagnostics, then stop reading later input.
     // Messenger failures can occur even when ApplyCommand returns zero.
     if (result != fCommandSucceeded || hasHandlerFailure_()) stopAfterFailure_ = true;
+    if (!stopAfterFailure_) afterCommand_(auditedCommand);
     const G4int parameterIndex = result % 100;
     const G4int status = result - parameterIndex;
     if (status != fCommandSucceeded && failedCommand_.empty()) {
@@ -172,7 +204,10 @@ class AuditedCshSession final : public G4UIterminal {
 
   bool& stopAfterFailure_;
   std::function<bool()> hasHandlerFailure_;
-  std::function<void(const std::string&)> beforeCommand_;
+  std::function<bool(const std::string&)> beforeCommand_;
+  std::function<void(const std::string&)> afterCommand_;
+  std::string semanticFailure_;
+  std::string semanticFailureKind_;
   std::string unrecognizedCommand_;
   std::string invalidParameter_;
   std::string parameterOutOfRange_;
@@ -226,7 +261,7 @@ void PrintUsage(const char* program) {
       << "  --output, -o <dir>   Override output directory.\n"
       << "  --run-name <name>    Override run name in SimulationManager.\n"
       << "  --ui                 Start an interactive Geant4 UI session.\n"
-      << "  --ui-session csh   Use the Geant4 command-line UI with --ui.\n"
+      << "  --ui-session csh   Required with --ui for the audited command-line session.\n"
       << "  --threads, -t <N>    Set requested number of worker threads when "
          "MT "
          "is available.\n"
@@ -666,6 +701,12 @@ int main(int argc, char** argv) {
       }
     }
 
+    if (context.IsInteractive() && !context.IsDryRun() && options.uiSession != "csh") {
+      throw std::runtime_error("Interactive execution requires --ui-session csh: use --ui --ui-session csh. "
+                               "Native Qt/other sessions cannot enforce command validation and are unavailable; "
+                               "the Python desktop GUI and batch macros remain available.");
+    }
+
     sim.Initialize();
     if (sim.GetContext().HasSeed()) {
       CLHEP::HepRandom::setTheSeed(
@@ -738,6 +779,11 @@ int main(int argc, char** argv) {
       bool kernelInitialized = false;
       for (const auto& command : preflight.commands) {
         const std::string commandName = MacroCommandName(command.text);
+        if (!sim.GetOutputManager()->GetRunSummary().GetRuns().empty() && RestartsExecutedKernel(commandName)) {
+          macroFailure = MacroFailureInfo{command.sourceFile.string(), static_cast<int>(command.lineNumber), command.text, 0, false};
+          macroStatus = "failed";
+          throw std::runtime_error(kRunRestartError);
+        }
         const bool physicsCommand = commandName.rfind("/aihl/physics/", 0) == 0 ||
             commandName.rfind("/aihl/biasing/", 0) == 0;
         const bool readOnlyPhysicsCommand = commandName == "/aihl/physics/print" ||
@@ -775,8 +821,10 @@ int main(int argc, char** argv) {
           }
         }
         if (commandName == "/run/beamon" && sim.GetBiasingManager() && sim.GetBiasingManager()->IsEnabled()) {
-          runManager->Initialize();
-          kernelInitialized = true;
+          if (!kernelInitialized) {
+            runManager->Initialize();
+            kernelInitialized = true;
+          }
           try {
             sim.ValidateBiasingProcessTargets();
           } catch (...) {
@@ -809,14 +857,17 @@ int main(int argc, char** argv) {
         const auto materialFailuresBefore = sim.GetMaterialManager()->GetCommandFailureCount();
         const auto outputFailuresBefore = sim.GetOutputManager()->GetCommandFailureCount();
         const bool seedStateChanged = sim.NoteMacroCommand(command.text);
+        bool restoredRandomState = false;
         try {
           sim.GetSourceManager()->BeforeNativeGPSCommand(command.text);
+          RandomCommandGuard::Validate(command.text);
+          restoredRandomState = RandomCommandGuard::ExecuteRestoreIfRequested(command.text);
         } catch (...) {
           macroFailure = MacroFailureInfo{command.sourceFile.string(), static_cast<int>(command.lineNumber), command.text, 0, false};
           macroStatus = "failed";
           throw;
         }
-        const int status = uiManager->ApplyCommand(command.text.c_str());
+        const int status = restoredRandomState ? fCommandSucceeded : uiManager->ApplyCommand(command.text.c_str());
         if (status != 0) {
           macroFailure = MacroFailureInfo{
               command.sourceFile.string(),
@@ -908,6 +959,8 @@ int main(int argc, char** argv) {
       std::string parameterOutOfRange;
       std::string illegalApplicationState;
       std::string failedCommand;
+      std::string randomSemanticFailure;
+      std::string semanticFailureKind;
       G4int failedCommandStatus = fCommandSucceeded;
       if (options.uiSession == "csh") {
         bool stopAfterFailure = false;
@@ -921,6 +974,33 @@ int main(int argc, char** argv) {
         };
         AuditedCshSession ui(stopAfterFailure, hasHandlerFailure, [&](const std::string& command) {
           sim.GetSourceManager()->BeforeNativeGPSCommand(command);
+          try {
+            const std::string resolved = StringUtils::NormalizeCommandSlashes(StringUtils::Trim(
+                G4UImanager::GetUIpointer()->SolveAlias(command.c_str())));
+            std::istringstream input(resolved);
+            std::string token;
+            input >> token;
+            token = StringUtils::ToLower(token);
+            if (!sim.GetOutputManager()->GetRunSummary().GetRuns().empty() && RestartsExecutedKernel(token))
+              throw SemanticCommandError(kRunRestartError, "run_lifecycle");
+            if (token == "/control/execute" || token == "/control/loop" ||
+                token == "/control/foreach" || token == "/control/if" || token == "/control/doif" ||
+                token == "/control/strif" || token == "/control/strdoif") {
+              throw std::runtime_error("Nested/dynamic csh dispatch cannot audit random command semantics; "
+                                       "use a preflighted --macro file or direct csh commands instead");
+            }
+            if (options.seed && token.rfind("/random/", 0) == 0) {
+              throw std::runtime_error("Random command conflicts with explicit CLI seed lock");
+            }
+            RandomCommandGuard::Validate(resolved);
+            return RandomCommandGuard::ExecuteRestoreIfRequested(resolved);
+          } catch (const SemanticCommandError&) {
+            throw;
+          } catch (const std::exception& error) {
+            throw SemanticCommandError(error.what());
+          }
+        }, [&](const std::string& command) {
+          sim.ConfirmMacroCommandSuccess(sim.NoteMacroCommand(command));
         });
         ui.SessionStart();
         unrecognizedCommand = ui.UnrecognizedCommandDiagnostic();
@@ -929,9 +1009,10 @@ int main(int argc, char** argv) {
         illegalApplicationState = ui.IllegalApplicationStateDiagnostic();
         failedCommand = ui.FailedCommand();
         failedCommandStatus = ui.FailedCommandStatus();
+        randomSemanticFailure = ui.SemanticFailureDiagnostic();
+        semanticFailureKind = ui.SemanticFailureKind();
       } else {
-        G4UIExecutive ui(argc, argv);
-        ui.SessionStart();
+        throw std::runtime_error("Interactive execution requires --ui-session csh; native unaudited sessions are unavailable.");
       }
       const bool materialFailed = sim.GetMaterialManager()->GetCommandFailureCount() != materialFailuresBefore;
       const bool outputFailed = sim.GetOutputManager()->GetCommandFailureCount() != outputFailuresBefore;
@@ -941,13 +1022,14 @@ int main(int argc, char** argv) {
       const bool uiCommandFailed = failedCommandStatus != fCommandSucceeded;
       if (materialFailed || outputFailed || !unrecognizedCommand.empty() || !invalidParameter.empty() ||
           !parameterOutOfRange.empty() || !illegalApplicationState.empty() || physicsFailed ||
-          biasingFailed || appFailed || uiCommandFailed) {
+          biasingFailed || appFailed || uiCommandFailed || !randomSemanticFailure.empty()) {
         std::vector<std::string> kinds;
         if (physicsFailed) kinds.push_back("physics");
         if (appFailed) kinds.push_back("app");
         if (biasingFailed) kinds.push_back("biasing");
         if (materialFailed) kinds.push_back("material");
         if (outputFailed) kinds.push_back("output");
+        if (!randomSemanticFailure.empty()) kinds.push_back(semanticFailureKind);
         if (!unrecognizedCommand.empty()) kinds.push_back("geant4_command_not_found");
         if (!invalidParameter.empty()) kinds.push_back("geant4_invalid_parameter");
         if (!parameterOutOfRange.empty()) kinds.push_back("geant4_parameter_out_of_range");
@@ -992,6 +1074,8 @@ int main(int argc, char** argv) {
         appendDiagnostic(invalidParameter);
         appendDiagnostic(parameterOutOfRange);
         appendDiagnostic(illegalApplicationState);
+        appendDiagnostic(randomSemanticFailure);
+        if (!randomSemanticFailure.empty()) appendDiagnostic("Rejected command: " + failedCommand);
         if (uiCommandFailed) {
           appendDiagnostic("Geant4 UI status=" + std::to_string(failedCommandStatus) +
                            " for command: " + failedCommand);

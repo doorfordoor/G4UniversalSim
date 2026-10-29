@@ -90,6 +90,11 @@ void RunAction::BeginOfRunAction(const G4Run* run)
 
     const char* stage = "run_begin_validate_targets";
     try {
+        if (role_ != Role::Master && biasingManager_ && biasingManager_->IsEnabled()) {
+            stage = "biasing_thread_begin";
+            biasingManager_->BeginThreadRun(runID);
+        }
+        stage = "run_begin_validate_targets";
         // The interactive UI invokes beamOn without passing through main.cc's
         // batch macro guard. Check the master/sequential output targets before
         // any worker begins writing event data.
@@ -172,6 +177,10 @@ void RunAction::EndOfRunAction(const G4Run* run)
             G4cerr << "[OutputFailure] " << stage << ": unknown exception" << G4endl;
         }
     };
+
+    if (role_ != Role::Master && biasingManager_ && biasingManager_->IsEnabled()) {
+        attempt("biasing_thread_end", [&]() { biasingManager_->EndThreadRun(runID); });
+    }
 
     if (role_ != Role::Master && scoringManager) {
         attempt("scoring_end_run", [&]() { scoringManager->EndRun(runID); });

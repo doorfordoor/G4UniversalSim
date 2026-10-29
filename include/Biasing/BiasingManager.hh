@@ -1,9 +1,12 @@
 #pragma once
 
 #include "Biasing/BiasingConfig.hh"
+#include "G4Cache.hh"
 
 #include <cstddef>
 #include <memory>
+#include <map>
+#include <mutex>
 #include <set>
 #include <string>
 #include <vector>
@@ -11,6 +14,7 @@
 class ConfigManager;
 class GeometryRegistry;
 class BiasingMultiParticleXS;
+class G4LogicalVolume;
 
 class BiasingManager {
 public:
@@ -110,6 +114,24 @@ public:
     void ValidateActiveProcessRules();
     std::size_t GetMatchedProcessRuleCount() const;
 
+    struct WorkerEvidence {
+        int runId = -1;
+        int threadId = -1;
+        std::size_t operators = 0;
+        std::size_t matchedRules = 0;
+        bool tlsVerified = false;
+        bool endRunCompleted = false;
+        unsigned long long proposals = 0;
+        unsigned long long applied = 0;
+        std::string failure;
+    };
+    // Only constructs worker-owned state. Never mutates master operators/config.
+    // Initialization failures are latched, then rejected at BeginThreadRun.
+    void ConstructThreadOperators(const GeometryRegistry& registry) const;
+    void BeginThreadRun(int runId) const;
+    void EndThreadRun(int runId) const;
+    std::vector<WorkerEvidence> GetWorkerEvidence() const;
+
 private:
     static std::string NormalizeParticleName(const std::string& particleName);
     static std::string ProcessRuleKey(const std::string& particleName, const std::string& processName);
@@ -126,6 +148,16 @@ private:
     // with rule-local volumeNames.
     std::vector<std::string> globalBiasVolumes_;
     std::vector<std::unique_ptr<BiasingMultiParticleXS>> xsOperators_;
+    struct Attachment {
+        G4LogicalVolume* logical = nullptr;
+        std::vector<XSProcessBiasRule> rules;
+    };
+    struct ThreadState;
+    std::vector<Attachment> attachmentPlan_; // frozen before worker creation
+    mutable G4Cache<ThreadState*> threadState_;
+    mutable std::mutex evidenceMutex_;
+    mutable std::map<std::pair<int, int>, WorkerEvidence> workerEvidence_;
+    mutable std::string firstConstructionFailure_;
     bool operatorsAttached_ = false;
     bool interactiveSessionMode_ = false;
     std::size_t interactiveRejectCount_ = 0;

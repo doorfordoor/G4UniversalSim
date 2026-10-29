@@ -37,6 +37,9 @@ public:
     void AttachToVolume(G4LogicalVolume* logicalVolume);
 
     void StartRun() override;
+    void ResetRunDiagnostics();
+    unsigned long long GetProposalCount() const;
+    unsigned long long GetAppliedCount() const;
     void StartTracking(const G4Track* track) override;
 
     G4VBiasingOperation* ProposeOccurenceBiasingOperation(

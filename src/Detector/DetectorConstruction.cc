@@ -53,6 +53,10 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
 void DetectorConstruction::ConstructSDandField()
 {
+    // The callback installs worker-owned TLS operators and records construction
+    // failures for BeginRun; it must run even with sensitive detectors disabled.
+    if (threadBiasingCallback_ && geometryManager_)
+        threadBiasingCallback_(geometryManager_->GetRegistry());
     if (fieldConfig_ && !fieldConfig_->Empty()) {
         try {
             FieldSetup::Construct(*fieldConfig_);
@@ -229,4 +233,9 @@ void DetectorConstruction::SetSensitiveDetectorFactory(SensitiveDetectorFactory 
 void DetectorConstruction::SetGeometryPostBuildCallback(GeometryPostBuildCallback callback)
 {
     postBuildCallback_ = std::move(callback);
+}
+
+void DetectorConstruction::SetThreadBiasingCallback(GeometryPostBuildCallback callback)
+{
+    threadBiasingCallback_ = std::move(callback);
 }
