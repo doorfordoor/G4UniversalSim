@@ -1,0 +1,263 @@
+{
+  "recorded_at_utc": "2026-10-29T15:04:48.984685+00:00",
+  "strict_options_only": true,
+  "no_report_modifications": true,
+  "windows_full_vs_copied_q1_baseline": {
+    "report": "docs\\verification\\2c-full-20261029\\windows-full\\report.json",
+    "report_sha256": "d39e8d3f02deee28df895eb8848e0a5e64b9263880439dab2f4f68480576d3dc",
+    "profile": "all",
+    "case_count": 118,
+    "assertions_executed_total": 40628,
+    "exit_code": 0,
+    "log": "docs\\verification\\2c-full-20261029\\windows-full\\archive-baseline-gate.log",
+    "log_sha256": "312183168d0d1730493ce203c1db80c38044d540f03299a9e3a67c562ff56410",
+    "baseline": "docs\\verification\\2c-full-20261029\\q1-counter-control\\20261029-223005-6361397e\\report.json",
+    "command": [
+      "D:/Geant4/G4UniversalSim/gui/.venv/Scripts/python.exe",
+      "-B",
+      "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\scripts\\check_report_evidence.py",
+      "--report",
+      "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\docs\\verification\\2c-full-20261029\\windows-full\\report.json",
+      "--baseline",
+      "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\docs\\verification\\2c-full-20261029\\q1-counter-control\\20261029-223005-6361397e\\report.json"
+    ]
+  },
+  "q1_control": {
+    "report": "docs\\verification\\2c-full-20261029\\q1-counter-control\\20261029-223005-6361397e\\report.json",
+    "report_sha256": "749b896ecc4776c7dc4e8080dce95b6045ce5ca5ed31ff77d827fe770045870b",
+    "profile": "all",
+    "case_count": 105,
+    "assertions_executed_total": 36269,
+    "exit_code": 0,
+    "log": "docs\\verification\\2c-full-20261029\\q1-counter-control\\archive-strict-gate.log",
+    "log_sha256": "236f72d4dfb0f6bd8b27c7f51eb98ca9195505cdec0561388154dca60f7ac66d",
+    "baseline": null,
+    "command": [
+      "D:/Geant4/G4UniversalSim/gui/.venv/Scripts/python.exe",
+      "-B",
+      "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\scripts\\check_report_evidence.py",
+      "--report",
+      "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\docs\\verification\\2c-full-20261029\\q1-counter-control\\20261029-223005-6361397e\\report.json"
+    ]
+  },
+  "ci_reports": [
+    {
+      "report": "docs\\verification\\2c-full-20261029\\ci\\linux-evidence-11.3.2\\linux-backend\\20261029-143317-c1b2190e\\report.json",
+      "report_sha256": "e8539f63ea3daafe60e6bf87e9e580181932096c94ad2c964d544b7efbd028af",
+      "profile": "backend",
+      "case_count": 52,
+      "assertions_executed_total": 34435,
+      "exit_code": 0,
+      "log": "docs\\verification\\2c-full-20261029\\ci\\linux-evidence-11.3.2\\linux-backend\\20261029-143317-c1b2190e\\archive-strict-gate.log",
+      "log_sha256": "c2cf4ff578b52a02a3c6c572bb4cd41e3770de68c4d1fdd83d065104f5ea8d37",
+      "baseline": null,
+      "command": [
+        "D:/Geant4/G4UniversalSim/gui/.venv/Scripts/python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\docs\\verification\\2c-full-20261029\\ci\\linux-evidence-11.3.2\\linux-backend\\20261029-143317-c1b2190e\\report.json"
+      ]
+    },
+    {
+      "report": "docs\\verification\\2c-full-20261029\\ci\\linux-evidence-11.3.2\\linux-gui\\20261029-143233-904662d1\\report.json",
+      "report_sha256": "f52904e48187b20afacd0762480257591c6a51b180d70d38e944b1fc4879accf",
+      "profile": "gui",
+      "case_count": 32,
+      "assertions_executed_total": 1460,
+      "exit_code": 0,
+      "log": "docs\\verification\\2c-full-20261029\\ci\\linux-evidence-11.3.2\\linux-gui\\20261029-143233-904662d1\\archive-strict-gate.log",
+      "log_sha256": "5de6a04034e49ae2d95a6c217e86a5d9690d74d59dc8e5c2611aa9c4b14e0fec",
+      "baseline": null,
+      "command": [
+        "D:/Geant4/G4UniversalSim/gui/.venv/Scripts/python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\docs\\verification\\2c-full-20261029\\ci\\linux-evidence-11.3.2\\linux-gui\\20261029-143233-904662d1\\report.json"
+      ]
+    },
+    {
+      "report": "docs\\verification\\2c-full-20261029\\ci\\linux-evidence-11.3.2\\linux-integration\\20261029-144714-7c21a09e\\report.json",
+      "report_sha256": "f201bdb094c1b6a30ea03fdda9e8d22375603f3a35d93d1407eb0d861c30dd9f",
+      "profile": "integration",
+      "case_count": 19,
+      "assertions_executed_total": 4194,
+      "exit_code": 0,
+      "log": "docs\\verification\\2c-full-20261029\\ci\\linux-evidence-11.3.2\\linux-integration\\20261029-144714-7c21a09e\\archive-strict-gate.log",
+      "log_sha256": "df22f27a1d61abadf6b5d47259bb8bd512a2aea06a7bc25c56c0be675ab40a70",
+      "baseline": null,
+      "command": [
+        "D:/Geant4/G4UniversalSim/gui/.venv/Scripts/python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\docs\\verification\\2c-full-20261029\\ci\\linux-evidence-11.3.2\\linux-integration\\20261029-144714-7c21a09e\\report.json"
+      ]
+    },
+    {
+      "report": "docs\\verification\\2c-full-20261029\\ci\\linux-evidence-11.3.2\\linux-static\\20261029-143214-de1e4bf3\\report.json",
+      "report_sha256": "a9e638d5fa804d630dc164daa132ed5d8458641274d1fddbdbee3061b2ab1900",
+      "profile": "static",
+      "case_count": 15,
+      "assertions_executed_total": 503,
+      "exit_code": 0,
+      "log": "docs\\verification\\2c-full-20261029\\ci\\linux-evidence-11.3.2\\linux-static\\20261029-143214-de1e4bf3\\archive-strict-gate.log",
+      "log_sha256": "ceb35a0d3f87d06bf59c80f4cb9ae6e1012d3a47fa11b0548bfa67e571272043",
+      "baseline": null,
+      "command": [
+        "D:/Geant4/G4UniversalSim/gui/.venv/Scripts/python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\docs\\verification\\2c-full-20261029\\ci\\linux-evidence-11.3.2\\linux-static\\20261029-143214-de1e4bf3\\report.json"
+      ]
+    },
+    {
+      "report": "docs\\verification\\2c-full-20261029\\ci\\linux-evidence-11.4.3\\linux-backend\\20261029-143258-cbc30568\\report.json",
+      "report_sha256": "c48123951f6769591004070ed330d431a483d6dfac4c9d9e0f8b9b04c4136d6b",
+      "profile": "backend",
+      "case_count": 52,
+      "assertions_executed_total": 33847,
+      "exit_code": 0,
+      "log": "docs\\verification\\2c-full-20261029\\ci\\linux-evidence-11.4.3\\linux-backend\\20261029-143258-cbc30568\\archive-strict-gate.log",
+      "log_sha256": "a9067ab316f0ea68239733e8c24f2c946d4962a639f799f242e1bdbf2d978866",
+      "baseline": null,
+      "command": [
+        "D:/Geant4/G4UniversalSim/gui/.venv/Scripts/python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\docs\\verification\\2c-full-20261029\\ci\\linux-evidence-11.4.3\\linux-backend\\20261029-143258-cbc30568\\report.json"
+      ]
+    },
+    {
+      "report": "docs\\verification\\2c-full-20261029\\ci\\linux-evidence-11.4.3\\linux-gui\\20261029-143220-a649e292\\report.json",
+      "report_sha256": "cd002fab5dfebd680a47b7273a54eb9e59339fda38240cbb06468bc4c61759e5",
+      "profile": "gui",
+      "case_count": 32,
+      "assertions_executed_total": 1460,
+      "exit_code": 0,
+      "log": "docs\\verification\\2c-full-20261029\\ci\\linux-evidence-11.4.3\\linux-gui\\20261029-143220-a649e292\\archive-strict-gate.log",
+      "log_sha256": "572e950b1e915a919c5d134ac02fc81b0085ae5877300ca4759afea5d87b422e",
+      "baseline": null,
+      "command": [
+        "D:/Geant4/G4UniversalSim/gui/.venv/Scripts/python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\docs\\verification\\2c-full-20261029\\ci\\linux-evidence-11.4.3\\linux-gui\\20261029-143220-a649e292\\report.json"
+      ]
+    },
+    {
+      "report": "docs\\verification\\2c-full-20261029\\ci\\linux-evidence-11.4.3\\linux-integration\\20261029-144609-23097136\\report.json",
+      "report_sha256": "8753eb0c831923061207382c2007b0d73f4992655ff0acad8e13f783fb8f3e6a",
+      "profile": "integration",
+      "case_count": 19,
+      "assertions_executed_total": 4194,
+      "exit_code": 0,
+      "log": "docs\\verification\\2c-full-20261029\\ci\\linux-evidence-11.4.3\\linux-integration\\20261029-144609-23097136\\archive-strict-gate.log",
+      "log_sha256": "d70244056c40f269a20335d7b86144ea5fc398f4af0058e18ccecfee81b51861",
+      "baseline": null,
+      "command": [
+        "D:/Geant4/G4UniversalSim/gui/.venv/Scripts/python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\docs\\verification\\2c-full-20261029\\ci\\linux-evidence-11.4.3\\linux-integration\\20261029-144609-23097136\\report.json"
+      ]
+    },
+    {
+      "report": "docs\\verification\\2c-full-20261029\\ci\\linux-evidence-11.4.3\\linux-static\\20261029-143203-f1e0b2b6\\report.json",
+      "report_sha256": "c36d7a355b2ceccfbbe306f64462ac1710ec13f0daf36b845faf74c8ea70e67e",
+      "profile": "static",
+      "case_count": 15,
+      "assertions_executed_total": 503,
+      "exit_code": 0,
+      "log": "docs\\verification\\2c-full-20261029\\ci\\linux-evidence-11.4.3\\linux-static\\20261029-143203-f1e0b2b6\\archive-strict-gate.log",
+      "log_sha256": "48bd5a86b51c121a603bb19fa22494d8890f7423cbb784c5f5dd9b76ff8ab2be",
+      "baseline": null,
+      "command": [
+        "D:/Geant4/G4UniversalSim/gui/.venv/Scripts/python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\docs\\verification\\2c-full-20261029\\ci\\linux-evidence-11.4.3\\linux-static\\20261029-143203-f1e0b2b6\\report.json"
+      ]
+    },
+    {
+      "report": "docs\\verification\\2c-full-20261029\\ci\\m0-report-ubuntu-latest\\20261029-143010-5f2fe038\\report.json",
+      "report_sha256": "e23852b8d79db526c69fbebf0aa4d38fca9ba34e95f50da6c228d2b883f5b085",
+      "profile": "static",
+      "case_count": 15,
+      "assertions_executed_total": 503,
+      "exit_code": 0,
+      "log": "docs\\verification\\2c-full-20261029\\ci\\m0-report-ubuntu-latest\\20261029-143010-5f2fe038\\archive-strict-gate.log",
+      "log_sha256": "6156de76512e081a8c145f95df652cf4ae4b4fc734f7e00b27a3a321083653e0",
+      "baseline": null,
+      "command": [
+        "D:/Geant4/G4UniversalSim/gui/.venv/Scripts/python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\docs\\verification\\2c-full-20261029\\ci\\m0-report-ubuntu-latest\\20261029-143010-5f2fe038\\report.json"
+      ]
+    },
+    {
+      "report": "docs\\verification\\2c-full-20261029\\ci\\m0-report-ubuntu-latest\\20261029-143031-b8f7660d\\report.json",
+      "report_sha256": "f68dea1188454776451eff61164c4d7e893b436048a28d629302737c459cfdb4",
+      "profile": "gui",
+      "case_count": 32,
+      "assertions_executed_total": 1460,
+      "exit_code": 0,
+      "log": "docs\\verification\\2c-full-20261029\\ci\\m0-report-ubuntu-latest\\20261029-143031-b8f7660d\\archive-strict-gate.log",
+      "log_sha256": "c67c825d15e7e0dbccdab91f0793acea0bc6c2040f64357dff809d2086c406fe",
+      "baseline": null,
+      "command": [
+        "D:/Geant4/G4UniversalSim/gui/.venv/Scripts/python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\docs\\verification\\2c-full-20261029\\ci\\m0-report-ubuntu-latest\\20261029-143031-b8f7660d\\report.json"
+      ]
+    },
+    {
+      "report": "docs\\verification\\2c-full-20261029\\ci\\m0-report-windows-latest\\20261029-143047-8812bbdb\\report.json",
+      "report_sha256": "ee54e8a32cf32d3e9330eb75262f16db8cfa6937b321b3a150a0ee2ac4706f0c",
+      "profile": "static",
+      "case_count": 15,
+      "assertions_executed_total": 499,
+      "exit_code": 0,
+      "log": "docs\\verification\\2c-full-20261029\\ci\\m0-report-windows-latest\\20261029-143047-8812bbdb\\archive-strict-gate.log",
+      "log_sha256": "5a4d976fb4e45f895e7924f0f9ab03552af87bf3bc676aa190fb403984e37e84",
+      "baseline": null,
+      "command": [
+        "D:/Geant4/G4UniversalSim/gui/.venv/Scripts/python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\docs\\verification\\2c-full-20261029\\ci\\m0-report-windows-latest\\20261029-143047-8812bbdb\\report.json"
+      ]
+    },
+    {
+      "report": "docs\\verification\\2c-full-20261029\\ci\\m0-report-windows-latest\\20261029-143118-fd4c6d1f\\report.json",
+      "report_sha256": "7f3f39943d922777064a2649072c7c10abf8ba0af96646ea15d425bba4718414",
+      "profile": "gui",
+      "case_count": 32,
+      "assertions_executed_total": 1462,
+      "exit_code": 0,
+      "log": "docs\\verification\\2c-full-20261029\\ci\\m0-report-windows-latest\\20261029-143118-fd4c6d1f\\archive-strict-gate.log",
+      "log_sha256": "da51af57a308d80533afbbbff5d0ecf44a2931dae4db298ed3ef6ce84fa4b305",
+      "baseline": null,
+      "command": [
+        "D:/Geant4/G4UniversalSim/gui/.venv/Scripts/python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\docs\\verification\\2c-full-20261029\\ci\\m0-report-windows-latest\\20261029-143118-fd4c6d1f\\report.json"
+      ]
+    }
+  ],
+  "ci_expected_reports": 12,
+  "all_gates_passed": true
+}

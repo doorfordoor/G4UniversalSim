@@ -386,3 +386,8 @@ Geant4 `ApplyCommand()` 返回 0 不足以确认命令成功；沿用材料命�
 - test_sd_context_failure/test_live_progress/test_run_summary/test_interactive_commands核对真实失败worker范围、stage、非零退出、失败摘要；保留首轮结果、后续停止、失败文件不登记、失败轮无合并统计等原保证。这是受控回调异常，不代表真实磁盘满或内存耗尽验收。
 - ROOT稀疏几何只保证单个worker有贡献，不保证它处理的历史少于总数。test_q1_results_backend保留N=32与CSV逐值/误差一致，报告本轮是否观察到稀疏分母缺口；确定性数值反例由test_q1_postprocessing提供。原ROOT副本缺metadata必须拒绝推断N，即使存在events ntuple也不可绕过。
 - 同字节NIEL读取的缺文件错误必须保留[scoring.displacement]/粒子、INI路径及准确行号、解析后的缺文件绝对路径并在事件前拒绝。受审计csh成功命令现在具有真实interactive来源；旧摘要兼容枚举macro，不伪造macro文件或行号，完整快照必须明确interactive及原命令。不得再测试其必为runtime_unattributed。
+### 2026-10-29 完整 2C 关闭补记
+
+前述完整候选和偏置失败契约已在f4770b0完成真实验收：Windows118/118、40628个v3入口、干净工作区，Linux11.3.2/11.4.3实际run40892017436各118，M0 run40892017433两平台各47；12份CI门禁与归档后的14份门禁均通过。非法偏置命令六类负例及正常路径共302入口，普通非零失败、来源位置/未发布revision/未执行后续命令均验证；空em来源和连续不同mutation请求保留亦闭合。最终可见Windows窗口2run/2worker/8事件/14快照、10类程序化检查和6图通过。
+
+同生产Q1代码仅加同五份测试overlay重新测量105项/36269入口，当前候选通过原逐例/总数门禁；其余100项与历史入口数完全一致，五项变化有逐项对照。旧83770及原失败报告不改写，不能把新固定不变量入口数与旧逐记录重复入口数当作覆盖质量排名。完整来源、未知边界、复制清单与集成收据见docs/verification/2c-full-20261029/README.md；E6、Q2、完整编辑/安装器仍各自独立。历史条目中的待验收字样描述当时状态，当前阶段事实以此报告与ROADMAP为准。

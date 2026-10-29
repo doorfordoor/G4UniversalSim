@@ -1,16 +1,16 @@
-# 有效配置快照（完整 2C 实施中）
+# 有效配置快照（完整 2C 已验收）
 
-完整 2C 的消费者、三阶段快照、模块策略和只读 GUI 已有工作区候选实现；状态仍为 **in_progress**。当前不能将独立编译、局部专项、旧 configured 子集或 Q1 的绿色报告称作完整 2C 验收。最终结论由主任务在冻结源码后完成干净 Release、Windows 全量、Linux 11.3.2/11.4.3 真实 CI 和严格证据门禁后记录。实施边界见 [开工信](collab/inbox/20261029-1959-astra-full-2c-execution.md)，状态以 [ROADMAP](ROADMAP.md) 为准。
+完整2C已在冻结产品 `f4770b0` 验收：干净Release、Windows118/118（40628个v3入口、git_dirty=false）、Linux11.3.2/11.4.3实际CI各118（run40892017436）、M0两平台各47（run40892017433），12个门禁及4份ZIP哈希通过。11类消费者、三阶段快照、模块策略与只读GUI均纳入本轮正反例；最终依据见[完整2C报告](verification/2c-full-20261029/README.md)。这不是旧configured子集或Q1验收的追溯扩张。实施边界见 [开工信](collab/inbox/20261029-1959-astra-full-2c-execution.md)，状态以 [ROADMAP](ROADMAP.md) 为准。
 
 ## 使用路径与只读边界
 
 `--dump-effective-config <新JSON文件|->` 复用真实 Configure 和递归 macro preflight；不执行 macro、不初始化 Geant4、不启动事件、不创建运行输出目录。指定文件必须不存在，包括不得覆盖已有硬链接；`-` 写标准输出。配置、预检或写入失败返回非零。此入口只展示 configure 阶段，不能据此宣称宏命令或内核已应用。
 
-正常运行的候选实现写出 `effective_config_configure.json`、逐 run/thread 的 `effective_config_run_<R>_t<T>.json`、线程最终化 `effective_config_final_r<R>_t<T>.json` 和进程 `effective_config_finalization.json`。文件成功关闭后才登记到本轮输出清单，写出失败走输出失败锁存。配置快照保持最初接受的 configure 状态；后续 macro 不反写它。失败、dry-run 和无 run 路径不得补造 run_begin；文件是否产生应结合摘要、manifest 和实际执行路径检查。
+正常运行写出 `effective_config_configure.json`、逐 run/thread 的 `effective_config_run_<R>_t<T>.json`、线程最终化 `effective_config_final_r<R>_t<T>.json` 和进程 `effective_config_finalization.json`。文件成功关闭后才登记到本轮输出清单，写出失败走输出失败锁存。配置快照保持最初接受的 configure 状态；后续 macro 不反写它。失败、dry-run 和无 run 路径不得补造 run_begin；文件是否产生应结合摘要、manifest 和实际执行路径检查。
 
 上述已登记的快照在摘要与 metadata 的文件格式清单中标注 `g4usim_effective_config_v1`。dry-run 也可生成 configure/finalization 配置证据，但必须为 `execution_performed=false`、`run_id=null`，不能把这些文件计为已执行模拟或运行成功。格式登记仅说明 writer 的协议，不证明文件未被外部篡改。
 
-GUI 第 9 页“有效配置”只读取快照或快照集合。可选择阶段/run/thread、查看对象摘要、类型化值、单位、来源链和应用证据，并比较两份快照的新增、删除和值/类型/来源变化。单文件上限 4 MiB，集合另有累计大小限制；损坏加载保留旧数据并标陈旧。页面不修改项目或运行参数，不能用差异方向、时间字符串或跨进程 revision 推断配置新旧。前端由 DeepSeek 实际 API 参与设计，采纳与纠偏见 [设计记录](collab/outbox/20261029-deepseek-full2c-design.md)；该设计输入不是运行验收。
+GUI“有效配置”页（工作区共9页）只读取快照或快照集合。可选择阶段/run/thread、查看对象摘要、类型化值、单位、来源链和应用证据，并比较两份快照的新增、删除和值/类型/来源变化。单文件上限4 MiB，集合最多64文件、累计上限32 MiB；损坏加载保留旧数据并标陈旧。页面不修改项目或运行参数，不能用差异方向、时间字符串或跨进程 revision 推断配置新旧。前端由 DeepSeek 实际 API 参与设计，采纳与纠偏见 [设计记录](collab/outbox/20261029-deepseek-full2c-design.md)；该设计输入不是运行验收。
 
 ## 数据与应用证据
 
@@ -24,11 +24,11 @@ GUI 第 9 页“有效配置”只读取快照或快照集合。可选择阶段/
 
 快照不是随机引擎检查点，不保证跨机器逐位重放，不证明物理正确，也不放开 Q1 的命令状态与热重建拒绝边界。
 
-## 11 类真实消费者候选覆盖
+## 11 类真实消费者覆盖
 
-下表描述已落盘的适配入口及审查要求，不表示这些病例已经全部通过。字段范围以真实消费者模式投影为准，schema 条数不能替代覆盖判定。
+下表描述本轮验收的适配入口和保留边界；“完整2C”不意味着每个字段都有内核getter或均可标applied。字段范围以真实消费者模式投影为准，schema 条数不能替代覆盖判定。
 
-| 消费者 | 候选实现与核验边界 |
+| 消费者 | 实现与核验边界 |
 | --- | --- |
 | 启动参数/主 INI | ConfigManager、SimulationManager 合并默认/INI/CLI，记录输入身份和已接受字段；CLI 锁定及拒绝事务须保持原语义。 |
 | 旧式单源 | SourceManager 导出实际源模式适用的位置、角度、能量、粒子/离子和 preset 来源；单能缓存不得冒充所有能谱。 |
@@ -46,14 +46,16 @@ GUI 第 9 页“有效配置”只读取快照或快照集合。可选择阶段/
 
 可选 `[modules]` 键为 `scoring`、`biasing`、`field`、`trajectories`，取 `off|auto|on`。**缺失 mode 与显式 auto 分开**：缺失保留 legacy 默认（包括默认 SD scoring），显式 `auto` 只依据明确活跃请求或确定性依赖决定，没有请求时禁用；快照保留这一区别，不能把缺失伪造成用户请求 auto。geometry/source/physics 为基础模块，禁止关闭。
 
-当前候选中，`off` 与显式活跃请求冲突即拒绝；`on` 要求已有有效活跃配置，空 hook 或只有 physics wrapper 不是完整 biasing 规则；`auto/on` 与相关显式 false 旧开关冲突也拒绝。不创造规则、场定义或轨迹上限。biasing 新旧规则语法的候选解析与最终策略分开，缺失 mode 保留旧门控语义。
+当前契约中，`off` 与显式活跃请求冲突即拒绝；`on` 要求已有有效活跃配置，空 hook 或只有 physics wrapper 不是完整 biasing 规则；`auto/on` 与相关显式 false 旧开关冲突也拒绝。不创造规则、场定义或轨迹上限。biasing 新旧规则语法的解析与最终策略分开，缺失 mode 保留旧门控语义。
 
 scoring 策略覆盖 sensitive scorer 和 mesh 请求，但 mesh-only 不启用独立 SD scoring 门控；`[scoring]/enabled=false` 可与有效 mesh 共存。phase_space 边界输出和 trajectories 不依赖 sensitive scorer 门控；scoring off/auto 的抑制不得清除两者。trajectories 按独立模块策略处理，需要显式正事件上限才构成活跃请求；有效场定义才构成 field 请求。后续命令不能绕过已锁定 off，GUI 不因此获得完整配置编辑能力。
 
-此前 off 静默覆盖请求的候选缺口已由严格判定与模块矩阵更新替换；本段是源码审查结论，**仍待本轮真实模块矩阵和完整平台验收**，不能以脚本存在或静态审查宣称通过。
+此前off静默覆盖请求的候选缺口已由严格判定修复，真实模块矩阵与完整平台验收见最终报告；原修前反例保留，不以脚本存在或静态审查代替该证据。
 
 ## 测试入口与交付门槛
 
-统一入口 `scripts/run_m0_tests.py`：static 注册 `test_effective_config_model.py`、`test_input_provenance.py`、`test_effective_consumer_state.py`，需要可用 C++17 编译器（支持 CXX）；backend 注册原有导出与 geometry/materials（显式 `--backend`）、source/physics、output/mesh、biasing、scoring、modules；integration 注册生命周期和 GDML 捕获 helper；gui 注册旧查看器和集合专项。后端用 `G4USIM_EXE` 指向本轮新二进制；GDML helper 必须随构建生成，不能借旧二进制或独立 Xerces 编译代替完整 GDML 运行验收。
+统一入口 `scripts/run_m0_tests.py`：static 注册 `test_effective_config_model.py`、`test_input_provenance.py`、`test_effective_consumer_state.py`、`effective_receipt_view`（`test_effective_lifecycle.py --component`），需要可用 C++17 编译器（支持 CXX）；backend 注册原有导出与 geometry/materials（显式 `--backend`）、source/physics、output/mesh、biasing、scoring、modules；integration 注册生命周期和 GDML 捕获 helper；gui 注册旧查看器和集合专项。后端用 `G4USIM_EXE` 指向本轮新二进制；GDML helper 必须随构建生成，不能借旧二进制或独立 Xerces 编译代替完整 GDML 运行验收。
 
-这些注册只使测试进入平台，不意味着已通过。最终需 ST/MT、多 run、失败/无 run/dry-run、未知原生命令、输入变化与拒绝事务反例，真实 GUI 中英/明暗/小窗检查，以及本轮完整平台报告和同 v3 基线证据门禁。历史子集清单与 source“待实现”说明已由本页当前候选说明取代，其旧验收范围不追溯扩大。
+本轮已完成MT构建的单worker/多worker、多run、失败/无run/dry-run、未知原生命令、输入变化与拒绝事务反例、真实Windows GUI中英/明暗/小窗、完整平台及同v3控制门禁。Q1控制使用同生产代码加同五份测试overlay新测量（105项/36269入口），不改历史83770报告；候选118项/40628入口按原门禁比较。最终实窗是程序化Qt操作真实窗口，2run/2worker/8事件、14快照、10类检查、6张原生截图均已查看，不宣称真人逐项点击。历史子集清单与 source“待实现”说明已由本页验收契约取代，其旧验收范围不追溯扩大。
+
+保留的不可观测边界：无独立getter的计分histogram binning、DDD表绑定、native mesh filter参数等不复制Manager缓存伪造applied；GPS原生命令后独立inventory不再归到旧INI源身份；部分GDML网络流未到EOF时保持unknown而不编造hash。成功目标不能替代同对象其他绑定的失败/未知，其他run/thread或旧generation收据不能升格。当前schema为357项，其中4项模块策略新增；field/biasing schema补齐仍归E6。完整GUI编辑、随机检查点、全资源可移植身份与一般物理验证分别保留后续阶段。

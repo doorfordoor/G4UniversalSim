@@ -1,0 +1,317 @@
+{
+  "total_count": 2,
+  "jobs": [
+    {
+      "id": 123483056508,
+      "run_id": 40884097335,
+      "workflow_name": "M0 static and GUI regression",
+      "head_branch": "roadmap/2c-effective-config",
+      "run_url": "https://api.github.com/repos/doorfordoor/G4UniversalSim/actions/runs/40884097335",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOScco-s8AAAAcwCnpfA",
+      "head_sha": "fee88d2840b8300aa315d0feaf21316768f90206",
+      "url": "https://api.github.com/repos/doorfordoor/G4UniversalSim/actions/jobs/123483056508",
+      "html_url": "https://github.com/doorfordoor/G4UniversalSim/actions/runs/40884097335/job/123483056508",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-10-29T13:40:27Z",
+      "started_at": "2026-10-29T13:40:30Z",
+      "completed_at": "2026-10-29T13:43:15Z",
+      "name": "windows-latest / Python 3.11",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-29T13:40:31Z",
+          "completed_at": "2026-10-29T13:40:32Z"
+        },
+        {
+          "name": "Run actions/checkout@v7",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-29T13:40:32Z",
+          "completed_at": "2026-10-29T13:40:39Z"
+        },
+        {
+          "name": "Run actions/setup-python@v7",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-29T13:40:39Z",
+          "completed_at": "2026-10-29T13:40:39Z"
+        },
+        {
+          "name": "Initialize Windows MSVC x64 compiler",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-29T13:40:39Z",
+          "completed_at": "2026-10-29T13:40:45Z"
+        },
+        {
+          "name": "Install Linux GUI runtime libraries",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 5,
+          "started_at": "2026-10-29T13:40:45Z",
+          "completed_at": "2026-10-29T13:40:45Z"
+        },
+        {
+          "name": "Install GUI dependency",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-29T13:40:45Z",
+          "completed_at": "2026-10-29T13:41:25Z"
+        },
+        {
+          "name": "Verify tracked source inventory and static tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-10-29T13:41:25Z",
+          "completed_at": "2026-10-29T13:41:54Z"
+        },
+        {
+          "name": "Validate static report evidence",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-10-29T13:41:54Z",
+          "completed_at": "2026-10-29T13:41:55Z"
+        },
+        {
+          "name": "Annotate failing static cases",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 9,
+          "started_at": "2026-10-29T13:41:55Z",
+          "completed_at": "2026-10-29T13:41:55Z"
+        },
+        {
+          "name": "Run offscreen GUI tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-10-29T13:41:55Z",
+          "completed_at": "2026-10-29T13:43:08Z"
+        },
+        {
+          "name": "Validate GUI report evidence",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-10-29T13:43:08Z",
+          "completed_at": "2026-10-29T13:43:09Z"
+        },
+        {
+          "name": "Annotate failing GUI cases",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 12,
+          "started_at": "2026-10-29T13:43:09Z",
+          "completed_at": "2026-10-29T13:43:09Z"
+        },
+        {
+          "name": "Upload M0 reports",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-10-29T13:43:09Z",
+          "completed_at": "2026-10-29T13:43:10Z"
+        },
+        {
+          "name": "Post Run actions/setup-python@v7",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 25,
+          "started_at": "2026-10-29T13:43:10Z",
+          "completed_at": "2026-10-29T13:43:11Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v7",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 26,
+          "started_at": "2026-10-29T13:43:11Z",
+          "completed_at": "2026-10-29T13:43:13Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 27,
+          "started_at": "2026-10-29T13:43:13Z",
+          "completed_at": "2026-10-29T13:43:13Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/doorfordoor/G4UniversalSim/check-runs/123483056508",
+      "labels": [
+        "windows-latest"
+      ],
+      "runner_id": 1000000156,
+      "runner_name": "GitHub Actions 1000000156",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 123483057046,
+      "run_id": 40884097335,
+      "workflow_name": "M0 static and GUI regression",
+      "head_branch": "roadmap/2c-effective-config",
+      "run_url": "https://api.github.com/repos/doorfordoor/G4UniversalSim/actions/runs/40884097335",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOScco-s8AAAAcwCnrlg",
+      "head_sha": "fee88d2840b8300aa315d0feaf21316768f90206",
+      "url": "https://api.github.com/repos/doorfordoor/G4UniversalSim/actions/jobs/123483057046",
+      "html_url": "https://github.com/doorfordoor/G4UniversalSim/actions/runs/40884097335/job/123483057046",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-10-29T13:40:28Z",
+      "started_at": "2026-10-29T13:40:30Z",
+      "completed_at": "2026-10-29T13:42:17Z",
+      "name": "ubuntu-latest / Python 3.11",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-29T13:40:31Z",
+          "completed_at": "2026-10-29T13:40:32Z"
+        },
+        {
+          "name": "Run actions/checkout@v7",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-29T13:40:32Z",
+          "completed_at": "2026-10-29T13:40:34Z"
+        },
+        {
+          "name": "Run actions/setup-python@v7",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-29T13:40:34Z",
+          "completed_at": "2026-10-29T13:40:34Z"
+        },
+        {
+          "name": "Initialize Windows MSVC x64 compiler",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 4,
+          "started_at": "2026-10-29T13:40:34Z",
+          "completed_at": "2026-10-29T13:40:34Z"
+        },
+        {
+          "name": "Install Linux GUI runtime libraries",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-29T13:40:34Z",
+          "completed_at": "2026-10-29T13:40:48Z"
+        },
+        {
+          "name": "Install GUI dependency",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-29T13:40:48Z",
+          "completed_at": "2026-10-29T13:41:08Z"
+        },
+        {
+          "name": "Verify tracked source inventory and static tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-10-29T13:41:08Z",
+          "completed_at": "2026-10-29T13:41:28Z"
+        },
+        {
+          "name": "Validate static report evidence",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-10-29T13:41:28Z",
+          "completed_at": "2026-10-29T13:41:28Z"
+        },
+        {
+          "name": "Annotate failing static cases",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 9,
+          "started_at": "2026-10-29T13:41:28Z",
+          "completed_at": "2026-10-29T13:41:28Z"
+        },
+        {
+          "name": "Run offscreen GUI tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-10-29T13:41:28Z",
+          "completed_at": "2026-10-29T13:42:12Z"
+        },
+        {
+          "name": "Validate GUI report evidence",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-10-29T13:42:12Z",
+          "completed_at": "2026-10-29T13:42:12Z"
+        },
+        {
+          "name": "Annotate failing GUI cases",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 12,
+          "started_at": "2026-10-29T13:42:12Z",
+          "completed_at": "2026-10-29T13:42:12Z"
+        },
+        {
+          "name": "Upload M0 reports",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-10-29T13:42:12Z",
+          "completed_at": "2026-10-29T13:42:14Z"
+        },
+        {
+          "name": "Post Run actions/setup-python@v7",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 25,
+          "started_at": "2026-10-29T13:42:14Z",
+          "completed_at": "2026-10-29T13:42:14Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v7",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 26,
+          "started_at": "2026-10-29T13:42:14Z",
+          "completed_at": "2026-10-29T13:42:14Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 27,
+          "started_at": "2026-10-29T13:42:14Z",
+          "completed_at": "2026-10-29T13:42:14Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/doorfordoor/G4UniversalSim/check-runs/123483057046",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000000157,
+      "runner_name": "GitHub Actions 1000000157",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    }
+  ]
+}

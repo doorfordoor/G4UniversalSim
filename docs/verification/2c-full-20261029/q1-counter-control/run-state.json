@@ -1,0 +1,24 @@
+{
+  "status": "completed",
+  "pid": 25368,
+  "started_at_utc": "2026-10-29T14:30:05.202857+00:00",
+  "command": [
+    "D:\\Geant4\\G4UniversalSim\\gui\\.venv\\Scripts\\python.exe",
+    "-u",
+    "-B",
+    "scripts/run_m0_tests.py",
+    "--profile",
+    "all",
+    "--executable",
+    "C:/Users/123/.codex/worktrees/q1-final/G4UniversalSim/out/build-q1-clean/Release/G4UniversalSim.exe",
+    "--merge-executable",
+    "C:/Users/123/.codex/worktrees/q1-final/G4UniversalSim/out/build-q1-clean/Release/mergeHistograms.exe",
+    "--require-tracked-sources",
+    "--fail-on-skip",
+    "--report-root",
+    "out\\verification\\q1-counter-control"
+  ],
+  "log": "out\\verification\\q1-counter-control\\full105.log",
+  "exit_code": 0,
+  "finished_at_utc": "2026-10-29T14:52:03.121995+00:00"
+}

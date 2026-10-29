@@ -1,0 +1,14 @@
+loader: valid file read; wrong schema, count and face index rejected
+missing main INI: reported without starting the backend
+MainWindow: Backend geometry: 13 volume copies from Geant4.
+demo project: package generated, Backend geometry: 15 volume copies from Geant4.
+smoke_backend_geometry: OK
+G4USIM_ASSERTS=14
+/home/runner/work/G4UniversalSim/G4UniversalSim/gui/g4usim_gui/output/plot_data.py:108: RuntimeWarning: Legacy/unverified directory: run_metadata.json is absent; file ownership and completeness are unverified.
+  for path in sorted(output_files(output, "scorer_statistics*.csv")):
+/home/runner/work/G4UniversalSim/G4UniversalSim/gui/g4usim_gui/output/plot_data.py:117: RuntimeWarning: Legacy/unverified directory: run_metadata.json is absent; file ownership and completeness are unverified.
+  for path in sorted(output_files(output, "scoring_mesh*.csv")):
+/home/runner/work/G4UniversalSim/G4UniversalSim/gui/g4usim_gui/output/plot_data.py:123: RuntimeWarning: Legacy/unverified directory: run_metadata.json is absent; file ownership and completeness are unverified.
+  for path in sorted(output_files(output, "g4usim*.root")):
+/home/runner/work/G4UniversalSim/G4UniversalSim/gui/g4usim_gui/output/plot_data.py:144: RuntimeWarning: Legacy/unverified directory: run_metadata.json is absent; file ownership and completeness are unverified.
+  runs = sorted({_run_of(p.stem) for p in output_files(output, f"{stem}_t*.csv")})

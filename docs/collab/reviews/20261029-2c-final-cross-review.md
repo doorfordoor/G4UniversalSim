@@ -45,3 +45,7 @@ em::accepted
 - EffectiveReceiptView：检查 thread/run/generation/resolved SHA 作用域、未知命令降级、不同绑定失败隔离及 immutable annotation。运行 `python -B scripts/test_effective_lifecycle.py --component` 返回 0，输出 PASS independent receipt reducer/target failure isolation/generation/run scopes/immutable snapshots/read-only classification。该组件测试不启动后端，不证明实际 worker 收据生产完整。
 
 本记录仅报告上述确定 P2，无优化建议清单。最终冻结需主任务确认修复与本轮真实专项、完整平台和 CI 证据；独立组件通过不提升为完整 2C 完成。
+
+## 关闭补记（2026-10-29）
+
+上述空/空白 EM 来源误归属已在最终 `f4770b0` 修复；真实 `effective_source_physics` 372 个入口通过，包含空值/空白与有效 option4 的请求、来源和解析值核对。Windows 118/118、Linux 11.3.2/11.4.3 各118/118及严格证据门禁均通过，见[最终报告](../../verification/2c-full-20261029/README.md)。原 P2 是修前成立的缺陷，现标记为已修复，不再作为当前未关闭问题；原组件证据和审查边界保留。

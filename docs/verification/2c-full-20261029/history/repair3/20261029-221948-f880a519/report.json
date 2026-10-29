@@ -1,0 +1,49 @@
+{
+  "schema": "G4UniversalSimM0TestReport",
+  "version": 2,
+  "profile": "all",
+  "platform": "Windows-10-10.0.26200-SP0",
+  "python": "3.11.9",
+  "git_head": "fee88d2840b8300aa315d0feaf21316768f90206",
+  "source_fingerprint": "fbbee2ceb2f259cf31434ff53dc0785636aab4ff7205f1a25c4c697ae69db1e2",
+  "tests_content_fingerprint": "4b53705ed626314f3c30600e028580dcf26d81662ba7868a5c2efa3dbdefed87",
+  "git_dirty": true,
+  "backend_executable": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-2c\\Release\\G4UniversalSim.exe",
+  "backend_provenance": "source_sha256_manifest_matches_executable",
+  "backend_build_identity": {
+    "build_configuration": "Release",
+    "compiler_id": "MSVC",
+    "compiler_version": "19.51.36246.0",
+    "geant4_version_number": 1132,
+    "multithreaded": true
+  },
+  "merge_executable": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-2c\\Release\\mergeHistograms.exe",
+  "merge_source_fingerprint": "49708e1b6b554af6bb0ad42688f447cf254f528f71614074309f75170964682d",
+  "merge_provenance": "source_sha256_matches_executable",
+  "optional_pyvista_coverage": "not_proven_by_this_runner",
+  "untracked_source_files": [],
+  "tracked_source_gate": "pass",
+  "assert_probe": "settrace_assert_lines_v3",
+  "log_digest_algorithm": "sha256_raw_bytes_lf_v2",
+  "assertions_executed_total": 1570,
+  "assert_sites_total": 460,
+  "cases_with_assertion_counts": 1,
+  "cases_with_zero_assertions": [],
+  "skip_policy": "failure",
+  "results": [
+    {
+      "name": "run_summary",
+      "layer": "backend",
+      "script": "scripts/test_run_summary.py",
+      "assert_sites": 460,
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 181.593,
+      "log": "out\\verification\\2c-regression-repair3\\20261029-221948-f880a519\\run_summary.log",
+      "log_sha256": "f96468b8f7cec0dd601c4b802b0a6034acef2a810cd7fedfe2105decd5a3e5b9",
+      "log_digest_algorithm": "sha256_raw_bytes_lf_v2",
+      "assertions_executed": 1570,
+      "assert_probe": "settrace_assert_lines_v3"
+    }
+  ]
+}

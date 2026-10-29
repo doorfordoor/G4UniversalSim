@@ -11,33 +11,35 @@
 
 统一工作项、排期波次、依赖、Q1 审查范围与提交节点均在 [ROADMAP](docs/ROADMAP.md) 的“统一代号与排期”一节。本对话作为 **Q1 完整可靠性审查、修复与验收**的主负责人；隔壁审查作为独立证据来源，不必等它全部结束。已有反例按代码基线复用；Q1 已在冻结范围完成验收，见[最终报告](docs/verification/q1-final-20261029/README.md)。
 
-当前顺序：Q1（已完成）→ 2C/E6 → F1/F4/F5/K1（I1 可并行）→ I2/J1/F8 → L1/F2；其后科研波次 Q2/H2/H3、F3/F7、E7/J2，与 K2/L2 按依赖安排；H4–H9 和 M5 保留后续独立阶段。这是导航摘要，具体状态与默认顺序以 ROADMAP 为准。用户一次启动一个完整代号，阶段内的提交和专项测试由负责人连续推进。
+当前顺序：Q1（已完成）→ 2C（已完成）→ E6 → F1/F4/F5/K1（I1 可并行）→ I2/J1/F8 → L1/F2；其后科研波次 Q2/H2/H3、F3/F7、E7/J2，与 K2/L2 按依赖安排；H4–H9 和 M5 保留后续独立阶段。这是导航摘要，具体状态与默认顺序以 ROADMAP 为准。用户一次启动一个完整代号，阶段内的提交和专项测试由负责人连续推进。
 
 2026-10-29 Q1已完成：九域审查、R01–R32闭合并交叉复核；验收代码 `8ecad66`。干净Windows **105 PASS / 0 FAIL / 0 SKIP**，83770个v3入口；旧同代98项基线79303，逐例/总数与原始日志门禁通过。Linux11.3.2/11.4.3真实CI各105（run40855144863），Windows/Ubuntu static+GUI各42（run40855144672），Windows实窗保存/生成/运行/取消/关窗通过。[完整收据](docs/verification/q1-final-20261029/README.md)；旧失败证据保留，历史偏置结果须重跑，原生交互迁移显式csh。
 
-## 当前2C实施（2026-10-29启动）
+## 完整 2C 已完成（2026-10-29）
 
-22:28接续：首轮五项失败及Linux额外live_progress现均由修后专项闭合（run_summary 1570、interactive 309、其余4项通过）。发现四项旧测试按worker输出行重复assert导致计数不稳定，已保留逐记录数值/身份检查并改为固定独立不变量断言、另记真实记录覆盖；[同口径控制提案](docs/collab/inbox/20261029-2223-astra-2c-counter-control.md)要求Q1生产代码+同五份测试重测全105，再与当前118走原门禁。旧Q1原始报告及门禁不改。控制在独立q1-counter-control工作区，原q1-final及DSH目录保持原样。当前将冻结修复版本并并行跑控制、候选全量及新真实CI；完整2C仍未验收。
+验收产品 `f4770b0`：11 类消费者、同字节输入来源、事务/稳定对象身份、configure/run_begin/finalization、独立内核/worker 收据、模块 off/auto/on、只读 GUI 集合与差异闭合。干净 Release 与 Windows 全量 **118 PASS / 0 FAIL / 0 SKIP，40628 个 v3 入口**，报告运行时 `git_dirty=false`；Linux 11.3.2/11.4.3 实际 CI `40892017436` 各118项，M0 `40892017433` 两平台各47项，12个证据门禁通过、4个ZIP传输SHA匹配。最终依据见[完整2C验收报告](docs/verification/2c-full-20261029/README.md)，契约见[EffectiveConfig](docs/EffectiveConfig.md)。
 
-最新检查点（22:10）：冻结`fee88d2`干净Windows全量118项已完成，113 PASS/5 FAIL/0 SKIP；Linux11.3.2/11.4.3真实CI `40884097773` backend失败，integration未执行；M0 `40884097335`两平台static/gui通过。原始证据分别在`out/verification/2c-full-windows/20261029-214410-a8c2b6e8`与`out/verification/2c-ci`，不能称完整2C已验收。已修快照格式登记、线程调度依赖的故障注入/稀疏分母用例、NIEL诊断及交互来源旧预期；修后构建成功，6项专项在跑（`out/verification/2c-regression-repair`）。下一步：专项闭合→新冻结/干净构建→Windows118项与Q1同v3基线门禁→新双版本真实CI→实窗关联与证据归档→阶段裁决/集成。最终可见GUI旧冻结证据另在`out/verification/2c-visible-final`，不得冒充修后版本。
+同口径 Q1 控制使用原 Q1 生产代码加同五份测试 overlay 新测量：105项、36269个v3入口；候选118项通过原 `check_report_evidence --baseline`。历史Q1的83770入口和原始报告保持原样，不能与新计数直接比较；[控制提案](docs/collab/inbox/20261029-2223-astra-2c-counter-control.md)及最终报告说明逐记录检查、固定断言入口和真实覆盖量的区别。
 
-用户已启动完整2C，基线f25da40。实施范围、单写者分工与整阶段验收见[本轮开工信](docs/collab/inbox/20261029-1959-astra-full-2c-execution.md)。当前先补事务/输入来源基础、11消费者真实适配和DeepSeek前端方案，再接三时点及线程证据；既有configured子集不算完整完成。无新的后端构建或测试结论，Q1验收记录保留。
+最终真实Windows可见GUI对应上述二进制：2run、2worker、8/8事件、14快照，10类程序化Qt检查及6张原生窗口截图全部完成并实际查看，证据保留在 `out/verification/2c-visible-accepted`。这不是offscreen或真人点击声明，也不构成物理正确性证明。sourcefp `c2b575bbb9c594765364aa7c78150e842ffb20ff34b10ad4729720bae2c8c91b`；testsfp `3ac890cc996d73289098628bb6cca8888f3120f9dffc3e22f60ab387ab1d6d1a`。
 
-实施检查点：基础事务/同字节来源已提交d422e63，全消费者/运行快照已提交2bb9d0b。build05已成功，真实专项 Source/Physics/Field、Output/mesh、Scoring、modules、生命周期、Geometry/Materials、GDML均已通过；新增Biasing非法命令Fatal abort反例已改成受控失败，6类负例及正例通过（out/verification/2c-consumers-repair，792 v3入口）。空em来源误归属和连续不同命令requested回退已修复；模块缺省legacy与显式auto分开，冲突拒绝。修前日志与失败报告原样保留。DeepSeek参与前端设计/实现，独立审核后真实Windows可见主窗口完成2run×4事件、2worker、14快照集合/差异/中英明暗/损坏保留，6张原生截图实际查看（out/verification/2c-visible），其sourcefp为build03，最终冻结还需补最终后端关联。统一runner已注册118项（static15/backend52/gui32/integration19），Windows静态CI补MSVC初始化且本机独立模型用cl实测通过。完整2C尚未验收；当前冻结后准备干净Release、Windows全量/Q1同v3门禁与真实双版本LinuxCI，再归档、阶段裁决和集成。
+原始首轮失败 `out/verification/2c-full-windows/20261029-214410-a8c2b6e8`、旧CI `out/verification/2c-ci`、修后专项 `out/verification/2c-regression-repair`、build03/fee88d2可见检查 `out/verification/2c-visible` / `out/verification/2c-visible-final` 继续保留，不能冒充最终证据。实施与DeepSeek设计裁决见[开工信](docs/collab/inbox/20261029-1959-astra-full-2c-execution.md)和[设计记录](docs/collab/outbox/20261029-deepseek-full2c-design.md)。
+
+下一阶段 E6；F1、Q2、安装包及完整GUI编辑等保持各自未完成状态，按ROADMAP依赖推进。
 
 ## 2026-10-29 隔离开发工作区与2C子集历史
 
 用户授权 Astra 主导 2C 实现。当前工作区 `C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim`，基线 `5465dbd`，分支 `roadmap/2c-effective-config`；原 D 盘工作区由 DSH 保留，禁止并发合并。实施契约见 [2C 开工回信](docs/collab/inbox/20261029-1010-astra-2c-execution.md)。DeepSeek 已通过 API 提供前端设计，采纳范围与纠偏见 [前端设计建议](docs/collab/outbox/20261029-1010-deepseek-effectiveconfig-ui-design.md)。
 
-独立数据模型、配置阶段导出与只读查看器已接通；完整消费者覆盖、三阶段应用证据与 off/auto/on 尚未完成，不提升支持等级。原基线 87 项归档报告已在本轮通过严格证据门禁复核。
+该历史子集接通独立数据模型、配置阶段导出与只读查看器；当时未完成完整消费者覆盖、三阶段应用证据与 off/auto/on，其历史验收范围不扩大。原基线 87 项归档报告已在本轮通过严格证据门禁复核。
 
 2C子集历史验收（旧探针计数，不与Q1 v3直接比较）：MSVC + Geant4 11.3.2 构建成功；最终两组覆盖统一平台全部 **89 PASS / 0 FAIL / 0 SKIP，117149 条断言**，另有独立模型 24 条。两组报告源码/测试指纹一致，逐用例断言非零，归档日志 SHA-256 与严格门禁通过；见 [验收记录](docs/verification/2c-configured-20261029/README.md)。初轮两项环境失败原样保留，已使用已有 GDML/数据根参数复测，未放宽测试。真实导出数据的浅色/深色/小窗口 offscreen 图已查看，不等同桌面与高 DPI 验收。
 
-当前 2C 代码范围：`Config/EffectiveConfig` 类型化事务与不可变快照、`--dump-effective-config` 独占新文件/标准输出、GUI 第 9 页只读查看器；完整 2C 继续进行中。上轮收尾收到独立审查，csh 拒绝主配置切换后仍报成功（R-01，P1）、元数据写失败但文本摘要仍成功（R-02，P2）在 70a1aba 重新复现；旧反例见 [修前证据](docs/verification/m0-known-defects-20261029/README.md)。它们当时未被已有 89 项覆盖，本轮已补正式回归并修复，见下段。
+当时 2C 子集代码范围：`Config/EffectiveConfig` 类型化事务与不可变快照、`--dump-effective-config` 独占新文件/标准输出、GUI新增只读查看器（当时共9页）；完整 2C 后续验收见本页上节。上轮收尾收到独立审查，csh 拒绝主配置切换后仍报成功（R-01，P1）、元数据写失败但文本摘要仍成功（R-02，P2）在 70a1aba 重新复现；旧反例见 [修前证据](docs/verification/m0-known-defects-20261029/README.md)。它们当时未被已有 89 项覆盖，本轮已补正式回归并修复，见下段。
 
 2026-10-29 R-01/R-02阶段历史验收：Release 构建、**89 PASS / 0 FAIL / 0 SKIP，117833 条断言**，严格证据门禁通过，见 [修复报告与日志](docs/verification/reliability-r01-r02-20261029/README.md)。维持拒绝配置热切换；metadata 异常纠正可写文本摘要并排除失败产物，不承诺跨文件原子性。该节点当时未做Linux/11.4/安装包验收；后续当前源码Linux/11.4证据见上方Q1，安装器扩展仍归I2。
 
-R03–R32现已完成修复与回归，旧[反例证据](docs/verification/r03-r04-current-20261029/README.md)和提案保留为历史。V01方法边界已裁决，统计适用范围后续归Q2。下一完整工作项是[2C](docs/EffectiveConfig.md)，五项新增目标与E/F/H依赖继续遵循[ROADMAP](docs/ROADMAP.md)；不因Q1通过宣布这些阶段完成。
+R03–R32现已完成修复与回归，旧[反例证据](docs/verification/r03-r04-current-20261029/README.md)和提案保留为历史。V01方法边界已裁决，统计适用范围后续归Q2。该Q1历史节点的下一项是[2C](docs/EffectiveConfig.md)，现已另行完成；五项新增目标与E/F/H依赖继续遵循[ROADMAP](docs/ROADMAP.md)；不因Q1通过宣布这些阶段完成。
 
 ## 原 DSH 集成基线（2026-10-28 归档，2C 新工作区见上节）
 
@@ -57,7 +59,7 @@ R03–R32现已完成修复与回归，旧[反例证据](docs/verification/r03-r
 - E 修复：E1（GUI 与后端规则一致）、E2（配置 schema）、E3（Linux CI，含 Geant4 11.3.2 / 11.4.3 版本矩阵）、E5（GUI 拆分）已完成（E3 见 ROADMAP 的“done for Linux”；M0 workflow 已由所有者启用并在 `402a9f2` 双平台全绿；11.2 未测）；E4 已做部分规范迁移和链接检查，仍需收尾；新增 E6/E7 的范围见 ROADMAP。
 - F 优化：F6（实时运行进度）已完成，2026-10-28 追加可选 `sequence`（进程级单调、跨 run 不重置，GUI 拒绝重复/回退行；旧后端仍可解析），契约见 [docs/实时运行进度.md](docs/实时运行进度.md)；F1 输出与来源、F2 运行会话、F3 性能/tasking、F4 校验定位、F5 undo/autosave、F7 二维扫描、F8 GUI 收尾未做。
 - H 增量：H1（径迹输出）已完成；H2–H9（过滤计分、平行世界、方差降低、光学、活化、DNA、体素体模、通用直方图）未做。
-- M0 全模块 EffectiveConfig / 模块开关归 2C（已有子集）；SolidRegistry 归 E7，仍未实现。M0–M5 是长期目标汇总，不与新工作项重复计算完成度。
+- M0 全模块 EffectiveConfig / 模块开关归已完成的2C；SolidRegistry 归 E7，仍未实现。M0–M5 是长期目标汇总，不与新工作项重复计算完成度。
 
 ## 阶段 2B（屏蔽/涂层场景 GUI 端到端，已完成 2026-10-28）
 
@@ -89,13 +91,13 @@ R03–R32现已完成修复与回归，旧[反例证据](docs/verification/r03-r
 - 2C：完整 EffectiveConfig + 模块 off/auto/on（Astra 主导设计）——原 DSH 基线的**只读测绘**见 [docs/collab/outbox/20261028-2000-deepseek-effectiveconfig-survey.md](docs/collab/outbox/20261028-2000-deepseek-effectiveconfig-survey.md)：
   现状（13 个 `effective_*` 标量、11 个来源字段、materials 六态、19 个 main_ini section、散落布尔开关、缺 `--dump-effective-config`）、
   六条缺口（无对象 ID、无 requested/resolved/applied 四元组、缺 BeginOfRun 快照、无 off/auto/on 语义、GUI 无结构化入口、验收只能数 353 字段），
-  以及当时的切片建议与五个待 Astra 决定的问题。隔离分支现已实现 configured 子集，见本页开头；不能再将当时“未写代码”的状态应用于当前隔离分支。
+  以及当时的切片建议与五个待 Astra 决定的问题。该测绘后的configured子集及最终完整2C已分别验收，见本页开头；不能再将当时“未写代码”的状态应用于当前隔离分支。
 - 铁律：阶段 2 冻结新功能，目标是压低 `experimental` 比例，而不是扩大分母。
 
 ## 已知缺口（不要把以下当作已完成）
 
 - 后端名字校验类错误可能在"首个事件前"才发现（例如 `[scoring.displacement]` 的粒子名在 `BeginRun` 校验，`--inspect-run` 查不出）。
-- 配置面 353 个字段中 supported 59 / experimental 287 / deprecated 5 / unsupported 2；有 `gui` 元数据的 57 个字段（generated 17 / generated_subset 30 / external_only 5 / legacy_external 2 / fixed_or_blocked 2 / fixed_false 1），其余 296 个字段没有任何 GUI 编辑路径。
+- 当前schema 357个字段中 supported 59 / experimental 291 / deprecated 5 / unsupported 2；61项有 `gui` 元数据（原57项分类保留，新增4项 `editable=false`），296项无GUI元数据。新增模块策略不开放GUI编辑；字段数不等于全配置或物理验证。
 - 探测器响应、Dose/Fluence/DDD 等基准多为"同源自洽"或"解析式"，缺少第三方独立数据与实测效率对照。
 - 偏置只有 process-level XS 路径；importance、weight-window、splitting、Russian roulette 未实现。
 - 交互命令审计只覆盖 `--ui --ui-session csh`；Qt UI 与部分嵌套/动态命令不受审计保证。

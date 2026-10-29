@@ -14,9 +14,9 @@
   metadata 打开/写入/关闭失败锁存 `run_metadata_open/write/close`，可写文本摘要纠正为 failed，失败 JSON 不列入产物；
   `summary_write_status=completed` 仅指文本摘要成功关闭，不等于 JSON/模拟成功。回归 `test_interactive_commands.py`、`test_run_summary.py`；全文见 `docs/agent-history.md`。
 
-- 2026-10-29 2C 配置快照子集：`Config/EffectiveConfig` 区分缺失值与显式 null，事务拒绝不得改变 revision；
+- 2026-10-29 历史2C配置快照子集：`Config/EffectiveConfig` 区分缺失值与显式 null，事务拒绝不得改变 revision；
   `--dump-effective-config <新文件|->` 只 Configure + preflight，不执行 macro/事件、不创建运行输出目录，拒绝覆盖已有文件（含硬链接）。
-  当前仅配置阶段 Manager 子集；命名源/相空间源不导出旧单源缓存，非 mono 不导出 mono energy；禁止据此宣称完整 2C 或内核已应用。
+  该次验收仅配置阶段Manager子集；命名源/相空间源不导出旧单源缓存，非mono不导出mono energy。其历史范围不扩大；当前完整2C见文末验收索引，配置值仍不能直接证明内核应用。
   回归 `test_effective_config_model.py`、`test_effective_config_export.py`、`smoke_effective_config.py`；全文见 `docs/agent-history.md`。
 
 2026-10-19 → 2026-10-27 的 29 条实施契约全文（含文件路径、行号、反例与回归入口）在 [docs/agent-history.md](docs/agent-history.md)。下表只列**仍然有效的操作规则**；改动相关模块前必须先读对应历史条目全文，只读索引不足以动手。新增条目：全文追加到 `docs/agent-history.md`，本表加一行，不要再在本文件堆长段落。
@@ -54,7 +54,7 @@
 - 2026-10-27 B1 位移损伤粒子名：`[scoring.displacement]` 键按 `G4ParticleTable` 大小写不敏感解析为规范名，在 `BeginRun`（首个事件前）校验（配置期粒子表为空）；未知名字报主 INI 文件、行号与候选后失败，不得静默让 DDD 恒为 0；回归 `scripts/test_displacement_damage.py`。
 - 2026-10-27 B2/B3/B4：主 INI 重复 section/键只告警 `[ConfigWarning] duplicate declaration` 并写摘要 `config_duplicate_count`，后值生效、不得改成拒绝；敏感探测器按配置名创建（禁硬编码 `AIHLParticleSD`）；`enableSD`/`setSDName`/`setSeed` 仅 `PreInit`，初始化后必须失败而非改缓存；回归 `test_config_duplicate_declarations.py`、`test_command_state_gating.py`。
 - 2026-10-27 F6：`Actions/RunProgress` 输出 `[G4USimProgress] ` + `g4usim_progress_v1` JSON，约 0.5 s 限频，终值取 `G4Run::GetNumberOfEvent()`；零事件不补造消息，进度不替代 `run_result` 判定；契约 `docs/实时运行进度.md`、回归 `test_live_progress.py`。
-- 2026-10-26 E2 配置 schema：353 个字段条目；改描述/默认/别名/范围必须跑 `scripts/generate_config_schema.py`，C++ 表、Python 数据、矩阵第 5 节与覆盖清单禁手改；`field`/`biasing` 在 excluded，不能说成全仓库统一；回归 `test_config_schema.py`、`test_config_schema_context.py`。
+- 2026-10-26 E2原验收353个字段；当前schema357项（新增modules四项）；改描述/默认/别名/范围必须跑 `scripts/generate_config_schema.py`，C++ 表、Python 数据、矩阵第 5 节与覆盖清单禁手改；`field`/`biasing` 在 excluded，不能说成全仓库统一；回归 `test_config_schema.py`、`test_config_schema_context.py`。
 - 2026-10-23 H1 粒子径迹：`[output] trajectories = N` 在 `SteppingAction` 开头记录（步前体积，被杀的步也记录），每 worker 每轮写 `trajectories_tN[_rR].json`，master 不写；回归 `test_trajectories.py`。
 - 2026-10-22 D 安装包：`Core/Geant4DataLocator` 仅在无 `GEANT4_DATA_DIR`/G4…DATA 变量时读可执行文件旁 `geant4-data.txt`；`packaging/build_package.py` 只写 git 忽略的 `out/`；打包验证须清空 PATH 与 Geant4 变量；数据集清单按 Geant4 11.3 写死。
 - 2026-10-22 B4 探测器响应：脉冲幅度就是 `event_edep` 沉积能（探测器为唯一敏感体），分辨率只在 `analyze_detector.py` 由用户参数施加；γ 源只在包外壳圆锥内抽样，绝对效率乘 `cone_fraction_of_4pi`；参考值全为解析式，不得声称实测效率。
@@ -111,7 +111,7 @@
 ## 3. 后端维护规则
 
 - SimulationManager、各模块 Manager、配置读取器和 Messenger 的行为必须保持一致；新增配置字段不能只加到 GUI writer 或文档。
-- 配置优先级必须以代码实际行为为准。M0-1/M0-1b 已对当前启动字段统一为“默认值 < 主配置文件 < macro 运行时命令 < 显式 CLI 参数”：`SimulationCommandLineOverrides` 在 `Configure()` 后重应用显式 CLI，并由 `SimulationManager`、`OutputManager`、`GeometryManager` 阻止低优先级入口改写 `output`、`threads`、`seed`、`check_overlaps` 等字段。它是向完整 `EffectiveConfig` 迁移的过渡层，不代表已经提供来源追踪。
+- 配置优先级必须以代码实际行为为准。M0-1/M0-1b 已对当前启动字段统一为“默认值 < 主配置文件 < macro 运行时命令 < 显式 CLI 参数”：`SimulationCommandLineOverrides` 在 `Configure()` 后重应用显式 CLI，并由 `SimulationManager`、`OutputManager`、`GeometryManager` 阻止低优先级入口改写 `output`、`threads`、`seed`、`check_overlaps` 等字段。该启动优先级过渡层本身不承担完整来源追踪；当前完整2C来源与独立应用证据见 `docs/EffectiveConfig.md`，不得以优先级守卫代替运行收据。
 - M0 几何生命周期守卫：`/AIHL/geometry/` 的几何/配置修改命令（含 `markModified`）以及 `/AIHL/app/setCheckOverlaps` 只允许在 Geant4 `PreInit` 状态执行；`print`、`printTree`、`listUserVolumes` 为只读命令，不受此限制。初始化后禁止只改 Manager 缓存却继续以旧 Geant4 world 执行。batch 的 `ApplyCommand` 非零返回须保存失败位置、失败摘要和非零退出；`csh` 的失败返回须停止后续输入。切换几何请在初始化前配置或启动新进程，不能把 `/run/reinitializeGeometry`（尤其含 biasing operator）视为已完成安全验收。实际后端回归见 `scripts/test_run_summary.py`、`scripts/test_interactive_commands.py`。
 - M0-2 的 `run_summary.txt` 只在最终生命周期阶段写入（dry-run、正常结束、交互会话结束或失败收尾），并区分计划配置与实际运行事实：状态、每次 run、计划/完成事件数、实际线程数、配置 seed、引擎初始 seed（无法可靠取得时为 `unknown`）、macro seed 修改、最终输出目录、生成文件和失败命令位置。seed 修改只可由当前代码明确识别且成功执行的命令确认；失败摘要必须区分执行失败和 preflight 失败。preflight 没有 `ApplyCommand()` 返回码，必须用 `macro_failure_code_available=false` 表达 `macro_failure_code=0` 的语义。无法取得的运行事实必须写为 `unknown` 或 `not_executed`。
 - M0-3C4 的 GUI 结果判定不能仅凭进程退出码：`success` 必须有正常退出、本次新摘要、后端和 macro 完成、至少一个 run 与正数计划事件；每个 run 的计划/完成事件数须一致，逐 run 合计也须与摘要总数一致，不能仅用相等总数掩盖单轮未完成。dry-run、交互无 run、普通无 run、终止、kill、失败和未证实分别保留状态；旧摘要和无摘要不得冒充成功。当前仅是未提交工作区候选，见 `gui/g4usim_gui/core/run_result.py` 和专项 smoke。
@@ -181,19 +181,19 @@
 ## 9. M0-3C0B 运行前清单（工作区）
 
 - `--inspect-run` 必须复用真实 `SimulationManager::Configure()` 和 `PreflightMacro`，不初始化/执行 Geant4 run，不写摘要或创建输出目录；JSON `G4UniversalSimRunPlan` v1 使用 `configuration_phase=before_macro` 明确区分配置计划与运行事实。
-- 初始配置清单记录当前启动字段、材料/几何输入、默认/主配置/CLI 来源以及主 INI 原文和行号。它尚非全模块 EffectiveConfig，macro 后续修改必须作为待执行命令报告，不能声称已生效。
+- 初始配置清单记录当前启动字段、材料/几何输入、默认/主配置/CLI 来源以及主 INI 原文和行号。该 `--inspect-run` 清单不是全消费者JSON快照，macro后续修改仍作为待执行命令报告；完整2C使用独立协议与真实阶段收据，不能据清单声称已生效。
 - GUI 外部 Run 先异步查询同一组实际启动参数，成功且输入未变化才启动；config-only、macro-only、中文路径、CLI 冲突和失败阻断由 `scripts/test_macro_plan.py` 与 GUI `smoke_run_input_modes.py` 验证。实际运行成功由 C4 结合摘要判断。
 - 回归脚本的默认输出和随机引擎文件必须留在临时工作区，不能改写仓库示例输出。当前 M0-1/M0-2 脚本复制所需配置/macro fixture 后在临时目录运行。
 
 ## 10. M0 有效启动字段来源快照（工作区候选）
 
 - `scripts/test_run_summary.py` 的单线程双 run 源采样回归，通过真实 hits 的主粒子首步记录验证 `/AIHL/source/particle`、`/AIHL/source/energy` 在受控点源、单能配置中实际作用于 Geant4 事件；不得推广为原生 `/gps/*`、多线程或全模块 EffectiveConfig 的应用验证。
-- `effective_config_source_coverage=startup_geometry_source_and_physics_reference` 代表六个启动字段 `output_dir`、`run_name`、`threads`、`seed`、`macro_file`、`check_overlaps`、三个几何字段 `geometry_template`、`geometry_config`、`geometry_default_world_material` 及 `source_particle`、`source_energy` 及 `physics_reference` 的来源记录；历史 `startup_geometry_and_source_particle`、`startup_geometry_and_source_particle_energy` 仍须兼容。不能宣称全模块 `EffectiveConfig` 或 Geant4 内核实际应用已验证。
+- `effective_config_source_coverage=startup_geometry_source_and_physics_reference` 代表六个启动字段 `output_dir`、`run_name`、`threads`、`seed`、`macro_file`、`check_overlaps`、三个几何字段 `geometry_template`、`geometry_config`、`geometry_default_world_material` 及 `source_particle`、`source_energy` 及 `physics_reference` 的来源记录；历史 `startup_geometry_and_source_particle`、`startup_geometry_and_source_particle_energy` 仍须兼容。该旧摘要覆盖枚举不能代表完整2C JSON，也不能证明Geant4内核实际应用。
 - `effective_<field>_origin_kind/file/line/section/key` 的 `kind` 只能使用 `default`、`main_ini`、`cli`、`macro` 或 `runtime_unattributed`。主 INI 保留原始字段和行号；宏命令须在真实执行成功并通过 Messenger 错误检查后记载来源；CLI 锁定字段不受宏重新归属。无法确定的运行时修改必须明确标为 `runtime_unattributed`。
 - `physics_reference` 在主 INI 中通常由 `[physics]/reference` 决定；reference 模式下非空 `[physics]/em` 改变最终 reference 后由 `em` 归属。成功 batch `/AIHL/physics/setReferenceList`、`setBaseReferenceList`、`clearReferenceList` 更新来源；`setEM` 仅在 PhysicsManager 当前处于 reference 模式时更新 reference 来源。`effective_physics_reference` 是 Manager 名称，不能据此推断 Geant4 内核或 biasing 已实际验证。
-- 相关回归由 `scripts/test_run_summary.py` 覆盖，几何来源在成功执行已识别 batch macro 后登记；`/AIHL/geometry/clear` 只重新归属 `geometry_config`，不改变模板或默认世界材料。`effective_geometry_default_world_material` 为 Manager 当前值，`effective_config_geant4_applied=unknown` 仍保留。`startup_fields_only`、`startup_and_geometry_fields`、`startup_geometry_and_source_particle`、`startup_geometry_and_source_particle_energy` 是历史摘要枚举值，消费者须兼容。`source_particle` 主 INI 优先记录非空 `[source]/particle`，否则记录 `[source]/preset`；成功 batch macro 的 `/AIHL/source/preset`、`/AIHL/source/particle`、`/AIHL/source/reset` 更新来源，包含重置为空状态。`source_energy` 优先记录非空 `[source]/energy`，否则记录 `[source]/preset`；成功批处理 `/AIHL/source/energy`、`/AIHL/source/preset`、`/AIHL/source/reset` 更新来源。`effective_source_energy_MeV` 是 SourceManager 当前单能值，0 表示未设置或已重置。来源仅针对 SourceManager，原生 `/gps/*` 命令对 Geant4 的直接效果未覆盖；后续若扩展到 physics、materials、scoring，应逐模块校验实际消费与运行生命周期，不能直接把配置表中的初始值当作最终有效值。
+- 相关回归由 `scripts/test_run_summary.py` 覆盖，几何来源在成功执行已识别 batch macro 后登记；`/AIHL/geometry/clear` 只重新归属 `geometry_config`，不改变模板或默认世界材料。`effective_geometry_default_world_material` 为 Manager 当前值，`effective_config_geant4_applied=unknown` 仍保留。`startup_fields_only`、`startup_and_geometry_fields`、`startup_geometry_and_source_particle`、`startup_geometry_and_source_particle_energy` 是历史摘要枚举值，消费者须兼容。`source_particle` 主 INI 优先记录非空 `[source]/particle`，否则记录 `[source]/preset`；成功 batch macro 的 `/AIHL/source/preset`、`/AIHL/source/particle`、`/AIHL/source/reset` 更新来源，包含重置为空状态。`source_energy` 优先记录非空 `[source]/energy`，否则记录 `[source]/preset`；成功批处理 `/AIHL/source/energy`、`/AIHL/source/preset`、`/AIHL/source/reset` 更新来源。`effective_source_energy_MeV` 是 SourceManager 当前单能值，0 表示未设置或已重置。来源仅针对 SourceManager，原生 `/gps/*` 命令对 Geant4 的直接效果未覆盖；后续扩展旧摘要字段仍须逐模块校验实际消费与运行生命周期；当前完整2C JSON另有消费者协议，不能直接把配置表中的初始值当作最终有效值。
 
 
-- 2026-10-29 完整 2C 候选覆盖说明：同日 configured 子集限制是历史验收范围，后续 11 消费者、三阶段、模块策略及 GUI 集合实现已落盘但仍 in_progress；更改这些路径前读 `docs/EffectiveConfig.md` 和 `docs/agent-history.md` 末尾完整 2C 补充。配置 revision、消费者 configuration_generation 与应用证据分别处理，未知原生命令不能伪造 applied，不以构建或旧测试宣称完整验收。
+- 2026-10-29 完整2C已验收：产品f4770b0，11消费者、三阶段、模块策略和GUI集合/差异，Windows118、双版本Linux各118、同口径Q1控制及实窗均通过；最终证据 `docs/verification/2c-full-20261029/README.md`。同日configured子集限制仅是历史验收范围；更改这些路径前读 `docs/EffectiveConfig.md` 和 `docs/agent-history.md` 末尾完整 2C 补充。配置 revision、消费者 configuration_generation 与应用证据分别处理，未知原生命令不能伪造 applied，不以构建或旧测试宣称完整验收。
 
-- 2026-10-29 完整 2C 偏置命令新反例：build03 非法 factor 曾 FatalException abort 且无受控摘要，旧 Q1 冻结范围未覆盖此例。非法 biasing macro/csh 应受控 failed、停止后续输入并保留真实失败位置，不发布配置值/来源/代次/revision；ParseDouble 拒绝非有限值，ApplyCommand 返回 0 仍须检查 BiasingManager 内部失败计数。修前证据及待修后验收契约见 `docs/agent-history.md` 末尾“偏置 macro 非法数值的受控失败链”；不将本索引当修后通过。
+- 2026-10-29 完整 2C 偏置命令新反例：build03 非法 factor 曾 FatalException abort 且无受控摘要，旧 Q1 冻结范围未覆盖此例。非法 biasing macro/csh 应受控 failed、停止后续输入并保留真实失败位置，不发布配置值/来源/代次/revision；ParseDouble 拒绝非有限值，ApplyCommand 返回 0 仍须检查 BiasingManager 内部失败计数。修前证据、修复契约及反例见 `docs/agent-history.md` 末尾“偏置 macro 非法数值的受控失败链”；修后6类负例、正例与完整平台通过以完整2C最终报告为准，不把修前build03当作验收版本。

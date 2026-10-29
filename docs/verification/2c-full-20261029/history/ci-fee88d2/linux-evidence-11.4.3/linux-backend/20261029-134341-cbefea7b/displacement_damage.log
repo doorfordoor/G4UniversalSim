@@ -1,0 +1,29 @@
+muons: log-log table, hits recomputation
+  mu- track length [mm]: 200.000102 (expected 200.000102, rel. tolerance 1e-09)
+  mu- DDD [MeV/g]: 0.00399926982 (expected 0.00399995077, rel. tolerance 0.001)
+  e- out-of-range track length 5.94279 mm (hits 5.94279 mm)
+  statistics ddd_mu-: 0.00399926982 (expected 0.00399926982, rel. tolerance 1e-09)
+  statistics ddd_total: 0.00399926982 (expected 0.00399926982, rel. tolerance 1e-09)
+  statistics sum_sq: 7.99707966e-08 (expected 7.99707966e-08, rel. tolerance 1e-09)
+  relative error 8.695e-06
+neutrons: zero-deposit steps, constant table
+  neutron DDD [MeV/g]: 0.04010239 (expected 0.04, rel. tolerance 0.005)
+ROOT-only output
+failures
+G4USIM_ASSERTS=22
+Traceback (most recent call last):
+  File "/home/runner/work/G4UniversalSim/G4UniversalSim/tools/test_assert_probe.py", line 177, in <module>
+    raise SystemExit(main(sys.argv))
+                     ^^^^^^^^^^^^^^
+  File "/home/runner/work/G4UniversalSim/G4UniversalSim/tools/test_assert_probe.py", line 153, in main
+    runpy.run_path(str(target), run_name="__main__")
+  File "<frozen runpy>", line 291, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/runner/work/G4UniversalSim/G4UniversalSim/scripts/test_displacement_damage.py", line 231, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/home/runner/work/G4UniversalSim/G4UniversalSim/scripts/test_displacement_damage.py", line 203, in main
+    assert message in log, (message, log[-2000:])
+           ^^^^^^^^^^^^^^
+AssertionError: ('cannot open NIEL table', "G4UniversalSim fatal error: [scoring.displacement]/proton (/tmp/g4usim_ddd_os_3e137/case05.ini line 28): Input file does not exist or is not regular: '/tmp/g4usim_ddd_os_3e137/missing.csv'\n")

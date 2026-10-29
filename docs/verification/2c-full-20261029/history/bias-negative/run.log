@@ -1,0 +1,24 @@
+
+**************************************************************
+ Geant4 version Name: geant4-11-03-patch-02 [MT]   (25-April-2025)
+  << in Multi-threaded mode >> 
+                       Copyright : Geant4 Collaboration
+                      References : NIM A 506 (2003), 250-303
+                                 : IEEE-TNS 53 (2006), 270-278
+                                 : NIM A 835 (2016), 186-225
+                             WWW : http://geant4.org/
+**************************************************************
+
+
+-------- EEEE ------- G4Exception-START -------- EEEE -------
+*** G4Exception : AIHLBiasingMessenger002
+      issued by : BiasingMessenger::SetNewValue
+Biasing command failed. input='proton hIoni -1', error='BiasingManager::SetXSProcessBiasFactor factor must be > 0'
+*** Fatal Exception *** core dump ***
+ **** Track information is not available at this moment
+ **** Step information is not available at this moment
+
+-------- EEEE -------- G4Exception-END --------- EEEE -------
+
+
+*** G4Exception: Aborting execution ***

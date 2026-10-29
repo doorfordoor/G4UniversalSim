@@ -28,7 +28,7 @@ This file is the single source of truth for progress. Every work session updates
 | G 3D view redesign | Done (G1-G6) | see log |
 | H Geant4 capability increments | In progress: H1 done | see log |
 | Q1 完整可靠性审查、修复与验收 | **已完成**：九域审查及R01–R32闭合；Windows105、Linux双版本各105与实窗通过 | 验收代码 `8ecad66`；[最终证据](verification/q1-final-20261029/README.md) |
-| 2C 完整 EffectiveConfig / off-auto-on | 进行中：configured 子集已验收；完整 11 消费者/三阶段/模块/GUI 候选已落盘，整体验收待完成 | `70a1aba` |
+| 2C 完整 EffectiveConfig / off-auto-on | 已完成：11消费者/三阶段/模块策略/只读GUI，Windows118、双版本Linux118、同口径门禁与实窗验收 | `f4770b0`；[最终证据](verification/2c-full-20261029/README.md) |
 | E6/E7、Q2、I1/I2、J1/J2、K1/K2、L1/L2 | 已编号并排期；继承已有基础，不冒充完整实现 | 下文统一计划 |
 
 ## Data storage decision
@@ -250,7 +250,7 @@ is marked experimental in the support matrix until benchmarked.
 | 代号 | 范围与已有基础 | 依赖/完成条件 | 当前状态 |
 | --- | --- | --- | --- |
 | **Q1** | 完整可靠性审查、反例复现、修复、回归与交付复核；覆盖已公开能力和拒绝边界 | 九域独立复核、确认缺陷及正式回归闭合，冻结矩阵与同v3逐例/总数门禁通过 | **已完成**；验收代码 `8ecad66`，见[最终报告](verification/q1-final-20261029/README.md) |
-| **2C** | 完整 EffectiveConfig：11 类真实消费者、稳定对象身份、完整来源链、实际读取字节哈希、事务替换/删除、configure/run_begin/finalization、内核/worker 证据、off/auto/on、GUI 审查 | Q1 基线；每类消费者有正反例，拒绝不污染 revision/来源；unknown 不伪装 applied；现有协议兼容 | `70a1aba` 为历史配置子集；f25da40 基线上的完整候选已落盘，整体验收待完成，仍 in_progress |
+| **2C** | 完整 EffectiveConfig：11 类真实消费者、稳定对象身份、完整来源链、实际读取字节哈希、事务替换/删除、configure/run_begin/finalization、内核/worker 证据、off/auto/on、GUI 审查 | Q1 基线；每类消费者有正反例，拒绝不污染 revision/来源；unknown 不伪装 applied；现有协议兼容 | 已完成（产品 `f4770b0`）；`70a1aba` 仅为历史配置子集。[完整2C最终证据](verification/2c-full-20261029/README.md)，不扩张E6/F1/Q2等范围 |
 | **E6** | E2 范围补齐与配置兼容：field/biasing schema；主 INI 版本策略；几何 v2/项目格式迁移与诊断去重 | 2C；生成表不手改；旧输入/别名、未来未知版本、迁移副本、**现有编辑子集** writer 兼容/往返。扩大编辑范围归 J2，不让 E6 等待 J2，不顺带开放 assembly/材料温压等 | 待开始，E2 原状态保持完成 |
 | **E7** | SolidRegistry 与统一实体能力元数据；后端构造、校验、能力查询、GUI 可消费定义逐步归一 | E6/现有 A5；实体逐项差分、缓存/线程生命周期守卫与旧配置不变；不借重构增加未验实体 | 待开始；原 M0 架构积压，不属于 2B 屏蔽场景欠账 |
 | **Q2** | 科研基准与适用范围：Dose/Fluence/LET/DDD、统计不确定度、现有 XS biasing 与 analog 对照、独立数据/解析参考与可复现实验 | Q1、F1；V-01 的口径先在 Q1 明确，Q2 再验证有限样本/覆盖与适用边界；不以同源自洽或 process 挂接代替独立证据 | 待完整验收，复用 A/B 已有限定基准 |
@@ -362,7 +362,7 @@ Q1 的冻结验证矩阵如下；它复用已有构建路径，不要求先完�
 
 提交示例是主题模板，不是假造已存在 SHA。可以合并紧密相关的文档/测试提交，避免空提交；源码实现与验收证据须可追溯。默认不提交红色的正式测试；确需保留修前失败，保留诊断夹具/日志，修复与正式反例一起进入可运行提交。纯计划文档只做链接/路径与相应静态检查，不机械重跑整套 Geant4。
 
-Q1 已存节点：修前证据d286577、R01/R02 f9930aa；5c6da6d（几何/材料）、529b5de（场/源）、f6e1302（数值/SD）、d3f37af（GUI/后处理）；后续4ed7233（执行生命周期）、cb54669（结果来源）、5ffe9b6（探针/测试）、8ecad66（绘图来源夹具）。最终验收8ecad66：Windows105/105、83770个v3入口；同v3旧98基线79303，逐例/总数未下降；Linux run40855144863两版本各105，M0 run40855144672两OS各42，Windows实窗通过。原失败记录保留，详见 [最终报告](verification/q1-final-20261029/README.md)。完整2C仍未完成，其他阶段保持原状态。
+Q1 已存节点：修前证据d286577、R01/R02 f9930aa；5c6da6d（几何/材料）、529b5de（场/源）、f6e1302（数值/SD）、d3f37af（GUI/后处理）；后续4ed7233（执行生命周期）、cb54669（结果来源）、5ffe9b6（探针/测试）、8ecad66（绘图来源夹具）。最终验收8ecad66：Windows105/105、83770个v3入口；同v3旧98基线79303，逐例/总数未下降；Linux run40855144863两版本各105，M0 run40855144672两OS各42，Windows实窗通过。原失败记录保留，详见 [最终报告](verification/q1-final-20261029/README.md)。该Q1验收不包含完整2C；2C后续独立验收见最终报告，其他阶段保持各自状态。
 
 当前继续使用已存在的隔离分支，不移动或重写其历史；后续整项按仓库约定使用 `roadmap/<代号>-<主题>`，优先复用合适 worktree。同一文件一个写者，完整回归期间冻结源码/测试。整项完成后才登记关闭；一个补丁或一个平台过关不等于阶段关闭。安装包/对外发布与源码集成另分节点，当前旧 1.0 包不作为新代码交付物。
 
@@ -465,3 +465,5 @@ H4–H8 if the user's applications favour some of them.
 - 2026-10-29 Q1后续候选：`4ed7233` worker偏置/随机/多run/原生UI入口守卫，`cb54669`结果来源，`5ffe9b6`探针v3与调度无关测试；105组正式清单。build7专项4/4与严格证据门禁通过，旧4e6测量基线以相同v3和两项测试修正重跑；没有重写旧失败报告。最终全平台验收与集成尚未完成。
 
 - 2026-10-29 Q1关闭：九域审查、R01–R32修复/拒绝边界、交叉复核、干净Release与105组正式回归、同v3基线及实际Windows/Linux矩阵全部完成。验收代码8ecad66，后续仅文档/证据归档；失败CI/测量诊断不改写。集成采用独立q1-final检出正常快进codex，DSH原分支与未跟踪审计资料保留；实际提交/推送收据见最终证据目录。下一完整阶段2C。
+
+- 2026-10-29 完整2C关闭：产品 `f4770b0` 干净Release，Windows118/118、40628个v3入口、运行时git_dirty=false；原Q1生产代码加同五份测试overlay重测控制105/105、36269入口，原baseline门禁通过。该控制是新测量，历史Q1的83770及失败报告不改写、不直接比较。Linux实际run40892017436两个版本各118，M0 run40892017433两平台各47；12gate通过、4ZIP哈希匹配。最终关联实窗2run/2worker/8事件/14快照、6张截图已查看。[最终报告](verification/2c-full-20261029/README.md)。E6、F1、Q2、完整GUI编辑和安装包不随本阶段关闭。

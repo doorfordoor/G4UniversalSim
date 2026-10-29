@@ -1,0 +1,92 @@
+{
+  "label": "Q1 production code + revised test-count overlay; not a rewrite of historic Q1 evidence",
+  "status": "passed",
+  "recorded_at_utc": "2026-10-29T14:53:02.459635+00:00",
+  "base_commit": "f25da40fff1786781c597063dd41924552448cfb",
+  "overlay_commit": "7929314120e07142b48205f00059625806e9193b",
+  "branch": "codex-q1-counter-control",
+  "git_dirty": false,
+  "source_fingerprint": "d9c4378a03052a05cc59b55259ba5e99c32a056e0a7d87b92257ca21948bec4b",
+  "tests_content_fingerprint": "3a72f846ab54c00475fbed357db4ddfef417d89e27b5305399f5cefa18507cec",
+  "assert_probe": "settrace_assert_lines_v3",
+  "assertions_executed_total": 36269,
+  "passed": 105,
+  "failed": 0,
+  "skipped": 0,
+  "cases_with_zero_assertions": [],
+  "strict_gate_exit_code": 0,
+  "report": "C:\\Users\\123\\.codex\\worktrees\\q1-counter-control\\G4UniversalSim\\out\\verification\\q1-counter-control\\20261029-223005-6361397e\\report.json",
+  "report_sha256": "749b896ecc4776c7dc4e8080dce95b6045ce5ca5ed31ff77d827fe770045870b",
+  "files": [
+    {
+      "path": "scripts/test_dose_scoring.py",
+      "source_sha256": "a2f783b7fa21d0fdba94d75072b99d99d1a230afcb27f0bebb35ac9bf25be28b",
+      "control_sha256": "a2f783b7fa21d0fdba94d75072b99d99d1a230afcb27f0bebb35ac9bf25be28b",
+      "bytes": 22677
+    },
+    {
+      "path": "scripts/test_scoring_numeric.py",
+      "source_sha256": "23477bdaea78399adf13010b83514e53baebaadb015d0872083a62d1fa6be27e",
+      "control_sha256": "23477bdaea78399adf13010b83514e53baebaadb015d0872083a62d1fa6be27e",
+      "bytes": 10166
+    },
+    {
+      "path": "scripts/test_geometry_a5.py",
+      "source_sha256": "bf44fa7b6881f31507ad2263e8adf28d8e6c1aa2d6e1e30da92686c131b938ff",
+      "control_sha256": "bf44fa7b6881f31507ad2263e8adf28d8e6c1aa2d6e1e30da92686c131b938ff",
+      "bytes": 35806
+    },
+    {
+      "path": "scripts/test_gdml_touchable_identity.py",
+      "source_sha256": "1044c753db4329b74dda4e079354042c27ae4499095c32d0619d1da5801e076c",
+      "control_sha256": "1044c753db4329b74dda4e079354042c27ae4499095c32d0619d1da5801e076c",
+      "bytes": 7147
+    },
+    {
+      "path": "scripts/test_q1_results_backend.py",
+      "source_sha256": "4d68d89b4a1863b67a285fe60a43ae71454112d5c79be048b68d4200ae0c9811",
+      "control_sha256": "4d68d89b4a1863b67a285fe60a43ae71454112d5c79be048b68d4200ae0c9811",
+      "bytes": 9955
+    }
+  ],
+  "production_git_objects": {
+    "src": {
+      "8ecad66": "676736c5246ad5af9ff3fa81346e0d3e8016bde9",
+      "f25da40": "676736c5246ad5af9ff3fa81346e0d3e8016bde9",
+      "7929314120e07142b48205f00059625806e9193b": "676736c5246ad5af9ff3fa81346e0d3e8016bde9"
+    },
+    "include": {
+      "8ecad66": "eec4fe39ca0b91cca402a300d6ba29930ca962a3",
+      "f25da40": "eec4fe39ca0b91cca402a300d6ba29930ca962a3",
+      "7929314120e07142b48205f00059625806e9193b": "eec4fe39ca0b91cca402a300d6ba29930ca962a3"
+    },
+    "main.cc": {
+      "8ecad66": "2deec3bdcb0e1ad614c166e54bb99a50de8b2e5c",
+      "f25da40": "2deec3bdcb0e1ad614c166e54bb99a50de8b2e5c",
+      "7929314120e07142b48205f00059625806e9193b": "2deec3bdcb0e1ad614c166e54bb99a50de8b2e5c"
+    },
+    "CMakeLists.txt": {
+      "8ecad66": "48ae65bdfd448f7bd5fb461dd626ad32bd7c2c93",
+      "f25da40": "48ae65bdfd448f7bd5fb461dd626ad32bd7c2c93",
+      "7929314120e07142b48205f00059625806e9193b": "48ae65bdfd448f7bd5fb461dd626ad32bd7c2c93"
+    }
+  },
+  "overlaid_case_counts": {
+    "dose_scoring": 79,
+    "scoring_numeric": 457,
+    "geometry_a5": 4320,
+    "gdml_touchable_identity": 65,
+    "q1_results_backend": 125
+  },
+  "binary": {
+    "path": "C:\\Users\\123\\.codex\\worktrees\\q1-final\\G4UniversalSim\\out\\build-q1-clean\\Release\\G4UniversalSim.exe",
+    "sha256": "688f1a454583006d713c6aad93f78b9690acf29bc16dfe79bddc7f1d38804998"
+  },
+  "merge": {
+    "path": "C:\\Users\\123\\.codex\\worktrees\\q1-final\\G4UniversalSim\\out\\build-q1-clean\\Release\\mergeHistograms.exe",
+    "sha256": "5ef5bb692d35694052bafb091ab23ea2f42065c14cd2d8c2bc10a6f13674c1a4"
+  },
+  "session_id": 50196,
+  "process_exit_code": 0,
+  "historical_dynamic_count_comparison": "not performed; different measurement formulation"
+}

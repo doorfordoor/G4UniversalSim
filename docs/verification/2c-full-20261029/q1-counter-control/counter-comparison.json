@@ -1,0 +1,38 @@
+{
+  "historical_total": 83770,
+  "control_total": 36269,
+  "sum_case_delta": -47501.0,
+  "changes": [
+    {
+      "case": "dose_scoring",
+      "historical": 309,
+      "control": 79,
+      "delta": -230
+    },
+    {
+      "case": "scoring_numeric",
+      "historical": 47710,
+      "control": 457,
+      "delta": -47253
+    },
+    {
+      "case": "geometry_a5",
+      "historical": 4336,
+      "control": 4320,
+      "delta": -16
+    },
+    {
+      "case": "gdml_touchable_identity",
+      "historical": 77,
+      "control": 65,
+      "delta": -12
+    },
+    {
+      "case": "q1_results_backend",
+      "historical": 115,
+      "control": 125,
+      "delta": 10
+    }
+  ],
+  "note": "Same production code, five explicit measurement-script changes; historical report preserved. Raw old/new totals are not coverage quality rankings."
+}

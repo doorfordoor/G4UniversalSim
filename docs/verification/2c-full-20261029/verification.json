@@ -1,0 +1,79 @@
+{
+  "schema": "g4usim_full2c_acceptance_v1",
+  "status": "complete",
+  "recorded_at": "2026-10-29T23:11:04.3135611+08:00",
+  "tested_commit": "f4770b0cb73c8b1f9852fbac0d485e17b25bc0e3",
+  "implementation_commits": [
+    "d422e631bcbf2a9285a56914b00e9101da3945ff",
+    "2bb9d0b",
+    "fee88d2",
+    "f4770b0cb73c8b1f9852fbac0d485e17b25bc0e3"
+  ],
+  "source_fingerprint": "c2b575bbb9c594765364aa7c78150e842ffb20ff34b10ad4729720bae2c8c91b",
+  "tests_content_fingerprint": "3ac890cc996d73289098628bb6cca8888f3120f9dffc3e22f60ab387ab1d6d1a",
+  "windows": {
+    "report": "windows-full/report.json",
+    "pass": 118,
+    "fail": 0,
+    "skip": 0,
+    "assertions_executed": 40628,
+    "probe": "settrace_assert_lines_v3",
+    "git_dirty": false,
+    "clean_build_log": "windows-build/build.log",
+    "executable_sha256": "fbb7c56e820d3d36e5f87a3ef2995d55c554d4c5cb38dbaa75191422d4bc37f0"
+  },
+  "q1_control": {
+    "report": "q1-counter-control/20261029-223005-6361397e/report.json",
+    "evidence": "q1-counter-control/control-evidence.json",
+    "overlay_commit": "7929314120e07142b48205f00059625806e9193b",
+    "source_fingerprint": "d9c4378a03052a05cc59b55259ba5e99c32a056e0a7d87b92257ca21948bec4b",
+    "pass": 105,
+    "fail": 0,
+    "skip": 0,
+    "assertions_executed": 36269,
+    "same_five_test_files": true,
+    "other_100_case_counts_unchanged": true,
+    "historical_83770_report_modified": false,
+    "comparison": "q1-counter-control/counter-comparison.json"
+  },
+  "ci": {
+    "evidence": "ci/ci-evidence.json",
+    "linux_run": 40892017436,
+    "m0_run": 40892017433,
+    "linux_cases_per_version": 118,
+    "m0_cases_per_platform": 47,
+    "strict_reports": 12,
+    "official_zip_hashes_verified": 4,
+    "source_and_tests_match": true
+  },
+  "visible_gui": {
+    "report": "windows-visible/gui-report.json",
+    "review": "windows-visible/visual-review.md",
+    "runs": 2,
+    "workers": 2,
+    "completed_events": 8,
+    "planned_events": 8,
+    "snapshots": 14,
+    "check_groups": 10,
+    "screenshots_viewed": 6,
+    "interaction": "programmatic Qt on native visible Windows window; no human-click claim"
+  },
+  "archive": {
+    "raw_files": 1148,
+    "raw_bytes": 5664014,
+    "copy_manifest": "copy-manifest.json",
+    "copy_manifest_sha256": "97ef53e98de0f506cc9dbcd4d79156755d3a91b9117d1d49cf1165c0c6112009",
+    "strict_archive_gates": 14,
+    "all_passed": true,
+    "historical_failures_preserved": true
+  },
+  "review": "../../collab/reviews/20261029-2c-closure-review.md",
+  "integration": "local-integration.json",
+  "next_stage": "E6",
+  "scope_limits": [
+    "Unknown runtime getters/native commands remain unknown",
+    "Not independent general physical validation; Q2 remains separate",
+    "Windows 11.3.2 MT single/multiple workers; not standalone serial build or Windows 11.4 validation",
+    "No full GUI editor, standalone project exporter or AI execution delivery"
+  ]
+}

@@ -1,0 +1,459 @@
+﻿2026-10-29T13:40:31.3039472Z Current runner version: '2.338.0'
+2026-10-29T13:40:31.3064692Z ##[group]Runner Image Provisioner
+2026-10-29T13:40:31.3065530Z Hosted Compute Agent
+2026-10-29T13:40:31.3066066Z Version: 20261021.618
+2026-10-29T13:40:31.3066695Z Commit: 21505ad2541d5be6135ed84fc33697146cf75b8e
+2026-10-29T13:40:31.3067369Z Build Date: 2026-10-21T00:45:21Z
+2026-10-29T13:40:31.3068312Z Worker ID: {8f7de205-9935-41eb-af47-90d486d8bcd9}
+2026-10-29T13:40:31.3069220Z Region: westus
+2026-10-29T13:40:31.3069840Z Cloud: Azure
+2026-10-29T13:40:31.3070341Z ##[endgroup]
+2026-10-29T13:40:31.3071702Z ##[group]Operating System
+2026-10-29T13:40:31.3072382Z Microsoft Windows Server 2025
+2026-10-29T13:40:31.3073026Z 10.0.26100
+2026-10-29T13:40:31.3073494Z Datacenter
+2026-10-29T13:40:31.3073976Z ##[endgroup]
+2026-10-29T13:40:31.3074474Z ##[group]Runner Image
+2026-10-29T13:40:31.3075015Z Image: windows-2025-vs2026
+2026-10-29T13:40:31.3075602Z Version: 20261021.278.1
+2026-10-29T13:40:31.3077035Z Included Software: https://github.com/actions/runner-images/blob/win25-vs2026/20261021.278/images/windows/Windows2025-VS2026-Readme.md
+2026-10-29T13:40:31.3078646Z Image Release: https://github.com/actions/runner-images/releases/tag/win25-vs2026%2F20261021.278
+2026-10-29T13:40:31.3079579Z ##[endgroup]
+2026-10-29T13:40:31.3080650Z ##[group]GITHUB_TOKEN Permissions
+2026-10-29T13:40:31.3082390Z Contents: read
+2026-10-29T13:40:31.3082984Z Metadata: read
+2026-10-29T13:40:31.3083488Z ##[endgroup]
+2026-10-29T13:40:31.3085476Z Secret source: Actions
+2026-10-29T13:40:31.3086350Z Cache mode: write
+2026-10-29T13:40:31.3087067Z Prepare workflow directory
+2026-10-29T13:40:31.3511898Z Prepare all required actions
+2026-10-29T13:40:31.3560592Z Getting action download info
+2026-10-29T13:40:31.7024441Z Download action repository 'actions/checkout@v7' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-10-29T13:40:31.8329705Z Download action repository 'actions/setup-python@v7' (SHA:6d4fd22b20465ccc0f7354476588e8df7c9ca0e0)
+2026-10-29T13:40:32.2704978Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-10-29T13:40:32.6124658Z Complete job name: windows-latest / Python 3.11
+2026-10-29T13:40:32.7565406Z ##[group]Run actions/checkout@v7
+2026-10-29T13:40:32.7566403Z with:
+2026-10-29T13:40:32.7567286Z   repository: doorfordoor/G4UniversalSim
+2026-10-29T13:40:32.7571392Z   token: ***
+2026-10-29T13:40:32.7571787Z   ssh-strict: true
+2026-10-29T13:40:32.7572203Z   ssh-user: git
+2026-10-29T13:40:32.7572610Z   persist-credentials: true
+2026-10-29T13:40:32.7573050Z   clean: true
+2026-10-29T13:40:32.7573458Z   sparse-checkout-cone-mode: true
+2026-10-29T13:40:32.7573930Z   fetch-depth: 1
+2026-10-29T13:40:32.7574313Z   fetch-tags: false
+2026-10-29T13:40:32.7574714Z   show-progress: true
+2026-10-29T13:40:32.7575123Z   lfs: false
+2026-10-29T13:40:32.7575493Z   submodules: false
+2026-10-29T13:40:32.7575899Z   set-safe-directory: true
+2026-10-29T13:40:32.7576367Z   allow-unsafe-pr-checkout: false
+2026-10-29T13:40:32.7577142Z env:
+2026-10-29T13:40:32.7577537Z   QT_QPA_PLATFORM: offscreen
+2026-10-29T13:40:32.7577997Z ##[endgroup]
+2026-10-29T13:40:32.9060201Z Syncing repository: doorfordoor/G4UniversalSim
+2026-10-29T13:40:32.9061948Z ##[group]Getting Git version info
+2026-10-29T13:40:32.9062653Z Working directory is 'D:\a\G4UniversalSim\G4UniversalSim'
+2026-10-29T13:40:33.0573187Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-10-29T13:40:33.3743911Z git version 2.56.0.windows.2
+2026-10-29T13:40:33.3792175Z ##[endgroup]
+2026-10-29T13:40:33.3811826Z Temporarily overriding HOME='D:\a\_temp\2b3a5bf6-12b0-4333-9e55-c937678c82fa' before making global git config changes
+2026-10-29T13:40:33.3815000Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-29T13:40:33.3826564Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\G4UniversalSim\G4UniversalSim
+2026-10-29T13:40:33.4497321Z Deleting the contents of 'D:\a\G4UniversalSim\G4UniversalSim'
+2026-10-29T13:40:33.4502869Z ##[group]Determining repository object format
+2026-10-29T13:40:33.4504818Z ##[endgroup]
+2026-10-29T13:40:33.4507379Z ##[group]Initializing the repository
+2026-10-29T13:40:33.4515658Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\G4UniversalSim\G4UniversalSim
+2026-10-29T13:40:33.5477528Z Initialized empty Git repository in D:/a/G4UniversalSim/G4UniversalSim/.git/
+2026-10-29T13:40:33.5517835Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/doorfordoor/G4UniversalSim
+2026-10-29T13:40:33.6174733Z ##[endgroup]
+2026-10-29T13:40:33.6177355Z ##[group]Disabling automatic garbage collection
+2026-10-29T13:40:33.6185157Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2026-10-29T13:40:33.6550959Z ##[endgroup]
+2026-10-29T13:40:33.6553272Z ##[group]Setting up auth
+2026-10-29T13:40:33.6555387Z Removing SSH command configuration
+2026-10-29T13:40:33.6563715Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-10-29T13:40:33.6926743Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-10-29T13:40:35.1315530Z Removing HTTP extra header
+2026-10-29T13:40:35.1325175Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-29T13:40:35.1696383Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-10-29T13:40:35.7320371Z Removing includeIf entries pointing to credentials config files
+2026-10-29T13:40:35.7331268Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-29T13:40:35.7712897Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-10-29T13:40:36.3287420Z [command]"C:\Program Files\Git\bin\git.exe" config --file D:\a\_temp\git-credentials-f7238150-14e9-4da7-8d3f-31b8c53de274.config http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2026-10-29T13:40:36.3703515Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:D:/a/G4UniversalSim/G4UniversalSim/.git.path D:\a\_temp\git-credentials-f7238150-14e9-4da7-8d3f-31b8c53de274.config
+2026-10-29T13:40:36.4075714Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:D:/a/G4UniversalSim/G4UniversalSim/.git/worktrees/*.path D:\a\_temp\git-credentials-f7238150-14e9-4da7-8d3f-31b8c53de274.config
+2026-10-29T13:40:36.4485828Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-f7238150-14e9-4da7-8d3f-31b8c53de274.config
+2026-10-29T13:40:36.4846314Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-f7238150-14e9-4da7-8d3f-31b8c53de274.config
+2026-10-29T13:40:36.5209281Z ##[endgroup]
+2026-10-29T13:40:36.5210020Z ##[group]Fetching the repository
+2026-10-29T13:40:36.5220784Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +fee88d2840b8300aa315d0feaf21316768f90206:refs/remotes/origin/roadmap/2c-effective-config
+2026-10-29T13:40:38.1217263Z From https://github.com/doorfordoor/G4UniversalSim
+2026-10-29T13:40:38.1219098Z  * [new ref]         fee88d2840b8300aa315d0feaf21316768f90206 -> origin/roadmap/2c-effective-config
+2026-10-29T13:40:38.1275916Z [command]"C:\Program Files\Git\bin\git.exe" branch --list --remote origin/roadmap/2c-effective-config
+2026-10-29T13:40:38.1708822Z   origin/roadmap/2c-effective-config
+2026-10-29T13:40:38.1753416Z [command]"C:\Program Files\Git\bin\git.exe" rev-parse refs/remotes/origin/roadmap/2c-effective-config
+2026-10-29T13:40:38.2128340Z fee88d2840b8300aa315d0feaf21316768f90206
+2026-10-29T13:40:38.2163297Z ##[endgroup]
+2026-10-29T13:40:38.2163712Z ##[group]Determining the checkout info
+2026-10-29T13:40:38.2164131Z ##[endgroup]
+2026-10-29T13:40:38.2173958Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+2026-10-29T13:40:38.2662313Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+2026-10-29T13:40:38.3035097Z ##[group]Checking out the ref
+2026-10-29T13:40:38.3045247Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force -B roadmap/2c-effective-config refs/remotes/origin/roadmap/2c-effective-config
+2026-10-29T13:40:39.3804788Z Updating files:  97% (4069/4185)
+2026-10-29T13:40:39.3993866Z Updating files:  98% (4102/4185)
+2026-10-29T13:40:39.4125203Z Updating files:  99% (4144/4185)
+2026-10-29T13:40:39.4125902Z Updating files: 100% (4185/4185)
+2026-10-29T13:40:39.4126449Z Updating files: 100% (4185/4185), done.
+2026-10-29T13:40:39.4387342Z Switched to a new branch 'roadmap/2c-effective-config'
+2026-10-29T13:40:39.4412058Z branch 'roadmap/2c-effective-config' set up to track 'origin/roadmap/2c-effective-config'.
+2026-10-29T13:40:39.4463065Z ##[endgroup]
+2026-10-29T13:40:39.5103312Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2026-10-29T13:40:39.5509045Z fee88d2840b8300aa315d0feaf21316768f90206
+2026-10-29T13:40:39.6001219Z ##[group]Run actions/setup-python@v7
+2026-10-29T13:40:39.6001564Z with:
+2026-10-29T13:40:39.6001761Z   python-version: 3.11
+2026-10-29T13:40:39.6001974Z   check-latest: false
+2026-10-29T13:40:39.6004780Z   token: ***
+2026-10-29T13:40:39.6005098Z   mirror: https://raw.githubusercontent.com/actions/python-versions/main
+2026-10-29T13:40:39.6005488Z   update-environment: true
+2026-10-29T13:40:39.6005742Z   allow-prereleases: false
+2026-10-29T13:40:39.6005978Z   freethreaded: false
+2026-10-29T13:40:39.6006157Z env:
+2026-10-29T13:40:39.6006327Z   QT_QPA_PLATFORM: offscreen
+2026-10-29T13:40:39.6006537Z ##[endgroup]
+2026-10-29T13:40:39.7446399Z ##[group]Installed versions
+2026-10-29T13:40:39.7587374Z Successfully set up CPython (3.11.9)
+2026-10-29T13:40:39.7588047Z ##[endgroup]
+2026-10-29T13:40:39.8002060Z ##[group]Run $vswhere = Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio/Installer/vswhere.exe'
+2026-10-29T13:40:39.8002965Z [36;1m$vswhere = Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio/Installer/vswhere.exe'[0m
+2026-10-29T13:40:39.8003920Z [36;1mif (-not (Test-Path -LiteralPath $vswhere)) { throw 'Visual Studio locator is unavailable' }[0m
+2026-10-29T13:40:39.8004771Z [36;1m$vsRoot = & $vswhere -latest -products '*' -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath[0m
+2026-10-29T13:40:39.8005580Z [36;1mif ($LASTEXITCODE -ne 0 -or -not $vsRoot) { throw 'Visual Studio C++ x64 tools are unavailable' }[0m
+2026-10-29T13:40:39.8006136Z [36;1m$devCmd = Join-Path $vsRoot 'Common7/Tools/VsDevCmd.bat'[0m
+2026-10-29T13:40:39.8006701Z [36;1mif (-not (Test-Path -LiteralPath $devCmd)) { throw 'Visual Studio developer environment is unavailable' }[0m
+2026-10-29T13:40:39.8007407Z [36;1m$toolEnvironment = & cmd.exe /d /s /c "`"$devCmd`" -no_logo -arch=x64 -host_arch=x64 >nul && set"[0m
+2026-10-29T13:40:39.8007982Z [36;1mif ($LASTEXITCODE -ne 0) { throw 'Failed to initialize Visual Studio x64 tools' }[0m
+2026-10-29T13:40:39.8008406Z [36;1mforeach ($entry in $toolEnvironment) {[0m
+2026-10-29T13:40:39.8008759Z [36;1m  if ($entry -match '^(PATH|INCLUDE|LIB|LIBPATH)=(.*)$') {[0m
+2026-10-29T13:40:39.8009075Z [36;1m    $key = $Matches[1][0m
+2026-10-29T13:40:39.8009296Z [36;1m    $value = $Matches[2][0m
+2026-10-29T13:40:39.8009629Z [36;1m    [Environment]::SetEnvironmentVariable($key, $value, 'Process')[0m
+2026-10-29T13:40:39.8010104Z [36;1m    "$key=$value" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append[0m
+2026-10-29T13:40:39.8010706Z [36;1m  }[0m
+2026-10-29T13:40:39.8010865Z [36;1m}[0m
+2026-10-29T13:40:39.8011306Z [36;1mif (-not (Get-Command cl.exe -ErrorAction SilentlyContinue)) { throw 'cl.exe is unavailable after initialization' }[0m
+2026-10-29T13:40:39.8011928Z [36;1m'CXX=cl' | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append[0m
+2026-10-29T13:40:39.9204122Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-10-29T13:40:39.9204586Z env:
+2026-10-29T13:40:39.9204824Z   QT_QPA_PLATFORM: offscreen
+2026-10-29T13:40:39.9205217Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.11.9\x64
+2026-10-29T13:40:39.9205812Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.11.9\x64/lib/pkgconfig
+2026-10-29T13:40:39.9206389Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+2026-10-29T13:40:39.9206892Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+2026-10-29T13:40:39.9207428Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+2026-10-29T13:40:39.9207829Z ##[endgroup]
+2026-10-29T13:40:45.0457432Z ##[group]Run python -m pip install -r gui/requirements.txt
+2026-10-29T13:40:45.0457926Z [36;1mpython -m pip install -r gui/requirements.txt[0m
+2026-10-29T13:40:45.0532255Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-10-29T13:40:45.0532588Z env:
+2026-10-29T13:40:45.0532762Z   QT_QPA_PLATFORM: offscreen
+2026-10-29T13:40:45.0533063Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.11.9\x64
+2026-10-29T13:40:45.0533489Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.11.9\x64/lib/pkgconfig
+2026-10-29T13:40:45.0533912Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+2026-10-29T13:40:45.0534304Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+2026-10-29T13:40:45.0534706Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+2026-10-29T13:40:45.0536998Z   INCLUDE: C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\include;C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\ATLMFC\include;C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Auxiliary\VS\include;C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt;C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\um;C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\shared;C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\winrt;C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\cppwinrt;C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8.1\include\um
+2026-10-29T13:40:45.0540216Z   LIB: C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\ATLMFC\lib\x64;C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\lib\x64;C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8.1\lib\um\x64;C:\Program Files (x86)\Windows Kits\10\lib\10.0.26100.0\ucrt\x64;C:\Program Files (x86)\Windows Kits\10\\lib\10.0.26100.0\\um\x64
+2026-10-29T13:40:45.0542844Z   LIBPATH: C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\ATLMFC\lib\x64;C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\lib\x64;C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\lib\x86\store\references;C:\Program Files (x86)\Windows Kits\10\UnionMetadata\10.0.26100.0;C:\Program Files (x86)\Windows Kits\10\References\10.0.26100.0;C:\Windows\Microsoft.NET\Framework64\v4.0.30319
+2026-10-29T13:40:45.0560991Z   Path: C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\bin\HostX64\x64;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\IDE\VC\VCPackages;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\IDE\CommonExtensions\Microsoft\TestWindow;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\IDE\CommonExtensions\Microsoft\TeamFoundation\Team Explorer;C:\Program Files\Microsoft Visual Studio\18\Enterprise\MSBuild\Current\bin\Roslyn;C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8.1 Tools\x64\;C:\Program Files (x86)\HTML Help Workshop;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\IDE\CommonExtensions\Microsoft\FSharp\Tools;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Team Tools\DiagnosticsHub\Collector;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\IDE\Extensions\Microsoft\CodeCoverage.Console;C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\\x64;C:\Program Files (x86)\Windows Kits\10\bin\\x64;C:\Program Files\Microsoft Visual Studio\18\Enterprise\\MSBuild\Current\Bin\amd64;C:\Windows\Microsoft.NET\Framework64\v4.0.30319;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\IDE\;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\Tools\;C:\Program Files\PowerShell\7;C:\Users\runneradmin\AppData\Roaming\Python\Python311\Scripts;C:\hostedtoolcache\windows\Python\3.11.9\x64\Scripts;C:\hostedtoolcache\windows\Python\3.11.9\x64;C:\Program Files\MongoDB\Server\7.0\bin;C:\vcpkg;C:\tools\zstd;C:\hostedtoolcache\windows\stack\3.11.1\x64;C:\cabal\bin;C:\\ghcup\bin;C:\mingw64\bin;C:\Program Files\dotnet;C:\Program Files\MySQL\MySQL Server 8.0\bin;C:\Program Files\R\R-4.6.1\bin\x64;C:\SeleniumWebDrivers\GeckoDriver;C:\SeleniumWebDrivers\EdgeDriver\;C:\SeleniumWebDrivers\ChromeDriver;C:\Program Files (x86)\sbt\bin;C:\Program Files (x86)\GitHub CLI;C:\Program Files\Git\bin;C:\Program Files (x86)\pipx_bin;C:\npm\prefix;C:\hostedtoolcache\windows\go\1.24.13\x64\bin;C:\hostedtoolcache\windows\Python\3.12.10\x64\Scripts;C:\hostedtoolcache\windows\Python\3.12.10\x64;C:\hostedtoolcache\windows\Ruby\3.3.12\x64\bin;C:\Program Files\OpenSSL\bin;C:\tools\kotlinc\bin;C:\hostedtoolcache\windows\Java_Temurin-Hotspot_jdk\17.0.20-101\x64\bin;C:\Program Files\ImageMagick-7.1.2-Q16-HDRI;C:\Program Files\Microsoft SDKs\Azure\CLI2\wbin;C:\ProgramData\kind;C:\ProgramData\Chocolatey\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\WSL\;C:\Program Files\PowerShell\7\;C:\Program Files\Microsoft\Web Platform Installer\;C:\Program Files\Microsoft SQL Server\170\Tools\Binn\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;C:\Program Files\dotnet\;C:\Program Files (x86)\Windows Kits\10\Windows Performance Toolkit\;C:\Program Files (x86)\WiX Toolset v3.14\bin;C:\Program Files\Microsoft SQL Server\130\DTS\Binn\;C:\Program Files\Microsoft SQL Server\140\DTS\Binn\;C:\Program Files\Microsoft SQL Server\150\DTS\Binn\;C:\Program Files\Microsoft SQL Server\160\DTS\Binn\;C:\Program Files\Microsoft SQL Server\170\DTS\Binn\;C:\ProgramData\chocolatey\lib\pulumi\tools\Pulumi\bin;C:\Program Files\CMake\bin;C:\Strawberry\c\bin;C:\Strawberry\perl\site\bin;C:\Strawberry\perl\bin;C:\ProgramData\chocolatey\lib\maven\apache-maven-3.9.16\bin;C:\Program Files\Microsoft Service Fabric\bin\Fabric\Fabric.Code;C:\Program Files\Microsoft SDKs\Service Fabric\Tools\ServiceFabricLocalClusterManager;C:\Program Files\LLVM\bin;C:\Program Files (x86)\LLVM\bin;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;C:\Program Files\Git\ucrt64\bin;C:\Program Files\Git\usr\bin;C:\Program Files\GitHub CLI\;c:\tools\php;C:\Program Files (x86)\sbt\bin;C:\Program Files\Amazon\AWSCLIV2\;C:\Program Files\Amazon\SessionManagerPlugin\bin\;C:\Program Files\Amazon\AWSSAMCLI\bin\;C:\Program Files\Microsoft SQL Server\130\Tools\Binn\;C:\Program Files\mongosh\;C:\Users\runneradmin\.dotnet\tools;C:\Users\runneradmin\.cargo\bin;C:\Users\runneradmin\AppData\Local\Microsoft\WindowsApps;C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\Llvm\x64\bin;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\IDE\VC\Linux\bin\ConnectionManagerExe;C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\vcpkg
+2026-10-29T13:40:45.0577221Z   CXX: cl
+2026-10-29T13:40:45.0577390Z ##[endgroup]
+2026-10-29T13:40:50.1010748Z Collecting PySide6 (from -r gui/requirements.txt (line 1))
+2026-10-29T13:40:50.3209410Z   Downloading pyside6-6.12.0-cp310-abi3-win_amd64.whl.metadata (5.7 kB)
+2026-10-29T13:40:50.5578609Z Collecting uproot (from -r gui/requirements.txt (line 2))
+2026-10-29T13:40:50.5652230Z   Downloading uproot-5.7.7-py3-none-any.whl.metadata (36 kB)
+2026-10-29T13:40:50.8987758Z Collecting numpy (from -r gui/requirements.txt (line 3))
+2026-10-29T13:40:50.9046255Z   Downloading numpy-2.4.6-cp311-cp311-win_amd64.whl.metadata (6.6 kB)
+2026-10-29T13:40:51.0761170Z Collecting matplotlib (from -r gui/requirements.txt (line 4))
+2026-10-29T13:40:51.0822619Z   Downloading matplotlib-3.11.2-cp311-cp311-win_amd64.whl.metadata (80 kB)
+2026-10-29T13:40:51.1826208Z Collecting PySide6_Essentials==6.12.0 (from PySide6->-r gui/requirements.txt (line 1))
+2026-10-29T13:40:51.1877776Z   Downloading pyside6_essentials-6.12.0-cp310-abi3-win_amd64.whl.metadata (3.9 kB)
+2026-10-29T13:40:51.2402298Z Collecting PySide6_Addons==6.12.0 (from PySide6->-r gui/requirements.txt (line 1))
+2026-10-29T13:40:51.2456223Z   Downloading pyside6_addons-6.12.0-cp310-abi3-win_amd64.whl.metadata (4.4 kB)
+2026-10-29T13:40:51.2892121Z Collecting PySide6_WebEngine==6.12.0.140 (from PySide6->-r gui/requirements.txt (line 1))
+2026-10-29T13:40:51.2947031Z   Downloading pyside6_webengine-6.12.0.140-cp310-abi3-win_amd64.whl.metadata (3.7 kB)
+2026-10-29T13:40:51.3347370Z Collecting PySide6_Pdf==6.12.0.140 (from PySide6->-r gui/requirements.txt (line 1))
+2026-10-29T13:40:51.3405739Z   Downloading pyside6_pdf-6.12.0.140-cp310-abi3-win_amd64.whl.metadata (3.6 kB)
+2026-10-29T13:40:51.4040659Z Collecting shiboken6==6.12.0 (from PySide6_Essentials==6.12.0->PySide6->-r gui/requirements.txt (line 1))
+2026-10-29T13:40:51.4085416Z   Downloading shiboken6-6.12.0-cp310-abi3-win_amd64.whl.metadata (2.6 kB)
+2026-10-29T13:40:51.5100420Z Collecting awkward>=2.8.2 (from uproot->-r gui/requirements.txt (line 2))
+2026-10-29T13:40:51.5171060Z   Downloading awkward-2.14.0-py3-none-any.whl.metadata (7.1 kB)
+2026-10-29T13:40:51.7407579Z Collecting cramjam>=2.5.0 (from uproot->-r gui/requirements.txt (line 2))
+2026-10-29T13:40:52.0306948Z   Downloading cramjam-2.14.0-cp311-cp311-win_amd64.whl.metadata (6.7 kB)
+2026-10-29T13:40:52.1060722Z Collecting fsspec!=2026.2.0 (from uproot->-r gui/requirements.txt (line 2))
+2026-10-29T13:40:52.1105900Z   Downloading fsspec-2026.9.0-py3-none-any.whl.metadata (10 kB)
+2026-10-29T13:40:52.1711219Z Collecting packaging (from uproot->-r gui/requirements.txt (line 2))
+2026-10-29T13:40:52.1791787Z   Downloading packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+2026-10-29T13:40:52.4033599Z Collecting xxhash (from uproot->-r gui/requirements.txt (line 2))
+2026-10-29T13:40:52.4124805Z   Downloading xxhash-4.0.2-cp311-cp311-win_amd64.whl.metadata (18 kB)
+2026-10-29T13:40:52.5127060Z Collecting contourpy>=1.0.1 (from matplotlib->-r gui/requirements.txt (line 4))
+2026-10-29T13:40:52.5185502Z   Downloading contourpy-1.3.3-cp311-cp311-win_amd64.whl.metadata (5.5 kB)
+2026-10-29T13:40:52.5574031Z Collecting cycler>=0.10 (from matplotlib->-r gui/requirements.txt (line 4))
+2026-10-29T13:40:52.5620986Z   Downloading cycler-0.12.1-py3-none-any.whl.metadata (3.8 kB)
+2026-10-29T13:40:52.7745203Z Collecting fonttools>=4.28.2 (from matplotlib->-r gui/requirements.txt (line 4))
+2026-10-29T13:40:52.7813675Z   Downloading fonttools-4.68.0-cp311-cp311-win_amd64.whl.metadata (142 kB)
+2026-10-29T13:40:52.8944384Z Collecting kiwisolver>=1.3.1 (from matplotlib->-r gui/requirements.txt (line 4))
+2026-10-29T13:40:52.8997653Z   Downloading kiwisolver-1.5.1-cp311-cp311-win_amd64.whl.metadata (5.2 kB)
+2026-10-29T13:40:53.1152890Z Collecting pillow>=9 (from matplotlib->-r gui/requirements.txt (line 4))
+2026-10-29T13:40:53.1203543Z   Downloading pillow-13.0.0-cp311-cp311-win_amd64.whl.metadata (9.3 kB)
+2026-10-29T13:40:53.1779616Z Collecting pyparsing>=3 (from matplotlib->-r gui/requirements.txt (line 4))
+2026-10-29T13:40:53.1838458Z   Downloading pyparsing-3.3.3-py3-none-any.whl.metadata (5.9 kB)
+2026-10-29T13:40:53.2310967Z Collecting python-dateutil>=2.7 (from matplotlib->-r gui/requirements.txt (line 4))
+2026-10-29T13:40:53.2352601Z   Downloading python_dateutil-3.0.0-py2.py3-none-any.whl.metadata (8.2 kB)
+2026-10-29T13:40:53.4365193Z Collecting awkward-cpp==57 (from awkward>=2.8.2->uproot->-r gui/requirements.txt (line 2))
+2026-10-29T13:40:53.4448334Z   Downloading awkward_cpp-57-cp311-cp311-win_amd64.whl.metadata (2.1 kB)
+2026-10-29T13:40:53.5000460Z Collecting importlib-metadata>=4.13.0 (from awkward>=2.8.2->uproot->-r gui/requirements.txt (line 2))
+2026-10-29T13:40:53.5042903Z   Downloading importlib_metadata-10.1.0-py3-none-any.whl.metadata (4.5 kB)
+2026-10-29T13:40:53.5537855Z Collecting zipp>=3.20 (from importlib-metadata>=4.13.0->awkward>=2.8.2->uproot->-r gui/requirements.txt (line 2))
+2026-10-29T13:40:53.5580225Z   Downloading zipp-4.1.2-py3-none-any.whl.metadata (3.6 kB)
+2026-10-29T13:40:53.6039360Z Collecting six>=1.6 (from python-dateutil>=2.7->matplotlib->-r gui/requirements.txt (line 4))
+2026-10-29T13:40:53.6078709Z   Downloading six-1.17.0-py2.py3-none-any.whl.metadata (1.7 kB)
+2026-10-29T13:40:53.6648798Z Collecting tzdata (from python-dateutil>=2.7->matplotlib->-r gui/requirements.txt (line 4))
+2026-10-29T13:40:53.6689220Z   Downloading tzdata-2026.6-py2.py3-none-any.whl.metadata (1.4 kB)
+2026-10-29T13:40:53.6940824Z Downloading pyside6-6.12.0-cp310-abi3-win_amd64.whl (578 kB)
+2026-10-29T13:40:53.7179192Z    ---------------------------------------- 579.0/579.0 kB 19.8 MB/s  0:00:00
+2026-10-29T13:40:53.7270839Z Downloading pyside6_addons-6.12.0-cp310-abi3-win_amd64.whl (40.5 MB)
+2026-10-29T13:40:54.2472644Z    ---------------------------------------- 40.5/40.5 MB 78.0 MB/s  0:00:00
+2026-10-29T13:40:54.2533524Z Downloading pyside6_essentials-6.12.0-cp310-abi3-win_amd64.whl (82.2 MB)
+2026-10-29T13:40:56.0427821Z    ---------------------------------------- 82.2/82.2 MB 46.0 MB/s  0:00:01
+2026-10-29T13:40:56.0482529Z Downloading pyside6_pdf-6.12.0.140-cp310-abi3-win_amd64.whl (3.0 MB)
+2026-10-29T13:40:56.1740965Z    ---------------------------------------- 3.0/3.0 MB 29.3 MB/s  0:00:00
+2026-10-29T13:40:56.1795123Z Downloading pyside6_webengine-6.12.0.140-cp310-abi3-win_amd64.whl (131.7 MB)
+2026-10-29T13:40:59.1986436Z    ---------------------------------------- 131.7/131.7 MB 43.8 MB/s  0:00:03
+2026-10-29T13:40:59.2043559Z Downloading shiboken6-6.12.0-cp310-abi3-win_amd64.whl (1.3 MB)
+2026-10-29T13:40:59.3254694Z    ---------------------------------------- 1.3/1.3 MB 9.2 MB/s  0:00:00
+2026-10-29T13:40:59.3403388Z Downloading uproot-5.7.7-py3-none-any.whl (441 kB)
+2026-10-29T13:40:59.3624487Z Downloading numpy-2.4.6-cp311-cp311-win_amd64.whl (12.6 MB)
+2026-10-29T13:40:59.4863328Z    ---------------------------------------- 12.6/12.6 MB 98.8 MB/s  0:00:00
+2026-10-29T13:40:59.4913100Z Downloading matplotlib-3.11.2-cp311-cp311-win_amd64.whl (9.3 MB)
+2026-10-29T13:40:59.6845840Z    ---------------------------------------- 9.3/9.3 MB 58.1 MB/s  0:00:00
+2026-10-29T13:40:59.6947910Z Downloading awkward-2.14.0-py3-none-any.whl (1.0 MB)
+2026-10-29T13:40:59.7191806Z    ---------------------------------------- 1.0/1.0 MB 46.1 MB/s  0:00:00
+2026-10-29T13:40:59.7240009Z Downloading awkward_cpp-57-cp311-cp311-win_amd64.whl (736 kB)
+2026-10-29T13:40:59.7501464Z    ---------------------------------------- 736.5/736.5 kB 29.6 MB/s  0:00:00
+2026-10-29T13:40:59.7956317Z Downloading contourpy-1.3.3-cp311-cp311-win_amd64.whl (225 kB)
+2026-10-29T13:40:59.8290372Z Downloading cramjam-2.14.0-cp311-cp311-win_amd64.whl (1.8 MB)
+2026-10-29T13:40:59.8603062Z    ---------------------------------------- 1.8/1.8 MB 102.5 MB/s  0:00:00
+2026-10-29T13:40:59.8643383Z Downloading cycler-0.12.1-py3-none-any.whl (8.3 kB)
+2026-10-29T13:40:59.8904683Z Downloading fonttools-4.68.0-cp311-cp311-win_amd64.whl (1.7 MB)
+2026-10-29T13:40:59.9215019Z    ---------------------------------------- 1.7/1.7 MB 88.7 MB/s  0:00:00
+2026-10-29T13:40:59.9253716Z Downloading fsspec-2026.9.0-py3-none-any.whl (221 kB)
+2026-10-29T13:40:59.9608853Z Downloading importlib_metadata-10.1.0-py3-none-any.whl (32 kB)
+2026-10-29T13:40:59.9809327Z Downloading kiwisolver-1.5.1-cp311-cp311-win_amd64.whl (70 kB)
+2026-10-29T13:41:00.0009399Z Downloading packaging-26.3-py3-none-any.whl (129 kB)
+2026-10-29T13:41:00.0284602Z Downloading pillow-13.0.0-cp311-cp311-win_amd64.whl (7.3 MB)
+2026-10-29T13:41:00.0962392Z    ---------------------------------------- 7.3/7.3 MB 90.0 MB/s  0:00:00
+2026-10-29T13:41:00.1003547Z Downloading pyparsing-3.3.3-py3-none-any.whl (126 kB)
+2026-10-29T13:41:00.1203296Z Downloading python_dateutil-3.0.0-py2.py3-none-any.whl (94 kB)
+2026-10-29T13:41:00.1414518Z Downloading six-1.17.0-py2.py3-none-any.whl (11 kB)
+2026-10-29T13:41:00.1634877Z Downloading zipp-4.1.2-py3-none-any.whl (10 kB)
+2026-10-29T13:41:00.1843921Z Downloading tzdata-2026.6-py2.py3-none-any.whl (348 kB)
+2026-10-29T13:41:00.2174691Z Downloading xxhash-4.0.2-cp311-cp311-win_amd64.whl (36 kB)
+2026-10-29T13:41:00.9271581Z Installing collected packages: zipp, xxhash, tzdata, six, shiboken6, pyparsing, pillow, packaging, numpy, kiwisolver, fsspec, fonttools, cycler, cramjam, python-dateutil, PySide6_Essentials, importlib-metadata, contourpy, awkward-cpp, PySide6_Pdf, PySide6_Addons, matplotlib, awkward, uproot, PySide6_WebEngine, PySide6
+2026-10-29T13:41:25.0188637Z 
+2026-10-29T13:41:25.0212544Z Successfully installed PySide6-6.12.0 PySide6_Addons-6.12.0 PySide6_Essentials-6.12.0 PySide6_Pdf-6.12.0.140 PySide6_WebEngine-6.12.0.140 awkward-2.14.0 awkward-cpp-57 contourpy-1.3.3 cramjam-2.14.0 cycler-0.12.1 fonttools-4.68.0 fsspec-2026.9.0 importlib-metadata-10.1.0 kiwisolver-1.5.1 matplotlib-3.11.2 numpy-2.4.6 packaging-26.3 pillow-13.0.0 pyparsing-3.3.3 python-dateutil-3.0.0 shiboken6-6.12.0 six-1.17.0 tzdata-2026.6 uproot-5.7.7 xxhash-4.0.2 zipp-4.1.2
+2026-10-29T13:41:25.2872711Z ##[group]Run python -B scripts/run_m0_tests.py --profile static --require-tracked-sources --fail-on-skip
+2026-10-29T13:41:25.2873518Z [36;1mpython -B scripts/run_m0_tests.py --profile static --require-tracked-sources --fail-on-skip[0m
+2026-10-29T13:41:25.2944583Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-10-29T13:41:25.2944927Z env:
+2026-10-29T13:41:25.2945110Z   QT_QPA_PLATFORM: offscreen
+2026-10-29T13:41:25.2945424Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.11.9\x64
+2026-10-29T13:41:25.2945867Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.11.9\x64/lib/pkgconfig
+2026-10-29T13:41:25.2946300Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+2026-10-29T13:41:25.2946687Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+2026-10-29T13:41:25.2947078Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+2026-10-29T13:41:25.2949436Z   INCLUDE: C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\include;C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\ATLMFC\include;C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Auxiliary\VS\include;C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt;C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\um;C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\shared;C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\winrt;C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\cppwinrt;C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8.1\include\um
+2026-10-29T13:41:25.2952773Z   LIB: C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\ATLMFC\lib\x64;C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\lib\x64;C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8.1\lib\um\x64;C:\Program Files (x86)\Windows Kits\10\lib\10.0.26100.0\ucrt\x64;C:\Program Files (x86)\Windows Kits\10\\lib\10.0.26100.0\\um\x64
+2026-10-29T13:41:25.2955571Z   LIBPATH: C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\ATLMFC\lib\x64;C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\lib\x64;C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\lib\x86\store\references;C:\Program Files (x86)\Windows Kits\10\UnionMetadata\10.0.26100.0;C:\Program Files (x86)\Windows Kits\10\References\10.0.26100.0;C:\Windows\Microsoft.NET\Framework64\v4.0.30319
+2026-10-29T13:41:25.2973861Z   Path: C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\bin\HostX64\x64;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\IDE\VC\VCPackages;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\IDE\CommonExtensions\Microsoft\TestWindow;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\IDE\CommonExtensions\Microsoft\TeamFoundation\Team Explorer;C:\Program Files\Microsoft Visual Studio\18\Enterprise\MSBuild\Current\bin\Roslyn;C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8.1 Tools\x64\;C:\Program Files (x86)\HTML Help Workshop;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\IDE\CommonExtensions\Microsoft\FSharp\Tools;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Team Tools\DiagnosticsHub\Collector;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\IDE\Extensions\Microsoft\CodeCoverage.Console;C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\\x64;C:\Program Files (x86)\Windows Kits\10\bin\\x64;C:\Program Files\Microsoft Visual Studio\18\Enterprise\\MSBuild\Current\Bin\amd64;C:\Windows\Microsoft.NET\Framework64\v4.0.30319;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\IDE\;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\Tools\;C:\Program Files\PowerShell\7;C:\Users\runneradmin\AppData\Roaming\Python\Python311\Scripts;C:\hostedtoolcache\windows\Python\3.11.9\x64\Scripts;C:\hostedtoolcache\windows\Python\3.11.9\x64;C:\Program Files\MongoDB\Server\7.0\bin;C:\vcpkg;C:\tools\zstd;C:\hostedtoolcache\windows\stack\3.11.1\x64;C:\cabal\bin;C:\\ghcup\bin;C:\mingw64\bin;C:\Program Files\dotnet;C:\Program Files\MySQL\MySQL Server 8.0\bin;C:\Program Files\R\R-4.6.1\bin\x64;C:\SeleniumWebDrivers\GeckoDriver;C:\SeleniumWebDrivers\EdgeDriver\;C:\SeleniumWebDrivers\ChromeDriver;C:\Program Files (x86)\sbt\bin;C:\Program Files (x86)\GitHub CLI;C:\Program Files\Git\bin;C:\Program Files (x86)\pipx_bin;C:\npm\prefix;C:\hostedtoolcache\windows\go\1.24.13\x64\bin;C:\hostedtoolcache\windows\Python\3.12.10\x64\Scripts;C:\hostedtoolcache\windows\Python\3.12.10\x64;C:\hostedtoolcache\windows\Ruby\3.3.12\x64\bin;C:\Program Files\OpenSSL\bin;C:\tools\kotlinc\bin;C:\hostedtoolcache\windows\Java_Temurin-Hotspot_jdk\17.0.20-101\x64\bin;C:\Program Files\ImageMagick-7.1.2-Q16-HDRI;C:\Program Files\Microsoft SDKs\Azure\CLI2\wbin;C:\ProgramData\kind;C:\ProgramData\Chocolatey\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\WSL\;C:\Program Files\PowerShell\7\;C:\Program Files\Microsoft\Web Platform Installer\;C:\Program Files\Microsoft SQL Server\170\Tools\Binn\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;C:\Program Files\dotnet\;C:\Program Files (x86)\Windows Kits\10\Windows Performance Toolkit\;C:\Program Files (x86)\WiX Toolset v3.14\bin;C:\Program Files\Microsoft SQL Server\130\DTS\Binn\;C:\Program Files\Microsoft SQL Server\140\DTS\Binn\;C:\Program Files\Microsoft SQL Server\150\DTS\Binn\;C:\Program Files\Microsoft SQL Server\160\DTS\Binn\;C:\Program Files\Microsoft SQL Server\170\DTS\Binn\;C:\ProgramData\chocolatey\lib\pulumi\tools\Pulumi\bin;C:\Program Files\CMake\bin;C:\Strawberry\c\bin;C:\Strawberry\perl\site\bin;C:\Strawberry\perl\bin;C:\ProgramData\chocolatey\lib\maven\apache-maven-3.9.16\bin;C:\Program Files\Microsoft Service Fabric\bin\Fabric\Fabric.Code;C:\Program Files\Microsoft SDKs\Service Fabric\Tools\ServiceFabricLocalClusterManager;C:\Program Files\LLVM\bin;C:\Program Files (x86)\LLVM\bin;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;C:\Program Files\Git\ucrt64\bin;C:\Program Files\Git\usr\bin;C:\Program Files\GitHub CLI\;c:\tools\php;C:\Program Files (x86)\sbt\bin;C:\Program Files\Amazon\AWSCLIV2\;C:\Program Files\Amazon\SessionManagerPlugin\bin\;C:\Program Files\Amazon\AWSSAMCLI\bin\;C:\Program Files\Microsoft SQL Server\130\Tools\Binn\;C:\Program Files\mongosh\;C:\Users\runneradmin\.dotnet\tools;C:\Users\runneradmin\.cargo\bin;C:\Users\runneradmin\AppData\Local\Microsoft\WindowsApps;C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\Llvm\x64\bin;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\IDE\VC\Linux\bin\ConnectionManagerExe;C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\vcpkg
+2026-10-29T13:41:25.2990022Z   CXX: cl
+2026-10-29T13:41:25.2990193Z ##[endgroup]
+2026-10-29T13:41:26.3340910Z PASS merge_outputs: asserts=18/12
+2026-10-29T13:41:27.0370113Z PASS output_extensions: asserts=25/21
+2026-10-29T13:41:28.0269712Z PASS runner_contract: asserts=31/31
+2026-10-29T13:41:28.2193667Z PASS doc_links: asserts=11/11
+2026-10-29T13:41:28.3552002Z PASS platform_paths: asserts=3/3
+2026-10-29T13:41:28.7069722Z PASS ci_annotations: asserts=12/13
+2026-10-29T13:41:29.9989875Z PASS report_evidence: asserts=77/21
+2026-10-29T13:41:30.1616816Z PASS writer_boundary: asserts=24/7
+2026-10-29T13:41:30.6853958Z PASS shielding_scenario_model: asserts=93/61
+2026-10-29T13:41:31.0097004Z PASS shielding_analysis: asserts=113/73
+2026-10-29T13:41:41.4756390Z PASS effective_config_model: asserts=17/18
+2026-10-29T13:41:45.3185380Z PASS input_provenance: asserts=14/5
+2026-10-29T13:41:49.9809538Z PASS effective_consumer_state: asserts=2/3
+2026-10-29T13:41:53.1710255Z PASS effective_receipt_view: asserts=13/45
+2026-10-29T13:41:54.2001370Z PASS output_provenance: asserts=46/26
+2026-10-29T13:41:54.5042922Z Report: D:\a\G4UniversalSim\G4UniversalSim\out\verification\20261029-134125-3591c133\report.json
+2026-10-29T13:41:54.5044081Z 15 pass / 0 fail / 0 skip of 15 cases; assertions executed 499 (15 cases reported counts, 0 cases asserted nothing)
+2026-10-29T13:41:54.6426958Z ##[group]Run python -B scripts/check_report_evidence.py
+2026-10-29T13:41:54.6427664Z [36;1mpython -B scripts/check_report_evidence.py[0m
+2026-10-29T13:41:54.6524472Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-10-29T13:41:54.6524816Z env:
+2026-10-29T13:41:54.6524999Z   QT_QPA_PLATFORM: offscreen
+2026-10-29T13:41:54.6525350Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.11.9\x64
+2026-10-29T13:41:54.6525788Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.11.9\x64/lib/pkgconfig
+2026-10-29T13:41:54.6526216Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+2026-10-29T13:41:54.6526625Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+2026-10-29T13:41:54.6527028Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+2026-10-29T13:41:54.6529589Z   INCLUDE: C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\include;C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\ATLMFC\include;C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Auxiliary\VS\include;C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt;C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\um;C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\shared;C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\winrt;C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\cppwinrt;C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8.1\include\um
+2026-10-29T13:41:54.6532804Z   LIB: C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\ATLMFC\lib\x64;C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\lib\x64;C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8.1\lib\um\x64;C:\Program Files (x86)\Windows Kits\10\lib\10.0.26100.0\ucrt\x64;C:\Program Files (x86)\Windows Kits\10\\lib\10.0.26100.0\\um\x64
+2026-10-29T13:41:54.6536846Z   LIBPATH: C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\ATLMFC\lib\x64;C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\lib\x64;C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\lib\x86\store\references;C:\Program Files (x86)\Windows Kits\10\UnionMetadata\10.0.26100.0;C:\Program Files (x86)\Windows Kits\10\References\10.0.26100.0;C:\Windows\Microsoft.NET\Framework64\v4.0.30319
+2026-10-29T13:41:54.6555681Z   Path: C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\bin\HostX64\x64;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\IDE\VC\VCPackages;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\IDE\CommonExtensions\Microsoft\TestWindow;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\IDE\CommonExtensions\Microsoft\TeamFoundation\Team Explorer;C:\Program Files\Microsoft Visual Studio\18\Enterprise\MSBuild\Current\bin\Roslyn;C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8.1 Tools\x64\;C:\Program Files (x86)\HTML Help Workshop;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\IDE\CommonExtensions\Microsoft\FSharp\Tools;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Team Tools\DiagnosticsHub\Collector;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\IDE\Extensions\Microsoft\CodeCoverage.Console;C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\\x64;C:\Program Files (x86)\Windows Kits\10\bin\\x64;C:\Program Files\Microsoft Visual Studio\18\Enterprise\\MSBuild\Current\Bin\amd64;C:\Windows\Microsoft.NET\Framework64\v4.0.30319;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\IDE\;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\Tools\;C:\Program Files\PowerShell\7;C:\Users\runneradmin\AppData\Roaming\Python\Python311\Scripts;C:\hostedtoolcache\windows\Python\3.11.9\x64\Scripts;C:\hostedtoolcache\windows\Python\3.11.9\x64;C:\Program Files\MongoDB\Server\7.0\bin;C:\vcpkg;C:\tools\zstd;C:\hostedtoolcache\windows\stack\3.11.1\x64;C:\cabal\bin;C:\\ghcup\bin;C:\mingw64\bin;C:\Program Files\dotnet;C:\Program Files\MySQL\MySQL Server 8.0\bin;C:\Program Files\R\R-4.6.1\bin\x64;C:\SeleniumWebDrivers\GeckoDriver;C:\SeleniumWebDrivers\EdgeDriver\;C:\SeleniumWebDrivers\ChromeDriver;C:\Program Files (x86)\sbt\bin;C:\Program Files (x86)\GitHub CLI;C:\Program Files\Git\bin;C:\Program Files (x86)\pipx_bin;C:\npm\prefix;C:\hostedtoolcache\windows\go\1.24.13\x64\bin;C:\hostedtoolcache\windows\Python\3.12.10\x64\Scripts;C:\hostedtoolcache\windows\Python\3.12.10\x64;C:\hostedtoolcache\windows\Ruby\3.3.12\x64\bin;C:\Program Files\OpenSSL\bin;C:\tools\kotlinc\bin;C:\hostedtoolcache\windows\Java_Temurin-Hotspot_jdk\17.0.20-101\x64\bin;C:\Program Files\ImageMagick-7.1.2-Q16-HDRI;C:\Program Files\Microsoft SDKs\Azure\CLI2\wbin;C:\ProgramData\kind;C:\ProgramData\Chocolatey\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\WSL\;C:\Program Files\PowerShell\7\;C:\Program Files\Microsoft\Web Platform Installer\;C:\Program Files\Microsoft SQL Server\170\Tools\Binn\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;C:\Program Files\dotnet\;C:\Program Files (x86)\Windows Kits\10\Windows Performance Toolkit\;C:\Program Files (x86)\WiX Toolset v3.14\bin;C:\Program Files\Microsoft SQL Server\130\DTS\Binn\;C:\Program Files\Microsoft SQL Server\140\DTS\Binn\;C:\Program Files\Microsoft SQL Server\150\DTS\Binn\;C:\Program Files\Microsoft SQL Server\160\DTS\Binn\;C:\Program Files\Microsoft SQL Server\170\DTS\Binn\;C:\ProgramData\chocolatey\lib\pulumi\tools\Pulumi\bin;C:\Program Files\CMake\bin;C:\Strawberry\c\bin;C:\Strawberry\perl\site\bin;C:\Strawberry\perl\bin;C:\ProgramData\chocolatey\lib\maven\apache-maven-3.9.16\bin;C:\Program Files\Microsoft Service Fabric\bin\Fabric\Fabric.Code;C:\Program Files\Microsoft SDKs\Service Fabric\Tools\ServiceFabricLocalClusterManager;C:\Program Files\LLVM\bin;C:\Program Files (x86)\LLVM\bin;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;C:\Program Files\Git\ucrt64\bin;C:\Program Files\Git\usr\bin;C:\Program Files\GitHub CLI\;c:\tools\php;C:\Program Files (x86)\sbt\bin;C:\Program Files\Amazon\AWSCLIV2\;C:\Program Files\Amazon\SessionManagerPlugin\bin\;C:\Program Files\Amazon\AWSSAMCLI\bin\;C:\Program Files\Microsoft SQL Server\130\Tools\Binn\;C:\Program Files\mongosh\;C:\Users\runneradmin\.dotnet\tools;C:\Users\runneradmin\.cargo\bin;C:\Users\runneradmin\AppData\Local\Microsoft\WindowsApps;C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\Llvm\x64\bin;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\IDE\VC\Linux\bin\ConnectionManagerExe;C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\vcpkg
+2026-10-29T13:41:54.6571908Z   CXX: cl
+2026-10-29T13:41:54.6572188Z ##[endgroup]
+2026-10-29T13:41:55.0002661Z report evidence: OK D:\a\G4UniversalSim\G4UniversalSim\out\verification\20261029-134125-3591c133\report.json
+2026-10-29T13:41:55.0003749Z   version 2, profile static, 15 cases, 499 assertions executed, probe settrace_assert_lines_v3, digest sha256_raw_bytes_lf_v2
+2026-10-29T13:41:55.0004491Z   source c5005fd9140d..., tests 5e7e0fa2308f...
+2026-10-29T13:41:55.1489831Z ##[group]Run python -B scripts/run_m0_tests.py --profile gui --require-tracked-sources --fail-on-skip
+2026-10-29T13:41:55.1490693Z [36;1mpython -B scripts/run_m0_tests.py --profile gui --require-tracked-sources --fail-on-skip[0m
+2026-10-29T13:41:55.1562778Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-10-29T13:41:55.1563134Z env:
+2026-10-29T13:41:55.1563324Z   QT_QPA_PLATFORM: offscreen
+2026-10-29T13:41:55.1563646Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.11.9\x64
+2026-10-29T13:41:55.1564763Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.11.9\x64/lib/pkgconfig
+2026-10-29T13:41:55.1565618Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+2026-10-29T13:41:55.1566375Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+2026-10-29T13:41:55.1567131Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+2026-10-29T13:41:55.1571406Z   INCLUDE: C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\include;C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\ATLMFC\include;C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Auxiliary\VS\include;C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt;C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\um;C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\shared;C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\winrt;C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\cppwinrt;C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8.1\include\um
+2026-10-29T13:41:55.1577822Z   LIB: C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\ATLMFC\lib\x64;C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\lib\x64;C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8.1\lib\um\x64;C:\Program Files (x86)\Windows Kits\10\lib\10.0.26100.0\ucrt\x64;C:\Program Files (x86)\Windows Kits\10\\lib\10.0.26100.0\\um\x64
+2026-10-29T13:41:55.1582770Z   LIBPATH: C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\ATLMFC\lib\x64;C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\lib\x64;C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\lib\x86\store\references;C:\Program Files (x86)\Windows Kits\10\UnionMetadata\10.0.26100.0;C:\Program Files (x86)\Windows Kits\10\References\10.0.26100.0;C:\Windows\Microsoft.NET\Framework64\v4.0.30319
+2026-10-29T13:41:55.1615105Z   Path: C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\bin\HostX64\x64;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\IDE\VC\VCPackages;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\IDE\CommonExtensions\Microsoft\TestWindow;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\IDE\CommonExtensions\Microsoft\TeamFoundation\Team Explorer;C:\Program Files\Microsoft Visual Studio\18\Enterprise\MSBuild\Current\bin\Roslyn;C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8.1 Tools\x64\;C:\Program Files (x86)\HTML Help Workshop;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\IDE\CommonExtensions\Microsoft\FSharp\Tools;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Team Tools\DiagnosticsHub\Collector;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\IDE\Extensions\Microsoft\CodeCoverage.Console;C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\\x64;C:\Program Files (x86)\Windows Kits\10\bin\\x64;C:\Program Files\Microsoft Visual Studio\18\Enterprise\\MSBuild\Current\Bin\amd64;C:\Windows\Microsoft.NET\Framework64\v4.0.30319;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\IDE\;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\Tools\;C:\Program Files\PowerShell\7;C:\Users\runneradmin\AppData\Roaming\Python\Python311\Scripts;C:\hostedtoolcache\windows\Python\3.11.9\x64\Scripts;C:\hostedtoolcache\windows\Python\3.11.9\x64;C:\Program Files\MongoDB\Server\7.0\bin;C:\vcpkg;C:\tools\zstd;C:\hostedtoolcache\windows\stack\3.11.1\x64;C:\cabal\bin;C:\\ghcup\bin;C:\mingw64\bin;C:\Program Files\dotnet;C:\Program Files\MySQL\MySQL Server 8.0\bin;C:\Program Files\R\R-4.6.1\bin\x64;C:\SeleniumWebDrivers\GeckoDriver;C:\SeleniumWebDrivers\EdgeDriver\;C:\SeleniumWebDrivers\ChromeDriver;C:\Program Files (x86)\sbt\bin;C:\Program Files (x86)\GitHub CLI;C:\Program Files\Git\bin;C:\Program Files (x86)\pipx_bin;C:\npm\prefix;C:\hostedtoolcache\windows\go\1.24.13\x64\bin;C:\hostedtoolcache\windows\Python\3.12.10\x64\Scripts;C:\hostedtoolcache\windows\Python\3.12.10\x64;C:\hostedtoolcache\windows\Ruby\3.3.12\x64\bin;C:\Program Files\OpenSSL\bin;C:\tools\kotlinc\bin;C:\hostedtoolcache\windows\Java_Temurin-Hotspot_jdk\17.0.20-101\x64\bin;C:\Program Files\ImageMagick-7.1.2-Q16-HDRI;C:\Program Files\Microsoft SDKs\Azure\CLI2\wbin;C:\ProgramData\kind;C:\ProgramData\Chocolatey\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\WSL\;C:\Program Files\PowerShell\7\;C:\Program Files\Microsoft\Web Platform Installer\;C:\Program Files\Microsoft SQL Server\170\Tools\Binn\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;C:\Program Files\dotnet\;C:\Program Files (x86)\Windows Kits\10\Windows Performance Toolkit\;C:\Program Files (x86)\WiX Toolset v3.14\bin;C:\Program Files\Microsoft SQL Server\130\DTS\Binn\;C:\Program Files\Microsoft SQL Server\140\DTS\Binn\;C:\Program Files\Microsoft SQL Server\150\DTS\Binn\;C:\Program Files\Microsoft SQL Server\160\DTS\Binn\;C:\Program Files\Microsoft SQL Server\170\DTS\Binn\;C:\ProgramData\chocolatey\lib\pulumi\tools\Pulumi\bin;C:\Program Files\CMake\bin;C:\Strawberry\c\bin;C:\Strawberry\perl\site\bin;C:\Strawberry\perl\bin;C:\ProgramData\chocolatey\lib\maven\apache-maven-3.9.16\bin;C:\Program Files\Microsoft Service Fabric\bin\Fabric\Fabric.Code;C:\Program Files\Microsoft SDKs\Service Fabric\Tools\ServiceFabricLocalClusterManager;C:\Program Files\LLVM\bin;C:\Program Files (x86)\LLVM\bin;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;C:\Program Files\Git\ucrt64\bin;C:\Program Files\Git\usr\bin;C:\Program Files\GitHub CLI\;c:\tools\php;C:\Program Files (x86)\sbt\bin;C:\Program Files\Amazon\AWSCLIV2\;C:\Program Files\Amazon\SessionManagerPlugin\bin\;C:\Program Files\Amazon\AWSSAMCLI\bin\;C:\Program Files\Microsoft SQL Server\130\Tools\Binn\;C:\Program Files\mongosh\;C:\Users\runneradmin\.dotnet\tools;C:\Users\runneradmin\.cargo\bin;C:\Users\runneradmin\AppData\Local\Microsoft\WindowsApps;C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\Llvm\x64\bin;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\IDE\VC\Linux\bin\ConnectionManagerExe;C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\vcpkg
+2026-10-29T13:41:55.1643447Z   CXX: cl
+2026-10-29T13:41:55.1643720Z ##[endgroup]
+2026-10-29T13:41:58.6511690Z PASS effective_config_collection: asserts=44/31
+2026-10-29T13:41:59.1341529Z PASS effective_config_viewer: asserts=22/23
+2026-10-29T13:41:59.5506059Z PASS gui_parsers: asserts=8/8
+2026-10-29T13:42:00.1227277Z PASS gui_materials: asserts=42/42
+2026-10-29T13:42:01.3235643Z PASS gui_geometry: asserts=69/63
+2026-10-29T13:42:02.2283848Z PASS gui_preview: asserts=22/22
+2026-10-29T13:42:02.9498315Z PASS gui_preview_primitives: asserts=37/37
+2026-10-29T13:42:03.4051930Z PASS gui_project_io: asserts=6/6
+2026-10-29T13:42:03.9122466Z PASS gui_source: asserts=50/39
+2026-10-29T13:42:04.9127663Z PASS gui_source_field_preservation: asserts=340/48
+2026-10-29T13:42:05.4551712Z PASS gui_run_config: asserts=34/34
+2026-10-29T13:42:11.4771299Z PASS gui_dose_results: asserts=21/21
+2026-10-29T13:42:16.0648836Z PASS gui_plots: asserts=34/34
+2026-10-29T13:42:18.6288958Z PASS gui_new_simulation_wizard: asserts=60/37
+2026-10-29T13:42:19.1669631Z PASS scenario_page: asserts=31/31
+2026-10-29T13:42:21.8623395Z PASS gui_scans: asserts=58/40
+2026-10-29T13:42:33.0525664Z PASS gui_start_page: asserts=74/41
+2026-10-29T13:42:35.2151305Z PASS gui_fluence_results: asserts=31/31
+2026-10-29T13:42:38.4699868Z PASS gui_output_extensions: asserts=61/50
+2026-10-29T13:42:38.6676290Z PASS gui_output: asserts=15/15
+2026-10-29T13:42:38.8786614Z PASS gui_history: asserts=7/7
+2026-10-29T13:42:39.0102596Z PASS gui_run_result: asserts=20/20
+2026-10-29T13:42:40.3205700Z PASS gui_live_progress: asserts=71/66
+2026-10-29T13:42:47.1888587Z PASS gui_main_window: asserts=46/30
+2026-10-29T13:42:47.6701519Z PASS gui_unsupported_features: asserts=6/9
+2026-10-29T13:42:48.4237154Z PASS gui_geometry_safety: asserts=11/15
+2026-10-29T13:42:49.2096900Z PASS gui_geometry_diagnostics: asserts=15/43
+2026-10-29T13:42:53.3608290Z PASS q1_postprocessing: asserts=123/35
+2026-10-29T13:42:56.5355948Z PASS gui_output_provenance: asserts=21/14
+2026-10-29T13:43:05.3616713Z PASS q1_public_paths: asserts=32/28
+2026-10-29T13:43:06.0398902Z PASS gui_3d_view: asserts=18/35
+2026-10-29T13:43:08.5693473Z PASS gui_config_editors: asserts=33/23
+2026-10-29T13:43:08.7729526Z Report: D:\a\G4UniversalSim\G4UniversalSim\out\verification\20261029-134155-4f69ba44\report.json
+2026-10-29T13:43:08.7731370Z 32 pass / 0 fail / 0 skip of 32 cases; assertions executed 1462 (32 cases reported counts, 0 cases asserted nothing)
+2026-10-29T13:43:08.8921310Z ##[group]Run python -B scripts/check_report_evidence.py
+2026-10-29T13:43:08.8921789Z [36;1mpython -B scripts/check_report_evidence.py[0m
+2026-10-29T13:43:08.8992327Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-10-29T13:43:08.8992693Z env:
+2026-10-29T13:43:08.8992886Z   QT_QPA_PLATFORM: offscreen
+2026-10-29T13:43:08.8993227Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.11.9\x64
+2026-10-29T13:43:08.8993716Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.11.9\x64/lib/pkgconfig
+2026-10-29T13:43:08.8994186Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+2026-10-29T13:43:08.8994615Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+2026-10-29T13:43:08.8995038Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+2026-10-29T13:43:08.8998294Z   INCLUDE: C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\include;C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\ATLMFC\include;C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Auxiliary\VS\include;C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt;C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\um;C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\shared;C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\winrt;C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\cppwinrt;C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8.1\include\um
+2026-10-29T13:43:08.9001624Z   LIB: C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\ATLMFC\lib\x64;C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\lib\x64;C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8.1\lib\um\x64;C:\Program Files (x86)\Windows Kits\10\lib\10.0.26100.0\ucrt\x64;C:\Program Files (x86)\Windows Kits\10\\lib\10.0.26100.0\\um\x64
+2026-10-29T13:43:08.9004339Z   LIBPATH: C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\ATLMFC\lib\x64;C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\lib\x64;C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\lib\x86\store\references;C:\Program Files (x86)\Windows Kits\10\UnionMetadata\10.0.26100.0;C:\Program Files (x86)\Windows Kits\10\References\10.0.26100.0;C:\Windows\Microsoft.NET\Framework64\v4.0.30319
+2026-10-29T13:43:08.9022582Z   Path: C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\bin\HostX64\x64;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\IDE\VC\VCPackages;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\IDE\CommonExtensions\Microsoft\TestWindow;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\IDE\CommonExtensions\Microsoft\TeamFoundation\Team Explorer;C:\Program Files\Microsoft Visual Studio\18\Enterprise\MSBuild\Current\bin\Roslyn;C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8.1 Tools\x64\;C:\Program Files (x86)\HTML Help Workshop;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\IDE\CommonExtensions\Microsoft\FSharp\Tools;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Team Tools\DiagnosticsHub\Collector;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\IDE\Extensions\Microsoft\CodeCoverage.Console;C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\\x64;C:\Program Files (x86)\Windows Kits\10\bin\\x64;C:\Program Files\Microsoft Visual Studio\18\Enterprise\\MSBuild\Current\Bin\amd64;C:\Windows\Microsoft.NET\Framework64\v4.0.30319;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\IDE\;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\Tools\;C:\Program Files\PowerShell\7;C:\Users\runneradmin\AppData\Roaming\Python\Python311\Scripts;C:\hostedtoolcache\windows\Python\3.11.9\x64\Scripts;C:\hostedtoolcache\windows\Python\3.11.9\x64;C:\Program Files\MongoDB\Server\7.0\bin;C:\vcpkg;C:\tools\zstd;C:\hostedtoolcache\windows\stack\3.11.1\x64;C:\cabal\bin;C:\\ghcup\bin;C:\mingw64\bin;C:\Program Files\dotnet;C:\Program Files\MySQL\MySQL Server 8.0\bin;C:\Program Files\R\R-4.6.1\bin\x64;C:\SeleniumWebDrivers\GeckoDriver;C:\SeleniumWebDrivers\EdgeDriver\;C:\SeleniumWebDrivers\ChromeDriver;C:\Program Files (x86)\sbt\bin;C:\Program Files (x86)\GitHub CLI;C:\Program Files\Git\bin;C:\Program Files (x86)\pipx_bin;C:\npm\prefix;C:\hostedtoolcache\windows\go\1.24.13\x64\bin;C:\hostedtoolcache\windows\Python\3.12.10\x64\Scripts;C:\hostedtoolcache\windows\Python\3.12.10\x64;C:\hostedtoolcache\windows\Ruby\3.3.12\x64\bin;C:\Program Files\OpenSSL\bin;C:\tools\kotlinc\bin;C:\hostedtoolcache\windows\Java_Temurin-Hotspot_jdk\17.0.20-101\x64\bin;C:\Program Files\ImageMagick-7.1.2-Q16-HDRI;C:\Program Files\Microsoft SDKs\Azure\CLI2\wbin;C:\ProgramData\kind;C:\ProgramData\Chocolatey\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\WSL\;C:\Program Files\PowerShell\7\;C:\Program Files\Microsoft\Web Platform Installer\;C:\Program Files\Microsoft SQL Server\170\Tools\Binn\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;C:\Program Files\dotnet\;C:\Program Files (x86)\Windows Kits\10\Windows Performance Toolkit\;C:\Program Files (x86)\WiX Toolset v3.14\bin;C:\Program Files\Microsoft SQL Server\130\DTS\Binn\;C:\Program Files\Microsoft SQL Server\140\DTS\Binn\;C:\Program Files\Microsoft SQL Server\150\DTS\Binn\;C:\Program Files\Microsoft SQL Server\160\DTS\Binn\;C:\Program Files\Microsoft SQL Server\170\DTS\Binn\;C:\ProgramData\chocolatey\lib\pulumi\tools\Pulumi\bin;C:\Program Files\CMake\bin;C:\Strawberry\c\bin;C:\Strawberry\perl\site\bin;C:\Strawberry\perl\bin;C:\ProgramData\chocolatey\lib\maven\apache-maven-3.9.16\bin;C:\Program Files\Microsoft Service Fabric\bin\Fabric\Fabric.Code;C:\Program Files\Microsoft SDKs\Service Fabric\Tools\ServiceFabricLocalClusterManager;C:\Program Files\LLVM\bin;C:\Program Files (x86)\LLVM\bin;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;C:\Program Files\Git\ucrt64\bin;C:\Program Files\Git\usr\bin;C:\Program Files\GitHub CLI\;c:\tools\php;C:\Program Files (x86)\sbt\bin;C:\Program Files\Amazon\AWSCLIV2\;C:\Program Files\Amazon\SessionManagerPlugin\bin\;C:\Program Files\Amazon\AWSSAMCLI\bin\;C:\Program Files\Microsoft SQL Server\130\Tools\Binn\;C:\Program Files\mongosh\;C:\Users\runneradmin\.dotnet\tools;C:\Users\runneradmin\.cargo\bin;C:\Users\runneradmin\AppData\Local\Microsoft\WindowsApps;C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\Llvm\x64\bin;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\IDE\VC\Linux\bin\ConnectionManagerExe;C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\vcpkg
+2026-10-29T13:43:08.9038386Z   CXX: cl
+2026-10-29T13:43:08.9038569Z ##[endgroup]
+2026-10-29T13:43:09.2453352Z report evidence: OK D:\a\G4UniversalSim\G4UniversalSim\out\verification\20261029-134155-4f69ba44\report.json
+2026-10-29T13:43:09.2454780Z   version 2, profile gui, 32 cases, 1462 assertions executed, probe settrace_assert_lines_v3, digest sha256_raw_bytes_lf_v2
+2026-10-29T13:43:09.2456301Z   source c5005fd9140d..., tests 5e7e0fa2308f...
+2026-10-29T13:43:09.4057437Z ##[group]Run actions/upload-artifact@v4
+2026-10-29T13:43:09.4057780Z with:
+2026-10-29T13:43:09.4057988Z   name: m0-report-windows-latest
+2026-10-29T13:43:09.4058238Z   path: out/verification
+2026-10-29T13:43:09.4058475Z   if-no-files-found: warn
+2026-10-29T13:43:09.4058810Z   compression-level: 6
+2026-10-29T13:43:09.4059084Z   overwrite: false
+2026-10-29T13:43:09.4059362Z   include-hidden-files: false
+2026-10-29T13:43:09.4059649Z env:
+2026-10-29T13:43:09.4059898Z   QT_QPA_PLATFORM: offscreen
+2026-10-29T13:43:09.4060321Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.11.9\x64
+2026-10-29T13:43:09.4060831Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.11.9\x64/lib/pkgconfig
+2026-10-29T13:43:09.4061343Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+2026-10-29T13:43:09.4061818Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+2026-10-29T13:43:09.4062284Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+2026-10-29T13:43:09.4123458Z   INCLUDE: C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\include;C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\ATLMFC\include;C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Auxiliary\VS\include;C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt;C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\um;C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\shared;C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\winrt;C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\cppwinrt;C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8.1\include\um
+2026-10-29T13:43:09.4127309Z   LIB: C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\ATLMFC\lib\x64;C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\lib\x64;C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8.1\lib\um\x64;C:\Program Files (x86)\Windows Kits\10\lib\10.0.26100.0\ucrt\x64;C:\Program Files (x86)\Windows Kits\10\\lib\10.0.26100.0\\um\x64
+2026-10-29T13:43:09.4130026Z   LIBPATH: C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\ATLMFC\lib\x64;C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\lib\x64;C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\lib\x86\store\references;C:\Program Files (x86)\Windows Kits\10\UnionMetadata\10.0.26100.0;C:\Program Files (x86)\Windows Kits\10\References\10.0.26100.0;C:\Windows\Microsoft.NET\Framework64\v4.0.30319
+2026-10-29T13:43:09.4149038Z   Path: C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\bin\HostX64\x64;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\IDE\VC\VCPackages;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\IDE\CommonExtensions\Microsoft\TestWindow;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\IDE\CommonExtensions\Microsoft\TeamFoundation\Team Explorer;C:\Program Files\Microsoft Visual Studio\18\Enterprise\MSBuild\Current\bin\Roslyn;C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8.1 Tools\x64\;C:\Program Files (x86)\HTML Help Workshop;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\IDE\CommonExtensions\Microsoft\FSharp\Tools;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Team Tools\DiagnosticsHub\Collector;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\IDE\Extensions\Microsoft\CodeCoverage.Console;C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\\x64;C:\Program Files (x86)\Windows Kits\10\bin\\x64;C:\Program Files\Microsoft Visual Studio\18\Enterprise\\MSBuild\Current\Bin\amd64;C:\Windows\Microsoft.NET\Framework64\v4.0.30319;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\IDE\;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\Tools\;C:\Program Files\PowerShell\7;C:\Users\runneradmin\AppData\Roaming\Python\Python311\Scripts;C:\hostedtoolcache\windows\Python\3.11.9\x64\Scripts;C:\hostedtoolcache\windows\Python\3.11.9\x64;C:\Program Files\MongoDB\Server\7.0\bin;C:\vcpkg;C:\tools\zstd;C:\hostedtoolcache\windows\stack\3.11.1\x64;C:\cabal\bin;C:\\ghcup\bin;C:\mingw64\bin;C:\Program Files\dotnet;C:\Program Files\MySQL\MySQL Server 8.0\bin;C:\Program Files\R\R-4.6.1\bin\x64;C:\SeleniumWebDrivers\GeckoDriver;C:\SeleniumWebDrivers\EdgeDriver\;C:\SeleniumWebDrivers\ChromeDriver;C:\Program Files (x86)\sbt\bin;C:\Program Files (x86)\GitHub CLI;C:\Program Files\Git\bin;C:\Program Files (x86)\pipx_bin;C:\npm\prefix;C:\hostedtoolcache\windows\go\1.24.13\x64\bin;C:\hostedtoolcache\windows\Python\3.12.10\x64\Scripts;C:\hostedtoolcache\windows\Python\3.12.10\x64;C:\hostedtoolcache\windows\Ruby\3.3.12\x64\bin;C:\Program Files\OpenSSL\bin;C:\tools\kotlinc\bin;C:\hostedtoolcache\windows\Java_Temurin-Hotspot_jdk\17.0.20-101\x64\bin;C:\Program Files\ImageMagick-7.1.2-Q16-HDRI;C:\Program Files\Microsoft SDKs\Azure\CLI2\wbin;C:\ProgramData\kind;C:\ProgramData\Chocolatey\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\WSL\;C:\Program Files\PowerShell\7\;C:\Program Files\Microsoft\Web Platform Installer\;C:\Program Files\Microsoft SQL Server\170\Tools\Binn\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;C:\Program Files\dotnet\;C:\Program Files (x86)\Windows Kits\10\Windows Performance Toolkit\;C:\Program Files (x86)\WiX Toolset v3.14\bin;C:\Program Files\Microsoft SQL Server\130\DTS\Binn\;C:\Program Files\Microsoft SQL Server\140\DTS\Binn\;C:\Program Files\Microsoft SQL Server\150\DTS\Binn\;C:\Program Files\Microsoft SQL Server\160\DTS\Binn\;C:\Program Files\Microsoft SQL Server\170\DTS\Binn\;C:\ProgramData\chocolatey\lib\pulumi\tools\Pulumi\bin;C:\Program Files\CMake\bin;C:\Strawberry\c\bin;C:\Strawberry\perl\site\bin;C:\Strawberry\perl\bin;C:\ProgramData\chocolatey\lib\maven\apache-maven-3.9.16\bin;C:\Program Files\Microsoft Service Fabric\bin\Fabric\Fabric.Code;C:\Program Files\Microsoft SDKs\Service Fabric\Tools\ServiceFabricLocalClusterManager;C:\Program Files\LLVM\bin;C:\Program Files (x86)\LLVM\bin;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;C:\Program Files\Git\ucrt64\bin;C:\Program Files\Git\usr\bin;C:\Program Files\GitHub CLI\;c:\tools\php;C:\Program Files (x86)\sbt\bin;C:\Program Files\Amazon\AWSCLIV2\;C:\Program Files\Amazon\SessionManagerPlugin\bin\;C:\Program Files\Amazon\AWSSAMCLI\bin\;C:\Program Files\Microsoft SQL Server\130\Tools\Binn\;C:\Program Files\mongosh\;C:\Users\runneradmin\.dotnet\tools;C:\Users\runneradmin\.cargo\bin;C:\Users\runneradmin\AppData\Local\Microsoft\WindowsApps;C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\Llvm\x64\bin;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja;C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\IDE\VC\Linux\bin\ConnectionManagerExe;C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\vcpkg
+2026-10-29T13:43:09.4165003Z   CXX: cl
+2026-10-29T13:43:09.4165171Z ##[endgroup]
+2026-10-29T13:43:09.6088085Z (node:8420) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-29T13:43:09.6089307Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-29T13:43:09.6308174Z With the provided path, there will be 50 files uploaded
+2026-10-29T13:43:09.6313697Z Artifact name is valid!
+2026-10-29T13:43:09.6315266Z Root directory input is valid!
+2026-10-29T13:43:10.0331117Z Beginning upload of artifact content to blob storage
+2026-10-29T13:43:10.1138658Z (node:8420) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-10-29T13:43:10.4323137Z Uploaded bytes 19167
+2026-10-29T13:43:10.5042568Z Finished uploading artifact content to blob storage!
+2026-10-29T13:43:10.5044585Z SHA256 digest of uploaded artifact zip is b6ce360f145cd02facb2aed9417f95d729f093cd7e016396f805e1287336d711
+2026-10-29T13:43:10.5046912Z Finalizing artifact upload
+2026-10-29T13:43:10.9608476Z Artifact m0-report-windows-latest.zip successfully finalized. Artifact ID 12901707621
+2026-10-29T13:43:10.9612390Z Artifact m0-report-windows-latest has been successfully uploaded! Final size is 19167 bytes. Artifact ID is 12901707621
+2026-10-29T13:43:10.9624087Z Artifact download URL: https://github.com/doorfordoor/G4UniversalSim/actions/runs/40884097335/artifacts/12901707621
+2026-10-29T13:43:10.9994503Z Post job cleanup.
+2026-10-29T13:43:11.1706698Z Post job cleanup.
+2026-10-29T13:43:11.4061547Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-10-29T13:43:11.4408658Z git version 2.56.0.windows.2
+2026-10-29T13:43:11.4474415Z Temporarily overriding HOME='D:\a\_temp\2bd9de7c-6271-4cf4-a0ca-2a64530fd997' before making global git config changes
+2026-10-29T13:43:11.4476433Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-29T13:43:11.4486153Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\G4UniversalSim\G4UniversalSim
+2026-10-29T13:43:11.4957767Z Removing SSH command configuration
+2026-10-29T13:43:11.4974023Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-10-29T13:43:11.5383285Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-10-29T13:43:12.0927129Z Removing HTTP extra header
+2026-10-29T13:43:12.0938109Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-29T13:43:12.1328659Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-10-29T13:43:12.7198015Z Removing includeIf entries pointing to credentials config files
+2026-10-29T13:43:12.7210516Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-29T13:43:12.7547588Z includeif.gitdir:D:/a/G4UniversalSim/G4UniversalSim/.git.path
+2026-10-29T13:43:12.7548436Z includeif.gitdir:D:/a/G4UniversalSim/G4UniversalSim/.git/worktrees/*.path
+2026-10-29T13:43:12.7549150Z includeif.gitdir:/github/workspace/.git.path
+2026-10-29T13:43:12.7550206Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-29T13:43:12.7588198Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:D:/a/G4UniversalSim/G4UniversalSim/.git.path
+2026-10-29T13:43:12.7928747Z D:\a\_temp\git-credentials-f7238150-14e9-4da7-8d3f-31b8c53de274.config
+2026-10-29T13:43:12.7974356Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:D:/a/G4UniversalSim/G4UniversalSim/.git.path D\:\\a\\_temp\\git\-credentials\-f7238150\-14e9\-4da7\-8d3f\-31b8c53de274\.config
+2026-10-29T13:43:12.8359985Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:D:/a/G4UniversalSim/G4UniversalSim/.git/worktrees/*.path
+2026-10-29T13:43:12.8698039Z D:\a\_temp\git-credentials-f7238150-14e9-4da7-8d3f-31b8c53de274.config
+2026-10-29T13:43:12.8741072Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:D:/a/G4UniversalSim/G4UniversalSim/.git/worktrees/*.path D\:\\a\\_temp\\git\-credentials\-f7238150\-14e9\-4da7\-8d3f\-31b8c53de274\.config
+2026-10-29T13:43:12.9114415Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-10-29T13:43:12.9469393Z /github/runner_temp/git-credentials-f7238150-14e9-4da7-8d3f-31b8c53de274.config
+2026-10-29T13:43:12.9516120Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-f7238150\-14e9\-4da7\-8d3f\-31b8c53de274\.config
+2026-10-29T13:43:12.9889565Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-29T13:43:13.0210503Z /github/runner_temp/git-credentials-f7238150-14e9-4da7-8d3f-31b8c53de274.config
+2026-10-29T13:43:13.0294936Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-f7238150\-14e9\-4da7\-8d3f\-31b8c53de274\.config
+2026-10-29T13:43:13.0670651Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-10-29T13:43:13.6051975Z Removing credentials config 'D:\a\_temp\git-credentials-f7238150-14e9-4da7-8d3f-31b8c53de274.config'
+2026-10-29T13:43:13.6254811Z Cleaning up orphan processes
+2026-10-29T13:43:13.6442805Z Terminate orphan process: pid (7612) (vctip)
+2026-10-29T13:43:13.6950836Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

@@ -1,0 +1,87 @@
+{
+  "schema": "full2c_visible_qt_v1",
+  "platform": "windows",
+  "visible_window_exposed": true,
+  "interaction": "Programmatic Qt widget operations in a real visible Windows main window; no human-click claim",
+  "real_backend_manifest": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\2c-visible-accepted\\backend.json",
+  "snapshot_count": 14,
+  "selected_canonical_path": "/source/objects/Visible~1~0/energy",
+  "checks": [
+    "collection selectors",
+    "baseline differences",
+    "escaped-name search",
+    "unknown/diff filters",
+    "language selection preservation",
+    "atomic invalid collection rejection",
+    "stale state preserved across language change",
+    "atomic reload recovery",
+    "light/dark themes",
+    "main window minimum 1200x760"
+  ],
+  "screenshots": [
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\2c-visible-accepted\\zh-light-real-collection.png",
+      "window_width": 1500,
+      "window_height": 950,
+      "page_width": 1280,
+      "page_height": 833,
+      "native_window_capture": true
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\2c-visible-accepted\\zh-light-real-differences.png",
+      "window_width": 1500,
+      "window_height": 950,
+      "page_width": 1280,
+      "page_height": 833,
+      "native_window_capture": true
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\2c-visible-accepted\\en-dark-small-filtered.png",
+      "window_width": 1200,
+      "window_height": 760,
+      "page_width": 980,
+      "page_height": 642,
+      "native_window_capture": true
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\2c-visible-accepted\\en-dark-small-stale.png",
+      "window_width": 1200,
+      "window_height": 760,
+      "page_width": 980,
+      "page_height": 642,
+      "native_window_capture": true
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\2c-visible-accepted\\zh-dark-small-stale.png",
+      "window_width": 1200,
+      "window_height": 760,
+      "page_width": 980,
+      "page_height": 642,
+      "native_window_capture": true
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\2c-visible-accepted\\zh-light-small-recovered.png",
+      "window_width": 1200,
+      "window_height": 760,
+      "page_width": 980,
+      "page_height": 642,
+      "native_window_capture": true
+    }
+  ],
+  "visual_review": "All six final native-window captures opened and inspected with view_image",
+  "product_commit": "f4770b0",
+  "source_fingerprint": "c2b575bbb9c594765364aa7c78150e842ffb20ff34b10ad4729720bae2c8c91b",
+  "script_exit_code": 0,
+  "automatic_check_count": 10,
+  "native_screenshot_count": 6,
+  "owned_window_closed": true,
+  "owned_qprocesses_not_running": true,
+  "screenshot_sha256": {
+    "zh-light-real-collection.png": "7f77240792c3f8d606751f8526a27f4aed98c3f147ee97574b3f26591f172bd4",
+    "zh-light-real-differences.png": "0d4cf5f7dfadb26c6a055ed7cf7146d8390d49e674f1a83af3079fe70bdb76b5",
+    "en-dark-small-filtered.png": "e89a22f085f5bf9012a2f4be63ad741911b997b950068e3d369d0f85a8593c5c",
+    "en-dark-small-stale.png": "de06851b33e24184d250d5b8548e5a0fd0779326d69f483dfea1684d191f4e69",
+    "zh-dark-small-stale.png": "cefc4c3ef49fb75c58fda344e8cca22e5f4ed33d8d8c6f119e06d5919302d335",
+    "zh-light-small-recovered.png": "e80e7887ce9c6fb0f96300480d86edfc254837b716e1549d47c0641868a622b6"
+  }
+}
