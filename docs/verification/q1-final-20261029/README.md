@@ -36,3 +36,10 @@
 - Windows 使用 MSVC 19.51.36246.0、Release、Geant4 11.3.2 MT/GDML；运行时检出无未提交修改，105组分布为11 static、31 GUI、46 backend、17 integration。可执行 SHA-256：`688f1a454583006d713c6aad93f78b9690acf29bc16dfe79bddc7f1d38804998`。
 - 旧基线使用4e6fa7a产品二进制及已登记的五项测量overlay；v3是保守assert入口计数，不是独立科学命题数量。没有与历史v1/v2虚高总数直接比较。
 - 下一完整阶段为2C（全消费者来源、三阶段应用证据及off/auto/on）；Q2继续承担独立物理/统计适用范围验证。
+
+## 提交与集成节点
+
+- `8ecad66`：被测试的冻结代码/测试提交。
+- `d02f629`：完整验收文档与987个原始证据文件归档；Git暂存内容逐文件与工作副本字节一致，文档链接检查通过。
+- 已在独立q1-final工作区将codex从5465dbd正常快进到d02f629，合并后工作区干净；[本地集成收据](local-integration.json)。当前交接提交仅追加状态文档，不改变验收源码/测试。远端普通推送结果另由本轮工具收据确认，不把文档SHA冒称已测试代码SHA。
+- D:/Geant4/G4UniversalSim仍保留roadmap/F6-live-progress及邻线未跟踪审查文件，未对其切换分支或覆盖。保留q1-final中的已验收Release供后续使用；旧测量工作区的必要证据已归档。
