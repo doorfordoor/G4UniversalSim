@@ -1,0 +1,26 @@
+
+**************************************************************
+ Geant4 version Name: geant4-11-03-patch-02 [MT]   (25-April-2025)
+  << in Multi-threaded mode >> 
+                       Copyright : Geant4 Collaboration
+                      References : NIM A 506 (2003), 250-303
+                                 : IEEE-TNS 53 (2006), 270-278
+                                 : NIM A 835 (2016), 186-225
+                             WWW : http://geant4.org/
+**************************************************************
+
+G4PhysListFactory::GetReferencePhysList <FTFP_BERT>  EMoption= 0
+<<< Geant4 Physics List simulation engine: FTFP_BERT
+
+
+[DetectorConstruction] GeometryManager is dirty; rebuilding world from current geometry state.
+G4GDML: Reading 'C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/docs/verification/q1-gdml-summary-root-cause\sensor.gdml'...
+G4GDML: Reading materials...
+G4GDML: Reading solids...
+G4GDML: Reading structure...
+Checking overlaps for volume Sensor_PV:0 (G4Box) ... OK! 
+Checking overlaps for volume sensor_PV:0 (G4Box) ... OK! 
+G4GDML: Reading setup...
+G4GDML: Reading 'C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/docs/verification/q1-gdml-summary-root-cause\sensor.gdml' done!
+Stripping off GDML names of materials, solids and volumes ...
+G4UniversalSim fatal error: GDML logical volume lookup is ambiguous under case-insensitive bias targeting: 'Sensor'. Rename the conflicting GDML logical volumes to distinct names before enabling bias targeting; SD and exact region selection remain available.

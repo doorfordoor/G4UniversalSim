@@ -1,0 +1,41 @@
+<gdml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://service-spi.web.cern.ch/service-spi/app/releases/GDML/schema/gdml.xsd">
+  <materials>
+    <material name="Water" Z="1">
+      <D value="1.0" unit="g/cm3" />
+      <atom value="1.008" />
+    </material>
+    <material name="Vacuum" Z="1">
+      <D value="1e-25" unit="g/cm3" />
+      <atom value="1.008" />
+    </material>
+  </materials>
+  <solids>
+    <box name="WorldBox" x="1000" y="1000" z="1000" lunit="mm" />
+    <box name="DetBox" x="20" y="20" z="20" lunit="mm" />
+  </solids>
+  <structure>
+    <volume name="Sensor">
+      <materialref ref="Water" />
+      <solidref ref="DetBox" />
+      <auxiliary auxtype="SensDet" auxvalue="Detector" />
+    </volume>
+    <volume name="sensor">
+      <materialref ref="Water" />
+      <solidref ref="DetBox" />
+      <auxiliary auxtype="SensDet" auxvalue="Detector" />
+    </volume><volume name="World_LV">
+      <materialref ref="Vacuum" />
+      <solidref ref="WorldBox" />
+      <physvol name="Det_PV">
+        <volumeref ref="Sensor" />
+        <position name="DetPos" x="-30" y="0" z="100" unit="mm" />
+      </physvol>
+    <physvol name="Second_PV">
+        <volumeref ref="sensor" />
+        <position name="SecondPos" x="30" y="0" z="100" unit="mm" />
+      </physvol></volume>
+  </structure>
+  <setup name="Default" version="1.0">
+    <world ref="World_LV" />
+  </setup>
+</gdml>

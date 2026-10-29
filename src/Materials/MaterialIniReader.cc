@@ -12,6 +12,7 @@
 #include <stdexcept>
 #include <algorithm>
 #include <limits>
+#include <cerrno>
 
 namespace {
 
@@ -24,9 +25,13 @@ int ParseRequiredInt(
 {
     const std::string value = MaterialIniReader::Require(sectionData, filename, section, key);
     char* end = nullptr;
+    errno = 0;
     const long parsed = std::strtol(value.c_str(), &end, 10);
     if (end == value.c_str() || !StringUtils::Trim(std::string(end)).empty()) {
         throw MaterialIniReader::Error(filename, section, key, "expected integer, got '" + value + "'");
+    }
+    if (errno == ERANGE || parsed < std::numeric_limits<int>::min() || parsed > std::numeric_limits<int>::max()) {
+        throw MaterialIniReader::Error(filename, section, key, "integer out of range: '" + value + "'");
     }
     return static_cast<int>(parsed);
 }
@@ -40,9 +45,13 @@ double ParseRequiredDouble(
 {
     const std::string value = MaterialIniReader::Require(sectionData, filename, section, key);
     char* end = nullptr;
+    errno = 0;
     const double parsed = std::strtod(value.c_str(), &end);
     if (end == value.c_str() || !StringUtils::Trim(std::string(end)).empty()) {
         throw MaterialIniReader::Error(filename, section, key, "expected number, got '" + value + "'");
+    }
+    if (errno == ERANGE || !std::isfinite(parsed)) {
+        throw MaterialIniReader::Error(filename, section, key, "number must be finite and within range: '" + value + "'");
     }
     return parsed;
 }

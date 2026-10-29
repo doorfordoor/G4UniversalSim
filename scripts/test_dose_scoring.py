@@ -124,6 +124,100 @@ def check_output_extension(output: Path, root: Path) -> None:
     assert not reference
 
 
+def check_mother_mass(root: Path) -> None:
+    """Independent analytic masses and raw-hit sums for sensitive mother/child."""
+    for material, child_mass in (("G4_WATER", .001), ("G4_Pb", .01135)):
+        geo = root / f"mother_{material}.ini"
+        geo.write_text("[world]\nshape = box\nsize = 1 m,1 m,1 m\nmaterial = G4_Galactic\n"
+                       "[volume.Mother]\nparent = world\nshape = box\nsize = 20 mm,20 mm,20 mm\n"
+                       "material = G4_WATER\nsensitive = true\n"
+                       "[volume.Child]\nparent = Mother\nshape = box\nsize = 10 mm,10 mm,10 mm\n"
+                       f"material = {material}\nsensitive = true\n", encoding="utf-8")
+        config = (f"[geometry]\ntemplate = hierarchical\nconfig = {geo.as_posix()}\n"
+                  f"[materials]\nfile = {(ROOT / 'config/materials/material.ini').as_posix()}\n"
+                  "[physics]\nreference = FTFP_BERT\n[output]\nformat = csv\n"
+                  "[scoring]\nenabled = true\nhits = true\ndose = true\n"
+                  "auto_create_default_scorers = true\n[source]\nparticle = proton\nenergy = 100 MeV\n"
+                  "position_type = point\nposition = 0,0,-9 mm\ndirection = +z\n")
+        for threads in (1, 2):
+            output = execute(root, f"mother_{material}_{threads}", config,
+                             "/run/initialize\n/run/beamOn 40\n/run/beamOn 40\n", threads)
+            hits = {}
+            for path in output.glob("hits_t*.csv"):
+                with path.open(newline="", encoding="utf-8") as stream:
+                    for row in csv.DictReader(stream):
+                        key = (int(row["runID"]), row["volume"])
+                        raw, weighted = hits.get(key, (0.0, 0.0))
+                        energy = float(row["edep_MeV"])
+                        hits[key] = (raw + energy, weighted + energy * float(row["weight"]))
+            dose = {}
+            for path in output.glob("dose_volume_summary_t*.csv"):
+                with path.open(newline="", encoding="utf-8") as stream:
+                    for row in csv.DictReader(stream):
+                        name = row["volume_path"].rsplit("/", 1)[1].split("#")[0]
+                        key = (int(row["runID"]), name)
+                        expected_mass = .007 if name == "Mother_PV" else child_mass
+                        assert name in ("Mother_PV", "Child_PV"), row
+                        mass = float(row["mass_kg"])
+                        # Mother water: 8 cm3 minus child's displaced 1 cm3 = 7 g.
+                        assert math.isclose(mass, expected_mass, rel_tol=1e-9), row
+                        raw, weighted = dose.get(key, (0.0, 0.0))
+                        dose[key] = (raw + float(row["raw_edep_MeV"]),
+                                     weighted + float(row["weighted_edep_MeV"]))
+                        for prefix in ("raw", "weighted"):
+                            assert math.isclose(float(row[f"{prefix}_dose_Gy"]),
+                                                float(row[f"{prefix}_edep_MeV"]) * MEV_J / expected_mass,
+                                                rel_tol=2e-9, abs_tol=1e-18), row
+            assert set(dose) == {(run, name) for run in (0, 1) for name in ("Mother_PV", "Child_PV")}, dose
+            for key, energies in dose.items():
+                assert all(value > 0 for value in energies), (key, energies)
+                for observed, expected in zip(energies, hits[key]):
+                    assert math.isclose(observed, expected, rel_tol=2e-9, abs_tol=1e-9), (key, observed, expected)
+
+
+def check_nested_and_invalid_mass(root: Path) -> None:
+    import test_geometry_a5 as a5
+    original = a5.MAIN
+    a5.MAIN = a5.MAIN.replace("fluence = true", "fluence = false")
+    try:
+        work = root / "nested"
+        work.mkdir()
+        (work / "copies.csv").write_text("x_mm,y_mm,z_mm,material\n-50,0,0,G4_WATER\n50,0,0,G4_Si\n", encoding="utf-8")
+        nested = a5.WORLD + a5.volume("Container", "shape = box\nsize = 200 mm,100 mm,100 mm", sensitive=False) + \
+            a5.volume("Mother", "shape = box\nsize = 20 mm,20 mm,20 mm\nplacement = parameterised\ncopies_file = copies.csv", parent="Container") + \
+            a5.volume("Child", "shape = box\nsize = 10 mm,10 mm,10 mm", parent="Mother", material="G4_Pb")
+        r = a5.Runner(work)
+        for threads in (1, 2):
+            r.threads = threads
+            for x, expected_mass in ((-50, .007), (50, .01631)):
+                source = f"[source]\nparticle = proton\nenergy = 100 MeV\nposition_type = point\nposition = {x},0,-9 mm\ndirection = +z\n"
+                output, _ = r.run(nested, source, 20, macro_extra="/run/beamOn 20\n")
+                observed = a5.rows(output, "dose_volume_summary")
+                assert observed and {int(row["runID"]) for row in observed} == {0, 1}, observed
+                for row in observed:
+                    expected = .01135 if "/Child_PV#" in row["volume_path"] else expected_mass
+                    assert math.isclose(float(row["mass_kg"]), expected, rel_tol=1e-9), row
+        # Deliberately overlapping daughters exhaust/exceed mother volume while
+        # leaving the starting point in exposed mother material. Overlap checks
+        # are disabled solely to exercise zero/negative-mass transport failure.
+        a5.MAIN = a5.MAIN.replace("check_overlaps = true", "check_overlaps = false")
+        for depth in (10, 12):
+            invalid = a5.WORLD + a5.volume("Mother", "shape = box\nsize = 20 mm,20 mm,20 mm")
+            for child in ("A", "B"):
+                invalid += a5.volume(child, f"shape = box\nsize = 20 mm,20 mm,{depth} mm", parent="Mother", sensitive=False)
+            source = "[source]\nparticle = proton\nenergy = 20 MeV\nposition_type = point\nposition = 0,0,-9 mm\ndirection = +z\n"
+            for threads in (1, 2):
+                r.threads = threads
+                output, log = r.run(invalid, source, 10, expect_ok=False)
+                (root / f"invalid_mass_{depth}_{threads}.log").write_text(log, encoding="utf-8")
+                summary = (output / "run_summary.txt").read_text(encoding="utf-8")
+                assert "status = failed" in summary, summary
+                assert "DoseScorer requires a positive Geant4 physical-volume mass" in summary, summary
+                assert "output_failure_stage = scoring_dose" in summary, summary
+    finally:
+        a5.MAIN = original
+
+
 def main() -> None:
     assert EXE.is_file(), EXE
     with tempfile.TemporaryDirectory(prefix="g4usim-dose-") as temp:
@@ -143,6 +237,8 @@ def main() -> None:
         both = execute(root, "dose_let", enabled.replace("let = false", "let = true"), macro)
         check_output(both, 1, 1)
         assert list(both.glob("let_volume_summary_t*.csv")), "LET summary missing next to dose"
+        check_mother_mass(root)
+        check_nested_and_invalid_mass(root)
         print("PASS: disabled, single/MT, multi-run, mass, Gy, manifest, M5 real Dose JSON, dose+LET coexistence")
 
 

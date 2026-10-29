@@ -1,0 +1,111 @@
+{
+  "binary_sha256": "4cca89890ffbce252623f682639d7d1597f7a0f99dc31d5c8c49c8b4388e9a84",
+  "cases": [
+    {
+      "case": "distinct_control",
+      "exit": 0,
+      "status": "completed",
+      "stage": "not_applicable",
+      "message": "not_applicable",
+      "rows": {
+        "dose_volume_summary_t0.csv": [
+          {
+            "runID": "0",
+            "volume_path": "/World_LV_PV#0/Unique0#0",
+            "volume_name": "Unique0",
+            "mass_kg": "0.008",
+            "raw_edep_MeV": "8",
+            "weighted_edep_MeV": "8",
+            "raw_dose_Gy": "1.602176634e-10",
+            "weighted_dose_Gy": "1.602176634e-10",
+            "raw_edep_sum_sq_MeV2": "16",
+            "weighted_edep_sum_sq_MeV2": "16",
+            "n_events": "4"
+          },
+          {
+            "runID": "0",
+            "volume_path": "/World_LV_PV#0/Unique1#0",
+            "volume_name": "Unique1",
+            "mass_kg": "0.008",
+            "raw_edep_MeV": "8",
+            "weighted_edep_MeV": "8",
+            "raw_dose_Gy": "1.602176634e-10",
+            "weighted_dose_Gy": "1.602176634e-10",
+            "raw_edep_sum_sq_MeV2": "16",
+            "weighted_edep_sum_sq_MeV2": "16",
+            "n_events": "4"
+          }
+        ]
+      }
+    },
+    {
+      "case": "let_collision",
+      "exit": 0,
+      "status": "completed",
+      "stage": "not_applicable",
+      "message": "not_applicable",
+      "rows": {
+        "let_volume_summary_t0.csv": [
+          {
+            "runID": "0",
+            "volume_path": "/World_LV_PV#0/SamePV#0",
+            "volume_name": "SamePV",
+            "particles": "all_charged",
+            "steps": "12",
+            "sum_wl_mm": "0.171449632072",
+            "sum_wSl_MeV": "15.6180932849",
+            "sum_wS2l_MeV2_per_mm": "1601.89987332",
+            "let_t_keV_per_um": "91.0943528787",
+            "let_d_keV_per_um": "102.566929528",
+            "sum_sq_wl_mm2": "0.00734875429638",
+            "sum_sq_wSl_MeV2": "60.9812669129",
+            "sum_sq_wS2l_MeV4_per_mm2": "641522.446477",
+            "sum_wl_x_wSl_MeV_mm": "0.669429852671",
+            "sum_wSl_x_wS2l_MeV3_per_mm": "6254.66509916",
+            "n_events": "4"
+          }
+        ]
+      }
+    },
+    {
+      "case": "fluence_reject",
+      "exit": 1,
+      "status": "failed",
+      "stage": "scoring_fluence",
+      "message": "FluenceScorer detected changing volume for touchable /World_LV_PV#0/SamePV#0",
+      "rows": {}
+    },
+    {
+      "case": "fluence_collision",
+      "exit": 0,
+      "status": "completed",
+      "stage": "not_applicable",
+      "message": "not_applicable",
+      "rows": {
+        "fluence_volume_summary_t0.csv": [
+          {
+            "runID": "0",
+            "volume_path": "/World_LV_PV#0/SamePV#0",
+            "volume_name": "SamePV",
+            "volume_mm3": "8000",
+            "raw_track_length_mm": "0.171449632072",
+            "weighted_track_length_mm": "0.171449632072",
+            "raw_fluence_mm-2": "2.1431204009e-05",
+            "weighted_fluence_mm-2": "2.1431204009e-05",
+            "raw_track_length_sum_sq_mm2": "0.00734875429638",
+            "weighted_track_length_sum_sq_mm2": "0.00734875429638",
+            "n_events": "4"
+          }
+        ]
+      }
+    },
+    {
+      "case": "dose_reject",
+      "exit": 1,
+      "status": "failed",
+      "stage": "scoring_dose",
+      "message": "DoseScorer detected changing mass for touchable /World_LV_PV#0/SamePV#0",
+      "rows": {}
+    }
+  ]
+}

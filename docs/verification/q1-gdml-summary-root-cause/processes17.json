@@ -1,0 +1,23 @@
+{"schema": "g4usim_process_dump_v1", "energy_unit": "MeV", "length_unit": "mm",
+ "physics_list": {"constructors": ["G4EmStandard", "G4GammaLeptoNuclearPhys", "Decay", "hElasticWEL_CHIPS_XS", "hInelastic FTFP_BERT", "stopping", "ionInelasticFTFP_BIC", "neutronTrackingCut", "BiasingP"]},
+ "radioactive_decay": {"time_threshold_years": null, "geant4_default": true},
+ "particles": [
+  {"name": "proton", "pdg": 2212, "processes": [
+    {"name": "CoupledTransportation", "type": "Transportation", "sub_type": 92, "active": true, "models": []},
+    {"name": "msc", "type": "Electromagnetic", "sub_type": 10, "active": true, "models": [{"name": "WentzelVIUni", "emin": 0.0001, "emax": 100000000}]},
+    {"name": "hIoni", "type": "Electromagnetic", "sub_type": 2, "active": true, "models": [{"name": "Bragg", "emin": 0.0001, "emax": 2}, {"name": "BetheBloch", "emin": 2, "emax": 100000000}]},
+    {"name": "hBrems", "type": "Electromagnetic", "sub_type": 3, "active": true, "models": [{"name": "hBrem", "emin": 0.0001, "emax": 100000000}]},
+    {"name": "hPairProd", "type": "Electromagnetic", "sub_type": 4, "active": true, "models": [{"name": "hPairProd", "emin": 0.0001, "emax": 100000000}]},
+    {"name": "CoulombScat", "type": "Electromagnetic", "sub_type": 1, "active": true, "models": [{"name": "eCoulombScattering", "emin": 0.0001, "emax": 100000000}]},
+    {"name": "hadElastic", "type": "Hadronic", "sub_type": 111, "active": true, "models": [{"name": "hElasticCHIPS", "emin": 0, "emax": 100000000}]},
+    {"name": "biasWrapper(protonInelastic)", "type": "Hadronic", "sub_type": 121, "active": true, "models": []}]}
+ ],
+ "regions": [
+  {"name": "DefaultRegionForTheWorld", "root_volumes": ["World_LV"], "production_cuts_mm": {"gamma": 1, "e-": 1, "e+": 1, "proton": 1}, "user_limits": null},
+  {"name": "DefaultRegionForParallelWorld", "root_volumes": [], "production_cuts_mm": {"gamma": 1, "e-": 1, "e+": 1, "proton": 1}, "user_limits": null}
+ ],
+ "couples": [
+  {"material": "Vacuum", "region": "DefaultRegionForTheWorld", "used": true, "range_cuts_mm": {"gamma": 1, "e-": 1, "e+": 1, "proton": 1}, "energy_cuts_MeV": {"gamma": 0.00099, "e-": 0.00099, "e+": 0.00099, "proton": 0.1}},
+  {"material": "Water", "region": "DefaultRegionForTheWorld", "used": true, "range_cuts_mm": {"gamma": 1, "e-": 1, "e+": 1, "proton": 1}, "energy_cuts_MeV": {"gamma": 0.00099, "e-": 0.5895891726, "e+": 0.5720562295, "proton": 0.1}}
+ ]
+}

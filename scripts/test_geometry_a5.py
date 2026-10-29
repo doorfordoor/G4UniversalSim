@@ -83,6 +83,7 @@ class Runner:
     def __init__(self, work: Path):
         self.work = work
         self.count = 0
+        self.threads = 2
 
     def run(self, geometry: str, source: str, events: int, *, seed: int = 4242, macro_extra: str = "",
             expect_ok: bool = True):
@@ -91,7 +92,7 @@ class Runner:
         geo = self.work / f"{name}_geometry.ini"
         geo.write_text(geometry, encoding="utf-8")
         ini = self.work / f"{name}.ini"
-        ini.write_text(MAIN.format(seed=seed, root=ROOT.as_posix(), geometry=geo.as_posix(), source=source),
+        ini.write_text(MAIN.replace("threads = 2", f"threads = {self.threads}").format(seed=seed, root=ROOT.as_posix(), geometry=geo.as_posix(), source=source),
                        encoding="utf-8")
         mac = self.work / f"{name}.mac"
         mac.write_text(f"/run/initialize\n{macro_extra}/run/beamOn {events}\n", encoding="utf-8")
@@ -416,7 +417,7 @@ def run_gdml(r: Runner, gdml_ini_text: str, source: str, events: int, *, seed: i
     geo = r.work / f"{name}_gdml.ini"
     geo.write_text(gdml_ini_text, encoding="utf-8")
     ini = r.work / f"{name}.ini"
-    ini.write_text(MAIN.replace("template = hierarchical", "template = gdml").format(
+    ini.write_text(MAIN.replace("threads = 2", f"threads = {r.threads}").replace("template = hierarchical", "template = gdml").format(
         seed=seed, root=ROOT.as_posix(), geometry=geo.as_posix(), source=source), encoding="utf-8")
     mac = r.work / f"{name}.mac"
     mac.write_text(f"/run/initialize\n{macro_extra}/run/beamOn {events}\n", encoding="utf-8")
@@ -521,6 +522,54 @@ def gdml_cases(r: Runner) -> None:
     print("  missing file, unknown sensitive volume and overwriting an existing GDML file are rejected")
 
 
+def gdml_case_sensitive_sd(r: Runner) -> None:
+    """Case-distinct LV objects, duplicate selections, both SD entry points and runs."""
+    import xml.etree.ElementTree as ET
+    for auxiliary in (True, False):
+        tree = ET.fromstring(GDML_SENSDET)
+        structure = tree.find("structure")
+        original = structure.find("volume[@name='Det_LV']")
+        original.set("name", "Sensor")
+        second = ET.fromstring(ET.tostring(original))
+        second.set("name", "sensor")
+        structure.insert(1, second)
+        world = structure.find("volume[@name='World_LV']")
+        first_pv = world.find("physvol")
+        first_pv.set("name", "Upper_PV")
+        first_pv.find("volumeref").set("ref", "Sensor")
+        first_pv.find("position").set("x", "-30")
+        second_pv = ET.fromstring(ET.tostring(first_pv))
+        second_pv.set("name", "Lower_PV")
+        second_pv.find("volumeref").set("ref", "sensor")
+        second_pv.find("position").set("name", "SecondPos")
+        second_pv.find("position").set("x", "30")
+        world.append(second_pv)
+        if not auxiliary:
+            for logical in (original, second):
+                logical.remove(logical.find("auxiliary"))
+        filename = f"case_distinct_{auxiliary}.gdml"
+        (r.work / filename).write_text(ET.tostring(tree, encoding="unicode"), encoding="utf-8")
+        for threads in (1, 2):
+            r.threads = threads
+            for x, expected in ((-30, "Upper_PV"), (30, "Lower_PV")):
+                source = (f"[source]\nparticle = proton\nenergy = 20 MeV\nposition_type = point\n"
+                          f"position = {x},0,90 mm\ndirection = +z\n")
+                selections = "" if auxiliary else "sensitive_volumes = Sensor, sensor, Sensor\n"
+                output, _ = run_gdml(r, f"[gdml]\nfile = {filename}\n"
+                                    + selections, source, 20,
+                                    macro_extra="/run/beamOn 20\n")
+                dose = rows(output, "dose_volume_summary")
+                assert dose and {int(row["runID"]) for row in dose} == {0, 1}, dose
+                assert all(row["volume_path"].endswith(f"/{expected}#0") for row in dose), dose
+                for row in dose:
+                    assert abs(float(row["mass_kg"]) / .008 - 1) < 1e-9, row
+                # No duplicated SD counting: each run deposits at most its injected energy.
+                for run in (0, 1):
+                    energy = sum(float(row["raw_edep_MeV"]) for row in dose if int(row["runID"]) == run)
+                    assert 0 < energy <= 400.0001, energy
+    r.threads = 2
+
+
 def failure_cases(r: Runner) -> None:
     print("failures before Geant4 geometry objects")
     (r.work / "open.stl").write_text("solid o\n" + "".join(
@@ -577,6 +626,7 @@ def main() -> int:
         parameterised_cases(r)
         export_case(r)
         gdml_cases(r)
+        gdml_case_sensitive_sd(r)
         failure_cases(r)
     finally:
         shutil.rmtree(work, ignore_errors=True)

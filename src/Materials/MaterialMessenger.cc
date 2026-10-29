@@ -11,6 +11,8 @@
 #include "G4ios.hh"
 
 #include <cstdlib>
+#include <cerrno>
+#include <limits>
 #include <stdexcept>
 
 namespace {
@@ -18,9 +20,13 @@ namespace {
 int ParseIntValue(const std::string& text, const std::string& key, const std::string& original)
 {
     char* end = nullptr;
+    errno = 0;
     const long value = std::strtol(text.c_str(), &end, 10);
     if (end == text.c_str() || *end != '\0') {
         throw std::runtime_error("Invalid integer for key '" + key + "' in command: " + original);
+    }
+    if (errno == ERANGE || value < std::numeric_limits<int>::min() || value > std::numeric_limits<int>::max()) {
+        throw std::runtime_error("Integer out of range for key '" + key + "' in command: " + original);
     }
     return static_cast<int>(value);
 }

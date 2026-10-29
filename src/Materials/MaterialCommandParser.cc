@@ -6,6 +6,9 @@
 #include "G4SystemOfUnits.hh"
 
 #include <cstdlib>
+#include <cerrno>
+#include <cmath>
+#include <limits>
 #include <stdexcept>
 
 namespace {
@@ -14,9 +17,13 @@ double ParseStrictNumber(const std::string& text, const std::string& original)
 {
     const std::string trimmed = StringUtils::Trim(text);
     char* end = nullptr;
+    errno = 0;
     const double value = std::strtod(trimmed.c_str(), &end);
     if (end == trimmed.c_str() || !StringUtils::Trim(std::string(end)).empty()) {
         throw std::runtime_error("Cannot parse number '" + text + "' in '" + original + "'");
+    }
+    if (errno == ERANGE || !std::isfinite(value)) {
+        throw std::runtime_error("Number must be finite and within range in '" + original + "'");
     }
     return value;
 }
@@ -25,9 +32,13 @@ std::pair<double, std::string> ParseNumberUnit(const std::string& text)
 {
     const std::string trimmed = StringUtils::Trim(text);
     char* end = nullptr;
+    errno = 0;
     const double value = std::strtod(trimmed.c_str(), &end);
     if (end == trimmed.c_str()) {
         throw std::runtime_error("Cannot parse number and unit from '" + text + "'");
+    }
+    if (errno == ERANGE || !std::isfinite(value)) {
+        throw std::runtime_error("Number must be finite and within range in '" + text + "'");
     }
     std::string unit = StringUtils::Trim(std::string(end));
     if (!unit.empty() && unit.front() == '*') {
@@ -129,7 +140,7 @@ std::vector<MaterialComponent> MaterialCommandParser::ParseMaterialComponents(
         c.mode = mode;
         if (mode == MaterialComponentMode::ByAtomCount) {
             const double atoms = ParseStrictNumber(parts[1], token);
-            if (atoms <= 0.0 || atoms != static_cast<int>(atoms)) {
+            if (atoms <= 0.0 || atoms > std::numeric_limits<int>::max() || std::floor(atoms) != atoms) {
                 throw std::runtime_error("Atom count must be a positive integer in '" + token + "'");
             }
             c.atomCount = static_cast<int>(atoms);

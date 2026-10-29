@@ -1,0 +1,27 @@
+[
+  {
+    "case": "valid",
+    "exit_code": 0,
+    "accepted": true
+  },
+  {
+    "case": "element_z_finite_huge",
+    "exit_code": 3221226505,
+    "accepted": false
+  },
+  {
+    "case": "element_z_intmax",
+    "exit_code": 3221226505,
+    "accepted": false
+  },
+  {
+    "case": "isotope_both_intmax",
+    "exit_code": 0,
+    "accepted": true
+  },
+  {
+    "case": "isotope_n_intmax",
+    "exit_code": 0,
+    "accepted": true
+  }
+]

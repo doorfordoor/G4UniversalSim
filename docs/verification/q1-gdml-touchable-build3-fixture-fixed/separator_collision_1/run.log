@@ -1,0 +1,27 @@
+
+**************************************************************
+ Geant4 version Name: geant4-11-03-patch-02 [MT]   (25-April-2025)
+  << in Multi-threaded mode >> 
+                       Copyright : Geant4 Collaboration
+                      References : NIM A 506 (2003), 250-303
+                                 : IEEE-TNS 53 (2006), 270-278
+                                 : NIM A 835 (2016), 186-225
+                             WWW : http://geant4.org/
+**************************************************************
+
+G4PhysListFactory::GetReferencePhysList <FTFP_BERT>  EMoption= 0
+<<< Geant4 Physics List simulation engine: FTFP_BERT
+
+
+[DetectorConstruction] GeometryManager is dirty; rebuilding world from current geometry state.
+G4GDML: Reading 'C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/docs/verification/q1-gdml-touchable-build3-fixture-fixed/separator_collision_1\model.gdml'...
+G4GDML: Reading materials...
+G4GDML: Reading solids...
+G4GDML: Reading structure...
+Checking overlaps for volume SensorB_PV:0 (G4Box) ... OK! 
+Checking overlaps for volume SensorA_PV:0 (G4Box) ... OK! 
+Checking overlaps for volume Container1_PV:0 (G4Box) ... OK! 
+G4GDML: Reading setup...
+G4GDML: Reading 'C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/docs/verification/q1-gdml-touchable-build3-fixture-fixed/separator_collision_1\model.gdml' done!
+Stripping off GDML names of materials, solids and volumes ...
+G4UniversalSim fatal error: GDML ambiguous touchable path: placement 'A#0/B' in mother logical volume 'World_LV' contains the path separator '/'; rename the placement before importing

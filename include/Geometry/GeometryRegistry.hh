@@ -15,6 +15,7 @@ public:
     void Clear();
 
     void RegisterLogicalVolume(const std::string& name, G4LogicalVolume* lv);
+    void TrackImportedLogicalVolume(G4LogicalVolume* logical);
     void RegisterPhysicalVolume(const std::string& name, G4VPhysicalVolume* pv);
 
     bool HasLogicalVolume(const std::string& name) const;
@@ -24,6 +25,8 @@ public:
     G4VPhysicalVolume* GetPhysicalVolume(const std::string& name) const;
 
     void MarkSensitiveVolume(const std::string& name);
+    // GDML identities must not pass through the INI case-insensitive name map.
+    void MarkSensitiveLogicalVolume(G4LogicalVolume* logical);
     void MarkBiasVolume(const std::string& name);
 
     bool IsSensitiveVolume(const std::string& name) const;
@@ -48,8 +51,11 @@ private:
     static void ValidateName(const std::string& name, const std::string& action);
 
     std::map<std::string, G4LogicalVolume*> logicalVolumes_;
+    std::map<std::string, G4LogicalVolume*> importedLogicalVolumes_;
+    std::set<std::string> ambiguousImportedLogicalNames_;
     std::map<std::string, G4VPhysicalVolume*> physicalVolumes_;
     std::set<std::string> sensitiveVolumes_;
+    std::vector<G4LogicalVolume*> sensitiveLogicalVolumes_;
     std::set<std::string> biasVolumes_;
     std::map<std::string, std::string> regionNames_;
 };

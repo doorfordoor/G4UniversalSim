@@ -1,0 +1,62 @@
+[
+  {
+    "case": "valid",
+    "exit_code": 0,
+    "accepted": true
+  },
+  {
+    "case": "element_z_nan",
+    "exit_code": 3221226505,
+    "accepted": false
+  },
+  {
+    "case": "element_a_nan",
+    "exit_code": 0,
+    "accepted": true
+  },
+  {
+    "case": "element_a_inf",
+    "exit_code": 0,
+    "accepted": true
+  },
+  {
+    "case": "element_a_overflow",
+    "exit_code": 0,
+    "accepted": true
+  },
+  {
+    "case": "isotope_z_overflow",
+    "exit_code": 3221226505,
+    "accepted": false
+  },
+  {
+    "case": "isotope_n_overflow",
+    "exit_code": 0,
+    "accepted": true
+  },
+  {
+    "case": "abundance_nan",
+    "exit_code": 0,
+    "accepted": true
+  },
+  {
+    "case": "mass_nan",
+    "exit_code": 0,
+    "accepted": true
+  },
+  {
+    "case": "mass_inf",
+    "exit_code": 1,
+    "accepted": false
+  },
+  {
+    "case": "atom_overflow",
+    "exit_code": 1,
+    "accepted": false
+  },
+  {
+    "case": "density_inf",
+    "exit_code": 1,
+    "accepted": false
+  }
+]

@@ -9,12 +9,32 @@
 #include "G4NistManager.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4ios.hh"
+#include "G4Version.hh"
 
 #include <cmath>
 #include <stdexcept>
 #include <vector>
+#include <algorithm>
+#include <limits>
 
 namespace {
+
+// Both supported minor versions index G4AtomicShells tables at rounded Z,
+// with 105 entries (0..104). Recheck the upstream table on a minor upgrade.
+#if G4VERSION_NUMBER >= 1130 && G4VERSION_NUMBER < 1150
+constexpr double kMaximumShellAtomicNumber = 104.0;
+#else
+#error "Review G4AtomicShells atomic-number bounds for this Geant4 version"
+#endif
+
+void ValidateElementAtomicNumber(double z, const std::string& name)
+{
+    // G4lrint narrows lrint's result to int; check in floating point first.
+    const double rounded = std::nearbyint(z);
+    if (!std::isfinite(z) || rounded < 1.0 || rounded > kMaximumShellAtomicNumber) {
+        throw std::runtime_error("Element '" + name + "' atomic number is outside the supported Geant4 shell-table range (rounded Z must be 1..104)");
+    }
+}
 
 constexpr double kFractionTolerance = 1.0e-6;
 constexpr double kWarnNormalizeTolerance = 1.0e-12;
@@ -72,8 +92,9 @@ std::string DensityText(double density)
 
 G4Isotope* MaterialFactory::BuildIsotope(const IsotopeDefinition& def)
 {
-    if (def.name.empty() || def.symbol.empty() || def.z <= 0 || def.n <= 0 || def.a <= 0.0) {
-        throw std::runtime_error("Invalid isotope definition: '" + def.name + "'");
+    if (def.name.empty() || def.symbol.empty() || def.z <= 0 || def.n < def.z ||
+        !std::isfinite(def.a) || def.a <= 0.0) {
+        throw std::runtime_error("Invalid isotope definition (finite positive mass and nucleon integer N >= Z required): '" + def.name + "'");
     }
     return new G4Isotope(def.name, def.z, def.n, def.a);
 }
@@ -88,8 +109,12 @@ G4Element* MaterialFactory::BuildElement(
 
 G4Element* MaterialFactory::BuildSimpleElement(const ElementDefinition& def)
 {
-    if (def.name.empty() || def.symbol.empty() || def.z <= 0.0 || def.a <= 0.0) {
-        throw std::runtime_error("Invalid simple element definition: '" + def.name + "'");
+    if (def.name.empty() || def.symbol.empty() || !std::isfinite(def.z) || !std::isfinite(def.a) || def.z <= 0.0 || def.a <= 0.0) {
+        throw std::runtime_error("Invalid simple element definition (finite positive Z and mass required): '" + def.name + "'");
+    }
+    ValidateElementAtomicNumber(def.z, def.name);
+    if (std::max(1.0, def.a / (g / mole)) < def.z) {
+        throw std::runtime_error("Element '" + def.name + "' atomic mass is outside the Geant4 construction range: effective nucleon count must be >= Z");
     }
     return new G4Element(def.name, def.symbol, def.z, def.a);
 }
@@ -103,17 +128,36 @@ G4Element* MaterialFactory::BuildIsotopicElement(
         throw std::runtime_error("Invalid isotopic element definition: '" + def.name + "'");
     }
 
-    auto* element = new G4Element(def.name, def.symbol, static_cast<G4int>(def.isotopes.size()));
     double sum = 0.0;
     for (const IsotopeComponent& component : def.isotopes) {
+        if (!std::isfinite(component.abundance) || component.abundance < 0.0) {
+            throw std::runtime_error("Element '" + def.name + "' isotope abundance must be finite and nonnegative");
+        }
         sum += component.abundance;
     }
-    if (std::abs(sum - 1.0) > 1.0e-6) {
+    if (!std::isfinite(sum) || std::abs(sum - 1.0) > 1.0e-6) {
         throw std::runtime_error(
             "Element '" + def.name + "' isotope abundances must sum to 1.0; got "
             + std::to_string(sum)
         );
     }
+    int isotopeZ = -1;
+    double effectiveMass = 0.0;
+    for (const IsotopeComponent& component : def.isotopes) {
+        const auto it = isotopes.find(Normalize(component.isotopeName));
+        if (it == isotopes.end()) throw std::runtime_error("Element '" + def.name + "' references unknown isotope '" + component.isotopeName + "'");
+        ValidateElementAtomicNumber(it->second->GetZ(), def.name);
+        if (isotopeZ >= 0 && isotopeZ != it->second->GetZ()) {
+            throw std::runtime_error("Element '" + def.name + "' isotope atomic numbers must be identical (outside valid construction range)");
+        }
+        isotopeZ = it->second->GetZ();
+        effectiveMass += component.abundance * it->second->GetA();
+        if (!std::isfinite(effectiveMass)) throw std::runtime_error("Element '" + def.name + "' weighted isotope mass must remain finite");
+    }
+    if (!std::isfinite(effectiveMass / sum)) {
+        throw std::runtime_error("Element '" + def.name + "' normalized isotope mass must remain finite");
+    }
+    auto* element = new G4Element(def.name, def.symbol, static_cast<G4int>(def.isotopes.size()));
     for (const IsotopeComponent& component : def.isotopes) {
         const auto it = isotopes.find(Normalize(component.isotopeName));
         if (it == isotopes.end()) {
@@ -164,6 +208,23 @@ G4Material* MaterialFactory::BuildCustomMaterial(
     }
 
     ValidateMassFractions(def);
+    std::map<G4Element*, long long> atomCounts;
+    double molecularMass = 0.0;
+    for (const MaterialComponent& component : def.components) {
+        if (component.mode != def.components.front().mode) {
+            throw std::runtime_error("Material '" + def.name + "' mixes component modes outside the valid construction range");
+        }
+        if (component.mode != MaterialComponentMode::ByAtomCount) continue;
+        auto* element = FindElement(component.name, elements);
+        if (!element) throw std::runtime_error("Material '" + def.name + "' atom_count requires element components");
+        auto& count = atomCounts[element];
+        if (count > std::numeric_limits<int>::max() - component.atomCount) {
+            throw std::runtime_error("Material '" + def.name + "' repeated-element atom count exceeds the Geant4 integer range");
+        }
+        count += component.atomCount;
+        molecularMass += component.atomCount * element->GetA();
+        if (!std::isfinite(molecularMass)) throw std::runtime_error("Material '" + def.name + "' molecular mass must remain finite");
+    }
     auto* material = new G4Material(
         def.name,
         def.density,
@@ -384,13 +445,20 @@ void MaterialFactory::ValidateMassFractions(const MaterialDefinition& def)
     bool allMass = true;
     double sum = 0.0;
     for (const MaterialComponent& component : def.components) {
+        if (component.mode == MaterialComponentMode::ByMassFraction &&
+            (!std::isfinite(component.fraction) || component.fraction < 0.0 || component.fraction > 1.0)) {
+            throw std::runtime_error("Material '" + def.name + "' mass fraction must be finite and in range 0..1");
+        }
+        if (component.mode == MaterialComponentMode::ByAtomCount && component.atomCount <= 0) {
+            throw std::runtime_error("Material '" + def.name + "' atom count must be a positive integer");
+        }
         if (component.mode != MaterialComponentMode::ByMassFraction) {
             allMass = false;
-            break;
+            continue;
         }
         sum += component.fraction;
     }
-    if (allMass && std::abs(sum - 1.0) > 1.0e-6) {
+    if (allMass && (!std::isfinite(sum) || std::abs(sum - 1.0) > 1.0e-6)) {
         throw std::runtime_error(
             "Material '" + def.name + "' mass fractions must sum to 1.0; got "
             + std::to_string(sum)

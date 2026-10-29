@@ -638,21 +638,37 @@ G4VPhysicalVolume* GeometryManager::BuildGdmlWorld(const VolumeNode& root)
     const std::string file = root.GetProperty("gdml_file");
     const GdmlIO::ImportResult imported = GdmlIO::Read(file, root.GetProperty("gdml_validate") == "true", checkOverlaps_);
     registry_.RegisterPhysicalVolume(imported.world->GetName(), imported.world);
+    std::vector<G4LogicalVolume*> importedLogicals;
+    std::set<G4LogicalVolume*> visited;
+    const std::function<void(G4LogicalVolume*)> collect = [&](G4LogicalVolume* logical) {
+        if (!logical || !visited.insert(logical).second) return;
+        importedLogicals.push_back(logical);
+        for (int i = 0; i < logical->GetNoDaughters(); ++i) collect(logical->GetDaughter(i)->GetLogicalVolume());
+    };
+    collect(imported.world->GetLogicalVolume());
+    for (auto* logical : importedLogicals) registry_.TrackImportedLogicalVolume(logical);
     std::string available;
-    for (G4LogicalVolume* logical : *G4LogicalVolumeStore::GetInstance()) {
+    for (G4LogicalVolume* logical : importedLogicals) {
         available += (available.empty() ? "" : ", ") + std::string(logical->GetName());
     }
     const auto mark = [&](const std::string& key, bool sensitive) {
         for (const std::string& part : StringUtils::Split(root.GetProperty(key), ',')) {
             const std::string name = StringUtils::Trim(part);
             if (name.empty()) continue;
-            G4LogicalVolume* logical = G4LogicalVolumeStore::GetInstance()->GetVolume(name, false);
+            G4LogicalVolume* logical = nullptr;
+            for (auto* candidate : importedLogicals) {
+                if (candidate->GetName() != name) continue;
+                if (logical && logical != candidate) {
+                    throw std::runtime_error("[gdml]/" + key + " has ambiguous logical volume name '" + name + "'");
+                }
+                logical = candidate;
+            }
             if (!logical) {
                 throw std::runtime_error("[gdml]/" + key + " names logical volume '" + name + "' which is not in '" +
                                          file + "'; available logical volumes: " + available);
             }
             if (!registry_.HasLogicalVolume(name)) registry_.RegisterLogicalVolume(name, logical);
-            if (sensitive) registry_.MarkSensitiveVolume(name);
+            if (sensitive) registry_.MarkSensitiveLogicalVolume(logical);
             else registry_.MarkBiasVolume(name);
         }
     };
@@ -661,7 +677,7 @@ G4VPhysicalVolume* GeometryManager::BuildGdmlWorld(const VolumeNode& root)
     for (G4LogicalVolume* logical : imported.auxSensitive) {
         const std::string name = logical->GetName();
         if (!registry_.HasLogicalVolume(name)) registry_.RegisterLogicalVolume(name, logical);
-        registry_.MarkSensitiveVolume(name);
+        registry_.MarkSensitiveLogicalVolume(logical);
     }
     return imported.world;
 }

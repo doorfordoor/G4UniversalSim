@@ -608,6 +608,8 @@ bool SimulationManager::FinalizeRunSummary(const std::string& status,
     summary.Set("actual_completed_event_count", completedEvents);
     summary.Set("run_count", static_cast<int>(runs.size()));
     summary.SetBool("simulation_executed", !runs.empty());
+    summary.SetBool("biasing_operators_attached", biasingManager_ && biasingManager_->AreOperatorsAttached());
+    summary.Set("biasing_attached_operator_count", static_cast<int>(biasingManager_ ? biasingManager_->GetAttachedOperatorCount() : 0));
     summary.Set("biasing_matched_process_rule_count", static_cast<int>(biasingManager_ ? biasingManager_->GetMatchedProcessRuleCount() : 0));
     summary.Set("biasing_process_match_status", !biasingManager_ || !biasingManager_->IsEnabled() ? "not_applicable" :
                 (biasingManager_->GetMatchedProcessRuleCount() > 0 ? "validated" : "not_validated"));

@@ -2,12 +2,15 @@
 
 #include <filesystem>
 #include <memory>
+#include <set>
 #include <stdexcept>
+#include <map>
 
 #ifdef G4USIM_HAVE_GDML
 #include "G4GDMLParser.hh"
 #include "G4LogicalVolume.hh"
 #include "G4LogicalVolumeStore.hh"
+#include "G4VPhysicalVolume.hh"
 #endif
 
 namespace GdmlIO {
@@ -31,7 +34,31 @@ ImportResult Read(const std::string& path, bool validate, bool checkOverlaps)
     ImportResult result;
     result.world = parser->GetWorldVolume();
     if (!result.world) throw std::runtime_error("GDML file '" + path + "' does not define a world volume");
-    for (G4LogicalVolume* logical : *G4LogicalVolumeStore::GetInstance()) {
+    std::vector<G4LogicalVolume*> pending{result.world->GetLogicalVolume()};
+    std::set<G4LogicalVolume*> visited;
+    while (!pending.empty()) {
+        G4LogicalVolume* logical = pending.back();
+        pending.pop_back();
+        if (!logical || !visited.insert(logical).second) continue;
+        std::map<std::pair<std::string, int>, G4VPhysicalVolume*> ordinaryPlacements;
+        for (int i = 0; i < logical->GetNoDaughters(); ++i) {
+            auto* placement = logical->GetDaughter(i);
+            const std::string name = placement->GetName();
+            if (name.find('/') != std::string::npos) {
+                throw std::runtime_error("GDML ambiguous touchable path: placement '" + name + "' in mother logical volume '" +
+                                         std::string(logical->GetName()) + "' contains the path separator '/'; rename the placement before importing");
+            }
+            if (!placement->IsReplicated() && !placement->IsParameterised()) {
+                const auto key = std::make_pair(name, placement->GetCopyNo());
+                const auto inserted = ordinaryPlacements.emplace(key, placement);
+                if (!inserted.second && inserted.first->second != placement) {
+                    throw std::runtime_error("GDML ambiguous touchable path: different ordinary placements in mother logical volume '" +
+                                             std::string(logical->GetName()) + "' share name '" + name + "' and copy number " +
+                                             std::to_string(placement->GetCopyNo()) + "; use unique names or copy numbers before importing");
+                }
+            }
+            pending.push_back(placement->GetLogicalVolume());
+        }
         for (const G4GDMLAuxStructType& aux : parser->GetVolumeAuxiliaryInformation(logical)) {
             if (aux.type == "SensDet") {
                 result.auxSensitive.push_back(logical);
