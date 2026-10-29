@@ -4,6 +4,10 @@
 
 ## 0. 条目索引与历史全文
 
+- 2026-10-29 R-01/R-02 失败证据：csh 中配置后 `setMainConfig` 拒绝必须登记 app 失败、停止后续输入并非零退出；不实现热重载。
+  metadata 打开/写入/关闭失败锁存 `run_metadata_open/write/close`，可写文本摘要纠正为 failed，失败 JSON 不列入产物；
+  `summary_write_status=completed` 仅指文本摘要成功关闭，不等于 JSON/模拟成功。回归 `test_interactive_commands.py`、`test_run_summary.py`；全文见 `docs/agent-history.md`。
+
 - 2026-10-29 2C 配置快照子集：`Config/EffectiveConfig` 区分缺失值与显式 null，事务拒绝不得改变 revision；
   `--dump-effective-config <新文件|->` 只 Configure + preflight，不执行 macro/事件、不创建运行输出目录，拒绝覆盖已有文件（含硬链接）。
   当前仅配置阶段 Manager 子集；命名源/相空间源不导出旧单源缓存，非 mono 不导出 mono energy；禁止据此宣称完整 2C 或内核已应用。

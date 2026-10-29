@@ -310,3 +310,12 @@ CMake 需要显式 `-DEXPAT_INCLUDE_DIR=$PREFIX/include -DEXPAT_LIBRARY=$PREFIX/
 - **GUI**：最多读取 4 MiB；拒绝重复 JSON key/path、无效 revision、非有限值和无相应证据的 applied。整个候选验证成功后才替换；失败保留原快照并显示陈旧。原始 JSON 保留作核对，路径和解码对象名都可搜索，语言切换保留选择。页面不启动 QProcess、不生成配置、不重算或改变物理，不把进度或 Manager 接受当成成功。
 - **反例**：已有输出/输入/硬链接目标、缺父目录、坏宏、命名源、相空间源、非 mono 能量、损坏 JSON、重复字段、未知与 null、对象名带斜杠、语言切换。`scripts/test_effective_config_export.py` 用真实后端且读 G4USIM_EXE，并将真实输出交给 GUI parser；`gui/smoke_tests/smoke_effective_config.py` 测页面和读取器；`scripts/test_effective_config_model.py` 需 C++17 编译器，独立验证事务与不可变性。模型测试是独立附加证据，不混入 Python-only static profile。
 - **未交付**：运行开始/最终化接线、所有模块/对象消费者、完整来源链与输入哈希、内核/worker 应用证据、off/auto/on、GUI 快照差异。数据模型能表示三个阶段不等于真实接入三个阶段；2C 保持进行中，验证报告入口以 STATUS 为准。
+
+## 2026-10-29 R-01/R-02 命令拒绝与元数据失败传播
+
+- **修前反例**：`70a1aba` 中，csh 的 `/AIHL/app/setMainConfig` 在 Configure 后被 JustWarning 拒绝，但继续读 echo/beamOn 并运行旧配置、返回 0；metadata 目标被目录占用则在文本成功摘要写出后退出 1，文本仍为 completed/exit0，目录还被预列为生成文件。原始复现见 `docs/verification/m0-known-defects-20261029/`。
+- **R-01**：`AppMessenger` 在拒绝主配置切换时增加 `SimulationManager` 的 app 失败计数与诊断；`main.cc` 将它并入 csh 的停止条件和收尾失败类别，单项为 `interactive_command_failure_kind=app`。不得为了让命令成功而重新 Configure，原配置及来源保持不变。仅为受审计 csh 的直接命令保证，不扩大成 Qt UI/任意动态命令保证。
+- **R-02**：`RunSummary::MetadataWriteError` 携带结构化阶段，metadata 的目录准备/打开、flush/write、close 失败分别登记 `run_metadata_open`、`run_metadata_write`、`run_metadata_close`。`OutputManager` 保留首个失败，不以次生 metadata 错误覆盖先前 worker/finalize 错误。文本/JSON 只在成功关闭后登记，重复写前撤销旧登记。
+- **纠正摘要**：`FinalizeRunSummary` 捕获 metadata 异常，更新 status=failed、program_exit_code 非零和 output_failure_*，从成功产物列表剔除 metadata，尽力重写文本摘要；文本本身失败仍抛出并走真实 summary failure 路径。`summary_write_status=completed` 仅指文本成功关闭；不代表 metadata 或模拟成功。没有跨文件原子提交/断电恢复保证，失败的 JSON 可能残缺或看似完整，均不可作为成功产物。
+- **反例回归**：`scripts/test_interactive_commands.py` 覆盖单/双线程 × PreInit/已初始化拒绝、停止后续命令、零 run、原来源保持；`scripts/test_run_summary.py` 覆盖真实目录碰撞与 `G4USIM_TEST_OUTPUT_FAULT=metadata_write_master|metadata_close_master`、单/双线程、多 run 保留、已有输出保留、正常 text/JSON 一致、首因不被覆盖。注入只是规定分支测试，不是实际磁盘故障。生产环境禁止设置该变量。
+- **验收范围**：构建/真实回归结果见 STATUS 链接的本轮证据；不能把这两个修复当作 R-03–R-07 或完整 2C 已完成。

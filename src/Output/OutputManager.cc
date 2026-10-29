@@ -170,7 +170,26 @@ std::string OutputManager::RootFilePath() const
 
 void OutputManager::WriteRunMetadataJson()
 {
-    runSummary_.WriteJson(MakeOutputPath("run_metadata.json"));
+    const std::string filename = MakeOutputPath("run_metadata.json");
+    // A repeated finalization may replace a previously completed file. Drop
+    // that registration before touching it; only a successful new close can
+    // publish the replacement as generated output.
+    const std::string absolute = FileUtils::AbsolutePath(filename);
+    {
+        std::lock_guard<std::mutex> guard(generatedFiles_->mutex);
+        auto& files = generatedFiles_->files;
+        files.erase(std::remove(files.begin(), files.end(), absolute), files.end());
+    }
+    try {
+        runSummary_.WriteJson(filename);
+    } catch (const RunSummary::MetadataWriteError& error) {
+        RecordOutputFailure(error.stage, error.what());
+        throw;
+    } catch (const std::exception& error) {
+        RecordOutputFailure("run_metadata_write", error.what());
+        throw;
+    }
+    RegisterGeneratedFile(filename);
 }
 
 void OutputManager::FillScoringMeshesRoot(int runId, long long threadEvents)
@@ -505,7 +524,15 @@ const RunSummary& OutputManager::GetRunSummary() const
 
 void OutputManager::WriteRunSummary()
 {
-    runSummary_.WriteText(MakeOutputPath("run_summary.txt"));
+    const std::string filename = MakeOutputPath("run_summary.txt");
+    const std::string absolute = FileUtils::AbsolutePath(filename);
+    {
+        std::lock_guard<std::mutex> guard(generatedFiles_->mutex);
+        auto& files = generatedFiles_->files;
+        files.erase(std::remove(files.begin(), files.end(), absolute), files.end());
+    }
+    runSummary_.WriteText(filename);
+    RegisterGeneratedFile(filename);
 }
 
 void OutputManager::RecordRun(int runId, std::int64_t plannedEvents, std::int64_t completedEvents)

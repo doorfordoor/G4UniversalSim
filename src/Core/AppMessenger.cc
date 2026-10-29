@@ -81,9 +81,12 @@ void AppMessenger::SetNewValue(G4UIcommand* command, G4String value)
 
     if (command == setMainConfigCmd_.get()) {
         if (manager_->IsConfigured() || manager_->IsInitialized()) {
+            const std::string message =
+                "/AIHL/app/setMainConfig is unavailable after configuration; start a new process with --config <file>.";
+            manager_->RecordAppCommandFailure(message);
             G4Exception(
                 "AppMessenger::SetNewValue", "AIHLAppCmdReject001", JustWarning,
-                "/AIHL/app/setMainConfig is unavailable after configuration; start a new process with --config <file>."
+                message.c_str()
             );
             return;
         }

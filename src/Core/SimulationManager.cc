@@ -647,8 +647,36 @@ bool SimulationManager::FinalizeRunSummary(const std::string& status,
     summary.Set("summary_write_status", "completed");
 
     outputManager_->WriteRunSummary();
-    outputManager_->WriteRunMetadataJson();
-    return !outputFailed;
+    // Metadata may fail after the first text summary was closed. Latch its
+    // precise cause, then correct the still-writable text artifact instead of
+    // leaving status=completed/exit=0 behind. This is not an atomic two-file
+    // transaction; a failed or partial JSON file is not a generated artifact.
+    try {
+        outputManager_->WriteRunMetadataJson();
+    } catch (const std::exception& error) {
+        outputManager_->RecordOutputFailure("run_metadata_write", error.what());
+        const auto failure = outputManager_->GetOutputFailure();
+        summary.Set("status", "failed");
+        summary.Set("program_exit_code", EXIT_FAILURE);
+        summary.Set("output_failure_status", "failed");
+        summary.Set("output_failure_run_id", std::to_string(failure.runId));
+        summary.Set("output_failure_thread_id", std::to_string(failure.threadId));
+        summary.Set("output_failure_stage", failure.stage);
+        summary.Set("output_failure_message", failure.message);
+        // Use only completed registrations here. In particular, an existing
+        // directory or a partially written metadata file must not be listed.
+        generated = outputManager_->GetGeneratedFiles();
+        const auto metadata = FileUtils::AbsolutePath(outputManager_->MakeOutputPath("run_metadata.json"));
+        generated.erase(std::remove(generated.begin(), generated.end(), metadata), generated.end());
+        summary.SetGeneratedFiles(generated);
+        summary.Set("generated_file_count", static_cast<int>(generated.size()));
+        // summary_write_status describes successful text-summary completion,
+        // not metadata success. If this corrective write fails it throws and
+        // the existing summary-failure path remains authoritative.
+        outputManager_->WriteRunSummary(); // preserve the real text-summary failure path
+        return false;
+    }
+    return !outputManager_->HasOutputFailure();
 }
 
 void SimulationManager::Configure()

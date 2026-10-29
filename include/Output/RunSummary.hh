@@ -3,10 +3,17 @@
 #include <map>
 #include <cstdint>
 #include <string>
+#include <stdexcept>
 #include <vector>
 
 class RunSummary {
 public:
+    // Preserve the exact serializer I/O boundary without message parsing.
+    struct MetadataWriteError : std::runtime_error {
+        std::string stage;
+        MetadataWriteError(const std::string& where, const std::string& message)
+            : std::runtime_error(message), stage(where) {}
+    };
     struct RunRecord {
         int runId = 0;
         std::int64_t plannedEvents = 0;

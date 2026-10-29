@@ -27,6 +27,9 @@ This file is the single source of truth for progress. Every work session updates
 | F System optimisation (backend + GUI) | In progress: F6 done (2026-10-27); F1–F5, F7, F8 pending | see log |
 | G 3D view redesign | Done (G1-G6) | see log |
 | H Geant4 capability increments | In progress: H1 done | see log |
+| 审计修复批次（2026-10-29） | 进行中：R-01/R-02 已修并通过完整 89 项回归；R-03/R-04 本分支确认仍有缺陷，R-05–R-07 待修；V-01 单列方法决策 | 下文接续安排 |
+| 2C 完整 EffectiveConfig / off-auto-on | 进行中：configured 子集已验收，完整来源与运行应用证据仍缺 | `70a1aba` |
+| 可信配置/环境诊断、工作区、AI 执行与独立工程导出 | 已评估并排期，尚未实现；按下文整阶段交付 | [价值与验收提案](collab/inbox/20261029-1140-astra-product-roadmap.md) |
 
 ## Data storage decision
 
@@ -217,7 +220,22 @@ is marked experimental in the support matrix until benchmarked.
 - **H9 Generic histograms and ntuples.** `G4AnalysisManager` H1/H2/ntuple definitions
   from INI, replacing hand-written writers where they overlap.
 
-### Order of work
+### 2026-10-29 接续顺序（覆盖下方旧顺序中的待办部分）
+
+用户希望继续开发，同时由另一会话逐项审查已完成阶段。修复采用连续接收、按影响插入的方式：结果错误、漏计分和假成功先于依赖它们的新功能；体验问题随对应阶段处理。历史 Done 只表示原约定范围和当时测试通过，不免除新反例修复，也不把所有历史阶段统一改成未完成。
+
+1. **可靠性修复批次 → 完整 2C**。R-03（敏感母体 Dose 质量）与 R-04（GDML 漏绑 SD）优先；R-01（csh 拒绝仍继续）、R-02（metadata 失败而文本成功）可以独立并行。R-05（粒子/事件归一化）、R-06（Edep 溢出）、R-07（ROOT 回退事件数）在同批结果可靠性门禁内闭合。V-01 是统计口径决策，不混算程序缺陷。然后继续完整消费者、输入哈希、对象身份、运行证据和三态开关。
+2. **可信配置与环境诊断**。整合 F1/F4/F5 与 E3/D/F8 的相关目标：统一检查/修改/生成/运行/判断服务、撤销恢复、分级验证、可移植配置包；自动辨别运行时与 SDK，给出路径/版本/能力/真实 smoke 诊断。
+3. **可调整工作区 + 环境安装助手**。两条可并行：DeepSeek 负责 Qt dock 与主题设计，Sol 实现；应用管理的安装前缀、支持矩阵及 Windows/Linux 分别验收。三个起始主题，配置/3D结果/日志/AI 面板可调整、保存、复位。
+4. **配置 Agent**。云 API 或本地模型通过同一动作接口执行自然语言实验配置、检查、小运行和证据汇报。支持取消、限额、记录、恢复与可审阅差异；受支持参数调整通常不需要生成 C++ 或重新编译。
+5. **独立 Geant4 工程导出**。携带必需 C++/CMake/资源与许可说明，脱离工具安装目录后可构建、运行、继续修改；先明确支持子集及可信源码模板，跨平台干净目录验收。
+6. **代码 Agent 与可恢复工作流**。在隔离工程中进行源码修改、构建、有限修复与用户确认。需要持久编排时优先评估 LangGraph，领域动作保持独立；不为多 Agent 而重复建设控制层。
+
+第 3 项用户目标中的“验证配置导出”优先级最高，“独立源码导出”单独排后；第 5 项是第 4 项成熟后的整合目标。详见 [五项目标价值、范围与验收](collab/inbox/20261029-1140-astra-product-roadmap.md)、[DeepSeek 工作区建议与纠偏](collab/outbox/20261029-1135-deepseek-workspace-design.md)。阶段 2 仍冻结新增产品功能，先修复和闭合基础。
+
+F2 继续保留，但完整主配置切换优先新进程，不以热重载作为 AI 自动化前置要求；Idle 可变字段另按生命周期验收。F3 性能、F7 扫描和 H2–H9 按明确科研需求插入，不抢在可信结果基础之前。以上为范围与次序，不是完成声明或固定工期。
+
+### 旧 Order of work（2026-10-23 历史）
 
 1. E1 (unblocks the 3D view) → 2. G1 → 3. G2 + G3 → 4. E5 (before more GUI work) →
 5. H1 → G6 → 6. G4 + G5 → 7. E2 (schema; modules migrate over several sessions) →
@@ -308,3 +326,5 @@ H4–H8 if the user's applications favour some of them.
 - 2026-10-29：2C 配置阶段基础链路在隔离分支完成本机验收：统一平台 89 项全过、117149 条断言，独立模型另 24 条；报告见 [2C 子集证据](verification/2c-configured-20261029/README.md)。类型化模型、配置导出、只读 GUI 已接通；全模块来源/输入哈希、运行开始/最终化、off/auto/on 未完成，2C 保持进行中。未将新代码合入原 DSH 工作区，未声称新代码 Linux/CI 已验证。
 
 - 2026-10-29 收尾补充：独立审查的 M0 两项遗留缺陷在 70a1aba 重新复现（csh setMainConfig 拒绝仍成功 P1、元数据写失败留下成功摘要 P2），尚未修复。安排在完整 2C 扩展前修复并新增正式反例；证据见 [当前分支复现](verification/m0-known-defects-20261029/README.md)。不能把既有 89 项绿当作这两项已解决。
+
+- 2026-10-29 接续：R-01/R-02 修复完成本机 Release 与完整回归，89 PASS / 0 FAIL / 0 SKIP、117833 断言、严格门禁通过，见 [本轮证据](verification/reliability-r01-r02-20261029/README.md)。同时在同一后端复现仍未修复的 R-03/R-04，见 [独立诊断](verification/r03-r04-current-20261029/README.md)；其修复提案和 R-05–R-07 提案已入信箱。V-01 不混算程序缺陷。五项产品目标已作价值评估并排期，DeepSeek API 提供工作区建议后由 Astra 纠偏；当前保持可靠性修复→完整 2C，不宣称新目标已实现。新代码未合入原 DSH 分支，未验证 Linux/11.4/安装包。

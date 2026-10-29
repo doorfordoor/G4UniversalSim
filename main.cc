@@ -868,6 +868,7 @@ int main(int argc, char** argv) {
       // Interactive PhysicsMessenger mutations are rejected after registration.
       sim.EnableInteractivePhysicsGuard();
       const auto physicsFailuresBefore = sim.GetInteractivePhysicsFailureCount();
+      const auto appFailuresBefore = sim.GetAppCommandFailureCount();
       const auto materialFailuresBefore = sim.GetMaterialManager()->GetCommandFailureCount();
       const auto outputFailuresBefore = sim.GetOutputManager()->GetCommandFailureCount();
       // Rejected interactive biasing mutations used to be warnings only: the
@@ -887,6 +888,7 @@ int main(int argc, char** argv) {
         bool stopAfterFailure = false;
         const auto hasHandlerFailure = [&]() {
           return sim.GetInteractivePhysicsFailureCount() != physicsFailuresBefore ||
+                 sim.GetAppCommandFailureCount() != appFailuresBefore ||
                  sim.GetMaterialManager()->GetCommandFailureCount() != materialFailuresBefore ||
                  sim.GetOutputManager()->GetCommandFailureCount() != outputFailuresBefore ||
                  sim.GetBiasingManager()->GetInteractiveRejectCount() != biasingRejectsBefore ||
@@ -907,13 +909,15 @@ int main(int argc, char** argv) {
       const bool materialFailed = sim.GetMaterialManager()->GetCommandFailureCount() != materialFailuresBefore;
       const bool outputFailed = sim.GetOutputManager()->GetCommandFailureCount() != outputFailuresBefore;
       const bool physicsFailed = sim.GetInteractivePhysicsFailureCount() != physicsFailuresBefore;
+      const bool appFailed = sim.GetAppCommandFailureCount() != appFailuresBefore;
       const bool biasingFailed = sim.GetBiasingManager()->GetInteractiveRejectCount() != biasingRejectsBefore;
       const bool uiCommandFailed = failedCommandStatus != fCommandSucceeded;
       if (materialFailed || outputFailed || !unrecognizedCommand.empty() || !invalidParameter.empty() ||
           !parameterOutOfRange.empty() || !illegalApplicationState.empty() || physicsFailed ||
-          biasingFailed || uiCommandFailed) {
+          biasingFailed || appFailed || uiCommandFailed) {
         std::vector<std::string> kinds;
         if (physicsFailed) kinds.push_back("physics");
+        if (appFailed) kinds.push_back("app");
         if (biasingFailed) kinds.push_back("biasing");
         if (materialFailed) kinds.push_back("material");
         if (outputFailed) kinds.push_back("output");
@@ -953,6 +957,7 @@ int main(int argc, char** argv) {
           if (!singleLine.empty()) messages.push_back(std::move(singleLine));
         };
         if (physicsFailed) appendDiagnostic(sim.GetLastInteractivePhysicsFailure());
+        if (appFailed) appendDiagnostic(sim.GetLastAppCommandFailure());
         if (biasingFailed) appendDiagnostic(sim.GetBiasingManager()->GetLastInteractiveReject());
         if (materialFailed) appendDiagnostic(sim.GetMaterialManager()->GetLastCommandFailure());
         if (outputFailed) appendDiagnostic(sim.GetOutputManager()->GetLastCommandFailure());

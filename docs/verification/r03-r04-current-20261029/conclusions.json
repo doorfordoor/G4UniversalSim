@@ -1,0 +1,63 @@
+{
+  "r03": {
+    "reproduced": true,
+    "mother_mass_kg_expected": 0.000488,
+    "mother_mass_kg_actual": 0.0062992,
+    "expected_dose_Gy": 3.283148840163935e-11,
+    "actual_dose_Gy": 2.5434604934e-12,
+    "leaf_mass_kg": 0.001,
+    "scope": "One-worker sensitive water mother with non-sensitive Pb daughter; not a general replica/parameterised or MT acceptance."
+  },
+  "r04": {
+    "reproduced": true,
+    "scope": "GDML SensDet auxiliary path; exact case-collision Sensor/sensor vs SensorA/SensorB; explicit sensitive_volumes and bias/region mappings not examined."
+  },
+  "mesh": {
+    "gdml_case_collision": [
+      {
+        "path": "/World_LV_PV#0",
+        "logical": "World_LV",
+        "sensitive": false,
+        "material": "Vacuum",
+        "cubic_volume_mm3": 1000000
+      },
+      {
+        "path": "/World_LV_PV#0/PV0#0",
+        "logical": "Sensor",
+        "sensitive": true,
+        "material": "Probe",
+        "cubic_volume_mm3": 1000
+      },
+      {
+        "path": "/World_LV_PV#0/PV1#0",
+        "logical": "sensor",
+        "sensitive": false,
+        "material": "Probe",
+        "cubic_volume_mm3": 1000
+      }
+    ],
+    "gdml_distinct_control": [
+      {
+        "path": "/World_LV_PV#0",
+        "logical": "World_LV",
+        "sensitive": false,
+        "material": "Vacuum",
+        "cubic_volume_mm3": 1000000
+      },
+      {
+        "path": "/World_LV_PV#0/PV0#0",
+        "logical": "SensorA",
+        "sensitive": true,
+        "material": "Probe",
+        "cubic_volume_mm3": 1000
+      },
+      {
+        "path": "/World_LV_PV#0/PV1#0",
+        "logical": "SensorB",
+        "sensitive": true,
+        "material": "Probe",
+        "cubic_volume_mm3": 1000
+      }
+    ]
+  }
+}

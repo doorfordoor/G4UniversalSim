@@ -15,9 +15,11 @@
 
 本轮基础链路验收：MSVC + Geant4 11.3.2 构建成功；最终两组覆盖统一平台全部 **89 PASS / 0 FAIL / 0 SKIP，117149 条断言**，另有独立模型 24 条。两组报告源码/测试指纹一致，逐用例断言非零，归档日志 SHA-256 与严格门禁通过；见 [验收记录](docs/verification/2c-configured-20261029/README.md)。初轮两项环境失败原样保留，已使用已有 GDML/数据根参数复测，未放宽测试。真实导出数据的浅色/深色/小窗口 offscreen 图已查看，不等同桌面与高 DPI 验收。
 
-当前代码范围：`Config/EffectiveConfig` 类型化事务与不可变快照、`--dump-effective-config` 独占新文件/标准输出、GUI 第 9 页只读查看器；完整 2C 继续进行中。没有后台运行任务，原 DSH 目录未合并。收尾收到新的独立审查，两个遗留缺陷已在当前 70a1aba 代码重新复现且**尚未修复**：csh 拒绝主配置切换后仍报成功（P1），元数据写失败但文本摘要仍成功（P2）；见 [当前分支复现证据](docs/verification/m0-known-defects-20261029/README.md) 与 [独立审查](docs/collab/reviews/20261029-1051-astra-5465dbd-m0-review.md)。现有 89 项未覆盖这些反例。
+当前 2C 代码范围：`Config/EffectiveConfig` 类型化事务与不可变快照、`--dump-effective-config` 独占新文件/标准输出、GUI 第 9 页只读查看器；完整 2C 继续进行中。上轮收尾收到独立审查，csh 拒绝主配置切换后仍报成功（R-01，P1）、元数据写失败但文本摘要仍成功（R-02，P2）在 70a1aba 重新复现；旧反例见 [修前证据](docs/verification/m0-known-defects-20261029/README.md)。它们当时未被已有 89 项覆盖，本轮已补正式回归并修复，见下段。
 
-下一步优先修复上述失败传播与最终化证据一致性，保留拒绝配置热切换的现有契约；完整热切换另行设计，不重复 Configure 冒充支持。随后按 [实际消费者清单与 source 接入约束](docs/EffectiveConfig.md) 闭合来源/解析字节哈希/对象身份，再接运行时证据和三态开关。
+2026-10-29 本轮 R-01/R-02 修复验收：Release 构建、**89 PASS / 0 FAIL / 0 SKIP，117833 条断言**，严格证据门禁通过，见 [修复报告与日志](docs/verification/reliability-r01-r02-20261029/README.md)。维持拒绝配置热切换；metadata 异常纠正可写文本摘要并排除失败产物，不承诺跨文件原子性。没有后台运行任务，原 DSH 代码未合并；新改动的 Linux/11.4/安装包尚未验证。
+
+接下来优先处理 R-03/R-04，二者已在本轮新构建独立复现且尚未修复，见 [当前证据](docs/verification/r03-r04-current-20261029/README.md) 与 [Dose/GDML 提案](docs/collab/inbox/20261029-1200-astra-dose-gdml-repair.md)。R-05–R-07 仍是原审查真实证据加本分支静态确认，见 [结果修复提案](docs/collab/inbox/20261029-1203-astra-results-repair.md)；V-01 单列方法决策。修复队列后继续 [完整 2C](docs/EffectiveConfig.md)。五项产品目标的必要性、价值、完整阶段与验收已写入 [产品裁决](docs/collab/inbox/20261029-1140-astra-product-roadmap.md)，唯一状态与顺序在 [ROADMAP](docs/ROADMAP.md)；DeepSeek 已实际通过 API 提供工作区设计并由 Astra 纠偏。本轮没有安装环境或引入 Agent 框架。
 
 ## 原 DSH 集成基线（2026-10-28 归档，2C 新工作区见上节）
 
@@ -66,10 +68,10 @@
 
 - 2A：Linux + Geant4 11.3/11.4 CI（E3）——已完成（Actions 双版本矩阵绿，见上）；遗留 11.2 兼容性；
 - 2B：屏蔽场景 GUI 端到端 + schema 驱动编辑器——**已完成（2026-10-28，见上节）**；
-- 2C：完整 EffectiveConfig + 模块 off/auto/on（Astra 主导设计）——**已提交只读测绘**，见 [docs/collab/outbox/20261028-2000-deepseek-effectiveconfig-survey.md](docs/collab/outbox/20261028-2000-deepseek-effectiveconfig-survey.md)：
+- 2C：完整 EffectiveConfig + 模块 off/auto/on（Astra 主导设计）——原 DSH 基线的**只读测绘**见 [docs/collab/outbox/20261028-2000-deepseek-effectiveconfig-survey.md](docs/collab/outbox/20261028-2000-deepseek-effectiveconfig-survey.md)：
   现状（13 个 `effective_*` 标量、11 个来源字段、materials 六态、19 个 main_ini section、散落布尔开关、缺 `--dump-effective-config`）、
   六条缺口（无对象 ID、无 requested/resolved/applied 四元组、缺 BeginOfRun 快照、无 off/auto/on 语义、GUI 无结构化入口、验收只能数 353 字段），
-  以及 S1–S6 切片建议与五个待 Astra 决定的问题；**未写任何 2C 代码**。
+  以及当时的切片建议与五个待 Astra 决定的问题。隔离分支现已实现 configured 子集，见本页开头；不能再将当时“未写代码”的状态应用于当前隔离分支。
 - 铁律：阶段 2 冻结新功能，目标是压低 `experimental` 比例，而不是扩大分母。
 
 ## 已知缺口（不要把以下当作已完成）

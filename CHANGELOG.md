@@ -37,6 +37,9 @@ Short, user-facing record of notable changes. Detailed support status lives in
 
 ### Fixed
 
+- R-01：csh 拒绝配置后的 `setMainConfig` 时立即停止后续输入，摘要明确 `app` 失败并非零退出，避免继续运行旧配置却报告成功；完整配置更换仍需新进程。
+- R-02：`run_metadata.json` 打开、写入、关闭失败后，锁存首因并尽力纠正可写文本摘要为失败；失败 JSON 不列入成功产物。保留已完成 run 和有效输出，不承诺文本/JSON 跨文件原子提交。
+
 - 三个 Geant4 版本相关测试缺陷：`scripts/test_geant4_data_locator.py` 不再写死 `G4EMLOW8.6.1`（改为从 `--check-geant4-data` 的 discovery 取文件夹名）；`scripts/test_physics_a6.py` 与 `scripts/test_gps_sources.py` 的激发态核名改为按能级数值容差匹配（11.3 `Ni60[2505.753]` 与 11.4 `Ni60[2505.75300]` 只是格式化差异）。
 - `scripts/test_scenario_shielding_core.py` 直接写死 `build_vs2026/Release/G4UniversalSim.exe`，Linux CI 的 backend profile
   因此报 `backend executable not found`（runner 其实已导出 `G4USIM_EXE` 并传 `--executable`）。现按其它后端用例的约定读

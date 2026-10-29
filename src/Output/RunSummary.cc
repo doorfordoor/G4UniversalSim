@@ -5,6 +5,7 @@
 #include "Utils/FileUtils.hh"
 
 #include <fstream>
+#include <cstdlib>
 #include <filesystem>
 #include <iomanip>
 #include <sstream>
@@ -284,9 +285,13 @@ std::string JsonString(const std::string& value)
 void RunSummary::WriteJson(const std::string& filename) const
 {
     const std::string parent = FileUtils::ParentPath(filename);
-    if (!parent.empty()) FileUtils::CreateDirectories(parent);
+    try {
+        if (!parent.empty()) FileUtils::CreateDirectories(parent);
+    } catch (const std::exception& error) {
+        throw MetadataWriteError("run_metadata_open", error.what());
+    }
     std::ofstream out(filename, std::ios::binary);
-    if (!out) throw std::runtime_error("Failed to open run metadata file: '" + filename + "'");
+    if (!out) throw MetadataWriteError("run_metadata_open", "Failed to open run metadata file: '" + filename + "'");
 
     out << "{\n  \"schema\": \"run_metadata_json_v1\",\n  \"values\": {";
     bool first = true;
@@ -315,8 +320,16 @@ void RunSummary::WriteJson(const std::string& filename) const
     writeList("messages", messages_);
     writeList("warnings", warnings_);
     out << "\n  ]\n}\n";
+    const char* faultValue = std::getenv("G4USIM_TEST_OUTPUT_FAULT");
+    const std::string fault = faultValue ? faultValue : "";
+    // Deterministic test hooks exercise these real finalization boundaries;
+    // they do not represent measured disk/device failures.
+    if (fault == "metadata_write_master") out.setstate(std::ios::badbit);
+    out.flush();
+    if (!out) throw MetadataWriteError("run_metadata_write", "Failed to write run metadata file: '" + filename + "'");
     out.close();
-    if (!out) throw std::runtime_error("Failed to write run metadata file: '" + filename + "'");
+    if (fault == "metadata_close_master") out.setstate(std::ios::badbit);
+    if (!out) throw MetadataWriteError("run_metadata_close", "Failed to close run metadata file: '" + filename + "'");
 }
 
 void RunSummary::Clear()

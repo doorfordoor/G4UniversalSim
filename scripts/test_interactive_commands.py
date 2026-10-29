@@ -63,6 +63,38 @@ def main() -> int:
         code, log, result = session("physics_read_only", "/AIHL/physics/print")
         assert code == 0 and result["status"] == "interactive_no_run", log[-4000:]
 
+        # setMainConfig cannot reload a configured process, even while Geant4
+        # remains PreInit. Its JustWarning must fail csh and stop later input.
+        replacement = temp / "replacement.ini"
+        replacement.write_text("[source]\nparticle=proton\nenergy=9 MeV\n", encoding="utf-8")
+        code, log, baseline = session("app_config_baseline", "/AIHL/app/printSummary",
+                                      config=True, threads=1)
+        assert code == 0 and baseline["status"] == "interactive_no_run", log[-4000:]
+        preserved_keys = ["main_config", "source_particle", "source_energy"]
+        preserved_keys.extend(key for key in baseline if
+                              key.startswith("effective_source_particle") or
+                              key.startswith("effective_source_energy"))
+        assert any("origin" in key for key in preserved_keys), baseline
+        for threads in (1, 2):
+            for initialized in (False, True):
+                name = f"app_config_reject_t{threads}_init{int(initialized)}"
+                commands = ("/run/initialize\n" if initialized else "")
+                commands += (f"/AIHL/app/setMainConfig {replacement.as_posix()}\n"
+                             "/control/echo APP_CONFIG_REJECT_CONTINUED\n"
+                             "/run/initialize\n/run/beamOn 1")
+                code, log, result = session(name, commands, config=True, threads=threads)
+                assert code != 0 and result["status"] == "failed", log[-4000:]
+                assert result["program_exit_code"] != "0", result
+                assert result["interactive_command_failure_kind"] == "app", result
+                assert "/AIHL/app/setMainConfig" in result["interactive_command_failure_message"], result
+                assert "start a new process" in result["interactive_command_failure_message"], result
+                assert "APP_CONFIG_REJECT_CONTINUED" not in log, log[-4000:]
+                assert result["run_count"] == "0", result
+                assert result["macro_execution_status"] == "not_run", result
+                for key in preserved_keys:
+                    assert result[key] == baseline[key], (key, result[key], baseline[key])
+                assert not list((temp / name).glob("event_edep*.csv")), result
+
         # Before /run/initialize geometry edits remain usable; afterwards
         # Geant4 refuses them and the audited terminal skips subsequent input.
         code, log, result = session(

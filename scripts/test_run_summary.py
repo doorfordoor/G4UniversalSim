@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import csv
+import json
 import os
 import subprocess
 import shutil
@@ -1073,6 +1074,12 @@ def main() -> int:
         assert set(multi_schemas) == set(multi_files)
         assert multi_schemas[str((multi_output / "event_edep_t0_r1.csv").resolve())] == "event_edep_csv_v3"
         assert multi_schemas[str((multi_output / "hist_edep_raw_t0_r1.csv").resolve())] == "histogram1d_csv_v3"
+        metadata = json.loads((multi_output / "run_metadata.json").read_text(encoding="utf-8"))
+        assert metadata["schema"] == "run_metadata_json_v1", metadata
+        for key in ("status", "program_exit_code", "output_failure_status", "summary_write_status",
+                    "generated_file_count", "planned_event_count", "actual_completed_event_count", "run_count"):
+            assert metadata["values"][key] == multi_values[key], (key, metadata["values"], multi_values)
+        assert {entry["path"] for entry in metadata["generated_files"]} == set(multi_files)
         with (multi_output / "hist_edep_raw_t0_r1.csv").open(newline="", encoding="utf-8") as stream:
             assert next(csv.reader(stream)) == ["bin", "low_edge_MeV", "high_edge_MeV", "center_MeV", "count"]
 
@@ -1093,6 +1100,9 @@ def main() -> int:
             mt_counts[expected_run] += len(rows)
             assert any(Path(file).name == event_file.name for file in mt_files)
         assert mt_counts == {0: 2, 1: 3}, mt_counts
+        metadata = json.loads((multi_mt_output / "run_metadata.json").read_text(encoding="utf-8"))
+        assert metadata["values"]["status"] == mt_values["status"] == "completed"
+        assert {entry["path"] for entry in metadata["generated_files"]} == set(mt_files)
         histogram_counts = {0: 0.0, 1: 0.0}
         for histogram_file in multi_mt_output.glob("hist_edep_raw_t*.csv"):
             with histogram_file.open(newline="", encoding="utf-8") as stream:
@@ -1220,6 +1230,73 @@ def main() -> int:
             assert values["actual_completed_event_count"] == "3", values
             assert values["summary_write_status"] == "completed", values
             assert "summary failure" not in log.lower(), log[-2500:]
+
+        # Metadata failures discovered after text-summary close must correct
+        # the text facts, preserve both completed runs and omit failed JSON.
+        # Directory collisions exercise real open failure; fault hooks cover
+        # write/close boundaries, not a physical disk/device failure claim.
+        for threads in (1, 2):
+            for fault, expected_stage in ((None, "run_metadata_open"),
+                                          ("metadata_write_master", "run_metadata_write"),
+                                          ("metadata_close_master", "run_metadata_close")):
+                target = temp / f"metadata-{expected_stage}-t{threads}"
+                target.mkdir()
+                retained = target / "previous-evidence.txt"
+                retained.write_bytes(b"retain previous evidence\n")
+                metadata_target = target / "run_metadata.json"
+                if fault is None:
+                    metadata_target.mkdir()
+                    (metadata_target / "keep.txt").write_bytes(b"directory collision\n")
+                environment = os.environ.copy()
+                environment.pop("G4USIM_TEST_OUTPUT_FAULT", None)
+                if fault:
+                    environment["G4USIM_TEST_OUTPUT_FAULT"] = fault
+                result = subprocess.run(
+                    [str(executable), "--config", "config/main.ini", "--macro", str(multi_macro),
+                     "--output", str(target), "--threads", str(threads)],
+                    cwd=TEST_CWD, capture_output=True, text=True, timeout=120, env=environment,
+                )
+                log = result.stdout + result.stderr
+                assert result.returncode != 0, log[-2500:]
+                values, files = read_summary(target)
+                assert values["status"] == "failed" and values["program_exit_code"] != "0", values
+                assert values["output_failure_status"] == "failed", values
+                assert values["output_failure_stage"] == expected_stage, values
+                assert "metadata" in values["output_failure_message"], values
+                assert values["summary_write_status"] == "completed", values
+                assert values["run_count"] == "2" and values["actual_completed_event_count"] == "5", values
+                assert values["run_0_completed_events"] == "2" and values["run_1_completed_events"] == "3", values
+                assert values["macro_execution_status"] == "completed", values
+                assert normalize(str(metadata_target)) not in {normalize(file) for file in files}, files
+                assert normalize(str(target / "run_summary.txt")) in {normalize(file) for file in files}, files
+                assert int(values["generated_file_count"]) == len(files), values
+                assert all(Path(file).is_file() for file in files), files
+                assert "summary failure" not in log.lower(), log[-2500:]
+                assert retained.read_bytes() == b"retain previous evidence\n"
+                counts = {0: 0, 1: 0}
+                for event_file in target.glob("event_edep_t*.csv"):
+                    with event_file.open(newline="", encoding="utf-8") as stream:
+                        for row in csv.DictReader(stream):
+                            counts[int(row["runID"])] += 1
+                assert counts == {0: 2, 1: 3}, counts
+                if fault is None:
+                    assert (metadata_target / "keep.txt").read_bytes() == b"directory collision\n"
+
+        # A secondary metadata error must not overwrite the earlier latch.
+        target = temp / "metadata-secondary-failure"
+        (target / "run_metadata.json").mkdir(parents=True)
+        environment = os.environ.copy()
+        environment["G4USIM_TEST_OUTPUT_FAULT"] = "final_flush_master"
+        result = subprocess.run(
+            [str(executable), "--config", "config/main.ini", "--macro", str(single_macro),
+             "--output", str(target), "--threads", "2"],
+            cwd=TEST_CWD, capture_output=True, text=True, timeout=120, env=environment,
+        )
+        assert result.returncode != 0, result.stdout + result.stderr
+        values, files = read_summary(target)
+        assert values["status"] == "failed" and values["output_failure_stage"] == "final_flush", values
+        assert "Injected main-thread" in values["output_failure_message"], values
+        assert all(Path(file).name != "run_metadata.json" for file in files), files
 
         run(executable, ["--config", str(scoring_off_config), "--macro", str(single_macro), "--output", str(scoring_off_output)])
         scoring_off_values, scoring_off_files = read_summary(scoring_off_output)

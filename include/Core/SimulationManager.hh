@@ -105,6 +105,14 @@ public:
     void EnableInteractivePhysicsGuard();
     std::size_t GetInteractivePhysicsFailureCount() const;
     std::string GetLastInteractivePhysicsFailure() const;
+    // Messenger rejections may return Geant4 status 0; the audited csh session
+    // must still stop and finalize with failure without changing configuration.
+    void RecordAppCommandFailure(const std::string& message) {
+        lastAppCommandFailure_ = message;
+        ++appCommandFailureCount_;
+    }
+    std::size_t GetAppCommandFailureCount() const { return appCommandFailureCount_; }
+    const std::string& GetLastAppCommandFailure() const { return lastAppCommandFailure_; }
 
     ConfigManager* GetConfigManager();
     OutputManager* GetOutputManager();
@@ -156,6 +164,8 @@ private:
     };
 
     SimulationContext context_;
+    std::size_t appCommandFailureCount_ = 0;
+    std::string lastAppCommandFailure_;
     std::unique_ptr<ConfigManager> configManager_;
     std::unique_ptr<OutputManager> outputManager_;
     std::unique_ptr<MaterialManager> materialManager_;
