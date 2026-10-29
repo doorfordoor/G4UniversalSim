@@ -36,6 +36,7 @@ class BackendGeometryController(QObject):
         self._pending: tuple[GeometryInputs, str, str] | None = None
         self._work: tempfile.TemporaryDirectory | None = None
         self.exports = 0      # Geant4 runs started (for tests and the status line)
+        self._requested_key: str | None = None
 
     def is_running(self) -> bool:
         return self.process.state() != QProcess.NotRunning
@@ -44,6 +45,7 @@ class BackendGeometryController(QObject):
         return self._cache.get(key)
 
     def request(self, inputs: GeometryInputs, executable: str, working_directory: str) -> None:
+        self._requested_key = inputs.key
         mesh = self._cache.get(inputs.key)
         if mesh is not None:
             self._cache.move_to_end(inputs.key)
@@ -51,6 +53,7 @@ class BackendGeometryController(QObject):
             self.meshReady.emit(mesh, True)
             return
         if self.is_running():
+            self._pending = None
             if self._running is None or self._running.key != inputs.key:
                 self._pending = (inputs, executable, working_directory)
             return
@@ -60,6 +63,7 @@ class BackendGeometryController(QObject):
         self._start(inputs, executable, working_directory)
 
     def stop(self) -> None:
+        self._requested_key = None
         self._pending = None
         if self.is_running():
             self.process.kill()
@@ -106,6 +110,8 @@ class BackendGeometryController(QObject):
                 self._cache.popitem(last=False)
         if pending is not None and (inputs is None or pending[0].key != inputs.key):
             self.request(*pending)    # newer inputs arrived meanwhile: show those instead
+            return
+        if inputs is None or inputs.key != self._requested_key:
             return
         if mesh is not None:
             self.meshReady.emit(mesh, False)

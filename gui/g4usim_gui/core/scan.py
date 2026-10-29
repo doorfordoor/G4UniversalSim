@@ -316,6 +316,7 @@ def _summary_values(path: Path) -> dict[str, str]:
 
 def collect(manifest: ScanManifest) -> list[PointResult]:
     """State, completed events and every scorer_statistics quantity of each point."""
+    from g4usim_gui.core.run_result import evaluate_run_result
     results = []
     for point in manifest.points:
         output = Path(point.output_dir)
@@ -331,10 +332,13 @@ def collect(manifest: ScanManifest) -> list[PointResult]:
                 state, reason = "unknown", "run_status.json is unreadable"
         elif summary:
             # run outside the GUI runner: trust only a completed summary with all events
-            done = summary.get("status") == "completed" and summary.get("planned_event_count") == \
-                summary.get("actual_completed_event_count") and summary.get("simulation_executed") == "true"
-            state = "success" if done else "incomplete"
-            reason = "judged from run_summary.txt (no run_status.json)"
+            result = evaluate_run_result(output / "run_summary.txt", exit_code=0, summary_fresh=True)
+            state = result.state
+            reason = "Summary evidence only (no process record): " + result.reason
+        if state == "success":
+            result = evaluate_run_result(output / "run_summary.txt", exit_code=0, summary_fresh=True)
+            if result.state != "success":
+                state, reason = result.state, result.reason
         try:
             events = int(summary["actual_completed_event_count"])
         except (KeyError, ValueError):

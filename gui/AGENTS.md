@@ -1,5 +1,7 @@
 # G4UniversalSim GUI Agent 开发约束
 
+2026-10-29 Q1：项目保存须同目录临时文件写完并原子替换，失败保留原文件；未来版本/未知字段须拒绝并指出路径，不能静默丢弃。刷新结果先清旧证据；扫描 success 必须有正完成数与逐 run 一致性；后端预览仅发布最后请求。主窗口关闭只停止其持有的主 run/scan/geometry/inspect/merge/extension/scenario 进程与队列，有界等待后确认停止；不能按进程名杀其他任务。完整回归 `smoke_q1_public_paths.py`，真实 Windows 窗口另见 `smoke_q1_windows.py`。绘图总量按完成事件数归一化，LET 比值不再归一化；旧 per_primary API 弃用但保留旧数值。小样本/零分母/零总量误差不可用，网格跨 cell 投影无协方差不画误差。全文与迁移见 `docs/输出数据契约.md` 和 `docs/agent-history.md`。
+
 2026-10-29 2C 只读有效配置页：`core/effective_config.py` 读取 `g4usim_effective_config_v1`，上限 4 MiB，
 拒绝重复 key/path、非有限值及无运行证据的 applied；缺失 requested/resolved 显示未知，显式 JSON null 保持 null。
 `widgets/effective_config_page.py` 仅加载与查看文件，不运行后端、不编辑项目、不推断模拟成功；失败加载保留旧快照并标陈旧。
@@ -31,7 +33,7 @@
 
 2026-10-22 C2 新建仿真向导：业务逻辑在 `core/wizard.py`（无 Qt），只产生编辑器已能生成的子集（NIST 材料、box/tubs、点源 fixed/isotropic 与矩形面源、参考物理列表、hits/event_edep/Edep/Dose/Fluence），不得借向导写出编辑器之外的后端字段；结果通过 `apply_to_project` 原位写入现有 `G4USimProject` 并由 `_set_project` 刷新页面，生成包必须走 `create_run_package`。校验消息与摘要以 (模板, 参数) 返回再 `ui_format`。向导页面在 `initializePage` 填控件时须屏蔽信号回读（`_loading`），否则半填的控件会覆盖 spec。新增 ZH_CN 键前检查重复：字典字面量中重复键会静默覆盖。专项 `smoke_new_simulation_wizard.py`（模型、对话框、主窗口与生成包；须替换模态 QMessageBox）与 `smoke_new_simulation_backend.py`（五个场景真实运行与物理合理性）。
 
-2026-10-22 C1 内置图表：数据读取只放在 `output/plot_data.py`（无 Qt，numpy），页面 `widgets/plot_panel.py` 只选数据集/视图、用 matplotlib 绘制并导出；图中数值必须与后端文件一致（scorer_statistics 的 value/std_error，网格 CSV 或 ROOT 的 sum 与 rel_error，box 网格坐标取 `run_metadata.json` 的 bins/size_mm（半宽）/center_mm）。每初级粒子归一化只能用 `run_summary.txt` 的 `run_<R>_completed_events`。说明文字以 (模板, 参数) 返回再经 `ui_format` 翻译。视图 combobox 的 data 用字符串（`profile:<轴>`、`map:<x>:<y>`），PySide6 的 `findData` 不能匹配 Python tuple。matplotlib 缺失时输出页仍须可用。专项 `smoke_plots.py`（合成逐值）与 `smoke_plots_backend.py`（真实后端，CSV/ROOT 网格一致）。
+2026-10-22 C1 内置图表（2026-10-29 修正归一化口径）：数据读取只放在 `output/plot_data.py`（无 Qt，numpy），页面 `widgets/plot_panel.py` 只选数据集/视图、用 matplotlib 绘制并导出；图中数值必须与后端文件一致（scorer_statistics 的 value/std_error，网格 CSV 或 ROOT 的 sum 与 rel_error，box 网格坐标取 `run_metadata.json` 的 bins/size_mm（半宽）/center_mm）。每事件归一化用 `run_summary.txt` 的 `run_<R>_completed_events`，不能称为每初级粒子。说明文字以 (模板, 参数) 返回再经 `ui_format` 翻译。视图 combobox 的 data 用字符串（`profile:<轴>`、`map:<x>:<y>`），PySide6 的 `findData` 不能匹配 Python tuple。matplotlib 缺失时输出页仍须可用。专项 `smoke_plots.py`（合成逐值）与 `smoke_plots_backend.py`（真实后端，CSV/ROOT 网格一致）。
 
 2026-10-21 M3/M5 Results JSON 导出原型：`widgets/output_page.py` 通过 `output/extension_runner.py` 的 `QProcess` 运行正式 Python CLI `dose_json`/`fluence_json`；只在存在模拟输出目录且目标为尚不存在的 JSON 文件时允许启动，重复启动拒绝，支持取消、启动/退出失败报告与页面关闭时子进程清理。GUI 对 schema、version、extension ID/version、data、warnings 和无效 JSON 常量执行读取校验，刷新文件列表；`smoke_output_extensions_gui.py` 覆盖真实 Qt 子进程和错误路径。导出成功只说明发现的 CSV 被后处理，必须提示检查上游 run_summary、worker 文件完整性及独立物理 benchmark，不能提升实验性 Dose/Fluence 的支持等级。
 

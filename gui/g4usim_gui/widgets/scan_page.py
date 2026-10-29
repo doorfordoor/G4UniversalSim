@@ -10,6 +10,9 @@ their scan.json manifest.
 from __future__ import annotations
 
 from collections.abc import Callable
+import csv
+import os
+import tempfile
 from pathlib import Path
 
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg
@@ -33,6 +36,7 @@ from PySide6.QtWidgets import (
 )
 
 from g4usim_gui.core import scan
+from g4usim_gui.output import plot_data
 from g4usim_gui.core.i18n import ui_format, ui_text
 from g4usim_gui.core.scan_runner import ScanRunner
 from g4usim_gui.core.theme import current_colors
@@ -69,7 +73,7 @@ class ScanPage(QWidget):
         self.status.setWordWrap(True)
         # not "metric": that name would shadow QPaintDevice.metric() and crash painting
         self.quantity = QComboBox()
-        self.per_primary = QCheckBox("Per primary")
+        self.per_event = QCheckBox("Per event")
         self.export_button = QPushButton("Export results...")
         self.table = QTableWidget(0, 6)
         self.table.verticalHeader().setVisible(False)   # the Point column numbers the rows
@@ -96,7 +100,7 @@ class ScanPage(QWidget):
         results_row = QHBoxLayout()
         results_row.addWidget(QLabel("Quantity"))
         results_row.addWidget(self.quantity, 1)
-        results_row.addWidget(self.per_primary)
+        results_row.addWidget(self.per_event)
         results_row.addWidget(self.export_button)
         lower = QSplitter()
         left = QWidget()
@@ -120,7 +124,7 @@ class ScanPage(QWidget):
         self.rerun_button.clicked.connect(lambda: self.run_scan(all_points=True))
         self.stop_button.clicked.connect(self.runner.stop)
         self.quantity.currentIndexChanged.connect(self._show_results)
-        self.per_primary.toggled.connect(self._show_results)
+        self.per_event.toggled.connect(self._show_results)
         self.export_button.clicked.connect(self._choose_export)
         self.runner.pointStarted.connect(self._on_point_started)
         self.runner.pointFinished.connect(self._on_point_finished)
@@ -256,9 +260,17 @@ class ScanPage(QWidget):
         data = self.quantity.currentData()
         return tuple(data.split("|")) if data else None
 
-    def plotted(self) -> tuple[list[float], list[float], list[float]]:
+    def _uncertainty(self, result):
+        if self._manifest is None or self.current_metric() is None:
+            return "unknown", "insufficient_events"
+        point = next((p for p in self._manifest.points if p.index == result.index), None)
+        return plot_data.statistic_uncertainty(point.output_dir, self.current_metric()) if point else ("unknown", "insufficient_events")
+
+    def plotted(self) -> tuple[list[float], list[float], list[float | None]]:
         """x, y, y error of the current plot (points with the quantity only)."""
         metric = self.current_metric()
+        if self.per_event.isChecked() and metric and metric[0] == "let":
+            raise ValueError(ui_text("LET is a ratio estimator; per-event normalization is not defined."))
         xs, ys, es = [], [], []
         numeric = all(scan.numeric_value(r.value) is not None for r in self._results)
         for position, result in enumerate(self._results):
@@ -266,18 +278,49 @@ class ScanPage(QWidget):
             if value is None:
                 continue
             scale = 1.0
-            if self.per_primary.isChecked():
-                if not result.completed_events:
-                    continue
+            if self.per_event.isChecked():
+                if result.completed_events is None or result.completed_events <= 0:
+                    raise ValueError(ui_text("Per-event normalization requires positive completed event counts."))
                 scale = 1.0 / result.completed_events
             xs.append(scan.numeric_value(result.value) if numeric else float(position))
             ys.append(value[0] * scale)
-            es.append(abs(value[0]) * value[1] * scale)
+            es.append(abs(value[0]) * value[1] * scale if self._uncertainty(result)[1] == "approximate" else None)
         return xs, ys, es
 
     def export_results(self, path: str) -> None:
-        if self._manifest is not None:
-            scan.write_results_csv(self._manifest, self._results, path, self.current_metric())
+        if self._manifest is None:
+            return
+        self.plotted()  # validate before creating/replacing output
+        metric = self.current_metric()
+        target = Path(path)
+        temporary = None
+        try:
+            with tempfile.NamedTemporaryFile(mode="w", newline="", encoding="utf-8", dir=target.parent,
+                                             prefix=target.name + ".", suffix=".tmp", delete=False) as handle:
+                temporary = Path(handle.name)
+                writer = csv.writer(handle)
+                header = ["point", self._manifest.parameter, "state", "completed_events"]
+                if metric:
+                    header += [f"{metric[0]}/{metric[1]}", "unit", "rel_error", "key",
+                               "normalization", "uncertainty_estimator", "uncertainty_status"]
+                writer.writerow(header)
+                for result in self._results:
+                    row = [result.index, result.value, result.state, result.completed_events]
+                    if metric:
+                        value = result.metrics.get(metric)
+                        method, status = self._uncertainty(result)
+                        mode = "per_event" if self.per_event.isChecked() else "total"
+                        if value:
+                            scale = 1 / result.completed_events if mode == "per_event" else 1
+                            row += [f"{value[0] * scale:.9g}", value[2] + (" / event" if mode == "per_event" else ""),
+                                    f"{value[1]:.6g}" if status == "approximate" else "", metric[2], mode, method, status]
+                        else:
+                            row += ["", "", "", metric[2], mode, method, status]
+                    writer.writerow(row)
+            os.replace(temporary, target)
+        finally:
+            if temporary is not None and temporary.exists():
+                temporary.unlink()
 
     # --- view ----------------------------------------------------------------------------
 
@@ -289,7 +332,7 @@ class ScanPage(QWidget):
             cells = [str(result.index), result.value, ui_text(result.state),
                      "" if result.completed_events is None else str(result.completed_events),
                      "" if value is None else f"{value[0]:.6g} {value[2]}",
-                     "" if value is None else f"{value[1]:.3g}"]
+                     "" if value is None else (f"{value[1]:.3g}" if self._uncertainty(result)[1] == "approximate" else ui_text("Unavailable"))]
             for column, text in enumerate(cells):
                 item = QTableWidgetItem(text)
                 if column == 2 and result.reason:
@@ -302,7 +345,12 @@ class ScanPage(QWidget):
     def _draw(self) -> None:
         colors = current_colors()
         metric = self.current_metric()
-        xs, ys, es = self.plotted()
+        try:
+            xs, ys, es = self.plotted()
+        except ValueError as error:
+            draw_empty(self.figure, colors, str(error))
+            self.canvas.draw_idle()
+            return
         if not (metric and xs):
             draw_empty(self.figure, colors, ui_text("No scan results yet: create or open a scan and run its points.")
                        if self._manifest is None or not self._results else
@@ -313,13 +361,22 @@ class ScanPage(QWidget):
         axes = self.figure.add_subplot(1, 1, 1)
         style_axes(self.figure, axes, colors)
         if metric and xs:
-            axes.errorbar(xs, ys, yerr=es, fmt="o-", capsize=3, color=colors.accent)
+            axes.plot(xs, ys, "o-", color=colors.accent)
+            available = [(x,y,e) for x,y,e in zip(xs,ys,es) if e is not None]
+            if available:
+                ex, ey, ee = zip(*available)
+                axes.errorbar(ex, ey, yerr=ee, fmt="none", capsize=3, color=colors.accent)
+            evidence = {self._uncertainty(r) for r in self._results if metric in r.metrics}
+            axes.text(0, 1.02, ui_format("Approximate uncertainty: {methods}; unavailable error bars are hidden ({statuses}).",
+                methods=", ".join(sorted({m for m,_ in evidence})),
+                statuses=", ".join(sorted({v for _,v in evidence}))),
+                transform=axes.transAxes, fontsize=7, color=colors.text_muted)
             numeric = all(scan.numeric_value(r.value) is not None for r in self._results)
             if not numeric:
                 axes.set_xticks(xs)
                 axes.set_xticklabels([self._results[int(x)].value for x in xs], rotation=30, ha="right")
             unit = next((r.metrics[metric][2] for r in self._results if metric in r.metrics), "")
-            label = f"{metric[0]} / {metric[1]} [{unit}{' / primary' if self.per_primary.isChecked() else ''}]"
+            label = f"{metric[0]} / {metric[1]} [{unit}{' / event' if self.per_event.isChecked() else ''}]"
             axes.set_ylabel(label, color=colors.text)
             axes.set_xlabel(self._manifest.parameter if self._manifest else "", color=colors.text)
             axes.set_title(metric[2], color=colors.text, fontsize=9, loc="left")
@@ -362,4 +419,7 @@ class ScanPage(QWidget):
     def _choose_export(self) -> None:
         path, _ = QFileDialog.getSaveFileName(self, ui_text("Export results"), "scan_results.csv", "CSV (*.csv)")
         if path:
-            self.export_results(path)
+            try:
+                self.export_results(path)
+            except (ValueError, OSError) as error:
+                self.log.appendPlainText(str(error))

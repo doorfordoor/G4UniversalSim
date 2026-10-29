@@ -27,11 +27,12 @@ class MergePlan:
     tasks: list[MergeTask]
 
 
-def build_merge_plan(output_dir: str, workspace_root: str = "", merge_histograms_exe: str = "") -> MergePlan:
+def build_merge_plan(output_dir: str, workspace_root: str = "", merge_histograms_exe: str = "",
+                     *, backend_executable: str = "") -> MergePlan:
     output = Path(output_dir)
     workspace = Path(workspace_root) if workspace_root else Path.cwd()
     script = workspace / "scripts" / "merge_outputs.py"
-    hist_tool = Path(merge_histograms_exe) if merge_histograms_exe else find_merge_histograms(workspace)
+    hist_tool = Path(merge_histograms_exe) if merge_histograms_exe else find_merge_histograms(workspace, backend_executable)
 
     specs = [
         ("Merge hits CSV", "hits", "hits_t*.csv", "hits_merged.csv", "python_script", script, "merge_hits"),
@@ -71,7 +72,12 @@ def build_merge_plan(output_dir: str, workspace_root: str = "", merge_histograms
     return MergePlan(tasks)
 
 
-def find_merge_histograms(workspace: Path) -> Path:
+def find_merge_histograms(workspace: Path, backend_executable: str = "") -> Path:
+    backend = Path(backend_executable) if backend_executable else None
+    if backend is not None and backend.is_file() and backend.suffix.lower() in {"", ".exe"}:
+        sibling = backend.parent / ("mergeHistograms.exe" if backend.suffix.lower() == ".exe" else "mergeHistograms")
+        if sibling.is_file():
+            return sibling
     candidates = [
         workspace / "bin" / "mergeHistograms.exe",   # installed package
         workspace / "build_vs2026" / "Release" / "mergeHistograms.exe",

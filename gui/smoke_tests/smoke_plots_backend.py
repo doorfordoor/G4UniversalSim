@@ -142,12 +142,12 @@ def main() -> None:
         panel.all_runs.setChecked(True)
         assert len(panel.current_plot().series) == 2, "run overlay"
         totals = [s.y.sum() for s in panel.current_plot().series]
-        panel.per_primary.setChecked(True)
-        per_primary = [s.y.sum() for s in panel.current_plot().series]
-        assert np.allclose(per_primary, [totals[0] / 300, totals[1] / 200]), (totals, per_primary)
-        # per primary, the two runs agree within their statistics (same beam, 300 vs 200 events)
-        assert abs(per_primary[0] / per_primary[1] - 1) < 0.1, per_primary
-        panel.per_primary.setChecked(False)
+        panel.per_event.setChecked(True)
+        per_event = [s.y.sum() for s in panel.current_plot().series]
+        assert np.allclose(per_event, [totals[0] / 300, totals[1] / 200]), (totals, per_event)
+        # per event, the two runs agree within their statistics (same beam, 300 vs 200 events)
+        assert abs(per_event[0] / per_event[1] - 1) < 0.1, per_event
+        panel.per_event.setChecked(False)
         panel.all_runs.setChecked(False)
         panel.add_comparison(str(root_only))
         compared = panel.current_plot().series

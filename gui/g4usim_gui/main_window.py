@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from PySide6.QtCore import QProcess
+from PySide6.QtCore import QProcess, QTimer
 from PySide6.QtWidgets import QMainWindow
 
 from pathlib import Path
@@ -101,20 +101,53 @@ class MainWindow(ShellMixin, ProjectMixin, RunMixin, ContentMixin, QMainWindow):
         self.runner.stderrReceived.connect(self.run_page.append_stderr)
         self.runner.stateChanged.connect(self._on_state_changed)
         self.runner.finished.connect(self._on_finished)
-        self.runner.errorOccurred.connect(self._on_runner_error)
+        self.runner.errorOccurred.connect(self._handle_runner_error)
         self.runner.logTagDetected.connect(self._on_log_tag)
         self.run_history_page.loadSnapshotRequested.connect(self.load_snapshot_into_project)
         self.run_history_page.openOutputRequested.connect(self.open_history_output)
         self.run_history_page.duplicateRequested.connect(lambda package: self.duplicate_history_package(package, run_after=False))
         self.run_history_page.duplicateAndRunRequested.connect(lambda package: self.duplicate_history_package(package, run_after=True))
 
+    def _handle_runner_error(self, message: str) -> None:
+        # QProcess reports the requested Windows kill as Crashed. The final run
+        # result already distinguishes stopped/killed from an unexpected crash.
+        if self.runner._requested_state in {"stopped", "killed"} and self.runner._process.error() == QProcess.Crashed:
+            return
+        self._on_runner_error(message)
+
     def closeEvent(self, event) -> None:  # noqa: N802 - Qt override.
+        self._closing = True
+        # Stop producers before waiting: completion signals must not launch queued jobs.
+        for timer in self.findChildren(QTimer):
+            timer.stop()
+        self._pending_inspection_run = False
+        self.scan_page.runner.stop()
+        self.output_page._merge_runner.cancel()
+        self.output_page._extension_runner.shutdown()
+        self.runner.terminate()
+        self.scenario_page.stop_run()
         if self._macro_inspection.state() != QProcess.NotRunning:
             self._macro_inspection.kill()
             self._macro_inspection.waitForFinished(1000)
         self.geometry_controller.stop()
-        if self.scan_page.runner.is_running():   # do not leave a scan point running after exit
-            self.scan_page.runner.stop()
+        owned_runners = (self.runner, self.scan_page.runner._runner)
+        for runner in owned_runners:
+            if runner.is_running() and not runner._process.waitForFinished(1000):
+                runner.kill()
+                runner._process.waitForFinished(3000)
+        # Only QProcesses owned by this window; never terminate unrelated applications.
+        processes = self.findChildren(QProcess)
+        for process in processes:
+            if process.state() != QProcess.NotRunning:
+                process.terminate()
+                if not process.waitForFinished(1000):
+                    process.kill()
+                    process.waitForFinished(3000)
+        if any(process.state() != QProcess.NotRunning for process in self.findChildren(QProcess)):
+            self.statusBar().showMessage(ui_text("Waiting for owned processes to stop before closing."))
+            event.ignore()
+            self._closing = False
+            return
         state = load_state()
         state["lastWorkspaceRoot"] = self.project.workspaceRoot
         state["lastRunsRoot"] = self.project.runsRoot

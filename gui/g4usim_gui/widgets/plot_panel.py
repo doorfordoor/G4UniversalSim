@@ -8,6 +8,8 @@ output directories or from the other runs of this directory.
 
 from __future__ import annotations
 
+import numpy as np
+
 from pathlib import Path
 
 from cycler import cycler
@@ -76,7 +78,7 @@ class PlotPanel(QWidget):
         self.log_x = QCheckBox("Log X")
         self.log_y = QCheckBox("Log Y")
         self.all_runs = QCheckBox("Overlay all runs")
-        self.per_primary = QCheckBox("Per primary")
+        self.per_event = QCheckBox("Per event")
         self.compare_button = QPushButton("Compare with output...")
         self.clear_compare_button = QPushButton("Clear comparison")
         self.export_png_button = QPushButton("Export image...")
@@ -116,7 +118,7 @@ class PlotPanel(QWidget):
         options = QHBoxLayout()
         options.addWidget(self.log_x)
         options.addWidget(self.log_y)
-        options.addWidget(self.per_primary)
+        options.addWidget(self.per_event)
         options.addWidget(self.all_runs)
         options.addStretch(1)
         options.addLayout(tools)
@@ -139,7 +141,7 @@ class PlotPanel(QWidget):
         self.log_x.toggled.connect(self.redraw)
         self.log_y.toggled.connect(self.redraw)
         self.all_runs.toggled.connect(self.redraw)
-        self.per_primary.toggled.connect(self.redraw)
+        self.per_event.toggled.connect(self.redraw)
         self.compare_button.clicked.connect(self._choose_comparison)
         self.clear_compare_button.clicked.connect(self.clear_comparisons)
         self.export_png_button.clicked.connect(self._choose_png)
@@ -299,7 +301,7 @@ class PlotPanel(QWidget):
             plots = []
             sources = self._sources(dataset)
             for directory, source, prefix in sources:
-                plot = plot_data.build_plot(directory, source, per_primary=self.per_primary.isChecked(), **options)
+                plot = plot_data.build_plot(directory, source, normalization="per_event" if self.per_event.isChecked() else "total", **options)
                 for series in plot.series:
                     series.label = prefix if len(plot.series) == 1 else f"{prefix}: {series.label}"
                 plots.append(plot)
@@ -314,6 +316,7 @@ class PlotPanel(QWidget):
                 bar = self.figure.colorbar(image, ax=axes)
                 bar.ax.tick_params(colors=colors.text_muted, labelcolor=colors.text)
                 bar.outline.set_edgecolor(colors.border_strong)
+                bar.set_label(main.value_label, color=colors.text)
             elif main.kind == "bar":
                 categories = []
                 for plot in plots:
@@ -327,8 +330,12 @@ class PlotPanel(QWidget):
                     xs = [i + (n - (len(plots) - 1) / 2) * width for i, c in enumerate(categories) if c in lookup]
                     ys = [lookup[c][0] for c in categories if c in lookup]
                     es = [lookup[c][1] for c in categories if c in lookup]
-                    axes.bar(xs, ys, width, yerr=es, capsize=2, label=series.label,
-                             error_kw={"ecolor": colors.text_muted, "elinewidth": 0.8})
+                    axes.bar(xs, ys, width, label=series.label)
+                    available = [(x, y, e) for x, y, e in zip(xs, ys, es) if not np.ma.is_masked(e)]
+                    if available:
+                        ex, ey, ee = zip(*available)
+                        axes.errorbar(ex, ey, yerr=ee, fmt="none", capsize=2,
+                                      ecolor=colors.text_muted, elinewidth=0.8)
                 # at most ~16 labels: name every n-th volume of long lists (slabs, layers)
                 step = max(1, -(-len(categories) // 16))
                 ticks = list(range(0, len(categories), step))
@@ -336,7 +343,7 @@ class PlotPanel(QWidget):
                 axes.set_xticklabels([categories[i].rsplit("/", 1)[-1] for i in ticks], rotation=30, ha="right",
                                      fontsize=8)
                 main = plot_data.Plot(main.title, main.xlabel, main.ylabel, "bar", categories=categories,
-                                      series=[s for p in plots for s in p.series], notes=main.notes)
+                                      series=[s for p in plots for s in p.series], notes=main.notes, normalization=main.normalization, value_label=main.value_label)
             else:
                 for plot in plots:
                     for series in plot.series:
@@ -351,7 +358,7 @@ class PlotPanel(QWidget):
                                           linewidth=1.2, elinewidth=0.8, label=series.label)
                 main = plot_data.Plot(main.title, main.xlabel, main.ylabel, main.kind,
                                       series=[s for p in plots for s in p.series], log_x=main.log_x,
-                                      notes=main.notes)
+                                      notes=main.notes, normalization=main.normalization, value_label=main.value_label)
             if main.kind != "image":
                 if self.log_x.isChecked():
                     axes.set_xscale("log")

@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import json
+import os
+import tempfile
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
@@ -65,8 +67,13 @@ def project_to_dict(project: G4USimProject) -> dict[str, Any]:
 
 
 def project_from_dict(data: dict[str, Any]) -> G4USimProject:
+    if not isinstance(data, dict):
+        raise ValueError("Project JSON root must be an object")
     if data.get("schema", SCHEMA_NAME) != SCHEMA_NAME:
         raise ValueError("Unsupported project schema")
+    version = data.get("version", 1)
+    if type(version) is not int or not 1 <= version <= SCHEMA_VERSION:
+        raise ValueError(f"Unsupported project version: {version}")
 
     allowed = set(G4USimProject.__dataclass_fields__.keys())
     filtered = {key: value for key, value in data.items() if key in allowed}
@@ -120,7 +127,33 @@ def project_from_dict(data: dict[str, Any]) -> G4USimProject:
         project.physicsEditor = PhysicsEditableModel.from_settings(project.physicsSettings)
     if not has_scoring_editor or project.scoringEditor.hist_bins <= 0:
         project.scoringEditor = ScoringEditableModel.from_settings(project.scoringSettings)
+    _check_supported_fields(data, project_to_dict(project))
     return project
+
+
+def _check_supported_fields(source: Any, saved: Any, path: str = "project") -> None:
+    """Reject data that the supported serializer would silently discard."""
+    aliases = {"schemaVersion": "schema_version", "sourcePath": "source_path",
+               "dirty": "is_dirty", "sourceCopyMode": "source_copy_mode",
+               "sourceErrors": "source_errors", "sourceWarnings": "source_warnings",
+               "validationErrors": "validation_errors", "validationWarnings": "validation_warnings",
+               "roundTripBlockers": "round_trip_blockers", "legacyMetadata": "legacy_metadata",
+               "simpleBox": "simple_box", "layeredDevice": "layered_device"}
+    if isinstance(source, dict):
+        if not isinstance(saved, dict):
+            raise ValueError(f"Unsupported project object: {path}")
+        for key, value in source.items():
+            target = aliases.get(key, key) if path.startswith("project.geometryEditor") else key
+            if target not in saved:
+                raise ValueError(f"Unsupported project field: {path}.{key}")
+            if target != key and target in source:
+                raise ValueError(f"Conflicting project fields: {path}.{key} / {target}")
+            _check_supported_fields(value, saved[target], f"{path}.{key}")
+    elif isinstance(source, list):
+        if not isinstance(saved, list) or len(source) != len(saved):
+            raise ValueError(f"Unsupported project list: {path}")
+        for index, (value, result) in enumerate(zip(source, saved)):
+            _check_supported_fields(value, result, f"{path}[{index}]")
 
 
 def load_project(path: str | Path) -> G4USimProject:
@@ -134,6 +167,17 @@ def load_project(path: str | Path) -> G4USimProject:
 def save_project(project: G4USimProject, path: str | Path) -> None:
     target = Path(path)
     target.parent.mkdir(parents=True, exist_ok=True)
-    with target.open("w", encoding="utf-8", newline="\n") as handle:
-        json.dump(project_to_dict(project), handle, indent=2, ensure_ascii=False)
-        handle.write("\n")
+    temporary = None
+    try:
+        with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", newline="\n",
+                                         dir=target.parent, prefix=f".{target.name}.",
+                                         suffix=".tmp", delete=False) as handle:
+            temporary = Path(handle.name)
+            json.dump(project_to_dict(project), handle, indent=2, ensure_ascii=False)
+            handle.write("\n")
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(temporary, target)
+    finally:
+        if temporary is not None:
+            temporary.unlink(missing_ok=True)

@@ -58,7 +58,7 @@ class ProjectMixin:
         self._generated_package_dir = ""
         self.project_page.set_project(project)
         self.config_builder_page.set_from_project(project)
-        self.output_page.set_workspace_root(project.workspaceRoot)
+        self.output_page.set_workspace_root(project.workspaceRoot, project.executable)
         self.output_page.set_output_dir(project.outputDir)
         self.run_history_page.set_runs_root(project.runsRoot)
         self.project_context.setText(
@@ -78,7 +78,7 @@ class ProjectMixin:
         )
         self._sync_flat_project_to_nested_paths()
         self.config_builder_page.set_run_defaults(self.project)
-        self.output_page.set_workspace_root(self.project.workspaceRoot)
+        self.output_page.set_workspace_root(self.project.workspaceRoot, self.project.executable)
         self.output_page.set_output_dir(self.project.outputDir)
         self.run_history_page.set_runs_root(self.project.runsRoot)
         if before != after and self.project.runInputMode == "generated":
@@ -99,7 +99,7 @@ class ProjectMixin:
         self.project_page.apply_to_project(self.project)
         self._sync_flat_project_to_nested_paths()
         self.config_builder_page.set_run_defaults(self.project)
-        self.output_page.set_workspace_root(self.project.workspaceRoot)
+        self.output_page.set_workspace_root(self.project.workspaceRoot, self.project.executable)
         self.output_page.set_output_dir(self.project.outputDir)
         self.run_history_page.set_runs_root(self.project.runsRoot)
 

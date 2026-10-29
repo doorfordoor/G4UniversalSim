@@ -20,6 +20,7 @@ LanguageCode = Literal["en", "zh_CN"]
 
 
 ZH_CN: dict[str, str] = {
+    "Waiting for owned processes to stop before closing.": "正在等待本窗口启动的任务停止，随后关闭。",
     "Effective configuration": "有效配置",
     "Effective Configuration": "有效配置",
     "Inspect backend configuration snapshots and their evidence without editing them.": "只读审查后端配置快照及其证据。",
@@ -200,6 +201,12 @@ ZH_CN: dict[str, str] = {
     'Log Y': 'Y 对数',
     'Overlay all runs': '叠加全部 run',
     'Per primary': '每个初级粒子',
+    'Per event': '每个事件',
+    'LET is a ratio estimator; per-event normalization is not defined.': 'LET 已是比值估计量，不能再按事件数归一化。',
+    'Approximate uncertainty: {methods}; unavailable error bars are hidden ({statuses}).': '近似不确定度：{methods}；不可用误差条已隐藏（{statuses}）。',
+    'Projection uncertainty unavailable when combining cells: cross-cell event covariance is not stored.': '合并网格单元后的投影不确定度不可用：文件未存储逐事件跨单元协方差。',
+    'Per-event normalization requires positive completed event counts.': '按事件归一化需要正的已完成事件数。',
+    'Deprecated per_primary option: normalization is per event, not per primary particle.': 'per_primary 选项已弃用：归一化分母为事件数，不是初级粒子数。',
     'Divided by the {events} completed events of run {run} (run_summary.txt).': '已除以 run {run} 完成的 {events} 个事件（run_summary.txt）。',
     'Compare with output...': '与其他输出比较...',
     'Clear comparison': '清除比较',

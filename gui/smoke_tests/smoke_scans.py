@@ -115,6 +115,10 @@ def main() -> None:
             (output / "run_summary.txt").write_text(
                 "status = completed\nplanned_event_count = 10\nactual_completed_event_count = 10\n"
                 "simulation_executed = true\n", encoding="utf-8")
+            with (output / "run_summary.txt").open("a", encoding="utf-8") as summary:
+                summary.write("program_exit_code = 0\nsummary_write_status = completed\n"
+                              "macro_execution_status = completed\nrun_count = 1\nrun_0_id = 0\n"
+                              "run_0_planned_events = 10\nrun_0_completed_events = 10\n")
             with (output / "scorer_statistics.csv").open("w", newline="", encoding="utf-8") as handle:
                 writer = csv.writer(handle)
                 writer.writerow(header)
@@ -146,8 +150,23 @@ def main() -> None:
         assert page.table.rowCount() == 3 and page.current_metric() == metric
         xs, ys, es = page.plotted()
         assert xs == [50.0, 100.0] and ys == [2.0, 4.0] and all(abs(e - t) < 1e-12 for e, t in zip(es, [0.2, 0.4]))
-        page.per_primary.setChecked(True)
+        page.per_event.setChecked(True)
         assert all(abs(y - t) < 1e-12 for y, t in zip(page.plotted()[1], [0.2, 0.4])), page.plotted()
+        normalized_export = runs / "normalized_scan.csv"
+        page.export_results(str(normalized_export))
+        with normalized_export.open(encoding="utf-8") as stream:
+            exported = list(csv.DictReader(stream))
+        assert all(row["unit"].endswith(" / event") for row in exported if row["unit"])
+        assert page.figure.axes[0].get_ylabel().endswith(" / event]")
+        saved_events = page._results[0].completed_events
+        page._results[0].completed_events = None
+        try:
+            page.plotted()
+        except ValueError as error:
+            assert "event" in str(error)
+        else:
+            assert False, "missing scan event count accepted"
+        page._results[0].completed_events = saved_events
         page.set_base_provider(lambda: (_ for _ in ()).throw(ValueError("external mode")))
         assert not page.refresh_base() and "external mode" in page.status.text()
 

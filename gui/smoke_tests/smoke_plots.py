@@ -91,8 +91,7 @@ def main() -> None:
         assert np.allclose(mesh.centres[0], [-5, 5]) and np.allclose(mesh.centres[2], [80, 100, 120])
         profile = plot_data.mesh_profile(mesh, 2)
         assert np.allclose(profile.series[0].y, [12, 14, 16]), profile.series[0].y
-        assert np.allclose(profile.series[0].yerr, 0.1 * np.sqrt([1 ** 2 + 11 ** 2, 2 ** 2 + 12 ** 2,
-                                                                  3 ** 2 + 13 ** 2]))
+        assert profile.series[0].yerr is None  # cross-cell covariance is not stored
         image = plot_data.mesh_map(mesh, 2, 0)   # x axis = Z (3 cells), y axis = X (2 cells)
         assert image.image.shape == (2, 3) and image.image[1, 0] == 11 and image.image[0, 2] == 3
         assert image.extent == (70.0, 130.0, -10.0, 10.0), image.extent
@@ -131,6 +130,16 @@ def main() -> None:
         assert panel.select_view("map:2:0") and panel.current_plot().kind == "image"
         assert panel.select("scorer/dose/weighted_dose/r0")
         assert len(panel.current_plot().series) == 2
+        (root / "run_summary.txt").write_text("run_0_completed_events = 4\n", encoding="utf-8")
+        (other / "run_summary.txt").write_text("run_0_completed_events = 4\n", encoding="utf-8")
+        panel.per_event.setChecked(True)
+        assert panel.current_plot().normalization == "per_event"
+        assert panel.current_plot().ylabel.endswith(" / event")
+        assert panel.select("mesh/m/dose/r0") and panel.select_view("map:2:0")
+        assert panel.current_plot().value_label.endswith(" / event")
+        assert panel.figure.axes[-1].get_ylabel().endswith(" / event")
+        panel.per_event.setChecked(False)
+        assert panel.select("scorer/dose/weighted_dose/r0")
         panel.clear_comparisons()
         panel.all_runs.setChecked(True)
         values = sorted(float(s.y[0]) for s in panel.current_plot().series)

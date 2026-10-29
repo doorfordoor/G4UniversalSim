@@ -220,7 +220,9 @@ class OutputPage(QWidget):
         self._merge_runner.taskStarted.connect(lambda name: self.merge_log.insertPlainText(f"\n[start] {name}\n"))
         self._merge_runner.taskFinished.connect(self._on_merge_finished)
         self._merge_runner.allFinished.connect(self._on_all_merges_finished)
-        self._merge_runner.errorOccurred.connect(lambda msg: QMessageBox.warning(self, "Merge error", msg))
+        self._merge_runner.errorOccurred.connect(
+            lambda msg: None if getattr(self.window(), "_closing", False)
+            else QMessageBox.warning(self, "Merge error", msg))
         self._merge_runner.stateChanged.connect(self._on_merge_state_changed)
         self.export_dose_button.clicked.connect(lambda: self.run_output_extension("dose_json"))
         self.export_fluence_button.clicked.connect(lambda: self.run_output_extension("fluence_json"))
@@ -245,8 +247,9 @@ class OutputPage(QWidget):
         self.tabs.setCurrentWidget(self.plot_panel)
         return self.plot_panel.select(key)
 
-    def set_workspace_root(self, workspace_root: str) -> None:
+    def set_workspace_root(self, workspace_root: str, backend_executable: str = "") -> None:
         self._workspace_root = workspace_root
+        self._backend_executable = backend_executable
         self.refresh_merge_plan()
 
     def set_output_dir(self, output_dir: str) -> None:
@@ -264,6 +267,10 @@ class OutputPage(QWidget):
     def refresh(self) -> None:
         self.file_tree.clear()
         self.preview_text.clear()
+        self._files = []
+        self._update_run_summary()
+        self._update_logs_tab()
+        self.refresh_merge_plan()
         if self.plot_panel is not None:
             self.plot_panel.set_output_dir(self._output_dir if self._output_dir and Path(self._output_dir).is_dir()
                                            else "")
@@ -349,7 +356,8 @@ class OutputPage(QWidget):
         if not self._output_dir:
             self._merge_plan = MergePlan([])
         else:
-            self._merge_plan = build_merge_plan(self._output_dir, self._workspace_root)
+            self._merge_plan = build_merge_plan(self._output_dir, self._workspace_root,
+                backend_executable=getattr(self, "_backend_executable", ""))
         self._populate_merge_table()
         self._update_merge_buttons(False)
 

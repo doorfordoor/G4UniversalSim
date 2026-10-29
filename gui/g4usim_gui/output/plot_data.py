@@ -15,7 +15,7 @@ Data sets found in an output directory:
   edep     per-worker hist_edep_raw/weighted_tN[_rR].csv summed over workers
   pulse    per-event deposits (event_edep_tN[_rR].csv) histogrammed
   phase    phase_space_tN[_rR].csv kinetic energy spectra per particle (log bins)
-Values are run totals; per_primary=True divides them by the run's completed events
+Values are run totals; normalization="per_event" divides them by the run's completed events
 (run_summary.txt), which makes runs with different event counts comparable.
 """
 
@@ -25,6 +25,7 @@ import csv
 import json
 import math
 import re
+import warnings
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -55,6 +56,8 @@ class Plot:
     image_error: np.ndarray | None = None
     extent: tuple[float, float, float, float] | None = None   # image: x0, x1, y0, y1
     log_x: bool = False
+    normalization: str = "total"
+    value_label: str = ""
     # (message template, values): translated and formatted by the GUI (i18n.ui_format)
     notes: list[tuple[str, dict]] = field(default_factory=list)
 
@@ -144,6 +147,36 @@ def discover(output_dir: str | Path) -> list[DataSet]:
 
 # --- loaders -----------------------------------------------------------------------
 
+def uncertainty(row: dict[str, str]) -> tuple[str, str]:
+    """Explicit v2 status, or conservative v1 inference without inventing N."""
+    ratio = row.get("estimator") == "ratio" or row.get("scorer") == "let"
+    method = "uncorrected_delta_ratio_v1" if ratio else "uncorrected_event_moments_v1"
+    try:
+        count = int(row["n_events"])
+        value = float(row.get("value", row.get("sum", "0")))
+    except (KeyError, ValueError, TypeError):
+        return method, "insufficient_events"
+    if count < 2:
+        return method, "insufficient_events"
+    explicit = row.get("uncertainty_status")
+    if explicit and explicit != "approximate":
+        return row.get("uncertainty_estimator", method), explicit
+    if value == 0:
+        return method, "undefined_ratio" if ratio else "zero_total"
+    if not math.isfinite(value):
+        raise ValueError("Non-finite scorer value")
+    return row.get("uncertainty_estimator", method), "approximate"
+
+
+def statistic_uncertainty(output_dir: str | Path, metric: tuple[str, str, str]) -> tuple[str, str]:
+    path = Path(output_dir) / "scorer_statistics.csv"
+    if path.is_file():
+        for row in _read_csv(path):
+            if (row.get("scorer"), row.get("quantity"), row.get("key")) == metric:
+                return uncertainty(row)
+    return "unknown", "insufficient_events"
+
+
 def scorer_plot(output_dir: str | Path, dataset: DataSet) -> Plot:
     output = Path(output_dir)
     name = "scorer_statistics.csv" if dataset.run_id == 0 else f"scorer_statistics_r{dataset.run_id}.csv"
@@ -151,12 +184,19 @@ def scorer_plot(output_dir: str | Path, dataset: DataSet) -> Plot:
     rows = [r for r in _read_csv(output / name) if r["scorer"] == scorer and r["quantity"] == quantity]
     rows.sort(key=lambda r: r["key"])
     values = np.array([float(r["value"]) for r in rows])
-    errors = np.array([float(r["std_error"]) for r in rows])
+    evidence = [uncertainty(row) for row in rows]
+    raw_errors = np.array([float(r["std_error"]) for r in rows])
+    if not np.all(np.isfinite(values)) or not np.all(np.isfinite(raw_errors)) or np.any(raw_errors < 0):
+        raise ValueError("Scorer values/errors must be finite and errors non-negative")
+    errors = np.ma.array(raw_errors,
+                         mask=[status != "approximate" for _, status in evidence])
     unit = rows[0]["unit"] if rows else ""
     plot = Plot(f"{scorer} / {quantity}", "volume", f"{quantity} [{unit}]", "bar",
                 categories=[r["key"] for r in rows])
     plot.series.append(Series(output.name, np.arange(len(rows)), values, errors))
-    plot.notes.append(("Error bars: per-event statistical standard error (scorer_statistics).", {}))
+    plot.notes.append(("Approximate uncertainty: {methods}; unavailable error bars are hidden ({statuses}).",
+                       {"methods": ", ".join(sorted({m for m, _ in evidence})),
+                        "statuses": ", ".join(sorted({v for _, v in evidence}))}))
     return plot
 
 
@@ -188,9 +228,10 @@ def load_mesh(output_dir: str | Path, dataset: DataSet) -> MeshData:
         unit = rows[0]["unit"] if rows else ""
         bins = bins or tuple(int(v) + 1 for v in index.max(axis=0))
         value = np.zeros(bins)
-        error = np.zeros(bins)
+        error = np.ma.masked_all(bins)
         value[tuple(index.T)] = sums
-        error[tuple(index.T)] = np.abs(sums) * rel
+        error[tuple(index.T)] = np.ma.array(np.abs(sums) * rel,
+            mask=[uncertainty(r)[1] != "approximate" for r in rows])
     else:
         import sys
         from g4usim_gui.core import install_layout
@@ -199,7 +240,7 @@ def load_mesh(output_dir: str | Path, dataset: DataSet) -> MeshData:
         name = "g4usim.root" if dataset.run_id == 0 else f"g4usim_r{dataset.run_id}.root"
         data = g4usim_io.load_mesh(output / name, mesh, quantity, bins)
         bins, unit, value = data.bins, data.unit, data.value
-        error = np.abs(value) * data.rel_error
+        error = np.ma.array(np.abs(value) * data.rel_error, mask=~data.uncertainty_available)
     axes = tuple(meta.get(prefix + "axes", "i0,i1,i2").split(","))
     centres = []
     coordinate_unit = "bin"
@@ -218,21 +259,24 @@ def load_mesh(output_dir: str | Path, dataset: DataSet) -> MeshData:
 def mesh_profile(data: MeshData, axis: int, label: str = "") -> Plot:
     others = tuple(a for a in range(3) if a != axis)
     value = data.value.sum(axis=others)
-    error = np.sqrt((data.error ** 2).sum(axis=others))   # cells are statistically independent sums
+    # No cross-cell event products are stored: projection covariance is unknown.
+    error = (np.ma.sqrt((data.error ** 2).sum(axis=others))
+             if all(data.bins[a] == 1 for a in others) else None)
     plot = Plot(f"{data.mesh} / {data.quantity}", f"{data.axes[axis]} [{data.coordinate_unit}]",
                 f"{data.quantity} [{data.unit}]", "line")
     plot.series.append(Series(label or data.mesh, data.centres[axis], value, error))
-    plot.notes.append(("Summed over the other two axes; error = quadrature sum of the cell errors "
-                       "(cells treated as independent).", {}))
+    plot.notes.append(("Projection uncertainty unavailable when combining cells: cross-cell event covariance is not stored.", {}))
+    plot.notes.append(("Approximate uncertainty: {methods}; unavailable error bars are hidden ({statuses}).",
+                       {"methods": "uncorrected_event_moments_v1", "statuses": "cell evidence / covariance"}))
     return plot
 
 
 def mesh_map(data: MeshData, axis_x: int, axis_y: int) -> Plot:
     other = ({0, 1, 2} - {axis_x, axis_y}).pop()
     value = data.value.sum(axis=other)
-    error = np.sqrt((data.error ** 2).sum(axis=other))
+    error = np.ma.sqrt((data.error ** 2).sum(axis=other)) if data.bins[other] == 1 else None
     if axis_x < axis_y:   # array is [ax_low, ax_high]; image wants [y, x]
-        image, image_error = value.T, error.T
+        image, image_error = value.T, None if error is None else error.T
     else:
         image, image_error = value, error
     cx, cy = data.centres[axis_x], data.centres[axis_y]
@@ -242,9 +286,14 @@ def mesh_map(data: MeshData, axis_x: int, axis_y: int) -> Plot:
         return c[0] - step / 2, c[-1] + step / 2
     unit = f" [{data.coordinate_unit}]"
     plot = Plot(f"{data.mesh} / {data.quantity}", data.axes[axis_x] + unit, data.axes[axis_y] + unit, "image",
-                image=image, image_error=image_error, extent=(*span(cx), *span(cy)))
+                image=image, image_error=image_error, extent=(*span(cx), *span(cy)),
+                value_label=f"{data.quantity} [{data.unit}]")
     plot.notes.append(("Summed over {axis}; colour = {quantity} [{unit}].",
                        {"axis": data.axes[other], "quantity": data.quantity, "unit": data.unit}))
+    plot.notes.append(("Approximate uncertainty: {methods}; unavailable error bars are hidden ({statuses}).",
+                       {"methods": "uncorrected_event_moments_v1", "statuses": "cell evidence / covariance"}))
+    if error is None:
+        plot.notes.append(("Projection uncertainty unavailable when combining cells: cross-cell event covariance is not stored.", {}))
     return plot
 
 
@@ -325,23 +374,49 @@ def run_events(output_dir: str | Path, run_id: int) -> int | None:
     return None
 
 
-def build_plot(output_dir: str | Path, dataset: DataSet, per_primary: bool = False, **options) -> Plot:
-    """The plot of a data set; per_primary divides values and errors by the run's completed events."""
+def build_plot(output_dir: str | Path, dataset: DataSet, per_primary: bool | None = None,
+               *, normalization: str | None = None, **options) -> Plot:
+    """Normalize by completed events, never by an assumed primary-particle count.
+
+    per_primary is a deprecated compatibility alias with its historical numbers.
+    """
+    if per_primary is not None:
+        if type(per_primary) is not bool:
+            raise ValueError("per_primary must be a boolean")
+        legacy = "per_event" if per_primary else "total"
+        if normalization is not None and normalization != legacy:
+            raise ValueError("per_primary conflicts with normalization")
+        warnings.warn("per_primary is deprecated; use normalization='per_event' or 'total'. "
+                      "The denominator is completed events, not primary particles.",
+                      DeprecationWarning, stacklevel=2)
+        normalization = legacy
+    normalization = "total" if normalization is None else normalization
+    if normalization not in {"total", "per_event"}:
+        raise ValueError("normalization must be 'total' or 'per_event'")
+    if normalization == "per_event" and dataset.kind == "scorer" and dataset.detail[0] == "let":
+        raise ValueError("LET is a ratio estimator; per-event normalization is not defined.")
     plot = _build_plot(output_dir, dataset, **options)
-    if per_primary and dataset.kind != "pulse":   # pulse spectra are already fractions of events
+    if normalization == "per_event" and dataset.kind != "pulse":
         events = run_events(output_dir, dataset.run_id)
-        if not events:
-            raise ValueError(f"no completed event count for run {dataset.run_id} in run_summary.txt")
+        if events is None or events <= 0:
+            raise ValueError(f"no positive completed event count for run {dataset.run_id} in run_summary.txt")
         for series in plot.series:
             series.y = series.y / events
             if series.yerr is not None:
                 series.yerr = series.yerr / events
         if plot.image is not None:
             plot.image = plot.image / events
-            plot.image_error = plot.image_error / events
-        plot.ylabel += " / primary" if plot.kind != "image" else ""
+            if plot.image_error is not None:
+                plot.image_error = plot.image_error / events
+        if plot.kind != "image":
+            plot.ylabel += " / event"
         plot.notes.append(("Divided by the {events} completed events of run {run} (run_summary.txt).",
                            {"events": events, "run": dataset.run_id}))
+    plot.normalization = "per_event" if dataset.kind == "pulse" else normalization
+    if normalization == "per_event" and plot.kind == "image":
+        plot.value_label += " / event"
+    if per_primary is not None:
+        plot.notes.append(("Deprecated per_primary option: normalization is per event, not per primary particle.", {}))
     return plot
 
 
@@ -375,16 +450,16 @@ def write_plot_csv(plot: Plot, path: str | Path) -> None:
     with Path(path).open("w", newline="", encoding="utf-8") as handle:
         writer = csv.writer(handle)
         if plot.kind == "image":
-            writer.writerow(["x_index", "y_index", "value", "error"])
+            writer.writerow(["x_index", "y_index", "value", "error", "normalization", "value_label"])
             for (iy, ix), value in np.ndenumerate(plot.image):
-                writer.writerow([ix, iy, f"{value:.9g}", f"{plot.image_error[iy, ix]:.9g}"])
+                writer.writerow([ix, iy, f"{value:.9g}", "" if plot.image_error is None or np.ma.is_masked(plot.image_error[iy, ix]) else f"{plot.image_error[iy, ix]:.9g}", plot.normalization, plot.value_label])
             return
-        writer.writerow(["series", "x_low_or_x", "x_high", "label", "value", "error"])
+        writer.writerow(["series", "x_low_or_x", "x_high", "label", "value", "error", "normalization", "value_label"])
         for series in plot.series:
             for i, value in enumerate(series.y):
                 low = series.x[i]
                 high = series.x[i + 1] if series.edges else ""
                 label = plot.categories[i] if plot.categories else ""
-                error = "" if series.yerr is None else f"{series.yerr[i]:.9g}"
+                error = "" if series.yerr is None or np.ma.is_masked(series.yerr[i]) else f"{series.yerr[i]:.9g}"
                 writer.writerow([series.label, f"{low:.9g}", high if high == "" else f"{high:.9g}", label,
-                                 f"{value:.9g}", error])
+                                 f"{value:.9g}", error, plot.normalization, plot.ylabel])

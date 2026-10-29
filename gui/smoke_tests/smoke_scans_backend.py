@@ -3,7 +3,7 @@
 The wizard's silicon detector (300 um Si pad) is scanned in proton energy (50, 100,
 200 MeV). The page creates one package per point, the ScanRunner runs them with the
 normal G4USimRunner, and the results table must show three successful points whose
-energy deposit per primary (edep / weighted_edep total) follows the NIST PSTAR silicon
+energy deposit per event (edep / weighted_edep total) follows the NIST PSTAR silicon
 electronic stopping power x areal density (within 6 %: delta electrons below the
 0.7 mm production cut deposit locally, nuclear secondaries add a little). A seed scan
 checks that each point's own seed reaches the backend.
@@ -87,7 +87,7 @@ def main() -> None:
         metric = ("edep", "weighted_edep", "total")
         assert page.quantity.findData("|".join(metric)) >= 0
         page.quantity.setCurrentIndex(page.quantity.findData("|".join(metric)))
-        page.per_primary.setChecked(True)
+        page.per_event.setChecked(True)
         xs, ys, es = page.plotted()
         assert xs == [50.0, 100.0, 200.0], xs
         table = nist.pstar("G4_Si")
@@ -95,7 +95,7 @@ def main() -> None:
         areal = 2.33 * 0.03   # g/cm2 of the 300 um pad
         for energy, deposit, error in zip(xs, ys, es):
             expected = nist.loglog(energy, energies, stopping) * areal
-            print(f"  {energy:g} MeV: {deposit:.4f} +- {error:.4f} MeV per primary, S x rho t = {expected:.4f}")
+            print(f"  {energy:g} MeV: {deposit:.4f} +- {error:.4f} MeV per event, S x rho t = {expected:.4f}")
             assert abs(deposit - expected) <= 0.06 * expected + 3 * error, (energy, deposit, expected)
         assert ys[0] > ys[1] > ys[2], "deposit falls with energy"
         export = runs / "results.csv"

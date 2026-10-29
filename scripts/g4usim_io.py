@@ -14,6 +14,8 @@ Requires `uproot` and `numpy`.
 from __future__ import annotations
 
 import json
+import re
+from numbers import Integral
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -33,10 +35,23 @@ class MeshQuantity:
     entries: np.ndarray     # number of contributing events per cell
 
     @property
+    def uncertainty_estimator(self) -> str:
+        return "uncorrected_event_moments_v1"
+
+    @property
+    def uncertainty_status(self) -> np.ndarray:
+        return np.where(self.n_events < 2, "insufficient_events",
+                        np.where(self.value == 0, "zero_total", "approximate"))
+
+    @property
+    def uncertainty_available(self) -> np.ndarray:
+        return self.uncertainty_status == "approximate"
+
+    @property
     def rel_error(self) -> np.ndarray:
         """R = sqrt(sum_sq / value^2 - 1/N); 0 where the cell is empty."""
         with np.errstate(divide="ignore", invalid="ignore"):
-            r2 = self.sum_sq / self.value**2 - 1.0 / max(self.n_events, 1)
+            r2 = (self.sum_sq / self.value) / self.value - 1.0 / max(self.n_events, 1)
         return np.where(self.value != 0, np.sqrt(np.clip(r2, 0.0, None)), 0.0)
 
     @property
@@ -64,12 +79,11 @@ def mesh_names(root_path: str | Path) -> list[tuple[str, str]]:
 
 
 def load_mesh(root_path: str | Path, mesh: str, quantity: str,
-              bins: tuple[int, int, int] | None = None) -> MeshQuantity:
+              bins: tuple[int, int, int] | None = None, *, n_events: int | None = None) -> MeshQuantity:
     """Merge the per-worker rows of one mesh quantity into dense arrays."""
     root_path = Path(root_path)
     with uproot.open(root_path) as root:
         data = root["mesh"].arrays(library="np")
-        events = root["events"].arrays(["threadID"], library="np") if "events" in root else None
     selected = (data["mesh"] == mesh) & (data["quantity"] == quantity)
     if not selected.any():
         raise KeyError(f"{root_path}: no rows for mesh '{mesh}' quantity '{quantity}'")
@@ -81,14 +95,7 @@ def load_mesh(root_path: str | Path, mesh: str, quantity: str,
     np.add.at(value, tuple(index.T), data["sum"][selected])
     np.add.at(sum_sq, tuple(index.T), data["sum_sq"][selected])
     np.add.at(entries, tuple(index.T), data["entries"][selected])
-    # n_events is per worker; count each worker once.
-    per_thread = {}
-    for thread, n in zip(data["threadID"][selected], data["n_events"][selected]):
-        per_thread[int(thread)] = int(n)
-    n_events = sum(per_thread.values())
-    if events is not None and len(events["threadID"]) and n_events < len(events["threadID"]):
-        # Workers with no mesh hits wrote no rows; the events ntuple has every event.
-        n_events = len(events["threadID"])
+    n_events = _resolve_events(root_path, n_events, [data])
     units = set(map(str, data["unit"][selected]))
     return MeshQuantity(mesh, quantity, units.pop() if len(units) == 1 else ",".join(sorted(units)),
                         bins, n_events, value, sum_sq, entries)
@@ -106,7 +113,24 @@ class ScorerStatistic:
     estimator: str          # "total" (run total) or "ratio" (LET)
     n_events: int
     value: float            # run total (total) or ratio value (ratio)
-    rel_error: float        # relative statistical error of value
+    rel_error: float        # compatibility value; consult uncertainty_available
+    ratio_denominator: float | None = None
+
+    @property
+    def uncertainty_estimator(self) -> str:
+        return "uncorrected_delta_ratio_v1" if self.estimator == "ratio" else "uncorrected_event_moments_v1"
+
+    @property
+    def uncertainty_status(self) -> str:
+        if self.n_events < 2:
+            return "insufficient_events"
+        if self.estimator == "ratio" and self.ratio_denominator == 0:
+            return "undefined_ratio"
+        return "zero_total" if self.value == 0 else "approximate"
+
+    @property
+    def uncertainty_available(self) -> bool:
+        return self.uncertainty_status == "approximate"
 
     @property
     def std_error(self) -> float:
@@ -116,24 +140,80 @@ class ScorerStatistic:
 def _rel_error(total: float, sum_sq: float, n_events: int) -> float:
     if n_events <= 0 or total == 0:
         return 0.0
-    return float(np.sqrt(max(sum_sq / total**2 - 1.0 / n_events, 0.0)))
+    return float(np.sqrt(max((sum_sq / total) / total - 1.0 / n_events, 0.0)))
 
 
 def _ratio_rel_error(num: float, num_sq: float, den: float, den_sq: float, cross: float) -> float:
     if num == 0 or den == 0:
         return 0.0
-    return float(np.sqrt(max(num_sq / num**2 + den_sq / den**2 - 2.0 * cross / (num * den), 0.0)))
+    return float(np.sqrt(max((num_sq / num) / num + (den_sq / den) / den -
+                            2.0 * ((cross / num) / den), 0.0)))
+
+
+def _event_count(value, source: str) -> int:
+    if isinstance(value, bool) or not isinstance(value, Integral) or value < 0:
+        raise ValueError(f"{source}: event count must be a non-negative integer (not bool)")
+    return int(value)
 
 
 def _run_events(root_path: Path) -> int | None:
-    stem = root_path.stem
-    run_id = 0 if stem == "g4usim" else int(stem.rsplit("_r", 1)[-1])
     metadata = root_path.with_name("run_metadata.json")
-    if metadata.is_file():
-        for run in json.loads(metadata.read_text(encoding="utf-8")).get("runs", []):
-            if int(run.get("run_id", -1)) == run_id:
-                return int(run["completed_events"])
-    return None
+    if not metadata.is_file():
+        return None
+    match = re.fullmatch(r"g4usim(?:_r([0-9]+))?", root_path.stem)
+    if match is None:
+        raise ValueError(f"{root_path}: cannot identify the run for adjacent metadata")
+    run_id = int(match.group(1) or 0)
+    try:
+        document = json.loads(metadata.read_text(encoding="utf-8"))
+        if not isinstance(document, dict) or document.get("schema") != "run_metadata_json_v1":
+            raise ValueError("unsupported or missing metadata schema")
+        runs = document.get("runs")
+        if not isinstance(runs, list):
+            raise ValueError("metadata runs must be a list")
+        counts = {}
+        for run in runs:
+            if not isinstance(run, dict):
+                raise ValueError("invalid metadata run")
+            identifier = _event_count(run.get("run_id"), "metadata run_id")
+            if identifier in counts:
+                raise ValueError("duplicate metadata run_id")
+            counts[identifier] = _event_count(run.get("completed_events"), "metadata completed_events")
+        return counts.get(run_id)
+    except (OSError, ValueError, TypeError) as error:
+        raise ValueError(f"{metadata}: invalid event-count metadata: {error}") from error
+
+
+def _resolve_events(root_path: Path, explicit, tables) -> int:
+    supplied = None if explicit is None else _event_count(explicit, "n_events")
+    recorded = _run_events(root_path)
+    if supplied is not None and recorded is not None and supplied != recorded:
+        raise ValueError(f"n_events={supplied} conflicts with metadata completed_events={recorded}")
+    count = supplied if supplied is not None else recorded
+    if count is None:
+        raise ValueError(f"{root_path}: no reliable completed event count; provide n_events or "
+                         "same-run run_metadata.json. Sparse scorer rows cannot count zero-contribution workers.")
+    # Sparse rows provide a lower bound and consistency checks, never the denominator.
+    workers = {}
+    has_rows = False
+    for data in tables:
+        for thread, value in zip(data["threadID"], data["n_events"]):
+            has_rows = True
+            # G4Analysis stores these counters in double columns in ROOT v4.
+            # Accept only exactly integral finite values there; the public API
+            # and JSON metadata still require actual integer types.
+            if isinstance(value, (float, np.floating)) and np.isfinite(value) and value.is_integer():
+                value = int(value)
+            value = _event_count(value, "ROOT worker n_events")
+            thread = int(thread)
+            if thread in workers and workers[thread] != value:
+                raise ValueError(f"inconsistent ROOT n_events for worker {thread}")
+            workers[thread] = value
+    if sum(workers.values()) > count:
+        raise ValueError("completed event count is smaller than the contributing workers' event counts")
+    if count == 0 and has_rows:
+        raise ValueError("zero completed events require empty scorer/mesh rows")
+    return count
 
 
 def load_scorer_statistics(root_path: str | Path, n_events: int | None = None) -> list[ScorerStatistic]:
@@ -141,20 +221,16 @@ def load_scorer_statistics(root_path: str | Path, n_events: int | None = None) -
 
     Mirrors scorer_statistics[_rR].csv (written by the backend for every output
     format). n_events defaults to the run's completed events in run_metadata.json.
+    Without same-run metadata an explicit non-negative integer is required; sparse
+    scorer rows and optional event ntuples are not proof of all completed histories.
     """
     root_path = Path(root_path)
-    n_events = n_events if n_events is not None else _run_events(root_path)
     tables: dict[str, dict] = {}
     with uproot.open(root_path) as root:
         for tree in ("edep_volume", "edep_particle", "dose", "fluence", "let"):
             if tree in root:
                 tables[tree] = root[tree].arrays(library="np")
-    if n_events is None:
-        threads: dict[int, int] = {}
-        for data in tables.values():
-            for thread, n in zip(data["threadID"], data["n_events"]):
-                threads[int(thread)] = int(n)
-        n_events = sum(threads.values())
+    n_events = _resolve_events(root_path, n_events, tables.values())
 
     def grouped(data, key_column, columns):
         sums: dict[str, dict[str, float]] = {}
@@ -205,13 +281,13 @@ def load_scorer_statistics(root_path: str | Path, n_events: int | None = None) -
                     "let", "let_t", key, names.get(key, key), "keV/um", "ratio", n_events,
                     r["sum_wSl_MeV"] / r["sum_wl_mm"],
                     _ratio_rel_error(r["sum_wSl_MeV"], r["sum_sq_wSl_MeV2"], r["sum_wl_mm"], r["sum_sq_wl_mm2"],
-                                     r["sum_wl_x_wSl_MeV_mm"])))
+                                     r["sum_wl_x_wSl_MeV_mm"]), ratio_denominator=r["sum_wl_mm"]))
             if r["sum_wSl_MeV"] > 0:
                 result.append(ScorerStatistic(
                     "let", "let_d", key, names.get(key, key), "keV/um", "ratio", n_events,
                     r["sum_wS2l_MeV2_per_mm"] / r["sum_wSl_MeV"],
                     _ratio_rel_error(r["sum_wS2l_MeV2_per_mm"], r["sum_sq_wS2l_MeV4_per_mm2"], r["sum_wSl_MeV"],
-                                     r["sum_sq_wSl_MeV2"], r["sum_wSl_x_wS2l_MeV3_per_mm"])))
+                                     r["sum_sq_wSl_MeV2"], r["sum_wSl_x_wS2l_MeV3_per_mm"]), ratio_denominator=r["sum_wSl_MeV"]))
     return result
 
 
