@@ -52,3 +52,10 @@
 - Windows 本轮为 Geant4 11.3.2 MT/GDML；`threads=1` 是一个 MT worker，不冒充独立串行构建。Windows 11.4、原生 Linux 桌面/安装器属于后续平台阶段。
 - 当前 schema 357 项不等于全 GUI 可编辑，也不等于 E6 已完成；field/biasing 统一 schema、完整编辑能力、独立工程导出及 AI 执行工作流保持后续阶段边界。
 - 下一完整节点为 **E6**，按 ROADMAP 推进。集成记录见 [local-integration.json](local-integration.json)；D 盘 DSH/邻线工作区不切换、不覆盖。
+
+## 提交与集成节点
+
+- `f4770b0`：本轮被完整测试的冻结代码/测试提交。
+- `790ad2c`：最终关闭文档及原始证据归档；暂存的1168份归档文件与工作副本逐字节一致，全部文档链接检查通过。
+- `codex` 已从 f25da40 正常快进到该证据提交，两个开发/集成工作区均干净；`codex` 与 `roadmap/2c-effective-config` 已普通推送至790ad2c。详见本目录集成收据。
+- 本补记提交仅记录已发生的集成/推送事实，不改变验收源码或测试，也不冒称为另一轮运行。保留D盘邻线分支、21项未跟踪审查资料及Q1原二进制。

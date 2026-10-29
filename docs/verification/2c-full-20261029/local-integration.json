@@ -17,5 +17,14 @@
     "untouched": true
   },
   "control_worktree": "archived after 116-file copied evidence hash verification; overlay patch retained",
-  "note": "This receipt records integration of tested production code. Subsequent archive/document commits will be fast-forwarded normally; they are not separate code-test runs."
+  "note": "Tested code f4770b0 and evidence commit 790ad2c were fast-forwarded and normally pushed. This subsequent receipt-only commit does not change tested production code or tests; it is not another test run.",
+  "evidence_commit": "790ad2cde598fdc781ca56d37235479313f8471e",
+  "evidence_fast_forward_exit_code": 0,
+  "normal_push": {
+    "exit_code": 0,
+    "remote": "origin",
+    "codex": "790ad2cde598fdc781ca56d37235479313f8471e",
+    "roadmap_2c_effective_config": "790ad2cde598fdc781ca56d37235479313f8471e",
+    "force": false
+  }
 }
