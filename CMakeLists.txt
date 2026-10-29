@@ -94,6 +94,13 @@ target_compile_definitions(mergeHistograms PRIVATE
 # static/GUI profiles also work on hosts where Geant4 cannot be configured.
 include(CTest)
 if(BUILD_TESTING)
+    if(Geant4_gdml_FOUND)
+        add_executable(gdmlInputCaptureCheck tools/gdmlInputCaptureCheck.cc
+            src/Geometry/GdmlInputCapture.cc src/Config/InputProvenance.cc)
+        target_compile_features(gdmlInputCaptureCheck PRIVATE cxx_std_17)
+        target_compile_definitions(gdmlInputCaptureCheck PRIVATE G4USIM_HAVE_GDML=1)
+        target_link_libraries(gdmlInputCaptureCheck ${Geant4_LIBRARIES})
+    endif()
     # Exercise real numeric accumulation/merge code independently of transport.
     add_executable(scoringNumericCheck tools/scoringNumericCheck.cc src/Scoring/HistoryStatistics.cc)
     target_compile_features(scoringNumericCheck PRIVATE cxx_std_17)

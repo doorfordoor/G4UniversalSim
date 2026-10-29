@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Physics/RegionPhysics.hh"
+#include "Config/EffectiveConfigSupport.hh"
 
 #include <map>
 #include <string>
@@ -8,6 +9,7 @@
 
 class BiasingManager;
 class ConfigManager;
+class G4VModularPhysicsList;
 
 class PhysicsManager {
 public:
@@ -106,8 +108,15 @@ public:
 
     void Validate() const;
     void PrintSummary() const;
+    std::vector<effective_config::Field> ExportEffectiveConfigFields() const;
+    effective_config::Value ExportEffectiveConfigEvidence() const;
+    void ConfirmEffectiveConfigMutation(const std::string& command, const effective_config::Origin& origin);
+    void ObserveEffectiveConfigPhysics(const G4VModularPhysicsList& list, const std::string& stage) const;
 
 private:
+    void LoadFromConfigImpl(const ConfigManager& config);
+    std::vector<effective_config::Field> ProjectEffectiveConfigFields() const;
+    std::shared_ptr<effective_config::ConsumerState> effective_ = std::make_shared<effective_config::ConsumerState>();
     static std::string NormalizeParticleName(const std::string& particleName);
     static void AddUnique(std::vector<std::string>& values, const std::string& value);
 

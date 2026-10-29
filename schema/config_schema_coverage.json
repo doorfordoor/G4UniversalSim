@@ -2460,6 +2460,62 @@
       ]
     },
     {
+      "file": "main_ini",
+      "section": "modules",
+      "key": "scoring",
+      "scalar_check": true,
+      "parser": "src/Core/EffectiveSimulation.cc:ApplyModuleModes",
+      "validation": "requires module context; does not imply physics validation",
+      "gui": {
+        "editable": false
+      },
+      "tests": [
+        "scripts/test_effective_modules.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "modules",
+      "key": "biasing",
+      "scalar_check": true,
+      "parser": "src/Core/EffectiveSimulation.cc:ApplyModuleModes",
+      "validation": "requires module context; does not imply physics validation",
+      "gui": {
+        "editable": false
+      },
+      "tests": [
+        "scripts/test_effective_modules.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "modules",
+      "key": "field",
+      "scalar_check": true,
+      "parser": "src/Core/EffectiveSimulation.cc:ApplyModuleModes",
+      "validation": "requires module context; does not imply physics validation",
+      "gui": {
+        "editable": false
+      },
+      "tests": [
+        "scripts/test_effective_modules.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "modules",
+      "key": "trajectories",
+      "scalar_check": true,
+      "parser": "src/Core/EffectiveSimulation.cc:ApplyModuleModes",
+      "validation": "requires module context; does not imply physics validation",
+      "gui": {
+        "editable": false
+      },
+      "tests": [
+        "scripts/test_effective_modules.py"
+      ]
+    },
+    {
       "file": "materials_ini",
       "section": "nist",
       "key": "materials",

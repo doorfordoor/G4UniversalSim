@@ -12,15 +12,19 @@ VolumeNode GeometryTemplate::BuildNodesFromFile(const std::string& filename) con
         throw std::runtime_error("Template '" + Name() + "' config file does not exist: '" + filename + "'");
     }
 
+    const auto input=input_provenance::ReadFile(filename);
     ConfigManager config;
-    config.LoadMainConfig(filename);
+    config.LoadMainConfigBytes(filename,input.bytes);
     diagnostics_.clear();
     try {
         ValidateConfig(config);
         CollectGeometryConfigDiagnostics(
-            config.GetMainConfigPath(), config.GetFields(), config.GetSectionInfo(), Name(), diagnostics_
+            config.GetMainConfigPath(), config.GetFields(), config.GetSectionInfo(), Name(), diagnostics_, &input.bytes
         );
-        return BuildNodes(config);
+        auto root=BuildNodes(config);
+        inputReader_=config.GetMainReader();
+        inputs_={{input.path,{},input.sha256}};
+        return root;
     } catch (const std::exception& error) {
         throw std::runtime_error(
             "Template '" + Name() + "' failed to build geometry from file '"

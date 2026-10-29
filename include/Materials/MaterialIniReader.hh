@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Materials/MaterialDefinition.hh"
+#include "Config/IniReader.hh"
 
 #include <map>
 #include <stdexcept>
@@ -14,6 +15,7 @@ public:
     MaterialIniReader() = default;
 
     void Load(const std::string& filename);
+    const IniReader& GetInputReader() const { return inputReader_; }
 
     bool HasIsotope(const std::string& name) const;
     bool HasElement(const std::string& name) const;
@@ -45,6 +47,8 @@ public:
     );
 
 private:
+    void LoadBytes(const std::string& filename, const std::string& bytes);
+    IniReader inputReader_;
     struct SourceInfo {
         std::string section;
         std::string key;

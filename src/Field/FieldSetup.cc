@@ -47,6 +47,7 @@ public:
     explicit ConfiguredMagneticField(const FieldSpec& spec) : spec_(spec) {}
     void GetFieldValue(const G4double point[4], G4double* field) const override { Evaluate(spec_, point, field); }
 
+    const FieldSpec& Specification() const { return spec_; }
 private:
     FieldSpec spec_;  // copies share the read-only maps
 };
@@ -57,7 +58,7 @@ public:
     explicit ConfiguredElectroMagneticField(const FieldSpec& spec) : spec_(spec) {}
     void GetFieldValue(const G4double point[4], G4double* field) const override { Evaluate(spec_, point, field); }
     G4bool DoesFieldChangeEnergy() const override { return true; }
-
+    const FieldSpec& Specification() const { return spec_; }
 private:
     FieldSpec spec_;
 };
@@ -95,6 +96,25 @@ G4FieldManager* MakeFieldManager(const FieldSpec& spec, G4FieldManager* existing
     manager->SetDeltaOneStep(spec.deltaOneStep);
     manager->SetDeltaIntersection(spec.deltaIntersection);
     return manager;
+}
+
+
+void RecordBinding(const FieldConfig& config,const std::string& name,const std::string& logicalVolume,
+                   G4FieldManager* manager,bool applied)
+{
+    const FieldSpec* stored=nullptr;
+    if(manager) {
+        if(const auto* field=dynamic_cast<const ConfiguredMagneticField*>(manager->GetDetectorField()))stored=&field->Specification();
+        if(const auto* field=dynamic_cast<const ConfiguredElectroMagneticField*>(manager->GetDetectorField()))stored=&field->Specification();
+    }
+    if(!stored){config.RecordEffectiveConfigBinding(name,logicalVolume,applied,nullptr);return;}
+    FieldSpec observed=*stored;
+    observed.deltaOneStep=manager->GetDeltaOneStep();
+    observed.deltaIntersection=manager->GetDeltaIntersection();
+    if(manager->GetChordFinder())observed.deltaChord=manager->GetChordFinder()->GetDeltaChord();
+    // minStep is retained from the immutable installed spec; the native
+    // integration driver API has no portable getter for this setting.
+    config.RecordEffectiveConfigBinding(name,logicalVolume,applied,&observed);
 }
 
 }  // namespace
@@ -172,7 +192,11 @@ void ConstructImpl(const FieldConfig& config, bool validateOnly)
     if (resolved.size() != store->size()) throw std::runtime_error("cyclic logical-volume field hierarchy");
     if (validateOnly) return;
 
-    if (global) MakeFieldManager(*global, G4TransportationManager::GetTransportationManager()->GetFieldManager());
+    if (global) {
+        auto* actual = G4TransportationManager::GetTransportationManager()->GetFieldManager();
+        MakeFieldManager(*global, actual);
+        RecordBinding(config,"", "transport_global",actual,actual->GetDetectorField() != nullptr);
+    }
     std::map<const FieldSpec*, G4FieldManager*> managers;
     for (const auto& binding : explicitFields) {
         if (!managers.count(binding.second)) managers.emplace(binding.second, MakeFieldManager(*binding.second, nullptr));
@@ -182,6 +206,8 @@ void ConstructImpl(const FieldConfig& config, bool validateOnly)
     for (auto* logical : postorder) {
         const auto* selected = resolved.at(logical);
         logical->SetFieldManager(selected ? managers.at(selected) : nullptr, false);
+        if (selected) RecordBinding(config,selected->name,logical->GetName(),logical->GetFieldManager(),
+            logical->GetFieldManager() == managers.at(selected));
     }
 }
 

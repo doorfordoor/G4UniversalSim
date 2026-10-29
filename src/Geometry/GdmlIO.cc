@@ -27,11 +27,17 @@ ImportResult Read(const std::string& path, bool validate, bool checkOverlaps)
     if (!std::filesystem::is_regular_file(std::filesystem::u8path(path))) {
         throw std::runtime_error("GDML file does not exist: '" + path + "'");
     }
+    std::unique_lock<std::recursive_mutex> nativeLock(GdmlInputCapture::NativeMutex());
     static std::unique_ptr<G4GDMLParser> parser;
     parser = std::make_unique<G4GDMLParser>();
     parser->SetOverlapCheck(checkOverlaps);
-    parser->Read(path, validate);
     ImportResult result;
+    {
+        GdmlInputCapture capture;
+        parser->Read(path, validate);
+        result.acceptedInputs = capture.AcceptedInputs();
+        result.untrackedInputs = capture.UntrackedInputs();
+    }
     result.world = parser->GetWorldVolume();
     if (!result.world) throw std::runtime_error("GDML file '" + path + "' does not define a world volume");
     std::vector<G4LogicalVolume*> pending{result.world->GetLogicalVolume()};
@@ -77,6 +83,7 @@ void Write(const std::string& path, G4VPhysicalVolume* world)
         throw std::runtime_error("GDML export refuses to overwrite existing file '" + path + "'");
     }
     if (file.has_parent_path()) std::filesystem::create_directories(file.parent_path());
+    std::unique_lock<std::recursive_mutex> nativeLock(GdmlInputCapture::NativeMutex());
     G4GDMLParser parser;
     parser.Write(path, world, false);
     if (!std::filesystem::is_regular_file(file)) throw std::runtime_error("GDML export failed to write '" + path + "'");

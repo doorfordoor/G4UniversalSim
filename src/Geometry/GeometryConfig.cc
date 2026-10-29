@@ -77,15 +77,17 @@ int ParseCount(const std::string& text)
 
 void GeometryConfig::Load(const std::string& filename)
 {
-    Clear();
-    if (!FileUtils::IsFile(filename)) {
-        throw std::runtime_error("Geometry config file does not exist: '" + filename + "'");
-    }
-    filename_ = filename;
-
-    std::ifstream input(filename);
-    if (!input) throw std::runtime_error("Failed to open geometry config file: '" + filename + "'");
-
+    const auto input=input_provenance::ReadFile(filename);
+    GeometryConfig candidate;
+    candidate.LoadBytes(filename,input.bytes);
+    *this=std::move(candidate);
+}
+void GeometryConfig::LoadBytes(const std::string& filename,const std::string& bytes)
+{
+    filename_=filename;
+    sourceReader_.LoadBytes(filename,bytes);
+    inputs_.push_back({filename,{},sourceReader_.GetInputSha256()});
+    std::istringstream input(bytes);
     std::map<std::string, Section> sections;
     std::string currentSection;
     std::string line;
@@ -134,12 +136,10 @@ void GeometryConfig::Load(const std::string& filename)
     std::map<std::string, std::map<int, BooleanSolidOperation>> pendingBooleanOps;
     std::map<std::string, std::string> pendingBooleanTargets;
 
-    IniReader sourceReader;
-    sourceReader.Load(filename);
-    sourceFields_ = sourceReader.GetFields();
-    sourceSections_ = sourceReader.GetSectionInfo();
+    sourceFields_ = sourceReader_.GetFields();
+    sourceSections_ = sourceReader_.GetSectionInfo();
     diagnostics_.clear();
-    CollectGeometryConfigDiagnostics(filename_, sourceFields_, sourceSections_, "hierarchical", diagnostics_);
+    CollectGeometryConfigDiagnostics(filename_, sourceFields_, sourceSections_, "hierarchical", diagnostics_, &bytes);
     ValidateCutFields();
 
     for (const auto& section : sections) {
@@ -204,6 +204,7 @@ void GeometryConfig::LoadFromConfigManager(const ConfigManager& config)
 
 void GeometryConfig::Clear()
 {
+    sourceReader_.Clear();inputs_.clear();
     filename_.clear();
     flatVolumes_.clear();
     indexByName_.clear();
@@ -857,8 +858,9 @@ void GeometryConfig::ParsePlacement(const std::string& sectionName, VolumeNode& 
                 fail("copies_file", "copies_file defines every copy's position and rotation; remove position and rotation.");
             }
             const std::string path = ResolveNextTo(filename_, values.at("copies_file"));
-            std::ifstream input(std::filesystem::u8path(path));
-            if (!input) fail("copies_file", "cannot open '" + path + "'.");
+            const auto acceptedInput=input_provenance::ReadFile(path);
+            std::istringstream input(acceptedInput.bytes);
+            inputs_.push_back({path,{},acceptedInput.sha256});
             std::string line;
             std::vector<std::string> header;
             int lineNumber = 0;

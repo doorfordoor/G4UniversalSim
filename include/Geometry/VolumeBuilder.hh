@@ -1,4 +1,5 @@
 #pragma once
+#include "Config/EffectiveConfig.hh"
 
 #include "Geometry/GeometryTypes.hh"
 
@@ -35,6 +36,7 @@ public:
     const std::string& GetDefaultWorldMaterial() const;
 
     void Clear();
+    const effective_config::Value::Array& GetInputEvidence() const { return inputEvidence_; }
 
     G4VPhysicalVolume* BuildWorld(const VolumeNode& rootNode);
     G4LogicalVolume* BuildLogicalVolume(const VolumeNode& node);
@@ -83,6 +85,7 @@ private:
     G4VPhysicalVolume* PlaceReplica(const VolumeNode& node, G4LogicalVolume* logical, G4LogicalVolume* motherLogical);
     G4VPhysicalVolume* PlaceParameterised(const VolumeNode& node, G4LogicalVolume* logical, G4LogicalVolume* motherLogical);
 
+    effective_config::Value::Array inputEvidence_;
     MaterialManager* materialManager_ = nullptr;
     GeometryRegistry* registry_ = nullptr;
     bool checkOverlaps_ = true;

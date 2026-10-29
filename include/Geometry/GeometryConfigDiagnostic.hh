@@ -29,5 +29,6 @@ void CollectGeometryConfigDiagnostics(
     const std::vector<IniFieldInfo>& fields,
     const std::vector<IniSectionInfo>& sections,
     const std::string& templateName,
-    std::vector<GeometryConfigDiagnostic>& diagnostics
+    std::vector<GeometryConfigDiagnostic>& diagnostics,
+    const std::string* acceptedBytes = nullptr
 );

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Scoring/PhaseSpace.hh"
+#include "Config/EffectiveConfigSupport.hh"
 
 #include <map>
 #include <memory>
@@ -43,6 +44,8 @@ public:
         double alpha = 0.0;
         double ezero = 0.0;
         std::string spectrumFile;
+        std::string spectrumSha256;
+        std::string preset;
         std::vector<std::pair<double, double>> spectrum;  // histogram: (upper edge, weight), first = (lower edge, 0); points: (E, density)
 
         // Position. type/shape use GPS names: Point, Plane, Volume, Beam;
@@ -85,6 +88,7 @@ public:
     // Throws if a confinement volume is missing or a phase-space file is too
     // short for plannedEvents without recycling.
     void PrepareForRun(long long plannedEvents = 0);
+    void ObserveEffectiveRunSource(const std::string& stage = "run_begin") const;
     // Called immediately before direct native commands on the master. Keeps
     // pending configuration separate from GPS state; does not rewrite SourceSpec.
     void BeforeNativeGPSCommand(const std::string& command);
@@ -129,8 +133,18 @@ public:
 
     std::size_t GetSourceCount() const;
     const std::vector<SourceSpec>& GetSources() const;
+    std::vector<effective_config::Field> ExportEffectiveConfigFields() const;
+    effective_config::Value ExportEffectiveConfigEvidence() const;
+    void ConfirmEffectiveConfigMutation(const std::string& command, const effective_config::Origin& origin);
 
 private:
+    void LoadFromConfigImpl(const ConfigManager& config);
+    std::vector<effective_config::Field> ProjectEffectiveConfigFields() const;
+    void ObserveGPS(std::size_t index, const G4SingleParticleSource& source, const std::string& stage) const;
+    std::shared_ptr<effective_config::ConsumerState> effective_ = std::make_shared<effective_config::ConsumerState>();
+    std::vector<input_provenance::InputFile> phaseSpaceInputs_;
+    mutable std::map<const G4SingleParticleSource*, std::size_t> configuredGPSSources_;
+    bool nativeGPSIdentityUncertain_ = false;
     SourceSpec& Current();
     const SourceSpec& Current() const;
     void RequireSingleSourceForCommand(const char* what) const;

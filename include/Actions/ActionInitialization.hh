@@ -1,6 +1,7 @@
 #pragma once
 
 #include "G4VUserActionInitialization.hh"
+#include "Actions/RunAction.hh"
 
 class OutputManager;
 class ScoringManager;
@@ -20,6 +21,9 @@ public:
 
     void SetVerboseLevel(int level);
     int GetVerboseLevel() const;
+    void SetEffectiveCallbacks(RunAction::EffectiveCallback begin, RunAction::EffectiveCallback end) {
+        effectiveBegin_ = std::move(begin); effectiveEnd_ = std::move(end);
+    }
 
 private:
     SourceManager* sourceManager_ = nullptr;   // non-owning
@@ -27,4 +31,5 @@ private:
     OutputManager* masterOutputManager_ = nullptr;   // non-owning
     BiasingManager* biasingManager_ = nullptr; // non-owning
     int verboseLevel_ = 0;
+    RunAction::EffectiveCallback effectiveBegin_, effectiveEnd_;
 };

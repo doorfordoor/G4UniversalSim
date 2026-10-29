@@ -1,3 +1,12 @@
+#include "Config/EffectiveRuntime.hh"
+#include "G4VModularPhysicsList.hh"
+#include "G4VPhysicsConstructor.hh"
+#include "G4ParticleTable.hh"
+#include "G4ProcessManager.hh"
+#include "G4VProcess.hh"
+#include "G4RegionStore.hh"
+#include "G4Region.hh"
+#include "G4ProductionCuts.hh"
 #include "Physics/PhysicsManager.hh"
 #include "Config/ConfigSchemaTable.hh"
 
@@ -13,6 +22,7 @@
 #include <cmath>
 #include <iostream>
 #include <stdexcept>
+#include <sstream>
 
 namespace {
 
@@ -476,6 +486,13 @@ double PhysicsManager::GetElectronCaptureThreshold() const
 
 void PhysicsManager::LoadFromConfig(const ConfigManager& config)
 {
+    LoadFromConfigImpl(config);
+    effective_->reader=config.GetMainReader();
+    effective_->Accept(config.GetMainReader(),ProjectEffectiveConfigFields());
+}
+
+void PhysicsManager::LoadFromConfigImpl(const ConfigManager& config)
+{
     if (config.HasSection("physics") && config.HasKey("physics", "reference")) {
         const auto reference = StringUtils::Trim(config.GetString("physics", "reference", ""));
         if (reference.empty()) {
@@ -695,5 +712,139 @@ void PhysicsManager::AddUnique(std::vector<std::string>& values, const std::stri
 {
     if (std::find(values.begin(), values.end(), value) == values.end()) {
         values.push_back(value);
+    }
+}
+
+std::vector<effective_config::Field> PhysicsManager::ProjectEffectiveConfigFields() const
+{
+ using namespace effective_config;std::vector<Field> result;
+ const auto add=[&](const char* key,Value value,const char* unit,const char* section,std::initializer_list<const char*> keys){result.push_back(effective_->Make(FieldPath("physics",key),std::move(value),unit,section,keys));};
+ const bool hasEMKey=effective_->reader.HasKey("physics","em");
+ const bool acceptedEM=hasEMKey && !StringUtils::Trim(effective_->reader.GetString("physics","em","")).empty();
+ const auto ignoredEM=[&](Field& field){
+  if(!hasEMKey || acceptedEM)return;
+  auto ignored=effective_->Make(field.path,field.resolved,field.unit,"physics",{"em"});
+  for(auto origin:ignored.origins)if(origin.kind=="main_ini"){origin.disposition="shadowed";field.origins.push_back(std::move(origin));}
+  field.reason+="; explicit empty em is ignored by the consumer";
+ };
+ add("mode",HasReferenceList()?"reference":"manual","","physics",{"reference"});
+ add("verbose",verboseLevel_,"","physics",{"verbose"});
+ if(HasReferenceList()){
+  add("reference",referenceListName_,"","physics",acceptedEM?std::initializer_list<const char*>{"reference","em"}:std::initializer_list<const char*>{"reference"});
+  ignoredEM(result.back());
+  add("base_reference",baseReferenceListName_,"","physics",{"reference"});
+  if(!requestedEMOption_.empty())add("requested_em",requestedEMOption_,"","physics",{"em"});
+  add("extra_modules",List(extraModules_),"","physics",{"modules","extra_modules"});
+ }else{
+  add("em",emOption_,"","physics",acceptedEM?std::initializer_list<const char*>{"em"}:hasEMKey?std::initializer_list<const char*>{}:std::initializer_list<const char*>{"list"});
+  ignoredEM(result.back());
+  // Manual module lists may themselves select EM, after the explicit
+  // em/list consumer. Record only module declarations that actually select EM.
+  auto& emField=result.back();
+  for(const auto* key:{"modules","extra_modules"}) {
+   const auto value=effective_->reader.GetString("physics",key,"");bool hasEM=false;
+   for(const auto& option:StringUtils::Split(value,',')) {
+    if(StringUtils::Trim(option).empty())continue;
+    try {hasEM=hasEM || PhysicsFactory::Classify(PhysicsFactory::NormalizeOptionName(option))==PhysicsCategory::EM;}catch(const std::exception&){}
+   }
+   if(!hasEM)continue;
+   const auto declarations=effective_->reader.GetDeclarations();
+   std::size_t last=0;for(const auto& d:declarations)if(d.normalizedSection=="physics" && d.normalizedKey==key)last=d.lineNumber;
+   for(const auto& d:declarations)if(d.normalizedSection=="physics" && d.normalizedKey==key) {
+    Origin origin;origin.kind="main_ini";origin.file=effective_->reader.GetFilename();origin.input_sha256=effective_->reader.GetInputSha256();
+    origin.section=d.originalSection;origin.key=d.originalKey;origin.alias=d.originalKey;origin.line=d.lineNumber;origin.raw=d.value;
+    origin.disposition=d.lineNumber==last?"accepted":"shadowed";
+    if(origin.disposition=="accepted") {for(auto& old:emField.origins)if(old.disposition=="accepted")old.disposition="shadowed";emField.requested=d.value;emField.requested_known=true;}
+    emField.origins.push_back(std::move(origin));
+   }
+  }
+  add("modules",List(modules_),"","physics",hasEMKey?std::initializer_list<const char*>{"modules","extra_modules"}:std::initializer_list<const char*>{"list","modules","extra_modules"});
+ }
+ add("default_cut",defaultCut_/mm,"mm","physics",{"default_cut"});
+ for(const auto& cut:particleCuts_)result.push_back(effective_->Make(ObjectFieldPath("physics", "particle:"+cut.first,"cut"),cut.second/mm,"mm","physics.cuts",{cut.first.c_str()}));
+ for(const auto& region:regionCuts_)for(const auto& cut:region.second)
+  result.push_back(effective_->Make(ObjectFieldPath("physics","region:"+region.first,"cut_"+cut.first),cut.second/mm,"mm","physics.region."+StringUtils::ToLower(region.first),{cut.first.c_str()}));
+ for(const auto& region:regionPhysics_) {
+  const auto section="physics.region."+StringUtils::ToLower(region.first);const auto& s=region.second;
+  const auto item=[&](const std::string& key,Value value,const char* unit){result.push_back(effective_->Make(ObjectFieldPath("physics","region:"+region.first,key),std::move(value),unit,section,{key.c_str()}));};
+  for(const auto& cut:s.cuts)item(cut.first,cut.second/mm,"mm");
+  item("volumes",List(s.volumes),"");
+  if(s.maxStep>0)item("max_step",s.maxStep/mm,"mm");
+  if(s.maxTrackLength>0)item("max_track_length",s.maxTrackLength/mm,"mm");
+  if(s.maxTime>0)item("max_time",s.maxTime/ns,"ns");
+  if(s.minKineticEnergy>0)item("min_kinetic_energy",s.minKineticEnergy/MeV,"MeV");
+ }
+ add("radioactive_decay",radioactiveDecayEnabled_,"","physics.radioactive_decay",{"enabled"});
+ if(HasRadioactiveDecayTimeThreshold())add("radioactive_decay_time_threshold",radioactiveDecayTimeThreshold_/ns,"ns","physics.radioactive_decay",{"time_threshold"});
+ add("biasing",biasingPhysicsEnabled_,"","physics",{"biasing"});
+ add("microelec",microElecEnabled_,"","physics.microelec",{"enabled"});
+ if(microElecEnabled_){
+  add("microelec_region",microElecRegionName_,"","physics.microelec",{"region"});
+  add("electron_capture",electronCaptureEnabled_,"","physics.microelec",{"electron_capture"});
+  if(electronCaptureEnabled_)add("electron_capture_threshold",electronCaptureThreshold_/MeV,"MeV","physics.microelec",{"electron_capture_threshold"});
+ }
+ return result;
+}
+std::vector<effective_config::Field> PhysicsManager::ExportEffectiveConfigFields() const {return effective_->accepted?effective_->fields:ProjectEffectiveConfigFields();}
+effective_config::Value PhysicsManager::ExportEffectiveConfigEvidence() const {return effective_->Evidence();}
+void PhysicsManager::ConfirmEffectiveConfigMutation(const std::string& command,const effective_config::Origin& origin)
+{
+ auto fields=ProjectEffectiveConfigFields();std::vector<std::string> targets;
+ const auto name=StringUtils::ToLower(command.substr(0,command.find_first_of(" \t")));
+ for(const auto& f:fields){const auto key=f.path.substr(f.path.find_last_of('/')+1);
+  const bool em=name.find("setem")!=std::string::npos && (key=="em" || key=="requested_em" || key=="reference");
+  const bool reference=name.find("referencelist")!=std::string::npos && (key=="reference" || key=="base_reference" || key=="mode");
+  const bool module=(name.find("module")!=std::string::npos || name.find("addhadronic")!=std::string::npos || name.find("addother")!=std::string::npos) && (key=="modules" || key=="extra_modules");
+  const bool exact=name.find("defaultcut")!=std::string::npos && key=="default_cut";
+  const bool option=(name.find("microelec")!=std::string::npos && key.find("microelec")!=std::string::npos) ||
+   (name.find("electroncapture")!=std::string::npos && key.find("electron_capture")!=std::string::npos) ||
+   (name.find("biasing")!=std::string::npos && key=="biasing") || (name.find("verbose")!=std::string::npos && key=="verbose");
+  if(em || reference || module || exact || option)targets.push_back(f.path);
+ }
+ // Particle/region setters encode the exact object name as their first argument.
+ std::istringstream arguments(command);std::string cmd,object;arguments>>cmd>>object;
+ if(name.find("setcut")!=std::string::npos)targets.push_back(effective_config::ObjectFieldPath("physics","particle:"+NormalizeParticleName(object),"cut"));
+ if(name.find("setregioncut")!=std::string::npos){std::string particle;arguments>>particle;targets.push_back(effective_config::ObjectFieldPath("physics","region:"+object,"cut_"+NormalizeParticleName(particle)));}
+ effective_->Confirm(std::move(fields),command,origin,false,targets);
+}
+void PhysicsManager::ObserveEffectiveConfigPhysics(const G4VModularPhysicsList& list,const std::string& stage) const
+{
+    using namespace effective_config;
+    Value::Array constructors;
+    for(int i=0;;++i){const auto* physics=list.GetPhysics(i);if(!physics)break;constructors.emplace_back(physics->GetPhysicsName());}
+    // Registered constructor names neither identify a reference-list name nor
+    // have the same semantics as accepted factory aliases. Keep an independent
+    // inventory with no fabricated configuration-valued observation.
+    Value::Object inventory{{"path",FieldPath("physics","mode")},{"stage",stage},
+        {"thread_id",G4Threading::G4GetThreadId()},
+        {"run_id",G4RunManager::GetRunManager() && G4RunManager::GetRunManager()->GetCurrentRun()?
+            Value(G4RunManager::GetRunManager()->GetCurrentRun()->GetRunID()):Value()},
+        {"application_status","unknown"},{"evidence_level","none"},
+        {"evidence_source","Actual G4VModularPhysicsList inventory; constructor names do not prove configured list identity"},
+        {"registered_constructors",constructors}};
+    if(stage=="physics_process") {
+        auto* table=G4ParticleTable::GetParticleTable();auto* iterator=table->GetIterator();iterator->reset();
+        Value::Object processes;
+        while((*iterator)()) {
+            auto* particle=iterator->value();auto* manager=particle->GetProcessManager();if(!manager)continue;
+            Value::Array names;auto* actual=manager->GetProcessList();
+            for(int i=0;i<manager->GetProcessListLength();++i)names.emplace_back((*actual)[i]->GetProcessName());
+            processes[particle->GetParticleName()]=std::move(names);
+        }
+        inventory["particle_processes"]=std::move(processes);
+    }
+    effective_->Record(std::move(inventory));
+    effective_->Record(Receipt(FieldPath("physics","verbose"),list.GetVerboseLevel(),stage,"Actual physics-list verbosity readback"));
+    if(stage=="physics_cuts") {
+        effective_->Record(Receipt(FieldPath("physics","default_cut"),list.GetDefaultCutValue()/mm,stage,"Actual physics-list default cut readback"));
+        for(const auto& cut:particleCuts_)
+            effective_->Record(Receipt(ObjectFieldPath("physics","particle:"+cut.first,"cut"),list.GetCutValue(cut.first)/mm,stage,"Actual physics-list particle production cut readback"));
+        for(const auto& settings:regionPhysics_) {
+            const auto* region=G4RegionStore::GetInstance()->GetRegion(settings.first,false);
+            if(!region || !region->GetProductionCuts())continue;
+            for(const auto& cut:settings.second.cuts)
+                effective_->Record(Receipt(ObjectFieldPath("physics","region:"+settings.first,cut.first),
+                    region->GetProductionCuts()->GetProductionCut(cut.first)/mm,stage,"Actual named-region production cut readback"));
+        }
     }
 }

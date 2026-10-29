@@ -16,7 +16,7 @@ struct KeySpec {
 };
 
 // main INI sections whose keys come from the schema
-inline constexpr const char* kMainIniSections[] = {"run", "general", "output", "source", "phase_space", "physics", "physics.microelec", "physics.radioactive_decay", "scoring", "scoring.edep", "scoring.let", "materials", "geometry"};
+inline constexpr const char* kMainIniSections[] = {"run", "general", "output", "source", "phase_space", "physics", "physics.microelec", "physics.radioactive_decay", "scoring", "scoring.edep", "scoring.let", "materials", "geometry", "modules"};
 
 inline constexpr KeySpec kMainIniKeys[] = {
     {"run", "threads", "", ValueType::Int, "1", "supported"},
@@ -113,6 +113,10 @@ inline constexpr KeySpec kMainIniKeys[] = {
     {"geometry", "check_overlaps", "checkoverlaps", ValueType::Bool, nullptr, "supported"},
     {"geometry", "default_world_material", "defaultworldmaterial", ValueType::String, nullptr, "supported"},
     {"geometry", "config", "configfile", ValueType::ExistingFile, "", "supported"},
+    {"modules", "scoring", "", ValueType::Enum, nullptr, "experimental"},
+    {"modules", "biasing", "", ValueType::Enum, nullptr, "experimental"},
+    {"modules", "field", "", ValueType::Enum, nullptr, "experimental"},
+    {"modules", "trajectories", "", ValueType::Enum, nullptr, "experimental"},
 };
 
 }  // namespace ConfigSchema
@@ -291,6 +295,10 @@ inline constexpr FieldKey kFieldKeys[] = {
     {"main_ini", "geometry", "defaultworldmaterial", true},
     {"main_ini", "geometry", "config", true},
     {"main_ini", "geometry", "configfile", true},
+    {"main_ini", "modules", "scoring", true},
+    {"main_ini", "modules", "biasing", true},
+    {"main_ini", "modules", "field", true},
+    {"main_ini", "modules", "trajectories", true},
     {"materials_ini", "nist", "materials", true},
     {"materials_ini", "isotope.<name>", "symbol", true},
     {"materials_ini", "isotope.<name>", "z", true},

@@ -25,12 +25,16 @@ public:
     bool Evaluate(double energy, double& nielMeVcm2PerG) const;
 
     const std::string& GetFile() const { return file_; }
+    const std::string& GetInputSha256() const { return inputSha256_; }
     double MinEnergy() const { return energies_.front(); }   // Geant4 units
     double MaxEnergy() const { return energies_.back(); }
     std::size_t Size() const { return energies_.size(); }
+    const std::vector<double>& Energies() const { return energies_; }
+    const std::vector<double>& Values() const { return values_; }
 
 private:
     std::string file_;
+    std::string inputSha256_;
     std::vector<double> energies_;  // Geant4 units
     std::vector<double> values_;    // MeV cm2/g
 };

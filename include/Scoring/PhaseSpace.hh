@@ -11,6 +11,7 @@
 // worker files of one run can simply be concatenated (event IDs are unique
 // across the threads of a run).
 
+#include "Config/InputProvenance.hh"
 #include <string>
 #include <vector>
 
@@ -33,6 +34,8 @@ namespace PhaseSpace {
 const std::vector<std::string>& Header();
 std::vector<std::string> Row(const PhaseSpaceParticle& particle);
 // Reads and validates the files in order; throws with file and line on error.
-std::vector<std::vector<PhaseSpaceParticle>> ReadHistories(const std::vector<std::string>& files);
+// Optional acceptedInputs receives path/hash metadata (bytes released), only on success.
+std::vector<std::vector<PhaseSpaceParticle>> ReadHistories(const std::vector<std::string>& files,
+    std::vector<input_provenance::InputFile>* acceptedInputs = nullptr);
 
 }  // namespace PhaseSpace

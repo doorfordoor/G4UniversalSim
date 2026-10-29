@@ -1,3 +1,4 @@
+#include "Config/InputProvenance.hh"
 #include "Config/ConfigSchemaTable.hh"
 #include "Materials/MaterialIniReader.hh"
 
@@ -98,16 +99,15 @@ std::string SchemaMessage(const std::string& key, const std::vector<std::string>
 
 void MaterialIniReader::Load(const std::string& filename)
 {
-    Clear();
-    if (!FileUtils::IsFile(filename)) {
-        throw std::runtime_error("Material ini file does not exist: '" + filename + "'");
-    }
-
-    std::ifstream input(filename);
-    if (!input) {
-        throw std::runtime_error("Failed to open material ini file: '" + filename + "'");
-    }
-
+    const auto input=input_provenance::ReadFile(filename);
+    MaterialIniReader candidate;
+    candidate.LoadBytes(filename,input.bytes);
+    *this=std::move(candidate);
+}
+void MaterialIniReader::LoadBytes(const std::string& filename,const std::string& bytes)
+{
+    inputReader_.LoadBytes(filename,bytes);
+    std::istringstream input(bytes);
     std::map<std::string, Section> sections;
     SourceMap sources;
     std::map<std::string, std::size_t> sectionLines;
@@ -227,6 +227,7 @@ std::vector<std::string> MaterialIniReader::GetNistMaterialNames() const
 
 void MaterialIniReader::Clear()
 {
+    inputReader_.Clear();
     nistMaterials_.clear();
     isotopes_.clear();
     elements_.clear();

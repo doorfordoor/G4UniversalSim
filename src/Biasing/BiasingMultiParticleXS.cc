@@ -49,6 +49,16 @@ bool BiasingMultiParticleXS::HasParticle(const G4String& particleName) const
     return particleOperators_.find(NormalizeParticleKey(particleName)) != particleOperators_.end();
 }
 
+std::vector<XSProcessBiasRule> BiasingMultiParticleXS::GetProcessRules() const
+{
+    std::vector<XSProcessBiasRule> result;
+    for (const auto& particle : particleOperators_) {
+        const auto rules = particle.second->GetProcessRules();
+        result.insert(result.end(), rules.begin(), rules.end());
+    }
+    return result;
+}
+
 void BiasingMultiParticleXS::ClearParticles()
 {
     currentOperator_ = nullptr;

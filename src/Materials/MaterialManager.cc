@@ -1,3 +1,5 @@
+#include "Materials/MaterialCommandParser.hh"
+#include "Config/EffectiveRuntime.hh"
 #include "Materials/MaterialManager.hh"
 
 #include "Materials/MaterialFactory.hh"
@@ -12,6 +14,7 @@
 #include "G4SystemOfUnits.hh"
 #include "G4ios.hh"
 
+#include <algorithm>
 #include <cmath>
 #include <cstdlib>
 #include <set>
@@ -54,6 +57,7 @@ void MaterialManager::LoadMaterials(const std::string& filename)
     EnsureUnlocked("load materials");
     MaterialIniReader reader;
     reader.Load(filename);
+    effectiveLoadInProgress_ = true;
     try {
         for (const std::string& nistName : reader.GetNistMaterialNames()) nistMaterialDefinitions_.push_back(nistName);
         for (const std::string& name : reader.GetIsotopeNames()) AddIsotopeDefinition(reader.GetIsotopeDefinition(name));
@@ -64,7 +68,13 @@ void MaterialManager::LoadMaterials(const std::string& filename)
         }
         BuildAll();
         loadedConfigFiles_.push_back(FileUtils::AbsolutePath(filename));
+        inputReaders_.push_back(reader.GetInputReader());
+        effective_->Accept(effective_->reader,ProjectEffectiveConfigFields());
+        effectiveLoadInProgress_=false;
+        RecordEffectiveConfigObjects();
     } catch (...) {
+        effectiveLoadInProgress_=false;
+        effective_->Record(effective_config::Receipt("/materials/load",filename,"material_load","MaterialManager::LoadMaterials","none","failed","Load may have constructed partial objects; no successful configuration provenance was published"));
         // BuildAll may have installed a subset of definitions/Geant4 objects.
         // An unsuccessful load must never be reported as a clean source.
         incompleteConfigLoad_ = true;
@@ -299,18 +309,21 @@ void MaterialManager::RegisterMaterial(const std::string& name, G4Material* mate
 {
     if (!material) throw std::runtime_error("Cannot register null material: '" + name + "'");
     materials_[Normalize(name)] = material;
+    if(!effectiveLoadInProgress_) RecordEffectiveConfigObjects();
 }
 
 void MaterialManager::RegisterElement(const std::string& name, G4Element* element)
 {
     if (!element) throw std::runtime_error("Cannot register null element: '" + name + "'");
     elements_[Normalize(name)] = element;
+    if(!effectiveLoadInProgress_) RecordEffectiveConfigObjects();
 }
 
 void MaterialManager::RegisterIsotope(const std::string& name, G4Isotope* isotope)
 {
     if (!isotope) throw std::runtime_error("Cannot register null isotope: '" + name + "'");
     isotopes_[Normalize(name)] = isotope;
+    if(!effectiveLoadInProgress_) RecordEffectiveConfigObjects();
 }
 
 std::vector<std::string> MaterialManager::GetMaterialNames() const
@@ -422,6 +435,8 @@ void MaterialManager::Clear()
     materials_.clear();
     buildingMaterials_.clear();
     buildingMaterialStack_.clear();
+    inputReaders_.clear();effectiveNistAliases_.clear();
+    effective_->Accept(effective_->reader,ProjectEffectiveConfigFields());
 }
 
 void MaterialManager::SetLocked(bool locked)
@@ -448,4 +463,119 @@ void MaterialManager::EnsureUnlocked(const std::string& action) const
             + ". Existing geometry will not update automatically after material changes."
         );
     }
+}
+
+std::vector<effective_config::Field> MaterialManager::ProjectEffectiveConfigFields() const
+{
+ using namespace effective_config;std::vector<Field> result;
+ const auto field=[&](const std::string& type,const std::string& name,const char* key,Value value,const char* unit,std::initializer_list<const char*> keys){
+  const auto path=ObjectFieldPath("materials",type+":"+name,key);ConsumerState fallback;
+  Field f=fallback.Make(path,std::move(value),unit,Normalize(type+"."+name),{});
+  f.origins.front().kind="runtime_unattributed";
+  const auto section=Normalize(type+"."+name);
+  for(const auto& reader:inputReaders_){ConsumerState source;source.reader=reader;
+   auto fragment=source.Make(path,f.resolved,unit,section,keys);
+   if(fragment.origins.size()==1 && type=="material")fragment=source.Make(path,f.resolved,unit,Normalize(name),{"material"});
+   if(fragment.origins.size()>1){
+    // MaterialIniReader processes its case-preserving section map in lexical
+    // order. Preserve that existing behavior even when differently cased
+    // declarations normalize to one definition; do not invent last-line wins.
+    const auto declarations=reader.GetDeclarations();std::string selectedSection;
+    const auto normalizedSection=Normalize(fragment.origins.back().section);
+    for(const auto& d:declarations)if(d.normalizedSection==normalizedSection && d.originalSection>selectedSection)selectedSection=d.originalSection;
+    for(auto& origin:fragment.origins)if(origin.kind=="main_ini")origin.disposition="shadowed";
+    for(const char* key:keys){const IniFieldInfo* winner=nullptr;
+     for(const auto& d:declarations)if(d.originalSection==selectedSection && d.normalizedKey==key)winner=&d;
+     if(winner){fragment.requested=winner->value;fragment.requested_known=true;
+      for(auto& origin:fragment.origins)if(origin.kind=="main_ini" && origin.line==winner->lineNumber)origin.disposition="accepted";}
+    }
+    if(f.origins.size()==1 && f.origins.front().kind=="runtime_unattributed")f.origins.clear();
+    for(auto& o:f.origins)if(o.disposition!="shadowed")o.disposition="shadowed";
+    f.origins.insert(f.origins.end(),fragment.origins.begin()+1,fragment.origins.end());f.requested=fragment.requested;f.requested_known=fragment.requested_known;}
+  }
+  result.push_back(std::move(f));
+ };
+ for(const auto& entry:isotopeDefinitions_){const auto& d=entry.second;
+  field("isotope",d.name,"symbol",d.symbol,"",{"symbol"});field("isotope",d.name,"z",d.z,"",{"z"});
+  field("isotope",d.name,"n",d.n,"",{"n"});field("isotope",d.name,"a",d.a/(g/mole),"g/mole",{"a"});
+ }
+ for(const auto& entry:elementDefinitions_){const auto& d=entry.second;
+  field("element",d.name,"symbol",d.symbol,"",{"symbol"});field("element",d.name,"use_isotopes",d.useIsotopes,"",{"isotopes"});
+  if(d.useIsotopes){Value::Array isotopes;for(const auto& c:d.isotopes)isotopes.emplace_back(Value::Object{{"name",c.isotopeName},{"abundance",c.abundance}});field("element",d.name,"isotopes",isotopes,"fraction",{"isotopes"});}
+  else {field("element",d.name,"z",d.z,"",{"z"});field("element",d.name,"a",d.a/(g/mole),"g/mole",{"a"});}
+ }
+ for(const auto& entry:materialDefinitions_){const auto& d=entry.second;
+  field("material",d.name,"source",d.source==MaterialSourceType::Nist?"nist":"custom","",{"material"});
+  if(d.source==MaterialSourceType::Nist){field("material",d.name,"nist_name",d.nistName,"",{"material"});continue;}
+  field("material",d.name,"density_auto",d.densityAuto,"",{"density","mode"});
+  if(d.HasExplicitDensity())field("material",d.name,"density",d.density/(g/cm3),"g/cm3",{"density"});
+  if(!d.state.empty())field("material",d.name,"state",StringUtils::ToLower(d.state),"",{"state"});
+  Value::Array components;
+  for(const auto& c:d.components){const char* mode=c.mode==MaterialComponentMode::ByAtomCount?"atom_count":(c.mode==MaterialComponentMode::ByVolumeFraction?"volume_fraction":"mass_fraction");
+   components.emplace_back(Value::Object{{"name",c.name},{"mode",mode},{"amount",c.mode==MaterialComponentMode::ByAtomCount?Value(c.atomCount):Value(c.fraction)}});}
+  field("material",d.name,"components",components,"",{"mode","components"});
+  if(d.isElement){field("material",d.name,"element_symbol",d.element.symbol,"",{});field("material",d.name,"element_z",d.element.z,"",{});field("material",d.name,"element_a",d.element.a/(g/mole),"g/mole",{});}
+ }
+ for(const auto& alias:effectiveNistAliases_)if(!materialDefinitions_.count(Normalize(alias.first))){
+  field("material",alias.first,"source","nist","",{});field("material",alias.first,"nist_name",alias.second,"",{});
+ }
+ Field lock;lock.path=FieldPath("materials","edit_locked");lock.resolved=locked_;lock.requested_known=false;lock.evidence_level=EvidenceLevel::ManagerAccepted;result.push_back(std::move(lock));
+ Field nist; nist.path=FieldPath("materials","nist_requests");nist.resolved=List(nistMaterialDefinitions_);nist.requested_known=false;nist.evidence_level=EvidenceLevel::ManagerAccepted;
+ for(const auto& reader:inputReaders_){ConsumerState state;state.reader=reader;auto f=state.Make(nist.path,nist.resolved,"","nist",{"materials"});if(f.origins.size()>1){nist.origins.insert(nist.origins.end(),f.origins.begin()+1,f.origins.end());nist.requested=f.requested;nist.requested_known=true;}}
+ result.push_back(std::move(nist));
+ Value::Array inputs;for(const auto& reader:inputReaders_)inputs.emplace_back(Value::Object{{"path",reader.GetFilename()},{"sha256",reader.GetInputSha256()}});
+ Field input;input.path=FieldPath("materials","input_files");input.resolved=inputs;input.requested_known=false;input.evidence_level=EvidenceLevel::ManagerAccepted;result.push_back(std::move(input));
+ return result;
+}
+std::vector<effective_config::Field> MaterialManager::ExportEffectiveConfigFields() const {return effective_->accepted?effective_->fields:ProjectEffectiveConfigFields();}
+effective_config::Value MaterialManager::ExportEffectiveConfigEvidence() const {return effective_->Evidence();}
+void MaterialManager::ConfirmEffectiveConfigMutation(const std::string& command,const effective_config::Origin& origin)
+{
+ const auto space=command.find_first_of(" \t");
+ const auto name=StringUtils::ToLower(command.substr(0,space));
+ const auto arguments=space==std::string::npos?std::string():command.substr(space+1);
+ std::map<std::string,std::string> values;
+ if(name.find("/add")!=std::string::npos)values=MaterialCommandParser::ParseKeyValueLine(arguments);
+ std::string object=values.count("name")?values.at("name"):std::string();
+ if(name.find("addnist")!=std::string::npos && values.count("nist")) {
+  if(object.empty())object=values.at("nist");effectiveNistAliases_[object]=values.at("nist");
+ }
+ auto fields=ProjectEffectiveConfigFields();std::vector<std::string> targets;
+ const std::string type=name.find("addelement")!=std::string::npos?"element":(name.find("addisotope")!=std::string::npos?"isotope":"material");
+ const auto prefix=object.empty()?std::string():"/materials/objects/"+effective_config::EscapePointerToken(type+":"+object)+"/";
+ for(const auto& f:fields){
+  if((!prefix.empty() && f.path.compare(0,prefix.size(),prefix)==0) ||
+     (name.find("load")!=std::string::npos) ||
+     (name.find("setlocked")!=std::string::npos && f.path=="/materials/edit_locked"))targets.push_back(f.path);
+ }
+ effective_->Confirm(std::move(fields),command,origin,false,targets);
+ RecordEffectiveConfigObjects();
+}
+void MaterialManager::RecordEffectiveConfigObjects() const
+{
+ using namespace effective_config;
+ const auto record=[&](const std::string& path,Value observed){
+  const auto found=std::find_if(effective_->fields.begin(),effective_->fields.end(),[&](const Field& f){return f.path==path;});
+  const bool matches=found==effective_->fields.end() || found->resolved.ToJson()==observed.ToJson();
+  effective_->Record(Receipt(path,std::move(observed),"material_construct","Actual registered Geant4 material/element/isotope readback","kernel_constructed",matches?"applied":"unknown",matches?"":"Existing Geant4 object differs from current definition; no redefinition is claimed"));
+ };
+ Value::Array nistObserved;
+ for(const auto& name:nistMaterialDefinitions_){const auto found=materials_.find(Normalize(name));nistObserved.emplace_back(found!=materials_.end() && found->second?Value(found->second->GetName()):Value());}
+ if(!nistMaterialDefinitions_.empty())record(FieldPath("materials","nist_requests"),nistObserved);
+ for(const auto& entry:isotopes_){const auto* object=entry.second;if(!object)continue;const auto found=isotopeDefinitions_.find(entry.first);const auto name=found==isotopeDefinitions_.end()?entry.first:found->second.name;
+  record(ObjectFieldPath("materials","isotope:"+name,"z"),object->GetZ());record(ObjectFieldPath("materials","isotope:"+name,"n"),object->GetN());record(ObjectFieldPath("materials","isotope:"+name,"a"),object->GetA()/(g/mole));}
+ for(const auto& entry:elements_){const auto* object=entry.second;if(!object)continue;const auto found=elementDefinitions_.find(entry.first);const auto name=found==elementDefinitions_.end()?entry.first:found->second.name;
+  record(ObjectFieldPath("materials","element:"+name,"z"),object->GetZ());record(ObjectFieldPath("materials","element:"+name,"a"),object->GetA()/(g/mole));
+  record(ObjectFieldPath("materials","element:"+name,"symbol"),object->GetSymbol());
+  if(found!=elementDefinitions_.end() && found->second.useIsotopes){Value::Array isotopes;
+   const auto* abundances=object->GetRelativeAbundanceVector();const auto* vector=object->GetIsotopeVector();
+   if(vector && abundances)for(std::size_t i=0;i<object->GetNumberOfIsotopes();++i)isotopes.emplace_back(Value::Object{{"name",(*vector)[i]->GetName()},{"abundance",abundances[i]}});
+   record(ObjectFieldPath("materials","element:"+name,"isotopes"),isotopes);
+  }
+ }
+ for(const auto& entry:materials_){const auto* object=entry.second;if(!object)continue;const auto found=materialDefinitions_.find(entry.first);const auto name=found==materialDefinitions_.end()?entry.first:found->second.name;
+  record(ObjectFieldPath("materials","material:"+name,"density"),object->GetDensity()/(g/cm3));
+  Value::Array elements;const auto* fractions=object->GetFractionVector();for(std::size_t i=0;i<object->GetNumberOfElements();++i)elements.emplace_back(Value::Object{{"element",(*object->GetElementVector())[i]->GetName()},{"mass_fraction",fractions?Value(fractions[i]):Value()}});
+  effective_->Record(Receipt(ObjectFieldPath("materials","material:"+name,"composition_observed"),elements,"material_construct","Actual G4Material element mass fractions"));
+ }
 }

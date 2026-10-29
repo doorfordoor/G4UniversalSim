@@ -1,3 +1,4 @@
+#include "Config/InputProvenance.hh"
 #include "Geometry/StlReader.hh"
 
 #include "Utils/StringUtils.hh"
@@ -72,9 +73,8 @@ namespace StlReader {
 StlMesh Read(const std::string& path, double lengthUnit)
 {
     if (!(lengthUnit > 0.0)) throw std::runtime_error("STL length unit must be > 0");
-    std::ifstream input(std::filesystem::u8path(path), std::ios::binary);
-    if (!input) throw std::runtime_error("Cannot open STL file '" + path + "'");
-    const std::string data((std::istreambuf_iterator<char>(input)), std::istreambuf_iterator<char>());
+    const auto input=input_provenance::ReadFile(path);
+    const auto& data=input.bytes;
 
     // Binary files may also start with "solid"; trust the size check first.
     std::vector<std::array<Vertex, 3>> facets;
@@ -88,6 +88,7 @@ StlMesh Read(const std::string& path, double lengthUnit)
     if (facets.size() < 4) throw std::runtime_error("STL '" + path + "' needs at least 4 triangles");
 
     StlMesh mesh;
+    mesh.inputPath=path;mesh.inputSha256=input.sha256;mesh.lengthUnit=lengthUnit;mesh.binary=binary;
     Vertex lo{1e300, 1e300, 1e300}, hi{-1e300, -1e300, -1e300};
     for (const auto& facet : facets) {
         for (const auto& v : facet) {

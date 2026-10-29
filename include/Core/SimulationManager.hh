@@ -5,6 +5,8 @@
 #include <functional>
 #include <map>
 #include "Field/FieldConfig.hh"
+#include "Config/EffectiveConfigSupport.hh"
+#include <mutex>
 
 #include <memory>
 #include <optional>
@@ -75,7 +77,11 @@ public:
     void ConfirmMacroCommandSuccess(bool seedStateChanged);
     void RecordSuccessfulMacroCommand(const std::string& command,
                                       const std::string& file,
-                                      int line);
+                                      int line, const std::string& inputSha256 = {});
+    void SetEffectiveMacroInputs(const std::vector<std::pair<std::string, std::string>>& inputs);
+    void ValidateEffectiveModuleCommand(const std::string& command) const;
+    void CaptureEffectiveRunBegin(int runId, ScoringManager* scoring, OutputManager* output) const;
+    void CaptureEffectiveThreadFinalization(int runId, ScoringManager* scoring, OutputManager* output) const;
     void SetExecutedMacroPath(const std::string& path);
     bool FinalizeRunSummary(const std::string& status,
                             int exitCode,
@@ -154,6 +160,15 @@ private:
     void WriteFinalConfigSnapshot(const std::string& macroStatus);
     void CaptureConfiguredValueOrigins();
     void MarkRuntimeValueOrigin(const std::string& field);
+    void InitializeEffectiveConfig();
+    void RefreshEffectiveConfig() const;
+    std::vector<effective_config::Field> ExportStartupFields() const;
+    void ConfirmEffectiveCommand(const std::string&, const effective_config::Origin&);
+    effective_config::Snapshot EffectiveSnapshot(const std::string& stage, std::optional<std::int64_t> runId,
+        ScoringManager* scoring = nullptr, OutputManager* output = nullptr) const;
+    void WriteEffectiveSnapshot(const effective_config::Snapshot&, const std::string&, OutputManager*) const;
+    void WriteEffectiveFinalization();
+    void ApplyModuleModes();
 
     struct ValueOrigin {
         std::string kind = "default";
@@ -203,4 +218,13 @@ private:
     bool runtimeTrackingStarted_ = false;
     std::string executedMacroPath_;
     std::map<std::string, ValueOrigin> effectiveValueOrigins_;
+    mutable std::mutex effectiveMutex_;
+    mutable effective_config::Registry effectiveRegistry_;
+    effective_config::ConsumerState startupEffective_;
+    std::optional<effective_config::Snapshot> configuredEffective_;
+    effective_config::Value::Array effectiveMacroInputs_;
+    effective_config::Value::Array effectiveCommands_;
+    mutable effective_config::Value::Array effectiveThreadFinals_;
+    std::map<std::string, std::string> moduleModes_;
+    mutable std::set<std::string> effectiveConfigureWritten_;
 };

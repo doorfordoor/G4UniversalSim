@@ -1,4 +1,6 @@
 #include "Core/MacroPreflight.hh"
+#include "Config/InputProvenance.hh"
+#include <sstream>
 #include "Core/RandomCommandGuard.hh"
 
 #include "Geometry/GdmlIO.hh"
@@ -181,6 +183,7 @@ public:
         ScanFile(filename, 0);
         return commands_;
     }
+    const std::vector<std::pair<std::string, std::string>>& Inputs() const { return inputs_; }
 
 private:
     void CheckCommand(
@@ -281,10 +284,11 @@ private:
         if (active_.find(filename) != active_.end()) {
             ThrowMacroError(filename, 0, "recursive /control/execute cycle detected");
         }
-        std::ifstream input(filename);
-        if (!input.is_open()) {
-            ThrowMacroError(filename, 0, "cannot open macro file");
-        }
+        input_provenance::InputFile accepted;
+        try { accepted = input_provenance::ReadFile(filename.u8string()); }
+        catch (const std::exception&) { ThrowMacroError(filename, 0, "cannot open macro file"); }
+        std::istringstream input(accepted.bytes);
+        inputs_.emplace_back(accepted.path, accepted.sha256);
 
         active_.insert(filename);
         std::string rawLine;
@@ -296,7 +300,7 @@ private:
 
             CheckCommand(line, filename, lineNumber);
             if (line.command != "/control/execute") {
-                commands_.push_back({filename, lineNumber, line.text});
+                commands_.push_back({filename, lineNumber, line.text, accepted.sha256, rawLine});
                 continue;
             }
 
@@ -318,6 +322,7 @@ private:
     MacroPreflightLocks locks_;
     std::set<std::filesystem::path> active_;
     std::vector<MacroCommand> commands_;
+    std::vector<std::pair<std::string, std::string>> inputs_;
 };
 
 }  // namespace
@@ -348,5 +353,6 @@ MacroPreflightResult PreflightMacro(
     );
 
     MacroScanner scanner(locks);
-    return {topLevel, scanner.Scan(topLevel)};
+    const auto commands = scanner.Scan(topLevel);
+    return {topLevel, commands, scanner.Inputs()};
 }

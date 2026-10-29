@@ -108,6 +108,7 @@ std::unique_ptr<ScoringManager> ScoringManager::CloneForThread(OutputManager* ou
     (void)threadId;
     auto clone = std::make_unique<ScoringManager>();
     clone->outputManager_ = outputManager;
+    clone->effectiveState_ = effectiveState_->Clone();
     clone->enabled_ = enabled_;
     clone->hitOutputEnabled_ = hitOutputEnabled_;
     clone->eventEdepOutputEnabled_ = eventEdepOutputEnabled_;
@@ -677,7 +678,11 @@ void ScoringManager::LoadFromConfig(const ConfigManager& config)
         }
         phaseSpaceKill_ = config.GetBool("phase_space", "kill", false);
     }
-    if (!config.HasSection("scoring")) return;
+    if (!config.HasSection("scoring")) {
+        effectiveState_->reader = config.GetMainReader();
+        effectiveState_->Accept(config.GetMainReader(), ExportEffectiveConfigFields());
+        return;
+    }
 
     Enable(config.GetBool("scoring", "enabled", enabled_));
     EnableHitOutput(config.GetBool("scoring", "hits", hitOutputEnabled_));
@@ -766,6 +771,8 @@ void ScoringManager::LoadFromConfig(const ConfigManager& config)
         }
         SetLETParticles(particles);
     }
+    effectiveState_->reader = config.GetMainReader();
+    effectiveState_->Accept(config.GetMainReader(), ExportEffectiveConfigFields());
 }
 
 void ScoringManager::PrintSummary() const

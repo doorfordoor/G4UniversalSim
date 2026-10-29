@@ -1,3 +1,14 @@
+#include "Utils/UnitParser.hh"
+#include "G4SystemOfUnits.hh"
+#include "Config/EffectiveRuntime.hh"
+#include "G4LogicalVolume.hh"
+#include "G4Material.hh"
+#include "G4VSolid.hh"
+#include "G4Box.hh"
+#include "G4Tubs.hh"
+#include "G4Region.hh"
+#include "G4ProductionCuts.hh"
+#include "G4UserLimits.hh"
 #include "Geometry/GeometryManager.hh"
 
 #include "Geometry/GeometryUtils.hh"
@@ -249,6 +260,9 @@ void GeometryManager::LoadGeometryConfig(const std::string& filename)
         ApplyUserAddedVolumes();
     }
     geometryConfigFile_ = filename;
+    effective_->reader=geometryTemplate->GetInputReader();
+    inputFiles_=geometryTemplate->GetInputs();
+    effective_->Accept(effective_->reader,ProjectEffectiveConfigFields());
     MarkDirty();
 }
 
@@ -546,6 +560,7 @@ G4VPhysicalVolume* GeometryManager::BuildWorld()
     G4VPhysicalVolume* world = volumeBuilder_.BuildWorld(*rootNode_);
     if (!world) throw std::runtime_error("GeometryManager BuildWorld returned null world physical volume");
     ApplyRegionPhysics();
+    RecordEffectiveConfigConstruction();
     ClearDirty();
     return world;
 }
@@ -638,6 +653,21 @@ G4VPhysicalVolume* GeometryManager::BuildGdmlWorld(const VolumeNode& root)
     const std::string file = root.GetProperty("gdml_file");
     const GdmlIO::ImportResult imported = GdmlIO::Read(file, root.GetProperty("gdml_validate") == "true", checkOverlaps_);
     registry_.RegisterPhysicalVolume(imported.world->GetName(), imported.world);
+    effective_config::Value::Array nativeInputs;
+    for(const auto& input:imported.acceptedInputs)nativeInputs.emplace_back(effective_config::Value::Object{{"path",input.path},{"sha256",input.sha256}});
+    effective_->Record(effective_config::Receipt(effective_config::FieldPath("geometry","input_files"),nativeInputs,"gdml_import","GdmlIO native exact-stream input capture"));
+    if(!imported.untrackedInputs.empty())effective_->Record(effective_config::Receipt(effective_config::FieldPath("geometry","input_files"),effective_config::List(imported.untrackedInputs),"gdml_import","GdmlIO native exact-stream input capture","none","unknown","Some parser inputs could not be completely observed; provenance is incomplete"));
+    std::function<void(G4VPhysicalVolume*,const std::string&)> observeImported;
+    observeImported=[&](G4VPhysicalVolume* pv,const std::string& parent){
+        const std::string identity=parent+"/"+std::string(pv->GetName())+"#"+std::to_string(pv->GetCopyNo());
+        auto* lv=pv->GetLogicalVolume();const auto& position=pv->GetObjectTranslation();
+        effective_->Record(effective_config::Receipt(effective_config::ObjectFieldPath("geometry","imported:"+identity,"observed"),
+          effective_config::Value::Object{{"logical_name",lv->GetName()},{"material",lv->GetMaterial()->GetName()},
+           {"solid_entity_type",lv->GetSolid()->GetEntityType()},{"position_mm",effective_config::Value::Array{position.x()/mm,position.y()/mm,position.z()/mm}},
+           {"copy_number",pv->GetCopyNo()},{"replicated",pv->IsReplicated()}},"gdml_import","Actual imported placement observation; original per-field requests unknown"));
+        for(int i=0;i<lv->GetNoDaughters();++i)observeImported(lv->GetDaughter(i),identity);
+    };
+    observeImported(imported.world,"");
     std::vector<G4LogicalVolume*> importedLogicals;
     std::set<G4LogicalVolume*> visited;
     const std::function<void(G4LogicalVolume*)> collect = [&](G4LogicalVolume* logical) {
@@ -749,6 +779,8 @@ void GeometryManager::Clear()
     templateRootNode_.reset();
     rootNode_.reset();
     userAddedVolumes_.clear();
+    inputFiles_.clear();effective_->reader.Clear();
+    effective_->Accept(effective_->reader,ProjectEffectiveConfigFields());
     registry_.Clear();
     volumeBuilder_.Clear();
     MarkDirty();
@@ -878,4 +910,178 @@ void GeometryManager::PrintTreeNode(const VolumeNode& node, int depth) const
 void GeometryManager::PrintReinitializeHint() const
 {
     G4cout << "[GeometryManager] Geometry tree was modified. Use /run/reinitializeGeometry before the next run if the run manager was already initialized." << G4endl;
+}
+
+std::vector<effective_config::Field> GeometryManager::ProjectEffectiveConfigFields() const
+{
+ using namespace effective_config;std::vector<Field> result;
+ const auto scalar=[&](const char* key,Value value){
+  ConsumerState source;source.reader=mainInputReader_;
+  std::vector<std::string> keys;
+  if(std::string(key)=="template")keys={"template","templatename"};
+  else if(std::string(key)=="config_file")keys={"config","configfile"};
+  else if(std::string(key)=="check_overlaps")keys={"check_overlaps","checkoverlaps"};
+  else if(std::string(key)=="default_world_material")keys={"default_world_material","defaultworldmaterial"};
+  else keys={key};
+  Field f=source.Make(FieldPath("geometry",key),std::move(value),"","geometry",{});
+  std::optional<IniFieldInfo> selected;
+  for(const auto& candidate:keys){for(const auto& entry:mainInputReader_.GetFields())if(entry.normalizedSection=="geometry" && entry.normalizedKey==candidate &&
+    (std::string(key)=="check_overlaps" || !StringUtils::Trim(entry.value).empty())){selected=entry;break;}if(selected)break;}
+  for(const auto& entry:mainInputReader_.GetDeclarations())if(entry.normalizedSection=="geometry" && std::find(keys.begin(),keys.end(),entry.normalizedKey)!=keys.end()){
+   Origin origin;origin.kind="main_ini";origin.file=mainInputReader_.GetFilename();origin.line=entry.lineNumber;origin.section=entry.originalSection;
+   origin.key=entry.originalKey;origin.alias=entry.originalKey;origin.raw=entry.value;origin.input_sha256=mainInputReader_.GetInputSha256();
+   origin.disposition=selected && selected->lineNumber==entry.lineNumber?"accepted":"shadowed";f.origins.push_back(origin);
+  }
+  if(selected){f.requested=selected->value;f.requested_known=true;f.origins.front().disposition="shadowed";}
+  result.push_back(std::move(f));
+ };
+ scalar("template",templateName_);scalar("config_file",geometryConfigFile_);scalar("check_overlaps",checkOverlaps_);scalar("default_world_material",defaultWorldMaterial_);
+ scalar("preserve_user_volumes_on_load",preserveUserVolumesOnLoad_);
+ Value::Array inputs;for(const auto& file:inputFiles_)inputs.emplace_back(Value::Object{{"path",file.path},{"sha256",file.sha256}});scalar("input_files",inputs);
+ if(!rootNode_)return result;
+ const auto vector=[](const Vec3& v,double unit){return Value::Array{v.x/unit,v.y/unit,v.z/unit};};
+ const auto rotation=[](const Rotation3& v){return Value::Array{v.x/deg,v.y/deg,v.z/deg};};
+ std::function<void(const VolumeNode&)> visit;
+ visit=[&](const VolumeNode& node){
+  std::string section=StringUtils::ToLower((templateName_=="hierarchical" || templateName_.find("boolean")!=std::string::npos)?(node.IsWorld()?"world":"volume."+node.name):node.name);
+  if(!node.IsWorld() && templateName_=="layered_device")section="layer."+StringUtils::ToLower(node.name);
+  if(!node.IsWorld() && templateName_=="shielding" && StringUtils::ToLower(node.name)!="detector")section="shield."+StringUtils::ToLower(node.name);
+  if(!node.IsWorld() && templateName_=="array")section="array";
+  if(!node.IsWorld() && templateName_=="simple_box")section="target";
+  const auto add=[&](const std::string& key,Value value,const char* unit,std::initializer_list<const char*> keys){
+   auto f=effective_->Make(ObjectFieldPath("geometry",node.name,key),std::move(value),unit,section,keys);
+   if(key=="boolean_operations" || (key=="visual" && templateName_=="simple_box") || (!node.IsWorld() && (templateName_=="array" || templateName_=="layered_device" || templateName_=="shielding"))) {
+    std::set<std::pair<std::string,std::string>> dependencies;
+    const auto depend=[&](const std::string& source,const std::string& input){dependencies.insert({source,input});};
+    if(key=="visual" && templateName_=="simple_box")for(const auto& d:effective_->reader.GetDeclarations())if(d.normalizedSection==(node.IsWorld()?"visual.world":"visual.target"))depend(d.normalizedSection,d.normalizedKey);
+    if(key=="boolean_operations")for(const auto& d:effective_->reader.GetDeclarations())if(d.normalizedSection.rfind(section+".boolean.",0)==0)depend(d.normalizedSection,d.normalizedKey);
+    if(templateName_=="array") {
+     if(key=="size")depend("array","element_size");
+     else if(key=="position")for(const char* input:{"center","pitch","counts"})depend("array",input);
+     else for(const char* input:keys)depend(section,input);
+    }
+    if(templateName_=="layered_device") {
+     if(key=="size"){depend(section,"xy");depend(section,"thickness");}
+     else if(key=="position") {depend(section,"position");for(const auto& d:effective_->reader.GetDeclarations())if(d.normalizedSection=="layers" || d.normalizedKey=="thickness")depend(d.normalizedSection,d.normalizedKey);}
+     else for(const char* input:keys)depend(section,input);
+    }
+    if(templateName_=="shielding") {
+     if(key=="size"){depend(section,"size");depend(section,"thickness");depend("shielding","area");}
+     else if(key=="position"){depend(section,"position");for(const auto& d:effective_->reader.GetDeclarations())if(d.normalizedSection=="shielding" || d.normalizedKey=="thickness")depend(d.normalizedSection,d.normalizedKey);}
+     else for(const char* input:keys)depend(section,input);
+    }
+    if(!dependencies.empty()){
+     f.origins.resize(1);f.origins.front().disposition="shadowed";Value::Object requested;
+     const auto winners=effective_->reader.GetFields();
+     for(const auto& d:effective_->reader.GetDeclarations())if(dependencies.count({d.normalizedSection,d.normalizedKey})){
+      Origin origin;origin.kind="main_ini";origin.file=effective_->reader.GetFilename();origin.line=d.lineNumber;origin.section=d.originalSection;
+      origin.key=d.originalKey;origin.alias=d.originalKey;origin.raw=d.value;origin.input_sha256=effective_->reader.GetInputSha256();origin.disposition="shadowed";
+      for(const auto& winner:winners)if(winner.normalizedSection==d.normalizedSection && winner.normalizedKey==d.normalizedKey && winner.lineNumber==d.lineNumber)origin.disposition="derived";
+      f.origins.push_back(origin);requested[d.originalSection+"/"+d.originalKey]=d.value;
+     }
+     if(!requested.empty()){f.requested=requested;f.requested_known=true;f.reason="Typed VolumeNode derived from the listed template inputs; earlier duplicate declarations are shadowed";}
+    }
+   }
+   if(f.origins.size()==1 && !geometryConfigFile_.empty()) {
+    Origin origin;origin.kind="derived";origin.file=geometryConfigFile_;origin.input_sha256=effective_->reader.GetInputSha256();origin.disposition="derived";
+    f.origins.push_back(origin);f.reason="Typed VolumeNode accepted from template '"+templateName_+"'; field may combine template inputs/defaults";
+   }
+   result.push_back(std::move(f));
+  };
+  add("parent",node.parentName,"",{"parent"});
+  if(node.GetProperty("template")=="gdml") {
+   add("import_descriptor",Value::Object{{"file",node.GetProperty("gdml_file")},{"validate",node.GetProperty("gdml_validate")},{"sensitive_volumes",node.GetProperty("sensitive_volumes")},{"bias_volumes",node.GetProperty("bias_volumes")}},"",{});
+   // The placeholder Box/material/size are not an accepted imported geometry.
+   return;
+  }
+  add("shape",node.ShapeAsString(),"",{"shape"});add("material",node.materialName,"",{"material"});
+  if(node.shape==VolumeShape::Box)add("size",vector(node.size,mm),"mm",{"size"});
+  if(!node.parameters.empty())add("parameters",Numbers(node.parameters),"Geant4_internal_shape_specific",{"parameters"});
+  add("position",vector(node.position,mm),"mm",{"position"});add("rotation",rotation(node.rotation),"deg",{"rotation"});
+  add("sensitive",node.sensitive,"",{"sensitive"});add("bias",node.bias,"",{"bias"});
+  if(!node.regionName.empty())add("region",node.regionName,"",{"region"});
+  if(node.hasProductionCuts){Value::Object cuts;
+   if(node.productionCuts.gamma>=0)cuts["gamma"]=node.productionCuts.gamma/mm;
+   if(node.productionCuts.electron>=0)cuts["e-"]=node.productionCuts.electron/mm;
+   if(node.productionCuts.positron>=0)cuts["e+"]=node.productionCuts.positron/mm;
+   if(node.productionCuts.proton>=0)cuts["proton"]=node.productionCuts.proton/mm;
+   add("production_cuts",cuts,"mm",{"cut.gamma","cut.e-","cut.e+","cut.proton"});}
+  const auto placement=node.placementType==PlacementType::Normal?"normal":(node.placementType==PlacementType::Replica?"replica":(node.placementType==PlacementType::Parameterised?"parameterised":"assembly"));
+  add("placement",placement,"",{"placement"});
+  if(node.placementType==PlacementType::Normal)add("copy_number",node.HasProperty("copyNo")?std::stoi(node.GetProperty("copyNo")):0,"",{"copyno"});
+  if(node.placementType==PlacementType::Replica)add("replica",Value::Object{{"axis",node.placement.replicaAxis},{"count",node.placement.replicaCount},
+    {"width",node.placement.replicaWidth/(node.placement.replicaAxis=="phi"?deg:mm)},
+    {"offset",node.placement.replicaOffset/(node.placement.replicaAxis=="phi"?deg:mm)},
+    {"unit",node.placement.replicaAxis=="phi"?"deg":"mm"},{"offset_explicit",node.placement.hasReplicaOffset}},"",{"replica_axis","replica_count","replica_width","replica_offset"});
+  if(node.placementType==PlacementType::Parameterised){Value::Array copies;for(const auto& copy:node.placement.copies)copies.emplace_back(Value::Object{{"position_mm",vector(copy.position,mm)},{"rotation_deg",rotation(copy.rotation)},{"material",copy.material}});add("copies",copies,"",{"copies_file","copies","copy_step","position","rotation"});}
+  add("visual",Value::Object{{"visible",node.visual.visible},{"color",node.visual.color},{"alpha",node.visual.alpha},{"wireframe",node.visual.wireframe}},"",{"vis.visible","vis.color","vis.alpha","vis.wireframe"});
+  for(const auto& property:node.userProperties){
+   static const std::set<std::string> used={"file","file.resolved","file_unit","dz","dy1","dy2","dx1","dx2","dx3","dx4","theta","phi","alpha1","alpha2","z_planes","r_inner","r_outer"};
+   if(!used.count(property.first))continue;
+   const auto inputKey=property.first=="file.resolved"?std::string("file"):StringUtils::ToLower(property.first);
+   if(property.first=="z_planes" || property.first=="r_inner" || property.first=="r_outer")
+    add("property:"+property.first,Numbers(GeometryUtils::ParseParameterList(property.second),mm),"mm",{inputKey.c_str()});
+   else if(property.first=="theta" || property.first=="phi" || property.first=="alpha1" || property.first=="alpha2")
+    add("property:"+property.first,UnitParser::ParseAngle(property.second)/deg,"deg",{inputKey.c_str()});
+   else if(property.first=="dz" || property.first.rfind("dx",0)==0 || property.first.rfind("dy",0)==0)
+    add("property:"+property.first,UnitParser::ParseLength(property.second)/mm,"mm",{inputKey.c_str()});
+   else if(property.first=="copyNo")add("copy_number",std::stoi(property.second),"",{"copyno"});
+   else add("property:"+property.first,property.second,"",{inputKey.c_str()});
+  }
+  Value::Array booleans;for(const auto& operation:node.booleanOperations){const auto& t=operation.tool;Value::Object properties;for(const auto& p:t.properties)properties[p.first]=p.second;
+   booleans.emplace_back(Value::Object{{"operation",operation.operation==BooleanOperation::Union?"union":(operation.operation==BooleanOperation::Subtraction?"subtraction":"intersection")},
+    {"name",operation.name},{"shape",GeometryUtils::ShapeToString(t.shape)},{"size_mm",vector(t.size,mm)},{"parameters",Numbers(t.parameters)},
+    {"position_mm",vector(t.position,mm)},{"rotation_deg",rotation(t.rotation)},{"properties",properties}});}
+  if(!booleans.empty())add("boolean_operations",booleans,"Geant4_internal_shape_specific",{});
+  for(const auto& child:node.children)visit(child);
+ };
+ visit(*rootNode_);return result;
+}
+void GeometryManager::AcceptEffectiveConfig(const IniReader& reader)
+{
+ mainInputReader_=reader;
+ if(geometryConfigFile_.empty())effective_->reader=reader;
+ effective_->Accept(effective_->reader,ProjectEffectiveConfigFields());
+}
+std::vector<effective_config::Field> GeometryManager::ExportEffectiveConfigFields() const {return effective_->accepted?effective_->fields:ProjectEffectiveConfigFields();}
+effective_config::Value GeometryManager::ExportEffectiveConfigEvidence() const {return effective_->Evidence();}
+void GeometryManager::ConfirmEffectiveConfigMutation(const std::string& command,const effective_config::Origin& origin)
+{
+ auto fields=ProjectEffectiveConfigFields();std::vector<std::string> targets;
+ const auto name=StringUtils::ToLower(command.substr(0,command.find_first_of(" \t")));
+ for(const auto& f:fields){
+  const auto key=f.path.substr(f.path.find_last_of('/')+1);
+  if(name.find("load")!=std::string::npos)targets.push_back(f.path);
+  if((name.find("settemplate")!=std::string::npos && key=="template") ||
+     (name.find("setcheckoverlaps")!=std::string::npos && key=="check_overlaps") ||
+     (name.find("setdefaultworldmaterial")!=std::string::npos && key=="default_world_material") ||
+     (name.find("preserve")!=std::string::npos && key=="preserve_user_volumes_on_load"))targets.push_back(f.path);
+ }
+ effective_->Confirm(std::move(fields),command,origin,false,targets);
+}
+void GeometryManager::RecordEffectiveConfigConstruction() const
+{
+ using namespace effective_config;
+ const auto record=[&](const std::string& name,const char* key,Value observed){effective_->Record(Receipt(ObjectFieldPath("geometry",name,key),std::move(observed),"geometry_construct","GeometryManager actual constructed object readback"));};
+ if(!rootNode_ || rootNode_->GetProperty("template")=="gdml")return;
+ std::function<void(const VolumeNode&)> visit;
+ visit=[&](const VolumeNode& node){auto* lv=registry_.GetLogicalVolume(node.name);auto* pv=registry_.GetPhysicalVolume(node.name);
+  if(lv){record(node.name,"material",lv->GetMaterial()->GetName());std::string actual=lv->GetSolid()->GetEntityType();
+   static const std::map<std::string,std::string> shapes={{"G4Box","box"},{"G4Tubs","tubs"},{"G4Sphere","sphere"},{"G4Orb","orb"},{"G4Cons","cone"},{"G4Trd","trd"},{"G4Trap","trap"},{"G4Ellipsoid","ellipsoid"},{"G4EllipticalTube","eltube"},{"G4Torus","torus"},{"G4Para","para"},{"G4Hype","hype"},{"G4Polycone","polycone"},{"G4Polyhedra","polyhedra"},{"G4TessellatedSolid","tessellated"}};
+   if(shapes.count(actual))record(node.name,"shape",shapes.at(actual));
+   if(const auto* box=dynamic_cast<const G4Box*>(lv->GetSolid()))record(node.name,"size",Value::Array{2*box->GetXHalfLength()/mm,2*box->GetYHalfLength()/mm,2*box->GetZHalfLength()/mm});
+   if(const auto* tubs=dynamic_cast<const G4Tubs*>(lv->GetSolid()))record(node.name,"parameters",Value::Array{tubs->GetInnerRadius(),tubs->GetOuterRadius(),tubs->GetZHalfLength(),tubs->GetStartPhiAngle(),tubs->GetDeltaPhiAngle()});
+   if(lv->GetRegion()){record(node.name,"region",lv->GetRegion()->GetName());if(auto* cuts=lv->GetRegion()->GetProductionCuts())if(node.hasProductionCuts){Value::Object actual;
+    if(node.productionCuts.gamma>=0)actual["gamma"]=cuts->GetProductionCut("gamma")/mm;
+    if(node.productionCuts.electron>=0)actual["e-"]=cuts->GetProductionCut("e-")/mm;
+    if(node.productionCuts.positron>=0)actual["e+"]=cuts->GetProductionCut("e+")/mm;
+    if(node.productionCuts.proton>=0)actual["proton"]=cuts->GetProductionCut("proton")/mm;
+    record(node.name,"production_cuts",actual);
+   }}
+  }
+  if(pv && node.placementType==PlacementType::Normal){const auto& p=pv->GetObjectTranslation();record(node.name,"position",Value::Array{p.x()/mm,p.y()/mm,p.z()/mm});record(node.name,"copy_number",pv->GetCopyNo());}
+  for(const auto& child:node.children)visit(child);
+ };
+ visit(*rootNode_);
+ for(const auto& input:volumeBuilder_.GetInputEvidence())effective_->Record(Receipt(FieldPath("geometry","input_files"),input,"geometry_construct","VolumeBuilder STL exact parsed bytes"));
 }

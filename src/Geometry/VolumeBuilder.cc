@@ -1,3 +1,4 @@
+#include "G4SystemOfUnits.hh"
 #include "Geometry/VolumeBuilder.hh"
 
 #include "Geometry/GeometryRegistry.hh"
@@ -239,6 +240,7 @@ const std::string& VolumeBuilder::GetDefaultWorldMaterial() const
 
 void VolumeBuilder::Clear()
 {
+    inputEvidence_.clear();
     rotations_.clear();
     visualAttributes_.clear();
 }
@@ -774,6 +776,9 @@ G4VSolid* VolumeBuilder::CreateTessellatedSolid(const VolumeNode& node)
         }
     }
     solid->SetSolidClosed(true);
+    inputEvidence_.emplace_back(effective_config::Value::Object{{"object",node.name},{"path",mesh.inputPath},
+      {"sha256",mesh.inputSha256},{"length_unit_internal",mesh.lengthUnit},{"format",mesh.binary?"binary_stl":"ascii_stl"},
+      {"triangles",static_cast<std::int64_t>(mesh.triangles.size())},{"volume_mm3",mesh.volume/(mm*mm*mm)}});
     return solid;
 }
 

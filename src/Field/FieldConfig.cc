@@ -1,3 +1,5 @@
+#include "Config/EffectiveRuntime.hh"
+#include "Config/InputProvenance.hh"
 #include "Field/FieldConfig.hh"
 
 #include "Config/ConfigManager.hh"
@@ -144,10 +146,11 @@ G4ThreeVector FieldConfig::ParseFieldVector(const std::string& text, char kind)
 
 std::shared_ptr<const FieldMap> FieldConfig::LoadMap(const std::string& path, char kind)
 {
-    std::ifstream input(std::filesystem::u8path(path));
-    if (!input) throw std::runtime_error("cannot open field map '" + path + "'");
+    const auto acceptedInput = input_provenance::ReadFile(path);
+    std::istringstream input(acceptedInput.bytes);
     auto map = std::make_shared<FieldMap>();
     map->file = path;
+    map->inputSha256 = acceptedInput.sha256;
     std::string line;
     int lineNumber = 0;
     std::vector<std::string> header;
@@ -230,6 +233,16 @@ std::shared_ptr<const FieldMap> FieldConfig::LoadMap(const std::string& path, ch
 
 void FieldConfig::LoadFromConfig(const ConfigManager& config)
 {
+    FieldConfig candidate;
+    candidate.LoadFromConfigImpl(config);
+    candidate.effective_->reader = config.GetMainReader();
+    candidate.effective_->Accept(config.GetMainReader(),candidate.ProjectEffectiveConfigFields());
+    fields_.swap(candidate.fields_);
+    effective_.swap(candidate.effective_);
+}
+
+void FieldConfig::LoadFromConfigImpl(const ConfigManager& config)
+{
     fields_.clear();
     static const std::set<std::string> keys = {"magnetic", "electric", "magnetic_map", "electric_map", "volumes",
                                                "min_step", "delta_chord", "delta_one_step", "delta_intersection"};
@@ -300,5 +313,75 @@ void FieldConfig::LoadFromConfig(const ConfigManager& config)
             throw std::runtime_error(context + ": " + error.what());
         }
         fields_.push_back(spec);
+    }
+}
+
+std::vector<effective_config::Field> FieldConfig::ProjectEffectiveConfigFields() const
+{
+ using namespace effective_config;std::vector<Field> result;
+ result.push_back(effective_->Make(FieldPath("field","module_enabled"),moduleEnabled_,"","modules",{"field"}));
+ for(const auto& spec:fields_) {
+  const std::string section=spec.IsGlobal()?"field":"field."+StringUtils::ToLower(spec.name);
+  const auto path=[&](const char* key){return spec.IsGlobal()?FieldPath("field",key):ObjectFieldPath("field",spec.name,key);};
+  const auto add=[&](const char* key,Value value,const char* unit,std::initializer_list<const char*> keys){result.push_back(effective_->Make(path(key),std::move(value),unit,section,keys));};
+  add("scope",spec.IsGlobal()?"global":"local","",{});
+  if(!spec.IsGlobal())add("volumes",List(spec.volumes),"",{"volumes"});
+  const auto vector=[](const G4ThreeVector& v,double unit){return Value::Array{v.x()/unit,v.y()/unit,v.z()/unit};};
+  if(spec.hasMagnetic && !spec.magneticMap)add("magnetic",vector(spec.magnetic,tesla),"T",{"magnetic"});
+  if(spec.hasElectric && !spec.electricMap)add("electric",vector(spec.electric,volt/m),"V/m",{"electric"});
+  const auto map=[&](const char* key,const std::shared_ptr<const FieldMap>& input){if(input){
+   add(key,Value::Object{{"path",input->file},{"sha256",input->inputSha256},
+       {"grid_shape",Value::Array{static_cast<std::int64_t>(input->x.size()),static_cast<std::int64_t>(input->y.size()),static_cast<std::int64_t>(input->z.size())}},
+       {"coordinate_unit","mm"},{"x",Numbers(input->x,mm)},{"y",Numbers(input->y,mm)},{"z",Numbers(input->z,mm)},
+       {"interpolation","trilinear_global"},{"outside","zero"}},"",{key});
+   Value::Array values;const double fieldUnit=std::string(key)=="magnetic_map"?tesla:volt/m;
+   for(const auto& value:input->values)values.emplace_back(vector(value,fieldUnit));
+   auto& object=std::get<Value::Object>(result.back().resolved.data);
+   object["values"]=std::move(values);object["field_unit"]=std::string(key)=="magnetic_map"?"T":"V/m";
+   Origin origin;origin.kind="field_map";origin.file=input->file;origin.input_sha256=input->inputSha256;
+   origin.disposition="derived";result.back().origins.push_back(std::move(origin));
+  }};
+  map("magnetic_map",spec.magneticMap);map("electric_map",spec.electricMap);
+  add("min_step",spec.minStep/mm,"mm",{"min_step"});add("delta_chord",spec.deltaChord/mm,"mm",{"delta_chord"});
+  add("delta_one_step",spec.deltaOneStep/mm,"mm",{"delta_one_step"});add("delta_intersection",spec.deltaIntersection/mm,"mm",{"delta_intersection"});
+ }
+ return result;
+}
+std::vector<effective_config::Field> FieldConfig::ExportEffectiveConfigFields() const {return effective_->accepted?effective_->fields:ProjectEffectiveConfigFields();}
+effective_config::Value FieldConfig::ExportEffectiveConfigEvidence() const {return effective_->Evidence();}
+void FieldConfig::ConfirmEffectiveConfigMutation(const std::string& command,const effective_config::Origin& origin) {effective_->Confirm(ProjectEffectiveConfigFields(),command,origin);}
+void FieldConfig::SetModuleEnabled(bool enabled)
+{
+    moduleEnabled_=enabled;
+    effective_config::Origin origin;origin.kind="module_policy";origin.file=effective_->reader.GetFilename();
+    origin.input_sha256=effective_->reader.GetInputSha256();origin.section="modules";origin.key="field";
+    origin.raw=enabled?"on":"off";origin.disposition="derived";
+    for(const auto& declaration:effective_->reader.GetFields())
+        if(declaration.normalizedSection=="modules" && declaration.normalizedKey=="field")origin.line=declaration.lineNumber;
+    effective_->Confirm(ProjectEffectiveConfigFields(),enabled?"[modules]/field = on":"[modules]/field = off",origin,false,{"/field/module_enabled"});
+}
+void FieldConfig::RecordEffectiveConfigBinding(const std::string& name,const std::string& logicalVolume,bool applied,const FieldSpec* observed) const
+{
+    using namespace effective_config;
+    if(!moduleEnabled_)return;
+    const auto scope=name.empty()?FieldPath("field","scope"):ObjectFieldPath("field",name,"scope");
+    auto binding=Receipt(scope,name.empty()?"global":"local","field_construct",
+        "FieldSetup actual logical-volume/transport field manager readback","thread_applied",
+        applied && observed?"applied":(applied?"unknown":"failed"));
+    auto& details=std::get<Value::Object>(binding.data);
+    details["logical_volume"]=logicalVolume;details["field_manager_bound"]=applied;
+    effective_->Record(std::move(binding));
+    if(!applied || !observed)return;
+    // Read back the immutable specification stored by the actual installed
+    // field object. This is distinct from copying the Manager configuration.
+    FieldConfig actual;actual.fields_.push_back(*observed);
+    for(const auto& field:actual.ProjectEffectiveConfigFields()) {
+        if(field.path=="/field/module_enabled" || field.path==scope ||
+           field.path.substr(field.path.find_last_of('/')+1)=="volumes" ||
+           field.path.substr(field.path.find_last_of('/')+1)=="min_step")continue;
+        auto receipt=Receipt(field.path,field.resolved,"field_construct",
+            "FieldSetup installed field object and integration manager readback","thread_applied");
+        std::get<Value::Object>(receipt.data)["logical_volume"]=logicalVolume;
+        effective_->Record(std::move(receipt));
     }
 }

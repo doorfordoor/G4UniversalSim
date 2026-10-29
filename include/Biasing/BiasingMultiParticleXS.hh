@@ -27,6 +27,7 @@ public:
     void AddParticle(const G4String& particleName, G4double factor);
     void AddProcessRule(const XSProcessBiasRule& rule);
     bool HasParticle(const G4String& particleName) const;
+    std::vector<XSProcessBiasRule> GetProcessRules() const;
     void ClearParticles();
 
     void SetOnlyPrimary(G4bool value);

@@ -12,6 +12,7 @@
 #include "G4ios.hh"
 
 #include <cctype>
+#include <cmath>
 #include <sstream>
 #include <stdexcept>
 #include <vector>
@@ -49,9 +50,6 @@ std::vector<std::string> SplitArgs(const std::string& line)
                                     const std::string& raw,
                                     const std::string& reason)
 {
-    G4ExceptionDescription desc;
-    desc << commandName << " failed: " << reason << "; input='" << raw << "'";
-    G4Exception(commandName.c_str(), "AIHLBiasingMessenger001", FatalException, desc);
     throw std::runtime_error(commandName + " failed: " + reason + "; input='" + raw + "'");
 }
 
@@ -63,12 +61,12 @@ double ParseDoubleArg(const std::string& commandName,
     try {
         std::size_t consumed = 0;
         const double parsed = std::stod(value, &consumed);
-        if (consumed != value.size()) {
-            ThrowCommandError(commandName, raw, "invalid numeric " + label + "='" + value + "'");
+        if (consumed != value.size() || !std::isfinite(parsed)) {
+            ThrowCommandError(commandName, raw, "invalid or non-finite numeric " + label + "='" + value + "'");
         }
         return parsed;
     } catch (const std::exception&) {
-        ThrowCommandError(commandName, raw, "invalid numeric " + label + "='" + value + "'");
+        ThrowCommandError(commandName, raw, "invalid or non-finite numeric " + label + "='" + value + "'");
     }
 }
 
@@ -413,9 +411,17 @@ void BiasingMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
             return;
         }
     } catch (const std::exception& ex) {
-        G4ExceptionDescription desc;
-        desc << "Biasing command failed. input='" << raw << "', error='" << ex.what() << "'";
-        G4Exception("BiasingMessenger::SetNewValue", "AIHLBiasingMessenger002", FatalException, desc);
+        const std::string name=command?std::string(command->GetCommandPath()):"<unknown>";
+        const std::string message="Biasing command failed: "+name+"; input='"+raw+"'; "+ex.what();
+        if(manager_)manager_->RecordCommandFailure(message);
+        G4ExceptionDescription desc;desc<<message;
+        G4Exception("BiasingMessenger::SetNewValue", "AIHLBiasingMessenger002", JustWarning, desc);
+    } catch (...) {
+        const std::string name=command?std::string(command->GetCommandPath()):"<unknown>";
+        const std::string message="Biasing command failed: "+name+"; input='"+raw+"'; unknown exception";
+        if(manager_)manager_->RecordCommandFailure(message);
+        G4ExceptionDescription desc;desc<<message;
+        G4Exception("BiasingMessenger::SetNewValue", "AIHLBiasingMessenger002", JustWarning, desc);
     }
 }
 

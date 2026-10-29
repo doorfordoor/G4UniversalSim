@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Biasing/BiasingConfig.hh"
+#include "Config/EffectiveConfigSupport.hh"
 #include "G4Cache.hh"
 
 #include <cstddef>
@@ -30,6 +31,9 @@ public:
     // still exited 0. Record every rejection so main.cc can stop the session
     // and fail the process instead.
     void RecordInteractiveReject(const std::string& command, const std::string& message);
+    std::size_t GetCommandFailureCount() const;
+    const std::string& GetLastCommandFailure() const;
+    void RecordCommandFailure(const std::string& message);
     std::size_t GetInteractiveRejectCount() const;
     const std::string& GetLastInteractiveReject() const;
 
@@ -106,6 +110,11 @@ public:
     void Validate() const;
     void PrintSummary() const;
     void LoadFromConfig(const ConfigManager& config);
+    std::vector<effective_config::Field> ExportEffectiveConfigFields() const;
+    effective_config::Value ExportEffectiveConfigEvidence() const;
+    void ConfirmEffectiveConfigMutation(const std::string&, effective_config::Origin);
+    void ConfirmEffectiveConfigDerived(const std::string& reason, effective_config::Origin);
+    static std::string EffectiveRuleIdentity(const std::string& particle, const std::string& process);
 
     void AttachOperators(const GeometryRegistry& registry);
     void ClearOperators();
@@ -141,6 +150,11 @@ private:
     std::vector<XSProcessBiasRule> BuildExpandedProcessRules(bool warnLegacy) const;
     void WarnLegacySyntax(const std::string& detail) const;
 
+    std::vector<effective_config::Field> BuildEffectiveConfigFields() const;
+    void AcceptEffectiveConfig(const IniReader&);
+    void RecordEffectiveWorkerEvidence(const WorkerEvidence&, const std::string& stage) const;
+    std::shared_ptr<effective_config::ConsumerState> effectiveState_ = std::make_shared<effective_config::ConsumerState>();
+    std::map<std::string, std::vector<std::string>> effectiveRuleSections_;
     BiasingConfig config_;
 
     // Global volumes are interpreted as shared target volumes for all rules by
@@ -162,6 +176,8 @@ private:
     bool interactiveSessionMode_ = false;
     std::size_t interactiveRejectCount_ = 0;
     std::string lastInteractiveReject_;
+    std::size_t commandFailureCount_ = 0;
+    std::string lastCommandFailure_;
     std::size_t matchedProcessRuleCount_ = 0;
     mutable bool legacyWarningEmitted_ = false;
     mutable std::set<std::string> legacyDetailWarnings_;

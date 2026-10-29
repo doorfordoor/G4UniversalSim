@@ -1,3 +1,4 @@
+#include "Config/EffectiveRuntime.hh"
 #include "Config/ConfigSchemaTable.hh"
 #include "Source/SourceManager.hh"
 
@@ -171,10 +172,10 @@ std::string ResolveRelativeToConfig(const ConfigManager& config, const std::stri
 // Spectrum file: CSV with a header. histogram: e_low_<unit>,e_high_<unit>,weight
 // (contiguous bins, weights per bin); points: energy_<unit>,density (linear
 // interpolation between points). <unit> is keV or MeV; '#' starts a comment.
-std::vector<std::pair<double, double>> ReadSpectrumFile(const std::string& path, const std::string& type)
+std::vector<std::pair<double, double>> ReadSpectrumFile(const std::string& path, const std::string& type, std::string& sha256)
 {
-    std::ifstream input(std::filesystem::u8path(path));
-    if (!input) throw std::runtime_error("SourceManager cannot open spectrum_file '" + path + "'");
+    const auto acceptedInput = input_provenance::ReadFile(path);
+    std::istringstream input(acceptedInput.bytes);
     std::vector<std::vector<std::string>> rows;
     std::string line;
     std::vector<std::string> header;
@@ -258,6 +259,7 @@ std::vector<std::pair<double, double>> ReadSpectrumFile(const std::string& path,
     if (points.size() < 2 || !(total > 0.0)) {
         throw std::runtime_error("SourceManager spectrum_file '" + path + "' needs at least one bin and a positive total weight");
     }
+    sha256 = acceptedInput.sha256;
     return points;
 }
 
@@ -364,10 +366,15 @@ void SourceManager::PrepareForRun(long long plannedEvents)
                 phaseSpaceDefinitions_[p.pdg] = definition;
             }
         }
+        effective_->Record(effective_config::Receipt(effective_config::FieldPath("source","phase_space_histories"),
+            static_cast<std::int64_t>(phaseSpace_->size()), "source_prepare", "SourceManager::PrepareForRun particle table resolution"));
         return;
     }
     GetGPS();
-    if (deferredApplied_) return;  // keep native /gps/... changes made between runs
+    const auto observePrepared = [&]() {
+        ObserveEffectiveRunSource("source_prepare");
+    };
+    if (deferredApplied_) { observePrepared(); return; } // preserve native changes between runs
     // Volume confinement and ions need the built geometry / ion table; GPS
     // silently drops an unknown confinement volume, so check it here.
     auto* data = G4GeneralParticleSourceData::Instance();
@@ -388,9 +395,11 @@ void SourceManager::PrepareForRun(long long plannedEvents)
         }
         if (!overrides.confineOverridden && !spec.confineVolume.empty())
             source->GetPosDist()->ConfineSourceToVolume(spec.confineVolume);
+        ObserveGPS(overrides.index, *source, "source_prepare");
     }
     deferredSources_.clear();
     deferredApplied_ = true;
+    observePrepared();
 }
 
 bool SourceManager::HasPendingDeferredConfiguration() const
@@ -446,6 +455,9 @@ void SourceManager::BeforeNativeGPSCommand(const std::string& command)
 void SourceManager::ResetGPS()
 {
     deferredSources_.clear();
+    configuredGPSSources_.clear();
+    nativeGPSIdentityUncertain_ = false;
+    phaseSpaceInputs_.clear();
     gps_.reset();
     phaseSpaceFiles_.clear();
     phaseSpace_.reset();
@@ -460,6 +472,13 @@ void SourceManager::ResetGPS()
 }
 
 void SourceManager::LoadFromConfig(const ConfigManager& config)
+{
+    LoadFromConfigImpl(config);
+    effective_->reader = config.GetMainReader();
+    effective_->Accept(config.GetMainReader(),ProjectEffectiveConfigFields());
+}
+
+void SourceManager::LoadFromConfigImpl(const ConfigManager& config)
 {
     std::vector<std::string> named;
     for (const std::string& section : config.GetSections()) {
@@ -494,6 +513,8 @@ void SourceManager::LoadFromConfig(const ConfigManager& config)
                 sources_.emplace_back();
                 current_ = sources_.size() - 1;
                 Current().name = name;
+                for (const auto& info : config.GetSectionInfo()) if (info.section == section && !info.originalSection.empty())
+                    Current().name = StringUtils::Trim(info.originalSection).substr(std::string("source.").size());
                 LoadSection(config, section, true);
             }
         } catch (...) {
@@ -523,7 +544,7 @@ void SourceManager::LoadFromConfig(const ConfigManager& config)
         }
         phaseSpaceRecycle_ = config.GetBool("source", "phase_space_recycle", false);
         auto histories = std::make_shared<std::vector<std::vector<PhaseSpaceParticle>>>(
-            PhaseSpace::ReadHistories(phaseSpaceFiles_));
+            PhaseSpace::ReadHistories(phaseSpaceFiles_, &phaseSpaceInputs_));
         phaseSpaceParticleCount_ = 0;
         for (const auto& history : *histories) phaseSpaceParticleCount_ += history.size();
         phaseSpace_ = std::move(histories);
@@ -875,7 +896,7 @@ void SourceManager::LoadAdvancedSection(const ConfigManager& config, const std::
                 throw std::runtime_error("SourceManager [" + section + "] energy_type = " + type + " requires spectrum_file");
             }
             spec.spectrumFile = ResolveRelativeToConfig(config, StringUtils::Trim(config.GetString(section, "spectrum_file")));
-            spec.spectrum = ReadSpectrumFile(spec.spectrumFile, type);
+            spec.spectrum = ReadSpectrumFile(spec.spectrumFile, type, spec.spectrumSha256);
         } else {
             throw std::runtime_error("SourceManager unsupported [" + section + "]/energy_type='" + type +
                                      "'; supported: mono, gauss, uniform, power, exp, histogram, points");
@@ -1071,6 +1092,7 @@ void SourceManager::ApplyPreset(const std::string& presetName)
     }
 
     presetName_ = preset;
+    Current().preset = preset;
     configured_ = true;
 }
 
@@ -1265,6 +1287,7 @@ void SourceManager::ApplyCurrentConfigurationToGPS() const
 {
     if (!gps_ || !gpsConfigDirty_) return;
     deferredSources_.clear();
+    configuredGPSSources_.clear();
     if (sources_.size() > 1) {
         // One GPS source per [source.<name>]; GPS picks one per event with
         // probability intensity / sum(intensity).
@@ -1273,11 +1296,15 @@ void SourceManager::ApplyCurrentConfigurationToGPS() const
             const auto& spec = sources_[index];
             gps_->AddaSource(spec.intensity);
             ApplySpec(spec, *gps_->GetCurrentSource());
+            configuredGPSSources_[gps_->GetCurrentSource()] = index;
+            ObserveGPS(index, *gps_->GetCurrentSource(), "gps_apply");
             if (spec.ion || !spec.confineVolume.empty()) deferredSources_[gps_->GetCurrentSource()].index = index;
         }
         gps_->SetCurrentSourceto(0);
     } else {
         ApplySpec(sources_.front(), *gps_->GetCurrentSource());
+        configuredGPSSources_[gps_->GetCurrentSource()] = 0;
+        ObserveGPS(0, *gps_->GetCurrentSource(), "gps_apply");
         if (sources_.front().ion || !sources_.front().confineVolume.empty())
             deferredSources_[gps_->GetCurrentSource()].index = 0;
     }
@@ -1492,4 +1519,225 @@ std::vector<double> SourceManager::ParseDirectionVector(const std::string& text)
 std::string SourceManager::NormalizeDirectionToken(const std::string& direction)
 {
     return StringUtils::ToLower(StringUtils::Trim(direction));
+}
+
+
+std::vector<effective_config::Field> SourceManager::ProjectEffectiveConfigFields() const
+{
+    using namespace effective_config;
+    std::vector<Field> result;
+    const auto addGlobal=[&](const char* key,Value value,std::initializer_list<const char*> keys){
+        result.push_back(effective_->Make(FieldPath("source",key),std::move(value),"","source",keys));
+    };
+    addGlobal("mode",phaseSpace_?"phase_space":(sources_.size()>1?"named":"single"),{});
+    addGlobal("verbose",verboseLevel_,{"verbose"});
+    if(phaseSpace_) {
+        addGlobal("phase_space_files",List(phaseSpaceFiles_),{"phase_space_file"});
+        addGlobal("phase_space_recycle",phaseSpaceRecycle_,{"phase_space_recycle"});
+        addGlobal("phase_space_histories",static_cast<std::int64_t>(phaseSpace_->size()),{"phase_space_file"});
+        addGlobal("phase_space_particles",static_cast<std::int64_t>(phaseSpaceParticleCount_),{"phase_space_file"});
+        Value::Array inputs;
+        for(const auto& input:phaseSpaceInputs_)inputs.emplace_back(Value::Object{{"path",input.path},{"sha256",input.sha256}});
+        addGlobal("phase_space_inputs",inputs,{"phase_space_file"});
+        for(auto& field:result) if(field.path.rfind("/source/phase_space_",0)==0)
+            for(const auto& input:phaseSpaceInputs_) {
+                Origin origin; origin.kind="phase_space_file";origin.file=input.path;
+                origin.input_sha256=input.sha256;origin.disposition="derived";
+                field.origins.push_back(std::move(origin));
+            }
+        return result;
+    }
+    for(const auto& spec:sources_) {
+        const std::string section=spec.name.empty()?"source":"source."+StringUtils::ToLower(spec.name);
+        const auto path=[&](const char* key){return spec.name.empty()?FieldPath("source",key):ObjectFieldPath("source",spec.name,key);};
+        const auto add=[&](const char* key,Value value,const char* unit,std::initializer_list<const char*> keys,bool presetAffected=false){
+            Field f=effective_->Make(path(key),std::move(value),unit,section,keys);
+            if(presetAffected && !spec.preset.empty()) {
+                std::vector<Origin> chain{f.origins.front()};chain.front().disposition="shadowed";
+                for(const auto& d:effective_->reader.GetDeclarations())if(d.normalizedSection==section && d.normalizedKey=="preset") {
+                    Origin o;o.kind="main_ini";o.file=effective_->reader.GetFilename();o.line=d.lineNumber;
+                    o.section=d.originalSection;o.key=d.originalKey;o.raw=d.value;o.input_sha256=effective_->reader.GetInputSha256();o.disposition="shadowed";chain.push_back(o);
+                }
+                Origin preset;preset.kind="preset";preset.raw=spec.preset;preset.disposition=f.origins.size()>1?"shadowed":"derived";chain.push_back(preset);
+                chain.insert(chain.end(),f.origins.begin()+1,f.origins.end());f.origins=std::move(chain);
+                if(!f.requested_known){f.requested=spec.preset;f.requested_known=true;}
+            }
+            if(!spec.spectrumFile.empty() && (std::string(key)=="spectrum" || std::string(key)=="spectrum_file" || std::string(key)=="spectrum_sha256")) {
+                Origin input;input.kind="spectrum_file";input.file=spec.spectrumFile;
+                input.input_sha256=spec.spectrumSha256;input.disposition="derived";
+                f.origins.push_back(std::move(input));
+            }
+            result.push_back(std::move(f));
+        };
+        add("intensity",spec.intensity,"",{"intensity"});
+        if(!spec.preset.empty())add("preset",spec.preset,"",{"preset"});
+        if(!spec.particleName.empty() || spec.ion)add("particle",spec.ion?"ion":spec.particleName,"",{"particle"},true);
+        if(spec.ion){add("ion_z",spec.ionZ,"",{"ion"});add("ion_a",spec.ionA,"",{"ion"});
+            add("ion_charge",spec.ionCharge,"eplus",{"ion"});add("ion_excitation",spec.ionExcitation/CLHEP::MeV,"MeV",{"ion"});
+            add("rest_energy",spec.restEnergy,"",{"energy"});}
+        // A zero GPS-default mono cache is not a known configured energy.
+        if(spec.monoEnergy>0 || spec.restEnergy || spec.energyType!="mono") {
+            add("energy_type",spec.energyType,"",{"energy_type"},true);
+            if(spec.energyType=="mono" || spec.energyType=="gauss")add("energy",spec.monoEnergy/CLHEP::MeV,"MeV",{"energy"},true);
+            if(spec.energyType=="gauss")add("energy_sigma",spec.energySigma/CLHEP::MeV,"MeV",{"energy_sigma"});
+            if(spec.energyType=="uniform" || spec.energyType=="power" || spec.energyType=="exp") {
+                add("energy_min",spec.energyMin/CLHEP::MeV,"MeV",{"energy_min"});add("energy_max",spec.energyMax/CLHEP::MeV,"MeV",{"energy_max"});
+                if(spec.energyType=="power")add("alpha",spec.alpha,"",{"alpha"});
+                if(spec.energyType=="exp")add("ezero",spec.ezero/CLHEP::MeV,"MeV",{"ezero"});
+            }
+            if(spec.energyType=="points" || spec.energyType=="histogram") {
+                add("spectrum_file",spec.spectrumFile,"",{"spectrum_file"});add("spectrum_sha256",spec.spectrumSha256,"",{"spectrum_file"});
+                Value::Array points;for(const auto& point:spec.spectrum)points.emplace_back(Value::Array{point.first/CLHEP::MeV,point.second});
+                add("spectrum",points,"MeV,density_or_bin_weight",{"spectrum_file"});
+            }
+        }
+        add("has_position",spec.hasPosition,"",{"position_type","position","center"},true);
+        if(spec.hasPosition) {
+            add("position_type",spec.positionType,"",{"position_type","position"},true);
+            if(!spec.positionShape.empty())add("shape",spec.positionShape,"",{"shape"},true);
+            if(spec.positionParams.size()>=3)add("center",Numbers({spec.positionParams[0],spec.positionParams[1],spec.positionParams[2]},CLHEP::mm),"mm",{"position","center"},true);
+            const auto& shape=spec.positionShape;
+            if(spec.positionType=="Plane" && shape=="Circle" && spec.positionParams.size()>3)add("radius",spec.positionParams[3]/CLHEP::mm,"mm",{"radius"},true);
+            if(shape=="Annulus" || (spec.positionType=="Volume" && (shape=="Sphere" || shape=="Cylinder")))add("radius",spec.radius/CLHEP::mm,"mm",{"radius"});
+            if(shape=="Annulus")add("inner_radius",spec.innerRadius/CLHEP::mm,"mm",{"inner_radius"});
+            if(spec.positionType=="Plane" && shape=="Rectangle" && spec.positionParams.size()>4) {
+                add("halfx",spec.positionParams[3]/CLHEP::mm,"mm",{"halfx"});add("halfy",spec.positionParams[4]/CLHEP::mm,"mm",{"halfy"});
+            } else if(shape=="Ellipse" || shape=="Square" || (spec.positionType=="Volume" && shape!="Sphere" && shape!="Cylinder")) {
+                add("halfx",spec.halfX/CLHEP::mm,"mm",{"halfx"});add("halfy",spec.halfY/CLHEP::mm,"mm",shape=="Square"?std::initializer_list<const char*>{"halfx"}:std::initializer_list<const char*>{"halfy"});
+            }
+            if(spec.positionType=="Volume" && shape!="Sphere")add("halfz",spec.halfZ/CLHEP::mm,"mm",{"halfz"});
+            if(spec.positionType=="Beam") {
+                if(shape=="Circle")add("beam_sigma",spec.beamSigmaR/CLHEP::mm,"mm",{"beam_sigma"});
+                else {add("beam_sigma_x",spec.beamSigmaX/CLHEP::mm,"mm",{"beam_sigma_x"});add("beam_sigma_y",spec.beamSigmaY/CLHEP::mm,"mm",{"beam_sigma_y"});}
+            }
+            add("has_rotation",spec.hasRotation,"",{"rot1","rot2"});
+            if(spec.hasRotation){add("rot1",Numbers(spec.rot1),"",{"rot1"});add("rot2",Numbers(spec.rot2),"",{"rot2"});}
+            if(!spec.confineVolume.empty())add("confine",spec.confineVolume,"",{"confine"});
+        }
+        add("has_direction",spec.hasDirection,"",{"direction"},true);
+        if(spec.hasDirection)add("direction",Numbers(spec.direction),"",{"direction"},true);
+        if(!spec.angular.empty() || spec.isotropic || spec.hasDirection) {
+            add("angular",spec.angular.empty()?(spec.isotropic?"isotropic":"fixed"):spec.angular,"",{"isotropic","direction","angular"},true);
+            add("has_theta_range",spec.hasThetaRange,"",{"min_theta","max_theta"});
+            if(spec.angular=="isotropic" || spec.angular=="cos") {add("min_theta",spec.minTheta/CLHEP::deg,"deg",{"min_theta"});add("max_theta",spec.maxTheta/CLHEP::deg,"deg",{"max_theta"});}
+            if(spec.angular=="beam1d")add("angular_sigma",spec.angularSigma/CLHEP::deg,"deg",{"angular_sigma"});
+            if(spec.angular=="beam2d"){add("angular_sigma_x",spec.angularSigmaX/CLHEP::deg,"deg",{"angular_sigma_x"});add("angular_sigma_y",spec.angularSigmaY/CLHEP::deg,"deg",{"angular_sigma_y"});}
+            if(spec.angular=="focused")add("focus",Numbers(spec.focus,CLHEP::mm),"mm",{"focus"});
+        }
+    }
+    return result;
+}
+std::vector<effective_config::Field> SourceManager::ExportEffectiveConfigFields() const
+{ return effective_->accepted?effective_->fields:ProjectEffectiveConfigFields(); }
+effective_config::Value SourceManager::ExportEffectiveConfigEvidence() const { return effective_->Evidence(); }
+void SourceManager::ConfirmEffectiveConfigMutation(const std::string& command,const effective_config::Origin& origin)
+{
+    const bool native=command.rfind("/gps/",0)==0;
+    if (native) nativeGPSIdentityUncertain_ = true;
+    auto projected=ProjectEffectiveConfigFields();std::vector<std::string> targets;
+    const auto name=StringUtils::ToLower(command.substr(0,command.find_first_of(" \t")));
+    for(const auto& f:projected){const auto key=f.path.substr(f.path.find_last_of('/')+1);
+        const bool all=name.find("preset")!=std::string::npos || name.find("reset")!=std::string::npos;
+        const bool energy=name.find("energy")!=std::string::npos && (key=="energy" || key=="energy_type");
+        const bool particle=name.find("particle")!=std::string::npos && (key=="particle" || key.rfind("ion_",0)==0);
+        const bool direction=(name.find("direction")!=std::string::npos || name.find("isotropic")!=std::string::npos) &&
+            (key=="angular" || key=="direction" || key=="has_direction" || key=="has_theta_range");
+        const bool position=name.find("point")!=std::string::npos || name.find("plane")!=std::string::npos;
+        if(all || energy || particle || direction || (position && (key=="center" || key=="position_type" || key=="shape" || key=="has_position" || key=="radius" || key=="halfx" || key=="halfy" || key=="direction" || key=="angular")))targets.push_back(f.path);
+    }
+    effective_->Confirm(std::move(projected),command,origin,native && !phaseSpace_,targets);
+    if(native)effective_->Record(effective_config::Receipt(effective_config::FieldPath("source","mode"),"native_gps_unmapped","native_command",command,"none","unknown","GPS mutation is not represented by Manager cached values"));
+}
+void SourceManager::ObserveGPS(std::size_t index,const G4SingleParticleSource& source,const std::string& stage) const
+{
+    using namespace effective_config;
+    if(nativeGPSIdentityUncertain_) return;
+    const auto identity=configuredGPSSources_.find(&source);
+    if(identity==configuredGPSSources_.end() || identity->second!=index) return;
+    const auto& spec=sources_.at(index);
+    const auto path=[&](const char* key){return spec.name.empty()?FieldPath("source",key):ObjectFieldPath("source",spec.name,key);};
+    const bool unknown=std::any_of(effective_->fields.begin(),effective_->fields.end(),[](const Field& f){return f.application_status==ApplicationStatus::Unknown;});
+    const auto record=[&](const char* key,Value value){
+        if(std::none_of(effective_->fields.begin(),effective_->fields.end(),[&](const Field& f){return f.path==path(key);}))return;
+        effective_->Record(Receipt(path(key),std::move(value),stage,"SourceManager actual GPS readback",
+        "kernel_constructed",unknown?"unknown":"applied",unknown?"Native GPS mutation: observed GPS value is independent of Manager configuration":""));};
+    if(source.GetParticleDefinition() && (!spec.ion || stage=="source_prepare"))record("particle",source.GetParticleDefinition()->GetParticleName());
+    const std::map<std::string,std::string> energyTypes{{"Mono","mono"},{"Gauss","gauss"},{"Lin","uniform"},{"Pow","power"},{"Exp","exp"},{"Arb","points"},{"User","histogram"}};
+    const auto energyType=energyTypes.find(source.GetEneDist()->GetEnergyDisType());
+    record("energy_type",energyType==energyTypes.end()?std::string(source.GetEneDist()->GetEnergyDisType()):energyType->second);
+    const auto nativeEnergy=source.GetEneDist()->GetEnergyDisType();
+    if(nativeEnergy=="Mono" || nativeEnergy=="Gauss")record("energy",source.GetEneDist()->GetMonoEnergy()/CLHEP::MeV);
+    if(nativeEnergy=="Gauss")record("energy_sigma",source.GetEneDist()->GetSE()/CLHEP::MeV);
+    if(nativeEnergy=="Lin" || nativeEnergy=="Pow" || nativeEnergy=="Exp") {
+        record("energy_min",source.GetEneDist()->GetEmin()/CLHEP::MeV);
+        record("energy_max",source.GetEneDist()->GetEmax()/CLHEP::MeV);
+        if(nativeEnergy=="Pow")record("alpha",source.GetEneDist()->Getalpha());
+        if(nativeEnergy=="Exp")record("ezero",source.GetEneDist()->GetEzero()/CLHEP::MeV);
+    }
+    if(spec.hasPosition){record("position_type",source.GetPosDist()->GetPosDisType());
+        const auto* position=source.GetPosDist();
+        const auto& center=position->GetCentreCoords();record("center",Value::Array{center.x()/CLHEP::mm,center.y()/CLHEP::mm,center.z()/CLHEP::mm});
+        // Beam/Circle is intentionally implemented as native Beam/Ellipse;
+        // keep that raw readback separate rather than forging a shape match.
+        if(spec.positionType!="Beam")record("shape",position->GetPosDisShape());
+        for(const auto& field:effective_->fields) if(field.path==path("radius"))record("radius",position->GetRadius()/CLHEP::mm);
+        for(const auto& field:effective_->fields) if(field.path==path("inner_radius"))record("inner_radius",position->GetRadius0()/CLHEP::mm);
+        for(const auto& field:effective_->fields) if(field.path==path("halfx"))record("halfx",position->GetHalfX()/CLHEP::mm);
+        for(const auto& field:effective_->fields) if(field.path==path("halfy"))record("halfy",position->GetHalfY()/CLHEP::mm);
+        for(const auto& field:effective_->fields) if(field.path==path("halfz"))record("halfz",position->GetHalfZ()/CLHEP::mm);
+        if(position->GetConfined())record("confine",position->GetConfineVolume());
+    }
+    const auto angular=source.GetAngDist()->GetDistType();
+    static const std::map<std::string,std::string> angularTypes{{"planar","fixed"},{"iso","isotropic"},{"cos","cos"},{"beam1d","beam1d"},{"beam2d","beam2d"},{"focused","focused"}};
+    const auto foundAngular=angularTypes.find(angular);
+    if(foundAngular!=angularTypes.end())record("angular",foundAngular->second);
+    if(angular=="iso" || angular=="cos") {
+        record("min_theta",source.GetAngDist()->GetMinTheta()/CLHEP::deg);
+        record("max_theta",source.GetAngDist()->GetMaxTheta()/CLHEP::deg);
+    }
+    if(angular=="planar" && spec.hasDirection) {
+        const auto direction=source.GetAngDist()->GetDirection();
+        record("direction",Value::Array{direction.x(),direction.y(),direction.z()});
+    }
+}
+
+void SourceManager::ObserveEffectiveRunSource(const std::string& stage) const
+{
+    if (phaseSpace_ || !gps_) return;
+    auto* actual=G4GeneralParticleSourceData::Instance();
+    const int count=actual->GetSourceVectorSize();
+    bool mapped=!nativeGPSIdentityUncertain_ && count==static_cast<int>(sources_.size());
+    for(int i=0;i<count && mapped;++i) {
+        const auto found=configuredGPSSources_.find(actual->GetCurrentSource(i));
+        mapped=found!=configuredGPSSources_.end() && found->second<sources_.size();
+    }
+    if(!mapped) {
+        using namespace effective_config;
+        Value::Array inventory;
+        for(int i=0;i<count;++i) {
+            const auto* source=actual->GetCurrentSource(i);
+            Value::Object entry{{"native_index",i},{"intensity",actual->GetIntensity(i)},
+                {"energy_type",source->GetEneDist()->GetEnergyDisType()},
+                {"position_type",source->GetPosDist()->GetPosDisType()}};
+            if(source->GetParticleDefinition())entry["particle"]=source->GetParticleDefinition()->GetParticleName();
+            if(source->GetEneDist()->GetEnergyDisType()=="Mono")entry["energy_MeV"]=source->GetEneDist()->GetMonoEnergy()/CLHEP::MeV;
+            inventory.emplace_back(std::move(entry));
+        }
+        auto receipt=Receipt("/source/mode","native_gps_unmapped",stage,
+            "Actual GPS inventory independent of configured source identities","none","unknown",
+            "Native GPS mutations invalidate INI identity attribution even when source counts are unchanged");
+        std::get<Value::Object>(receipt.data)["native_inventory"]=std::move(inventory);
+        effective_->Record(std::move(receipt));
+        return;
+    }
+    effective_->Record(effective_config::Receipt("/source/mode",count>1?"named":"single",stage,"Actual identity-mapped GPS source inventory"));
+    for(int i=0;i<count;++i) {
+        const auto* source=actual->GetCurrentSource(i);
+        const auto index=configuredGPSSources_.at(source);
+        ObserveGPS(index,*source,stage);
+        using namespace effective_config;
+        const auto& spec=sources_.at(index);
+        const auto path=spec.name.empty()?FieldPath("source","intensity"):ObjectFieldPath("source",spec.name,"intensity");
+        effective_->Record(Receipt(path,actual->GetIntensity(i),stage,"Actual GPS source intensity readback"));
+    }
 }

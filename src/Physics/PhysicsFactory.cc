@@ -492,5 +492,6 @@ void PhysicsFactory::ApplyRegionAndDecaySettings(G4VModularPhysicsList* list, co
     if (manager.NeedsStepLimiter() && !list->GetPhysics("stepLimiter")) {
         list->RegisterPhysics(new G4StepLimiterPhysics());
     }
+    manager.ObserveEffectiveConfigPhysics(*list, "physics_list_registered");
 }
 

@@ -4,6 +4,7 @@
 #include "Biasing/BiasingXS.hh"
 #include "Config/ConfigManager.hh"
 #include "Geometry/GeometryRegistry.hh"
+#include "Config/EffectiveRuntime.hh"
 #include "Utils/StringUtils.hh"
 
 #include "G4LogicalVolume.hh"
@@ -11,6 +12,7 @@
 #include "G4Threading.hh"
 
 #include <algorithm>
+#include <cmath>
 #include <cstdlib>
 #include <iostream>
 #include <map>
@@ -208,7 +210,7 @@ void BiasingManager::SetXSProcessBiasFactor(
     const std::string& processName,
     double factor)
 {
-    if (factor <= 0.0) throw std::runtime_error("BiasingManager::SetXSProcessBiasFactor factor must be > 0");
+    if (!std::isfinite(factor) || factor <= 0.0) throw std::runtime_error("BiasingManager::SetXSProcessBiasFactor factor must be > 0");
     CreateOrGetXSProcessBiasRule(particleName, processName).factor = factor;
 }
 
@@ -217,7 +219,8 @@ void BiasingManager::AddXSProcessBiasVolume(
     const std::string& processName,
     const std::string& volumeName)
 {
-    AddUnique(CreateOrGetXSProcessBiasRule(particleName, processName).volumeNames, TrimRequired(volumeName, "volumeName"));
+    const auto volume=TrimRequired(volumeName,"volumeName");
+    AddUnique(CreateOrGetXSProcessBiasRule(particleName, processName).volumeNames, volume);
 }
 
 void BiasingManager::SetXSProcessOnlyPrimary(
@@ -245,7 +248,7 @@ void BiasingManager::SetXSProcessMinWeight(
     const std::string& processName,
     double minWeight)
 {
-    if (minWeight < 0.0) throw std::runtime_error("BiasingManager::SetXSProcessMinWeight minWeight must be >= 0");
+    if (!std::isfinite(minWeight) || minWeight < 0.0) throw std::runtime_error("BiasingManager::SetXSProcessMinWeight minWeight must be >= 0");
     CreateOrGetXSProcessBiasRule(particleName, processName).minWeight = minWeight;
 }
 
@@ -306,8 +309,9 @@ void BiasingManager::AddXSBiasParticle(const std::string& particleName)
 
 void BiasingManager::AddXSBiasProcess(const std::string& particleName, const std::string& processName)
 {
+    const auto process=TrimRequired(processName,"processName");
     XSBiasRule& rule = CreateOrGetXSBiasRule(particleName);
-    AddUnique(rule.processNames, TrimRequired(processName, "processName"));
+    AddUnique(rule.processNames, process);
 }
 
 void BiasingManager::AddXSBiasProcess(const std::string& processName)
@@ -324,7 +328,7 @@ void BiasingManager::AddXSBiasProcess(const std::string& processName)
 
 void BiasingManager::SetXSBiasFactor(const std::string& particleName, double factor)
 {
-    if (factor <= 0.0) throw std::runtime_error("BiasingManager::SetXSBiasFactor factor must be > 0");
+    if (!std::isfinite(factor) || factor <= 0.0) throw std::runtime_error("BiasingManager::SetXSBiasFactor factor must be > 0");
     CreateOrGetXSBiasRule(particleName).factor = factor;
 }
 
@@ -344,7 +348,7 @@ void BiasingManager::SetApplyToSecondaries(const std::string& particleName, bool
 
 void BiasingManager::SetMinWeight(const std::string& particleName, double minWeight)
 {
-    if (minWeight < 0.0) throw std::runtime_error("BiasingManager::SetMinWeight minWeight must be >= 0");
+    if (!std::isfinite(minWeight) || minWeight < 0.0) throw std::runtime_error("BiasingManager::SetMinWeight minWeight must be >= 0");
     CreateOrGetXSBiasRule(particleName).minWeight = minWeight;
 }
 
@@ -361,7 +365,8 @@ void BiasingManager::AddBiasVolume(const std::string& volumeName)
 
 void BiasingManager::AddBiasVolumeForParticle(const std::string& particleName, const std::string& volumeName)
 {
-    AddUnique(CreateOrGetXSBiasRule(particleName).volumeNames, TrimRequired(volumeName, "volumeName"));
+    const auto volume=TrimRequired(volumeName,"volumeName");
+    AddUnique(CreateOrGetXSBiasRule(particleName).volumeNames, volume);
 }
 
 bool BiasingManager::HasXSBiasRule(const std::string& particleName) const
@@ -462,14 +467,29 @@ void BiasingManager::PrintSummary() const
 
 void BiasingManager::LoadFromConfig(const ConfigManager& config)
 {
-    Clear();
-    if (!config.HasSection("biasing")) {
+    const auto previousConfig = config_;
+    const auto previousVolumes = globalBiasVolumes_;
+    const auto previousSections = effectiveRuleSections_;
+    try {
+    // Load is a configuration transaction. Do not destroy accepted operators or
+    // source chains before validation succeeds.
+    config_.Clear();
+    globalBiasVolumes_.clear();
+    effectiveRuleSections_.clear();
+    const auto mode=config.HasKey("modules","biasing")?
+        StringUtils::ToLower(StringUtils::Trim(config.GetString("modules","biasing"))):std::string();
+    const bool parseDormantRules=mode=="auto" || mode=="on";
+    if (!config.HasSection("biasing") && !parseDormantRules) {
         Enable(false);
+        AcceptEffectiveConfig(config.GetMainReader());
         return;
     }
 
     Enable(config.GetBool("biasing", "enabled", false));
-    if (!IsEnabled()) return;
+    // Explicit new policies need the complete candidate rules even when the
+    // old gate is absent/false. Root resolves the policy and rejects explicit
+    // boolean contradictions; missing mode keeps the legacy early return.
+    if (!IsEnabled() && !parseDormantRules) { AcceptEffectiveConfig(config.GetMainReader()); return; }
 
     // New process-level syntax: [biasing.xs.<particle>.<process>].
     for (const auto& info : config.GetSectionInfo()) {
@@ -506,6 +526,7 @@ void BiasingManager::LoadFromConfig(const ConfigManager& config)
         rule.volumeNames = config.GetVector(section, "volumes", std::vector<std::string>{});
         rule.legacyGenerated = false;
         AddXSProcessBiasRule(rule);
+        effectiveRuleSections_[EffectiveRuleIdentity(rule.particleName, rule.processName)].push_back(section);
     }
 
     // Legacy particle-level shorthand: [biasing.xs].
@@ -514,6 +535,11 @@ void BiasingManager::LoadFromConfig(const ConfigManager& config)
         const auto particles = config.GetVector("biasing.xs", "particles", std::vector<std::string>{});
         const auto processes = config.GetVector("biasing.xs", "processes", std::vector<std::string>{});
         const auto volumes = config.GetVector("biasing.xs", "volumes", std::vector<std::string>{});
+        if(parseDormantRules && (config.HasKey("biasing.xs","particles") || config.HasKey("biasing.xs","processes")) &&
+            (particles.empty() || processes.empty())) {
+            throw std::runtime_error("Explicit [modules]/biasing = " + mode +
+                " requires complete legacy [biasing.xs] particles and processes lists; neither may be missing or empty");
+        }
 
         const double factor = config.GetDouble("biasing.xs", "factor", 1.0);
         const bool onlyPrimary = config.GetBool("biasing.xs", "only_primary", true);
@@ -538,6 +564,13 @@ void BiasingManager::LoadFromConfig(const ConfigManager& config)
     }
 
     Validate();
+    AcceptEffectiveConfig(config.GetMainReader());
+    } catch (...) {
+        config_ = previousConfig;
+        globalBiasVolumes_ = previousVolumes;
+        effectiveRuleSections_ = previousSections;
+        throw;
+    }
 }
 
 void BiasingManager::AttachOperators(const GeometryRegistry& registry)
@@ -626,6 +659,15 @@ void BiasingManager::AttachOperators(const GeometryRegistry& registry)
     }
 
     operatorsAttached_ = !xsOperators_.empty();
+    for (const auto& attachment : attachmentPlan_) {
+        for (const auto& rule : attachment.rules) {
+            const auto path = effective_config::ObjectFieldPath("biasing", EffectiveRuleIdentity(rule.particleName, rule.processName), "binding");
+            auto receipt = effective_config::Receipt(path, std::string(attachment.logical->GetName()), "master_attachment",
+                "BiasingManager::AttachOperators actual logical volume binding", "kernel_constructed", "applied",
+                "Master attachment only; worker TLS and physical effects are separate evidence");
+            effectiveState_->Record(std::move(receipt));
+        }
+    }
     std::cout << "[BiasingManager] Attached " << xsOperators_.size()
               << " process-level XS biasing operator(s) to geometry logical volume(s)." << '\n';
 }
@@ -732,17 +774,20 @@ void BiasingManager::BeginThreadRun(int runId) const
         if (state) state->current = evidence;
         std::lock_guard<std::mutex> lock(evidenceMutex_);
         workerEvidence_[{runId, threadId}] = evidence;
+        RecordEffectiveWorkerEvidence(evidence, "run_begin");
         throw;
     } catch (...) {
         evidence.failure = "unknown execution-thread bias validation exception";
         if (state) state->current = evidence;
         std::lock_guard<std::mutex> lock(evidenceMutex_);
         workerEvidence_[{runId, threadId}] = evidence;
+        RecordEffectiveWorkerEvidence(evidence, "run_begin");
         throw;
     }
     state->current = evidence;
     std::lock_guard<std::mutex> lock(evidenceMutex_);
     workerEvidence_[{runId, threadId}] = evidence;
+    RecordEffectiveWorkerEvidence(evidence, "run_begin");
 }
 
 void BiasingManager::EndThreadRun(int runId) const
@@ -758,6 +803,7 @@ void BiasingManager::EndThreadRun(int runId) const
     }
     std::lock_guard<std::mutex> lock(evidenceMutex_);
     workerEvidence_[{evidence.runId, evidence.threadId}] = evidence;
+    RecordEffectiveWorkerEvidence(evidence, "run_end");
     std::ostringstream line;
     line << "[G4USimBiasing] {\"schema\":\"g4usim_biasing_worker_v1\",\"run_id\":" << evidence.runId
          << ",\"thread_id\":" << evidence.threadId << ",\"operators\":" << evidence.operators
@@ -906,4 +952,59 @@ void BiasingManager::WarnLegacySyntax(const std::string& detail) const
               << " (" << detail << "). All listed processes share the same parameters. "
               << "Prefer process-level rules: [biasing.xs.<particle>.<process>] or "
               << "/AIHL/biasing/xs/addRule.\n";
+}
+
+void BiasingManager::RecordEffectiveWorkerEvidence(const WorkerEvidence& evidence, const std::string& stage) const
+{
+    using namespace effective_config;
+    const bool failed = !evidence.failure.empty();
+    auto receipt = Receipt("/biasing/enabled", !failed && evidence.tlsVerified && evidence.operators>0 && evidence.matchedRules>0, stage,
+        "BiasingManager actual execution-thread TLS and wrapped-process validation", "thread_applied", failed ? "failed" : "applied",
+        "Attachment and operation callback counts do not validate unbiased physics or variance improvement");
+    auto& object = std::get<Value::Object>(receipt.data);
+    object["run_id"] = evidence.runId;
+    object["thread_id"] = evidence.threadId;
+    object["operator_count"] = static_cast<std::int64_t>(evidence.operators);
+    object["matched_rule_count"] = static_cast<std::int64_t>(evidence.matchedRules);
+    object["tls_verified"] = evidence.tlsVerified;
+    object["end_run_completed"] = evidence.endRunCompleted;
+    // Preserve unsigned counters without narrowing into negative JSON integers.
+    object["proposal_callbacks"] = std::to_string(evidence.proposals);
+    object["applied_callbacks"] = std::to_string(evidence.applied);
+    object["failure"] = evidence.failure;
+    object["physical_effect_status"] = "unknown";
+    effectiveState_->Record(receipt);
+    // Read thread-owned operator rules, not the Manager attachment plan.
+    if (failed || !evidence.tlsVerified) return;
+    const auto* state = threadState_.Get();
+    if (!state) return;
+    for (std::size_t i = 0; i < state->active.size(); ++i) {
+        for (const auto& rule : state->active[i]->GetProcessRules()) {
+            const auto identity = EffectiveRuleIdentity(rule.particleName, rule.processName);
+            const Value::Object properties{
+                {"particle", rule.particleName}, {"process", rule.processName}, {"name", rule.name},
+                {"enabled", rule.enabled}, {"factor", rule.factor}, {"volumes", List(rule.volumeNames)},
+                {"only_primary", rule.onlyPrimary}, {"apply_to_secondaries", rule.applyToSecondaries},
+                {"min_weight", rule.minWeight}, {"max_interactions", rule.maxInteractions},
+                {"legacy_generated", rule.legacyGenerated}};
+            for (const auto& property : properties) {
+                auto observed = receipt;
+                auto& item = std::get<Value::Object>(observed.data);
+                item["path"] = ObjectFieldPath("biasing", identity, property.first);
+                item["observed"] = property.second;
+                item["logical_volume"] = std::string(state->targets.at(i)->GetName());
+                item["counter_scope"] = "execution_thread_aggregate";
+                item["evidence_source"] = "Readback from actual thread-owned BiasingXS rules with verified TLS target and wrapped process";
+                effectiveState_->Record(std::move(observed));
+            }
+        }
+    }
+}
+
+std::size_t BiasingManager::GetCommandFailureCount() const { return commandFailureCount_; }
+const std::string& BiasingManager::GetLastCommandFailure() const { return lastCommandFailure_; }
+void BiasingManager::RecordCommandFailure(const std::string& message)
+{
+    ++commandFailureCount_;
+    lastCommandFailure_=message;
 }

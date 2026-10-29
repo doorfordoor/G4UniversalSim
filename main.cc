@@ -9,6 +9,7 @@
 #include "Geometry/GeometryManager.hh"
 #include "Materials/MaterialManager.hh"
 #include "Source/SourceManager.hh"
+#include "Scoring/ScoringMeshConfig.hh"
 #include "Utils/StringUtils.hh"
 #include "Detector/DetectorConstruction.hh"
 #include "G4RunManager.hh"
@@ -637,6 +638,7 @@ int main(int argc, char** argv) {
           locks.seed = cliOverrides.seed.has_value();
           locks.checkOverlaps = cliOverrides.checkOverlaps.has_value();
           plan = PreflightMacro(context.GetMacroFile(), locks);
+          sim.SetEffectiveMacroInputs(plan.inputs);
         }
         if (options.dumpEffectiveConfig.empty()) {
           WriteRunPlan(sim, options, plan, std::cout);
@@ -682,6 +684,7 @@ int main(int argc, char** argv) {
       locks.seed = cliOverrides.seed.has_value();
       locks.checkOverlaps = cliOverrides.checkOverlaps.has_value();
       preflight = PreflightMacro(context.GetMacroFile(), locks);
+      sim.SetEffectiveMacroInputs(preflight.inputs);
       sim.SetExecutedMacroPath(preflight.macroPath.string());
     }
 
@@ -743,6 +746,7 @@ int main(int argc, char** argv) {
                                  "; check the scorer type, unit and particle names");
       }
     }
+    ScoringMeshConfig::RecordEffectiveConfigDispatch();
 
     std::unique_ptr<G4VisManager> visManager;
     if (sim.GetContext().IsInteractive() && !sim.GetContext().IsDryRun()) {
@@ -779,6 +783,12 @@ int main(int argc, char** argv) {
       bool kernelInitialized = false;
       for (const auto& command : preflight.commands) {
         const std::string commandName = MacroCommandName(command.text);
+        try { sim.ValidateEffectiveModuleCommand(command.text); }
+        catch(const std::exception&) {
+          macroFailure=MacroFailureInfo{command.sourceFile.string(),static_cast<int>(command.lineNumber),command.text,0,false};
+          macroStatus="failed";
+          throw;
+        }
         if (!sim.GetOutputManager()->GetRunSummary().GetRuns().empty() && RestartsExecutedKernel(commandName)) {
           macroFailure = MacroFailureInfo{command.sourceFile.string(), static_cast<int>(command.lineNumber), command.text, 0, false};
           macroStatus = "failed";
@@ -856,6 +866,7 @@ int main(int argc, char** argv) {
         }
         const auto materialFailuresBefore = sim.GetMaterialManager()->GetCommandFailureCount();
         const auto outputFailuresBefore = sim.GetOutputManager()->GetCommandFailureCount();
+        const auto biasingFailuresBefore = sim.GetBiasingManager()->GetCommandFailureCount();
         const bool seedStateChanged = sim.NoteMacroCommand(command.text);
         bool restoredRandomState = false;
         try {
@@ -898,6 +909,11 @@ int main(int argc, char** argv) {
           macroStatus = "failed";
           throw std::runtime_error(sim.GetOutputManager()->GetLastCommandFailure());
         }
+        if (sim.GetBiasingManager()->GetCommandFailureCount() != biasingFailuresBefore) {
+          macroFailure = MacroFailureInfo{command.sourceFile.string(), static_cast<int>(command.lineNumber), command.text, 0, false};
+          macroStatus = "failed";
+          throw std::runtime_error(sim.GetBiasingManager()->GetLastCommandFailure());
+        }
         if (commandName == "/run/beamon" && sim.GetOutputManager()->HasOutputFailure()) {
           const auto failure = sim.GetOutputManager()->GetOutputFailure();
           macroFailure = MacroFailureInfo{
@@ -922,7 +938,7 @@ int main(int argc, char** argv) {
         if (changesPhysics) physicsListDirty = true;
         sim.ConfirmMacroCommandSuccess(seedStateChanged);
         sim.RecordSuccessfulMacroCommand(command.text, command.sourceFile.string(),
-                                         static_cast<int>(command.lineNumber));
+                                         static_cast<int>(command.lineNumber), command.inputSha256);
       }
       macroStatus = "completed";
     }
@@ -951,6 +967,7 @@ int main(int argc, char** argv) {
       // command was ignored, the session continued and the process exited 0
       // while the user believed biasing was configured.
       const auto biasingRejectsBefore = sim.GetBiasingManager()->GetInteractiveRejectCount();
+      const auto biasingFailuresBefore = sim.GetBiasingManager()->GetCommandFailureCount();
       RunSummary& summary = sim.GetOutputManager()->GetRunSummary();
       summary.Set("interactive_command_failure_kind", "none");
       summary.Set("interactive_command_failure_message", "not_applicable");
@@ -970,6 +987,7 @@ int main(int argc, char** argv) {
                  sim.GetMaterialManager()->GetCommandFailureCount() != materialFailuresBefore ||
                  sim.GetOutputManager()->GetCommandFailureCount() != outputFailuresBefore ||
                  sim.GetBiasingManager()->GetInteractiveRejectCount() != biasingRejectsBefore ||
+                 sim.GetBiasingManager()->GetCommandFailureCount() != biasingFailuresBefore ||
                  sim.GetOutputManager()->HasOutputFailure();
         };
         AuditedCshSession ui(stopAfterFailure, hasHandlerFailure, [&](const std::string& command) {
@@ -993,6 +1011,7 @@ int main(int argc, char** argv) {
               throw std::runtime_error("Random command conflicts with explicit CLI seed lock");
             }
             RandomCommandGuard::Validate(resolved);
+            sim.ValidateEffectiveModuleCommand(resolved);
             return RandomCommandGuard::ExecuteRestoreIfRequested(resolved);
           } catch (const SemanticCommandError&) {
             throw;
@@ -1001,6 +1020,7 @@ int main(int argc, char** argv) {
           }
         }, [&](const std::string& command) {
           sim.ConfirmMacroCommandSuccess(sim.NoteMacroCommand(command));
+          sim.RecordSuccessfulMacroCommand(command, "", 0);
         });
         ui.SessionStart();
         unrecognizedCommand = ui.UnrecognizedCommandDiagnostic();
@@ -1018,7 +1038,8 @@ int main(int argc, char** argv) {
       const bool outputFailed = sim.GetOutputManager()->GetCommandFailureCount() != outputFailuresBefore;
       const bool physicsFailed = sim.GetInteractivePhysicsFailureCount() != physicsFailuresBefore;
       const bool appFailed = sim.GetAppCommandFailureCount() != appFailuresBefore;
-      const bool biasingFailed = sim.GetBiasingManager()->GetInteractiveRejectCount() != biasingRejectsBefore;
+      const bool biasingFailed = sim.GetBiasingManager()->GetInteractiveRejectCount() != biasingRejectsBefore ||
+          sim.GetBiasingManager()->GetCommandFailureCount() != biasingFailuresBefore;
       const bool uiCommandFailed = failedCommandStatus != fCommandSucceeded;
       if (materialFailed || outputFailed || !unrecognizedCommand.empty() || !invalidParameter.empty() ||
           !parameterOutOfRange.empty() || !illegalApplicationState.empty() || physicsFailed ||
@@ -1067,7 +1088,12 @@ int main(int argc, char** argv) {
         };
         if (physicsFailed) appendDiagnostic(sim.GetLastInteractivePhysicsFailure());
         if (appFailed) appendDiagnostic(sim.GetLastAppCommandFailure());
-        if (biasingFailed) appendDiagnostic(sim.GetBiasingManager()->GetLastInteractiveReject());
+        if (biasingFailed) {
+          if (sim.GetBiasingManager()->GetInteractiveRejectCount() != biasingRejectsBefore)
+            appendDiagnostic(sim.GetBiasingManager()->GetLastInteractiveReject());
+          if (sim.GetBiasingManager()->GetCommandFailureCount() != biasingFailuresBefore)
+            appendDiagnostic(sim.GetBiasingManager()->GetLastCommandFailure());
+        }
         if (materialFailed) appendDiagnostic(sim.GetMaterialManager()->GetLastCommandFailure());
         if (outputFailed) appendDiagnostic(sim.GetOutputManager()->GetLastCommandFailure());
         appendDiagnostic(unrecognizedCommand);

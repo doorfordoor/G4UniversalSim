@@ -70,6 +70,7 @@ void PhysicsList::ConstructProcess()
 {
     ConfigureFromManager();
     G4VModularPhysicsList::ConstructProcess();
+    if (manager_) manager_->ObserveEffectiveConfigPhysics(*this, "physics_process");
 }
 
 void PhysicsList::SetCuts()
@@ -82,6 +83,7 @@ void PhysicsList::SetCuts()
         for (const auto& item : manager_->GetParticleCuts()) {
             SetParticleCut(item.first, item.second);
         }
+        manager_->ObserveEffectiveConfigPhysics(*this, "physics_cuts");
         // Region-specific cuts may already be applied by VolumeBuilder-created
         // G4Region/G4ProductionCuts. PhysicsManager keeps a copy for later
         // policy unification and diagnostics.

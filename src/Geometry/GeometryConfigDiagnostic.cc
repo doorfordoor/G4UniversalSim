@@ -1,3 +1,4 @@
+#include "Config/InputProvenance.hh"
 #include "Config/ConfigSchemaTable.hh"
 #include "Geometry/GeometryConfigDiagnostic.hh"
 
@@ -94,12 +95,11 @@ bool IsCut(const std::string& key)
     return StringUtils::StartsWith(key, "cut.");
 }
 
-void RejectDuplicateGeometryVersion(const std::string& filename)
+void RejectDuplicateGeometryVersion(const std::string& filename,const std::string& bytes)
 {
     // IniReader intentionally keeps only the last value of a repeated key.
     // Inspect the geometry source so a repeated strict-mode declaration cannot disappear.
-    std::ifstream input(filename);
-    if (!input) throw std::runtime_error("Cannot inspect geometry schema version in file '" + filename + "'");
+    std::istringstream input(bytes);
     std::string section = "global";
     std::string line;
     std::size_t lineNumber = 0;
@@ -126,12 +126,11 @@ void RejectDuplicateGeometryVersion(const std::string& filename)
     }
 }
 
-void RejectStrictDuplicateGeometryDeclarations(const std::string& filename)
+void RejectStrictDuplicateGeometryDeclarations(const std::string& filename,const std::string& bytes)
 {
     // IniReader stores the last occurrence of each normalized section/key.
     // Version 2 must reject that ambiguity before a geometry object is created.
-    std::ifstream input(filename);
-    if (!input) throw std::runtime_error("Cannot inspect geometry declarations in file '" + filename + "'");
+    std::istringstream input(bytes);
     std::set<std::string> sections;
     std::set<std::pair<std::string, std::string>> keys;
     std::string section = "global";
@@ -227,10 +226,12 @@ void CollectGeometryConfigDiagnostics(
     const std::vector<IniFieldInfo>& fields,
     const std::vector<IniSectionInfo>& sections,
     const std::string& templateName,
-    std::vector<GeometryConfigDiagnostic>& diagnostics
+    std::vector<GeometryConfigDiagnostic>& diagnostics,
+    const std::string* acceptedBytes
 )
 {
-    RejectDuplicateGeometryVersion(filename);
+    const auto bytes=acceptedBytes?*acceptedBytes:input_provenance::ReadFile(filename).bytes;
+    RejectDuplicateGeometryVersion(filename,bytes);
     const std::string mode = Normalize(templateName);
     const auto layerNames = SplitNames(fields, "layers", "names");
     const auto shieldNames = SplitNames(fields, "shielding", "layers");
@@ -329,7 +330,7 @@ void CollectGeometryConfigDiagnostics(
             + "]', key '" + OriginalKey(*versionField) + "', value '" + versionField->value
             + "': supported geometry versions are 1 (legacy) and 2 (strict)");
     }
-    RejectStrictDuplicateGeometryDeclarations(filename);
+    RejectStrictDuplicateGeometryDeclarations(filename,bytes);
     if (!diagnostics.empty()) {
         const auto& first = diagnostics.front();
         throw std::runtime_error("Geometry version=2 schema rejected " + first.code + " in file '"

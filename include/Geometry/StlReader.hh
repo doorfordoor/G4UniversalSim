@@ -12,6 +12,10 @@
 #include <vector>
 
 struct StlMesh {
+    std::string inputPath;
+    std::string inputSha256;
+    double lengthUnit = 1.0;
+    bool binary = false;
     std::vector<std::array<double, 3>> vertices;   // Geant4 internal length units
     std::vector<std::array<int, 3>> triangles;     // indices into vertices
     double volume = 0.0;                           // enclosed volume (> 0)

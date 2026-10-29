@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Output/CsvWriter.hh"
+#include "Config/EffectiveConfigSupport.hh"
 #include "Output/Histogram1D.hh"
 #include "Output/OutputRecord.hh"
 #include "Output/RunSummary.hh"
@@ -30,6 +31,11 @@ public:
         std::string message;
     };
     OutputManager() = default;
+    void AcceptEffectiveConfig(const IniReader& reader);
+    std::vector<effective_config::Field> ExportEffectiveConfigFields() const;
+    effective_config::Value ExportEffectiveConfigEvidence() const;
+    void ConfirmEffectiveConfigMutation(const std::string&, effective_config::Origin);
+    void RecordEffectiveConfigState(const std::string& stage) const;
     ~OutputManager() noexcept;
 
     std::unique_ptr<OutputManager> CloneForThread(int threadId) const;
@@ -123,6 +129,7 @@ private:
     static std::vector<std::string> EventEdepHeader();
     static std::string ToString(double value);
 
+    std::shared_ptr<effective_config::ConsumerState> effectiveState_ = std::make_shared<effective_config::ConsumerState>();
     std::string outputDir_ = "output";
     bool outputDirLocked_ = false;
     int threadId_ = 0;

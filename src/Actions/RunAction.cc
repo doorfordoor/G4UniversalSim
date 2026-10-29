@@ -6,6 +6,7 @@
 #include "G4Exception.hh"
 #include "G4Run.hh"
 #include "G4RunManager.hh"
+#include "G4Threading.hh"
 #include "G4ios.hh"
 #include "Output/AnalysisOutput.hh"
 #include "Output/OutputManager.hh"
@@ -128,7 +129,10 @@ void RunAction::BeginOfRunAction(const G4Run* run)
         if (role_ != Role::Master && scoringManager) {
             stage = "scoring_begin_run";
             scoringManager->BeginRun(runID);
+            scoringManager->RecordEffectiveConfigApplied(runID, G4Threading::G4GetThreadId());
         }
+        stage = "effective_config_run_begin";
+        if (effectiveBegin_) effectiveBegin_(runID, role_ == Role::Master ? nullptr : scoringManager, outputManager);
     } catch (const std::exception& error) {
         if (outputManager) outputManager->RecordOutputFailure(stage, error.what(), runID);
         G4cerr << "[OutputFailure] " << stage << ": " << error.what() << G4endl;
@@ -247,6 +251,9 @@ void RunAction::EndOfRunAction(const G4Run* run)
     } else if (verboseLevel_ > 0) {
         G4cout << "[RunAction] OutputManager is null; final output skipped." << G4endl;
     }
+    attempt("effective_config_thread_finalization", [&]() {
+        if (effectiveEnd_) effectiveEnd_(runID, role_ == Role::Master ? nullptr : scoringManager, outputManager);
+    });
     if (role_ != Role::Worker) {
         RunProgress::End(runID, run->GetNumberOfEventToBeProcessed(), run->GetNumberOfEvent(),
                          outputManager && outputManager->HasOutputFailure());

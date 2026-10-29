@@ -34,11 +34,14 @@ struct MacroCommand {
     std::filesystem::path sourceFile;
     std::size_t lineNumber = 0;
     std::string text;
+    std::string inputSha256; // exact bytes parsed by preflight, never reopened at execution
+    std::string rawLine;
 };
 
 struct MacroPreflightResult {
     std::filesystem::path macroPath;
     std::vector<MacroCommand> commands;
+    std::vector<std::pair<std::string, std::string>> inputs; // path, parsed-byte sha256 (includes empty/include-only files)
 };
 
 MacroPreflightResult PreflightMacro(

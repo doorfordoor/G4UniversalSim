@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Real-backend configured subset export; no simulation output is allowed."""
+"""Real-backend consumer export; inspection must not execute or create output."""
 import argparse
 import json
 import os
@@ -37,11 +37,11 @@ def main():
             data = json.loads(result.stdout)
             assert parse_snapshot(result.stdout) == data, "Backend and viewer wire contracts differ"
             assert data["schema"] == "g4usim_effective_config_v1"
-            assert data["scope"] == "manager_state_subset"
+            assert data["scope"] == "consumer_configuration_with_separate_application_evidence"
             assert data["stage"] == "configure" and data["run_id"] is None
             assert data["macro_execution_status"] == "not_executed" and not data["execution_performed"]
-            assert data["origin_chain_coverage"] == "winning_source_only"
-            assert data["input_hash_coverage"] == "not_recorded"
+            assert data["origin_chain_coverage"] == "consumer_recorded"
+            assert data["input_hash_coverage"] == "accepted_parser_bytes"
             assert all(f["application_status"] == "not_applied" and f["applied_revision"] is None
                        for f in data["fields"])
             assert all(f["evidence_level"] == "manager_accepted" for f in data["fields"])
@@ -53,12 +53,12 @@ def main():
         assert fields["/source/energy"]["resolved"] == 2.0
         assert fields["/source/energy"]["requested"] == "2 MeV"
         assert fields["/source/energy"]["unit"] == "MeV"
-        assert fields["/source/energy"]["origins"][0]["line"] > 0
-        assert "requested" not in fields["/scoring/enabled"]
-        assert fields["/scoring/enabled"]["origins"] == []
+        assert any(origin["kind"]=="main_ini" and origin["line"]>0 for origin in fields["/source/energy"]["origins"])
+        assert fields["/scoring/enabled"]["requested"] is True
+        assert fields["/scoring/enabled"]["origins"][0]["kind"] == "default"
         override = read(run("--dump-effective-config", "-", "--threads", "2", "--run-name", "cli"))
         assert override["/run/threads"]["resolved"] == 2 and override["/run/threads"]["requested"] == 2
-        assert override["/run/threads"]["origins"][0]["kind"] == "cli"
+        assert override["/run/threads"]["origins"][-1]["kind"] == "cli" and any(o["kind"]=="main_ini" for o in override["/run/threads"]["origins"])
         assert override["/run/name"]["resolved"] == "cli"
         read(run("--dump-effective-config", "-", "--macro", str(macro)))
         assert run("--dump-effective-config", "-").stdout == first.stdout
@@ -107,7 +107,7 @@ def main():
         replay = read(run("--dump-effective-config", "-"))
         assert "/source/particle" not in replay and "/source/energy" not in replay
         assert not (folder / "run_summary.txt").exists()
-    print("EffectiveConfig configured subset export passed")
+    print("EffectiveConfig consumer export and inspection isolation passed")
 
 
 if __name__ == "__main__":

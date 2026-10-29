@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Materials/MaterialDefinition.hh"
+#include "Config/EffectiveConfigSupport.hh"
 
 #include <map>
 #include <set>
@@ -60,11 +61,20 @@ public:
     void PrintAll() const;
 
     void Clear();
+    std::vector<effective_config::Field> ExportEffectiveConfigFields() const;
+    effective_config::Value ExportEffectiveConfigEvidence() const;
+    void ConfirmEffectiveConfigMutation(const std::string& command,const effective_config::Origin& origin);
 
     void SetLocked(bool locked);
     bool IsLocked() const;
 
 private:
+    std::vector<effective_config::Field> ProjectEffectiveConfigFields() const;
+    void RecordEffectiveConfigObjects() const;
+    std::shared_ptr<effective_config::ConsumerState> effective_ = std::make_shared<effective_config::ConsumerState>();
+    std::vector<IniReader> inputReaders_;
+    std::map<std::string,std::string> effectiveNistAliases_;
+    bool effectiveLoadInProgress_ = false;
     static std::string Normalize(const std::string& name);
     void EnsureUnlocked(const std::string& action) const;
 

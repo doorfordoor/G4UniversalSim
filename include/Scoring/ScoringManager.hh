@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Output/OutputRecord.hh"
+#include "Config/EffectiveConfigSupport.hh"
 #include "Scoring/PhaseSpace.hh"
 #include "Scoring/ScorerBase.hh"
 #include "Scoring/TrajectoryRecorder.hh"
@@ -110,6 +111,11 @@ public:
 
     void LoadFromConfig(const ConfigManager& config);
     void PrintSummary() const;
+    std::vector<effective_config::Field> ExportEffectiveConfigFields() const;
+    effective_config::Value ExportEffectiveConfigEvidence() const;
+    void ConfirmEffectiveConfigMutation(const std::string& command, effective_config::Origin origin);
+    void RecordEffectiveConfigApplied(int runId, int threadId);
+    void SuppressModule(bool trajectoriesOnly, const effective_config::Origin& origin);
 
     // Phase-space recording ([phase_space] in the main INI): particles entering
     // the named physical volume are written to phase_space_tN[_rR].csv.
@@ -152,6 +158,7 @@ private:
     // (before the first event) and throws with the configuration file and line.
     void ResolvePendingNielNames();
 
+    std::shared_ptr<effective_config::ConsumerState> effectiveState_ = std::make_shared<effective_config::ConsumerState>();
     OutputManager* outputManager_ = nullptr;
     bool enabled_ = true;
     bool hitOutputEnabled_ = true;

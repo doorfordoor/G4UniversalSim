@@ -61,13 +61,17 @@ std::vector<std::string> Row(const PhaseSpaceParticle& p)
             Number(p.kineticEnergy / MeV), Number(p.time / ns), Number(p.weight)};
 }
 
-std::vector<std::vector<PhaseSpaceParticle>> ReadHistories(const std::vector<std::string>& files)
+std::vector<std::vector<PhaseSpaceParticle>> ReadHistories(const std::vector<std::string>& files,
+    std::vector<input_provenance::InputFile>* acceptedInputs)
 {
     std::vector<std::vector<PhaseSpaceParticle>> histories;
+    std::vector<input_provenance::InputFile> inputs;
     if (files.empty()) throw std::runtime_error("PhaseSpace needs at least one file");
     for (const std::string& file : files) {
-        std::ifstream input(std::filesystem::u8path(file));
-        if (!input) throw std::runtime_error("PhaseSpace cannot open '" + file + "'");
+        auto fileInput = input_provenance::ReadFile(file);
+        std::istringstream input(fileInput.bytes);
+        // Retain accepted identity/hash, not another copy of all replay bytes.
+        if (acceptedInputs) inputs.push_back({fileInput.path, {}, fileInput.sha256});
         std::string line;
         int lineNumber = 0;
         bool headerSeen = false;
@@ -126,6 +130,7 @@ std::vector<std::vector<PhaseSpaceParticle>> ReadHistories(const std::vector<std
         if (!headerSeen) throw std::runtime_error("PhaseSpace '" + file + "' is empty (no header)");
     }
     if (histories.empty()) throw std::runtime_error("PhaseSpace files contain no particles");
+    if (acceptedInputs) *acceptedInputs = std::move(inputs);
     return histories;
 }
 

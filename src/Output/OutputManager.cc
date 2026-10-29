@@ -54,6 +54,7 @@ std::unique_ptr<OutputManager> OutputManager::CloneForThread(int threadId) const
     clone->format_ = format_;
     clone->runSummary_ = runSummary_;
     clone->generatedFiles_ = generatedFiles_;
+    clone->effectiveState_ = effectiveState_->Clone();
     return clone;
 }
 
@@ -395,6 +396,7 @@ void OutputManager::OpenHitFile()
     Initialize();
     hitWriter_ = std::make_unique<CsvWriter>(MakeOutputPath(MakeThreadFilename("hits.csv")));
     hitWriter_->WriteHeader(HitHeader());
+    RecordEffectiveConfigState("writer_open");
 }
 
 void OutputManager::OpenEventEdepFile()
@@ -403,6 +405,7 @@ void OutputManager::OpenEventEdepFile()
     eventEdepWriter_ =
         std::make_unique<CsvWriter>(MakeOutputPath(MakeThreadFilename("event_edep.csv")));
     eventEdepWriter_->WriteHeader(EventEdepHeader());
+    RecordEffectiveConfigState("writer_open");
 }
 
 void OutputManager::WriteHit(const HitRecord& record)

@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Geometry/GeometryRegistry.hh"
+#include "Config/EffectiveConfigSupport.hh"
+#include "Config/InputProvenance.hh"
 #include "Geometry/VolumeBuilder.hh"
 #include "Geometry/VolumeNode.hh"
 #include "Geometry/GeometryConfigDiagnostic.hh"
@@ -110,8 +112,17 @@ public:
     void PrintTree() const;
 
     void Clear();
+    void AcceptEffectiveConfig(const IniReader& reader);
+    std::vector<effective_config::Field> ExportEffectiveConfigFields() const;
+    effective_config::Value ExportEffectiveConfigEvidence() const;
+    void ConfirmEffectiveConfigMutation(const std::string& command,const effective_config::Origin& origin);
+    void RecordEffectiveConfigConstruction() const;
 
 private:
+    std::vector<effective_config::Field> ProjectEffectiveConfigFields() const;
+    std::shared_ptr<effective_config::ConsumerState> effective_ = std::make_shared<effective_config::ConsumerState>();
+    std::vector<input_provenance::InputFile> inputFiles_;
+    IniReader mainInputReader_;
     void ValidateRootNode(const VolumeNode& rootNode) const;
     void ValidateUserVolume(const VolumeNode& node) const;
     VolumeNode* FindNodeMutable(VolumeNode& root, const std::string& name);

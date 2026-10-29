@@ -17,6 +17,7 @@
 // the field is zero.
 
 #include "G4ThreeVector.hh"
+#include "Config/EffectiveConfigSupport.hh"
 
 #include <memory>
 #include <string>
@@ -26,6 +27,7 @@ class ConfigManager;
 
 struct FieldMap {
     std::string file;
+    std::string inputSha256;
     std::vector<double> x, y, z;            // sorted node coordinates (Geant4 units)
     std::vector<G4ThreeVector> values;      // index (ix * ny + iy) * nz + iz
     G4ThreeVector Value(const G4ThreeVector& point) const;
@@ -52,8 +54,13 @@ struct FieldSpec {
 class FieldConfig {
 public:
     void LoadFromConfig(const ConfigManager& config);
-    const std::vector<FieldSpec>& GetFields() const { return fields_; }
-    bool Empty() const { return fields_.empty(); }
+    const std::vector<FieldSpec>& GetFields() const { return moduleEnabled_ ? fields_ : emptyFields_; }
+    bool Empty() const { return GetFields().empty(); }
+    void SetModuleEnabled(bool enabled);
+    std::vector<effective_config::Field> ExportEffectiveConfigFields() const;
+    effective_config::Value ExportEffectiveConfigEvidence() const;
+    void ConfirmEffectiveConfigMutation(const std::string& command, const effective_config::Origin& origin);
+    void RecordEffectiveConfigBinding(const std::string& name, const std::string& logicalVolume, bool applied, const FieldSpec* observed = nullptr) const;
 
     // Parses "Bx, By, Bz unit" (or one unit per component) for a magnetic
     // (kind 'B') or electric (kind 'E') field vector.
@@ -61,5 +68,10 @@ public:
     static std::shared_ptr<const FieldMap> LoadMap(const std::string& path, char kind);
 
 private:
+    void LoadFromConfigImpl(const ConfigManager& config);
+    std::vector<effective_config::Field> ProjectEffectiveConfigFields() const;
+    std::shared_ptr<effective_config::ConsumerState> effective_ = std::make_shared<effective_config::ConsumerState>();
     std::vector<FieldSpec> fields_;
+    bool moduleEnabled_ = true;
+    std::vector<FieldSpec> emptyFields_;
 };

@@ -3,6 +3,7 @@
 #include "Geometry/VolumeNode.hh"
 #include "Geometry/GeometryConfigDiagnostic.hh"
 #include "Config/IniReader.hh"
+#include "Config/InputProvenance.hh"
 
 #include <map>
 #include <set>
@@ -17,6 +18,8 @@ public:
     GeometryConfig() = default;
 
     void Load(const std::string& filename);
+    const IniReader& GetInputReader() const { return sourceReader_; }
+    const std::vector<input_provenance::InputFile>& GetInputs() const { return inputs_; }
     void LoadFromConfigManager(const ConfigManager& config);
     void Clear();
 
@@ -37,6 +40,9 @@ public:
     const std::vector<GeometryConfigDiagnostic>& GetDiagnostics() const;
 
 private:
+    void LoadBytes(const std::string& filename,const std::string& bytes);
+    IniReader sourceReader_;
+    mutable std::vector<input_provenance::InputFile> inputs_;
     using Section = std::map<std::string, std::string>;
 
     struct BooleanSectionId {

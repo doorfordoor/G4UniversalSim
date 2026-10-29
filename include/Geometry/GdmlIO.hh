@@ -7,6 +7,7 @@
 // Available() throws with an explanation, so configurations fail before any
 // geometry object is created.
 
+#include "Geometry/GdmlInputCapture.hh"
 #include <string>
 #include <vector>
 
@@ -21,6 +22,10 @@ struct ImportResult {
     G4VPhysicalVolume* world = nullptr;
     // Logical volumes tagged <auxiliary auxtype="SensDet"> in the file.
     std::vector<G4LogicalVolume*> auxSensitive;
+    // Native inputs, in open/read observation order (including modules,
+    // schemas and entities). Repeated paths may have different digests.
+    std::vector<AcceptedInput> acceptedInputs;
+    std::vector<std::string> untrackedInputs;
 };
 
 // Reads the file (optional XML schema validation, optional overlap check).

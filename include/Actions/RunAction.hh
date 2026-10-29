@@ -4,6 +4,7 @@
 #include "G4UserRunAction.hh"
 
 #include <memory>
+#include <functional>
 
 class G4Run;
 class OutputManager;
@@ -41,6 +42,10 @@ public:
     // Master/sequential: source settings that need the built geometry are
     // applied at the start of each run (SourceManager::PrepareForRun).
     void SetSourceManager(SourceManager* sourceManager);
+    using EffectiveCallback = std::function<void(int, ScoringManager*, OutputManager*)>;
+    void SetEffectiveCallbacks(EffectiveCallback begin, EffectiveCallback end) {
+        effectiveBegin_ = std::move(begin); effectiveEnd_ = std::move(end);
+    }
 
     void SetVerboseLevel(int level);
     int GetVerboseLevel() const;
@@ -57,4 +62,5 @@ private:
     Role role_ = Role::Sequential;
     int verboseLevel_ = 0;
     G4Timer runTimer_;  // master/sequential wall time of the current run (FOM)
+    EffectiveCallback effectiveBegin_, effectiveEnd_;
 };

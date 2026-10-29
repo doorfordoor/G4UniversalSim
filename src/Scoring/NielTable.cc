@@ -1,4 +1,5 @@
 #include "Scoring/NielTable.hh"
+#include "Config/InputProvenance.hh"
 
 #include "Utils/StringUtils.hh"
 #include "G4SystemOfUnits.hh"
@@ -6,15 +7,16 @@
 #include <algorithm>
 #include <cmath>
 #include <filesystem>
-#include <fstream>
+#include <sstream>
 #include <stdexcept>
 
 std::shared_ptr<const NielTable> NielTable::Load(const std::string& path)
 {
-    std::ifstream input(std::filesystem::u8path(path));
-    if (!input) throw std::runtime_error("cannot open NIEL table '" + path + "'");
+    const auto acceptedInput = input_provenance::ReadFile(path);
+    std::istringstream input(acceptedInput.bytes);
     auto table = std::make_shared<NielTable>();
     table->file_ = path;
+    table->inputSha256_ = acceptedInput.sha256;
     std::string line;
     int lineNumber = 0;
     bool header = false;

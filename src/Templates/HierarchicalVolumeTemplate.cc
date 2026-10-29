@@ -17,7 +17,9 @@ VolumeNode HierarchicalVolumeTemplate::BuildNodesFromFile(const std::string& fil
     GeometryConfig config;
     config.Load(filename);
     diagnostics_ = config.GetDiagnostics();
-    return config.BuildTree();
+    auto root=config.BuildTree();
+    inputReader_=config.GetInputReader();inputs_=config.GetInputs();
+    return root;
 }
 
 void HierarchicalVolumeTemplate::ValidateConfig(const ConfigManager&) const
