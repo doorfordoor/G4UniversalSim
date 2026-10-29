@@ -71,6 +71,11 @@ def fixture(root: Path, scale: float = 1.0) -> None:
            [0, 2, 2, 1, "e-", 11, 0, 0, 0, 0, 0, 1, 0.01, 0, 1.0]])
 
 
+    (root / "run_summary.txt").write_text(
+        "status = completed\nsummary_write_status = completed\noutput_failure_status = none\n"
+        "run_count = 2\nplanned_event_count = 15\nactual_completed_event_count = 15\n"
+        "run_0_id = 0\nrun_0_planned_events = 5\nrun_0_completed_events = 5\n"
+        "run_1_id = 1\nrun_1_planned_events = 10\nrun_1_completed_events = 10\n", encoding="utf-8")
     meta_path = root / "run_metadata.json"
     meta = json.loads(meta_path.read_text())
     meta.update(schema="run_metadata_json_v1", runs=[{"run_id":0,"completed_events":5},{"run_id":1,"completed_events":10}],

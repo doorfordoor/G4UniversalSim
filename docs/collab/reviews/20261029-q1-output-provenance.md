@@ -121,3 +121,9 @@ smoke_output_provenance通过：删除manifest同文件名、合法manifest新�
 ## 提交前 static 夹具兼容修正
 
 static-precommit报告20261029-174906-ca3b655a的两项失败均为旧测试假设：platform_paths发现provenance fixture写死盘符，改为实际临时目录绝对路径（仍测复制锚点，不规避扫描规则）；shielding_analysis的mock manifest缺自身metadata/summary登记，补完整登记。负向helper同时接受新共享ProvenanceError并核对原错误文本。旧mixed-run夹具仅创建未登记后续run文件，新契约应忽略：现明确验证未登记文件不参与，再登记该r1文件、验证缺run1的manifest被严格拒绝。不改产品/runner/probe。仅重跑两失败case：platform_paths exit0/v3 asserts3；shielding_analysis exit0/v3 asserts113。日志out/verification/r27-static-platform-paths.log及r27-static-shielding-analysis.log。两个测试与本记录冻结。
+
+## f407真实CI夹具失败补修
+
+真实Linux双版本run40853939918与M0 run40853939864均在gui_plots被严格provenance检查拒绝：fixture未创建/登记run_summary.txt。构建/static已通过，GUI30/31，Linuxbackend/integration未执行，不能称四profile绿色；原始四artifacts、八报告及GitHub SHA256核验保留在out/verification/q1-final-ci/ci-evidence.json。仅修smoke_plots.py：manifest生成前写最小真实summary，维持run0=5/run1=10、共15事件语义，随其余文件自动登记。不放宽产品校验。待完整GUI31专项。
+
+完整修后GUI31通过：out/verification/q1-gui-ci-fixture/20261029-180507-f228c9fa/report.json，31pass/0fail/0skip、1418 v3入口计数，发布证据门禁exit0。gui_plots后续断言均执行通过。仅smoke_plots.py与本审查说明变更，未自行提交/推送，原失败CI证据完整保留。源码/测试冻结供root提交。
