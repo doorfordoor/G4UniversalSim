@@ -7,6 +7,14 @@
 配置驱动、可复现、可验证的 Geant4 桌面工作台（C++17 后端 + PySide6 前端 + 场景包/基准/测试平台）。
 当前是"有真实物理验证的 Beta"，不是 1.0：核心链路可用，大量高级能力仍是实验性，产品完成度低于工程纪律。
 
+## 当前计划入口（2026-10-29 编号整理）
+
+统一工作项、排期波次、依赖、Q1 审查范围与提交节点均在 [ROADMAP](docs/ROADMAP.md) 的“统一代号与排期”一节。本对话作为 **Q1 完整可靠性审查、修复与验收**的主负责人；隔壁审查作为独立证据来源，不必等它全部结束。已有反例按代码基线复用，完整 Q1 尚未验收。
+
+当前顺序：Q1 → 2C/E6 → F1/F4/F5/K1（I1 可并行）→ I2/J1/F8 → L1/F2；其后科研波次 Q2/H2/H3、F3/F7、E7/J2，与 K2/L2 按依赖安排；H4–H9 和 M5 保留后续独立阶段。这是导航摘要，具体状态与默认顺序以 ROADMAP 为准。用户一次启动一个完整代号，阶段内的提交和专项测试由负责人连续推进。
+
+本次只整理计划文档，不新增实现或宣称重新完成审查。源码最新修复仍为 `f9930aa`，Windows 的 89 项通过是该提交的历史验收证据；不外推为 Q1 全面审查或 Linux 新版本已过。当前没有后台运行任务。
+
 ## 2026-10-29 隔离开发工作区
 
 用户授权 Astra 主导 2C 实现。当前工作区 `C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim`，基线 `5465dbd`，分支 `roadmap/2c-effective-config`；原 D 盘工作区由 DSH 保留，禁止并发合并。实施契约见 [2C 开工回信](docs/collab/inbox/20261029-1010-astra-2c-execution.md)。DeepSeek 已通过 API 提供前端设计，采纳范围与纠偏见 [前端设计建议](docs/collab/outbox/20261029-1010-deepseek-effectiveconfig-ui-design.md)。
@@ -36,10 +44,10 @@
 ## 阶段状态（摘要，详表见 ROADMAP）
 
 - A 核心功能、B 场景包与基准、C 向导/绘图/扫描、D 安装包、G 3D 预览：已完成。
-- E 修复：E1（GUI 与后端规则一致）、E2（配置 schema）、E3（Linux CI，含 Geant4 11.3.2 / 11.4.3 版本矩阵）、E5（GUI 拆分）已完成（E3 见 ROADMAP 的“done for Linux”；M0 workflow 已由所有者启用并在 `402a9f2` 双平台全绿；11.2 未测）；E4（轻量化流程）未做。
+- E 修复：E1（GUI 与后端规则一致）、E2（配置 schema）、E3（Linux CI，含 Geant4 11.3.2 / 11.4.3 版本矩阵）、E5（GUI 拆分）已完成（E3 见 ROADMAP 的“done for Linux”；M0 workflow 已由所有者启用并在 `402a9f2` 双平台全绿；11.2 未测）；E4 已做部分规范迁移和链接检查，仍需收尾；新增 E6/E7 的范围见 ROADMAP。
 - F 优化：F6（实时运行进度）已完成，2026-10-28 追加可选 `sequence`（进程级单调、跨 run 不重置，GUI 拒绝重复/回退行；旧后端仍可解析），契约见 [docs/实时运行进度.md](docs/实时运行进度.md)；F1 输出与来源、F2 运行会话、F3 性能/tasking、F4 校验定位、F5 undo/autosave、F7 二维扫描、F8 GUI 收尾未做。
 - H 增量：H1（径迹输出）已完成；H2–H9（过滤计分、平行世界、方差降低、光学、活化、DNA、体素体模、通用直方图）未做。
-- M0 全模块 EffectiveConfig / 模块开关 / SolidRegistry 仍未实现（长期欠账）。
+- M0 全模块 EffectiveConfig / 模块开关归 2C（已有子集）；SolidRegistry 归 E7，仍未实现。M0–M5 是长期目标汇总，不与新工作项重复计算完成度。
 
 ## 阶段 2B（屏蔽/涂层场景 GUI 端到端，已完成 2026-10-28）
 
