@@ -1,7 +1,9 @@
 #pragma once
 
 #include <cstddef>
+#include <algorithm>
 #include <string>
+#include <tuple>
 #include <vector>
 
 struct IniFieldInfo;
@@ -22,7 +24,19 @@ struct GeometryConfigDiagnostic {
     std::string FormatWarning() const;
 };
 
-void SortAndDeduplicateGeometryDiagnostics(std::vector<GeometryConfigDiagnostic>& diagnostics);
+inline void SortAndDeduplicateGeometryDiagnostics(std::vector<GeometryConfigDiagnostic>& diagnostics)
+{
+    const auto identity = [](const GeometryConfigDiagnostic& item) {
+        return std::tie(item.filename, item.line, item.section, item.key, item.value,
+                        item.code, item.message, item.category, item.suggestion);
+    };
+    std::sort(diagnostics.begin(), diagnostics.end(), [&](const auto& left, const auto& right) {
+        return identity(left) < identity(right);
+    });
+    diagnostics.erase(std::unique(diagnostics.begin(), diagnostics.end(), [&](const auto& left, const auto& right) {
+        return identity(left) == identity(right);
+    }), diagnostics.end());
+}
 
 void CollectGeometryConfigDiagnostics(
     const std::string& filename,

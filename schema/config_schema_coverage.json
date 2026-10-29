@@ -143,6 +143,20 @@
     },
     {
       "file": "main_ini",
+      "section": "general",
+      "key": "schema_version",
+      "scalar_check": true,
+      "parser": "include/Config/MainConfigVersion.hh:ValidateMainIniFormat",
+      "validation": "load candidate main INI, before publishing its reader",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_config_schema.py"
+      ]
+    },
+    {
+      "file": "main_ini",
       "section": "output",
       "key": "dir",
       "scalar_check": true,
@@ -2513,6 +2527,575 @@
       },
       "tests": [
         "scripts/test_effective_modules.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "field",
+      "key": "magnetic",
+      "scalar_check": false,
+      "parser": "src/Field/FieldConfig.cc:FieldConfig::LoadFromConfigImpl",
+      "validation": "configure: syntax/maps; geometry initialization: actual field binding; per-thread ConstructSDandField: installation",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_field_biasing_schema.py",
+        "scripts/test_fields_a7.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "field",
+      "key": "electric",
+      "scalar_check": false,
+      "parser": "src/Field/FieldConfig.cc:FieldConfig::LoadFromConfigImpl",
+      "validation": "configure: syntax/maps; geometry initialization: actual field binding; per-thread ConstructSDandField: installation",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_field_biasing_schema.py",
+        "scripts/test_fields_a7.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "field",
+      "key": "magnetic_map",
+      "scalar_check": true,
+      "parser": "src/Field/FieldConfig.cc:FieldConfig::LoadFromConfigImpl",
+      "validation": "configure: syntax/maps; geometry initialization: actual field binding; per-thread ConstructSDandField: installation",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_field_biasing_schema.py",
+        "scripts/test_fields_a7.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "field",
+      "key": "electric_map",
+      "scalar_check": true,
+      "parser": "src/Field/FieldConfig.cc:FieldConfig::LoadFromConfigImpl",
+      "validation": "configure: syntax/maps; geometry initialization: actual field binding; per-thread ConstructSDandField: installation",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_field_biasing_schema.py",
+        "scripts/test_fields_a7.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "field",
+      "key": "min_step",
+      "scalar_check": true,
+      "parser": "src/Field/FieldConfig.cc:FieldConfig::LoadFromConfigImpl",
+      "validation": "configure: syntax/maps; geometry initialization: actual field binding; per-thread ConstructSDandField: installation",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_field_biasing_schema.py",
+        "scripts/test_fields_a7.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "field",
+      "key": "delta_chord",
+      "scalar_check": true,
+      "parser": "src/Field/FieldConfig.cc:FieldConfig::LoadFromConfigImpl",
+      "validation": "configure: syntax/maps; geometry initialization: actual field binding; per-thread ConstructSDandField: installation",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_field_biasing_schema.py",
+        "scripts/test_fields_a7.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "field",
+      "key": "delta_one_step",
+      "scalar_check": true,
+      "parser": "src/Field/FieldConfig.cc:FieldConfig::LoadFromConfigImpl",
+      "validation": "configure: syntax/maps; geometry initialization: actual field binding; per-thread ConstructSDandField: installation",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_field_biasing_schema.py",
+        "scripts/test_fields_a7.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "field",
+      "key": "delta_intersection",
+      "scalar_check": true,
+      "parser": "src/Field/FieldConfig.cc:FieldConfig::LoadFromConfigImpl",
+      "validation": "configure: syntax/maps; geometry initialization: actual field binding; per-thread ConstructSDandField: installation",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_field_biasing_schema.py",
+        "scripts/test_fields_a7.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "field.<name>",
+      "key": "magnetic",
+      "scalar_check": false,
+      "parser": "src/Field/FieldConfig.cc:FieldConfig::LoadFromConfigImpl",
+      "validation": "configure: syntax and configured INI volumes; master-built world: ambiguous/conflicting bindings; per-thread ConstructSDandField: installation",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_field_biasing_schema.py",
+        "scripts/test_fields_a7.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "field.<name>",
+      "key": "electric",
+      "scalar_check": false,
+      "parser": "src/Field/FieldConfig.cc:FieldConfig::LoadFromConfigImpl",
+      "validation": "configure: syntax and configured INI volumes; master-built world: ambiguous/conflicting bindings; per-thread ConstructSDandField: installation",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_field_biasing_schema.py",
+        "scripts/test_fields_a7.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "field.<name>",
+      "key": "magnetic_map",
+      "scalar_check": true,
+      "parser": "src/Field/FieldConfig.cc:FieldConfig::LoadFromConfigImpl",
+      "validation": "configure: syntax and configured INI volumes; master-built world: ambiguous/conflicting bindings; per-thread ConstructSDandField: installation",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_field_biasing_schema.py",
+        "scripts/test_fields_a7.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "field.<name>",
+      "key": "electric_map",
+      "scalar_check": true,
+      "parser": "src/Field/FieldConfig.cc:FieldConfig::LoadFromConfigImpl",
+      "validation": "configure: syntax and configured INI volumes; master-built world: ambiguous/conflicting bindings; per-thread ConstructSDandField: installation",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_field_biasing_schema.py",
+        "scripts/test_fields_a7.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "field.<name>",
+      "key": "volumes",
+      "scalar_check": false,
+      "parser": "src/Field/FieldConfig.cc:FieldConfig::LoadFromConfigImpl",
+      "validation": "configure: syntax and configured INI volumes; master-built world: ambiguous/conflicting bindings; per-thread ConstructSDandField: installation",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_field_biasing_schema.py",
+        "scripts/test_fields_a7.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "field.<name>",
+      "key": "min_step",
+      "scalar_check": true,
+      "parser": "src/Field/FieldConfig.cc:FieldConfig::LoadFromConfigImpl",
+      "validation": "configure: syntax and configured INI volumes; master-built world: ambiguous/conflicting bindings; per-thread ConstructSDandField: installation",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_field_biasing_schema.py",
+        "scripts/test_fields_a7.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "field.<name>",
+      "key": "delta_chord",
+      "scalar_check": true,
+      "parser": "src/Field/FieldConfig.cc:FieldConfig::LoadFromConfigImpl",
+      "validation": "configure: syntax and configured INI volumes; master-built world: ambiguous/conflicting bindings; per-thread ConstructSDandField: installation",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_field_biasing_schema.py",
+        "scripts/test_fields_a7.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "field.<name>",
+      "key": "delta_one_step",
+      "scalar_check": true,
+      "parser": "src/Field/FieldConfig.cc:FieldConfig::LoadFromConfigImpl",
+      "validation": "configure: syntax and configured INI volumes; master-built world: ambiguous/conflicting bindings; per-thread ConstructSDandField: installation",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_field_biasing_schema.py",
+        "scripts/test_fields_a7.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "field.<name>",
+      "key": "delta_intersection",
+      "scalar_check": true,
+      "parser": "src/Field/FieldConfig.cc:FieldConfig::LoadFromConfigImpl",
+      "validation": "configure: syntax and configured INI volumes; master-built world: ambiguous/conflicting bindings; per-thread ConstructSDandField: installation",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_field_biasing_schema.py",
+        "scripts/test_fields_a7.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "biasing",
+      "key": "enabled",
+      "scalar_check": true,
+      "parser": "src/Biasing/BiasingManager.cc:BiasingManager::LoadFromConfig",
+      "validation": "configure: gate and module-policy resolution; physics/geometry initialization and BeginRun/EndRun: actual process/worker contracts",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_field_biasing_schema.py",
+        "scripts/test_effective_biasing.py",
+        "scripts/test_biasing_worker_runtime.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "biasing.xs",
+      "key": "particles",
+      "scalar_check": false,
+      "parser": "src/Biasing/BiasingManager.cc:BiasingManager::LoadFromConfig",
+      "validation": "configure only when gate or explicit auto/on requires parsing; initialization/BeginRun: real target matching",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_field_biasing_schema.py",
+        "scripts/test_biasing_target_contract.py",
+        "scripts/test_effective_biasing.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "biasing.xs",
+      "key": "processes",
+      "scalar_check": false,
+      "parser": "src/Biasing/BiasingManager.cc:BiasingManager::LoadFromConfig",
+      "validation": "configure only when gate or explicit auto/on requires parsing; initialization/BeginRun: real target matching",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_field_biasing_schema.py",
+        "scripts/test_biasing_target_contract.py",
+        "scripts/test_effective_biasing.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "biasing.xs",
+      "key": "volumes",
+      "scalar_check": false,
+      "parser": "src/Biasing/BiasingManager.cc:BiasingManager::LoadFromConfig",
+      "validation": "configure only when gate or explicit auto/on requires parsing; initialization/BeginRun: real target matching",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_field_biasing_schema.py",
+        "scripts/test_biasing_target_contract.py",
+        "scripts/test_effective_biasing.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "biasing.xs",
+      "key": "factor",
+      "scalar_check": true,
+      "parser": "src/Biasing/BiasingManager.cc:BiasingManager::LoadFromConfig",
+      "validation": "configure only when gate or explicit auto/on requires parsing; initialization/BeginRun: real target matching",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_field_biasing_schema.py",
+        "scripts/test_biasing_target_contract.py",
+        "scripts/test_effective_biasing.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "biasing.xs",
+      "key": "only_primary",
+      "scalar_check": true,
+      "parser": "src/Biasing/BiasingManager.cc:BiasingManager::LoadFromConfig",
+      "validation": "configure only when gate or explicit auto/on requires parsing; initialization/BeginRun: real target matching",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_field_biasing_schema.py",
+        "scripts/test_biasing_target_contract.py",
+        "scripts/test_effective_biasing.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "biasing.xs",
+      "key": "apply_to_secondaries",
+      "scalar_check": true,
+      "parser": "src/Biasing/BiasingManager.cc:BiasingManager::LoadFromConfig",
+      "validation": "configure only when gate or explicit auto/on requires parsing; initialization/BeginRun: real target matching",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_field_biasing_schema.py",
+        "scripts/test_biasing_target_contract.py",
+        "scripts/test_effective_biasing.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "biasing.xs",
+      "key": "min_weight",
+      "scalar_check": true,
+      "parser": "src/Biasing/BiasingManager.cc:BiasingManager::LoadFromConfig",
+      "validation": "configure only when gate or explicit auto/on requires parsing; initialization/BeginRun: real target matching",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_field_biasing_schema.py",
+        "scripts/test_biasing_target_contract.py",
+        "scripts/test_effective_biasing.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "biasing.xs",
+      "key": "max_interactions",
+      "scalar_check": true,
+      "parser": "src/Biasing/BiasingManager.cc:BiasingManager::LoadFromConfig",
+      "validation": "configure only when gate or explicit auto/on requires parsing; initialization/BeginRun: real target matching",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_field_biasing_schema.py",
+        "scripts/test_biasing_target_contract.py",
+        "scripts/test_effective_biasing.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "biasing.xs.<particle>.<process>",
+      "key": "particle",
+      "scalar_check": true,
+      "parser": "src/Biasing/BiasingManager.cc:BiasingManager::LoadFromConfig",
+      "validation": "configure when parsed: syntax/numeric rule validation; physics initialization/BeginRun: actual wrapped process and worker binding; EndRun: complete receipts",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_field_biasing_schema.py",
+        "scripts/test_biasing_target_contract.py",
+        "scripts/test_biasing_worker_runtime.py",
+        "scripts/test_effective_biasing.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "biasing.xs.<particle>.<process>",
+      "key": "process",
+      "scalar_check": true,
+      "parser": "src/Biasing/BiasingManager.cc:BiasingManager::LoadFromConfig",
+      "validation": "configure when parsed: syntax/numeric rule validation; physics initialization/BeginRun: actual wrapped process and worker binding; EndRun: complete receipts",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_field_biasing_schema.py",
+        "scripts/test_biasing_target_contract.py",
+        "scripts/test_biasing_worker_runtime.py",
+        "scripts/test_effective_biasing.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "biasing.xs.<particle>.<process>",
+      "key": "name",
+      "scalar_check": true,
+      "parser": "src/Biasing/BiasingManager.cc:BiasingManager::LoadFromConfig",
+      "validation": "configure when parsed: syntax/numeric rule validation; physics initialization/BeginRun: actual wrapped process and worker binding; EndRun: complete receipts",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_field_biasing_schema.py",
+        "scripts/test_biasing_target_contract.py",
+        "scripts/test_biasing_worker_runtime.py",
+        "scripts/test_effective_biasing.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "biasing.xs.<particle>.<process>",
+      "key": "enabled",
+      "scalar_check": true,
+      "parser": "src/Biasing/BiasingManager.cc:BiasingManager::LoadFromConfig",
+      "validation": "configure when parsed: syntax/numeric rule validation; physics initialization/BeginRun: actual wrapped process and worker binding; EndRun: complete receipts",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_field_biasing_schema.py",
+        "scripts/test_biasing_target_contract.py",
+        "scripts/test_biasing_worker_runtime.py",
+        "scripts/test_effective_biasing.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "biasing.xs.<particle>.<process>",
+      "key": "factor",
+      "scalar_check": true,
+      "parser": "src/Biasing/BiasingManager.cc:BiasingManager::LoadFromConfig",
+      "validation": "configure when parsed: syntax/numeric rule validation; physics initialization/BeginRun: actual wrapped process and worker binding; EndRun: complete receipts",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_field_biasing_schema.py",
+        "scripts/test_biasing_target_contract.py",
+        "scripts/test_biasing_worker_runtime.py",
+        "scripts/test_effective_biasing.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "biasing.xs.<particle>.<process>",
+      "key": "only_primary",
+      "scalar_check": true,
+      "parser": "src/Biasing/BiasingManager.cc:BiasingManager::LoadFromConfig",
+      "validation": "configure when parsed: syntax/numeric rule validation; physics initialization/BeginRun: actual wrapped process and worker binding; EndRun: complete receipts",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_field_biasing_schema.py",
+        "scripts/test_biasing_target_contract.py",
+        "scripts/test_biasing_worker_runtime.py",
+        "scripts/test_effective_biasing.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "biasing.xs.<particle>.<process>",
+      "key": "apply_to_secondaries",
+      "scalar_check": true,
+      "parser": "src/Biasing/BiasingManager.cc:BiasingManager::LoadFromConfig",
+      "validation": "configure when parsed: syntax/numeric rule validation; physics initialization/BeginRun: actual wrapped process and worker binding; EndRun: complete receipts",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_field_biasing_schema.py",
+        "scripts/test_biasing_target_contract.py",
+        "scripts/test_biasing_worker_runtime.py",
+        "scripts/test_effective_biasing.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "biasing.xs.<particle>.<process>",
+      "key": "min_weight",
+      "scalar_check": true,
+      "parser": "src/Biasing/BiasingManager.cc:BiasingManager::LoadFromConfig",
+      "validation": "configure when parsed: syntax/numeric rule validation; physics initialization/BeginRun: actual wrapped process and worker binding; EndRun: complete receipts",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_field_biasing_schema.py",
+        "scripts/test_biasing_target_contract.py",
+        "scripts/test_biasing_worker_runtime.py",
+        "scripts/test_effective_biasing.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "biasing.xs.<particle>.<process>",
+      "key": "max_interactions",
+      "scalar_check": true,
+      "parser": "src/Biasing/BiasingManager.cc:BiasingManager::LoadFromConfig",
+      "validation": "configure when parsed: syntax/numeric rule validation; physics initialization/BeginRun: actual wrapped process and worker binding; EndRun: complete receipts",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_field_biasing_schema.py",
+        "scripts/test_biasing_target_contract.py",
+        "scripts/test_biasing_worker_runtime.py",
+        "scripts/test_effective_biasing.py"
+      ]
+    },
+    {
+      "file": "main_ini",
+      "section": "biasing.xs.<particle>.<process>",
+      "key": "volumes",
+      "scalar_check": false,
+      "parser": "src/Biasing/BiasingManager.cc:BiasingManager::LoadFromConfig",
+      "validation": "configure when parsed: syntax/numeric rule validation; physics initialization/BeginRun: actual wrapped process and worker binding; EndRun: complete receipts",
+      "gui": {
+        "editable": "external_only"
+      },
+      "tests": [
+        "scripts/test_field_biasing_schema.py",
+        "scripts/test_biasing_target_contract.py",
+        "scripts/test_biasing_worker_runtime.py",
+        "scripts/test_effective_biasing.py"
       ]
     },
     {
@@ -5849,13 +6432,7 @@
     }
   ],
   "excluded": {
-    "main_ini": [
-      "field",
-      "field.<name>",
-      "biasing",
-      "biasing.xs",
-      "biasing.xs.<particle>.<process>"
-    ],
-    "reason": "场与偏置不属于本次约定迁移；保持现有解析与已知键表。"
+    "main_ini": [],
+    "reason": "E6 includes field and biasing descriptions and generated keys. Macro/CLI, GDML/STL contents and auxiliary table formats keep their dedicated parsers; schema inventory does not imply GUI editability or physical validation."
   }
 }

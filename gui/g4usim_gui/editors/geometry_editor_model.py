@@ -6,6 +6,7 @@ from dataclasses import asdict, dataclass, field
 
 from g4usim_gui.editors.editable_models import EditableDocument
 from g4usim_gui.core.i18n import ui_format, ui_text
+from g4usim_gui.core.project_migration import normalize_geometry_data, validate_dataclass_fields
 from g4usim_gui.parsers.materials_parser import NIST_QUICK_LIST, material_reference_status
 from g4usim_gui.parsers.geometry_parser import GeometrySummary
 from g4usim_gui.parsers.geometry_parser import PRODUCTION_CUT_KEYS, TRD_PROPERTY_KEYS, VISUAL_KEYS
@@ -206,13 +207,17 @@ def geometry_document_from_summary(summary: GeometrySummary | None, template_nam
 def geometry_document_from_dict(data: dict | None) -> GeometryDocument:
     document = GeometryDocument()
     if not isinstance(data, dict):
-        return document
+        if data is None:
+            return document
+        raise ValueError("Expected JSON object: project.geometryEditor")
+    data = normalize_geometry_data(data)
     document.mode = str(data.get("mode", "preview_only"))
     raw_version = data.get("schema_version", data.get("schemaVersion"))
     if raw_version is not None:
         if str(raw_version) not in {"1", "2"}:
             raise ValueError(f"Unsupported geometry schema version in project snapshot: {raw_version}")
         document.schema_version = int(raw_version)
+    validate_dataclass_fields(data, GeometryDocument, "project.geometryEditor")
     document.source_path = str(data.get("source_path", data.get("sourcePath", "")))
     document.is_dirty = bool(data.get("is_dirty", data.get("dirty", False)))
     document.source_copy_mode = bool(data.get("source_copy_mode", data.get("sourceCopyMode", False)))
@@ -233,7 +238,7 @@ def geometry_document_from_dict(data: dict | None) -> GeometryDocument:
             if isinstance(item, dict):
                 layers.append(LayerRow(**{k: v for k, v in item.items() if k in LayerRow.__dataclass_fields__}))
         document.layered_device = LayeredDeviceGeometryModel(**values)
-        if layers:
+        if "layers" in layered:
             document.layered_device.layers = layers
     preview = data.get("preview", {})
     volume_rows = data.get("volumes", preview.get("volumes", []))

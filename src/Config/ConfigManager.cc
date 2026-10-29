@@ -1,11 +1,13 @@
 #include "Config/ConfigManager.hh"
 
 #include "Config/ConfigSchemaTable.hh"
+#include "Config/MainConfigVersion.hh"
 #include "Utils/StringUtils.hh"
 
 #include <stdexcept>
 #include <algorithm>
 #include <limits>
+#include <utility>
 
 namespace {
 
@@ -19,16 +21,11 @@ bool StartsWith(const std::string& value, const std::string& prefix)
     return value.size() >= prefix.size() && value.compare(0, prefix.size(), prefix) == 0;
 }
 
-// Keys of the sections not yet migrated to schema/config_schema.json (roadmap E2); the
-// migrated static sections come from the generated table below.
+// Static section keys come only from the generated schema table. Section-name
+// grammars and contextual validation remain with the existing parsers.
 std::map<std::string, std::vector<std::string>> BuildKnownKeys()
 {
-    std::map<std::string, std::vector<std::string>> keys = {
-        {"field", {"magnetic", "electric", "magnetic_map", "electric_map", "min_step", "delta_chord", "delta_one_step",
-                   "delta_intersection"}},
-        {"biasing", {"enabled"}},
-        {"biasing.xs", {"particles", "processes", "volumes", "factor", "only_primary", "apply_to_secondaries", "min_weight", "max_interactions"}},
-    };
+    std::map<std::string, std::vector<std::string>> keys;
     for (const char* section : ConfigSchema::kMainIniSections) {
         if (keys.count(section)) throw std::logic_error(std::string("section [") + section + "] is in the schema and the hand list");
         keys[section];
@@ -94,13 +91,12 @@ std::vector<std::string> DynamicKeys(const std::string& section)
         return ConfigSchema::Keys("main_ini", "scoring.mesh.<name>.<quantity>");
     }
     if (StartsWith(section, "field.")) {
-        return {"magnetic", "electric", "magnetic_map", "electric_map", "volumes", "min_step", "delta_chord",
-                "delta_one_step", "delta_intersection"};
+        return ConfigSchema::Keys("main_ini", "field.<name>");
     }
     if (StartsWith(section, "source.")) {
         return ConfigSchema::Keys("main_ini", "source.<name>", true);
     }
-    if (StartsWith(section, "biasing.xs.")) return {"particle", "process", "name", "enabled", "factor", "only_primary", "apply_to_secondaries", "min_weight", "max_interactions", "volumes"};
+    if (StartsWith(section, "biasing.xs.")) return ConfigSchema::Keys("main_ini", "biasing.xs.<particle>.<process>");
     return {};
 }
 
@@ -108,10 +104,21 @@ std::vector<std::string> DynamicKeys(const std::string& section)
 
 void ConfigManager::LoadMainConfig(const std::string& filename)
 {
-    mainConfig_.Load(filename);
+    IniReader candidate;
+    candidate.Load(filename);
+    ValidateMainIniFormat(candidate);
+    mainConfig_ = std::move(candidate);
 }
 
 void ConfigManager::LoadMainConfigBytes(const std::string& filename, const std::string& bytes)
+{
+    IniReader candidate;
+    candidate.LoadBytes(filename, bytes);
+    ValidateMainIniFormat(candidate);
+    mainConfig_ = std::move(candidate);
+}
+
+void ConfigManager::LoadGeometryConfigBytes(const std::string& filename, const std::string& bytes)
 {
     mainConfig_.LoadBytes(filename, bytes);
 }

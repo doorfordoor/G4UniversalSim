@@ -3,6 +3,7 @@
 #include "Field/FieldConfig.hh"
 
 #include "Config/ConfigManager.hh"
+#include "Config/ConfigSchemaTable.hh"
 #include "Utils/StringUtils.hh"
 #include "Utils/UnitParser.hh"
 
@@ -244,8 +245,10 @@ void FieldConfig::LoadFromConfig(const ConfigManager& config)
 void FieldConfig::LoadFromConfigImpl(const ConfigManager& config)
 {
     fields_.clear();
-    static const std::set<std::string> keys = {"magnetic", "electric", "magnetic_map", "electric_map", "volumes",
-                                               "min_step", "delta_chord", "delta_one_step", "delta_intersection"};
+    // The shared local-field keys include volumes; the global-field-specific
+    // rejection below intentionally retains its original diagnostic.
+    const auto registeredKeys = ConfigSchema::Keys("main_ini", "field.<name>");
+    const std::set<std::string> keys(registeredKeys.begin(), registeredKeys.end());
     for (const auto& info : config.GetSectionInfo()) {
         const std::string section = info.section;
         const std::string lower = StringUtils::ToLower(section);

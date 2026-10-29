@@ -391,3 +391,13 @@ Geant4 `ApplyCommand()` 返回 0 不足以确认命令成功；沿用材料命�
 前述完整候选和偏置失败契约已在f4770b0完成真实验收：Windows118/118、40628个v3入口、干净工作区，Linux11.3.2/11.4.3实际run40892017436各118，M0 run40892017433两平台各47；12份CI门禁与归档后的14份门禁均通过。非法偏置命令六类负例及正常路径共302入口，普通非零失败、来源位置/未发布revision/未执行后续命令均验证；空em来源和连续不同mutation请求保留亦闭合。最终可见Windows窗口2run/2worker/8事件/14快照、10类程序化检查和6图通过。
 
 同生产Q1代码仅加同五份测试overlay重新测量105项/36269入口，当前候选通过原逐例/总数门禁；其余100项与历史入口数完全一致，五项变化有逐项对照。旧83770及原失败报告不改写，不能把新固定不变量入口数与旧逐记录重复入口数当作覆盖质量排名。完整来源、未知边界、复制清单与集成收据见docs/verification/2c-full-20261029/README.md；E6、Q2、完整编辑/安装器仍各自独立。历史条目中的待验收字样描述当时状态，当前阶段事实以此报告与ROADMAP为准。
+
+## 2026-10-30 E6 兼容与迁移候选
+
+实施契约见 `docs/collab/inbox/20261029-2355-astra-e6-execution.md`，使用说明见 `docs/配置兼容与迁移.md`；本条记录候选行为，阶段完成仍须最终证据。schema 增加 field/biasing 五类 section 与主版本标记，共394项，生成文件禁手改。场/偏置专用解析、dormant短路、process大小写、运行绑定与模块三态不变；未知命令或表格文件仍不在通用schema中。
+
+主 INI `[general]/schema_version` 缺失为legacy1，显式仅接受`1`，future/非法词法在候选reader发布前拒绝；重复声明仍后值生效并告警。ConfigManager 的 `LoadGeometryConfigBytes` 专用于独立几何，不能调用主版本校验；几何的版本仍为 `[global]/version`。有效配置的 `/configuration/main_ini_schema_version` 只记录格式接受和来源，不提供内核应用收据。GUI 标量与迁移scanner使用ASCII空白、INI按LF分行，不能用Python Unicode strip/splitlines误收后端会拒绝的版本/数值。
+
+迁移计划只读源并带实际字节SHA，publish复核源身份后以同目录临时文件flush/fsync及exclusive hard link发布，不覆盖已有目标/链接；失败不改源。发布是提交点，之后清理临时链接失败返回warning，不能将已成功目标报告为失败或删除目标。主INI副本限定同目录以保留相对资源；几何相对STL/GDML/copies路径确定性转成原资源绝对路径；K1资源包仍未实现。项目兼容1–6/缺省及列明的旧preview/别名，未知/冲突/重复JSON/nonfinite拒绝；正常保存保持原子替换，Save As成功后才切project_file。迁移不自动启source-copy，不解除原编辑blocker，格式检查不等于后端/物理验证。
+
+诊断C++排序和相等共用完整字段身份，GUI源问题以位置/类别/严重度识别，避免重复校验/重载累加。专项为`test_main_config_version`（含component）、`test_main_ini_migration`、`test_field_biasing_schema`、`test_config_migration`、`test_config_migration_backend`、`test_geometry_diagnostic_identity`、`smoke_config_migration_ui`；旧schema/几何/项目/来源及平台全量继续保留。独立审查发现的类型静默转换和preview类型等值问题已修复并由不同写者用原始5例、14组合法旧版本复核，见`docs/collab/reviews/20261030-e6-migration-cross-review.md`；完整冻结验收仍待后续证据，不因本文写入而视为完成。

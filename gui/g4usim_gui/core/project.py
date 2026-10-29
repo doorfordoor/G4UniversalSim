@@ -6,6 +6,8 @@ import tempfile
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
+from g4usim_gui.core.config_migration import check_finite_json, load_json_strict
+from g4usim_gui.core.project_migration import normalize_project_data, validate_dataclass_fields
 
 from g4usim_gui.models.package_model import GeometrySettings, PathSettings
 from g4usim_gui.models.physics_model import PhysicsSettings
@@ -74,6 +76,11 @@ def project_from_dict(data: dict[str, Any]) -> G4USimProject:
     version = data.get("version", 1)
     if type(version) is not int or not 1 <= version <= SCHEMA_VERSION:
         raise ValueError(f"Unsupported project version: {version}")
+    check_finite_json(data)
+    data = normalize_project_data(data)
+    validate_dataclass_fields(data, G4USimProject, "project")
+    if data.get("threads", 1) <= 0:
+        raise ValueError("project.threads must be positive")
 
     allowed = set(G4USimProject.__dataclass_fields__.keys())
     filtered = {key: value for key, value in data.items() if key in allowed}
@@ -101,12 +108,6 @@ def project_from_dict(data: dict[str, Any]) -> G4USimProject:
     project = G4USimProject(**filtered)
     if project.runInputMode not in RUN_INPUT_MODES:
         raise ValueError(f"Unsupported runInputMode: {project.runInputMode}")
-    if not isinstance(project.threads, int):
-        project.threads = int(project.threads)
-    if project.threads <= 0:
-        project.threads = 1
-    if project.seed is None:
-        project.seed = ""
 
     # Backward compatibility with Round 7B flat project JSON.
     if not project.pathSettings.executable:
@@ -128,6 +129,7 @@ def project_from_dict(data: dict[str, Any]) -> G4USimProject:
     if not has_scoring_editor or project.scoringEditor.hist_bins <= 0:
         project.scoringEditor = ScoringEditableModel.from_settings(project.scoringSettings)
     _check_supported_fields(data, project_to_dict(project))
+    project.version = SCHEMA_VERSION
     return project
 
 
@@ -157,8 +159,7 @@ def _check_supported_fields(source: Any, saved: Any, path: str = "project") -> N
 
 
 def load_project(path: str | Path) -> G4USimProject:
-    with Path(path).open("r", encoding="utf-8") as handle:
-        data = json.load(handle)
+    data = load_json_strict(Path(path).read_bytes())
     if not isinstance(data, dict):
         raise ValueError("Project JSON root must be an object")
     return project_from_dict(data)
@@ -173,7 +174,7 @@ def save_project(project: G4USimProject, path: str | Path) -> None:
                                          dir=target.parent, prefix=f".{target.name}.",
                                          suffix=".tmp", delete=False) as handle:
             temporary = Path(handle.name)
-            json.dump(project_to_dict(project), handle, indent=2, ensure_ascii=False)
+            json.dump(project_to_dict(project), handle, indent=2, ensure_ascii=False, allow_nan=False)
             handle.write("\n")
             handle.flush()
             os.fsync(handle.fileno())

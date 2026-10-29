@@ -1,5 +1,9 @@
 # 给 Astra 的当前状态简报
 
+## 2026-10-30 当前交接（优先）
+
+Q1与完整2C已验收交付，代码/证据基线 `c6bf8ad`。用户已启动下一完整阶段E6，当前分支 `roadmap/E6-config-compat`，复用effective-config隔离工作区；原DSH检出保持独立。范围、单写者和门槛见 [E6开工契约](inbox/20261029-2355-astra-e6-execution.md)，当前状态仍以STATUS/ROADMAP为准。DeepSeek已实际参与一次迁移前端设计；field/biasing schema、主INI版本、迁移副本和诊断正在实现/独立审查，尚未整阶段验收。下方同日更早的“完整2C未完成”等不再代表当前状态。
+
 ## 2026-10-29 当前交接补充（优先于下方历史待办）
 
 用户已授权 Astra 完全主导，Sol 按独占文件协作、DeepSeek 继续负责前端设计。实施在 `roadmap/2c-effective-config` 隔离 worktree，原 DSH 工作区未合并；角色与单写者规则以 [README](README.md) 更新条目为准。

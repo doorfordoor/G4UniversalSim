@@ -21,25 +21,6 @@ std::string GeometryConfigDiagnostic::FormatWarning() const
     return text.str();
 }
 
-void SortAndDeduplicateGeometryDiagnostics(std::vector<GeometryConfigDiagnostic>& diagnostics)
-{
-    const auto less = [](const GeometryConfigDiagnostic& left, const GeometryConfigDiagnostic& right) {
-        if (left.filename != right.filename) return left.filename < right.filename;
-        if (left.line != right.line) return left.line < right.line;
-        if (left.section != right.section) return left.section < right.section;
-        if (left.key != right.key) return left.key < right.key;
-        if (left.value != right.value) return left.value < right.value;
-        if (left.code != right.code) return left.code < right.code;
-        return left.message < right.message;
-    };
-    std::sort(diagnostics.begin(), diagnostics.end(), less);
-    diagnostics.erase(std::unique(diagnostics.begin(), diagnostics.end(), [](const auto& left, const auto& right) {
-        return left.code == right.code && left.category == right.category && left.filename == right.filename
-            && left.line == right.line && left.section == right.section && left.key == right.key
-            && left.value == right.value && left.message == right.message && left.suggestion == right.suggestion;
-    }), diagnostics.end());
-}
-
 namespace {
 
 std::string Normalize(const std::string& value)

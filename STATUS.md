@@ -1,6 +1,6 @@
 # G4UniversalSim 状态（唯一入口页）
 
-更新：2026-10-29。本页只做导航与快照；**阶段状态以 [docs/ROADMAP.md](docs/ROADMAP.md) 为准，支持等级以 [docs/功能支持矩阵.md](docs/功能支持矩阵.md) 为准**，两者冲突时先改事实再改文档。
+更新：2026-10-30。本页只做导航与快照；**阶段状态以 [docs/ROADMAP.md](docs/ROADMAP.md) 为准，支持等级以 [docs/功能支持矩阵.md](docs/功能支持矩阵.md) 为准**，两者冲突时先改事实再改文档。
 
 ## 一句话定位
 
@@ -15,6 +15,10 @@
 
 2026-10-29 Q1已完成：九域审查、R01–R32闭合并交叉复核；验收代码 `8ecad66`。干净Windows **105 PASS / 0 FAIL / 0 SKIP**，83770个v3入口；旧同代98项基线79303，逐例/总数与原始日志门禁通过。Linux11.3.2/11.4.3真实CI各105（run40855144863），Windows/Ubuntu static+GUI各42（run40855144672），Windows实窗保存/生成/运行/取消/关窗通过。[完整收据](docs/verification/q1-final-20261029/README.md)；旧失败证据保留，历史偏置结果须重跑，原生交互迁移显式csh。
 
+## E6 进行中（2026-10-30）
+
+基于已交付 `c6bf8ad`，在同一隔离工作区的新分支 `roadmap/E6-config-compat` 推进字段补齐与配置兼容。范围、单写者归属、内部提交及验收节点见 [E6 开工契约](docs/collab/inbox/20261029-2355-astra-e6-execution.md)。DeepSeek 已完成一次真实前端设计咨询，采纳/纠偏见 [设计记录](docs/collab/outbox/20261029-deepseek-e6-design.md)。主 INI 版本候选拒绝的独立组件检查通过；schema、迁移服务及前端正在实现，全量/跨平台/实窗验收尚未执行，不能标记阶段完成。
+
 ## 完整 2C 已完成（2026-10-29）
 
 验收产品 `f4770b0`：11 类消费者、同字节输入来源、事务/稳定对象身份、configure/run_begin/finalization、独立内核/worker 收据、模块 off/auto/on、只读 GUI 集合与差异闭合。干净 Release 与 Windows 全量 **118 PASS / 0 FAIL / 0 SKIP，40628 个 v3 入口**，报告运行时 `git_dirty=false`；Linux 11.3.2/11.4.3 实际 CI `40892017436` 各118项，M0 `40892017433` 两平台各47项，12个证据门禁通过、4个ZIP传输SHA匹配。最终依据见[完整2C验收报告](docs/verification/2c-full-20261029/README.md)，契约见[EffectiveConfig](docs/EffectiveConfig.md)。
@@ -25,7 +29,7 @@
 
 原始首轮失败 `out/verification/2c-full-windows/20261029-214410-a8c2b6e8`、旧CI `out/verification/2c-ci`、修后专项 `out/verification/2c-regression-repair`、build03/fee88d2可见检查 `out/verification/2c-visible` / `out/verification/2c-visible-final` 继续保留，不能冒充最终证据。实施与DeepSeek设计裁决见[开工信](docs/collab/inbox/20261029-1959-astra-full-2c-execution.md)和[设计记录](docs/collab/outbox/20261029-deepseek-full2c-design.md)。
 
-下一阶段 E6；F1、Q2、安装包及完整GUI编辑等保持各自未完成状态，按ROADMAP依赖推进。
+2C 后续 E6 已启动；F1、Q2、安装包及完整GUI编辑等保持各自未完成状态，按ROADMAP依赖推进。
 
 ## 2026-10-29 隔离开发工作区与2C子集历史
 

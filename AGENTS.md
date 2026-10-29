@@ -4,6 +4,8 @@
 
 ## 0. 条目索引与历史全文
 
+- 2026-10-30 E6候选：主INI版本标记与独立几何版本严格分开，版本拒绝须保持旧reader；迁移副本源SHA复核/exclusive发布，发布后清理失败仅warning；旧项目已知兼容、未知/类型冲突拒绝；schema394项，GUI编辑范围不扩。改动前读 `docs/agent-history.md` 同日E6条目与 `docs/配置兼容与迁移.md`，阶段证据以STATUS/ROADMAP为准。
+
 - 2026-10-29 完整 2C 回归衔接：有效配置文件按 `g4usim_effective_config_v1` 登记；dry-run 配置证据不是模拟执行。故障注入的 `_t0` 仅用于单 worker 确定性覆盖，多 worker 使用 `_any_worker` 在实际回调原子竞争一次，不能假定 worker0 分到事件。稀疏 ROOT 总 N 必须来自可靠 metadata，不能假定所有 worker 都工作。全文及正反例见 `docs/agent-history.md` 的“完整 2C 首轮全量回归衔接”。
 
 - 2026-10-29 Q1 运行边界：Dose 用扣 daughter 的本体质量；GDML SD 保留真实对象，无法表达的 bias 名碰撞和持久 touchable 路径歧义须拒绝；材料解析/实际构造都检查数值及版本壳层范围；局部场最近显式祖先、冲突在 master 拒绝；延迟 GPS 按真实源身份管理，pending 动态/别名命令必须拒绝；SD 回调异常锁存并中止。更改这些路径前读 `docs/agent-history.md` 的 Q1 几何、材料、源与场条目及其回归。
@@ -54,7 +56,7 @@
 - 2026-10-27 B1 位移损伤粒子名：`[scoring.displacement]` 键按 `G4ParticleTable` 大小写不敏感解析为规范名，在 `BeginRun`（首个事件前）校验（配置期粒子表为空）；未知名字报主 INI 文件、行号与候选后失败，不得静默让 DDD 恒为 0；回归 `scripts/test_displacement_damage.py`。
 - 2026-10-27 B2/B3/B4：主 INI 重复 section/键只告警 `[ConfigWarning] duplicate declaration` 并写摘要 `config_duplicate_count`，后值生效、不得改成拒绝；敏感探测器按配置名创建（禁硬编码 `AIHLParticleSD`）；`enableSD`/`setSDName`/`setSeed` 仅 `PreInit`，初始化后必须失败而非改缓存；回归 `test_config_duplicate_declarations.py`、`test_command_state_gating.py`。
 - 2026-10-27 F6：`Actions/RunProgress` 输出 `[G4USimProgress] ` + `g4usim_progress_v1` JSON，约 0.5 s 限频，终值取 `G4Run::GetNumberOfEvent()`；零事件不补造消息，进度不替代 `run_result` 判定；契约 `docs/实时运行进度.md`、回归 `test_live_progress.py`。
-- 2026-10-26 E2原验收353个字段；当前schema357项（新增modules四项）；改描述/默认/别名/范围必须跑 `scripts/generate_config_schema.py`，C++ 表、Python 数据、矩阵第 5 节与覆盖清单禁手改；`field`/`biasing` 在 excluded，不能说成全仓库统一；回归 `test_config_schema.py`、`test_config_schema_context.py`。
+- 2026-10-26 E2原验收353个字段；2C增加modules四项，E6候选增加field/biasing及主版本标记37项，共394。改描述/默认/别名/范围必须跑 `scripts/generate_config_schema.py`，C++ 表、Python 数据、矩阵第 5 节与覆盖清单禁手改；macro/CLI和辅助文件仍用专用解析器，不把字段登记当物理验证。回归 `test_config_schema.py`、`test_config_schema_context.py`、`test_field_biasing_schema.py`。
 - 2026-10-23 H1 粒子径迹：`[output] trajectories = N` 在 `SteppingAction` 开头记录（步前体积，被杀的步也记录），每 worker 每轮写 `trajectories_tN[_rR].json`，master 不写；回归 `test_trajectories.py`。
 - 2026-10-22 D 安装包：`Core/Geant4DataLocator` 仅在无 `GEANT4_DATA_DIR`/G4…DATA 变量时读可执行文件旁 `geant4-data.txt`；`packaging/build_package.py` 只写 git 忽略的 `out/`；打包验证须清空 PATH 与 Geant4 变量；数据集清单按 Geant4 11.3 写死。
 - 2026-10-22 B4 探测器响应：脉冲幅度就是 `event_edep` 沉积能（探测器为唯一敏感体），分辨率只在 `analyze_detector.py` 由用户参数施加；γ 源只在包外壳圆锥内抽样，绝对效率乘 `cone_fraction_of_4pi`；参考值全为解析式，不得声称实测效率。

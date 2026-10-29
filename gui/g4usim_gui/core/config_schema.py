@@ -120,7 +120,9 @@ def check_value(section: str, key: str, text: str, *, base_dir: str | Path | Non
         return f"{where} is unsupported: {data['description']}"
     if field.type == "structured":
         raise ValueError(f"{where} requires contextual validation by {data.get('parser', 'the backend')}")
-    value = text.strip()
+    # Backend StringUtils trims ASCII whitespace in UTF-8 input. Python's
+    # Unicode strip would silently accept NBSP around version tags/numbers.
+    value = text.strip(" \t\r\n\v\f")
     if not value and data.get("empty") == "default":
         return None          # the backend reads an empty value as absent
     if field.type == "int":
@@ -162,16 +164,17 @@ def energy_mev(text: str) -> float | None:
 
 def quantity(text: str, kind: str) -> float | None:
     """UnitParser scalar grammar, in Geant4 base units; includes conversion overflow."""
-    match = NUMBER.match(text.strip())
+    value = text.strip(" \t\r\n\v\f")
+    match = NUMBER.match(value)
     if not match:
         return None
     try:
         number = float.fromhex(match.group(0)) if "x" in match.group(0).lower() else float(match.group(0))
     except (ValueError, OverflowError):
         return None
-    unit = text.strip()[match.end():].strip()
+    unit = value[match.end():].strip(" \t\r\n\v\f")
     if unit.startswith("*") and kind != "number":
-        unit = unit[1:].strip()
+        unit = unit[1:].strip(" \t\r\n\v\f")
     if not math.isfinite(number) or any(c.isspace() for c in unit):
         return None
     if not unit:

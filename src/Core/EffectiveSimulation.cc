@@ -110,6 +110,13 @@ std::vector<effective_config::Field> SimulationManager::ExportStartupFields() co
     add("interactive", context_.IsInteractive(), {{"run","interactive"}}, optional(commandLineOverrides_.interactive));
     add("dry_run", context_.IsDryRun(), {{"run","dry_run"},{"run","dryrun"}}, optional(commandLineOverrides_.dryRun));
     add("verbose", context_.GetVerboseLevel(), {{"run","verbose"},{"general","verbose"}});
+    auto format = startupEffective_.Make(FieldPath("configuration", "main_ini_schema_version"),
+                                         1, "", "general", {"schema_version"});
+    format.evidence_source = "ConfigManager input format validation";
+    format.reason = startupEffective_.reader.HasKey("general", "schema_version")
+        ? "Explicit main INI format accepted; this is not a kernel simulation setting"
+        : "Version absent: legacy main INI format 1 retained; no explicit version request";
+    fields.push_back(std::move(format));
     for (const auto& mode : moduleModes_) {
         auto policy=startupEffective_.Make(FieldPath("modules", mode.first),mode.second,"","modules",{mode.first.c_str()});
         const bool explicitMode=startupEffective_.reader.HasKey("modules",mode.first);

@@ -14,7 +14,7 @@ VolumeNode GeometryTemplate::BuildNodesFromFile(const std::string& filename) con
 
     const auto input=input_provenance::ReadFile(filename);
     ConfigManager config;
-    config.LoadMainConfigBytes(filename,input.bytes);
+    config.LoadGeometryConfigBytes(filename,input.bytes);
     diagnostics_.clear();
     try {
         ValidateConfig(config);

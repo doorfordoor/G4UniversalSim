@@ -1,5 +1,7 @@
 # G4UniversalSim GUI Agent 开发约束
 
+2026-10-30 E6候选：迁移副本由core计划/发布，窗口不重写格式规则。未知/冲突/重复JSON/非有限/不合法类型拒绝；旧项目仍可按已知兼容规则打开，不强制旧版只读。主INI新副本限同目录；几何资源保持原目标，不自动启source-copy或解除J2编辑blocker。已有目标/链接绝不能覆盖；发布后cleanup_warning须显示为成功附警告。只有保存成功后才切project_file，打开副本必须显式；格式检查不称模拟成功。完整契约见 `../docs/配置兼容与迁移.md` 和agent-history，候选不等于阶段已验收。
+
 2026-10-29 R32：执行原生 Geant4 交互会话仅允许显式 `--ui --ui-session csh`；裸 `--ui` 或 INI `interactive=true` 未选择 csh 时在初始化及 macro 执行前明确拒绝并写失败摘要，不自动降级。dry-run 不开启会话，仍可使用裸 `--ui`。Python 桌面 GUI 正常 Run/后端几何预览继续使用 batch config/macro，不受此限制；不要把桌面 GUI 与原生 Qt UI 会话混称。修复已在8ecad66真实Windows及Linux双版本回归通过，证据见 `docs/verification/q1-final-20261029/README.md`。
 
 2026-10-29 Q1 R25–R30 当前边界：后端偏置算符按 worker 私有创建；GUI 解读摘要必须区分 master 几何挂接计划与逐 `(runID, threadID)` 的真实 wrapped process、绑定和 EndRun 完成收据，缺收据失败，proposal/applied 计数只证明调用。hits/HitRecord 的 `weight` 已纠正为步前统计权重，Edep/Dose/Fluence/LET/DDD 使用同一口径；相空间保留边界采样权重。历史偏置计分须重算；同次运行与原生 energyDeposit/cellFlux 的有限专项对照不等于一般无偏性、方差收益或全自动物理验证。generated 模式仍无 biasing 规则编辑器。

@@ -251,7 +251,7 @@ is marked experimental in the support matrix until benchmarked.
 | --- | --- | --- | --- |
 | **Q1** | 完整可靠性审查、反例复现、修复、回归与交付复核；覆盖已公开能力和拒绝边界 | 九域独立复核、确认缺陷及正式回归闭合，冻结矩阵与同v3逐例/总数门禁通过 | **已完成**；验收代码 `8ecad66`，见[最终报告](verification/q1-final-20261029/README.md) |
 | **2C** | 完整 EffectiveConfig：11 类真实消费者、稳定对象身份、完整来源链、实际读取字节哈希、事务替换/删除、configure/run_begin/finalization、内核/worker 证据、off/auto/on、GUI 审查 | Q1 基线；每类消费者有正反例，拒绝不污染 revision/来源；unknown 不伪装 applied；现有协议兼容 | 已完成（产品 `f4770b0`）；`70a1aba` 仅为历史配置子集。[完整2C最终证据](verification/2c-full-20261029/README.md)，不扩张E6/F1/Q2等范围 |
-| **E6** | E2 范围补齐与配置兼容：field/biasing schema；主 INI 版本策略；几何 v2/项目格式迁移与诊断去重 | 2C；生成表不手改；旧输入/别名、未来未知版本、迁移副本、**现有编辑子集** writer 兼容/往返。扩大编辑范围归 J2，不让 E6 等待 J2，不顺带开放 assembly/材料温压等 | 待开始，E2 原状态保持完成 |
+| **E6** | E2 范围补齐与配置兼容：field/biasing schema；主 INI 版本策略；几何 v2/项目格式迁移与诊断去重 | 2C；生成表不手改；旧输入/别名、未来未知版本、迁移副本、**现有编辑子集** writer 兼容/往返。扩大编辑范围归 J2，不让 E6 等待 J2，不顺带开放 assembly/材料温压等 | 进行中；基线 `c6bf8ad`，见 [实施契约](collab/inbox/20261029-2355-astra-e6-execution.md)，E2 原状态保持完成 |
 | **E7** | SolidRegistry 与统一实体能力元数据；后端构造、校验、能力查询、GUI 可消费定义逐步归一 | E6/现有 A5；实体逐项差分、缓存/线程生命周期守卫与旧配置不变；不借重构增加未验实体 | 待开始；原 M0 架构积压，不属于 2B 屏蔽场景欠账 |
 | **Q2** | 科研基准与适用范围：Dose/Fluence/LET/DDD、统计不确定度、现有 XS biasing 与 analog 对照、独立数据/解析参考与可复现实验 | Q1、F1；V-01 的口径先在 Q1 明确，Q2 再验证有限样本/覆盖与适用边界；不以同源自洽或 process 挂接代替独立证据 | 待完整验收，复用 A/B 已有限定基准 |
 

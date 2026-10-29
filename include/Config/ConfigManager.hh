@@ -23,6 +23,10 @@ public:
     void LoadMainConfig(const std::string& filename);
     void LoadMainConfigBytes(const std::string& filename, const std::string& bytes);
 
+    // Geometry templates reuse this key/value facade, but their format version
+    // is [global]/version and is validated by GeometryConfigDiagnostic.
+    void LoadGeometryConfigBytes(const std::string& filename, const std::string& bytes);
+
     void LoadConfigFile(const std::string& name, const std::string& filename);
 
     bool HasConfigFile(const std::string& name) const;

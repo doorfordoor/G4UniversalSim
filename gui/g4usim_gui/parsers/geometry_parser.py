@@ -77,6 +77,16 @@ class GeometrySummary:
     round_trip_blockers: list[str] = field(default_factory=list)
     legacy_metadata: list[str] = field(default_factory=list)
     raw_text: str = ""
+    diagnostics: list[GeometrySourceDiagnostic] = field(default_factory=list)
+
+    def record(self, code: str, severity: str, message: str, *, line: int = 0,
+               section: str = "", key: str = "", value: str = "") -> None:
+        diagnostic = GeometrySourceDiagnostic(code, severity, self.path, line, section, key, value, message)
+        if any(item.identity == diagnostic.identity for item in self.diagnostics):
+            return
+        self.diagnostics.append(diagnostic)
+        channel = {"error": self.errors, "warning": self.warnings, "blocker": self.round_trip_blockers}[severity]
+        channel.append(message)
 
     @property
     def volume_names(self) -> set[str]:
@@ -87,23 +97,45 @@ class GeometrySummary:
         return bool(self.round_trip_blockers)
 
 
+@dataclass(frozen=True)
+class GeometrySourceDiagnostic:
+    code: str
+    severity: str
+    filename: str
+    line: int
+    section: str
+    key: str
+    value: str
+    message: str
+
+    @property
+    def identity(self) -> tuple:
+        # Display wording is deliberately excluded from source-fact identity.
+        return (self.code, self.severity, str(Path(self.filename).resolve()), self.line,
+                self.section.lower(), self.key.lower(), self.value)
+
+
 def parse_geometry(path: str | Path, template_name: str | None = None) -> GeometrySummary:
     document = parse_ini_light(path)
-    summary = GeometrySummary(path=document.path, warnings=list(document.warnings), errors=list(document.errors), raw_text=document.raw_text)
+    summary = GeometrySummary(path=document.path, raw_text=document.raw_text)
+    for severity, messages in (("warning", document.warnings), ("error", document.errors)):
+        for message in messages:
+            summary.record("ini_syntax", severity, message, value=message)
     lower_text = document.raw_text.lower()
     summary.template_hint = (template_name or "").strip().lower() or _template_hint(lower_text)
 
     version_fields = _schema_version_fields(document.raw_text)
     if len(version_fields) > 1:
-        summary.errors.append(f"{summary.path}: duplicate [global]/version declaration")
+        summary.record("duplicate_version", "error", f"{summary.path}: duplicate [global]/version declaration",
+                       line=version_fields[1][0], section="global", key="version")
     elif version_fields:
         line, section, key, value = version_fields[0]
         if value.strip() in {"1", "2"}:
             summary.schema_version = int(value.strip())
         else:
-            summary.errors.append(
+            summary.record("unsupported_version", "error",
                 f"{summary.path}:{line} [{section}]/{key} = {value}: "
-                "supported geometry versions are 1 and 2"
+                "supported geometry versions are 1 and 2", line=line, section=section, key=key, value=value,
             )
 
     volume_by_name: dict[str, VolumeEntry] = {}
@@ -131,12 +163,13 @@ def parse_geometry(path: str | Path, template_name: str | None = None) -> Geomet
         if operation.target_volume in volume_by_name:
             volume_by_name[operation.target_volume].boolean_ops.append(operation)
         if operation.forbidden_keys:
-            summary.warnings.append(
-                f"Boolean section [{operation.section}] contains unsupported keys: {', '.join(operation.forbidden_keys)}"
+            summary.record("ignored_boolean_key", "warning",
+                f"Boolean section [{operation.section}] contains unsupported keys: {', '.join(operation.forbidden_keys)}",
+                line=operation.line_no, section=operation.section, value=",".join(operation.forbidden_keys),
             )
 
     if not summary.volumes and not summary.errors:
-        summary.warnings.append("No ordinary volume sections were found.")
+        summary.record("no_ordinary_volumes", "warning", "No ordinary volume sections were found.")
     _detect_round_trip_blockers(document.sections, summary)
     return summary
 
@@ -245,8 +278,9 @@ def _detect_round_trip_blockers(sections: list[IniSection], summary: GeometrySum
     for index, section in enumerate(sections):
         section_lower = section.name.lower()
         if section_lower in seen_sections:
-            summary.round_trip_blockers.append(
-                f"{summary.path}:{section.line_no} [{section.name}]: duplicate section cannot be preserved by the Geometry Editor"
+            summary.record("duplicate_section", "blocker",
+                f"{summary.path}:{section.line_no} [{section.name}]: duplicate section cannot be preserved by the Geometry Editor",
+                line=section.line_no, section=section.name,
             )
         seen_sections.add(section_lower)
         if mode == "simple_box":
@@ -262,8 +296,9 @@ def _detect_round_trip_blockers(sections: list[IniSection], summary: GeometrySum
         else:
             recognized_section = False
         if not recognized_section:
-            summary.round_trip_blockers.append(
-                f"{summary.path}:{section.line_no} [{section.name}]: section is not represented by the Geometry Editor"
+            summary.record("unknown_editor_section", "blocker",
+                f"{summary.path}:{section.line_no} [{section.name}]: section is not represented by the Geometry Editor",
+                line=section.line_no, section=section.name,
             )
             continue
 
@@ -275,8 +310,9 @@ def _detect_round_trip_blockers(sections: list[IniSection], summary: GeometrySum
                 continue
             key = raw.split("=", 1)[0].strip().lower()
             if key in seen_keys:
-                summary.round_trip_blockers.append(
-                    f"{summary.path}:{line_no} [{section.name}]/{key}: duplicate key cannot be preserved by the Geometry Editor"
+                summary.record("duplicate_key", "blocker",
+                    f"{summary.path}:{line_no} [{section.name}]/{key}: duplicate key cannot be preserved by the Geometry Editor",
+                    line=line_no, section=section.name, key=key,
                 )
             seen_keys.add(key)
         for original_key, value in section.values.items():
@@ -324,12 +360,14 @@ def _detect_round_trip_blockers(sections: list[IniSection], summary: GeometrySum
                 f"{summary.path}:{line} [{section.name}]/{original_key} = {value}: "
                 "the current Geometry Editor cannot preserve this field without changing the source"
             )
-            summary.round_trip_blockers.append(message)
+            summary.record("unrepresentable_editor_field", "blocker", message,
+                           line=line, section=section.name, key=original_key, value=value)
             if legacy:
                 summary.legacy_metadata.append(message)
-                summary.warnings.append(
+                summary.record("legacy_metadata", "warning",
                     f"{summary.path}:{line} [{section.name}]/{original_key} = {value}: legacy metadata is preserved; "
-                    f"use metadata.{original_key} in a future migration"
+                    f"use metadata.{original_key} in a future migration",
+                    line=line, section=section.name, key=original_key, value=value,
                 )
 
 

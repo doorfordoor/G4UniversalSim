@@ -1,4 +1,4 @@
-# 配置 schema（E2）
+# 配置 schema（E2 / E6）
 
 `schema/config_schema.json` 统一描述本次迁移范围内的配置字段。它生成 C++ 已知键登记表、GUI 字段描述、支持矩阵第 5 节以及逐字段覆盖清单 `schema/config_schema_coverage.json`。生成文件不得手改。
 
@@ -7,7 +7,7 @@
 - 主 INI：run/general/output、source 与命名源、phase_space、physics（含 MicroElec、cuts、区域和放射性衰变）、scoring（含 Edep、LET、DDD、网格及 quantity）、geometry/materials 文件引用。
 - 独立材料 INI：global、nist、isotope、element、material 和旧材料别名。
 - 独立几何 INI：hierarchical（含布尔工具）、simple_box、layered_device、array、shielding、GDML。各模板单独登记，不能用所有字段的并集接受任意模板。
-- field 与 biasing 的主 INI section 不在本次约定迁移内，列入 schema 的 `excluded`；其解析与键表保持原样。macro、CLI、GDML 内容、STL 内容、NIEL/能谱文件格式不因此成为通用 schema 解释器的一部分。
+- E6 补齐 field、field.<name>、biasing、legacy biasing.xs、biasing.xs.<particle>.<process>，并登记 `[general]/schema_version`；合计 394 个字段。静态/动态已知键和 FieldConfig 闭合键表由 schema 生成，专用上下文校验保留。macro、CLI、GDML 内容、STL 内容、NIEL/能谱文件格式不因此成为通用 schema 解释器的一部分。
 
 ## 描述与执行的边界
 
@@ -26,6 +26,8 @@
 `--inspect-run` 只能验证配置与宏预检。离子/confine/相空间粒子准备、参考物理列表实际初始化、网格 scorer 命令、GDML 世界构建以及真实输运/输出须运行对应专项。覆盖清单是“字段→解析入口/阶段/GUI状态/回归”的导航，不是逐字段物理验证证明。
 
 ## 兼容行为
+
+- E6 的主 INI / 几何 / 项目版本和迁移副本规则见 [配置兼容与迁移](配置兼容与迁移.md)。主 INI 缺失版本保持旧行为；未来版本拒绝，独立几何不使用主版本规则。场/偏置描述不开放新 GUI 编辑器；默认精度、局部场绑定、dormant 偏置和 process 大小写保持专用解析器语义。
 
 - `source.z` 是历史已知但未消费字段，会警告；它不是 center 的别名。命名源保留原先解析器接受、诊断键表不登记的差异。
 - hierarchical 的 dx/dy/dz/theta/phi/alpha 字段保留原解析与诊断登记差异。`recognition=parser_only` 明确记录，不借 E2 改变 version 1/2 的警告或拒绝行为。

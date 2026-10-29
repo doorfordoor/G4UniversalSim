@@ -135,31 +135,27 @@ class ProjectMixin:
         )
         if not path:
             return
+        self._load_project_path(path)
+
+    def _load_project_path(self, path: str, *, snapshot: bool = False) -> bool:
         try:
             project = load_project(path)
         except Exception as exc:  # noqa: BLE001 - user-facing project load errors.
-            QMessageBox.critical(self, "Open project failed", str(exc))
-            return
-        self.project_file = Path(path)
-        add_recent_project(path)
-        self._refresh_recent_menu()
+            QMessageBox.critical(self, ui_text("Open project failed"), str(exc))
+            return False
         self._set_project(project)
-        self.statusBar().showMessage(f"Loaded project: {path}", 5000)
+        if not snapshot:
+            self.project_file = Path(path)
+            add_recent_project(path)
+            self._refresh_recent_menu()
+        self.statusBar().showMessage(ui_format("Loaded project: {path}", path=path), 5000)
+        return True
 
     def save_project(self) -> None:
         if self.project_file is None:
             self.save_project_as()
             return
-        self._update_project_from_page()
-        self.config_builder_page.update_project(self.project)
-        try:
-            save_project(self.project, self.project_file)
-        except Exception as exc:  # noqa: BLE001
-            QMessageBox.critical(self, "Save project failed", str(exc))
-            return
-        self.statusBar().showMessage(f"Saved project: {self.project_file}", 5000)
-        add_recent_project(str(self.project_file))
-        self._refresh_recent_menu()
+        self._save_project_to(self.project_file)
 
     def save_project_as(self) -> None:
         path, _ = QFileDialog.getSaveFileName(
@@ -167,18 +163,32 @@ class ProjectMixin:
         )
         if not path:
             return
-        self.project_file = Path(path)
-        self.save_project()
+        if self._save_project_to(Path(path)):
+            self.project_file = Path(path)
+
+    def _save_project_to(self, target: Path) -> bool:
+        self._update_project_from_page()
+        self.config_builder_page.update_project(self.project)
+        try:
+            save_project(self.project, target)
+        except Exception as exc:  # noqa: BLE001 - keep the previous project path on failure.
+            QMessageBox.critical(self, ui_text("Save project failed"), str(exc))
+            return False
+        self.statusBar().showMessage(ui_format("Saved project: {path}", path=target), 5000)
+        add_recent_project(str(target))
+        self._refresh_recent_menu()
+        return True
+
+    def open_migration_preview(self) -> None:
+        from g4usim_gui.widgets.migration_dialog import MigrationDialog
+
+        dialog = MigrationDialog(self, open_project=self._load_project_path)
+        dialog.exec()
 
     def load_snapshot_into_project(self, snapshot_path: str) -> None:
-        try:
-            project = load_project(snapshot_path)
-        except Exception as exc:  # noqa: BLE001
-            QMessageBox.warning(self, "Load snapshot failed", str(exc))
-            return
         # Keep historical package paths visible, but users can generate a new package before running.
-        self._set_project(project)
-        self.statusBar().showMessage("Snapshot loaded. You can generate a new package or rerun with the existing package.", 8000)
+        if self._load_project_path(snapshot_path, snapshot=True):
+            self.statusBar().showMessage(ui_text("Snapshot loaded. You can generate a new package or rerun with the existing package."), 8000)
 
     def open_history_output(self, package_dir: str, output_dir: str) -> None:
         self.output_page.set_package_dir(package_dir, output_dir)
@@ -223,13 +233,7 @@ class ProjectMixin:
             action.triggered.connect(lambda _checked=False, p=path: self._open_recent_project(p))
 
     def _open_recent_project(self, path: str) -> None:
-        try:
-            project = load_project(path)
-        except Exception as exc:  # noqa: BLE001
-            QMessageBox.warning(self, "Open recent project failed", str(exc))
-            return
-        self.project_file = Path(path)
-        self._set_project(project)
+        self._load_project_path(path)
 
     def clear_recent_projects(self) -> None:
         clear_recent_projects()
