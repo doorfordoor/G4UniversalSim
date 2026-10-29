@@ -1,0 +1,13 @@
+{
+  "stage": "E6",
+  "implementation_head": "a779634483d1f077357433c532ccb0d9e3dc5517",
+  "automatic_acceptance": "automatic_acceptance_passed",
+  "visible_acceptance": "pending_user_unlock_and_real_window_check",
+  "stage_acceptance": "stage_acceptance_pending_visible",
+  "stage_complete": false,
+  "merged_to_integration": false,
+  "windows": {"cases": 134, "passed": 134, "failed": 0, "skipped": 0, "v3_assertion_entries": 42815, "baseline_gate": "passed"},
+  "ci": {"linux_run": 40931653660, "m0_run": 40931654093, "strict_reports_passed": 12, "official_archives_digest_matched": 4, "case_logs_sha256_matched": 384},
+  "archive": {"manifest_files_byte_verified": 2711, "release_reports_strict_passed": 13},
+  "limits": ["Linux reports retain git_dirty=true; exact full dirty set was not captured; see ci/git-dirty-audit.json", "Visible acceptance preparation is not an executed window check", "Engineering acceptance does not add physical validation or expand J2/K1 scope"]
+}

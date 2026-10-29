@@ -1,0 +1,58 @@
+{
+  "status": "automatic_acceptance_passed_visible_pending_archive_not_executed",
+  "recorded_at_utc": "2026-10-29T18:58:20.807530+00:00",
+  "head": "a779634483d1f077357433c532ccb0d9e3dc5517",
+  "tracked_clean_at_read": true,
+  "source_fingerprint": "ab79c6c2227518bd7f38d5109998ed0998d8fd53ad500cfbe714d544eb19a474",
+  "tests_content_fingerprint": "e9b4f852e36dca85971d40da2c63ed6fd184055358ca965116babba6b16fafd4",
+  "frozen_profile_counts": {
+    "static": 21,
+    "gui": 37,
+    "backend": 56,
+    "integration": 20
+  },
+  "frozen_total": 134,
+  "count_source": "out/verification/e6-ci-release/frozen-case-manifest.json",
+  "windows": {
+    "session_owned_by_root": "51778",
+    "root": "out/verification/e6-release-windows",
+    "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-release-windows\\20261030-023219-5d625b7d\\report.json",
+    "passed": 134,
+    "failed": 0,
+    "skipped": 0,
+    "assertions": 42815,
+    "strict_and_2c_baseline_gate": "passed",
+    "baseline_assertions": 40628,
+    "git_dirty": false
+  },
+  "ci": {
+    "root": "out/verification/e6-ci-release",
+    "linux_run": 40931653660,
+    "m0_run": 40931654093,
+    "complete": true,
+    "status": "passed",
+    "actual_report_count": 12,
+    "passed": null,
+    "matrix_case_records": 384,
+    "assertions": 91884,
+    "official_artifacts": 4,
+    "all_strict_gates_passed": true,
+    "raw_logs_checked": 384,
+    "raw_log_mismatches": 0,
+    "linux_git_dirty": true,
+    "linux_dirty_boundary": "environment paths evidenced; no full porcelain/tracked diff retained, complete dirty contents unknown; exact source/tests fingerprints and untracked source gate match"
+  },
+  "automatic_acceptance": "automatic_acceptance_passed",
+  "visible_acceptance": "pending_user_unlock_and_real_window_check",
+  "stage_acceptance": "stage_acceptance_pending_visible",
+  "stage_complete": false,
+  "archive": "plan preparation only; no execution",
+  "visible_preparation": {
+    "root": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-acceptance-a779634",
+    "source_identity_count": 13,
+    "resource_hashes": 58,
+    "resource_mismatches": 0,
+    "ui_or_backend_launched": false,
+    "status": "prepared_not_launched"
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "status": "plan_only_next_release_identity_unbound",
+  "release": {
+    "head": null,
+    "windows_report": null,
+    "ci_root": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-ci-release",
+    "destination": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\docs\\verification\\e6-final-20261030"
+  },
+  "historical_ci_roots": [
+    {
+      "root": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-ci",
+      "head": "cb837e680e08a66dd47e62a9ee7e25fa125026c3",
+      "role": "first failed CI, automatically retained"
+    },
+    {
+      "root": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-ci-final",
+      "head": "5bf479d85ba7c12e0f71984d31b8335c47c5a8c3",
+      "role": "second failed CI, explicit --historical-ci-root",
+      "status": "not_passed",
+      "available_reports": 8,
+      "expected_release_reports": 12
+    }
+  ],
+  "historical_windows_roots": [
+    {
+      "root": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-full-windows",
+      "head": "cb837e680e08a66dd47e62a9ee7e25fa125026c3",
+      "role": "first 126pass/1fail, defaults"
+    },
+    {
+      "root": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-final-windows",
+      "head": "5bf479d85ba7c12e0f71984d31b8335c47c5a8c3",
+      "role": "historical/control only; terminal 133/133 passed",
+      "status": "passed",
+      "assertions": 42786,
+      "strict_and_2c_baseline_gate": "passed"
+    }
+  ],
+  "include_roots": [
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-first-run-review",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-gui-projection-review",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-gui-projection-postfix",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-frontend-guard-independent",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-snapshot-review",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-snapshot-independent",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-snapshot-current-writer",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-component",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-component-new-format",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-backend",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-backend02",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-backend03",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-backend04",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-settings-component",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-settings-backend",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-cli",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-independent-review",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-cli-independent",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-cli-independent-after-name-fix",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-final-preflight",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-linux-finalize",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-linux-teardown-review",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-acceptance-5bf479d",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-delivery-readonly-review"
+  ],
+  "include_files": [
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\e6-repair-build-identity.json",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\audit-e6-gui-projection.py",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\audit-e6-gui-projection-postfix.py",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\review-e6-frontend-guard.py",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\review-e6-writer-snapshot.py",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\review-e6-duplicate-independent.py",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\review-e6-duplicate-cli-independent.py",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\review-e6-duplicate-cli-independent-after-name-fix.py",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\e6-gui-projection-review-first.log",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\e6-gui-projection-review.log",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\e6-duplicate-cli-independent-review.log",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\e6-duplicate-cli-independent-after-name-fix.log",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\e6-duplicate-cli-independent-after-name-fix-pass.log",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\e6-core-import-contract.md",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\e6-core-editor-presence-results.md",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\e6-package-snapshot-api.md",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\e6-snapshot-implementation-results.md",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\e6-duplicate-contract.md",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\e6-generated-run-settings-api.md",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\archive-e6-next-round-roles.md",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\e6-archive-role-guard-check.json",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\e6-final-windows-gate.log"
+  ],
+  "notice": "Only supplemental arguments prepared. No archive executed. Failed rounds remain history; new release SHA and separate Windows report must be supplied by root. DeepSeek request/script, credentials, binaries, ZIP/media, old CI selfchecks excluded.",
+  "recorded_at_utc": "2026-10-29T18:22:08.428454+00:00",
+  "observed_head": "5bf479d85ba7c12e0f71984d31b8335c47c5a8c3",
+  "validation": {
+    "all_include_roots_exist": true,
+    "all_include_files_exist": true,
+    "include_root_count": 24,
+    "include_file_count": 22
+  }
+}

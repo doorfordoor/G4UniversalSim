@@ -1,0 +1,134 @@
+{
+  "checked_head": "a779634483d1f077357433c532ccb0d9e3dc5517",
+  "repository_ignore_rule_check": "::\tbin/micromamba\n::\t.g4env-11.3.2/bin/python\n::\t.g4env-11.4.3/bin/python\n::\t.micromamba/pkgs/python-3.11.18.tar.bz2\n.gitignore:2:/build*/\tbuild_linux/G4UniversalSim\n.gitignore:4:/out/\tout/verification/geant4-11.3.2/report.json\n",
+  "repository_tracked_paths_in_environment_locations": [],
+  "job_logs": {
+    "123651349959": {
+      "log_sha256": "482746132c37a25b3ad0e52860629714a75051bd287c3144411fc7f047c2d45d",
+      "creation_evidence": [
+        {
+          "line": 51,
+          "text": "2026-10-29T18:31:46.4217721Z   MAMBA_ROOT_PREFIX: /home/runner/work/G4UniversalSim/G4UniversalSim/.micromamba"
+        },
+        {
+          "line": 52,
+          "text": "2026-10-29T18:31:46.4218270Z   G4_PREFIX: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2"
+        },
+        {
+          "line": 128,
+          "text": "2026-10-29T18:31:48.1681675Z \u001b[36;1mcurl -Ls https://micro.mamba.pm/api/micromamba/linux-64/latest | tar -xj bin/micromamba\u001b[0m"
+        },
+        {
+          "line": 477,
+          "text": "2026-10-29T18:32:20.1278051Z Linking python-3.11.18-h5f976f7_0_cpython"
+        },
+        {
+          "line": 513,
+          "text": "2026-10-29T18:32:22.3996381Z Linking geant4-11.3.2-py311h866470e_7"
+        },
+        {
+          "line": 515,
+          "text": "2026-10-29T18:32:23.1829370Z Transaction finished"
+        }
+      ],
+      "captured_status_listing_matches": []
+    },
+    "123651349706": {
+      "log_sha256": "7463635eb0958d04eff2ddca2a8eeb3f7036821e76068b6bd3c43f1451a770ae",
+      "creation_evidence": [
+        {
+          "line": 51,
+          "text": "2026-10-29T18:31:47.4968473Z   MAMBA_ROOT_PREFIX: /home/runner/work/G4UniversalSim/G4UniversalSim/.micromamba"
+        },
+        {
+          "line": 52,
+          "text": "2026-10-29T18:31:47.4969486Z   G4_PREFIX: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.4.3"
+        },
+        {
+          "line": 128,
+          "text": "2026-10-29T18:31:49.3742098Z \u001b[36;1mcurl -Ls https://micro.mamba.pm/api/micromamba/linux-64/latest | tar -xj bin/micromamba\u001b[0m"
+        },
+        {
+          "line": 472,
+          "text": "2026-10-29T18:32:12.6388148Z Linking python-3.11.18-h5f976f7_0_cpython"
+        },
+        {
+          "line": 485,
+          "text": "2026-10-29T18:32:14.7766802Z Linking geant4-11.4.3-qt_f90a02a_0"
+        },
+        {
+          "line": 491,
+          "text": "2026-10-29T18:32:15.6475203Z Transaction finished"
+        }
+      ],
+      "captured_status_listing_matches": []
+    }
+  },
+  "reports": [
+    {
+      "report": "linux-evidence-11.3.2\\linux-backend\\20261029-183423-1c19e542\\report.json",
+      "git_dirty": true,
+      "untracked_source_files": [],
+      "tracked_source_gate": "pass",
+      "source_fingerprint": "ab79c6c2227518bd7f38d5109998ed0998d8fd53ad500cfbe714d544eb19a474",
+      "tests_content_fingerprint": "e9b4f852e36dca85971d40da2c63ed6fd184055358ca965116babba6b16fafd4"
+    },
+    {
+      "report": "linux-evidence-11.3.2\\linux-gui\\20261029-183347-4008fdc1\\report.json",
+      "git_dirty": true,
+      "untracked_source_files": [],
+      "tracked_source_gate": "pass",
+      "source_fingerprint": "ab79c6c2227518bd7f38d5109998ed0998d8fd53ad500cfbe714d544eb19a474",
+      "tests_content_fingerprint": "e9b4f852e36dca85971d40da2c63ed6fd184055358ca965116babba6b16fafd4"
+    },
+    {
+      "report": "linux-evidence-11.3.2\\linux-integration\\20261029-184249-ef85c158\\report.json",
+      "git_dirty": true,
+      "untracked_source_files": [],
+      "tracked_source_gate": "pass",
+      "source_fingerprint": "ab79c6c2227518bd7f38d5109998ed0998d8fd53ad500cfbe714d544eb19a474",
+      "tests_content_fingerprint": "e9b4f852e36dca85971d40da2c63ed6fd184055358ca965116babba6b16fafd4"
+    },
+    {
+      "report": "linux-evidence-11.3.2\\linux-static\\20261029-183332-12829505\\report.json",
+      "git_dirty": true,
+      "untracked_source_files": [],
+      "tracked_source_gate": "pass",
+      "source_fingerprint": "ab79c6c2227518bd7f38d5109998ed0998d8fd53ad500cfbe714d544eb19a474",
+      "tests_content_fingerprint": "e9b4f852e36dca85971d40da2c63ed6fd184055358ca965116babba6b16fafd4"
+    },
+    {
+      "report": "linux-evidence-11.4.3\\linux-backend\\20261029-183515-59df3385\\report.json",
+      "git_dirty": true,
+      "untracked_source_files": [],
+      "tracked_source_gate": "pass",
+      "source_fingerprint": "ab79c6c2227518bd7f38d5109998ed0998d8fd53ad500cfbe714d544eb19a474",
+      "tests_content_fingerprint": "e9b4f852e36dca85971d40da2c63ed6fd184055358ca965116babba6b16fafd4"
+    },
+    {
+      "report": "linux-evidence-11.4.3\\linux-gui\\20261029-183421-5bbb5787\\report.json",
+      "git_dirty": true,
+      "untracked_source_files": [],
+      "tracked_source_gate": "pass",
+      "source_fingerprint": "ab79c6c2227518bd7f38d5109998ed0998d8fd53ad500cfbe714d544eb19a474",
+      "tests_content_fingerprint": "e9b4f852e36dca85971d40da2c63ed6fd184055358ca965116babba6b16fafd4"
+    },
+    {
+      "report": "linux-evidence-11.4.3\\linux-integration\\20261029-184834-fcee792b\\report.json",
+      "git_dirty": true,
+      "untracked_source_files": [],
+      "tracked_source_gate": "pass",
+      "source_fingerprint": "ab79c6c2227518bd7f38d5109998ed0998d8fd53ad500cfbe714d544eb19a474",
+      "tests_content_fingerprint": "e9b4f852e36dca85971d40da2c63ed6fd184055358ca965116babba6b16fafd4"
+    },
+    {
+      "report": "linux-evidence-11.4.3\\linux-static\\20261029-183357-46919325\\report.json",
+      "git_dirty": true,
+      "untracked_source_files": [],
+      "tracked_source_gate": "pass",
+      "source_fingerprint": "ab79c6c2227518bd7f38d5109998ed0998d8fd53ad500cfbe714d544eb19a474",
+      "tests_content_fingerprint": "e9b4f852e36dca85971d40da2c63ed6fd184055358ca965116babba6b16fafd4"
+    }
+  ],
+  "limit": "Full original git status --porcelain stdout/return code and tracked diff were not archived; exact complete dirty path set and absence of other tracked changes are unknown. Repository ignore check is not a reconstruction of runner-global ignore configuration."
+}

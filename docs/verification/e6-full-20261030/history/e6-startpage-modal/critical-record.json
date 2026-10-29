@@ -1,0 +1,19 @@
+{
+  "original_sha256": "f19e79bee2a2b7f7fda69fdc21bccbc05e2b27e4a7e1262ed55a4d24430099d2",
+  "copy_sha256": "f19e79bee2a2b7f7fda69fdc21bccbc05e2b27e4a7e1262ed55a4d24430099d2",
+  "frozen_source_unchanged": true,
+  "critical_calls": [
+    {
+      "title": "Open project failed",
+      "message": "[Errno 2] No such file or directory: 'C:\\\\Users\\\\123\\\\.codex\\\\worktrees\\\\effective-config\\\\G4UniversalSim\\\\gui\\\\demo_project.json'",
+      "stack": [
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-startpage-modal\\record_critical.py:30:<module>",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\gui\\smoke_tests\\smoke_start_page.py:200:<module>",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\gui\\smoke_tests\\smoke_start_page.py:180:main",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\gui\\g4usim_gui\\widgets\\start_page.py:199:<lambda>",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\gui\\g4usim_gui\\window\\project.py:236:_open_recent_project",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\gui\\g4usim_gui\\window\\project.py:144:_load_project_path"
+      ]
+    }
+  ]
+}

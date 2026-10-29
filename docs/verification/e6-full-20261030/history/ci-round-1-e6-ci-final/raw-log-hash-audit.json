@@ -1,0 +1,87 @@
+[
+  {
+    "artifact": "linux-evidence-11.3.2",
+    "profile": "gui",
+    "report_sha256": "eaa5f71f2e317bdb7227f50128a3c77c4c19df3d8c9ab55d43c1d9cf49ae3776",
+    "logs_checked": 36,
+    "mismatches": [],
+    "failures": [
+      {
+        "name": "gui_project_import_projection",
+        "exit_code": -6,
+        "assertions_executed": 393,
+        "log": "linux-evidence-11.3.2\\linux-gui\\20261029-175924-e84c1d62\\gui_project_import_projection.log"
+      }
+    ]
+  },
+  {
+    "artifact": "linux-evidence-11.3.2",
+    "profile": "static",
+    "report_sha256": "b3681d4101b84a64c5cf8e5884aa005ad565ce5f04308fe65645694084bad55d",
+    "logs_checked": 21,
+    "mismatches": [],
+    "failures": []
+  },
+  {
+    "artifact": "linux-evidence-11.4.3",
+    "profile": "gui",
+    "report_sha256": "5158601d5f66f60f078d25d4577d7edd29362ede7fb4b5c953dfd407704bbd9f",
+    "logs_checked": 36,
+    "mismatches": [],
+    "failures": [
+      {
+        "name": "gui_project_import_projection",
+        "exit_code": -6,
+        "assertions_executed": 393,
+        "log": "linux-evidence-11.4.3\\linux-gui\\20261029-175931-3ad1a389\\gui_project_import_projection.log"
+      }
+    ]
+  },
+  {
+    "artifact": "linux-evidence-11.4.3",
+    "profile": "static",
+    "report_sha256": "0eb1eaf728d36716b9936b0c4adcbaae87794ad072a0abcf9c0a10664769bf00",
+    "logs_checked": 21,
+    "mismatches": [],
+    "failures": []
+  },
+  {
+    "artifact": "m0-report-ubuntu-latest",
+    "profile": "static",
+    "report_sha256": "0de094627c02827b031657ecab0009b5551e78b96e107837d9c126eff15a6d9a",
+    "logs_checked": 21,
+    "mismatches": [],
+    "failures": []
+  },
+  {
+    "artifact": "m0-report-ubuntu-latest",
+    "profile": "gui",
+    "report_sha256": "490ada14a57a73c10567dfaacd8c08e376f85d46f3ed6d895e2ef0296d74d658",
+    "logs_checked": 36,
+    "mismatches": [],
+    "failures": [
+      {
+        "name": "gui_project_import_projection",
+        "exit_code": -6,
+        "assertions_executed": 393,
+        "log": "m0-report-ubuntu-latest\\20261029-175753-d8ae527d\\gui_project_import_projection.log"
+      }
+    ]
+  },
+  {
+    "artifact": "m0-report-windows-latest",
+    "profile": "static",
+    "report_sha256": "ee0999b3f3ede642300a5ad5defb786d7b113648b1008c7339560a1cc4c04b98",
+    "logs_checked": 21,
+    "mismatches": [],
+    "failures": []
+  },
+  {
+    "artifact": "m0-report-windows-latest",
+    "profile": "gui",
+    "report_sha256": "b630772d64d5dbff7525fb5d430bf33f9940fff47f1d19a61741066170770c1c",
+    "logs_checked": 36,
+    "mismatches": [],
+    "failures": []
+  }
+]

@@ -1,0 +1,67 @@
+{
+  "string_false_becomes_true": {
+    "accepted": false,
+    "error": "Invalid JSON type at project.geometryEditor.source_copy_mode; expected bool",
+    "input": {
+      "geometryEditor": {
+        "source_copy_mode": "false",
+        "is_dirty": "false"
+      }
+    }
+  },
+  "fractional_threads_truncated": {
+    "accepted": false,
+    "error": "Invalid JSON type at project.threads; expected int",
+    "input": {
+      "threads": 2.75
+    }
+  },
+  "source_error_string_splits": {
+    "accepted": false,
+    "error": "Expected JSON array: project.geometryEditor.source_errors",
+    "input": {
+      "geometryEditor": {
+        "source_errors": "ERR"
+      }
+    }
+  },
+  "null_path_stringifies": {
+    "accepted": false,
+    "error": "Invalid JSON type at project.geometryEditor.source_path; expected str",
+    "input": {
+      "geometryEditor": {
+        "source_path": null
+      }
+    }
+  },
+  "preview_bool_integer_conflict": {
+    "accepted": false,
+    "error": "Conflicting project fields: project.geometryEditor.preview.volumes / volumes",
+    "input": {
+      "geometryEditor": {
+        "volumes": [
+          {
+            "name": "V",
+            "sensitive": false
+          }
+        ],
+        "preview": {
+          "volumes": [
+            {
+              "name": "V",
+              "sensitive": 0
+            }
+          ]
+        }
+      }
+    }
+  },
+  "unicode_backend_source": {
+    "exit": 0,
+    "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-independent\\source.log"
+  },
+  "unicode_backend_migrated": {
+    "exit": 0,
+    "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-independent\\migrated.log"
+  }
+}

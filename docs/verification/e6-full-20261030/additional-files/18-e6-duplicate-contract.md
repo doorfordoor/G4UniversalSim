@@ -1,0 +1,21 @@
+# E6 标准生成包复制与snapshot adapter协调契约
+
+生产签名保持duplicate_package(old_package_dir,new_runs_root)->str。仅修改history/run_package_actions.py；新增scripts/test_duplicate_generated_package.py。没有修改snapshot adapter/frontend/main writer/runner。
+
+支持标准GUI writer实际输出，含旧缺省主版本或唯一general/schema_version=1。严格拒绝future/非法版本、重复section/key、坏JSON/重复JSON/未来项目版本/未知snapshot字段、runPackage任一路径与原标准包不一致、main三目标非原标准绝对路径、额外config/macros资源、geometry file/copies_file依赖、非标准macro命令。当前资源闭包限定：config/main.ini、config/materials/material.ini、config/geometry/geometry.ini、macros/run.mac及snapshot/validation report。一般外部资源包仍明确拒绝，不扩K1。
+
+复制先验证并读取输入字节，再分配新目录。main只按扫描定位的3个键值重写，保留其它原文/注释，非全文件字符串替换。runPackage全部11路径、顶层configPath/macroPath/outputDir/workspaceRoot/runsRoot、pathSettings实际材料/几何与工作目录、geometrySettings.config_path及summary.path均同步新包。实际doc内容保留历史provenance，由专用adapter重新parse包内实际INI；adapter不能再回读doc旧source_path或selected path。
+
+日志/输出创建空目录，不复制旧run_status/run_summary/metadata/输出；validation_report副本附加execution_performed=false与旧结果不是新证据提示。坏JSON/写出异常不吞掉假成功；写失败可留下显式未完成新目录，但调用抛错、不返回成功路径，源包不变。
+
+已通过真实create_run_package->duplicate，15类负例，格式1正例，模拟新包写失败；实际旧包移走、原selected材料/几何改坏后新包Inspect通过并2事件completed。证据out/verification/e6-duplicate-backend（rejected-cases.json、inspect.log、run.log、完整新旧目录）。初版component15增加前的12例成功在e6-duplicate-component，均保留。
+
+请root协调：现有gui/smoke_tests/smoke_history.py手写复制fixture仅[run]、无完整runPackage/实际材料几何文件，不是标准生成包，将被本新约束拒绝。保留其history scanner断言，但复制正例应由root/fixture写者改为真实create_run_package输出（我不改该共享正式测试）。
+
+runner建议：backend名称duplicate_generated_package，脚本scripts/test_duplicate_generated_package.py无参数（使用G4USIM_EXE；包含全部component及真实2事件）。如需静态覆盖可另名duplicate_generated_package_model加--component，使用sys.executable作为仅校验文件存在的fixture，不运行它做模拟。
+
+snapshot adapter正例可直接使用e6-duplicate-backend/copies下未运行tagged副本，或create_run_package后新duplicate。两个实际材料/几何runPackage路径已全部是新包自身，JSON没有加入新未知根字段。
+
+补充：后端02同样通过，证据e6-duplicate-backend02；增加目标runs_root位于源包/output等内部时的拒绝，保证复制不会写入原包任何目录。主格式1在复制器中按精确字符串支持，旧未标记main仍兼容。15类拒绝另有源包内目标拒绝与模拟写失败两项；源包及旧output全树哈希不变。
+
+新格式/共享校验更新：当前复用core.project.load_project_snapshot完整源包校验，不只私有摘要helper；nested unknown已加正式反例。backend04与component-new-format通过，16类拒绝。新producer唯一格式1与无标记legacy双正例、唯一值future拒绝已改。

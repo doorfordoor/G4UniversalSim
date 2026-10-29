@@ -1,0 +1,86 @@
+{
+  "frozen_commit": "a779634483d1f077357433c532ccb0d9e3dc5517",
+  "snapshot": {
+    "package": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-acceptance-a779634\\resources\\snapshot\\runs\\20261030_023830_snapshot_restore",
+    "snapshot": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-acceptance-a779634\\resources\\snapshot\\runs\\20261030_023830_snapshot_restore\\project_snapshot.json",
+    "notes": [
+      "Restored current package material/geometry files and snapshot-recorded run/source/physics/scoring editor parameters; validate and generate a new package before running.",
+      "Unwritten disabled rows/editor drafts are not restored; materialDocument contains component counts, not a full recipe.",
+      "Current main.ini/macro edits, final runtime EffectiveConfig and historical success are not restored or verified.",
+      "This snapshot format has no original resource hashes; current input hashes do not prove equality with historical run bytes."
+    ],
+    "source_files": [
+      "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-acceptance-a779634\\resources\\snapshot\\original_inputs\\material.ini",
+      "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-acceptance-a779634\\resources\\snapshot\\original_inputs\\geometry.ini"
+    ],
+    "file_only_loader_check": "passed",
+    "event_count_candidate": 2
+  },
+  "duplicate_cases": [
+    {
+      "case": "seed43",
+      "package": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-acceptance-a779634\\resources\\duplicate\\seed43\\20261030_023830_writer_run",
+      "main": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-acceptance-a779634\\resources\\duplicate\\seed43\\20261030_023830_writer_run\\config\\main.ini",
+      "threads": 2,
+      "seed": 43,
+      "run_name": "writer_run",
+      "expected_gui": "publish candidate; final CLI follows main"
+    },
+    {
+      "case": "seed_omitted",
+      "package": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-acceptance-a779634\\resources\\duplicate\\seed_omitted\\20261030_023830_writer_run",
+      "main": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-acceptance-a779634\\resources\\duplicate\\seed_omitted\\20261030_023830_writer_run\\config\\main.ini",
+      "threads": 2,
+      "seed": null,
+      "run_name": "writer_run",
+      "expected_gui": "publish candidate; final CLI follows main"
+    },
+    {
+      "case": "seed_zero",
+      "package": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-acceptance-a779634\\resources\\duplicate\\seed_zero\\20261030_023831_writer_run",
+      "main": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-acceptance-a779634\\resources\\duplicate\\seed_zero\\20261030_023831_writer_run\\config\\main.ini",
+      "threads": 2,
+      "seed": 0,
+      "run_name": "writer_run",
+      "expected_gui": "publish candidate; final CLI follows main"
+    },
+    {
+      "case": "stale_snapshot",
+      "package": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-acceptance-a779634\\resources\\duplicate\\stale_snapshot\\20261030_023831_writer_run",
+      "main": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-acceptance-a779634\\resources\\duplicate\\stale_snapshot\\20261030_023831_writer_run\\config\\main.ini",
+      "threads": 3,
+      "seed": 83,
+      "run_name": "actual_main_run",
+      "expected_gui": "publish candidate; final CLI follows main"
+    },
+    {
+      "case": "unicode_name",
+      "package": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-acceptance-a779634\\resources\\duplicate\\unicode_name\\20261030_023831_writer_run",
+      "main": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-acceptance-a779634\\resources\\duplicate\\unicode_name\\20261030_023831_writer_run\\config\\main.ini",
+      "threads": 2,
+      "seed": 43,
+      "run_name": "Alpha 名称　Tail ",
+      "expected_gui": "publish candidate; final CLI follows main"
+    },
+    {
+      "case": "ascii_name",
+      "package": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-acceptance-a779634\\resources\\duplicate\\ascii_name\\20261030_023831_writer_run",
+      "main": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-acceptance-a779634\\resources\\duplicate\\ascii_name\\20261030_023831_writer_run\\config\\main.ini",
+      "threads": 2,
+      "seed": 43,
+      "run_name": "ordinary name",
+      "expected_gui": "publish candidate; final CLI follows main"
+    },
+    {
+      "case": "projection1025",
+      "package": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-acceptance-a779634\\resources\\duplicate\\projection1025\\20261030_023831_writer_run",
+      "main": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-visible-acceptance-a779634\\resources\\duplicate\\projection1025\\20261030_023831_writer_run\\config\\main.ini",
+      "threads": 1025,
+      "seed": 43,
+      "run_name": "writer_run",
+      "expected_gui": "copy created; no load/run; preserve current state"
+    }
+  ],
+  "ui_or_backend_launched": false,
+  "fixture_origin": "Frozen formal smoke helper bodies; only executable replaced with candidate Geant4 path and snapshot beam_on 23 changed to 2. No GUI/test main invoked."
+}

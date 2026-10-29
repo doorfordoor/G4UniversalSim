@@ -1,0 +1,186 @@
+{
+  "audited_at_utc": "2026-10-29T16:28:47.028120+00:00",
+  "git_head": "cb837e680e08a66dd47e62a9ee7e25fa125026c3",
+  "tracked_status": "",
+  "frozen": {
+    "head": "cb837e680e08a66dd47e62a9ee7e25fa125026c3",
+    "source_fingerprint": "ab79c6c2227518bd7f38d5109998ed0998d8fd53ad500cfbe714d544eb19a474",
+    "tests_content_fingerprint": "bfdb9630eef8ee95146d95769bf83bb247afbd54e1d81f3f4fa409a3a1f57430",
+    "case_counts": {
+      "static": 19,
+      "gui": 33,
+      "backend": 55,
+      "integration": 20
+    }
+  },
+  "reports": [
+    {
+      "path": "out\\verification\\e6-foundation\\20261030-000607-c0c557a8\\report.json",
+      "git_head": "c6bf8ad2c4d58b5e66392b1a029859c26b6dc17a",
+      "git_dirty": true,
+      "source_matches_frozen": false,
+      "tests_match_frozen": false,
+      "statuses": {
+        "pass": 2
+      },
+      "assertions_executed_total": 41,
+      "cases_with_zero_assertions": [],
+      "raw_log_hash_checks": [
+        {
+          "case": "main_config_version_component",
+          "sha256_matches": true
+        },
+        {
+          "case": "main_ini_migration",
+          "sha256_matches": true
+        }
+      ],
+      "strict_gate_exit_code": 0
+    },
+    {
+      "path": "out\\verification\\e6-backend-first\\20261030-000813-4132c85c\\report.json",
+      "git_head": "c6bf8ad2c4d58b5e66392b1a029859c26b6dc17a",
+      "git_dirty": true,
+      "source_matches_frozen": false,
+      "tests_match_frozen": false,
+      "statuses": {
+        "skip": 2
+      },
+      "assertions_executed_total": 0,
+      "cases_with_zero_assertions": [],
+      "raw_log_hash_checks": [],
+      "strict_gate_exit_code": 1
+    },
+    {
+      "path": "out\\verification\\e6-backend-second\\20261030-001725-a7476217\\report.json",
+      "git_head": "c6bf8ad2c4d58b5e66392b1a029859c26b6dc17a",
+      "git_dirty": true,
+      "source_matches_frozen": true,
+      "tests_match_frozen": false,
+      "statuses": {
+        "pass": 4
+      },
+      "assertions_executed_total": 820,
+      "cases_with_zero_assertions": [],
+      "raw_log_hash_checks": [
+        {
+          "case": "main_config_version",
+          "sha256_matches": true
+        },
+        {
+          "case": "field_biasing_schema",
+          "sha256_matches": true
+        },
+        {
+          "case": "config_migration_backend",
+          "sha256_matches": true
+        },
+        {
+          "case": "config_schema",
+          "sha256_matches": true
+        }
+      ],
+      "strict_gate_exit_code": 0
+    },
+    {
+      "path": "out\\verification\\e6-specialized\\20261030-002122-fe40efc7\\report.json",
+      "git_head": "c6bf8ad2c4d58b5e66392b1a029859c26b6dc17a",
+      "git_dirty": true,
+      "source_matches_frozen": true,
+      "tests_match_frozen": true,
+      "statuses": {
+        "pass": 6
+      },
+      "assertions_executed_total": 390,
+      "cases_with_zero_assertions": [],
+      "raw_log_hash_checks": [
+        {
+          "case": "main_config_version_component",
+          "sha256_matches": true
+        },
+        {
+          "case": "main_ini_migration",
+          "sha256_matches": true
+        },
+        {
+          "case": "field_biasing_schema_review",
+          "sha256_matches": true
+        },
+        {
+          "case": "config_migration",
+          "sha256_matches": true
+        },
+        {
+          "case": "geometry_diagnostic_identity",
+          "sha256_matches": true
+        },
+        {
+          "case": "gui_config_migration",
+          "sha256_matches": true
+        }
+      ],
+      "strict_gate_exit_code": 0
+    }
+  ],
+  "schema_differential_records": {
+    "e6-schema-baseline04": {
+      "case_count": 61,
+      "executable": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-2c\\Release\\G4UniversalSim.exe",
+      "baseline": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-2c\\Release\\G4UniversalSim.exe"
+    },
+    "e6-schema-candidate": {
+      "case_count": 61,
+      "executable": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-e6\\Release\\G4UniversalSim.exe",
+      "baseline": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-2c\\Release\\G4UniversalSim.exe"
+    }
+  },
+  "independent_schema_probes": {
+    "candidate_sha256": "dcd96ad49c1c3756a4be4175c7182681de93979c7c5cbc354b1941d4eee2c785",
+    "baseline_sha256": "fbb7c56e820d3d36e5f87a3ef2995d55c554d4c5cb38dbaa75191422d4bc37f0",
+    "cases": [
+      {
+        "case": "dormant-malformed-grammar",
+        "accepted": true
+      },
+      {
+        "case": "auto-activates-malformed-grammar",
+        "accepted": false
+      },
+      {
+        "case": "disabled-rule-still-parses-number",
+        "accepted": false
+      },
+      {
+        "case": "mixed-case-and-derived-precedence",
+        "accepted": true
+      }
+    ],
+    "scope": "Configure-only parser/schema compatibility; no transport or physics claim"
+  },
+  "independent_type_review": {
+    "original_cases_rejected": 5,
+    "old_format_combinations_checked": 14
+  },
+  "ci_checkpoint_at_review": {
+    "head": "cb837e680e08a66dd47e62a9ee7e25fa125026c3",
+    "status": "in_progress",
+    "frozen_profiles": {
+      "static": 19,
+      "gui": 33,
+      "backend": 55,
+      "integration": 20
+    },
+    "total_cases": 127,
+    "linux_run": 40911355023,
+    "m0_run": 40911355092,
+    "jobs": {
+      "11.3.2": 123579858842,
+      "11.4.3": 123579859232,
+      "m0-ubuntu": 123579859374,
+      "m0-windows": 123579859622
+    },
+    "routing": "Connected GitHub fetch discovered push runs directly; dedicated jobs endpoint available. No fallback or credentials used.",
+    "next": "Await completion; fetch complete metadata and artifacts/logs with connected tools; four ZIP SHA256 and 12 strict gates."
+  },
+  "scope": "Read-only scope/evidence review; not a new whole-stage test run or stage-closure decision"
+}

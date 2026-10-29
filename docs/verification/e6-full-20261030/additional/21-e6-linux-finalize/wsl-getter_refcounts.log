@@ -1,0 +1,8 @@
+{"python": "3.11.18 (main, Oct 26 2026, 11:35:17) [GCC 15.3.0]", "pyside": "6.12.0", "shiboken": "6.12.0", "records": [{"getter": "combo_currentData_empty", "calls": 500, "before": 5245, "after": 4745, "delta": -500}, {"getter": "combo_itemData_empty", "calls": 500, "before": 4735, "after": 4235, "delta": -500}, {"getter": "combo_itemData_string", "calls": 500, "before": 4235, "after": 4235, "delta": 0}, {"getter": "combo_currentText", "calls": 500, "before": 4235, "after": 4235, "delta": 0}, {"getter": "widget_isEnabled", "calls": 500, "before": 4235, "after": 4235, "delta": 0}, {"getter": "line_text", "calls": 500, "before": 4235, "after": 4235, "delta": 0}]}
+normal widget teardown complete; None refs 4228
+Fatal Python error: none_dealloc: deallocating None: bug likely caused by a refcount error in a C extension
+Python runtime state: finalizing (tstate=0x00005b58238b6fb8)
+
+Current thread 0x0000799151475580 (most recent call first):
+  Garbage-collecting
+  <no Python frame>

@@ -1,0 +1,533 @@
+{
+  "pre_fix_evidence": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-gui-projection-review\\cases.json",
+  "pre_fix_sha256": "3f8563082c5178c67631c200d5e3e3d480fa870b2bb0c3d481cf6db63e5e6e3f",
+  "gui_replays": [
+    {
+      "name": "negative-run-thread",
+      "expected_accept": false,
+      "accepted": false,
+      "errors": [
+        "Project field project.runSettings.threads = -1 is outside the editable GUI range [1, 1024]."
+      ],
+      "source_unchanged": true,
+      "old_object_path_controls_building_package_unchanged": true
+    },
+    {
+      "name": "zero-run-thread",
+      "expected_accept": false,
+      "accepted": false,
+      "errors": [
+        "Project field project.runSettings.threads = 0 is outside the editable GUI range [1, 1024]."
+      ],
+      "source_unchanged": true,
+      "old_object_path_controls_building_package_unchanged": true
+    },
+    {
+      "name": "negative-events",
+      "expected_accept": false,
+      "accepted": false,
+      "errors": [
+        "Project field project.runSettings.beam_on = -1 is outside the editable GUI range [0, 2000000000]."
+      ],
+      "source_unchanged": true,
+      "old_object_path_controls_building_package_unchanged": true
+    },
+    {
+      "name": "negative-settings-bins",
+      "expected_accept": false,
+      "accepted": false,
+      "errors": [
+        "Project field project.scoringSettings.hist_bins = -1 is outside the editable GUI range [1, 10000000]."
+      ],
+      "source_unchanged": true,
+      "old_object_path_controls_building_package_unchanged": true
+    },
+    {
+      "name": "zero-editor-bins-fallback",
+      "expected_accept": false,
+      "accepted": false,
+      "errors": [
+        "Project field project.scoringEditor.hist_bins = 0 is outside the editable GUI range [1, 10000000]."
+      ],
+      "source_unchanged": true,
+      "old_object_path_controls_building_package_unchanged": true
+    },
+    {
+      "name": "negative-rays",
+      "expected_accept": false,
+      "accepted": false,
+      "errors": [
+        "Project field project.sourceEditor.preview_ray_count = -1 is outside the editable GUI range [1, 512]."
+      ],
+      "source_unchanged": true,
+      "old_object_path_controls_building_package_unchanged": true
+    },
+    {
+      "name": "negative-preview-seed",
+      "expected_accept": false,
+      "accepted": false,
+      "errors": [
+        "Project field project.sourceEditor.random_seed_preview = -1 is outside the editable GUI range [0, 2147483647]."
+      ],
+      "source_unchanged": true,
+      "old_object_path_controls_building_package_unchanged": true
+    },
+    {
+      "name": "negative-trajectories",
+      "expected_accept": false,
+      "accepted": false,
+      "errors": [
+        "Project field project.scoringEditor.trajectory_events = -1 is outside the editable GUI range [0, 1000]."
+      ],
+      "source_unchanged": true,
+      "old_object_path_controls_building_package_unchanged": true
+    },
+    {
+      "name": "over-rays",
+      "expected_accept": false,
+      "accepted": false,
+      "errors": [
+        "Project field project.sourceEditor.preview_ray_count = 513 is outside the editable GUI range [1, 512]."
+      ],
+      "source_unchanged": true,
+      "old_object_path_controls_building_package_unchanged": true
+    },
+    {
+      "name": "over-preview-seed",
+      "expected_accept": false,
+      "accepted": false,
+      "errors": [
+        "Project field project.sourceEditor.random_seed_preview = 2147483648 is outside the editable GUI range [0, 2147483647]."
+      ],
+      "source_unchanged": true,
+      "old_object_path_controls_building_package_unchanged": true
+    },
+    {
+      "name": "over-trajectories",
+      "expected_accept": false,
+      "accepted": false,
+      "errors": [
+        "Project field project.scoringEditor.trajectory_events = 1001 is outside the editable GUI range [0, 1000]."
+      ],
+      "source_unchanged": true,
+      "old_object_path_controls_building_package_unchanged": true
+    },
+    {
+      "name": "empty-physics-reference-list-rejected",
+      "expected_accept": true,
+      "accepted": true,
+      "errors": [],
+      "source_unchanged": true
+    },
+    {
+      "name": "empty-physics-reference-fallback",
+      "expected_accept": true,
+      "accepted": true,
+      "errors": [],
+      "source_unchanged": true
+    },
+    {
+      "name": "empty-source-particle-fallback",
+      "expected_accept": true,
+      "accepted": true,
+      "errors": [],
+      "source_unchanged": true
+    },
+    {
+      "name": "unknown-enums",
+      "expected_accept": true,
+      "accepted": true,
+      "errors": [],
+      "source_unchanged": true
+    },
+    {
+      "name": "empty-enums",
+      "expected_accept": true,
+      "accepted": true,
+      "errors": [],
+      "source_unchanged": true
+    },
+    {
+      "name": "large-text-values",
+      "expected_accept": true,
+      "accepted": true,
+      "errors": [],
+      "source_unchanged": true
+    },
+    {
+      "name": "source-mode-conflict",
+      "expected_accept": false,
+      "accepted": false,
+      "errors": [
+        "Conflicting project fields: project.sourceEditor.position_mode / position_type"
+      ],
+      "source_unchanged": true,
+      "old_object_path_controls_building_package_unchanged": true
+    },
+    {
+      "name": "flat_threads_huge",
+      "expected_accept": false,
+      "accepted": false,
+      "errors": [
+        "Project field project.threads = 10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 is outside the editable GUI range [1, 1024]."
+      ],
+      "source_unchanged": true,
+      "old_object_path_controls_building_package_unchanged": true
+    },
+    {
+      "name": "run_threads_huge",
+      "expected_accept": false,
+      "accepted": false,
+      "errors": [
+        "Project field project.runSettings.threads = 10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 is outside the editable GUI range [1, 1024]."
+      ],
+      "source_unchanged": true,
+      "old_object_path_controls_building_package_unchanged": true
+    },
+    {
+      "name": "events_huge",
+      "expected_accept": false,
+      "accepted": false,
+      "errors": [
+        "Project field project.runSettings.beam_on = 10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 is outside the editable GUI range [0, 2000000000]."
+      ],
+      "source_unchanged": true,
+      "old_object_path_controls_building_package_unchanged": true
+    },
+    {
+      "name": "settings_hist_bins_huge",
+      "expected_accept": false,
+      "accepted": false,
+      "errors": [
+        "Project field project.scoringSettings.hist_bins = 10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 is outside the editable GUI range [1, 10000000]."
+      ],
+      "source_unchanged": true,
+      "old_object_path_controls_building_package_unchanged": true
+    },
+    {
+      "name": "editor_hist_bins_huge",
+      "expected_accept": false,
+      "accepted": false,
+      "errors": [
+        "Project field project.scoringEditor.hist_bins = 10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 is outside the editable GUI range [0, 10000000]."
+      ],
+      "source_unchanged": true,
+      "old_object_path_controls_building_package_unchanged": true
+    },
+    {
+      "name": "preview_rays_huge",
+      "expected_accept": false,
+      "accepted": false,
+      "errors": [
+        "Project field project.sourceEditor.preview_ray_count = 10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 is outside the editable GUI range [1, 512]."
+      ],
+      "source_unchanged": true,
+      "old_object_path_controls_building_package_unchanged": true
+    },
+    {
+      "name": "preview_seed_huge",
+      "expected_accept": false,
+      "accepted": false,
+      "errors": [
+        "Project field project.sourceEditor.random_seed_preview = 10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 is outside the editable GUI range [0, 2147483647]."
+      ],
+      "source_unchanged": true,
+      "old_object_path_controls_building_package_unchanged": true
+    },
+    {
+      "name": "trajectories_huge",
+      "expected_accept": false,
+      "accepted": false,
+      "errors": [
+        "Project field project.scoringEditor.trajectory_events = 10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 is outside the editable GUI range [0, 1000]."
+      ],
+      "source_unchanged": true,
+      "old_object_path_controls_building_package_unchanged": true
+    },
+    {
+      "name": "flat_threads_clamped",
+      "expected_accept": false,
+      "accepted": false,
+      "errors": [
+        "Project field project.threads = 2048 is outside the editable GUI range [1, 1024]."
+      ],
+      "source_unchanged": true,
+      "old_object_path_controls_building_package_unchanged": true
+    },
+    {
+      "name": "events_clamped",
+      "expected_accept": false,
+      "accepted": false,
+      "errors": [
+        "Project field project.runSettings.beam_on = 2000000001 is outside the editable GUI range [0, 2000000000]."
+      ],
+      "source_unchanged": true,
+      "old_object_path_controls_building_package_unchanged": true
+    },
+    {
+      "name": "hist_bins_clamped",
+      "expected_accept": false,
+      "accepted": false,
+      "errors": [
+        "Project field project.scoringEditor.hist_bins = 10000001 is outside the editable GUI range [0, 10000000]."
+      ],
+      "source_unchanged": true,
+      "old_object_path_controls_building_package_unchanged": true
+    }
+  ],
+  "legacy_alias_cases": [
+    {
+      "version": null,
+      "alias": "position_mode",
+      "value": "plane",
+      "accepted": true
+    },
+    {
+      "version": null,
+      "alias": "position_mode",
+      "value": "FuturePosition",
+      "accepted": true
+    },
+    {
+      "version": null,
+      "alias": "position_mode",
+      "value": "",
+      "accepted": true
+    },
+    {
+      "version": null,
+      "alias": "position_type",
+      "value": "plane",
+      "accepted": true
+    },
+    {
+      "version": null,
+      "alias": "position_type",
+      "value": "FuturePosition",
+      "accepted": true
+    },
+    {
+      "version": null,
+      "alias": "position_type",
+      "value": "",
+      "accepted": true
+    },
+    {
+      "version": 1,
+      "alias": "position_mode",
+      "value": "plane",
+      "accepted": true
+    },
+    {
+      "version": 1,
+      "alias": "position_mode",
+      "value": "FuturePosition",
+      "accepted": true
+    },
+    {
+      "version": 1,
+      "alias": "position_mode",
+      "value": "",
+      "accepted": true
+    },
+    {
+      "version": 1,
+      "alias": "position_type",
+      "value": "plane",
+      "accepted": true
+    },
+    {
+      "version": 1,
+      "alias": "position_type",
+      "value": "FuturePosition",
+      "accepted": true
+    },
+    {
+      "version": 1,
+      "alias": "position_type",
+      "value": "",
+      "accepted": true
+    },
+    {
+      "version": 2,
+      "alias": "position_mode",
+      "value": "plane",
+      "accepted": true
+    },
+    {
+      "version": 2,
+      "alias": "position_mode",
+      "value": "FuturePosition",
+      "accepted": true
+    },
+    {
+      "version": 2,
+      "alias": "position_mode",
+      "value": "",
+      "accepted": true
+    },
+    {
+      "version": 2,
+      "alias": "position_type",
+      "value": "plane",
+      "accepted": true
+    },
+    {
+      "version": 2,
+      "alias": "position_type",
+      "value": "FuturePosition",
+      "accepted": true
+    },
+    {
+      "version": 2,
+      "alias": "position_type",
+      "value": "",
+      "accepted": true
+    },
+    {
+      "version": 3,
+      "alias": "position_mode",
+      "value": "plane",
+      "accepted": true
+    },
+    {
+      "version": 3,
+      "alias": "position_mode",
+      "value": "FuturePosition",
+      "accepted": true
+    },
+    {
+      "version": 3,
+      "alias": "position_mode",
+      "value": "",
+      "accepted": true
+    },
+    {
+      "version": 3,
+      "alias": "position_type",
+      "value": "plane",
+      "accepted": true
+    },
+    {
+      "version": 3,
+      "alias": "position_type",
+      "value": "FuturePosition",
+      "accepted": true
+    },
+    {
+      "version": 3,
+      "alias": "position_type",
+      "value": "",
+      "accepted": true
+    },
+    {
+      "version": 4,
+      "alias": "position_mode",
+      "value": "plane",
+      "accepted": true
+    },
+    {
+      "version": 4,
+      "alias": "position_mode",
+      "value": "FuturePosition",
+      "accepted": true
+    },
+    {
+      "version": 4,
+      "alias": "position_mode",
+      "value": "",
+      "accepted": true
+    },
+    {
+      "version": 4,
+      "alias": "position_type",
+      "value": "plane",
+      "accepted": true
+    },
+    {
+      "version": 4,
+      "alias": "position_type",
+      "value": "FuturePosition",
+      "accepted": true
+    },
+    {
+      "version": 4,
+      "alias": "position_type",
+      "value": "",
+      "accepted": true
+    },
+    {
+      "version": 5,
+      "alias": "position_mode",
+      "value": "plane",
+      "accepted": true
+    },
+    {
+      "version": 5,
+      "alias": "position_mode",
+      "value": "FuturePosition",
+      "accepted": true
+    },
+    {
+      "version": 5,
+      "alias": "position_mode",
+      "value": "",
+      "accepted": true
+    },
+    {
+      "version": 5,
+      "alias": "position_type",
+      "value": "plane",
+      "accepted": true
+    },
+    {
+      "version": 5,
+      "alias": "position_type",
+      "value": "FuturePosition",
+      "accepted": true
+    },
+    {
+      "version": 5,
+      "alias": "position_type",
+      "value": "",
+      "accepted": true
+    },
+    {
+      "version": 6,
+      "alias": "position_mode",
+      "value": "plane",
+      "accepted": true
+    },
+    {
+      "version": 6,
+      "alias": "position_mode",
+      "value": "FuturePosition",
+      "accepted": true
+    },
+    {
+      "version": 6,
+      "alias": "position_mode",
+      "value": "",
+      "accepted": true
+    },
+    {
+      "version": 6,
+      "alias": "position_type",
+      "value": "plane",
+      "accepted": true
+    },
+    {
+      "version": 6,
+      "alias": "position_type",
+      "value": "FuturePosition",
+      "accepted": true
+    },
+    {
+      "version": 6,
+      "alias": "position_type",
+      "value": "",
+      "accepted": true
+    }
+  ],
+  "export_copy_does_not_mutate_caller": true
+}

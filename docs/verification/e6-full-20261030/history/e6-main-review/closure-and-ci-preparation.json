@@ -1,0 +1,24 @@
+{
+  "unicode_finding_status": "closed_by_current_ascii_trim_and_lf_scanner",
+  "checks": [
+    "main_ini_migration passed",
+    "main_config_version --component passed with g++",
+    "field_biasing_schema --component passed",
+    "real backend NBSP min_step/factor/enabled all rejected"
+  ],
+  "independent_geometry_api_review": "No new issue: only production caller GeometryTemplate uses LoadGeometryConfigBytes, IniReader remains transactional; main callers validate version before publishing.",
+  "file_sha256": {
+    "gui/g4usim_gui/core/main_ini_migration.py": "f6ba27fd26f7ed831e13d6cb44771300a4d515d98cbcf6fe424446629a9494af",
+    "gui/g4usim_gui/core/config_schema.py": "9967058481965987a7a66f811fef17e927e7f5e550d29279810bcddc70f7716c",
+    "src/Config/ConfigManager.cc": "4ff268913d7614c9aae2dfec7d906972bcc93049fe9d969d6f34d7fb37cc8d31",
+    "include/Config/ConfigManager.hh": "4b78174fde66d1a456a272825426ea6dc394213b193ee2362482ec8acd9711db",
+    "src/Templates/GeometryTemplate.cc": "e870cc135d1d6616d22f99c640cc0363916ba181cfc36f362c1894612f47df32"
+  },
+  "candidate_differential": {
+    "session": 95563,
+    "exit_code": 0,
+    "cases": 61,
+    "evidence": "out/verification/e6-schema-candidate/cases.json"
+  },
+  "ci_status": "prepared only; no dispatch/push/collection of new runs"
+}

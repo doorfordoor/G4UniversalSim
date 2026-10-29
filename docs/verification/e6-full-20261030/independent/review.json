@@ -1,0 +1,149 @@
+{
+  "archive": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\docs\\verification\\e6-full-20261030",
+  "status": "passed",
+  "expected_head": "a779634483d1f077357433c532ccb0d9e3dc5517",
+  "manifest_files_checked": 2711,
+  "manifest_bytes_checked": 13423947,
+  "release_reports": [
+    {
+      "report": "ci/linux-evidence-11.3.2/linux-backend/20261029-183423-1c19e542/report.json",
+      "category": "accepted_ci",
+      "strict_gate_exit_code": 0,
+      "git_dirty": true,
+      "cases": 56
+    },
+    {
+      "report": "ci/linux-evidence-11.3.2/linux-gui/20261029-183347-4008fdc1/report.json",
+      "category": "accepted_ci",
+      "strict_gate_exit_code": 0,
+      "git_dirty": true,
+      "cases": 37
+    },
+    {
+      "report": "ci/linux-evidence-11.3.2/linux-integration/20261029-184249-ef85c158/report.json",
+      "category": "accepted_ci",
+      "strict_gate_exit_code": 0,
+      "git_dirty": true,
+      "cases": 20
+    },
+    {
+      "report": "ci/linux-evidence-11.3.2/linux-static/20261029-183332-12829505/report.json",
+      "category": "accepted_ci",
+      "strict_gate_exit_code": 0,
+      "git_dirty": true,
+      "cases": 21
+    },
+    {
+      "report": "ci/linux-evidence-11.4.3/linux-backend/20261029-183515-59df3385/report.json",
+      "category": "accepted_ci",
+      "strict_gate_exit_code": 0,
+      "git_dirty": true,
+      "cases": 56
+    },
+    {
+      "report": "ci/linux-evidence-11.4.3/linux-gui/20261029-183421-5bbb5787/report.json",
+      "category": "accepted_ci",
+      "strict_gate_exit_code": 0,
+      "git_dirty": true,
+      "cases": 37
+    },
+    {
+      "report": "ci/linux-evidence-11.4.3/linux-integration/20261029-184834-fcee792b/report.json",
+      "category": "accepted_ci",
+      "strict_gate_exit_code": 0,
+      "git_dirty": true,
+      "cases": 20
+    },
+    {
+      "report": "ci/linux-evidence-11.4.3/linux-static/20261029-183357-46919325/report.json",
+      "category": "accepted_ci",
+      "strict_gate_exit_code": 0,
+      "git_dirty": true,
+      "cases": 21
+    },
+    {
+      "report": "ci/m0-report-ubuntu-latest/20261029-183212-22a57434/report.json",
+      "category": "accepted_ci",
+      "strict_gate_exit_code": 0,
+      "git_dirty": false,
+      "cases": 21
+    },
+    {
+      "report": "ci/m0-report-ubuntu-latest/20261029-183234-60eeebc9/report.json",
+      "category": "accepted_ci",
+      "strict_gate_exit_code": 0,
+      "git_dirty": false,
+      "cases": 37
+    },
+    {
+      "report": "ci/m0-report-windows-latest/20261029-183245-597604c7/report.json",
+      "category": "accepted_ci",
+      "strict_gate_exit_code": 0,
+      "git_dirty": false,
+      "cases": 21
+    },
+    {
+      "report": "ci/m0-report-windows-latest/20261029-183330-198ea191/report.json",
+      "category": "accepted_ci",
+      "strict_gate_exit_code": 0,
+      "git_dirty": false,
+      "cases": 37
+    },
+    {
+      "report": "windows/final-1/report.json",
+      "category": "accepted_windows",
+      "strict_gate_exit_code": 0,
+      "git_dirty": false,
+      "cases": 134
+    }
+  ],
+  "release_case_logs_checked": 518,
+  "baseline": {
+    "head": "f4770b0cb73c8b1f9852fbac0d485e17b25bc0e3",
+    "sha256": "d39e8d3f02deee28df895eb8848e0a5e64b9263880439dab2f4f68480576d3dc",
+    "gate_exit_code": 0
+  },
+  "historical_failed_reports_not_release": [
+    {
+      "path": "history/cb837e6-ci/linux-evidence-11.3.2/linux-gui/20261029-162749-6a480005/report.json",
+      "head": "cb837e680e08a66dd47e62a9ee7e25fa125026c3",
+      "category": "historical"
+    },
+    {
+      "path": "history/cb837e6-ci/linux-evidence-11.4.3/linux-gui/20261029-162735-a3d14a9b/report.json",
+      "head": "cb837e680e08a66dd47e62a9ee7e25fa125026c3",
+      "category": "historical"
+    },
+    {
+      "path": "history/cb837e6-ci/m0-report-ubuntu-latest/20261029-162557-d95726f6/report.json",
+      "head": "cb837e680e08a66dd47e62a9ee7e25fa125026c3",
+      "category": "historical"
+    },
+    {
+      "path": "history/cb837e6-ci/m0-report-windows-latest/20261029-162642-47ebcc3e/report.json",
+      "head": "cb837e680e08a66dd47e62a9ee7e25fa125026c3",
+      "category": "historical"
+    },
+    {
+      "path": "history/ci-round-1-e6-ci-final/linux-evidence-11.3.2/linux-gui/20261029-175924-e84c1d62/report.json",
+      "head": "5bf479d85ba7c12e0f71984d31b8335c47c5a8c3",
+      "category": "historical_ci"
+    },
+    {
+      "path": "history/ci-round-1-e6-ci-final/linux-evidence-11.4.3/linux-gui/20261029-175931-3ad1a389/report.json",
+      "head": "5bf479d85ba7c12e0f71984d31b8335c47c5a8c3",
+      "category": "historical_ci"
+    },
+    {
+      "path": "history/ci-round-1-e6-ci-final/m0-report-ubuntu-latest/20261029-175753-d8ae527d/report.json",
+      "head": "5bf479d85ba7c12e0f71984d31b8335c47c5a8c3",
+      "category": "historical_ci"
+    },
+    {
+      "path": "history/e6-full-windows/20261030-002736-c9ff9815/report.json",
+      "head": "cb837e680e08a66dd47e62a9ee7e25fa125026c3",
+      "category": "historical"
+    }
+  ],
+  "stage_complete": false
+}

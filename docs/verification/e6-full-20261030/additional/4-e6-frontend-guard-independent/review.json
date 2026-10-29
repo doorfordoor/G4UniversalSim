@@ -1,0 +1,514 @@
+{
+  "scope": "offscreen independent frontend guard/state review; not visible UI or physical validation",
+  "product_hashes": {
+    "gui/g4usim_gui/window/project.py": "7b36fcf5a4aebeb19714dfd13992a7867b72de49bc5e45fb653b1eee01856e80",
+    "gui/g4usim_gui/window/content.py": "20e107a3122c59f8ac933f5432900523aeaa411aa75963ab85071f8b93f761fe",
+    "gui/g4usim_gui/widgets/project_page.py": "ae3390227e54210ab8d20ae1d9b3fbf348397a19f15737b696434c3ab610548c",
+    "gui/g4usim_gui/widgets/config_builder_page.py": "1b3ea8b6d3905e858ad2066285f062148004b0866ec2ba7050edbce7ed040fc6",
+    "gui/g4usim_gui/widgets/config/run_config.py": "5b2d6a3a97e54f27a314c40b316297128dbbdbddbf9aacc94f2da74b3832beb0",
+    "gui/g4usim_gui/widgets/migration_dialog.py": "bcc83177ce167842d8df0397c3c7016a11f79be1ff398abf8c2aa71f30d97a0f"
+  },
+  "product_unchanged": true,
+  "facts": [
+    {
+      "case": "reject-before-publish",
+      "mode": "generated",
+      "field": "threads",
+      "value": "0"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "generated",
+      "field": "threads",
+      "value": "1025"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "generated",
+      "field": "threads",
+      "value": "10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "generated",
+      "field": "threads",
+      "value": "-10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "generated",
+      "field": "runSettings.threads",
+      "value": "0"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "generated",
+      "field": "runSettings.threads",
+      "value": "1025"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "generated",
+      "field": "runSettings.threads",
+      "value": "10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "generated",
+      "field": "runSettings.threads",
+      "value": "-10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "generated",
+      "field": "runSettings.beam_on",
+      "value": "-1"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "generated",
+      "field": "runSettings.beam_on",
+      "value": "2000000001"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "generated",
+      "field": "runSettings.beam_on",
+      "value": "10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "generated",
+      "field": "runSettings.beam_on",
+      "value": "-10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "generated",
+      "field": "scoringSettings.hist_bins",
+      "value": "0"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "generated",
+      "field": "scoringSettings.hist_bins",
+      "value": "10000001"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "generated",
+      "field": "scoringSettings.hist_bins",
+      "value": "10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "generated",
+      "field": "scoringSettings.hist_bins",
+      "value": "-10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "generated",
+      "field": "scoringEditor.hist_bins",
+      "value": "0"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "generated",
+      "field": "scoringEditor.hist_bins",
+      "value": "10000001"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "generated",
+      "field": "scoringEditor.hist_bins",
+      "value": "10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "generated",
+      "field": "scoringEditor.hist_bins",
+      "value": "-10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "generated",
+      "field": "scoringEditor.trajectory_events",
+      "value": "-1"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "generated",
+      "field": "scoringEditor.trajectory_events",
+      "value": "1001"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "generated",
+      "field": "scoringEditor.trajectory_events",
+      "value": "10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "generated",
+      "field": "scoringEditor.trajectory_events",
+      "value": "-10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "generated",
+      "field": "sourceEditor.preview_ray_count",
+      "value": "0"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "generated",
+      "field": "sourceEditor.preview_ray_count",
+      "value": "513"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "generated",
+      "field": "sourceEditor.preview_ray_count",
+      "value": "10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "generated",
+      "field": "sourceEditor.preview_ray_count",
+      "value": "-10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "generated",
+      "field": "sourceEditor.random_seed_preview",
+      "value": "-1"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "generated",
+      "field": "sourceEditor.random_seed_preview",
+      "value": "2147483648"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "generated",
+      "field": "sourceEditor.random_seed_preview",
+      "value": "10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "generated",
+      "field": "sourceEditor.random_seed_preview",
+      "value": "-10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "external",
+      "field": "threads",
+      "value": "0"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "external",
+      "field": "threads",
+      "value": "1025"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "external",
+      "field": "threads",
+      "value": "10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "external",
+      "field": "threads",
+      "value": "-10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "external",
+      "field": "runSettings.threads",
+      "value": "0"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "external",
+      "field": "runSettings.threads",
+      "value": "1025"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "external",
+      "field": "runSettings.threads",
+      "value": "10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "external",
+      "field": "runSettings.threads",
+      "value": "-10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "external",
+      "field": "runSettings.beam_on",
+      "value": "-1"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "external",
+      "field": "runSettings.beam_on",
+      "value": "2000000001"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "external",
+      "field": "runSettings.beam_on",
+      "value": "10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "external",
+      "field": "runSettings.beam_on",
+      "value": "-10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "external",
+      "field": "scoringSettings.hist_bins",
+      "value": "0"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "external",
+      "field": "scoringSettings.hist_bins",
+      "value": "10000001"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "external",
+      "field": "scoringSettings.hist_bins",
+      "value": "10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "external",
+      "field": "scoringSettings.hist_bins",
+      "value": "-10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "external",
+      "field": "scoringEditor.hist_bins",
+      "value": "0"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "external",
+      "field": "scoringEditor.hist_bins",
+      "value": "10000001"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "external",
+      "field": "scoringEditor.hist_bins",
+      "value": "10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "external",
+      "field": "scoringEditor.hist_bins",
+      "value": "-10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "external",
+      "field": "scoringEditor.trajectory_events",
+      "value": "-1"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "external",
+      "field": "scoringEditor.trajectory_events",
+      "value": "1001"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "external",
+      "field": "scoringEditor.trajectory_events",
+      "value": "10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "external",
+      "field": "scoringEditor.trajectory_events",
+      "value": "-10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "external",
+      "field": "sourceEditor.preview_ray_count",
+      "value": "0"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "external",
+      "field": "sourceEditor.preview_ray_count",
+      "value": "513"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "external",
+      "field": "sourceEditor.preview_ray_count",
+      "value": "10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "external",
+      "field": "sourceEditor.preview_ray_count",
+      "value": "-10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "external",
+      "field": "sourceEditor.random_seed_preview",
+      "value": "-1"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "external",
+      "field": "sourceEditor.random_seed_preview",
+      "value": "2147483648"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "external",
+      "field": "sourceEditor.random_seed_preview",
+      "value": "10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "case": "reject-before-publish",
+      "mode": "external",
+      "field": "sourceEditor.random_seed_preview",
+      "value": "-10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "case": "direct-set-project-guard",
+      "unchanged": true
+    },
+    {
+      "case": "original-error-severity",
+      "entry": "recent",
+      "severity": "warning"
+    },
+    {
+      "case": "original-error-severity",
+      "entry": "snapshot",
+      "severity": "warning"
+    },
+    {
+      "case": "original-error-severity",
+      "entry": "normal",
+      "severity": "critical"
+    },
+    {
+      "case": "wizard-refusal-before-in-place-apply",
+      "unchanged": true
+    },
+    {
+      "case": "wizard-refusal-before-in-place-apply",
+      "unchanged": true
+    },
+    {
+      "case": "inclusive-boundary-accepted",
+      "field": "threads",
+      "value": 1
+    },
+    {
+      "case": "inclusive-boundary-accepted",
+      "field": "threads",
+      "value": 1024
+    },
+    {
+      "case": "inclusive-boundary-accepted",
+      "field": "runSettings.threads",
+      "value": 1
+    },
+    {
+      "case": "inclusive-boundary-accepted",
+      "field": "runSettings.threads",
+      "value": 1024
+    },
+    {
+      "case": "inclusive-boundary-accepted",
+      "field": "runSettings.beam_on",
+      "value": 0
+    },
+    {
+      "case": "inclusive-boundary-accepted",
+      "field": "runSettings.beam_on",
+      "value": 2000000000
+    },
+    {
+      "case": "inclusive-boundary-accepted",
+      "field": "scoringSettings.hist_bins",
+      "value": 1
+    },
+    {
+      "case": "inclusive-boundary-accepted",
+      "field": "scoringSettings.hist_bins",
+      "value": 10000000
+    },
+    {
+      "case": "inclusive-boundary-accepted",
+      "field": "scoringEditor.hist_bins",
+      "value": 1
+    },
+    {
+      "case": "inclusive-boundary-accepted",
+      "field": "scoringEditor.hist_bins",
+      "value": 10000000
+    },
+    {
+      "case": "inclusive-boundary-accepted",
+      "field": "scoringEditor.trajectory_events",
+      "value": 0
+    },
+    {
+      "case": "inclusive-boundary-accepted",
+      "field": "scoringEditor.trajectory_events",
+      "value": 1000
+    },
+    {
+      "case": "inclusive-boundary-accepted",
+      "field": "sourceEditor.preview_ray_count",
+      "value": 1
+    },
+    {
+      "case": "inclusive-boundary-accepted",
+      "field": "sourceEditor.preview_ray_count",
+      "value": 512
+    },
+    {
+      "case": "inclusive-boundary-accepted",
+      "field": "sourceEditor.random_seed_preview",
+      "value": 0
+    },
+    {
+      "case": "inclusive-boundary-accepted",
+      "field": "sourceEditor.random_seed_preview",
+      "value": 2147483647
+    },
+    {
+      "case": "lineedit-and-unused-fields-have-no-spinbox-limit",
+      "accepted": true
+    },
+    {
+      "case": "wizard-candidate-matches-in-place-guarded-values",
+      "same_values": true,
+      "same_project_identity": true
+    }
+  ]
+}

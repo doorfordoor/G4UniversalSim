@@ -1,0 +1,317 @@
+{
+  "verified_utc": "2026-10-29T19:08:45.175071+00:00",
+  "files_sha256_matched": 2711,
+  "reports": [
+    {
+      "report": "additional/20-e6-final-preflight/20261030-015324-89f03dea/report.json",
+      "category": "additional",
+      "strict_gate_exit_code": 0,
+      "all_pass": true,
+      "gate_log": "verification/gate-000.log",
+      "meaning": "retained original history, not release acceptance"
+    },
+    {
+      "report": "additional/27-e6-release-preflight/20261030-023016-55a5d076/report.json",
+      "category": "additional",
+      "strict_gate_exit_code": 0,
+      "all_pass": true,
+      "gate_log": "verification/gate-001.log",
+      "meaning": "retained original history, not release acceptance"
+    },
+    {
+      "report": "baseline/1/report.json",
+      "category": "baseline",
+      "strict_gate_exit_code": 0,
+      "all_pass": true,
+      "gate_log": "verification/gate-002.log",
+      "meaning": "retained original history, not release acceptance"
+    },
+    {
+      "report": "ci/linux-evidence-11.3.2/linux-backend/20261029-183423-1c19e542/report.json",
+      "category": "accepted_ci",
+      "strict_gate_exit_code": 0,
+      "all_pass": true,
+      "gate_log": "verification/gate-003.log",
+      "meaning": "release evidence"
+    },
+    {
+      "report": "ci/linux-evidence-11.3.2/linux-gui/20261029-183347-4008fdc1/report.json",
+      "category": "accepted_ci",
+      "strict_gate_exit_code": 0,
+      "all_pass": true,
+      "gate_log": "verification/gate-004.log",
+      "meaning": "release evidence"
+    },
+    {
+      "report": "ci/linux-evidence-11.3.2/linux-integration/20261029-184249-ef85c158/report.json",
+      "category": "accepted_ci",
+      "strict_gate_exit_code": 0,
+      "all_pass": true,
+      "gate_log": "verification/gate-005.log",
+      "meaning": "release evidence"
+    },
+    {
+      "report": "ci/linux-evidence-11.3.2/linux-static/20261029-183332-12829505/report.json",
+      "category": "accepted_ci",
+      "strict_gate_exit_code": 0,
+      "all_pass": true,
+      "gate_log": "verification/gate-006.log",
+      "meaning": "release evidence"
+    },
+    {
+      "report": "ci/linux-evidence-11.4.3/linux-backend/20261029-183515-59df3385/report.json",
+      "category": "accepted_ci",
+      "strict_gate_exit_code": 0,
+      "all_pass": true,
+      "gate_log": "verification/gate-007.log",
+      "meaning": "release evidence"
+    },
+    {
+      "report": "ci/linux-evidence-11.4.3/linux-gui/20261029-183421-5bbb5787/report.json",
+      "category": "accepted_ci",
+      "strict_gate_exit_code": 0,
+      "all_pass": true,
+      "gate_log": "verification/gate-008.log",
+      "meaning": "release evidence"
+    },
+    {
+      "report": "ci/linux-evidence-11.4.3/linux-integration/20261029-184834-fcee792b/report.json",
+      "category": "accepted_ci",
+      "strict_gate_exit_code": 0,
+      "all_pass": true,
+      "gate_log": "verification/gate-009.log",
+      "meaning": "release evidence"
+    },
+    {
+      "report": "ci/linux-evidence-11.4.3/linux-static/20261029-183357-46919325/report.json",
+      "category": "accepted_ci",
+      "strict_gate_exit_code": 0,
+      "all_pass": true,
+      "gate_log": "verification/gate-010.log",
+      "meaning": "release evidence"
+    },
+    {
+      "report": "ci/m0-report-ubuntu-latest/20261029-183212-22a57434/report.json",
+      "category": "accepted_ci",
+      "strict_gate_exit_code": 0,
+      "all_pass": true,
+      "gate_log": "verification/gate-011.log",
+      "meaning": "release evidence"
+    },
+    {
+      "report": "ci/m0-report-ubuntu-latest/20261029-183234-60eeebc9/report.json",
+      "category": "accepted_ci",
+      "strict_gate_exit_code": 0,
+      "all_pass": true,
+      "gate_log": "verification/gate-012.log",
+      "meaning": "release evidence"
+    },
+    {
+      "report": "ci/m0-report-windows-latest/20261029-183245-597604c7/report.json",
+      "category": "accepted_ci",
+      "strict_gate_exit_code": 0,
+      "all_pass": true,
+      "gate_log": "verification/gate-013.log",
+      "meaning": "release evidence"
+    },
+    {
+      "report": "ci/m0-report-windows-latest/20261029-183330-198ea191/report.json",
+      "category": "accepted_ci",
+      "strict_gate_exit_code": 0,
+      "all_pass": true,
+      "gate_log": "verification/gate-014.log",
+      "meaning": "release evidence"
+    },
+    {
+      "report": "history/cb837e6-ci/linux-evidence-11.3.2/linux-gui/20261029-162749-6a480005/report.json",
+      "category": "historical",
+      "strict_gate_exit_code": 1,
+      "all_pass": false,
+      "gate_log": "verification/gate-015.log",
+      "meaning": "retained original history, not release acceptance"
+    },
+    {
+      "report": "history/cb837e6-ci/linux-evidence-11.3.2/linux-static/20261029-162726-fc234004/report.json",
+      "category": "historical",
+      "strict_gate_exit_code": 0,
+      "all_pass": true,
+      "gate_log": "verification/gate-016.log",
+      "meaning": "retained original history, not release acceptance"
+    },
+    {
+      "report": "history/cb837e6-ci/linux-evidence-11.4.3/linux-gui/20261029-162735-a3d14a9b/report.json",
+      "category": "historical",
+      "strict_gate_exit_code": 1,
+      "all_pass": false,
+      "gate_log": "verification/gate-017.log",
+      "meaning": "retained original history, not release acceptance"
+    },
+    {
+      "report": "history/cb837e6-ci/linux-evidence-11.4.3/linux-static/20261029-162713-38c416e1/report.json",
+      "category": "historical",
+      "strict_gate_exit_code": 0,
+      "all_pass": true,
+      "gate_log": "verification/gate-018.log",
+      "meaning": "retained original history, not release acceptance"
+    },
+    {
+      "report": "history/cb837e6-ci/m0-report-ubuntu-latest/20261029-162533-49c46045/report.json",
+      "category": "historical",
+      "strict_gate_exit_code": 0,
+      "all_pass": true,
+      "gate_log": "verification/gate-019.log",
+      "meaning": "retained original history, not release acceptance"
+    },
+    {
+      "report": "history/cb837e6-ci/m0-report-ubuntu-latest/20261029-162557-d95726f6/report.json",
+      "category": "historical",
+      "strict_gate_exit_code": 1,
+      "all_pass": false,
+      "gate_log": "verification/gate-020.log",
+      "meaning": "retained original history, not release acceptance"
+    },
+    {
+      "report": "history/cb837e6-ci/m0-report-windows-latest/20261029-162603-982a885c/report.json",
+      "category": "historical",
+      "strict_gate_exit_code": 0,
+      "all_pass": true,
+      "gate_log": "verification/gate-021.log",
+      "meaning": "retained original history, not release acceptance"
+    },
+    {
+      "report": "history/cb837e6-ci/m0-report-windows-latest/20261029-162642-47ebcc3e/report.json",
+      "category": "historical",
+      "strict_gate_exit_code": 1,
+      "all_pass": false,
+      "gate_log": "verification/gate-022.log",
+      "meaning": "retained original history, not release acceptance"
+    },
+    {
+      "report": "history/ci-round-1-e6-ci-final/linux-evidence-11.3.2/linux-gui/20261029-175924-e84c1d62/report.json",
+      "category": "historical_ci",
+      "strict_gate_exit_code": 1,
+      "all_pass": false,
+      "gate_log": "verification/gate-023.log",
+      "meaning": "retained original history, not release acceptance"
+    },
+    {
+      "report": "history/ci-round-1-e6-ci-final/linux-evidence-11.3.2/linux-static/20261029-175900-96579d53/report.json",
+      "category": "historical_ci",
+      "strict_gate_exit_code": 0,
+      "all_pass": true,
+      "gate_log": "verification/gate-024.log",
+      "meaning": "retained original history, not release acceptance"
+    },
+    {
+      "report": "history/ci-round-1-e6-ci-final/linux-evidence-11.4.3/linux-gui/20261029-175931-3ad1a389/report.json",
+      "category": "historical_ci",
+      "strict_gate_exit_code": 1,
+      "all_pass": false,
+      "gate_log": "verification/gate-025.log",
+      "meaning": "retained original history, not release acceptance"
+    },
+    {
+      "report": "history/ci-round-1-e6-ci-final/linux-evidence-11.4.3/linux-static/20261029-175906-3fd51a74/report.json",
+      "category": "historical_ci",
+      "strict_gate_exit_code": 0,
+      "all_pass": true,
+      "gate_log": "verification/gate-026.log",
+      "meaning": "retained original history, not release acceptance"
+    },
+    {
+      "report": "history/ci-round-1-e6-ci-final/m0-report-ubuntu-latest/20261029-175726-ac027454/report.json",
+      "category": "historical_ci",
+      "strict_gate_exit_code": 0,
+      "all_pass": true,
+      "gate_log": "verification/gate-027.log",
+      "meaning": "retained original history, not release acceptance"
+    },
+    {
+      "report": "history/ci-round-1-e6-ci-final/m0-report-ubuntu-latest/20261029-175753-d8ae527d/report.json",
+      "category": "historical_ci",
+      "strict_gate_exit_code": 1,
+      "all_pass": false,
+      "gate_log": "verification/gate-028.log",
+      "meaning": "retained original history, not release acceptance"
+    },
+    {
+      "report": "history/ci-round-1-e6-ci-final/m0-report-windows-latest/20261029-175747-69da3cff/report.json",
+      "category": "historical_ci",
+      "strict_gate_exit_code": 0,
+      "all_pass": true,
+      "gate_log": "verification/gate-029.log",
+      "meaning": "retained original history, not release acceptance"
+    },
+    {
+      "report": "history/ci-round-1-e6-ci-final/m0-report-windows-latest/20261029-175827-b7fdf13f/report.json",
+      "category": "historical_ci",
+      "strict_gate_exit_code": 0,
+      "all_pass": true,
+      "gate_log": "verification/gate-030.log",
+      "meaning": "retained original history, not release acceptance"
+    },
+    {
+      "report": "history/e6-backend-first/20261030-000813-4132c85c/report.json",
+      "category": "historical",
+      "strict_gate_exit_code": 1,
+      "all_pass": false,
+      "gate_log": "verification/gate-031.log",
+      "meaning": "retained original history, not release acceptance"
+    },
+    {
+      "report": "history/e6-backend-second/20261030-001725-a7476217/report.json",
+      "category": "historical",
+      "strict_gate_exit_code": 0,
+      "all_pass": true,
+      "gate_log": "verification/gate-032.log",
+      "meaning": "retained original history, not release acceptance"
+    },
+    {
+      "report": "history/e6-foundation/20261030-000607-c0c557a8/report.json",
+      "category": "historical",
+      "strict_gate_exit_code": 0,
+      "all_pass": true,
+      "gate_log": "verification/gate-033.log",
+      "meaning": "retained original history, not release acceptance"
+    },
+    {
+      "report": "history/e6-full-windows/20261030-002736-c9ff9815/report.json",
+      "category": "historical",
+      "strict_gate_exit_code": 1,
+      "all_pass": false,
+      "gate_log": "verification/gate-034.log",
+      "meaning": "retained original history, not release acceptance"
+    },
+    {
+      "report": "history/e6-specialized/20261030-002122-fe40efc7/report.json",
+      "category": "historical",
+      "strict_gate_exit_code": 0,
+      "all_pass": true,
+      "gate_log": "verification/gate-035.log",
+      "meaning": "retained original history, not release acceptance"
+    },
+    {
+      "report": "history/windows-round-1-e6-final-windows/20261030-015707-a71633dc/report.json",
+      "category": "historical_windows",
+      "strict_gate_exit_code": 0,
+      "all_pass": true,
+      "gate_log": "verification/gate-036.log",
+      "meaning": "retained original history, not release acceptance"
+    },
+    {
+      "report": "windows/final-1/report.json",
+      "category": "accepted_windows",
+      "strict_gate_exit_code": 0,
+      "all_pass": true,
+      "gate_log": "verification/gate-037.log",
+      "meaning": "release evidence"
+    }
+  ],
+  "baseline_comparisons": [
+    {
+      "report": "windows/final-1/report.json",
+      "baseline": "baseline/1/report.json",
+      "exit_code": 0
+    }
+  ]
+}

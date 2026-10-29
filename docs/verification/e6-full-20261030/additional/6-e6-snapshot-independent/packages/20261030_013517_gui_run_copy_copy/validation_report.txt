@@ -1,0 +1,68 @@
+G4UniversalSim GUI Validation Report
+can_run = true
+
+[errors]
+<none>
+
+[warnings]
+<none>
+
+[info]
+Materials summary: 6 material entries parsed.
+Geometry summary: 2 ordinary volumes parsed.
+Sensitive volumes: Target
+Bias volumes: <none>
+Boolean operations: <none>
+Source summary: preset=proton_beam, particle=proton, energy=10 MeV
+Physics summary: mode=reference, reference=FTFP_BERT_EMZ, default_cut=1 mm, biasing=False
+Scoring summary: enabled=True, hits=True, event_edep=True, edep=True, hist_bins=100
+Validation passed.
+
+[selected input files]
+materials = C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\verification\e6-duplicate-backend04\selected-material.ini
+geometry = C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\verification\e6-duplicate-backend04\selected-geometry.ini
+
+[copied files]
+materials_source_mode = copied from source
+geometry_source_mode = copied from source
+materials = C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\verification\e6-duplicate-backend04\packages\20261030_013208_gui_run\config\materials\material.ini
+geometry = C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\verification\e6-duplicate-backend04\packages\20261030_013208_gui_run\config\geometry\geometry.ini
+main_ini = C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\verification\e6-duplicate-backend04\packages\20261030_013208_gui_run\config\main.ini
+run_macro = C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\verification\e6-duplicate-backend04\packages\20261030_013208_gui_run\macros\run.mac
+output = C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\verification\e6-duplicate-backend04\packages\20261030_013208_gui_run\output
+
+[materials summary]
+path = C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\verification\e6-duplicate-backend04\packages\20261030_013208_gui_run\config\materials\material.ini
+count = 6
+- World kind=nist density=<none> components=1 section=[World]
+- Water kind=nist density=<none> components=1 section=[Water]
+- Silicon kind=nist density=<none> components=1 section=[Silicon]
+- Lead kind=nist density=<none> components=1 section=[Lead]
+- Copper kind=nist density=<none> components=1 section=[Copper]
+- Aluminum kind=nist density=<none> components=1 section=[Aluminum]
+
+[geometry summary]
+path = C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\verification\e6-duplicate-backend04\packages\20261030_013208_gui_run\config\geometry\geometry.ini
+template_hint = hierarchical
+volumes = 2
+- world parent=<none> shape=box material=G4_AIR boolean_ops=0 
+- Target parent=world shape=box material=G4_Si boolean_ops=0 sensitive
+
+Sensitive volumes:
+- Target
+
+Bias volumes:
+- <none>
+
+Boolean operations:
+- <none>
+
+[duplication]
+duplicated_from = C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\verification\e6-duplicate-backend04\packages\20261030_013208_gui_run
+execution_performed = false
+This copy contains inputs only; previous results are not new-run evidence.
+
+[duplication]
+duplicated_from = C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\verification\e6-duplicate-backend04\copies\20261030_013208_gui_run_copy
+execution_performed = false
+This copy contains inputs only; previous results are not new-run evidence.

@@ -1,0 +1,241 @@
+{
+  "scope": "offscreen actual Run/inspection callback; process launches intercepted, no physical run",
+  "product_hashes": {
+    "gui/g4usim_gui/history/run_package_actions.py": "7c2f495cce22083fd47e8017516f25e1f5abdf89be23d2dcdbdd007ffbe84b42",
+    "gui/g4usim_gui/window/project.py": "0b881873b045c0b9fed5b683143fe6e4bed530e9241fc0335d5de4475b765f43",
+    "gui/g4usim_gui/widgets/project_page.py": "ae3390227e54210ab8d20ae1d9b3fbf348397a19f15737b696434c3ab610548c",
+    "gui/g4usim_gui/core/runner.py": "ba81b315f700ff4aaa362cfec6ee7ebd3b18c116f401d66ad2c5aa4404524343"
+  },
+  "product_unchanged": true,
+  "facts": [
+    {
+      "case": "missing-seed",
+      "helper": {
+        "threads": 2,
+        "seed": null,
+        "run_name": "snapshot_fixture"
+      },
+      "inspect_arguments": [
+        "--inspect-run",
+        "--config",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-cli-independent\\copies\\20261030_014624_snapshot_fixture_copy\\config\\main.ini",
+        "--macro",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-cli-independent\\copies\\20261030_014624_snapshot_fixture_copy\\macros\\run.mac",
+        "--output",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-cli-independent\\copies\\20261030_014624_snapshot_fixture_copy\\output",
+        "--threads",
+        "2",
+        "--run-name",
+        "snapshot_fixture"
+      ],
+      "run_command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "--config",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-cli-independent\\copies\\20261030_014624_snapshot_fixture_copy\\config\\main.ini",
+        "--macro",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-cli-independent\\copies\\20261030_014624_snapshot_fixture_copy\\macros\\run.mac",
+        "--output",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-cli-independent\\copies\\20261030_014624_snapshot_fixture_copy\\output",
+        "--threads",
+        "2",
+        "--run-name",
+        "snapshot_fixture"
+      ],
+      "expected_name_preserved": true
+    },
+    {
+      "case": "zero-seed",
+      "helper": {
+        "threads": 2,
+        "seed": 0,
+        "run_name": "snapshot_fixture"
+      },
+      "inspect_arguments": [
+        "--inspect-run",
+        "--config",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-cli-independent\\copies\\20261030_014625_snapshot_fixture_copy\\config\\main.ini",
+        "--macro",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-cli-independent\\copies\\20261030_014625_snapshot_fixture_copy\\macros\\run.mac",
+        "--output",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-cli-independent\\copies\\20261030_014625_snapshot_fixture_copy\\output",
+        "--threads",
+        "2",
+        "--seed",
+        "0",
+        "--run-name",
+        "snapshot_fixture"
+      ],
+      "run_command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "--config",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-cli-independent\\copies\\20261030_014625_snapshot_fixture_copy\\config\\main.ini",
+        "--macro",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-cli-independent\\copies\\20261030_014625_snapshot_fixture_copy\\macros\\run.mac",
+        "--output",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-cli-independent\\copies\\20261030_014625_snapshot_fixture_copy\\output",
+        "--threads",
+        "2",
+        "--seed",
+        "0",
+        "--run-name",
+        "snapshot_fixture"
+      ],
+      "expected_name_preserved": true
+    },
+    {
+      "case": "negative-zero-seed",
+      "helper": {
+        "threads": 2,
+        "seed": 0,
+        "run_name": "snapshot_fixture"
+      },
+      "inspect_arguments": [
+        "--inspect-run",
+        "--config",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-cli-independent\\copies\\20261030_014625_snapshot_fixture_copy_1\\config\\main.ini",
+        "--macro",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-cli-independent\\copies\\20261030_014625_snapshot_fixture_copy_1\\macros\\run.mac",
+        "--output",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-cli-independent\\copies\\20261030_014625_snapshot_fixture_copy_1\\output",
+        "--threads",
+        "2",
+        "--seed",
+        "0",
+        "--run-name",
+        "snapshot_fixture"
+      ],
+      "run_command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "--config",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-cli-independent\\copies\\20261030_014625_snapshot_fixture_copy_1\\config\\main.ini",
+        "--macro",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-cli-independent\\copies\\20261030_014625_snapshot_fixture_copy_1\\macros\\run.mac",
+        "--output",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-cli-independent\\copies\\20261030_014625_snapshot_fixture_copy_1\\output",
+        "--threads",
+        "2",
+        "--seed",
+        "0",
+        "--run-name",
+        "snapshot_fixture"
+      ],
+      "expected_name_preserved": true
+    },
+    {
+      "case": "invalid-seed",
+      "helper": null,
+      "helper_error": "config/main.ini [run]/seed must be a complete decimal integer",
+      "rejected_before_current_publication": true,
+      "warning": [
+        "Duplicate failed",
+        "config/main.ini [run]/seed must be a complete decimal integer"
+      ]
+    },
+    {
+      "case": "gui-thread-upper-plus-one",
+      "helper": {
+        "threads": 1025,
+        "seed": 43,
+        "run_name": "snapshot_fixture"
+      },
+      "helper_error": null,
+      "rejected_before_current_publication": true,
+      "warning": [
+        "Copy created; not loaded or run",
+        "Copy created at C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-cli-independent\\copies\\20261030_014625_snapshot_fixture_copy_2, but it was not loaded and no run was started: Project field project.threads = 1025 is outside the editable GUI range [1, 1024]."
+      ]
+    },
+    {
+      "case": "backend-thread-zero",
+      "helper": null,
+      "helper_error": "config/main.ini [run]/threads is outside [1, 2147483647]",
+      "rejected_before_current_publication": true,
+      "warning": [
+        "Duplicate failed",
+        "config/main.ini [run]/threads is outside [1, 2147483647]"
+      ]
+    },
+    {
+      "case": "missing-name",
+      "helper": {
+        "threads": 2,
+        "seed": 43,
+        "run_name": ""
+      },
+      "inspect_arguments": [
+        "--inspect-run",
+        "--config",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-cli-independent\\copies\\20261030_014626_snapshot_fixture_copy\\config\\main.ini",
+        "--macro",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-cli-independent\\copies\\20261030_014626_snapshot_fixture_copy\\macros\\run.mac",
+        "--output",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-cli-independent\\copies\\20261030_014626_snapshot_fixture_copy\\output",
+        "--threads",
+        "2",
+        "--seed",
+        "43"
+      ],
+      "run_command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "--config",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-cli-independent\\copies\\20261030_014626_snapshot_fixture_copy\\config\\main.ini",
+        "--macro",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-cli-independent\\copies\\20261030_014626_snapshot_fixture_copy\\macros\\run.mac",
+        "--output",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-cli-independent\\copies\\20261030_014626_snapshot_fixture_copy\\output",
+        "--threads",
+        "2",
+        "--seed",
+        "43"
+      ],
+      "expected_name_preserved": true
+    },
+    {
+      "case": "unicode-name-tail",
+      "helper": {
+        "threads": 2,
+        "seed": 43,
+        "run_name": "精确名字 "
+      },
+      "inspect_arguments": [
+        "--inspect-run",
+        "--config",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-cli-independent\\copies\\20261030_014626_snapshot_fixture_copy_1\\config\\main.ini",
+        "--macro",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-cli-independent\\copies\\20261030_014626_snapshot_fixture_copy_1\\macros\\run.mac",
+        "--output",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-cli-independent\\copies\\20261030_014626_snapshot_fixture_copy_1\\output",
+        "--threads",
+        "2",
+        "--seed",
+        "43",
+        "--run-name",
+        "精确名字"
+      ],
+      "run_command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "--config",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-cli-independent\\copies\\20261030_014626_snapshot_fixture_copy_1\\config\\main.ini",
+        "--macro",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-cli-independent\\copies\\20261030_014626_snapshot_fixture_copy_1\\macros\\run.mac",
+        "--output",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-cli-independent\\copies\\20261030_014626_snapshot_fixture_copy_1\\output",
+        "--threads",
+        "2",
+        "--seed",
+        "43",
+        "--run-name",
+        "精确名字"
+      ],
+      "expected_name_preserved": false
+    }
+  ],
+  "issues": [
+    {
+      "case": "unicode-name-tail",
+      "helper_name": "精确名字 ",
+      "expected_command_name": "精确名字 ",
+      "actual_command_name": "精确名字"
+    }
+  ]
+}

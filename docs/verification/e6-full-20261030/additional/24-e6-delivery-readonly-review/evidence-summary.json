@@ -1,0 +1,74 @@
+{
+  "recorded_at_utc": "2026-10-29T18:22:08.428454+00:00",
+  "observed_head": "5bf479d85ba7c12e0f71984d31b8335c47c5a8c3",
+  "tracked_status": "",
+  "stage": "in_progress",
+  "scope": "read-only source/doc/evidence mapping; no new boundary experiments; own migration implementation not represented as independent writer review",
+  "schema": {
+    "total": 394,
+    "support": {
+      "supported": 60,
+      "deprecated": 13,
+      "experimental": 319,
+      "unsupported": 2
+    },
+    "previous_2c": 357,
+    "added": 37,
+    "five_field_biasing_sections": 36,
+    "main_schema_version": 1
+  },
+  "rounds": [
+    {
+      "head": "cb837e680e08a66dd47e62a9ee7e25fa125026c3",
+      "windows": "126 pass / 1 fail / 0 skip",
+      "ci": "failed",
+      "role": "history"
+    },
+    {
+      "head": "5bf479d85ba7c12e0f71984d31b8335c47c5a8c3",
+      "windows_report_present": true,
+      "windows_session_owned_by_root": "55580",
+      "ci": "not_passed",
+      "actual_reports": 8,
+      "expected_reports": 12,
+      "ci_runs": [
+        40926120374,
+        40926120368
+      ],
+      "role": "failed CI / passed Windows historical control",
+      "windows": "133 pass / 0 fail / 0 skip",
+      "assertions_executed_total": 42786,
+      "probe": "settrace_assert_lines_v3",
+      "strict_gate": "passed",
+      "baseline_gate": "passed",
+      "baseline_assertions": 40628
+    }
+  ],
+  "final_case_plan": {
+    "all": 133,
+    "static": 21,
+    "gui": 36,
+    "backend": 56,
+    "integration": 20
+  },
+  "visible_ui": {
+    "status": "prepared_not_launched",
+    "unlock_confirmation": false,
+    "evidence": "out/verification/e6-visible-acceptance-5bf479d/checkpoint.json",
+    "classification": "external acceptance gap; not product defect"
+  },
+  "missing_release_gates": [
+    "narrow Linux failure fix and new frozen identity",
+    "new frozen Windows full + same-v3 2C per-case and total gates",
+    "new actual Linux dual-version and M0 dual-platform passing CI (4 artifacts,12 reports)",
+    "real visible Windows acceptance after unlock",
+    "archive byte copies and SHA recheck + final report/log gates",
+    "final docs/ROADMAP and support/evidence status alignment after all acceptance results"
+  ],
+  "status_layers": {
+    "code": "5bf frozen; Linux narrow repair and next freeze pending",
+    "automatic": "5bf Windows+2C passed; 5bf Linux CI failed; next frozen full matrix pending",
+    "visible_ui": "not launched; awaiting unlock; external acceptance gap",
+    "archive": "prepared only, not executed"
+  }
+}

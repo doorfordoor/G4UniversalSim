@@ -1,0 +1,62 @@
+[
+  {
+    "case": "real-writer-descendant-after-original-move",
+    "accepted": true,
+    "inputs": [
+      {
+        "role": "materials_ini_path",
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-snapshot-independent\\packages\\20261030_013517_gui_run_copy_copy\\config\\materials\\material.ini",
+        "sha256": "df72faf9fb634931086a7f98db6d1bd93fad37f20c28329eea22f40b9858beb6"
+      },
+      {
+        "role": "geometry_ini_path",
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-snapshot-independent\\packages\\20261030_013517_gui_run_copy_copy\\config\\geometry\\geometry.ini",
+        "sha256": "80423ef75785f637fad47d0adcd690dff07d197ab9b33634aaacc2791d4de852"
+      },
+      {
+        "role": "main_ini_path",
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-snapshot-independent\\packages\\20261030_013517_gui_run_copy_copy\\config\\main.ini",
+        "sha256": "caff6ad77fd34091e33e6705c9fe638705c7795f3c9b0eb9f450bb9867aa2e62"
+      },
+      {
+        "role": "run_macro_path",
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-snapshot-independent\\packages\\20261030_013517_gui_run_copy_copy\\macros\\run.mac",
+        "sha256": "25096d0040fcffd495f8fdce99341e21e09e99d0e74db441c690249a327c371d"
+      }
+    ],
+    "notes": [
+      "Restored current package material/geometry files and snapshot-recorded run/source/physics/scoring editor parameters; validate and generate a new package before running.",
+      "Unwritten disabled rows/editor drafts are not restored; materialDocument contains component counts, not a full recipe.",
+      "Current main.ini/macro edits, final runtime EffectiveConfig and historical success are not restored or verified.",
+      "This snapshot format has no original resource hashes; current input hashes do not prove equality with historical run bytes."
+    ]
+  },
+  {
+    "case": "ordinary-loader-remains-closed",
+    "rejected": "Unsupported project field: project.runPackage"
+  },
+  {
+    "case": "unknown-material-nested",
+    "rejected": "Unsupported project field: snapshot.materialsSummary.materials[0].unknown"
+  },
+  {
+    "case": "wrong-nested-type",
+    "rejected": "Invalid JSON type at snapshot.materialsSummary.materials[0].components; expected int"
+  },
+  {
+    "case": "one-wrong-input-path",
+    "rejected": "Snapshot has a single contradictory material/geometry package path"
+  },
+  {
+    "case": "future-project-version",
+    "rejected": "Unsupported project version: 999"
+  },
+  {
+    "case": "recognized-legacy-pair-never-read-old-root",
+    "accepted": true
+  },
+  {
+    "case": "missing-current-geometry",
+    "rejected": "Snapshot package resource is missing: geometry_ini_path: C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-snapshot-independent\\packages\\20261030_013517_gui_run_copy_copy\\config\\geometry\\geometry.ini"
+  }
+]

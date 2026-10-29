@@ -1,0 +1,27 @@
+{
+  "head": "5bf479d85ba7c12e0f71984d31b8335c47c5a8c3",
+  "status": "not_passed",
+  "linux_run": 40926120374,
+  "m0_run": 40926120368,
+  "jobs": {
+    "11.4.3": 123631968565,
+    "11.3.2": 123631968946,
+    "m0-ubuntu": 123631968440,
+    "m0-windows": 123631969002
+  },
+  "profiles": {
+    "static": 21,
+    "gui": 36,
+    "backend": 56,
+    "integration": 20
+  },
+  "next": "Root investigates Linux/PySide finalization; preserve this 5bf479d attempt, no rerun requested",
+  "artifacts": 4,
+  "official_zip_digests_match": true,
+  "reports": 8,
+  "strict_gate_pass": 5,
+  "strict_gate_fail": 3,
+  "failed_case": "gui_project_import_projection",
+  "failure": "Linux process finalization none_dealloc, exit -6 after 393 assert entries; M0 Windows green",
+  "missing_profiles": "Linux backend/integration skipped after GUI failure"
+}

@@ -1,0 +1,85 @@
+{
+  "head": "a779634483d1f077357433c532ccb0d9e3dc5517",
+  "count_policy": "actual frozen names, no hardcoded total",
+  "total_unique": 134,
+  "checks": [
+    {
+      "role": "windows all",
+      "names_match_manifest": true,
+      "actual": 134,
+      "expected": 134
+    },
+    {
+      "role": "linux-evidence-11.3.2/backend",
+      "names_match_manifest": true,
+      "actual": 56,
+      "expected": 56
+    },
+    {
+      "role": "linux-evidence-11.3.2/gui",
+      "names_match_manifest": true,
+      "actual": 37,
+      "expected": 37
+    },
+    {
+      "role": "linux-evidence-11.3.2/integration",
+      "names_match_manifest": true,
+      "actual": 20,
+      "expected": 20
+    },
+    {
+      "role": "linux-evidence-11.3.2/static",
+      "names_match_manifest": true,
+      "actual": 21,
+      "expected": 21
+    },
+    {
+      "role": "linux-evidence-11.4.3/backend",
+      "names_match_manifest": true,
+      "actual": 56,
+      "expected": 56
+    },
+    {
+      "role": "linux-evidence-11.4.3/gui",
+      "names_match_manifest": true,
+      "actual": 37,
+      "expected": 37
+    },
+    {
+      "role": "linux-evidence-11.4.3/integration",
+      "names_match_manifest": true,
+      "actual": 20,
+      "expected": 20
+    },
+    {
+      "role": "linux-evidence-11.4.3/static",
+      "names_match_manifest": true,
+      "actual": 21,
+      "expected": 21
+    },
+    {
+      "role": "m0-report-ubuntu-latest/static",
+      "names_match_manifest": true,
+      "actual": 21,
+      "expected": 21
+    },
+    {
+      "role": "m0-report-ubuntu-latest/gui",
+      "names_match_manifest": true,
+      "actual": 37,
+      "expected": 37
+    },
+    {
+      "role": "m0-report-windows-latest/static",
+      "names_match_manifest": true,
+      "actual": 21,
+      "expected": 21
+    },
+    {
+      "role": "m0-report-windows-latest/gui",
+      "names_match_manifest": true,
+      "actual": 37,
+      "expected": 37
+    }
+  ]
+}

@@ -1,0 +1,1938 @@
+{
+  "product_hashes": {
+    "gui/g4usim_gui/core/project.py": "9865b9e71af70fb6b5f925fb10704daefe29aad3e6f2f0ec100ee317a23c44dc",
+    "gui/g4usim_gui/core/project_migration.py": "b3cfe4691826382ab1cc5d70de0c4718f997105261ca56fa317b7dc37be6047a",
+    "gui/g4usim_gui/widgets/config_builder_page.py": "2dd916b507d659fe976422c7fe8757d067ca58ad9651c1a91902021562b34b16",
+    "gui/g4usim_gui/widgets/config/run_config.py": "5b2d6a3a97e54f27a314c40b316297128dbbdbddbf9aacc94f2da74b3832beb0",
+    "gui/g4usim_gui/window/project.py": "b7c131bcc8cf1fe31d2e6c305554253be13b09303b689aeb64307307b8811866"
+  },
+  "results": [
+    {
+      "name": "negative-run-thread",
+      "incoming": {
+        "runSettings": {
+          "threads": -1
+        }
+      },
+      "loaded_projection": {
+        "runSettings": {
+          "run_name": "gui_run",
+          "threads": -1,
+          "seed": 12345,
+          "beam_on": 100,
+          "check_overlaps": true,
+          "dry_run": false
+        }
+      },
+      "spinner_limits": {
+        "threads": [
+          1,
+          1024
+        ],
+        "beam_on": [
+          0,
+          2000000000
+        ],
+        "hist_bins": [
+          1,
+          10000000
+        ],
+        "source_editor_preview_rays": [
+          1,
+          512
+        ],
+        "source_editor_preview_seed": [
+          0,
+          2147483647
+        ],
+        "scoring_editor_trajectories": [
+          0,
+          1000
+        ],
+        "scoring_editor_bins": [
+          0,
+          10000000
+        ]
+      },
+      "error": null,
+      "project_import_double_spinboxes": 0,
+      "control_values": {
+        "threads": 1,
+        "beam_on": 100,
+        "hist_bins": 100,
+        "source_editor_preview_rays": 12,
+        "source_editor_preview_seed": 12345,
+        "scoring_editor_trajectories": 0,
+        "scoring_editor_bins": 100
+      },
+      "enum_controls": {
+        "source_editor_preset": "proton_beam",
+        "source_editor_position_type": "point",
+        "source_editor_shape": "point",
+        "source_editor_angular_mode": "fixed",
+        "physics_editor_mode": "reference",
+        "physics_editor_reference": "FTFP_BERT_EMZ"
+      },
+      "geometry_template_control": "simple_box",
+      "after_projection": {
+        "runSettings": {
+          "run_name": "gui_run",
+          "threads": -1,
+          "seed": 12345,
+          "beam_on": 100,
+          "check_overlaps": true,
+          "dry_run": false
+        }
+      },
+      "builder_building": false
+    },
+    {
+      "name": "zero-run-thread",
+      "incoming": {
+        "runSettings": {
+          "threads": 0
+        }
+      },
+      "loaded_projection": {
+        "runSettings": {
+          "run_name": "gui_run",
+          "threads": 0,
+          "seed": 12345,
+          "beam_on": 100,
+          "check_overlaps": true,
+          "dry_run": false
+        }
+      },
+      "spinner_limits": {
+        "threads": [
+          1,
+          1024
+        ],
+        "beam_on": [
+          0,
+          2000000000
+        ],
+        "hist_bins": [
+          1,
+          10000000
+        ],
+        "source_editor_preview_rays": [
+          1,
+          512
+        ],
+        "source_editor_preview_seed": [
+          0,
+          2147483647
+        ],
+        "scoring_editor_trajectories": [
+          0,
+          1000
+        ],
+        "scoring_editor_bins": [
+          0,
+          10000000
+        ]
+      },
+      "error": null,
+      "project_import_double_spinboxes": 0,
+      "control_values": {
+        "threads": 1,
+        "beam_on": 100,
+        "hist_bins": 100,
+        "source_editor_preview_rays": 12,
+        "source_editor_preview_seed": 12345,
+        "scoring_editor_trajectories": 0,
+        "scoring_editor_bins": 100
+      },
+      "enum_controls": {
+        "source_editor_preset": "proton_beam",
+        "source_editor_position_type": "point",
+        "source_editor_shape": "point",
+        "source_editor_angular_mode": "fixed",
+        "physics_editor_mode": "reference",
+        "physics_editor_reference": "FTFP_BERT_EMZ"
+      },
+      "geometry_template_control": "simple_box",
+      "after_projection": {
+        "runSettings": {
+          "run_name": "gui_run",
+          "threads": 0,
+          "seed": 12345,
+          "beam_on": 100,
+          "check_overlaps": true,
+          "dry_run": false
+        }
+      },
+      "builder_building": false
+    },
+    {
+      "name": "negative-events",
+      "incoming": {
+        "runSettings": {
+          "beam_on": -1
+        }
+      },
+      "loaded_projection": {
+        "runSettings": {
+          "run_name": "gui_run",
+          "threads": 1,
+          "seed": 12345,
+          "beam_on": -1,
+          "check_overlaps": true,
+          "dry_run": false
+        }
+      },
+      "spinner_limits": {
+        "threads": [
+          1,
+          1024
+        ],
+        "beam_on": [
+          0,
+          2000000000
+        ],
+        "hist_bins": [
+          1,
+          10000000
+        ],
+        "source_editor_preview_rays": [
+          1,
+          512
+        ],
+        "source_editor_preview_seed": [
+          0,
+          2147483647
+        ],
+        "scoring_editor_trajectories": [
+          0,
+          1000
+        ],
+        "scoring_editor_bins": [
+          0,
+          10000000
+        ]
+      },
+      "error": null,
+      "project_import_double_spinboxes": 0,
+      "control_values": {
+        "threads": 1,
+        "beam_on": 0,
+        "hist_bins": 100,
+        "source_editor_preview_rays": 12,
+        "source_editor_preview_seed": 12345,
+        "scoring_editor_trajectories": 0,
+        "scoring_editor_bins": 100
+      },
+      "enum_controls": {
+        "source_editor_preset": "proton_beam",
+        "source_editor_position_type": "point",
+        "source_editor_shape": "point",
+        "source_editor_angular_mode": "fixed",
+        "physics_editor_mode": "reference",
+        "physics_editor_reference": "FTFP_BERT_EMZ"
+      },
+      "geometry_template_control": "simple_box",
+      "after_projection": {
+        "runSettings": {
+          "run_name": "gui_run",
+          "threads": 1,
+          "seed": 12345,
+          "beam_on": -1,
+          "check_overlaps": true,
+          "dry_run": false
+        }
+      },
+      "builder_building": false
+    },
+    {
+      "name": "negative-settings-bins",
+      "incoming": {
+        "scoringSettings": {
+          "hist_bins": -1
+        }
+      },
+      "loaded_projection": {
+        "scoringSettings": {
+          "enabled": true,
+          "hits": true,
+          "event_edep": true,
+          "edep": true,
+          "dose": false,
+          "fluence": false,
+          "trajectory_events": 0,
+          "hist_bins": -1,
+          "hist_min": "0 eV",
+          "hist_max": "10 MeV"
+        }
+      },
+      "spinner_limits": {
+        "threads": [
+          1,
+          1024
+        ],
+        "beam_on": [
+          0,
+          2000000000
+        ],
+        "hist_bins": [
+          1,
+          10000000
+        ],
+        "source_editor_preview_rays": [
+          1,
+          512
+        ],
+        "source_editor_preview_seed": [
+          0,
+          2147483647
+        ],
+        "scoring_editor_trajectories": [
+          0,
+          1000
+        ],
+        "scoring_editor_bins": [
+          0,
+          10000000
+        ]
+      },
+      "error": null,
+      "project_import_double_spinboxes": 0,
+      "control_values": {
+        "threads": 1,
+        "beam_on": 100,
+        "hist_bins": 1,
+        "source_editor_preview_rays": 12,
+        "source_editor_preview_seed": 12345,
+        "scoring_editor_trajectories": 0,
+        "scoring_editor_bins": 0
+      },
+      "enum_controls": {
+        "source_editor_preset": "proton_beam",
+        "source_editor_position_type": "point",
+        "source_editor_shape": "point",
+        "source_editor_angular_mode": "fixed",
+        "physics_editor_mode": "reference",
+        "physics_editor_reference": "FTFP_BERT_EMZ"
+      },
+      "geometry_template_control": "simple_box",
+      "after_projection": {
+        "scoringSettings": {
+          "enabled": true,
+          "hits": true,
+          "event_edep": true,
+          "edep": true,
+          "dose": false,
+          "fluence": false,
+          "trajectory_events": 0,
+          "hist_bins": -1,
+          "hist_min": "0 eV",
+          "hist_max": "10 MeV"
+        }
+      },
+      "builder_building": false
+    },
+    {
+      "name": "zero-editor-bins-fallback",
+      "incoming": {
+        "scoringEditor": {
+          "hist_bins": 0,
+          "dose": true,
+          "trajectory_events": 7
+        }
+      },
+      "loaded_projection": {
+        "scoringEditor": {
+          "enabled": true,
+          "hits": true,
+          "event_edep": true,
+          "edep": true,
+          "raw_histogram": true,
+          "weighted_histogram": true,
+          "hist_bins": 100,
+          "hist_min": "0 eV",
+          "hist_max": "10 MeV",
+          "volume_summary": true,
+          "particle_summary": true,
+          "let": false,
+          "dose": false,
+          "fluence": false,
+          "trajectory_events": 0,
+          "auto_create_default_scorers": true,
+          "verbose": 1,
+          "is_dirty": false,
+          "errors": [],
+          "warnings": []
+        }
+      },
+      "spinner_limits": {
+        "threads": [
+          1,
+          1024
+        ],
+        "beam_on": [
+          0,
+          2000000000
+        ],
+        "hist_bins": [
+          1,
+          10000000
+        ],
+        "source_editor_preview_rays": [
+          1,
+          512
+        ],
+        "source_editor_preview_seed": [
+          0,
+          2147483647
+        ],
+        "scoring_editor_trajectories": [
+          0,
+          1000
+        ],
+        "scoring_editor_bins": [
+          0,
+          10000000
+        ]
+      },
+      "error": null,
+      "project_import_double_spinboxes": 0,
+      "control_values": {
+        "threads": 1,
+        "beam_on": 100,
+        "hist_bins": 100,
+        "source_editor_preview_rays": 12,
+        "source_editor_preview_seed": 12345,
+        "scoring_editor_trajectories": 0,
+        "scoring_editor_bins": 100
+      },
+      "enum_controls": {
+        "source_editor_preset": "proton_beam",
+        "source_editor_position_type": "point",
+        "source_editor_shape": "point",
+        "source_editor_angular_mode": "fixed",
+        "physics_editor_mode": "reference",
+        "physics_editor_reference": "FTFP_BERT_EMZ"
+      },
+      "geometry_template_control": "simple_box",
+      "after_projection": {
+        "scoringEditor": {
+          "enabled": true,
+          "hits": true,
+          "event_edep": true,
+          "edep": true,
+          "raw_histogram": true,
+          "weighted_histogram": true,
+          "hist_bins": 100,
+          "hist_min": "0 eV",
+          "hist_max": "10 MeV",
+          "volume_summary": true,
+          "particle_summary": true,
+          "let": false,
+          "dose": false,
+          "fluence": false,
+          "trajectory_events": 0,
+          "auto_create_default_scorers": true,
+          "verbose": 1,
+          "is_dirty": false,
+          "errors": [],
+          "warnings": []
+        }
+      },
+      "builder_building": false
+    },
+    {
+      "name": "negative-rays",
+      "incoming": {
+        "sourceEditor": {
+          "preview_ray_count": -1
+        }
+      },
+      "loaded_projection": {
+        "sourceEditor": {
+          "preset": "proton_beam",
+          "particle": "proton",
+          "energy": "10 MeV",
+          "position_mode": "point",
+          "position_type": "point",
+          "position": "0,0,-1 mm",
+          "direction": "0,0,1",
+          "source_shape": "point",
+          "radius": "",
+          "inner_radius": "",
+          "halfx": "",
+          "halfy": "",
+          "halfz": "",
+          "normal": "0,0,1",
+          "rotation1": "1,0,0",
+          "rotation2": "0,1,0",
+          "confine_volume": "",
+          "center": "",
+          "angular_mode": "fixed",
+          "theta_min": "0 deg",
+          "theta_max": "180 deg",
+          "phi_min": "0 deg",
+          "phi_max": "360 deg",
+          "cone_half_angle": "5 deg",
+          "focus_point": "0,0,0 mm",
+          "random_seed_preview": 12345,
+          "preview_ray_count": -1,
+          "enabled": true,
+          "is_dirty": false,
+          "errors": [],
+          "warnings": []
+        }
+      },
+      "spinner_limits": {
+        "threads": [
+          1,
+          1024
+        ],
+        "beam_on": [
+          0,
+          2000000000
+        ],
+        "hist_bins": [
+          1,
+          10000000
+        ],
+        "source_editor_preview_rays": [
+          1,
+          512
+        ],
+        "source_editor_preview_seed": [
+          0,
+          2147483647
+        ],
+        "scoring_editor_trajectories": [
+          0,
+          1000
+        ],
+        "scoring_editor_bins": [
+          0,
+          10000000
+        ]
+      },
+      "error": null,
+      "project_import_double_spinboxes": 0,
+      "control_values": {
+        "threads": 1,
+        "beam_on": 100,
+        "hist_bins": 100,
+        "source_editor_preview_rays": 1,
+        "source_editor_preview_seed": 12345,
+        "scoring_editor_trajectories": 0,
+        "scoring_editor_bins": 100
+      },
+      "enum_controls": {
+        "source_editor_preset": "proton_beam",
+        "source_editor_position_type": "point",
+        "source_editor_shape": "point",
+        "source_editor_angular_mode": "fixed",
+        "physics_editor_mode": "reference",
+        "physics_editor_reference": "FTFP_BERT_EMZ"
+      },
+      "geometry_template_control": "simple_box",
+      "after_projection": {
+        "sourceEditor": {
+          "preset": "proton_beam",
+          "particle": "proton",
+          "energy": "10 MeV",
+          "position_mode": "point",
+          "position_type": "point",
+          "position": "0,0,-1 mm",
+          "direction": "0,0,1",
+          "source_shape": "point",
+          "radius": "",
+          "inner_radius": "",
+          "halfx": "",
+          "halfy": "",
+          "halfz": "",
+          "normal": "0,0,1",
+          "rotation1": "1,0,0",
+          "rotation2": "0,1,0",
+          "confine_volume": "",
+          "center": "",
+          "angular_mode": "fixed",
+          "theta_min": "0 deg",
+          "theta_max": "180 deg",
+          "phi_min": "0 deg",
+          "phi_max": "360 deg",
+          "cone_half_angle": "5 deg",
+          "focus_point": "0,0,0 mm",
+          "random_seed_preview": 12345,
+          "preview_ray_count": -1,
+          "enabled": true,
+          "is_dirty": false,
+          "errors": [
+            "preview_ray_count must be > 0"
+          ],
+          "warnings": []
+        }
+      },
+      "builder_building": false
+    },
+    {
+      "name": "negative-preview-seed",
+      "incoming": {
+        "sourceEditor": {
+          "random_seed_preview": -1
+        }
+      },
+      "loaded_projection": {
+        "sourceEditor": {
+          "preset": "proton_beam",
+          "particle": "proton",
+          "energy": "10 MeV",
+          "position_mode": "point",
+          "position_type": "point",
+          "position": "0,0,-1 mm",
+          "direction": "0,0,1",
+          "source_shape": "point",
+          "radius": "",
+          "inner_radius": "",
+          "halfx": "",
+          "halfy": "",
+          "halfz": "",
+          "normal": "0,0,1",
+          "rotation1": "1,0,0",
+          "rotation2": "0,1,0",
+          "confine_volume": "",
+          "center": "",
+          "angular_mode": "fixed",
+          "theta_min": "0 deg",
+          "theta_max": "180 deg",
+          "phi_min": "0 deg",
+          "phi_max": "360 deg",
+          "cone_half_angle": "5 deg",
+          "focus_point": "0,0,0 mm",
+          "random_seed_preview": -1,
+          "preview_ray_count": 12,
+          "enabled": true,
+          "is_dirty": false,
+          "errors": [],
+          "warnings": []
+        }
+      },
+      "spinner_limits": {
+        "threads": [
+          1,
+          1024
+        ],
+        "beam_on": [
+          0,
+          2000000000
+        ],
+        "hist_bins": [
+          1,
+          10000000
+        ],
+        "source_editor_preview_rays": [
+          1,
+          512
+        ],
+        "source_editor_preview_seed": [
+          0,
+          2147483647
+        ],
+        "scoring_editor_trajectories": [
+          0,
+          1000
+        ],
+        "scoring_editor_bins": [
+          0,
+          10000000
+        ]
+      },
+      "error": null,
+      "project_import_double_spinboxes": 0,
+      "control_values": {
+        "threads": 1,
+        "beam_on": 100,
+        "hist_bins": 100,
+        "source_editor_preview_rays": 12,
+        "source_editor_preview_seed": 0,
+        "scoring_editor_trajectories": 0,
+        "scoring_editor_bins": 100
+      },
+      "enum_controls": {
+        "source_editor_preset": "proton_beam",
+        "source_editor_position_type": "point",
+        "source_editor_shape": "point",
+        "source_editor_angular_mode": "fixed",
+        "physics_editor_mode": "reference",
+        "physics_editor_reference": "FTFP_BERT_EMZ"
+      },
+      "geometry_template_control": "simple_box",
+      "after_projection": {
+        "sourceEditor": {
+          "preset": "proton_beam",
+          "particle": "proton",
+          "energy": "10 MeV",
+          "position_mode": "point",
+          "position_type": "point",
+          "position": "0,0,-1 mm",
+          "direction": "0,0,1",
+          "source_shape": "point",
+          "radius": "",
+          "inner_radius": "",
+          "halfx": "",
+          "halfy": "",
+          "halfz": "",
+          "normal": "0,0,1",
+          "rotation1": "1,0,0",
+          "rotation2": "0,1,0",
+          "confine_volume": "",
+          "center": "",
+          "angular_mode": "fixed",
+          "theta_min": "0 deg",
+          "theta_max": "180 deg",
+          "phi_min": "0 deg",
+          "phi_max": "360 deg",
+          "cone_half_angle": "5 deg",
+          "focus_point": "0,0,0 mm",
+          "random_seed_preview": -1,
+          "preview_ray_count": 12,
+          "enabled": true,
+          "is_dirty": false,
+          "errors": [],
+          "warnings": []
+        }
+      },
+      "builder_building": false
+    },
+    {
+      "name": "negative-trajectories",
+      "incoming": {
+        "scoringEditor": {
+          "trajectory_events": -1
+        }
+      },
+      "loaded_projection": {
+        "scoringEditor": {
+          "enabled": true,
+          "hits": true,
+          "event_edep": true,
+          "edep": true,
+          "raw_histogram": true,
+          "weighted_histogram": true,
+          "hist_bins": 100,
+          "hist_min": "0 eV",
+          "hist_max": "10 MeV",
+          "volume_summary": true,
+          "particle_summary": true,
+          "let": false,
+          "dose": false,
+          "fluence": false,
+          "trajectory_events": -1,
+          "auto_create_default_scorers": true,
+          "verbose": 1,
+          "is_dirty": false,
+          "errors": [],
+          "warnings": []
+        }
+      },
+      "spinner_limits": {
+        "threads": [
+          1,
+          1024
+        ],
+        "beam_on": [
+          0,
+          2000000000
+        ],
+        "hist_bins": [
+          1,
+          10000000
+        ],
+        "source_editor_preview_rays": [
+          1,
+          512
+        ],
+        "source_editor_preview_seed": [
+          0,
+          2147483647
+        ],
+        "scoring_editor_trajectories": [
+          0,
+          1000
+        ],
+        "scoring_editor_bins": [
+          0,
+          10000000
+        ]
+      },
+      "error": null,
+      "project_import_double_spinboxes": 0,
+      "control_values": {
+        "threads": 1,
+        "beam_on": 100,
+        "hist_bins": 100,
+        "source_editor_preview_rays": 12,
+        "source_editor_preview_seed": 12345,
+        "scoring_editor_trajectories": 0,
+        "scoring_editor_bins": 100
+      },
+      "enum_controls": {
+        "source_editor_preset": "proton_beam",
+        "source_editor_position_type": "point",
+        "source_editor_shape": "point",
+        "source_editor_angular_mode": "fixed",
+        "physics_editor_mode": "reference",
+        "physics_editor_reference": "FTFP_BERT_EMZ"
+      },
+      "geometry_template_control": "simple_box",
+      "after_projection": {
+        "scoringEditor": {
+          "enabled": true,
+          "hits": true,
+          "event_edep": true,
+          "edep": true,
+          "raw_histogram": true,
+          "weighted_histogram": true,
+          "hist_bins": 100,
+          "hist_min": "0 eV",
+          "hist_max": "10 MeV",
+          "volume_summary": true,
+          "particle_summary": true,
+          "let": false,
+          "dose": false,
+          "fluence": false,
+          "trajectory_events": -1,
+          "auto_create_default_scorers": true,
+          "verbose": 1,
+          "is_dirty": false,
+          "errors": [
+            "trajectories must be 0 (off) to 1000 events"
+          ],
+          "warnings": []
+        }
+      },
+      "builder_building": false
+    },
+    {
+      "name": "over-rays",
+      "incoming": {
+        "sourceEditor": {
+          "preview_ray_count": 513
+        }
+      },
+      "loaded_projection": {
+        "sourceEditor": {
+          "preset": "proton_beam",
+          "particle": "proton",
+          "energy": "10 MeV",
+          "position_mode": "point",
+          "position_type": "point",
+          "position": "0,0,-1 mm",
+          "direction": "0,0,1",
+          "source_shape": "point",
+          "radius": "",
+          "inner_radius": "",
+          "halfx": "",
+          "halfy": "",
+          "halfz": "",
+          "normal": "0,0,1",
+          "rotation1": "1,0,0",
+          "rotation2": "0,1,0",
+          "confine_volume": "",
+          "center": "",
+          "angular_mode": "fixed",
+          "theta_min": "0 deg",
+          "theta_max": "180 deg",
+          "phi_min": "0 deg",
+          "phi_max": "360 deg",
+          "cone_half_angle": "5 deg",
+          "focus_point": "0,0,0 mm",
+          "random_seed_preview": 12345,
+          "preview_ray_count": 513,
+          "enabled": true,
+          "is_dirty": false,
+          "errors": [],
+          "warnings": []
+        }
+      },
+      "spinner_limits": {
+        "threads": [
+          1,
+          1024
+        ],
+        "beam_on": [
+          0,
+          2000000000
+        ],
+        "hist_bins": [
+          1,
+          10000000
+        ],
+        "source_editor_preview_rays": [
+          1,
+          512
+        ],
+        "source_editor_preview_seed": [
+          0,
+          2147483647
+        ],
+        "scoring_editor_trajectories": [
+          0,
+          1000
+        ],
+        "scoring_editor_bins": [
+          0,
+          10000000
+        ]
+      },
+      "error": null,
+      "project_import_double_spinboxes": 0,
+      "control_values": {
+        "threads": 1,
+        "beam_on": 100,
+        "hist_bins": 100,
+        "source_editor_preview_rays": 512,
+        "source_editor_preview_seed": 12345,
+        "scoring_editor_trajectories": 0,
+        "scoring_editor_bins": 100
+      },
+      "enum_controls": {
+        "source_editor_preset": "proton_beam",
+        "source_editor_position_type": "point",
+        "source_editor_shape": "point",
+        "source_editor_angular_mode": "fixed",
+        "physics_editor_mode": "reference",
+        "physics_editor_reference": "FTFP_BERT_EMZ"
+      },
+      "geometry_template_control": "simple_box",
+      "after_projection": {
+        "sourceEditor": {
+          "preset": "proton_beam",
+          "particle": "proton",
+          "energy": "10 MeV",
+          "position_mode": "point",
+          "position_type": "point",
+          "position": "0,0,-1 mm",
+          "direction": "0,0,1",
+          "source_shape": "point",
+          "radius": "",
+          "inner_radius": "",
+          "halfx": "",
+          "halfy": "",
+          "halfz": "",
+          "normal": "0,0,1",
+          "rotation1": "1,0,0",
+          "rotation2": "0,1,0",
+          "confine_volume": "",
+          "center": "",
+          "angular_mode": "fixed",
+          "theta_min": "0 deg",
+          "theta_max": "180 deg",
+          "phi_min": "0 deg",
+          "phi_max": "360 deg",
+          "cone_half_angle": "5 deg",
+          "focus_point": "0,0,0 mm",
+          "random_seed_preview": 12345,
+          "preview_ray_count": 513,
+          "enabled": true,
+          "is_dirty": false,
+          "errors": [],
+          "warnings": []
+        }
+      },
+      "builder_building": false
+    },
+    {
+      "name": "over-preview-seed",
+      "incoming": {
+        "sourceEditor": {
+          "random_seed_preview": 2147483648
+        }
+      },
+      "loaded_projection": {
+        "sourceEditor": {
+          "preset": "proton_beam",
+          "particle": "proton",
+          "energy": "10 MeV",
+          "position_mode": "point",
+          "position_type": "point",
+          "position": "0,0,-1 mm",
+          "direction": "0,0,1",
+          "source_shape": "point",
+          "radius": "",
+          "inner_radius": "",
+          "halfx": "",
+          "halfy": "",
+          "halfz": "",
+          "normal": "0,0,1",
+          "rotation1": "1,0,0",
+          "rotation2": "0,1,0",
+          "confine_volume": "",
+          "center": "",
+          "angular_mode": "fixed",
+          "theta_min": "0 deg",
+          "theta_max": "180 deg",
+          "phi_min": "0 deg",
+          "phi_max": "360 deg",
+          "cone_half_angle": "5 deg",
+          "focus_point": "0,0,0 mm",
+          "random_seed_preview": 2147483648,
+          "preview_ray_count": 12,
+          "enabled": true,
+          "is_dirty": false,
+          "errors": [],
+          "warnings": []
+        }
+      },
+      "spinner_limits": {
+        "threads": [
+          1,
+          1024
+        ],
+        "beam_on": [
+          0,
+          2000000000
+        ],
+        "hist_bins": [
+          1,
+          10000000
+        ],
+        "source_editor_preview_rays": [
+          1,
+          512
+        ],
+        "source_editor_preview_seed": [
+          0,
+          2147483647
+        ],
+        "scoring_editor_trajectories": [
+          0,
+          1000
+        ],
+        "scoring_editor_bins": [
+          0,
+          10000000
+        ]
+      },
+      "error": "OverflowError: ",
+      "project_import_double_spinboxes": 0,
+      "builder_building": true
+    },
+    {
+      "name": "over-trajectories",
+      "incoming": {
+        "scoringEditor": {
+          "trajectory_events": 1001
+        }
+      },
+      "loaded_projection": {
+        "scoringEditor": {
+          "enabled": true,
+          "hits": true,
+          "event_edep": true,
+          "edep": true,
+          "raw_histogram": true,
+          "weighted_histogram": true,
+          "hist_bins": 100,
+          "hist_min": "0 eV",
+          "hist_max": "10 MeV",
+          "volume_summary": true,
+          "particle_summary": true,
+          "let": false,
+          "dose": false,
+          "fluence": false,
+          "trajectory_events": 1001,
+          "auto_create_default_scorers": true,
+          "verbose": 1,
+          "is_dirty": false,
+          "errors": [],
+          "warnings": []
+        }
+      },
+      "spinner_limits": {
+        "threads": [
+          1,
+          1024
+        ],
+        "beam_on": [
+          0,
+          2000000000
+        ],
+        "hist_bins": [
+          1,
+          10000000
+        ],
+        "source_editor_preview_rays": [
+          1,
+          512
+        ],
+        "source_editor_preview_seed": [
+          0,
+          2147483647
+        ],
+        "scoring_editor_trajectories": [
+          0,
+          1000
+        ],
+        "scoring_editor_bins": [
+          0,
+          10000000
+        ]
+      },
+      "error": null,
+      "project_import_double_spinboxes": 0,
+      "control_values": {
+        "threads": 1,
+        "beam_on": 100,
+        "hist_bins": 100,
+        "source_editor_preview_rays": 12,
+        "source_editor_preview_seed": 12345,
+        "scoring_editor_trajectories": 1000,
+        "scoring_editor_bins": 100
+      },
+      "enum_controls": {
+        "source_editor_preset": "proton_beam",
+        "source_editor_position_type": "point",
+        "source_editor_shape": "point",
+        "source_editor_angular_mode": "fixed",
+        "physics_editor_mode": "reference",
+        "physics_editor_reference": "FTFP_BERT_EMZ"
+      },
+      "geometry_template_control": "simple_box",
+      "after_projection": {
+        "scoringEditor": {
+          "enabled": true,
+          "hits": true,
+          "event_edep": true,
+          "edep": true,
+          "raw_histogram": true,
+          "weighted_histogram": true,
+          "hist_bins": 100,
+          "hist_min": "0 eV",
+          "hist_max": "10 MeV",
+          "volume_summary": true,
+          "particle_summary": true,
+          "let": false,
+          "dose": false,
+          "fluence": false,
+          "trajectory_events": 1001,
+          "auto_create_default_scorers": true,
+          "verbose": 1,
+          "is_dirty": false,
+          "errors": [
+            "trajectories must be 0 (off) to 1000 events"
+          ],
+          "warnings": []
+        }
+      },
+      "builder_building": false
+    },
+    {
+      "name": "empty-physics-reference-list-rejected",
+      "incoming": {
+        "physicsEditor": {
+          "mode": "manual",
+          "reference_list": "",
+          "manual_modules": [
+            "G4EmStandardPhysics"
+          ]
+        }
+      },
+      "error": "Before UI: ValueError: Unsupported project list: project.physicsEditor.manual_modules"
+    },
+    {
+      "name": "empty-physics-reference-fallback",
+      "incoming": {
+        "physicsEditor": {
+          "mode": "manual",
+          "reference_list": "",
+          "enable_biasing_physics": true
+        }
+      },
+      "loaded_projection": {
+        "physicsEditor": {
+          "mode": "reference",
+          "reference_list": "FTFP_BERT_EMZ",
+          "default_cut": "1 mm",
+          "enable_biasing_physics": false,
+          "extra_modules": [],
+          "manual_modules": [],
+          "particle_cuts": {},
+          "is_dirty": false,
+          "errors": [],
+          "warnings": []
+        }
+      },
+      "spinner_limits": {
+        "threads": [
+          1,
+          1024
+        ],
+        "beam_on": [
+          0,
+          2000000000
+        ],
+        "hist_bins": [
+          1,
+          10000000
+        ],
+        "source_editor_preview_rays": [
+          1,
+          512
+        ],
+        "source_editor_preview_seed": [
+          0,
+          2147483647
+        ],
+        "scoring_editor_trajectories": [
+          0,
+          1000
+        ],
+        "scoring_editor_bins": [
+          0,
+          10000000
+        ]
+      },
+      "error": null,
+      "project_import_double_spinboxes": 0,
+      "control_values": {
+        "threads": 1,
+        "beam_on": 100,
+        "hist_bins": 100,
+        "source_editor_preview_rays": 12,
+        "source_editor_preview_seed": 12345,
+        "scoring_editor_trajectories": 0,
+        "scoring_editor_bins": 100
+      },
+      "enum_controls": {
+        "source_editor_preset": "proton_beam",
+        "source_editor_position_type": "point",
+        "source_editor_shape": "point",
+        "source_editor_angular_mode": "fixed",
+        "physics_editor_mode": "reference",
+        "physics_editor_reference": "FTFP_BERT_EMZ"
+      },
+      "geometry_template_control": "simple_box",
+      "after_projection": {
+        "physicsEditor": {
+          "mode": "reference",
+          "reference_list": "FTFP_BERT_EMZ",
+          "default_cut": "1 mm",
+          "enable_biasing_physics": false,
+          "extra_modules": [],
+          "manual_modules": [],
+          "particle_cuts": {},
+          "is_dirty": false,
+          "errors": [],
+          "warnings": []
+        }
+      },
+      "builder_building": false
+    },
+    {
+      "name": "empty-source-particle-fallback",
+      "incoming": {
+        "sourceEditor": {
+          "particle": "",
+          "position_mode": "plane",
+          "source_shape": "rectangle",
+          "preview_ray_count": 88
+        }
+      },
+      "loaded_projection": {
+        "sourceEditor": {
+          "preset": "proton_beam",
+          "particle": "proton",
+          "energy": "10 MeV",
+          "position_mode": "point",
+          "position_type": "point",
+          "position": "0,0,-1 mm",
+          "direction": "0,0,1",
+          "source_shape": "point",
+          "radius": "",
+          "inner_radius": "",
+          "halfx": "",
+          "halfy": "",
+          "halfz": "",
+          "normal": "0,0,1",
+          "rotation1": "1,0,0",
+          "rotation2": "0,1,0",
+          "confine_volume": "",
+          "center": "",
+          "angular_mode": "fixed",
+          "theta_min": "0 deg",
+          "theta_max": "180 deg",
+          "phi_min": "0 deg",
+          "phi_max": "360 deg",
+          "cone_half_angle": "5 deg",
+          "focus_point": "0,0,0 mm",
+          "random_seed_preview": 12345,
+          "preview_ray_count": 12,
+          "enabled": true,
+          "is_dirty": false,
+          "errors": [],
+          "warnings": []
+        }
+      },
+      "spinner_limits": {
+        "threads": [
+          1,
+          1024
+        ],
+        "beam_on": [
+          0,
+          2000000000
+        ],
+        "hist_bins": [
+          1,
+          10000000
+        ],
+        "source_editor_preview_rays": [
+          1,
+          512
+        ],
+        "source_editor_preview_seed": [
+          0,
+          2147483647
+        ],
+        "scoring_editor_trajectories": [
+          0,
+          1000
+        ],
+        "scoring_editor_bins": [
+          0,
+          10000000
+        ]
+      },
+      "error": null,
+      "project_import_double_spinboxes": 0,
+      "control_values": {
+        "threads": 1,
+        "beam_on": 100,
+        "hist_bins": 100,
+        "source_editor_preview_rays": 12,
+        "source_editor_preview_seed": 12345,
+        "scoring_editor_trajectories": 0,
+        "scoring_editor_bins": 100
+      },
+      "enum_controls": {
+        "source_editor_preset": "proton_beam",
+        "source_editor_position_type": "point",
+        "source_editor_shape": "point",
+        "source_editor_angular_mode": "fixed",
+        "physics_editor_mode": "reference",
+        "physics_editor_reference": "FTFP_BERT_EMZ"
+      },
+      "geometry_template_control": "simple_box",
+      "after_projection": {
+        "sourceEditor": {
+          "preset": "proton_beam",
+          "particle": "proton",
+          "energy": "10 MeV",
+          "position_mode": "point",
+          "position_type": "point",
+          "position": "0,0,-1 mm",
+          "direction": "0,0,1",
+          "source_shape": "point",
+          "radius": "",
+          "inner_radius": "",
+          "halfx": "",
+          "halfy": "",
+          "halfz": "",
+          "normal": "0,0,1",
+          "rotation1": "1,0,0",
+          "rotation2": "0,1,0",
+          "confine_volume": "",
+          "center": "",
+          "angular_mode": "fixed",
+          "theta_min": "0 deg",
+          "theta_max": "180 deg",
+          "phi_min": "0 deg",
+          "phi_max": "360 deg",
+          "cone_half_angle": "5 deg",
+          "focus_point": "0,0,0 mm",
+          "random_seed_preview": 12345,
+          "preview_ray_count": 12,
+          "enabled": true,
+          "is_dirty": false,
+          "errors": [],
+          "warnings": []
+        }
+      },
+      "builder_building": false
+    },
+    {
+      "name": "unknown-enums",
+      "incoming": {
+        "geometrySettings": {
+          "template": "FutureTemplate"
+        },
+        "sourceEditor": {
+          "position_mode": "FuturePosition",
+          "angular_mode": "FutureAngular"
+        },
+        "physicsEditor": {
+          "mode": "FuturePhysics",
+          "reference_list": "FutureReference"
+        }
+      },
+      "loaded_projection": {
+        "geometrySettings": {
+          "template": "FutureTemplate",
+          "config_path": ""
+        },
+        "sourceEditor": {
+          "preset": "proton_beam",
+          "particle": "proton",
+          "energy": "10 MeV",
+          "position_mode": "FuturePosition",
+          "position_type": "point",
+          "position": "0,0,-1 mm",
+          "direction": "0,0,1",
+          "source_shape": "point",
+          "radius": "",
+          "inner_radius": "",
+          "halfx": "",
+          "halfy": "",
+          "halfz": "",
+          "normal": "0,0,1",
+          "rotation1": "1,0,0",
+          "rotation2": "0,1,0",
+          "confine_volume": "",
+          "center": "",
+          "angular_mode": "FutureAngular",
+          "theta_min": "0 deg",
+          "theta_max": "180 deg",
+          "phi_min": "0 deg",
+          "phi_max": "360 deg",
+          "cone_half_angle": "5 deg",
+          "focus_point": "0,0,0 mm",
+          "random_seed_preview": 12345,
+          "preview_ray_count": 12,
+          "enabled": true,
+          "is_dirty": false,
+          "errors": [],
+          "warnings": []
+        },
+        "physicsEditor": {
+          "mode": "FuturePhysics",
+          "reference_list": "FutureReference",
+          "default_cut": "1 mm",
+          "enable_biasing_physics": false,
+          "extra_modules": [],
+          "manual_modules": [],
+          "particle_cuts": {},
+          "is_dirty": false,
+          "errors": [],
+          "warnings": []
+        }
+      },
+      "spinner_limits": {
+        "threads": [
+          1,
+          1024
+        ],
+        "beam_on": [
+          0,
+          2000000000
+        ],
+        "hist_bins": [
+          1,
+          10000000
+        ],
+        "source_editor_preview_rays": [
+          1,
+          512
+        ],
+        "source_editor_preview_seed": [
+          0,
+          2147483647
+        ],
+        "scoring_editor_trajectories": [
+          0,
+          1000
+        ],
+        "scoring_editor_bins": [
+          0,
+          10000000
+        ]
+      },
+      "error": null,
+      "project_import_double_spinboxes": 0,
+      "control_values": {
+        "threads": 1,
+        "beam_on": 100,
+        "hist_bins": 100,
+        "source_editor_preview_rays": 12,
+        "source_editor_preview_seed": 12345,
+        "scoring_editor_trajectories": 0,
+        "scoring_editor_bins": 100
+      },
+      "enum_controls": {
+        "source_editor_preset": "proton_beam",
+        "source_editor_position_type": "FuturePosition",
+        "source_editor_shape": "point",
+        "source_editor_angular_mode": "FutureAngular",
+        "physics_editor_mode": "FuturePhysics",
+        "physics_editor_reference": "FutureReference"
+      },
+      "geometry_template_control": "FutureTemplate",
+      "after_projection": {
+        "geometrySettings": {
+          "template": "FutureTemplate",
+          "config_path": ""
+        },
+        "sourceEditor": {
+          "preset": "proton_beam",
+          "particle": "proton",
+          "energy": "10 MeV",
+          "position_mode": "FuturePosition",
+          "position_type": "FuturePosition",
+          "position": "0,0,-1 mm",
+          "direction": "0,0,1",
+          "source_shape": "point",
+          "radius": "",
+          "inner_radius": "",
+          "halfx": "",
+          "halfy": "",
+          "halfz": "",
+          "normal": "0,0,1",
+          "rotation1": "1,0,0",
+          "rotation2": "0,1,0",
+          "confine_volume": "",
+          "center": "",
+          "angular_mode": "FutureAngular",
+          "theta_min": "0 deg",
+          "theta_max": "180 deg",
+          "phi_min": "0 deg",
+          "phi_max": "360 deg",
+          "cone_half_angle": "5 deg",
+          "focus_point": "0,0,0 mm",
+          "random_seed_preview": 12345,
+          "preview_ray_count": 12,
+          "enabled": true,
+          "is_dirty": false,
+          "errors": [
+            "position mode must be point or plane in this GUI MVP",
+            "angular mode must be fixed, isotropic, cone, cosine, or focused"
+          ],
+          "warnings": []
+        },
+        "physicsEditor": {
+          "mode": "FuturePhysics",
+          "reference_list": "FutureReference",
+          "default_cut": "1 mm",
+          "enable_biasing_physics": false,
+          "extra_modules": [],
+          "manual_modules": [],
+          "particle_cuts": {},
+          "is_dirty": false,
+          "errors": [
+            "manual physics mode is not generated by this GUI MVP"
+          ],
+          "warnings": [
+            "reference list is not in the GUI quick list; Geant4 validates it at initialization"
+          ]
+        }
+      },
+      "builder_building": false
+    },
+    {
+      "name": "empty-enums",
+      "incoming": {
+        "sourceEditor": {
+          "preset": "",
+          "angular_mode": ""
+        }
+      },
+      "loaded_projection": {
+        "sourceEditor": {
+          "preset": "",
+          "particle": "proton",
+          "energy": "10 MeV",
+          "position_mode": "point",
+          "position_type": "point",
+          "position": "0,0,-1 mm",
+          "direction": "0,0,1",
+          "source_shape": "point",
+          "radius": "",
+          "inner_radius": "",
+          "halfx": "",
+          "halfy": "",
+          "halfz": "",
+          "normal": "0,0,1",
+          "rotation1": "1,0,0",
+          "rotation2": "0,1,0",
+          "confine_volume": "",
+          "center": "",
+          "angular_mode": "",
+          "theta_min": "0 deg",
+          "theta_max": "180 deg",
+          "phi_min": "0 deg",
+          "phi_max": "360 deg",
+          "cone_half_angle": "5 deg",
+          "focus_point": "0,0,0 mm",
+          "random_seed_preview": 12345,
+          "preview_ray_count": 12,
+          "enabled": true,
+          "is_dirty": false,
+          "errors": [],
+          "warnings": []
+        }
+      },
+      "spinner_limits": {
+        "threads": [
+          1,
+          1024
+        ],
+        "beam_on": [
+          0,
+          2000000000
+        ],
+        "hist_bins": [
+          1,
+          10000000
+        ],
+        "source_editor_preview_rays": [
+          1,
+          512
+        ],
+        "source_editor_preview_seed": [
+          0,
+          2147483647
+        ],
+        "scoring_editor_trajectories": [
+          0,
+          1000
+        ],
+        "scoring_editor_bins": [
+          0,
+          10000000
+        ]
+      },
+      "error": null,
+      "project_import_double_spinboxes": 0,
+      "control_values": {
+        "threads": 1,
+        "beam_on": 100,
+        "hist_bins": 100,
+        "source_editor_preview_rays": 12,
+        "source_editor_preview_seed": 12345,
+        "scoring_editor_trajectories": 0,
+        "scoring_editor_bins": 100
+      },
+      "enum_controls": {
+        "source_editor_preset": "proton_beam",
+        "source_editor_position_type": "point",
+        "source_editor_shape": "point",
+        "source_editor_angular_mode": "fixed",
+        "physics_editor_mode": "reference",
+        "physics_editor_reference": "FTFP_BERT_EMZ"
+      },
+      "geometry_template_control": "simple_box",
+      "after_projection": {
+        "sourceEditor": {
+          "preset": "",
+          "particle": "proton",
+          "energy": "10 MeV",
+          "position_mode": "point",
+          "position_type": "point",
+          "position": "0,0,-1 mm",
+          "direction": "0,0,1",
+          "source_shape": "point",
+          "radius": "",
+          "inner_radius": "",
+          "halfx": "",
+          "halfy": "",
+          "halfz": "",
+          "normal": "0,0,1",
+          "rotation1": "1,0,0",
+          "rotation2": "0,1,0",
+          "confine_volume": "",
+          "center": "",
+          "angular_mode": "",
+          "theta_min": "0 deg",
+          "theta_max": "180 deg",
+          "phi_min": "0 deg",
+          "phi_max": "360 deg",
+          "cone_half_angle": "5 deg",
+          "focus_point": "0,0,0 mm",
+          "random_seed_preview": 12345,
+          "preview_ray_count": 12,
+          "enabled": true,
+          "is_dirty": false,
+          "errors": [
+            "preset is required",
+            "angular mode must be fixed, isotropic, cone, cosine, or focused"
+          ],
+          "warnings": []
+        }
+      },
+      "builder_building": false
+    },
+    {
+      "name": "large-text-values",
+      "incoming": {
+        "sourceEditor": {
+          "energy": "1e309 MeV",
+          "direction": "1e309,0,1",
+          "cone_half_angle": "1e309 rad"
+        }
+      },
+      "loaded_projection": {
+        "sourceEditor": {
+          "preset": "proton_beam",
+          "particle": "proton",
+          "energy": "1e309 MeV",
+          "position_mode": "point",
+          "position_type": "point",
+          "position": "0,0,-1 mm",
+          "direction": "1e309,0,1",
+          "source_shape": "point",
+          "radius": "",
+          "inner_radius": "",
+          "halfx": "",
+          "halfy": "",
+          "halfz": "",
+          "normal": "0,0,1",
+          "rotation1": "1,0,0",
+          "rotation2": "0,1,0",
+          "confine_volume": "",
+          "center": "",
+          "angular_mode": "fixed",
+          "theta_min": "0 deg",
+          "theta_max": "180 deg",
+          "phi_min": "0 deg",
+          "phi_max": "360 deg",
+          "cone_half_angle": "1e309 rad",
+          "focus_point": "0,0,0 mm",
+          "random_seed_preview": 12345,
+          "preview_ray_count": 12,
+          "enabled": true,
+          "is_dirty": false,
+          "errors": [],
+          "warnings": []
+        }
+      },
+      "spinner_limits": {
+        "threads": [
+          1,
+          1024
+        ],
+        "beam_on": [
+          0,
+          2000000000
+        ],
+        "hist_bins": [
+          1,
+          10000000
+        ],
+        "source_editor_preview_rays": [
+          1,
+          512
+        ],
+        "source_editor_preview_seed": [
+          0,
+          2147483647
+        ],
+        "scoring_editor_trajectories": [
+          0,
+          1000
+        ],
+        "scoring_editor_bins": [
+          0,
+          10000000
+        ]
+      },
+      "error": null,
+      "project_import_double_spinboxes": 0,
+      "control_values": {
+        "threads": 1,
+        "beam_on": 100,
+        "hist_bins": 100,
+        "source_editor_preview_rays": 12,
+        "source_editor_preview_seed": 12345,
+        "scoring_editor_trajectories": 0,
+        "scoring_editor_bins": 100
+      },
+      "enum_controls": {
+        "source_editor_preset": "proton_beam",
+        "source_editor_position_type": "point",
+        "source_editor_shape": "point",
+        "source_editor_angular_mode": "fixed",
+        "physics_editor_mode": "reference",
+        "physics_editor_reference": "FTFP_BERT_EMZ"
+      },
+      "geometry_template_control": "simple_box",
+      "after_projection": {
+        "sourceEditor": {
+          "preset": "proton_beam",
+          "particle": "proton",
+          "energy": "1e309 MeV",
+          "position_mode": "point",
+          "position_type": "point",
+          "position": "0,0,-1 mm",
+          "direction": "1e309,0,1",
+          "source_shape": "point",
+          "radius": "",
+          "inner_radius": "",
+          "halfx": "",
+          "halfy": "",
+          "halfz": "",
+          "normal": "0,0,1",
+          "rotation1": "1,0,0",
+          "rotation2": "0,1,0",
+          "confine_volume": "",
+          "center": "",
+          "angular_mode": "fixed",
+          "theta_min": "0 deg",
+          "theta_max": "180 deg",
+          "phi_min": "0 deg",
+          "phi_max": "360 deg",
+          "cone_half_angle": "1e309 rad",
+          "focus_point": "0,0,0 mm",
+          "random_seed_preview": 12345,
+          "preview_ray_count": 12,
+          "enabled": true,
+          "is_dirty": false,
+          "errors": [
+            "[source]/energy must be a finite energy (units eV, keV, MeV, GeV), got '1e309 MeV'",
+            "energy must contain only finite numeric values",
+            "direction must contain only finite numeric values"
+          ],
+          "warnings": []
+        }
+      },
+      "builder_building": false
+    },
+    {
+      "name": "source-mode-conflict",
+      "incoming": {
+        "sourceEditor": {
+          "position_mode": "plane",
+          "position_type": "point",
+          "source_shape": "rectangle",
+          "halfx": "1 mm",
+          "halfy": "1 mm"
+        }
+      },
+      "loaded_projection": {
+        "sourceEditor": {
+          "preset": "proton_beam",
+          "particle": "proton",
+          "energy": "10 MeV",
+          "position_mode": "plane",
+          "position_type": "point",
+          "position": "0,0,-1 mm",
+          "direction": "0,0,1",
+          "source_shape": "rectangle",
+          "radius": "",
+          "inner_radius": "",
+          "halfx": "1 mm",
+          "halfy": "1 mm",
+          "halfz": "",
+          "normal": "0,0,1",
+          "rotation1": "1,0,0",
+          "rotation2": "0,1,0",
+          "confine_volume": "",
+          "center": "",
+          "angular_mode": "fixed",
+          "theta_min": "0 deg",
+          "theta_max": "180 deg",
+          "phi_min": "0 deg",
+          "phi_max": "360 deg",
+          "cone_half_angle": "5 deg",
+          "focus_point": "0,0,0 mm",
+          "random_seed_preview": 12345,
+          "preview_ray_count": 12,
+          "enabled": true,
+          "is_dirty": false,
+          "errors": [],
+          "warnings": []
+        }
+      },
+      "spinner_limits": {
+        "threads": [
+          1,
+          1024
+        ],
+        "beam_on": [
+          0,
+          2000000000
+        ],
+        "hist_bins": [
+          1,
+          10000000
+        ],
+        "source_editor_preview_rays": [
+          1,
+          512
+        ],
+        "source_editor_preview_seed": [
+          0,
+          2147483647
+        ],
+        "scoring_editor_trajectories": [
+          0,
+          1000
+        ],
+        "scoring_editor_bins": [
+          0,
+          10000000
+        ]
+      },
+      "error": null,
+      "project_import_double_spinboxes": 0,
+      "control_values": {
+        "threads": 1,
+        "beam_on": 100,
+        "hist_bins": 100,
+        "source_editor_preview_rays": 12,
+        "source_editor_preview_seed": 12345,
+        "scoring_editor_trajectories": 0,
+        "scoring_editor_bins": 100
+      },
+      "enum_controls": {
+        "source_editor_preset": "proton_beam",
+        "source_editor_position_type": "plane",
+        "source_editor_shape": "rectangle",
+        "source_editor_angular_mode": "fixed",
+        "physics_editor_mode": "reference",
+        "physics_editor_reference": "FTFP_BERT_EMZ"
+      },
+      "geometry_template_control": "simple_box",
+      "after_projection": {
+        "sourceEditor": {
+          "preset": "proton_beam",
+          "particle": "proton",
+          "energy": "10 MeV",
+          "position_mode": "plane",
+          "position_type": "plane",
+          "position": "0,0,-1 mm",
+          "direction": "0,0,1",
+          "source_shape": "rectangle",
+          "radius": "",
+          "inner_radius": "",
+          "halfx": "1 mm",
+          "halfy": "1 mm",
+          "halfz": "",
+          "normal": "0,0,1",
+          "rotation1": "1,0,0",
+          "rotation2": "0,1,0",
+          "confine_volume": "",
+          "center": "",
+          "angular_mode": "fixed",
+          "theta_min": "0 deg",
+          "theta_max": "180 deg",
+          "phi_min": "0 deg",
+          "phi_max": "360 deg",
+          "cone_half_angle": "5 deg",
+          "focus_point": "0,0,0 mm",
+          "random_seed_preview": 12345,
+          "preview_ray_count": 12,
+          "enabled": true,
+          "is_dirty": false,
+          "errors": [],
+          "warnings": []
+        }
+      },
+      "builder_building": false
+    }
+  ]
+}

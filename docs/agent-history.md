@@ -427,3 +427,7 @@ Geant4 `ApplyCommand()` 返回 0 不足以确认命令成功；沿用材料命�
 原有WSL Python3.11.18/PySide6-shiboken6 6.12.0复现：没有MainWindow的QComboBox在缺失UserRole时反复currentData/itemData，使None引用计数随调用下降，正常解释器收尾可崩溃；有字符串userdata/currentText对照稳定。PlotPanel.current_dataset与ScanPage.current_metric默认无数据状态的1000次实际调用各下降999，但该有限调用实验正常退出，因此不能夸大为单击必崩。历史QObject析构-11另有旧证据，不能用旧栈替代本次原因。
 
 窄修通过widgets/qt_data.py读取项目使用的标准模型role map，以Python处理缺失键，保留rootModelIndex、modelColumn、0/False/空字符串等值；不改变数据、不补造None引用、不强退、不忽略退出码或锁定未经验证的依赖版本。用于已确认的绘图/扫描空数据路径、明确可能为空的初始化/选择入口及测试状态快照；没有将所有字符串选项机械替换。该接口不宣称解决任意自定义模型或嵌套QVariant的所有绑定问题。原导入assert AST保持一致；gui_qt_combo_data登记标准模型语义及空数据重复读取回归，清单增至134项。新冻结的平台和实窗验收仍须单独完成。
+
+### 2026-10-30 E6 自动验收完成，实窗待验
+
+验收代码a779634：Windows134/134、42815个v3入口，2C基线40628逐例/总数门禁通过；真实Linux40931653660两版本各134、M040931654093两平台各58，12份CI严格门禁、4官方ZIP摘要与384日志SHA通过。三轮原件按字节归档；2711文件及13份release门禁经不同写者复核。Linux git_dirty=true的依赖路径与未知完整状态边界保留，不能冒称整个检出clean。见[E6自动验收报告](verification/e6-full-20261030/README.md)及[独立复核](verification/e6-full-20261030/independent/README.md)。实窗因锁屏待解锁，stage_complete=false，未合主线；原始报告不可用后续证据覆盖。

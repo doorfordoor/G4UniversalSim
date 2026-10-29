@@ -1,0 +1,38 @@
+{
+  "head": "cb837e680e08a66dd47e62a9ee7e25fa125026c3",
+  "status": "not_passed",
+  "frozen_profiles": {
+    "static": 19,
+    "gui": 33,
+    "backend": 55,
+    "integration": 20
+  },
+  "total_cases": 127,
+  "linux_run": 40911355023,
+  "m0_run": 40911355092,
+  "jobs": {
+    "11.3.2": 123579858842,
+    "11.4.3": 123579859232,
+    "m0-ubuntu": 123579859374,
+    "m0-windows": 123579859622
+  },
+  "routing": "Connected GitHub fetch discovered push runs directly; dedicated jobs endpoint available. No fallback or credentials used.",
+  "next": "Root fixes modal dialog test boundary in a new candidate; preserve this attempt and all raw reports",
+  "last_observation": "Linux both static and strict static gates passed; Linux and M0 four jobs executing GUI profiles",
+  "read_incident": "One connector job-status read rejected without serializable detail; one read-only retry succeeded. No workflow rerun.",
+  "known_local_regression": "Root independently located gui_start_page modal QMessageBox critical mock mismatch. CI still running; do not infer CI failure before actual result.",
+  "local_gui_migration_probe": {
+    "exit_code": 0,
+    "assert_marker": 74,
+    "log": "gui-migration-local-check.log",
+    "scope": "new migration UI smoke; does not establish gui_start_page or full suite success"
+  },
+  "artifacts": 4,
+  "official_zip_digests_match": true,
+  "reports": 8,
+  "strict_gate_pass": 4,
+  "strict_gate_fail": 4,
+  "failed_case": "gui_start_page",
+  "failure": "timeout after 600s on all four jobs",
+  "missing_profiles": "Linux backend/integration skipped after GUI failure"
+}

@@ -1,0 +1,66 @@
+[
+  {
+    "name": "bad-json",
+    "error": "Expecting property name enclosed in double quotes: line 1 column 2 (char 1)"
+  },
+  {
+    "name": "duplicate-json-key",
+    "error": "Duplicate JSON key: runPackage"
+  },
+  {
+    "name": "future-main-format",
+    "error": "Generated main.ini schema_version must be the exact supported string 1"
+  },
+  {
+    "name": "duplicate-path-key",
+    "error": "config/main.ini:20: duplicate or empty key [materials]/file"
+  },
+  {
+    "name": "duplicate-path-section",
+    "error": "config/main.ini:66: duplicate section [materials] is ambiguous for duplication"
+  },
+  {
+    "name": "external-material-path",
+    "error": "[materials]/file must reference the original generated package target: C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-backend04\\packages\\20261030_013208_gui_run\\config\\materials\\material.ini"
+  },
+  {
+    "name": "external-geometry-path",
+    "error": "[geometry]/config must reference the original generated package target: C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-backend04\\packages\\20261030_013208_gui_run\\config\\geometry\\geometry.ini"
+  },
+  {
+    "name": "external-output-path",
+    "error": "[output]/dir must reference the original generated package target: C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-backend04\\packages\\20261030_013208_gui_run\\output"
+  },
+  {
+    "name": "relative-material-path",
+    "error": "[materials]/file must reference the original generated package target: C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-backend04\\packages\\20261030_013208_gui_run\\config\\materials\\material.ini"
+  },
+  {
+    "name": "extra-resource-section",
+    "error": "Unsupported generated main.ini sections; only standard generated inputs can be duplicated"
+  },
+  {
+    "name": "dynamic-macro",
+    "error": "Macro contains unsupported commands or external resource dependencies"
+  },
+  {
+    "name": "geometry-sidecar",
+    "error": "Geometry with external file/copies_file resources cannot be duplicated without a resource bundle"
+  },
+  {
+    "name": "snapshot-path-mismatch",
+    "error": "Snapshot has a single contradictory material/geometry package path"
+  },
+  {
+    "name": "unknown-nested-metadata",
+    "error": "Unsupported project field: snapshot.materialsSummary.materials[0].unknown_metadata"
+  },
+  {
+    "name": "additional-file",
+    "error": "Only standard generated config inputs can be duplicated; additional resources require a resource bundle"
+  },
+  {
+    "name": "missing-material",
+    "error": "Generated package duplication requires a regular package input: C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-backend04\\packages\\20261030_013208_gui_run\\config\\materials\\material.ini"
+  }
+]

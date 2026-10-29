@@ -1,0 +1,15 @@
+C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\widgets\config\run_config.py:356: RuntimeWarning: libshiboken: Overflow: Value 2147483648 exceeds limits of type  [signed] "int" (4bytes).
+  self.source_editor_preview_seed.setValue(self.source_editor.random_seed_preview)
+Traceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\audit-e6-gui-projection.py", line 49, in <module>
+    candidate = project_from_dict(data)
+                ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\core\project.py", line 131, in project_from_dict
+    _check_supported_fields(data, project_to_dict(project))
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\core\project.py", line 153, in _check_supported_fields
+    _check_supported_fields(value, saved[target], f"{path}.{key}")
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\core\project.py", line 153, in _check_supported_fields
+    _check_supported_fields(value, saved[target], f"{path}.{key}")
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\core\project.py", line 156, in _check_supported_fields
+    raise ValueError(f"Unsupported project list: {path}")
+ValueError: Unsupported project list: project.physicsEditor.manual_modules

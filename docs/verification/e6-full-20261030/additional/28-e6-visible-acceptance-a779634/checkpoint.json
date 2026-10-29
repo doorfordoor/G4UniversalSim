@@ -1,0 +1,25 @@
+{
+  "frozen_commit": "a779634483d1f077357433c532ccb0d9e3dc5517",
+  "status": "prepared_not_launched",
+  "manifest_cases": 134,
+  "user_unlock_confirmation_received": false,
+  "windows_launch_done": false,
+  "backend_run_done": false,
+  "owned_windows": [],
+  "running_sessions": [],
+  "resource_files": 58,
+  "duplicate_cases": 7,
+  "snapshot_file_only_loader_check": "passed",
+  "source_identity_check": "HEAD a779634; clean; 13 tracked source files match HEAD",
+  "old_manifest_file_hashes": "7 unchanged; old plan untouched",
+  "stages": {
+    "migration_preview_and_no_clobber": "pending_user_unlock",
+    "snapshot_actual_inputs_and_visible_details": "pending_user_unlock",
+    "duplicate_final_cli_identity": "pending_user_unlock",
+    "optional_real_two_events": "pending_user_unlock_and_frozen_executable_confirmation"
+  },
+  "full_windows_session_owned_by_root": "51778",
+  "full_and_real_ci_status": "running as last reported by root; not polled by this preparation",
+  "existing_rendered_images_are_layout_reference_only": true,
+  "next_action": "Wait for explicit user unlock and root launch instruction. Do not operate desktop or start backend."
+}

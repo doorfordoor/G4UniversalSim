@@ -1,0 +1,129 @@
+{
+  "facts": [
+    {
+      "original_payload": "string_false_becomes_true",
+      "now_rejected": true,
+      "error": "Invalid JSON type at project.geometryEditor.source_copy_mode; expected bool"
+    },
+    {
+      "original_payload": "fractional_threads_truncated",
+      "now_rejected": true,
+      "error": "Invalid JSON type at project.threads; expected int"
+    },
+    {
+      "original_payload": "source_error_string_splits",
+      "now_rejected": true,
+      "error": "Expected JSON array: project.geometryEditor.source_errors"
+    },
+    {
+      "original_payload": "null_path_stringifies",
+      "now_rejected": true,
+      "error": "Invalid JSON type at project.geometryEditor.source_path; expected str"
+    },
+    {
+      "original_payload": "preview_bool_integer_conflict",
+      "now_rejected": true,
+      "error": "Conflicting project fields: project.geometryEditor.preview.volumes / volumes"
+    },
+    {
+      "input_version": null,
+      "geometry_string_version": "1",
+      "threads_string_seed_null_compatible": true,
+      "migration_save_reload_equal": true
+    },
+    {
+      "input_version": null,
+      "geometry_string_version": "2",
+      "threads_string_seed_null_compatible": true,
+      "migration_save_reload_equal": true
+    },
+    {
+      "input_version": 1,
+      "geometry_string_version": "1",
+      "threads_string_seed_null_compatible": true,
+      "migration_save_reload_equal": true
+    },
+    {
+      "input_version": 1,
+      "geometry_string_version": "2",
+      "threads_string_seed_null_compatible": true,
+      "migration_save_reload_equal": true
+    },
+    {
+      "input_version": 2,
+      "geometry_string_version": "1",
+      "threads_string_seed_null_compatible": true,
+      "migration_save_reload_equal": true
+    },
+    {
+      "input_version": 2,
+      "geometry_string_version": "2",
+      "threads_string_seed_null_compatible": true,
+      "migration_save_reload_equal": true
+    },
+    {
+      "input_version": 3,
+      "geometry_string_version": "1",
+      "threads_string_seed_null_compatible": true,
+      "migration_save_reload_equal": true
+    },
+    {
+      "input_version": 3,
+      "geometry_string_version": "2",
+      "threads_string_seed_null_compatible": true,
+      "migration_save_reload_equal": true
+    },
+    {
+      "input_version": 4,
+      "geometry_string_version": "1",
+      "threads_string_seed_null_compatible": true,
+      "migration_save_reload_equal": true
+    },
+    {
+      "input_version": 4,
+      "geometry_string_version": "2",
+      "threads_string_seed_null_compatible": true,
+      "migration_save_reload_equal": true
+    },
+    {
+      "input_version": 5,
+      "geometry_string_version": "1",
+      "threads_string_seed_null_compatible": true,
+      "migration_save_reload_equal": true
+    },
+    {
+      "input_version": 5,
+      "geometry_string_version": "2",
+      "threads_string_seed_null_compatible": true,
+      "migration_save_reload_equal": true
+    },
+    {
+      "input_version": 6,
+      "geometry_string_version": "1",
+      "threads_string_seed_null_compatible": true,
+      "migration_save_reload_equal": true
+    },
+    {
+      "input_version": 6,
+      "geometry_string_version": "2",
+      "threads_string_seed_null_compatible": true,
+      "migration_save_reload_equal": true
+    },
+    {
+      "script": "gui/smoke_tests/smoke_project_io.py",
+      "exit": 0,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-independent\\smoke_project_io-types-fix.log"
+    },
+    {
+      "script": "scripts/test_config_migration.py",
+      "exit": 0,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-independent\\test_config_migration-types-fix.log"
+    }
+  ],
+  "identities": {
+    "gui/g4usim_gui/core/project_migration.py": "b3cfe4691826382ab1cc5d70de0c4718f997105261ca56fa317b7dc37be6047a",
+    "gui/g4usim_gui/core/project.py": "9865b9e71af70fb6b5f925fb10704daefe29aad3e6f2f0ec100ee317a23c44dc",
+    "gui/g4usim_gui/editors/geometry_editor_model.py": "78747aec58769b358611a29d7cc8875b2a54ac5c9178cda999ba5053d4102820",
+    "out/verification/e6-independent/review_migration.py": "945fec461306eb552cfdbcf4ad3db1a010375f89a76e240d16bc514c28732578"
+  }
+}

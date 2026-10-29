@@ -1,0 +1,56 @@
+{
+  "schema": "G4UniversalSimM0TestReport",
+  "version": 2,
+  "profile": "all",
+  "platform": "Windows-10-10.0.26200-SP0",
+  "python": "3.11.9",
+  "git_head": "c6bf8ad2c4d58b5e66392b1a029859c26b6dc17a",
+  "source_fingerprint": "ce4bc374a93e3751d9bb1f6eea982c8ccf3295fcd2339bcc4936a76fffcd4501",
+  "tests_content_fingerprint": "d0d30476ca22bf2e28cd1cbf4ca12319910e427c4ceddbbaaf80d28739dcdea1",
+  "git_dirty": true,
+  "backend_executable": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-e6\\Release\\G4UniversalSim.exe",
+  "backend_provenance": "backend source fingerprint is missing or differs from this worktree; rebuild",
+  "backend_build_identity": null,
+  "merge_executable": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\build_vs2026\\Release\\mergeHistograms.exe",
+  "merge_source_fingerprint": "49708e1b6b554af6bb0ad42688f447cf254f528f71614074309f75170964682d",
+  "merge_provenance": "mergeHistograms executable is missing",
+  "optional_pyvista_coverage": "not_proven_by_this_runner",
+  "untracked_source_files": [
+    "gui/g4usim_gui/core/config_migration.py",
+    "gui/g4usim_gui/core/geometry_migration.py",
+    "gui/g4usim_gui/core/main_ini_migration.py",
+    "gui/g4usim_gui/core/project_migration.py",
+    "gui/g4usim_gui/widgets/migration_dialog.py",
+    "gui/smoke_tests/smoke_config_migration_ui.py",
+    "include/Config/MainConfigVersion.hh",
+    "scripts/test_config_migration.py",
+    "scripts/test_config_migration_backend.py",
+    "scripts/test_field_biasing_schema.py",
+    "scripts/test_main_config_version.py",
+    "scripts/test_main_ini_migration.py"
+  ],
+  "tracked_source_gate": "fail",
+  "assert_probe": "settrace_assert_lines_v3",
+  "log_digest_algorithm": "sha256_raw_bytes_lf_v2",
+  "assertions_executed_total": 0,
+  "assert_sites_total": 0,
+  "cases_with_assertion_counts": 0,
+  "cases_with_zero_assertions": [],
+  "skip_policy": "failure",
+  "results": [
+    {
+      "name": "main_config_version",
+      "layer": "backend",
+      "script": "scripts/test_main_config_version.py",
+      "status": "skip",
+      "reason": "backend source fingerprint is missing or differs from this worktree; rebuild"
+    },
+    {
+      "name": "field_biasing_schema",
+      "layer": "backend",
+      "script": "scripts/test_field_biasing_schema.py",
+      "status": "skip",
+      "reason": "backend source fingerprint is missing or differs from this worktree; rebuild"
+    }
+  ]
+}

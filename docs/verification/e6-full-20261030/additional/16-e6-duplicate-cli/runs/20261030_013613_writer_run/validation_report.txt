@@ -1,0 +1,66 @@
+G4UniversalSim GUI Validation Report
+can_run = true
+
+[errors]
+<none>
+
+[warnings]
+Executable file name does not contain G4UniversalSim.
+Geometry: C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\config\geometry\simple_box.ini:24 [visual.world]/color = white: legacy metadata is preserved; use metadata.color in a future migration
+Geometry: C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\config\geometry\simple_box.ini:25 [visual.world]/alpha = 0.05: legacy metadata is preserved; use metadata.alpha in a future migration
+Geometry: C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\config\geometry\simple_box.ini:26 [visual.world]/visible = true: legacy metadata is preserved; use metadata.visible in a future migration
+Geometry: C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\config\geometry\simple_box.ini:27 [visual.world]/wireframe = true: legacy metadata is preserved; use metadata.wireframe in a future migration
+Geometry: C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\config\geometry\simple_box.ini:30 [visual.target]/color = blue: legacy metadata is preserved; use metadata.color in a future migration
+Geometry: C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\config\geometry\simple_box.ini:31 [visual.target]/alpha = 0.6: legacy metadata is preserved; use metadata.alpha in a future migration
+Geometry: C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\config\geometry\simple_box.ini:32 [visual.target]/visible = true: legacy metadata is preserved; use metadata.visible in a future migration
+Geometry: C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\config\geometry\simple_box.ini:33 [visual.target]/wireframe = false: legacy metadata is preserved; use metadata.wireframe in a future migration
+
+[info]
+Materials summary: 6 material entries parsed.
+Geometry summary: 2 ordinary volumes parsed.
+Sensitive volumes: Target
+Bias volumes: <none>
+Boolean operations: <none>
+Source summary: preset=proton_beam, particle=proton, energy=10 MeV
+Physics summary: mode=reference, reference=FTFP_BERT_EMZ, default_cut=1 mm, biasing=False
+Scoring summary: enabled=True, hits=True, event_edep=True, edep=True, hist_bins=100
+Validation passed.
+
+[selected input files]
+materials = C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\config\materials\material.ini
+geometry = C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\config\geometry\simple_box.ini
+
+[copied files]
+materials_source_mode = copied from source
+geometry_source_mode = copied from source
+materials = C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\verification\e6-duplicate-cli\runs\20261030_013613_writer_run\config\materials\material.ini
+geometry = C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\verification\e6-duplicate-cli\runs\20261030_013613_writer_run\config\geometry\geometry.ini
+main_ini = C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\verification\e6-duplicate-cli\runs\20261030_013613_writer_run\config\main.ini
+run_macro = C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\verification\e6-duplicate-cli\runs\20261030_013613_writer_run\macros\run.mac
+output = C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\verification\e6-duplicate-cli\runs\20261030_013613_writer_run\output
+
+[materials summary]
+path = C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\verification\e6-duplicate-cli\runs\20261030_013613_writer_run\config\materials\material.ini
+count = 6
+- World kind=nist density=<none> components=1 section=[World]
+- Water kind=nist density=<none> components=1 section=[Water]
+- Silicon kind=nist density=<none> components=1 section=[Silicon]
+- Lead kind=nist density=<none> components=1 section=[Lead]
+- Copper kind=nist density=<none> components=1 section=[Copper]
+- Aluminum kind=nist density=<none> components=1 section=[Aluminum]
+
+[geometry summary]
+path = C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\verification\e6-duplicate-cli\runs\20261030_013613_writer_run\config\geometry\geometry.ini
+template_hint = simple_box
+volumes = 2
+- world parent=<none> shape=<none> material=G4_AIR boolean_ops=0 
+- Target parent=world shape=box material=G4_Si boolean_ops=0 sensitive
+
+Sensitive volumes:
+- Target
+
+Bias volumes:
+- <none>
+
+Boolean operations:
+- <none>

@@ -1,0 +1,295 @@
+{
+  "schema": "G4UniversalSimProject",
+  "version": 6,
+  "projectName": "demo",
+  "runInputMode": "generated",
+  "executable": "",
+  "workspaceRoot": "",
+  "configPath": "",
+  "macroPath": "",
+  "outputDir": "",
+  "runsRoot": "",
+  "threads": 1,
+  "seed": "",
+  "runName": "",
+  "runSettings": {
+    "run_name": "gui_run",
+    "threads": 1,
+    "seed": 43,
+    "beam_on": 2,
+    "check_overlaps": true,
+    "dry_run": false
+  },
+  "pathSettings": {
+    "executable": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-e6\\Release\\G4UniversalSim.exe",
+    "workspace_root": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim",
+    "runs_root": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-backend04\\packages",
+    "materials_config": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-backend04\\selected-material.ini",
+    "geometry_config": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-backend04\\selected-geometry.ini"
+  },
+  "geometrySettings": {
+    "template": "hierarchical",
+    "config_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-backend04\\selected-geometry.ini"
+  },
+  "sourceSettings": {
+    "preset": "proton_beam",
+    "particle": "proton",
+    "energy": "10 MeV",
+    "position": "0,0,-1 mm",
+    "direction": "0,0,1"
+  },
+  "physicsSettings": {
+    "reference": "FTFP_BERT_EMZ",
+    "default_cut": "1 mm",
+    "enable_biasing": false
+  },
+  "scoringSettings": {
+    "enabled": true,
+    "hits": true,
+    "event_edep": true,
+    "edep": true,
+    "dose": false,
+    "fluence": false,
+    "trajectory_events": 0,
+    "hist_bins": 100,
+    "hist_min": "0 eV",
+    "hist_max": "10 MeV"
+  },
+  "sourceEditor": {
+    "preset": "proton_beam",
+    "particle": "proton",
+    "energy": "10 MeV",
+    "position_mode": "point",
+    "position_type": "point",
+    "position": "0,0,-1 mm",
+    "direction": "0,0,1",
+    "source_shape": "point",
+    "radius": "",
+    "inner_radius": "",
+    "halfx": "",
+    "halfy": "",
+    "halfz": "",
+    "normal": "0,0,1",
+    "rotation1": "1,0,0",
+    "rotation2": "0,1,0",
+    "confine_volume": "",
+    "center": "",
+    "angular_mode": "fixed",
+    "theta_min": "0 deg",
+    "theta_max": "180 deg",
+    "phi_min": "0 deg",
+    "phi_max": "360 deg",
+    "cone_half_angle": "5 deg",
+    "focus_point": "0,0,0 mm",
+    "random_seed_preview": 12345,
+    "preview_ray_count": 12,
+    "enabled": true,
+    "is_dirty": false,
+    "errors": [],
+    "warnings": []
+  },
+  "physicsEditor": {
+    "mode": "reference",
+    "reference_list": "FTFP_BERT_EMZ",
+    "default_cut": "1 mm",
+    "enable_biasing_physics": false,
+    "extra_modules": [],
+    "manual_modules": [],
+    "particle_cuts": {},
+    "is_dirty": false,
+    "errors": [],
+    "warnings": []
+  },
+  "scoringEditor": {
+    "enabled": true,
+    "hits": true,
+    "event_edep": true,
+    "edep": true,
+    "raw_histogram": true,
+    "weighted_histogram": true,
+    "hist_bins": 100,
+    "hist_min": "0 eV",
+    "hist_max": "10 MeV",
+    "volume_summary": true,
+    "particle_summary": true,
+    "let": false,
+    "dose": false,
+    "fluence": false,
+    "trajectory_events": 0,
+    "auto_create_default_scorers": true,
+    "verbose": 1,
+    "is_dirty": false,
+    "errors": [],
+    "warnings": []
+  },
+  "geometryEditor": {
+    "mode": "preview_only",
+    "schema_version": null,
+    "source_path": "",
+    "is_dirty": false,
+    "source_copy_mode": false,
+    "source_errors": [],
+    "source_warnings": [],
+    "validation_errors": [],
+    "validation_warnings": [],
+    "round_trip_blockers": [],
+    "legacy_metadata": [],
+    "simple_box": {
+      "world_size": "10 cm, 10 cm, 10 cm",
+      "world_material": "G4_AIR",
+      "target_name": "Target",
+      "target_shape": "box",
+      "target_size": "1 cm, 1 cm, 1 mm",
+      "target_material": "G4_Si",
+      "target_position": "0 mm, 0 mm, 0 mm",
+      "target_rotation": "0 deg, 0 deg, 0 deg",
+      "target_sensitive": true,
+      "target_bias": false,
+      "target_region": "SV"
+    },
+    "layered_device": {
+      "world_size": "20 cm, 20 cm, 20 cm",
+      "world_material": "G4_AIR",
+      "axis": "z",
+      "auto_stack": true,
+      "gap": "0 um",
+      "z_start": "",
+      "layers": [
+        {
+          "enabled": true,
+          "name": "Substrate",
+          "material": "G4_Si",
+          "thickness": "500 um",
+          "xy": "10 mm, 10 mm",
+          "sensitive": false,
+          "bias": false,
+          "region": "",
+          "copy_no": "",
+          "position": "",
+          "rotation": "",
+          "visual": {},
+          "production_cuts": {},
+          "metadata": "",
+          "errors": []
+        },
+        {
+          "enabled": true,
+          "name": "Sensitive",
+          "material": "G4_Si",
+          "thickness": "10 um",
+          "xy": "10 mm, 10 mm",
+          "sensitive": true,
+          "bias": false,
+          "region": "SV",
+          "copy_no": "",
+          "position": "",
+          "rotation": "",
+          "visual": {},
+          "production_cuts": {},
+          "metadata": "",
+          "errors": []
+        }
+      ]
+    },
+    "volumes": [],
+    "boolean_ops": [],
+    "preview": {
+      "volumes": [],
+      "boolean_ops": []
+    }
+  },
+  "runPackage": {
+    "package_dir": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-backend04\\packages\\20261030_013208_gui_run",
+    "config_dir": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-backend04\\packages\\20261030_013208_gui_run\\config",
+    "macro_dir": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-backend04\\packages\\20261030_013208_gui_run\\macros",
+    "logs_dir": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-backend04\\packages\\20261030_013208_gui_run\\logs",
+    "output_dir": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-backend04\\packages\\20261030_013208_gui_run\\output",
+    "main_ini_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-backend04\\packages\\20261030_013208_gui_run\\config\\main.ini",
+    "run_macro_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-backend04\\packages\\20261030_013208_gui_run\\macros\\run.mac",
+    "validation_report_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-backend04\\packages\\20261030_013208_gui_run\\validation_report.txt",
+    "project_snapshot_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-backend04\\packages\\20261030_013208_gui_run\\project_snapshot.json",
+    "materials_ini_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-backend04\\packages\\20261030_013208_gui_run\\config\\materials\\material.ini",
+    "geometry_ini_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-backend04\\packages\\20261030_013208_gui_run\\config\\geometry\\geometry.ini"
+  },
+  "materialsSourceMode": "copied from source",
+  "geometrySourceMode": "copied from source",
+  "materialsSummary": {
+    "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-backend04\\packages\\20261030_013208_gui_run\\config\\materials\\material.ini",
+    "count": 6,
+    "materials": [
+      {
+        "name": "World",
+        "kind": "nist",
+        "density": "",
+        "components": 1
+      },
+      {
+        "name": "Water",
+        "kind": "nist",
+        "density": "",
+        "components": 1
+      },
+      {
+        "name": "Silicon",
+        "kind": "nist",
+        "density": "",
+        "components": 1
+      },
+      {
+        "name": "Lead",
+        "kind": "nist",
+        "density": "",
+        "components": 1
+      },
+      {
+        "name": "Copper",
+        "kind": "nist",
+        "density": "",
+        "components": 1
+      },
+      {
+        "name": "Aluminum",
+        "kind": "nist",
+        "density": "",
+        "components": 1
+      }
+    ],
+    "warnings": [],
+    "errors": []
+  },
+  "geometrySummary": {
+    "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-backend04\\packages\\20261030_013208_gui_run\\config\\geometry\\geometry.ini",
+    "templateHint": "hierarchical",
+    "volumes": [
+      {
+        "name": "world",
+        "parent": "",
+        "shape": "box",
+        "material": "G4_AIR",
+        "sensitive": false,
+        "bias": false,
+        "booleanOps": 0
+      },
+      {
+        "name": "Target",
+        "parent": "world",
+        "shape": "box",
+        "material": "G4_Si",
+        "sensitive": true,
+        "bias": false,
+        "booleanOps": 0
+      }
+    ],
+    "materialRefs": [
+      "G4_AIR",
+      "G4_Si"
+    ],
+    "sensitiveVolumes": [
+      "Target"
+    ],
+    "biasVolumes": [],
+    "booleanOps": [],
+    "warnings": [],
+    "errors": []
+  }
+}

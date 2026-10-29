@@ -1,0 +1,56 @@
+[
+  {
+    "artifact": "m0-report-ubuntu-latest",
+    "python": "3.11.17",
+    "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.43",
+    "exit_code": -6,
+    "assertions_executed": 393,
+    "sha256": "be5ee32f65ac6859a1baf28649d159e4f49baa07d5eaa9a289ef88cb42f961e1",
+    "stdout_success_message_present": true,
+    "assert_marker_present": true,
+    "fatal_block": [
+      "Fatal Python error: none_dealloc: deallocating None: bug likely caused by a refcount error in a C extension",
+      "Python runtime state: finalizing (tstate=0x000076e271d76918)",
+      "",
+      "Current thread 0x000076e271e80b80 (most recent call first):",
+      "  <no Python frame>"
+    ],
+    "native_stack_available": false
+  },
+  {
+    "artifact": "linux-evidence-11.3.2",
+    "python": "3.11.18",
+    "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39",
+    "exit_code": -6,
+    "assertions_executed": 393,
+    "sha256": "c4dcd0e1f8f8eb0b19bc94d290b17272f00c866c31b573caf26eb6a2746090cc",
+    "stdout_success_message_present": true,
+    "assert_marker_present": true,
+    "fatal_block": [
+      "Fatal Python error: none_dealloc: deallocating None: bug likely caused by a refcount error in a C extension",
+      "Python runtime state: finalizing (tstate=0x00005614f5730fb8)",
+      "",
+      "Current thread 0x00007f42d945a740 (most recent call first):",
+      "  <no Python frame>"
+    ],
+    "native_stack_available": false
+  },
+  {
+    "artifact": "linux-evidence-11.4.3",
+    "python": "3.11.18",
+    "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39",
+    "exit_code": -6,
+    "assertions_executed": 393,
+    "sha256": "b3f06113d4741f6a8cb6a7f580653558a808d7f8f2166513efe88366aa0e4963",
+    "stdout_success_message_present": true,
+    "assert_marker_present": true,
+    "fatal_block": [
+      "Fatal Python error: none_dealloc: deallocating None: bug likely caused by a refcount error in a C extension",
+      "Python runtime state: finalizing (tstate=0x00005651960c4fb8)",
+      "",
+      "Current thread 0x00007f7dd5205740 (most recent call first):",
+      "  <no Python frame>"
+    ],
+    "native_stack_available": false
+  }
+]

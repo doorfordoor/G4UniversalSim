@@ -15,9 +15,11 @@
 
 2026-10-29 Q1已完成：九域审查、R01–R32闭合并交叉复核；验收代码 `8ecad66`。干净Windows **105 PASS / 0 FAIL / 0 SKIP**，83770个v3入口；旧同代98项基线79303，逐例/总数与原始日志门禁通过。Linux11.3.2/11.4.3真实CI各105（run40855144863），Windows/Ubuntu static+GUI各42（run40855144672），Windows实窗保存/生成/运行/取消/关窗通过。[完整收据](docs/verification/q1-final-20261029/README.md)；旧失败证据保留，历史偏置结果须重跑，原生交互迁移显式csh。
 
-## E6 进行中（2026-10-30）
+## E6 实现与自动验收通过，实窗待验（2026-10-30）
 
-基于已交付 `c6bf8ad`，在隔离分支 `roadmap/E6-config-compat` 推进字段补齐与配置兼容。范围与验收节点见 [E6 开工契约](docs/collab/inbox/20261029-2355-astra-e6-execution.md)；DeepSeek 的真实前端设计咨询见 [设计记录](docs/collab/outbox/20261029-deepseek-e6-design.md)。394 项 schema、主 INI 版本、迁移副本、诊断及标准运行包恢复/复制已实现并交叉审查。首轮 `cb837e6` 的弹窗阻塞和导入参数丢失问题已修复；第二轮 `5bf479d` Windows 全量 **133/133、42786 个 v3 入口**及 2C 基线门禁通过，但 Linux CI 在 GUI 导入测试结束后出现 Python `none_dealloc` 崩溃。独立实验已确认当前 PySide6 空数据读取的引用计数问题，正在修复测试和实际受影响的绘图/扫描路径；两轮证据各自保留，下一候选须重新冻结验收。实窗仍等待桌面解锁，E6 未关闭。
+验收代码 `a779634`，隔离分支 `roadmap/E6-config-compat`。394 项 schema、主 INI 版本、迁移副本、诊断及标准运行包恢复/复制已实现并交叉审查；DeepSeek 真实参与前端设计，见 [设计记录](docs/collab/outbox/20261029-deepseek-e6-design.md)。导入参数丢失、弹窗回归及 Linux Qt 空数据读取问题均已修复。Windows **134/134、42815 个 v3 入口**与 2C 基线门禁通过；真实 Linux 11.3.2/11.4.3 各134项、M0 两平台各58项通过，12份CI报告严格门禁、4份官方归档摘要、384份用例日志哈希匹配。三轮证据按原字节保留，见 [E6 自动验收报告](docs/verification/e6-full-20261030/README.md)。Linux依赖在仓库内生成使报告dirty，完整状态清单未采集，范围与内容指纹证据见报告，不能称其整个检出clean。**实窗仍等待桌面解锁，E6保持进行中，尚未合入主线**；高级编辑与任意资源打包仍归J2/K1。
+
+E6补充导航：[不同写者归档复核](docs/verification/e6-full-20261030/independent/README.md)、[阶段机器状态](docs/verification/e6-full-20261030/acceptance-state.json)。原始证据与复核分别保存；实窗准备不等于已经执行。
 
 ## 完整 2C 已完成（2026-10-29）
 

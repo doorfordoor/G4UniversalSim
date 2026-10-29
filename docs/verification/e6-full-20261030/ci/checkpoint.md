@@ -1,0 +1,7 @@
+# E6 release CI采集检查点
+
+冻结HEAD a779634483d1f077357433c532ccb0d9e3dc5517，freeze时clean。实际manifest134：21static/37gui/56backend/20integration。sourcefp ab79c6c2227518bd7f38d5109998ed0998d8fd53ad500cfbe714d544eb19a474；testsfp e9b4f852e36dca85971d40da2c63ed6fd184055358ca965116babba6b16fafd4，与root preflight原报告一致。
+
+GitHub连接器已确认同SHA、event=push的两个实际run：Linux40931653660；M040931654093。初读均in_progress。未触发、重跑或取消。所有原始终态metadata/jobs/logs/4ZIP及12report门禁将在本目录保存；旧e6-ci及e6-ci-final不动。
+
+当前等待实际jobs终态，以合理间隔读取。中间进度快照与最终收据分开，不把预检657断言/本机独立复核冒充CI。

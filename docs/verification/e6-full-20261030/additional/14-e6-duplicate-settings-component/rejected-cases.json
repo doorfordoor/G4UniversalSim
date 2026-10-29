@@ -1,0 +1,126 @@
+[
+  {
+    "name": "bad-json",
+    "error": "Expecting property name enclosed in double quotes: line 1 column 2 (char 1)"
+  },
+  {
+    "name": "duplicate-json-key",
+    "error": "Duplicate JSON key: runPackage"
+  },
+  {
+    "name": "future-main-format",
+    "error": "Generated main.ini schema_version must be the exact supported string 1"
+  },
+  {
+    "name": "invalid-threads-b''",
+    "error": "config/main.ini [run]/threads must be a complete decimal integer"
+  },
+  {
+    "name": "invalid-threads-b'0'",
+    "error": "config/main.ini [run]/threads is outside [1, 2147483647]"
+  },
+  {
+    "name": "invalid-threads-b'-1'",
+    "error": "config/main.ini [run]/threads is outside [1, 2147483647]"
+  },
+  {
+    "name": "invalid-threads-b'1.0'",
+    "error": "config/main.ini [run]/threads must be a complete decimal integer"
+  },
+  {
+    "name": "invalid-threads-b'1e2'",
+    "error": "config/main.ini [run]/threads must be a complete decimal integer"
+  },
+  {
+    "name": "invalid-threads-b'2147483648'",
+    "error": "config/main.ini [run]/threads is outside [1, 2147483647]"
+  },
+  {
+    "name": "invalid-threads-b'1\\xc2\\xa0'",
+    "error": "config/main.ini [run]/threads must be a complete decimal integer"
+  },
+  {
+    "name": "invalid-seed-b''",
+    "error": "config/main.ini [run]/seed must be a complete decimal integer"
+  },
+  {
+    "name": "invalid-seed-b'-1'",
+    "error": "config/main.ini [run]/seed is outside [0, 2147483647]"
+  },
+  {
+    "name": "invalid-seed-b'1.0'",
+    "error": "config/main.ini [run]/seed must be a complete decimal integer"
+  },
+  {
+    "name": "invalid-seed-b'0x10'",
+    "error": "config/main.ini [run]/seed must be a complete decimal integer"
+  },
+  {
+    "name": "invalid-seed-b'2147483648'",
+    "error": "config/main.ini [run]/seed is outside [0, 2147483647]"
+  },
+  {
+    "name": "invalid-seed-b'1\\xc2\\xa0'",
+    "error": "config/main.ini [run]/seed must be a complete decimal integer"
+  },
+  {
+    "name": "missing-required-threads",
+    "error": "config/main.ini [run]/threads is required for standard package duplication"
+  },
+  {
+    "name": "duplicate-run-name",
+    "error": "config/main.ini:8: duplicate or empty key [run]/name"
+  },
+  {
+    "name": "duplicate-path-key",
+    "error": "config/main.ini:20: duplicate or empty key [materials]/file"
+  },
+  {
+    "name": "duplicate-path-section",
+    "error": "config/main.ini:66: duplicate section [materials] is ambiguous for duplication"
+  },
+  {
+    "name": "external-material-path",
+    "error": "[materials]/file must reference the original generated package target: C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-settings-component\\packages\\20261030_014109_gui_run\\config\\materials\\material.ini"
+  },
+  {
+    "name": "external-geometry-path",
+    "error": "[geometry]/config must reference the original generated package target: C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-settings-component\\packages\\20261030_014109_gui_run\\config\\geometry\\geometry.ini"
+  },
+  {
+    "name": "external-output-path",
+    "error": "[output]/dir must reference the original generated package target: C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-settings-component\\packages\\20261030_014109_gui_run\\output"
+  },
+  {
+    "name": "relative-material-path",
+    "error": "[materials]/file must reference the original generated package target: C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-settings-component\\packages\\20261030_014109_gui_run\\config\\materials\\material.ini"
+  },
+  {
+    "name": "extra-resource-section",
+    "error": "Unsupported generated main.ini sections; only standard generated inputs can be duplicated"
+  },
+  {
+    "name": "dynamic-macro",
+    "error": "Macro contains unsupported commands or external resource dependencies"
+  },
+  {
+    "name": "geometry-sidecar",
+    "error": "Geometry with external file/copies_file resources cannot be duplicated without a resource bundle"
+  },
+  {
+    "name": "snapshot-path-mismatch",
+    "error": "Snapshot has a single contradictory material/geometry package path"
+  },
+  {
+    "name": "unknown-nested-metadata",
+    "error": "Unsupported project field: snapshot.materialsSummary.materials[0].unknown_metadata"
+  },
+  {
+    "name": "additional-file",
+    "error": "Only standard generated config inputs can be duplicated; additional resources require a resource bundle"
+  },
+  {
+    "name": "missing-material",
+    "error": "Generated package duplication requires a regular package input: C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-settings-component\\packages\\20261030_014109_gui_run\\config\\materials\\material.ini"
+  }
+]

@@ -1,0 +1,40 @@
+{
+  "scope": "independent closed duplicate helper review; no frontend CLI/run claim",
+  "product_sha256": "fb9f71592d35251c76dca3d644206931102e1a1068c849e642bf71664f7a5463",
+  "product_unchanged": true,
+  "facts": [
+    {
+      "case": "three-path-relocation-and-no-results",
+      "source_unchanged": true,
+      "preserved_nonpath_edit": true
+    },
+    {
+      "case": "nested-envelope-type",
+      "refused": true,
+      "error": "Invalid JSON type at snapshot.materialDocument.rows[0].components; expected int"
+    },
+    {
+      "case": "closed-nested-resource-set",
+      "refused": true,
+      "error": "Only standard generated config inputs can be duplicated; additional resources require a resource bundle"
+    },
+    {
+      "case": "known-sidecar-field",
+      "refused": true,
+      "error": "Geometry with external file/copies_file resources cannot be duplicated without a resource bundle"
+    },
+    {
+      "case": "duplicate-does-not-silently-relax-legacy-path-contract",
+      "refused": true,
+      "error": "runPackage.materials_ini_path must reference the original generated package target: C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-duplicate-independent-review\\fixture\\runs\\20261030_013837_snapshot_fixture\\config\\materials\\material.ini"
+    },
+    {
+      "case": "late-write-failure",
+      "return_success": false,
+      "history_statuses": [
+        "incomplete"
+      ],
+      "source_unchanged": true
+    }
+  ]
+}

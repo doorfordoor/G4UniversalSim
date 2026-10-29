@@ -1,0 +1,36 @@
+mixed spectrum source
+  electron share: 0.98775 (expected 0.98544 +- 0.00757)
+  proton share above 10 MeV: 0.02025 (expected 0.020624 +- 0.019)
+electron albedo
+  W-faced stack: 0.3615 backscattered electrons per primary
+  B4C-faced stack: 0.0120 backscattered electrons per primary
+pores
+  7162 pore copies in the Geant4 world (generated 7162)
+  porous / dense energy loss: 0.7932 (expected 0.8 +- 0.03)
+junction layers
+  Junction1_W_PV thickness [mm]: 0.01 (expected 0.01 +- 1e-09)
+  Layer1_W_PV thickness [mm]: 0.09 (expected 0.09 +- 1e-09)
+  Junction2_Al_PV thickness [mm]: 0.03 (expected 0.03 +- 1e-09)
+  Layer2_Al_PV thickness [mm]: 0.27 (expected 0.27 +- 1e-09)
+analysis
+  transmission run, 200 primaries (proton), layers B4C 300 um, G4_W 100 um, G4_Al 300 um
+    TID: 1.088e-09 Gy per primary, 6.963e-10 Gy cm2 per unit fluence (rel. error 0.11, evidence scorer_statistics.csv)
+    DDD: 0.00101 MeV/g per primary, 0.0006467 MeV/g cm2 per unit fluence (rel. error 0.0079, evidence scorer_statistics.csv)
+    primaries crossing the stack: 0.99
+    e-: 0.045 per primary, mean 0.08016 MeV
+    gamma: 0.015 per primary, mean 0.8767 MeV
+    neutron: 0.025 per primary, mean 0.8957 MeV
+    proton: 1.005 per primary, mean 97.14 MeV
+  report: D:\Temp\g4usim_shield_oqa7ks53\analysis\output\shielding_report.json, spectra: D:\Temp\g4usim_shield_oqa7ks53\analysis\output\spectra.csv
+  tid per primary x events / total: 1 (expected 1 +- 1e-12)
+  tid per fluence / per primary: 0.64 (expected 0.64 +- 1e-12)
+  ddd per primary x events / total: 1 (expected 1 +- 1e-12)
+  ddd per fluence / per primary: 0.64 (expected 0.64 +- 1e-12)
+analysis evidence controls
+  evidence_missing_statistics: rejected
+  evidence_failed_run: rejected
+  evidence_zero_events: rejected
+  evidence_stale_phase_space: rejected
+  evidence_zero_deposition: accepted with an explicit evidence label
+test_shielding_coating: OK
+G4USIM_ASSERTS=60

@@ -1,0 +1,53 @@
+G4UniversalSim GUI Validation Report
+can_run = true
+
+[errors]
+<none>
+
+[warnings]
+<none>
+
+[info]
+Materials summary: 1 material entries parsed.
+Geometry summary: 2 ordinary volumes parsed.
+Sensitive volumes: Target
+Bias volumes: <none>
+Boolean operations: <none>
+Source summary: preset=proton_beam, particle=proton, energy=5 MeV
+Physics summary: mode=reference, reference=FTFP_BERT, default_cut=1 mm, biasing=False
+Scoring summary: enabled=True, hits=False, event_edep=True, edep=True, hist_bins=100
+Validation passed.
+
+[selected input files]
+materials = C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\verification\e6-snapshot-current-writer\snapshot-roundtrip\runs\20261030_013203_snapshot_fixture\config\materials\material.ini
+geometry = C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\verification\e6-snapshot-current-writer\snapshot-roundtrip\runs\20261030_013203_snapshot_fixture\config\geometry\geometry.ini
+
+[copied files]
+materials_source_mode = copied from source
+geometry_source_mode = copied from source
+materials = C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\verification\e6-snapshot-current-writer\snapshot-roundtrip\runs\20261030_013204_snapshot_fixture\config\materials\material.ini
+geometry = C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\verification\e6-snapshot-current-writer\snapshot-roundtrip\runs\20261030_013204_snapshot_fixture\config\geometry\geometry.ini
+main_ini = C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\verification\e6-snapshot-current-writer\snapshot-roundtrip\runs\20261030_013204_snapshot_fixture\config\main.ini
+run_macro = C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\verification\e6-snapshot-current-writer\snapshot-roundtrip\runs\20261030_013204_snapshot_fixture\macros\run.mac
+output = C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\verification\e6-snapshot-current-writer\snapshot-roundtrip\runs\20261030_013204_snapshot_fixture\output
+
+[materials summary]
+path = C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\verification\e6-snapshot-current-writer\snapshot-roundtrip\runs\20261030_013204_snapshot_fixture\config\materials\material.ini
+count = 1
+- ActiveMix kind=mass_fraction density=2 g/cm3 components=2 section=[material.ActiveMix]
+
+[geometry summary]
+path = C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\verification\e6-snapshot-current-writer\snapshot-roundtrip\runs\20261030_013204_snapshot_fixture\config\geometry\geometry.ini
+template_hint = hierarchical
+volumes = 2
+- world parent=<none> shape=box material=G4_AIR boolean_ops=0 
+- Target parent=world shape=box material=ActiveMix boolean_ops=0 sensitive
+
+Sensitive volumes:
+- Target
+
+Bias volumes:
+- <none>
+
+Boolean operations:
+- <none>

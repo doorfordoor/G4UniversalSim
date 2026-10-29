@@ -1,0 +1,125 @@
+{
+  "flat_threads_huge": {
+    "model_load_accepted": true,
+    "old_project_object_retained": false,
+    "project_page_building": true,
+    "config_page_building": false,
+    "generated_package_stale": true,
+    "generated_package_dir": "",
+    "exception_type": "OverflowError"
+  },
+  "run_threads_huge": {
+    "model_load_accepted": true,
+    "old_project_object_retained": false,
+    "project_page_building": false,
+    "config_page_building": true,
+    "generated_package_stale": true,
+    "generated_package_dir": "",
+    "exception_type": "OverflowError"
+  },
+  "events_huge": {
+    "model_load_accepted": true,
+    "old_project_object_retained": false,
+    "project_page_building": false,
+    "config_page_building": true,
+    "generated_package_stale": true,
+    "generated_package_dir": "",
+    "exception_type": "OverflowError"
+  },
+  "settings_hist_bins_huge": {
+    "model_load_accepted": true,
+    "old_project_object_retained": false,
+    "project_page_building": false,
+    "config_page_building": true,
+    "generated_package_stale": true,
+    "generated_package_dir": "",
+    "exception_type": "OverflowError"
+  },
+  "editor_hist_bins_huge": {
+    "model_load_accepted": true,
+    "old_project_object_retained": false,
+    "project_page_building": false,
+    "config_page_building": true,
+    "generated_package_stale": true,
+    "generated_package_dir": "",
+    "exception_type": "OverflowError"
+  },
+  "preview_rays_huge": {
+    "model_load_accepted": true,
+    "old_project_object_retained": false,
+    "project_page_building": false,
+    "config_page_building": true,
+    "generated_package_stale": true,
+    "generated_package_dir": "",
+    "exception_type": "OverflowError"
+  },
+  "preview_seed_huge": {
+    "model_load_accepted": true,
+    "old_project_object_retained": false,
+    "project_page_building": false,
+    "config_page_building": true,
+    "generated_package_stale": true,
+    "generated_package_dir": "",
+    "exception_type": "OverflowError"
+  },
+  "trajectories_huge": {
+    "model_load_accepted": true,
+    "old_project_object_retained": false,
+    "project_page_building": false,
+    "config_page_building": true,
+    "generated_package_stale": true,
+    "generated_package_dir": "",
+    "exception_type": "OverflowError"
+  },
+  "flat_threads_clamped": {
+    "model_load_accepted": true,
+    "old_project_object_retained": false,
+    "project_page_building": false,
+    "config_page_building": false,
+    "generated_package_stale": true,
+    "generated_package_dir": "",
+    "helper_return": true
+  },
+  "events_clamped": {
+    "model_load_accepted": true,
+    "old_project_object_retained": false,
+    "project_page_building": false,
+    "config_page_building": false,
+    "generated_package_stale": true,
+    "generated_package_dir": "",
+    "helper_return": true
+  },
+  "hist_bins_clamped": {
+    "model_load_accepted": true,
+    "old_project_object_retained": false,
+    "project_page_building": false,
+    "config_page_building": false,
+    "generated_package_stale": true,
+    "generated_package_dir": "",
+    "helper_return": true
+  }
+}
+OverflowError: int too big to convert
+C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\widgets\project_page.py:128: RuntimeWarning: libshiboken: Overflow: Value 10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 exceeds limits of type  [signed] "int" (4bytes).
+  self.threads.setValue(max(1, int(project.threads)))
+OverflowError: int too big to convert
+C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\widgets\config_builder_page.py:198: RuntimeWarning: libshiboken: Overflow: Value 10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 exceeds limits of type  [signed] "int" (4bytes).
+  self.threads.setValue(run.threads or project.threads or 1)
+OverflowError: int too big to convert
+C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\widgets\config_builder_page.py:200: RuntimeWarning: libshiboken: Overflow: Value 10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 exceeds limits of type  [signed] "int" (4bytes).
+  self.beam_on.setValue(run.beam_on)
+OverflowError: int too big to convert
+C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\widgets\config_builder_page.py:222: RuntimeWarning: libshiboken: Overflow: Value 10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 exceeds limits of type  [signed] "int" (4bytes).
+  self.hist_bins.setValue(scoring.hist_bins)
+OverflowError: int too big to convert
+C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\widgets\config\run_config.py:372: RuntimeWarning: libshiboken: Overflow: Value 10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 exceeds limits of type  [signed] "int" (4bytes).
+  self.scoring_editor_bins.setValue(self.scoring_editor.hist_bins)
+OverflowError: int too big to convert
+C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\widgets\config\run_config.py:355: RuntimeWarning: libshiboken: Overflow: Value 10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 exceeds limits of type  [signed] "int" (4bytes).
+  self.source_editor_preview_rays.setValue(self.source_editor.preview_ray_count)
+OverflowError: int too big to convert
+C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\widgets\config\run_config.py:356: RuntimeWarning: libshiboken: Overflow: Value 10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 exceeds limits of type  [signed] "int" (4bytes).
+  self.source_editor_preview_seed.setValue(self.source_editor.random_seed_preview)
+OverflowError: int too big to convert
+C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\widgets\config\run_config.py:369: RuntimeWarning: libshiboken: Overflow: Value 10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 exceeds limits of type  [signed] "int" (4bytes).
+  self.scoring_editor_trajectories.setValue(self.scoring_editor.trajectory_events)

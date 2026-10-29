@@ -1,0 +1,63 @@
+[
+  {
+    "variant": "original",
+    "exit": 134,
+    "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-linux-finalize\\wsl-full-original.log",
+    "selected": [
+      "NONECOUNT before_app 30781",
+      "NONECOUNT before_window 30778",
+      "NONECOUNT before_initial_snapshot 30241",
+      "NONECOUNT after_negative_imports 19773",
+      "NONECOUNT before_close 10497",
+      "NONECOUNT end_main 10506",
+      "smoke_project_import_projection: ok",
+      "G4USIM_ASSERTS=393",
+      "Fatal Python error: none_dealloc: deallocating None: bug likely caused by a refcount error in a C extension"
+    ]
+  },
+  {
+    "variant": "cleanup_only",
+    "exit": 139,
+    "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-linux-finalize\\wsl-full-cleanup_only.log",
+    "selected": [
+      "NONECOUNT before_app 30784",
+      "NONECOUNT before_window 30781",
+      "NONECOUNT before_initial_snapshot 30244",
+      "NONECOUNT after_negative_imports 19776",
+      "NONECOUNT before_close 10500",
+      "NONECOUNT end_main 9878",
+      "smoke_project_import_projection: ok",
+      "G4USIM_ASSERTS=393"
+    ]
+  },
+  {
+    "variant": "safe_getters",
+    "exit": 0,
+    "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-linux-finalize\\wsl-full-safe_getters.log",
+    "selected": [
+      "NONECOUNT before_app 30782",
+      "NONECOUNT before_window 30779",
+      "NONECOUNT before_initial_snapshot 30242",
+      "NONECOUNT after_negative_imports 30875",
+      "NONECOUNT before_close 21599",
+      "NONECOUNT end_main 21608",
+      "smoke_project_import_projection: ok",
+      "G4USIM_ASSERTS=393"
+    ]
+  },
+  {
+    "variant": "safe_getters_cleanup",
+    "exit": 139,
+    "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-linux-finalize\\wsl-full-safe_getters_cleanup.log",
+    "selected": [
+      "NONECOUNT before_app 30785",
+      "NONECOUNT before_window 30782",
+      "NONECOUNT before_initial_snapshot 30262",
+      "NONECOUNT after_negative_imports 30878",
+      "NONECOUNT before_close 21602",
+      "NONECOUNT end_main 20980",
+      "smoke_project_import_projection: ok",
+      "G4USIM_ASSERTS=393"
+    ]
+  }
+]

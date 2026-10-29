@@ -1,0 +1,128 @@
+{
+  "string_false_becomes_true": {
+    "accepted": true,
+    "input": {
+      "geometryEditor": {
+        "source_copy_mode": "false",
+        "is_dirty": "false"
+      }
+    },
+    "threads": 1,
+    "geometry": {
+      "source_copy_mode": true,
+      "is_dirty": true,
+      "source_errors": [],
+      "source_path": "",
+      "volumes": []
+    }
+  },
+  "fractional_threads_truncated": {
+    "accepted": true,
+    "input": {
+      "threads": 2.75
+    },
+    "threads": 2,
+    "geometry": {
+      "source_copy_mode": false,
+      "is_dirty": false,
+      "source_errors": [],
+      "source_path": "",
+      "volumes": []
+    }
+  },
+  "source_error_string_splits": {
+    "accepted": true,
+    "input": {
+      "geometryEditor": {
+        "source_errors": "ERR"
+      }
+    },
+    "threads": 1,
+    "geometry": {
+      "source_copy_mode": false,
+      "is_dirty": false,
+      "source_errors": [
+        "E",
+        "R",
+        "R"
+      ],
+      "source_path": "",
+      "volumes": []
+    }
+  },
+  "null_path_stringifies": {
+    "accepted": true,
+    "input": {
+      "geometryEditor": {
+        "source_path": null
+      }
+    },
+    "threads": 1,
+    "geometry": {
+      "source_copy_mode": false,
+      "is_dirty": false,
+      "source_errors": [],
+      "source_path": "None",
+      "volumes": []
+    }
+  },
+  "preview_bool_integer_conflict": {
+    "accepted": true,
+    "input": {
+      "geometryEditor": {
+        "volumes": [
+          {
+            "name": "V",
+            "sensitive": false
+          }
+        ],
+        "preview": {
+          "volumes": [
+            {
+              "name": "V",
+              "sensitive": 0
+            }
+          ]
+        }
+      }
+    },
+    "threads": 1,
+    "geometry": {
+      "source_copy_mode": false,
+      "is_dirty": false,
+      "source_errors": [],
+      "source_path": "",
+      "volumes": [
+        {
+          "enabled": true,
+          "name": "V",
+          "parent": "",
+          "shape": "",
+          "size": "",
+          "parameters": "",
+          "material": "",
+          "position": "",
+          "rotation": "",
+          "sensitive": false,
+          "bias": false,
+          "region": "",
+          "copy_no": "",
+          "metadata": "",
+          "shape_properties": {},
+          "preview_properties": {},
+          "visual": {},
+          "production_cuts": {},
+          "notes": ""
+        }
+      ]
+    }
+  },
+  "unicode_backend_source": {
+    "exit": 0,
+    "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-independent\\source.log"
+  },
+  "unicode_backend_migrated": {
+    "exit": 0,
+    "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\e6-independent\\migrated.log"
+  }
+}

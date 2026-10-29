@@ -1,0 +1,11 @@
+# E6最终归档不同写者复核：通过
+
+目标docs/verification/e6-full-20261030，冻结代码a779634483d1f077357433c532ccb0d9e3dc5517。实际执行独立只读脚本exit0，未改tracked/归档原件。
+
+- archive-complete中的manifest与verification摘要匹配；manifest全部2711文件、13423947字节逐项size/SHA匹配，且与原源文件完整字节相同。逐文件清单manifest-byte-checks.json。
+- 恰13份release：12CI+1Windows，全部重新运行原严格门禁exit0；同一a779、双指纹、冻结用例集合及12profile分布一致。518个release用例日志均要求归档本地副本且原字节SHA匹配，不允许回读绝对源日志。
+- Windows为134/134、42815条v3断言执行；与完整2C f4770b0原118例/40628条同v3基线门禁exit0。baseline归档原报告字节与2C canonical原报告完全相同，SHA d39e8d3f02deee28df895eb8848e0a5e64b9263880439dab2f4f68480576d3dc。
+- 8份历史失败报告保持原字节，来自cb837和5bf，均未列release，未用旧失败/旧Windows通过控制替代本轮验收。
+- 归档根README保留stage_complete=false及stage_acceptance_pending_visible；自动验收通过不代表实窗或物理阶段完成。root稍后拟写的acceptance-state.json在本次读取时尚不存在，不预认其内容。
+
+机器结果review.json；重新运行的13门禁为release-gate-00至12.log，基线门禁windows-2c-baseline-gate.log。本复核只读已有归档并写本out目录，不重跑产品测试或CI。

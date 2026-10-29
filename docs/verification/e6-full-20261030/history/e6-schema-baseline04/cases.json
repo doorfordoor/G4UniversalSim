@@ -1,0 +1,419 @@
+{
+  "executable": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-2c\\Release\\G4UniversalSim.exe",
+  "baseline": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-2c\\Release\\G4UniversalSim.exe",
+  "cases": [
+    {
+      "name": "absent",
+      "accepted": true,
+      "exit_code": 0,
+      "diagnostics": []
+    },
+    {
+      "name": "uniform-b",
+      "accepted": true,
+      "exit_code": 0,
+      "diagnostics": []
+    },
+    {
+      "name": "uniform-e-b",
+      "accepted": true,
+      "exit_code": 0,
+      "diagnostics": []
+    },
+    {
+      "name": "field-map",
+      "accepted": true,
+      "exit_code": 0,
+      "diagnostics": []
+    },
+    {
+      "name": "electric-map",
+      "accepted": true,
+      "exit_code": 0,
+      "diagnostics": []
+    },
+    {
+      "name": "local",
+      "accepted": true,
+      "exit_code": 0,
+      "diagnostics": []
+    },
+    {
+      "name": "precision",
+      "accepted": true,
+      "exit_code": 0,
+      "diagnostics": []
+    },
+    {
+      "name": "field-both-map",
+      "accepted": false,
+      "exit_code": 1,
+      "diagnostics": []
+    },
+    {
+      "name": "field-global-volumes",
+      "accepted": false,
+      "exit_code": 1,
+      "diagnostics": []
+    },
+    {
+      "name": "field-no-volumes",
+      "accepted": false,
+      "exit_code": 1,
+      "diagnostics": []
+    },
+    {
+      "name": "field-empty-volumes",
+      "accepted": false,
+      "exit_code": 1,
+      "diagnostics": []
+    },
+    {
+      "name": "field-missing-volume",
+      "accepted": false,
+      "exit_code": 1,
+      "diagnostics": []
+    },
+    {
+      "name": "field-no-source",
+      "accepted": false,
+      "exit_code": 1,
+      "diagnostics": []
+    },
+    {
+      "name": "field-bad-name",
+      "accepted": false,
+      "exit_code": 1,
+      "diagnostics": []
+    },
+    {
+      "name": "field-unit-case",
+      "accepted": false,
+      "exit_code": 1,
+      "diagnostics": []
+    },
+    {
+      "name": "field-short-vector",
+      "accepted": false,
+      "exit_code": 1,
+      "diagnostics": []
+    },
+    {
+      "name": "field-unknown",
+      "accepted": false,
+      "exit_code": 1,
+      "diagnostics": []
+    },
+    {
+      "name": "bias-defaults",
+      "accepted": true,
+      "exit_code": 0,
+      "diagnostics": []
+    },
+    {
+      "name": "bias-boundaries",
+      "accepted": true,
+      "exit_code": 0,
+      "diagnostics": []
+    },
+    {
+      "name": "bias-secondary-precedence",
+      "accepted": true,
+      "exit_code": 0,
+      "diagnostics": []
+    },
+    {
+      "name": "bias-name-empty",
+      "accepted": true,
+      "exit_code": 0,
+      "diagnostics": []
+    },
+    {
+      "name": "bias-overrides",
+      "accepted": true,
+      "exit_code": 0,
+      "diagnostics": [
+        "[BiasingManager] warning: section 'biasing.xs.a.a' overrides particle='A' with particle='proton'.",
+        "[BiasingManager] warning: section 'biasing.xs.a.a' overrides process='a' with process='hIoni'."
+      ]
+    },
+    {
+      "name": "bias-legacy",
+      "accepted": true,
+      "exit_code": 0,
+      "diagnostics": [
+        "[BiasingManager] warning: Legacy particle-level XS bias syntax is used ([biasing.xs]). All listed processes share the same parameters. Prefer process-level rules: [biasing.xs.<particle>.<process>] or /AIHL/biasing/xs/addRule."
+      ]
+    },
+    {
+      "name": "bias-dormant-absent",
+      "accepted": true,
+      "exit_code": 0,
+      "diagnostics": [
+        "[ConfigWarning] unconsumed field D:\\Temp\\g4usim-e6-schema-o72h4g5q\\case-23.ini:15 [biasing.xs.proton.hioni]/factor = nan; did you mean 'factor'?"
+      ]
+    },
+    {
+      "name": "bias-dormant-false",
+      "accepted": true,
+      "exit_code": 0,
+      "diagnostics": [
+        "[ConfigWarning] unconsumed field D:\\Temp\\g4usim-e6-schema-o72h4g5q\\case-24.ini:17 [biasing.xs.proton.hioni]/factor = nan; did you mean 'factor'?"
+      ]
+    },
+    {
+      "name": "bias-unknown-warning",
+      "accepted": true,
+      "exit_code": 0,
+      "diagnostics": [
+        "[ConfigWarning] unconsumed field D:\\Temp\\g4usim-e6-schema-o72h4g5q\\case-25.ini:18 [biasing.xs.proton.hioni]/faktor = 2; did you mean 'factor'?"
+      ]
+    },
+    {
+      "name": "bias-bad-section",
+      "accepted": false,
+      "exit_code": 1,
+      "diagnostics": []
+    },
+    {
+      "name": "bias-particle-empty",
+      "accepted": false,
+      "exit_code": 1,
+      "diagnostics": []
+    },
+    {
+      "name": "bias-process-empty",
+      "accepted": false,
+      "exit_code": 1,
+      "diagnostics": []
+    },
+    {
+      "name": "bias-auto",
+      "accepted": true,
+      "exit_code": 0,
+      "diagnostics": []
+    },
+    {
+      "name": "bias-on",
+      "accepted": true,
+      "exit_code": 0,
+      "diagnostics": []
+    },
+    {
+      "name": "bias-auto-false",
+      "accepted": false,
+      "exit_code": 1,
+      "diagnostics": []
+    },
+    {
+      "name": "bias-off-active",
+      "accepted": false,
+      "exit_code": 1,
+      "diagnostics": []
+    },
+    {
+      "name": "bias-auto-incomplete",
+      "accepted": false,
+      "exit_code": 1,
+      "diagnostics": []
+    },
+    {
+      "name": "field-min_step-0",
+      "accepted": false,
+      "exit_code": 1,
+      "diagnostics": []
+    },
+    {
+      "name": "field-min_step--1 mm",
+      "accepted": false,
+      "exit_code": 1,
+      "diagnostics": []
+    },
+    {
+      "name": "field-min_step-nan",
+      "accepted": false,
+      "exit_code": 1,
+      "diagnostics": []
+    },
+    {
+      "name": "field-min_step-1e308 m",
+      "accepted": false,
+      "exit_code": 1,
+      "diagnostics": []
+    },
+    {
+      "name": "field-delta_chord-0",
+      "accepted": false,
+      "exit_code": 1,
+      "diagnostics": []
+    },
+    {
+      "name": "field-delta_chord--1 mm",
+      "accepted": false,
+      "exit_code": 1,
+      "diagnostics": []
+    },
+    {
+      "name": "field-delta_chord-nan",
+      "accepted": false,
+      "exit_code": 1,
+      "diagnostics": []
+    },
+    {
+      "name": "field-delta_chord-1e308 m",
+      "accepted": false,
+      "exit_code": 1,
+      "diagnostics": []
+    },
+    {
+      "name": "field-delta_one_step-0",
+      "accepted": false,
+      "exit_code": 1,
+      "diagnostics": []
+    },
+    {
+      "name": "field-delta_one_step--1 mm",
+      "accepted": false,
+      "exit_code": 1,
+      "diagnostics": []
+    },
+    {
+      "name": "field-delta_one_step-nan",
+      "accepted": false,
+      "exit_code": 1,
+      "diagnostics": []
+    },
+    {
+      "name": "field-delta_one_step-1e308 m",
+      "accepted": false,
+      "exit_code": 1,
+      "diagnostics": []
+    },
+    {
+      "name": "field-delta_intersection-0",
+      "accepted": false,
+      "exit_code": 1,
+      "diagnostics": []
+    },
+    {
+      "name": "field-delta_intersection--1 mm",
+      "accepted": false,
+      "exit_code": 1,
+      "diagnostics": []
+    },
+    {
+      "name": "field-delta_intersection-nan",
+      "accepted": false,
+      "exit_code": 1,
+      "diagnostics": []
+    },
+    {
+      "name": "field-delta_intersection-1e308 m",
+      "accepted": false,
+      "exit_code": 1,
+      "diagnostics": []
+    },
+    {
+      "name": "bias-factor-0",
+      "accepted": false,
+      "exit_code": 1,
+      "diagnostics": []
+    },
+    {
+      "name": "bias-factor--1",
+      "accepted": false,
+      "exit_code": 1,
+      "diagnostics": []
+    },
+    {
+      "name": "bias-factor-inf",
+      "accepted": false,
+      "exit_code": 1,
+      "diagnostics": []
+    },
+    {
+      "name": "bias-factor-nan",
+      "accepted": false,
+      "exit_code": 1,
+      "diagnostics": []
+    },
+    {
+      "name": "bias-factor-1e999",
+      "accepted": false,
+      "exit_code": 1,
+      "diagnostics": []
+    },
+    {
+      "name": "bias-min_weight--1",
+      "accepted": false,
+      "exit_code": 1,
+      "diagnostics": []
+    },
+    {
+      "name": "bias-min_weight-nan",
+      "accepted": false,
+      "exit_code": 1,
+      "diagnostics": []
+    },
+    {
+      "name": "bias-max_interactions--2",
+      "accepted": false,
+      "exit_code": 1,
+      "diagnostics": []
+    },
+    {
+      "name": "bias-max_interactions-1.0",
+      "accepted": false,
+      "exit_code": 1,
+      "diagnostics": []
+    },
+    {
+      "name": "bias-max_interactions-2147483648",
+      "accepted": false,
+      "exit_code": 1,
+      "diagnostics": []
+    },
+    {
+      "name": "runtime-two-workers-two-runs",
+      "completed_events": 8,
+      "biasing_facts": [
+        {
+          "run_id": 0,
+          "thread_id": 0,
+          "operators": 1,
+          "matched_rules": 1,
+          "tls_verified": true,
+          "end_run_completed": true,
+          "failed": false
+        },
+        {
+          "run_id": 0,
+          "thread_id": 1,
+          "operators": 1,
+          "matched_rules": 1,
+          "tls_verified": true,
+          "end_run_completed": true,
+          "failed": false
+        },
+        {
+          "run_id": 1,
+          "thread_id": 0,
+          "operators": 1,
+          "matched_rules": 1,
+          "tls_verified": true,
+          "end_run_completed": true,
+          "failed": false
+        },
+        {
+          "run_id": 1,
+          "thread_id": 1,
+          "operators": 1,
+          "matched_rules": 1,
+          "tls_verified": true,
+          "end_run_completed": true,
+          "failed": false
+        }
+      ]
+    }
+  ]
+}
