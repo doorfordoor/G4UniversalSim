@@ -501,3 +501,5 @@ host原observation_acceptance=pending、真实夹具准备收据pending、build_
 覆盖Config既有编辑字段、Project/Run路径检查、向导、扫描及屏蔽场景；跨页setup/project目标需双侧快照守卫。运行包新增validation_diagnostics.json并保留validation_report.txt；生成时校验不证明运行/物理正确。F5撤销与K1/L1执行服务仍是后续范围。专项scripts/test_f4_diagnostics.py、test_f4_producers.py、test_f4_document_diagnostics.py、gui/smoke_tests/smoke_f4_navigation.py和smoke_f4_entrypoints.py；正式矩阵/实窗未完成前不得宣称F4关闭。
 
 F4验收入口追加：smoke_f4_inspect_protocol.py覆盖合成协议及过期回调；smoke_f4_inspect_backend.py覆盖真实后端拒绝原文及无模拟启动；smoke_f4_layout.py覆盖小窗口滚动和字段可达。合成协议测试不得冒充真实Geant4输出。
+
+F4首轮5d6f008实窗反例：重名几何的size诊断虽选中[2,6]，外层滚动却显示空白。修复必须在切页/布局后按visualItemRect映射目标单元格到各滚动视口；不能用整张QTableWidget中心或isVisible()冒充单元格可见。smoke_f4_layout追加实际裁剪区域交集、远端行/布尔/详情及不改值断言。原生失败记录、正常host退出与未完成Windows轮分别保存，不得把过程exit0或部分测试通过算阶段验收。

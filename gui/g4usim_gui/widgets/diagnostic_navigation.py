@@ -80,15 +80,26 @@ def reveal_widget(widget: QWidget, *, allow_read_only: bool = False) -> Navigati
             parent.set_expanded(True)
         if parent.layout() is not None:
             parent.layout().activate()
+    anchor = widget
+    target_rect = widget.rect()
+    if isinstance(widget, QTableWidget) and widget.currentItem() is not None:
+        # Hidden tabs have not laid out their item view yet. Reveal them first,
+        # then align the selected cell inside the table and every outer scroll.
+        widget.doItemsLayout()
+        widget.scrollToItem(widget.currentItem(), QTableWidget.PositionAtCenter)
+        anchor = widget.viewport()
+        target_rect = widget.visualItemRect(widget.currentItem())
     for parent in parents:
         if isinstance(parent, QScrollArea):
-            parent.ensureWidgetVisible(widget, 24, 24)
+            if anchor is widget:
+                parent.ensureWidgetVisible(widget, 24, 24)
             # Qt may reveal only a line edit/text edit cursor. In a narrow pane
             # that can leave the highlighted control mostly outside the view.
-            center = widget.mapTo(parent.widget(), widget.rect().center())
+            # Tables use the selected cell, not the much larger table center.
+            center = anchor.mapTo(parent.widget(), target_rect.center())
             parent.ensureVisible(center.x(), center.y(),
-                                 min(widget.width() // 2 + 24, parent.viewport().width() // 2),
-                                 min(widget.height() // 2 + 24, parent.viewport().height() // 2))
+                                 min(target_rect.width() // 2 + 24, parent.viewport().width() // 2),
+                                 min(target_rect.height() // 2 + 24, parent.viewport().height() // 2))
     widget.setFocus(Qt.OtherFocusReason)
     return result
 
@@ -360,10 +371,13 @@ class ConfigDiagnosticNavigator(QObject):
             finally:
                 target.table.blockSignals(previous)
                 self.page._building = was_building
+        revealed = reveal_widget(target.widget)
+        if not revealed.ok:
+            return revealed
+        if target.table is not None and target.row is not None and target.widget is not target.table:
             item = target.table.item(target.row, target.column)
             if item is not None:
                 target.table.scrollToItem(item, QTableWidget.PositionAtCenter)
-        reveal_widget(target.widget)
         self.highlighter.highlight(target.widget, diagnostic.severity, diagnostic.message)
         return NavigationResult("focused", ui_format("Located field: {location}", location=diagnostic.location.field), target.widget)
 

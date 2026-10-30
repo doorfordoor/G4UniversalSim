@@ -11,6 +11,15 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from PySide6.QtCore import QCoreApplication, QEvent, QSettings  # noqa: E402
 from PySide6.QtWidgets import QApplication  # noqa: E402
+from PySide6.QtTest import QSignalSpy  # noqa: E402
+from g4usim_gui.core.diagnostics import collect_diagnostics, extend_diagnostics  # noqa: E402
+from g4usim_gui.editors.geometry_editor_model import (  # noqa: E402
+    BooleanOperationRow, GeometryDocument, HierarchicalVolumeRow, validate_geometry_document,
+)
+from g4usim_gui.editors.material_editor_model import (  # noqa: E402
+    MaterialDocument, MaterialRow, validate_material_document,
+)
+from g4usim_gui.validators.config_validator import ValidationReport  # noqa: E402
 from g4usim_gui.core.i18n import apply_language, set_application_language  # noqa: E402
 from g4usim_gui.core.theme import apply_theme  # noqa: E402
 from g4usim_gui.main_window import MainWindow  # noqa: E402
@@ -35,6 +44,84 @@ def reach(app, scroll, widget):
     scroll.horizontalScrollBar().setValue(center.x() - scroll.viewport().width() // 2)
     app.processEvents()
     visible_in_scroll(scroll, widget)
+
+
+def target_visible_through_ancestors(widget, local_rect, *, full_cell=True):
+    """Selection/isVisible alone do not prove a cell survived outer clipping."""
+    target = local_rect.translated(widget.mapToGlobal(local_rect.topLeft()) - local_rect.topLeft())
+    clipped = target
+    parent = widget
+    while parent is not None:
+        area = parent.rect().translated(parent.mapToGlobal(parent.rect().topLeft()))
+        clipped = clipped.intersected(area)
+        parent = parent.parentWidget()
+    assert not clipped.isEmpty(), (target, clipped)
+    assert clipped.contains(target.center()), (target, clipped)
+    if full_cell:
+        assert clipped == target, (target, clipped)
+
+
+def check_config_targets(app, window):
+    page = window.config_builder_page
+    page.preview3d_auto_backend.setChecked(False)
+    window.page_stack.setCurrentWidget(page)
+    page.geometry_document = GeometryDocument(mode="hierarchical", is_dirty=True, volumes=[
+        HierarchicalVolumeRow(name="World", shape="box", size="10 cm,10 cm,10 cm", material="G4_AIR"),
+        HierarchicalVolumeRow(name="Sensor", parent="World", shape="box", size="1 mm,1 mm,1 mm", material="G4_Si"),
+        HierarchicalVolumeRow(name="Sensor", parent="World", shape="box", size="bad", material="G4_Si"),
+    ], boolean_ops=[BooleanOperationRow(target_volume="Sensor", index=2, operation="invalid-operation",
+                                       tool_shape="box", tool_size="0.1 mm,0.1 mm,0.1 mm")])
+    # A distant row also exercises the table's internal scrollbar.
+    page.geometry_document.volumes.extend(HierarchicalVolumeRow(
+        name=f"Far{i}", parent="World", shape="box", size="bad", material="G4_Si") for i in range(60))
+    page._populate_geometry_editor()
+    validate_geometry_document(page.geometry_document)
+    report = ValidationReport()
+    extend_diagnostics(report, collect_diagnostics(page.geometry_document))
+    page.set_validation_report(report)
+    for editor, row, field, table, column in (
+        ("geometry", 2, "size", page.geometry_table, 6),
+        ("geometry", 62, "size", page.geometry_table, 6),
+        ("booleans", 0, "operation", page.boolean_table, 3),
+    ):
+        record = next(d for d in page.diagnostic_panel.records if d.location and
+                      (d.location.editor, d.location.row, d.location.field) == (editor, row, field))
+        before = asdict(page.geometry_document)
+        snapshot = page._current_diagnostic_snapshot()
+        changed = QSignalSpy(page.settingsChanged)
+        page.workspace_tabs.setCurrentIndex(5)
+        app.processEvents()
+        assert page.navigate_diagnostic(record).ok
+        app.processEvents()
+        assert (table.currentRow(), table.currentColumn()) == (row, column)
+        target_visible_through_ancestors(table.viewport(), table.visualItemRect(table.currentItem()))
+        assert asdict(page.geometry_document) == before
+        assert page._current_diagnostic_snapshot() == snapshot
+        assert changed.count() == 0
+
+    page.material_document = MaterialDocument(is_dirty=True, rows=[
+        MaterialRow(name="Same", density="1 g/cm3", components_text="Si:1"),
+        MaterialRow(name="Same", density="bad", components_text="Si:1")])
+    page._populate_material_editor()
+    validate_material_document(page.material_document)
+    report = ValidationReport()
+    extend_diagnostics(report, collect_diagnostics(page.material_document))
+    page.set_validation_report(report)
+    record = next(d for d in page.diagnostic_panel.records if d.location and
+                  d.location.row == 1 and d.location.field == "density")
+    before = asdict(page.material_document)
+    snapshot = page._current_diagnostic_snapshot()
+    changed = QSignalSpy(page.settingsChanged)
+    page.workspace_tabs.setCurrentIndex(5)
+    app.processEvents()
+    assert page.navigate_diagnostic(record).ok
+    app.processEvents()
+    target_visible_through_ancestors(page.material_density, page.material_density.rect(), full_cell=False)
+    assert page.materials_table.currentRow() == 1
+    assert page.material_density.text() == "bad"
+    assert asdict(page.material_document) == before
+    assert page._current_diagnostic_snapshot() == snapshot
+    assert changed.count() == 0
 
 
 def main():
@@ -79,6 +166,7 @@ def main():
             assert window.page_stack.currentWidget() is project
             visible_in_scroll(project.content_scroll, project.executable)
             assert project.diagnostic_values() == before
+            check_config_targets(app, window)
 
     narrow_project, narrow_run = ProjectPage(), RunPage()
     for page in (narrow_project, narrow_run):
