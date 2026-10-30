@@ -41,3 +41,9 @@
 [发布后独立核验](delivery/f1-visible-published-review.md)已批准：102原件、2850旧文件、14图与关闭链、双HEAD身份及归档根下20产物严格SHA全部通过；[核验收据](delivery/f1-visible-published-evidence-final.json)与[四份审查材料复制清单](delivery/copy-manifest.json)独立保留。审查者未操作桌面或冒称看图。
 
 下一完整阶段为 **F4：诊断定位到 editor/row/field/code 并支持点击跳转**，随后F5、K1；I1可按依赖并行。集成采用独立q1-final工作区正常快进codex，实际推送事实另行登记。
+
+## 已发生的集成
+
+阶段关闭提交 `7e75d28675427bc900de2c29d713c75022b57ab5` 已正常推送至 `roadmap/F1-output-provenance`；独立q1-final工作区的 `codex` 从 `20ab4f3` 快进至同一提交并普通推送，实际读取远端确认两分支一致。见[集成收据](integration-receipt.json)与[原始执行日志清单](delivery/integration/copy-manifest.json)。原D盘检出的HEAD/分支和21项未跟踪材料状态与预检一致，未执行切换或合并；没有force/reset/rebase。
+
+第一次集成辅助脚本在只读路径检查中遇到Git中文路径引用格式而停止，未执行任何merge/push；保留该收据。改用NUL分隔原始路径重新核对后，正常集成才执行成功。此补记只记录已发生事实；后续提交仅归档这些收据，不改变被测产品。

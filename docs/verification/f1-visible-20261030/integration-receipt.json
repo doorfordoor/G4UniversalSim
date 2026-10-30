@@ -1,0 +1,318 @@
+{
+  "schema": "f1_normal_integration_v1",
+  "started_utc": "2026-10-30T10:05:52.944758+00:00",
+  "stage_close_commit": "7e75d28675427bc900de2c29d713c75022b57ab5",
+  "product_commit": "f176d0ed4cea60b7ca5a80ed81017c9404ec1257",
+  "integration_before": "20ab4f3eb34b41d4004a4e1b9d38d2f2f290f366",
+  "steps": [
+    {
+      "cwd": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim",
+      "args": [
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\f1-integrate-corrected-00.log",
+      "log_sha256": "234ac546991c1e7b8de50630751db5d6e421187be8e33de1fddb8fb453aae4e7",
+      "stdout": "7e75d28675427bc900de2c29d713c75022b57ab5\n"
+    },
+    {
+      "cwd": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim",
+      "args": [
+        "branch",
+        "--show-current"
+      ],
+      "exit_code": 0,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\f1-integrate-corrected-01.log",
+      "log_sha256": "00372e80771ecd127ec9aeb8f6f7bfdb2219e2257ada06e9a0865cb5157b5ca6",
+      "stdout": "roadmap/F1-output-provenance\n"
+    },
+    {
+      "cwd": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim",
+      "args": [
+        "status",
+        "--porcelain=v1"
+      ],
+      "exit_code": 0,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\f1-integrate-corrected-02.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": ""
+    },
+    {
+      "cwd": "C:\\Users\\123\\.codex\\worktrees\\q1-final\\G4UniversalSim",
+      "args": [
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\f1-integrate-corrected-03.log",
+      "log_sha256": "16283074f9c5e2af4e46f69bc16479408df405b98efd7d01de53eee0bc2940be",
+      "stdout": "20ab4f3eb34b41d4004a4e1b9d38d2f2f290f366\n"
+    },
+    {
+      "cwd": "C:\\Users\\123\\.codex\\worktrees\\q1-final\\G4UniversalSim",
+      "args": [
+        "branch",
+        "--show-current"
+      ],
+      "exit_code": 0,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\f1-integrate-corrected-04.log",
+      "log_sha256": "243b0dc9b847e66c440dca985e10fe0ce9e29c379b018ddd5747ba8948f84cc8",
+      "stdout": "codex\n"
+    },
+    {
+      "cwd": "C:\\Users\\123\\.codex\\worktrees\\q1-final\\G4UniversalSim",
+      "args": [
+        "status",
+        "--porcelain=v1"
+      ],
+      "exit_code": 0,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\f1-integrate-corrected-05.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": ""
+    },
+    {
+      "cwd": "D:\\Geant4\\G4UniversalSim",
+      "args": [
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\f1-integrate-corrected-06.log",
+      "log_sha256": "8ab48d540ec8627eaf5eb4b049d65d93caec5b1c703070281789fb9a8b109e9c",
+      "stdout": "5465dbdddf36dae921a885d2a18a1d049c383a1e\n"
+    },
+    {
+      "cwd": "D:\\Geant4\\G4UniversalSim",
+      "args": [
+        "branch",
+        "--show-current"
+      ],
+      "exit_code": 0,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\f1-integrate-corrected-07.log",
+      "log_sha256": "982d5746ba58011a37c026bfbc142505972020cd0e2d18947f4be7de83a9f4f6",
+      "stdout": "roadmap/F6-live-progress\n"
+    },
+    {
+      "cwd": "D:\\Geant4\\G4UniversalSim",
+      "args": [
+        "status",
+        "--porcelain=v1"
+      ],
+      "exit_code": 0,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\f1-integrate-corrected-08.log",
+      "log_sha256": "d2c83305793fac6741e71466cdf1f74cbe39f62faa1f191202130c3aea02fc55",
+      "stdout": "?? docs/collab/inbox/20261029-1010-astra-2c-execution.md\n?? docs/collab/inbox/20261029-1103-astra-2c-configure-review.md\n?? docs/collab/inbox/20261029-1112-astra-m0-priority.md\n?? docs/collab/inbox/20261029-1154-astra-roadmap-notice.md\n?? docs/collab/inbox/20261029-1310-astra-plan-codes.md\n?? docs/collab/inbox/20261029-1312-astra-new-audit-receipt.md\n?? docs/collab/reviews/20261029-1051-astra-5465dbd-m0-review.md\n?? docs/collab/reviews/20261029-1105-astra-5465dbd-material-geometry-review.md\n?? docs/collab/reviews/20261029-1117-astra-5465dbd-scoring-review.md\n?? docs/collab/reviews/20261029-1128-astra-5465dbd-uncertainty-review.md\n?? docs/collab/reviews/20261029-1254-astra-5465dbd-source-physics-field-review.md\n?? docs/collab/reviews/20261029-1314-astra-5465dbd-biasing-weight-review.md\n?? docs/collab/reviews/20261029-1330-astra-5465dbd-output-contract-review.md\n?? docs/collab/reviews/20261029-1350-astra-5465dbd-rng-repro-review.md\n?? docs/verification/independent-biasing-weight-5465dbd-20261029/\n?? docs/verification/independent-material-geometry-5465dbd-20261029/\n?? docs/verification/independent-output-contract-5465dbd-20261029/\n?? docs/verification/independent-rng-repro-5465dbd-20261029/\n?? docs/verification/independent-scoring-5465dbd-20261029/\n?? docs/verification/independent-source-physics-field-5465dbd-20261029/\n?? docs/verification/independent-uncertainty-5465dbd-20261029/\n"
+    },
+    {
+      "cwd": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim",
+      "args": [
+        "ls-remote",
+        "origin",
+        "refs/heads/codex",
+        "refs/heads/roadmap/F1-output-provenance"
+      ],
+      "exit_code": 0,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\f1-integrate-corrected-09.log",
+      "log_sha256": "75e583da18b8b8b8a47b39cf9c35e04507de0d4a931ce1a2eeff30b62dd61c10",
+      "stdout": "20ab4f3eb34b41d4004a4e1b9d38d2f2f290f366\trefs/heads/codex\n7e75d28675427bc900de2c29d713c75022b57ab5\trefs/heads/roadmap/F1-output-provenance\n"
+    },
+    {
+      "cwd": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim",
+      "args": [
+        "merge-base",
+        "--is-ancestor",
+        "20ab4f3eb34b41d4004a4e1b9d38d2f2f290f366",
+        "7e75d28675427bc900de2c29d713c75022b57ab5"
+      ],
+      "exit_code": 0,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\f1-integrate-corrected-10.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": ""
+    },
+    {
+      "cwd": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim",
+      "args": [
+        "merge-base",
+        "--is-ancestor",
+        "f176d0ed4cea60b7ca5a80ed81017c9404ec1257",
+        "7e75d28675427bc900de2c29d713c75022b57ab5"
+      ],
+      "exit_code": 0,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\f1-integrate-corrected-11.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": ""
+    },
+    {
+      "cwd": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim",
+      "args": [
+        "diff",
+        "--name-only",
+        "-z",
+        "f176d0ed4cea60b7ca5a80ed81017c9404ec1257",
+        "7e75d28675427bc900de2c29d713c75022b57ab5"
+      ],
+      "exit_code": 0,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\f1-integrate-corrected-12.log",
+      "log_sha256": "d3f6c024d85da85b71a6059791e6228035cd4f1a8a637880fd8975438931aecb",
+      "stdout": "Full output in log"
+    },
+    {
+      "cwd": "C:\\Users\\123\\.codex\\worktrees\\q1-final\\G4UniversalSim",
+      "args": [
+        "merge",
+        "--ff-only",
+        "7e75d28675427bc900de2c29d713c75022b57ab5"
+      ],
+      "exit_code": 0,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\f1-integrate-corrected-13.log",
+      "log_sha256": "54c4fde0b59491ca21ba960d42643bbd48fb2f38dcebc813faa4f7b9620114e6",
+      "stdout": "Full output in log"
+    },
+    {
+      "cwd": "C:\\Users\\123\\.codex\\worktrees\\q1-final\\G4UniversalSim",
+      "args": [
+        "push",
+        "origin",
+        "codex"
+      ],
+      "exit_code": 0,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\f1-integrate-corrected-14.log",
+      "log_sha256": "0a44adfdd3e41dbd8303fcfe01cd0dff74f2016263ccdd122bca21c5b5077ba1",
+      "stdout": ""
+    },
+    {
+      "cwd": "C:\\Users\\123\\.codex\\worktrees\\q1-final\\G4UniversalSim",
+      "args": [
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\f1-integrate-corrected-15.log",
+      "log_sha256": "234ac546991c1e7b8de50630751db5d6e421187be8e33de1fddb8fb453aae4e7",
+      "stdout": "7e75d28675427bc900de2c29d713c75022b57ab5\n"
+    },
+    {
+      "cwd": "C:\\Users\\123\\.codex\\worktrees\\q1-final\\G4UniversalSim",
+      "args": [
+        "branch",
+        "--show-current"
+      ],
+      "exit_code": 0,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\f1-integrate-corrected-16.log",
+      "log_sha256": "243b0dc9b847e66c440dca985e10fe0ce9e29c379b018ddd5747ba8948f84cc8",
+      "stdout": "codex\n"
+    },
+    {
+      "cwd": "C:\\Users\\123\\.codex\\worktrees\\q1-final\\G4UniversalSim",
+      "args": [
+        "status",
+        "--porcelain=v1"
+      ],
+      "exit_code": 0,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\f1-integrate-corrected-17.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": ""
+    },
+    {
+      "cwd": "D:\\Geant4\\G4UniversalSim",
+      "args": [
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\f1-integrate-corrected-18.log",
+      "log_sha256": "8ab48d540ec8627eaf5eb4b049d65d93caec5b1c703070281789fb9a8b109e9c",
+      "stdout": "5465dbdddf36dae921a885d2a18a1d049c383a1e\n"
+    },
+    {
+      "cwd": "D:\\Geant4\\G4UniversalSim",
+      "args": [
+        "branch",
+        "--show-current"
+      ],
+      "exit_code": 0,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\f1-integrate-corrected-19.log",
+      "log_sha256": "982d5746ba58011a37c026bfbc142505972020cd0e2d18947f4be7de83a9f4f6",
+      "stdout": "roadmap/F6-live-progress\n"
+    },
+    {
+      "cwd": "D:\\Geant4\\G4UniversalSim",
+      "args": [
+        "status",
+        "--porcelain=v1"
+      ],
+      "exit_code": 0,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\f1-integrate-corrected-20.log",
+      "log_sha256": "d2c83305793fac6741e71466cdf1f74cbe39f62faa1f191202130c3aea02fc55",
+      "stdout": "?? docs/collab/inbox/20261029-1010-astra-2c-execution.md\n?? docs/collab/inbox/20261029-1103-astra-2c-configure-review.md\n?? docs/collab/inbox/20261029-1112-astra-m0-priority.md\n?? docs/collab/inbox/20261029-1154-astra-roadmap-notice.md\n?? docs/collab/inbox/20261029-1310-astra-plan-codes.md\n?? docs/collab/inbox/20261029-1312-astra-new-audit-receipt.md\n?? docs/collab/reviews/20261029-1051-astra-5465dbd-m0-review.md\n?? docs/collab/reviews/20261029-1105-astra-5465dbd-material-geometry-review.md\n?? docs/collab/reviews/20261029-1117-astra-5465dbd-scoring-review.md\n?? docs/collab/reviews/20261029-1128-astra-5465dbd-uncertainty-review.md\n?? docs/collab/reviews/20261029-1254-astra-5465dbd-source-physics-field-review.md\n?? docs/collab/reviews/20261029-1314-astra-5465dbd-biasing-weight-review.md\n?? docs/collab/reviews/20261029-1330-astra-5465dbd-output-contract-review.md\n?? docs/collab/reviews/20261029-1350-astra-5465dbd-rng-repro-review.md\n?? docs/verification/independent-biasing-weight-5465dbd-20261029/\n?? docs/verification/independent-material-geometry-5465dbd-20261029/\n?? docs/verification/independent-output-contract-5465dbd-20261029/\n?? docs/verification/independent-rng-repro-5465dbd-20261029/\n?? docs/verification/independent-scoring-5465dbd-20261029/\n?? docs/verification/independent-source-physics-field-5465dbd-20261029/\n?? docs/verification/independent-uncertainty-5465dbd-20261029/\n"
+    },
+    {
+      "cwd": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim",
+      "args": [
+        "ls-remote",
+        "origin",
+        "refs/heads/codex",
+        "refs/heads/roadmap/F1-output-provenance"
+      ],
+      "exit_code": 0,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\f1-integrate-corrected-21.log",
+      "log_sha256": "125d4bfffce9d00ecf9d0d0a919b6ed3f9746d3f1c10e6755bc0bf94d234b02e",
+      "stdout": "7e75d28675427bc900de2c29d713c75022b57ab5\trefs/heads/codex\n7e75d28675427bc900de2c29d713c75022b57ab5\trefs/heads/roadmap/F1-output-provenance\n"
+    }
+  ],
+  "completed": true,
+  "precheck": {
+    "roadmap": {
+      "head": "7e75d28675427bc900de2c29d713c75022b57ab5",
+      "branch": "roadmap/F1-output-provenance",
+      "status_lines": []
+    },
+    "integration": {
+      "head": "20ab4f3eb34b41d4004a4e1b9d38d2f2f290f366",
+      "branch": "codex",
+      "status_lines": []
+    },
+    "original": {
+      "head": "5465dbdddf36dae921a885d2a18a1d049c383a1e",
+      "branch": "roadmap/F6-live-progress",
+      "status_lines": [
+        "?? docs/collab/inbox/20261029-1010-astra-2c-execution.md",
+        "?? docs/collab/inbox/20261029-1103-astra-2c-configure-review.md",
+        "?? docs/collab/inbox/20261029-1112-astra-m0-priority.md",
+        "?? docs/collab/inbox/20261029-1154-astra-roadmap-notice.md",
+        "?? docs/collab/inbox/20261029-1310-astra-plan-codes.md",
+        "?? docs/collab/inbox/20261029-1312-astra-new-audit-receipt.md",
+        "?? docs/collab/reviews/20261029-1051-astra-5465dbd-m0-review.md",
+        "?? docs/collab/reviews/20261029-1105-astra-5465dbd-material-geometry-review.md",
+        "?? docs/collab/reviews/20261029-1117-astra-5465dbd-scoring-review.md",
+        "?? docs/collab/reviews/20261029-1128-astra-5465dbd-uncertainty-review.md",
+        "?? docs/collab/reviews/20261029-1254-astra-5465dbd-source-physics-field-review.md",
+        "?? docs/collab/reviews/20261029-1314-astra-5465dbd-biasing-weight-review.md",
+        "?? docs/collab/reviews/20261029-1330-astra-5465dbd-output-contract-review.md",
+        "?? docs/collab/reviews/20261029-1350-astra-5465dbd-rng-repro-review.md",
+        "?? docs/verification/independent-biasing-weight-5465dbd-20261029/",
+        "?? docs/verification/independent-material-geometry-5465dbd-20261029/",
+        "?? docs/verification/independent-output-contract-5465dbd-20261029/",
+        "?? docs/verification/independent-rng-repro-5465dbd-20261029/",
+        "?? docs/verification/independent-scoring-5465dbd-20261029/",
+        "?? docs/verification/independent-source-physics-field-5465dbd-20261029/",
+        "?? docs/verification/independent-uncertainty-5465dbd-20261029/"
+      ]
+    },
+    "remote_refs": {
+      "refs/heads/codex": "20ab4f3eb34b41d4004a4e1b9d38d2f2f290f366",
+      "refs/heads/roadmap/F1-output-provenance": "7e75d28675427bc900de2c29d713c75022b57ab5"
+    },
+    "documentation_only_paths": 2971
+  },
+  "finished_utc": "2026-10-30T10:06:13.551414+00:00",
+  "integration_after": {
+    "head": "7e75d28675427bc900de2c29d713c75022b57ab5",
+    "branch": "codex",
+    "status_lines": []
+  },
+  "original_workspace_unchanged": true,
+  "remote_heads_verified": "7e75d28675427bc900de2c29d713c75022b57ab5\trefs/heads/codex\n7e75d28675427bc900de2c29d713c75022b57ab5\trefs/heads/roadmap/F1-output-provenance",
+  "method": "normal fast-forward and ordinary push; no force/reset/rebase; original D checkout untouched"
+}
