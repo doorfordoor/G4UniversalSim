@@ -1,0 +1,17 @@
+# F5 测试修复后原生证据身份映射：独立结论
+
+2026-10-31。**同意有条件采用显式跨提交映射；无需机械重做完全相同的 22 项 GUI 操作。** 这是对当前 F5 提案的独立认可，不是引用 F4 例外，也不是已执行新候选实窗。旧观察、旧 SHA、失败图片和原收据必须保持原样。
+
+本次已审 `out/collab/f5-create-identity-map.py`（精确 SHA 见 `f5-ddd-independent-review.json`）及执行提案 diff。脚本检查干净 HEAD、允许变更仅 DDD 测试/runner/执行提案三文件、GUI/C++ 树无 diff、129 个 GUI 文件 raw/LF SHA 和 Git blob 与 5d 相同、新 backend 源指纹/编译模式/编译器/Geant4/MT 参数与旧一致；独占创建结果文件。检查逻辑与范围相符，可用于冻结后身份核对。当前尚未运行该映射，不能先称 target 通过。
+
+采用条件：
+
+1. 新冻结 SHA 只有上述三文件变化，GUI、资源、配置、后端实现无变更。129 GUI 原字节与 Git blob 均匹配既有独立审查的原清单。任意产品语义变化均使本提案失效，需补相关原生交互。
+2. 仍明确 `native_observed_commit = 5d56187392a2e7b888d5ce13f8da05a295cba6d4`；新 candidate 只复用未变 GUI 行为证据。不要在收据、文件名或阶段总结写“新 SHA 经过 22 项实窗”。可增加 `new_candidate_native_execution = false` 以减少误读。
+3. 新冻结 SHA 的 Windows、双 Geant4 Linux 和 M0 正式矩阵重新执行，原 v3/逐 case/总数/日志摘要门禁都通过；其结果不能由 identity-map 的 `status=passed` 代替。映射脚本的 `automated_matrix_commit` 只标目标身份，尚不证明矩阵状态。
+4. 保留旧 native 目录、launcher exit 0、全部观察/图片、保存 JSON、host/GUI manifest 和独立完整性收据的原 SHA。归档链应把 `identity.json.gui_files_sha256` 与 manifest 的规范 JSON SHA 对上，并与已审原收据 SHA 对上。当前映射器只记录这些输入的当前摘要，未自行证明全部图片/host/保存件未改；这部分继续使用独立原生 integrity 清单和最终 exact-copy 哈希核对，不能把映射器当完整归档验收器。
+5. 新 capabilities JSON 必须来自新真实 exe 的成功调用，并与新正式报告的实际 exe 身份关联。旧 native 实际 exe SHA `f0523878f0537d0e8dd16cf4b49c31a2b23c65b90b133f4ca8905d4d8c8ffded` 保留；源码相同也可能因构建提交字段产生不同 exe 字节，不能声称二进制相等。旧实窗的 Qt 6.11.1 / Windows / Fusion 运行环境仍只是旧观察身份，不因新矩阵而改写。
+
+证据边界：旧 08 是 Windows 文件框路径拒绝；09 才是成功保存。18 的 Ctrl+Z 没有触发；19 才是工具栏 Undo 返回保存点。快捷键范围是编辑 page 的 WidgetWithChildrenShortcut，不是任意焦点全局快捷键。复用证据时必须同时复用这些限制及 J1/F8 文本/对比度待改结论。
+
+结论分类：映射方法和脚本当前保护范围 **无问题**；冻结后 raw/blob/新 capabilities/新矩阵的实际映射 **待执行验证**。只要以上身份检查和新矩阵均完成，没有必要通过重复相同 GUI 操作制造一个新的 commit 标签。若范围、GUI 运行依赖或交互行为发生改变，应重新评估并补相应实窗。

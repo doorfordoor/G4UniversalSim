@@ -1,0 +1,12 @@
+# F5 恢复 revision 独立审查修复 R1
+
+只解除本写者冻结修复 root 指定三项。当前再次冻结 owned files，等原审查者复核。
+
+- RecoverySession.publish：同一 revision 不允许不同 payload；相同 payload 的重复发布返回原收据且不改时间/来源/文件字节。低 revision 拒绝。
+- RecoverySession.retire：建立终态 revision 屏障；saved/discarded 后原 revision 不能重新 active。严格更大的新 revision 仍可在同一 session 正常保存。
+- RecoveryController.changed：在排队前建立已请求 revision 的高水位；迟到旧通知与同revision不同payload拒绝且不改 pending。相同通知不会覆盖 immutable pending；失败的同内容写入仍可重试。saved/discarded后同revision不能重新排队；reset新session重置这些内部标记。
+- 正式反例已添加到 test_f5_recovery 与 smoke_f5_recovery_ui：same-revision冲突/idempotency、retire后重放、new revision仍成功；延迟write + newer queued + late older notification，验证最终新 revision与payload、状态仍提示pending，saved后拒绝旧通知。
+
+新日志：f5-recovery-core-r1.log、f5-recovery-ui-r1.log、f5-recovery-process-r1.log，三项 exit 0。原 core审查反例 JSON/log 没有覆盖。真实 MainWindow异常退出恢复仍 writer退出1/reader退出0，源冲突与非法草稿保持。
+
+本次独立审查 core 已确认一项另外的 P1 源阻断缓存绕过，见 f5-core-independent-review-checkpoint.md 与 f5-core-independent-review.py/log；应由 core原写者修复，不是恢复 revision改动的一部分。

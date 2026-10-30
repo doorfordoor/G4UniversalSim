@@ -1,0 +1,88 @@
+{
+  "schema": "g4usim_ddd_first_run_evidence_v1",
+  "files": [
+    {
+      "path": "inputs/case01.ini",
+      "source": "D:\\Temp\\g4usim_ddd_2gewg444\\case01.ini",
+      "size_bytes": 647,
+      "sha256": "ee99a8ae6788a43c7d108bb719e4694d9bcf85a7c791e61c73ac7dfc56968ba9"
+    },
+    {
+      "path": "inputs/case01_geometry.ini",
+      "source": "D:\\Temp\\g4usim_ddd_2gewg444\\case01_geometry.ini",
+      "size_bytes": 211,
+      "sha256": "1269a7895183f1b48ec38d7994fa619520a464dbbee40390a66693961692f757"
+    },
+    {
+      "path": "inputs/case01.mac",
+      "source": "D:\\Temp\\g4usim_ddd_2gewg444\\case01.mac",
+      "size_bytes": 34,
+      "sha256": "57c4260f267943a094cb6783635145f75264cb2b818f67ee5c7f6fdef1558269"
+    },
+    {
+      "path": "inputs/material.ini",
+      "source": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\config\\materials\\material.ini",
+      "size_bytes": 190,
+      "sha256": "df72faf9fb634931086a7f98db6d1bd93fad37f20c28329eea22f40b9858beb6"
+    },
+    {
+      "path": "inputs/mu.csv",
+      "source": "D:\\Temp\\g4usim_ddd_2gewg444\\mu.csv",
+      "size_bytes": 64,
+      "sha256": "e45adb8f8a71a9e5a63893c2c63a97b8612417c0a1438f828278fa6334dc9e7a"
+    },
+    {
+      "path": "inputs/far.csv",
+      "source": "D:\\Temp\\g4usim_ddd_2gewg444\\far.csv",
+      "size_bytes": 70,
+      "sha256": "0409ebe88431eb34c1b94b82cf3c8f24cd735ad5c2cf2b62c489134f9009e954"
+    },
+    {
+      "path": "outputs/displacement_volume_summary_t0.csv",
+      "source": "D:\\Temp\\g4usim_ddd_2gewg444\\case01\\displacement_volume_summary_t0.csv",
+      "size_bytes": 145,
+      "sha256": "b74372696d832263fee662c3f12abe1792aefefd243f907d372ac61b8c0e8c9c"
+    },
+    {
+      "path": "outputs/displacement_volume_summary_t1.csv",
+      "source": "D:\\Temp\\g4usim_ddd_2gewg444\\case01\\displacement_volume_summary_t1.csv",
+      "size_bytes": 376,
+      "sha256": "3a120d2de8120ed65bd74349f5cfd353fe52cc743560316d9e1b70efc317847e"
+    },
+    {
+      "path": "outputs/hits_t1.csv",
+      "source": "D:\\Temp\\g4usim_ddd_2gewg444\\case01\\hits_t1.csv",
+      "size_bytes": 29018,
+      "sha256": "bb2c320bd3efebf638dc3cb54cd66fd475f4bae8ec0df8deec4f4f08f9972022"
+    },
+    {
+      "path": "outputs/run_metadata.json",
+      "source": "D:\\Temp\\g4usim_ddd_2gewg444\\case01\\run_metadata.json",
+      "size_bytes": 17355,
+      "sha256": "90553cce25978281c5da63cb16a5508f71714e92935f17c35e9576a3cd9de944"
+    },
+    {
+      "path": "outputs/run_summary.txt",
+      "source": "D:\\Temp\\g4usim_ddd_2gewg444\\case01\\run_summary.txt",
+      "size_bytes": 10943,
+      "sha256": "17e02311d3b176b5f6bbaa1efeed067b5506eee079f36decbfa63fec2d4dcd3b"
+    },
+    {
+      "path": "outputs/scorer_statistics.csv",
+      "source": "D:\\Temp\\g4usim_ddd_2gewg444\\case01\\scorer_statistics.csv",
+      "size_bytes": 802,
+      "sha256": "a3bf92323ff66336a4239362a4c5cd62629eda87b68be61535c0a991dab30cf0"
+    }
+  ],
+  "returncode": 0,
+  "command": [
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-f5\\Release\\G4UniversalSim.exe",
+    "--config",
+    "D:\\Temp\\g4usim_ddd_2gewg444\\case01.ini",
+    "--macro",
+    "D:\\Temp\\g4usim_ddd_2gewg444\\case01.mac",
+    "--output",
+    "D:\\Temp\\g4usim_ddd_2gewg444\\case01"
+  ],
+  "note": "Original inputs/CSV/metadata/summary subset, not a complete run bundle. Absolute paths describe the original temporary run, not a relocated replay."
+}

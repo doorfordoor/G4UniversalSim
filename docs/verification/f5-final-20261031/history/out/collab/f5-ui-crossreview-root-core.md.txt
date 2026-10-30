@@ -1,0 +1,22 @@
+# F5 UI agent 对 root/core 改动的独立审查
+
+2026-10-30，HEAD 75b1a19 的共享候选工作区。此次审查不修改被审 root/core 文件；后续根据 root 新授权修复的 UI P1 单列在 f5-ui-p1-repairs.md。
+
+## 结论
+
+- **无问题**：`gui/smoke_tests/gui_test_window.py:24` 是真实 ProductMainWindow 子类，构造调用产品代码。`:26` 隔离恢复目录，`:28` 仅关闭启动扫描；`:32` 明确选择 Discard，生产 `_confirm_unsaved_edits` 与 closeEvent 仍执行。`:19` 仅替换默认用户 history 路径，已有测试显式路径保留。fixture 不替换原被测编辑、迁移、运行或关闭代码，不是全局 offscreen 自动丢弃。
+- **无问题**：`core/project.py:215` 同一次 read_bytes 既用于 JSON 解析也用于 SHA；`:234` 的保存 SHA 来自 fsync 后、发布前的真实临时字节。不存在回调重读目标伪造历史身份。独立重跑 `test_f5_project_receipts.py` 18 个 v3 断言通过。发布后 finally 清理 P2 由 recovery 独立报告发现、root 后续修复；此报告不覆盖或撤回该原失败证据。
+- **无问题**：`parsers/ini_light_parser.py:29` 原文件路径读法、解码错误策略保持，`:47` 新文本入口复用原解析主体。`materials_parser.py:77`、`geometry_parser.py:126` 只是将输入文档与规则生成分开。捕获文本不是当前原文件读取收据；失败读取没有冒充成功空文本。源文本专项 84 个、原 F4 document diagnostics 119 个 v3 断言独立重跑通过。
+- **无问题，限定范围**：`scripts/test_f5_transactions_backend.py:138` 启动真实后端，`:144` 核对完成状态及 3 个事件，`:163` 读取逐事件真实主径迹，`:173` 检查主粒子及初始能量；来源不是 Manager 缓存或假日志。`src/Scoring/TrajectoryRecorder.cc:116` 该能量来自实际 step pre-point。`:154` 读取 backend mesh；`:158`–`:161` 检查实际材料名、敏感性、体积和尺寸。`src/Geometry/GeometryExport.cc:88`、`:94`、`:100` 分别来自真实 material、logical/solid 与世界坐标顶点。
+- **证据边界**：后端专项 `:153` 密度只核对生成材料文件，报告 `:179` 也明确名为 generated_material_density，不能提升为运行时密度验证。无独立物理精度、统计正确性或随机种子完整可复现性结论。`:137` 在正常 writer macro 之后追加已有只读 exportMesh，不改变 source/physics/beamOn；这是额外观察，不是替代运行。
+- **无固定平台依赖**：`:188` 从 G4USIM_EXE/--executable 选后端；`:194` 从测试工作目录或 tempfile 取临时路径，没有写死盘符、构建目录或 Windows exe 后缀。缺可执行文件会 assert，不会假通过。此为源码可移植性审查，不代表本次已运行 Linux。
+- **无问题，局部动态范围**：20 个旧 GUI 脚本只替换 MainWindow 导入，其中迁移测试 `smoke_config_migration_ui.py:41` 将输出版本常量改为 SCHEMA_VERSION；未删原断言。静态 AST 核对这 20 个脚本及两个兼容脚本：assert 站点 836→845，仅原“输出版本6”断言改为当前版本，新增9站点。动态与正式 F4 `docs/verification/f4-final-20261030/windows/final-1/report.json` 比较，9 个已运行旧例各自断言完全相同：62、74、6、393、61、60、32、103、33。正式基线为152项/49913 v3，不能误用旧151项/49905报告。尚未对其余143项声明动态不下降。
+
+## 本次证据
+
+- `out/collab/f5-ui-review-receipts.log`：18，exit0。
+- `out/collab/f5-ui-review-parsers.log`：84，exit0。
+- `out/collab/f5-ui-review-f4-parser-regression.log`：119，exit0。
+- 父任务原9例中7pass/2fail保持：`out/verification/f5-dev-compat/20261030-222437-ed45d64a/report.json`。
+- 修后2例为74/33：`out/verification/f5-dev-compat-fix/20261030-222724-34db4cbe/report.json`。
+- 已读取 core 独立运行产物 `out/verification/f5-source-fix-backend/f5-backend-evidence.json`：恢复后1MeV/FirstTarget/8mm/512mm³，重做后3MeV/SecondTarget/12mm/1728mm³，各3/3事件。此轮未重复执行该后端专项，记录只作对现存证据核验。

@@ -1,0 +1,39 @@
+# F5 归档选择脚本只读审查（2026-10-31）
+
+对象：`out/collab/f5-prepare-selection.py`，SHA-256 `a13aecc508bcfcb1e1f7bf64579037325ef8a8d8f7545665cb9e624ae9c36c21`。只读检查脚本、现有报告和保留夹具；没有修改脚本、产品或原证据，没有运行 main 或创建正式 selection。输出本报告及 `f5-selection-ui-readonly-probe.json`。r3/最新 reviews 尚待 root 加入，属已知待办，不作为本报告缺陷。
+
+**结论：选择步骤没有直接宣称阶段通过，但有两项 P2 和一项较低优先级的静默缺项风险，应在正式选取前收紧。** 这些是清单/归档完整性问题，不否定既有产品测试或原生观察。
+
+## P2：新 CI / 原生证据未与已有审计固定摘要重新绑定（确定漏验）
+
+`:39–51` 检查 mapping/CI audit 的状态、提交、计数；`:79–80` 随后以 `tree()` 遍历当前 CI 和原生目录，`:59–68` 为现有字节重新计算摘要。这里没有用 CI 审计或 manifest 已记录的逐文件摘要作为 expected，也没有重新核对 mapping 中的 `native_identity_sha256`、`native_gui_hashes_sha256`，或原生独立 integrity 中的观察/PNG 摘要。
+
+因此，只要一份已审计日志/原生记录在 audit/map 生成后发生改变或丢失，而 audit/map 仍保留 passed，该路径可接受现有字节并给它新摘要；后续复制器只能证明符合这个新 selection，不能证明复制的是此前审计覆盖的字节。`:93–95` 对旧 CI 已采用固定 SHA/bytes，当前 CI 没有采用同样约束。现有 CI audit 明确有 `reports`/`case_logs` 的路径和 SHA，原生独立 integrity 也有观察/PNG SHA，故不需要猜测这些字段。
+
+最小建议：当前 CI 使用其已核验归档 manifest（处理明确的 self-exclusion），逐项 SHA/bytes 和精确成员核对后把 expected 传入 add；或在选取前重新跑现有独立 CI 审计并固定其已验清单。原生至少重新核对 mapping 的 identity/GUI manifest 摘要，并据既有独立 integrity 复核 22 观察/28 PNG 的成员及摘要。保留这些原始审查收据。不要只比较 passed/数量，也不需要重新视觉操作。
+
+这是静态可确认的缺失守卫，本次没有篡改正式日志或声称发现现有证据已损坏。原 inventory 的保留同理，可复用 `f5-evidence-copyable.json.inventory_sha256_raw` 检查其指向的原 inventory；不把对当前文件重新 hash 等同于已核对旧固定身份。
+
+## P2：resolve 在先，来源链接检查失效（已用保留 junction 复现）
+
+`:56` 先 `source.resolve()`，`:58` 再 `source.is_symlink()`，检查对象已经是链接目标。`:73` 只检查树中的叶文件 `is_symlink()`，既不覆盖来源根/父目录，也不覆盖 Windows junction 的 reparse 属性。于是原请求路径的链接信息会从传给复制器的 source 中消失。
+
+只读提取脚本原样 add 函数，传入已有夹具 `out/collab/f5-copy-review-probe-20261030-235041/junction-alias/source.txt`：父目录 reparse=true，add 接受并输出 `.../junction-real/source.txt`。该实验没有运行 main、写复制目标或修改夹具，证明复制器后续看不到原 junction 路径。收据见 `f5-selection-ui-readonly-probe.json`。
+
+最小建议：在 resolve 之前核对仓库内词法路径及每级组件的 symlink/reparse，保留验证后的原始仓库相对来源；可复用已审查复制器的路径规则。之后的 resolve 只能作额外的仓库边界核对。当前 inside-repo 断言仍阻止解析后逃到仓库外，本次不声称复现了外部文件写入或逃逸。
+
+## P3：必需历史目录缺失时 tree 静默空选（已验证行为）
+
+`:70–76` 的 tree 对不存在的目录返回零条；`:97–99` 没有先检查历史 Windows 目录和开发证据目录存在。原样 tree 单函数传入确定不存在的 out 路径，未抛错且新增条目为零。若某个要求保留的目录被移走或路径拼错，主选择可以继续，形成不完整历史。当前三个列出的开发目录实际均存在，没有把它们报告为当前丢失。
+
+最小建议：tree 默认要求目录存在，并对要求保留的目录要求非空；若某目录确实可选，调用处显式注明并把缺失原因写入选择附记。不要以空目录遍历隐式决定丢弃历史证据。
+
+## 已核对无问题的范围
+
+- `:26–35` 将实际 HEAD/clean、唯一 Windows 报告、同 SHA、160 用例和严格 F4 validate_report 门禁结合；validate_report 会抛 AssertionError，默认不允许 fail/skip/legacy，并重验逐日志 raw SHA。本次不修改其门禁或原 F4 基线。
+- `:82–91` 对 preflight 已验的 300 条历史记录固定 SHA/bytes；唯一变化的 `f5-ci-status.md` 按当前固定版本单独放入 `history/current-receipts/`，原 pin 保留在 supplement，不冒充旧字节。现有 preflight 确为 300 条及 1 条变化。
+- `:92–96` 旧 5d CI 按 534 条 manifest 固定摘要选取，manifest 自身另存；既有 5d Windows/失败收据放历史路径，不当作新 SHA 矩阵。
+- Markdown 加 `.txt` 是明确的历史文本归档决定，raw 内容未改写；来源/目标映射须随最终 copy receipt 保留。该操作不修复历史链接，也不因此取得当前文档效力。
+- `:117–122` 只独占写 selection 数组并报告文件数/字节数；无 phase-complete 或最终验收声明。清单成功不是 F5 关闭；仍需独立复制复核及阶段裁决。
+
+交接：以上均为最小守卫建议，未自行改脚本。请 root 决定修正后再选取；新矩阵、r3 和最新审查的待补项沿原计划执行。

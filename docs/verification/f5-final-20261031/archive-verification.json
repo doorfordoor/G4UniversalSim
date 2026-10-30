@@ -1,0 +1,33 @@
+{
+  "schema": "f5_archive_publication_v1",
+  "recorded_utc": "2026-10-30T17:08:25.392926+00:00",
+  "status": "byte_copy_verified",
+  "selected_files": 2072,
+  "selected_bytes": 17294016,
+  "staging_files_with_copy_receipt": 2073,
+  "staging_exact_members_and_sha_verified": true,
+  "destination_exact_before_metadata": true,
+  "selection_sha256": "7405286798a7b8ab07f0757afd11ec097c983dcf48ad5ea2c5628c25f582721e",
+  "copy_receipt_sha256": "fdd0c759aa36af1fa6e6469255884a96e1ad250f6be53c719f150df62a696a71",
+  "added_evidence": [
+    {
+      "source": "out/collab/f5-final-selection.json",
+      "path": "selection.json",
+      "bytes": 670082,
+      "sha256": "7405286798a7b8ab07f0757afd11ec097c983dcf48ad5ea2c5628c25f582721e"
+    },
+    {
+      "source": "out/collab/f5-windows-5c1eec5-baseline-gate.log",
+      "path": "windows/baseline-gate.log",
+      "bytes": 305,
+      "sha256": "6643116d6816b33adc04f0cbc29dc4cbb164da5bbb27c5dd19f65c6fb82f0e7e"
+    },
+    {
+      "source": "out/collab/f5-copy-cli-path-note.md",
+      "path": "review/f5-copy-cli-path-note.md.txt",
+      "bytes": 886,
+      "sha256": "2206be903f6fee23a50447f29d8d30a866f3aad2a1aa5d1cdca2ce2b84817966"
+    }
+  ],
+  "stage_acceptance": "Independent review and final documentation required separately; this receipt proves byte publication only."
+}

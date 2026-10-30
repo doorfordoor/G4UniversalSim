@@ -1,0 +1,23 @@
+Traceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\f5-visible-host.py", line 367, in <module>
+    host.precheck()
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\f5-visible-host.py", line 332, in precheck
+    assert app.style().objectName().lower() == 'fusion'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+Windows fatal exception: access violation
+
+Thread 0x0000a564 (most recent call first):
+  File "C:\Users\123\AppData\Local\Programs\Python\Python311\Lib\concurrent\futures\thread.py", line 81 in _worker
+  File "C:\Users\123\AppData\Local\Programs\Python\Python311\Lib\threading.py", line 982 in run
+  File "C:\Users\123\AppData\Local\Programs\Python\Python311\Lib\threading.py", line 1045 in _bootstrap_inner
+  File "C:\Users\123\AppData\Local\Programs\Python\Python311\Lib\threading.py", line 1002 in _bootstrap
+
+Thread 0x000013fc (most recent call first):
+  File "C:\Users\123\AppData\Local\Programs\Python\Python311\Lib\concurrent\futures\thread.py", line 81 in _worker
+  File "C:\Users\123\AppData\Local\Programs\Python\Python311\Lib\threading.py", line 982 in run
+  File "C:\Users\123\AppData\Local\Programs\Python\Python311\Lib\threading.py", line 1045 in _bootstrap_inner
+  File "C:\Users\123\AppData\Local\Programs\Python\Python311\Lib\threading.py", line 1002 in _bootstrap
+
+Current thread 0x000010b0 (most recent call first):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\f5-visible-host.py", line 393 in <module>

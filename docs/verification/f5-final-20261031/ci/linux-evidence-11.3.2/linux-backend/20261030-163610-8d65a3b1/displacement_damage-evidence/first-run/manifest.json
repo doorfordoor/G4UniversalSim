@@ -1,0 +1,88 @@
+{
+  "schema": "g4usim_ddd_first_run_evidence_v1",
+  "files": [
+    {
+      "path": "inputs/case01.ini",
+      "source": "/tmp/g4usim_ddd_u8adg67d/case01.ini",
+      "size_bytes": 594,
+      "sha256": "b94d035a3a543b19026af99105ea2c3f28980dd8a2c06d9f251bcedd7119c65d"
+    },
+    {
+      "path": "inputs/case01_geometry.ini",
+      "source": "/tmp/g4usim_ddd_u8adg67d/case01_geometry.ini",
+      "size_bytes": 199,
+      "sha256": "0743b56b42130e41738056a8b5002c8b448697cea1e65a3a265858f3edf7a613"
+    },
+    {
+      "path": "inputs/case01.mac",
+      "source": "/tmp/g4usim_ddd_u8adg67d/case01.mac",
+      "size_bytes": 32,
+      "sha256": "9ae3ca2b7ff8a3c51a775be5d03905ba5d6baaeac540a89e116b8ad9c54eb8a2"
+    },
+    {
+      "path": "inputs/material.ini",
+      "source": "/home/runner/work/G4UniversalSim/G4UniversalSim/config/materials/material.ini",
+      "size_bytes": 190,
+      "sha256": "df72faf9fb634931086a7f98db6d1bd93fad37f20c28329eea22f40b9858beb6"
+    },
+    {
+      "path": "inputs/mu.csv",
+      "source": "/tmp/g4usim_ddd_u8adg67d/mu.csv",
+      "size_bytes": 60,
+      "sha256": "8ab8485722f5bc75c2407b571f88c4293b359e912721c49cc78be93d4e1a302a"
+    },
+    {
+      "path": "inputs/far.csv",
+      "source": "/tmp/g4usim_ddd_u8adg67d/far.csv",
+      "size_bytes": 66,
+      "sha256": "948526f0c0078f9f88dce9775160a3918799ef1fc82734a8cbbda9615779f15d"
+    },
+    {
+      "path": "outputs/displacement_volume_summary_t0.csv",
+      "source": "/tmp/g4usim_ddd_u8adg67d/case01/displacement_volume_summary_t0.csv",
+      "size_bytes": 367,
+      "sha256": "47917f0410e7023ffbc50f1705f3680483112c14d7adc71d6e9f4b37f858eebc"
+    },
+    {
+      "path": "outputs/displacement_volume_summary_t1.csv",
+      "source": "/tmp/g4usim_ddd_u8adg67d/case01/displacement_volume_summary_t1.csv",
+      "size_bytes": 144,
+      "sha256": "563fdb1377535ed01cd6892a20482b55e9c5abb5836e2ca93b4a9d43adfce398"
+    },
+    {
+      "path": "outputs/hits_t0.csv",
+      "source": "/tmp/g4usim_ddd_u8adg67d/case01/hits_t0.csv",
+      "size_bytes": 28774,
+      "sha256": "9104be2f63cb00af121a5c6cc3cdd500c4877d9f149e0267f32127fa504bb239"
+    },
+    {
+      "path": "outputs/run_metadata.json",
+      "source": "/tmp/g4usim_ddd_u8adg67d/case01/run_metadata.json",
+      "size_bytes": 17052,
+      "sha256": "c5630390b54500fd630b7222254777a05f40e5ba96b7996a7f3ca72fca858213"
+    },
+    {
+      "path": "outputs/run_summary.txt",
+      "source": "/tmp/g4usim_ddd_u8adg67d/case01/run_summary.txt",
+      "size_bytes": 10512,
+      "sha256": "d5d79cc59933911bfaeb241f404414cf3b3afe206d2b54c444f21ff8efff545e"
+    },
+    {
+      "path": "outputs/scorer_statistics.csv",
+      "source": "/tmp/g4usim_ddd_u8adg67d/case01/scorer_statistics.csv",
+      "size_bytes": 801,
+      "sha256": "348c3dd89c215baa7c20fabdd74f2bfddf5548f66869dd00ccc1030b7a4d8518"
+    }
+  ],
+  "returncode": 0,
+  "command": [
+    "/home/runner/work/G4UniversalSim/G4UniversalSim/build_linux/G4UniversalSim",
+    "--config",
+    "/tmp/g4usim_ddd_u8adg67d/case01.ini",
+    "--macro",
+    "/tmp/g4usim_ddd_u8adg67d/case01.mac",
+    "--output",
+    "/tmp/g4usim_ddd_u8adg67d/case01"
+  ],
+  "note": "Original inputs/CSV/metadata/summary subset, not a complete run bundle. Absolute paths describe the original temporary run, not a relocated replay."
+}

@@ -1,0 +1,30 @@
+[
+  {
+    "case": "legacy_huge_run",
+    "error": "Project field project.runSettings.beam_on = 10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 is outside the editable GUI range [0, 2000000000].",
+    "widgets_objects_evidence_unchanged": true,
+    "history_savepoint_redo_unchanged": true,
+    "no_projection_called": true
+  },
+  {
+    "case": "v7_huge_run",
+    "error": "Project field project.runSettings.beam_on = 10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 is outside the editable GUI range [0, 2000000000].",
+    "widgets_objects_evidence_unchanged": true,
+    "history_savepoint_redo_unchanged": true,
+    "no_projection_called": true
+  },
+  {
+    "case": "v7_unknown_widget_binding",
+    "error": "Unknown editor binding: config.unknown_bound_widget",
+    "widgets_objects_evidence_unchanged": true,
+    "history_savepoint_redo_unchanged": true,
+    "no_projection_called": true
+  },
+  {
+    "case": "v7_raw_widget_range",
+    "error": "Draft integer outside supported range: project.editingState.drafts.config.beam_on",
+    "widgets_objects_evidence_unchanged": true,
+    "history_savepoint_redo_unchanged": true,
+    "no_projection_called": true
+  }
+]

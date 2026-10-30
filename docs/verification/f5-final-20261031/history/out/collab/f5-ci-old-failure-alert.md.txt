@@ -1,0 +1,9 @@
+# CI 首轮失败告警（4f960ab 已撤回）
+
+官方 run41076028060、run41076028070 均 completed/failure，四个 job 均在 GUI 阶段失败。原始 API 与 Ubuntu M0 job124132321457 完整 connector 解码日志保存在 `out/verification/f5-ci-4f960ab`。
+
+已提取确定失败：`gui_project_import_projection`，`gui/smoke_tests/smoke_project_import_projection.py:161` 的 `assert snapshot(window, widgets) == before`，原 log 包含 331 个 v3 assert 入口。尚未认定四 job 均为同一用例，尚未认定新 b290eb4 CI 失败；正独立重跑当前候选同脚本，收据 `out/verification/f5-ci-b290eb4/current-project-import-repro.log`。
+
+新轮：Linux41077114559、M0 41077114583，均绑定 b290eb4522fade982bedcd1c8b0174d3e3904279，最近观察仍 GUI in_progress。root 应优先检查项目导入原子性回归，不要将首轮旧候选失败日志覆盖。
+
+当前本机 b290eb4 复跑已确认同一个首要断言失败：`smoke_project_import_projection.py:161`；其后未正常关闭窗口才出现恢复锁 PermissionError 和最终 -1073741819。源头为对超范围 `beam_on=10**100` 执行 `_set_project(load_project(huge))`，预检已报 ValueError，但旧窗口快照改变。`window/project.py:77-103` 的 try/except 捕获了尚未修改 UI 的预检失败，随后无条件 `apply_workspace(verified, reason='open-rollback')`；这个不必要的投影会改变对象身份及 UI 证据状态，疑似源头。没有证实发生冻结，请 UI 原写者核定最小修复。没有修改产品或正式测试。

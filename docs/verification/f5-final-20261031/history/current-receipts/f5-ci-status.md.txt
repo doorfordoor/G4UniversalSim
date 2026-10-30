@@ -1,0 +1,21 @@
+# F5 CI 独立取证状态
+
+**5d56187最终取证已完成，完整审计失败且不能关闭F5**：2workflow/4job官方全success，4ZIP/492成员/12report/478case完整；11/12严格F4基线通过，唯一11.4.3 backend DDD44<46拒绝。主收据 `out/verification/f5-ci-5d56187/evidence-integrity-audit.json`、README.md；建议归档manifest同目录。原件未改、无临时URL或密钥，所有下载与审计进程已结束。请root处置DDD基线再决定最终阶段结论。
+
+**给 root 的即时阻断告警（5d56187）：官方11.4.3全success，但严格F4 backend基线失败，39795<39797；唯一case displacement_damage 44<46。其他7个已到档profile门禁通过。没有豁免或改阈值，尚不能据CI关闭F5。完整告警 `f5-ci-5d56187-baseline-alert.md`。11.3.2仍integration，收齐终态后会生成如实failed的ci审计JSON/README及可归档清单。**
+
+**当前最终候选为 5d56187392a2e7b888d5ce13f8da05a295cba6d4**，正式 Linux41082364530 / M041082364655。进度 `f5-ci-5d56187-status.md`，证据独占新目录 `out/verification/f5-ci-5d56187`。下方均为先前撤回候选历史。
+
+当前最终候选已更新为 b290eb4522fade982bedcd1c8b0174d3e3904279。新正式 Linux run41077114559、M0 run41077114583，状态与证据见 `f5-ci-b290eb4-status.md` 及 `out/verification/f5-ci-b290eb4`。下方保留撤回首轮的历史。
+
+首轮提交：4f960ab1236dee6e91f82f281983e3ccdda2fe69。root 因新发现 scan_base 消费入口 P1 撤回其最终候选身份，后续将使用修正 SHA 与新 CI 目录。本轮原 manifest 和证据保留，不计作最终验收。
+
+- Linux run 41076028060：GitHub API 确认同一 SHA，两版本 11.3.2 / 11.4.3 正在 Build the backend。
+- M0 run 41076028070：同一 SHA，Windows 正在 static，Ubuntu 正在 offscreen GUI。
+- 官方初始 run 元数据保存到 `out/verification/f5-ci-4f960ab/*-run-initial.json`。
+- 尚未下载最终 artifacts / logs，未宣称 CI 通过。依 root 指令暂停完整旧轮审计，等待自然完成后简要保全 API 元数据；优先独立复核 scan_base 修复。
+- 不重启 CI，不修改 workflow，不轮询 root 的 Windows 本地 session。
+
+## Scan 修后独立复核
+
+`out/collab/f5-scan-independent-recheck.py/.log` 退出 0；真实扫描按钮拒绝非法 seed、双投影失败和恢复来源变化，保留旧 manifest、所有包文件 SHA 和扫描草稿。既有独立合法 base 仍可使用，显式修复后新扫描为 101 事件。完整结论见 `f5-scan-independent-recheck.md`。等待 root 修正 SHA 后恢复最终 CI 取证；旧轮两 run 最近均处于 GUI 测试，不作为最终证据。

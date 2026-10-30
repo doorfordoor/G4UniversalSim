@@ -1,0 +1,18 @@
+# F5 Open 容量修复独立复核
+
+**结论：无问题（原容量注入下的发布原子性缺口已修复）**。审查仅写 out，未修改产品/正式测试；不扩大为默认超大文件或整阶段验收。
+
+- `window/project.py:77-96,250-258`：合法 v7 新项目在 complete snapshot codec 与当前 session.max_bytes 检查后才可投影；本次按原容量条件（旧快照大小+1）分别调用 `_set_project` 和实际 `_load_project_path`，两者均在 apply 和旧项目保存/丢弃询问之前拒绝。完整 QWidget 状态、模型/编辑器对象 ID、历史 revision/保存点/redo、旧文件路径、恢复来源 SHA 均保持。
+- `window/project.py:100-126`：将 legacy 实际 Open 的 session.reset 注入晚期容量失败，UI 已进行投影但异常后回滚；最终 view/current fingerprint、历史/redo、旧 path 和原件来源 SHA 一致，未留下故障状态。
+- `window/project.py:113-119,261-287`：reset 完成后向 history_changed 注入异常，实际 Open 返回 True；新 path、新 view、新历史保持一致、revision 增长且 clean，恢复 origin SHA 等于本次读取的新项目实际原始字节；原文件和新文件字节都不改，明确显示 status update failed。
+
+独立脚本：`f5-open-capacity-independent-recheck.py`；原始成功收据：`f5-open-capacity-independent-recheck-r1.log`，exit0。原失败容量 probe 及原 CI 失败证据保持。
+
+第一版新复核脚本错误假设 `_save_project_to` 会更新 project_file（实际由 save-as/打开入口赋值），因此在前置 fixture 的 path 断言 exit1；`f5-open-capacity-independent-recheck.log` 保留。r1 加上实际 `_load_project_path` 建立已打开的旧文件身份，未改产品或放宽判据。
+
+## 其他任务状态
+
+- 等 root 通知核心指纹缓存修复完成后，再跑原 F1 close<0.5s 的真实完整专项；不提前跑并发写入中的版本，不修改 0.5s 原阈值，不将迟延误归为 5 秒恢复 IO 等待。
+- 旧 4f960ab：Linux41076028060 / M0 41076028070 均 completed/failure，全部 job GUI 失败；官方最终 run/jobs 元数据在其原专属目录。
+- 旧 b290eb4：Linux41077114559 / M0 41077114583 也均 completed/failure，四 job GUI 失败；官方最终 run/jobs 元数据已保全到 `out/verification/f5-ci-b290eb4/*-withdrawn-*-final.json`。不再轮询或完整审计这两旧 SHA。
+- 下一最终 SHA 的 12 reports / 478 case executions 官方 ZIP、日志、F4 逐例基线审计等待新冻结；下载器和审计模板保留在 b290eb4 目录，届时新目录改参数，绝不借旧 head 报告代替。

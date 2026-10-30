@@ -1,0 +1,50 @@
+# F5 恢复存储与控制器独立只读审查
+
+审查者：f5_transactions；被审写者：f5_recovery。2026-10-30。依据候选交接及当前代码读取；未修改被审产品/测试文件。只在out/collab写两个独立反例和收据。root正在扩展project文件receipt，不把尚未完工的调用接线作为本文已验结论。
+
+## 结论
+
+现有真实进程与核心专项独立新跑通过。发现两项**确定的公共接口层版本守卫缺口**；反例是合成迟到通知，不声称已在正常当前MainWindow操作中复现数据丢失。建议在F5关闭前由原写者收紧，避免K1后续复用接口时再补第二套守卫。
+
+### R-F5-REC-01 — 确定缺陷，P2：迟到changed覆盖更高版本的待写草稿
+
+- 位置：`gui/g4usim_gui/window/recovery.py:58`–`:67`（无条件替换pending）；`:80`–`:83`（提交当前pending）。
+- 调用：`changed(new_payload, 2)` 后、启动后台写盘前，迟到 `changed(old_payload, 1)`；随后flush。
+- 实际：落盘revision=1、projectName为旧草稿，状态仍“Recovery copy updated”。core只知道已落盘revision，初次写盘时不能保护从未落盘的revision2。
+- 收据：`out/collab/f5-recovery-controller-review-repro.py`、同名`.json`；独立实际Qt对象与后台future，退出0。不是仅凭静态代码猜测。
+- 与已修“旧write成功、新pending存在”的不同：已修的是完成状态文案和future发布序号；本例是pending本身被较旧changed通知替换。
+- 建议：controller保存最高已接受请求revision/相应payload身份，低revision通知拒绝或无操作；相同revision只允许同编辑payload的幂等更新。reset新会话时明确重置此边界。错误/拒绝不得丢较新的pending。
+- 当前调用可达性边界：MainWindow历史通知目前同步且EditSession revision单调，尚无正常鼠标流程触发证据；这是可复用公共API的确定缺口，不外推当前每次自动保存都会出错。
+
+### R-F5-REC-02 — 确定缺陷，P2：相同revision可改写身份，退休后同版旧发布可复活副本
+
+- 位置：`gui/g4usim_gui/core/workspace_recovery.py:325`–`:341`只拒绝`revision < _revision`；`:358`–`:370`退休不设置发布屏障。
+- 反例A：publish(payloadA,4)→publish(payloadB,4)，接受第二份不同内容，原revision对应的不可变编辑状态被替换。
+- 反例B：publish(...,4)→retire('discarded')→迟到publish(old,4)，重新生成disposition=active的恢复副本；close后又被discover为可恢复候选。
+- 收据：`out/collab/f5-recovery-review-repro.py`及`.json`。同时确认真正lower revision=3会拒绝，故不是误判所有revision守卫都缺失。
+- 建议：同revision校验payload identity，相同内容可幂等重发或仅更新已定义来源上下文；不同内容拒绝。retire记录其截止revision，同/更旧发布拒绝，只有更新的编辑revision可再次激活该会话（或显式新session）。
+- 当前控制器范围：`window/recovery.py:135`–`:146`确实先清pending并等待in-flight write，使正常saved/discarded流程不会简单受到已有future回调影响；本文**不撤销这一已有保护**。建议将不可变revision与退休屏障也落实到无Qt持久层，调用者不必自行发明保护。
+
+## 其余重点结论
+
+| 项目 | 判定 | 证据与边界 |
+|---|---|---|
+| 写失败保留原件 | 无问题（已实验） | `_atomic_publish:122`–`:143`同目录临时文件/fsync/replace；独立注入fsync与replace失败，原恢复JSON字节保持；临时清理不覆盖正式文件 |
+| 活跃多进程/同进程窗口锁 | 无问题（已实验） | `_Lease:69`–`:110`、`discover:272`–`:296`；独立重跑正式test_f5_recovery，双子进程活跃时不可发现，杀一个只发现它；进程死亡实际收据1/1/2而非虚构PID |
+| 非本store候选 | 无问题（已实验） | `claim:300`–`:308`校验路径与hex session id；把A候选交给B store，拒绝且文件仍在 |
+| close后复用 | 无问题（已实验） | `publish:328`、`RecoveryClaim._check_bytes:385`；关闭session后publish、退出claim上下文后read/discard均RuntimeError，未碰文件 |
+| 坏JSON/未来版本/未知/缺完整editor | 无问题（代码与正式实验） | `_decode:201`–`:238`调用strict JSON与完整snapshot codec，不降级为legacy project；坏候选保留错误，显式discard仅删除该候选 |
+| 超限与稳定链接 | 无问题（限定证据） | `_check_regular:58`–`:66`拒绝symlink/reparse；读取限MAX_BYTES+1。独立实验将MAX_BYTES缩为2048并写2049字节，discover报错且保留文件。hash为空时claim拒绝，`recovery_dialog.py:88`附近明确禁用discard，未误导可删除。真实Linux/Windows符号链接竞态不在本次实验范围 |
+| old completed future发布 | 无问题（静态+原专项） | `_finish_future:93`–`:112`核对future对象身份；有新pending时不显示“全部已保护”。与R01的旧changed通知不是同一情况 |
+| Restore取消/拒绝 | 无问题（代码与原专项） | `restore_candidate:195`–`:198`与`_restore_recovery_payload:321`–`:328`，先投影预检、dirty确认再reset；False保留候选，claim正常释放 |
+| 后继副本成功前保留前驱 | 无问题（代码与原专项） | `restore_candidate:199`–`:208`，必须有callback产生pending且flush成功才discard前驱；新写失败仅报告恢复未保护，前驱留存 |
+| 原项目变更提示 | 无问题（限定静态） | `origin_status:180`–`:198`分missing/unobserved/changed/matches；仅作当前观察，不改历史SHA。root新receipt接线还需最终专项，本文不提前宣布 |
+| 控制器reset失败/关窗清理 | 需最终集成实验 | 窗口hooks仍由UI写者完成；需要最终版本验证ignore后timer重启、恢复新session失败不假关闭及实际MainWindow正常退出。现有恢复UI/进程专项属于此前候选，不能代替最终集成 |
+
+## 本次独立运行
+
+- `python -B scripts/test_f5_recovery.py`退出0。三次实际进程死亡：active恢复1、atomic_before恢复1、atomic_after恢复2；正式多进程/正常退出/保留分支通过。
+- `python -B out/collab/f5-recovery-review-repro.py`退出0（该脚本的assert刻意确认已观察到的缺口，修复后应改为期待拒绝，不应直接把旧反例退出0当修复绿色）。
+- `python -B out/collab/f5-recovery-controller-review-repro.py`退出0，同上反例口径；输出最新请求2但持久1。
+
+没有改被审文件，没有重复制造整阶段验收结论；建议root将两条API守卫交原写者修复，再由不同写者用上述原反例改成期望拒绝进行复核。

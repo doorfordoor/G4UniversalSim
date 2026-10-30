@@ -1,5 +1,7 @@
 # G4UniversalSim Development Roadmap
 
+2026-10-31 F5：**已完成**。冻结验收5c1eec5；Windows160/160、50898个v3入口，Linux11.3.2/11.4.3各160、M0两平台各79，原F4逐例与总量门禁通过。原生22份观察/28截图/真实退出0保持5d身份，经明确映射关联新冻结；不新增物理验证结论。[最终证据](verification/f5-final-20261031/README.md)。下方带日期的旧状态保留其历史范围。
+
 Agreed 2026-10-21. Order of work: **Phase A core functions → Phase B scenario packs → Phase C wizard and plotting → Phase D installer** (only once the framework is mostly stable).
 
 This file is the single source of truth for progress. Every work session updates the status table and the progress log at the end.
@@ -24,7 +26,7 @@ This file is the single source of truth for progress. Every work session updates
 | C Wizard + built-in plotting | Done (C1 built-in plots, C2 wizard, C3 parameter scans) | see log |
 | D Installer | Done (portable ZIP + Inno Setup installer; uses an existing Geant4 data folder) | see log |
 | E Fixes and foundations | In progress: E1, E2, E3 (Linux incl. Geant4 11.3.2/11.4.3 matrix, done 2026-10-28), E5 done; E4 pending | see log |
-| F System optimisation (backend + GUI) | In progress: F1 and F6 done; F4 已完成; F2/F3/F5/F7/F8 pending | see log |
+| F System optimisation (backend + GUI) | In progress: F1 and F6 done; F4 已完成; F5 已完成; F2/F3/F7/F8 pending | see log |
 | G 3D view redesign | Done (G1-G6) | see log |
 | H Geant4 capability increments | In progress: H1 done | see log |
 | Q1 完整可靠性审查、修复与验收 | **已完成**：九域审查及R01–R32闭合；Windows105、Linux双版本各105与实窗通过 | 验收代码 `8ecad66`；[最终证据](verification/q1-final-20261029/README.md) |
@@ -160,14 +162,12 @@ Backend:
 GUI:
 - **F4 Validation that leads to the field.** Every message carries its location
   (editor, row, field); clicking it selects the tab/row and highlights the control.
-- **F5 Undo/redo and autosave.** Command-based undo in the editors; autosave of the
-  project to a recovery file and an offer to restore after a crash.
+- **F5 Undo/redo and autosave.** 主项目和成功应用向导共用完整快照事务；v7保存材料/几何及原始草稿，独立恢复副本受系统会话锁保护，恢复为未命名、未保存副本。[使用与限制](配置撤销与恢复.md)。
 - **F6 Live run progress.** The backend prints a progress line (events done, rate)
   at a fixed interval; the Run Console shows a progress bar, rate and time left.
 - **F7 Better scans.** Two-parameter grids with a 2D map plot; several points at once
   within a thread budget; scans of scenario-pack generators.
-- **F8 Smaller GUI follow-ups.** A page for the Geant4 data folder (D follow-up),
-  re-opening the wizard on an existing project, a human high-DPI/accessibility pass.
+- **F8 GUI follow-ups and acceptance.** 衔接I1环境设置与J1主题/布局，完成向导重入及跨页DPI、键盘、文案和可访问性实窗验收。
 
 ### Phase G: 3D view redesign
 
@@ -237,7 +237,7 @@ is marked experimental in the support matrix until benchmarked.
 | 1 | 可靠性基线 | **Q1**；E4 文档校准可同步 | 本对话完成约定范围的全模块审查、修复、独立复核与验收；不只清空已收到的 R 清单 |
 | 2 | 配置底座 | **2C → E6** | 真实消费者/生命周期证据、模块三态、schema 与迁移契约闭合；I1 只读环境设计可并行 |
 | 3 | 可信实验闭环 | **F1 → F4 → F5 → K1**，并行 **I1** | 手工操作和未来 Agent 共用检查/修改/运行/判断服务；可验证、可移植配置包成立 |
-| 4 | 双平台桌面交付 | **I2、J1** 独立文件并行，随后 **F8** 收尾 | 支持矩阵内的运行时/SDK安装、当前版本包、真实桌面布局与向导操作验收 |
+| 4 | 双平台桌面交付 | **I2、J1**独占文件并行，随后**F8**；J1设计可在K1期间先行，实施待服务/状态所有权稳定 | Windows/Linux交付、区域清楚的主题与可调整布局、易懂中文，跨页DPI/键盘/向导实窗验收 |
 | 5 | 自动配置与运行 | **L1 → F2** | 配置 Agent 真正闭环；F2 单独证明 Idle 白名单与重放。L1 先用新进程，不被热会话阻塞 |
 | 6 | 科研效率与架构补齐 | **Q2 → H2 → H3**；**F3 → F7**；**E7 → J2** 按文件归属串并行 | 独立物理/权重基准、过滤/平行世界、性能/二维扫描、实体注册与编辑覆盖各自整项验收 |
 | 7 | 独立工程与代码执行 | **K2 → L2** | 干净 Windows/Linux 环境能独立构建、运行、继续开发；代码 Agent 有隔离、恢复与有限修复证据 |
@@ -263,11 +263,11 @@ is marked experimental in the support matrix until benchmarked.
 | **F1** | 输出身份、commit/config/项目实际读取资源 hash，未观测输入明确标记；版本化输出与测量后决定缓存/format=auto | 来源/格式节点分开提交；默认CSV不变。依赖 2C/E6，支持 K1/Q2 | 已完成：产品f176d0e；Windows143/143及E6基线、Linux双版本各143、M0双OS各64通过，14次实窗观察/正常关闭与独立复核通过。[最终证据及集成](verification/f1-visible-20261030/README.md)。[自动归档](verification/f1-automated-20261030/README.md)保留两轮失败及当时pending；72次测量完成、缓冲候选撤回。[契约](collab/inbox/20261030-1410-astra-f1-scope.md) |
 | **F2** | GUI 受控 run session、Idle 白名单、逐 run 输入/来源/重放协议 | 完整换配置用新进程；三轮调整的真实状态与限定环境重放；不承诺跨平台/线程数逐位一致。可在 L1 后交付 | 待开始 |
 | **F3** | hits-heavy/mesh-heavy 的耗时、内存、输出基线及瓶颈优化；tasking 单列实验 | 测量→单一瓶颈变更→前后对照；统计/种子/输出契约不改变。性能优化不能成为接受结果差异的理由 | 待开始 |
-| **F4** | 定位到 editor/row/field/code 的诊断及点击跳转 | 诊断身份不随语言改变，不抹除来源错误；K1/L1 复用同一结构 | 已完成：产品 `7d718d038a00d89995ea773b4772764116b620c3`；Windows 152/152、49913 个 v3 入口与 F1 原始143/48511同代基线门禁；Linux11.3.2 为 152 项、11.4.3 为 152 项（run 41056994075），M0 Windows 为 72 项、Ubuntu 为 72 项（run 41056993987）。CI实际提交 `a9ad09dfd6e99d287fa77ff7f38e7919c475e1b9`，与产品的关系见[提交身份映射](verification/f4-final-20261030/identity/identity-map.json)。Windows原生 13 态、19 次实际观察与进程退出 0；[最终证据](verification/f4-final-20261030/README.md)，[独立审查](collab/reviews/20261030-astra-f4-close-review.md)。 下一F5待开始。 |
-| **F5** | 配置事务 undo/redo、自动保存、异常恢复 | 撤销后生成语义一致；恢复文件不覆盖原件；自动操作走相同事务接口 | 实施中；范围75b1a19，尚未验收 |
+| **F4** | 定位到 editor/row/field/code 的诊断及点击跳转 | 诊断身份不随语言改变，不抹除来源错误；K1/L1 复用同一结构 | 已完成：产品 `7d718d038a00d89995ea773b4772764116b620c3`；Windows 152/152、49913 个 v3 入口与 F1 原始143/48511同代基线门禁；Linux11.3.2 为 152 项、11.4.3 为 152 项（run 41056994075），M0 Windows 为 72 项、Ubuntu 为 72 项（run 41056993987）。CI实际提交 `a9ad09dfd6e99d287fa77ff7f38e7919c475e1b9`，与产品的关系见[提交身份映射](verification/f4-final-20261030/identity/identity-map.json)。Windows原生 13 态、19 次实际观察与进程退出 0；[最终证据](verification/f4-final-20261030/README.md)，[独立审查](collab/reviews/20261030-astra-f4-close-review.md)。 后续F5当前状态见下一行。 |
+| **F5** | 配置事务 undo/redo、自动保存、异常恢复 | 主编辑快照完整；恢复不覆盖原件，撤销后重新验证 | 已完成：5c1eec5，Windows160/50898、双Linux各160、M0双平台各79及F4门禁通过；5d实窗22观察/28截图/退出0经身份映射。[最终证据](verification/f5-final-20261031/README.md) |
 | **F6** | 实时进度与 sequence | 已完成，Q1 复核解析、取消和失败边界；进度不替代成功证据 | 保持完成 |
 | **F7** | 二维扫描、线程预算内并发、场景生成器扫描 | 依赖 K1/F3；每点独立 seed/目录/证据，失败/重试不重复发布，缺点可见 | 待开始；已有单参数串行扫描保留 |
-| **F8** | 环境设置页、向导重入、真实桌面 DPI/可访问性收尾 | 数据目录页由 I1 实现；布局/DPI 由 J1 实现；F8 承担向导重入和跨项桌面验收，避免重复建设。三部分齐全才关闭 F8 | 待完成 |
+| **F8** | 环境设置衔接、向导重入、跨页DPI/键盘/文案一致性与可访问性 | I1提供环境页；J1实现布局/主题/主要中文及焦点适配；F8做跨项桌面验收，避免重复建设 | 待完成；配置/结果/日志/任务等页面及不同屏幕缩放实窗验收，三部分齐全才关闭 |
 
 E3 的已完成 Linux CI 基础不重建；Windows 11.4、原生 Linux 桌面、包内 ROOT/Python 辅助工具与干净安装验收归 I2。现有后端 ROOT 输出和新版本源码 CI 仍按 Q1 及各阶段冻结矩阵验证。Geant4 11.2 先在 I1/I2 决定是否进入支持矩阵：不支持则清晰拒绝/说明，不默认承担无限旧版本兼容。
 
@@ -279,7 +279,7 @@ E3 的已完成 Linux CI 基础不重建；Windows 11.4、原生 Linux 桌面、
 | --- | --- | --- | --- |
 | **I1 环境发现与诊断** | 目标 1；GUI/启动器检测后端、运行时、SDK、编译器、CMake、版本、架构、可选组件和数据；区分候选发现与真实可用 | Q1；只读探测可与配置底座并行 | 环境模型/探测 → GUI 选择与诊断 → 缺库/多环境/路径/真实 smoke。缺 Geant4 时诊断入口仍能启动 |
 | **I2 辅助安装与双平台交付** | 目标 1；受控安装前缀、下载校验、失败恢复、运行时/SDK 两种方案、当前版本 Windows/Linux 包、诊断包和版本矩阵 | I1 | 平台方案 → 安装/恢复实现 → 干净系统包验收/实际 CI。普通运行不强迫装编译器；项目许可/签名发布另按具体产物决定 |
-| **J1 可调整工作区** | 目标 2；配置、3D/结果、日志、AI 区可移动/缩放/隐藏/浮动；三种布局和 B/K/C 起始主题；本机保存/复位 | Q1；K1 的服务/状态所有权稳定 | Qt dock 骨架 → 布局持久化/主题 → 多屏/DPI/键盘/中英/运行中切换。布局不改配置、不重复启 run |
+| **J1 可调整工作区** | 配置、3D/结果、日志、AI区可移动/缩放/隐藏/浮动；明确区域边界、视觉层次、配色、间距/留白和信息密度；参考既有HTML，三种布局及B/K/C起始主题，支持保存/复位 | Q1；设计可在K1期间先做，实施须K1服务/状态所有权稳定，可与I2独占文件并行 | 设计审查 → dock/布局持久化/主题 → 主题稳定后统一易懂中文 → 多屏/DPI/键盘/中英/运行中切换；布局不改配置、不重复启run，科学含义与诊断code保持准确 |
 | **J2 编辑覆盖与几何往返** | 原 M3 余项；按科研需求扩展已支持的高级源/实体/场/偏置编辑，连接能力清单；布尔工具只开放已实现子集 | E6、E7；按阶段冻结编辑范围 | 能力/编辑映射 → editor/writer → 旧输入保留、未知字段无损复制或明确拒绝、真实生成/重载/运行。不是给全部 Geant4 接口做表单 |
 | **K1 可信实验工作流与配置导出** | 目标 3 的配置部分；统一 inspect/validate/apply/generate/run/evaluate/export，验证分级、输入身份、可移植配置/资源/证据包 | 2C、E6、F1、F4、F5、I1 | 服务契约 → GUI/CLI 接通 → bundle/验证失效 → 干净目录加载/重跑/分享。修改输入后旧验证不能继续挂在新配置上 |
 | **K2 独立 Geant4 工程导出** | 目标 3 的源码部分；可审阅 C++/CMake、配置/资源/许可、扩展点和构建说明；脱离工具可继续开发 | K1、I2；当前支持子集即可，不依赖所有 H 项 | 导出模板/manifest → 生成与构建 → 两平台干净环境构建/运行/二次修改；不能只附 INI 或依赖工具安装目录 |
@@ -477,3 +477,9 @@ H4–H8 if the user's applications favour some of them.
 既有编辑器及Project/Run、向导、扫描、屏蔽场景共用结构化诊断；按实际对象/字段/快照定位，表格按目标单元格滚动，旧报告失效，来源只读，原文本和阻断规则兼容。无编辑控件或可靠来源时明确拒绝。这不扩张高级GUI字段或科研物理验证；F5为下一完整阶段，仍待启动，K1/L1/Q2按原依赖推进。
 
 5d6f008几何定位空白反例与Windows中断轮（92 PASS/1 FAIL、无完整report）、旧CI失败/未执行profile，以及096f4b3原生host异常退出均保留历史原件，不计最终通过。QA host的Close事件对象树遍历缺陷只在out辅助程序修正；第三轮7d718d0的Linux CI因缺少libEGL.so.1失败，仅有6份实际报告，后续6个Linux profile未执行；其旧报告与失败日志仍属历史，不能用新CI回填或冒充当轮通过。PID40456、2026-10-30 19:51:06的0xc0000409与缺失退出收据不得改写。合成夹具、离屏交互、真实后端Inspect拒绝与原生图像观察分别计证；本阶段不声称新增模拟或物理基准。
+
+## 2026-10-31 F5 验收记录
+
+2026-10-31 F5：**已完成**。冻结验收5c1eec5；Windows160/160、50898个v3入口，Linux11.3.2/11.4.3各160、M0两平台各79，原F4逐例与总量门禁通过。原生22份观察/28截图/真实退出0保持5d身份，经明确映射关联新冻结；不新增物理验证结论。[最终证据](verification/f5-final-20261031/README.md)。下方带日期的旧状态保留其历史范围。
+
+后续按[模型分工](collab/MODEL-POLICY.md)选择实际可用模型与推理档；下一完整阶段K1尚未启动，I1可并行准备。

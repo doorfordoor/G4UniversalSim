@@ -1,0 +1,48 @@
+# F5 recovery integration API (implementation starting)
+
+Owner: f5_recovery. 2026-10-30. The complete design is f5-recovery-proposal.md.
+
+Core will use the shared v7 `project_to_dict` / `project_from_dict` codec, not define another editing schema. UI converts WorkspaceSnapshot to complete project payload with the transaction agent's codec.
+
+Files owned here: `core/workspace_recovery.py`, `window/recovery.py`, `widgets/recovery_dialog.py`, `core/install_layout.py` (only default_recovery_root), `scripts/test_f5_recovery.py`, `gui/smoke_tests/smoke_f5_recovery_ui.py`.
+
+Planned stable API:
+- `RecoveryStore(root=None).open_session() -> RecoverySession` (OS lease; same-process windows also excluded)
+- `session.publish(payload: dict, revision: int, *, origin_path='', origin_sha256=None, saved_digest=None)`
+- `session.retire(reason='saved'|'discarded')`; `session.close()` releases lease, never silently deletes active state
+- `store.discover() -> tuple[RecoveryCandidate]`; candidate includes id/path/raw_sha256/project_name/updated_utc/origin_path/error/disposition, malformed retained
+- `store.claim(candidate) -> context manager RecoveryClaim`; `.read() -> RecoveryRecord` / `.retain()` / `.discard()`
+- `RecoveryRecord.payload` is the complete project dict; use shared codec to restore to WorkspaceSnapshot.
+
+Qt adapter `RecoveryController(owner, *, restore: Callable[[dict], bool], root=None)`:
+- `changed(payload: dict, revision: int, *, origin_path='', origin_sha256=None, saved_digest=None)` captures immutable pending state, async debounce+max interval autosave
+- `flush(timeout_ms=5000) -> bool` writes last state and waits boundedly
+- `saved() -> bool` clears saved generation only after settling writer; caller must not call it if a newer edit exists
+- `discard() -> bool` explicit clear own recovery record, settle writer
+- `reset() -> bool` retire prior clean/discarded session and create a new lease (only call after document guard resolved)
+- `show_recovery_dialog()` explicit menu; no modal automatically in constructor/offscreen
+- `offer_at_startup()` only if candidates; GUI integration chooses delayed call except offscreen/minimal/self-test
+- `close(*, keep=False) -> bool`: flush if keep, await writer, release own lease; `keep=True` sets retained disposition for an intentional preserve
+- `statusChanged(str)` signal, status messages go via ui_text/ui_format; translation mapping delivered to out/collab/f5-recovery-i18n.json.
+
+Restore callback is owned by editor UI: run existing dirty replacement guard, strict projection, restore as new untitled dirty WorkspaceSnapshot, stale all evidence. Return False on cancel/failure. Controller retains old candidate until new session's copy is successfully published. Original project/source files are never saved by recovery.
+
+Collaboration direct tool is not currently exposed in child runtime; this file is the machine-visible contract for root/UI/core. Please send corrections before main integration; core store itself has no dependency on future UI method names.
+
+Implementation update: the files above now exist. Constructor never starts discovery by itself; UI owns `MainWindow(..., offer_recovery=True)` and a queued `controller.offer_at_startup()` when explicitly enabled. Product does NOT branch on offscreen/minimal. Tests must pass offer_recovery=False and a temporary recovery_root explicitly. Restore callback must reset its WorkspaceSnapshot session and invoke `controller.changed(full_project_payload, new_revision, ...)` before returning True; controller flushes successor then deletes claimed predecessor, or retains old candidate and reports the protection failure.
+
+MainWindow integration now provided as `RecoveryMixin` in `window/recovery.py`; import and add to MainWindow bases (main file owner only). Implemented hook signatures:
+- `_setup_recovery()` uses `_recovery_root`, `_offer_recovery`; defines `self._recovery`, persistent `recovery_status`, recovery_action under existing edit_menu.
+- `_recovery_history_changed()` called by existing history_changed.
+- `_recovery_project_replaced(*, origin_path=None, origin_sha256=None) -> bool` after successful guarded load/switch.
+- `_recovery_project_saved(*, origin_path=None, origin_sha256=None) -> bool` after successful save; if callers can supply actual-open/saved-byte receipt, pass it. Without receipt hash stays explicitly unknown; we never re-read later bytes and invent historical identity.
+- `_recovery_before_close(*, discard=False) -> bool`; main MUST honor False with event.ignore and restore `_closing=False`/history_changed before cleanup of evidence jobs. Do not close event first then ignore bool.
+- `_restore_recovery_payload(dict) -> bool` uses WorkspaceSnapshot(project_from_dict(payload)), `_check_workspace_projection`, `_confirm_unsaved_edits`, `_edit_session.reset(..., saved=False, apply=...)`, sets project_file=None and stale evidence through apply_workspace. It does not re-read materials/geometry.
+
+Owner/root must keep `_recovery_project_replaced` out of startup `_set_project` before `_setup_recovery`; existing hasattr guard handles that. Current hook loading location is correct. Parent tools did not expose send_message to this child; root routes these notes to UI agent.
+
+Observed Windows crash-test correction: venv Scripts/python.exe may be a redirector whose death is NOT the real interpreter's death. Core child uses sys._base_executable and verifies Popen.pid equals published os.getpid before owned kill; initial false-crash trial kept live lock (correct). Current process tests cover real active/before-replace/after-replace death and multi-instance normal close.
+
+Current independent checks: scripts/test_f5_recovery.py passes genuine process deaths (active / before replace / after replace), multi-process live exclusion, malformed strict input, original-file changes/missing, terminal cleanup. gui/smoke_tests/smoke_f5_recovery_ui.py passes actual Qt timers/dialog/failed successor preservation plus delayed old publish/new revision status; pending edits remain visibly unprotected. i18n mapping: out/collab/f5-recovery-i18n.json. Receipt/source-origin status now appears in dialog selected details (matches/changed/missing/unobserved/unavailable); no retrospective original SHA fabrication.
+
+Recovery payload is now strict full v7 project + editingState + materialEditor. _decode reuses edit_snapshot.snapshot_from_dict after separating existing editingState, rejects partial/legacy/future recovery payload; ordinary project compatibility unchanged. Tests create proper WorkspaceSnapshot-derived payloads.

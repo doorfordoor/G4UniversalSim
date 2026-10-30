@@ -531,3 +531,10 @@ F5统一主Project/Configuration、材料/组分、几何/层/布尔、Source/Ph
 `workspace_recovery.py`每会话OS lease防活跃窗口接管、严格版本/摘要/路径和原子发布，控制器拒绝迟到revision/同revision换payload/已退役revision复活。恢复为未命名dirty副本，不覆盖原项目/INI/macro，不触发运行。自动保存不等于普通保存，失败保持原有效副本。`ProjectFileReceipt`来自实际读取或本次写入的原始字节；os.replace为保存提交点，发布后不清理已经转移的临时名称。
 
 专项：test_f5_transactions/source_snapshots/project_receipts/recovery；smoke_f5_editor_history/recovery_ui/recovery_process；test_f5_transactions_backend（Undo/Redo生成后真实Geant4的源能量和几何读回，非物理正确性基准）。旧GUI用专用test MainWindow隔离恢复/history并明确Discard，产品不按offscreen绕过恢复或未保存保护。原失败实验/报告保留out，再归档；完整验收尚未完成。
+
+
+## 2026-10-31 F5 冻结验收与恢复契约
+
+2026-10-31 F5：**已完成**。冻结验收5c1eec5；Windows160/160、50898个v3入口，Linux11.3.2/11.4.3各160、M0两平台各79，原F4逐例与总量门禁通过。原生22份观察/28截图/真实退出0保持5d身份，经明确映射关联新冻结；不新增物理验证结论。[最终证据](verification/f5-final-20261031/README.md)。下方带日期的旧状态保留其历史范围。
+
+保留前述F5候选契约。新冻结仅改DDD测试/runner证据与实施提案，产品不变；5d的DDD44<46原失败门禁、r2强等N假设撤回及原生失败尝试均保存。新DDD按固定不变量检查全部行，保留原物理判据/容差；可见worker去重N<=master N，空表头N未知，不能由稀疏行推导完整N。runner新增独立证据目录和原样Git状态，不放宽v3原始日志/基线门禁。后续模型分工遵循[项目规则](collab/MODEL-POLICY.md)。

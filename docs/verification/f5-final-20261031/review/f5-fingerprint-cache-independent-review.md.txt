@@ -1,0 +1,21 @@
+# F5 当前指纹缓存与原 F1 时延独立验收
+
+**结论：无问题；可由 root 冻结新候选进入完整矩阵。** 本轮没有编辑产品或正式测试，也没有修改原 F1 `<0.5s` 断言。
+
+## 边界审查
+
+- `core/edit_transactions.py:51-81`：初始对象先 defensive clone、完整指纹/容量检查，缓存只属于私有 current；dirty 查询是当前/保存指纹比较。
+- `:135-170`：mark_saved() 可使用私有缓存；显式旧快照仍重新计算。外部 replace 候选仍 clone、校验并重新求指纹，no-op 也不绕过输入校验。成功 apply 以后才提交 current 与其指纹。
+- `:176-235`：transact 使用隔离副本；undo/redo/reset 在 apply 之前取得候选指纹，成功发布时再更新缓存。重置先执行编码和容量门禁；单/双投影失败、指纹拒绝不会推进 current/revision/cursor/savepoint。
+- `_apply` 向 UI 回调提供 clone，`current()` 和返回值也为 clone；没有新增可通过公开 API 持有并修改私有 current 的引用。直接篡改私有 `_current` 不在公共 API 承诺内。
+
+## 独立实际证据
+
+1. **原 F1 完整专项通过**：`tools/test_assert_probe.py gui/smoke_tests/smoke_f1_async_identity.py`，exit0、**39 v3**。保留第170行真实 MainWindow 在异步身份 hash 尚未释放时 `window.close()` 必须在0.5秒内返回的原断言，以及所有 job 取消与忽略关闭语义。原始日志 `f5-f1-async-independent-after-cache-v3.log`。该文件本轮无 diff。
+2. **核心正式专项独立重跑通过**：`f5-fingerprint-author-tests-independent-v3.log`，exit0、**321 v3**；包含来源缓存/降级、保存点、容量、异常、外部引用、明确旧快照保存语义。
+3. **另写独立状态遍历通过**：`f5-fingerprint-cache-independent.py/.log`，exit0。固定种子160步覆盖 replace/transact/undo/redo/reset、当前与旧保存点；每步将公开 current 重新编码所得指纹与 dirty/saved 语义核对。修改输入、返回副本、回调副本和逸出 transform 引用均不能改变内部状态。replace/undo/redo/reset 的单投影失败、双失败及指纹失败均保持原完整状态。100次 dirty 查询及无参数保存点检查不调用编码函数。
+4. **普通关闭分层诊断**：原 root 诊断脚本在 v3 下新跑，关闭 true / **0.1380102秒**，history_changed 约0.000416秒、恢复 close 约0.000519秒。日志 `f5-close-profile-independent-after-cache-v3.log`。该脚本无 assert，marker=0，是诊断而非正式验收；不能替代第1项。与 root 先前约0.4753秒诊断相比已下降，但不以单次计时声称所有机器性能上界。
+
+冻结内容与作者交接 SHA 相符：core/edit_transactions.py 为 `b29b1059924d54ddd78a01df518d1d35bb98adcc9d0dcc863c5a5b5932d410cc`，scripts/test_f5_transactions.py 为 `b55d4f3e34deb6579be3a6fd3892ca86dc66aa04da3f99c6259d0e0efcc78094`。
+
+旧时延失败、旧CI失败与先前项目容量失败证据原样保留。本轮通过不替代新 SHA 的 Windows 全量、真实 Linux 双版本/M0 与原生窗口完整验收；等待 root 新 commit/push 后继续正式 CI 取证。

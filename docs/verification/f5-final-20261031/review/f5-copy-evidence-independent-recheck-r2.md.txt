@@ -1,0 +1,21 @@
+# F5 复制器 Windows 路径修复独立复核
+
+2026-10-31。对象 `out/collab/f5-copy-evidence.py` 冻结 SHA-256：`672cedbaad6a7715eb8afd266482b1e889db1118f32d041be54662347f219dbc`。仅在新独立 out 目录做小反例；未改复制器、产品、正式测试、旧失败夹具或原报告。
+
+**结论：原 ADS P2 已修复，当前受测范围无问题，可以交 root 做显式清单的 staging；复制仍不是 F5 阶段验收。**
+
+- `:21–28` 在文件系统操作前检查每个组件；`:31–38` 用于来源/目标成员，`:49–50` 也覆盖绝对归档根目录。
+- 独立重复原 `copy-receipt.json:stream`、普通 ADS、NUL、`.. ` / `.. .`、CON.txt、尾部点/空格名称：全部在 make_plan 拒绝，未创建 stage。原本未成功逃逸的尾部空格路径也已提前拒绝，不再留空的 incomplete 目录。
+- 来源和绝对根目录同类反例也前置拒绝；手工构造 plan 直接 execute 仍会重新验证。真实 CLI plan/execute 两种模式对原 ADS 都非零退出、目标目录不存在。
+- 旧真实 Windows junction 同时用作 source parent / destination parent，仍均拒绝；未把 junction 与文件 symbolic-link 权限/测试混称。
+- 普通文件精确复制成功，实际成员仅为 manifest 文件和完成收据，源 SHA 不变、目标 SHA/bytes 相同；收据继续 `phase_complete=false`、`acceptance=not_evaluated`。
+
+以上 **20 项小规模独立检查**完成，进程 exit0，原始结构化回执：`out/collab/f5-copy-evidence-independent-recheck-r2.json`。不是产品 v3 断言计数、不是全量门禁。源脚本 SHA 在复核前后相同。
+
+## 原失败可获得性
+
+- 原脚本已由写者保全为 `f5-copy-evidence.pre-windows-path-fix.py`，独立核对 SHA 仍为 `3849b4cdff8b1ada16b6596296c3ad301d81220cc36bcd55370fc556bb8da6e3`。
+- 原 `f5-copy-review-probe-20261030-235041/stage-3` 仍可读：默认流完成收据0字节、ADS28字节、incomplete状态不变。未清理或改写原失败。
+- 原 `f5-copy-evidence-independent-review.md` **被写者追加了修复交接**，当前6733字节、SHA `b052bbc48bd98de561001aac241fc356f900c95feaf87f8b8edd2deb904e5d40`。其前4147字节仍为原独立失败报告，边界结束在原“原生图像尚未开始审查”句；当前该原始段摘要为 `d2e0ef869a15315636cdb9fc53cd83af3b86008649332a1c943c88c30f9ffddc`。4147之后是明确的写者交接标题。不得把这个追加文档整体当作原始不可变独立通过结论；本文件才是修后独立复核。
+
+真正归档到 docs 仍由 root 在明确新目标中核对完整文件集合、每项原字节 SHA/bytes 和最终成员集合。当前复制器仍仅写 out；本复核没有扩大其目标权限，也不授予 F5 完成状态。

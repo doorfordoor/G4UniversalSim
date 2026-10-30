@@ -1,0 +1,14 @@
+# F5 DDD P2 修后独立复核（r3 差异限定）
+
+2026-10-31。**原 P2 已修复，可冻结该测试修复候选。** 本轮仅核对事件覆盖差异及对应反例，没有重复先前通过的产品/runner/原生审查，也没有重跑 Geant4。
+
+- `scripts/test_displacement_damage.py:175–179` 明确表头空行不能区分零事件与无相关命中事件；完整 N 来自 master。
+- `:187` 保留总体 mu-/e- 集合；原来每 worker 必须有 mu- 的假设已删除。
+- `:203–210` 保留每 worker 的正整数、行间一致性，master 仍必须为 200；可见 worker 去重 N 现在只作 `0 < N_visible <= N_master` 下界一致性判断。
+- `:227–234` 新增无贡献 worker 和每 worker mu- 稀疏正例；`:250–251` 的负例改成可见 N=201 超过 master=200，具有真实语义，不再拒绝不可见贡献。
+
+独立小反例 6/6 符合预期：199 可见+另一个空表头通过；某 worker 仅电子而总体粒子齐全通过；201 可见拒绝；同 worker 粒子 N 冲突拒绝；全局 mu- 缺失拒绝；master N=199 拒绝。具体输入结果见 `f5-ddd-independent-recheck-r3.json`。原失败审查及 JSON 保留，不追改。
+
+复核脚本 raw SHA-256：`e69203bc94ddaa05be7c189c77201427bc642433d1256219b9579a27c5bc6f2c`。作者 r3 开发专项报告 `out/verification/f5-ddd-stable-r3-dev/20261031-002814-cd4c034d/report.json` 为 pass / exit 0 / 73 v3，独立验证 case 日志 SHA 与报告匹配；报告 SHA `6901e8f4d8a9e3db278007c618e8333fbb55d77a19898ea31e82474e59d900d7`，首轮 manifest SHA `00c3e16020a477fd4eff47fcdee7ea5b6f930cd05ffb4f5314654bf34d60e28f`。
+
+73 的来源是原固定 42 + 10 项不变量 + 5 个合法布局 + 16 个损坏反例。新增两项分别覆盖原 P2 的两种错误假设，不是凑数。该报告仍记 HEAD=5d56187 且三个计划文件 dirty，属于开发专项；新冻结提交仍须完整正式矩阵、原严格 F4 门禁及显式原生身份映射。这里不把开发报告改称新 SHA 正式验收。

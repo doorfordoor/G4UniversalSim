@@ -1,0 +1,133 @@
+{
+  "schema": "f5_copy_independent_recheck_v1",
+  "copier_sha256": "672cedbaad6a7715eb8afd266482b1e889db1118f32d041be54662347f219dbc",
+  "fixture_root": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\f5-copy-independent-r2-20261031-000402",
+  "checks": [
+    {
+      "case": "destination:copy-receipt.json:stream",
+      "rejected_before_stage_creation": true,
+      "error": "ValueError: Unsafe Windows path component: 'copy-receipt.json:stream'"
+    },
+    {
+      "case": "direct_execute_original_ADS",
+      "rejected_before_stage_creation": true,
+      "error": "ValueError: Unsafe Windows path component: 'copy-receipt.json:stream'"
+    },
+    {
+      "case": "destination:nested/file:stream",
+      "rejected_before_stage_creation": true,
+      "error": "ValueError: Unsafe Windows path component: 'file:stream'"
+    },
+    {
+      "case": "destination:NUL",
+      "rejected_before_stage_creation": true,
+      "error": "ValueError: Unsafe Windows path component: 'NUL'"
+    },
+    {
+      "case": "destination:.. /escaped.txt",
+      "rejected_before_stage_creation": true,
+      "error": "ValueError: Unsafe Windows path component: '.. '"
+    },
+    {
+      "case": "destination:.. ./escaped2.txt",
+      "rejected_before_stage_creation": true,
+      "error": "ValueError: Unsafe Windows path component: '.. .'"
+    },
+    {
+      "case": "destination:CON.txt",
+      "rejected_before_stage_creation": true,
+      "error": "ValueError: Unsafe Windows path component: 'CON.txt'"
+    },
+    {
+      "case": "destination:directory./file",
+      "rejected_before_stage_creation": true,
+      "error": "ValueError: Unsafe Windows path component: 'directory.'"
+    },
+    {
+      "case": "destination:directory /file",
+      "rejected_before_stage_creation": true,
+      "error": "ValueError: Unsafe Windows path component: 'directory '"
+    },
+    {
+      "case": "source:source.txt:stream",
+      "rejected_before_stage_creation": true,
+      "error": "ValueError: Unsafe Windows path component: 'source.txt:stream'"
+    },
+    {
+      "case": "source:NUL",
+      "rejected_before_stage_creation": true,
+      "error": "ValueError: Unsafe Windows path component: 'NUL'"
+    },
+    {
+      "case": "source:.. /outside.txt",
+      "rejected_before_stage_creation": true,
+      "error": "ValueError: Unsafe Windows path component: '.. '"
+    },
+    {
+      "case": "absolute_root:.. /escaped-root",
+      "rejected_before_stage_creation": true,
+      "error": "ValueError: Unsafe Windows path component: '.. '"
+    },
+    {
+      "case": "absolute_root:CON.txt",
+      "rejected_before_stage_creation": true,
+      "error": "ValueError: Unsafe Windows path component: 'CON.txt'"
+    },
+    {
+      "case": "absolute_root:archive.",
+      "rejected_before_stage_creation": true,
+      "error": "ValueError: Unsafe Windows path component: 'archive.'"
+    },
+    {
+      "case": "actual_windows_junction_source",
+      "rejected_before_stage_creation": true,
+      "error": "ValueError: Linked or reparse paths are refused"
+    },
+    {
+      "case": "actual_windows_junction_destination",
+      "rejected_before_stage_creation": true,
+      "error": "ValueError: Linked or reparse paths are refused"
+    },
+    {
+      "case": "cli_plan_ADS",
+      "exit_code": 1,
+      "rejected_before_stage_creation": true,
+      "stderr_last_line": "ValueError: Unsafe Windows path component: 'copy-receipt.json:stream'"
+    },
+    {
+      "case": "cli_execute_ADS",
+      "exit_code": 1,
+      "rejected_before_stage_creation": true,
+      "stderr_last_line": "ValueError: Unsafe Windows path component: 'copy-receipt.json:stream'"
+    },
+    {
+      "case": "normal_exact_copy",
+      "exact_files": [
+        "copy-receipt.json",
+        "nested/evidence.txt"
+      ],
+      "sha_and_bytes_match": true,
+      "copy_status": "byte_copy_verified",
+      "acceptance": "not_evaluated",
+      "phase_complete": false
+    }
+  ],
+  "count": 20,
+  "source_unchanged": true,
+  "original_copier_preserved": true,
+  "original_failure_retained": {
+    "completion_filename_bytes": 0,
+    "ads_bytes": 28,
+    "incomplete_status": "incomplete"
+  },
+  "original_review_document": {
+    "current_bytes": 6733,
+    "current_sha256": "b052bbc48bd98de561001aac241fc356f900c95feaf87f8b8edd2deb904e5d40",
+    "original_section_prefix_bytes": 4147,
+    "original_section_prefix_sha256": "d2e0ef869a15315636cdb9fc53cd83af3b86008649332a1c943c88c30f9ffddc",
+    "appended_writer_handoff": true,
+    "boundary": "Original review section remains as the first 4147 bytes; later author handoff is a distinct appended section, not independent acceptance."
+  },
+  "phase_complete": false,
+  "symbolic_link_test": "not_claimed; actual junction tested"
+}

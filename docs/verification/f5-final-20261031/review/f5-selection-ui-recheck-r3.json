@@ -1,0 +1,98 @@
+{
+  "schema": "f5_selection_helper_recheck_v1",
+  "reviewed_script_sha256": "2747c649bbe9ade19945be00c2574a4416b5b7c2ad21ca855a5efc83bf7e615d",
+  "copy_helper_sha256": "672cedbaad6a7715eb8afd266482b1e889db1118f32d041be54662347f219dbc",
+  "fixture_root": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\f5-selection-r2-probe-q1inp56v",
+  "checks": [
+    {
+      "name": "retained_junction_add",
+      "result": "rejected",
+      "error": "Linked or reparse paths are refused"
+    },
+    {
+      "name": "retained_junction_tree",
+      "result": "rejected",
+      "error": "Linked or reparse paths are refused"
+    },
+    {
+      "name": "retained_junction_nested_tree",
+      "result": "rejected",
+      "error": "Linked or reparse paths are refused"
+    },
+    {
+      "name": "valid_fixed_tree",
+      "result": "accepted_exact_bytes"
+    },
+    {
+      "name": "retained_junction_pinned_tree",
+      "result": "rejected",
+      "error": "Linked or reparse paths are refused"
+    },
+    {
+      "name": "missing_required_directory",
+      "result": "rejected",
+      "error": "Missing required evidence directory: C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\f5-selection-r2-probe-q1inp56v\\missing"
+    },
+    {
+      "name": "empty_required_directory",
+      "result": "rejected",
+      "error": "Empty required evidence directory: C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\f5-selection-r2-probe-q1inp56v\\empty"
+    },
+    {
+      "name": "bad_fixed_hash",
+      "result": "rejected",
+      "error": "Pinned evidence changed: C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\f5-selection-r2-probe-q1inp56v\\source\\source.txt"
+    },
+    {
+      "name": "bad_fixed_bytes",
+      "result": "rejected",
+      "error": "Pinned evidence changed: C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\f5-selection-r2-probe-q1inp56v\\source\\source.txt"
+    },
+    {
+      "name": "duplicate_manifest_member",
+      "result": "rejected",
+      "error": "Duplicate pinned source paths"
+    },
+    {
+      "name": "missing_pinned_member",
+      "result": "rejected",
+      "error": "(WindowsPath('C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/f5-selection-r2-probe-q1inp56v/source'), {'missing.txt'})"
+    },
+    {
+      "name": "unexpected_member",
+      "result": "rejected",
+      "error": "(WindowsPath('C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/f5-selection-r2-probe-q1inp56v/extra-source'), {'extra.txt'})"
+    },
+    {
+      "name": "bytes_changed_after_fixed_manifest",
+      "result": "rejected",
+      "error": "Pinned evidence changed: C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\f5-selection-r2-probe-q1inp56v\\changed-source\\source.txt"
+    },
+    {
+      "name": "explicit_self_exclusion_and_separate_manifest",
+      "result": "accepted_exact_members"
+    },
+    {
+      "name": "actual_native_74_file_exact_manifest",
+      "result": "accepted_exact_bytes",
+      "files": 74,
+      "bytes": 4785143
+    },
+    {
+      "name": "actual_native_mapping_independent_receipt_binding",
+      "result": "passed",
+      "native_observed_commit": "5d56187392a2e7b888d5ce13f8da05a295cba6d4",
+      "mapped_candidate": "5c1eec5007cd29cbe12949c19bed81457f1f825b"
+    },
+    {
+      "name": "original_inventory_digest_binding",
+      "result": "passed"
+    }
+  ],
+  "checks_passed": 17,
+  "retained_junction_fixture_unchanged": true,
+  "main_executed": false,
+  "formal_selection_written": false,
+  "phase_complete": false,
+  "boundary": "Helper tests only; no matrix, native visual or phase acceptance claim."
+}

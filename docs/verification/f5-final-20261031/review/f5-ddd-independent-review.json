@@ -1,0 +1,126 @@
+{
+  "scope": "Independent read-only script/receipt checks; no new backend run; synthetic sparse case is a contract example, not an observed Geant4 allocation",
+  "script_sha256": "fdd4a8fdc4c0d052af57a8d84c7dc410563da6a5de0d65d4ffbd4c0dfe698d5d",
+  "runner_sha256": "68345ed05f294b1f05b1edf5dce314fdfe3f15bb1bb39901080b31e96fe5c72b",
+  "identity_map_script_sha256": "e64c15ead4a37f6141cd14b7bc24b333747ca5ca83e0c457cfa19e2fdcba04d6",
+  "report_sha256": "9426ca72dfd13047979df93ce21d8e95e519aa4b38ab20eba54decd989181467",
+  "report_git_head": "5d56187392a2e7b888d5ce13f8da05a295cba6d4",
+  "report_git_status_porcelain": " M docs/collab/inbox/20261030-2155-astra-f5-execution.md\n M scripts/run_m0_tests.py\n M scripts/test_displacement_damage.py",
+  "ddd_case": {
+    "status": "pass",
+    "exit_code": 0,
+    "assertions_executed": 71,
+    "assert_probe": "settrace_assert_lines_v3",
+    "evidence_directory": "displacement_damage-evidence"
+  },
+  "log_sha256_matches": true,
+  "manifest_sha256": "bb927024da4c2d905b11f51cd8b66ad07a43502c926014e61f458d4e2adc76a9",
+  "raw_files": [
+    {
+      "path": "inputs/case01.ini",
+      "size_matches": true,
+      "sha256_matches": true
+    },
+    {
+      "path": "inputs/case01_geometry.ini",
+      "size_matches": true,
+      "sha256_matches": true
+    },
+    {
+      "path": "inputs/case01.mac",
+      "size_matches": true,
+      "sha256_matches": true
+    },
+    {
+      "path": "inputs/material.ini",
+      "size_matches": true,
+      "sha256_matches": true
+    },
+    {
+      "path": "inputs/mu.csv",
+      "size_matches": true,
+      "sha256_matches": true
+    },
+    {
+      "path": "inputs/far.csv",
+      "size_matches": true,
+      "sha256_matches": true
+    },
+    {
+      "path": "outputs/displacement_volume_summary_t0.csv",
+      "size_matches": true,
+      "sha256_matches": true
+    },
+    {
+      "path": "outputs/displacement_volume_summary_t1.csv",
+      "size_matches": true,
+      "sha256_matches": true
+    },
+    {
+      "path": "outputs/hits_t0.csv",
+      "size_matches": true,
+      "sha256_matches": true
+    },
+    {
+      "path": "outputs/run_metadata.json",
+      "size_matches": true,
+      "sha256_matches": true
+    },
+    {
+      "path": "outputs/run_summary.txt",
+      "size_matches": true,
+      "sha256_matches": true
+    },
+    {
+      "path": "outputs/scorer_statistics.csv",
+      "size_matches": true,
+      "sha256_matches": true
+    }
+  ],
+  "raw_count": 12,
+  "raw_bytes": 59855,
+  "actual_worker_rows": {
+    "0": [
+      {
+        "particle": "e-",
+        "n_events": "200"
+      },
+      {
+        "particle": "mu-",
+        "n_events": "200"
+      }
+    ],
+    "1": []
+  },
+  "actual_captured_checks": {
+    "nonempty": true,
+    "volume": true,
+    "particles": true,
+    "worker_identity": true,
+    "row_identity": true,
+    "unique_rows": true,
+    "niel_identity": true,
+    "finite_nonnegative": true,
+    "worker_events": true,
+    "master_events": true
+  },
+  "original_counterexamples_function_completed": true,
+  "synthetic_noncontributing_worker": {
+    "known_master_completed_events": 200,
+    "observed_worker_n": 199,
+    "other_worker_header_only": "processed event count unknown in sparse CSV",
+    "checks": {
+      "nonempty": true,
+      "volume": true,
+      "particles": true,
+      "worker_identity": true,
+      "row_identity": true,
+      "unique_rows": true,
+      "niel_identity": true,
+      "finite_nonnegative": true,
+      "worker_events": true,
+      "master_events": false
+    },
+    "scope": "Demonstrates the new equality depends on a complete worker coverage assumption; does not reproduce a backend failure"
+  }
+}

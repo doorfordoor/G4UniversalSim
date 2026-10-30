@@ -1,0 +1,31 @@
+# F5 身份映射工具只读复核（2026-10-31）
+
+对象：`out/collab/f5-create-identity-map.py`，当前 SHA-256 `558643d956255fda6134a8ebee555507656b9489092a74076c69e4c8f331e722`，已含 root 补充的规范清单摘要检查。审查者为 F5 UI 作者；本次是工具/身份检查，不替代 f5_transactions 的原生独立验收。未修改脚本、产品或原生收据，未操作桌面。
+
+**结论：当前版本的工具静态审查通过，结合既有原生独立审查，足以承担所述身份映射；未发现剩余阻断缺陷。新冻结尚未实际执行本工具或矩阵，此结论不是运行通过或 F5 关闭。** 初稿对缺少清单绑定的 P2 已由新增第 39 行解决；初稿保留于 `f5-identity-map-ui-review-initial.md`，不能把其结论继续套用到当前文件。
+
+## 清单、原生 identity 与 Git 证据（当前无问题）
+
+`f5-create-identity-map.py:37–44` 读取清单并检查 129 个条目，对当前原始字节及 LF 字节分别核对清单值，再检查两个提交的 Git blob 相等。两类绑定按如下证据建立：
+
+1. 当前 `:39` 已将完整清单按原 host 算法绑定到 `identity['gui_files_sha256']`。初稿版本只是记录当前清单 raw 摘要，缺少这一验证；该缺口现已解决。
+2. 当前 `:44` 直接证明旧/新 Git blob 相等；原生清单的 LF 摘要与旧 Git 内容相等由 f5_transactions 的原生独立审查建立，本次对真实 129 个文件也逐项重查一致。因此结合该独立证据，关系闭合；直接在工具内再比一次 LF 摘要与 Git blob 可增强自足性，但不作为本次剩余阻断。
+
+本工具应作为既有独立原生证据与新候选之间的映射，不作为脱离原件的自证验收。最终归档需要同时保留原生 identity/清单、独立审查与映射收据；不能只保留一份 status=passed JSON。
+
+已核对的摘要算法与边界：
+
+- 第 39 行为 `sha(json.dumps(hashes, sort_keys=True).encode('utf-8')) == identity['gui_files_sha256']`，与 `out/collab/f5-visible-host.py:88` 相同；该字段是规范序列化对象摘要，**不是清单 JSON 文件 raw SHA**，不能误用两者直接比较。
+- 本次实际只读核对每个路径的 Git blob SHA 与 `expected['sha256_lf']`，保留该检查 JSON 作为原生独立证据的补充，不把工具缺少重复检查称作真实原件错误。
+
+对当前真实原件已额外只读执行以上关系：129 个文件全部 raw/LF/Git 匹配，规范清单摘要与 identity 相同。机器收据 `out/collab/f5-identity-map-ui-review-current.json`，mismatches 为空。该 JSON 中脚本摘要 e64c15e 属检查开始时的版本；本报告明确记录随后新增第 39 行后的当前摘要，不追改旧检查收据。
+
+## 无问题与使用边界
+
+- `:29–33` 要求实际 HEAD 等于输入、工作区 clean、改动非空且只在 DDD 测试、runner、实施提案三条白名单内；同时拒绝 gui/src/include/main.cc/CMakeLists.txt 差异。它对“仅这些文件改变、GUI/C++ 树无差异”的检查覆盖所述目标。当前 HEAD 仍为 5d 且 root 正在修改上述文件，本次没有强行运行 main 或绕过其 clean 守卫，新候选映射仍待实际执行。
+- `:34–36` 核对原生 gui_head 为 5d 和 launcher 实际退出 0；`:53–64` 分别输出 native_observed_commit 与 automated_matrix_commit，明确后续提交没有新的原生交互或二进制字节相同声明。此边界正确。
+- 22 份观察/28 PNG 由 `f5-native-5d56187-independent-review.md` 及同名 integrity JSON 支持，仍归 5d。此脚本没有重新验证这 22 份观察内容或图像；最终归档应引用并绑定该独立审查及完整原件。不能把脚本的 passed 解释成再次原生验收，也不能把“22 份观察”写成“22 次成功动作”。
+- `:45–51` 核对新 capabilities 的 commit/clean，并比较 source fingerprint、Release 配置、编译器 ID/版本、Geant4 版本号和 MT 属性。它证明这些声明字段相同，不证明二进制、全部依赖或物理结果相同。输入 capabilities 与本轮实际后端的来源绑定仍由新矩阵/构建收据承担，不由本脚本凭 JSON 自行证明。
+- `:66–68` 使用独占创建输出，不覆盖已有映射文件。自动矩阵独立验收的说明保留，身份映射通过不替代严格 F4 基线和阶段裁决。
+
+交接：仅新增/更新 out 审查文档和检查 JSON；脚本/产品未改。当前版本可交负责人在新冻结且 clean 时实际执行，并归档新旧真实 SHA、差异清单及独立原生收据；其输出不自动使阶段关闭。

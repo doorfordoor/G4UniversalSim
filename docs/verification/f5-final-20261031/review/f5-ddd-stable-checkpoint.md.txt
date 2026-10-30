@@ -1,0 +1,20 @@
+# F5 DDD 稳定判据修复检查点
+
+2026-10-31：仅修改 `scripts/test_displacement_damage.py`，未改后端、物理参数、原容差、旧证据；尚未提交。
+
+- 将原先随 CSV 行数变化的体积判据完整纳入聚合检查；加入粒子和 NIEL 表身份、run/volume/worker 身份、重复行、有限非负量、每 worker 事件数一致性及去重 N 与 master 一致性。
+- 已查真实 scorer：`DisplacementScorer.cc:44-47` 每事件累积 N；`:107-116` 每粒子行重复输出该 worker 的 N；没有统计的 worker 仅表头。当前测试的每个 primary 必穿过 Die，故 active worker 有 mu- 行；明确限定该 fixture，不把它推广成任意稀疏结果的 N 推断。
+- 同一已注册专项中加入确定性的单活跃 worker、双活跃 worker、电子稀疏行及 16 种损坏反例，不新增矩阵用例、不要求两个 worker 都参与。
+- 使用 root 新增 `G4USIM_TEST_EVIDENCE_DIR`，在测试成功/失败判定前保留首轮 inputs、所有 CSV、run_metadata.json、run_summary.txt 原始字节和 SHA-256 manifest；位于既有 report 子目录内，现有 workflow 上传范围可直接覆盖。独立执行默认写 `out/verification/ddd-standalone` 独占临时子目录。输入仍保留原临时路径，不声称归档重定位后可以直接重放。明确是小型证据子集，不额外保存全部 EffectiveConfig 快照。
+- 真实定向 runner 已启动：session 22538，日志 `out/collab/f5-ddd-stable-dev.log`，报告根 `out/verification/f5-ddd-stable-dev`。后端 `out/build-f5/Release/G4UniversalSim.exe`，显式数据路径 `D:/ProgramFiles/Geant4/share/Geant4/data`。等待最终退出后确认体量、断言计数及门禁。
+
+## 候选交接（已冻结该专项，等独立审查）
+
+- 第一轮 session 22538 最终 exit 0 / 71 v3 / 门禁通过；为减小归档，随后仅将 JSON/TXT 全选缩小到 metadata/summary，保留该轮旧证据。
+- 最终第二轮 session 9630 最终 exit 0 / 71 v3 / 门禁通过：`out/verification/f5-ddd-stable-r2-dev/20261031-001959-c74d3d87/report.json`。
+- 新判据实际观察到 t0 为 200 events/2 行、t1 为零行（完整原 CSV 已保留）；原 mu/e/neutron/He3、ROOT-only、7种坏输入及未知粒子原物理判定与容差均保留。
+- 稳定总数：原固定42 + 新10项聚合不变量 + 3个有效确定性分配 + 16个损坏反例 = 71；CSV行数不再影响成功执行断言数。
+- `scripts/test_displacement_damage.py:129` 原始证据；`:163` worker文件身份；`:174` 聚合判据；`:216` 确定性判据反例；`:297` 固定类别断言。只读校验归档摘要的明细为 `out/collab/f5-ddd-stable-evidence-check.json`。
+- 无正在运行的本人测试 session，无提交。root 所有 runner/inbox 修改未触碰。
+
+旧 `f5-ci-5d56187` 的失败审计和原报告一字未改；本次修复仍须独立审查与新冻结正式矩阵。关于旧 pin 的 `out/collab/f5-ci-status.md`：我没有已确认字节匹配的旧版本备份，不能重建/猜测旧文案。

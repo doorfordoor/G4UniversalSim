@@ -1,0 +1,26 @@
+[
+  {
+    "category": "no_issue",
+    "case": "receipt_raw_bytes_and_prepublication_hash_failure",
+    "legacy_bom_crlf_sha_retained": true,
+    "hash_failure_kept_original": true
+  },
+  {
+    "category": "confirmed",
+    "case": "postpublication_cleanup_reported_save_failure",
+    "error": "postpublication cleanup failure",
+    "new_target_already_published": true,
+    "scope": "inherited finally behavior; exact normal cleanup OS frequency not claimed"
+  },
+  {
+    "category": "confirmed",
+    "case": "double_projection_failure_ui_not_frozen",
+    "double_failure_error": "Workspace update failed: injected Qt projection failure after changing beam widget; restoring the previous workspace also failed: injected Qt projection failure after changing beam widget",
+    "view_differs_from_authoritative_history": true,
+    "can_mutate_workspace": true,
+    "save_succeeded": true,
+    "beam_before_failure": 101,
+    "beam_written_after_failure": 2569,
+    "history_now_clean": true
+  }
+]

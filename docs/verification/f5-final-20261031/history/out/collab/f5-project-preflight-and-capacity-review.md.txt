@@ -1,0 +1,24 @@
+# F5 项目预检修复与 reset 容量边界独立复核
+
+## 已修预检回归：无问题
+
+`gui/g4usim_gui/window/project.py:77-89` 将纯 `_check_project_projection` 与完整 WorkspaceSnapshot 控件检查放到发布 try 以前。独立 `f5-project-preflight-independent-recheck.py/.log` 退出 0：legacy 超大 beam_on、v7 超大 beam_on、未知 widget binding、raw widget 数值越界四种拒绝，均未调用任何 apply/rollback；实际所有 QWidget 内容/启用状态、模型对象身份、路径、生成包/Inspect 文本、history revision、保存指纹、redo 分支保持。没有修改产品/正式测试。
+
+原正式用例独立重跑：`f5-project-import-preflight-recheck-v3.log` 为 exit0 / **393**；完整 F5 editor smoke `f5-editor-after-project-preflight-v3.log` 为 exit0 / **203**。这两个收据与原失败日志分开保存。
+
+## reset 容量边界：注入下确定不原子，默认触发条件仍需实验
+
+独立 `f5-project-reset-capacity-probe.py` / `f5-project-reset-capacity-probe-r1.log` 退出 0，使用约 61 KiB 的合法普通 v7 项目，没有制造巨文件或修改默认产品限制：
+
+- 现有快照编码 43168 字节；只将当前 EditSession 实例的 `max_bytes` 从默认 33554432 降为 43169，新项目改变真实 project_name 和对应 draft。
+- 经实际 `_set_project`、实际 `_load_project_path` 两入口，均在 `EditSession.reset` 报 `TransactionCapacityError`。
+- 两入口均已显示新 projectName；历史 fingerprint/revision 和 project_file 仍属旧项目；`_workspace_fault=''`、`can_mutate_workspace()==True`。
+- `_load_project_path` 的 preflight 捕获之外直接调用 `_set_project`，此异常不是正常返回 false，而是穿出调用边界；实验统一捕获后记录，不冒充 UI 已处理。
+
+原因路径：`window/project.py` 在发布 try 之后调用 `_reset_edit_history()`；`window/transactions.py:682-692` capture 已发布页面并调用 reset；`core/edit_transactions.py:213-227` 到此才编码 fingerprint/检查容量，尚未提交新 history。因此 reset 拒绝时没有回滚已发布页面。
+
+**范围判定**：默认 UI 没有配置 `max_bytes` 的控件，本实验本身不能证明用户默认 32 MiB 下会遇到 history 容量拒绝。确定的是受支持 EditSession 容量参数在窗口整合处存在失败原子性缺口，应按契约修复，不因仅注入一次就声称默认超大项目已真实复现。
+
+**24 MiB 问题的只读结论**：普通 `core/project.py:217-223` 是 read_bytes → load_json_strict → project_from_dict，没有项目原始字节/完整 snapshot 24 MiB 前置检查；`core/edit_snapshot.py:73-85` 的完整编码上限在 snapshot_fingerprint/size 路径才执行。v7 editingState 自身有 16 MiB、每份 sources 文本 4 MiB 等限制，**不是整个项目/快照的 24 MiB 检查**。当前 `_check_workspace_projection` 验 state 和绑定，不预先调用完整 snapshot 编码。实际默认总编码超限是否可经某种合法大模型触发此次后发布失败尚未造大文件实验，保留“需实验”，不把推断当实测。
+
+首个容量 probe 因只改模型 projectName、未改 draft，恢复时 draft 覆盖模型而没有变大，预期错误 exit1；该原日志 `f5-project-reset-capacity-probe.log` 保留。r1 修正的是独立输入构造，不改产品、不放宽判据。

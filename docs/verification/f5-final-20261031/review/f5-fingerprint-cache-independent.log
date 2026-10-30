@@ -1,0 +1,20 @@
+{
+  "state_walk_steps": 160,
+  "operations": {
+    "transact": 23,
+    "reset": 25,
+    "undo": 23,
+    "saved": 28,
+    "redo": 20,
+    "replace": 24,
+    "saved_old": 17
+  },
+  "source_and_return_aliases_isolated": true,
+  "dirty_and_current_save_queries_do_not_encode": true,
+  "single_double_apply_and_digest_failure_preserved": [
+    "replace",
+    "undo",
+    "redo",
+    "reset"
+  ]
+}

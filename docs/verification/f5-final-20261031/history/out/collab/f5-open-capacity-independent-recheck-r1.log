@@ -1,0 +1,21 @@
+[
+  {
+    "case": "direct_set",
+    "rejected_before_projection_and_prompt": true,
+    "all_widget_model_ids_and_file_history_receipt_preserved": true
+  },
+  {
+    "case": "actual_load",
+    "rejected_before_projection_and_prompt": true,
+    "all_widget_model_ids_and_file_history_receipt_preserved": true
+  },
+  {
+    "case": "actual_load_late_session_reset_rejection",
+    "view_history_path_origin_rolled_back": true
+  },
+  {
+    "case": "afterpublish_notification_exception",
+    "open_succeeded_new_view_history_path_and_actual_byte_receipt_aligned": true,
+    "original_and_candidate_files_unchanged": true
+  }
+]

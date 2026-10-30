@@ -1,0 +1,45 @@
+# F5 证据复制器独立审查
+
+审查对象：`out/collab/f5-copy-evidence.py`，原始 SHA-256 `3849b4cdff8b1ada16b6596296c3ad301d81220cc36bcd55370fc556bb8da6e3`。仅阅读产品/正式测试；小反例全部在独立 `out/collab/f5-copy-review-probe-20261030-235041`。未改变复制器、产品、正式测试或既有证据，未操作原生窗口。
+
+## P2 确定缺陷：Windows ADS 绕过保留收据名检查
+
+`f5-copy-evidence.py:21–26` 只拒绝首部盘符、反斜杠和字面 `.`/`..`，不拒绝成员内冒号；`:85` 只对完整第一段做保留名比较。因此合法结构的 manifest 目标 `copy-receipt.json:stream` 被 `make_plan` 接受。
+
+Windows 实验实际经过 `execute :120`，向 NTFS alternate data stream 写入证据字节；它同时创建默认流为空的 **copy-receipt.json**。`:136` 的 exact-files 检查随后报错，`:156` 正常保留 incomplete marker，但失败目录已经有完成收据名称。这违反 `:147–152` 所述“最后 rename 才发布完成名称”的约定，也违反失败时无完成收据文件的自测目标。
+
+- 真实结果：`make_plan` 接受；`execute` 抛 `ValueError: Copied member set differs from explicit manifest`。
+- `copy-receipt.json` 存在，默认流 **0 字节**；`:stream` 为本测试的 **28 字节**证据；`copy-incomplete.json.copy_status=incomplete`。
+- **没有**声称返回了有效成功 JSON；helper 的 execute 仍失败。问题是文件命名协议可被突破，不能仅靠完成文件名存在判断归档成功。
+- 原始收据：`out/collab/f5-copy-evidence-independent-path-probe.json` 的 `copy-receipt.json:stream` 项及保留夹具。源 SHA 未变。
+
+相邻输入 `nested/file:stream` 同样 plan 接受，执行到写盘后才在 exact-files 检查失败；`NUL` plan 接受，访问设备后以 Bad file descriptor 失败。两种尾部带空格/点的 `.. ` 路径在 execute 的 resolve 检查中被拒绝，**本次没有复现目录逃逸或外部写入**，不得把这两项说成已逃逸。
+
+建议最小修正：在规划阶段对每个路径组件拒绝 Windows ADS 冒号、控制字符、Windows 非法名称字符、尾部点/空格和保留 DOS 设备名（包括带扩展名形式）；可用 Python 3.11 的 `PureWindowsPath(component).is_reserved()` 辅助设备名判断，但不能只靠它检测 ADS。保留现有路径/链接/重复名/xb/hash/exact-files 检查。所有新负例应在 make_plan 前置拒绝，目标目录不应创建。
+
+## 已独立核对：无问题（当前受测范围）
+
+- `:67–99` 显式闭合字段、非负真实 int 字节数、小写 SHA、来源先验 hash/bytes、casefold 重复与文件/目录前缀冲突；默认 CLI 计划模式不调用 execute。
+- `:104–108` 执行前复核计划，目标必须是 repo/out 下尚不存在的新目录；`xb` 写成员不覆盖已有文件。父级创建前后保留 repository/reparse 检查。
+- `:127–140` 复制流与目标重读摘要、完整成员/目录集合核对；成功收据明确 `phase_complete=false`、`acceptance=not_evaluated`。
+- 独立正常小文件复制得到精确两个文件（成员和完成收据），原件与副本 SHA 一致，未混入额外文件；不是阶段验收。
+- 补上可在本机无管理员符号链接权限时执行的 **Windows junction** 反例：实际创建 reparse junction，分别作为来源父目录、目标父目录，两个 make_plan 均拒绝且未建 stage。原始收据 `out/collab/f5-copy-evidence-independent-junction-probe.json`。这里 `is_symlink=false`、reparse 属性=true；**不宣称文件 symbolic link 创建或测试通过**。
+
+## 交接
+
+建议先由原写者修正上述 P2 命名边界，再冻结复制器并独立重查原 ADS 反例。当前可用于只读计划核对，但不建议在修复前执行正式证据 staging。最终 docs 归档仍需对明确文件清单、SHA/bytes 和 exact file set 另验；本工具本身限制 out，不授予阶段完成资格。
+
+原生图像尚未开始审查；等待 root 完成本轮 5d56187 操作后提供最终目录，08 的文件选择错误不计保存成功。
+
+## 写者修复交接：P2 已修，等待独立复核
+
+以下为复制器写者的修复收据，不替代上方独立审查或 F5 阶段验收。产品仍冻结在 `5d56187392a2e7b888d5ce13f8da05a295cba6d4`，本次只写 `out/collab`；未启动 UI，未改产品、正式测试或 tracked 文档。
+
+- `out/collab/f5-copy-evidence.py:21` 新增统一组件检查：拒绝 ADS 冒号、Windows 非法字符及 0–31 控制字符、尾部点/空格、DOS 设备名及带扩展名形式（含 COM/LPT 上标变体、CONIN$/CONOUT$）。`PureWindowsPath.is_reserved()` 仅辅助设备名判断，冒号独立拒绝。
+- `:31` 对来源和目标清单的每个路径组件应用同一检查；`:41` 对绝对归档根目录相对仓库锚点的每个组件补同一检查，固定盘符锚点不误判。所有拒绝均发生在创建归档目录前；来源的非法组件在对该来源执行文件系统检查前拒绝。原有链接/reparse、raw hash/bytes、独占写、成员集合和末尾发布收据逻辑保留。
+- `out/collab/test-f5-copy-evidence.py:71` 增加 30 类非法路径，逐一检查 destination/source/absolute-root 三条路径，共 90 项；`:93` 覆盖真实 CLI 的 plan 和 execute 对 `copy-receipt.json:stream` 的前置拒绝；`:101` 覆盖手工构造 plan 后直接 execute 仍拒绝。所有负例检查目标目录未创建，CLI 负例还检查完成收据未出现；普通合法文件名仍接受。
+- 本轮独立临时目录小检查 **105 项通过，进程退出 0**；`out/collab/f5-copy-evidence-selfcheck-r2.json` 和同名 `.log` 为本轮结果。不是正式产品 v3 断言矩阵，也不计阶段通过。本机文件 symbolic-link 创建仍为 `not_executed: OSError`，不冒称通过；上方 reviewer 已执行的 junction 反例仍为独立历史证据。
+- 原脚本另存 `out/collab/f5-copy-evidence.pre-windows-path-fix.py`，SHA-256 仍为 `3849b4cdff8b1ada16b6596296c3ad301d81220cc36bcd55370fc556bb8da6e3`。当前修复脚本冻结 SHA-256 为 `672cedbaad6a7715eb8afd266482b1e889db1118f32d041be54662347f219dbc`。
+- 原 path-probe/junction-probe JSON 及旧 selfcheck JSON/log 的 SHA 均未变化。只读重查原 `f5-copy-review-probe-20261030-235041/stage-3`：默认流收据仍 0 字节、ADS 仍 28 字节、incomplete 状态仍 `incomplete`；原失败夹具未清理或重写。
+
+复制器已停止写入，交 root/reviewer 重跑原 ADS/设备名反例；其字节复制成功仍不代表 F5 完成。最终原生验收是否完成须由 root 的实际观察证据判定，本次没有新增原生观察。

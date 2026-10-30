@@ -1,5 +1,9 @@
 # Linux 构建与验证（本机 WSL 实测，2026-10-28）
 
+## 2026-10-31 F5 冻结验收
+
+已完成。提交5c1eec5的官方Linux run41090605959覆盖Geant4 11.3.2/11.4.3各160项，M0 run41090605955覆盖Windows/Ubuntu各79项，全部严格F4门禁通过；[原始报告与边界](verification/f5-final-20261031/README.md)。Linux报告的dirty原值来自未跟踪的环境前缀、micromamba根目录及解包工具bin/，原样porcelain已保留；不称整个工作区clean。GUI依赖与运行库策略继续沿用下方F4说明，原生Linux桌面仍归I2/J1验收。
+
 ## 2026-10-30 F4 当前环境说明
 
 当前Linux CI采用Python 3.11；GUI依赖以`gui/requirements.txt`为准，PySide6约束为`>=6.11.1,<6.12`，使用随其提供的Qt 6.11.x。系统运行库安装`libegl1 libgl1 libxkbcommon0 libdbus-1-3 libfontconfig1`；保留Geant4数据集环境变量，并令`QT_PLUGIN_PATH`指向当前PySide6自身的`Qt/plugins`。

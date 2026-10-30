@@ -1,0 +1,21 @@
+# F5 5c1eec5 新候选身份映射独立复核
+
+2026-10-31；**身份映射通过。** 目标 `5c1eec5007cd29cbe12949c19bed81457f1f825b`，原生观察仍属于 `5d56187392a2e7b888d5ce13f8da05a295cba6d4`。本次没有操作 UI，没有运行仿真，也没有把旧原生收据改为新提交。
+
+- 实际 Git HEAD 为新候选且工作区 clean。两提交差异精确为 DDD 测试、测试 runner、F5 执行提案三文件；GUI、C++、配置等其余文件无改动。
+- 独立逐一读取 **129 个 GUI 文件**，当前 raw SHA、LF SHA、旧/新 Git blob 全部一致；规范 GUI manifest 摘要与旧 identity 一致。映射产物内 identity、GUI 清单、capabilities 三个原字节摘要均与当前文件一致。
+- 实际新 exe 在独立 `--capabilities` 调用前后 SHA 均为 `9790aa71a4fa7e9c2ca7d98f617fd983e328db09591766832f37a4ee138386d0`，调用 exit 0，返回 JSON 与保存的 capabilities 完整一致。其构建提交为新 SHA、source state clean；源指纹、Release、MSVC 19.51.36246.0、Geant4 1132、MT 与旧 native 相同。
+- 旧 native exe SHA 仍为 `f0523878f0537d0e8dd16cf4b49c31a2b23c65b90b133f4ca8905d4d8c8ffded`，与新 exe 不同；没有声称二进制相等。旧 Qt/Fusion/Windows 实窗环境仍只归属旧观察。
+- 复核旧独立收据中 22 个观察 JSON、28 张 PNG、2 个保存项目的原 SHA，全部一致。额外核对已改变原件、损坏候选的 SHA，全部仍与旧审查一致。旧 launcher exit 0、host SHA 及旧 capabilities/identity 关系仍成立。
+
+详细收据：`out/collab/f5-identity-map-5c1eec5-independent.json`。原生方法的认可和限制仍见 `f5-native-identity-mapping-independent-review.md`；08 路径拒绝、18 快捷键未触发、timer 滞后和局部快捷键范围等旧结论不变。
+
+## 固定归档清单
+
+`out/collab/f5-native-final-file-manifest.json` 按要求提供 `source_directory` 与每项 `{path,sha256,bytes}`，路径相对 native 目录且为 POSIX。精确 **74 文件 / 4785143 字节**；第二次遍历核对精确文件集合、大小和摘要，且无链接/reparse point，排除规则仅 `__pycache__`。
+
+Manifest SHA-256：`948ada6fb125f4aa80d88bf53710541a28784b26bed138104eb834c8c3f764cb`。
+
+54 个路径直接对照旧独立审查中的 raw SHA；identity/GUI 清单另与新映射绑定。其余辅助日志和夹具文件在 manifest 的 recorded_utc 时点正式固定，不伪称每个 raw SHA 都在旧审查中已有收据。复制后必须按该清单核对 exact files/size/SHA，不能只重新给目的目录自行生成一份清单。
+
+**验收边界：** 新候选的 Windows、Linux 双版本及 M0 正式矩阵与严格 F4 门禁仍由各自完成收据证明；本次身份通过不代表全阶段通过。无需重演未改变的 22 项 UI 操作，但不得写成新 SHA 已经完成实窗交互。

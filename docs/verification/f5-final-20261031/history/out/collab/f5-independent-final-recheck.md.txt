@@ -1,0 +1,35 @@
+# F5 独立复核：来源兼容、保存收据与双失败冻结
+
+审查者：f5_recovery；2026-10-30。此轮只读产品，仅新增本目录反例脚本与日志；我拥有的 recovery R1 候选保持冻结。当前工作树有其他写者并行改动，本记录对应本次实际读取与运行的文件，不声称整阶段冻结、跨平台通过或原生实窗验收。
+
+## 结论与原缺陷复核
+
+1. **无问题（先前确定 P2 已修复）** — `gui/g4usim_gui/core/project.py:252-259`：发布后立即清空临时文件所有权，finally 不再触碰已经发布的旧临时路径。按原反例 patch `Path.unlink` 在已消失的 `.tmp` 上报错，本次清理调用为零，保存返回真实目标字节 SHA 收据；发布前临时文件读取失败仍保留旧目标并清理临时文件。BOM/CRLF v6 文件的加载收据仍对应实际原始字节，未被迁移后的 JSON 替换。
+
+2. **无问题（先前确定 P1 已修复）** — `gui/g4usim_gui/window/transactions.py:451-459,574-623`：保留原来“真实 beam_on 控件先改为 2569 后抛错，undo 与 rollback 均失败”的注入。现在权威历史仍为 101，窗口被冻结，实际 `_save_project_to`、`_generate_current_package` 与 `generate_package` 均拒绝，目标文件未产生；再次修复失败保持冻结。移除故障后调用显式修复，真实控件和完整捕获指纹回到 101，revision、undo 能力和原 dirty/savepoint 保持；随后正常保存读回 101。`transactions.py:448-459` 对显式修复完成后的控件指纹再核对，通过后才解除冻结。此为真实 MainWindow 的 offscreen 实验，不是原生桌面观察。
+
+3. **无问题（先前确定来源缓存 P1 及降级标签旁路已修复）** — `gui/g4usim_gui/core/project.py:175-180`、`core/edit_sources.py:23-82`：普通 reader 无条件对已有捕获原文重建来源约束。独立把同一已捕获文本的缓存诊断清空，逐个改为 version 1–7；材料 `unknown_parameter` 与几何 `placement=replica` 均仍阻断 writer。恢复时禁止任何 `Path.read_text/read_bytes`，全部通过，证明没有偷读当前文件替代旧草稿。真实旧版本 1–6 仅有旧字段、缺少新快照时仍能读取，`materialEditor`/`editingState` 维持 None，不伪造空编辑文档。
+
+4. **无问题（E6 范围保持）** — `gui/g4usim_gui/core/project_snapshot.py:247-307`：普通 `load_project` 继续拒绝 `runPackage`；历史包专用入口仍从包内当前材料/几何重建，清空 `editingState`，不导入未写出的 v7 草稿行。独立使用实际 package writer 创建包，再把包内密度改为 2.5 g/cm3、几何边长改为 13 mm；恢复得到新值、源文本与当前包文件一致、快照原件字节未变。只含旧普通项目的 snapshot 入口仍标记资源未验证。此处只验格式与输入来源，没有运行假 executable，也不扩大 E6 到任意 main/macro、历史运行内容或物理验证。
+
+5. **无问题（真实 Generate 非法 seed 原缺陷已修复）** — `gui/g4usim_gui/window/project.py:148-163`：不再用解析失败的 None 抹去输入原文。独立照原反例输入 `not-an-integer`、flush 后直接发真实 `generatePackageRequested(False)`，现在两页保留原文、seed 校验拒绝且未生成包。再将带首尾空格的非法输入保存/重开、undo/redo/undo，分别从 Project 与 Configuration 修改并触发 Generate / Generate & Run，共四条路径仍保留原文和 revision，未写 main.ini、未调用后端启动。正例 seed=17 与空 seed 正常生成，分别显式输出 seed 与省略 seed，证明未误封正常生成。
+
+## 本次证据
+
+- `f5-receipts-rollback-recheck.py` / `f5-receipts-rollback-recheck.log`：独立重现上述 P2、UI P1 原注入语义并按修后条件判定，退出 0。
+- `f5-compat-scope-independent.py` / `.log`：独立旧标签 1–7、真实 legacy 1–6、普通/包 reader 分离及当前包输入验证，退出 0。
+- `f5-seed-signal-independent-recheck.py` / `.log`：独立原始 Generate 信号、两页非法 seed 保存/重开/历史重放后四条生成入口和两个合法生成正例，退出 0；不执行后端。
+- `f5-e6-compat-recheck.log`：实际重跑 `scripts/test_project_snapshot_compat.py`，退出 0；包括复制/重定位、当前包变更、未知/损坏字段、缺失资源和路径逃逸反例。
+- `f5-receipts-author-tests-independent-r2.log`、`f5-transactions-author-tests-independent-r2.log`、`f5-editor-author-tests-independent-r2.log`：独立重跑原写者正式专项，均退出 0。Editor 用例包含双失败冻结以及两页真实 Generate/Generate & Run 信号保留非法 seed 草稿，源码位置 `gui/smoke_tests/smoke_f5_editor_history.py:319-438`。本次直接运行没有新建正式 v3 计数报告，不能替代 root 的矩阵收据。
+
+原始失败证据 `f5-receipts-rollback-independent.py/.log/.md`、`f5-core-independent-review.py/.log` 及 checkpoint 保留，未修改或用成功日志覆盖。
+
+## 文档与验收覆盖核对
+
+- 当前 `docs/配置撤销与恢复.md:7-17,21-37` 已写清主项目范围、扫描/场景/未应用向导排除、磁盘操作不可撤销、100 操作/32 MiB 编码预算、v7、独立恢复副本、锁、严格缓存重建、来源收据及证据分层。
+- `docs/配置兼容与迁移.md:16,34-38` 已分开普通 v7 草稿与 E6 当前包资源权威；`gui/README.md:304`、`gui/AGENTS.md:3` 已有 F5 候选说明。既有 F4 “F5 未启动”属于历史，保留并由新条目覆盖，不能篡改旧证据。
+- root 最终同步清单：根/GUI AGENTS 新条目、agent-history、STATUS、ROADMAP、功能支持矩阵、开发路线图、测试平台说明、CHANGELOG、GUI README、协作 brief。文件现已大部分更新中，不把未冻结文档标为产品缺陷；`docs/collab/ASTRA-BRIEF.md:5` 仍写“尚未实现/验收关闭”，最终应改为准确候选/验收状态。
+- 新发现已进入正式专项：来源降级标签 `scripts/test_f5_transactions.py:362-381`；发布后清理 `scripts/test_f5_project_receipts.py:61-74`；UI 双失败及 raw seed `gui/smoke_tests/smoke_f5_editor_history.py:319-438`。恢复 revision 三项和真实进程死亡保持已有 R1 专项。
+- **需实验 / root 总验收负责**：冻结代码后的完整 Windows 与真实 Linux 双版本矩阵、同代 v3 基线门禁、原生可见窗口观察与正常退出、实际后端编辑→保存→恢复→重新生成运行证据。本报告没有替代这些层级，也不把工程回归称为物理验证。
+
+本轮审查范围内未保留未修复产品缺陷，可以进入 root 候选冻结与完整验收；不据此宣布整阶段完成。恢复 R1 文件仍冻结，不再修改产品。

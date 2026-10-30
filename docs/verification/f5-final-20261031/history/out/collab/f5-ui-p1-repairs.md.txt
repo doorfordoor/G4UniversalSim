@@ -1,0 +1,31 @@
+# F5 UI P1 修复交接
+
+2026-10-30。原失败证据 `f5-receipts-rollback-independent.*`、`f5-ui-seed-independent-repro.*` 原样保留。
+
+## 双失败冻结
+
+`window/transactions.py:356` 在统一 apply_workspace 投影边界捕获局部失败，保留 EditSession.current 的独立快照；自动回滚与显式修复只能重新投影同一最后可证实快照，重捕获 fingerprint 一致后才能解锁。普通预检拒绝不冻结。
+
+`:589` 冻结编辑页、撤销/重做、同步计时器，标记包过期、界面故障，提供 Edit 菜单及工具条“Restore last verified editor state”。`:609` 修复失败继续冻结且保留原快照；成功不改变历史 revision、保存点、undo/redo。关闭也须先成功修复，避免把坏投影收为丢弃/保存决定。
+
+`:663` broken 时不调用 recovery history callback；recovery 原实现 `window/recovery.py:306` 本身使用 session.current，不捕获 view，因此不需要改 recovery agent 文件。RecoveryMixin.reset(apply) 自动经过统一边界；project.py:77 同时保护 v7 Open 和旧项目首次投影，失败尝试原快照回滚，双失败锁住。保存入口、真实运行/Inspect/验证入口均检查故障；直接 workspace_transaction 也拒绝。
+
+正式 F5 GUI 测试新增 Undo、recovery reset、普通项目替换三条实际双失败路径：真实 beam widget 101→2569，检查历史/保存点不变，保存不落盘、生成拒绝、runner 不调用、普通及直接事务拒绝、再次修复失败仍冻结、成功修复恢复101。另测单次失败且回滚成功仍可使用。
+
+## 非法 seed 生成旁路
+
+`window/project.py:143` Config→Project 保留原始 seed 字符串，避免将解析失败的 None 当作空 seed。Project→Config 两条同步同样保留原文，Generate 在原始输入上校验。
+
+测试走 page.generatePackageRequested.emit(False/True)，不是只测 validate_current：Config 与 Project 非法 seed、保存/重新打开/Undo/Redo后非法 seed，都不建包、不启动、不改变原文或历史；合法42与空seed仍可生成。测试使用仅验证路径存在的 fixture executable，明确不执行后端。
+
+## 隔离和证据
+
+- `smoke_f5_editor_history.py:43` owned_window 明确隔离 run_history_store.STATE_PATH 到临时目录，并恢复原全局值，不再写用户最近项目。
+- smoke_f5_recovery_process.py:34 已隔离子进程 state；smoke_f5_recovery_ui 无 MainWindow/项目保存/最近项目写入，未改他人文件。
+- `out/collab/f5-ui-double-failure-regression.log`：146 v3，exit0。
+- `out/collab/f5-ui-fault-seed-regression.log`：178 v3，exit0。
+- `out/collab/f5-ui-fault-f4-navigation.log`：224 v3，exit0。
+- `out/collab/f5-ui-fault-wizard.log`：60 v3，exit0。
+- `out/collab/f5-ui-fault-run-inputs.log`：69 v3，exit0，但未传 G4USIM_EXE，脚本明确跳过真实后端分支；不是103断言完整用例验收。
+
+本轮实际修改 transactions.py、project.py、run.py、smoke_f5_editor_history.py；新增文案交 out/collab/f5-ui-p1-i18n.json，由 root 独占合入 i18n。未修改 core/recovery 文件，未改桌面，未启动全量矩阵或声明 F5 关闭。

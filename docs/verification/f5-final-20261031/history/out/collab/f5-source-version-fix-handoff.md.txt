@@ -1,0 +1,13 @@
+# F5 降级标签绕过修复：供 recovery 独立复核
+
+已按 root 授权完成，范围只含 `core/project.py` 的 `project_from_dict` 和 `scripts/test_f5_transactions.py`。没有触碰 root `save_project` P2 或 UI 文件。
+
+修复：`project.py:175`–`:179` 在原有有限值/类型/未知字段/别名及 supported-field 检查全部通过后，无论载入标签版本都调用 captured-source helper。helper 仅重建已有 captured raw text/read state 的源事实；真正旧版无捕获原文仍保持 None/既有 reload 兼容。不能靠 version=1…6 解除 source schema/round-trip 阻断。
+
+正式反例 `test_f5_transactions.py::source_constraint_contract` 新增逐版本 1–6：原材料 unknown_parameter/几何 placement 原文不变、缓存清空、editingState 缺失，载入后源阻断回填且两个 writer 拒绝；显式 source_copy 保持且仍携带 blockers；材料未知字段仍严格拒绝；真实旧项目缺失材料/editingState 维持 None，flat seed fallback 与空 geometry 原文不变。
+
+新跑全部 exit 0：test_f5_transactions、test_config_migration、test_project_snapshot_compat、test_f5_project_receipts（含 root 最新保存 P2）、smoke_project_io。日志：`out/collab/f5-source-version-fix-*.log`。独占文件 diff --check 通过。旧 `f5-source-compat-review.json/.log` 原失败证据保留，不追改成成功。
+
+建议独立复核再构造 version=1/6 + state 有/无 + source_copy true/false，并确认纯 loader 不读当前磁盘；核心当前可交付给 root/recovery 冻结复核。本 agent 不再写产品。
+
+交接 SHA256：project.py `9CD408F4454527F94C29DB5736063E3DE8B04CB0AF01BEF407443494DDC4487A`；test_f5_transactions.py `8ACD3CA15C809D4C6FFA3EC9FDD238D0CD006F3942E43164B2FAF25423FD7B39`。

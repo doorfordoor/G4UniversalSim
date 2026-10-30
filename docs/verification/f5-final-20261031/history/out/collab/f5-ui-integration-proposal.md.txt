@@ -1,0 +1,119 @@
+# F5 GUI 编辑、撤销与恢复集成提案
+
+审查基线：`676ffb2b27a56d636a2c984012c9442a6091337b`，2026-10-30。此文件为只读勘察的设计输出，未修改产品文件，未进行桌面验收。下面“建议”均待主设计师与 core/recovery 接口裁决；不将现有缺口说成已实现。
+
+## 1. 必须闭合的实际边界
+
+1. **确定为缺陷（F5 接续需修）**：普通项目对象只有 geometry/source/physics/scoring editor，没有材料文档；`ConfigBuilderPage.update_project()` 也未复制材料草稿。材料只留在页面对象，重新发布项目会 `reload_materials()` 从源重建。因此不可仅给 `G4USimProject` 套 undo/autosave 就声称完整覆盖材料编辑。证据：`gui/g4usim_gui/core/project.py:35`、`:60`；`widgets/config_builder_page.py:245`、`:249`、`:261`；`widgets/config/materials.py:129`。这里及下文 `widgets/`、`window/`、`core/` 路径均相对 `gui/g4usim_gui/`。
+2. **确定为缺口**：当前没有项目级 Undo/Redo、保存标记或关闭时草稿提示。菜单只有 File/View；`closeEvent` 直接停止作业并关闭。材料/几何 `is_dirty` 是“不同于源文件”的 writer 选择标记，不能充当项目“是否保存”的 dirty。证据：`window/shell.py:240`；`main_window.py:120`；`widgets/config/geometry.py:521`。
+3. **确定为风险，须回归实验覆盖**：Setup 的 quick signals 先连 `_emit_changed`，再连 SPS 同步槽；一次键入可能先发旧模型、后发同步模型，不能把每次 `settingsChanged` 当独立命令。证据：`widgets/config_builder_page.py:195`；`widgets/config/setup_panel.py:204`；`widgets/config/run_config.py:436`。材料逐字输入还会重建表格/详情，恢复时必须避开递归写入与光标跳动。
+4. **确定为缺口**：表格正在编辑但未提交的文字只存在 delegate editor；F4 只监听文字失效诊断，没有草稿保存。Setup 无效 seed 会变成模型 None，向导各页还有尚未写入 spec 的控件数据。只保存 dataclass 会丢这些文本。证据：`widgets/diagnostic_navigation.py:163`；`widgets/config/setup_panel.py:261`；`widgets/new_simulation_wizard.py:167`、`:206`、`:294`。
+5. **确定为边界不齐，F5 统一门禁**：运行时仅禁 Project 的部分控件，Config 仍可改，菜单 Open/Wizard 仍可调；Project browse 按钮也不在禁用清单。扫描仅禁创建/打开/运行按钮，场景仅禁生成/校验/运行按钮，其草稿输入仍活动。证据：`window/run.py:258`；`widgets/project_page.py:170`、`:220`；`widgets/scan_page.py:444`；`widgets/scenario_page.py:248`。建议 F5 在拥有者任务执行期间冻结会影响该任务的编辑、Undo/Redo、替换入口；按钮禁用与方法守卫两层都做。不能仅靠 UI disabled。
+6. **无问题，须保持**：F4 generation/epoch 不属于可撤销快照；每次 edit/undo/redo/reload/recovery 都递增，旧报告即使值恢复相同仍不可复活。证据：`widgets/config_builder_page.py:341`；`widgets/form_diagnostics.py:66`；`docs/agent-history.md:499`。
+
+## 2. 推荐事务接口（尽早冻结）
+
+推荐无 Qt core 接受显式命令；Qt 层只采集/投影，不让 core 依赖控件：
+
+```python
+history = WorkspaceHistory(initial_snapshot, limit=...)
+history.execute(label_key, mutate_candidate, merge_key=None, merge_epoch=None)
+# 或对已有槽的适配：history.record(before, after, label_key, merge_key, merge_epoch)
+history.undo() -> WorkspaceSnapshot | None
+history.redo() -> WorkspaceSnapshot | None
+history.current() -> WorkspaceSnapshot   # detached/deep-copy
+history.mark_saved(snapshot)             # 成功落盘后，不能仅靠当前游标猜
+history.reset(snapshot, saved=True)      # 成功 Open/Recent/Snapshot 切换文档
+```
+
+`WorkspaceSnapshot` 至少包含：严格项目数据、完整 `MaterialDocument`、完整 `GeometryDocument` 与源绑定/源错误/blocker、Source/Physics/Scoring 模型、可编辑 raw drafts、scan 草稿与 deep-copy base、scenario 字段和目标目录、可恢复 wizard 草稿。具体存储 schema 由 core/recovery agent 决定；GUI 不能自造第二个业务快照协议。
+
+**GUI 必需 hooks**：`capture_workspace()`、`apply_workspace(snapshot, reason)`、`commit_edit(label, operation, merge_key)`、`flush_pending_edit()`、`can_mutate_workspace(reason)`、`history_changed`。恢复文件调用同一 capture/apply，不能通过“保存→重新打开源文件”模拟恢复；历史命令 replay 不调用源读取、生成包或后端运行。
+
+**原子范围**：一次用户动作以最外层 `begin/end` 包住完整 signal cascade；内层 `_emit_changed` 仅标记需要刷新，退出最外层后 capture 一次。可采用 core `record(before, after)` 命令对象；不要仅用延迟 timer 对比掩盖多次独立按钮点击，也不要在每个现有槽之后单独 push。前一已提交快照加 raw draft overlay 可作为输入事件前状态，但 explicit button/reload/wizard 操作必须显式 transaction。
+
+**投影**：`apply_workspace` 在恢复 guard + `QSignalBlocker` 下赋全模型，再刷新所有镜像，最后一次性失效 diagnostics/package/preview。不要调用当前 `_set_project` 作为普通 Undo 的恢复器，它会读磁盘且刷新结果视图 (`window/project.py:77`、`widgets/config_builder_page.py:249`)。Open 使用独立 reset 路径；Undo 不改变 project_file，也不把历史 outputDir 当已运行事实重新发布。
+
+## 3. 编辑动作全覆盖清单
+
+| 范围 | 当前写入点与位置 | F5 事务单位/注意 |
+|---|---|---|
+| Project 全局路径/运行字段 | `widgets/project_page.py:120`、`:153`；`window/project.py:95` | projectName/input mode/backend/workspace/config/macro/output/runs root/threads/seed/run name；一个字段一次输入会话。浏览选路是单独命令，取消无命令；flat/nested 与 Setup 镜像归同一命令。 |
+| Setup 运行/输入 | `widgets/config/setup_panel.py:204`、`:261`、`:292` | runName/threads/seed/beamOn/check overlaps/dry-run、materials/geometry path/template；选文件+reload 整体一个命令，保存源读取结果，Undo 不能重读磁盘。 |
+| Setup quick SPS | `widgets/config/run_config.py:436` | preset/particle/energy/position/direction、reference/default cut/biasing、enabled/hits/event_edep/edep/hist bins/min/max；保持未展示的 plane/rectangle/isotropic 字段，镜像无新命令。 |
+| 材料 | `widgets/config/materials.py:108`、`:233`、`:253`、`:260`、`:270` | NIST/mass_fraction/volume_fraction/atom_count add，duplicate/delete，name/mode/density/components/enabled；多行 components 一个编辑会话；删除不自动修引用。源 errors/warnings 不因 Undo 或验证清除。 |
+| 普通几何 simple/layered | `widgets/config/geometry.py:230`、`:460` | world/target size/material/name/shape/position/rotation/region/sensitive/bias；layered world/axis/gap/z_start/auto_stack；字段变动及关联模型更新一个命令。 |
+| 层 | `widgets/config/layers.py:75`、`:96`、`:106`、`:122`、`:135` | name/material/thickness/xy/region/copyNo/position/rotation/enabled/sensitive/bias；add/duplicate/delete/move 各一个。必须深拷贝 metadata/vis/cut，不能改变未开放字段。 |
+| Hierarchical | `widgets/config/geometry.py:490`、`:528`、`:538`、`:552`、`:564` | 单元格 enabled/name/parent/shape/material/position/size或parameters/rotation/sensitive/bias/region/trd五参数；每次 cell commit 一个命令；shape 与 parameters 清空归同一命令；world 删除拒绝不入栈。 |
+| Boolean | `widgets/config/booleans.py:13`、`:35`、`:55`、`:71`、`:80`、`:92` | 表格字段及 add/duplicate/delete/move；自动切 hierarchical_boolean、renumber 全归同一动作；重复名字不作为对象唯一身份。 |
+| 几何模式/原件复制 | `widgets/config/geometry.py:330`、`:365` | 模式切换+补 world 单命令；source_copy 显式切换单命令；Undo 不能绕过剩余 blocker，也不能因恢复自动开启 source-copy。 |
+| Source 全编辑器 | `widgets/config/run_config.py:382` | preset/particle/energy、position mode/type/shape/position/radius/inner_radius/halfx/halfy/normal/confine/direction/angular mode/theta/phi/cone/focus、preview rays/seed；两别名原子同步，禁扩张支持范围。 |
+| Physics/Scoring | `widgets/config/run_config.py:410`、`:416` | Physics mode/reference/cut/bias hook；Scoring enabled/hits/event_edep/edep/dose/fluence/trajectory_events/raw+weighted histogram/bins/min/max/volume+particle summary/auto create。一个控件只产生一个命令，不将整三模块同时标 dirty 当三命令。 |
+| 材料/几何 reload/revert | `widgets/config_builder_page.py:404`；`widgets/config/materials.py:129`；`widgets/config/geometry.py:300` | 用户显式 reload 是可撤销替换，before/after 含源快照；自动 validate 中“干净才读源”应另有受控刷新，不得偷偷覆盖用户历史，读到改变的源时失效旧验证。 |
+| 向导草稿 | `widgets/new_simulation_wizard.py:103`、`:167`、`:206`、`:286`、`:339` | modal 内独立子事务历史，含所有页面 raw 值+spec+当前页+run_after；Next/Back 仅导航，page 初始化不入栈；切 scenario +默认值重置一个命令；取消不改项目。恢复应重新打开草稿页并禁止自动 Finish/Run。 |
+| 向导应用/示例 | `window/content.py:41`、`:65` | Finish 到主项目是一个复合命令；示例套用亦一个命令。run_after 的生成/执行在提交之后独立处理，Undo 只改配置。示例结果展示不进入可撤销业务内容。 |
+| 扫描草稿 | `widgets/scan_page.py:56`、`:173`、`:198`、`:204` | parameter/values/name/base/runs root/backend/workspace。Use current configuration 是一次 base 替换命令，Undo 恢复 deep-copy base，不能重新取当前项目；语法错误 values 原文也保留。manifest/results/progress 是外部运行证据，不可 Undo。 |
+| 场景草稿 | `widgets/scenario_page.py:196`、`:211`、`:220`、`:234` | `_fields` 全字段（含高级字段）+directory；set_values 批量一命令且预验证 keys/choice 后再投影。advanced 显隐本身为 UI 状态，不影响业务 dirty；场景 backend 随 project 更新但不偷偷合并用户历史。 |
+| 3D/诊断/结果浏览 | `widgets/config/preview3d.py:85`；`widgets/config/details.py:29` | camera/selection/诊断定位/只读原文/图表量/主题语言不进入配置 Undo。当前无拖拽改几何入口，不为 F5 增加 J1/J2。source preview rays/seed 已属可持久模型，仍参与上面 Source 历史。 |
+
+## 4. 历史合并与未提交草稿
+
+- 主窗口维护一条带 scope 标签的会话配置历史，Project/Config/scan/scenario 按真实编辑先后撤销；不要因为切页而把 Undo 静默路由到另一堆栈。菜单例如“撤销：扫描 · 参数值”。向导为 modal 子历史，主窗口堆栈在向导内暂停。
+- 同一编辑会话+同一字段+同一行稳定定位，连续键入可合并；建议静默 800ms 或焦点转移、Enter、选行/切页、选择另一控件、保存、Undo/Redo、结构命令、读源后终止合并。长按 spinbox 在一次 press/release 合并；离散 combo/checkbox/button 一次一命令。不得跨 save marker 合并，也不得跨对象删除重建后凭同名合并。
+- 插入行、删除行、拖动不存在；现有 move 按钮每次一命令，不与字段编辑合并。duplicate 必须深拷贝内嵌 dict/list；修改副本不改变原件/历史。
+- 文本草稿需保存原始字符串（含空、非法单位、未完成整数、Unicode 空白），业务投影仍遵守现行 trim/解析规则。不可为了 autosave 强制通过 validator，也不可把非法 seed None 当已经保存原输入。
+- 表格 edit delegate 管理 pending cell `(collection,row identity,column,before text,raw text)`；Autosave 可采集未 commit 的 raw draft。按 Undo 时先结束当前编辑组，再撤销该组；Escape 取消该 cell 草稿且不创建业务命令；Enter/Tab/失焦提交一次。需专测菜单点击导致 focus-out 后再触发 Undo 的双重执行。
+- `QLineEdit/QPlainTextEdit/QAbstractSpinBox.lineEdit()` 的原生 Ctrl+Z/Redo 与右键菜单不能另起一套编辑历史。配置可编辑控件统一接入快捷键/上下文菜单路由，保留 copy/cut/paste/select all 与 IME；只读日志/原文使用自身普通复制菜单。单纯 QAction shortcut 会被 QLineEdit ShortcutOverride 吞掉，必须测试 keyboard 和 menu 两个入口。
+- Undo 后新增编辑清掉 redo；失败/no-op/rejected command 不占历史。历史容量/清理只裁掉最旧命令，不冒充变为已保存；清理后仍按保存指纹判 dirty。
+
+## 5. 菜单、工具条、状态与生命周期
+
+建议 File 保留已有项，补标准 `Ctrl+O`、`Ctrl+S`、`Ctrl+Shift+S`，增加“恢复未保存工作…”；Edit 菜单提供 `撤销 <动作>` Ctrl+Z、`重做 <动作>` Ctrl+Shift+Z（Windows 同时 Ctrl+Y），空栈显示灰色。主框架标题区小工具条放两个撤销/重做按钮，复用同一 QAction，不新造快捷键或重复回调。所有 label/tooltip/action reason 走 i18n，主题用既有 token。
+
+标题 `项目名 *` 表示普通项目/工作草稿未保存，状态栏独立显示“恢复副本已更新 HH:mm / 自动保存失败：原因 / 本轮未创建恢复副本”。材料源 dirty 仍用现有材料标记，不因保存项目错误清为源 clean。主报告不得将“已写恢复文件”称作“项目已保存”或“配置已验证”。
+
+在 **Open/Recent/Load snapshot/Close** 之前先 `flush_pending_edit`，如 dirty 给“保存 / 放弃修改 / 取消”。只有真正保存成功才继续；取消保存对话框或写入失败视为取消切换。完成候选解析和投影预检后才发布并 reset 历史；候选错误保持旧项目、栈、原路径、恢复条目。迁移创建副本不修改历史；显式打开副本才走同一替换流程。Wizard Finish、例子套用保留同文档 undo；外部 Open 作为文档边界清栈。
+
+运行门禁建议：main run/Inspect pending 时冻结主 Project/Config 与相关主历史；scan run 冻结 scan 草稿/base与替换manifest操作；scenario run 冻结 scenario草稿/directory；跨 scope 全局 Undo 若顶项涉及忙 scope 则明确禁用并说明原因，不越过它去撤销更旧项。项目替换/恢复在任一 owned run/Inspect 使用 workspace 时禁止。只读查看、日志、Stop/Kill 保持可用。后端 geometry 导出不是 run，修改时取消/失效旧请求并保持“最后请求”发布规则。
+
+**关闭次序**：先处理未保存选择，再停止 owned jobs、最后可靠 flush recovery/清理自身会话租约并关窗。当前 closeEvent 一开始停全部 timer；若用户取消或进程仍未停止导致 event.ignore，应恢复自动保存 timer，不得把取消关闭变成之后不再自动保存。不得关闭其他实例任务，保留 Q1 bounded wait 行为。
+
+## 6. 自动保存与恢复对话框
+
+建议编辑后 debounce 2 秒、持续输入最多 30 秒有一次落盘；间隔/上限归 recovery 核心配置。UI timer 只采 snapshot，文件写入由 recovery 服务负责，上一写入未完成时仅保留最新 revision；旧异步成功不能把新草稿显示为已保存。路径用系统用户数据/恢复目录，不写原 `.json`，原件不覆盖，不生成或运行 Geant4。
+
+启动发现非活跃会话的有效恢复项时，展示可比较列表：项目名/原项目绝对路径或“未命名”、最后恢复时间、来源会话、原件是否改变/缺失、所含草稿（材料/几何/扫描/场景/向导）、校验状态。选择项目后摘要明确“恢复的是未验证编辑草稿，不恢复运行成功状态或后台进程”。
+
+三个明确按钮：**恢复草稿**（载入内存、标未保存、生成包 stale，建议后续 Save As；若含 wizard 重新打开草稿）/**暂不恢复**（保留条目，不删除）/**丢弃所选恢复副本**（明确确认后只删除所选本应用恢复条目）。关闭对话框等于暂不恢复。损坏/超限/未知schema 条目显示原因且不能恢复，保留原文件供诊断；原项目磁盘改变展示双方时间/哈希信息，禁止自动覆盖或拼接。
+
+多实例只能读取自己的 active session，其他 live lease 条目显示“另一窗口正在编辑”不可接管；恢复在新会话持有独立条目，旧条目只在恢复成功且新恢复写入可靠后按协议消费。恢复失败保持当前工作、原恢复文件与 project_file 不变。退出明确放弃可清理该会话恢复；正常成功保存时清理匹配 revision 的恢复，不能删另一实例或更新的 revision。
+
+## 7. 外部动作不可撤销
+
+- 写普通项目/另存、创建迁移副本、生成运行包、创建扫描目录/场景文件、复制历史包、导出日志/结果/图片：Undo 不回滚磁盘，不删除新产物、不覆盖旧文件。
+- Run/Scan/Scenario 的启动/停止/kill、既有进程结果、统计合并、扩展执行、读取或删除外部文件：不可放进配置命令回放。复原配置不会重跑，不会恢复已停止进程或抹掉真实日志。
+- 当前 `_generate_current_package` 写 configPath/macroPath/outputDir（`window/run.py:226`），需要从编辑历史的“运行包状态”分离或作为不可重放派生元信息；任何 Undo 后包标 stale，不能恢复“可运行旧包”标记。结果页仍绑定产生结果的实际目录，不随配置 history 偷换。扫描 `create_scan` 的 manifest、场景 `_generated/_outcome` 同理（`widgets/scan_page.py:228`；`widgets/scenario_page.py:295`）。
+- 语言/主题、导航、窗口布局、相机、只读日志和诊断定位不是配置命令。F5 不扩 J1/K1/L1，不增加任意自动工具执行。
+
+## 8. 必须验收的矩阵
+
+| 组 | 自动验收要点 | 实窗要点 |
+|---|---|---|
+| 全入口字段 | 上表每类至少一 scalar/check/combo 与结构动作；run/model/flat mirrors一致；semantic snapshot undo/redo等值；生成 INI round-trip同义 | Project+Setup、材料多行、几何单元格/层/布尔、Source/Physics/Scoring，各验证按钮与键盘 |
+| 合并 | 连续 typing 一次撤销、跨字段/行/保存不合并、无效 seed/单位可还原、redo 分叉、no-op 不入栈 | 长按 spin、IME输入、Ctrl+Z/Ctrl+Y/Ctrl+Shift+Z、右键菜单、切页后动作标签 |
+| 表格草稿 | 未 commit 已 autosave；Escape取消；Enter/Tab/失焦单次提交；菜单Undo不双撤；duplicate独立dict；删除+再建同名不合并 | 在活跃 cell editor 内操作Undo/关闭；高DPI目标行可见 |
+| reload/mode | 源变化、缺失、非法；undo source snapshot不重读；blocker/source错误保留；template+补world/Boolean renumber原子 | 重载/撤销提示与源只读证据 |
+| wizard/scan/scenario | 全 raw草稿+高级字段；Wizard Next/Back/Cancel无项目命令，Finish仅一命令；scan base深拷贝与无效values；scenario batch失败回滚 | modal Undo路由、恢复向导不自动run、扫描/场景工具条域标签 |
+| F4 | edit→undo仍旧报告失效；新验证可定位；恢复/切项目不能旧报告重绑；定位不dirty/不入栈 | 旧报告灰态与可读来源、当前诊断定位 |
+| save/open/close | dirty保存点、原子失败原字节不变、Open失败保旧栈；SaveAs取消保路径；Close取消保timer/进程；成功关闭owned进程自然exit0 | 三项未保存对话框，正常关闭后无重复恢复提示 |
+| recovery | 真子进程kill后启动 offer；未命名/非法草稿；写坏/旧schema/截断/替换失败；多实例活lease；source改动；恢复失败原文件不变 | 启动恢复列表、保留/丢弃/恢复、中文长路径、浅深主题/中英文 |
+| busy/external | main/Inspect/scan/scenario禁写与方法守卫；Undo不执行subprocess/文件写入；生成包stale且结果绑定原run | Run中禁用原因清楚，Stop仍可用，运行结束恢复操作 |
+| 回归 | F4所有专项、E6导入/迁移/snapshot/duplicate、Q1 public_paths、既有editors/writer boundaries/scan/scenario/wizard，Windows/Linux严格报告门禁 | 原生截图必须实际查看；offscreen不代替原生；退出码0不代替断言 |
+
+正式实现需由 root 记录独立审查、Windows全量及真实Linux矩阵，实窗使用产品 Fusion/主题，不追改 F4 已归档证据。
+
+## 9. 文件所有权建议
+
+本 agent 后续可负责 `main_window.py`、`window/{project,shell,content,transactions}.py`、`widgets/config_builder_page.py`、`widgets/config/*.py`、相关 GUI smoke。实施还必须覆盖 `window/run.py` 与 `widgets/{project_page,new_simulation_wizard,scan_page,scenario_page,diagnostic_navigation}.py` 的明确事务入口/门禁；请 root 分配这些文件，不能因暂未分配而漏掉功能。core/recovery 由各自 agent；`window/recovery.py` 只调用冻结 hooks，勿并改 main_window。i18n 共用文件由 root 统一整合键，或指定唯一写者。root 的 DeepSeek 前端设计建议需在此方案上吸收，不能替代真实代码/验收约束。
+
+当前验证：只读代码与契约定位；未运行产品行为实验，未修改 tracked 文件。最终接口名称、序列化版本、autosave存放策略和 scope busy策略由 root 合并三份提案后确定。

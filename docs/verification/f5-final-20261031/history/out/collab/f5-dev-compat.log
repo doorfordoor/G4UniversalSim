@@ -1,0 +1,51 @@
+PASS gui_f4_entrypoints: asserts=62/62
+FAIL gui_config_migration: G4USIM_ASSERTS=3
+Traceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 177, in <module>
+    raise SystemExit(main(sys.argv))
+                     ^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 153, in main
+    runpy.run_path(str(target), run_name="__main__")
+  File "<frozen runpy>", line 291, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\smoke_tests\smoke_config_migration_ui.py", line 175, in <module>
+    main()
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\smoke_tests\smoke_config_migration_ui.py", line 41, in main
+    assert "输出版本 6" in dialog.version_label.text()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+ asserts=3/70
+PASS gui_project_io: asserts=6/6
+PASS gui_project_import_projection: asserts=393/34
+PASS gui_project_snapshot_restore: asserts=61/54
+PASS gui_new_simulation_wizard: asserts=60/37
+PASS q1_public_paths: asserts=32/28
+PASS gui_run_inputs: asserts=103/94
+FAIL gui_config_editors: y", line 632, in _rmtree_unsafe
+    os.unlink(fullname)
+PermissionError: [WinError 32] 另一个程序正在使用此文件，进程无法访问。: 'D:\\Temp\\g4usim-smoke-recovery-yyr1czzb\\35c7961d47a242fba24c89e2447b65d4.lock'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\123\AppData\Local\Programs\Python\Python311\Lib\weakref.py", line 666, in _exitfunc
+    f()
+  File "C:\Users\123\AppData\Local\Programs\Python\Python311\Lib\weakref.py", line 590, in __call__
+    return info.func(*info.args, **(info.kwargs or {}))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\123\AppData\Local\Programs\Python\Python311\Lib\tempfile.py", line 933, in _cleanup
+    cls._rmtree(name, ignore_errors=ignore_errors)
+  File "C:\Users\123\AppData\Local\Programs\Python\Python311\Lib\tempfile.py", line 929, in _rmtree
+    _shutil.rmtree(name, onerror=onerror)
+  File "C:\Users\123\AppData\Local\Programs\Python\Python311\Lib\shutil.py", line 787, in rmtree
+    return _rmtree_unsafe(path, onerror)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\123\AppData\Local\Programs\Python\Python311\Lib\shutil.py", line 634, in _rmtree_unsafe
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "C:\Users\123\AppData\Local\Programs\Python\Python311\Lib\tempfile.py", line 893, in onerror
+    _os.unlink(path)
+PermissionError: [WinError 32] 另一个程序正在使用此文件，进程无法访问。: 'D:\\Temp\\g4usim-smoke-recovery-yyr1czzb\\35c7961d47a242fba24c89e2447b65d4.lock'
+ asserts=8/23
+Report: out\verification\f5-dev-compat\20261030-222437-ed45d64a\report.json
+7 pass / 2 fail / 0 skip of 9 cases; assertions executed 728 (9 cases reported counts, 0 cases asserted nothing)

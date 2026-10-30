@@ -1,0 +1,23 @@
+# F5 UI 独立复核
+
+## 确定为缺陷：无效 seed 草稿在 Generate 前被镜像清空，生成通过
+
+P1，真实 Qt public signal 可达，未执行 Geant4。反例 `out/collab/f5-ui-seed-independent-repro.py`，原运行证据 `.json` / `.log`。启动真实 MainWindow，应用 single_target wizard，设置一个真实存在但永不执行的 validation-only executable，Config seed 输入 `not-an-integer`；`validate_current` 明确 can_run=false。随后从 `page.generatePackageRequested.emit(False)` 走完整实际生成，结果 Config seed 清空、package_generated=true，落盘 main.ini 无 seed 行。
+
+根因链（2026-10-30 当前文件，待 UI 最终冻结核对）：
+- `window/project.py:134`：Config→Project 同步 seed 采用已解析 runSettings.seed，非法草稿被镜像为 `""`。
+- `window/run.py:188`：Generate 调用 `_update_project_from_page_without_preview`。
+- `window/project.py:141` → `widgets/config/setup_panel.py:248`：由镜像 Project 空 seed 重新覆盖 Config 原始草稿，发生在 `run.py:200` validate_current 之前。
+
+建议由 UI 写者保持镜像 raw seed，或在 Generate 前禁止逆向覆盖当前 Config 草稿；不要仅在测试调用 validate_current，使真正生成路径仍能绕过。验收覆盖 Config invalid seed（保存/重开/Undo后也一致）、Project invalid seed、合法 seed 与空 seed、Generate 和 Generate & Run；非法输入不得建包/启动且原始文本不丢失。此 agent 未改 UI 文件。
+
+## 无问题 / 已有修复
+
+- `window/transactions.py:486` 当前捕获异常已进入 try，容量注入时 visible text 回滚、revision 不变；`out/collab/f5-ui-independent-repro.json` 有独立证据。不要把初期 try 外 capture 再报缺陷。
+- 普通保存保留 materials/raw drafts，E6 package 采用当前包材料/几何；`test_project_snapshot_compat` 及 F5 history smoke 重跑通过。
+- persistent document typed source diagnostics 最初确实丢失；当前 core `edit_sources.py` 从 captured source 重建已补齐，复现 JSON after_document 不再为空。此项与原源 cache P1 共用根因修复，不重复开问题。
+- source-cache P1 新正式反例、旧兼容、receipt、GUI history/recovery 与真实 backend 3+3 事件通过，见 `f5-source-constraint-fix-status.md`。
+
+## Ownership
+
+`core/project.py` 当前写入已完成，立即移交 root；后续本 agent 仅只读兼容复核，不再修改其 save_project/receipt。root 可独占修保存发布后清理 P2；本 agent 不与 UI 当前修复争写。

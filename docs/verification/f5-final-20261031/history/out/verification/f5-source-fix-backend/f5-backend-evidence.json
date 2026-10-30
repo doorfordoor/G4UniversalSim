@@ -1,0 +1,62 @@
+{
+  "schema": "g4usim_f5_transactions_backend_evidence_v1",
+  "executable": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-f4\\Release\\G4UniversalSim.exe",
+  "executable_sha256": "8055edd08ef07aa6eee7d710c8d360b83e8bec60cb410160f4b89aad61d6f25b",
+  "original_source_sha256": {
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f5-source-fix-backend\\original-materials.ini": "4bfb64cc63dad229525137f14e64412a94eee8790b449ee64e10a8906cb67da5",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f5-source-fix-backend\\original-geometry.ini": "b6f500fb680f4aa13393e2545824321f15e6c63815bb396821ad4b7b1d930fc2"
+  },
+  "persisted_snapshot_sha256": "9eb331531677a52dc674e91f743431cf0bbb455b19eda58ba52c1a5af5a3e50f",
+  "cases": [
+    {
+      "case": "undo-restored",
+      "package": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f5-source-fix-backend\\packages\\20261030_223449_f5-transaction",
+      "completed_events": 3,
+      "source_energy_MeV": 1.0,
+      "observed_primary_energies_MeV": [
+        1,
+        1,
+        1
+      ],
+      "actual_target_material": "FirstTarget",
+      "actual_target_volume_mm3": 512.0,
+      "actual_target_extents_mm": [
+        8.0,
+        8.0,
+        8.0
+      ],
+      "generated_material_density": "2.33 g/cm3",
+      "main_sha256": "acfc8d98e32663b2cc072e6662694c1cb76a0bb2888f218a17d6b91be41a9b41",
+      "macro_sha256": "931f5baeeb15e7fe3580068dbb1374ac6b554eedbc7f19a814cff02183eaab1f",
+      "materials_sha256": "d77923cdd8a0020c205b2287cfcbbe6e05b09d8e65359c33278a743c51361665",
+      "geometry_sha256": "e6d77380889a38f16b6c2ad2f309bd33edb81060d29b30b3055b3f0b6e7e5a2e",
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f5-source-fix-backend\\undo-restored.log",
+      "scope": "configuration and actual consumer selection; not a physics-accuracy benchmark"
+    },
+    {
+      "case": "redo-edited",
+      "package": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f5-source-fix-backend\\packages\\20261030_223450_f5-transaction",
+      "completed_events": 3,
+      "source_energy_MeV": 3.0,
+      "observed_primary_energies_MeV": [
+        3,
+        3,
+        3
+      ],
+      "actual_target_material": "SecondTarget",
+      "actual_target_volume_mm3": 1728.0,
+      "actual_target_extents_mm": [
+        12.0,
+        12.0,
+        12.0
+      ],
+      "generated_material_density": "3 g/cm3",
+      "main_sha256": "676a2706b6e7ff33d1ecbc0d3ba6cb61af498d8bbfd508f6c83a005f47d0c57a",
+      "macro_sha256": "3b5975ab1f3d644c8740ea8894a449f065a87b0630781296c3437a132894716d",
+      "materials_sha256": "9c0a03fb226d497c1d055bb7dbd591223d624e1736cbdd8336798a88cdd843eb",
+      "geometry_sha256": "78f359cf0c34d8844138690951b03717f231815b29995417b5080ba8d547c208",
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f5-source-fix-backend\\redo-edited.log",
+      "scope": "configuration and actual consumer selection; not a physics-accuracy benchmark"
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+# 最终复制命令路径记录
+
+首次计划命令使用相对 `--destination out/f5-evidence-copy-5c1eec5-final-1`；argparse把它转换为Windows Path后，字符串含反斜杠，复制器的relative_path拒绝并报 `ValueError: Expected a safe repository-relative POSIX path`，进程exit1。此时仅计划校验，目标目录尚不存在，没有复制或覆盖。
+
+负责人先验证目标仍不存在，随后以同一目录的完整绝对路径传给现有受控入口。复制器仍执行仓库边界、所有路径组件/reparse和源摘要检查；计划exit0、write_performed=false，2072文件/17294016字节。之后才对该相同目标运行 --execute。
+
+这是本机CLI参数表示差异，不是上游安全拒绝；未修改被独立审查的复制器或放宽路径规则。正式复制的最终结果以copy-receipt.json及另行独立字节审计为准。

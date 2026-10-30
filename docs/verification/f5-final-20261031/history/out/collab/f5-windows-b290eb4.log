@@ -1,0 +1,63 @@
+PASS f5_source_snapshots: asserts=84/7
+PASS f5_project_receipts: asserts=22/19
+PASS f5_transactions: asserts=173/92
+PASS f5_recovery: asserts=119/48
+PASS gui_f5_recovery: asserts=62/60
+PASS f5_transactions_backend: asserts=63/34
+PASS gui_f5_editor_history: asserts=203/142
+PASS gui_f5_recovery_process: asserts=12/33
+PASS f4_diagnostics: asserts=48/26
+PASS f4_producers: asserts=593/62
+PASS f4_document_diagnostics: asserts=119/100
+PASS gui_f4_navigation: asserts=224/77
+PASS gui_f4_entrypoints: asserts=62/62
+PASS gui_f4_layout: asserts=257/31
+PASS gui_f4_inspect_protocol: asserts=46/16
+PASS gui_f4_inspect_backend: asserts=45/40
+PASS build_identity: asserts=47/16
+PASS f1_input_provenance: asserts=37/7
+PASS f1_input_resources: asserts=561/38
+PASS f1_artifact_model: asserts=97/51
+PASS f1_output_identity: asserts=4129/51
+PASS output_auto_model: asserts=4/41
+PASS output_auto: asserts=734/41
+PASS gui_f1_output_identity: asserts=28/29
+FAIL gui_f1_async_identity: meWarning: Legacy metadata: content hashes are not recorded; byte identity is unverified.
+  for path in sorted(output_files(output, "g4usim*.root")):
+C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\output\plot_data.py:140: RuntimeWarning: Legacy metadata: content hashes are not recorded; byte identity is unverified.
+  runs = sorted({_run_of(p.stem) for p in output_files(output, f"{stem}_t*.csv")})
+Traceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 177, in <module>
+    raise SystemExit(main(sys.argv))
+                     ^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 153, in main
+    runpy.run_path(str(target), run_name="__main__")
+  File "<frozen runpy>", line 291, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\smoke_tests\smoke_f1_async_identity.py", line 178, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\smoke_tests\smoke_f1_async_identity.py", line 170, in main
+    begin=time.monotonic();assert window.close();assert time.monotonic()-begin < .5
+                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+ asserts=36/45
+PASS merge_outputs: asserts=18/12
+PASS output_extensions: asserts=25/21
+PASS runner_contract: asserts=31/31
+PASS doc_links: asserts=11/11
+PASS platform_paths: asserts=3/3
+PASS ci_annotations: asserts=12/13
+PASS report_evidence: asserts=77/21
+PASS writer_boundary: asserts=24/7
+PASS shielding_scenario_model: asserts=93/61
+PASS shielding_analysis: asserts=113/73
+PASS effective_config_model: asserts=18/18
+PASS main_config_version_component: asserts=4/27
+PASS main_ini_migration: asserts=60/22
+PASS main_config_version: asserts=84/27
+PASS field_biasing_schema: asserts=278/49
+PASS field_biasing_schema_review: asserts=18/12
+PASS config_migration: asserts=447/53
+PASS project_snapshot_compat: asserts=78/34

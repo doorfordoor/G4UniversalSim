@@ -1,0 +1,15 @@
+# F5 源阻断 P1 修后独立复核
+
+原失败脚本 `f5-core-independent-review.py` 未改，另存运行输出 `f5-core-independent-review-after-source-fix.log`：在旧反例原来会成功的 materials writer 处抛 ValueError，仍明确报告 unknown_parameter；原脚本退出1是旧缺陷断言已不成立，不冒称该脚本本身通过。
+
+新增独立修后验收 `f5-source-cache-fix-independent.py` / `.log` exit 0：
+
+- 同一材料 unknown_parameter、同一几何 placement=replica、同样清空缓存列表，普通 v7 project 与 snapshot 两入口都从捕获文本重建源问题，两个 writer 保持拒绝。
+- restore期间将Path.read_text/read_bytes都替换为禁止调用；通过，未重读现在源文件来覆盖旧草稿或伪造来源。
+- 材料组分/raw source原样保持；显式source-copy仍为显式且blockers保留；captured source text与editor raw text矛盾拒绝。
+- EditSession.transact 自动动作尝试清空缓存，新的snapshot边界恢复阻断，当前语义fingerprint仍等于原受阻状态。
+- 真实 validate_config_builder 的 errors重新含 unknown_parameter和placement round-trip blocker，不再 errors=[]。
+
+对应当前实现：`core/edit_sources.py:20` source evidence重建；`core/project.py:175` v7导入调用；`core/edit_snapshot.py:38` 内存事务边界调用、`:110`导入时同时提供源上下文。以上原写者修复已由本独立写者复核，先前 source-cache P1 现判为已修复（限定上述边界）；旧失败证据保留。
+
+另两项新发现仍开放：`f5-receipts-rollback-independent.md` 中 UI投影与回滚双失败P1、保存发布后清理误报失败P2。本写者未修改产品，恢复R1仍冻结。

@@ -1,0 +1,25 @@
+# F5 导入预检回归：只读定位与最小修复方案
+
+当前 b290eb4；产品/正式测试未改。本轮未重新运行正在全量冻结中的测试。结论基于当前源码和 recovery 已独立复现的 current-project-import-repro.log。
+
+## 确定为缺陷
+
+`gui/g4usim_gui/window/project.py:81` 的新增 try 包围了 `_project_initial_projection`；后者 `:103` 在任何 UI 更新之前调用 `_check_project_projection`。超范围 `beam_on=10**100` 在 `:72` 抛 ValueError，此时旧窗口尚未变化，但 `:92`–`:95` 无条件 apply_workspace(verified)。
+
+这段“回滚”本身是有副作用的投影：`window/transactions.py:366` 停观察任务，`:367` 用 deepcopy 替换 self.project，后续替换编辑器文档、清空运行成功状态、使包过期并增加诊断代次。因此旧窗口的对象身份、证据与UI都被不必要地改动。`smoke_project_import_projection.py:56` 快照明确包含 project/editor 对象身份、控件、包状态、Inspect等，`:161` 的原断言正确；应修产品而非放宽该断言。
+
+v7路径同类风险：`project.py:84` 在 try 内创建 WorkspaceSnapshot，构造 `core/edit_snapshot.py:35`–`:39` 可因来源/状态验证拒绝；apply_workspace本身 `transactions.py:362` 的投影预检也在其自身修改UI前，但被外层catch误判为需要回滚。
+
+## 建议最小改动（待 root 停止冻结会话后授权）
+
+1. 只改 `window/project.py:_set_project`：在现有 try 之前完成 `_check_project_projection(project)`。若带editingState，在 try 之前构造一次 WorkspaceSnapshot，并调用 `_check_workspace_projection(snapshot)`。普通legacy则保持snapshot=None。
+2. 仅在上述纯预检全部通过后保留现有 verified、try/except；v7投影复用已检查snapshot，legacy维持原实际初始化。不要删内部防御预检，也不改错误类别。
+3. 实际投影失败后仍进入现有回滚；回滚再失败仍保留 TransactionApplyError、故障锁、最后确认快照与修复入口。既有 Undo/Recovery/Open 双失败203断言专项保持，不修改其原断言。
+
+## 验收建议
+
+- 原 `smoke_project_import_projection.py` 完整用例应恢复 F4 的393个v3断言，不删`:161`或改其快照比较。
+- F5 GUI增加direct _set_project 的v7未知draft键/表形状拒绝，断言项目与文档ID、revision/保存点、diagnostic代次、包路径/stale和Inspect记录原样保留；legacy超范围由原测试完整覆盖。
+- 原 F5三个实际双失败路径及单次失败成功回滚保持通过；现有扫描203断言基线不得下降。需要重跑的最小组合为原导入专项与F5编辑专项，再交独立复核。
+
+没有扩大到优化或更改扫描语义，旧CI/本机失败证据不动。

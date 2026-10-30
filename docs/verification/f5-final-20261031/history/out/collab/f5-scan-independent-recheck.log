@@ -1,0 +1,21 @@
+[
+  {
+    "case": "cached_independent_valid_base",
+    "still_generates_original_seed_42": true
+  },
+  {
+    "case": "invalid_raw_seed_current_scan_base",
+    "rejected": true,
+    "old_files_and_scan_draft_preserved": true
+  },
+  {
+    "case": "double_failure_current_scan_base",
+    "rejected": true,
+    "after_explicit_repair_beam_on": 101
+  },
+  {
+    "case": "recovered_material_source_changed",
+    "new_current_base_rejected": true,
+    "captured_draft_and_old_files_preserved": true
+  }
+]

@@ -1,0 +1,32 @@
+# F5 DDD 基线下降：精确事实与最小处理提案
+
+结论：**确定为证据门禁缺陷/拒绝，未证明物理回归**；不豁免，不降门禁，不追改旧报告，不重跑挑绿。
+
+## 已证实
+
+- 正式5d56187 CI已全部结束success；完整独立收据12report/478case、4ZIP/492成员、所有日志SHA与v3 marker匹配。唯一严格F4基线拒绝为11.4.3 backend39795<39797；唯一改变case `displacement_damage` 44<46。
+- 测试脚本F4实际CI提交a9ad09d与5d56187的Git blob完全相同：`scripts/test_displacement_damage.py = 1e6017797422f527409d9d1a8f5ad5ce31a53357`。
+- v3探针也完全相同：`tools/test_assert_probe.py = 44ea1e3b5728c2bc784e25c841613691942df9bb`。源码fingerprint与实际Geant4/GNU/Release/MT构建身份对照也保存在原报告；无测试删断言证据。
+- 两份DDD日志在末尾 `G4USIM_ASSERTS` 行以外的**原始字节完全相同**，含mu/e/neutron/He3的打印数值、7种非法输入拒绝和成功信息。
+- 固定输入由同一脚本生成：threads=2、seed=11，首轮1GeV mu-、200events、100×100×1mm Si体积；mu和e表分别取固定log-log范围与超范围表。source/geometry/主INI模板、macro事件数和NIEL表点值没有代码差异；材料INI与DisplacementScorer也无diff。原临时目录绝对路径/每worker实际任务分配不是固定输入，本轮不把“seed=11”扩大为所有并发行为可重现。
+
+## 两次少执行在哪里
+
+由完全相同脚本的控制流、完整成功日志和v3计数可推导：**唯一可变的assert执行次数是 `scripts/test_displacement_damage.py:156`，位于 :153 的 `for row in summary` 中**。除该行外计数固定为42：Runner成功/失败共12次，close()共7次，首轮聚合检查5次，ROOT-only2次，7种错误消息7次，missing表路径4次，He3存在1次，未知粒子三消息3次，无DDD行1次。
+
+故旧46 = 42 + 4次summary行assert；新44 = 42 + 2次summary行assert。少的是第156行的两次循环求值，**不是两条源代码assert被删除**。这是基于完整控制流的计数推导，尚不是原始worker行身份的直接观测。
+
+`src/Scoring/DisplacementScorer.cc:52-53,63-70` 仅给已配置表且实际hit的volume/particle建记录；`:106-118` 按worker CSV中实际存在的volume/particle输出。首轮只配置mu-和e-；`:153`汇总全部 `_t*.csv` 后逐行assert，因此实际参与的worker/每worker粒子记录数会改变循环数。
+
+**不能声称是哪两条t0/t1记录消失**：旧/新case在finally `scripts/test_displacement_damage.py:237`清理临时目录，CI artifact只保留简短case日志/报告，没有case01每worker CSV、实际worker事件数或逐assert行轨迹。本次没有这些不可恢复的证据，不能把“一个worker未分到事件”写成已实测结论；也不能通过新跑一次绿灯证明历史两次行身份。
+
+## 最小可验证处理方案（仅提案，未改产品或测试）
+
+1. root明确授权后，只改该测试及必要测试证据辅助接口，**不改后端物理、线程调度、种子或容差**。为本case归档case01的规范化输入、全部worker summary原字节、scorer_statistics、run_metadata及来源SHA；日志记明确行身份和实际每worker事件收据，不依靠执行耗时推断worker任务分配。
+2. 将逐行几何/体积条件完整保留为带文件/行身份的聚合校验，使断言入口数不依赖稀疏worker行数。同时补确有价值的固定合同：配置粒子集合覆盖、同worker/run/volume/particle不重复、worker统计与master总量一致。事件数要按真实worker身份去重，不能逐粒子行重复累计n_events。不能用无意义assert补到46，也不能删掉行条件来制造稳定计数；最终固定数量由这些实际合同决定，再检查严格F4门禁是否满足。
+3. 增加小型确定性输入反例：合法一worker承载与两worker分担的等价摘要均通过所有物理/来源检查；缺必需粒子、重复行、错误volume/体积、worker/master不一致均拒绝。它们只验证测试判据，不冒充真实Geant4运行；再做一次有原始CSV留存的真实专项，说明实际分配事实，**不是反复重跑选绿**。
+4. 若正式测试发生变化，root需新冻结测试指纹/提交并按既定同SHA规则形成新正式矩阵。5d56187的failed审计、旧F4原件和所有计数保持，不追改为pass。
+
+这比放宽“断言总数不下降”门禁更窄：修正的是依赖稀疏MT行数的测试证据计数，同时增强可归档诊断。若root选择先只做证据实验，则当前阶段继续保持未关闭。
+
+完整CI入口：`out/verification/f5-ci-5d56187/README.md`、`evidence-integrity-audit.json`、`archive-file-manifest.json`（534文件，约1.90MB，未含签名临时URL/密钥）。

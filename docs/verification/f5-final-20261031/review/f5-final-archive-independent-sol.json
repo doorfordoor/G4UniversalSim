@@ -1,0 +1,214 @@
+{
+  "schema": "f5_final_archive_independent_sol_v1",
+  "recorded_utc": "2026-10-30T17:11:27.890556+00:00",
+  "reviewer_model": "gpt-6.1-sol",
+  "reasoning_effort": "medium",
+  "scope": "Existing files/report verification only; no simulation, CI or UI rerun; no tracked writes.",
+  "status": "passed",
+  "issues": [],
+  "checks": {
+    "selected_files": 2072,
+    "selected_bytes": 17294016,
+    "stage_files": 2073,
+    "final_extra_files": [],
+    "final_missing_files": [],
+    "ci/archive-file-manifest.json": {
+      "files": 567,
+      "bytes": 2197906,
+      "manifest_sha256": "05256f15daa258fde451931ab579fbd3dd58360c6ce306ef9abe8004c3a2a723"
+    },
+    "visible/native-file-manifest.json": {
+      "files": 74,
+      "bytes": 4785143,
+      "manifest_sha256": "948ada6fb125f4aa80d88bf53710541a28784b26bed138104eb834c8c3f764cb"
+    },
+    "official_reports": [
+      {
+        "label": "Windows all",
+        "cases": 160,
+        "assertions": 50898,
+        "report_sha256": "07cb528df9840b83b962514c8b2595031ef4e6a7158a55252cdee55f5900d832"
+      },
+      {
+        "label": "linux-evidence-11.3.2/backend",
+        "cases": 59,
+        "assertions": 40416,
+        "report_sha256": "0927fed33b384959a9bf55c23b30455aed65fbcde39b6d907106a8eb6c5374c2"
+      },
+      {
+        "label": "linux-evidence-11.3.2/gui",
+        "cases": 47,
+        "assertions": 3249,
+        "report_sha256": "b9897f6e548098b76b38a329d6a4d7872060d46f12a7f0f7069a4e53c586f14a"
+      },
+      {
+        "label": "linux-evidence-11.3.2/integration",
+        "cases": 22,
+        "assertions": 4486,
+        "report_sha256": "1e4937cfc0649d39a9699271298ac7c72f1269b7b3a14911ed87f2804a11b075"
+      },
+      {
+        "label": "linux-evidence-11.3.2/static",
+        "cases": 32,
+        "assertions": 2715,
+        "report_sha256": "f03a4387a405a4aac516df0f383cac5d1e27841cf6f68f57cdbb2eeb71dbc62c"
+      },
+      {
+        "label": "linux-evidence-11.4.3/backend",
+        "cases": 59,
+        "assertions": 39824,
+        "report_sha256": "80e79ae99cb40b2fc4eac3299f91224477e4f2c3c94189dd5fb8e826436fab4a"
+      },
+      {
+        "label": "linux-evidence-11.4.3/gui",
+        "cases": 47,
+        "assertions": 3249,
+        "report_sha256": "f4aa0c4f77bf39d8416094667e62a7238a7244aacaf78ec39ade76098a783b0c"
+      },
+      {
+        "label": "linux-evidence-11.4.3/integration",
+        "cases": 22,
+        "assertions": 4486,
+        "report_sha256": "d7608317d7b73732d911b896bc1861a32a11d05c0aac1a276cf883c5a9bcdb81"
+      },
+      {
+        "label": "linux-evidence-11.4.3/static",
+        "cases": 32,
+        "assertions": 2715,
+        "report_sha256": "c526c6df0ddd362b12f78740af556c8a21596ad04ddb3d40cee8f9487fe4551f"
+      },
+      {
+        "label": "m0-report-windows-latest/static",
+        "cases": 32,
+        "assertions": 2706,
+        "report_sha256": "2e9556fd1cef87f6ba038e78f09b72c421e3c831fd67df43fdf356db5d955cf1"
+      },
+      {
+        "label": "m0-report-windows-latest/gui",
+        "cases": 47,
+        "assertions": 3251,
+        "report_sha256": "a0ddc04304c72541eec448c14681f083b96d48bd5afdd031ebbd214ea49f62f7"
+      },
+      {
+        "label": "m0-report-ubuntu-latest/static",
+        "cases": 32,
+        "assertions": 2715,
+        "report_sha256": "dc71f7c76ddef6c424ebb29d98fe77fb0164916211a5203fe2e10d1a7ac6af0a"
+      },
+      {
+        "label": "m0-report-ubuntu-latest/gui",
+        "cases": 47,
+        "assertions": 3249,
+        "report_sha256": "7df146a3710bdd64dcdc8e174558b2dc8a56bc946320c264f3b7b6f32f4f516a"
+      }
+    ],
+    "ci_cases": 478,
+    "ci_assertions": 113061,
+    "strict_report_gates": [
+      {
+        "report": "docs/verification/f5-final-20261031/windows/final-1/report.json",
+        "baseline": "docs\\verification\\f5-final-20261031\\baseline\\f4-windows\\report.json",
+        "exit_code": 0,
+        "output": "report evidence: OK C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\docs\\verification\\f5-final-20261031\\windows\\final-1\\report.json\n  version 2, profile all, 160 cases, 50898 assertions executed, baseline 49913 assertions, probe settrace_assert_lines_v3, digest sha256_raw_bytes_lf_v2\n  source db253b7b1ed5..., tests 5328e3515e88...\n"
+      },
+      {
+        "report": "docs/verification/f5-final-20261031/ci/linux-evidence-11.3.2/linux-backend/20261030-163610-8d65a3b1/report.json",
+        "baseline": "docs\\verification\\f4-final-20261030\\ci\\linux-evidence-11.3.2\\linux-backend\\20261030-124410-181bc528\\report.json",
+        "exit_code": 0,
+        "output": "report evidence: OK C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\docs\\verification\\f5-final-20261031\\ci\\linux-evidence-11.3.2\\linux-backend\\20261030-163610-8d65a3b1\\report.json\n  version 2, profile backend, 59 cases, 40416 assertions executed, baseline 40387 assertions, probe settrace_assert_lines_v3, digest sha256_raw_bytes_lf_v2\n  source db253b7b1ed5..., tests 5328e3515e88...\n"
+      },
+      {
+        "report": "docs/verification/f5-final-20261031/ci/linux-evidence-11.3.2/linux-gui/20261030-163414-35ee6859/report.json",
+        "baseline": "docs\\verification\\f4-final-20261030\\ci\\linux-evidence-11.3.2\\linux-gui\\20261030-124250-06c516a1\\report.json",
+        "exit_code": 0,
+        "output": "report evidence: OK C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\docs\\verification\\f5-final-20261031\\ci\\linux-evidence-11.3.2\\linux-gui\\20261030-163414-35ee6859\\report.json\n  version 2, profile gui, 47 cases, 3249 assertions executed, baseline 2938 assertions, probe settrace_assert_lines_v3, digest sha256_raw_bytes_lf_v2\n  source db253b7b1ed5..., tests 5328e3515e88...\n"
+      },
+      {
+        "report": "docs/verification/f5-final-20261031/ci/linux-evidence-11.3.2/linux-integration/20261030-164742-a44a810d/report.json",
+        "baseline": "docs\\verification\\f4-final-20261030\\ci\\linux-evidence-11.3.2\\linux-integration\\20261030-125840-1c58dbf6\\report.json",
+        "exit_code": 0,
+        "output": "report evidence: OK C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\docs\\verification\\f5-final-20261031\\ci\\linux-evidence-11.3.2\\linux-integration\\20261030-164742-a44a810d\\report.json\n  version 2, profile integration, 22 cases, 4486 assertions executed, baseline 4423 assertions, probe settrace_assert_lines_v3, digest sha256_raw_bytes_lf_v2\n  source db253b7b1ed5..., tests 5328e3515e88...\n"
+      },
+      {
+        "report": "docs/verification/f5-final-20261031/ci/linux-evidence-11.3.2/linux-static/20261030-163323-b778da3e/report.json",
+        "baseline": "docs\\verification\\f4-final-20261030\\ci\\linux-evidence-11.3.2\\linux-static\\20261030-124157-a6e99cc7\\report.json",
+        "exit_code": 0,
+        "output": "report evidence: OK C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\docs\\verification\\f5-final-20261031\\ci\\linux-evidence-11.3.2\\linux-static\\20261030-163323-b778da3e\\report.json\n  version 2, profile static, 32 cases, 2715 assertions executed, baseline 2133 assertions, probe settrace_assert_lines_v3, digest sha256_raw_bytes_lf_v2\n  source db253b7b1ed5..., tests 5328e3515e88...\n"
+      },
+      {
+        "report": "docs/verification/f5-final-20261031/ci/linux-evidence-11.4.3/linux-backend/20261030-163616-619dba70/report.json",
+        "baseline": "docs\\verification\\f4-final-20261030\\ci\\linux-evidence-11.4.3\\linux-backend\\20261030-124414-30aa0a05\\report.json",
+        "exit_code": 0,
+        "output": "report evidence: OK C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\docs\\verification\\f5-final-20261031\\ci\\linux-evidence-11.4.3\\linux-backend\\20261030-163616-619dba70\\report.json\n  version 2, profile backend, 59 cases, 39824 assertions executed, baseline 39797 assertions, probe settrace_assert_lines_v3, digest sha256_raw_bytes_lf_v2\n  source db253b7b1ed5..., tests 5328e3515e88...\n"
+      },
+      {
+        "report": "docs/verification/f5-final-20261031/ci/linux-evidence-11.4.3/linux-gui/20261030-163413-4a77cf70/report.json",
+        "baseline": "docs\\verification\\f4-final-20261030\\ci\\linux-evidence-11.4.3\\linux-gui\\20261030-124251-313219a4\\report.json",
+        "exit_code": 0,
+        "output": "report evidence: OK C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\docs\\verification\\f5-final-20261031\\ci\\linux-evidence-11.4.3\\linux-gui\\20261030-163413-4a77cf70\\report.json\n  version 2, profile gui, 47 cases, 3249 assertions executed, baseline 2938 assertions, probe settrace_assert_lines_v3, digest sha256_raw_bytes_lf_v2\n  source db253b7b1ed5..., tests 5328e3515e88...\n"
+      },
+      {
+        "report": "docs/verification/f5-final-20261031/ci/linux-evidence-11.4.3/linux-integration/20261030-164743-e706be2d/report.json",
+        "baseline": "docs\\verification\\f4-final-20261030\\ci\\linux-evidence-11.4.3\\linux-integration\\20261030-125846-f29cc36d\\report.json",
+        "exit_code": 0,
+        "output": "report evidence: OK C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\docs\\verification\\f5-final-20261031\\ci\\linux-evidence-11.4.3\\linux-integration\\20261030-164743-e706be2d\\report.json\n  version 2, profile integration, 22 cases, 4486 assertions executed, baseline 4423 assertions, probe settrace_assert_lines_v3, digest sha256_raw_bytes_lf_v2\n  source db253b7b1ed5..., tests 5328e3515e88...\n"
+      },
+      {
+        "report": "docs/verification/f5-final-20261031/ci/linux-evidence-11.4.3/linux-static/20261030-163318-7abab7ca/report.json",
+        "baseline": "docs\\verification\\f4-final-20261030\\ci\\linux-evidence-11.4.3\\linux-static\\20261030-124154-6e1eb34d\\report.json",
+        "exit_code": 0,
+        "output": "report evidence: OK C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\docs\\verification\\f5-final-20261031\\ci\\linux-evidence-11.4.3\\linux-static\\20261030-163318-7abab7ca\\report.json\n  version 2, profile static, 32 cases, 2715 assertions executed, baseline 2133 assertions, probe settrace_assert_lines_v3, digest sha256_raw_bytes_lf_v2\n  source db253b7b1ed5..., tests 5328e3515e88...\n"
+      },
+      {
+        "report": "docs/verification/f5-final-20261031/ci/m0-report-windows-latest/20261030-163210-ef333e6f/report.json",
+        "baseline": "docs\\verification\\f4-final-20261030\\ci\\m0-report-windows-latest\\20261030-124035-5b9c7e29\\report.json",
+        "exit_code": 0,
+        "output": "report evidence: OK C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\docs\\verification\\f5-final-20261031\\ci\\m0-report-windows-latest\\20261030-163210-ef333e6f\\report.json\n  version 2, profile static, 32 cases, 2706 assertions executed, baseline 2124 assertions, probe settrace_assert_lines_v3, digest sha256_raw_bytes_lf_v2\n  source db253b7b1ed5..., tests 5328e3515e88...\n"
+      },
+      {
+        "report": "docs/verification/f5-final-20261031/ci/m0-report-windows-latest/20261030-163402-2590a2ce/report.json",
+        "baseline": "docs\\verification\\f4-final-20261030\\ci\\m0-report-windows-latest\\20261030-124143-737a5b79\\report.json",
+        "exit_code": 0,
+        "output": "report evidence: OK C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\docs\\verification\\f5-final-20261031\\ci\\m0-report-windows-latest\\20261030-163402-2590a2ce\\report.json\n  version 2, profile gui, 47 cases, 3251 assertions executed, baseline 2940 assertions, probe settrace_assert_lines_v3, digest sha256_raw_bytes_lf_v2\n  source db253b7b1ed5..., tests 5328e3515e88...\n"
+      },
+      {
+        "report": "docs/verification/f5-final-20261031/ci/m0-report-ubuntu-latest/20261030-163149-ddeaeddb/report.json",
+        "baseline": "docs\\verification\\f4-final-20261030\\ci\\m0-report-ubuntu-latest\\20261030-124000-75b141a9\\report.json",
+        "exit_code": 0,
+        "output": "report evidence: OK C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\docs\\verification\\f5-final-20261031\\ci\\m0-report-ubuntu-latest\\20261030-163149-ddeaeddb\\report.json\n  version 2, profile static, 32 cases, 2715 assertions executed, baseline 2133 assertions, probe settrace_assert_lines_v3, digest sha256_raw_bytes_lf_v2\n  source db253b7b1ed5..., tests 5328e3515e88...\n"
+      },
+      {
+        "report": "docs/verification/f5-final-20261031/ci/m0-report-ubuntu-latest/20261030-163253-5f8ec5d4/report.json",
+        "baseline": "docs\\verification\\f4-final-20261030\\ci\\m0-report-ubuntu-latest\\20261030-124100-bf1644f3\\report.json",
+        "exit_code": 0,
+        "output": "report evidence: OK C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\docs\\verification\\f5-final-20261031\\ci\\m0-report-ubuntu-latest\\20261030-163253-5f8ec5d4\\report.json\n  version 2, profile gui, 47 cases, 3249 assertions executed, baseline 2938 assertions, probe settrace_assert_lines_v3, digest sha256_raw_bytes_lf_v2\n  source db253b7b1ed5..., tests 5328e3515e88...\n"
+      }
+    ],
+    "readme_sha256": "331699a2784289a1beb3759b4028dde6d815b78c22e39ef50cf9445b40a19532",
+    "readme_review": "Scope, identity separation, historical DDD failure, sparse N<=master/unknown empty header, native failure attempts, no Linux native/physics claim are accurately qualified; final review/integration explicitly pending.",
+    "manifest_bindings": [
+      {
+        "manifest": "ci/archive-file-manifest.json",
+        "files": 567,
+        "total_bytes": 2197906,
+        "selection_source_to_destination_bound": true,
+        "renamed_markdown": [
+          "ci/README.md.txt"
+        ]
+      },
+      {
+        "manifest": "visible/native-file-manifest.json",
+        "files": 74,
+        "total_bytes": 4785143,
+        "selection_source_to_destination_bound": true,
+        "renamed_markdown": [
+          "visible/final-1/observations-root.md.txt"
+        ]
+      }
+    ],
+    "zip_member_count": 521,
+    "zip_official_digests_and_exact_extracted_members_verified": true,
+    "markdown_rename_resolution": "Two apparent missing paths from direct manifest-relative lookup resolve exactly through selection source/destination: ci/README.md -> ci/README.md.txt; visible/final-1/observations-root.md -> observations-root.md.txt. Raw bytes match; no evidence defect and no original edits."
+  },
+  "boundary": "Does not close the phase or prove branch integration. Handoff/close-review links pending root publication are not counted as delivered. Historical reports excluded from current success totals."
+}

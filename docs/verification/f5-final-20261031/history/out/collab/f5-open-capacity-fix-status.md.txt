@@ -1,0 +1,23 @@
+# F5 普通 Open 容量与发布边界修复
+
+基于 b290eb4 之后的导入预检修正。root确认47项GUI开发runner结束后授权；本轮产品仅改 window/project.py，正式测试仅增补 smoke_f5_editor_history.py。transactions.py、recovery及性能路径未改。
+
+## 改动
+
+1. 完整v7快照在任何投影前使用snapshot_size执行codec总尺寸检查，并与当前EditSession.max_bytes比较。实际_load_project_path在询问旧项目保存/丢弃以前检查；direct_set_project同样前置检查。
+2. _reset_edit_history放入实际投影try，覆盖legacy转换或UI归一化后capture/reset才拒绝的路径；历史未提交时回滚原view，回滚再失败继续原冻结契约。
+3. reset增加revision是此次历史发布边界。若之后history_changed通知抛异常，保持新view/history，记录_project_open_notification_warning并正常返回，使调用者完成新的project_file和实际读取收据绑定；显示“项目已打开，但状态更新失败”。不回滚旧view，不误报Open失败。
+4. _load_project_path捕获投影/reset失败，沿用Ordinary critical、Recent/Snapshot warning规则，返回False且不更新project_file/recent/来源收据。实际修改失败若不能回滚仍显式冻结。
+
+## 验收
+
+- 原smoke_project_import_projection完全未改：**393 v3，exit0**，日志out/collab/f5-open-capacity-import-393.log。
+- 正式F5编辑专项：**237 v3，exit0**；原203全部保留，新增34。日志out/collab/f5-open-capacity-editor.log。
+- 真实_load_project_path加载约几十KiB合法v7文件，实例max_bytes设为当前合法快照+1：拒绝在投影前，view/项目及编辑器ID、包/Inspect/诊断状态、revision/保存点/redo、旧project_file、原与候选文件字节均保持。
+- legacy实际Open后注入late reset容量拒绝：旧view/history/path/redo保持；再注入rollback失败：明确冻结且保留原快照，修复后还原。
+- reset已提交后单独注入history_changed异常：Open返回True，新project_file/view/history一致，revision前进、clean，新文件与旧文件原字节不改，并显示通知异常。
+- git diff --check通过；两个运行会话已正常退出，无遗留运行。
+
+仍保留证据边界：小实例容量注入验证失败原子性，不声称已制造默认32MiB或24MiB超大用户项目的实际失败。旧独立容量/CI失败日志保持原样。本轮不是全量或阶段最终验收。
+
+新增文案1条在out/collab/f5-open-capacity-i18n.json。产品/正式测试再次冻结，可交独立复核。

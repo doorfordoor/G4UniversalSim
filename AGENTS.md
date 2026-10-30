@@ -4,6 +4,8 @@
 
 ## 0. 条目索引与历史全文
 
+- 2026-10-31 F5：已完成；冻结5c1eec5、原生5d身份映射及失败历史见[最终证据](docs/verification/f5-final-20261031/README.md)。完整契约仍在docs/agent-history.md及配置撤销与恢复；稀疏worker去重N仅为master完整N的下界，空表头N未知。后续分派按[模型规则](docs/collab/MODEL-POLICY.md)，不让常规子任务继承最高推理档。下方旧状态按原日期理解。
+
 - 2026-10-30 F5候选：主编辑快照/事务统一Undo/Redo，v7保留材料/几何及raw drafts，源阻断从捕获原文重建；旧包恢复仍遵守E6当前包语义。每会话恢复OS锁、单调revision和已退役屏障；发布后清理不能反转保存成功。双投影失败须冻结，不能保存坏view。改相关入口前读 `docs/agent-history.md` 的F5条目及 `docs/配置撤销与恢复.md`；完整验收状态看STATUS/ROADMAP。
 
 - 2026-10-30 F4阶段关闭记录（已完成）：产品7d718d038a00d89995ea773b4772764116b620c3，正式矩阵/原生退出/独立审查见[最终证据](docs/verification/f4-final-20261030/README.md)。保留下方候选与失败契约；单元格可见性、旧快照拒绝、逻辑文本与原始字节身份分开。全文追加到docs/agent-history.md；F5未启动。

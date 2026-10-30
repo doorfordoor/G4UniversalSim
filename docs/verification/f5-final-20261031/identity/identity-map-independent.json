@@ -1,0 +1,1081 @@
+{
+  "schema": "f5_new_candidate_identity_independent_v1",
+  "status": "passed",
+  "new_candidate": "5c1eec5007cd29cbe12949c19bed81457f1f825b",
+  "native_observed_commit": "5d56187392a2e7b888d5ce13f8da05a295cba6d4",
+  "new_candidate_native_execution": false,
+  "git_status_porcelain": "",
+  "changed_files": [
+    "docs/collab/inbox/20261030-2155-astra-f5-execution.md",
+    "scripts/run_m0_tests.py",
+    "scripts/test_displacement_damage.py"
+  ],
+  "product_tree_diff_empty": true,
+  "gui_count": 129,
+  "gui_checks": [
+    {
+      "path": "gui/g4usim_gui/__init__.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/app.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/core/__init__.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/core/backend_capabilities.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/core/capability_messages.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/core/config_migration.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/core/config_schema.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/core/config_schema_data.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/core/diagnostics.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/core/edit_snapshot.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/core/edit_sources.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/core/edit_state.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/core/edit_transactions.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/core/effective_config.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/core/evidence_job.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/core/examples.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/core/geometry_migration.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/core/i18n.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/core/icons.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/core/install_layout.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/core/log_parser.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/core/main_ini_migration.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/core/paths.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/core/project.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/core/project_diagnostics.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/core/project_migration.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/core/project_snapshot.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/core/run_progress.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/core/run_result.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/core/runner.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/core/scan.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/core/scan_runner.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/core/scenario_shielding.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/core/theme.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/core/wizard.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/core/workspace_recovery.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/editors/__init__.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/editors/editable_models.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/editors/geometry_editor_model.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/editors/material_editor_model.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/editors/source_physics_scoring_model.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/history/__init__.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/history/run_history_model.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/history/run_history_scanner.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/history/run_history_store.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/history/run_package_actions.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/main_window.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/models/__init__.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/models/package_model.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/models/physics_model.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/models/run_model.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/models/scoring_model.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/models/source_model.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/output/__init__.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/output/csv_preview.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/output/dose_summary.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/output/extension_runner.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/output/file_classifier.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/output/fluence_summary.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/output/identity.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/output/merge_plan.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/output/merge_runner.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/output/plot_data.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/output/provenance.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/output/run_summary_parser.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/parsers/__init__.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/parsers/geometry_parser.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/parsers/ini_light_parser.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/parsers/materials_parser.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/preview3d/__init__.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/preview3d/backend_geometry_controller.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/preview3d/backend_inputs.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/preview3d/backend_mesh.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/preview3d/fallback_preview_widget.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/preview3d/geometry_primitives.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/preview3d/pyvista_preview_widget.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/preview3d/scene_builder.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/preview3d/scene_model.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/preview3d/sketch_geometry.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/preview3d/source_builder.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/preview3d/trajectories.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/preview3d/units.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/preview3d/view_model.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/validators/__init__.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/validators/config_validator.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/__init__.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/config/__init__.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/config/booleans.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/config/details.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/config/geometry.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/config/layers.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/config/materials.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/config/preview3d.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/config/run_config.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/config/setup_panel.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/config_builder_page.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/diagnostic_navigation.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/diagnostic_panel.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/effective_config_page.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/form_diagnostics.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/migration_dialog.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/new_simulation_wizard.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/output_identity_panel.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/output_page.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/plot_panel.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/project_page.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/qt_data.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/recovery_dialog.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/run_history_page.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/run_page.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/scan_page.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/scenario_page.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/start_page.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/ui_helpers.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/window/__init__.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/window/content.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/window/diagnostics.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/window/project.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/window/recovery.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/window/run.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/window/shell.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/window/transactions.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/writers/__init__.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/writers/geometry_ini_writer.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/writers/macro_writer.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/writers/main_ini_writer.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/writers/materials_ini_writer.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/writers/package_writer.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    },
+    {
+      "path": "gui/g4usim_gui/writers/validation_report_writer.py",
+      "raw": true,
+      "lf": true,
+      "git_blob": true
+    }
+  ],
+  "mapped_receipt_sha256": "df3f4865efdb0829e40f0da53c8f5cf0b958e8ff25bd4b8ed9140313ba3f7c76",
+  "mapping_tool_sha256": "558643d956255fda6134a8ebee555507656b9489092a74076c69e4c8f331e722",
+  "native_identity_sha256": "ea2d7df95cf1c52ccf35ee526e8c2168ab67e5ae5bf5589bf08ca54ed26a4a55",
+  "native_gui_manifest_raw_sha256": "280395f50c32c9a26945713e6cf8a6f6dcfae4d30c8603d6c60936028dfd88ec",
+  "native_manifest_canonical_sha256": "b58e48d1359491eeff3009021a8af8b3063c3553eda46fb7b463920f117e0975",
+  "prior_integrity_report_sha256": "9228babc0508671d6290e3a5b45413bbba3b7ad541f1a9e27490e617da8cf849",
+  "prior_native_artifact_count": 52,
+  "prior_native_artifacts": [
+    {
+      "path": "out/collab/f5-native-5d56187-1/native-saved-project.json",
+      "sha256_raw": "73aed6dd172ba1923bd6d3211bc244993afd4f8298dae204d98a439d7a24ae57",
+      "matches_prior_review": true
+    },
+    {
+      "path": "out/collab/f5-native-5d56187-1/native-restored-project.json",
+      "sha256_raw": "326bbc1ebdac2674b9f4a604295b1e86f6f0ca896626a0414632b0ba6dffb30a",
+      "matches_prior_review": true
+    },
+    {
+      "path": "out/collab/f5-native-5d56187-1/native/01-normal-light.json",
+      "sha256_raw": "518f5cfaa73b17a497c5bf1c84800f65411a85fe8e7e3ba3370d93953f30704c",
+      "matches_prior_review": true
+    },
+    {
+      "path": "out/collab/f5-native-5d56187-1/native/01-normal-light-0.png",
+      "sha256_raw": "681cb6a707be3a8dece2b7d80726d323118c244fc1864f733c1f38dabae529a7",
+      "matches_prior_review": true
+    },
+    {
+      "path": "out/collab/f5-native-5d56187-1/native/02-raw-invalid-seed.json",
+      "sha256_raw": "13ece6d92bea5784abb1437057e3aa2d0b12818b56b99dc8124baec88818aebb",
+      "matches_prior_review": true
+    },
+    {
+      "path": "out/collab/f5-native-5d56187-1/native/02-raw-invalid-seed-0.png",
+      "sha256_raw": "42f312275fb4c52ad8df6dc53a5f5fdcb79b41f2739425d6f9d50c21b304d256",
+      "matches_prior_review": true
+    },
+    {
+      "path": "out/collab/f5-native-5d56187-1/native/03-undo-seed.json",
+      "sha256_raw": "d72e35c9620a3d3ebc024727aa6299efa3b405d430fbf0ac4b4ba1e9fc1e4509",
+      "matches_prior_review": true
+    },
+    {
+      "path": "out/collab/f5-native-5d56187-1/native/03-undo-seed-0.png",
+      "sha256_raw": "0f016b11fe4f5504e679b6667ce36bbc43cfc27e1e0699ca5b92f5ee5a2c5983",
+      "matches_prior_review": true
+    },
+    {
+      "path": "out/collab/f5-native-5d56187-1/native/04-redo-seed.json",
+      "sha256_raw": "8b36106ac9d767a83d7eed58dff4e4df32d5c7d270493f98a2fd0532582e10b1",
+      "matches_prior_review": true
+    },
+    {
+      "path": "out/collab/f5-native-5d56187-1/native/04-redo-seed-0.png",
+      "sha256_raw": "d1fb3d42c7b37d8e353b8321f3f46e394c47fbdeb214ec88dc1d050fad10f031",
+      "matches_prior_review": true
+    },
+    {
+      "path": "out/collab/f5-native-5d56187-1/native/05-autosave-updated.json",
+      "sha256_raw": "85633f9b8a5db1278f6b62139b8ee8fe5fdcffad831b44d5641b83fa36007b5e",
+      "matches_prior_review": true
+    },
+    {
+      "path": "out/collab/f5-native-5d56187-1/native/05-autosave-updated-0.png",
+      "sha256_raw": "f4ca00488c3cef6ab93a3553b4c847d3f57ba974c5623773bd9d3ab403042dfe",
+      "matches_prior_review": true
+    },
+    {
+      "path": "out/collab/f5-native-5d56187-1/native/06-close-unsaved-prompt.json",
+      "sha256_raw": "713001c5859d8055957d03d92a73e8acebeae0051006f4ec2c5f7f025bbb367c",
+      "matches_prior_review": true
+    },
+    {
+      "path": "out/collab/f5-native-5d56187-1/native/06-close-unsaved-prompt-0.png",
+      "sha256_raw": "843cc3a91e9329f6ac1b8aa03644fa24e0b47fd7d341b2d2509e7027c997511c",
+      "matches_prior_review": true
+    },
+    {
+      "path": "out/collab/f5-native-5d56187-1/native/06-close-unsaved-prompt-1.png",
+      "sha256_raw": "b5cf6cb77f5785ddc2b68a5c7cd78b9f8d1b0ab69ae1411e34c26d79e2524602",
+      "matches_prior_review": true
+    },
+    {
+      "path": "out/collab/f5-native-5d56187-1/native/07-close-cancel-retains-draft.json",
+      "sha256_raw": "c218cadd876b1517044a72fb158e013313a8bde7056b5d73fccd5b8c77ec61d1",
+      "matches_prior_review": true
+    },
+    {
+      "path": "out/collab/f5-native-5d56187-1/native/07-close-cancel-retains-draft-0.png",
+      "sha256_raw": "d095a6c5712e7a3b7d2063a95b02a9225164915ccfa41c2dd021412cffd57f1a",
+      "matches_prior_review": true
+    },
+    {
+      "path": "out/collab/f5-native-5d56187-1/native/08-saved-raw-draft-clean.json",
+      "sha256_raw": "06a7fa04ea58a940aef91a0220988b153d56aab2ae060fc9563c6f82d27401ef",
+      "matches_prior_review": true
+    },
+    {
+      "path": "out/collab/f5-native-5d56187-1/native/08-saved-raw-draft-clean-0.png",
+      "sha256_raw": "45054067967bb9701fc1c89c27bd2c56e5111798617a8d189d29f1cdc7ddec8f",
+      "matches_prior_review": true
+    },
+    {
+      "path": "out/collab/f5-native-5d56187-1/native/08-saved-raw-draft-clean-1.png",
+      "sha256_raw": "26fe9eeff8f66237352a5280febb7363e1e561e70fc8e0bdaab0bbdc5f0af00e",
+      "matches_prior_review": true
+    },
+    {
+      "path": "out/collab/f5-native-5d56187-1/native/08-saved-raw-draft-clean-2.png",
+      "sha256_raw": "ac0cbb91eb8b8a181c3d6a5e3d07ebdb15a7767eee62ec7857723f808c464032",
+      "matches_prior_review": true
+    },
+    {
+      "path": "out/collab/f5-native-5d56187-1/native/09-save-completed.json",
+      "sha256_raw": "bec70860f68cea4408a595dc875cf1cd5398dcaa65319070f17403d520eb9c69",
+      "matches_prior_review": true
+    },
+    {
+      "path": "out/collab/f5-native-5d56187-1/native/09-save-completed-0.png",
+      "sha256_raw": "e9ab1d2ad65f73f7763cf5219a87e67a4a351bb8071c50c464f4aa909226692a",
+      "matches_prior_review": true
+    },
+    {
+      "path": "out/collab/f5-native-5d56187-1/native/10-recovery-origin-changed-list.json",
+      "sha256_raw": "cc7a42b10864d0e83cb56ed282a3f298617c2e6ca8f843271da3e4b2608c229d",
+      "matches_prior_review": true
+    },
+    {
+      "path": "out/collab/f5-native-5d56187-1/native/10-recovery-origin-changed-list-0.png",
+      "sha256_raw": "f08a243eb985579822ff62b3368d6d6dc9b40e9b9b8b4d915c883cc533490d58",
+      "matches_prior_review": true
+    },
+    {
+      "path": "out/collab/f5-native-5d56187-1/native/10-recovery-origin-changed-list-1.png",
+      "sha256_raw": "21d68080810cf9512daae41f2f6e6d8ae1b897713d08d569d14ea92a922cd26a",
+      "matches_prior_review": true
+    },
+    {
+      "path": "out/collab/f5-native-5d56187-1/native/11-restored-unsaved-copy.json",
+      "sha256_raw": "6f3523fafa31f856d8e0dcdc3a85362568538cb2e00169645d427d43693f2472",
+      "matches_prior_review": true
+    },
+    {
+      "path": "out/collab/f5-native-5d56187-1/native/11-restored-unsaved-copy-0.png",
+      "sha256_raw": "6dba897d54b006abdf6b26cabbd586ca3fa57b51da0614162ee1517b1f481fe8",
+      "matches_prior_review": true
+    },
+    {
+      "path": "out/collab/f5-native-5d56187-1/native/12-restored-copy-needs-new-path.json",
+      "sha256_raw": "5dc7a8289d86c3c2f4e3884d98838862e2b1ba35f0dd34a0c33b2d069f654d6d",
+      "matches_prior_review": true
+    },
+    {
+      "path": "out/collab/f5-native-5d56187-1/native/12-restored-copy-needs-new-path-0.png",
+      "sha256_raw": "e5c40ff8616d844a6e22af4220bcdce728ec229d6fb13b19e6203b33215a24fb",
+      "matches_prior_review": true
+    },
+    {
+      "path": "out/collab/f5-native-5d56187-1/native/12-restored-copy-needs-new-path-1.png",
+      "sha256_raw": "e4f52b6569d4e612bc541a89db04f33cb18609d78f7d81ae739881a56997e5c2",
+      "matches_prior_review": true
+    },
+    {
+      "path": "out/collab/f5-native-5d56187-1/native/13-restored-copy-saved.json",
+      "sha256_raw": "81ec0ef67f854d9160b4ded15064ecfe6c304baec43d1b75b789d54e1f8f4538",
+      "matches_prior_review": true
+    },
+    {
+      "path": "out/collab/f5-native-5d56187-1/native/13-restored-copy-saved-0.png",
+      "sha256_raw": "03ab2df4cdca7f99f70fc34778446bd5cd9b4b473107edacc2ec23b277fa0ba7",
+      "matches_prior_review": true
+    },
+    {
+      "path": "out/collab/f5-native-5d56187-1/native/14-corrupt-recovery-disabled.json",
+      "sha256_raw": "a8ae6d4e99cfc560bf6b2e52018f395b4550ba6c4fd0b24addc53b8967dec59e",
+      "matches_prior_review": true
+    },
+    {
+      "path": "out/collab/f5-native-5d56187-1/native/14-corrupt-recovery-disabled-0.png",
+      "sha256_raw": "2b0fcaed828e4d42ae1e942ac9c5b838600e3d67ed1b509d4e1f8fc937742609",
+      "matches_prior_review": true
+    },
+    {
+      "path": "out/collab/f5-native-5d56187-1/native/14-corrupt-recovery-disabled-1.png",
+      "sha256_raw": "b737c97894c7b0abdebf053cd1fc903880a4e8af2a3e9a55847e64ea4a7cde3d",
+      "matches_prior_review": true
+    },
+    {
+      "path": "out/collab/f5-native-5d56187-1/native/15-fault-armed-fixture.json",
+      "sha256_raw": "4b262cadb44bf5b92197398884462867de1f77bc88e5185a7890ed9ee2cbff5f",
+      "matches_prior_review": true
+    },
+    {
+      "path": "out/collab/f5-native-5d56187-1/native/15-fault-armed-fixture-0.png",
+      "sha256_raw": "90d66a2bcfd018cbc6c430b71fc5a702ed31d1427a53fd7b427f9a6668b22e78",
+      "matches_prior_review": true
+    },
+    {
+      "path": "out/collab/f5-native-5d56187-1/native/16-fault-frozen.json",
+      "sha256_raw": "825e38b1ff67aa0e1d0a4507a0cfc22f7a90b9789fe3111e295dc75d97e0a266",
+      "matches_prior_review": true
+    },
+    {
+      "path": "out/collab/f5-native-5d56187-1/native/16-fault-frozen-0.png",
+      "sha256_raw": "f421c006171c9db68f3b4a491e94041d80c45282f787a5fe546506104d857551",
+      "matches_prior_review": true
+    },
+    {
+      "path": "out/collab/f5-native-5d56187-1/native/17-fault-repaired.json",
+      "sha256_raw": "517ade232b8ee0881f5d24d609f2387911b7c69a3476146848ece849ddf2b14a",
+      "matches_prior_review": true
+    },
+    {
+      "path": "out/collab/f5-native-5d56187-1/native/17-fault-repaired-0.png",
+      "sha256_raw": "e505f1f438a0b4b591a045aea4c445dbe88e02cf211ba57a936b2062e676db9a",
+      "matches_prior_review": true
+    },
+    {
+      "path": "out/collab/f5-native-5d56187-1/native/18-repair-then-undo-clean.json",
+      "sha256_raw": "36bc5782515b23c93dfca0357152e65f435ca59173ce521f1a288c71e8f0ebb8",
+      "matches_prior_review": true
+    },
+    {
+      "path": "out/collab/f5-native-5d56187-1/native/18-repair-then-undo-clean-0.png",
+      "sha256_raw": "e505f1f438a0b4b591a045aea4c445dbe88e02cf211ba57a936b2062e676db9a",
+      "matches_prior_review": true
+    },
+    {
+      "path": "out/collab/f5-native-5d56187-1/native/19-toolbar-undo-to-saved.json",
+      "sha256_raw": "413684c5dfdf92e91b2c56e31a80764590c03eaf15ca1469f1c474311627c694",
+      "matches_prior_review": true
+    },
+    {
+      "path": "out/collab/f5-native-5d56187-1/native/19-toolbar-undo-to-saved-0.png",
+      "sha256_raw": "0a88814388c4c0879c5d4df2acd7559f16693a1f4e55d26d279962bb32ae4ddd",
+      "matches_prior_review": true
+    },
+    {
+      "path": "out/collab/f5-native-5d56187-1/native/20-dark-theme-clean.json",
+      "sha256_raw": "1589ebb129f9352416eb3941bcbedb79130d4bf1e4d7ce68b14f6802db900f00",
+      "matches_prior_review": true
+    },
+    {
+      "path": "out/collab/f5-native-5d56187-1/native/20-dark-theme-clean-0.png",
+      "sha256_raw": "9929a25c04b9b35f9a42ada6f60e9a540e93404072cbb2c44d872e2f65c25e29",
+      "matches_prior_review": true
+    },
+    {
+      "path": "out/collab/f5-native-5d56187-1/native/21-english-dark-clean.json",
+      "sha256_raw": "c973d206e9f07b2e87adfbdfbee66882fce2ab79e77abeb1f6ee01f00094f8d4",
+      "matches_prior_review": true
+    },
+    {
+      "path": "out/collab/f5-native-5d56187-1/native/21-english-dark-clean-0.png",
+      "sha256_raw": "22e1bcce25e8fb310eafbd54a99783ddbe3b52d032f22771cd98327bc81483d8",
+      "matches_prior_review": true
+    },
+    {
+      "path": "out/collab/f5-native-5d56187-1/native/22-final-clean-before-close.json",
+      "sha256_raw": "b78a1ec9c0a8f3ec45564081bf091d5fb37fcd9e5a6824401e9a97c13cc196e0",
+      "matches_prior_review": true
+    },
+    {
+      "path": "out/collab/f5-native-5d56187-1/native/22-final-clean-before-close-0.png",
+      "sha256_raw": "d6ad27334e1b44f5434525e81f73ad7e470351c312679447eb4792587c0cd8b5",
+      "matches_prior_review": true
+    }
+  ],
+  "old_native_executable_sha256": "f0523878f0537d0e8dd16cf4b49c31a2b23c65b90b133f4ca8905d4d8c8ffded",
+  "new_executable_sha256_before": "9790aa71a4fa7e9c2ca7d98f617fd983e328db09591766832f37a4ee138386d0",
+  "new_executable_sha256_after": "9790aa71a4fa7e9c2ca7d98f617fd983e328db09591766832f37a4ee138386d0",
+  "independent_capabilities_exit_code": 0,
+  "independent_capabilities_stdout_sha256": "e3232ad6b4caa1ea8d68436c61ae6c2f61c31ea5b6ea87da289d17580dfa390b",
+  "independent_capabilities_stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stored_capabilities_raw_sha256": "e3232ad6b4caa1ea8d68436c61ae6c2f61c31ea5b6ea87da289d17580dfa390b",
+  "capabilities_json_exactly_equal": true,
+  "compared_backend_properties": {
+    "source_fingerprint": "db253b7b1ed5f810789f1322faa75002df311d4aeb04572867dbb130c71d95cc",
+    "build_configuration": "Release",
+    "compiler_id": "MSVC",
+    "compiler_version": "19.51.36246.0",
+    "geant4_version_number": 1132,
+    "multithreaded": true
+  },
+  "build_receipt_sha256": "fcb41d90b929d346c072f0c6ffb0136ad91a0a9b4278bea35383ccb4f943a119",
+  "host_sha_matches_prior_identity": true,
+  "old_launcher_actual_exit": 0,
+  "formal_matrix_status": "pending_independent_completion",
+  "boundary": "No new native UI or simulation run. An actual read-only capabilities invocation verifies the new executable. Mapping reuses unchanged GUI behavior observed on old commit; new full matrix remains independent."
+}

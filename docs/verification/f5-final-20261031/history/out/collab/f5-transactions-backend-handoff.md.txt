@@ -1,0 +1,11 @@
+# F5 真实后端事务验收交接
+
+新增唯一产品测试文件：`scripts/test_f5_transactions_backend.py`。不修改core实现，不依赖尚在开发的GUI适配；由root注册integration case。
+
+真实验证已完成，2026-10-30本机执行退出0；可执行文件从运行时G4USIM_EXE接入，测试源码没有固定Windows路径。保留证据：`out/verification/f5-transactions-backend-dev/f5-backend-evidence.json`，同目录两个backend log、实际运行包和落盘edit snapshot。
+
+流程：初始编辑态1MeV电子/FirstTarget/8mm盒→同一EditSession.transact组改3MeV/SecondTarget/12mm及材料密度→Undo→完整snapshot codec写文件再读入新会话→正常writer生成包并运行3事件→原会话Redo→再次正常生成包并运行3事件。
+
+证据边界：不只比较INI或Manager能量。两次actual-geometry mesh分别确认Geant4实际目标材料及512/1728mm³体积、三轴8/12mm；轨迹中每轮3个真实primary的initial_energy分别都是1/3MeV。摘要完成状态、逐轮正事件数、材料与几何实际路径均核对；生成材料密度2.33/3g/cm³正确，原始两份源文件SHA始终不变。只追加只读exportMesh命令，不改变正常writer的initialize/beamOn。不是独立物理基准或科学结果准确性背书。
+
+后续只读recovery review：父任务要求先确认冻结窗口。目前没有开始阅读/测试正在写入的recovery文件。root若认可短暂冻结请发明确版本/范围，我再审查store/controller并给反例建议；我当前工具目录仍没有collaboration send_message，故用此文件+final回传。

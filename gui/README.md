@@ -1,5 +1,7 @@
 # G4UniversalSim PySide6 Runner
 
+F5: 已完成. Project version 7 preserves complete editing drafts and supports known versions 1–6. See [acceptance evidence and limits](../docs/verification/f5-final-20261031/README.md); native observations retain commit 5d and are explicitly mapped to acceptance commit 5c1eec5.
+
 This directory contains the MVP external runner GUI for G4UniversalSim.
 
 The GUI does not embed Geant4, `G4RunManager`, OpenGL, or Geant4 Qt visualization. It starts the existing `G4UniversalSim.exe` through `QProcess`, captures stdout/stderr, saves logs, and previews lightweight output files.

@@ -1,0 +1,15 @@
+# F5 修正候选正式 CI 取证
+
+**本候选已由 root 撤回最终验收**：Windows 全量也停于导入预检回归。待 UI 原写者修复后换新 SHA/CI；本目录原 manifest、日志、API 保留，不再完整审计此旧轮。Linux run41077114559 已 completed/failure，M0 最近仍 in_progress。
+
+最终历史保全：Linux41077114559 / M0 41077114583 均 completed/failure，四个 job 均在 GUI 阶段失败。两个 run 的最终官方元数据与 jobs 已保存 `*-withdrawn-run-final.json` / `*-withdrawn-jobs-final.json`。不再轮询这两个运行。Open 容量独立修后通过，见 `out/collab/f5-open-capacity-independent-recheck.md`；等待新冻结 SHA。
+
+- 最终候选 b290eb4522fade982bedcd1c8b0174d3e3904279。
+- 官方 API 确认 Linux run 41077114559、M0 run 41077114583 均绑定此 SHA，目前 in_progress。
+- 独占目录 `out/verification/f5-ci-b290eb4`，root 冻结 manifest 保持不改。目标 32 static + 47 GUI + 59 backend + 22 integration；Linux 各160，M0各79；四ZIP、十二报告、478 case executions。
+- 旧 4f960ab 已撤回，不能替代本轮最终验收。无 workflow/源/正式测试修改。
+- 正在准备下载器、原始字节验证与 F4 同代逐例基线审计，尚未宣布 CI 通过。
+
+## 失败告警
+
+旧候选两 run 已 completed/failure。Ubuntu M0 日志确定 `gui_project_import_projection` 在 `smoke_project_import_projection.py:161` 断言失败。当前 b290eb4 独立本机复跑该脚本也异常退出 -1073741819，日志 `current-project-import-repro.log` 已保存；另有失败后窗口未正常关闭导致恢复锁清理 PermissionError，不能把它与首个断言混同。新 CI 最近仍在运行，待提取新轮原始日志确认。详见 `out/collab/f5-ci-old-failure-alert.md`。

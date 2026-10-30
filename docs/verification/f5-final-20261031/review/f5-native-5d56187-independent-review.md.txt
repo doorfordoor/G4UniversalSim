@@ -1,0 +1,51 @@
+# F5 5d56187 原生实窗独立复核
+
+审查日期：2026-10-31（本轮原生操作发生于北京时间 2026-10-30 23:46–23:55）。审查者 f5_transactions，仅阅读原生文件、直接查看已有 PNG 和核对文件内容；没有操作窗口、重启程序、修改产品/host/原证据，也没有重跑完整测试。
+
+**结论：本轮要求的原生行为与保存/身份收据一致，限定范围内无新阻断缺陷。** 这份结论不替代尚需汇总的全量自动矩阵，不宣称物理验证或整阶段已关闭。08 的保存路径错误与 18 的未触发快捷键明确保留；不能把 22 份观察都称作成功动作。
+
+## 身份与退出：无问题
+
+目录：`out/collab/f5-native-5d56187-1`。
+
+- `identity.json` 对应冻结产品 **5d56187392a2e7b888d5ce13f8da05a295cba6d4**，启动工作区 clean，Windows Qt 6.11.1、Fusion、真实 light 主题。
+- 独立核对 `gui-file-hashes.json` 的 **129 个文件**：当前原始字节 SHA、LF SHA 均匹配；逐文件与冻结 Git 对象的 LF SHA 比较也全部匹配。整个 manifest 摘要匹配 identity。
+- host、launcher、host.log 均与各自记录 SHA 匹配。实际后端文件 SHA 为 `f0523878f0537d0e8dd16cf4b49c31a2b23c65b90b133f4ca8905d4d8c8ffded`，与 identity 一致；capabilities stdout 与 identity 内对象相同，build commit 同为 5d56187。此处运行的是 capabilities 身份检查，不是仿真物理验收。
+- 133 条事件序号连续；结尾为 native_close_requested → product_close_accepted → host_finished。`exit.json` 的请求退出与 `launcher.json.actual_process_exit=0` 一致，host 日志摘要匹配。父代理另持实际 launcher session 56648 的退出回执。
+- application PID=24012、launcher 所监督 PID=35836 均按原收据保留，未强行写成同一 PID；本审查不额外证明进程父子拓扑。
+- `user-stop-receipt.json` 是 23:43、当时 0 次观察的早期停止记录；不得覆盖或冒称本轮最终结果。01–22 是后续有效原生截图集合。更早遮挡、两次置前失败没有保存有效截图，不计入观察通过。
+
+机器核对结果和全部观察/PNG SHA：`out/collab/f5-native-5d56187-independent-integrity.json`。共 22 份 native JSON、28 张 PNG；本次直接打开查看其中 **23 张关键 PNG**（每个编号至少一张，08 两张），并核对所有 28 张的文件摘要。没有以文件名或 UIA 文本代替图像查看。
+
+## 实际可见行为及交叉证据
+
+| 观察 | 直接看见的内容与收据 | 判定 |
+|---|---|---|
+| 01–05 原始输入、Undo/Redo、自动保存 | 01 seed 为12345；02输入unfinished-，标题星号与等待保存出现；03恢复12345、Redo可用；04回到unfinished-；05底部显示恢复副本已更新，仍有未保存星号。03指纹回到初始值，04/05指纹相同、dirty=true。 | 无问题；自动保存没有冒充普通保存。 |
+| 06–07 Close/Cancel | 06真实提示是否保存，说明恢复副本不替代正式项目；07窗口仍在，unfinished-和星号保留。事件70请求关闭、71取消/推迟。 | 无问题；本轮确实观察取消，未把弹窗出现当退出。 |
+| 08 保存失败 | Windows文件名框使用forward slash路径，出现“文件名无效”。host_state仍dirty=true、project_file=null。 | 操作失败，**撤回文件名中 saved/clean 暗示**；不计保存成功。 |
+| 09 实际保存 | 文件框消失，unfinished-保留，星号消失；project_file绑定native-saved-project.json。 | 无问题；实际落盘JSON与host指纹一致。 |
+| 10 原件变化恢复列表 | 列表显示独立草稿，底部明确“原项目文件与已记录的字节身份不同，恢复不会覆盖它”。 | 无问题；为QA构造的非活跃会话与原件变化夹具，非真实崩溃实验。 |
+| 11–13 恢复为未命名副本并另存 | 11标题星号、恢复提示，材料密度为2.70 g/cm3；project_file=null。12普通保存弹出空文件名选择框；13另存后星号消失、project_file为native-restored-project.json。 | 无问题；恢复内容未被当前原件2.33 g/cm3覆盖，必须选新路径。 |
+| 14 损坏恢复条目 | 显示“此副本无法恢复”，Restore按钮灰显，仍可选择丢弃/稍后；底部原始JSON解析错误可见。 | 行为无问题；损坏原文件SHA保持；错误文案改进另列J1/F8。 |
+| 15–17 双失败冻结与修复 | 15仅布置夹具并增加一个Undo点；16出现“编辑状态需要恢复”及修复动作，编辑控件灰显；17修复后控件恢复，仍dirty。事件120/121明确两次注入失败，122异常正对应预期注入。 | 无问题；旧verified指纹与revision6保持，修复恢复确认状态，未伪造撤销成功。没有在此原生步骤逐个点击所有保存/生成/运行门禁。 |
+| 18 未触发的Ctrl+Z | 截图仍有星号且与17相同；focus=null，revision6、beam_on=6、dirty=true。 | 未执行撤销，**撤回名称 undo-clean 暗示**。快捷键范围不是全局任意焦点。 |
+| 19 工具栏Undo | 原生点击后星号消失，Redo出现；revision7、beam_on=5、dirty=false，指纹回到13保存点。 | 无问题；这是本轮实际回到保存点的证据。 |
+| 20–22 深色/英文/最终状态 | 20变深色；21菜单与主界面文字变英文；22保持clean，Needs validation仍在，没有运行成功标志。 | 无问题；主题/语言未改保存指纹。最终运行结果仍Not run yet、package_stale=true。 |
+
+**快照时序边界：** `host_state` 由约600 ms定时器提供，02仍是旧seed/clean，16仍是注入前workspace_fault=''、remaining=2。两份不可以单独推翻同次原生截图，也不能追改它们来伪造同步采样。02由03–05与实际保存JSON补证；16由可见冻结控件/提示、事件120–122及17恢复状态补证。UIA树也不是逐控件视觉或同步时序的替代品。
+
+## 落盘、原件与损坏条目
+
+- `native-saved-project.json`：v7，16569字节，SHA `73aed6dd172ba1923bd6d3211bc244993afd4f8298dae204d98a439d7a24ae57`；顶层seed及Project/Config raw seed均为unfinished-，runSettings.seed=null，密度2.33 g/cm3。通过真实普通项目loader重建WorkspaceSnapshot，其fingerprint与09一致。
+- `native-restored-project.json`：v7，16617字节，SHA `326bbc1ebdac2674b9f4a604295b1e86f6f0ca896626a0414632b0ba6dffb30a`；raw seed继续unfinished-、run seed=null、密度2.70 g/cm3。普通loader重建指纹与13、19、22一致。原始非法草稿被保存，不表示该草稿可以运行。
+- `fixture-inputs/recovery-origin.json`：最终SHA `de89364be305884fa78abea61c25caebb492c3c2156f107a6e772e074dffb7a3` 与事件86中夹具修改后的current_origin_sha256相同，且不同于旧记录 `0ff66a2d8db72e9c5c9fe366c1a9b7e92a3dc0685399ff23da5f63a948c88d8e`。恢复/另存没有覆盖原件。
+- 损坏条目 `fixture-inputs/recovery/1cfb10fe12d741848b19ccece3459144.json`：最终SHA `eacea08b5f0377add5a6da227eec96f636cb71b9cf84725ff09767429c9c6127` 与事件102一致，仍在。未把无法恢复解释为自动删除。
+
+## 视觉与文案后续项（J1/F8）
+
+界面在本轮尺寸下可操作，浅色/深色均能看到主要表单与状态，但不应描述成已完成精细视觉设计。中文页仍有英文材料输出说明、表头和原始JSON错误；关闭提示的Save/Discard/Cancel也未统一中文。工具栏可用/不可用状态差别偏弱，冻结时虽整体灰显，关键状态仍主要靠文字。建议在J1/F8统一用户文案与状态区分；QA toolbar和夹具提示属于host，不当作产品翻译缺陷。
+
+快捷键按当前WidgetWithChildrenShortcut绑定编辑页；本轮有效Ctrl+Z/Redo发生在编辑控件有焦点时。18已经证明不能宣称“任意焦点下全局快捷键都可用”。工具栏路径19通过。
+
+本审查未调用桌面控制工具、未改变任何原截图/JSON/事件。所有旧失败、时序滞后和操作误标均原样保留。

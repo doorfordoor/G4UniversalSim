@@ -1,0 +1,32 @@
+# F5 DDD 与 runner 独立审查
+
+2026-10-31；只读审查，未修改产品、测试或旧证据，未新增 Geant4 运行。复核时 tracked dirty 仅 DDD 测试、runner、F5 执行提案三文件。具体原字节 SHA 和读取结果在 `f5-ddd-independent-review.json`。
+
+## 历史 46 → 44
+
+**确定为测试证据稳定性缺陷；严格门禁拒绝正确，未证明物理回归。** F4 a9ad09d 与 5d56187 的 DDD 脚本、v3 探针、DisplacementScorer 和材料配置 Git blob 相同。两份原日志经各自报告 SHA 校验后，去掉计数 marker 的字节摘要同为 `69009a0688cdbc5ff28a706251dc7203c8cad4b9835b9049ace019324b229a6a`。
+
+旧脚本固定 42 次加第 156 行每条 summary 一次，故 46/44 对应循环 4/2 次。原始 CSV 已清理，不能确定少了哪两条 worker/particle 记录，也不能把完整数值 CSV 字节一致或某 worker 零事件写成历史已观测。`f5-ddd-baseline-diagnosis.md` 首句“证据门禁缺陷”应解释为测试计数稳定性，不能解释为门禁实现坏了。
+
+## 新补丁已确认部分
+
+- **无问题**：原 `volume_name == Die_PV` 且体积差小于 `1e-6` 的完整逐行条件在新 `scripts/test_displacement_damage.py:191–193` 保留；先遍历全部行再在 `:296–300` 按固定类别断言。原 42 次固定断言、mu/e/neutron/He3、ROOT-only、错误输入及各个数值容差未删除或放宽。成功计数现在为 42 + 10 个固定类别 + 3 个正例 + 16 个反例 = 71，不再随 summary 行数变化。
+- **无问题**：`:216–255` 的一 worker、双 worker、电子稀疏布局和最后一行损坏反例具有明确契约意义。独立调用此小型检查函数通过；没有通过重跑后端挑选行数。
+- **无问题**：`:129–160` 在首轮返回判定前保留输入、CSV、metadata、summary 原字节。独立核对 r2 开发报告为 pass / exit 0 / 71 v3；其日志 SHA 正确。12 个 manifest 成员均复核 size/SHA，合计 59855 字节，manifest SHA `bb927024da4c2d905b11f51cd8b66ad07a43502c926014e61f458d4e2adc76a9`。这是原始证据子集；captured-process.log 是解码后的文本记录，不是原始管道字节，且不在该 12 成员 manifest 中；不能称完整运行包。
+- 当前真实保存行明确显示 t0 的 mu-/e- 各 `n_events=200`，t1 只有表头。可以写“t1 无统计行”；仅凭这个 CSV 不能写“t1 处理零事件”。
+
+## 冻结前应收窄的一项
+
+**P2：新增事件覆盖假定过强；契约反例确定，实际本 fixture 触发需实验。** `scripts/test_displacement_damage.py:178–179,208–212` 要求每个有行 worker 都有 mu-，并要求可见 worker 去重 N 之和恰好为 master N。`DisplacementScorer.cc:44–47` 每事件累计 N，而 `:52–58,63–70` 只为实际命中且配置有表的粒子创建稀疏记录。没有行不能单独区分零事件与有事件但无相关命中。`docs/输出数据契约.md:165,171` 已明确 master N 是完整计数，稀疏行只作一致性/下界检查。
+
+独立小反例（JSON 内 `synthetic_noncontributing_worker`）：worker0 两行 N=199、worker1 仅表头、master N=200。它满足原输出稀疏合同，当前 helper 只因 `master_events` 失败而拒绝。它不是本次真实 Geant4 运行记录。固定点源朝向并未提供每一事件实际入射的独立收据；“每个 primary 必穿 Die”是额外物理假定，不能替代来源证据。
+
+最小建议：保留 master N=200、每 worker 各粒子行 N 一致、正整数、worker 身份检查；将可见 worker N 合计作为 `<= master N` 的下界一致性检查，不能重复按粒子相加。去掉每个有行 worker 必须存在 mu- 的要求，保留全局 mu-/e- 集合要求（旧 e- out-of-range > 0 本就要求电子证据）。正例加入合法无贡献 worker；坏例改成可见 N 超过 master 或同 worker 行 N 冲突，仍有独立语义价值。若坚持相等，须另有完整 per-worker 完成事件收据，不应为这次测试计数修复扩展产品。
+
+## Runner 18 行补丁
+
+**无问题（所审边界）**：`scripts/run_m0_tests.py:417–423` 每个 case 使用独立 env 副本和 report 内独立证据子目录；`:445–446` 仅目录实际存在时登记相对目录名。现有固定 case 名来自内部清单，未引入外部路径输入。`:466–481` 保留 porcelain 原前两列，未用 strip 丢掉前导空格；不可得仍明确 unavailable。测试清单、marker、probe、基线比较均未改。新目录登记只是定位信息，不代替各 manifest 和最终归档哈希验证。
+
+## 与 F4 门禁衔接
+
+`scripts/check_report_evidence.py:232–258` 同时要求同 probe、总数不降、每个旧 case 不降且无缺失，继续原样使用。新语义检查应先合理，再按相同 v3 测量；不能用其他 case 追加计数抵消 DDD 缺口、改名、重算旧基线或追改 5d 失败收据。新候选冻结后重做完整正式矩阵和严格 F4 门禁。当前 71 仅为开发专项的有证据结果，尚非新冻结候选验收。

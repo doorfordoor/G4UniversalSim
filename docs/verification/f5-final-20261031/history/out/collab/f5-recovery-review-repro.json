@@ -1,0 +1,47 @@
+{
+  "lower_revision": [
+    "ValueError",
+    "Recovery revision cannot go backwards"
+  ],
+  "same_revision_conflicting_payload": null,
+  "same_revision_result": {
+    "revision": 4,
+    "projectName": "stale conflicting payload"
+  },
+  "retired_same_revision_publish": null,
+  "retired_copy_recreated": true,
+  "retired_recreated_disposition": "active",
+  "closed_session": [
+    "RuntimeError",
+    "Recovery session is closed"
+  ],
+  "non_own_claim": [
+    "ValueError",
+    "Recovery candidate does not belong to this store"
+  ],
+  "closed_claim_read": [
+    "RuntimeError",
+    "Recovery claim is closed"
+  ],
+  "closed_claim_discard": [
+    "RuntimeError",
+    "Recovery claim is closed"
+  ],
+  "failure_fsync": [
+    "OSError",
+    "independent fsync failure"
+  ],
+  "failure_replace": [
+    "OSError",
+    "independent replace failure"
+  ],
+  "oversize_discovered": {
+    "error": "Recovery copy exceeds the supported size limit",
+    "hash_present": false
+  },
+  "oversize_discard": [
+    "ValueError",
+    "Recovery copy exceeds the supported size limit"
+  ],
+  "scope": "pure storage API; controller queue reachability not claimed"
+}

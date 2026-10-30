@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\f5-core-independent-review.py", line 107, in <module>
+    material_output=generate_materials_ini_text(restored.project.materialEditor)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\editors\material_editor_model.py", line 380, in generate_materials_ini_text
+    raise ValueError("Cannot generate materials.ini with validation errors:\n" + "\n".join(document.errors))
+ValueError: Cannot generate materials.ini with validation errors:
+Material schema error: file 'D:\Temp\f5-core-review-0mc6xwlx\materials.ini', line 9, section 'material.Mixed', key 'unknown_parameter', value '7': unknown material configuration key

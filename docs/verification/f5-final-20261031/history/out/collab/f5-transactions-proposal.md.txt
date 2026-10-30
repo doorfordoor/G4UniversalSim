@@ -1,0 +1,145 @@
+# F5 配置事务核心只读勘察与接口提案
+
+日期：2026-10-30。勘察基线：`676ffb2b27a56d636a2c984012c9442a6091337b`；开始时 `git status --short` 为空。本文为子任务建议，未修改产品代码、未运行新的验收，不将既往 F4 通过当作 F5 证据。以下路径以仓库根为基准。
+
+## 1. 给主设计者的结论
+
+1. 采用 **无 Qt 的 WorkspaceSnapshot + EditSession**。统一覆盖 Project 页与 Configuration 页全部现有编辑状态，不能只 snapshot `G4USimProject`；材料文档不在现有项目中，原样草稿也不在模型中。
+2. **正常项目建议升到 v7，新增可选的完整材料编辑文档和原样草稿字段**；异常恢复使用独立、严格的 `g4usim_workspace_recovery_v1` 外壳，内装与普通保存相同的 v7 编辑载荷。不要只给 autosave 做更完整格式、让用户主动 Save 仍丢材料。旧 v1–v6 兼容保持；缺新增字段与显式空文档必须区别。
+3. **恢复不得调用当前 `_set_project()/set_from_project()` 作为通用恢复函数**：它会重新读源、重置运行/结果页面，且只恢复 dirty/source-copy 几何。新增只恢复编辑面的投影路径，禁止隐含磁盘读取。
+4. `is_dirty` 有两种含义，必须分开：文档的 `is_dirty` 控制 writer 采用“编辑生成”还是“源文件复制”；会话的 unsaved 是与最后成功保存快照比较。Save 不得清材料/几何的 `is_dirty`，否则下次生成悄悄重新复制旧源。
+5. 事务接受可恢复的非法编辑草稿，生成前仍走现有校验；F5 不扩 GUI 支持白名单、不实现 K1 运行/导出服务。每次 edit/undo/redo/restore 都增加独立单调 revision，绝不能恢复旧 F4 generation 或运行成功状态。
+
+范围依据：`docs/ROADMAP.md:163`、`:267`、`:274`；数据层约束 `gui/AGENTS.md:94`–`:98`、`:114`–`:117`、`:144`–`:151`；F4 不允许撤回值复活旧诊断 `docs/agent-history.md:499`。
+
+## 2. 实际代码证据及风险
+
+| 现状 | 证据 | F5 推论 |
+|---|---|---|
+| 项目 v6 包含 run/path/geometry/settings 与 Source/Physics/Scoring/GeometryEditor，**没有 MaterialDocument** | `gui/g4usim_gui/core/project.py:29`–`:60` | 单纯项目 deepcopy/JSON 会漏整个材料草稿；不能宣传完整恢复 |
+| `update_project` 保存几何与 SPS 引用，但不保存材料 | `gui/g4usim_gui/widgets/config_builder_page.py:261`–`:272` | 需要显式 WorkspaceSnapshot，不能借现有 update_project 推断完整性 |
+| `set_from_project` 无条件 reload 两个源；只覆回 dirty/source-copy 几何 | `gui/g4usim_gui/widgets/config_builder_page.py:245`–`:258` | redo 会读到“现在”的磁盘文件；clean 几何历史也会变，应提供 `restore_edit_state` |
+| `SourceEditableModel` 的几何/分布/只读预览参数远多于 SourceSettings | `gui/g4usim_gui/editors/source_physics_scoring_model.py:37`–`:89` | 保留整个模型，不能由简单 settings 反推；否则 rectangle/isotropic 被压回 point/fixed |
+| Setup 只同步实际镜像字段，明确禁止源几何被重置 | `gui/g4usim_gui/widgets/config/run_config.py:436`–`:472` | 事务恢复须整模型 + 原样草稿，并继续采用同一镜像规则 |
+| 几何保留 raw/source diagnostics/blockers/version/source_copy、volume vis/cuts/metadata/preview_properties | `gui/g4usim_gui/editors/geometry_editor_model.py:40`–`:60`、`:134`–`:168` | 不能只记可见 cell；未知/不可编辑信息仍决定生成拒绝和预览 |
+| 材料完整组分在 `components_text`；包快照只存组分数量 | `gui/g4usim_gui/editors/material_editor_model.py:26`–`:57`、`:404`–`:428` | **不可复用 material_document_to_snapshot 当恢复格式**；需完整字段 codec |
+| `material_document.clone_document` 的 components 仅 list()，组件对象未深拷贝 | `gui/g4usim_gui/editors/material_editor_model.py:442`–`:472` | Undo 快照须完全隔离可变对象，不能直接依赖此 clone 当不可变历史 |
+| writer 对材料 dirty 生成，非 dirty 复制；几何 source_copy 优先，再 dirty 编辑生成，否则复制 | `gui/g4usim_gui/writers/package_writer.py:163`–`:200` | dirty 是业务语义，不是“保存项目后清零”的提示位 |
+| 原样无效 seed 在 `run_settings()` 被转为 None，空 run name 替换成 gui_run | `gui/g4usim_gui/widgets/config/setup_panel.py:261`–`:274` | 只保存 typed model 会丢用户草稿甚至把无效变合法；恢复需原样文本 |
+| 材料详情每次 textEdited/textChanged 直接改行，再刷新和 emit | `gui/g4usim_gui/widgets/config/materials.py:121`–`:126`、`:233`–`:251` | 集中事务适配需观察动作前/后的状态，不可在 settingsChanged 之后才把 mutated object 当 before |
+| 模板切换、source_copy 切换、行增删/重排多字段同步 | `gui/g4usim_gui/widgets/config/geometry.py:330`–`:373`、`:528`–`:575`；`widgets/config/layers.py:96`–`:145`；`widgets/config/booleans.py:35`–`:92` | 每次用户动作一个命令；重排必须带关联布尔索引、源信息和完整行顺序 |
+| F4 snapshot 已覆盖模型/原样标量/表格/磁盘哈希，但含 generation 且无逆向 codec | `gui/g4usim_gui/widgets/diagnostic_navigation.py:239`–`:266` | 可参考字段覆盖，不能直接当 F5 dirty/历史指纹；每次哈希也不应同步大文件 IO |
+| F4每次修改都单调增加 generation | `gui/g4usim_gui/widgets/config_builder_page.py:341`–`:347` | Undo 回到同值仍使旧报告失效；generation 不进入可撤销快照 |
+| project update 直接改同一对象；与 config 页均接 signal | `gui/g4usim_gui/window/project.py:95`–`:123`；`gui/g4usim_gui/main_window.py:72`–`:84` | 两页必须共用一个 session；不能各自建 undo stack 导致互相覆盖 |
+| 普通保存原子替换，Save As成功才改project_file | `gui/g4usim_gui/core/project.py:183`–`:199`；`gui/g4usim_gui/window/project.py:230`–`:250` | saved marker 仅在实际写入成功后推进；autosave成功不推进 saved marker |
+| Generate写config/macro/output与包绑定；wizard原位改项目后_set_project | `gui/g4usim_gui/window/run.py:226`–`:243`；`gui/g4usim_gui/window/content.py:41`–`:62` | 区分编辑内容与已生成/已运行事实；wizard结果可整组撤销，但不能撤销其生成/运行副作用 |
+| 关闭先停止所有计时器和拥有进程，再可能ignore | `gui/g4usim_gui/main_window.py:120`–`:164` | 新增 dirty关闭提示必须在破坏性关闭步骤之前；ignore后autosave不能永久停用 |
+
+相关完整约束已读：`docs/agent-history.md:324`–`:330`（Q1数据安全）、`:395`–`:421`（E6版本/投影/运行包恢复）、`:495`–`:507`（F4身份与失效）；`gui/AGENTS.md:5`、`:15`、`:25`、`:92`–`:180`。
+
+## 3. WorkspaceSnapshot 的具体边界
+
+建议新建 `core/workspace_state.py`，只导入 dataclasses/现有纯模型；Qt适配器在 `window/` 或 `widgets/`。
+
+```python
+@dataclass(frozen=True)
+class WorkspaceSnapshot:
+    project: G4USimProject          # 内部受保护的深副本，不能向调用者暴露可变引用
+    materials: MaterialDocument    # 包含clean文档，不仅dirty文档
+    geometry: GeometryDocument     # 总是保留，不能只在dirty时恢复
+    source_context: SourceContext  # 已读源快照与解析上下文，不是当前磁盘的声称
+    drafts: EditorDrafts            # 稳定字段ID -> 原样文本/机器值/完整table draft
+```
+
+`frozen=True` 本身不会冻结内部对象：实际实现须在输入、输出、回调时 deep-copy 或使用规范化不可变JSON值；测试外部修改不能污染历史。Source/Physics/Scoring模型已在project中，只保留一个权威副本，禁止snapshot里两份不一致。
+
+必须包含：
+
+- Project页当前机器值、路径、seed文本、名称，以及全部nested run/path/settings/editor状态。flat与nested只按现有同步规则对齐，不能重新默认化。
+- 材料所有行顺序、enabled/name/mode/density/nist_name/components_text/components/source_section/notes、行dirty；原文、preserved_sections、源错误与文档dirty。`[NIST]/element/isotope`保留顺序；不能退化为生成摘要。
+- 几何全document，包含simple_box、layered_device（auto_stack、顺序、位置/旋转、vis/cut/metadata）、volumes、boolean_ops、未编辑的shape/preview属性、严格版本、原文/source_copy/blockers。
+- SPS全模型，包含当前不可编辑但已载入的参数；不把未知选项、空选项转为默认。
+- 原样未解析draft：特别是非法seed、空名称、正在输入的数值/单位、material多行组分、正在编辑但尚未commit的table cell。保存/undo/autosave前可以显式提交delegate到**草稿层**，但不得以invalid为由替换为旧合法值；或者用stable collection/row/column表示active cell draft。
+- 源上下文：materials/geometry当前已读的path + 完整logical text + template + read_success；解析summary缓存可在内存deepcopy，持久化优先用原样来源重建同一parser结果。已有parser只有path API（`parsers/ini_light_parser.py:29`、`materials_parser.py:77`、`geometry_parser.py:126`），若持久恢复重建，需抽出共用text parsing入口，不能写临时文件冒充原来源，也不能读现磁盘替代旧原文。
+- `_f4_source_diagnostics`、`_f4_source_snapshot` 可作为内存源事实保持，重建后仍只表述加载时的来源；不要把整个动态 `__dict__` 写盘，尤其 `_f4_target_context` 以Python对象id索引（`editors/geometry_editor_model.py:389`–`:401`）。生产处从原样文本重建typed source诊断；新鲜业务校验重跑，旧report快照不复用。
+
+不进入undo/redo历史：runner/QProcess、进度/日志、success/失败运行收据、output evidence/hash校验任务、EffectiveConfig已应用记录、生成包可运行绑定、F4报告/generation、pending inspect/mesh任务编号、recent列表、project_file保存目标、主题/语言/布局/3D相机。选择行/焦点可作为可选界面提示恢复，但不影响dirty/fingerprint；单纯选择/诊断导航不能产生命令。
+
+`project.configPath/macroPath/outputDir` 当前混有用户输入与生成事实：external模式是编辑输入；generated模式产生的实际包绑定应放在session外，undo恢复后**总是stale**，不能依据历史路径重新绑定旧包。为缩小改动，可以暂保留历史路径作为可见记录，但Run必须重新生成；生成过程的绑定更新不得创建一条用户可撤销的“运行成功”命令。
+
+## 4. 无 Qt EditSession 接口建议
+
+建议 `core/edit_transactions.py`，采用候选快照的 before/after 命令，而不是为每字段写一套逆操作。接口名可由root裁定：
+
+```python
+session = EditSession(initial, max_commands=100, max_bytes=32 * 1024 * 1024)
+session.transact(label_key, transform, expected_revision=None, merge_key=None)
+session.replace(label_key, after, expected_revision=None, merge_key=None)
+session.undo()
+session.redo()
+session.mark_saved(saved_snapshot)  # 实际写入成功的那份，不读取已经变更的current
+session.reset(snapshot, saved=True) # 新/Open/切项目屏障，清redo及旧history
+session.current()                  # 返回深副本
+session.revision                   # 单调，永不undo
+session.is_modified                # 与独立saved fingerprint比较
+```
+
+- 每条记录含 `before/after,label_key,label_args,command_id,merge_key`。label为可翻译键，不将中文/英文显示内容作为命令身份。
+- `transform` 只作用于候选深副本，不接受任意shell/后端命令；通过schema/type/size与必要投影检查后再发布。业务错误（空energy/无效单位/不完整材料）允许留作草稿，writer仍拒绝。
+- `expected_revision` 在应用前比较，未来K1/L1复用；过期自动动作不能覆盖用户已编辑状态。不可把后端EffectiveConfig revision当本地编辑revision。
+- `replace()` 服务于当前signal结构：session始终保留上一已发布snapshot，UI修改后捕获after，仍能得到正确before。不要保留原model别名当before。
+- 原子组：材料新增/复制/删除、volume/layer/boolean重排、模板切换、source-copy切换、wizard应用和源重载分别是一条动作；任一步异常，模型/草稿/history/redo/saved marker均不变。`group()`可只提供组候选clone一次，退出成功commit；避免先发布几个子命令再反向undo掩盖失败。
+- 文本编辑coalesce仅限同一稳定field/同一对象/连续会话；切控件/结构操作/保存/undo/redo/屏障即断组。保存之后绝不把新输入并入保存前那条命令。不要把“所有settingsChanged”都按一个merge key合并。
+- undo后新编辑切断redo；失败/无效结构/冲突revision不切断redo。no-op不增历史也不清redo；真实draft改变即使typed model相同也算变化。F4对原样draft的失效仍立即发生。
+- saved marker应保存独立canonical编辑payload fingerprint；不是cursor索引。容量裁剪、redo分支、undo回最后保存状态后能准确显示clean；即使saved节点被裁掉也不误清dirty。文档dirty（writer来源模式）参与语义快照，切勿等同session dirty。
+- 容量按命令数与编码byte数双限；丢最旧完整命令，不拆组。超大单次snapshot不能静默失去undo：拒绝并保持原状态，或明确进入不可撤销屏障，后者必须可见而不是默认降级。先按100条/32MiB实现可配置常量，原样source字符串可共享不可变存储避免每按键复制巨大内容。
+- Qt投影要在restore guard下做，一次成功后发布一个change通知。恢复前先投影预检；若投影中异常，退回before且cursor/marker不动；若回滚也失败，明确冻结编辑并保留恢复文件，不能报告成功。核心可以通过通用 `apply(candidate)`回调完成“两阶段候选+发布”，不import Qt。
+
+## 5. 持久格式裁决建议
+
+**推荐 v7 additive project + 专用恢复外壳，而不是只新建另一套“workspace项目文件”。** 正常Save与autosave共享同一个严格编辑载荷codec，防止两套支持范围漂移。
+
+- v7新增 `materialEditor`（完整typed文档，缺失表示legacy需要首次源加载）、`editingDrafts`（严格字段路径/表格坐标结构，原样值）；几何沿用现有完整GeometryDocument，但不能恢复时忽略clean文档。若source_context需独立保存，可新增一个显式typed字段；不要藏于metadata任意字典。
+- v1–v6缺字段可旧行为读入并升级内存；显式空材料document不等于缺失，不能重新从源补满。future/unknown/duplicate/nonfinite/type拒绝保持E6契约。修改 `project_from_dict`/`project_to_dict`/迁移schema及run-package snapshot兼容测试；源材料INI永不被保存项目覆盖。
+- `g4usim_workspace_recovery_v1` 外壳内容：format version、session id、当前编辑revision、saved指纹、原项目路径/原文件身份（缺失明确）、时间、编辑载荷、校验digest。原路径仅作恢复上下文，恢复动作不自动写该路径；新会话从恢复内容生成新dirty工作区/新保存目标。
+- 原子写、大小限制、strict JSON、拒绝未知字段/路径/非法坐标；不pickle、不反射任意类、不序列化回调/Qt对象。恢复file只记录用户输入，不能声称其source hash等于历史运行F1 bytes hash。
+- autosave只更新recovery marker，不改变正常Save marker；Save失败仍dirty且保留上次有效recovery。写新版本成功后再清理旧恢复文件，清理失败作warning。
+- 恢复载荷里的源bytes/text与磁盘不同或文件消失时，旧编辑内容应仍能展示/undo，但生成必须触发现有“重新加载源”校验，不自动转source_copy、清blocker或认可旧验证。
+
+如果root为压缩本阶段改动选择不升级正常项目，则必须明确正常Save不含材料/草稿、保持session dirty，并提供“另存完整编辑会话”显式入口；否则不能通过“完整F5”的用户数据不丢失验收。此替代比v7更容易造成双格式认知负担，故不推荐。
+
+## 6. 操作边界与屏障
+
+| 操作 | 建议 |
+|---|---|
+| Project/Config标量编辑；材料/几何/SPS现有编辑、模板、显式source-copy | 同一session命令；完整支持子集；镜像更新包含在同组 |
+| 材料/几何Load/Revert/source路径更新后Reload | 对新磁盘内容只读一次，形成有before/after/source context的整组；undo仅恢复旧内存，不写回磁盘；仍校验源已变更 |
+| 新项目/Open/Recent/明确打开迁移副本/加载历史package | 会话硬屏障；先解决dirty（保存/放弃/取消），候选严格读取投影成功后才发布及reset；失败/取消保留history与目标路径 |
+| 向导应用 | 有效候选后一个复合事务；不能通过_set_project无意清undo；run_after单独交已有运行服务 |
+| Save/Save As | 不清undo；flush文本组、捕获精确payload、原子成功后mark_saved；Save As仅成功切目标 |
+| Validate/Inspect/预览/语言主题/诊断导航 | 不产生编辑命令；可重算派生值但不改变可生成语义。当前变更使旧请求失效 |
+| Generate/Run/Scan/Scenario生成和运行 | flush draft后获取冻结输入；外部副作用不可undo、不删除产物。编辑undo只使新编辑结果需重验/重生成；历史运行证据仍归原包 |
+| 运行中undo/reload/Open | 延用现有busy策略，至少禁止改动正被启动/生成的编辑发布；若允许编辑下一轮，运行绑定必须独立。F5不另造进程控制器 |
+| 异常恢复 | 新session屏障、全部验证和运行绑定失效，不复活历史success；旧recovery保留直至成功恢复/用户明确丢弃 |
+
+独立屏蔽场景页和扫描定义不是G4USimProject字段（`main_window.py:55`–`:58`、`window/content.py:20`–`:33`）；建议F5明确承诺“Project/Configuration编辑工作区”，不恢复已运行扫描队列、scenario进程/分析事实。若整阶段需要保留其待填表单，应各自以纯draft DTO复用同一个事务服务，不把场景执行器搬进F5。向导取消前的临时对话框无须进入项目历史，成功apply必须进入。
+
+## 7. 实现所有权与验收建议（待root分配）
+
+建议拆分但共用冻结接口：
+
+- 核心写者：`core/workspace_state.py`、`core/edit_transactions.py`、`core/project.py`/迁移兼容、无Qt完整材料codec和core tests。
+- 恢复写者：`core/workspace_recovery.py`/专用严格外壳/原子IO/拒绝和故障注入；只消费WorkspaceSnapshot codec。
+- 前端写者：`window/`事务适配、Project/Config capture/restore、编辑分组、undo/redo按钮快捷键与可翻译状态、autosave timer与恢复对话；不要触碰core协议另造字段。
+- 独立审查者：用户动作端到端与失败回滚、writer语义一致、源诊断和旧报告失效、平台自然退出。
+
+必要验收：
+
+1. 纯核心：before/after隔离；跨标量/嵌套/重复行/重排；组失败与异常；redo分支；no-op；saved节点裁剪；同字段合并保存边界；容量拒绝；revision冲突；旧版本/未来/unknown/duplicate/nonfinite；精确材料组分/rawtext持久回读。
+2. GUI：Project与Config交替编辑、所有五类编辑器、simple/layered/hierarchical/boolean、源rectangle+isotropic不变、非法seed/未提交table draft、中文/英文、菜单和快捷键、选择导航不加历史、恢复不读源、不触发自动后端调用。
+3. writer：A生成→编辑B→undoA→再次生成，比较**配置语义/保持的原始源字节**，忽略唯一包路径和时间；材料dirty、clean源复制、geometry source_copy/blocker/strict version均需覆盖。运行小规模真实generated包验证未越过现有支持边界。
+4. 源/诊断：源文件变更/缺失后undo仍保留旧内存但不能生成；源重复诊断保留独立身份；A报告→B编辑→undoA，旧报告仍stale；不把logical SHA当F1历史bytes身份。
+5. 数据安全：Save/SaveAs失败原文件字节不变、目标路径与saved marker不动；autosave失败保留上一份；模拟异常重启恢复完整草稿且不覆盖原件；取消Open/Close不丢历史、不停autosave；恢复字段严格验证。
+6. 外部副作用：undo不删package、不杀进程、不复活运行成功/已验证身份；异步结果只接受当前revision；结束进程自然退出，保留既有Qt6.11.x生命周期回归。
+
+本文无实现收据；建议所有动作前先由root冻结WorkspaceSnapshot和正常保存格式，再并行写者，避免前后端各造一套状态。

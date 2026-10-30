@@ -1,0 +1,24 @@
+{
+  "status": "passed",
+  "native_observed_commit": "5d56187392a2e7b888d5ce13f8da05a295cba6d4",
+  "automated_matrix_commit": "5c1eec5007cd29cbe12949c19bed81457f1f825b",
+  "changed_files": [
+    "docs/collab/inbox/20261030-2155-astra-f5-execution.md",
+    "scripts/run_m0_tests.py",
+    "scripts/test_displacement_damage.py"
+  ],
+  "gui_files_raw_and_git_blob_equal": 129,
+  "product_tree_diff_empty": true,
+  "compared_backend_properties": {
+    "source_fingerprint": "db253b7b1ed5f810789f1322faa75002df311d4aeb04572867dbb130c71d95cc",
+    "build_configuration": "Release",
+    "compiler_id": "MSVC",
+    "compiler_version": "19.51.36246.0",
+    "geant4_version_number": 1132,
+    "multithreaded": true
+  },
+  "native_identity_sha256": "ea2d7df95cf1c52ccf35ee526e8c2168ab67e5ae5bf5589bf08ca54ed26a4a55",
+  "native_gui_hashes_sha256": "280395f50c32c9a26945713e6cf8a6f6dcfae4d30c8603d6c60936028dfd88ec",
+  "new_capabilities_sha256": "e3232ad6b4caa1ea8d68436c61ae6c2f61c31ea5b6ea87da289d17580dfa390b",
+  "boundary": "Native interaction was observed at native_observed_commit. The later commit changes only tests and review documentation; its automated matrix is validated separately. No claim of native interaction or binary byte equality at the later commit."
+}

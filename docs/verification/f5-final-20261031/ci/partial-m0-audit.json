@@ -1,0 +1,2984 @@
+{
+  "head_sha": "5c1eec5007cd29cbe12949c19bed81457f1f825b",
+  "status": "partial",
+  "evidence_collection_complete": false,
+  "problems": [],
+  "runs": [
+    {
+      "id": 41090605955,
+      "head_sha": "5c1eec5007cd29cbe12949c19bed81457f1f825b",
+      "head_branch": "roadmap/F5-transactions-recovery",
+      "name": "M0 static and GUI regression",
+      "status": "completed",
+      "conclusion": "success",
+      "run_attempt": 1,
+      "html_url": "https://github.com/doorfordoor/G4UniversalSim/actions/runs/41090605955"
+    }
+  ],
+  "jobs": [
+    {
+      "id": 124183178185,
+      "name": "windows-latest / Python 3.11",
+      "run_id": 41090605955,
+      "head_sha": "5c1eec5007cd29cbe12949c19bed81457f1f825b",
+      "status": "completed",
+      "conclusion": "success",
+      "path": "job-124183178185.log",
+      "bytes": 83306,
+      "sha256": "fcf7af69a3b06eaf04b79a31ba7d5e6f7e28770a66971936c44d324fc47eda7c",
+      "representation": "connector-decoded UTF-8 text",
+      "negative_control_passed": null
+    },
+    {
+      "id": 124183178464,
+      "name": "ubuntu-latest / Python 3.11",
+      "run_id": 41090605955,
+      "head_sha": "5c1eec5007cd29cbe12949c19bed81457f1f825b",
+      "status": "completed",
+      "conclusion": "success",
+      "path": "job-124183178464.log",
+      "bytes": 47847,
+      "sha256": "9e1d7a7d6c9a3d53cfb84c48534f31d5a6ee212842d7f1d63cfe153981f4dc8e",
+      "representation": "connector-decoded UTF-8 text",
+      "negative_control_passed": null
+    }
+  ],
+  "artifacts": [
+    {
+      "id": 12993942643,
+      "run_id": 41090605955,
+      "name": "m0-report-windows-latest",
+      "official_digest": "sha256:9a093f5f6619ac53d713c66fb25945de3c808ce7ac1b763f6b01e2007d33f156",
+      "local_sha256": "sha256:9a093f5f6619ac53d713c66fb25945de3c808ce7ac1b763f6b01e2007d33f156",
+      "bytes": 32465
+    },
+    {
+      "id": 12993188333,
+      "run_id": 41090605955,
+      "name": "m0-report-ubuntu-latest",
+      "official_digest": "sha256:0e86f5b89888462e2431b5b612c68c02527cb4137ac3c17f4d90a2cdb5f38967",
+      "local_sha256": "sha256:0e86f5b89888462e2431b5b612c68c02527cb4137ac3c17f4d90a2cdb5f38967",
+      "bytes": 35092
+    }
+  ],
+  "reports": [
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "static",
+      "path": "m0-report-windows-latest/20261030-163210-ef333e6f/report.json",
+      "sha256": "2e9556fd1cef87f6ba038e78f09b72c421e3c831fd67df43fdf356db5d955cf1",
+      "cases": 32,
+      "assertions": 2706,
+      "git_dirty": false,
+      "git_status_porcelain": "",
+      "backend_build_identity": null,
+      "backend_provenance": "backend executable is missing",
+      "merge_provenance": "mergeHistograms executable is missing",
+      "strict_baseline_gate_exit": 0,
+      "baseline": "docs/verification/f4-final-20261030/ci/m0-report-windows-latest/20261030-124035-5b9c7e29/report.json",
+      "baseline_sha256": "33971117fb90aacb8a9633d5b2303008a5d34a1bd3db1d8e6da00b86b99b7ce1",
+      "gate_log": "baseline-gates/m0-report-windows-latest-static.log",
+      "failures": []
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "gui",
+      "path": "m0-report-windows-latest/20261030-163402-2590a2ce/report.json",
+      "sha256": "a0ddc04304c72541eec448c14681f083b96d48bd5afdd031ebbd214ea49f62f7",
+      "cases": 47,
+      "assertions": 3251,
+      "git_dirty": false,
+      "git_status_porcelain": "",
+      "backend_build_identity": null,
+      "backend_provenance": "backend executable is missing",
+      "merge_provenance": "mergeHistograms executable is missing",
+      "strict_baseline_gate_exit": 0,
+      "baseline": "docs/verification/f4-final-20261030/ci/m0-report-windows-latest/20261030-124143-737a5b79/report.json",
+      "baseline_sha256": "b69b25856e861585076981bd1b9113f46f8f13ea4f185465ada1c21bbd206610",
+      "gate_log": "baseline-gates/m0-report-windows-latest-gui.log",
+      "failures": []
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "static",
+      "path": "m0-report-ubuntu-latest/20261030-163149-ddeaeddb/report.json",
+      "sha256": "dc71f7c76ddef6c424ebb29d98fe77fb0164916211a5203fe2e10d1a7ac6af0a",
+      "cases": 32,
+      "assertions": 2715,
+      "git_dirty": false,
+      "git_status_porcelain": "",
+      "backend_build_identity": null,
+      "backend_provenance": "backend executable is missing",
+      "merge_provenance": "mergeHistograms executable is missing",
+      "strict_baseline_gate_exit": 0,
+      "baseline": "docs/verification/f4-final-20261030/ci/m0-report-ubuntu-latest/20261030-124000-75b141a9/report.json",
+      "baseline_sha256": "901f15aca7ef52797c77be0eb14f91d40b5c2943cd3de11057beb7e1e3b6aefd",
+      "gate_log": "baseline-gates/m0-report-ubuntu-latest-static.log",
+      "failures": []
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "gui",
+      "path": "m0-report-ubuntu-latest/20261030-163253-5f8ec5d4/report.json",
+      "sha256": "7df146a3710bdd64dcdc8e174558b2dc8a56bc946320c264f3b7b6f32f4f516a",
+      "cases": 47,
+      "assertions": 3249,
+      "git_dirty": false,
+      "git_status_porcelain": "",
+      "backend_build_identity": null,
+      "backend_provenance": "backend executable is missing",
+      "merge_provenance": "mergeHistograms executable is missing",
+      "strict_baseline_gate_exit": 0,
+      "baseline": "docs/verification/f4-final-20261030/ci/m0-report-ubuntu-latest/20261030-124100-bf1644f3/report.json",
+      "baseline_sha256": "e02e9e90f6a89ea5a9bd6ccfe2be13823ad64d18e7d8a0e97aa6e628dd7290d0",
+      "gate_log": "baseline-gates/m0-report-ubuntu-latest-gui.log",
+      "failures": []
+    }
+  ],
+  "case_executions": 158,
+  "all_case_logs_sha_marker_matched": true,
+  "all_zip_members_match": true,
+  "report_count": 4,
+  "case_logs": [
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "static",
+      "case": "f5_source_snapshots",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 84,
+      "path": "m0-report-windows-latest/20261030-163210-ef333e6f/f5_source_snapshots.log",
+      "bytes": 103,
+      "sha256": "ac21ceca4bf0bccf7fe7fcd670a9b9d6c39ea3de9864137a81f642e78248bb6c"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "static",
+      "case": "f5_project_receipts",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 22,
+      "path": "m0-report-windows-latest/20261030-163210-ef333e6f/f5_project_receipts.log",
+      "bytes": 99,
+      "sha256": "1e75653553dc930d64885572f0594f31536a249d26dfe4fb925ad0efedacacef"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "static",
+      "case": "f5_transactions",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 321,
+      "path": "m0-report-windows-latest/20261030-163210-ef333e6f/f5_transactions.log",
+      "bytes": 116,
+      "sha256": "31857ac40fde90151c8c98397f61d0a35d700278d1fcc011ea5dd9b0042a0ec1"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "static",
+      "case": "f5_recovery",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 119,
+      "path": "m0-report-windows-latest/20261030-163210-ef333e6f/f5_recovery.log",
+      "bytes": 557,
+      "sha256": "ec1c484279228c3a1c5b5ef9ec86dd195eed5efa9ead63cefd1fbc0b9982264c"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "static",
+      "case": "f4_diagnostics",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 48,
+      "path": "m0-report-windows-latest/20261030-163210-ef333e6f/f4_diagnostics.log",
+      "bytes": 103,
+      "sha256": "8e84c9a21395ca85de684507d433f52a5cfeb3048d0fb6100a271086a8181fa9"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "static",
+      "case": "f4_producers",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 593,
+      "path": "m0-report-windows-latest/20261030-163210-ef333e6f/f4_producers.log",
+      "bytes": 115,
+      "sha256": "af8813ee0e48818180b68e3d675b194025f509af400c0cc8d53dcd466c295132"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "static",
+      "case": "f4_document_diagnostics",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 119,
+      "path": "m0-report-windows-latest/20261030-163210-ef333e6f/f4_document_diagnostics.log",
+      "bytes": 52,
+      "sha256": "aaf2d8afc6d0867fe1c691f3bd48289301a4482824b0bd7135b614b95835609e"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "static",
+      "case": "build_identity",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 47,
+      "path": "m0-report-windows-latest/20261030-163210-ef333e6f/build_identity.log",
+      "bytes": 126,
+      "sha256": "afaa448bf65a2f39ea7598c2363d1d7a5eaaa5b2753cf2a0acb71a3a0d143a71"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "static",
+      "case": "f1_input_provenance",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 36,
+      "path": "m0-report-windows-latest/20261030-163210-ef333e6f/f1_input_provenance.log",
+      "bytes": 76,
+      "sha256": "a2ee5f24a8c0929844709e1afc882ff4ac331298da2dc1cd322a10a903f8f815"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "static",
+      "case": "f1_artifact_model",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 96,
+      "path": "m0-report-windows-latest/20261030-163210-ef333e6f/f1_artifact_model.log",
+      "bytes": 132,
+      "sha256": "c38b11317e25240da8f3b766a509b84cfeb67e1a337d9ee0b4d927fb833017f3"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "static",
+      "case": "output_auto_model",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 3,
+      "path": "m0-report-windows-latest/20261030-163210-ef333e6f/output_auto_model.log",
+      "bytes": 64,
+      "sha256": "9ec40f97ae2ac9888c55eab2197f3007473298c928c4e8412af918d6310ba449"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "static",
+      "case": "merge_outputs",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 18,
+      "path": "m0-report-windows-latest/20261030-163210-ef333e6f/merge_outputs.log",
+      "bytes": 147,
+      "sha256": "66b9a1b563455abd9e61f68c310a970c64996cd50e4d343a2c4b3da700e499a9"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "static",
+      "case": "output_extensions",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 25,
+      "path": "m0-report-windows-latest/20261030-163210-ef333e6f/output_extensions.log",
+      "bytes": 45,
+      "sha256": "56e904249f47f9be0e53928f7f48c5a06d662593e9f9d41ffada8e219e521791"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "static",
+      "case": "runner_contract",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 31,
+      "path": "m0-report-windows-latest/20261030-163210-ef333e6f/runner_contract.log",
+      "bytes": 37,
+      "sha256": "ce9ec1cce72a0433e4dae40370635401f13aa2a994d1d2db46cd0af2cf0b6e26"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "static",
+      "case": "doc_links",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 11,
+      "path": "m0-report-windows-latest/20261030-163210-ef333e6f/doc_links.log",
+      "bytes": 71,
+      "sha256": "a8f906b1e85149a7b4ca1aeef1c5671e0d65a0fc22e9176f9e6156eb2710111d"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "static",
+      "case": "platform_paths",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 3,
+      "path": "m0-report-windows-latest/20261030-163210-ef333e6f/platform_paths.log",
+      "bytes": 80,
+      "sha256": "310b65fa3d0bf7c43f9bb3d1eb1887fb2b834027db5e8956399751d2ea5c3c18"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "static",
+      "case": "ci_annotations",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 12,
+      "path": "m0-report-windows-latest/20261030-163210-ef333e6f/ci_annotations.log",
+      "bytes": 42,
+      "sha256": "e6f1720d56cf90165af33e5c8850e7e912b46b12140baccf41cc974aae9f8336"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "static",
+      "case": "report_evidence",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 77,
+      "path": "m0-report-windows-latest/20261030-163210-ef333e6f/report_evidence.log",
+      "bytes": 43,
+      "sha256": "51e7563874211bcddaaa5384ce34c6cea8ada5e21889c1ae92e31478efa7490e"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "static",
+      "case": "writer_boundary",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 24,
+      "path": "m0-report-windows-latest/20261030-163210-ef333e6f/writer_boundary.log",
+      "bytes": 85,
+      "sha256": "c692fbbffedc2dfb1462d91a5c50592ebd92cbb09eb02e331f2e3b35158e59c0"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "static",
+      "case": "shielding_scenario_model",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 93,
+      "path": "m0-report-windows-latest/20261030-163210-ef333e6f/shielding_scenario_model.log",
+      "bytes": 170,
+      "sha256": "faa60f6cc7947845c42663b8f4c1e3fb59718e3224160764239ffa4eae6b401c"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "static",
+      "case": "shielding_analysis",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 113,
+      "path": "m0-report-windows-latest/20261030-163210-ef333e6f/shielding_analysis.log",
+      "bytes": 19,
+      "sha256": "eea30185f373f1418469885b72d4577f2b2283a3a79144ec465f494817214aa8"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "static",
+      "case": "effective_config_model",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 17,
+      "path": "m0-report-windows-latest/20261030-163210-ef333e6f/effective_config_model.log",
+      "bytes": 58,
+      "sha256": "beefcf119ff52f6025097770f5f122a6f6e448beaf82f57e5976dc35a9304ab2"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "static",
+      "case": "main_config_version_component",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 3,
+      "path": "m0-report-windows-latest/20261030-163210-ef333e6f/main_config_version_component.log",
+      "bytes": 17,
+      "sha256": "bf03a482a5cea62eb7613e146132e329b5ca96d39ee5722bb889305b18a5c758"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "static",
+      "case": "main_ini_migration",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 60,
+      "path": "m0-report-windows-latest/20261030-163210-ef333e6f/main_ini_migration.log",
+      "bytes": 54,
+      "sha256": "d614f49467ed3c26847f1450093c96f8b5f7838306ff14d2736f364b27b5675c"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "static",
+      "case": "config_migration",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 447,
+      "path": "m0-report-windows-latest/20261030-163210-ef333e6f/config_migration.log",
+      "bytes": 54,
+      "sha256": "a597e2d26065ca0a07a3f0f63da34c9504e2f2d7c73764e88ccff35fac6e236b"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "static",
+      "case": "project_snapshot_compat",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 78,
+      "path": "m0-report-windows-latest/20261030-163210-ef333e6f/project_snapshot_compat.log",
+      "bytes": 124,
+      "sha256": "c717ee5a4674dcb23b34fe6a5e8dc2e7e660ed7d6cd24d59701ab468eea08b1d"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "static",
+      "case": "duplicate_generated_package_model",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 128,
+      "path": "m0-report-windows-latest/20261030-163210-ef333e6f/duplicate_generated_package_model.log",
+      "bytes": 86,
+      "sha256": "5af9531995ec8eb868f6f048d10ab69810cb5aaa107f615e71c1226999017ee0"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "static",
+      "case": "geometry_diagnostic_identity",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 3,
+      "path": "m0-report-windows-latest/20261030-163210-ef333e6f/geometry_diagnostic_identity.log",
+      "bytes": 63,
+      "sha256": "bb2f4009db5f7ca0f88eb73939857d3d1913b3a6c66f4191efe5de8794bb029e"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "static",
+      "case": "input_provenance",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 14,
+      "path": "m0-report-windows-latest/20261030-163210-ef333e6f/input_provenance.log",
+      "bytes": 64,
+      "sha256": "24d74a7d23a9780c79e3be0ad5109903caa179fc59e19af62638ac16252fb5be"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "static",
+      "case": "effective_consumer_state",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 2,
+      "path": "m0-report-windows-latest/20261030-163210-ef333e6f/effective_consumer_state.log",
+      "bytes": 61,
+      "sha256": "6e7eaef8b30745cf95f99f224dae69084c5777b66402c90e7a6647d15e8ba7c9"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "static",
+      "case": "effective_receipt_view",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 13,
+      "path": "m0-report-windows-latest/20261030-163210-ef333e6f/effective_receipt_view.log",
+      "bytes": 154,
+      "sha256": "e853b0e2d1b08b410b61584be6cbd4558f34efe67f5dd3acbf74c82059701ef9"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "static",
+      "case": "output_provenance",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 46,
+      "path": "m0-report-windows-latest/20261030-163210-ef333e6f/output_provenance.log",
+      "bytes": 1347,
+      "sha256": "06657851c194b1add728d98cec3539e7117b68900cd61f2be5e880673b070b1f"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "gui",
+      "case": "gui_f5_recovery",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 62,
+      "path": "m0-report-windows-latest/20261030-163402-2590a2ce/gui_f5_recovery.log",
+      "bytes": 89,
+      "sha256": "df4beb6854de1f8638d35f5fea6e66057c2bf934e76f7614d822cfe302566274"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "gui",
+      "case": "gui_f5_editor_history",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 237,
+      "path": "m0-report-windows-latest/20261030-163402-2590a2ce/gui_f5_editor_history.log",
+      "bytes": 1113,
+      "sha256": "fe0eeead29424cfe9066c7f7397fea8521f6022c8044c9ceca787e3c6d0bc880"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "gui",
+      "case": "gui_f5_recovery_process",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 12,
+      "path": "m0-report-windows-latest/20261030-163402-2590a2ce/gui_f5_recovery_process.log",
+      "bytes": 302,
+      "sha256": "b39d205ee8407e49298e74c6e59601b22195f0ef87fb791c6d596b931ca6e46b"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "gui",
+      "case": "gui_f4_navigation",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 224,
+      "path": "m0-report-windows-latest/20261030-163402-2590a2ce/gui_f4_navigation.log",
+      "bytes": 118,
+      "sha256": "698d5e3b292a28b65f035b2b11e9c9449102abdb7e8721842690b9f74ef3df3c"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "gui",
+      "case": "gui_f4_entrypoints",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 62,
+      "path": "m0-report-windows-latest/20261030-163402-2590a2ce/gui_f4_entrypoints.log",
+      "bytes": 43,
+      "sha256": "4fd07e34a2f7b308b97302b2ad127a83e9feab9653b21a16cf9f51b52b5b4b98"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "gui",
+      "case": "gui_f4_layout",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 257,
+      "path": "m0-report-windows-latest/20261030-163402-2590a2ce/gui_f4_layout.log",
+      "bytes": 116,
+      "sha256": "1f16c33d145ee4caa9482bf0241d95fce332aec5279615c192c0ff2f5c525790"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "gui",
+      "case": "gui_f4_inspect_protocol",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 46,
+      "path": "m0-report-windows-latest/20261030-163402-2590a2ce/gui_f4_inspect_protocol.log",
+      "bytes": 78,
+      "sha256": "46ae4728e2114dab83a449090e5c2d58ceb07881b423b00f431831ca22009164"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "gui",
+      "case": "gui_f1_output_identity",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 28,
+      "path": "m0-report-windows-latest/20261030-163402-2590a2ce/gui_f1_output_identity.log",
+      "bytes": 47,
+      "sha256": "7c6ae9b8a106feae64a07ac0a9779e900a07e3b28d9d5b34740b5feb2fd7e8ea"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "gui",
+      "case": "gui_f1_async_identity",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 39,
+      "path": "m0-report-windows-latest/20261030-163402-2590a2ce/gui_f1_async_identity.log",
+      "bytes": 3747,
+      "sha256": "dca46814e5a4c9a3a57e2d04c71ef73ece3f1797ea71eab176c2bb2f18da1fa5"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "gui",
+      "case": "gui_config_migration",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 74,
+      "path": "m0-report-windows-latest/20261030-163402-2590a2ce/gui_config_migration.log",
+      "bytes": 48,
+      "sha256": "76484c167d012b68dd342c14a8177d8c9cfa5a9f4e4f5f01d038f5d71e81f6e1"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "gui",
+      "case": "effective_config_collection",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 44,
+      "path": "m0-report-windows-latest/20261030-163402-2590a2ce/effective_config_collection.log",
+      "bytes": 111,
+      "sha256": "b8b84ab930956e5df9fe71b3ecbaa4ddeb8af512e6f42fffd4dfff105cf6c9e9"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "gui",
+      "case": "effective_config_viewer",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 22,
+      "path": "m0-report-windows-latest/20261030-163402-2590a2ce/effective_config_viewer.log",
+      "bytes": 115,
+      "sha256": "55f915cb320978c1cd117063beed18c119cbede0d68e5bd76c19497c69629ec3"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "gui",
+      "case": "gui_parsers",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 8,
+      "path": "m0-report-windows-latest/20261030-163402-2590a2ce/gui_parsers.log",
+      "bytes": 35,
+      "sha256": "0681a3a73ed5077894bc6c9605e5b41b0f2f9f551ac25d6991f5d2ac25e988f7"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "gui",
+      "case": "gui_qt_combo_data",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 29,
+      "path": "m0-report-windows-latest/20261030-163402-2590a2ce/gui_qt_combo_data.log",
+      "bytes": 244,
+      "sha256": "a28bffc90cfe2116eb5418ee22941c97cdc3088d11e90d1ee17cfef083e17347"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "gui",
+      "case": "gui_qt_binding_lifetime",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 8,
+      "path": "m0-report-windows-latest/20261030-163402-2590a2ce/gui_qt_binding_lifetime.log",
+      "bytes": 591,
+      "sha256": "b67663fbe4176788fbe9755428e4cfdb612e0442eb9ee67ce1d7f043a3790169"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "gui",
+      "case": "gui_materials",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 42,
+      "path": "m0-report-windows-latest/20261030-163402-2590a2ce/gui_materials.log",
+      "bytes": 45,
+      "sha256": "16fe47bb7af9f40ab9bf499db97ac47b3399420163b6b129ca15741099147db4"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "gui",
+      "case": "gui_geometry",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 69,
+      "path": "m0-report-windows-latest/20261030-163402-2590a2ce/gui_geometry.log",
+      "bytes": 44,
+      "sha256": "1a4ce4692967b7c13b87904817be371bb61ab1978a6ec4d39d4a1862abe95f7e"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "gui",
+      "case": "gui_preview",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 22,
+      "path": "m0-report-windows-latest/20261030-163402-2590a2ce/gui_preview.log",
+      "bytes": 38,
+      "sha256": "cafd0f4a1b079749f44e4e3682f0fa03cc6d410adc80b4af1f12f194e6668d21"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "gui",
+      "case": "gui_preview_primitives",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 37,
+      "path": "m0-report-windows-latest/20261030-163402-2590a2ce/gui_preview_primitives.log",
+      "bytes": 49,
+      "sha256": "867c1cc504d7b376450a147e3aad3714cc629da8594987e4eadc6e831250197b"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "gui",
+      "case": "gui_project_io",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 6,
+      "path": "m0-report-windows-latest/20261030-163402-2590a2ce/gui_project_io.log",
+      "bytes": 38,
+      "sha256": "e816e97f4293c8371f6d44eee025d927e848d198b98ba8bf4afba87d9066b693"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "gui",
+      "case": "gui_project_import_projection",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 393,
+      "path": "m0-report-windows-latest/20261030-163402-2590a2ce/gui_project_import_projection.log",
+      "bytes": 55,
+      "sha256": "02ad09b289827b255f65a78e2ff7cf859e93e73c7668e2bd1dd3a6167814afb0"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "gui",
+      "case": "gui_project_snapshot_restore",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 61,
+      "path": "m0-report-windows-latest/20261030-163402-2590a2ce/gui_project_snapshot_restore.log",
+      "bytes": 53,
+      "sha256": "922000e2b1a2cd5f28b0e5ec014919a0ae42ffeb1651715d265120323055619f"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "gui",
+      "case": "gui_source",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 50,
+      "path": "m0-report-windows-latest/20261030-163402-2590a2ce/gui_source.log",
+      "bytes": 45,
+      "sha256": "e1071a389518028dd555e83fc9fa1e4ecd700c96cdbf0a99ec570200840d3957"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "gui",
+      "case": "gui_source_field_preservation",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 340,
+      "path": "m0-report-windows-latest/20261030-163402-2590a2ce/gui_source_field_preservation.log",
+      "bytes": 916,
+      "sha256": "27eabc4cccdf73967f627c26d816d41272a12e0dd79da69601cf63048a35c8e9"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "gui",
+      "case": "gui_run_config",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 34,
+      "path": "m0-report-windows-latest/20261030-163402-2590a2ce/gui_run_config.log",
+      "bytes": 47,
+      "sha256": "f257e69596cabda87b8db46eae0f21612062de9eee30c9d987c7c7693914e63a"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "gui",
+      "case": "gui_dose_results",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 21,
+      "path": "m0-report-windows-latest/20261030-163402-2590a2ce/gui_dose_results.log",
+      "bytes": 1107,
+      "sha256": "298175bc70662f8b6ada9d49b19fda9a19b5f6d9404cf82cf7a8c849c0a66c23"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "gui",
+      "case": "gui_plots",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 37,
+      "path": "m0-report-windows-latest/20261030-163402-2590a2ce/gui_plots.log",
+      "bytes": 6155,
+      "sha256": "03f400a313ab492d7ef674d4541eb28d4ffff98b5f66a41768f1f88597573c00"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "gui",
+      "case": "gui_new_simulation_wizard",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 60,
+      "path": "m0-report-windows-latest/20261030-163402-2590a2ce/gui_new_simulation_wizard.log",
+      "bytes": 75,
+      "sha256": "2d4edf7661aa7231f0f4d3be620188baf189ab7c85ccbe20451ac9a5cf4bedfb"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "gui",
+      "case": "scenario_page",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 31,
+      "path": "m0-report-windows-latest/20261030-163402-2590a2ce/scenario_page.log",
+      "bytes": 95,
+      "sha256": "0ae3199c6d6a496edb68b1c02e7e95dc223e04f32511881f583340c031e4b351"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "gui",
+      "case": "gui_scans",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 58,
+      "path": "m0-report-windows-latest/20261030-163402-2590a2ce/gui_scans.log",
+      "bytes": 68,
+      "sha256": "e38f0ec3d1c9041b5b9ce45f7a2cf7b8b3481c725341cd41df863839e323470b"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "gui",
+      "case": "gui_start_page",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 74,
+      "path": "m0-report-windows-latest/20261030-163402-2590a2ce/gui_start_page.log",
+      "bytes": 6419,
+      "sha256": "6fd9d5e08de256ee8d146010876712e8e19187a28c496e490b0bab1bd6c27a1a"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "gui",
+      "case": "gui_fluence_results",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 31,
+      "path": "m0-report-windows-latest/20261030-163402-2590a2ce/gui_fluence_results.log",
+      "bytes": 1110,
+      "sha256": "85aaf860f4cdaac909e0c0402b159fc032b11c245ab663d907b615bff0b3ec43"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "gui",
+      "case": "gui_output_extensions",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 61,
+      "path": "m0-report-windows-latest/20261030-163402-2590a2ce/gui_output_extensions.log",
+      "bytes": 1116,
+      "sha256": "688a55bdadfd50c27541fcd00c5b499629aa75bd494fa0f7e254187ba8508926"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "gui",
+      "case": "gui_output",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 15,
+      "path": "m0-report-windows-latest/20261030-163402-2590a2ce/gui_output.log",
+      "bytes": 41,
+      "sha256": "5a63647ed317e8368ac31a5c180dff0fd92fd939be5abd2cc76227e4dca7e540"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "gui",
+      "case": "gui_history",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 7,
+      "path": "m0-report-windows-latest/20261030-163402-2590a2ce/gui_history.log",
+      "bytes": 35,
+      "sha256": "6a590ec73966942743841e815af8794591482af191f57f1113ad15f64ab27e7a"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "gui",
+      "case": "gui_duplicate_history_cli",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 254,
+      "path": "m0-report-windows-latest/20261030-163402-2590a2ce/gui_duplicate_history_cli.log",
+      "bytes": 51,
+      "sha256": "b77bd34dcb2d4dd67cee97e8af95cb7477eb4a786ab4eab0fa3ca7e8996a2bfe"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "gui",
+      "case": "gui_run_result",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 20,
+      "path": "m0-report-windows-latest/20261030-163402-2590a2ce/gui_run_result.log",
+      "bytes": 39,
+      "sha256": "46dde4387f2cb08fb951874a6ecccc6987b480dd9e49f4d95146b7222ec9ab98"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "gui",
+      "case": "gui_live_progress",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 71,
+      "path": "m0-report-windows-latest/20261030-163402-2590a2ce/gui_live_progress.log",
+      "bytes": 99,
+      "sha256": "51cfee5c7dc48d2f8fe2b3d183bcc682fa07d045fbe4444cd55449acf3a3ea37"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "gui",
+      "case": "gui_main_window",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 46,
+      "path": "m0-report-windows-latest/20261030-163402-2590a2ce/gui_main_window.log",
+      "bytes": 43,
+      "sha256": "4478f913fc7f4d0bdcbfedee587f47c651b1ce15cd8fb3ff2cd4fa3f9fe03702"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "gui",
+      "case": "gui_unsupported_features",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 6,
+      "path": "m0-report-windows-latest/20261030-163402-2590a2ce/gui_unsupported_features.log",
+      "bytes": 68,
+      "sha256": "b483c90fc92d1addd7205126f14fe83c7319923d1db724f717e3342928895f59"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "gui",
+      "case": "gui_geometry_safety",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 11,
+      "path": "m0-report-windows-latest/20261030-163402-2590a2ce/gui_geometry_safety.log",
+      "bytes": 52,
+      "sha256": "3080f410814041bc0be96dc521c50d1a83588d6f6187cf1d1c8cd1aa61aba96e"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "gui",
+      "case": "gui_geometry_diagnostics",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 15,
+      "path": "m0-report-windows-latest/20261030-163402-2590a2ce/gui_geometry_diagnostics.log",
+      "bytes": 55,
+      "sha256": "3de5697d65e5cecce797deba4d7be02e4a587006b4ad5f4d84dbf72aac429e5f"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "gui",
+      "case": "q1_postprocessing",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 123,
+      "path": "m0-report-windows-latest/20261030-163402-2590a2ce/q1_postprocessing.log",
+      "bytes": 1004,
+      "sha256": "e6777a21c62c8bd33fef079ae4e976a2658c84f08d2a53447be90fbe8247e763"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "gui",
+      "case": "gui_output_provenance",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 21,
+      "path": "m0-report-windows-latest/20261030-163402-2590a2ce/gui_output_provenance.log",
+      "bytes": 1269,
+      "sha256": "888efbb70c90e7b9e18ef077b76b4d46d936303e0fd2a4d1f2b5aeb3c3d618ad"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "gui",
+      "case": "q1_public_paths",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 32,
+      "path": "m0-report-windows-latest/20261030-163402-2590a2ce/q1_public_paths.log",
+      "bytes": 1967,
+      "sha256": "636b256e9a102277250fe9ddbee25ddb867e73c15e6792cc49d021ced9504070"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "gui",
+      "case": "gui_3d_view",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 18,
+      "path": "m0-report-windows-latest/20261030-163402-2590a2ce/gui_3d_view.log",
+      "bytes": 159,
+      "sha256": "446955624c4c8c91df78d09e04d0a42bd2816c38b4bf1a85c7bf3513cb8bc1f6"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "gui",
+      "case": "gui_config_editors",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 33,
+      "path": "m0-report-windows-latest/20261030-163402-2590a2ce/gui_config_editors.log",
+      "bytes": 295,
+      "sha256": "8d7717b2addb5dc3ff15e90c282577590f1f4072d6ce9b61563c035be71c3556"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "static",
+      "case": "f5_source_snapshots",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 84,
+      "path": "m0-report-ubuntu-latest/20261030-163149-ddeaeddb/f5_source_snapshots.log",
+      "bytes": 103,
+      "sha256": "ac21ceca4bf0bccf7fe7fcd670a9b9d6c39ea3de9864137a81f642e78248bb6c"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "static",
+      "case": "f5_project_receipts",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 22,
+      "path": "m0-report-ubuntu-latest/20261030-163149-ddeaeddb/f5_project_receipts.log",
+      "bytes": 99,
+      "sha256": "1e75653553dc930d64885572f0594f31536a249d26dfe4fb925ad0efedacacef"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "static",
+      "case": "f5_transactions",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 321,
+      "path": "m0-report-ubuntu-latest/20261030-163149-ddeaeddb/f5_transactions.log",
+      "bytes": 116,
+      "sha256": "31857ac40fde90151c8c98397f61d0a35d700278d1fcc011ea5dd9b0042a0ec1"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "static",
+      "case": "f5_recovery",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 119,
+      "path": "m0-report-ubuntu-latest/20261030-163149-ddeaeddb/f5_recovery.log",
+      "bytes": 560,
+      "sha256": "cdbc1863bb3cefb84ded17a7cc444dda2ae0e548fb6c3ab79d685750f4bd8077"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "static",
+      "case": "f4_diagnostics",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 48,
+      "path": "m0-report-ubuntu-latest/20261030-163149-ddeaeddb/f4_diagnostics.log",
+      "bytes": 103,
+      "sha256": "8e84c9a21395ca85de684507d433f52a5cfeb3048d0fb6100a271086a8181fa9"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "static",
+      "case": "f4_producers",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 593,
+      "path": "m0-report-ubuntu-latest/20261030-163149-ddeaeddb/f4_producers.log",
+      "bytes": 115,
+      "sha256": "af8813ee0e48818180b68e3d675b194025f509af400c0cc8d53dcd466c295132"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "static",
+      "case": "f4_document_diagnostics",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 119,
+      "path": "m0-report-ubuntu-latest/20261030-163149-ddeaeddb/f4_document_diagnostics.log",
+      "bytes": 52,
+      "sha256": "aaf2d8afc6d0867fe1c691f3bd48289301a4482824b0bd7135b614b95835609e"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "static",
+      "case": "build_identity",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 47,
+      "path": "m0-report-ubuntu-latest/20261030-163149-ddeaeddb/build_identity.log",
+      "bytes": 126,
+      "sha256": "afaa448bf65a2f39ea7598c2363d1d7a5eaaa5b2753cf2a0acb71a3a0d143a71"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "static",
+      "case": "f1_input_provenance",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 37,
+      "path": "m0-report-ubuntu-latest/20261030-163149-ddeaeddb/f1_input_provenance.log",
+      "bytes": 76,
+      "sha256": "8d1bfa462c6f331c333c115c755dfc46e5664d602718b75864270f71c98f50ea"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "static",
+      "case": "f1_artifact_model",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 97,
+      "path": "m0-report-ubuntu-latest/20261030-163149-ddeaeddb/f1_artifact_model.log",
+      "bytes": 132,
+      "sha256": "0834f84d106153f19cd21e59312dfe396b9bacfcc36a939d8e45ca59b7596b07"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "static",
+      "case": "output_auto_model",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 4,
+      "path": "m0-report-ubuntu-latest/20261030-163149-ddeaeddb/output_auto_model.log",
+      "bytes": 64,
+      "sha256": "af817c26a4b658e2808180cbb0447799f10340fa90a52cd438b554e0ab323a3d"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "static",
+      "case": "merge_outputs",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 18,
+      "path": "m0-report-ubuntu-latest/20261030-163149-ddeaeddb/merge_outputs.log",
+      "bytes": 147,
+      "sha256": "66b9a1b563455abd9e61f68c310a970c64996cd50e4d343a2c4b3da700e499a9"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "static",
+      "case": "output_extensions",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 25,
+      "path": "m0-report-ubuntu-latest/20261030-163149-ddeaeddb/output_extensions.log",
+      "bytes": 45,
+      "sha256": "56e904249f47f9be0e53928f7f48c5a06d662593e9f9d41ffada8e219e521791"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "static",
+      "case": "runner_contract",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 31,
+      "path": "m0-report-ubuntu-latest/20261030-163149-ddeaeddb/runner_contract.log",
+      "bytes": 37,
+      "sha256": "ce9ec1cce72a0433e4dae40370635401f13aa2a994d1d2db46cd0af2cf0b6e26"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "static",
+      "case": "doc_links",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 11,
+      "path": "m0-report-ubuntu-latest/20261030-163149-ddeaeddb/doc_links.log",
+      "bytes": 71,
+      "sha256": "a8f906b1e85149a7b4ca1aeef1c5671e0d65a0fc22e9176f9e6156eb2710111d"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "static",
+      "case": "platform_paths",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 3,
+      "path": "m0-report-ubuntu-latest/20261030-163149-ddeaeddb/platform_paths.log",
+      "bytes": 80,
+      "sha256": "310b65fa3d0bf7c43f9bb3d1eb1887fb2b834027db5e8956399751d2ea5c3c18"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "static",
+      "case": "ci_annotations",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 12,
+      "path": "m0-report-ubuntu-latest/20261030-163149-ddeaeddb/ci_annotations.log",
+      "bytes": 42,
+      "sha256": "e6f1720d56cf90165af33e5c8850e7e912b46b12140baccf41cc974aae9f8336"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "static",
+      "case": "report_evidence",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 77,
+      "path": "m0-report-ubuntu-latest/20261030-163149-ddeaeddb/report_evidence.log",
+      "bytes": 43,
+      "sha256": "51e7563874211bcddaaa5384ce34c6cea8ada5e21889c1ae92e31478efa7490e"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "static",
+      "case": "writer_boundary",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 24,
+      "path": "m0-report-ubuntu-latest/20261030-163149-ddeaeddb/writer_boundary.log",
+      "bytes": 85,
+      "sha256": "c692fbbffedc2dfb1462d91a5c50592ebd92cbb09eb02e331f2e3b35158e59c0"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "static",
+      "case": "shielding_scenario_model",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 93,
+      "path": "m0-report-ubuntu-latest/20261030-163149-ddeaeddb/shielding_scenario_model.log",
+      "bytes": 135,
+      "sha256": "26368e67551c3e39efe3b147fed66c6b75d613088b71b35b1c42cc5932950bbe"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "static",
+      "case": "shielding_analysis",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 113,
+      "path": "m0-report-ubuntu-latest/20261030-163149-ddeaeddb/shielding_analysis.log",
+      "bytes": 19,
+      "sha256": "eea30185f373f1418469885b72d4577f2b2283a3a79144ec465f494817214aa8"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "static",
+      "case": "effective_config_model",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 18,
+      "path": "m0-report-ubuntu-latest/20261030-163149-ddeaeddb/effective_config_model.log",
+      "bytes": 58,
+      "sha256": "0d15697820772d53853ad6ff81ab78caec5280c9c22049233e434c8de8e176db"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "static",
+      "case": "main_config_version_component",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 4,
+      "path": "m0-report-ubuntu-latest/20261030-163149-ddeaeddb/main_config_version_component.log",
+      "bytes": 17,
+      "sha256": "7fdd0a724827b7f91af0dbb33282a4c50d277a6aef2fcec17950b8bd1debef99"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "static",
+      "case": "main_ini_migration",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 60,
+      "path": "m0-report-ubuntu-latest/20261030-163149-ddeaeddb/main_ini_migration.log",
+      "bytes": 54,
+      "sha256": "d614f49467ed3c26847f1450093c96f8b5f7838306ff14d2736f364b27b5675c"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "static",
+      "case": "config_migration",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 447,
+      "path": "m0-report-ubuntu-latest/20261030-163149-ddeaeddb/config_migration.log",
+      "bytes": 54,
+      "sha256": "a597e2d26065ca0a07a3f0f63da34c9504e2f2d7c73764e88ccff35fac6e236b"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "static",
+      "case": "project_snapshot_compat",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 78,
+      "path": "m0-report-ubuntu-latest/20261030-163149-ddeaeddb/project_snapshot_compat.log",
+      "bytes": 124,
+      "sha256": "c717ee5a4674dcb23b34fe6a5e8dc2e7e660ed7d6cd24d59701ab468eea08b1d"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "static",
+      "case": "duplicate_generated_package_model",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 128,
+      "path": "m0-report-ubuntu-latest/20261030-163149-ddeaeddb/duplicate_generated_package_model.log",
+      "bytes": 86,
+      "sha256": "5af9531995ec8eb868f6f048d10ab69810cb5aaa107f615e71c1226999017ee0"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "static",
+      "case": "geometry_diagnostic_identity",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 4,
+      "path": "m0-report-ubuntu-latest/20261030-163149-ddeaeddb/geometry_diagnostic_identity.log",
+      "bytes": 63,
+      "sha256": "98f5cabd0b9f4eda66e87be165f46220a0ff10faf89c682bd62f14b0ae184310"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "static",
+      "case": "input_provenance",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 15,
+      "path": "m0-report-ubuntu-latest/20261030-163149-ddeaeddb/input_provenance.log",
+      "bytes": 64,
+      "sha256": "768b631b76e4d32750e764251d71f55405983233c058ca19c222a0a73d9205a1"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "static",
+      "case": "effective_consumer_state",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 3,
+      "path": "m0-report-ubuntu-latest/20261030-163149-ddeaeddb/effective_consumer_state.log",
+      "bytes": 61,
+      "sha256": "d47da3ba00a4b25a2fa3034dd314e364e3ccf4c1b1d4376bb75be2c1b3d7e031"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "static",
+      "case": "effective_receipt_view",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 14,
+      "path": "m0-report-ubuntu-latest/20261030-163149-ddeaeddb/effective_receipt_view.log",
+      "bytes": 154,
+      "sha256": "7b735b89fb1ad1709d6840a0bba0cdcaf5b98cb4ee39096bd9885d7621c082da"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "static",
+      "case": "output_provenance",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 46,
+      "path": "m0-report-ubuntu-latest/20261030-163149-ddeaeddb/output_provenance.log",
+      "bytes": 1412,
+      "sha256": "2835a66f552f3e8ede20f9c043b6c42c33d8b9fcb5a69e21291c82f8c26f5fad"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "gui",
+      "case": "gui_f5_recovery",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 62,
+      "path": "m0-report-ubuntu-latest/20261030-163253-5f8ec5d4/gui_f5_recovery.log",
+      "bytes": 89,
+      "sha256": "df4beb6854de1f8638d35f5fea6e66057c2bf934e76f7614d822cfe302566274"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "gui",
+      "case": "gui_f5_editor_history",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 237,
+      "path": "m0-report-ubuntu-latest/20261030-163253-5f8ec5d4/gui_f5_editor_history.log",
+      "bytes": 1165,
+      "sha256": "b2b6e3912aa427ee6173b3791f49ff383f724678d9ac51ad4c061e0419c39ab9"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "gui",
+      "case": "gui_f5_recovery_process",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 12,
+      "path": "m0-report-ubuntu-latest/20261030-163253-5f8ec5d4/gui_f5_recovery_process.log",
+      "bytes": 303,
+      "sha256": "a3b49061351eca3cf8318cc33e9dcd20c3f4ffa2d004514b34053e5cc527a4f7"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "gui",
+      "case": "gui_f4_navigation",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 224,
+      "path": "m0-report-ubuntu-latest/20261030-163253-5f8ec5d4/gui_f4_navigation.log",
+      "bytes": 168,
+      "sha256": "723878265080093311b870094952792da61e733ff6c1c9012b8cc2a608c549de"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "gui",
+      "case": "gui_f4_entrypoints",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 62,
+      "path": "m0-report-ubuntu-latest/20261030-163253-5f8ec5d4/gui_f4_entrypoints.log",
+      "bytes": 593,
+      "sha256": "27fa5e99d413bf22c886b1a7bb15286b719fafa8f79180d750686ea995031634"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "gui",
+      "case": "gui_f4_layout",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 257,
+      "path": "m0-report-ubuntu-latest/20261030-163253-5f8ec5d4/gui_f4_layout.log",
+      "bytes": 6610,
+      "sha256": "5ad76f4a61ca297dd12f5b4592a450293795b36269f188654d61be10c20fa75d"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "gui",
+      "case": "gui_f4_inspect_protocol",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 46,
+      "path": "m0-report-ubuntu-latest/20261030-163253-5f8ec5d4/gui_f4_inspect_protocol.log",
+      "bytes": 78,
+      "sha256": "46ae4728e2114dab83a449090e5c2d58ceb07881b423b00f431831ca22009164"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "gui",
+      "case": "gui_f1_output_identity",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 28,
+      "path": "m0-report-ubuntu-latest/20261030-163253-5f8ec5d4/gui_f1_output_identity.log",
+      "bytes": 47,
+      "sha256": "7c6ae9b8a106feae64a07ac0a9779e900a07e3b28d9d5b34740b5feb2fd7e8ea"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "gui",
+      "case": "gui_f1_async_identity",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 39,
+      "path": "m0-report-ubuntu-latest/20261030-163253-5f8ec5d4/gui_f1_async_identity.log",
+      "bytes": 3942,
+      "sha256": "387821a122b6ef1bca1c68d34505b8e8a7eeb453286eaa987649ab9d65fb250c"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "gui",
+      "case": "gui_config_migration",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 74,
+      "path": "m0-report-ubuntu-latest/20261030-163253-5f8ec5d4/gui_config_migration.log",
+      "bytes": 48,
+      "sha256": "76484c167d012b68dd342c14a8177d8c9cfa5a9f4e4f5f01d038f5d71e81f6e1"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "gui",
+      "case": "effective_config_collection",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 42,
+      "path": "m0-report-ubuntu-latest/20261030-163253-5f8ec5d4/effective_config_collection.log",
+      "bytes": 211,
+      "sha256": "26340bc5fdd83f176a360b6d6d8ac8ca4db79f04d0a2e99ad85cba6ec3f8f11e"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "gui",
+      "case": "effective_config_viewer",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 22,
+      "path": "m0-report-ubuntu-latest/20261030-163253-5f8ec5d4/effective_config_viewer.log",
+      "bytes": 115,
+      "sha256": "55f915cb320978c1cd117063beed18c119cbede0d68e5bd76c19497c69629ec3"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "gui",
+      "case": "gui_parsers",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 8,
+      "path": "m0-report-ubuntu-latest/20261030-163253-5f8ec5d4/gui_parsers.log",
+      "bytes": 35,
+      "sha256": "0681a3a73ed5077894bc6c9605e5b41b0f2f9f551ac25d6991f5d2ac25e988f7"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "gui",
+      "case": "gui_qt_combo_data",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 29,
+      "path": "m0-report-ubuntu-latest/20261030-163253-5f8ec5d4/gui_qt_combo_data.log",
+      "bytes": 244,
+      "sha256": "61928d2acf3830f73168f7fa903e664e1beda20d335dd1eb92cc504a8fbc4b9e"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "gui",
+      "case": "gui_qt_binding_lifetime",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 8,
+      "path": "m0-report-ubuntu-latest/20261030-163253-5f8ec5d4/gui_qt_binding_lifetime.log",
+      "bytes": 561,
+      "sha256": "29a43c5c56453fce75ea9064f1368985db2a674d319089a161aa65303ebda602"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "gui",
+      "case": "gui_materials",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 42,
+      "path": "m0-report-ubuntu-latest/20261030-163253-5f8ec5d4/gui_materials.log",
+      "bytes": 45,
+      "sha256": "16fe47bb7af9f40ab9bf499db97ac47b3399420163b6b129ca15741099147db4"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "gui",
+      "case": "gui_geometry",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 69,
+      "path": "m0-report-ubuntu-latest/20261030-163253-5f8ec5d4/gui_geometry.log",
+      "bytes": 44,
+      "sha256": "1a4ce4692967b7c13b87904817be371bb61ab1978a6ec4d39d4a1862abe95f7e"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "gui",
+      "case": "gui_preview",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 22,
+      "path": "m0-report-ubuntu-latest/20261030-163253-5f8ec5d4/gui_preview.log",
+      "bytes": 38,
+      "sha256": "cafd0f4a1b079749f44e4e3682f0fa03cc6d410adc80b4af1f12f194e6668d21"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "gui",
+      "case": "gui_preview_primitives",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 37,
+      "path": "m0-report-ubuntu-latest/20261030-163253-5f8ec5d4/gui_preview_primitives.log",
+      "bytes": 49,
+      "sha256": "867c1cc504d7b376450a147e3aad3714cc629da8594987e4eadc6e831250197b"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "gui",
+      "case": "gui_project_io",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 6,
+      "path": "m0-report-ubuntu-latest/20261030-163253-5f8ec5d4/gui_project_io.log",
+      "bytes": 38,
+      "sha256": "e816e97f4293c8371f6d44eee025d927e848d198b98ba8bf4afba87d9066b693"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "gui",
+      "case": "gui_project_import_projection",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 393,
+      "path": "m0-report-ubuntu-latest/20261030-163253-5f8ec5d4/gui_project_import_projection.log",
+      "bytes": 6579,
+      "sha256": "8f1307565bf4f879061dcd270534f951c936b83010de9ead9fff082aa35f4584"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "gui",
+      "case": "gui_project_snapshot_restore",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 61,
+      "path": "m0-report-ubuntu-latest/20261030-163253-5f8ec5d4/gui_project_snapshot_restore.log",
+      "bytes": 6547,
+      "sha256": "cb601cd4e4d0216cfe6804dac2d07372430454e4c531b6d98ea88d60e26f5312"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "gui",
+      "case": "gui_source",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 50,
+      "path": "m0-report-ubuntu-latest/20261030-163253-5f8ec5d4/gui_source.log",
+      "bytes": 45,
+      "sha256": "e1071a389518028dd555e83fc9fa1e4ecd700c96cdbf0a99ec570200840d3957"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "gui",
+      "case": "gui_source_field_preservation",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 340,
+      "path": "m0-report-ubuntu-latest/20261030-163253-5f8ec5d4/gui_source_field_preservation.log",
+      "bytes": 916,
+      "sha256": "27eabc4cccdf73967f627c26d816d41272a12e0dd79da69601cf63048a35c8e9"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "gui",
+      "case": "gui_run_config",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 34,
+      "path": "m0-report-ubuntu-latest/20261030-163253-5f8ec5d4/gui_run_config.log",
+      "bytes": 47,
+      "sha256": "f257e69596cabda87b8db46eae0f21612062de9eee30c9d987c7c7693914e63a"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "gui",
+      "case": "gui_dose_results",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 21,
+      "path": "m0-report-ubuntu-latest/20261030-163253-5f8ec5d4/gui_dose_results.log",
+      "bytes": 1159,
+      "sha256": "2064b8b46b421cf62c03bf3ad847fb7d3490ad89bd45bbf2f824c135f0c47084"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "gui",
+      "case": "gui_plots",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 37,
+      "path": "m0-report-ubuntu-latest/20261030-163253-5f8ec5d4/gui_plots.log",
+      "bytes": 6480,
+      "sha256": "286882c8e8b3fe21f54611222080b56224064579857754d0b68fa31a3b61f263"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "gui",
+      "case": "gui_new_simulation_wizard",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 60,
+      "path": "m0-report-ubuntu-latest/20261030-163253-5f8ec5d4/gui_new_simulation_wizard.log",
+      "bytes": 375,
+      "sha256": "d5a49d07269b7075fdaa79c75f8b4c9dba3636fdac9e783686431296f35f2a8a"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "gui",
+      "case": "scenario_page",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 31,
+      "path": "m0-report-ubuntu-latest/20261030-163253-5f8ec5d4/scenario_page.log",
+      "bytes": 95,
+      "sha256": "0ae3199c6d6a496edb68b1c02e7e95dc223e04f32511881f583340c031e4b351"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "gui",
+      "case": "gui_scans",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 58,
+      "path": "m0-report-ubuntu-latest/20261030-163253-5f8ec5d4/gui_scans.log",
+      "bytes": 68,
+      "sha256": "e38f0ec3d1c9041b5b9ce45f7a2cf7b8b3481c725341cd41df863839e323470b"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "gui",
+      "case": "gui_start_page",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 74,
+      "path": "m0-report-ubuntu-latest/20261030-163253-5f8ec5d4/gui_start_page.log",
+      "bytes": 12019,
+      "sha256": "7e2f3eb7733eb160720b44bccd92c029db4d8feea8f6622383b07ef93ed29046"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "gui",
+      "case": "gui_fluence_results",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 31,
+      "path": "m0-report-ubuntu-latest/20261030-163253-5f8ec5d4/gui_fluence_results.log",
+      "bytes": 1162,
+      "sha256": "f8b35016d150f619976280849cd07d122a1ce5a5b8eb3813c56e3cad8f694ca6"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "gui",
+      "case": "gui_output_extensions",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 61,
+      "path": "m0-report-ubuntu-latest/20261030-163253-5f8ec5d4/gui_output_extensions.log",
+      "bytes": 1168,
+      "sha256": "346856f29153ada8f9cb1a5c469c8909d84ad7b9bb1f8333fc85663048ad4be2"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "gui",
+      "case": "gui_output",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 15,
+      "path": "m0-report-ubuntu-latest/20261030-163253-5f8ec5d4/gui_output.log",
+      "bytes": 41,
+      "sha256": "5a63647ed317e8368ac31a5c180dff0fd92fd939be5abd2cc76227e4dca7e540"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "gui",
+      "case": "gui_history",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 7,
+      "path": "m0-report-ubuntu-latest/20261030-163253-5f8ec5d4/gui_history.log",
+      "bytes": 35,
+      "sha256": "6a590ec73966942743841e815af8794591482af191f57f1113ad15f64ab27e7a"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "gui",
+      "case": "gui_duplicate_history_cli",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 254,
+      "path": "m0-report-ubuntu-latest/20261030-163253-5f8ec5d4/gui_duplicate_history_cli.log",
+      "bytes": 51,
+      "sha256": "b77bd34dcb2d4dd67cee97e8af95cb7477eb4a786ab4eab0fa3ca7e8996a2bfe"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "gui",
+      "case": "gui_run_result",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 20,
+      "path": "m0-report-ubuntu-latest/20261030-163253-5f8ec5d4/gui_run_result.log",
+      "bytes": 39,
+      "sha256": "46dde4387f2cb08fb951874a6ecccc6987b480dd9e49f4d95146b7222ec9ab98"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "gui",
+      "case": "gui_live_progress",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 71,
+      "path": "m0-report-ubuntu-latest/20261030-163253-5f8ec5d4/gui_live_progress.log",
+      "bytes": 99,
+      "sha256": "51cfee5c7dc48d2f8fe2b3d183bcc682fa07d045fbe4444cd55449acf3a3ea37"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "gui",
+      "case": "gui_main_window",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 46,
+      "path": "m0-report-ubuntu-latest/20261030-163253-5f8ec5d4/gui_main_window.log",
+      "bytes": 6295,
+      "sha256": "3024d1698ae1eb3224dac416fb73fde620a7032fda6bcf202e81801b4f8bb996"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "gui",
+      "case": "gui_unsupported_features",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 6,
+      "path": "m0-report-ubuntu-latest/20261030-163253-5f8ec5d4/gui_unsupported_features.log",
+      "bytes": 68,
+      "sha256": "b483c90fc92d1addd7205126f14fe83c7319923d1db724f717e3342928895f59"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "gui",
+      "case": "gui_geometry_safety",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 11,
+      "path": "m0-report-ubuntu-latest/20261030-163253-5f8ec5d4/gui_geometry_safety.log",
+      "bytes": 52,
+      "sha256": "3080f410814041bc0be96dc521c50d1a83588d6f6187cf1d1c8cd1aa61aba96e"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "gui",
+      "case": "gui_geometry_diagnostics",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 15,
+      "path": "m0-report-ubuntu-latest/20261030-163253-5f8ec5d4/gui_geometry_diagnostics.log",
+      "bytes": 55,
+      "sha256": "3de5697d65e5cecce797deba4d7be02e4a587006b4ad5f4d84dbf72aac429e5f"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "gui",
+      "case": "q1_postprocessing",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 123,
+      "path": "m0-report-ubuntu-latest/20261030-163253-5f8ec5d4/q1_postprocessing.log",
+      "bytes": 1056,
+      "sha256": "bfa939bf7703d6279aa6f1fd4a3cf95a9dcf6b02a9efa61403fd0dd58d3de5c1"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "gui",
+      "case": "gui_output_provenance",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 21,
+      "path": "m0-report-ubuntu-latest/20261030-163253-5f8ec5d4/gui_output_provenance.log",
+      "bytes": 1334,
+      "sha256": "c382cd6e0ebe33bdba0cf99f2e748cd8dff3cbb5c9663275bfbe6b119c39f92b"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "gui",
+      "case": "q1_public_paths",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 32,
+      "path": "m0-report-ubuntu-latest/20261030-163253-5f8ec5d4/q1_public_paths.log",
+      "bytes": 2045,
+      "sha256": "ad178c80366a2eb55965b286db3c24daf20ff3d2a69c6bcf4bada7b9d8d5c1c6"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "gui",
+      "case": "gui_3d_view",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 18,
+      "path": "m0-report-ubuntu-latest/20261030-163253-5f8ec5d4/gui_3d_view.log",
+      "bytes": 215,
+      "sha256": "8f0db22dde8c24f26b8023ee8a79b43a59a7ee9015926f34615748fcaf6786ad"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "gui",
+      "case": "gui_config_editors",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 33,
+      "path": "m0-report-ubuntu-latest/20261030-163253-5f8ec5d4/gui_config_editors.log",
+      "bytes": 295,
+      "sha256": "8d7717b2addb5dc3ff15e90c282577590f1f4072d6ce9b61563c035be71c3556"
+    }
+  ],
+  "zip_members": [
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163210-ef333e6f/build_identity.log",
+      "bytes": 126,
+      "sha256": "afaa448bf65a2f39ea7598c2363d1d7a5eaaa5b2753cf2a0acb71a3a0d143a71"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163210-ef333e6f/ci_annotations.log",
+      "bytes": 42,
+      "sha256": "e6f1720d56cf90165af33e5c8850e7e912b46b12140baccf41cc974aae9f8336"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163210-ef333e6f/config_migration.log",
+      "bytes": 54,
+      "sha256": "a597e2d26065ca0a07a3f0f63da34c9504e2f2d7c73764e88ccff35fac6e236b"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163210-ef333e6f/doc_links.log",
+      "bytes": 71,
+      "sha256": "a8f906b1e85149a7b4ca1aeef1c5671e0d65a0fc22e9176f9e6156eb2710111d"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163210-ef333e6f/duplicate_generated_package_model.log",
+      "bytes": 86,
+      "sha256": "5af9531995ec8eb868f6f048d10ab69810cb5aaa107f615e71c1226999017ee0"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163210-ef333e6f/effective_config_model.log",
+      "bytes": 58,
+      "sha256": "beefcf119ff52f6025097770f5f122a6f6e448beaf82f57e5976dc35a9304ab2"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163210-ef333e6f/effective_consumer_state.log",
+      "bytes": 61,
+      "sha256": "6e7eaef8b30745cf95f99f224dae69084c5777b66402c90e7a6647d15e8ba7c9"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163210-ef333e6f/effective_receipt_view.log",
+      "bytes": 154,
+      "sha256": "e853b0e2d1b08b410b61584be6cbd4558f34efe67f5dd3acbf74c82059701ef9"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163210-ef333e6f/f1_artifact_model.log",
+      "bytes": 132,
+      "sha256": "c38b11317e25240da8f3b766a509b84cfeb67e1a337d9ee0b4d927fb833017f3"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163210-ef333e6f/f1_input_provenance.log",
+      "bytes": 76,
+      "sha256": "a2ee5f24a8c0929844709e1afc882ff4ac331298da2dc1cd322a10a903f8f815"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163210-ef333e6f/f4_diagnostics.log",
+      "bytes": 103,
+      "sha256": "8e84c9a21395ca85de684507d433f52a5cfeb3048d0fb6100a271086a8181fa9"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163210-ef333e6f/f4_document_diagnostics.log",
+      "bytes": 52,
+      "sha256": "aaf2d8afc6d0867fe1c691f3bd48289301a4482824b0bd7135b614b95835609e"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163210-ef333e6f/f4_producers.log",
+      "bytes": 115,
+      "sha256": "af8813ee0e48818180b68e3d675b194025f509af400c0cc8d53dcd466c295132"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163210-ef333e6f/f5_project_receipts.log",
+      "bytes": 99,
+      "sha256": "1e75653553dc930d64885572f0594f31536a249d26dfe4fb925ad0efedacacef"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163210-ef333e6f/f5_recovery.log",
+      "bytes": 557,
+      "sha256": "ec1c484279228c3a1c5b5ef9ec86dd195eed5efa9ead63cefd1fbc0b9982264c"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163210-ef333e6f/f5_source_snapshots.log",
+      "bytes": 103,
+      "sha256": "ac21ceca4bf0bccf7fe7fcd670a9b9d6c39ea3de9864137a81f642e78248bb6c"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163210-ef333e6f/f5_transactions.log",
+      "bytes": 116,
+      "sha256": "31857ac40fde90151c8c98397f61d0a35d700278d1fcc011ea5dd9b0042a0ec1"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163210-ef333e6f/geometry_diagnostic_identity.log",
+      "bytes": 63,
+      "sha256": "bb2f4009db5f7ca0f88eb73939857d3d1913b3a6c66f4191efe5de8794bb029e"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163210-ef333e6f/input_provenance.log",
+      "bytes": 64,
+      "sha256": "24d74a7d23a9780c79e3be0ad5109903caa179fc59e19af62638ac16252fb5be"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163210-ef333e6f/main_config_version_component.log",
+      "bytes": 17,
+      "sha256": "bf03a482a5cea62eb7613e146132e329b5ca96d39ee5722bb889305b18a5c758"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163210-ef333e6f/main_ini_migration.log",
+      "bytes": 54,
+      "sha256": "d614f49467ed3c26847f1450093c96f8b5f7838306ff14d2736f364b27b5675c"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163210-ef333e6f/merge_outputs.log",
+      "bytes": 147,
+      "sha256": "66b9a1b563455abd9e61f68c310a970c64996cd50e4d343a2c4b3da700e499a9"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163210-ef333e6f/output_auto_model.log",
+      "bytes": 64,
+      "sha256": "9ec40f97ae2ac9888c55eab2197f3007473298c928c4e8412af918d6310ba449"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163210-ef333e6f/output_extensions.log",
+      "bytes": 45,
+      "sha256": "56e904249f47f9be0e53928f7f48c5a06d662593e9f9d41ffada8e219e521791"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163210-ef333e6f/output_provenance.log",
+      "bytes": 1347,
+      "sha256": "06657851c194b1add728d98cec3539e7117b68900cd61f2be5e880673b070b1f"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163210-ef333e6f/platform_paths.log",
+      "bytes": 80,
+      "sha256": "310b65fa3d0bf7c43f9bb3d1eb1887fb2b834027db5e8956399751d2ea5c3c18"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163210-ef333e6f/project_snapshot_compat.log",
+      "bytes": 124,
+      "sha256": "c717ee5a4674dcb23b34fe6a5e8dc2e7e660ed7d6cd24d59701ab468eea08b1d"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163210-ef333e6f/report.json",
+      "bytes": 19938,
+      "sha256": "2e9556fd1cef87f6ba038e78f09b72c421e3c831fd67df43fdf356db5d955cf1"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163210-ef333e6f/report_evidence.log",
+      "bytes": 43,
+      "sha256": "51e7563874211bcddaaa5384ce34c6cea8ada5e21889c1ae92e31478efa7490e"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163210-ef333e6f/runner_contract.log",
+      "bytes": 37,
+      "sha256": "ce9ec1cce72a0433e4dae40370635401f13aa2a994d1d2db46cd0af2cf0b6e26"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163210-ef333e6f/shielding_analysis.log",
+      "bytes": 19,
+      "sha256": "eea30185f373f1418469885b72d4577f2b2283a3a79144ec465f494817214aa8"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163210-ef333e6f/shielding_scenario_model.log",
+      "bytes": 170,
+      "sha256": "faa60f6cc7947845c42663b8f4c1e3fb59718e3224160764239ffa4eae6b401c"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163210-ef333e6f/writer_boundary.log",
+      "bytes": 85,
+      "sha256": "c692fbbffedc2dfb1462d91a5c50592ebd92cbb09eb02e331f2e3b35158e59c0"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163402-2590a2ce/effective_config_collection.log",
+      "bytes": 111,
+      "sha256": "b8b84ab930956e5df9fe71b3ecbaa4ddeb8af512e6f42fffd4dfff105cf6c9e9"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163402-2590a2ce/effective_config_viewer.log",
+      "bytes": 115,
+      "sha256": "55f915cb320978c1cd117063beed18c119cbede0d68e5bd76c19497c69629ec3"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163402-2590a2ce/gui_3d_view.log",
+      "bytes": 159,
+      "sha256": "446955624c4c8c91df78d09e04d0a42bd2816c38b4bf1a85c7bf3513cb8bc1f6"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163402-2590a2ce/gui_config_editors.log",
+      "bytes": 295,
+      "sha256": "8d7717b2addb5dc3ff15e90c282577590f1f4072d6ce9b61563c035be71c3556"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163402-2590a2ce/gui_config_migration.log",
+      "bytes": 48,
+      "sha256": "76484c167d012b68dd342c14a8177d8c9cfa5a9f4e4f5f01d038f5d71e81f6e1"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163402-2590a2ce/gui_dose_results.log",
+      "bytes": 1107,
+      "sha256": "298175bc70662f8b6ada9d49b19fda9a19b5f6d9404cf82cf7a8c849c0a66c23"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163402-2590a2ce/gui_duplicate_history_cli.log",
+      "bytes": 51,
+      "sha256": "b77bd34dcb2d4dd67cee97e8af95cb7477eb4a786ab4eab0fa3ca7e8996a2bfe"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163402-2590a2ce/gui_f1_async_identity.log",
+      "bytes": 3747,
+      "sha256": "dca46814e5a4c9a3a57e2d04c71ef73ece3f1797ea71eab176c2bb2f18da1fa5"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163402-2590a2ce/gui_f1_output_identity.log",
+      "bytes": 47,
+      "sha256": "7c6ae9b8a106feae64a07ac0a9779e900a07e3b28d9d5b34740b5feb2fd7e8ea"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163402-2590a2ce/gui_f4_entrypoints.log",
+      "bytes": 43,
+      "sha256": "4fd07e34a2f7b308b97302b2ad127a83e9feab9653b21a16cf9f51b52b5b4b98"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163402-2590a2ce/gui_f4_inspect_protocol.log",
+      "bytes": 78,
+      "sha256": "46ae4728e2114dab83a449090e5c2d58ceb07881b423b00f431831ca22009164"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163402-2590a2ce/gui_f4_layout.log",
+      "bytes": 116,
+      "sha256": "1f16c33d145ee4caa9482bf0241d95fce332aec5279615c192c0ff2f5c525790"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163402-2590a2ce/gui_f4_navigation.log",
+      "bytes": 118,
+      "sha256": "698d5e3b292a28b65f035b2b11e9c9449102abdb7e8721842690b9f74ef3df3c"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163402-2590a2ce/gui_f5_editor_history.log",
+      "bytes": 1113,
+      "sha256": "fe0eeead29424cfe9066c7f7397fea8521f6022c8044c9ceca787e3c6d0bc880"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163402-2590a2ce/gui_f5_recovery.log",
+      "bytes": 89,
+      "sha256": "df4beb6854de1f8638d35f5fea6e66057c2bf934e76f7614d822cfe302566274"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163402-2590a2ce/gui_f5_recovery_process.log",
+      "bytes": 302,
+      "sha256": "b39d205ee8407e49298e74c6e59601b22195f0ef87fb791c6d596b931ca6e46b"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163402-2590a2ce/gui_fluence_results.log",
+      "bytes": 1110,
+      "sha256": "85aaf860f4cdaac909e0c0402b159fc032b11c245ab663d907b615bff0b3ec43"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163402-2590a2ce/gui_geometry.log",
+      "bytes": 44,
+      "sha256": "1a4ce4692967b7c13b87904817be371bb61ab1978a6ec4d39d4a1862abe95f7e"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163402-2590a2ce/gui_geometry_diagnostics.log",
+      "bytes": 55,
+      "sha256": "3de5697d65e5cecce797deba4d7be02e4a587006b4ad5f4d84dbf72aac429e5f"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163402-2590a2ce/gui_geometry_safety.log",
+      "bytes": 52,
+      "sha256": "3080f410814041bc0be96dc521c50d1a83588d6f6187cf1d1c8cd1aa61aba96e"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163402-2590a2ce/gui_history.log",
+      "bytes": 35,
+      "sha256": "6a590ec73966942743841e815af8794591482af191f57f1113ad15f64ab27e7a"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163402-2590a2ce/gui_live_progress.log",
+      "bytes": 99,
+      "sha256": "51cfee5c7dc48d2f8fe2b3d183bcc682fa07d045fbe4444cd55449acf3a3ea37"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163402-2590a2ce/gui_main_window.log",
+      "bytes": 43,
+      "sha256": "4478f913fc7f4d0bdcbfedee587f47c651b1ce15cd8fb3ff2cd4fa3f9fe03702"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163402-2590a2ce/gui_materials.log",
+      "bytes": 45,
+      "sha256": "16fe47bb7af9f40ab9bf499db97ac47b3399420163b6b129ca15741099147db4"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163402-2590a2ce/gui_new_simulation_wizard.log",
+      "bytes": 75,
+      "sha256": "2d4edf7661aa7231f0f4d3be620188baf189ab7c85ccbe20451ac9a5cf4bedfb"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163402-2590a2ce/gui_output.log",
+      "bytes": 41,
+      "sha256": "5a63647ed317e8368ac31a5c180dff0fd92fd939be5abd2cc76227e4dca7e540"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163402-2590a2ce/gui_output_extensions.log",
+      "bytes": 1116,
+      "sha256": "688a55bdadfd50c27541fcd00c5b499629aa75bd494fa0f7e254187ba8508926"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163402-2590a2ce/gui_output_provenance.log",
+      "bytes": 1269,
+      "sha256": "888efbb70c90e7b9e18ef077b76b4d46d936303e0fd2a4d1f2b5aeb3c3d618ad"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163402-2590a2ce/gui_parsers.log",
+      "bytes": 35,
+      "sha256": "0681a3a73ed5077894bc6c9605e5b41b0f2f9f551ac25d6991f5d2ac25e988f7"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163402-2590a2ce/gui_plots.log",
+      "bytes": 6155,
+      "sha256": "03f400a313ab492d7ef674d4541eb28d4ffff98b5f66a41768f1f88597573c00"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163402-2590a2ce/gui_preview.log",
+      "bytes": 38,
+      "sha256": "cafd0f4a1b079749f44e4e3682f0fa03cc6d410adc80b4af1f12f194e6668d21"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163402-2590a2ce/gui_preview_primitives.log",
+      "bytes": 49,
+      "sha256": "867c1cc504d7b376450a147e3aad3714cc629da8594987e4eadc6e831250197b"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163402-2590a2ce/gui_project_import_projection.log",
+      "bytes": 55,
+      "sha256": "02ad09b289827b255f65a78e2ff7cf859e93e73c7668e2bd1dd3a6167814afb0"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163402-2590a2ce/gui_project_io.log",
+      "bytes": 38,
+      "sha256": "e816e97f4293c8371f6d44eee025d927e848d198b98ba8bf4afba87d9066b693"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163402-2590a2ce/gui_project_snapshot_restore.log",
+      "bytes": 53,
+      "sha256": "922000e2b1a2cd5f28b0e5ec014919a0ae42ffeb1651715d265120323055619f"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163402-2590a2ce/gui_qt_binding_lifetime.log",
+      "bytes": 591,
+      "sha256": "b67663fbe4176788fbe9755428e4cfdb612e0442eb9ee67ce1d7f043a3790169"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163402-2590a2ce/gui_qt_combo_data.log",
+      "bytes": 244,
+      "sha256": "a28bffc90cfe2116eb5418ee22941c97cdc3088d11e90d1ee17cfef083e17347"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163402-2590a2ce/gui_run_config.log",
+      "bytes": 47,
+      "sha256": "f257e69596cabda87b8db46eae0f21612062de9eee30c9d987c7c7693914e63a"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163402-2590a2ce/gui_run_result.log",
+      "bytes": 39,
+      "sha256": "46dde4387f2cb08fb951874a6ecccc6987b480dd9e49f4d95146b7222ec9ab98"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163402-2590a2ce/gui_scans.log",
+      "bytes": 68,
+      "sha256": "e38f0ec3d1c9041b5b9ce45f7a2cf7b8b3481c725341cd41df863839e323470b"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163402-2590a2ce/gui_source.log",
+      "bytes": 45,
+      "sha256": "e1071a389518028dd555e83fc9fa1e4ecd700c96cdbf0a99ec570200840d3957"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163402-2590a2ce/gui_source_field_preservation.log",
+      "bytes": 916,
+      "sha256": "27eabc4cccdf73967f627c26d816d41272a12e0dd79da69601cf63048a35c8e9"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163402-2590a2ce/gui_start_page.log",
+      "bytes": 6419,
+      "sha256": "6fd9d5e08de256ee8d146010876712e8e19187a28c496e490b0bab1bd6c27a1a"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163402-2590a2ce/gui_unsupported_features.log",
+      "bytes": 68,
+      "sha256": "b483c90fc92d1addd7205126f14fe83c7319923d1db724f717e3342928895f59"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163402-2590a2ce/q1_postprocessing.log",
+      "bytes": 1004,
+      "sha256": "e6777a21c62c8bd33fef079ae4e976a2658c84f08d2a53447be90fbe8247e763"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163402-2590a2ce/q1_public_paths.log",
+      "bytes": 1967,
+      "sha256": "636b256e9a102277250fe9ddbee25ddb867e73c15e6792cc49d021ced9504070"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163402-2590a2ce/report.json",
+      "bytes": 28807,
+      "sha256": "a0ddc04304c72541eec448c14681f083b96d48bd5afdd031ebbd214ea49f62f7"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "20261030-163402-2590a2ce/scenario_page.log",
+      "bytes": 95,
+      "sha256": "0ae3199c6d6a496edb68b1c02e7e95dc223e04f32511881f583340c031e4b351"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "member": "q1-public-paths-regression.json",
+      "bytes": 301,
+      "sha256": "d85444c299be58d4059b9e0085fc2b2520920ab8244ad173e67f0d7a69c39e9a"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163149-ddeaeddb/ci_annotations.log",
+      "bytes": 42,
+      "sha256": "e6f1720d56cf90165af33e5c8850e7e912b46b12140baccf41cc974aae9f8336"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163149-ddeaeddb/build_identity.log",
+      "bytes": 126,
+      "sha256": "afaa448bf65a2f39ea7598c2363d1d7a5eaaa5b2753cf2a0acb71a3a0d143a71"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163149-ddeaeddb/config_migration.log",
+      "bytes": 54,
+      "sha256": "a597e2d26065ca0a07a3f0f63da34c9504e2f2d7c73764e88ccff35fac6e236b"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163149-ddeaeddb/doc_links.log",
+      "bytes": 71,
+      "sha256": "a8f906b1e85149a7b4ca1aeef1c5671e0d65a0fc22e9176f9e6156eb2710111d"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163149-ddeaeddb/duplicate_generated_package_model.log",
+      "bytes": 86,
+      "sha256": "5af9531995ec8eb868f6f048d10ab69810cb5aaa107f615e71c1226999017ee0"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163149-ddeaeddb/effective_config_model.log",
+      "bytes": 58,
+      "sha256": "0d15697820772d53853ad6ff81ab78caec5280c9c22049233e434c8de8e176db"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163149-ddeaeddb/effective_consumer_state.log",
+      "bytes": 61,
+      "sha256": "d47da3ba00a4b25a2fa3034dd314e364e3ccf4c1b1d4376bb75be2c1b3d7e031"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163149-ddeaeddb/effective_receipt_view.log",
+      "bytes": 154,
+      "sha256": "7b735b89fb1ad1709d6840a0bba0cdcaf5b98cb4ee39096bd9885d7621c082da"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163149-ddeaeddb/f1_artifact_model.log",
+      "bytes": 132,
+      "sha256": "0834f84d106153f19cd21e59312dfe396b9bacfcc36a939d8e45ca59b7596b07"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163149-ddeaeddb/f1_input_provenance.log",
+      "bytes": 76,
+      "sha256": "8d1bfa462c6f331c333c115c755dfc46e5664d602718b75864270f71c98f50ea"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163149-ddeaeddb/f4_diagnostics.log",
+      "bytes": 103,
+      "sha256": "8e84c9a21395ca85de684507d433f52a5cfeb3048d0fb6100a271086a8181fa9"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163149-ddeaeddb/f4_document_diagnostics.log",
+      "bytes": 52,
+      "sha256": "aaf2d8afc6d0867fe1c691f3bd48289301a4482824b0bd7135b614b95835609e"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163149-ddeaeddb/f4_producers.log",
+      "bytes": 115,
+      "sha256": "af8813ee0e48818180b68e3d675b194025f509af400c0cc8d53dcd466c295132"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163149-ddeaeddb/f5_project_receipts.log",
+      "bytes": 99,
+      "sha256": "1e75653553dc930d64885572f0594f31536a249d26dfe4fb925ad0efedacacef"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163149-ddeaeddb/f5_recovery.log",
+      "bytes": 560,
+      "sha256": "cdbc1863bb3cefb84ded17a7cc444dda2ae0e548fb6c3ab79d685750f4bd8077"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163149-ddeaeddb/f5_source_snapshots.log",
+      "bytes": 103,
+      "sha256": "ac21ceca4bf0bccf7fe7fcd670a9b9d6c39ea3de9864137a81f642e78248bb6c"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163149-ddeaeddb/f5_transactions.log",
+      "bytes": 116,
+      "sha256": "31857ac40fde90151c8c98397f61d0a35d700278d1fcc011ea5dd9b0042a0ec1"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163149-ddeaeddb/geometry_diagnostic_identity.log",
+      "bytes": 63,
+      "sha256": "98f5cabd0b9f4eda66e87be165f46220a0ff10faf89c682bd62f14b0ae184310"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163149-ddeaeddb/input_provenance.log",
+      "bytes": 64,
+      "sha256": "768b631b76e4d32750e764251d71f55405983233c058ca19c222a0a73d9205a1"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163149-ddeaeddb/main_config_version_component.log",
+      "bytes": 17,
+      "sha256": "7fdd0a724827b7f91af0dbb33282a4c50d277a6aef2fcec17950b8bd1debef99"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163149-ddeaeddb/main_ini_migration.log",
+      "bytes": 54,
+      "sha256": "d614f49467ed3c26847f1450093c96f8b5f7838306ff14d2736f364b27b5675c"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163149-ddeaeddb/output_auto_model.log",
+      "bytes": 64,
+      "sha256": "af817c26a4b658e2808180cbb0447799f10340fa90a52cd438b554e0ab323a3d"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163149-ddeaeddb/output_extensions.log",
+      "bytes": 45,
+      "sha256": "56e904249f47f9be0e53928f7f48c5a06d662593e9f9d41ffada8e219e521791"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163149-ddeaeddb/merge_outputs.log",
+      "bytes": 147,
+      "sha256": "66b9a1b563455abd9e61f68c310a970c64996cd50e4d343a2c4b3da700e499a9"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163149-ddeaeddb/output_provenance.log",
+      "bytes": 1412,
+      "sha256": "2835a66f552f3e8ede20f9c043b6c42c33d8b9fcb5a69e21291c82f8c26f5fad"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163149-ddeaeddb/platform_paths.log",
+      "bytes": 80,
+      "sha256": "310b65fa3d0bf7c43f9bb3d1eb1887fb2b834027db5e8956399751d2ea5c3c18"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163149-ddeaeddb/project_snapshot_compat.log",
+      "bytes": 124,
+      "sha256": "c717ee5a4674dcb23b34fe6a5e8dc2e7e660ed7d6cd24d59701ab468eea08b1d"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163149-ddeaeddb/report.json",
+      "bytes": 20166,
+      "sha256": "dc71f7c76ddef6c424ebb29d98fe77fb0164916211a5203fe2e10d1a7ac6af0a"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163149-ddeaeddb/report_evidence.log",
+      "bytes": 43,
+      "sha256": "51e7563874211bcddaaa5384ce34c6cea8ada5e21889c1ae92e31478efa7490e"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163149-ddeaeddb/runner_contract.log",
+      "bytes": 37,
+      "sha256": "ce9ec1cce72a0433e4dae40370635401f13aa2a994d1d2db46cd0af2cf0b6e26"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163149-ddeaeddb/shielding_analysis.log",
+      "bytes": 19,
+      "sha256": "eea30185f373f1418469885b72d4577f2b2283a3a79144ec465f494817214aa8"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163149-ddeaeddb/shielding_scenario_model.log",
+      "bytes": 135,
+      "sha256": "26368e67551c3e39efe3b147fed66c6b75d613088b71b35b1c42cc5932950bbe"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163253-5f8ec5d4/effective_config_collection.log",
+      "bytes": 211,
+      "sha256": "26340bc5fdd83f176a360b6d6d8ac8ca4db79f04d0a2e99ad85cba6ec3f8f11e"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163149-ddeaeddb/writer_boundary.log",
+      "bytes": 85,
+      "sha256": "c692fbbffedc2dfb1462d91a5c50592ebd92cbb09eb02e331f2e3b35158e59c0"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163253-5f8ec5d4/effective_config_viewer.log",
+      "bytes": 115,
+      "sha256": "55f915cb320978c1cd117063beed18c119cbede0d68e5bd76c19497c69629ec3"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163253-5f8ec5d4/gui_3d_view.log",
+      "bytes": 215,
+      "sha256": "8f0db22dde8c24f26b8023ee8a79b43a59a7ee9015926f34615748fcaf6786ad"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163253-5f8ec5d4/gui_config_editors.log",
+      "bytes": 295,
+      "sha256": "8d7717b2addb5dc3ff15e90c282577590f1f4072d6ce9b61563c035be71c3556"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163253-5f8ec5d4/gui_config_migration.log",
+      "bytes": 48,
+      "sha256": "76484c167d012b68dd342c14a8177d8c9cfa5a9f4e4f5f01d038f5d71e81f6e1"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163253-5f8ec5d4/gui_dose_results.log",
+      "bytes": 1159,
+      "sha256": "2064b8b46b421cf62c03bf3ad847fb7d3490ad89bd45bbf2f824c135f0c47084"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163253-5f8ec5d4/gui_duplicate_history_cli.log",
+      "bytes": 51,
+      "sha256": "b77bd34dcb2d4dd67cee97e8af95cb7477eb4a786ab4eab0fa3ca7e8996a2bfe"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163253-5f8ec5d4/gui_f1_async_identity.log",
+      "bytes": 3942,
+      "sha256": "387821a122b6ef1bca1c68d34505b8e8a7eeb453286eaa987649ab9d65fb250c"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163253-5f8ec5d4/gui_f1_output_identity.log",
+      "bytes": 47,
+      "sha256": "7c6ae9b8a106feae64a07ac0a9779e900a07e3b28d9d5b34740b5feb2fd7e8ea"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163253-5f8ec5d4/gui_f4_entrypoints.log",
+      "bytes": 593,
+      "sha256": "27fa5e99d413bf22c886b1a7bb15286b719fafa8f79180d750686ea995031634"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163253-5f8ec5d4/gui_f4_inspect_protocol.log",
+      "bytes": 78,
+      "sha256": "46ae4728e2114dab83a449090e5c2d58ceb07881b423b00f431831ca22009164"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163253-5f8ec5d4/gui_f4_layout.log",
+      "bytes": 6610,
+      "sha256": "5ad76f4a61ca297dd12f5b4592a450293795b36269f188654d61be10c20fa75d"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163253-5f8ec5d4/gui_f4_navigation.log",
+      "bytes": 168,
+      "sha256": "723878265080093311b870094952792da61e733ff6c1c9012b8cc2a608c549de"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163253-5f8ec5d4/gui_f5_editor_history.log",
+      "bytes": 1165,
+      "sha256": "b2b6e3912aa427ee6173b3791f49ff383f724678d9ac51ad4c061e0419c39ab9"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163253-5f8ec5d4/gui_f5_recovery.log",
+      "bytes": 89,
+      "sha256": "df4beb6854de1f8638d35f5fea6e66057c2bf934e76f7614d822cfe302566274"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163253-5f8ec5d4/gui_f5_recovery_process.log",
+      "bytes": 303,
+      "sha256": "a3b49061351eca3cf8318cc33e9dcd20c3f4ffa2d004514b34053e5cc527a4f7"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163253-5f8ec5d4/gui_fluence_results.log",
+      "bytes": 1162,
+      "sha256": "f8b35016d150f619976280849cd07d122a1ce5a5b8eb3813c56e3cad8f694ca6"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163253-5f8ec5d4/gui_geometry.log",
+      "bytes": 44,
+      "sha256": "1a4ce4692967b7c13b87904817be371bb61ab1978a6ec4d39d4a1862abe95f7e"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163253-5f8ec5d4/gui_geometry_diagnostics.log",
+      "bytes": 55,
+      "sha256": "3de5697d65e5cecce797deba4d7be02e4a587006b4ad5f4d84dbf72aac429e5f"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163253-5f8ec5d4/gui_geometry_safety.log",
+      "bytes": 52,
+      "sha256": "3080f410814041bc0be96dc521c50d1a83588d6f6187cf1d1c8cd1aa61aba96e"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163253-5f8ec5d4/gui_history.log",
+      "bytes": 35,
+      "sha256": "6a590ec73966942743841e815af8794591482af191f57f1113ad15f64ab27e7a"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163253-5f8ec5d4/gui_main_window.log",
+      "bytes": 6295,
+      "sha256": "3024d1698ae1eb3224dac416fb73fde620a7032fda6bcf202e81801b4f8bb996"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163253-5f8ec5d4/gui_live_progress.log",
+      "bytes": 99,
+      "sha256": "51cfee5c7dc48d2f8fe2b3d183bcc682fa07d045fbe4444cd55449acf3a3ea37"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163253-5f8ec5d4/gui_materials.log",
+      "bytes": 45,
+      "sha256": "16fe47bb7af9f40ab9bf499db97ac47b3399420163b6b129ca15741099147db4"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163253-5f8ec5d4/gui_new_simulation_wizard.log",
+      "bytes": 375,
+      "sha256": "d5a49d07269b7075fdaa79c75f8b4c9dba3636fdac9e783686431296f35f2a8a"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163253-5f8ec5d4/gui_output.log",
+      "bytes": 41,
+      "sha256": "5a63647ed317e8368ac31a5c180dff0fd92fd939be5abd2cc76227e4dca7e540"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163253-5f8ec5d4/gui_output_extensions.log",
+      "bytes": 1168,
+      "sha256": "346856f29153ada8f9cb1a5c469c8909d84ad7b9bb1f8333fc85663048ad4be2"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163253-5f8ec5d4/gui_output_provenance.log",
+      "bytes": 1334,
+      "sha256": "c382cd6e0ebe33bdba0cf99f2e748cd8dff3cbb5c9663275bfbe6b119c39f92b"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163253-5f8ec5d4/gui_parsers.log",
+      "bytes": 35,
+      "sha256": "0681a3a73ed5077894bc6c9605e5b41b0f2f9f551ac25d6991f5d2ac25e988f7"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163253-5f8ec5d4/gui_plots.log",
+      "bytes": 6480,
+      "sha256": "286882c8e8b3fe21f54611222080b56224064579857754d0b68fa31a3b61f263"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163253-5f8ec5d4/gui_preview.log",
+      "bytes": 38,
+      "sha256": "cafd0f4a1b079749f44e4e3682f0fa03cc6d410adc80b4af1f12f194e6668d21"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163253-5f8ec5d4/gui_preview_primitives.log",
+      "bytes": 49,
+      "sha256": "867c1cc504d7b376450a147e3aad3714cc629da8594987e4eadc6e831250197b"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163253-5f8ec5d4/gui_project_import_projection.log",
+      "bytes": 6579,
+      "sha256": "8f1307565bf4f879061dcd270534f951c936b83010de9ead9fff082aa35f4584"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163253-5f8ec5d4/gui_project_io.log",
+      "bytes": 38,
+      "sha256": "e816e97f4293c8371f6d44eee025d927e848d198b98ba8bf4afba87d9066b693"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163253-5f8ec5d4/gui_project_snapshot_restore.log",
+      "bytes": 6547,
+      "sha256": "cb601cd4e4d0216cfe6804dac2d07372430454e4c531b6d98ea88d60e26f5312"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163253-5f8ec5d4/gui_qt_binding_lifetime.log",
+      "bytes": 561,
+      "sha256": "29a43c5c56453fce75ea9064f1368985db2a674d319089a161aa65303ebda602"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163253-5f8ec5d4/gui_qt_combo_data.log",
+      "bytes": 244,
+      "sha256": "61928d2acf3830f73168f7fa903e664e1beda20d335dd1eb92cc504a8fbc4b9e"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163253-5f8ec5d4/gui_run_result.log",
+      "bytes": 39,
+      "sha256": "46dde4387f2cb08fb951874a6ecccc6987b480dd9e49f4d95146b7222ec9ab98"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163253-5f8ec5d4/gui_run_config.log",
+      "bytes": 47,
+      "sha256": "f257e69596cabda87b8db46eae0f21612062de9eee30c9d987c7c7693914e63a"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163253-5f8ec5d4/gui_scans.log",
+      "bytes": 68,
+      "sha256": "e38f0ec3d1c9041b5b9ce45f7a2cf7b8b3481c725341cd41df863839e323470b"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163253-5f8ec5d4/gui_source.log",
+      "bytes": 45,
+      "sha256": "e1071a389518028dd555e83fc9fa1e4ecd700c96cdbf0a99ec570200840d3957"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163253-5f8ec5d4/gui_source_field_preservation.log",
+      "bytes": 916,
+      "sha256": "27eabc4cccdf73967f627c26d816d41272a12e0dd79da69601cf63048a35c8e9"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163253-5f8ec5d4/gui_start_page.log",
+      "bytes": 12019,
+      "sha256": "7e2f3eb7733eb160720b44bccd92c029db4d8feea8f6622383b07ef93ed29046"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163253-5f8ec5d4/gui_unsupported_features.log",
+      "bytes": 68,
+      "sha256": "b483c90fc92d1addd7205126f14fe83c7319923d1db724f717e3342928895f59"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163253-5f8ec5d4/q1_postprocessing.log",
+      "bytes": 1056,
+      "sha256": "bfa939bf7703d6279aa6f1fd4a3cf95a9dcf6b02a9efa61403fd0dd58d3de5c1"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163253-5f8ec5d4/report.json",
+      "bytes": 29124,
+      "sha256": "7df146a3710bdd64dcdc8e174558b2dc8a56bc946320c264f3b7b6f32f4f516a"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163253-5f8ec5d4/q1_public_paths.log",
+      "bytes": 2045,
+      "sha256": "ad178c80366a2eb55965b286db3c24daf20ff3d2a69c6bcf4bada7b9d8d5c1c6"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "20261030-163253-5f8ec5d4/scenario_page.log",
+      "bytes": 95,
+      "sha256": "0ae3199c6d6a496edb68b1c02e7e95dc223e04f32511881f583340c031e4b351"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "member": "q1-public-paths-regression.json",
+      "bytes": 291,
+      "sha256": "518990de0dd777654732432875b43b6d497342b9af81f8a61fe07acbec14e8cc"
+    }
+  ],
+  "source_fingerprint": "db253b7b1ed5f810789f1322faa75002df311d4aeb04572867dbb130c71d95cc",
+  "tests_content_fingerprint": "5328e3515e882c69585cbfceeb43ca0e5f480c925e8336072b6cbdfc22de2109",
+  "boundary": "CI only; local Windows all-profile and native UI acceptance are separate. No physics validation is inferred.",
+  "candidate_stage_status": "ci_not_accepted",
+  "report_profile_coverage_complete": false,
+  "missing_profiles": [
+    [
+      "linux-evidence-11.3.2",
+      "backend"
+    ],
+    [
+      "linux-evidence-11.3.2",
+      "gui"
+    ],
+    [
+      "linux-evidence-11.3.2",
+      "integration"
+    ],
+    [
+      "linux-evidence-11.3.2",
+      "static"
+    ],
+    [
+      "linux-evidence-11.4.3",
+      "backend"
+    ],
+    [
+      "linux-evidence-11.4.3",
+      "gui"
+    ],
+    [
+      "linux-evidence-11.4.3",
+      "integration"
+    ],
+    [
+      "linux-evidence-11.4.3",
+      "static"
+    ]
+  ],
+  "qt_runtime": [
+    {
+      "artifact": "m0-report-windows-latest",
+      "identity": {
+        "python": "3.11.9 (tags/v3.11.9:de54cf5, Apr  2 2024, 10:12:12) [MSC v.1938 64 bit (AMD64)]",
+        "implementation": "CPython",
+        "PySide6": "6.11.3",
+        "shiboken6": "6.11.3",
+        "Qt": "6.11.3"
+      },
+      "operations": [
+        {
+          "operation": "QWidget.update",
+          "iterations": 100,
+          "none_ref_delta": 0
+        },
+        {
+          "operation": "QObject.setObjectName",
+          "iterations": 100,
+          "none_ref_delta": 0
+        },
+        {
+          "operation": "QObject.missing_property",
+          "iterations": 100,
+          "none_ref_delta": 0
+        },
+        {
+          "operation": "QObject.existing_false_property",
+          "iterations": 100,
+          "none_ref_delta": 0
+        }
+      ],
+      "pass": true,
+      "log": "m0-report-windows-latest/20261030-163402-2590a2ce/gui_qt_binding_lifetime.log",
+      "log_sha256": "b67663fbe4176788fbe9755428e4cfdb612e0442eb9ee67ce1d7f043a3790169"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "identity": {
+        "python": "3.11.17 (main, Oct  1 2026, 14:33:19) [GCC 15.2.0]",
+        "implementation": "CPython",
+        "PySide6": "6.11.3",
+        "shiboken6": "6.11.3",
+        "Qt": "6.11.3"
+      },
+      "operations": [
+        {
+          "operation": "QWidget.update",
+          "iterations": 100,
+          "none_ref_delta": 0
+        },
+        {
+          "operation": "QObject.setObjectName",
+          "iterations": 100,
+          "none_ref_delta": 0
+        },
+        {
+          "operation": "QObject.missing_property",
+          "iterations": 100,
+          "none_ref_delta": 0
+        },
+        {
+          "operation": "QObject.existing_false_property",
+          "iterations": 100,
+          "none_ref_delta": 0
+        }
+      ],
+      "pass": true,
+      "log": "m0-report-ubuntu-latest/20261030-163253-5f8ec5d4/gui_qt_binding_lifetime.log",
+      "log_sha256": "29a43c5c56453fce75ea9064f1368985db2a674d319089a161aa65303ebda602"
+    }
+  ],
+  "helper_builds": [],
+  "helper_runs": [],
+  "native_evidence_boundary": "Native acceptance and Windows all-profile are handled by root; this receipt does not infer their result.",
+  "ddd_first_run_evidence": [],
+  "git_dirty_boundary": "Preserve git_dirty and exact git_status_porcelain together. Dirty paths are reported as observed; source/test fingerprints and tracked-source inventory are separate checks, not proof of an entirely clean runner."
+}

@@ -1,0 +1,16 @@
+# F5 ScanBase 入口 P1 独立修后复核
+
+结论：**无问题（已确认的 ScanBase 入口 P1 在本轮独立反例内修复）**。可由 root 冻结修正候选，重新建立最终提交的 CI；4f960ab 首轮保持撤回，不因旧 CI 成功恢复其最终候选身份。
+
+产品变更位置 `gui/g4usim_gui/window/content.py:19-47`：取得新 ScanBase 前使用故障/忙门禁并完成当前编辑事务；`validate_current` 产生的 raw seed 与恢复来源变更诊断在转换为 typed ScanBase 前拒绝。逐扫描点可覆盖的其他参数仍交既有扫描生成器验证，不扩大主项目撤销/保存范围至独立扫描表单。
+
+独立脚本 `out/collab/f5-scan-independent-recheck.py`，原始日志 `out/collab/f5-scan-independent-recheck.log`，真实 MainWindow / ScanPage、按钮 `.click()`、临时独立 recovery/history、退出码 0；未执行后端：
+
+1. 先从 seed=42、beam_on=101 捕获合法扫描基础并生成包。主配置随后输入非法 seed，未重新读取主配置时，已捕获的独立合法扫描基础仍生成 seed=42，证明未误伤独立扫描范围。
+2. 实际点击“使用当前配置”再点击创建，非法 `not-an-integer` 被拒绝。旧 manifest 身份、所有既有包文件 SHA、扫描参数草稿和原始 seed 均保持。
+3. 按原反例使 Undo 投影与回滚双失败，真实坏控件=2569，权威历史=101。点击同样两按钮无法创建新包，旧 manifest/文件 SHA/扫描草稿保持；显式修复后重新捕获并生成的 macro 为 `/run/beamOn 101`。
+4. 从真实材料文件载入并普通保存/重开，形成已捕获来源；外部修改该文件后点击上述按钮拒绝创建新 ScanBase，保留旧来源原文、既有包和扫描草稿。
+
+原缺陷证据 `f5-ui-final-scan-probe*.log/.json` 均未改动。未修改产品或正式测试。此结果为 Qt 自动入口验证，原生可见窗口、最终修正 SHA 下全量矩阵与真实后端验收仍由 root 汇总。
+
+当前旧轮 CI：run41076028060 与 run41076028070 最近 API 观察均仍在 GUI 测试；首轮初始元数据及不可修改 frozen-case-manifest 留在 `out/verification/f5-ci-4f960ab`。按 root 指令没有继续耗时下载/完整审计旧轮。

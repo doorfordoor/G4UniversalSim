@@ -1,0 +1,46 @@
+[
+  {
+    "category": "no_issue",
+    "case": "strict_codec_and_full_roundtrip",
+    "checks": "missing top/nested fields, wrong types, aliases, complete roundtrip"
+  },
+  {
+    "category": "no_issue",
+    "case": "failure_and_history_boundary",
+    "checks": "partial apply rollback; saved marker; redo preserved on reject; reentrant guard; whole-command trim"
+  },
+  {
+    "category": "confirmed",
+    "case": "source_cache_blocker_bypass",
+    "original_material_errors": [
+      "Material schema error: file 'D:\\Temp\\f5-core-review-3s715j0w\\materials.ini', line 9, section 'material.Mixed', key 'unknown_parameter', value '7': unknown material configuration key"
+    ],
+    "original_geometry_blockers": [
+      "D:\\Temp\\f5-core-review-3s715j0w\\geometry.ini:14 [volume.target]/placement = replica: the current Geometry Editor cannot preserve this field without changing the source"
+    ],
+    "restored_accepted": true,
+    "material_unknown_dropped": true,
+    "geometry_placement_dropped": true,
+    "validator_errors": [],
+    "validator_codes": [
+      "config.path.executable.name",
+      "geometry.placement.not_editable",
+      "config.information.add_edited_geometry_summary_info.1",
+      "config.information.add_edited_geometry_summary_info.2",
+      "config.information.add_edited_geometry_summary_info.3",
+      "config.information.add_edited_geometry_summary_info.4",
+      "config.information.add_edited_geometry_summary_info.5",
+      "config.information.add_editor_summary_info.1",
+      "config.information.add_editor_summary_info.2",
+      "config.information.add_editor_summary_info.3",
+      "config.information.validate_config_builder.1"
+    ]
+  },
+  {
+    "category": "needs_experiment",
+    "case": "rollback_failure_no_core_freeze",
+    "explicit_error": true,
+    "subsequent_replace_accepted": true,
+    "boundary": "GUI must freeze/resynchronize if projection and rollback both failed"
+  }
+]

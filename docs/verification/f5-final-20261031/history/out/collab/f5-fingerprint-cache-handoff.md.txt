@@ -1,0 +1,34 @@
+# F5 当前指纹缓存修复交接（冻结）
+
+2026-10-30，f5_transactions。父代理授权的最小范围已经实现并冻结，可由 recovery 代理立即独立复核和运行原 F1。未改 GUI、parser、snapshot codec、原 F1 阈值；未运行全 GUI、未提交。
+
+## 修改
+
+- `gui/g4usim_gui/core/edit_transactions.py`：构造时取得私有快照指纹（:63）；dirty 查询只比较缓存（:80）；无参数 mark_saved 使用当前缓存、显式 snapshot 继续求值（:138）。replace 的外部候选继续 clone/重建/校验（:147–149），成功发布才更换缓存（:169）。Undo/Redo 在 apply 前计算候选指纹（:198、:212）、apply 成功才同步更新（:201、:215）；Reset 沿既有提前求值与容量门禁，在成功发布时更新（:230）。所有拒绝和回滚路径均不更新缓存。
+- `scripts/test_f5_transactions.py`：原有函数及其断言未删减；新增引用隔离、确定性无重复求值、保存游标、各发布路径成功及故障反例。显式保存旧快照仍 dirty；外部输入、返回副本、投影回调副本、transform 逸出引用不能修改内部快照。replace/undo/redo/reset 的单次与双投影失败、指纹失败先于投影、容量/版本冲突/非法类型拒绝均检查完整状态、指纹、保存点、修订、历史与游标保持。
+
+## 本地专项
+
+同一命令与解释器：
+
+```powershell
+& 'D:/Geant4/G4UniversalSim/gui/.venv/Scripts/python.exe' -B tools/test_assert_probe.py scripts/test_f5_transactions.py
+```
+
+- 修改前实际 exit 0，`G4USIM_ASSERTS=173`：`out/collab/f5-fingerprint-cache-before.log`。
+- 修改后实际 exit 0，`G4USIM_ASSERTS=321`：`out/collab/f5-fingerprint-cache-targeted.log`。
+- `git diff --check -- gui/g4usim_gui/core/edit_transactions.py scripts/test_f5_transactions.py` 无输出、exit 0。
+- 原 source-cache、source-version、失败读取、codec、raw draft 和 writer 契约仍随本专项全部执行。
+
+此处只证明核心专项；原 F1 `<0.5s` 与 GUI 关闭表现等待独立复核，不宣称已修复性能验收通过。
+
+## 冻结原始字节 SHA-256
+
+| 文件 | SHA-256 |
+|---|---|
+| `gui/g4usim_gui/core/edit_transactions.py` | `b29b1059924d54ddd78a01df518d1d35bb98adcc9d0dcc863c5a5b5932d410cc` |
+| `scripts/test_f5_transactions.py` | `b55d4f3e34deb6579be3a6fd3892ca86dc66aa04da3f99c6259d0e0efcc78094` |
+| `out/collab/f5-fingerprint-cache-before.log` | `69af02a66f43bb069e2a3a8b5c04dc12b151146a9c52bcecf0d44afc0f8dd050` |
+| `out/collab/f5-fingerprint-cache-targeted.log` | `55f5b033e53fc04a7559f2a5010ca1dfc4d7d2813f626c60169a6cfac7e3e565` |
+
+本代理停止编辑以上两个文件，后续仅按父代理新任务行动。此前性能只读报告 `out/collab/f5-source-parse-cost-review.md` 保留原文，不追改为修后收据。

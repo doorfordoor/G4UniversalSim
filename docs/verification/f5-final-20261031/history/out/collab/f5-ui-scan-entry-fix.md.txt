@@ -1,0 +1,25 @@
+# F5 扫描入口 P1 最小修复交接
+
+基于撤回最终候选4f960ab修正；旧反例 f5-ui-final-scan-probe-confirmed.log/json 原样保留。仅改 window/content.py 与正式 smoke_f5_editor_history.py；未扩展扫描临时草稿 Undo/恢复范围。
+
+## 实现
+
+- content.py scan_base 在读取当前主编辑区之前调用 can_mutate_workspace('scan')，失败抛 ValueError，既有 ScanPage.refresh_base 捕获后清 _base 并显示失败。create_scan 在 _base 为空时必须重新取基础，失败即返回，不会沿旧字段继续生成。
+- 复用 page.validate_current 生产的结构化诊断，只拦截 run.seed.invalid 与两类 config.source.*.recovered_changed；不提前要求整个 base 有效。其余配置依然由 core.scan.apply_value 后逐点 validate_scan_report 验证，保留扫描字段纠正 base 值的既有能力。
+- 同文件 export_backend_geometry 首先使用 can_mutate_workspace('preview')，防止故障/忙状态消费主配置；不让 raw seed 校验阻断仅几何预览。此为入口防御，不把此前未证实可达性的 preview 项包装成已复现缺陷。
+
+## 正式测试和消费入口核对
+
+- F5 编辑 GUI 专项加入真实 scan.refresh_button/create_button 点击：正常seed42/101事件创建；非法seed拒绝且原有manifest/包字节不变；双失败后2569坏控件无法生成，原历史仍101；修复后可继续。
+- 额外覆盖无效base energy可被source.energy扫描3MeV覆盖并成功生成；已恢复材料源外改后禁止新取ScanBase；故障时实际geometry public signals不调用controller。
+- main_window.py:61是产品唯一provider注册点；ScanPage.refresh_base为唯一调用者。现有showEvent/create_scan/run_scan在需要当前配置时通过refresh_base委托；刷新失败返回False并清空_base，创建不会用空基础继续。已生成的独立历史扫描包不会因主编辑器坏状态被重写，它们继续属于原ScanManifest。
+- 其他读取入口：Wizard/Example、Save/Open、Generate/Run/Inspect、Recovery均已有门禁；read-only结果/轨迹显示不构建或运行当前坏配置。F4回放失效机制未改。
+
+## 证据与状态
+
+- out/collab/f5-ui-scan-entry-fix.log：203个v3断言，exit0。
+- out/collab/f5-ui-scan-compat.log：既有扫描专项58个v3断言，exit0。
+- 新文案1条：out/collab/f5-ui-scan-fix-i18n.json。
+- git diff --check通过。未运行后端或全量矩阵，未改原4f960ab或失败证据。
+
+修复后停止产品/正式测试写入，可交独立复核。

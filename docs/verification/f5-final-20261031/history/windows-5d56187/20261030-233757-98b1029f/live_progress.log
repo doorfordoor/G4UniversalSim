@@ -1,0 +1,32 @@
+{
+  "backend": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-f5\\Release\\G4UniversalSim.exe",
+  "checks": [
+    "1 workers, two runs: counts match summary",
+    "2 workers, two runs: counts match summary",
+    "4 workers, two runs: counts match summary",
+    "zero requested events: no fabricated completed run",
+    "configuration failure: no fabricated run progress",
+    "4 workers with event/tracking log noise: valid progress messages",
+    "event_row_t0: actual failure worker=0",
+    "event_row_t0: nonzero failed summary; terminal counts agree",
+    "event_row_any_worker: actual failure worker=0",
+    "event_row_any_worker: nonzero failed summary; terminal counts agree",
+    "begin_scoring_t0: nonzero failed summary; terminal counts agree",
+    "final_close_master: nonzero failed summary; terminal counts agree",
+    "real process killed after receiving live completed-event update"
+  ],
+  "performance": {},
+  "cancel_last_progress": {
+    "schema": "g4usim_progress_v1",
+    "run_id": 0,
+    "sequence": 2,
+    "phase": "running",
+    "planned_events": 10000000,
+    "completed_events": 27624,
+    "elapsed_s": 0.5000228,
+    "rate_eps": 55245.48081,
+    "eta_s": 180.5102581
+  }
+}
+test_live_progress: OK
+G4USIM_ASSERTS=138

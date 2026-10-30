@@ -1,0 +1,522 @@
+{
+  "head_sha": "5c1eec5007cd29cbe12949c19bed81457f1f825b",
+  "status": "passed",
+  "evidence_collection_complete": true,
+  "report_count": 12,
+  "case_executions": 478,
+  "problems": [],
+  "source_fingerprint": "db253b7b1ed5f810789f1322faa75002df311d4aeb04572867dbb130c71d95cc",
+  "tests_content_fingerprint": "5328e3515e882c69585cbfceeb43ca0e5f480c925e8336072b6cbdfc22de2109",
+  "audit_file": "evidence-integrity-audit.json",
+  "audit_sha256": "b75e87da88711393b6831b40b24e954a917efdf1abc06c387098035ca888a985",
+  "zip_count": 4,
+  "zip_members": 521,
+  "assertions_executed_total": 113061,
+  "reports": [
+    {
+      "artifact": "linux-evidence-11.3.2",
+      "profile": "backend",
+      "path": "linux-evidence-11.3.2/linux-backend/20261030-163610-8d65a3b1/report.json",
+      "sha256": "0927fed33b384959a9bf55c23b30455aed65fbcde39b6d907106a8eb6c5374c2",
+      "cases": 59,
+      "assertions": 40416,
+      "git_dirty": true,
+      "git_status_porcelain": "?? .g4env-11.3.2/\n?? .micromamba/\n?? bin/",
+      "backend_build_identity": {
+        "build_configuration": "Release",
+        "compiler_id": "GNU",
+        "compiler_version": "13.3.0",
+        "geant4_version_number": 1132,
+        "multithreaded": true
+      },
+      "backend_provenance": "source_sha256_manifest_matches_executable",
+      "merge_provenance": "source_sha256_matches_executable",
+      "strict_baseline_gate_exit": 0,
+      "baseline": "docs/verification/f4-final-20261030/ci/linux-evidence-11.3.2/linux-backend/20261030-124410-181bc528/report.json",
+      "baseline_sha256": "ee559bdf2b97c40a72832d09bc3675dc7e7ff0cdf2379afbc3000b4308385adc",
+      "gate_log": "baseline-gates/linux-evidence-11.3.2-backend.log",
+      "failures": []
+    },
+    {
+      "artifact": "linux-evidence-11.3.2",
+      "profile": "gui",
+      "path": "linux-evidence-11.3.2/linux-gui/20261030-163414-35ee6859/report.json",
+      "sha256": "b9897f6e548098b76b38a329d6a4d7872060d46f12a7f0f7069a4e53c586f14a",
+      "cases": 47,
+      "assertions": 3249,
+      "git_dirty": true,
+      "git_status_porcelain": "?? .g4env-11.3.2/\n?? .micromamba/\n?? bin/",
+      "backend_build_identity": null,
+      "backend_provenance": "backend executable is missing",
+      "merge_provenance": "mergeHistograms executable is missing",
+      "strict_baseline_gate_exit": 0,
+      "baseline": "docs/verification/f4-final-20261030/ci/linux-evidence-11.3.2/linux-gui/20261030-124250-06c516a1/report.json",
+      "baseline_sha256": "527ace0c98a180d4e3a2136b3abfbd51813d333470977fe53e6ea6b65a71f886",
+      "gate_log": "baseline-gates/linux-evidence-11.3.2-gui.log",
+      "failures": []
+    },
+    {
+      "artifact": "linux-evidence-11.3.2",
+      "profile": "integration",
+      "path": "linux-evidence-11.3.2/linux-integration/20261030-164742-a44a810d/report.json",
+      "sha256": "1e4937cfc0649d39a9699271298ac7c72f1269b7b3a14911ed87f2804a11b075",
+      "cases": 22,
+      "assertions": 4486,
+      "git_dirty": true,
+      "git_status_porcelain": "?? .g4env-11.3.2/\n?? .micromamba/\n?? bin/",
+      "backend_build_identity": {
+        "build_configuration": "Release",
+        "compiler_id": "GNU",
+        "compiler_version": "13.3.0",
+        "geant4_version_number": 1132,
+        "multithreaded": true
+      },
+      "backend_provenance": "source_sha256_manifest_matches_executable",
+      "merge_provenance": "source_sha256_matches_executable",
+      "strict_baseline_gate_exit": 0,
+      "baseline": "docs/verification/f4-final-20261030/ci/linux-evidence-11.3.2/linux-integration/20261030-125840-1c58dbf6/report.json",
+      "baseline_sha256": "f196d36996f73699571e8c4ac9d5b94b1e70da8823abe6f00523d369969a552d",
+      "gate_log": "baseline-gates/linux-evidence-11.3.2-integration.log",
+      "failures": []
+    },
+    {
+      "artifact": "linux-evidence-11.3.2",
+      "profile": "static",
+      "path": "linux-evidence-11.3.2/linux-static/20261030-163323-b778da3e/report.json",
+      "sha256": "f03a4387a405a4aac516df0f383cac5d1e27841cf6f68f57cdbb2eeb71dbc62c",
+      "cases": 32,
+      "assertions": 2715,
+      "git_dirty": true,
+      "git_status_porcelain": "?? .g4env-11.3.2/\n?? .micromamba/\n?? bin/",
+      "backend_build_identity": null,
+      "backend_provenance": "backend executable is missing",
+      "merge_provenance": "mergeHistograms executable is missing",
+      "strict_baseline_gate_exit": 0,
+      "baseline": "docs/verification/f4-final-20261030/ci/linux-evidence-11.3.2/linux-static/20261030-124157-a6e99cc7/report.json",
+      "baseline_sha256": "f9aef56add9342aa05d539cac926bd6d95a960c3708ea41ed46b870e3aa0589d",
+      "gate_log": "baseline-gates/linux-evidence-11.3.2-static.log",
+      "failures": []
+    },
+    {
+      "artifact": "linux-evidence-11.4.3",
+      "profile": "backend",
+      "path": "linux-evidence-11.4.3/linux-backend/20261030-163616-619dba70/report.json",
+      "sha256": "80e79ae99cb40b2fc4eac3299f91224477e4f2c3c94189dd5fb8e826436fab4a",
+      "cases": 59,
+      "assertions": 39824,
+      "git_dirty": true,
+      "git_status_porcelain": "?? .g4env-11.4.3/\n?? .micromamba/\n?? bin/",
+      "backend_build_identity": {
+        "build_configuration": "Release",
+        "compiler_id": "GNU",
+        "compiler_version": "13.3.0",
+        "geant4_version_number": 1143,
+        "multithreaded": true
+      },
+      "backend_provenance": "source_sha256_manifest_matches_executable",
+      "merge_provenance": "source_sha256_matches_executable",
+      "strict_baseline_gate_exit": 0,
+      "baseline": "docs/verification/f4-final-20261030/ci/linux-evidence-11.4.3/linux-backend/20261030-124414-30aa0a05/report.json",
+      "baseline_sha256": "e82848ebccd4828a5845a951d936597b9bb506f7ffb88aaee769520450897d77",
+      "gate_log": "baseline-gates/linux-evidence-11.4.3-backend.log",
+      "failures": []
+    },
+    {
+      "artifact": "linux-evidence-11.4.3",
+      "profile": "gui",
+      "path": "linux-evidence-11.4.3/linux-gui/20261030-163413-4a77cf70/report.json",
+      "sha256": "f4aa0c4f77bf39d8416094667e62a7238a7244aacaf78ec39ade76098a783b0c",
+      "cases": 47,
+      "assertions": 3249,
+      "git_dirty": true,
+      "git_status_porcelain": "?? .g4env-11.4.3/\n?? .micromamba/\n?? bin/",
+      "backend_build_identity": null,
+      "backend_provenance": "backend executable is missing",
+      "merge_provenance": "mergeHistograms executable is missing",
+      "strict_baseline_gate_exit": 0,
+      "baseline": "docs/verification/f4-final-20261030/ci/linux-evidence-11.4.3/linux-gui/20261030-124251-313219a4/report.json",
+      "baseline_sha256": "04e8de48f8698a88aaebb1768d3323942cf4a2aaeff68c6ce0ab4ed1d315a26c",
+      "gate_log": "baseline-gates/linux-evidence-11.4.3-gui.log",
+      "failures": []
+    },
+    {
+      "artifact": "linux-evidence-11.4.3",
+      "profile": "integration",
+      "path": "linux-evidence-11.4.3/linux-integration/20261030-164743-e706be2d/report.json",
+      "sha256": "d7608317d7b73732d911b896bc1861a32a11d05c0aac1a276cf883c5a9bcdb81",
+      "cases": 22,
+      "assertions": 4486,
+      "git_dirty": true,
+      "git_status_porcelain": "?? .g4env-11.4.3/\n?? .micromamba/\n?? bin/",
+      "backend_build_identity": {
+        "build_configuration": "Release",
+        "compiler_id": "GNU",
+        "compiler_version": "13.3.0",
+        "geant4_version_number": 1143,
+        "multithreaded": true
+      },
+      "backend_provenance": "source_sha256_manifest_matches_executable",
+      "merge_provenance": "source_sha256_matches_executable",
+      "strict_baseline_gate_exit": 0,
+      "baseline": "docs/verification/f4-final-20261030/ci/linux-evidence-11.4.3/linux-integration/20261030-125846-f29cc36d/report.json",
+      "baseline_sha256": "66082eba33dd9db197769a36bc337ccb9fc3404bc0cdfd3a89a2754eb1f759fe",
+      "gate_log": "baseline-gates/linux-evidence-11.4.3-integration.log",
+      "failures": []
+    },
+    {
+      "artifact": "linux-evidence-11.4.3",
+      "profile": "static",
+      "path": "linux-evidence-11.4.3/linux-static/20261030-163318-7abab7ca/report.json",
+      "sha256": "c526c6df0ddd362b12f78740af556c8a21596ad04ddb3d40cee8f9487fe4551f",
+      "cases": 32,
+      "assertions": 2715,
+      "git_dirty": true,
+      "git_status_porcelain": "?? .g4env-11.4.3/\n?? .micromamba/\n?? bin/",
+      "backend_build_identity": null,
+      "backend_provenance": "backend executable is missing",
+      "merge_provenance": "mergeHistograms executable is missing",
+      "strict_baseline_gate_exit": 0,
+      "baseline": "docs/verification/f4-final-20261030/ci/linux-evidence-11.4.3/linux-static/20261030-124154-6e1eb34d/report.json",
+      "baseline_sha256": "571fcf588768cd8112b58e7dde31e08153e938dcfb4e39a1749d9847c08c59ff",
+      "gate_log": "baseline-gates/linux-evidence-11.4.3-static.log",
+      "failures": []
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "static",
+      "path": "m0-report-windows-latest/20261030-163210-ef333e6f/report.json",
+      "sha256": "2e9556fd1cef87f6ba038e78f09b72c421e3c831fd67df43fdf356db5d955cf1",
+      "cases": 32,
+      "assertions": 2706,
+      "git_dirty": false,
+      "git_status_porcelain": "",
+      "backend_build_identity": null,
+      "backend_provenance": "backend executable is missing",
+      "merge_provenance": "mergeHistograms executable is missing",
+      "strict_baseline_gate_exit": 0,
+      "baseline": "docs/verification/f4-final-20261030/ci/m0-report-windows-latest/20261030-124035-5b9c7e29/report.json",
+      "baseline_sha256": "33971117fb90aacb8a9633d5b2303008a5d34a1bd3db1d8e6da00b86b99b7ce1",
+      "gate_log": "baseline-gates/m0-report-windows-latest-static.log",
+      "failures": []
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "gui",
+      "path": "m0-report-windows-latest/20261030-163402-2590a2ce/report.json",
+      "sha256": "a0ddc04304c72541eec448c14681f083b96d48bd5afdd031ebbd214ea49f62f7",
+      "cases": 47,
+      "assertions": 3251,
+      "git_dirty": false,
+      "git_status_porcelain": "",
+      "backend_build_identity": null,
+      "backend_provenance": "backend executable is missing",
+      "merge_provenance": "mergeHistograms executable is missing",
+      "strict_baseline_gate_exit": 0,
+      "baseline": "docs/verification/f4-final-20261030/ci/m0-report-windows-latest/20261030-124143-737a5b79/report.json",
+      "baseline_sha256": "b69b25856e861585076981bd1b9113f46f8f13ea4f185465ada1c21bbd206610",
+      "gate_log": "baseline-gates/m0-report-windows-latest-gui.log",
+      "failures": []
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "static",
+      "path": "m0-report-ubuntu-latest/20261030-163149-ddeaeddb/report.json",
+      "sha256": "dc71f7c76ddef6c424ebb29d98fe77fb0164916211a5203fe2e10d1a7ac6af0a",
+      "cases": 32,
+      "assertions": 2715,
+      "git_dirty": false,
+      "git_status_porcelain": "",
+      "backend_build_identity": null,
+      "backend_provenance": "backend executable is missing",
+      "merge_provenance": "mergeHistograms executable is missing",
+      "strict_baseline_gate_exit": 0,
+      "baseline": "docs/verification/f4-final-20261030/ci/m0-report-ubuntu-latest/20261030-124000-75b141a9/report.json",
+      "baseline_sha256": "901f15aca7ef52797c77be0eb14f91d40b5c2943cd3de11057beb7e1e3b6aefd",
+      "gate_log": "baseline-gates/m0-report-ubuntu-latest-static.log",
+      "failures": []
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "gui",
+      "path": "m0-report-ubuntu-latest/20261030-163253-5f8ec5d4/report.json",
+      "sha256": "7df146a3710bdd64dcdc8e174558b2dc8a56bc946320c264f3b7b6f32f4f516a",
+      "cases": 47,
+      "assertions": 3249,
+      "git_dirty": false,
+      "git_status_porcelain": "",
+      "backend_build_identity": null,
+      "backend_provenance": "backend executable is missing",
+      "merge_provenance": "mergeHistograms executable is missing",
+      "strict_baseline_gate_exit": 0,
+      "baseline": "docs/verification/f4-final-20261030/ci/m0-report-ubuntu-latest/20261030-124100-bf1644f3/report.json",
+      "baseline_sha256": "e02e9e90f6a89ea5a9bd6ccfe2be13823ad64d18e7d8a0e97aa6e628dd7290d0",
+      "gate_log": "baseline-gates/m0-report-ubuntu-latest-gui.log",
+      "failures": []
+    }
+  ],
+  "ddd_first_run_evidence": [
+    {
+      "manifest_sha256": "39653945d25ae9fd0c0c2abfb71023770f012f0bba5ba8a55adce855ed96b242",
+      "files": [
+        {
+          "path": "inputs/case01.ini",
+          "size_bytes": 594,
+          "sha256": "b94d035a3a543b19026af99105ea2c3f28980dd8a2c06d9f251bcedd7119c65d"
+        },
+        {
+          "path": "inputs/case01_geometry.ini",
+          "size_bytes": 199,
+          "sha256": "0743b56b42130e41738056a8b5002c8b448697cea1e65a3a265858f3edf7a613"
+        },
+        {
+          "path": "inputs/case01.mac",
+          "size_bytes": 32,
+          "sha256": "9ae3ca2b7ff8a3c51a775be5d03905ba5d6baaeac540a89e116b8ad9c54eb8a2"
+        },
+        {
+          "path": "inputs/material.ini",
+          "size_bytes": 190,
+          "sha256": "df72faf9fb634931086a7f98db6d1bd93fad37f20c28329eea22f40b9858beb6"
+        },
+        {
+          "path": "inputs/mu.csv",
+          "size_bytes": 60,
+          "sha256": "8ab8485722f5bc75c2407b571f88c4293b359e912721c49cc78be93d4e1a302a"
+        },
+        {
+          "path": "inputs/far.csv",
+          "size_bytes": 66,
+          "sha256": "948526f0c0078f9f88dce9775160a3918799ef1fc82734a8cbbda9615779f15d"
+        },
+        {
+          "path": "outputs/displacement_volume_summary_t0.csv",
+          "size_bytes": 367,
+          "sha256": "47917f0410e7023ffbc50f1705f3680483112c14d7adc71d6e9f4b37f858eebc"
+        },
+        {
+          "path": "outputs/displacement_volume_summary_t1.csv",
+          "size_bytes": 144,
+          "sha256": "563fdb1377535ed01cd6892a20482b55e9c5abb5836e2ca93b4a9d43adfce398"
+        },
+        {
+          "path": "outputs/hits_t0.csv",
+          "size_bytes": 28774,
+          "sha256": "9104be2f63cb00af121a5c6cc3cdd500c4877d9f149e0267f32127fa504bb239"
+        },
+        {
+          "path": "outputs/run_metadata.json",
+          "size_bytes": 17052,
+          "sha256": "c5630390b54500fd630b7222254777a05f40e5ba96b7996a7f3ca72fca858213"
+        },
+        {
+          "path": "outputs/run_summary.txt",
+          "size_bytes": 10512,
+          "sha256": "d5d79cc59933911bfaeb241f404414cf3b3afe206d2b54c444f21ff8efff545e"
+        },
+        {
+          "path": "outputs/scorer_statistics.csv",
+          "size_bytes": 801,
+          "sha256": "348c3dd89c215baa7c20fabdd74f2bfddf5548f66869dd00ccc1030b7a4d8518"
+        }
+      ],
+      "raw_bytes": 58791,
+      "worker_rows": [
+        {
+          "file": "outputs/displacement_volume_summary_t0.csv",
+          "worker": 0,
+          "row_count": 2,
+          "worker_events": 200,
+          "rows": [
+            {
+              "runID": "0",
+              "volume_path": "/world_PV#0/Die_PV#0",
+              "volume_name": "Die_PV",
+              "particle": "e-",
+              "niel_table": "/tmp/g4usim_ddd_u8adg67d/far.csv",
+              "volume_mm3": "10000",
+              "track_length_mm": "0",
+              "out_of_range_track_length_mm": "5.94279221171",
+              "ddd_MeV_g": "0",
+              "ddd_sum_sq_MeV2_g2": "0",
+              "n_events": "200"
+            },
+            {
+              "runID": "0",
+              "volume_path": "/world_PV#0/Die_PV#0",
+              "volume_name": "Die_PV",
+              "particle": "mu-",
+              "niel_table": "/tmp/g4usim_ddd_u8adg67d/mu.csv",
+              "volume_mm3": "10000",
+              "track_length_mm": "200.000102353",
+              "out_of_range_track_length_mm": "0",
+              "ddd_MeV_g": "0.00399926981863",
+              "ddd_sum_sq_MeV2_g2": "7.99707966204e-08",
+              "n_events": "200"
+            }
+          ]
+        },
+        {
+          "file": "outputs/displacement_volume_summary_t1.csv",
+          "worker": 1,
+          "row_count": 0,
+          "worker_events": null,
+          "rows": []
+        }
+      ],
+      "observed_worker_event_sum": 200,
+      "master_events": 200,
+      "scope": "Observed sparse-worker N is a lower bound, not full event coverage. A header-only worker has unknown N. Original first-run subset, not a runnable bundle.",
+      "artifact": "linux-evidence-11.3.2",
+      "report": "linux-evidence-11.3.2/linux-backend/20261030-163610-8d65a3b1/report.json"
+    },
+    {
+      "manifest_sha256": "2467933e3bcc50a07838e3e8b247af6901286264b4075d74ac6c0d65c8fb8505",
+      "files": [
+        {
+          "path": "inputs/case01.ini",
+          "size_bytes": 594,
+          "sha256": "67daa9fc7b75f69e991f651048616d3ce025fc6d2223f9e99b77561d27383542"
+        },
+        {
+          "path": "inputs/case01_geometry.ini",
+          "size_bytes": 199,
+          "sha256": "0743b56b42130e41738056a8b5002c8b448697cea1e65a3a265858f3edf7a613"
+        },
+        {
+          "path": "inputs/case01.mac",
+          "size_bytes": 32,
+          "sha256": "9ae3ca2b7ff8a3c51a775be5d03905ba5d6baaeac540a89e116b8ad9c54eb8a2"
+        },
+        {
+          "path": "inputs/material.ini",
+          "size_bytes": 190,
+          "sha256": "df72faf9fb634931086a7f98db6d1bd93fad37f20c28329eea22f40b9858beb6"
+        },
+        {
+          "path": "inputs/mu.csv",
+          "size_bytes": 60,
+          "sha256": "8ab8485722f5bc75c2407b571f88c4293b359e912721c49cc78be93d4e1a302a"
+        },
+        {
+          "path": "inputs/far.csv",
+          "size_bytes": 66,
+          "sha256": "948526f0c0078f9f88dce9775160a3918799ef1fc82734a8cbbda9615779f15d"
+        },
+        {
+          "path": "outputs/displacement_volume_summary_t0.csv",
+          "size_bytes": 366,
+          "sha256": "623534288d8c30126089d43fee886caf9b0f7a3522ad1c76b51647be4eec7680"
+        },
+        {
+          "path": "outputs/displacement_volume_summary_t1.csv",
+          "size_bytes": 367,
+          "sha256": "1e17186ace697938466ddb9c22b0000f926d3749397188caeac7bf9b4b7ac9fb"
+        },
+        {
+          "path": "outputs/hits_t0.csv",
+          "size_bytes": 26760,
+          "sha256": "a3e3261174ed49b0a1c23e84a29cfe81e92aa961fe92dbc057ee9f31a35622d4"
+        },
+        {
+          "path": "outputs/hits_t1.csv",
+          "size_bytes": 2171,
+          "sha256": "f348d4ddb21a9ef7f66356770947cf783b7268533990de0fd939aa16464c7849"
+        },
+        {
+          "path": "outputs/run_metadata.json",
+          "size_bytes": 17380,
+          "sha256": "2fb615be586ccd38d947a590aa693c083914bfa4fdbe83f95285aa0a406a5442"
+        },
+        {
+          "path": "outputs/run_summary.txt",
+          "size_bytes": 10646,
+          "sha256": "b9a4454abc23c48e2db620154e6ba790cef7d0176b029e424d60e105c44514c5"
+        },
+        {
+          "path": "outputs/scorer_statistics.csv",
+          "size_bytes": 804,
+          "sha256": "5e635e5357a40aa93a2c4ae9a4ef17663a63157d49e0485698a6dced224e988b"
+        }
+      ],
+      "raw_bytes": 59635,
+      "worker_rows": [
+        {
+          "file": "outputs/displacement_volume_summary_t0.csv",
+          "worker": 0,
+          "row_count": 2,
+          "worker_events": 190,
+          "rows": [
+            {
+              "runID": "0",
+              "volume_path": "/world_PV#0/Die_PV#0",
+              "volume_name": "Die_PV",
+              "particle": "e-",
+              "niel_table": "/tmp/g4usim_ddd_03daf6b3/far.csv",
+              "volume_mm3": "10000",
+              "track_length_mm": "0",
+              "out_of_range_track_length_mm": "5.30197883655",
+              "ddd_MeV_g": "0",
+              "ddd_sum_sq_MeV2_g2": "0",
+              "n_events": "190"
+            },
+            {
+              "runID": "0",
+              "volume_path": "/world_PV#0/Die_PV#0",
+              "volume_name": "Die_PV",
+              "particle": "mu-",
+              "niel_table": "/tmp/g4usim_ddd_03daf6b3/mu.csv",
+              "volume_mm3": "10000",
+              "track_length_mm": "190.000097224",
+              "out_of_range_track_length_mm": "0",
+              "ddd_MeV_g": "0.00379930873663",
+              "ddd_sum_sq_MeV2_g2": "7.5972353091e-08",
+              "n_events": "190"
+            }
+          ]
+        },
+        {
+          "file": "outputs/displacement_volume_summary_t1.csv",
+          "worker": 1,
+          "row_count": 2,
+          "worker_events": 10,
+          "rows": [
+            {
+              "runID": "0",
+              "volume_path": "/world_PV#0/Die_PV#0",
+              "volume_name": "Die_PV",
+              "particle": "e-",
+              "niel_table": "/tmp/g4usim_ddd_03daf6b3/far.csv",
+              "volume_mm3": "10000",
+              "track_length_mm": "0",
+              "out_of_range_track_length_mm": "0.640813375157",
+              "ddd_MeV_g": "0",
+              "ddd_sum_sq_MeV2_g2": "0",
+              "n_events": "10"
+            },
+            {
+              "runID": "0",
+              "volume_path": "/world_PV#0/Die_PV#0",
+              "volume_name": "Die_PV",
+              "particle": "mu-",
+              "niel_table": "/tmp/g4usim_ddd_03daf6b3/mu.csv",
+              "volume_mm3": "10000",
+              "track_length_mm": "10.0000051287",
+              "out_of_range_track_length_mm": "0",
+              "ddd_MeV_g": "0.000199961082004",
+              "ddd_sum_sq_MeV2_g2": "3.99844352937e-09",
+              "n_events": "10"
+            }
+          ]
+        }
+      ],
+      "observed_worker_event_sum": 200,
+      "master_events": 200,
+      "scope": "Observed sparse-worker N is a lower bound, not full event coverage. A header-only worker has unknown N. Original first-run subset, not a runnable bundle.",
+      "artifact": "linux-evidence-11.4.3",
+      "report": "linux-evidence-11.4.3/linux-backend/20261030-163616-619dba70/report.json"
+    }
+  ],
+  "scope": "CI only; local Windows full regression and native acceptance remain separately owned evidence.",
+  "windows_build_identity_verification": "windows-build-verification.json",
+  "windows_build_identity_verification_sha256": "821985fb82a51b6da4df88a0ed9b6899babb91cb23528f6b960ff15470ce4b45"
+}

@@ -1,0 +1,26 @@
+{"ready": true, "pid": 24012, "state": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\f5-native-5d56187-1\\state.json", "visual_acceptance": "not_claimed"}
+Error calling Python override of QObject::eventFilter(): Traceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\core\edit_transactions.py", line 122, in _apply
+    apply(clone_snapshot(candidate))
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\window\transactions.py", line 629, in <lambda>
+    self._edit_session.undo(apply=lambda snapshot: self.apply_workspace(snapshot, reason='undo'))
+                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\window\transactions.py", line 370, in apply_workspace
+    page.set_from_project(self.project, reload_sources=False)
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\f5-visible-host.py", line 294, in injected
+    raise RuntimeError('QA injected projection failure after widget mutation')
+RuntimeError: QA injected projection failure after widget mutation
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\window\transactions.py", line 152, in eventFilter
+    (window.undo_edit if undo else window.redo_edit)()
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\window\transactions.py", line 629, in undo_edit
+    self._edit_session.undo(apply=lambda snapshot: self.apply_workspace(snapshot, reason='undo'))
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\core\edit_transactions.py", line 199, in undo
+    self._apply(candidate, apply)
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\core\edit_transactions.py", line 127, in _apply
+    raise TransactionApplyError(original, rollback) from original
+g4usim_gui.core.edit_transactions.TransactionApplyError: Workspace update failed: QA injected projection failure after widget mutation; restoring the previous workspace also failed: QA injected projection failure after widget mutation
+F5 QA host requested exit 0 artifacts C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\f5-native-5d56187-1

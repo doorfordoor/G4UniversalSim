@@ -1,0 +1,27 @@
+# F5 选择器修复复核（2026-10-31，r3）
+
+审查当前 `out/collab/f5-prepare-selection.py`，SHA-256 `2747c649bbe9ade19945be00c2574a4416b5b7c2ad21ca855a5efc83bf7e615d`。仅复核新增守卫与绑定，未修改选择器/复制器/产品，未执行 main 或生成正式 selection，未操作 UI。
+
+**结论：此前两项 P2 和一项 P3 已修复；当前所查变化通过。17 项辅助检查通过，未发现新增阻断。** 这不是实际 CI/Windows 全清单执行、图像复验或 F5 关闭。
+
+## 原问题的关闭依据
+
+- **链接路径，已修复。** `:15–20` 固定并加载已独立审查的复制器 SHA `672cedba…`；`:69–81` 的 add 在读取前调用 `within_repository`，不再先 resolve 丢弃词法路径。tree/pinned_tree 也逐组件核对 reparse。用原保留 `junction-alias/source.txt` 及其父/上层目录验证 add、tree、pinned_tree 全部拒绝；原夹具字节未改。
+- **目录静默空选，已修复。** `:83` 起 tree 明确要求目录存在，遍历后要求确实选入文件；不存在和空目录均拒绝。不是仅发现路径后忽略空结果。
+- **审计后字节漂移，已修复。** `:96` 起 pinned_tree 核对非空固定清单、重复路径、实际精确成员集合及每项 SHA/bytes。当前 CI 使用其正式 archive manifest，自排除后单独保留 manifest；原生使用 transactions 独立重核后的固定 manifest。测试覆盖错误 SHA/bytes、实际文件在清单形成后改变、缺失成员、额外成员、重复路径及正确 self-exclusion，全符合预期。
+
+## 实际原件正例与新增绑定
+
+原生 manifest 原始 SHA 为 `948ada6fb125f4aa80d88bf53710541a28784b26bed138104eb834c8c3f764cb`。对现有 `out/collab/f5-native-5d56187-1` 调用原样 pinned_tree，**74 文件、4,785,143 字节全部精确匹配**。仅选入内存数组，未复制或修改这些原件。
+
+新增 `:51–56` 对原生 identity/GUI manifest 与 mapping、独立 mapping 收据状态/新候选及原 mapping 摘要逐层绑定；`:119–121` 固定最终原生 manifest 摘要，并核对 mapped_candidate 和独立审查收据 SHA。实际文件链核对通过：原生观察仍为 `5d56187392a2e7b888d5ce13f8da05a295cba6d4`，映射候选为 `5c1eec5007cd29cbe12949c19bed81457f1f825b`，`new_candidate_native_execution=false`。未把 5d 观察改称新 SHA 实窗，未主张二进制字节相同。
+
+`:127` 的原 inventory SHA 与原 copyable 绑定已用实际文件核对通过；旧 300 条 pin 及变化 status 的独立新版本逻辑保留。r3 开发目录已加入必需目录列表。最新审查文件清单由 root 汇总；本报告不因尚待最终汇总而扩展缺陷范围。
+
+## 收据与边界
+
+- `out/collab/f5-selection-ui-recheck-r3.json` / `.log`：17 项通过、进程退出 0，记录实际脚本摘要；17 项中包含上一轮 14 个函数检查与本轮 3 项真实原件/身份/原 inventory 核对。
+- `out/collab/test-f5-selection-review-r3.py`：导入选择器但不调用 main，按 AST 原样取出三个嵌套辅助函数；只向独立 out 临时夹具写自测副本。原 junction、原生、CI 及产品文件均未修改。
+- 原失败报告/反例及 r2 的 14 项记录保留，不能用当前通过覆盖历史缺陷。r2 审查的脚本 SHA 为 `3c84669b…`，r3 使用本页完整 SHA。
+
+正式运行仍须在新冻结且 clean 的工作区通过 main 的全部报告/CI守卫，并把最终选择、复制、独立归档核对和阶段裁决分开记证。本次未绕过或模拟这些主流程门禁。

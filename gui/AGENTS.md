@@ -1,5 +1,7 @@
 # G4UniversalSim GUI Agent 开发约束
 
+2026-10-31 F5：已完成；冻结5c1eec5、原生5d身份映射及失败历史见[最终证据](../docs/verification/f5-final-20261031/README.md)。完整契约仍在docs/agent-history.md及配置撤销与恢复；稀疏worker去重N仅为master完整N的下界，空表头N未知。后续分派按[模型规则](../docs/collab/MODEL-POLICY.md)，不让常规子任务继承最高推理档。下方旧状态按原日期理解。
+
 2026-10-30 F5候选：Project/Configuration共用完整事务，raw非法草稿必须保留并正常阻断Generate；不能由get_project同步清空。普通项目v7恢复完整编辑内容，历史包仍从当前包材料/几何重建。Undo/恢复使包与F4诊断身份失效，不恢复旧运行成功；自动保存独立于普通保存。投影及回滚双失败需冻结保存/生成/运行并保留最后可证实快照。测试必须显式隔离recovery/history，产品不得按offscreen旁路交互。详见 `../docs/配置撤销与恢复.md` 和agent-history；下方F4“F5未启动”仅是旧关闭时记录。
 
 2026-10-30 F4阶段关闭记录（已完成）：产品 `7d718d038a00d89995ea773b4772764116b620c3`；Windows 152/152、49913 个 v3 入口与 F1 原始143/48511同代基线门禁；Linux11.3.2 为 152 项、11.4.3 为 152 项（run 41056994075），M0 Windows 为 72 项、Ubuntu 为 72 项（run 41056993987）。CI实际提交 `a9ad09dfd6e99d287fa77ff7f38e7919c475e1b9`，与产品的关系见[提交身份映射](../docs/verification/f4-final-20261030/identity/identity-map.json)。Windows原生 13 态、19 次实际观察与进程退出 0；[最终证据](../docs/verification/f4-final-20261030/README.md)，[独立审查](../docs/collab/reviews/20261030-astra-f4-close-review.md)。原生观察须使用产品Fusion和主题初始化；QA生命周期修正不冒充产品修复。保留下方旧候选原文，F5未启动。
@@ -97,7 +99,7 @@ external batch/csh 的随机恢复须经过后端守卫，仅支持当前 MixMax
 - models/、editors/ 保存可序列化的编辑状态；parsers/ 读取现有配置；validators/ 做 GUI 侧早期提示；writers/ 生成运行包；core/runner.py 只负责进程生命周期、日志和状态。
 - 推荐的数据流是“源文件解析 → 编辑模型 → GUI 校验 → writer 生成运行包 → 后端再次校验/运行”。GUI 校验永远不能替代 C++ 后端校验。
 - 源 materials.ini、geometry.ini 不得被编辑器直接覆盖。编辑结果写入独立 run package，并在报告中记录 copied 或 generated 来源。
-- 项目 JSON schema 当前为 G4UniversalSimProject version 6。`runInputMode` 只保存 `generated`/`external` 机器值；旧项目缺少该字段时，有 config/macro 路径迁移为 `external`，否则迁移为 `generated`。修改字段必须增加读取兼容或迁移测试，不能静默丢弃旧项目状态。
+- 项目 JSON schema 当前为 G4UniversalSimProject version 7，完整材料/几何与raw编辑草稿一并持久保存，已知1–6版本兼容。`runInputMode` 只保存 `generated`/`external` 机器值；旧项目缺少该字段时，有 config/macro 路径迁移为 `external`，否则迁移为 `generated`。修改字段必须增加读取兼容或迁移测试，不能静默丢弃旧项目状态。
 
 ## 2. 后端能力边界
 

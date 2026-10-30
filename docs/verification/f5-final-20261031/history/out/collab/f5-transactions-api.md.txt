@@ -1,0 +1,47 @@
+# F5 core API handshake (2026-10-30)
+
+Full proposal: f5-transactions-proposal.md. Source-only reconnaissance complete; root now authorized core implementation.
+
+IMPORTANT for root: this child's current tool catalog has NO collaboration send_message or agent tools, so direct agent coordination is unavailable. Please relay this contract to UI/recovery.
+
+Proposed immediate frozen API (root can message corrections while implementation proceeds):
+
+- `core/edit_snapshot.py`: `EditSnapshot(project: G4USimProject, state: dict)` stores isolated typed project plus strict, bounded JSON editing state. `snapshot_to_dict(snapshot)` / `snapshot_from_dict(data)` / `snapshot_fingerprint(snapshot)`; current in-memory capture NEVER calls the legacy `project_from_dict`.
+- `G4USimProject` v7 additive `materialEditor: MaterialDocument | None = None` and `editingState: dict | None = None`. None is legacy missing; explicit empty content is preserved. `editingState` uses a closed schema below, not arbitrary extensible Python values. Normal Save retains exactly the editing snapshot through these two fields.
+- `editingState`: `{version: 1, drafts: {binding_name: string|bool|int}, tables: {binding_name: [[string]]}, selections: {binding_name: int}, sources: {materials|geometry: {path: str, text: str, read_success: bool, template: str}}}`. Keys/version/type/limits checked. UI validates binding names against its explicit capture registry (not `setattr` arbitrary names). `selections` are UI hints excluded from dirty fingerprint. Raw uncommitted table edit is committed to draft capture before undo/save/autosave; no model normalization for drafts.
+- In-memory transient parser summaries/typed source diagnostics should be kept in `EditSnapshot.transient` (deepcopied dict; never serialized). Restore across process should derive parser summaries/typed diagnostics from persisted original text using new pure parser text functions, or root-owned restoration helper; no disk reread substituted for historical text. Existing document source errors/blockers remain persisted regardless.
+- `core/edit_transactions.py`: `EditSession(initial, *, max_commands=100, max_bytes=32MiB)`; `.current` returns isolated snapshot; `.revision`, `.is_modified`, `.can_undo`, `.can_redo`, `.undo_label`, `.redo_label`; `.record(after, label, *, merge_key=None, expected_revision=None)`, `.undo()`, `.redo()`, `.reset(snapshot, *, saved=True)`, `.mark_saved(snapshot=None)`, `.break_merge()`, `.transact(label, transform, *, merge_key=None, expected_revision=None)`.
+- record/undo/redo return current isolated snapshot (no-op can compare revision). `.record` records captured after using session's previous canonical before, not mutated GUI aliases. `.transact` runs transform(candidate) and commits only success, same noQt interface for future automated actions. Optional apply callback if root wants UI projection rollback coordinated before cursor publication; UI should preflight projection and call core only after controlled apply.
+- Core owns project.py/project_migration.py/new edit_snapshot.py/edit_transactions.py/static tests. UI owns binding registry/capture/restore/no reload/raw delegate behavior. Recovery consumes snapshot_to_dict/from_dict and does not own transaction internals.
+
+Open integration concern: GUI restoration needs source parser state without rereading. Root please assign parser pure-text extraction (ini_light_parser/materials_parser/geometry_parser) or explicitly permit core agent this ownership; current core scope does not list these files. Until then in-memory undo preserves parser context through transient, disk recovery must not fake parser freshness.
+
+## Root relay update / final signature 22:20
+
+Root owns the three parser text entry points; I am NOT editing parsers. Accepted signatures `parse_ini_light_text(text, *, source_path)`, `parse_materials_text(text, *, source_path)`, `parse_geometry_text(text, *, source_path, template_name=None)`; read_failed remains explicit and is not reconstructed as successful empty text.
+
+Use final class name `WorkspaceSnapshot` in `core/edit_snapshot.py`, alias `EditSnapshot` also exported. Fields: `project: G4USimProject`, `state: dict | None = None`, `transient: dict | None = None`. `state=None` derives project.editingState or empty version1 state. Materials are `snapshot.project.materialEditor` (avoid two authorities), convenience `.materials` property. The state structure above is authoritative, not arbitrary unknown keys.
+
+`EditSession.current()` is a METHOD (correcting earlier property proposal). `replace(label: str, after: WorkspaceSnapshot, *, merge_key: str | None = None, expected_revision: int | None = None, apply: Callable[[WorkspaceSnapshot], None] | None = None)`; `record(after, label, **same)` alias. `transact(label, transform, **same)` gives isolated candidate; return optional replacement snapshot or mutate candidate. `undo(*, apply=None)`, `redo(*, apply=None)`, `reset(snapshot, *, saved=True, apply=None)`.
+
+If apply callback raises, core calls apply(before) and retains revision/history/redo/marker; a rollback failure is explicit TransactionApplyError with original+rollback errors. UI restoration callback must be guarded (no nested record), side-effect free and preflight target values. Limits/validation are checked BEFORE apply, so catch command rejection and restore `history.current()` if a UI slot has already mutated the view before record().
+
+`mark_saved(snapshot=None)` stores fingerprint of the exact written snapshot, not necessarily current; breaks coalescing. `break_merge()` method. All mutating methods return isolated current snapshot. Read properties `revision`, `is_modified`, `can_undo`, `can_redo`, `undo_label`, `redo_label`.
+
+## Core ready for integration / root attention
+
+Implemented exact signatures above in `core/edit_snapshot.py`, `edit_state.py`, `edit_transactions.py` and v7 project codec. `project_for_snapshot(snapshot)` returns the exact normal-save G4USimProject payload. snapshot_to_json/from_json are bounded strict bytes codecs; snapshot_to_dict/from_dict expose the same versioned envelope. `saved_fingerprint`, `history_count`, `history_bytes` read properties also available. max_bytes is explicitly the encoded before/after payload budget, NOT a claim actual process RAM stays below 32MiB (transient parser deepcopies are outside that estimate).
+
+Passed fresh subprocesses (exit0): `scripts/test_f5_transactions.py`, `scripts/test_config_migration.py`, `scripts/test_project_snapshot_compat.py`. Transaction tests include full raw source/material recipe roundtrip, invalid seed, scalar and compound writer undo semantics, complete before/after independence, no-op/derived view, expected_revision, failed/recursive transform, failed apply+rollback, redo branch, coalescing save boundary, count/byte refusal/pruning and independent saved fingerprint. Old static tests now use SCHEMA_VERSION+1 for future versions and actual written version token for duplicate JSON.
+
+**Integration risk root should assign:** `core/project_snapshot.py:275` loads the full v7 project, then lines290–302 replace the geometry from the CURRENT package but only update material path, leaving the newly added materialEditor/editingState from historical snapshot untouched. This violates E6's current-package restoration if v7 writer captured material drafts. When loading historical package, set materialEditor from freshly parsed package materials (or None for intentional page reload) and clear editingState: package snapshots do not restore unsaved raw UI drafts. I have not edited project_snapshot.py because it is outside my declared ownership.
+
+### Final handoff for this core turn
+
+Root subsequently approved ownership of core/project_snapshot.py. Above integration risk is now fixed: package adapter replaces materialEditor with freshly parsed CURRENT package materials and sets editingState=None; legacy ordinary project branch remains unchanged. `test_project_snapshot_compat` now creates a genuine v7 writer envelope containing disabled unsaved material row + invalid raw seed draft, verifies both are not restored, modifies current package density to2.5 while historical snapshot says2.0, and verifies restore follows current file.
+
+Latest tested code includes full geometry raw_source_text/source diagnostics in v7, exact empty v7 nested run/path fields, optional typed-document error preserving nested field path, strict complete snapshot fields (normal legacy project loading intentionally still allows known omitted defaults), rejected nested transactions, and atomic apply rollback.
+
+Fresh checks all exit0 independently: test_f5_transactions, test_config_migration, test_project_snapshot_compat, smoke_project_io, and independent test_f5_source_snapshots. `git diff --check` for owned tracked files is clean. No commit made; parent integrates shared worktree. Core new files: core/edit_state.py, core/edit_snapshot.py, core/edit_transactions.py, scripts/test_f5_transactions.py; existing edits: core/project.py, core/project_migration.py, core/project_snapshot.py, scripts/test_config_migration.py, scripts/test_project_snapshot_compat.py.
+
+Independent parser review: out/collab/f5-parser-independent-review.md. No parser extraction defect found. It flags a UI integration boundary: persist capture-time absolute source anchor when summary.path is relative, otherwise a new process CWD can change diagnostic source identity; never turn read_success=false into successful empty text.

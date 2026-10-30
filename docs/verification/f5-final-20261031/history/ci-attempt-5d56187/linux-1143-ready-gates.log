@@ -1,0 +1,39 @@
+[
+  {
+    "artifact": "linux-evidence-11.4.3",
+    "profile": "backend",
+    "cases": 59,
+    "assertions": 39795,
+    "git_dirty": true,
+    "gate_exit": 1
+  },
+  {
+    "artifact": "linux-evidence-11.4.3",
+    "profile": "gui",
+    "cases": 47,
+    "assertions": 3249,
+    "git_dirty": true,
+    "gate_exit": 0
+  },
+  {
+    "artifact": "linux-evidence-11.4.3",
+    "profile": "integration",
+    "cases": 22,
+    "assertions": 4486,
+    "git_dirty": true,
+    "gate_exit": 0
+  },
+  {
+    "artifact": "linux-evidence-11.4.3",
+    "profile": "static",
+    "cases": 32,
+    "assertions": 2715,
+    "git_dirty": true,
+    "gate_exit": 0
+  }
+]
+Traceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\verification\f5-ci-5d56187\gate-ready-artifact.py", line 22, in <module>
+    assert all(r['gate_exit']==0 for r in records)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

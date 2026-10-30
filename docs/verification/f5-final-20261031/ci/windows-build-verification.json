@@ -1,0 +1,30 @@
+{
+  "status": "passed",
+  "head_sha": "5c1eec5007cd29cbe12949c19bed81457f1f825b",
+  "checks": [
+    "receipt exit 0",
+    "same head/source fingerprint",
+    "capabilities raw SHA256",
+    "current executable raw SHA256",
+    "Release/MSVC/1132/MT",
+    "empty captured stderr"
+  ],
+  "files": [
+    {
+      "path": "windows-build/capabilities.json",
+      "bytes": 6156,
+      "sha256": "e3232ad6b4caa1ea8d68436c61ae6c2f61c31ea5b6ea87da289d17580dfa390b"
+    },
+    {
+      "path": "windows-build/capabilities.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "windows-build/receipt.json",
+      "bytes": 540,
+      "sha256": "fcb41d90b929d346c072f0c6ffb0136ad91a0a9b4278bea35383ccb4f943a119"
+    }
+  ],
+  "boundary": "Root-owned recorded build identity and current binary comparison only; not local regression or native UI acceptance."
+}

@@ -1,0 +1,85 @@
+# F5 Close 成本与指纹缓存独立只读审查
+
+日期：2026-10-30。审查者：f5_transactions（事务模块作者，对当前性能方案做边界评估）。
+读取基线：`b290eb4522fade982bedcd1c8b0174d3e3904279`；当时工作区只有 UI 所有者的 `window/project.py` 与 `smoke_f5_editor_history.py` 修改。本次未修改产品或测试，未重跑完整 F1，未操作桌面。本文是诊断和修复提案，不是阶段验收或修后通过收据。
+
+## 结论
+
+1. **确定为性能问题：** `EditSession.is_modified` 对事务私有且未改变的完整快照反复严格编码、类型校验、计算 SHA。一次无编辑关闭沿现有调用链执行约五次此查询，另有 no-op replace 对当前快照重新计算。优先修复这一确定重复工作。
+2. **确定存在、不是当前首选修复点：** 每次 `clone_snapshot` 都重建源诊断。默认源的纯核心抽样中，一次模拟关闭刷新三次材料/几何解析合计约 **4.27 ms**，总工作约 **94–114 ms**。这些数据不支持将源解析认定为本次 Close 越过 0.5 s 的主因。
+3. **建议最小修复：** 为 `EditSession` 内部 `_current` 保存一个 `_current_fingerprint`，只在成功发布新状态时一起更换；`is_modified` 用字符串比较。保持所有外部候选的 clone、源重建、严格校验、容量与回滚流程。该方案不需要来源 parser LRU，不信任持久文件声称的 hash/已验证标记。
+4. **需实验：** 是否足以稳定恢复原有 F1 `close < 0.5 s`，由原 F1 用例在同一 v3 断言探针下验收。父代理当前的普通窗口诊断已将大部分延迟定位到反复 dirty 查询，但该诊断 `G4USIM_ASSERTS=0`，不可用作测试通过证据。
+
+## 读取到的实际调用链
+
+| 边界 | file:line（当前基线） | 与本次问题的关系 |
+|---|---|---|
+| Close 先询问未保存编辑 | `gui/g4usim_gui/main_window.py:130` | 在取消后台证据任务前执行完整历史刷新。不能删除未保存检查。 |
+| 关闭前 flush | `gui/g4usim_gui/window/transactions.py:700`、`:517`、`:504` | `_finish_history_merge → flush_pending_edit`，即使 no-op 也捕获、replace、history_changed。 |
+| 捕获编辑状态 | `gui/g4usim_gui/window/transactions.py:254`、`:300` | 构造 `WorkspaceSnapshot`，保留 raw drafts、文档及源原文。 |
+| 每个 clone 重建来源 | `gui/g4usim_gui/core/edit_snapshot.py:32`、`:39`、`:52` | WorkspaceSnapshot 构造深拷贝后执行 `restore_source_evidence`；clone 再走构造函数。 |
+| no-op replace | `gui/g4usim_gui/core/edit_transactions.py:144`、`:145`、`:146`、`:147` | 候选 clone+指纹、当前指纹、返回 current 再 clone。来源解析不是 fingerprint 本身直接调用。 |
+| 标题 dirty 与恢复 dirty | `gui/g4usim_gui/window/transactions.py:677`、`gui/g4usim_gui/window/recovery.py:293` | `history_changed` 内重复两次完整指纹。 |
+| Close dirty | `gui/g4usim_gui/window/transactions.py:701` | flush 后再次完整指纹。 |
+| 恢复关闭 dirty | `gui/g4usim_gui/window/recovery.py:366`、`:368` | 再两次完整指纹。真实待写恢复副本的 flush/lease 关闭仍须保留。 |
+| 每次 dirty 的重工作 | `gui/g4usim_gui/core/edit_transactions.py:77`、`core/edit_snapshot.py:128`、`:58` | 完整序列化、递归 strict validation、semantic 过滤、JSON/SHA。 |
+| 类型信息重复解析 | `gui/g4usim_gui/core/project_migration.py:38`、`:51` | 每层 dataclass 验证都重新 `get_type_hints`，放大重复指纹的成本。此轮不必另扩 schema metadata cache。 |
+| 实际回归门槛 | `gui/smoke_tests/smoke_f1_async_identity.py:170` | 原有真实窗口、阻塞证据任务背景下 `assert window.close(); ... < .5`。不能放宽门槛替代修复。 |
+
+## 有边界的性能证据
+
+### 本代理纯核心抽样
+
+在默认源 `test/materials/test_materials.ini`（510 字节）、`test/geometry/hierarchical_test.ini`（5730 字节、15 个几何行）上构造真实模型、源原文状态与 transient。
+每轮执行 `WorkspaceSnapshot(...)`、一次 no-op `EditSession.replace`、五次 `is_modified`。不创建 Qt，不执行 Close，不写恢复文件；没有完整 GUI table/raw-draft 集合。因此只能说明核心重复工作比例。
+
+- 五轮墙钟：113.572、106.529、100.908、101.196、94.160 ms。
+- 同一进程内存包装 parser 计数：材料 15 次共 2.911 ms，几何 15 次共 18.444 ms；三对 parser/轮，共约 4.271 ms/轮。
+- 另一次 cProfile 诊断：7 次 `snapshot_fingerprint`；`validate_dataclass_fields` 共 574 次（含递归）；`get_type_hints` 574 次；`restore_source_evidence` 3 次。累积时间分别约 254.631、164.457、125.639、10.375 ms。
+- cProfile 本身明显增加成本；这些累积耗时有调用嵌套，**不可相加，也不可与无 profile 墙钟直接比较**。以上纯核心抽样原始输出在本代理工具回执，未另生成不可变日志；这里只据此支持方向，不据此宣称性能验收。
+
+### 父代理普通 Close 分层计时（读取原日志）
+
+`out/collab/f5-close-root-profile.log`：普通 Close 0.1134743 s。
+`out/collab/f5-close-root-profile-probed.log`：同 v3 probe 下 Close 0.4753009 s，capture_workspace 0.0215104 s、history_changed 0.1190396 s、flush_pending_edit 0.2870916 s、_confirm_unsaved_edits 0.3478379 s、_recovery_before_close 0.1226562 s。
+
+这些也是嵌套调用，不能相加。后者明确 `G4USIM_ASSERTS=0`，是定位日志。接近阈值和 dirty 路径占比与上述核心抽样一致；F1 专用失败过程的精确计时仍由 recovery 代理完成。
+
+## `_current_fingerprint` 的安全最小实现要求
+
+**无问题（在下列约束下）：** 缓存仅对应事务内部私有 `_current`，不会缓存外部 `WorkspaceSnapshot` 的可信性。仓库搜索未发现事务类外部直接修改 `_edit_session._current` / `session._current` / `history._current`。输入和输出目前均经过 defensive clone：构造 `:57`、`current :68`、`replace :144`、`_apply :119`、`transact :176`；调用方没有获准可变引用。Python 私有属性不能阻止恶意反射，但这里不是任意进程内 Python 沙箱，不能以此要求所有查询重验证。
+
+建议只修改 `core/edit_transactions.py`，对应正式反例放 `scripts/test_f5_transactions.py`。不改 snapshot codec、来源重建或 GUI dirty 门禁：
+
+| 发布位置 | 必须保持的顺序 |
+|---|---|
+| `__init__ :57–61` | 深拷贝/来源重建、指纹、容量全部成功，设置当前指纹；初始 saved marker 的语义保持。 |
+| `replace :144–167` | 新候选仍 clone+重建并计算新指纹。no-op 与缓存的当前指纹比较；失败不动缓存。容量/命令构建和 `_apply` 成功后，随 `_current` 一起赋新指纹。 |
+| `undo :193–199` | 历史候选仍 clone+重建；**在 `_apply` 之前计算候选指纹**，以免哈希失败发生在 UI 已切换之后。apply 成功后才同时发布状态/指纹/游标/修订。 |
+| `redo :205–211` | 同 undo。不要直接复用未经此次 clone 重建的旧命令指纹作为可信事实。 |
+| `reset :216–227` | 使用已算出的候选指纹；容量和 apply 成功后再一起更新。saved=False 继续 `_saved_fingerprint=None`。 |
+| `is_modified :75–77` | 只比较当前私有指纹与保存指纹，不 clone、不重新校验。 |
+| `mark_saved :133–137` | 未传 snapshot 才可使用当前缓存；**显式传入 snapshot 必须继续单独求指纹**，保留“保存的是旧快照、当前仍 dirty”语义。 |
+
+不需要给每个 `_Command` 增加 hash，不需要修改 JSON。merge 回到原值的 `before` 可能是较早命令快照（`:153`），继续原求值逻辑即可。使用缓存的当前指纹只能替代确知是 `_current` 的求值，不能把旧命令当当前。当前没有多线程发布保证；本提案不新增该保证。
+
+原有拒绝边界继续有效：expected_revision 冲突、未知字段/类型/非有限值、单事务容量超限、apply 抛错、rollback 再抛错都不得发布缓存或 revision；`_apply` 回调看到的仍是独立 clone，旧状态与旧指纹在回调期间保持配对。
+
+## 为什么本轮不加来源 parser LRU
+
+`core/project.py:175–180` 的版本无关来源重建刚封住 v1–6 降级标签绕过；`core/edit_sources.py:32–48` 检查源文档缺失、wizard 独立文档和原文矛盾；`:50–63` 保留真实读取失败；`:65–75` 从捕获原文恢复阻断。上述入口不能因“之前验证过”“同 revision”或 transient 缓存存在而跳过。
+
+如后续确有大源实测瓶颈，安全 cache 必须只缓存 parser 派生的不可变事实，key 至少包括源种类、**准确原文**、解析后的来源身份（相对路径/CWD）、几何 template、read_success 与解析规则代次；每次仍执行文档/源一致性及 failed-read 检查，重新合并现有额外 blockers，不能缓存并外泄可变 document/diagnostic params。只用路径、mtime、revision、持久 hash 或“清空错误列表”均不足以保证安全。缓存还须有字节上限以免保留多份大原文。本次约 4 ms 量级不值得引入这些新信任和内存边界。
+
+同样，不宜把关闭 flush 简化为“timer 未运行则跳过”。当前 raw line edits、spin、动态 table delegate 各有信号边界（`window/transactions.py:203–211`，`widgets/config_builder_page.py:54–65`），live delegate 的程序写入并不保证发出 textEdited；Close 的最终捕获承担保存完整 raw draft 的职责。只改指纹缓存即可保留此边界。
+
+## 本次提案的验收标准
+
+1. 原 `smoke_f1_async_identity.py` 在同 v3 probe 下通过原 `< .5`，不能更改阈值/跳过背景证据任务/只计部分 Close。修后日志保留，与前失败日志分开。
+2. 当前值/返回值/输入初始快照/transform 暂存/回调 clone 的外部修改不影响内部 fingerprint、dirty 或 history；不允许调用方通过引用篡改内部缓存对应状态。
+3. saved=True/False、显式 mark_saved(旧快照)、Undo 到保存点、Redo 离开保存点、合并回原值、reset 两种 saved 模式的 dirty 仍正确。
+4. 冲突、容量拒绝、无效 raw/类型、apply 失败和双失败均保持旧状态、旧 revision、旧 dirty；no-op 不产生历史。缓存指纹必须在状态发布前可用。
+5. 现有来源清空、旧版本标签、失败读取、source_copy、持久 codec roundtrip 反例全部保留通过；该修复不得减少 source reconstruction 次数来换性能。
+6. 可用一个确定性 spy 检查多次 is_modified 不再调用 fingerprint，且每次实际发布后新指纹与 `snapshot_fingerprint(current())` 一致；不新增另一条容易受机器负载影响的微秒阈值测试。
+
+本报告建议由父代理待 recovery 精确定位收敛后授权上述极小范围修复；本代理当前未作实现修改。

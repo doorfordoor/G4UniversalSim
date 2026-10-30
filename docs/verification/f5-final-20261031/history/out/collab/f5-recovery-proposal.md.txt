@@ -1,0 +1,129 @@
+# F5 自动保存与异常恢复：只读审查及实施提案
+
+- 基线：`676ffb2b27a56d636a2c984012c9442a6091337b`，`roadmap/F4-validation-navigation`；审查开始时 tracked clean。
+- 范围：仅源代码/契约审查，未改产品、未执行崩溃实验、未操作桌面。本文件是实施提案，不是验收结果。
+- 结论：可以完整实现，但不能把现有普通项目 JSON 或运行包快照直接当作完整恢复文件。先由统一事务层定义完整编辑状态，再让保存、undo/redo 和自动恢复共用该状态。无需新增 Agent/Runner 框架。
+
+## 1. 已确认事实与缺口
+
+| 结论 | 当前证据 | 对 F5 的约束 |
+|---|---|---|
+| 已有手动保存原子替换，无需重新发明 | `gui/g4usim_gui/core/project.py:183` 同目录临时文件、flush/fsync、os.replace；Q1 契约 `docs/agent-history.md:329` | 保留旧文件失败保护。恢复发布到专用目录，不调用原路径保存 |
+| 普通项目持久化不完整 | `core/project.py:35` 项目字段含 geometry/source/physics/scoring editor，不含材料文档；`widgets/config_builder_page.py:261` 更新项目时也未复制材料文档 | 完整恢复必须包含材料行、components_text、preserved_sections、禁用行及源问题，不能只保存项目 |
+| 已有材料 snapshot 是摘要 | `editors/material_editor_model.py:404` 将 components 写成数量，遗漏 raw_source_text、preserved_sections、notes 等；`core/project_snapshot.py:315` 明确说明不恢复未写出草稿 | 不调用该摘要 serializer 保存恢复状态；增加独立完整状态 codec 或升级项目格式 |
+| 几何项目 snapshot 不是完整文档 | `editors/geometry_editor_model.py:141` 有 raw_source_text，`:266` 的 snapshot 不写它；loader `:216` 也不还原它 | 源文本与 blockers 必须随完整编辑状态保留，否则恢复后源匹配失效或被重载覆盖 |
+| 当前载入会读磁盘并替换模型 | `widgets/config_builder_page.py:249` 无条件 reload 材料/几何，仅随后恢复 dirty/source-copy 的 geometry；`widgets/config/materials.py:129`、`widgets/config/geometry.py:300` 会重建文档 | 恢复发布必须有“不读源文件、不清草稿”的独立投影接口，不能走现有 set_from_project 再侥幸补回 |
+| 运行模型无法保存所有编辑草稿 | `widgets/config/setup_panel.py:261` 非法 seed 文本转换为 None；`widgets/config/materials.py:240` 多字段 strip；`widgets/diagnostic_navigation.py:170` 单元格输入尚未 commit 就会使诊断失效 | 保存原始可编辑字段值与活动单元格草稿；类型合法而业务无效的文本也要能恢复 |
+| 运行包恢复契约不能替代恢复机制 | `core/project_snapshot.py:246` 严格解析专用 envelope；`:308` 清 config/macro/output，恢复包内当前源；`docs/agent-history.md:415` 明确材料摘要不能重建草稿 | F5 新恢复 schema 独立命名；旧 snapshot 路由不放宽 unknown/type 检查 |
+| 当前关闭无未保存策略 | `main_window.py:120` 停 timer/owned QProcess；`:148` 可能 ignore；`:160` 只记 last workspace/runs | 先处理当前文档保存/保留/丢弃/取消，再进入已有进程关闭路径；关闭被 ignore 时恢复控制器仍可继续工作 |
+| 已有源变化门禁必须保留 | `validators/config_validator.py:180` / `:216` 比较编辑源；`:282` 比路径和 logical text | 恢复旧草稿不等于确认当前外部源。缺失/变化时保留编辑内容，但生成/运行继续受门禁保护 |
+| 严格读取能力已存在 | `core/config_migration.py:50` 拒绝重复 JSON 和非有限；`core/project_migration.py:34` 检查字段/类型，bool 不能冒充 int | 恢复 envelope 与内层编辑状态均闭合校验，不做静默丢字段或“坏新协议退回 legacy” |
+| F4 瞬态诊断不是可恢复业务状态 | `gui/AGENTS.md:5`；`widgets/config_builder_page.py:207` / `:321`；`widgets/diagnostic_navigation.py:239` 为含草稿/源指纹的诊断身份 | 不序列化旧报告、导航身份或 success。恢复/undo/redo 后创建新诊断 generation，旧报告永不重新变有效 |
+
+以上 GUI 相对路径在表中省略的前缀均为 `gui/g4usim_gui/`。缺口属于 F5 待实现范围；未称为本轮运行复现缺陷。
+
+## 2. 与统一事务接口的边界
+
+建议事务 agent 与主 agent 先统一以下名称/含义，再由恢复实现者接入；最终命名可服从事务模块，但只能有一份状态 codec。
+
+```python
+capture_edit_state() -> EditState
+validate_edit_state(payload) -> EditState
+apply_edit_state(state, *, reason) -> None
+edit_session.state_changed(revision, state_digest, dirty)
+edit_session.mark_saved(saved_state_digest, project_file_receipt)
+```
+
+- `EditState` 必须是与 Qt 控件脱离的深拷贝，包括项目字段、完整材料/几何文档、source/physics/scoring 模型、当前未解析文本和表格草稿。不要包含 QObject、QProcess、日志、输出/验证成功标签、旧诊断对象、后端预览网格或运行队列。
+- 状态捕获必须旁观读取，不偷偷调用 validate/reload/start_run，不把非法 seed 改成默认，不触发配置写入。原始草稿键由显式注册表限定；行草稿有集合/行身份/字段，不以翻译标签定位，不以 QObject 内存地址持久化。
+- `apply_edit_state` 在候选完整解析/控件范围检查后批量发布，禁止中途发 settingsChanged 造成递归事务；失败保持原对象/路径/dirty/undo 栈。发布后统一刷新依赖、包 stale 和 F4 新 generation。
+- 自动保存订阅已发布事务及草稿变更，undo/redo 同样触发；不建立第二套 undo 栈。恢复后的历史以恢复状态为新起点，不恢复可执行命令历史；显示“已恢复，尚未保存”，使用新 session/document ID。
+- 恢复到当前已编辑文档之前，先走统一的文档切换 guard；用户取消，当前文档与恢复原件都不变。
+
+**普通保存的必要衔接决定：**建议项目升级到 version 7，使用同一 codec 保存完整 editor 状态（例如增加完整 materialsEditor、几何 source text 和明确的 raw draft 字段），保持 1–6 兼容读取。不要在 v6 下悄悄加入未知字段，也不要让“保存成功”把没有写出的材料/原始草稿标为 clean。版本迁移、run-package snapshot 和旧 E6 导入矩阵需一并更新。字段最终结构由主 agent/事务实现者统一，恢复模块不独立复制模型 schema。
+
+## 3. 恢复存储 API 与文件协议
+
+建议新增 `core/project_recovery.py`，仅处理文件与纯数据；新增 `window/recovery.py` 管理 Qt timer、状态栏和选择交互。持久目录定位统一从 `core/install_layout.py` 提供（已有安装布局职责见 `:25` / `:47`），默认用户可写目录；不放源项目旁、安装目录或运行输出目录。测试可注入临时 root，不能污染用户恢复目录。
+
+```python
+RecoveryStore(root)
+store.start_session() -> SessionLease
+session.publish(document_id, revision, edit_state, origin_receipt) -> RecoveryReceipt
+store.discover() -> tuple[RecoveryCandidate, ...]
+store.claim(candidate_id) -> CandidateLease
+claim.read_checked(expected_raw_sha256) -> RecoveryPayload
+claim.retain() / claim.discard()  # 针对该候选；从不接收任意外部路径
+session.retire(document_id, *, reason, saved_receipt=None)
+session.close()
+```
+
+建议恢复 envelope `g4usim_edit_recovery_v1`，包含 schema/version、随机 session/document ID、创建/更新时间、revision、状态摘要、可选原项目路径及打开/上次保存时实际读取字节 SHA、完整 `EditState`、已捕获的源逻辑文本身份、`disposition`。PID/host 可作展示元数据，不能作为可删除判据；时间仅用于展示，不能证明崩溃。
+
+- `origin_receipt` 只能由实际打开/保存结果产生；自动保存时重读当前原件得到的 SHA 不能充当“开始编辑时的原件”身份。未命名项目 origin 为 null。
+- source 记录区分“已载入逻辑文本 SHA”和“实际原始字节 SHA”。当前模型只有逻辑文本时明确标记，不能套 F1 字节证据身份。缺失/变化/未观测各保留，恢复过程不把今天源文件的 hash 填成历史 hash。
+- `load_json_strict` 后再校验 root/version/必需字段/未知字段/数组项与标量类型/非有限/摘要。格式无效、未来版本、超限或不完整的候选在列表标明原因，只能显式保留/丢弃，不能静默删除或部分恢复。
+- 给 JSON 字节数、草稿数/行数/文本长度设置明确可测试上限；超限保留上一有效恢复文件并显示自动保存失败，不把截断后的状态伪称完整。不要根据列表路径自动加载外部依赖、导入 Python 或启动进程。
+
+### 原子性与多实例
+
+1. 每实例/session 使用不可预测 UUID 的独占目录，每文档独立记录。A/B 同时打开同一个项目也不能写入同一个恢复目标。
+2. 用操作系统进程生命周期锁保护每个 session/候选，进程死亡后内核释放锁；Windows/Linux分别实现并通过真实子进程验证。仅“PID存在”“心跳超时”或可手改 alive 标记不足以判定拥有者已退出。不能抢占仍持锁的活实例；不能按 PID/名称杀进程。
+3. scanner 只读自己 root 下固定布局的普通文件，排除符号链接/重解析逃逸；restore/retain/discard 持有候选 claim 锁到操作完成。两个新窗口不能同时认领或删除同一候选。
+4. 写入同目录唯一临时文件，完整 UTF-8/LF 序列化、flush/fsync、原子替换本 session 的当前记录。仅完整发布后的 generation 返回成功收据；旧有效文件不能先删。中断留下的临时文件不是有效候选，不自动升级。
+5. 单实例串行写入、合并连续编辑；旧 revision 不得覆盖新 revision。后台 I/O 只拿 immutable EditState，不能访问 QWidget。可借鉴 `core/evidence_job.py:22` 的 Qt 排队回传，但它取消后只忽略回调，**不能直接当成已停止写盘**；terminal retire/close 必须等待所有该文档写盘完成或关闭被拒绝。
+6. 清理失败发生在成功发布之后只报告 warning；不把成功恢复/保存反改成失败。retire 先原子写明确 saved/discarded 的终态，清理失败时 discovery 不把终态当未处理崩溃草稿。删除仅针对已认领记录，不递归清用户 root。
+7. 明确范围：保证进程异常退出时最后一次已完成发布的恢复文件可用；不是每键实时备份，不保证操作系统断电/存储故障全部可恢复。界面显示“自动恢复副本已更新”与最后成功时间，不能显示“项目已保存”。
+
+## 4. 生命周期和交互规则
+
+- **启动**：MainWindow 构造和语言/主题就绪后（现 `main_window.py:65-70`），异步扫描；发现未持锁、非终态候选再给恢复列表。不是根据“上次没写 clean 字段”直接宣布软件崩溃；文案用“发现上次未正常结束或保留的编辑副本”。
+- **每次编辑**：短 debounce（建议 1–2 秒），并设持续输入最长写入间隔（建议 10 秒）避免一直编辑永不保存；同一 digest 不重复写。自动保存失败显示状态、保留上次有效副本，后续正常改动可重试，不能吞异常。
+- **恢复**：先 read/check/claim + 候选投影验证，再通过统一事务接口发布。保持该恢复文件直到新 session 成功发布同一状态；此后原记录可标记已接续。恢复后的 `project_file=None`，原路径仅显示为来源，下一次保存明确选择目标，避免回写或误覆盖原项目。
+- **保留**：不改变当前编辑项目、不标成功、不删候选；可以在同次会话暂不再弹，但下次仍可从恢复入口打开。正常退出选择“保留恢复副本”时 disposition 必须与异常遗留区分。
+- **丢弃**：只有显式选择当前候选才能丢弃，核对 claim 与原 SHA；发现候选变化则重新读取，不对错误路径执行清理。
+- **手动保存**：实际完整状态成功落盘才更新 project_file/saved marker，并 retire 对应已保存 generation。保存失败或 Save As 取消不改路径/clean/恢复副本。保存开始后发生新编辑，只能标保存的旧 digest，不可把新状态变 clean。原项目自打开后被另一实例/外部修改或删除，默认拒绝覆盖并提供另存，不能把恢复副本当 overwrite 授权。
+- **打开/最近/向导/示例/历史快照/迁移副本切换**：全部复用文档替换 guard。当前 dirty 状态允许保存/保留副本/丢弃/取消；候选新项目解析失败时，旧项目/undo/恢复保持。
+- **正常关闭**：先解决 dirty 与 pending draft，再冻结新写入并等待最后发布；之后沿用已有 owned-process 关闭流程。`main_window.py:148` 若 ignore，要解除冻结并继续 debounce，不能误写终态或删除副本。进程实际停止、event接受后才能最终释放当前 lease。正常保存关闭不应产生“异常恢复成功”证据。
+- **外部源改变/缺失**：恢复完整草稿、源文本和 blockers，不自动 reload 覆盖草稿，也不把源-copy mode 转为已验证。保留明确冲突状态；生成/run/几何后端预览继续执行输入门禁。选择新源/重载属于显式事务，可撤销。F5 不新增依赖打包功能，也不把恢复路径当可编译工程导出。
+
+## 5. 最小文件清单与职责
+
+| 文件 | 修改用途/负责人建议 |
+|---|---|
+| 新统一 EditState/transaction 模块（事务 agent 定名） | 全量可逆状态 codec、raw drafts、revision/saved marker；本恢复模块仅使用它 |
+| `core/project.py`、`core/project_migration.py`、相关 editor codec | 完整项目持久化 v7 与 1–6 兼容，避免保存材料草稿丢失；主/事务 agent |
+| `core/project_recovery.py`（新） | 严格 envelope、独立目录、锁、atomic publish、discover/claim/retire；恢复实现者 |
+| `core/install_layout.py` | 统一用户恢复目录位置与测试注入入口 |
+| `window/recovery.py`（新） | timer/单 writer、恢复选择、dirty 切换 guard、生命周期；由主 agent 接到 transaction |
+| `main_window.py`、`window/project.py`、`window/content.py` | 信号、启动/关闭、所有替换项目入口，保持 Q1 owned-process 行为 |
+| `widgets/config_builder_page.py`、必要编辑模块 | 不重读源的批量状态发布、活动文本/表格 draft 提交或捕获；事务 agent 统一，避免双方并改 |
+| `core/i18n.py`、必要恢复选择对话框 | 集中双语提示，明确已恢复/尚未保存/源冲突/坏文件/保留/丢弃 |
+| `scripts/test_project_recovery.py`、`gui/smoke_tests/smoke_f5_recovery.py`（新） | 文件协议/锁/故障与 GUI 联动，正式 runner 注册 |
+| F5契约文档、GUI说明、STATUS/ROADMAP/支持矩阵/agent-history | 主 agent 最终同步；旧 F4/E6 验收原件不修改 |
+
+## 6. 验收矩阵（必须执行后才可称通过）
+
+### 核心与 GUI 自动测试
+
+1. 未命名项目；材料禁用行/无效配方/注释与源 preserved_sections；几何源 raw_text/unknown blocker；非法 seed 与活动单元格草稿；空值/零/False/中文/换行完全往返。恢复后字段与原草稿逐项相等，验证错误不被洗掉。
+2. 成功保存、保存失败、取消 Save As、保存后继续编辑、undo 到 saved 点、redo 再 dirty、分支编辑；原件字节 SHA 与 saved marker 一致。加载/恢复错误不得半更新当前页面、项目路径、历史或恢复文件。
+3. 未来 schema、重复键、未知字段、bool-as-int、非法数组、NaN/Infinity、空文件、截断文件、digest不符、超限、源路径逃逸。逐例明确拒绝且保持原文件/上一有效候选；坏候选不阻止列表其他有效候选。
+4. 原材料/几何被外部改写、删除、仅换行改变；原项目被另一实例覆盖；原路径对应新文件。恢复草稿仍可查看/另存；当前源匹配、格式接受、运行身份分别标记；不自动生成或恢复成功状态。
+5. Auto-save timer 去抖与最长间隔；连续编辑中旧 writer 延迟结束；项目切换后旧回调；恢复后后台旧回调；close 被 ignore 再继续编辑。不能旧 revision 覆盖新状态、误 retire 新状态或在隐藏窗口启动作业。
+6. 保留/丢弃/恢复/取消全部覆盖；候选在对话框期间改变须拒绝 stale decision；正常保存关闭不会反复弹恢复。
+7. E6/Q1/F4 回归：project IO/import projection/snapshot compatibility、source blockers、owned QProcess shutdown、diagnostic stale/navigation、writer round trip。添加正式用例后按项目证据门禁检查非零断言/原日志 SHA 与平台矩阵，不能仅 compileall。
+
+### 必须有真实子进程异常终止实验
+
+- 子进程 A 使用实际 MainWindow + 正式恢复控制器（独立 temp recovery root），实际编辑未命名材料/几何/seed 草稿；等 **已发布 recovery receipt** 后记录文件 raw SHA/revision，并向父进程通过管道发 ready。不要自己制造 recovery JSON 或 clean=false 标志代替这一段。
+- 父进程只终止自己创建的 A：Windows terminate/kill 句柄、Linux SIGKILL；等待真实非正常退出并保存 pid/退出状态。A 不执行 closeEvent/atexit/discard。原项目与源文件 SHA 保持。
+- 全新子进程 B 实际 discovery，显示该候选，通过正式恢复入口确认；逐项核对完整草稿、project_file=None、dirty=true、新 diagnostics generation、package stale、无 run success，最后 B 正常关闭并核对退出码。
+- 独立对照：A 正常保存关闭不应被认作异常；A 正常关闭并显式保留应标“保留副本”；A 在首次完成 autosave 以前被杀应明确无保证，不伪造可恢复记录。
+- 原子中断：A 先发布有效 generation 1；在写 generation 2 的临时文件/replace 前可观测阶段终止真实进程。B 至少恢复完整 generation 1，绝不能解析半个 generation 2。replace 已完成后中断应能恢复完整 generation 2。
+- 多实例：两个真实进程同时持 lease、编辑同项目，第三进程发现时跳过两者；杀其中一个后只发现其候选，另一进程持续编辑不受影响。两个恢复者并发 claim 同一候选只允许一个成功；不能用伪 PID 模拟代替这部分。
+- 以上至少 Windows/Linux 各做核心进程锁/异常终止实验；Windows原生实际窗口检查恢复列表、中文按钮、错误提示和真实恢复状态。offscreen 测试可证明逻辑，不能冒称实窗观察。
+
+## 7. 实施顺序建议与当前边界
+
+先冻结完整 EditState / 保存版本决策与统一 API，再实现纯 recovery store 和故障测试，随后接 GUI 生命周期，最后做真实异常退出/多实例、正式矩阵和实窗审查。当前只有只读证据与上述提案，未宣称 F5 实现、测试或验收完成。等待主 agent 分配实现所有权；本子任务未修改任何 tracked 文件。

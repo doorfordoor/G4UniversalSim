@@ -1,0 +1,14 @@
+# F5 已捕获源文本解析入口独立复核
+
+审查者：f5_transactions（非该parser改动写者）；2026-10-30。只读复核root的三个parser及 `scripts/test_f5_source_snapshots.py`；没有修改这些文件。
+
+结论：**未发现本轮parser抽取中的确定缺陷，可接入F5恢复链路。**
+
+- `gui/g4usim_gui/parsers/ini_light_parser.py:29`–`:44`：原文件读取/失败分支仍留在path入口，失败产生source_unavailable且没有文本快照，不把读取失败改为空文件读取成功。
+- `gui/g4usim_gui/parsers/ini_light_parser.py:47`–`:99`：新text入口明确非字符串拒绝，在提供的logical text上走同一词法处理；不调用read_text，不再另造一套INI解析。
+- `gui/g4usim_gui/parsers/materials_parser.py:77`–`:90` 与 `geometry_parser.py:126`–`:154`：两个入口汇入同一个document消费者，维持源schema问题、source-only定位、重复源问题及几何template上下文。没有解除材料闭合schema/几何round-trip blocker。
+- 新测试比较dataclass所有字段及每条typed诊断，并在源文件已替换、禁止Path.read_text时重建；另覆盖删除文件、原缺失读取、无效参数。实际独立运行 `python -B scripts/test_f5_source_snapshots.py` 退出0；没有把该纯Python证据外推为GUI或后端验收。
+
+**接入注意（不是本parser抽取的缺陷）：** text入口的source_path必须是捕获时的准确锚定路径。当前UI草稿捕获代码曾使用summary.path原字符串；若它是相对路径，跨进程CWD改变后重建source_location会指向另一目录。请UI适配器持久化捕获时的canonical路径/解析锚点，或恢复前明确沿原workspace锚定，不能用恢复时cwd猜；补一条相对源路径+工作目录改变的恢复测试。绝对路径来自真实捕获，不代表历史F1原始字节hash验证。
+
+历史read_success=false的恢复调用者也必须保留原源错误及无快照状态，不能调用parse_*_text("")“修复”为已成功读取。core严格状态格式单独保存read_success，UI需执行此分支。

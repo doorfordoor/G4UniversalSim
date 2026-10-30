@@ -1,0 +1,51 @@
+[
+  {
+    "case": "exact_original_Generate_signal",
+    "raw_seed": "not-an-integer",
+    "blocked": true
+  },
+  {
+    "case": "persisted_history_replayed_seed",
+    "entry": "Configuration",
+    "run_after": false,
+    "raw_preserved": true,
+    "history_unchanged": true,
+    "generation_and_run_blocked": true
+  },
+  {
+    "case": "persisted_history_replayed_seed",
+    "entry": "Configuration",
+    "run_after": true,
+    "raw_preserved": true,
+    "history_unchanged": true,
+    "generation_and_run_blocked": true
+  },
+  {
+    "case": "persisted_history_replayed_seed",
+    "entry": "Project",
+    "run_after": false,
+    "raw_preserved": true,
+    "history_unchanged": true,
+    "generation_and_run_blocked": true
+  },
+  {
+    "case": "persisted_history_replayed_seed",
+    "entry": "Project",
+    "run_after": true,
+    "raw_preserved": true,
+    "history_unchanged": true,
+    "generation_and_run_blocked": true
+  },
+  {
+    "case": "valid_seed_or_empty_control",
+    "raw": "17",
+    "generated": true,
+    "backend_executed": false
+  },
+  {
+    "case": "valid_seed_or_empty_control",
+    "raw": "",
+    "generated": true,
+    "backend_executed": false
+  }
+]

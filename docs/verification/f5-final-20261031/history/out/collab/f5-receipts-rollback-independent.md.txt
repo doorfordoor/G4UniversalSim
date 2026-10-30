@@ -1,0 +1,29 @@
+# F5 独立审查补充：字节收据与回滚双失败
+
+本轮只读产品，反例脚本/日志写 out。本人恢复 R1 产品与正式测试保持冻结。
+
+证据：`out/collab/f5-receipts-rollback-independent.py`、`out/collab/f5-receipts-rollback-independent.log`（exit 0），不覆盖此前源阻断 P1 原件。
+
+## 无问题：实际读取字节身份与发布前身份读取失败
+
+`gui/g4usim_gui/core/project.py:212`–`:218`：用带 UTF-8 BOM 和 CRLF 的 legacy v6 输入读取，项目升级到 v7，但 receipt SHA 仍是原始 BOM/CRLF 字节而不是 canonical v7 序列化值；通过。
+
+`core/project.py:244`–`:247`：在实际临时文件读 hash 的新增步骤注入读取失败，原目标字节保持、临时文件清理；通过。现有作者测试还覆盖源读取后外改与发布后目标立即外改，读取收据与本次写入收据不绑定后来文件。
+
+## 确定为缺陷 P2：保存已发布但清理异常冒充保存失败
+
+位置：`gui/g4usim_gui/core/project.py:249`–`:251`。
+
+注入只针对 `os.replace` 已完成后、不再存在的临时文件 unlink。`save_project()` 已把目标写成 projectName='already published'，却抛 OSError('postpublication cleanup failure')，调用者拿不到成功 receipt。现有 finally 行为是历史继承问题，本次不是声称新 receipt 引入；但当前代码违反“发布后清理不能反转成功”的生命周期判定，GUI 会保留旧保存点并显示保存失败。
+
+建议根负责人最小修正：发布提交点后无需再 unlink 已移动的 temp，或明确返回已提交receipt附warning；真正发布前故障仍清 temp、保留原字节。本审查不夸大真实 OS 出现该错误的频率。
+
+## 确定为缺陷 P1：实际窗口双失败后没有冻结，损坏投影被重新收为合法保存
+
+位置：`gui/g4usim_gui/core/edit_transactions.py:113`–`:127` 抛出 TransactionApplyError(rollback!=None)后没有故障状态；`gui/g4usim_gui/window/transactions.py:554`–`:558` can_mutate_workspace仅检查进程和closing；`:566` undo入口在双失败后不设置冻结；`gui/g4usim_gui/window/project.py:268` 的保存路径会再flush/capture当前控件。
+
+真实 offscreen MainWindow 中先形成 events=101 的有效历史，再在原 apply_workspace 调用的 `ConfigBuilderPage.set_from_project` 处注入两次失败：先把实际 beam_on QWidget 改为2569，随后raise；初次投影与rollback均如此。核心history/revision保持101并正确抛double-failure，**但 view snapshot与history不一致**。取证结果：can_mutate_workspace=True；随后真实 `_save_project_to()` 返回True；重新load磁盘项目得到 beam_on=2569；session clean=True。不是只证明pure API可继续调用，也不是合成一个flag；确有实际窗口状态不一致被保存并标为成功。
+
+建议 UI/core 写者处理：双失败必须进入显式不一致/冻结状态，停止普通编辑同步与自动保存，不允许生成/保存把坏投影当正常新编辑；保留最后可证实快照/恢复副本。只能经明确且成功的重新投影/重载清除故障。单次失败且rollback成功仍按现有逻辑保持可用。独立复核应证明 double-failure 后 save/generate/editor操作拒绝，且成功恢复后才能解除。
+
+当前原先“需实验”的 GUI 双失败条目升级为上述确定缺陷。原 source-cache P1 等原写者修复后另存修后复核日志；旧失败原件不改。

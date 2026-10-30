@@ -1,0 +1,110 @@
+{
+  "scope": "r3 delta-only independent checker calls; no Geant4 run or product modification",
+  "script_sha256": "e69203bc94ddaa05be7c189c77201427bc642433d1256219b9579a27c5bc6f2c",
+  "checks": [
+    {
+      "label": "199 observed + header-only worker is accepted",
+      "expected": true,
+      "category": null,
+      "checks": {
+        "nonempty": true,
+        "volume": true,
+        "particles": true,
+        "worker_identity": true,
+        "row_identity": true,
+        "unique_rows": true,
+        "niel_identity": true,
+        "finite_nonnegative": true,
+        "worker_events": true,
+        "master_events": true
+      }
+    },
+    {
+      "label": "worker with electron only is accepted if global particles remain covered",
+      "expected": true,
+      "category": null,
+      "checks": {
+        "nonempty": true,
+        "volume": true,
+        "particles": true,
+        "worker_identity": true,
+        "row_identity": true,
+        "unique_rows": true,
+        "niel_identity": true,
+        "finite_nonnegative": true,
+        "worker_events": true,
+        "master_events": true
+      }
+    },
+    {
+      "label": "observed worker N exceeds master is rejected",
+      "expected": false,
+      "category": "master_events",
+      "checks": {
+        "nonempty": true,
+        "volume": true,
+        "particles": true,
+        "worker_identity": true,
+        "row_identity": true,
+        "unique_rows": true,
+        "niel_identity": true,
+        "finite_nonnegative": true,
+        "worker_events": true,
+        "master_events": false
+      }
+    },
+    {
+      "label": "same worker conflicting particle N remains rejected",
+      "expected": false,
+      "category": "worker_events",
+      "checks": {
+        "nonempty": true,
+        "volume": true,
+        "particles": true,
+        "worker_identity": true,
+        "row_identity": true,
+        "unique_rows": true,
+        "niel_identity": true,
+        "finite_nonnegative": true,
+        "worker_events": false,
+        "master_events": true
+      }
+    },
+    {
+      "label": "global muon coverage remains required",
+      "expected": false,
+      "category": "particles",
+      "checks": {
+        "nonempty": true,
+        "volume": true,
+        "particles": false,
+        "worker_identity": true,
+        "row_identity": true,
+        "unique_rows": true,
+        "niel_identity": true,
+        "finite_nonnegative": true,
+        "worker_events": true,
+        "master_events": true
+      }
+    },
+    {
+      "label": "master actual N must remain 200",
+      "expected": false,
+      "category": "master_events",
+      "checks": {
+        "nonempty": true,
+        "volume": true,
+        "particles": true,
+        "worker_identity": true,
+        "row_identity": true,
+        "unique_rows": true,
+        "niel_identity": true,
+        "finite_nonnegative": true,
+        "worker_events": true,
+        "master_events": false
+      }
+    }
+  ],
+  "passed": 6,
+  "failed": 0
+}

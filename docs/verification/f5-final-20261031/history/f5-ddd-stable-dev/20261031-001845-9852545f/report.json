@@ -1,0 +1,51 @@
+{
+  "schema": "G4UniversalSimM0TestReport",
+  "version": 2,
+  "profile": "backend",
+  "platform": "Windows-10-10.0.26200-SP0",
+  "python": "3.11.9",
+  "git_head": "5d56187392a2e7b888d5ce13f8da05a295cba6d4",
+  "source_fingerprint": "db253b7b1ed5f810789f1322faa75002df311d4aeb04572867dbb130c71d95cc",
+  "tests_content_fingerprint": "4a179292e55b6ef1c894b1a2e44f532b95bfa2afad308d88d59e8f9075efa48a",
+  "git_dirty": true,
+  "git_status_porcelain": " M docs/collab/inbox/20261030-2155-astra-f5-execution.md\n M scripts/run_m0_tests.py\n M scripts/test_displacement_damage.py",
+  "backend_executable": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-f5\\Release\\G4UniversalSim.exe",
+  "backend_provenance": "source_sha256_manifest_matches_executable",
+  "backend_build_identity": {
+    "build_configuration": "Release",
+    "compiler_id": "MSVC",
+    "compiler_version": "19.51.36246.0",
+    "geant4_version_number": 1132,
+    "multithreaded": true
+  },
+  "merge_executable": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-f5\\Release\\mergeHistograms.exe",
+  "merge_source_fingerprint": "49708e1b6b554af6bb0ad42688f447cf254f528f71614074309f75170964682d",
+  "merge_provenance": "source_sha256_matches_executable",
+  "optional_pyvista_coverage": "not_proven_by_this_runner",
+  "untracked_source_files": [],
+  "tracked_source_gate": "pass",
+  "assert_probe": "settrace_assert_lines_v3",
+  "log_digest_algorithm": "sha256_raw_bytes_lf_v2",
+  "assertions_executed_total": 71,
+  "assert_sites_total": 26,
+  "cases_with_assertion_counts": 1,
+  "cases_with_zero_assertions": [],
+  "skip_policy": "failure",
+  "results": [
+    {
+      "name": "displacement_damage",
+      "layer": "backend",
+      "script": "scripts/test_displacement_damage.py",
+      "assert_sites": 26,
+      "status": "pass",
+      "exit_code": 0,
+      "duration_seconds": 9.969,
+      "log": "out\\verification\\f5-ddd-stable-dev\\20261031-001845-9852545f\\displacement_damage.log",
+      "log_sha256": "3d884f243e8a0515876b561bdb2db6f9c75cb075604c06b927821e39ed1ccc9e",
+      "log_digest_algorithm": "sha256_raw_bytes_lf_v2",
+      "evidence_directory": "displacement_damage-evidence",
+      "assertions_executed": 71,
+      "assert_probe": "settrace_assert_lines_v3"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+# F5 最终入口审查：确定阻断 P1
+
+冻结提交：4f960ab1236dee6e91f82f281983e3ccdda2fe69。未修改产品/正式测试；独立反例仅写 out。建议暂停该候选的最终验收，处理下列一条共享入口漏洞。
+
+## 确定为缺陷：扫描页读取主配置绕过故障锁和 raw seed 校验
+
+位置：`gui/g4usim_gui/window/content.py:19`–`:33`，尤其 `:21`–`:22`、`:28`；调用方 `gui/g4usim_gui/widgets/scan_page.py:178`、`:219`；消费方 `gui/g4usim_gui/core/scan.py:223`、`:267`。
+
+`scan_base()` 没有 can_mutate_workspace 检查，没有原始 seed 校验，也没有已恢复来源的 changed 门禁。它从当前 Config 控件产生 run_settings，invalid seed 已变 None。ScanPage 本身不属于被禁用的主编辑区；其“使用当前配置”与“创建扫描”按钮仍能正常触发该路径。
+
+真实 Qt public button click 独立反例已确认两项后果，未启动后端：
+
+1. Config seed='not-an-integer'，validate_current 明确拒绝；点击 Scan 刷新基础配置与创建扫描（扫描 source.energy），成功生成 main.ini，文件没有 seed 字段。可见文本仍为非法值，运行输入却变成无显式 seed。
+2. Undo 投影及回滚同时失败后，主窗口 can_mutate=False、历史 beam_on=101，坏 QWidget beam_on=2569。此时点击同一 Scan 两按钮，成功生成 `/run/beamOn 2569` 包。说明上轮主入口冻结仍有真实可点击的生成旁路，不是仅调用私有 core API 的人为反例。
+
+这不要求把扫描页临时草稿纳入主 Undo/恢复，也不要求禁止使用故障前已捕获的独立合法 ScanBase。问题是“从当前主编辑器取得新基础配置”的接口绕过当前的失败/来源/原始值边界。
+
+最小修复建议：在 scan_base 的主编辑区读取入口使用同一故障/忙门禁，拒绝不可信控件投影；将原始配置验证与恢复来源检查应用在取得新 ScanBase 前，避免 run_settings 的 None 擦除非法输入。验收使用真实 Scan 刷新和创建按钮，断言拒绝时旧目录/现有独立扫描草稿不被改写，合法配置扫描仍可生成；明确既有缓存基础与新读取当前配置的语义区别。
+
+## 证据
+
+- `out/collab/f5-ui-final-scan-probe.py`：独立反例，不修改产品代码；默认用户 history 与恢复路径均隔离。
+- `out/collab/f5-ui-final-scan-probe-confirmed.log`：exit0，两个反例断言成立。
+- `out/collab/f5-ui-final-scan-probe.json`：记录完整生成 main.ini/macro、raw seed、历史及扫描事件数。
+- 首次 probe 因误用不存在的 current_manifest 方法 exit1，原日志 `f5-ui-final-scan-probe.log` 保留；修正只在 out 脚本使用实际 manifest 字段，没有改产品或绕过任何校验。
+
+## 其他已查入口
+
+普通 Save/Open/Generate/Run/Inspect 经过新增门禁；Recovery reset 经过 apply_workspace 统一边界。Undo/Redo 在 apply_workspace 内强制增加诊断代次并清 Inspect snapshot；_macro_inspection_inputs 同时带 session.revision，回到旧值不会复活旧 F4 诊断/旧 Inspect run-after 请求。此次未发现这些路径的新增具体高影响缺陷。
+
+`content.py:106` 的 backend geometry preview 也未显式检查故障，且可读当前源；当前禁用主编辑区且失败应用先停止旧 timer/controller，尚未用正常用户触发证明其可达后果，不与已确认 Scan P1混为一谈。

@@ -1,0 +1,29 @@
+{
+  "schema": "f5_native_candidate_observations_v1",
+  "product_commit": "b290eb4522fade982bedcd1c8b0174d3e3904279",
+  "final_acceptance": false,
+  "reason": "Later independent project-import rejection regression requires a new candidate; these observations remain historical.",
+  "observations": 13,
+  "screenshots": 18,
+  "actual_launcher_exit": 0,
+  "observed": [
+    "Chinese light main editor and Undo/Redo toolbar",
+    "Native seed edit unfinished- sets dirty and autosave waiting",
+    "Ctrl+Z restores 12345 and clean marker; Ctrl+Y restores unfinished-",
+    "Unsaved Close prompt; Escape cancels and retains draft",
+    "Recovery copy updated indicator",
+    "Native Save dialog writes a new v7 project retaining raw invalid seed and clears dirty"
+  ],
+  "not_observed": [
+    "recovery dialog and source conflict",
+    "damaged recovery candidate",
+    "double-failure repair",
+    "dark theme"
+  ],
+  "tool_incident": {
+    "action": "click element 223 in owned modal",
+    "raw_error": "element 223 is not available in cached app state for python.exe",
+    "resolution": "Refreshed window selection and screenshot, used Escape to Cancel; no repeated submit."
+  },
+  "saved_project_sha256": "0aaebc145bcb7cdd82bdc7b41becc111e57f7a14ccdf08b78aebc1f1d517a24d"
+}

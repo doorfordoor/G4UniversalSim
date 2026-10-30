@@ -1,0 +1,27 @@
+# F5 DDD r3：稀疏事件证据修正交接
+
+结论：已按独立审查P2做最小修正，候选重新冻结，等待独立复核；未提交。
+
+## 明确撤回 r2 推断
+
+撤回 `f5-ddd-stable-checkpoint.md` 中“每个primary必穿过Die，故active worker有mu-行”的未经观测假定，及任何把 r2 的“t1只有表头/零统计行”推断为“t1处理零事件”的表述。旧检查点和r2报告/日志/CSV保持历史原样。首轮 CSV 本身不能区分该 worker 零事件与有事件但没有相关统计；空表头 worker 的 N 应为 unknown/null。CI 准备 README 与独立审计器已同步修正，旧 `local-ddd-audit-probe.json` 和 `local-negative-probe.json` 中错误强等/零值推断明确标为撤回，未改原件。
+
+## 实现和契约
+
+- `scripts/test_displacement_damage.py:174`：说明稀疏契约。保留 master 每条统计 N=200、同 worker 所有行 N 一致且为正整数；可见 worker 去重 N 仅要求 `0 < sum <= master`。
+- 移除每个有行 worker 必须出现 mu- 的约束。保留全局 mu-/e- 集合、原完整体积判据与原 mu/e 实际量检查。
+- 确定性正例增加 worker0 可见 N=199、worker1 只有表头、master=200，以及某 worker 仅有 e- 统计；合法。将原拒绝“缺worker行”反例替换为可见 worker N=80+121=201 超过master的反例；拒绝。原 16 个反例仍具有明确数据契约意义。
+- 原 42 项固定物理/错误输入判定及全部容差未改；10 聚合条件、5 个正例、16 个反例，共73次成功执行断言，仍不依赖 CSV 行数/worker 调度。
+
+## 本机真实专项
+
+- Session 71668 最终 exit 0；`out/collab/f5-ddd-stable-r3-dev.log`。
+- 报告：`out/verification/f5-ddd-stable-r3-dev/20261031-002814-cd4c034d/report.json`，1pass/0fail/0skip，73 v3；`check_report_evidence.py` 门禁通过。
+- r3 首轮原始证据实际是 t0 零行（N未知）、t1 两行且各N=200。r2 是 t0 两行/200、t1 零行；只记实际CSV，不把这次身份差异倒填到5d旧CI。
+- 12 个输入/CSV/metadata/summary原件，59855字节；独立审计器逐项 size/SHA通过。
+
+## 独立 CI 审计器
+
+`out/collab/f5-ci-next/ddd_evidence.py` 同步使用 observed worker N 下界语义；空表头 N 返回 null，不强等、不要求 per-worker mu-。`local-sparse-audit-r3.json/.log` 记录原始摘要通过、合法199/200通过、超额201/200拒绝、原字节篡改拒绝。首次反例驱动写死t0导致的失败另存 `r3-first-probe-adapter-failure.md`，后续驱动从原始行选择实际有统计的worker；没有重跑后端挑选worker。
+
+无运行中的本人进程；旧5d CI失败审计/r2证据未改。新冻结CI仍待root独立复核后给SHA。

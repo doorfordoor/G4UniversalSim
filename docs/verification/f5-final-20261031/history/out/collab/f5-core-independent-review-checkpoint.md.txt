@@ -1,0 +1,28 @@
+# F5 核心独立审查检查点
+
+状态：独立审查中；本文件记录已完成的真实反例。接到 root 指令后暂缓后续 core 审查，先修本人恢复模块三项 revision 守卫。未改任何 core agent owned 产品或正式测试。
+
+## 确定为缺陷：持久化源诊断缓存可解除原本无法保存的源字段阻断
+
+优先级建议 P1。反例脚本：`out/collab/f5-core-independent-review.py`；原始运行日志：`out/collab/f5-core-independent-review.log`（exit 0，包含完整 assert 通过和事实 JSON）。
+
+触发：真实 parser 从材料源读出 unknown_parameter，几何源读出 placement=replica，原始文档各有 source_errors / round_trip_blockers，两个 writer 均拒绝。将完整、合法类型的 v7 snapshot 的材料 source_errors/errors 与几何 source_errors/errors/round_trip_blockers 改成空列表，**不改 raw_source_text、editingState.sources、源文件或实际模型字段**。`snapshot_from_dict` 接受后两个 writer 均成功，未知材料字段/placement 被丢弃；对照当前源的 `validate_config_builder` 结果 `errors=[]`，几何 placement 只剩 warning。
+
+证据位置：
+- `gui/g4usim_gui/core/project.py:128`–`:142` 恢复几何/材料文档直接采信持久列表；`:105` 只检查 editingState 结构，没有从捕获源文本重建并校验源阻断依据。
+- `gui/g4usim_gui/core/edit_snapshot.py:94`–`:109` 严格类型/完整性门禁后直接发布；不会发现诊断缓存与同一源文本矛盾。
+- `gui/g4usim_gui/validators/config_validator.py:185` / `:218` 在编辑文档 raw_source_text 与当前源相同时跳过源 parser errors；预期文档已携带可信 source_errors/blockers，但 v7 文件中的这两类字段可被合法清空。
+- `gui/g4usim_gui/core/project_snapshot.py:301` 的运行包恢复会重新解析当前包文件，不是本例路由，不能用它的正确行为覆盖普通 v7 快照缺口。
+
+修复方向供原写者实施：持久载入/自动事务边界重建或核对 captured source parser 的不可编辑/源 schema 阻断事实，不信任序列化的缓存空列表；保持实际材料/几何草稿、raw_source_text、来源身份和现有支持范围。不能只在 GUI 为此例增加一个 hardcoded key，也不能因 malformed cache 直接重读当前磁盘覆盖恢复草稿。回归须同时覆盖未知材料 key、geometry placement、source-copy显式选择与旧项目兼容。
+
+## 无问题（已跑独立反例）
+
+- `edit_snapshot.py:94` / `project_migration.py:45`：逐项删除 project 顶级及几何必要子字段、错类型、legacy/canonical alias 并存、source position双别名冲突均拒绝；完整快照往返一致。
+- `edit_transactions.py:113` / `:139`：先破坏部分外部投影后抛错，rollback成功时 current/revision/saved fingerprint/history bytes/redo 分支全保持；reentrant与过期revision拒绝无副作用。
+- `edit_transactions.py:160`：按完整命令裁剪、保存点 fingerprint 独立于cursor，裁剪后不误标 clean；不同写者用新的顺序完成验证。
+
+## 需实验/待裁决
+
+- `edit_transactions.py:123` / `:126`：投影和rollback双失败会明确抛 TransactionApplyError(rollback!=None)，但之后 pure session 仍接受 replace。核心模型未被更改，异常并未吞掉；GUI是否必须冻结并重新同步还需独立故障注入（当前 UI 未检索到 rollback-error 冻结分支）。本点目前不冒称真实桌面损坏已复现。
+- root 正在增补 project 原始字节 receipt，此轮检查点未覆盖该未冻结改动；后续继续审查。

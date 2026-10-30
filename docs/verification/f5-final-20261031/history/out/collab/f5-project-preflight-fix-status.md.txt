@@ -1,0 +1,13 @@
+# F5 导入预检原子性回归修复
+
+基于 b290eb4，root 已停止冻结测试会话后授权修复。仅修改 `gui/g4usim_gui/window/project.py:_set_project`，10行增加/3行移除；无正式测试改动，无其他产品改动。
+
+纯项目范围检查、v7 WorkspaceSnapshot 构造和完整投影注册/形状检查移到try之前；拒绝时不调用apply_workspace、不替换项目/编辑器对象、不清包与诊断证据。实际投影才进入原回滚catch，保持Undo/Recovery/Open双失败冻结与原快照修复逻辑。内部防御检查保持。
+
+证据：
+
+- `out/collab/f5-project-preflight-fixed-393.log`：原gui_project_import_projection **393个v3断言，exit0**，原`:161`未改。
+- `out/collab/f5-project-preflight-fixed-f5-203.log`：F5 doublefault/seed/scan **203个v3断言，exit0**；正式测试原字节未改。
+- `git diff --check`通过；本轮tracked diff仅window/project.py。
+
+候选再次冻结，产品/测试停止写入，可交独立复核。原4f960ab/b290eb4失败及中止收据不修改。本记录不替代后续全量、Linux CI、原生实窗验收。
