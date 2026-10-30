@@ -110,6 +110,7 @@ CASES = (
     Case("merge_histograms", "scripts/test_merge_histograms.py", "backend", ("merge",)),
     Case("gui_parsers", "gui/smoke_tests/smoke_parsers.py", "gui", ("qt",)),
     Case("gui_qt_combo_data", "gui/smoke_tests/smoke_qt_combo_data.py", "gui", ("qt",)),
+    Case("gui_qt_binding_lifetime", "gui/smoke_tests/smoke_qt_binding_lifetime.py", "gui", ("qt",)),
     Case("gui_materials", "gui/smoke_tests/smoke_materials_editor.py", "gui", ("qt",)),
     Case("gui_geometry", "gui/smoke_tests/smoke_geometry_editor.py", "gui", ("qt",)),
     Case("gui_preview", "gui/smoke_tests/smoke_preview3d.py", "gui", ("qt",)),

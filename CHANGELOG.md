@@ -367,3 +367,7 @@ Short, user-facing record of notable changes. Detailed support status lives in
 - Repository hygiene: corrected `.gitignore`, removed tracked build artifacts and
   Geant4 example B1 leftovers, `.gitattributes` line-ending normalization.
 - `gui/requirements.txt` now includes `uproot`.
+
+### F4 依赖验收候选
+
+统一PySide6验证范围为>=6.11.1,<6.12；新增绑定生命周期回归并记录实际运行版本。Linux CI使用后端RPATH及PySide自己的Qt库，避免全局conda库路径混载。原失败及修复后完整验收分别保留，阶段状态仍以ROADMAP为准。

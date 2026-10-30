@@ -33,3 +33,7 @@
 ## 辅助入口的生产边界补充
 
 主负责人还负责 `core/runner.py`/新project诊断模块、`core/wizard.py`、`core/scan.py`、`core/scenario_shielding.py` 与对应Project/Run/向导/扫描/场景页。向导和场景在原规则生产处保留field/code，不靠返回字符串识别字段；`scenarios/shielding_coating/scenario_model.py` 可增加独立于GUI的结构化问题记录接口，旧 `problems()` 保持原文/顺序和规则，render/generate/物理参数完全不变。扫描基础配置错误保留原目标及扫描点上下文，不将其误指扫描值输入；没有当前编辑快照证据时明确不可定位。后端Inspect失败当前仅有stderr，作为raw未定位诊断保留，不为F4改写全部C++异常架构。专项包含旧字符串接口等价、当前表单定位和运行/生成拒绝不变。
+
+## F4 验收期间的依赖修复提案（2026-10-30）
+
+确定为缺陷：Linux CPython3.11的PySide6/shiboken6 6.12.0普通void调用与缺失属性读取可耗减None引用，旧CI出现none_dealloc/-6；仅绕过一处读取不足。文件清单：gui/requirements.txt、gui/smoke_tests/smoke_qt_binding_lifetime.py、scripts/run_m0_tests.py、.github/workflows/linux-geant4.yml及对应维护文档。采用已隔离验证的6.11.1至6.11补丁线，移除会与wheel混载Qt的全局conda库路径，保留数据/插件设置。验收：旧103/45/257断言均保留并正常退出，新增绑定回归拒绝已知坏版本；最终152项Windows、Linux双Geant4及双OS M0按新SHA完整验收，辅助程序实际运行与实窗13态另核对。旧失败轮不改写。QA host自身Close遍历销毁对象的异常只修out辅助程序，不据此修改产品。

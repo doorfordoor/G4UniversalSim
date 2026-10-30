@@ -503,3 +503,5 @@ host原observation_acceptance=pending、真实夹具准备收据pending、build_
 F4验收入口追加：smoke_f4_inspect_protocol.py覆盖合成协议及过期回调；smoke_f4_inspect_backend.py覆盖真实后端拒绝原文及无模拟启动；smoke_f4_layout.py覆盖小窗口滚动和字段可达。合成协议测试不得冒充真实Geant4输出。
 
 F4首轮5d6f008实窗反例：重名几何的size诊断虽选中[2,6]，外层滚动却显示空白。修复必须在切页/布局后按visualItemRect映射目标单元格到各滚动视口；不能用整张QTableWidget中心或isVisible()冒充单元格可见。smoke_f4_layout追加实际裁剪区域交集、远端行/布尔/详情及不改值断言。原生失败记录、正常host退出与未完成Windows轮分别保存，不得把过程exit0或部分测试通过算阶段验收。
+
+2026-10-30 F4依赖候选：Linux CPython3.11 / PySide6与shiboken6 6.12.0的缺失属性及普通void返回均可耗减None引用，原CI存在断言完成后none_dealloc/-6；不能以退出前成功文字、强制退出或单一属性绕行掩盖。隔离Linux6.11.1与6.11.3各通过binding8/Inspect45/真实运行103/layout257且自然退出0，暂约束PySide6>=6.11.1,<6.12，配对组件由官方依赖元数据锁定。新增smoke_qt_binding_lifetime登记实际Python/PySide/shiboken/Qt版本与引用变化；Python3.12的immortal None不能替代3.11验证。Linux workflow移除全局conda LD_LIBRARY_PATH以免混载Qt，保留数据环境和PySide插件路径；后端用自身CMake RPATH，新CI仍须覆盖两Geant4版本及辅助程序。当前仅候选，不提前关闭阶段。

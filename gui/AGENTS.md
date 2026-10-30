@@ -174,3 +174,5 @@ external batch/csh 的随机恢复须经过后端守卫，仅支持当前 MixMax
 ## 2026-10-29 完整 2C 查看器候选补充
 
 前述 Manager 子集描述保留为历史验收边界；当前集合候选支持阶段/run/thread、对象摘要与两快照差异，继续使用 v1、4 MiB 单文件限制及累计集合限制，损坏加载保留旧数据并标陈旧。requested/resolved 缺失与 null 分开，configuration_generation/revision 不混用，manager_accepted 不译为内核已应用，跨进程 revision 不推断先后。DeepSeek 实际设计参与见 `../docs/collab/outbox/20261029-deepseek-full2c-design.md`。专项增加 `smoke_effective_config_collection.py`；真实后端驱动窗口与整阶段验收仍待主任务确认，不提升为完整 2C 已完成。
+
+F4依赖维护：安装统一走gui/requirements.txt，当前验证线PySide6>=6.11.1,<6.12；不得独立混装shiboken/Essentials/Addons。升级须保留CPython3.11绑定生命周期回归、原失败集成用例自然退出及Windows/Linux矩阵。完整原因与历史反例见docs/agent-history.md的F4依赖条目；这不是物理能力变更。
