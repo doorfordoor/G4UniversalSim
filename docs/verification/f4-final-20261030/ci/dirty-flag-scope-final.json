@@ -1,0 +1,157 @@
+{
+  "schema": "f4_ci_dirty_flag_scope_final_v1",
+  "report_flag_definition": "bool(git status --porcelain), scripts/run_m0_tests.py:459",
+  "workflow_created_locations": [
+    "bin/micromamba",
+    ".g4env-${matrix.geant4}",
+    ".micromamba"
+  ],
+  "ignore_rule_checks": [
+    {
+      "path": "bin/micromamba",
+      "ignored": false,
+      "rule": ""
+    },
+    {
+      "path": ".g4env-11.3.2/conda-meta/history",
+      "ignored": false,
+      "rule": ""
+    },
+    {
+      "path": ".g4env-11.4.3/conda-meta/history",
+      "ignored": false,
+      "rule": ""
+    },
+    {
+      "path": ".micromamba/pkgs/cache/example.json",
+      "ignored": false,
+      "rule": ""
+    },
+    {
+      "path": "build_linux/CMakeCache.txt",
+      "ignored": true,
+      "rule": ".gitignore:2:/build*/\tbuild_linux/CMakeCache.txt"
+    }
+  ],
+  "m0_observed_all_reports_git_dirty": false,
+  "linux_observed_all_reports_git_dirty": true,
+  "boundary": "Workflow/install log paths and non-ignored environment directories explain why Linux may be dirty. No exact per-file git status --porcelain inventory is retained by this workflow; do not claim this enumerates every dirty entry, nor that all tracked paths were pristine. Product source/test identity is checked separately.",
+  "reports": [
+    {
+      "artifact": "linux-evidence-11.4.3",
+      "profile": "backend",
+      "git_dirty": true
+    },
+    {
+      "artifact": "linux-evidence-11.4.3",
+      "profile": "gui",
+      "git_dirty": true
+    },
+    {
+      "artifact": "linux-evidence-11.4.3",
+      "profile": "integration",
+      "git_dirty": true
+    },
+    {
+      "artifact": "linux-evidence-11.4.3",
+      "profile": "static",
+      "git_dirty": true
+    },
+    {
+      "artifact": "linux-evidence-11.3.2",
+      "profile": "backend",
+      "git_dirty": true
+    },
+    {
+      "artifact": "linux-evidence-11.3.2",
+      "profile": "gui",
+      "git_dirty": true
+    },
+    {
+      "artifact": "linux-evidence-11.3.2",
+      "profile": "integration",
+      "git_dirty": true
+    },
+    {
+      "artifact": "linux-evidence-11.3.2",
+      "profile": "static",
+      "git_dirty": true
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "static",
+      "git_dirty": false
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "gui",
+      "git_dirty": false
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "static",
+      "git_dirty": false
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "gui",
+      "git_dirty": false
+    }
+  ],
+  "job_log_evidence": [
+    {
+      "job": 124066923574,
+      "path": "job-124066923574.log",
+      "sha256": "718219793252c40858433b3d1082eb249ff57cd15a41eec65dc5d95c2180e7e5",
+      "selected_locations": [
+        {
+          "line": 51,
+          "text": "2026-10-30T12:39:36.5252602Z   MAMBA_ROOT_PREFIX: /home/runner/work/G4UniversalSim/G4UniversalSim/.micromamba"
+        },
+        {
+          "line": 52,
+          "text": "2026-10-30T12:39:36.5253599Z   G4_PREFIX: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2"
+        },
+        {
+          "line": 132,
+          "text": "2026-10-30T12:39:39.0682123Z   MAMBA_ROOT_PREFIX: /home/runner/work/G4UniversalSim/G4UniversalSim/.micromamba"
+        },
+        {
+          "line": 133,
+          "text": "2026-10-30T12:39:39.0682656Z   G4_PREFIX: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2"
+        },
+        {
+          "line": 224,
+          "text": "2026-10-30T12:39:47.3284713Z \u001b[36;1mcurl -Ls https://micro.mamba.pm/api/micromamba/linux-64/latest | tar -xj bin/micromamba\u001b[0m"
+        }
+      ]
+    },
+    {
+      "job": 124066923712,
+      "path": "job-124066923712.log",
+      "sha256": "eeb7351e7896597aa7312555bfe83ebd7efc017a66c1cb28b706da2fedfb5033",
+      "selected_locations": [
+        {
+          "line": 51,
+          "text": "2026-10-30T12:39:35.8846443Z   MAMBA_ROOT_PREFIX: /home/runner/work/G4UniversalSim/G4UniversalSim/.micromamba"
+        },
+        {
+          "line": 52,
+          "text": "2026-10-30T12:39:35.8847455Z   G4_PREFIX: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.4.3"
+        },
+        {
+          "line": 132,
+          "text": "2026-10-30T12:39:38.1303405Z   MAMBA_ROOT_PREFIX: /home/runner/work/G4UniversalSim/G4UniversalSim/.micromamba"
+        },
+        {
+          "line": 133,
+          "text": "2026-10-30T12:39:38.1303955Z   G4_PREFIX: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.4.3"
+        },
+        {
+          "line": 224,
+          "text": "2026-10-30T12:39:47.4681976Z \u001b[36;1mcurl -Ls https://micro.mamba.pm/api/micromamba/linux-64/latest | tar -xj bin/micromamba\u001b[0m"
+        }
+      ]
+    }
+  ]
+}

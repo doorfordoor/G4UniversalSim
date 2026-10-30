@@ -1,0 +1,481 @@
+{
+  "schema": "g4usim_interrupted_validation_v1",
+  "commit": "5d6f00854e1c7304f677c4ed033772aa2d95ae9d",
+  "exec_session": 9729,
+  "process_exit_code": 1,
+  "normal_completion": false,
+  "termination_reason": "Known launcher GDML-expectation failure and independently reproduced native table visibility defect; replaced by corrected full round.",
+  "passed_cases_before_interruption": [
+    "f4_diagnostics",
+    "f4_producers",
+    "f4_document_diagnostics",
+    "gui_f4_navigation",
+    "gui_f4_entrypoints",
+    "gui_f4_layout",
+    "gui_f4_inspect_protocol",
+    "gui_f4_inspect_backend",
+    "build_identity",
+    "f1_input_provenance",
+    "f1_input_resources",
+    "f1_artifact_model",
+    "f1_output_identity",
+    "output_auto_model",
+    "output_auto",
+    "gui_f1_output_identity",
+    "gui_f1_async_identity",
+    "merge_outputs",
+    "output_extensions",
+    "runner_contract",
+    "doc_links",
+    "platform_paths",
+    "ci_annotations",
+    "report_evidence",
+    "writer_boundary",
+    "shielding_scenario_model",
+    "shielding_analysis",
+    "effective_config_model",
+    "main_config_version_component",
+    "main_ini_migration",
+    "main_config_version",
+    "field_biasing_schema",
+    "field_biasing_schema_review",
+    "config_migration",
+    "project_snapshot_compat",
+    "duplicate_generated_package_model",
+    "duplicate_generated_package",
+    "geometry_diagnostic_identity",
+    "config_migration_backend",
+    "gui_config_migration",
+    "input_provenance",
+    "effective_consumer_state",
+    "effective_geometry_materials",
+    "effective_source_physics",
+    "effective_output_mesh",
+    "effective_biasing",
+    "effective_scoring",
+    "effective_modules",
+    "effective_receipt_view",
+    "effective_lifecycle",
+    "effective_gdml",
+    "effective_config_collection",
+    "effective_config_export",
+    "effective_config_viewer",
+    "merge_histograms",
+    "gui_parsers",
+    "gui_qt_combo_data",
+    "gui_materials",
+    "gui_geometry",
+    "gui_preview",
+    "gui_preview_primitives",
+    "gui_project_io",
+    "gui_project_import_projection",
+    "gui_project_snapshot_restore",
+    "gui_source",
+    "gui_source_field_preservation",
+    "gui_run_config",
+    "gui_dose_results",
+    "gui_plots",
+    "gui_new_simulation_wizard",
+    "scenario_page",
+    "gui_scans",
+    "gui_start_page",
+    "gui_fluence_results",
+    "gui_output_extensions",
+    "gui_output",
+    "gui_history",
+    "gui_duplicate_history_cli",
+    "gui_run_result",
+    "gui_live_progress",
+    "gui_live_progress_backend",
+    "gui_scenario_backend",
+    "live_progress",
+    "gui_main_window",
+    "gui_unsupported_features",
+    "gui_geometry_safety",
+    "gui_geometry_diagnostics",
+    "config_precedence",
+    "config_duplicate_declarations",
+    "config_value_finiteness",
+    "run_summary",
+    "command_state_gating"
+  ],
+  "failed_cases_before_interruption": [
+    "backend_capabilities"
+  ],
+  "report_json_exists": false,
+  "runner_log_sha256": "cece997ca96c5d5d07314b45bf9c6674ad5665e0cd47af8d174ae92a45449418",
+  "case_logs": [
+    {
+      "path": "backend_capabilities.log",
+      "sha256": "5414d743da8506b97a6b0128f905df5d253b84691d6bfbe30bfb5d8c5397f6ab"
+    },
+    {
+      "path": "build_identity.log",
+      "sha256": "afaa448bf65a2f39ea7598c2363d1d7a5eaaa5b2753cf2a0acb71a3a0d143a71"
+    },
+    {
+      "path": "ci_annotations.log",
+      "sha256": "e6f1720d56cf90165af33e5c8850e7e912b46b12140baccf41cc974aae9f8336"
+    },
+    {
+      "path": "command_state_gating.log",
+      "sha256": "0f8ebd611ae7274f20c9d1084eabdac030207607399bd1e0faebde1cf90651a7"
+    },
+    {
+      "path": "config_duplicate_declarations.log",
+      "sha256": "fbb0f763b228dcb2a19033fafd98980970580ed9081203f4f99d8cf9274188c5"
+    },
+    {
+      "path": "config_migration.log",
+      "sha256": "08aa76eef27ed07f336584c082c9f7c176437e87316f725389bdee937c7d3ed8"
+    },
+    {
+      "path": "config_migration_backend.log",
+      "sha256": "0404d3ce267b39302df73c332531c668c49cd76432b224f68d5fcf276e426b8a"
+    },
+    {
+      "path": "config_precedence.log",
+      "sha256": "835acfb65275893ec0de3976cdc10b655166027155582387fb8c92f80f430ae3"
+    },
+    {
+      "path": "config_value_finiteness.log",
+      "sha256": "e99a6a37d65b95b5a84932381a1a67be23e84c88291fdf95f3da1d619e32e1d6"
+    },
+    {
+      "path": "doc_links.log",
+      "sha256": "d43bdc1cac09558450354c097bd05fdd217b7e78580df95fecc20409e4e52b58"
+    },
+    {
+      "path": "duplicate_generated_package.log",
+      "sha256": "50a941eb647e53423dea35c600e8db5ec0e94a89887cf8eb6b1b7037fb758f6d"
+    },
+    {
+      "path": "duplicate_generated_package_model.log",
+      "sha256": "5af9531995ec8eb868f6f048d10ab69810cb5aaa107f615e71c1226999017ee0"
+    },
+    {
+      "path": "effective_biasing.log",
+      "sha256": "9279671b916c10e19a7a7a957cbbeaaae72f03886ec4e62c607406941dd48059"
+    },
+    {
+      "path": "effective_config_collection.log",
+      "sha256": "b8b84ab930956e5df9fe71b3ecbaa4ddeb8af512e6f42fffd4dfff105cf6c9e9"
+    },
+    {
+      "path": "effective_config_export.log",
+      "sha256": "80e44964b80bba2a644b3b57bf3fe585c724815422febef98ec5932ac9b7b0f1"
+    },
+    {
+      "path": "effective_config_model.log",
+      "sha256": "0d15697820772d53853ad6ff81ab78caec5280c9c22049233e434c8de8e176db"
+    },
+    {
+      "path": "effective_config_viewer.log",
+      "sha256": "55f915cb320978c1cd117063beed18c119cbede0d68e5bd76c19497c69629ec3"
+    },
+    {
+      "path": "effective_consumer_state.log",
+      "sha256": "d47da3ba00a4b25a2fa3034dd314e364e3ccf4c1b1d4376bb75be2c1b3d7e031"
+    },
+    {
+      "path": "effective_gdml.log",
+      "sha256": "141aa62dd25c01116e3389b2306c5a920c322fbfa34709695a1552a4b2cf917d"
+    },
+    {
+      "path": "effective_geometry_materials.log",
+      "sha256": "82ac32135ba64b403fa25b2692bdd42080e62b9b12d69e78eb58567e74a8549a"
+    },
+    {
+      "path": "effective_lifecycle.log",
+      "sha256": "d6dba5673716a785f45493392767f63ddac6fe49d2fe71085becbedf2f266442"
+    },
+    {
+      "path": "effective_modules.log",
+      "sha256": "c59f844609648cd2057bdfad168b95db93be996a8ddf3b7663748585ba9d5ebe"
+    },
+    {
+      "path": "effective_output_mesh.log",
+      "sha256": "d14cb4e7b75cded272676eeb4dcdcc4a6a2a07de6400084bbd0d1dc8b86bc851"
+    },
+    {
+      "path": "effective_receipt_view.log",
+      "sha256": "7b735b89fb1ad1709d6840a0bba0cdcaf5b98cb4ee39096bd9885d7621c082da"
+    },
+    {
+      "path": "effective_scoring.log",
+      "sha256": "63580eb5b30ebd3c86e08e1dddf9ea0598d9db275e85e8524b44d06140a7a3f4"
+    },
+    {
+      "path": "effective_source_physics.log",
+      "sha256": "30328606ed99f4df68e1a2efbdc7982117d286d3671eaf08700bdc48ba703378"
+    },
+    {
+      "path": "f1_artifact_model.log",
+      "sha256": "0834f84d106153f19cd21e59312dfe396b9bacfcc36a939d8e45ca59b7596b07"
+    },
+    {
+      "path": "f1_input_provenance.log",
+      "sha256": "8d1bfa462c6f331c333c115c755dfc46e5664d602718b75864270f71c98f50ea"
+    },
+    {
+      "path": "f1_input_resources.log",
+      "sha256": "77481cae9031eff218914721653940a1f27c7a39fbd4c14fb5664ba3229c6f85"
+    },
+    {
+      "path": "f1_output_identity.log",
+      "sha256": "8d8586d4564d2134dbee11581d28450fd2fd7708eac1bb2f1100447f03a6d27f"
+    },
+    {
+      "path": "f4_diagnostics.log",
+      "sha256": "8e84c9a21395ca85de684507d433f52a5cfeb3048d0fb6100a271086a8181fa9"
+    },
+    {
+      "path": "f4_document_diagnostics.log",
+      "sha256": "aaf2d8afc6d0867fe1c691f3bd48289301a4482824b0bd7135b614b95835609e"
+    },
+    {
+      "path": "f4_producers.log",
+      "sha256": "af8813ee0e48818180b68e3d675b194025f509af400c0cc8d53dcd466c295132"
+    },
+    {
+      "path": "field_biasing_schema.log",
+      "sha256": "62423e37451d946bf525124996f7b5bd70cd9e907247c3aff31c059b57ed88f5"
+    },
+    {
+      "path": "field_biasing_schema_review.log",
+      "sha256": "3aed18d58ece3274086c69e85e16d1e5f99a0c16c0de9ec3fb09c881acfdffd1"
+    },
+    {
+      "path": "geometry_diagnostic_identity.log",
+      "sha256": "98f5cabd0b9f4eda66e87be165f46220a0ff10faf89c682bd62f14b0ae184310"
+    },
+    {
+      "path": "gui_config_migration.log",
+      "sha256": "76484c167d012b68dd342c14a8177d8c9cfa5a9f4e4f5f01d038f5d71e81f6e1"
+    },
+    {
+      "path": "gui_dose_results.log",
+      "sha256": "b18973c556dea7ebed5024d3b64a2cc4285aec06f390e75d5b47826c514f4643"
+    },
+    {
+      "path": "gui_duplicate_history_cli.log",
+      "sha256": "b77bd34dcb2d4dd67cee97e8af95cb7477eb4a786ab4eab0fa3ca7e8996a2bfe"
+    },
+    {
+      "path": "gui_f1_async_identity.log",
+      "sha256": "5ff3c976c63aea1ac2351e9a58282cf217cc862e9e70fd2b40fe0dd3a7c52e17"
+    },
+    {
+      "path": "gui_f1_output_identity.log",
+      "sha256": "7c6ae9b8a106feae64a07ac0a9779e900a07e3b28d9d5b34740b5feb2fd7e8ea"
+    },
+    {
+      "path": "gui_f4_entrypoints.log",
+      "sha256": "4fd07e34a2f7b308b97302b2ad127a83e9feab9653b21a16cf9f51b52b5b4b98"
+    },
+    {
+      "path": "gui_f4_inspect_backend.log",
+      "sha256": "0dde00c6f94c205f7b553a69fa61b304667286668e25e1a492f4bc849918d16d"
+    },
+    {
+      "path": "gui_f4_inspect_protocol.log",
+      "sha256": "46ae4728e2114dab83a449090e5c2d58ceb07881b423b00f431831ca22009164"
+    },
+    {
+      "path": "gui_f4_layout.log",
+      "sha256": "ed14247746dbbaa46fb271c972695c63ce685df5122b356b546ad1535c71a29d"
+    },
+    {
+      "path": "gui_f4_navigation.log",
+      "sha256": "698d5e3b292a28b65f035b2b11e9c9449102abdb7e8721842690b9f74ef3df3c"
+    },
+    {
+      "path": "gui_fluence_results.log",
+      "sha256": "cdeb2594167051199994ce4126058b70bcc5d0bd7d502ec3439ea0d28f0522ae"
+    },
+    {
+      "path": "gui_geometry.log",
+      "sha256": "1a4ce4692967b7c13b87904817be371bb61ab1978a6ec4d39d4a1862abe95f7e"
+    },
+    {
+      "path": "gui_geometry_diagnostics.log",
+      "sha256": "3de5697d65e5cecce797deba4d7be02e4a587006b4ad5f4d84dbf72aac429e5f"
+    },
+    {
+      "path": "gui_geometry_safety.log",
+      "sha256": "3080f410814041bc0be96dc521c50d1a83588d6f6187cf1d1c8cd1aa61aba96e"
+    },
+    {
+      "path": "gui_history.log",
+      "sha256": "6a590ec73966942743841e815af8794591482af191f57f1113ad15f64ab27e7a"
+    },
+    {
+      "path": "gui_live_progress.log",
+      "sha256": "51cfee5c7dc48d2f8fe2b3d183bcc682fa07d045fbe4444cd55449acf3a3ea37"
+    },
+    {
+      "path": "gui_live_progress_backend.log",
+      "sha256": "2aeea014e6ff1c43aace36889a6534c5896c1b58ff977423ecc0934caf8aed25"
+    },
+    {
+      "path": "gui_main_window.log",
+      "sha256": "4478f913fc7f4d0bdcbfedee587f47c651b1ce15cd8fb3ff2cd4fa3f9fe03702"
+    },
+    {
+      "path": "gui_materials.log",
+      "sha256": "16fe47bb7af9f40ab9bf499db97ac47b3399420163b6b129ca15741099147db4"
+    },
+    {
+      "path": "gui_new_simulation_wizard.log",
+      "sha256": "2d4edf7661aa7231f0f4d3be620188baf189ab7c85ccbe20451ac9a5cf4bedfb"
+    },
+    {
+      "path": "gui_output.log",
+      "sha256": "5a63647ed317e8368ac31a5c180dff0fd92fd939be5abd2cc76227e4dca7e540"
+    },
+    {
+      "path": "gui_output_extensions.log",
+      "sha256": "ed9e689e3e9f4292810276df7b38f54fd5d53085b1db517f086d2e98904d2918"
+    },
+    {
+      "path": "gui_parsers.log",
+      "sha256": "0681a3a73ed5077894bc6c9605e5b41b0f2f9f551ac25d6991f5d2ac25e988f7"
+    },
+    {
+      "path": "gui_plots.log",
+      "sha256": "8eaa21ffb1f4eedab27e4bbab1818e607324100a8cc4e2254dfb22b35af0d07b"
+    },
+    {
+      "path": "gui_preview.log",
+      "sha256": "cafd0f4a1b079749f44e4e3682f0fa03cc6d410adc80b4af1f12f194e6668d21"
+    },
+    {
+      "path": "gui_preview_primitives.log",
+      "sha256": "867c1cc504d7b376450a147e3aad3714cc629da8594987e4eadc6e831250197b"
+    },
+    {
+      "path": "gui_project_import_projection.log",
+      "sha256": "02ad09b289827b255f65a78e2ff7cf859e93e73c7668e2bd1dd3a6167814afb0"
+    },
+    {
+      "path": "gui_project_io.log",
+      "sha256": "e816e97f4293c8371f6d44eee025d927e848d198b98ba8bf4afba87d9066b693"
+    },
+    {
+      "path": "gui_project_snapshot_restore.log",
+      "sha256": "922000e2b1a2cd5f28b0e5ec014919a0ae42ffeb1651715d265120323055619f"
+    },
+    {
+      "path": "gui_qt_combo_data.log",
+      "sha256": "f490a5676748195a214d6e1ecefeebef35941927a5a6d5a052ca44801dcb8686"
+    },
+    {
+      "path": "gui_run_config.log",
+      "sha256": "f257e69596cabda87b8db46eae0f21612062de9eee30c9d987c7c7693914e63a"
+    },
+    {
+      "path": "gui_run_result.log",
+      "sha256": "46dde4387f2cb08fb951874a6ecccc6987b480dd9e49f4d95146b7222ec9ab98"
+    },
+    {
+      "path": "gui_scans.log",
+      "sha256": "e38f0ec3d1c9041b5b9ce45f7a2cf7b8b3481c725341cd41df863839e323470b"
+    },
+    {
+      "path": "gui_scenario_backend.log",
+      "sha256": "40a1f2500e6ce2547c8902a7e03e0ba0356bea2b319e0a2c3fb9e6811a5a257b"
+    },
+    {
+      "path": "gui_source.log",
+      "sha256": "e1071a389518028dd555e83fc9fa1e4ecd700c96cdbf0a99ec570200840d3957"
+    },
+    {
+      "path": "gui_source_field_preservation.log",
+      "sha256": "27eabc4cccdf73967f627c26d816d41272a12e0dd79da69601cf63048a35c8e9"
+    },
+    {
+      "path": "gui_start_page.log",
+      "sha256": "54cd3a11f2ac7e89e6da1696045a805eb770efe2f57b9d85495b439a59327d6b"
+    },
+    {
+      "path": "gui_unsupported_features.log",
+      "sha256": "b483c90fc92d1addd7205126f14fe83c7319923d1db724f717e3342928895f59"
+    },
+    {
+      "path": "input_provenance.log",
+      "sha256": "768b631b76e4d32750e764251d71f55405983233c058ca19c222a0a73d9205a1"
+    },
+    {
+      "path": "live_progress.log",
+      "sha256": "93a35d3bfbdd648dad83d7bd1376c6f1ebcc7a5f40a4edcf927abfda79bec0eb"
+    },
+    {
+      "path": "main_config_version.log",
+      "sha256": "54f5b45b40ad382347641068a8db6f1aed8f3fc05d0f7d72b19117e848bf4404"
+    },
+    {
+      "path": "main_config_version_component.log",
+      "sha256": "7fdd0a724827b7f91af0dbb33282a4c50d277a6aef2fcec17950b8bd1debef99"
+    },
+    {
+      "path": "main_ini_migration.log",
+      "sha256": "d614f49467ed3c26847f1450093c96f8b5f7838306ff14d2736f364b27b5675c"
+    },
+    {
+      "path": "merge_histograms.log",
+      "sha256": "a9f777c0e6a41afb89a8b84107072b274b3d0f46e0ea81c1001f5a4976cfadc2"
+    },
+    {
+      "path": "merge_outputs.log",
+      "sha256": "66b9a1b563455abd9e61f68c310a970c64996cd50e4d343a2c4b3da700e499a9"
+    },
+    {
+      "path": "output_auto.log",
+      "sha256": "8e8261f2c72c754b37039eab9415ea1a74ede0fef6725d7edadad8a7ab2eb5fe"
+    },
+    {
+      "path": "output_auto_model.log",
+      "sha256": "af817c26a4b658e2808180cbb0447799f10340fa90a52cd438b554e0ab323a3d"
+    },
+    {
+      "path": "output_extensions.log",
+      "sha256": "56e904249f47f9be0e53928f7f48c5a06d662593e9f9d41ffada8e219e521791"
+    },
+    {
+      "path": "platform_paths.log",
+      "sha256": "91449ba8f7545ff141cb16b36950b6a0a93f00b19a1a2a3ebb51e0ece7a2fc16"
+    },
+    {
+      "path": "project_snapshot_compat.log",
+      "sha256": "434eaa2ff580c294408d5b32de7d342429371f93e47f1beb866bef5aa0b60ce3"
+    },
+    {
+      "path": "report_evidence.log",
+      "sha256": "51e7563874211bcddaaa5384ce34c6cea8ada5e21889c1ae92e31478efa7490e"
+    },
+    {
+      "path": "run_summary.log",
+      "sha256": "f96468b8f7cec0dd601c4b802b0a6034acef2a810cd7fedfe2105decd5a3e5b9"
+    },
+    {
+      "path": "runner_contract.log",
+      "sha256": "ce9ec1cce72a0433e4dae40370635401f13aa2a994d1d2db46cd0af2cf0b6e26"
+    },
+    {
+      "path": "scenario_page.log",
+      "sha256": "0ae3199c6d6a496edb68b1c02e7e95dc223e04f32511881f583340c031e4b351"
+    },
+    {
+      "path": "shielding_analysis.log",
+      "sha256": "eea30185f373f1418469885b72d4577f2b2283a3a79144ec465f494817214aa8"
+    },
+    {
+      "path": "shielding_scenario_model.log",
+      "sha256": "25a64b666361df246c7864ad7753cb97df56c8bbc69e36a7c98377b6a1fcd62b"
+    },
+    {
+      "path": "writer_boundary.log",
+      "sha256": "c692fbbffedc2dfb1462d91a5c50592ebd92cbb09eb02e331f2e3b35158e59c0"
+    }
+  ]
+}

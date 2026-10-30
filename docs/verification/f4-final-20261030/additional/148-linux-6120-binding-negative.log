@@ -1,0 +1,21 @@
+{"python": "3.11.18 (main, Oct 26 2026, 11:35:17) [GCC 15.3.0]", "implementation": "CPython", "PySide6": "6.12.0", "shiboken6": "6.12.0", "Qt": "6.12.0"}
+{"operation": "QWidget.update", "iterations": 100, "none_ref_delta": -100}
+G4USIM_ASSERTS=2
+Traceback (most recent call last):
+  File "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/tools/test_assert_probe.py", line 177, in <module>
+    raise SystemExit(main(sys.argv))
+                     ^^^^^^^^^^^^^^
+  File "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/tools/test_assert_probe.py", line 153, in main
+    runpy.run_path(str(target), run_name="__main__")
+  File "<frozen runpy>", line 291, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/smoke_qt_binding_lifetime_candidate.py", line 45, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/smoke_qt_binding_lifetime_candidate.py", line 31, in main
+    check('QWidget.update',widget.update)
+  File "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/smoke_qt_binding_lifetime_candidate.py", line 27, in check
+    assert after == before, f'{name}: binding changed None refs by {after-before}'
+           ^^^^^^^^^^^^^^^
+AssertionError: QWidget.update: binding changed None refs by -100

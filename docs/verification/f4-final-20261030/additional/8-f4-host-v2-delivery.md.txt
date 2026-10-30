@@ -1,0 +1,27 @@
+# F4 QA host v2 delivery
+
+Only `out/collab/f4-visible-host-v2.py` is the revised QA host. Original host `f4-visible-host.py` remains SHA-256 `e8be4861d3dfbee1b1a07f8d5357109404023f473e7352086c41c05bacba7527`; original native failure files are unchanged. Product/test tracked files were not modified.
+
+## Host changes
+
+- Close events return before inspecting any panel; main-window Close bookkeeping also pauses observation and detaches the wizard before closing/deleting it.
+- The filter ignores non-input events before accessing Qt controls and uses the explicit current live panel, not a recursive object-tree query.
+- Fixture replacement disables observation and clears panel/wizard references before deferred deletion. Each fixture has a generation number.
+- The 80 ms observer callback is bound to the original case/generation. Replaced/closed fixture callbacks produce an explicit discarded record rather than a false after-input receipt.
+- Application setup now uses the existing product APIs: Fusion style, `apply_theme(app, 'light')`, Chinese language initialization, and isolated QA QSettings. No custom styles or user settings were introduced. Native root can exercise actual Theme/Language menus separately.
+- Identity records host version and original file SHA; native abort diagnostics use faulthandler. The normal host exit record remains explicitly separate from the launcher's actual process status.
+
+## Final isolated checks
+
+Exact paths and hashes: `out/collab/f4-host-v2-delivery.json`.
+
+1. Original failure sequence on the final Fusion/light v2: wizard diagnostic Locate → Cancel → prepare Scan (deleting wizard) → Scan Locate → wait beyond highlight timer → normal event-loop exit **0**, launcher process exit **0**. Log `out/collab/f4-v2-fusion-original-sequence.log`, launcher receipt with the same stem plus `-launcher.json`.
+2. Full final Fusion/light 13-state event-loop test: **13/13**, all actions preserve business hashes. Actual table row/column and target highlight assertions are checked. Real backend Inspect rejects the expected CLI-lock conflict, retains exact raw stderr and does not run simulation. Additional rapid wizard→scan replacement before 80 ms discards the old-generation callback, and a subsequent scan click records a new matched input pair. Event-loop and launcher both exit **0**. Log `out/collab/f4-v2-fusion-full-eventloop.log`; launcher receipt with the same stem plus `-launcher.json`; full state/exit receipts are linked in the delivery JSON.
+
+The earlier unthemed test output and the tightened-test failure are retained as diagnostic history. The tightened test exposed that a lone `QTest.mouseDClick` does not establish the initial table click; the final probe uses a first click followed by the double-click event, and proves the selected geometry cell (2,6). It does not weaken the target assertion. Only final Fusion/light evidence is used above.
+
+All checks used Windows PySide6 **6.11.1**, offscreen. They do not count as native visual acceptance. Root should launch the final v2 file against the final frozen backend and use a new native evidence root; root owns desktop observation.
+
+## Historical incident boundary
+
+The prior native crash was PID **40456**, Windows Application Error timestamp **2026-10-30 19:51:06** local, exception **0xc0000409**, faulting module **ucrtbase.dll**, offset **0x00000000000a4ace**. WER followed at 19:51:10, report `0076789b-f764-4e1d-9ea7-f2a3b000b552`. Native state prepared Scan at seq34 and had no natural-exit receipt; this remains a failed QA-host round, not rewritten as a successful run. The causal offscreen diagnosis is `out/collab/f4-wizard-close-independent-review.md`; it is separate from the historical Linux Qt 6.12 combo None-reference issue.

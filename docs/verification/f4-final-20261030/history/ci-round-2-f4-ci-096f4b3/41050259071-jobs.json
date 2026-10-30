@@ -1,0 +1,477 @@
+{
+  "total_count": 2,
+  "jobs": [
+    {
+      "id": 124044262255,
+      "run_id": 41050259071,
+      "workflow_name": "Linux build and backend regression",
+      "head_branch": "roadmap/F4-validation-navigation",
+      "run_url": "https://api.github.com/repos/doorfordoor/G4UniversalSim/actions/runs/41050259071",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOScco-s8AAAAc4Z07bw",
+      "head_sha": "096f4b37c15aac0a12206914b9b02ee1b8a3d976",
+      "url": "https://api.github.com/repos/doorfordoor/G4UniversalSim/actions/jobs/124044262255",
+      "html_url": "https://github.com/doorfordoor/G4UniversalSim/actions/runs/41050259071/job/124044262255",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-10-30T11:44:36Z",
+      "started_at": "2026-10-30T11:44:38Z",
+      "completed_at": "2026-10-30T11:49:05Z",
+      "name": "ubuntu-24.04 / Geant4 11.4.3",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-30T11:44:39Z",
+          "completed_at": "2026-10-30T11:44:40Z"
+        },
+        {
+          "name": "Run actions/checkout@v7",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-30T11:44:40Z",
+          "completed_at": "2026-10-30T11:44:42Z"
+        },
+        {
+          "name": "Install micromamba",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-30T11:44:42Z",
+          "completed_at": "2026-10-30T11:44:43Z"
+        },
+        {
+          "name": "Create pinned Geant4 environment",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-30T11:44:43Z",
+          "completed_at": "2026-10-30T11:45:18Z"
+        },
+        {
+          "name": "Export the Geant4 dataset environment",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-30T11:45:18Z",
+          "completed_at": "2026-10-30T11:45:18Z"
+        },
+        {
+          "name": "Point Qt at the PySide6 plugins",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-30T11:45:18Z",
+          "completed_at": "2026-10-30T11:45:18Z"
+        },
+        {
+          "name": "Configure the backend",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-10-30T11:45:18Z",
+          "completed_at": "2026-10-30T11:45:20Z"
+        },
+        {
+          "name": "Build the backend",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-10-30T11:45:20Z",
+          "completed_at": "2026-10-30T11:46:48Z"
+        },
+        {
+          "name": "Verify the Geant4 data lookup of the built executable",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-10-30T11:46:48Z",
+          "completed_at": "2026-10-30T11:46:48Z"
+        },
+        {
+          "name": "Record GDML availability of this Geant4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-10-30T11:46:48Z",
+          "completed_at": "2026-10-30T11:46:48Z"
+        },
+        {
+          "name": "Run static tests on Linux",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-10-30T11:46:48Z",
+          "completed_at": "2026-10-30T11:47:41Z"
+        },
+        {
+          "name": "Validate the Linux static report",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12,
+          "started_at": "2026-10-30T11:47:41Z",
+          "completed_at": "2026-10-30T11:47:41Z"
+        },
+        {
+          "name": "Annotate failing static cases",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13,
+          "started_at": "2026-10-30T11:47:41Z",
+          "completed_at": "2026-10-30T11:47:41Z"
+        },
+        {
+          "name": "Run offscreen GUI tests on Linux",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 14,
+          "started_at": "2026-10-30T11:47:41Z",
+          "completed_at": "2026-10-30T11:49:02Z"
+        },
+        {
+          "name": "Validate the Linux GUI report",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 15,
+          "started_at": "2026-10-30T11:49:02Z",
+          "completed_at": "2026-10-30T11:49:02Z"
+        },
+        {
+          "name": "Annotate failing GUI cases",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16,
+          "started_at": "2026-10-30T11:49:02Z",
+          "completed_at": "2026-10-30T11:49:02Z"
+        },
+        {
+          "name": "Run backend tests on Linux",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 17,
+          "started_at": "2026-10-30T11:49:02Z",
+          "completed_at": "2026-10-30T11:49:02Z"
+        },
+        {
+          "name": "Validate the Linux backend report",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 18,
+          "started_at": "2026-10-30T11:49:02Z",
+          "completed_at": "2026-10-30T11:49:02Z"
+        },
+        {
+          "name": "Annotate failing backend cases",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19,
+          "started_at": "2026-10-30T11:49:02Z",
+          "completed_at": "2026-10-30T11:49:02Z"
+        },
+        {
+          "name": "Run integration tests on Linux",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 20,
+          "started_at": "2026-10-30T11:49:02Z",
+          "completed_at": "2026-10-30T11:49:02Z"
+        },
+        {
+          "name": "Validate the Linux integration report",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 21,
+          "started_at": "2026-10-30T11:49:02Z",
+          "completed_at": "2026-10-30T11:49:02Z"
+        },
+        {
+          "name": "Annotate failing integration cases",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 22,
+          "started_at": "2026-10-30T11:49:02Z",
+          "completed_at": "2026-10-30T11:49:02Z"
+        },
+        {
+          "name": "Verify the evidence gate rejects a tampered report",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 23,
+          "started_at": "2026-10-30T11:49:02Z",
+          "completed_at": "2026-10-30T11:49:02Z"
+        },
+        {
+          "name": "Upload Linux evidence",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 24,
+          "started_at": "2026-10-30T11:49:02Z",
+          "completed_at": "2026-10-30T11:49:03Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v7",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 48,
+          "started_at": "2026-10-30T11:49:03Z",
+          "completed_at": "2026-10-30T11:49:03Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 49,
+          "started_at": "2026-10-30T11:49:03Z",
+          "completed_at": "2026-10-30T11:49:03Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/doorfordoor/G4UniversalSim/check-runs/124044262255",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000000253,
+      "runner_name": "GitHub Actions 1000000253",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 124044262528,
+      "run_id": 41050259071,
+      "workflow_name": "Linux build and backend regression",
+      "head_branch": "roadmap/F4-validation-navigation",
+      "run_url": "https://api.github.com/repos/doorfordoor/G4UniversalSim/actions/runs/41050259071",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOScco-s8AAAAc4Z08gA",
+      "head_sha": "096f4b37c15aac0a12206914b9b02ee1b8a3d976",
+      "url": "https://api.github.com/repos/doorfordoor/G4UniversalSim/actions/jobs/124044262528",
+      "html_url": "https://github.com/doorfordoor/G4UniversalSim/actions/runs/41050259071/job/124044262528",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-10-30T11:44:37Z",
+      "started_at": "2026-10-30T11:44:38Z",
+      "completed_at": "2026-10-30T11:49:20Z",
+      "name": "ubuntu-24.04 / Geant4 11.3.2",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-30T11:44:39Z",
+          "completed_at": "2026-10-30T11:44:40Z"
+        },
+        {
+          "name": "Run actions/checkout@v7",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-30T11:44:40Z",
+          "completed_at": "2026-10-30T11:44:42Z"
+        },
+        {
+          "name": "Install micromamba",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-30T11:44:42Z",
+          "completed_at": "2026-10-30T11:44:44Z"
+        },
+        {
+          "name": "Create pinned Geant4 environment",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-30T11:44:44Z",
+          "completed_at": "2026-10-30T11:45:21Z"
+        },
+        {
+          "name": "Export the Geant4 dataset environment",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-30T11:45:21Z",
+          "completed_at": "2026-10-30T11:45:21Z"
+        },
+        {
+          "name": "Point Qt at the PySide6 plugins",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-30T11:45:21Z",
+          "completed_at": "2026-10-30T11:45:21Z"
+        },
+        {
+          "name": "Configure the backend",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-10-30T11:45:21Z",
+          "completed_at": "2026-10-30T11:45:26Z"
+        },
+        {
+          "name": "Build the backend",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-10-30T11:45:26Z",
+          "completed_at": "2026-10-30T11:46:56Z"
+        },
+        {
+          "name": "Verify the Geant4 data lookup of the built executable",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-10-30T11:46:56Z",
+          "completed_at": "2026-10-30T11:46:56Z"
+        },
+        {
+          "name": "Record GDML availability of this Geant4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-10-30T11:46:56Z",
+          "completed_at": "2026-10-30T11:46:56Z"
+        },
+        {
+          "name": "Run static tests on Linux",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-10-30T11:46:56Z",
+          "completed_at": "2026-10-30T11:47:52Z"
+        },
+        {
+          "name": "Validate the Linux static report",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12,
+          "started_at": "2026-10-30T11:47:52Z",
+          "completed_at": "2026-10-30T11:47:52Z"
+        },
+        {
+          "name": "Annotate failing static cases",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13,
+          "started_at": "2026-10-30T11:47:52Z",
+          "completed_at": "2026-10-30T11:47:52Z"
+        },
+        {
+          "name": "Run offscreen GUI tests on Linux",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 14,
+          "started_at": "2026-10-30T11:47:52Z",
+          "completed_at": "2026-10-30T11:49:17Z"
+        },
+        {
+          "name": "Validate the Linux GUI report",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 15,
+          "started_at": "2026-10-30T11:49:17Z",
+          "completed_at": "2026-10-30T11:49:17Z"
+        },
+        {
+          "name": "Annotate failing GUI cases",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16,
+          "started_at": "2026-10-30T11:49:17Z",
+          "completed_at": "2026-10-30T11:49:17Z"
+        },
+        {
+          "name": "Run backend tests on Linux",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 17,
+          "started_at": "2026-10-30T11:49:17Z",
+          "completed_at": "2026-10-30T11:49:17Z"
+        },
+        {
+          "name": "Validate the Linux backend report",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 18,
+          "started_at": "2026-10-30T11:49:17Z",
+          "completed_at": "2026-10-30T11:49:17Z"
+        },
+        {
+          "name": "Annotate failing backend cases",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19,
+          "started_at": "2026-10-30T11:49:17Z",
+          "completed_at": "2026-10-30T11:49:17Z"
+        },
+        {
+          "name": "Run integration tests on Linux",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 20,
+          "started_at": "2026-10-30T11:49:17Z",
+          "completed_at": "2026-10-30T11:49:17Z"
+        },
+        {
+          "name": "Validate the Linux integration report",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 21,
+          "started_at": "2026-10-30T11:49:17Z",
+          "completed_at": "2026-10-30T11:49:17Z"
+        },
+        {
+          "name": "Annotate failing integration cases",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 22,
+          "started_at": "2026-10-30T11:49:17Z",
+          "completed_at": "2026-10-30T11:49:17Z"
+        },
+        {
+          "name": "Verify the evidence gate rejects a tampered report",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 23,
+          "started_at": "2026-10-30T11:49:17Z",
+          "completed_at": "2026-10-30T11:49:17Z"
+        },
+        {
+          "name": "Upload Linux evidence",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 24,
+          "started_at": "2026-10-30T11:49:17Z",
+          "completed_at": "2026-10-30T11:49:18Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v7",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 48,
+          "started_at": "2026-10-30T11:49:18Z",
+          "completed_at": "2026-10-30T11:49:19Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 49,
+          "started_at": "2026-10-30T11:49:19Z",
+          "completed_at": "2026-10-30T11:49:19Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/doorfordoor/G4UniversalSim/check-runs/124044262528",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000000254,
+      "runner_name": "GitHub Actions 1000000254",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    }
+  ]
+}

@@ -1,0 +1,211 @@
+{
+  "recorded_at_utc": "2026-10-30T11:52:38.885021+00:00",
+  "head_sha": "096f4b37c15aac0a12206914b9b02ee1b8a3d976",
+  "status": "not_passed",
+  "complete": false,
+  "runs": [
+    {
+      "id": 41050259071,
+      "head_sha": "096f4b37c15aac0a12206914b9b02ee1b8a3d976",
+      "conclusion": "failure",
+      "name": "Linux build and backend regression",
+      "path": ".github/workflows/linux-geant4.yml",
+      "event": "push",
+      "html_url": "https://github.com/doorfordoor/G4UniversalSim/actions/runs/41050259071",
+      "run_attempt": 1,
+      "jobs": [
+        {
+          "id": 124044262255,
+          "name": "ubuntu-24.04 / Geant4 11.4.3",
+          "conclusion": "failure",
+          "log_present": true
+        },
+        {
+          "id": 124044262528,
+          "name": "ubuntu-24.04 / Geant4 11.3.2",
+          "conclusion": "failure",
+          "log_present": true
+        }
+      ]
+    },
+    {
+      "id": 41050258833,
+      "head_sha": "096f4b37c15aac0a12206914b9b02ee1b8a3d976",
+      "conclusion": "failure",
+      "name": "M0 static and GUI regression",
+      "path": ".github/workflows/m0-static-gui.yml",
+      "event": "push",
+      "html_url": "https://github.com/doorfordoor/G4UniversalSim/actions/runs/41050258833",
+      "run_attempt": 1,
+      "jobs": [
+        {
+          "id": 124044261613,
+          "name": "windows-latest / Python 3.11",
+          "conclusion": "success",
+          "log_present": true
+        },
+        {
+          "id": 124044262068,
+          "name": "ubuntu-latest / Python 3.11",
+          "conclusion": "failure",
+          "log_present": true
+        }
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "name": "linux-evidence-11.4.3",
+      "id": 12974786563,
+      "official_digest": "sha256:33c1c97fc1b4dfdd46c4b89f0d6d12ec9492c30a8e1bcb0ffb8faf40ad167319",
+      "sha256": "sha256:33c1c97fc1b4dfdd46c4b89f0d6d12ec9492c30a8e1bcb0ffb8faf40ad167319"
+    },
+    {
+      "name": "linux-evidence-11.3.2",
+      "id": 12974647006,
+      "official_digest": "sha256:450fbbb22d5a64aa9e16ec45db6a451f0167d5428e4db0749a8654d165501aca",
+      "sha256": "sha256:450fbbb22d5a64aa9e16ec45db6a451f0167d5428e4db0749a8654d165501aca"
+    },
+    {
+      "name": "m0-report-ubuntu-latest",
+      "id": 12974641852,
+      "official_digest": "sha256:17259e2566e5ade353525fe2a3a28e4a9e49ffb0211a2d72e6f2bf5c1fc9a9e5",
+      "sha256": "sha256:17259e2566e5ade353525fe2a3a28e4a9e49ffb0211a2d72e6f2bf5c1fc9a9e5"
+    },
+    {
+      "name": "m0-report-windows-latest",
+      "id": 12973818588,
+      "official_digest": "sha256:0738bc8b4e710c74df86a897b44c3fe99fb89756dee9c04ead3e6c87db4b828f",
+      "sha256": "sha256:0738bc8b4e710c74df86a897b44c3fe99fb89756dee9c04ead3e6c87db4b828f"
+    }
+  ],
+  "reports": [
+    {
+      "artifact": "linux-evidence-11.3.2",
+      "path": "linux-evidence-11.3.2\\linux-gui\\20261030-114752-110e65d1\\report.json",
+      "profile": "gui",
+      "cases": 43,
+      "assertions": 2930,
+      "strict_gate_exit_code": 1,
+      "git_dirty": true,
+      "tracked_source_gate": "pass",
+      "problems": [
+        "failed/skipped case",
+        "strict evidence gate failed"
+      ]
+    },
+    {
+      "artifact": "linux-evidence-11.3.2",
+      "path": "linux-evidence-11.3.2\\linux-static\\20261030-114656-8d3ccc0f\\report.json",
+      "profile": "static",
+      "cases": 28,
+      "assertions": 2133,
+      "strict_gate_exit_code": 0,
+      "git_dirty": true,
+      "tracked_source_gate": "pass",
+      "problems": []
+    },
+    {
+      "artifact": "linux-evidence-11.4.3",
+      "path": "linux-evidence-11.4.3\\linux-gui\\20261030-114741-099e7cf1\\report.json",
+      "profile": "gui",
+      "cases": 43,
+      "assertions": 2930,
+      "strict_gate_exit_code": 1,
+      "git_dirty": true,
+      "tracked_source_gate": "pass",
+      "problems": [
+        "failed/skipped case",
+        "strict evidence gate failed"
+      ]
+    },
+    {
+      "artifact": "linux-evidence-11.4.3",
+      "path": "linux-evidence-11.4.3\\linux-static\\20261030-114648-8bee0b77\\report.json",
+      "profile": "static",
+      "cases": 28,
+      "assertions": 2133,
+      "strict_gate_exit_code": 0,
+      "git_dirty": true,
+      "tracked_source_gate": "pass",
+      "problems": []
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "path": "m0-report-ubuntu-latest\\20261030-114510-2ff87a6f\\report.json",
+      "profile": "static",
+      "cases": 28,
+      "assertions": 2133,
+      "strict_gate_exit_code": 0,
+      "git_dirty": false,
+      "tracked_source_gate": "pass",
+      "problems": []
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "path": "m0-report-ubuntu-latest\\20261030-114608-505a6641\\report.json",
+      "profile": "gui",
+      "cases": 43,
+      "assertions": 2930,
+      "strict_gate_exit_code": 1,
+      "git_dirty": false,
+      "tracked_source_gate": "pass",
+      "problems": [
+        "failed/skipped case",
+        "strict evidence gate failed"
+      ]
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "path": "m0-report-windows-latest\\20261030-114606-6fa32e60\\report.json",
+      "profile": "static",
+      "cases": 28,
+      "assertions": 2124,
+      "strict_gate_exit_code": 0,
+      "git_dirty": false,
+      "tracked_source_gate": "pass",
+      "problems": []
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "path": "m0-report-windows-latest\\20261030-114729-fa45c7eb\\report.json",
+      "profile": "gui",
+      "cases": 43,
+      "assertions": 2932,
+      "strict_gate_exit_code": 0,
+      "git_dirty": false,
+      "tracked_source_gate": "pass",
+      "problems": []
+    }
+  ],
+  "collection_problems": [
+    {
+      "artifact": "linux-evidence-11.3.2",
+      "found_profiles": [
+        "gui",
+        "static"
+      ],
+      "expected_profiles": [
+        "backend",
+        "gui",
+        "integration",
+        "static"
+      ]
+    },
+    {
+      "artifact": "linux-evidence-11.4.3",
+      "found_profiles": [
+        "gui",
+        "static"
+      ],
+      "expected_profiles": [
+        "backend",
+        "gui",
+        "integration",
+        "static"
+      ]
+    }
+  ],
+  "source_fingerprint": "db253b7b1ed5f810789f1322faa75002df311d4aeb04572867dbb130c71d95cc",
+  "tests_content_fingerprint": "fa32cb49760314c208f944b8c66be507b791f766ffeabeb7b01a8142cb10cc4c"
+}

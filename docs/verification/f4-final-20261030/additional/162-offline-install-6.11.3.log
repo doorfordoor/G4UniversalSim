@@ -1,0 +1,26 @@
+Looking in links: /mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/f4-qt-dependency-validation/wheelhouse
+Processing ./out/collab/f4-qt-dependency-validation/wheelhouse/pyside6-6.11.3-cp310-abi3-manylinux_2_34_x86_64.whl
+Processing ./out/collab/f4-qt-dependency-validation/wheelhouse/shiboken6-6.11.3-cp310-abi3-manylinux_2_34_x86_64.whl (from PySide6==6.11.3)
+Processing ./out/collab/f4-qt-dependency-validation/wheelhouse/pyside6_essentials-6.11.3-cp310-abi3-manylinux_2_34_x86_64.whl (from PySide6==6.11.3)
+Processing ./out/collab/f4-qt-dependency-validation/wheelhouse/pyside6_addons-6.11.3-cp310-abi3-manylinux_2_34_x86_64.whl (from PySide6==6.11.3)
+Installing collected packages: shiboken6, PySide6_Essentials, PySide6_Addons, PySide6
+  Attempting uninstall: shiboken6
+    Found existing installation: shiboken6 6.12.0
+    Not uninstalling shiboken6 at /home/u123/g4ci/lib/python3.11/site-packages, outside environment /home/u123/venvs/g4-f4-qt-6.11.3-20261030
+    Can't uninstall 'shiboken6'. No files were found to uninstall.
+  Attempting uninstall: PySide6_Essentials
+    Found existing installation: PySide6_Essentials 6.12.0
+    Not uninstalling pyside6-essentials at /home/u123/g4ci/lib/python3.11/site-packages, outside environment /home/u123/venvs/g4-f4-qt-6.11.3-20261030
+    Can't uninstall 'PySide6_Essentials'. No files were found to uninstall.
+  Attempting uninstall: PySide6_Addons
+    Found existing installation: PySide6_Addons 6.12.0
+    Not uninstalling pyside6-addons at /home/u123/g4ci/lib/python3.11/site-packages, outside environment /home/u123/venvs/g4-f4-qt-6.11.3-20261030
+    Can't uninstall 'PySide6_Addons'. No files were found to uninstall.
+  Attempting uninstall: PySide6
+    Found existing installation: PySide6 6.12.0
+    Not uninstalling pyside6 at /home/u123/g4ci/lib/python3.11/site-packages, outside environment /home/u123/venvs/g4-f4-qt-6.11.3-20261030
+    Can't uninstall 'PySide6'. No files were found to uninstall.
+Successfully installed PySide6-6.11.3 PySide6_Addons-6.11.3 PySide6_Essentials-6.11.3 shiboken6-6.11.3
+ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
+pyside6-pdf 6.12.0.140 requires PySide6_Essentials==6.12.0, but you have pyside6-essentials 6.11.3 which is incompatible.
+pyside6-webengine 6.12.0.140 requires PySide6_Addons==6.12.0, but you have pyside6-addons 6.11.3 which is incompatible.

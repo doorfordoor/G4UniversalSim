@@ -1,0 +1,204 @@
+{
+  "schema": "f4_final_prepublication_independent_review_v1",
+  "status": "approved_fixed_plan_for_root_publication",
+  "blocking_findings": [],
+  "plan_path": "out\\collab\\f4-final-publication-plan.json",
+  "plan_sha256": "5b46eddd49ed1a65c40746449bae6e57c2e714f1922a6048bf2597ba50d52871",
+  "helper_review_path": "out\\collab\\f4-final-prepublication-review.json",
+  "helper_review_sha256": "7a8fe8c91695bf45c7305433150585f890751d64372b5b217250cc2d48b5c73a",
+  "session_id": 6837,
+  "actual_process_exit_code": 0,
+  "helper_review_log": "out/collab/f4-final-prepublication-review.log",
+  "helper_review_log_sha256": "42f485af684a675200630fa632893c83ff128b148872bf2fee422407f9471977",
+  "source_files_verified": 2495,
+  "source_roots_coverage": [
+    {
+      "source": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6",
+      "category": "accepted_windows",
+      "actual": 153,
+      "included": 153,
+      "excluded": 0,
+      "unaccounted": []
+    },
+    {
+      "source": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-ci-a9ad09d",
+      "category": "accepted_ci",
+      "actual": 519,
+      "included": 515,
+      "excluded": 4,
+      "unaccounted": []
+    },
+    {
+      "source": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\docs\\verification\\f1-automated-20261030\\windows\\final-1",
+      "category": "baseline",
+      "actual": 144,
+      "included": 144,
+      "excluded": 0,
+      "unaccounted": []
+    },
+    {
+      "source": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0",
+      "category": "visible",
+      "actual": 48,
+      "included": 48,
+      "excluded": 0,
+      "unaccounted": []
+    },
+    {
+      "source": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-freeze-windows\\20261030-192616-7a34aee1",
+      "category": "historical_windows",
+      "actual": 94,
+      "included": 94,
+      "excluded": 0,
+      "unaccounted": []
+    },
+    {
+      "source": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-final-windows\\20261030-194526-3f060b82",
+      "category": "historical_windows",
+      "actual": 152,
+      "included": 152,
+      "excluded": 0,
+      "unaccounted": []
+    },
+    {
+      "source": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-ci-5d6f008",
+      "category": "historical_ci",
+      "actual": 510,
+      "included": 510,
+      "excluded": 0,
+      "unaccounted": []
+    },
+    {
+      "source": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-ci-096f4b3",
+      "category": "historical_ci",
+      "actual": 336,
+      "included": 336,
+      "excluded": 0,
+      "unaccounted": []
+    },
+    {
+      "source": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-ci-7d718d0",
+      "category": "historical_ci",
+      "actual": 247,
+      "included": 247,
+      "excluded": 0,
+      "unaccounted": []
+    },
+    {
+      "source": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-5d6f008",
+      "category": "historical_visible",
+      "actual": 25,
+      "included": 25,
+      "excluded": 0,
+      "unaccounted": []
+    },
+    {
+      "source": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-096f4b3",
+      "category": "historical_visible",
+      "actual": 34,
+      "included": 34,
+      "excluded": 0,
+      "unaccounted": []
+    }
+  ],
+  "all_selected_source_bytes_still_match": true,
+  "accepted_windows_head": "7d718d038a00d89995ea773b4772764116b620c3",
+  "accepted_visible_head": "7d718d038a00d89995ea773b4772764116b620c3",
+  "accepted_ci_head": "a9ad09dfd6e99d287fa77ff7f38e7919c475e1b9",
+  "accepted_strict_report_gates": 13,
+  "ci_actual_reports": 12,
+  "windows_f1_baseline_gate": [
+    {
+      "report": "windows/final-1/report.json",
+      "baseline": "baseline/1/report.json",
+      "exit_code": 0
+    }
+  ],
+  "historical_ci": [
+    {
+      "head": "5d6f00854e1c7304f677c4ed033772aa2d95ae9d",
+      "status": "failed",
+      "reports": 12,
+      "missing_profiles": [],
+      "release_accepted": false
+    },
+    {
+      "head": "096f4b37c15aac0a12206914b9b02ee1b8a3d976",
+      "status": "failed",
+      "reports": 8,
+      "missing_profiles": [
+        [
+          "linux-evidence-11.3.2",
+          "backend"
+        ],
+        [
+          "linux-evidence-11.3.2",
+          "integration"
+        ],
+        [
+          "linux-evidence-11.4.3",
+          "backend"
+        ],
+        [
+          "linux-evidence-11.4.3",
+          "integration"
+        ]
+      ],
+      "release_accepted": false
+    },
+    {
+      "head": "7d718d038a00d89995ea773b4772764116b620c3",
+      "status": "failed",
+      "reports": 6,
+      "missing_profiles": [
+        [
+          "linux-evidence-11.3.2",
+          "backend"
+        ],
+        [
+          "linux-evidence-11.3.2",
+          "gui"
+        ],
+        [
+          "linux-evidence-11.3.2",
+          "integration"
+        ],
+        [
+          "linux-evidence-11.4.3",
+          "backend"
+        ],
+        [
+          "linux-evidence-11.4.3",
+          "gui"
+        ],
+        [
+          "linux-evidence-11.4.3",
+          "integration"
+        ]
+      ],
+      "release_accepted": false
+    }
+  ],
+  "identity_mapping_check": {
+    "status": "verified_exact_linux_runtime_child",
+    "product_commit": "7d718d038a00d89995ea773b4772764116b620c3",
+    "ci_commit": "a9ad09dfd6e99d287fa77ff7f38e7919c475e1b9",
+    "tracked_entries_verified": 11340,
+    "changed_files": [
+      ".github/workflows/linux-geant4.yml"
+    ],
+    "source_fingerprint": "db253b7b1ed5f810789f1322faa75002df311d4aeb04572867dbb130c71d95cc",
+    "tests_content_fingerprint": "92c2c470814b0bea95d918e3393394a9c39ff5897fc3d57e64d33ef7e6174ddb",
+    "phase_acceptance": false
+  },
+  "portable_local_readme_links": 25,
+  "broken_local_links": 0,
+  "archive_destination": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\docs\\verification\\f4-final-20261030",
+  "archive_destination_absent_after_review": true,
+  "archive_published": false,
+  "plan_phase_complete": false,
+  "tool_visible_acceptance": "not_asserted_by_archive_tool",
+  "readme_stage_boundary_review": "Engineering/function/matrix/native acceptance is recorded; archive snapshot predates codex integration, later stage closure belongs to a separate tracked close review. Original pending/native/CI history is not rewritten.",
+  "exclusion_boundary": "Only four accepted official ZIP containers stay at source under explicit F1 policy; verified official digests and exact extracted members are retained. All historical ZIPs and all native original streams are selected.",
+  "scope": "Exact 2495-source formal plan only, not any prior selftest. No edits to selected source files or frozen CI. Root may publish this unchanged plan; any changed source or plan requires renewed byte verification."
+}

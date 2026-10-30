@@ -1,0 +1,18 @@
+# Out-only navigation candidate independent review — accepted for this exact hash
+
+Candidate: `out/collab/f4-table-fixed-overlay/g4usim_gui/widgets/diagnostic_navigation.py`, raw SHA256 **041ddbada211e6f45f080926742ae70dc0ce90c01400fd36b4c59e2006513437**. Frozen product remained unchanged/clean. If the writer's final delivery changes this file hash, this receipt does not automatically cover the new file.
+
+The independent script `f4-navigation-overlay-independent.py` was authored separately and imports only this candidate module in memory. It never imports the QA host. It measures target rectangles through table viewport and every ancestor clip, along with full configuration/model before/after SHA, real current row and field value.
+
+| Target | Frozen baseline visible fraction | Candidate fraction | Business model/drafts |
+|---|---:|---:|---|
+| Duplicate-name geometry third row size, cell [2,6] | 0% | 100%, 6090 px² | unchanged |
+| Boolean index=2 row operation, cell [0,3] | 100% | 100%, 6090 px² | unchanged |
+| Second duplicate material density detail | 100% | 100%, 9636 px² | unchanged |
+| Second layer thickness detail | 100% | 100%, 9592 px² | unchanged |
+
+All four repeated with and without a QA-height toolbar (8 candidate cases): target selection correct, visible fraction 1.0, no-write hashes identical; `bad` / `invalid-operation` preserved. Script exits **0**, strict candidate assertions require focused outcome, at least 95% target intersection and unchanged model hash. Receipts: `f4-independent-overlay-candidate-1/results.json` and `f4-independent-overlay-candidate-1.log`. Baseline retained separately under `f4-independent-overlay-baseline/`.
+
+Static review confirms candidate reveals/activates hidden tab layouts first, aligns the actual current item inside the table, then ensures that cell rectangle rather than the full table center in enclosing scroll areas. Scalar/detail controls preserve their existing widget-anchor path. Existing editable/hidden/disabled guards remain. No new business setters or source re-read identity path is introduced.
+
+This is independent **offscreen** acceptance of the proposed navigation change, not native acceptance or a new product commit. Parent should apply only after original all-matrix completion, rerun required automation and observe the 13 host states natively in a new evidence directory. Old failed native receipt remains unchanged.

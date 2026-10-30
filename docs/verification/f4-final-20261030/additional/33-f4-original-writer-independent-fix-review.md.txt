@@ -1,0 +1,10 @@
+# Geometry follow-up independent review — accepted
+
+2026-10-30. Original document-producer writer independently reviewed the core writer's two follow-up fixes. No tracked product/test edits were made in this review.
+
+- **R1 accepted**: `geometry_editor_model.py:511,620` include the concrete production-cut key in identity facts while retaining the actual editable `region` target. Both hierarchical and layered repros now give legacy=2, typed=2, fallback=0. The tests also verify distinct JSON/report identities, stable translation identity, original text/order and clearing after correction.
+- **R2 accepted**: `geometry_parser.py:132` captures successful-read evidence once, with a separate no-text/no-hash SourceLocation on read failure. `geometry_editor_model.py:159,448` carries and reuses only that runtime evidence. Failed reads no longer create an empty historical snapshot; genuinely empty files retain the correct empty-text hash. Reviewed changed-cwd, subsequent creation/deletion, deepcopy, denied read, no-reread patch and old-asdict restore cases.
+- Independent execution: `tools/test_assert_probe.py scripts/test_f4_document_diagnostics.py` returned exit 0 and **119 v3 assertions**. Receipt: `out/collab/f4-original-writer-independent-fixes.log`.
+- Independently reran `out/collab/f4-core-document-review-repros.py`: both cut cases yielded 2 typed records / 0 fallback; missing-file source and derived records both showed snapshot=None and empty hash.
+
+No remaining blocker found in these two fixes. This closes only R1/R2 review; full formal matrix, CI, native observation and archive review remain pending under the parent. Current runner count announced by root is 151, superseding the earlier 150-case candidate plan. QA visible-host preparation remains the next out-only task.

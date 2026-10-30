@@ -1,0 +1,35 @@
+findfont: Failed to find font weight normal for WenQuanYi Zen Hei, now using 500.
+/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/gui/g4usim_gui/output/plot_data.py:104: RuntimeWarning: Legacy/unverified directory: run_metadata.json is absent; file ownership and completeness are unverified.
+  for path in sorted(output_files(output, "scorer_statistics*.csv")):
+/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/gui/g4usim_gui/output/plot_data.py:113: RuntimeWarning: Legacy/unverified directory: run_metadata.json is absent; file ownership and completeness are unverified.
+  for path in sorted(output_files(output, "scoring_mesh*.csv")):
+/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/gui/g4usim_gui/output/plot_data.py:119: RuntimeWarning: Legacy/unverified directory: run_metadata.json is absent; file ownership and completeness are unverified.
+  for path in sorted(output_files(output, "g4usim*.root")):
+/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/gui/g4usim_gui/output/plot_data.py:140: RuntimeWarning: Legacy/unverified directory: run_metadata.json is absent; file ownership and completeness are unverified.
+  runs = sorted({_run_of(p.stem) for p in output_files(output, f"{stem}_t*.csv")})
+/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/gui/g4usim_gui/preview3d/trajectories.py:123: RuntimeWarning: Legacy/unverified directory: run_metadata.json is absent; file ownership and completeness are unverified.
+  for path in output_files(output_dir, "trajectories_t*.json"):
+G4USIM_ASSERTS=75
+Traceback (most recent call last):
+  File "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/f4-qt-test-wrapper.py", line 13, in <module>
+    runpy.run_path(str(ROOT/'tools/test_assert_probe.py'),run_name='__main__')
+  File "<frozen runpy>", line 291, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/tools/test_assert_probe.py", line 177, in <module>
+    raise SystemExit(main(sys.argv))
+                     ^^^^^^^^^^^^^^
+  File "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/tools/test_assert_probe.py", line 153, in main
+    runpy.run_path(str(target), run_name="__main__")
+  File "<frozen runpy>", line 291, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/gui/smoke_tests/smoke_run_input_modes.py", line 465, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/gui/smoke_tests/smoke_run_input_modes.py", line 362, in main
+    test_real_generated_run(app, Path(tmp), Path(backend).resolve())
+  File "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/gui/smoke_tests/smoke_run_input_modes.py", line 322, in test_real_generated_run
+    assert not warnings, warnings
+           ^^^^^^^^^^^^
+AssertionError: ['QProcess error: Crashed']

@@ -1,0 +1,12 @@
+--- a/.github/workflows/linux-geant4.yml
++++ b/.github/workflows/linux-geant4.yml
+@@ -67,7 +67,8 @@
+           set -euo pipefail
+           ./bin/micromamba run -p "$G4_PREFIX" -- printenv \
+             | grep -E '^(G4[A-Z0-9_]*DATA|GEANT4[A-Z0-9_]*)=' >> "$GITHUB_ENV"
+-          echo "LD_LIBRARY_PATH=$G4_PREFIX/lib:${LD_LIBRARY_PATH:-}" >> "$GITHUB_ENV"
++          # Keep the backend CMake RPATH and the PySide6 wheel Qt libraries separate.
++          # A global conda lib prefix can mix incompatible Qt libraries in Python.
+           echo "$G4_PREFIX/bin" >> "$GITHUB_PATH"
+ 
+       # PySide6 ships its own Qt6 plugins inside site-packages, but a conda prefix

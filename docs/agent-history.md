@@ -505,3 +505,15 @@ F4验收入口追加：smoke_f4_inspect_protocol.py覆盖合成协议及过期�
 F4首轮5d6f008实窗反例：重名几何的size诊断虽选中[2,6]，外层滚动却显示空白。修复必须在切页/布局后按visualItemRect映射目标单元格到各滚动视口；不能用整张QTableWidget中心或isVisible()冒充单元格可见。smoke_f4_layout追加实际裁剪区域交集、远端行/布尔/详情及不改值断言。原生失败记录、正常host退出与未完成Windows轮分别保存，不得把过程exit0或部分测试通过算阶段验收。
 
 2026-10-30 F4依赖候选：Linux CPython3.11 / PySide6与shiboken6 6.12.0的缺失属性及普通void返回均可耗减None引用，原CI存在断言完成后none_dealloc/-6；不能以退出前成功文字、强制退出或单一属性绕行掩盖。隔离Linux6.11.1与6.11.3各通过binding8/Inspect45/真实运行103/layout257且自然退出0，暂约束PySide6>=6.11.1,<6.12，配对组件由官方依赖元数据锁定。新增smoke_qt_binding_lifetime登记实际Python/PySide/shiboken/Qt版本与引用变化；Python3.12的immortal None不能替代3.11验证。Linux workflow移除全局conda LD_LIBRARY_PATH以免混载Qt，保留数据环境和PySide插件路径；后端用自身CMake RPATH，新CI仍须覆盖两Geant4版本及辅助程序。当前仅候选，不提前关闭阶段。
+
+## 2026-10-30 F4 阶段关闭记录（已完成）
+
+产品 `7d718d038a00d89995ea773b4772764116b620c3`；Windows 152/152、49913 个 v3 入口与 F1 原始143/48511同代基线门禁；Linux11.3.2 为 152 项、11.4.3 为 152 项（run 41056994075），M0 Windows 为 72 项、Ubuntu 为 72 项（run 41056993987）。CI实际提交 `a9ad09dfd6e99d287fa77ff7f38e7919c475e1b9`，与产品的关系见[提交身份映射](verification/f4-final-20261030/identity/identity-map.json)。Windows原生 13 态、19 次实际观察与进程退出 0；[最终证据](verification/f4-final-20261030/README.md)，[独立审查](collab/reviews/20261030-astra-f4-close-review.md)。
+
+实窗GUI提交 `7d718d038a00d89995ea773b4772764116b620c3`，与产品身份关系：实窗GUI与Windows后端均为产品7d718d0，121份GUI源文件清单经独立复核。13个合成诊断状态及主题、语言切换共19次原生观察，独立启动器确认自然退出0；合成导航、真实后端Inspect拒绝与图像观察分别计证，未据此新增物理验证结论。。CI身份关系：CI为产品的直接单父提交子节点，仅在Linux工作流增加六行系统运行库安装；完整11340项Git路径、模式与对象核验确认其他项相同，来源及测试指纹一致。Windows与实窗证据保留7d718d0原身份，CI十二份报告保留a9ad09d原身份；映射证明代码与测试对应关系，不证明跨平台二进制字节相同。。依赖结论：GUI依赖统一经gui/requirements.txt限定PySide6>=6.11.1,<6.12；本轮Windows实窗使用6.11.1。Linux CI采用Python3.11并安装libegl1、libgl1、libxkbcommon0、libdbus-1-3、libfontconfig1，保留数据集环境及PySide6自身QT_PLUGIN_PATH，后端使用本轮已验CI构建的CMake RPATH，Python/GUI不全局注入conda LD_LIBRARY_PATH。旧WSL命令保留历史，不作为当前启动方案。。集成事实：此关闭记录形成时，codex分支尚待正常快进；随后同日回信记录真实集成结果。。
+
+既有编辑器及Project/Run、向导、扫描、屏蔽场景共用结构化诊断；按实际对象/字段/快照定位，表格按目标单元格滚动，旧报告失效，来源只读，原文本和阻断规则兼容。无编辑控件或可靠来源时明确拒绝。这不扩张高级GUI字段或科研物理验证；F5为下一完整阶段，仍待启动，K1/L1/Q2按原依赖推进。
+
+5d6f008几何定位空白反例与Windows中断轮（92 PASS/1 FAIL、无完整report）、旧CI失败/未执行profile，以及096f4b3原生host异常退出均保留历史原件，不计最终通过。QA host的Close事件对象树遍历缺陷只在out辅助程序修正；第三轮7d718d0的Linux CI因缺少libEGL.so.1失败，仅有6份实际报告，后续6个Linux profile未执行；其旧报告与失败日志仍属历史，不能用新CI回填或冒充当轮通过。PID40456、2026-10-30 19:51:06的0xc0000409与缺失退出收据不得改写。合成夹具、离屏交互、真实后端Inspect拒绝与原生图像观察分别计证；本阶段不声称新增模拟或物理基准。
+
+正常原生host SHA256 `aa59397f4711c17f7edcc9a39d927c9c4197e124d98ccafb58b8d1d886c11d6c`。保持Diagnostic/SourceLocation/EditorLocation及JSON v1语义；不新增项目持久UUID。实际来源先核验逻辑文本身份，历史快照明确标注；表格单元格须与所有祖先视口实际裁剪相交。导航不改值/dirty，换项目/重载/任何草稿修改后旧报告不得复活。

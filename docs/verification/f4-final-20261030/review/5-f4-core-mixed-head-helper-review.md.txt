@@ -1,0 +1,13 @@
+# F4 CI 与双提交归档工具独立复审
+
+结论：当前交付无阻塞缺陷，可用于生成正式归档计划；此结论不代表正式归档已发布。检查收据见相邻 `f4-core-mixed-head-helper-review.json`。
+
+- 独立调用真实仓库对象验证：产品7d718d0、CI a9ad09d直接父子关系，完整11340项Git树相同，唯一差异为Linux工作流准确6行apt安装。raw commit/tree/blob绑定、权限位与精确新增内容均受校验，不是仅相信映射中的自报布尔值。错误冻结指纹的独立负例被拒绝。
+- 新 `archive-f4.py` 与旧 `archive-f1.py` 的函数级AST比较，仅 `report_gates` 改变。CI拓扑、官方artifact和12份报告对应关系的实现未改；report_gates仍要求归档本地日志原字节SHA、非零断言/成功退出等严格报告门禁、Windows clean/all及同代F1基线。新增仅是明确分配Windows产品HEAD和CI HEAD，并先校验完整映射。
+- 复核17项负例源码与收据。改变依赖/测试、apt文本、权限、父提交的负例会重新构造内部一致Git对象，仍被拒绝，证明不是只测试格式错误。旧新profile混用与native改标CI SHA同样拒绝。22个交付文件SHA全部与交付表一致；761文件旧夹具兼容检查与5份native原始字节保留检查的证据完整，无需重复运行长测试。
+- 对真实最终CI独立调用拓扑校验通过12份；CI采集专项另已完成4官方ZIP、448次执行、12/12严格F1基线、109307个v3断言、0fail/skip、helper6/6与negative2/2。所有实际Qt/PySide/shiboken均6.11.3。Linux8报告git_dirty=true、M0四报告false，原值和依赖目录说明均保留；未将CI泛称clean。
+- 原 `.jsonl/.stdout/.stderr` 扩展仅作用于visible/historical_visible；保留原相对名字及CRLF等原字节，不把其他类别扩大为隐式来源。7d旧CI历史优先读取round-summary，明确4ZIP/6报告/200执行、10失败、6profile未执行，不能升级成通过。
+
+正式计划待核：旧 `f4-archive-plan.md` 是早期两轮与archive-f1指引，不能直接当最终参数清单。新计划须使用archive-f4及identity模块，Windows/native仍7d、CI a9，明确选择5d6f008、096f4b3、7d718d0三轮失败CI历史；产品7d的最终native不应因同SHA旧CI失败被错误归入失败native。最终具体计划将另行发布前复审。
+
+已按root要求冻结 `out/verification/f4-ci-a9ad09d`；本次补充只写 `out/collab`，未改产品、旧原件或发布归档。

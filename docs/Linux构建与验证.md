@@ -1,5 +1,13 @@
 # Linux 构建与验证（本机 WSL 实测，2026-10-28）
 
+## 2026-10-30 F4 当前环境说明
+
+当前Linux CI采用Python 3.11；GUI依赖以`gui/requirements.txt`为准，PySide6约束为`>=6.11.1,<6.12`，使用随其提供的Qt 6.11.x。系统运行库安装`libegl1 libgl1 libxkbcommon0 libdbus-1-3 libfontconfig1`；保留Geant4数据集环境变量，并令`QT_PLUGIN_PATH`指向当前PySide6自身的`Qt/plugins`。
+
+Python/GUI进程不全局注入conda的`LD_LIBRARY_PATH`，防止加载到另一套Qt库。后端按本轮CI构建记录中验证的CMake RPATH启动；该结论仅覆盖最终归档所列CI产物，没有验证过的旧二进制不能据此认定其RPATH已满足。产品提交为`7d718d038a00d89995ea773b4772764116b620c3`，CI实际提交为`a9ad09dfd6e99d287fa77ff7f38e7919c475e1b9`；见[最终验收证据](verification/f4-final-20261030/README.md)与[双提交身份映射](verification/f4-final-20261030/identity/identity-map.json)。
+
+下方2026-10-28 WSL环境及命令保留原始历史记录，其中全局`LD_LIBRARY_PATH`设置和旧产物的动态库说明不作为F4当前启动方案，也不证明当前或其他二进制的运行依赖已满足。
+
 本文记录本仓库在 Linux 上的一次真实构建与测试过程，供之后维护 Linux CI 的人复用。**它记录的是一次本机 WSL 实测，不是 GitHub Actions 的运行记录**——CI 的执行结果只能从 Actions 页面读取。
 
 ## 1. 为什么要做

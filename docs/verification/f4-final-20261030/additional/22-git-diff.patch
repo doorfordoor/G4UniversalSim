@@ -1,0 +1,17 @@
+diff --git a/.github/workflows/linux-geant4.yml b/.github/workflows/linux-geant4.yml
+index 479f58f6afb2ab9d7683755d75f33c2102eef4e3..7d589a4517e39804165983284d1d3effeb150a52 100644
+--- a/.github/workflows/linux-geant4.yml
++++ b/.github/workflows/linux-geant4.yml
+@@ -43,6 +43,12 @@ jobs:
+     steps:
+       - uses: actions/checkout@v7
+ 
++      - name: Install Linux GUI runtime libraries
++        run: |
++          sudo apt-get update
++          sudo apt-get install --yes --no-install-recommends \
++            libegl1 libgl1 libxkbcommon0 libdbus-1-3 libfontconfig1
++
+       - name: Install micromamba
+         run: |
+           set -euo pipefail

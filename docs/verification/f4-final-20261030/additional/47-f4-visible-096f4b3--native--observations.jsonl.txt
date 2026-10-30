@@ -1,0 +1,13 @@
+{"name":"01-energy-before","time":"2026-10-30T11:46:44.678Z","note":"实际F4窗口置前，源能量错误被选中，定位可用。"}
+{"name":"02-energy-located","time":"2026-10-30T11:46:51.856Z","note":"产品定位打开源编辑页，invalid-energy可见并聚焦，未改值。"}
+{"name":"03-geometry-before","time":"2026-10-30T11:46:59.702Z","note":"实际选择Sensor重名第三行size诊断。"}
+{"name":"04-geometry-located","time":"2026-10-30T11:47:06.935Z","note":"修复后第三行size/parameters单元格bad清晰可见并聚焦；旧轮空白反例已消除。"}
+{"name":"05-material-located","time":"2026-10-30T11:47:24.793Z","note":"材料详情名称SameMaterial、密度bad可见聚焦，启用状态保留。"}
+{"name":"06-layer-located","time":"2026-10-30T11:47:40.350Z","note":"Second层详情厚度bad可见聚焦，材料G4_Si与启用状态保留。"}
+{"name":"07-boolean-located","time":"2026-10-30T11:47:57.951Z","note":"布尔表第一行index=2、operation=invalid-operation可见且聚焦，未改非法值。"}
+{"name":"08-stale-report","time":"2026-10-30T11:48:06.323Z","note":"输入变化后显示诊断过期警告，定位字段与查看来源禁用，原错误仍保留。"}
+{"name":"09-current-source","time":"2026-10-30T11:48:50.321Z","note":"只读来源显示真实文件及行5，mystery=bad被选中，提示当前源文本与记录快照一致。该夹具为独立解析审计，不是当前生成配置。"}
+{"name":"10-historical-source","time":"2026-10-30T11:49:09.549Z","note":"来源变化后明确警告正在显示记录时的源文本快照，当前文件已改变或不可用；旧行5只在历史文本中选中。"}
+{"name":"11-project-crosspage","time":"2026-10-30T11:49:31.247Z","note":"运行页诊断跨页打开项目，可执行程序空框聚焦且仍为空，诊断提示保留。"}
+{"name":"12-scenario-advanced","time":"2026-10-30T11:49:59.957Z","note":"定位主动展开高级字段并滚到孔隙率2，非法值保留，未运行场景。"}
+{"name":"13-wizard-prior-page","time":"2026-10-30T11:50:55.174Z","note":"定位由最终页返回材料和几何页，空材料选择框可见，世界材料与尺寸保留；截图中Next有默认边框，焦点须结合事件收据判断。"}

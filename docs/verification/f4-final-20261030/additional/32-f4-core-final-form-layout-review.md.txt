@@ -1,0 +1,23 @@
+# F4 final form/navigation/layout review
+
+## Conclusion
+
+PASS for this requested bounded freeze review; no new blocking finding. Read-only product review, no product/test modification by this reviewer. This is offscreen automation and code review, not actual desktop acceptance or full stage closure.
+
+## Evidence
+
+- `out/collab/f4-core-final-entrypoints-review.log`: `smoke_f4_entrypoints.py`, exit 0, 62 v3 assertions.
+- `out/collab/f4-core-final-layout-review.log`: `smoke_f4_layout.py`, exit 0, 129 v3 assertions.
+- Both commands used the current shared worktree code, not historical receipts.
+
+## Invariants reviewed
+
+- `widgets/form_diagnostics.py`: report/controller binding captures the first presentation snapshot; mutation increments the generation before staleness. Re-presenting the same old report and reverting a field do not revive it. Locations emitted to panels carry their captured snapshot; signal records must match the current panel identity.
+- Full target/ancestor precheck precedes reveal callbacks; hidden/disabled/read-only controls are refused. Explicit revealable ancestor lists are confined to wizard pages and scenario advanced groups; prechecks do not enable fields.
+- `window/diagnostics.py`: Project/Run route uses actual Project fields. Config→Project route checks the current Config report before switching pages, and returns to typed registered targets. Entry test covers this route while preserving Project values.
+- `window/shell.py` uses one highlighter clear path before both theme and language changes. Entry tests verify focus property removal; record identities remain language independent.
+- DiagnosticPanel keeps typed records separate from display language; list labels use producer message templates where provided, raw detail is retained. Updating language renders the same records and preserves selection by identity.
+- Project/Run/Scenario/Wizard layout changes add scroll containers and wrap long form rows without changing model parsing. Layout test covers supported MainWindow 1280/1200 x 768 boundaries, isolated 680 x 640 pages, 600 x 640 wizard, both languages/themes, controls/actions/report/log reachability, and automatic target reveal.
+- Existing wizard cross-page navigation and scenario advanced-group reveal compare pre/post model and widget values; both pass. No configuration mutation observed.
+
+Prior review's ScanBase nested snapshot and duplicate scan text findings were already fixed and independently rechecked; they are not reopened. Document producer R1/R2 fixes are separately handed off for another agent's independent review and are outside this UI freeze conclusion.

@@ -1,0 +1,8 @@
+{"path": "apply_language_one_widget", "iterations": 100, "none_before": 6897, "none_after": 6697, "delta": -200, "python": "3.11.18 (main, Oct 26 2026, 11:35:17) [GCC 15.3.0]", "pyside": "6.12.0"}
+{"path": "highlight_clear", "iterations": 100, "none_before": 6564, "none_after": 4964, "delta": -1600, "python": "3.11.18 (main, Oct 26 2026, 11:35:17) [GCC 15.3.0]", "pyside": "6.12.0"}
+Fatal Python error: none_dealloc: deallocating None: bug likely caused by a refcount error in a C extension
+Python runtime state: finalizing (tstate=0x000059c2e251bfb8)
+
+Current thread 0x000076493e030580 (most recent call first):
+  Garbage-collecting
+  <no Python frame>

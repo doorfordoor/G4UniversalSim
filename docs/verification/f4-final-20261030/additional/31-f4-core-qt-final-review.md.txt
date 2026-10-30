@@ -1,0 +1,30 @@
+# F4 Qt dependency and Linux loader patch — independent final review
+
+**Disposition: approve both delivered patches for the next candidate freeze**, with the root's stated wording correction (affected Linux CPython3.11 / PySide6-shiboken6.12.0; do not blame all Qt6.12 or all operating systems). This approves the bounded fixes, not F4 closure. No tracked files were edited by this reviewer.
+
+## Dependency regression
+
+The patch's new test is AST-identical to reviewed candidate6bb5fcabf943aad2a3c199abd7f2414659b3bff260c0c3100a03b5c22ef11935 except its docstring. It calls real C++ APIs, warms10 calls then measures100, keeps value/state assertions, prints actual Python/PySide/shiboken/Qt identities, and uses normal cleanup/exit. No mocks, synthetic None references, forced exit or skipped failure.
+
+Independent positive controls: Windows3.11/6.11.1 and Linux3.11/6.11.3 return0/all deltas0. Known-bad Linux3.11/6.12 gives delta-100 on update and exits1 at the assertion. The zero threshold is meaningful for these controlled processes. Delivered6.11.1 and6.11.3 final receipts each contain8+45+103+257=413 assertions with exit0; all8 raw log SHA/markers and actual version identities were independently verified without repeating those tests. Receipt: `out/collab/f4-core-qt-delivery-review-receipt.json`.
+
+Python3.12's immortal None makes the counter non-observable: independent limited ABI3 checks for BOTH6.11.3 and6.12 report4294967295 then all-zero deltas/exit0. This is API/natural-exit coverage, not ownership proof. The writer's formal README explicitly documents this boundary and retains CPython3.11 as the upgrade gate. Thus it is not a blocker for the present3.11 CI. An explicit machine-readable observability field is optional future clarity; do not claim3.12-only success validates the3.11 defect. No full-project3.12 acceptance is claimed.
+
+## Removing the workflow's global conda LD_LIBRARY_PATH
+
+This change is necessary in this stage: the delivered traces show6.11 PySide loading conda6.12 QtDBus and failing with an undefined Qt symbol; removing that broad prefix permits the original Inspect and actual3/3-event paths to pass. It is a separate loader collision, not the None-reference error. Retain QT_PLUGIN_PATH and all Geant4 dataset exports.
+
+Independent readonly ELF review explicitly removed LD_LIBRARY_PATH/LD_PRELOAD for `readelf -d` and `ldd -r`:
+
+- Existing Geant411.3 main binary: RUNPATH `/home/u123/g4env/lib`, all dependencies/relocations resolve.
+- Existing11.4 main and newly built current-source11.4 main: RUNPATH `/home/u123/g4env114/lib`, all resolve.
+- Their three mergeHistograms binaries have no conda runtime path and resolve standard system libraries without error; this target does not link Geant4 (`CMakeLists.txt:90`).
+- Actual helper ELF files are absent from these local builds and bounded search locations; do not claim their execution was verified. Current11.4 generated link lines for gdmlInputCaptureCheck and randomCommandGuardCheck contain the same explicit conda runtime path. scoringNumericCheck has no Geant4 linkage. Current CMake links those Geant4 helpers through the same `${Geant4_LIBRARIES}` rule as the main binary (`CMakeLists.txt:103-115`), with RPATH enabled in all inspected caches.
+
+Evidence: `out/collab/f4-core-elf-review/receipt.json`, raw readelf/ldd logs, generated link lines and `helper-search.json`. Existing11.3/old11.4 binaries are loader evidence only, not current-source acceptance. No simulation or helper tests were rerun and no binaries were rebuilt for this review.
+
+## Required coverage at the new SHA
+
+Both patches pass `git apply --check`. New registry should be152 (28/44/59/21), M0 each OS72, full CI448 executions/12 reports/4 official ZIPs. New real CI must build all targets and pass `effective_gdml` integration plus `scoring_numeric`/`random_command_semantics` backend cases; these actually launch the relevant helpers and close the local helper-ELF gap. Do not weaken tests or reintroduce global conda Qt into Python. Full Windows and native observed states remain separate required evidence.
+
+No further local loader exploration is required before freezing; the remaining helper execution boundary is explicitly assigned to the new real CI matrix.

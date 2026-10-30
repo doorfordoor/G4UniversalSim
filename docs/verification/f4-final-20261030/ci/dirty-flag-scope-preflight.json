@@ -1,0 +1,39 @@
+{
+  "schema": "f4_ci_dirty_flag_scope_v1",
+  "report_flag_definition": "bool(git status --porcelain), scripts/run_m0_tests.py:459",
+  "workflow_created_locations": [
+    "bin/micromamba",
+    ".g4env-${matrix.geant4}",
+    ".micromamba"
+  ],
+  "ignore_rule_checks": [
+    {
+      "path": "bin/micromamba",
+      "ignored": false,
+      "rule": ""
+    },
+    {
+      "path": ".g4env-11.3.2/conda-meta/history",
+      "ignored": false,
+      "rule": ""
+    },
+    {
+      "path": ".g4env-11.4.3/conda-meta/history",
+      "ignored": false,
+      "rule": ""
+    },
+    {
+      "path": ".micromamba/pkgs/cache/example.json",
+      "ignored": false,
+      "rule": ""
+    },
+    {
+      "path": "build_linux/CMakeCache.txt",
+      "ignored": true,
+      "rule": ".gitignore:2:/build*/\tbuild_linux/CMakeCache.txt"
+    }
+  ],
+  "m0_observed_all_reports_git_dirty": false,
+  "linux_observed_all_reports_git_dirty": "pending official reports",
+  "boundary": "Workflow/install log paths and non-ignored environment directories explain why Linux may be dirty. No exact per-file git status --porcelain inventory is retained by this workflow; do not claim this enumerates every dirty entry, nor that all tracked paths were pristine. Product source/test identity is checked separately."
+}

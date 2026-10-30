@@ -1,0 +1,46 @@
+# F4 archive helper independent review
+
+Conclusion: current helper already supports multiple historical roots; no new CLI option is needed. One real path-containment defect was fixed only in the ignored helper. No tracked file, old receipt or published archive was changed.
+
+## Findings and minimal changes
+
+1. **No issue: multiple history roots already supported.** `prepare-f4-archive.py:248` iterates each supplied history list; CLI uses `action=append` at line372. Each Windows/CI/native source gets a unique `history/<kind>-round-<index>-<name>` prefix. Historical `release_accepted=false`; final `ci/` and `windows/final-1` remain separate. Duplicate/ancestor overlap is refused.
+2. **Confirmed defect, fixed:** before the change, `under_workspace()` returned the lexical absolute path, so `ROOT/out/../gui/...` passed a later lexical `is_relative_to(ROOT/out)` test despite resolving outside out. The minimal fix at lines41-43 returns the normalized resolved path only after existing workspace/reparse checks. Independent tests show both out-only write and destination traversal are rejected before any write; ordinary normalized in-workspace paths still work.
+3. **Confirmed stale plan, corrected:** `f4-archive-plan.md` still identified failed096f4b3 as final. It now requires an explicitly supplied new validated SHA and lists both existing CI/native roots as history, plus the second Windows round only after its terminal receipt exists. No old evidence file was rewritten.
+4. **No issue: incomplete history is not promoted.** First Windows root requires its terminal interruption receipt and all93 existing case-log hashes; runner-log SHA must be selected with `--include-file`. Both CI histories retain original ZIPs and their actual12/8 report counts. The second Windows root currently has neither report.json nor interruption.json and is refused until terminal. Do not manufacture a report to unblock planning.
+5. **Final acceptance remains strict.** Final CI uses exact new head, two successful push workflows/four official artifacts/twelve profile reports and strict gates; Windows must be clean all at that same head with frozen case identities and same-probe F1 baseline. Both actual failed CI roots were independently rejected as final. No relaxation to8 reports was added.
+6. **Native boundary:** helper intentionally reports `visible_acceptance=not_asserted_by_archive_tool` and `phase_complete=false`. It is an archive-copy tool, not a visual acceptance oracle. Root must select the NEW native root and independent review for the NEW SHA, preserve normal host-exit evidence, and separately approve observed states. Successful archive copying alone must never close F4. Final ZIP containers follow existing F1 policy: checked at their original source, while extracted bytes are copied; retain those source ZIPs. Historical ZIP containers are themselves copied under history.
+
+## Required final CLI additions
+
+Use the new final `--expected-head`, `--windows-report`, `--ci-receipt`, `--visible-root`, `--review-file` and readme. Then repeat:
+
+```
+--historical-ci-root out/verification/f4-ci-5d6f008
+--historical-ci-root out/verification/f4-ci-096f4b3
+--historical-visible-root out/verification/f4-visible-5d6f008
+--historical-visible-root out/verification/f4-visible-096f4b3
+--historical-windows-root out/verification/f4-freeze-windows/20261030-192616-7a34aee1
+--include-file out/collab/f4-freeze-windows-runner.log
+```
+
+Only after Windows session29831 terminates, also include:
+
+```
+--historical-windows-root out/verification/f4-final-windows/20261030-194526-3f060b82
+--include-file out/collab/f4-final-windows-runner.log
+```
+
+Any further failed round can use the same repeatable options. Never select a parent and its child simultaneously or capture a still-growing source as frozen evidence. The second Windows round, even if151/151 pass, belongs to its original096f4b3/dependency environment and does not replace the new final all-profile run.
+
+## Independent verification
+
+`out/collab/test-f4-archive-multiround-core.py` completed successfully. Receipt: `out/collab/f4-archive-core-review-f1e5q4vm/selfcheck.json`; reviewed plan: sibling `plan.json`.
+
+- 1752 selected original files checked through temporary-copy strict/local-log review.
+- Two historical CI roots retain12 and8 reports plus8 original ZIPs; two native roots and the interrupted Windows root remain unaccepted history.
+- Accepted fixture remains exactly12 CI reports and one all-profile Windows report; it is historical F1 data used ONLY to test helper mechanics, not F4 acceptance.
+- Both known failed CI rounds rejected as final topology; live second Windows rejected without terminal evidence.
+- Traversal tests do not create the disallowed file/destination. Planned publication destination remains nonexistent; `formal_docs_published=false`.
+
+Prepared `out/collab/f4-ci-discovery-template.js` for one read-only connector discovery of a future exact SHA. It has a deliberately invalid placeholder and has not been called for any new candidate; no workflow dispatch/rerun/cancel operation exists in it.

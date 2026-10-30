@@ -1,0 +1,27 @@
+# F4 Windows 产品7d独立验收审查
+
+**结论：Windows 范围通过独立审查，未发现阻塞缺陷。F4仍待最终CI与归档审查，不在此关闭。**
+
+原报告：`out/verification/f4-release-windows/20261030-202435-a53c3ee6/report.json`，实际产品 `7d718d038a00d89995ea773b4772764116b620c3` / clean；SHA `3e24845e6f8b7c71ea570639eebc3fa5308e82821afae756e2bf1a7fcf4bb8b3`。当前工作树已是 `a9ad09dfd6e99d287fa77ff7f38e7919c475e1b9` / clean，只增加Linux CI运行库安装；原报告、构建、原生和本次Registry均保持7d身份，没有改写为a9。
+
+## 完整清单、断言与原字节
+
+- 从 `git show 7d:scripts/run_m0_tests.py` 直接解析152项Registry，与报告逐项顺序、name、script、layer一致，无缺失/重复/额外项。分层28 static、44 GUI、59 backend、21 integration。
+- 152 PASS、0 FAIL、0 SKIP；每例exit0且断言≥1。全部152份本地日志UTF-8/LF原字节SHA匹配，每份最终 `G4USIM_ASSERTS` 与报告一致；目录日志集合正好等于清单。
+- 实际断言逐项和 **49,913**；152例均有计数，无零断言。静态assert站点总数4,903亦逐脚本复核，但没有把静态站点数当实际执行数。
+- source/tests fingerprint只读重算一致；受跟踪源码门禁通过。9个新增项明确列在JSON，未用新增断言掩盖旧例下降。
+- Qt绑定专项实物记录Windows Python3.11.9 / PySide6=shiboken6=Qt6.11.1；四项100次调用的None引用delta均0，8断言、正常退出。原Inspect45、Run Inputs103、Layout257均完整保留。
+
+## F1同口径基线
+
+F1原件143例、48,511个 `settrace_assert_lines_v3` 断言，本轮同probe为49,913（+1,402）。143旧例全部仍在，逐例无下降。独立执行现有严格证据门禁两次：当前报告+F1比较 exit0；F1原件自身含日志SHA检查 exit0。仅读取已存在证据，**未重跑全量或任何测试用例**。命令、原始门禁输出与SHA见JSON。
+
+## 正常完成与原生范围
+
+root从原session16898确认实际进程exit0；持久化acceptance收据、runner日志及其152条PASS/终态汇总均独立对账，三个记录的报告/门禁/runner SHA一致。本审查没有重新等待已结束的父任务session；外层实际退出的直接观察归属root原会话，逐用例exit0及报告内容由本审查复核。
+
+已通过的7d实窗仍是13态、19张实际查看截图、15对业务hash相等、session19960实际exit0。Windows报告与该原生审查对应同一产品/构建。Esc可能同时遇到高亮定时器、来源是独立解析器夹具、主题/语言菜单没有单独hash配对等边界保持，不因本轮自动通过而扩大。
+
+## 后续
+
+仅新增out审查文件；报告、152份日志、F1基线和root收据保持原字节。可接受Windows+原生这两部分；a9完整真实CI、混合HEAD归档门禁、归档前后独立审查和主负责人关闭决定仍待完成。计数不代表物理验证，optional PyVista仍保持原报告的not_proven。

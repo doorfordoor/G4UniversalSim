@@ -7,6 +7,12 @@ Short, user-facing record of notable changes. Detailed support status lives in
 
 ## Unreleased
 
+### F4 结构化诊断与定位（2026-10-30 已完成，未发布）
+
+产品 `7d718d038a00d89995ea773b4772764116b620c3`；Windows 152/152、49913 个 v3 入口与 F1 原始143/48511同代基线门禁；Linux11.3.2 为 152 项、11.4.3 为 152 项（run 41056994075），M0 Windows 为 72 项、Ubuntu 为 72 项（run 41056993987）。CI实际提交 `a9ad09dfd6e99d287fa77ff7f38e7919c475e1b9`，与产品的关系见[提交身份映射](docs/verification/f4-final-20261030/identity/identity-map.json)。Windows原生 13 态、19 次实际观察与进程退出 0；[最终证据](docs/verification/f4-final-20261030/README.md)，[独立审查](docs/collab/reviews/20261030-astra-f4-close-review.md)。
+
+支持范围与兼容约定沿用下方候选条目；历史候选未验收文字保留其时间含义，当前以本条及ROADMAP为准。F5待开始。
+
 ### F4 结构化诊断与定位（实现候选）
 
 - 配置校验显示带稳定代号和真实字段/行/来源的问题列表，支持点击与键盘定位、滚动和临时高亮；修改输入后旧诊断失效。源文本只读，历史快照明确标注。

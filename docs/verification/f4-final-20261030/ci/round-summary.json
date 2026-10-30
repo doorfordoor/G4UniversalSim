@@ -1,0 +1,585 @@
+{
+  "head_sha": "a9ad09dfd6e99d287fa77ff7f38e7919c475e1b9",
+  "status": "passed",
+  "candidate_stage_status": "ci_passed_other_acceptance_separate",
+  "evidence_collection_complete": true,
+  "report_profile_coverage_complete": true,
+  "missing_profiles": [],
+  "problems": [],
+  "runs": [
+    {
+      "id": 41056994075,
+      "head_sha": "a9ad09dfd6e99d287fa77ff7f38e7919c475e1b9",
+      "head_branch": "roadmap/F4-validation-navigation",
+      "name": "Linux build and backend regression",
+      "status": "completed",
+      "conclusion": "success",
+      "run_attempt": 1,
+      "html_url": "https://github.com/doorfordoor/G4UniversalSim/actions/runs/41056994075"
+    },
+    {
+      "id": 41056993987,
+      "head_sha": "a9ad09dfd6e99d287fa77ff7f38e7919c475e1b9",
+      "head_branch": "roadmap/F4-validation-navigation",
+      "name": "M0 static and GUI regression",
+      "status": "completed",
+      "conclusion": "success",
+      "run_attempt": 1,
+      "html_url": "https://github.com/doorfordoor/G4UniversalSim/actions/runs/41056993987"
+    }
+  ],
+  "jobs": [
+    {
+      "id": 124066923574,
+      "name": "ubuntu-24.04 / Geant4 11.3.2",
+      "run_id": 41056994075,
+      "head_sha": "a9ad09dfd6e99d287fa77ff7f38e7919c475e1b9",
+      "status": "completed",
+      "conclusion": "success",
+      "path": "job-124066923574.log",
+      "bytes": 140838,
+      "sha256": "718219793252c40858433b3d1082eb249ff57cd15a41eec65dc5d95c2180e7e5",
+      "representation": "connector-decoded UTF-8 text",
+      "negative_control_passed": true
+    },
+    {
+      "id": 124066923712,
+      "name": "ubuntu-24.04 / Geant4 11.4.3",
+      "run_id": 41056994075,
+      "head_sha": "a9ad09dfd6e99d287fa77ff7f38e7919c475e1b9",
+      "status": "completed",
+      "conclusion": "success",
+      "path": "job-124066923712.log",
+      "bytes": 138862,
+      "sha256": "eeb7351e7896597aa7312555bfe83ebd7efc017a66c1cb28b706da2fedfb5033",
+      "representation": "connector-decoded UTF-8 text",
+      "negative_control_passed": true
+    },
+    {
+      "id": 124066923356,
+      "name": "ubuntu-latest / Python 3.11",
+      "run_id": 41056993987,
+      "head_sha": "a9ad09dfd6e99d287fa77ff7f38e7919c475e1b9",
+      "status": "completed",
+      "conclusion": "success",
+      "path": "job-124066923356.log",
+      "bytes": 47364,
+      "sha256": "53293c3e2c312282f0d3ccf94e2bc79df6a54361f2f9b4f62b49badc5d291b5b",
+      "representation": "connector-decoded UTF-8 text",
+      "negative_control_passed": null
+    },
+    {
+      "id": 124066923501,
+      "name": "windows-latest / Python 3.11",
+      "run_id": 41056993987,
+      "head_sha": "a9ad09dfd6e99d287fa77ff7f38e7919c475e1b9",
+      "status": "completed",
+      "conclusion": "success",
+      "path": "job-124066923501.log",
+      "bytes": 82141,
+      "sha256": "e2fa9d30f560968c784a64c1ba3f12b19130ddc6ee4f06c1596a1d32b6c6dbb2",
+      "representation": "connector-decoded UTF-8 text",
+      "negative_control_passed": null
+    }
+  ],
+  "artifacts": [
+    {
+      "id": 12978637460,
+      "run_id": 41056994075,
+      "name": "linux-evidence-11.4.3",
+      "official_digest": "sha256:add56cf7a553f65435f5adc0543fdb31f63518e79b5c2b7d1cec9cff248e5bd0",
+      "local_sha256": "sha256:add56cf7a553f65435f5adc0543fdb31f63518e79b5c2b7d1cec9cff248e5bd0",
+      "bytes": 80046
+    },
+    {
+      "id": 12977524729,
+      "run_id": 41056994075,
+      "name": "linux-evidence-11.3.2",
+      "official_digest": "sha256:9271aa3ee9dbe7293189de24a7f6962b213d6e0c7f68badecae7a9d50a1078e0",
+      "local_sha256": "sha256:9271aa3ee9dbe7293189de24a7f6962b213d6e0c7f68badecae7a9d50a1078e0",
+      "bytes": 80052
+    },
+    {
+      "id": 12977566392,
+      "run_id": 41056993987,
+      "name": "m0-report-windows-latest",
+      "official_digest": "sha256:f4c35051377e3b073d7617254a2627e7b19f40346fd01928305c4dfc18bb2e03",
+      "local_sha256": "sha256:f4c35051377e3b073d7617254a2627e7b19f40346fd01928305c4dfc18bb2e03",
+      "bytes": 29412
+    },
+    {
+      "id": 12976793070,
+      "run_id": 41056993987,
+      "name": "m0-report-ubuntu-latest",
+      "official_digest": "sha256:db73336a48aab2f4e2623a36877bb9fbd4a5d376411fcf014f11409f51c88986",
+      "local_sha256": "sha256:db73336a48aab2f4e2623a36877bb9fbd4a5d376411fcf014f11409f51c88986",
+      "bytes": 32041
+    }
+  ],
+  "reports": [
+    {
+      "artifact": "linux-evidence-11.4.3",
+      "profile": "backend",
+      "path": "linux-evidence-11.4.3/linux-backend/20261030-124414-30aa0a05/report.json",
+      "sha256": "e82848ebccd4828a5845a951d936597b9bb506f7ffb88aaee769520450897d77",
+      "cases": 59,
+      "assertions": 39797,
+      "git_dirty": true,
+      "backend_build_identity": {
+        "build_configuration": "Release",
+        "compiler_id": "GNU",
+        "compiler_version": "13.3.0",
+        "geant4_version_number": 1143,
+        "multithreaded": true
+      },
+      "backend_provenance": "source_sha256_manifest_matches_executable",
+      "merge_provenance": "source_sha256_matches_executable",
+      "strict_baseline_gate_exit": 0,
+      "baseline": "docs/verification/f1-automated-20261030/ci/linux-evidence-11.4.3/linux-backend/20261030-085917-b668dfa4/report.json",
+      "baseline_sha256": "77946583a828029cb928bbc04e8e30ee77eef58c41e1e3505de2ca570a688589",
+      "gate_log": "baseline-gates/linux-evidence-11.4.3-backend.log",
+      "failures": []
+    },
+    {
+      "artifact": "linux-evidence-11.4.3",
+      "profile": "gui",
+      "path": "linux-evidence-11.4.3/linux-gui/20261030-124251-313219a4/report.json",
+      "sha256": "04e8de48f8698a88aaebb1768d3323942cf4a2aaeff68c6ce0ab4ed1d315a26c",
+      "cases": 44,
+      "assertions": 2938,
+      "git_dirty": true,
+      "backend_build_identity": null,
+      "backend_provenance": "backend executable is missing",
+      "merge_provenance": "mergeHistograms executable is missing",
+      "strict_baseline_gate_exit": 0,
+      "baseline": "docs/verification/f1-automated-20261030/ci/linux-evidence-11.4.3/linux-gui/20261030-085814-17086ea8/report.json",
+      "baseline_sha256": "29b32a46d775272c04eb3263d9518d41ec362486491227474ca7549341f4aaa7",
+      "gate_log": "baseline-gates/linux-evidence-11.4.3-gui.log",
+      "failures": []
+    },
+    {
+      "artifact": "linux-evidence-11.4.3",
+      "profile": "integration",
+      "path": "linux-evidence-11.4.3/linux-integration/20261030-125846-f29cc36d/report.json",
+      "sha256": "66082eba33dd9db197769a36bc337ccb9fc3404bc0cdfd3a89a2754eb1f759fe",
+      "cases": 21,
+      "assertions": 4423,
+      "git_dirty": true,
+      "backend_build_identity": {
+        "build_configuration": "Release",
+        "compiler_id": "GNU",
+        "compiler_version": "13.3.0",
+        "geant4_version_number": 1143,
+        "multithreaded": true
+      },
+      "backend_provenance": "source_sha256_manifest_matches_executable",
+      "merge_provenance": "source_sha256_matches_executable",
+      "strict_baseline_gate_exit": 0,
+      "baseline": "docs/verification/f1-automated-20261030/ci/linux-evidence-11.4.3/linux-integration/20261030-091345-ccb2c6a0/report.json",
+      "baseline_sha256": "935593072b47e7b131613e65fdf423f0adb4208e4cf6c74e5218a87b62bec5f7",
+      "gate_log": "baseline-gates/linux-evidence-11.4.3-integration.log",
+      "failures": []
+    },
+    {
+      "artifact": "linux-evidence-11.4.3",
+      "profile": "static",
+      "path": "linux-evidence-11.4.3/linux-static/20261030-124154-6e1eb34d/report.json",
+      "sha256": "571fcf588768cd8112b58e7dde31e08153e938dcfb4e39a1749d9847c08c59ff",
+      "cases": 28,
+      "assertions": 2133,
+      "git_dirty": true,
+      "backend_build_identity": null,
+      "backend_provenance": "backend executable is missing",
+      "merge_provenance": "mergeHistograms executable is missing",
+      "strict_baseline_gate_exit": 0,
+      "baseline": "docs/verification/f1-automated-20261030/ci/linux-evidence-11.4.3/linux-static/20261030-085719-90e72d82/report.json",
+      "baseline_sha256": "9ef914b0aad3bf8b1a5efe71b48bc52f4fe1e6345816f173a587c58c08661142",
+      "gate_log": "baseline-gates/linux-evidence-11.4.3-static.log",
+      "failures": []
+    },
+    {
+      "artifact": "linux-evidence-11.3.2",
+      "profile": "backend",
+      "path": "linux-evidence-11.3.2/linux-backend/20261030-124410-181bc528/report.json",
+      "sha256": "ee559bdf2b97c40a72832d09bc3675dc7e7ff0cdf2379afbc3000b4308385adc",
+      "cases": 59,
+      "assertions": 40387,
+      "git_dirty": true,
+      "backend_build_identity": {
+        "build_configuration": "Release",
+        "compiler_id": "GNU",
+        "compiler_version": "13.3.0",
+        "geant4_version_number": 1132,
+        "multithreaded": true
+      },
+      "backend_provenance": "source_sha256_manifest_matches_executable",
+      "merge_provenance": "source_sha256_matches_executable",
+      "strict_baseline_gate_exit": 0,
+      "baseline": "docs/verification/f1-automated-20261030/ci/linux-evidence-11.3.2/linux-backend/20261030-085908-442e5e41/report.json",
+      "baseline_sha256": "8b965bdb89e94fcc4f968461c2ac295d0d4a616f4dfea761f2138a201452a241",
+      "gate_log": "baseline-gates/linux-evidence-11.3.2-backend.log",
+      "failures": []
+    },
+    {
+      "artifact": "linux-evidence-11.3.2",
+      "profile": "gui",
+      "path": "linux-evidence-11.3.2/linux-gui/20261030-124250-06c516a1/report.json",
+      "sha256": "527ace0c98a180d4e3a2136b3abfbd51813d333470977fe53e6ea6b65a71f886",
+      "cases": 44,
+      "assertions": 2938,
+      "git_dirty": true,
+      "backend_build_identity": null,
+      "backend_provenance": "backend executable is missing",
+      "merge_provenance": "mergeHistograms executable is missing",
+      "strict_baseline_gate_exit": 0,
+      "baseline": "docs/verification/f1-automated-20261030/ci/linux-evidence-11.3.2/linux-gui/20261030-085807-247d9d38/report.json",
+      "baseline_sha256": "7ed9bc0f64ecbe8e3e7e934d01d5ae64ce679f5705c02c6b909d5bcb424643b0",
+      "gate_log": "baseline-gates/linux-evidence-11.3.2-gui.log",
+      "failures": []
+    },
+    {
+      "artifact": "linux-evidence-11.3.2",
+      "profile": "integration",
+      "path": "linux-evidence-11.3.2/linux-integration/20261030-125840-1c58dbf6/report.json",
+      "sha256": "f196d36996f73699571e8c4ac9d5b94b1e70da8823abe6f00523d369969a552d",
+      "cases": 21,
+      "assertions": 4423,
+      "git_dirty": true,
+      "backend_build_identity": {
+        "build_configuration": "Release",
+        "compiler_id": "GNU",
+        "compiler_version": "13.3.0",
+        "geant4_version_number": 1132,
+        "multithreaded": true
+      },
+      "backend_provenance": "source_sha256_manifest_matches_executable",
+      "merge_provenance": "source_sha256_matches_executable",
+      "strict_baseline_gate_exit": 0,
+      "baseline": "docs/verification/f1-automated-20261030/ci/linux-evidence-11.3.2/linux-integration/20261030-091347-3c389cd8/report.json",
+      "baseline_sha256": "9d71bbe41881f9a1173063570e458a0225f8970b68b85215f69ba6389543d71e",
+      "gate_log": "baseline-gates/linux-evidence-11.3.2-integration.log",
+      "failures": []
+    },
+    {
+      "artifact": "linux-evidence-11.3.2",
+      "profile": "static",
+      "path": "linux-evidence-11.3.2/linux-static/20261030-124157-a6e99cc7/report.json",
+      "sha256": "f9aef56add9342aa05d539cac926bd6d95a960c3708ea41ed46b870e3aa0589d",
+      "cases": 28,
+      "assertions": 2133,
+      "git_dirty": true,
+      "backend_build_identity": null,
+      "backend_provenance": "backend executable is missing",
+      "merge_provenance": "mergeHistograms executable is missing",
+      "strict_baseline_gate_exit": 0,
+      "baseline": "docs/verification/f1-automated-20261030/ci/linux-evidence-11.3.2/linux-static/20261030-085714-5a950ea2/report.json",
+      "baseline_sha256": "1ec4852ee0a75f7479d5f0d7399eda39e1eedfd179a938fc9dba843ae63188b3",
+      "gate_log": "baseline-gates/linux-evidence-11.3.2-static.log",
+      "failures": []
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "static",
+      "path": "m0-report-windows-latest/20261030-124035-5b9c7e29/report.json",
+      "sha256": "33971117fb90aacb8a9633d5b2303008a5d34a1bd3db1d8e6da00b86b99b7ce1",
+      "cases": 28,
+      "assertions": 2124,
+      "git_dirty": false,
+      "backend_build_identity": null,
+      "backend_provenance": "backend executable is missing",
+      "merge_provenance": "mergeHistograms executable is missing",
+      "strict_baseline_gate_exit": 0,
+      "baseline": "docs/verification/f1-automated-20261030/ci/m0-report-windows-latest/20261030-085559-fc139df5/report.json",
+      "baseline_sha256": "6608fd5a76ec8d9e92df8c94689d3bf900a14fee879f608a0fd76ab2d114b48d",
+      "gate_log": "baseline-gates/m0-report-windows-latest-static.log",
+      "failures": []
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "gui",
+      "path": "m0-report-windows-latest/20261030-124143-737a5b79/report.json",
+      "sha256": "b69b25856e861585076981bd1b9113f46f8f13ea4f185465ada1c21bbd206610",
+      "cases": 44,
+      "assertions": 2940,
+      "git_dirty": false,
+      "backend_build_identity": null,
+      "backend_provenance": "backend executable is missing",
+      "merge_provenance": "mergeHistograms executable is missing",
+      "strict_baseline_gate_exit": 0,
+      "baseline": "docs/verification/f1-automated-20261030/ci/m0-report-windows-latest/20261030-085726-e56c442a/report.json",
+      "baseline_sha256": "7103b10ca386706e4cb574f5109486e25166fd646dcf0ed661a601d47def7602",
+      "gate_log": "baseline-gates/m0-report-windows-latest-gui.log",
+      "failures": []
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "static",
+      "path": "m0-report-ubuntu-latest/20261030-124000-75b141a9/report.json",
+      "sha256": "901f15aca7ef52797c77be0eb14f91d40b5c2943cd3de11057beb7e1e3b6aefd",
+      "cases": 28,
+      "assertions": 2133,
+      "git_dirty": false,
+      "backend_build_identity": null,
+      "backend_provenance": "backend executable is missing",
+      "merge_provenance": "mergeHistograms executable is missing",
+      "strict_baseline_gate_exit": 0,
+      "baseline": "docs/verification/f1-automated-20261030/ci/m0-report-ubuntu-latest/20261030-085531-34838c3e/report.json",
+      "baseline_sha256": "7b305c60a0d1bef6230705b0d0929ae3a312d564bbcd249f76fffbae91463e5e",
+      "gate_log": "baseline-gates/m0-report-ubuntu-latest-static.log",
+      "failures": []
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "gui",
+      "path": "m0-report-ubuntu-latest/20261030-124100-bf1644f3/report.json",
+      "sha256": "e02e9e90f6a89ea5a9bd6ccfe2be13823ad64d18e7d8a0e97aa6e628dd7290d0",
+      "cases": 44,
+      "assertions": 2938,
+      "git_dirty": false,
+      "backend_build_identity": null,
+      "backend_provenance": "backend executable is missing",
+      "merge_provenance": "mergeHistograms executable is missing",
+      "strict_baseline_gate_exit": 0,
+      "baseline": "docs/verification/f1-automated-20261030/ci/m0-report-ubuntu-latest/20261030-085606-197ce25c/report.json",
+      "baseline_sha256": "3c71b9e4437d4b1b9b384c9093bcc9e2b4e197f8a4ac005e7532aad0219e311f",
+      "gate_log": "baseline-gates/m0-report-ubuntu-latest-gui.log",
+      "failures": []
+    }
+  ],
+  "case_executions": 448,
+  "report_count": 12,
+  "source_fingerprint": "db253b7b1ed5f810789f1322faa75002df311d4aeb04572867dbb130c71d95cc",
+  "tests_content_fingerprint": "92c2c470814b0bea95d918e3393394a9c39ff5897fc3d57e64d33ef7e6174ddb",
+  "boundary": "CI only; local Windows all-profile and native UI acceptance are separate. No physics validation is inferred.",
+  "qt_runtime": [
+    {
+      "artifact": "linux-evidence-11.4.3",
+      "identity": {
+        "python": "3.11.18 (main, Oct 26 2026, 11:35:17) [GCC 15.3.0]",
+        "implementation": "CPython",
+        "PySide6": "6.11.3",
+        "shiboken6": "6.11.3",
+        "Qt": "6.11.3"
+      },
+      "operations": [
+        {
+          "operation": "QWidget.update",
+          "iterations": 100,
+          "none_ref_delta": 0
+        },
+        {
+          "operation": "QObject.setObjectName",
+          "iterations": 100,
+          "none_ref_delta": 0
+        },
+        {
+          "operation": "QObject.missing_property",
+          "iterations": 100,
+          "none_ref_delta": 0
+        },
+        {
+          "operation": "QObject.existing_false_property",
+          "iterations": 100,
+          "none_ref_delta": 0
+        }
+      ],
+      "pass": true,
+      "log": "linux-evidence-11.4.3/linux-gui/20261030-124251-313219a4/gui_qt_binding_lifetime.log",
+      "log_sha256": "b91ba4c1376d0349e0600b826e24568d9df5ecfbd0a9b2ed3beb232064159116"
+    },
+    {
+      "artifact": "linux-evidence-11.3.2",
+      "identity": {
+        "python": "3.11.18 (main, Oct 26 2026, 11:35:17) [GCC 15.3.0]",
+        "implementation": "CPython",
+        "PySide6": "6.11.3",
+        "shiboken6": "6.11.3",
+        "Qt": "6.11.3"
+      },
+      "operations": [
+        {
+          "operation": "QWidget.update",
+          "iterations": 100,
+          "none_ref_delta": 0
+        },
+        {
+          "operation": "QObject.setObjectName",
+          "iterations": 100,
+          "none_ref_delta": 0
+        },
+        {
+          "operation": "QObject.missing_property",
+          "iterations": 100,
+          "none_ref_delta": 0
+        },
+        {
+          "operation": "QObject.existing_false_property",
+          "iterations": 100,
+          "none_ref_delta": 0
+        }
+      ],
+      "pass": true,
+      "log": "linux-evidence-11.3.2/linux-gui/20261030-124250-06c516a1/gui_qt_binding_lifetime.log",
+      "log_sha256": "b91ba4c1376d0349e0600b826e24568d9df5ecfbd0a9b2ed3beb232064159116"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "identity": {
+        "python": "3.11.9 (tags/v3.11.9:de54cf5, Apr  2 2024, 10:12:12) [MSC v.1938 64 bit (AMD64)]",
+        "implementation": "CPython",
+        "PySide6": "6.11.3",
+        "shiboken6": "6.11.3",
+        "Qt": "6.11.3"
+      },
+      "operations": [
+        {
+          "operation": "QWidget.update",
+          "iterations": 100,
+          "none_ref_delta": 0
+        },
+        {
+          "operation": "QObject.setObjectName",
+          "iterations": 100,
+          "none_ref_delta": 0
+        },
+        {
+          "operation": "QObject.missing_property",
+          "iterations": 100,
+          "none_ref_delta": 0
+        },
+        {
+          "operation": "QObject.existing_false_property",
+          "iterations": 100,
+          "none_ref_delta": 0
+        }
+      ],
+      "pass": true,
+      "log": "m0-report-windows-latest/20261030-124143-737a5b79/gui_qt_binding_lifetime.log",
+      "log_sha256": "b67663fbe4176788fbe9755428e4cfdb612e0442eb9ee67ce1d7f043a3790169"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "identity": {
+        "python": "3.11.17 (main, Oct  1 2026, 14:33:19) [GCC 15.2.0]",
+        "implementation": "CPython",
+        "PySide6": "6.11.3",
+        "shiboken6": "6.11.3",
+        "Qt": "6.11.3"
+      },
+      "operations": [
+        {
+          "operation": "QWidget.update",
+          "iterations": 100,
+          "none_ref_delta": 0
+        },
+        {
+          "operation": "QObject.setObjectName",
+          "iterations": 100,
+          "none_ref_delta": 0
+        },
+        {
+          "operation": "QObject.missing_property",
+          "iterations": 100,
+          "none_ref_delta": 0
+        },
+        {
+          "operation": "QObject.existing_false_property",
+          "iterations": 100,
+          "none_ref_delta": 0
+        }
+      ],
+      "pass": true,
+      "log": "m0-report-ubuntu-latest/20261030-124100-bf1644f3/gui_qt_binding_lifetime.log",
+      "log_sha256": "29a43c5c56453fce75ea9064f1368985db2a674d319089a161aa65303ebda602"
+    }
+  ],
+  "helper_builds": [
+    {
+      "job_id": 124066923574,
+      "targets": {
+        "gdmlInputCaptureCheck": true,
+        "scoringNumericCheck": true,
+        "randomCommandGuardCheck": true
+      }
+    },
+    {
+      "job_id": 124066923712,
+      "targets": {
+        "gdmlInputCaptureCheck": true,
+        "scoringNumericCheck": true,
+        "randomCommandGuardCheck": true
+      }
+    }
+  ],
+  "helper_runs": [
+    {
+      "artifact": "linux-evidence-11.4.3",
+      "case": "scoring_numeric",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 457,
+      "log": "linux-evidence-11.4.3/linux-backend/20261030-124414-30aa0a05/scoring_numeric.log",
+      "log_sha256": "bef57247b7d215dc509d0b498b63eaa073976079d0cb2928bef8d16a6c82db93"
+    },
+    {
+      "artifact": "linux-evidence-11.4.3",
+      "case": "random_command_semantics",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 302,
+      "log": "linux-evidence-11.4.3/linux-backend/20261030-124414-30aa0a05/random_command_semantics.log",
+      "log_sha256": "748da783f08fdd035993ccd53f4aff1c1deb8a240dc2c07f54727f34f994032f"
+    },
+    {
+      "artifact": "linux-evidence-11.4.3",
+      "case": "effective_gdml",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 11,
+      "log": "linux-evidence-11.4.3/linux-integration/20261030-125846-f29cc36d/effective_gdml.log",
+      "log_sha256": "2243826b2195352306f46b6b46668504a002b5240de5ad9309f2df83cced0256"
+    },
+    {
+      "artifact": "linux-evidence-11.3.2",
+      "case": "scoring_numeric",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 457,
+      "log": "linux-evidence-11.3.2/linux-backend/20261030-124410-181bc528/scoring_numeric.log",
+      "log_sha256": "246b3328411903d138adf85723e4ac04346c46f54a52d72ce845f776b50952df"
+    },
+    {
+      "artifact": "linux-evidence-11.3.2",
+      "case": "random_command_semantics",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 302,
+      "log": "linux-evidence-11.3.2/linux-backend/20261030-124410-181bc528/random_command_semantics.log",
+      "log_sha256": "748da783f08fdd035993ccd53f4aff1c1deb8a240dc2c07f54727f34f994032f"
+    },
+    {
+      "artifact": "linux-evidence-11.3.2",
+      "case": "effective_gdml",
+      "status": "pass",
+      "exit_code": 0,
+      "assertions": 11,
+      "log": "linux-evidence-11.3.2/linux-integration/20261030-125840-1c58dbf6/effective_gdml.log",
+      "log_sha256": "c192da61d02bc3539406d29e0e07808de275c759e70c8c407af3903d900bb8b9"
+    }
+  ],
+  "expected_reports_for_complete_matrix": 12,
+  "expected_case_executions": 448,
+  "strict_pass_reports": 12,
+  "failed_case_executions": 0,
+  "failures": [],
+  "skipped_case_executions": 0,
+  "evidence_integrity_checked": true,
+  "official_zip_count": 4,
+  "decoded_job_log_count": 4,
+  "zip_member_count": 462,
+  "stage_acceptance": "requires_separate_root_windows_native_receipts",
+  "audit_sha256": "a02367d3bb4b43a7c3b058eba2c3b6b8f73c2d1d7783eaa13ee05309775662b9",
+  "ci_acceptance_passed": true,
+  "local_product_commit": "7d718d038a00d89995ea773b4772764116b620c3",
+  "ci_product_mapping": "ci-product-identity-map.json"
+}

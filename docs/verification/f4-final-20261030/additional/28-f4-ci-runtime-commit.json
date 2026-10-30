@@ -1,0 +1,13 @@
+{
+  "schema": "g4usim_ci_only_commit_v1",
+  "product_commit": "7d718d038a00d89995ea773b4772764116b620c3",
+  "ci_commit": "a9ad09dfd6e99d287fa77ff7f38e7919c475e1b9",
+  "changed_files": [
+    ".github/workflows/linux-geant4.yml"
+  ],
+  "working_tree_unchanged": true,
+  "before_sha256": "7d307002f26e334677d0b96b3a24b5a63a94b48993b18c343e03f8cfb74053a5",
+  "after_sha256": "bfa420a45706bc651ca16f94779cf5c3aa8c6db86b8fb69b2f0d6ab6276862a3",
+  "diff": "diff --git a/.github/workflows/linux-geant4.yml b/.github/workflows/linux-geant4.yml\nindex 479f58f..7d589a4 100644\n--- a/.github/workflows/linux-geant4.yml\n+++ b/.github/workflows/linux-geant4.yml\n@@ -43,6 +43,12 @@ jobs:\n     steps:\n       - uses: actions/checkout@v7\n \n+      - name: Install Linux GUI runtime libraries\n+        run: |\n+          sudo apt-get update\n+          sudo apt-get install --yes --no-install-recommends \\\n+            libegl1 libgl1 libxkbcommon0 libdbus-1-3 libfontconfig1\n+\n       - name: Install micromamba\n         run: |\n           set -euo pipefail",
+  "pushed": false
+}

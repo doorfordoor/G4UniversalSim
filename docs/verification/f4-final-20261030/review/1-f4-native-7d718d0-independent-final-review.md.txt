@@ -1,0 +1,53 @@
+# F4 7d718d0 Windows 原生独立最终审查
+
+**结论：通过本轮原生审查，已审范围内未发现阻塞缺陷。** 这是结束后的证据与实际图像独立复核，不代替父任务的完整自动矩阵和阶段关闭。
+
+产品 `7d718d038a00d89995ea773b4772764116b620c3` clean；实际 Release/Geant4 11.3.2 exe SHA `8055edd08ef07aa6eee7d710c8d360b83e8bec60cb410160f4b89aad61d6f25b`；host v2 SHA `aa59397f4711c17f7edcc9a39d927c9c4197e124d98ccafb58b8d1d886c11d6c`。构建收据、capabilities、当前 exe 字节、宿主字节、GUI 已跟踪文件清单均独立对账一致。客户端窗口尺寸 1366×768。
+
+48 个事件，13 个不同合成状态（energy 在英文深色下再次准备，共14次准备），15 对完整 before/after，全部业务 hash 相等、无歧义/未配对/丢弃；其中12次完成定位或查看源，2次仅选行，1次 Esc 相关输入。退出时业务 hash 仍与最后 after 相等。
+
+真实 QProcess `--inspect-run` 返回正常非零拒绝（exit=1，NormalExit），256 字节原始 stderr 与收据 SHA 相符；CLI 输出锁冲突未被转换为猜测的 GUI 位置。runner 未启动，夹具中无 run_summary。host exit.json 的 requested return=0 与 session19960 独立 launcher 的实际进程退出0/normal_completion=true 分开核对；413字节进程日志 SHA 匹配，无 traceback。
+
+## 实际图像观察
+
+下列19张 JPG 均通过 `tools.view_image` 打开并直接观察，未以截图文件名、root观察文字、UIA或自动状态替代。每张图片及其原生捕获 sidecar 的 SHA 已记录在同名 JSON 报告中。
+
+| 图像 | 独立观察 | 结论 |
+| --- | --- | --- |
+| `01-energy-before.jpg` | 浅色配置页显示 energy 错误的列表与原文；Locate 可用，Source 灰显，未先跳转。 | 通过 |
+| `02-energy-highlight.jpg` | Run Config / Source 已打开；invalid-energy 字段完整可见，绿边框和文本光标可见。 | 通过 |
+| `03-energy-after-escape.jpg` | 同一输入仍为 invalid-energy，边框恢复细线；不将此图单独归因为 Esc，定时器也可能已清除高亮。 | 通过（有归因边界） |
+| `04-geometry-cell.jpg` | 几何表第三行的 size/parameters=bad 完整可见并选中；不是旧轮白色空区域。名称列横向在视口外，重名身份结合模型/事件 cell[2,6] 核对。 | 通过 |
+| `05-material-density.jpg` | 所选材料详情显示 SameMaterial、density=bad 和启用状态；目标输入可见。第二个同名对象身份由 row=1 事件与夹具确定，不从名称猜测。 | 通过 |
+| `06-layer-thickness.jpg` | Second 层详情的 thickness=bad 完整可见并高亮；G4_Si、启用及其他字段保留。 | 通过 |
+| `07-boolean-operation.jpg` | 布尔表可见 Sensor / index=2 / operation=invalid-operation；operation 单元格被选中，表格可见。 | 通过 |
+| `08-stale-report.jpg` | 原 source 错误仍保留；输入已变化、诊断已过期的警告可读，Locate 与 Source 均灰显；重新校验仍可用。 | 通过 |
+| `09-current-source.jpg` | 运行页源查看器显示五行真实文本及选中的 mystery=bad；标明行5、快照一致和 source_only。底部 QA 提示明确是独立源文件审计夹具。 | 通过 |
+| `10-historical-source.jpg` | 查看器仍显示记录时 mystery=bad / 行5，并明确警告正在显示记录时的源文本快照、当前文件已改变或不可用。 | 通过 |
+| `11-project-crosspage.jpg` | Project 页空的可执行程序输入框已聚焦并绿框标记，下方缺少路径错误仍存在；没有自动填值。 | 通过 |
+| `12-scenario-advanced.jpg` | 场景高级字段勾选并展开，已滚到孔隙率输入2，目标字段完整可见且高亮。 | 通过 |
+| `13-wizard-prior-page.jpg` | 向导位于材料和几何页，空材料选择框完整可见并高亮；世界材料、厚度、横向尺寸仍显示。 | 通过 |
+| `14-scan-enter.jpg` | 扫描取值框获焦、高亮且仍为空，仅有占位提示；scan.values 错误及已定位 values、配置值未改变的状态可读。Enter 手势由原生动作记录和 KeyPress 旁证确定。 | 通过 |
+| `15-backend-raw-no-location.jpg` | 运行控制台显示未运行、后端错误和无可编辑位置；Locate/Source 灰显。详情在下方，另由图16观察。 | 通过 |
+| `16-backend-raw-detail.jpg` | 滚动后后端原始错误可读：子文件.mac 第2行 setdir 与显式 CLI 输出目录冲突；下方明确未提供结构化编辑位置，按钮仍灰显。 | 通过 |
+| `17-dark-backend.jpg` | 深色主题下原始错误、无位置说明及两禁用按钮仍可辨读；未把 raw 原文翻译重写。 | 通过 |
+| `18-english-dark-backend.jpg` | 英文深色下表头 Severity/Code/Location/Message、Locate field/View source 等控件已英文显示；生成时中文消息前缀及后端原文保留，Location unavailable 理由可读。 | 通过 |
+| `19-english-dark-energy-highlight.jpg` | 英文深色 Configuration/Run Config/Source 中 Energy=invalid-energy 完整可见、聚焦、高亮；这轮实际定位仍可用。 | 通过 |
+
+## 范围与边界
+
+- 03 only observes a cleared highlight after an Esc-related input; elapsed highlight timer is a competing cause, so no exclusive Esc-clear claim.
+- Current/history source states are an independent actual-parser fixture, not the current generated project config or evidence that a simulation consumed it.
+- Image04 proves third-row size cell visible; names are offscreen horizontally. Exact repeated-name identity is established with row/cell events and fixture, not the rendered name alone.
+- Source viewer content and warning are visually observed. Readonly widget enforcement is not established by a screenshot alone; existing product/regression checks own that property.
+- Business equality covers the 15 recorded product input pairs and final unchanged state. Theme/language menu changes do not have separate observer pairs; images establish appearance and existing automated tests own strict identity invariance.
+- The observer samples 80 ms after press. Its hashes are bounded completed-action evidence, not a universal transactional guarantee or all possible delayed effects.
+- Stale/backend disabled navigation is a successful guard observation, not a fabricated successful navigation action.
+- Native covers this Windows build/client size and selected light/dark Chinese/English states; not Linux native desktop, every theme/DPI/layout, all error types, simulation success or physical validation.
+- Event parser intentionally remains mechanical-only. This separate review adds actual image observation; original receipts retain not_claimed/pending review wording.
+
+两轮历史失败仍原样保留：5d6f008 为几何目标实际不可见，096f4b3 为 QA host 异常退出 -1073740791。本轮成功没有追改其状态。当前原件中的 pending independent review/not_claimed 仍是生成时状态，不追改；本文件是后续独立审查。
+
+机械审查：`out/collab/f4-native-7d718d0-independent-event-audit.json`。完整独立图像、身份、退出及原件 SHA 清单：`out/collab/f4-native-7d718d0-independent-final-review.json`。
+
+本审查只读原证据、产品与旧失败记录；仅写 out 新报告。未操作桌面、未重跑后端、未修改产品或原证据。

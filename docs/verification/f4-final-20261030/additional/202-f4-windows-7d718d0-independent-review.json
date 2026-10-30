@@ -1,0 +1,4256 @@
+{
+  "schema": "f4_windows_independent_acceptance_review_v1",
+  "reviewed_utc": "2026-10-30T13:05:38.231384+00:00",
+  "conclusion": "accepted_windows_scope_no_blocking_defect",
+  "product_head": "7d718d038a00d89995ea773b4772764116b620c3",
+  "reported_git_dirty": false,
+  "current_checkout_head": "a9ad09dfd6e99d287fa77ff7f38e7919c475e1b9",
+  "current_checkout_status": "",
+  "current_checkout_boundary": "a9 is workflow-only CI child; report/registry/native/build keep actual product7d identity",
+  "report": {
+    "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\report.json",
+    "bytes": 87596,
+    "sha256": "3e24845e6f8b7c71ea570639eebc3fa5308e82821afae756e2bf1a7fcf4bb8b3"
+  },
+  "baseline": {
+    "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\docs\\verification\\f1-automated-20261030\\windows\\final-1\\report.json",
+    "bytes": 82056,
+    "sha256": "43112bc3dd187da1c23a30d96dd70827ee2a6d392be45cb04630bbe18b3e6a92"
+  },
+  "registry_snapshot": {
+    "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\f4-windows-independent-7d718d0-registry.py.txt",
+    "bytes": 32256,
+    "sha256": "7619f9325c7084407670aa8b6b4b230e761c8fe3f46986286822dae17b8ab5e2"
+  },
+  "registry_source_git_blob": "1f5bbc8be9072bd02b2718ad9852e7852027198e",
+  "registry_exact_order_script_layer_match": true,
+  "missing_or_extra_cases": [],
+  "duplicate_cases": [],
+  "case_counts": {
+    "static": 28,
+    "gui": 44,
+    "integration": 21,
+    "backend": 59
+  },
+  "passed": 152,
+  "failed": 0,
+  "skipped": 0,
+  "assertions_executed_total": 49913,
+  "assert_sites_total": 4903,
+  "zero_assertion_cases": [],
+  "all_152_case_exit_codes_zero": true,
+  "all_152_log_raw_sha_lf_utf8_verified": true,
+  "all_152_last_assert_markers_match": true,
+  "exact_case_log_file_set": true,
+  "assert_probe": "settrace_assert_lines_v3",
+  "digest": "sha256_raw_bytes_lf_v2",
+  "current_source_fingerprint": "db253b7b1ed5f810789f1322faa75002df311d4aeb04572867dbb130c71d95cc",
+  "current_tests_fingerprint": "92c2c470814b0bea95d918e3393394a9c39ff5897fc3d57e64d33ef7e6174ddb",
+  "fingerprints_recomputed_without_running_tests": true,
+  "required_tracked_sources_present": true,
+  "baseline_comparison": {
+    "baseline_cases": 143,
+    "baseline_assertions": 48511,
+    "current_assertions": 49913,
+    "delta_total": 1402,
+    "all_original_cases_retained": true,
+    "per_case_regressions": [],
+    "new_cases": [
+      "f4_diagnostics",
+      "f4_document_diagnostics",
+      "f4_producers",
+      "gui_f4_entrypoints",
+      "gui_f4_inspect_backend",
+      "gui_f4_inspect_protocol",
+      "gui_f4_layout",
+      "gui_f4_navigation",
+      "gui_qt_binding_lifetime"
+    ],
+    "comparisons": [
+      {
+        "name": "build_identity",
+        "baseline": 47,
+        "current": 47,
+        "delta": 0
+      },
+      {
+        "name": "f1_input_provenance",
+        "baseline": 37,
+        "current": 37,
+        "delta": 0
+      },
+      {
+        "name": "f1_input_resources",
+        "baseline": 561,
+        "current": 561,
+        "delta": 0
+      },
+      {
+        "name": "f1_artifact_model",
+        "baseline": 97,
+        "current": 97,
+        "delta": 0
+      },
+      {
+        "name": "f1_output_identity",
+        "baseline": 4129,
+        "current": 4129,
+        "delta": 0
+      },
+      {
+        "name": "output_auto_model",
+        "baseline": 4,
+        "current": 4,
+        "delta": 0
+      },
+      {
+        "name": "output_auto",
+        "baseline": 734,
+        "current": 734,
+        "delta": 0
+      },
+      {
+        "name": "gui_f1_output_identity",
+        "baseline": 28,
+        "current": 28,
+        "delta": 0
+      },
+      {
+        "name": "gui_f1_async_identity",
+        "baseline": 39,
+        "current": 39,
+        "delta": 0
+      },
+      {
+        "name": "merge_outputs",
+        "baseline": 18,
+        "current": 18,
+        "delta": 0
+      },
+      {
+        "name": "output_extensions",
+        "baseline": 25,
+        "current": 25,
+        "delta": 0
+      },
+      {
+        "name": "runner_contract",
+        "baseline": 31,
+        "current": 31,
+        "delta": 0
+      },
+      {
+        "name": "doc_links",
+        "baseline": 11,
+        "current": 11,
+        "delta": 0
+      },
+      {
+        "name": "platform_paths",
+        "baseline": 3,
+        "current": 3,
+        "delta": 0
+      },
+      {
+        "name": "ci_annotations",
+        "baseline": 12,
+        "current": 12,
+        "delta": 0
+      },
+      {
+        "name": "report_evidence",
+        "baseline": 77,
+        "current": 77,
+        "delta": 0
+      },
+      {
+        "name": "writer_boundary",
+        "baseline": 24,
+        "current": 24,
+        "delta": 0
+      },
+      {
+        "name": "shielding_scenario_model",
+        "baseline": 93,
+        "current": 93,
+        "delta": 0
+      },
+      {
+        "name": "shielding_analysis",
+        "baseline": 113,
+        "current": 113,
+        "delta": 0
+      },
+      {
+        "name": "effective_config_model",
+        "baseline": 18,
+        "current": 18,
+        "delta": 0
+      },
+      {
+        "name": "main_config_version_component",
+        "baseline": 4,
+        "current": 4,
+        "delta": 0
+      },
+      {
+        "name": "main_ini_migration",
+        "baseline": 60,
+        "current": 60,
+        "delta": 0
+      },
+      {
+        "name": "main_config_version",
+        "baseline": 84,
+        "current": 84,
+        "delta": 0
+      },
+      {
+        "name": "field_biasing_schema",
+        "baseline": 278,
+        "current": 278,
+        "delta": 0
+      },
+      {
+        "name": "field_biasing_schema_review",
+        "baseline": 18,
+        "current": 18,
+        "delta": 0
+      },
+      {
+        "name": "config_migration",
+        "baseline": 420,
+        "current": 420,
+        "delta": 0
+      },
+      {
+        "name": "project_snapshot_compat",
+        "baseline": 69,
+        "current": 69,
+        "delta": 0
+      },
+      {
+        "name": "duplicate_generated_package_model",
+        "baseline": 128,
+        "current": 128,
+        "delta": 0
+      },
+      {
+        "name": "duplicate_generated_package",
+        "baseline": 135,
+        "current": 135,
+        "delta": 0
+      },
+      {
+        "name": "geometry_diagnostic_identity",
+        "baseline": 4,
+        "current": 4,
+        "delta": 0
+      },
+      {
+        "name": "config_migration_backend",
+        "baseline": 171,
+        "current": 171,
+        "delta": 0
+      },
+      {
+        "name": "gui_config_migration",
+        "baseline": 74,
+        "current": 74,
+        "delta": 0
+      },
+      {
+        "name": "input_provenance",
+        "baseline": 15,
+        "current": 15,
+        "delta": 0
+      },
+      {
+        "name": "effective_consumer_state",
+        "baseline": 3,
+        "current": 3,
+        "delta": 0
+      },
+      {
+        "name": "effective_geometry_materials",
+        "baseline": 11,
+        "current": 11,
+        "delta": 0
+      },
+      {
+        "name": "effective_source_physics",
+        "baseline": 372,
+        "current": 372,
+        "delta": 0
+      },
+      {
+        "name": "effective_output_mesh",
+        "baseline": 142,
+        "current": 142,
+        "delta": 0
+      },
+      {
+        "name": "effective_biasing",
+        "baseline": 302,
+        "current": 302,
+        "delta": 0
+      },
+      {
+        "name": "effective_scoring",
+        "baseline": 57,
+        "current": 57,
+        "delta": 0
+      },
+      {
+        "name": "effective_modules",
+        "baseline": 136,
+        "current": 136,
+        "delta": 0
+      },
+      {
+        "name": "effective_receipt_view",
+        "baseline": 14,
+        "current": 14,
+        "delta": 0
+      },
+      {
+        "name": "effective_lifecycle",
+        "baseline": 3102,
+        "current": 3102,
+        "delta": 0
+      },
+      {
+        "name": "effective_gdml",
+        "baseline": 11,
+        "current": 11,
+        "delta": 0
+      },
+      {
+        "name": "effective_config_collection",
+        "baseline": 44,
+        "current": 44,
+        "delta": 0
+      },
+      {
+        "name": "effective_config_export",
+        "baseline": 109,
+        "current": 109,
+        "delta": 0
+      },
+      {
+        "name": "effective_config_viewer",
+        "baseline": 22,
+        "current": 22,
+        "delta": 0
+      },
+      {
+        "name": "merge_histograms",
+        "baseline": 29,
+        "current": 29,
+        "delta": 0
+      },
+      {
+        "name": "gui_parsers",
+        "baseline": 8,
+        "current": 8,
+        "delta": 0
+      },
+      {
+        "name": "gui_qt_combo_data",
+        "baseline": 29,
+        "current": 29,
+        "delta": 0
+      },
+      {
+        "name": "gui_materials",
+        "baseline": 42,
+        "current": 42,
+        "delta": 0
+      },
+      {
+        "name": "gui_geometry",
+        "baseline": 69,
+        "current": 69,
+        "delta": 0
+      },
+      {
+        "name": "gui_preview",
+        "baseline": 22,
+        "current": 22,
+        "delta": 0
+      },
+      {
+        "name": "gui_preview_primitives",
+        "baseline": 37,
+        "current": 37,
+        "delta": 0
+      },
+      {
+        "name": "gui_project_io",
+        "baseline": 6,
+        "current": 6,
+        "delta": 0
+      },
+      {
+        "name": "gui_project_import_projection",
+        "baseline": 393,
+        "current": 393,
+        "delta": 0
+      },
+      {
+        "name": "gui_project_snapshot_restore",
+        "baseline": 61,
+        "current": 61,
+        "delta": 0
+      },
+      {
+        "name": "gui_source",
+        "baseline": 50,
+        "current": 50,
+        "delta": 0
+      },
+      {
+        "name": "gui_source_field_preservation",
+        "baseline": 340,
+        "current": 340,
+        "delta": 0
+      },
+      {
+        "name": "gui_run_config",
+        "baseline": 34,
+        "current": 34,
+        "delta": 0
+      },
+      {
+        "name": "gui_dose_results",
+        "baseline": 21,
+        "current": 21,
+        "delta": 0
+      },
+      {
+        "name": "gui_plots",
+        "baseline": 37,
+        "current": 37,
+        "delta": 0
+      },
+      {
+        "name": "gui_new_simulation_wizard",
+        "baseline": 60,
+        "current": 60,
+        "delta": 0
+      },
+      {
+        "name": "scenario_page",
+        "baseline": 31,
+        "current": 31,
+        "delta": 0
+      },
+      {
+        "name": "gui_scans",
+        "baseline": 58,
+        "current": 58,
+        "delta": 0
+      },
+      {
+        "name": "gui_start_page",
+        "baseline": 74,
+        "current": 74,
+        "delta": 0
+      },
+      {
+        "name": "gui_fluence_results",
+        "baseline": 31,
+        "current": 31,
+        "delta": 0
+      },
+      {
+        "name": "gui_output_extensions",
+        "baseline": 61,
+        "current": 61,
+        "delta": 0
+      },
+      {
+        "name": "gui_output",
+        "baseline": 15,
+        "current": 15,
+        "delta": 0
+      },
+      {
+        "name": "gui_history",
+        "baseline": 7,
+        "current": 7,
+        "delta": 0
+      },
+      {
+        "name": "gui_duplicate_history_cli",
+        "baseline": 254,
+        "current": 254,
+        "delta": 0
+      },
+      {
+        "name": "gui_run_result",
+        "baseline": 20,
+        "current": 20,
+        "delta": 0
+      },
+      {
+        "name": "gui_live_progress",
+        "baseline": 71,
+        "current": 71,
+        "delta": 0
+      },
+      {
+        "name": "gui_live_progress_backend",
+        "baseline": 16,
+        "current": 16,
+        "delta": 0
+      },
+      {
+        "name": "gui_scenario_backend",
+        "baseline": 32,
+        "current": 32,
+        "delta": 0
+      },
+      {
+        "name": "live_progress",
+        "baseline": 138,
+        "current": 138,
+        "delta": 0
+      },
+      {
+        "name": "gui_main_window",
+        "baseline": 46,
+        "current": 46,
+        "delta": 0
+      },
+      {
+        "name": "gui_unsupported_features",
+        "baseline": 6,
+        "current": 6,
+        "delta": 0
+      },
+      {
+        "name": "gui_geometry_safety",
+        "baseline": 11,
+        "current": 11,
+        "delta": 0
+      },
+      {
+        "name": "gui_geometry_diagnostics",
+        "baseline": 15,
+        "current": 15,
+        "delta": 0
+      },
+      {
+        "name": "backend_capabilities",
+        "baseline": 21,
+        "current": 21,
+        "delta": 0
+      },
+      {
+        "name": "config_precedence",
+        "baseline": 24,
+        "current": 24,
+        "delta": 0
+      },
+      {
+        "name": "config_duplicate_declarations",
+        "baseline": 22,
+        "current": 22,
+        "delta": 0
+      },
+      {
+        "name": "config_value_finiteness",
+        "baseline": 8,
+        "current": 8,
+        "delta": 0
+      },
+      {
+        "name": "run_summary",
+        "baseline": 1570,
+        "current": 1570,
+        "delta": 0
+      },
+      {
+        "name": "command_state_gating",
+        "baseline": 23,
+        "current": 23,
+        "delta": 0
+      },
+      {
+        "name": "dose_scoring",
+        "baseline": 79,
+        "current": 79,
+        "delta": 0
+      },
+      {
+        "name": "fluence_scoring",
+        "baseline": 96,
+        "current": 96,
+        "delta": 0
+      },
+      {
+        "name": "root_output",
+        "baseline": 25,
+        "current": 25,
+        "delta": 0
+      },
+      {
+        "name": "scoring_mesh",
+        "baseline": 618,
+        "current": 618,
+        "delta": 0
+      },
+      {
+        "name": "let_scoring",
+        "baseline": 36,
+        "current": 36,
+        "delta": 0
+      },
+      {
+        "name": "statistical_uncertainty",
+        "baseline": 153,
+        "current": 153,
+        "delta": 0
+      },
+      {
+        "name": "scoring_numeric",
+        "baseline": 457,
+        "current": 457,
+        "delta": 0
+      },
+      {
+        "name": "sd_context_failure",
+        "baseline": 213,
+        "current": 213,
+        "delta": 0
+      },
+      {
+        "name": "q1_postprocessing",
+        "baseline": 123,
+        "current": 123,
+        "delta": 0
+      },
+      {
+        "name": "output_provenance",
+        "baseline": 46,
+        "current": 46,
+        "delta": 0
+      },
+      {
+        "name": "output_provenance_backend",
+        "baseline": 60,
+        "current": 60,
+        "delta": 0
+      },
+      {
+        "name": "gui_output_provenance",
+        "baseline": 21,
+        "current": 21,
+        "delta": 0
+      },
+      {
+        "name": "q1_public_paths",
+        "baseline": 32,
+        "current": 32,
+        "delta": 0
+      },
+      {
+        "name": "gps_sources",
+        "baseline": 219,
+        "current": 219,
+        "delta": 0
+      },
+      {
+        "name": "geometry_a5",
+        "baseline": 4320,
+        "current": 4320,
+        "delta": 0
+      },
+      {
+        "name": "physics_a6",
+        "baseline": 71,
+        "current": 71,
+        "delta": 0
+      },
+      {
+        "name": "fields_a7",
+        "baseline": 336,
+        "current": 336,
+        "delta": 0
+      },
+      {
+        "name": "max_step_scope",
+        "baseline": 54,
+        "current": 54,
+        "delta": 0
+      },
+      {
+        "name": "material_numeric",
+        "baseline": 66,
+        "current": 66,
+        "delta": 0
+      },
+      {
+        "name": "gdml_bias_identity",
+        "baseline": 97,
+        "current": 97,
+        "delta": 0
+      },
+      {
+        "name": "gdml_touchable_identity",
+        "baseline": 65,
+        "current": 65,
+        "delta": 0
+      },
+      {
+        "name": "q1_results_backend",
+        "baseline": 125,
+        "current": 125,
+        "delta": 0
+      },
+      {
+        "name": "displacement_damage",
+        "baseline": 44,
+        "current": 44,
+        "delta": 0
+      },
+      {
+        "name": "shielding_coating",
+        "baseline": 68,
+        "current": 68,
+        "delta": 0
+      },
+      {
+        "name": "scenario_shielding_core",
+        "baseline": 46,
+        "current": 46,
+        "delta": 0
+      },
+      {
+        "name": "semiconductor_device",
+        "baseline": 53,
+        "current": 53,
+        "delta": 0
+      },
+      {
+        "name": "detector_response",
+        "baseline": 19,
+        "current": 19,
+        "delta": 0
+      },
+      {
+        "name": "trajectories",
+        "baseline": 19257,
+        "current": 19257,
+        "delta": 0
+      },
+      {
+        "name": "geant4_data_locator",
+        "baseline": 12,
+        "current": 12,
+        "delta": 0
+      },
+      {
+        "name": "benchmarks",
+        "baseline": 1,
+        "current": 1,
+        "delta": 0
+      },
+      {
+        "name": "interactive_commands",
+        "baseline": 309,
+        "current": 309,
+        "delta": 0
+      },
+      {
+        "name": "unsupported_features",
+        "baseline": 21,
+        "current": 21,
+        "delta": 0
+      },
+      {
+        "name": "unconsumed_config",
+        "baseline": 20,
+        "current": 20,
+        "delta": 0
+      },
+      {
+        "name": "material_schema",
+        "baseline": 85,
+        "current": 85,
+        "delta": 0
+      },
+      {
+        "name": "geometry_safety",
+        "baseline": 203,
+        "current": 203,
+        "delta": 0
+      },
+      {
+        "name": "geometry_diagnostics",
+        "baseline": 50,
+        "current": 50,
+        "delta": 0
+      },
+      {
+        "name": "macro_plan",
+        "baseline": 33,
+        "current": 33,
+        "delta": 0
+      },
+      {
+        "name": "default_geometry",
+        "baseline": 24,
+        "current": 24,
+        "delta": 0
+      },
+      {
+        "name": "geometry_roundtrip",
+        "baseline": 45,
+        "current": 45,
+        "delta": 0
+      },
+      {
+        "name": "biasing_targets",
+        "baseline": 80,
+        "current": 80,
+        "delta": 0
+      },
+      {
+        "name": "biasing_worker_runtime",
+        "baseline": 3479,
+        "current": 3479,
+        "delta": 0
+      },
+      {
+        "name": "biasing_step_weight",
+        "baseline": 79,
+        "current": 79,
+        "delta": 0
+      },
+      {
+        "name": "random_command_semantics",
+        "baseline": 302,
+        "current": 302,
+        "delta": 0
+      },
+      {
+        "name": "run_reinitialization",
+        "baseline": 389,
+        "current": 389,
+        "delta": 0
+      },
+      {
+        "name": "gui_run_inputs",
+        "baseline": 103,
+        "current": 103,
+        "delta": 0
+      },
+      {
+        "name": "gui_backend_geometry",
+        "baseline": 14,
+        "current": 14,
+        "delta": 0
+      },
+      {
+        "name": "gui_backend_package",
+        "baseline": 74,
+        "current": 74,
+        "delta": 0
+      },
+      {
+        "name": "gui_plots_backend",
+        "baseline": 32,
+        "current": 32,
+        "delta": 0
+      },
+      {
+        "name": "gui_new_simulation_backend",
+        "baseline": 17,
+        "current": 17,
+        "delta": 0
+      },
+      {
+        "name": "gui_scans_backend",
+        "baseline": 18,
+        "current": 18,
+        "delta": 0
+      },
+      {
+        "name": "gui_backend_agreement",
+        "baseline": 107,
+        "current": 107,
+        "delta": 0
+      },
+      {
+        "name": "gui_backend_geometry_auto",
+        "baseline": 30,
+        "current": 30,
+        "delta": 0
+      },
+      {
+        "name": "gui_3d_view",
+        "baseline": 35,
+        "current": 35,
+        "delta": 0
+      },
+      {
+        "name": "gui_config_editors",
+        "baseline": 33,
+        "current": 33,
+        "delta": 0
+      },
+      {
+        "name": "gui_trajectory_view",
+        "baseline": 35,
+        "current": 35,
+        "delta": 0
+      },
+      {
+        "name": "gui_sketch_accuracy",
+        "baseline": 55,
+        "current": 55,
+        "delta": 0
+      },
+      {
+        "name": "gui_source_glyphs",
+        "baseline": 40,
+        "current": 40,
+        "delta": 0
+      },
+      {
+        "name": "config_schema",
+        "baseline": 309,
+        "current": 309,
+        "delta": 0
+      }
+    ]
+  },
+  "cases": [
+    {
+      "name": "f4_diagnostics",
+      "script": "scripts/test_f4_diagnostics.py",
+      "layer": "static",
+      "registry_requirements": [],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 48,
+      "assert_sites": 26,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\f4_diagnostics.log",
+        "bytes": 103,
+        "sha256": "8e84c9a21395ca85de684507d433f52a5cfeb3048d0fb6100a271086a8181fa9"
+      },
+      "all_assert_markers": [
+        48
+      ]
+    },
+    {
+      "name": "f4_producers",
+      "script": "scripts/test_f4_producers.py",
+      "layer": "static",
+      "registry_requirements": [],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 593,
+      "assert_sites": 62,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\f4_producers.log",
+        "bytes": 115,
+        "sha256": "af8813ee0e48818180b68e3d675b194025f509af400c0cc8d53dcd466c295132"
+      },
+      "all_assert_markers": [
+        593
+      ]
+    },
+    {
+      "name": "f4_document_diagnostics",
+      "script": "scripts/test_f4_document_diagnostics.py",
+      "layer": "static",
+      "registry_requirements": [],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 119,
+      "assert_sites": 100,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\f4_document_diagnostics.log",
+        "bytes": 52,
+        "sha256": "aaf2d8afc6d0867fe1c691f3bd48289301a4482824b0bd7135b614b95835609e"
+      },
+      "all_assert_markers": [
+        119
+      ]
+    },
+    {
+      "name": "gui_f4_navigation",
+      "script": "gui/smoke_tests/smoke_f4_navigation.py",
+      "layer": "gui",
+      "registry_requirements": [
+        "qt"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 224,
+      "assert_sites": 77,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\gui_f4_navigation.log",
+        "bytes": 118,
+        "sha256": "698d5e3b292a28b65f035b2b11e9c9449102abdb7e8721842690b9f74ef3df3c"
+      },
+      "all_assert_markers": [
+        224
+      ]
+    },
+    {
+      "name": "gui_f4_entrypoints",
+      "script": "gui/smoke_tests/smoke_f4_entrypoints.py",
+      "layer": "gui",
+      "registry_requirements": [
+        "qt"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 62,
+      "assert_sites": 62,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\gui_f4_entrypoints.log",
+        "bytes": 43,
+        "sha256": "4fd07e34a2f7b308b97302b2ad127a83e9feab9653b21a16cf9f51b52b5b4b98"
+      },
+      "all_assert_markers": [
+        62
+      ]
+    },
+    {
+      "name": "gui_f4_layout",
+      "script": "gui/smoke_tests/smoke_f4_layout.py",
+      "layer": "gui",
+      "registry_requirements": [
+        "qt"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 257,
+      "assert_sites": 31,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\gui_f4_layout.log",
+        "bytes": 116,
+        "sha256": "1f16c33d145ee4caa9482bf0241d95fce332aec5279615c192c0ff2f5c525790"
+      },
+      "all_assert_markers": [
+        257
+      ]
+    },
+    {
+      "name": "gui_f4_inspect_protocol",
+      "script": "gui/smoke_tests/smoke_f4_inspect_protocol.py",
+      "layer": "gui",
+      "registry_requirements": [
+        "qt"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 46,
+      "assert_sites": 16,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\gui_f4_inspect_protocol.log",
+        "bytes": 78,
+        "sha256": "46ae4728e2114dab83a449090e5c2d58ceb07881b423b00f431831ca22009164"
+      },
+      "all_assert_markers": [
+        46
+      ]
+    },
+    {
+      "name": "gui_f4_inspect_backend",
+      "script": "gui/smoke_tests/smoke_f4_inspect_backend.py",
+      "layer": "integration",
+      "registry_requirements": [
+        "qt",
+        "exe"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 45,
+      "assert_sites": 40,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\gui_f4_inspect_backend.log",
+        "bytes": 87,
+        "sha256": "0dde00c6f94c205f7b553a69fa61b304667286668e25e1a492f4bc849918d16d"
+      },
+      "all_assert_markers": [
+        45
+      ]
+    },
+    {
+      "name": "build_identity",
+      "script": "scripts/test_build_identity.py",
+      "layer": "static",
+      "registry_requirements": [],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 47,
+      "assert_sites": 16,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\build_identity.log",
+        "bytes": 126,
+        "sha256": "afaa448bf65a2f39ea7598c2363d1d7a5eaaa5b2753cf2a0acb71a3a0d143a71"
+      },
+      "all_assert_markers": [
+        47
+      ]
+    },
+    {
+      "name": "f1_input_provenance",
+      "script": "scripts/test_f1_input_provenance.py",
+      "layer": "static",
+      "registry_requirements": [
+        "cxx"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 37,
+      "assert_sites": 7,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\f1_input_provenance.log",
+        "bytes": 76,
+        "sha256": "8d1bfa462c6f331c333c115c755dfc46e5664d602718b75864270f71c98f50ea"
+      },
+      "all_assert_markers": [
+        37
+      ]
+    },
+    {
+      "name": "f1_input_resources",
+      "script": "scripts/test_f1_input_resources_backend.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 561,
+      "assert_sites": 38,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\f1_input_resources.log",
+        "bytes": 166,
+        "sha256": "77481cae9031eff218914721653940a1f27c7a39fbd4c14fb5664ba3229c6f85"
+      },
+      "all_assert_markers": [
+        561
+      ]
+    },
+    {
+      "name": "f1_artifact_model",
+      "script": "scripts/test_f1_output_identity.py",
+      "layer": "static",
+      "registry_requirements": [
+        "cxx"
+      ],
+      "registry_args": [
+        "--component"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 97,
+      "assert_sites": 51,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\f1_artifact_model.log",
+        "bytes": 132,
+        "sha256": "0834f84d106153f19cd21e59312dfe396b9bacfcc36a939d8e45ca59b7596b07"
+      },
+      "all_assert_markers": [
+        97
+      ]
+    },
+    {
+      "name": "f1_output_identity",
+      "script": "scripts/test_f1_output_identity.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 4129,
+      "assert_sites": 51,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\f1_output_identity.log",
+        "bytes": 313,
+        "sha256": "8d8586d4564d2134dbee11581d28450fd2fd7708eac1bb2f1100447f03a6d27f"
+      },
+      "all_assert_markers": [
+        4129
+      ]
+    },
+    {
+      "name": "output_auto_model",
+      "script": "scripts/test_output_auto.py",
+      "layer": "static",
+      "registry_requirements": [
+        "cxx"
+      ],
+      "registry_args": [
+        "--component"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 4,
+      "assert_sites": 41,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\output_auto_model.log",
+        "bytes": 64,
+        "sha256": "af817c26a4b658e2808180cbb0447799f10340fa90a52cd438b554e0ab323a3d"
+      },
+      "all_assert_markers": [
+        4
+      ]
+    },
+    {
+      "name": "output_auto",
+      "script": "scripts/test_output_auto.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 734,
+      "assert_sites": 41,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\output_auto.log",
+        "bytes": 130,
+        "sha256": "8e8261f2c72c754b37039eab9415ea1a74ede0fef6725d7edadad8a7ab2eb5fe"
+      },
+      "all_assert_markers": [
+        734
+      ]
+    },
+    {
+      "name": "gui_f1_output_identity",
+      "script": "gui/smoke_tests/smoke_f1_output_identity.py",
+      "layer": "gui",
+      "registry_requirements": [
+        "qt"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 28,
+      "assert_sites": 29,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\gui_f1_output_identity.log",
+        "bytes": 47,
+        "sha256": "7c6ae9b8a106feae64a07ac0a9779e900a07e3b28d9d5b34740b5feb2fd7e8ea"
+      },
+      "all_assert_markers": [
+        28
+      ]
+    },
+    {
+      "name": "gui_f1_async_identity",
+      "script": "gui/smoke_tests/smoke_f1_async_identity.py",
+      "layer": "gui",
+      "registry_requirements": [
+        "qt"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 39,
+      "assert_sites": 45,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\gui_f1_async_identity.log",
+        "bytes": 4152,
+        "sha256": "5ff3c976c63aea1ac2351e9a58282cf217cc862e9e70fd2b40fe0dd3a7c52e17"
+      },
+      "all_assert_markers": [
+        39
+      ]
+    },
+    {
+      "name": "merge_outputs",
+      "script": "scripts/test_merge_outputs.py",
+      "layer": "static",
+      "registry_requirements": [],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 18,
+      "assert_sites": 12,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\merge_outputs.log",
+        "bytes": 147,
+        "sha256": "66b9a1b563455abd9e61f68c310a970c64996cd50e4d343a2c4b3da700e499a9"
+      },
+      "all_assert_markers": [
+        18
+      ]
+    },
+    {
+      "name": "output_extensions",
+      "script": "scripts/test_output_extensions.py",
+      "layer": "static",
+      "registry_requirements": [],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 25,
+      "assert_sites": 21,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\output_extensions.log",
+        "bytes": 45,
+        "sha256": "56e904249f47f9be0e53928f7f48c5a06d662593e9f9d41ffada8e219e521791"
+      },
+      "all_assert_markers": [
+        25
+      ]
+    },
+    {
+      "name": "runner_contract",
+      "script": "scripts/test_m0_runner.py",
+      "layer": "static",
+      "registry_requirements": [],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 31,
+      "assert_sites": 31,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\runner_contract.log",
+        "bytes": 37,
+        "sha256": "ce9ec1cce72a0433e4dae40370635401f13aa2a994d1d2db46cd0af2cf0b6e26"
+      },
+      "all_assert_markers": [
+        31
+      ]
+    },
+    {
+      "name": "doc_links",
+      "script": "scripts/check_doc_links.py",
+      "layer": "static",
+      "registry_requirements": [],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 11,
+      "assert_sites": 11,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\doc_links.log",
+        "bytes": 71,
+        "sha256": "d43bdc1cac09558450354c097bd05fdd217b7e78580df95fecc20409e4e52b58"
+      },
+      "all_assert_markers": [
+        11
+      ]
+    },
+    {
+      "name": "platform_paths",
+      "script": "scripts/check_test_platform_paths.py",
+      "layer": "static",
+      "registry_requirements": [],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 3,
+      "assert_sites": 3,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\platform_paths.log",
+        "bytes": 80,
+        "sha256": "cca19121722b592cbf1630bcc6cab03e0e7fcdc528fdfe493a405eda0f1c3bbd"
+      },
+      "all_assert_markers": [
+        3
+      ]
+    },
+    {
+      "name": "ci_annotations",
+      "script": "scripts/test_ci_annotations.py",
+      "layer": "static",
+      "registry_requirements": [],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 12,
+      "assert_sites": 13,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\ci_annotations.log",
+        "bytes": 42,
+        "sha256": "e6f1720d56cf90165af33e5c8850e7e912b46b12140baccf41cc974aae9f8336"
+      },
+      "all_assert_markers": [
+        12
+      ]
+    },
+    {
+      "name": "report_evidence",
+      "script": "scripts/test_report_evidence.py",
+      "layer": "static",
+      "registry_requirements": [],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 77,
+      "assert_sites": 21,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\report_evidence.log",
+        "bytes": 43,
+        "sha256": "51e7563874211bcddaaa5384ce34c6cea8ada5e21889c1ae92e31478efa7490e"
+      },
+      "all_assert_markers": [
+        77
+      ]
+    },
+    {
+      "name": "writer_boundary",
+      "script": "scripts/test_writer_boundary.py",
+      "layer": "static",
+      "registry_requirements": [],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 24,
+      "assert_sites": 7,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\writer_boundary.log",
+        "bytes": 85,
+        "sha256": "c692fbbffedc2dfb1462d91a5c50592ebd92cbb09eb02e331f2e3b35158e59c0"
+      },
+      "all_assert_markers": [
+        24
+      ]
+    },
+    {
+      "name": "shielding_scenario_model",
+      "script": "scripts/test_shielding_scenario_model.py",
+      "layer": "static",
+      "registry_requirements": [],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 93,
+      "assert_sites": 61,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\shielding_scenario_model.log",
+        "bytes": 138,
+        "sha256": "7073eb0807367394cd83d2bd5ea780131b74062fce0817e30de4afa451a861d0"
+      },
+      "all_assert_markers": [
+        93
+      ]
+    },
+    {
+      "name": "shielding_analysis",
+      "script": "scripts/test_shielding_analysis.py",
+      "layer": "static",
+      "registry_requirements": [],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 113,
+      "assert_sites": 73,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\shielding_analysis.log",
+        "bytes": 19,
+        "sha256": "eea30185f373f1418469885b72d4577f2b2283a3a79144ec465f494817214aa8"
+      },
+      "all_assert_markers": [
+        113
+      ]
+    },
+    {
+      "name": "effective_config_model",
+      "script": "scripts/test_effective_config_model.py",
+      "layer": "static",
+      "registry_requirements": [
+        "cxx"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 18,
+      "assert_sites": 18,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\effective_config_model.log",
+        "bytes": 58,
+        "sha256": "0d15697820772d53853ad6ff81ab78caec5280c9c22049233e434c8de8e176db"
+      },
+      "all_assert_markers": [
+        18
+      ]
+    },
+    {
+      "name": "main_config_version_component",
+      "script": "scripts/test_main_config_version.py",
+      "layer": "static",
+      "registry_requirements": [
+        "cxx"
+      ],
+      "registry_args": [
+        "--component"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 4,
+      "assert_sites": 27,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\main_config_version_component.log",
+        "bytes": 17,
+        "sha256": "7fdd0a724827b7f91af0dbb33282a4c50d277a6aef2fcec17950b8bd1debef99"
+      },
+      "all_assert_markers": [
+        4
+      ]
+    },
+    {
+      "name": "main_ini_migration",
+      "script": "scripts/test_main_ini_migration.py",
+      "layer": "static",
+      "registry_requirements": [],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 60,
+      "assert_sites": 22,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\main_ini_migration.log",
+        "bytes": 54,
+        "sha256": "d614f49467ed3c26847f1450093c96f8b5f7838306ff14d2736f364b27b5675c"
+      },
+      "all_assert_markers": [
+        60
+      ]
+    },
+    {
+      "name": "main_config_version",
+      "script": "scripts/test_main_config_version.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 84,
+      "assert_sites": 27,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\main_config_version.log",
+        "bytes": 60,
+        "sha256": "54f5b45b40ad382347641068a8db6f1aed8f3fc05d0f7d72b19117e848bf4404"
+      },
+      "all_assert_markers": [
+        84
+      ]
+    },
+    {
+      "name": "field_biasing_schema",
+      "script": "scripts/test_field_biasing_schema.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe"
+      ],
+      "registry_args": [
+        "--runtime"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 278,
+      "assert_sites": 49,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\field_biasing_schema.log",
+        "bytes": 134,
+        "sha256": "62423e37451d946bf525124996f7b5bd70cd9e907247c3aff31c059b57ed88f5"
+      },
+      "all_assert_markers": [
+        278
+      ]
+    },
+    {
+      "name": "field_biasing_schema_review",
+      "script": "scripts/test_field_biasing_schema_review.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 18,
+      "assert_sites": 12,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\field_biasing_schema_review.log",
+        "bytes": 584,
+        "sha256": "ce95e837d9d40dceb709bcd92b6212ae0f2be8ef6689f07a88a09736ca295cee"
+      },
+      "all_assert_markers": [
+        18
+      ]
+    },
+    {
+      "name": "config_migration",
+      "script": "scripts/test_config_migration.py",
+      "layer": "static",
+      "registry_requirements": [],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 420,
+      "assert_sites": 53,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\config_migration.log",
+        "bytes": 54,
+        "sha256": "08aa76eef27ed07f336584c082c9f7c176437e87316f725389bdee937c7d3ed8"
+      },
+      "all_assert_markers": [
+        420
+      ]
+    },
+    {
+      "name": "project_snapshot_compat",
+      "script": "scripts/test_project_snapshot_compat.py",
+      "layer": "static",
+      "registry_requirements": [],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 69,
+      "assert_sites": 25,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\project_snapshot_compat.log",
+        "bytes": 124,
+        "sha256": "434eaa2ff580c294408d5b32de7d342429371f93e47f1beb866bef5aa0b60ce3"
+      },
+      "all_assert_markers": [
+        69
+      ]
+    },
+    {
+      "name": "duplicate_generated_package_model",
+      "script": "scripts/test_duplicate_generated_package.py",
+      "layer": "static",
+      "registry_requirements": [],
+      "registry_args": [
+        "--component"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 128,
+      "assert_sites": 42,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\duplicate_generated_package_model.log",
+        "bytes": 86,
+        "sha256": "5af9531995ec8eb868f6f048d10ab69810cb5aaa107f615e71c1226999017ee0"
+      },
+      "all_assert_markers": [
+        128
+      ]
+    },
+    {
+      "name": "duplicate_generated_package",
+      "script": "scripts/test_duplicate_generated_package.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 135,
+      "assert_sites": 42,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\duplicate_generated_package.log",
+        "bytes": 112,
+        "sha256": "50a941eb647e53423dea35c600e8db5ec0e94a89887cf8eb6b1b7037fb758f6d"
+      },
+      "all_assert_markers": [
+        135
+      ]
+    },
+    {
+      "name": "geometry_diagnostic_identity",
+      "script": "scripts/test_geometry_diagnostic_identity.py",
+      "layer": "static",
+      "registry_requirements": [
+        "cxx"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 4,
+      "assert_sites": 4,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\geometry_diagnostic_identity.log",
+        "bytes": 63,
+        "sha256": "98f5cabd0b9f4eda66e87be165f46220a0ff10faf89c682bd62f14b0ae184310"
+      },
+      "all_assert_markers": [
+        4
+      ]
+    },
+    {
+      "name": "config_migration_backend",
+      "script": "scripts/test_config_migration_backend.py",
+      "layer": "integration",
+      "registry_requirements": [
+        "exe"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 171,
+      "assert_sites": 26,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\config_migration_backend.log",
+        "bytes": 945,
+        "sha256": "0404d3ce267b39302df73c332531c668c49cd76432b224f68d5fcf276e426b8a"
+      },
+      "all_assert_markers": [
+        171
+      ]
+    },
+    {
+      "name": "gui_config_migration",
+      "script": "gui/smoke_tests/smoke_config_migration_ui.py",
+      "layer": "gui",
+      "registry_requirements": [
+        "qt"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 74,
+      "assert_sites": 70,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\gui_config_migration.log",
+        "bytes": 48,
+        "sha256": "76484c167d012b68dd342c14a8177d8c9cfa5a9f4e4f5f01d038f5d71e81f6e1"
+      },
+      "all_assert_markers": [
+        74
+      ]
+    },
+    {
+      "name": "input_provenance",
+      "script": "scripts/test_input_provenance.py",
+      "layer": "static",
+      "registry_requirements": [
+        "cxx"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 15,
+      "assert_sites": 5,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\input_provenance.log",
+        "bytes": 64,
+        "sha256": "768b631b76e4d32750e764251d71f55405983233c058ca19c222a0a73d9205a1"
+      },
+      "all_assert_markers": [
+        15
+      ]
+    },
+    {
+      "name": "effective_consumer_state",
+      "script": "scripts/test_effective_consumer_state.py",
+      "layer": "static",
+      "registry_requirements": [
+        "cxx"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 3,
+      "assert_sites": 3,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\effective_consumer_state.log",
+        "bytes": 61,
+        "sha256": "d47da3ba00a4b25a2fa3034dd314e364e3ccf4c1b1d4376bb75be2c1b3d7e031"
+      },
+      "all_assert_markers": [
+        3
+      ]
+    },
+    {
+      "name": "effective_geometry_materials",
+      "script": "scripts/test_effective_geometry_materials.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe"
+      ],
+      "registry_args": [
+        "--backend"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 11,
+      "assert_sites": 15,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\effective_geometry_materials.log",
+        "bytes": 62,
+        "sha256": "82ac32135ba64b403fa25b2692bdd42080e62b9b12d69e78eb58567e74a8549a"
+      },
+      "all_assert_markers": [
+        11
+      ]
+    },
+    {
+      "name": "effective_source_physics",
+      "script": "scripts/test_effective_source_physics.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 372,
+      "assert_sites": 59,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\effective_source_physics.log",
+        "bytes": 76,
+        "sha256": "30328606ed99f4df68e1a2efbdc7982117d286d3671eaf08700bdc48ba703378"
+      },
+      "all_assert_markers": [
+        372
+      ]
+    },
+    {
+      "name": "effective_output_mesh",
+      "script": "scripts/test_effective_output_mesh.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 142,
+      "assert_sites": 25,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\effective_output_mesh.log",
+        "bytes": 45,
+        "sha256": "d14cb4e7b75cded272676eeb4dcdcc4a6a2a07de6400084bbd0d1dc8b86bc851"
+      },
+      "all_assert_markers": [
+        142
+      ]
+    },
+    {
+      "name": "effective_biasing",
+      "script": "scripts/test_effective_biasing.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 302,
+      "assert_sites": 39,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\effective_biasing.log",
+        "bytes": 75,
+        "sha256": "9279671b916c10e19a7a7a957cbbeaaae72f03886ec4e62c607406941dd48059"
+      },
+      "all_assert_markers": [
+        302
+      ]
+    },
+    {
+      "name": "effective_scoring",
+      "script": "scripts/test_effective_scoring.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 57,
+      "assert_sites": 35,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\effective_scoring.log",
+        "bytes": 158,
+        "sha256": "63580eb5b30ebd3c86e08e1dddf9ea0598d9db275e85e8524b44d06140a7a3f4"
+      },
+      "all_assert_markers": [
+        57
+      ]
+    },
+    {
+      "name": "effective_modules",
+      "script": "scripts/test_effective_modules.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 136,
+      "assert_sites": 27,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\effective_modules.log",
+        "bytes": 124,
+        "sha256": "c59f844609648cd2057bdfad168b95db93be996a8ddf3b7663748585ba9d5ebe"
+      },
+      "all_assert_markers": [
+        136
+      ]
+    },
+    {
+      "name": "effective_receipt_view",
+      "script": "scripts/test_effective_lifecycle.py",
+      "layer": "static",
+      "registry_requirements": [
+        "cxx"
+      ],
+      "registry_args": [
+        "--component"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 14,
+      "assert_sites": 45,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\effective_receipt_view.log",
+        "bytes": 154,
+        "sha256": "7b735b89fb1ad1709d6840a0bba0cdcaf5b98cb4ee39096bd9885d7621c082da"
+      },
+      "all_assert_markers": [
+        14
+      ]
+    },
+    {
+      "name": "effective_lifecycle",
+      "script": "scripts/test_effective_lifecycle.py",
+      "layer": "integration",
+      "registry_requirements": [
+        "exe"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 3102,
+      "assert_sites": 45,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\effective_lifecycle.log",
+        "bytes": 120,
+        "sha256": "d6dba5673716a785f45493392767f63ddac6fe49d2fe71085becbedf2f266442"
+      },
+      "all_assert_markers": [
+        3102
+      ]
+    },
+    {
+      "name": "effective_gdml",
+      "script": "scripts/test_effective_gdml.py",
+      "layer": "integration",
+      "registry_requirements": [
+        "exe"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 11,
+      "assert_sites": 9,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\effective_gdml.log",
+        "bytes": 791,
+        "sha256": "d03d18a6abdc46ed6bbae81c57bca12a8e5c088c892caf5ac0b021ee250a1482"
+      },
+      "all_assert_markers": [
+        11
+      ]
+    },
+    {
+      "name": "effective_config_collection",
+      "script": "gui/smoke_tests/smoke_effective_config_collection.py",
+      "layer": "gui",
+      "registry_requirements": [
+        "qt"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 44,
+      "assert_sites": 31,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\effective_config_collection.log",
+        "bytes": 111,
+        "sha256": "b8b84ab930956e5df9fe71b3ecbaa4ddeb8af512e6f42fffd4dfff105cf6c9e9"
+      },
+      "all_assert_markers": [
+        44
+      ]
+    },
+    {
+      "name": "effective_config_export",
+      "script": "scripts/test_effective_config_export.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 109,
+      "assert_sites": 41,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\effective_config_export.log",
+        "bytes": 83,
+        "sha256": "80e44964b80bba2a644b3b57bf3fe585c724815422febef98ec5932ac9b7b0f1"
+      },
+      "all_assert_markers": [
+        109
+      ]
+    },
+    {
+      "name": "effective_config_viewer",
+      "script": "gui/smoke_tests/smoke_effective_config.py",
+      "layer": "gui",
+      "registry_requirements": [
+        "qt"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 22,
+      "assert_sites": 23,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\effective_config_viewer.log",
+        "bytes": 115,
+        "sha256": "55f915cb320978c1cd117063beed18c119cbede0d68e5bd76c19497c69629ec3"
+      },
+      "all_assert_markers": [
+        22
+      ]
+    },
+    {
+      "name": "merge_histograms",
+      "script": "scripts/test_merge_histograms.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "merge"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 29,
+      "assert_sites": 21,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\merge_histograms.log",
+        "bytes": 44,
+        "sha256": "a9f777c0e6a41afb89a8b84107072b274b3d0f46e0ea81c1001f5a4976cfadc2"
+      },
+      "all_assert_markers": [
+        29
+      ]
+    },
+    {
+      "name": "gui_parsers",
+      "script": "gui/smoke_tests/smoke_parsers.py",
+      "layer": "gui",
+      "registry_requirements": [
+        "qt"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 8,
+      "assert_sites": 8,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\gui_parsers.log",
+        "bytes": 35,
+        "sha256": "0681a3a73ed5077894bc6c9605e5b41b0f2f9f551ac25d6991f5d2ac25e988f7"
+      },
+      "all_assert_markers": [
+        8
+      ]
+    },
+    {
+      "name": "gui_qt_combo_data",
+      "script": "gui/smoke_tests/smoke_qt_combo_data.py",
+      "layer": "gui",
+      "registry_requirements": [
+        "qt"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 29,
+      "assert_sites": 16,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\gui_qt_combo_data.log",
+        "bytes": 244,
+        "sha256": "4fbcbc42801aeaaf77273700cc83281a57b76caba90b3d0310041a04631ff8ab"
+      },
+      "all_assert_markers": [
+        29
+      ]
+    },
+    {
+      "name": "gui_qt_binding_lifetime",
+      "script": "gui/smoke_tests/smoke_qt_binding_lifetime.py",
+      "layer": "gui",
+      "registry_requirements": [
+        "qt"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 8,
+      "assert_sites": 5,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\gui_qt_binding_lifetime.log",
+        "bytes": 591,
+        "sha256": "8577240813e935d8bba24262b22d97d822d3ecb6212387edea6070b19c01c577"
+      },
+      "all_assert_markers": [
+        8
+      ]
+    },
+    {
+      "name": "gui_materials",
+      "script": "gui/smoke_tests/smoke_materials_editor.py",
+      "layer": "gui",
+      "registry_requirements": [
+        "qt"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 42,
+      "assert_sites": 42,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\gui_materials.log",
+        "bytes": 45,
+        "sha256": "16fe47bb7af9f40ab9bf499db97ac47b3399420163b6b129ca15741099147db4"
+      },
+      "all_assert_markers": [
+        42
+      ]
+    },
+    {
+      "name": "gui_geometry",
+      "script": "gui/smoke_tests/smoke_geometry_editor.py",
+      "layer": "gui",
+      "registry_requirements": [
+        "qt"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 69,
+      "assert_sites": 63,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\gui_geometry.log",
+        "bytes": 44,
+        "sha256": "1a4ce4692967b7c13b87904817be371bb61ab1978a6ec4d39d4a1862abe95f7e"
+      },
+      "all_assert_markers": [
+        69
+      ]
+    },
+    {
+      "name": "gui_preview",
+      "script": "gui/smoke_tests/smoke_preview3d.py",
+      "layer": "gui",
+      "registry_requirements": [
+        "qt"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 22,
+      "assert_sites": 22,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\gui_preview.log",
+        "bytes": 38,
+        "sha256": "cafd0f4a1b079749f44e4e3682f0fa03cc6d410adc80b4af1f12f194e6668d21"
+      },
+      "all_assert_markers": [
+        22
+      ]
+    },
+    {
+      "name": "gui_preview_primitives",
+      "script": "gui/smoke_tests/smoke_preview3d_primitives.py",
+      "layer": "gui",
+      "registry_requirements": [
+        "qt"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 37,
+      "assert_sites": 37,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\gui_preview_primitives.log",
+        "bytes": 49,
+        "sha256": "867c1cc504d7b376450a147e3aad3714cc629da8594987e4eadc6e831250197b"
+      },
+      "all_assert_markers": [
+        37
+      ]
+    },
+    {
+      "name": "gui_project_io",
+      "script": "gui/smoke_tests/smoke_project_io.py",
+      "layer": "gui",
+      "registry_requirements": [
+        "qt"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 6,
+      "assert_sites": 6,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\gui_project_io.log",
+        "bytes": 38,
+        "sha256": "e816e97f4293c8371f6d44eee025d927e848d198b98ba8bf4afba87d9066b693"
+      },
+      "all_assert_markers": [
+        6
+      ]
+    },
+    {
+      "name": "gui_project_import_projection",
+      "script": "gui/smoke_tests/smoke_project_import_projection.py",
+      "layer": "gui",
+      "registry_requirements": [
+        "qt"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 393,
+      "assert_sites": 34,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\gui_project_import_projection.log",
+        "bytes": 55,
+        "sha256": "02ad09b289827b255f65a78e2ff7cf859e93e73c7668e2bd1dd3a6167814afb0"
+      },
+      "all_assert_markers": [
+        393
+      ]
+    },
+    {
+      "name": "gui_project_snapshot_restore",
+      "script": "gui/smoke_tests/smoke_project_snapshot_restore.py",
+      "layer": "gui",
+      "registry_requirements": [
+        "qt"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 61,
+      "assert_sites": 54,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\gui_project_snapshot_restore.log",
+        "bytes": 53,
+        "sha256": "922000e2b1a2cd5f28b0e5ec014919a0ae42ffeb1651715d265120323055619f"
+      },
+      "all_assert_markers": [
+        61
+      ]
+    },
+    {
+      "name": "gui_source",
+      "script": "gui/smoke_tests/smoke_source_editor_v2.py",
+      "layer": "gui",
+      "registry_requirements": [
+        "qt"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 50,
+      "assert_sites": 39,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\gui_source.log",
+        "bytes": 45,
+        "sha256": "e1071a389518028dd555e83fc9fa1e4ecd700c96cdbf0a99ec570200840d3957"
+      },
+      "all_assert_markers": [
+        50
+      ]
+    },
+    {
+      "name": "gui_source_field_preservation",
+      "script": "gui/smoke_tests/smoke_source_field_preservation.py",
+      "layer": "gui",
+      "registry_requirements": [
+        "qt"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 340,
+      "assert_sites": 48,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\gui_source_field_preservation.log",
+        "bytes": 916,
+        "sha256": "27eabc4cccdf73967f627c26d816d41272a12e0dd79da69601cf63048a35c8e9"
+      },
+      "all_assert_markers": [
+        340
+      ]
+    },
+    {
+      "name": "gui_run_config",
+      "script": "gui/smoke_tests/smoke_run_config_editors.py",
+      "layer": "gui",
+      "registry_requirements": [
+        "qt"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 34,
+      "assert_sites": 34,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\gui_run_config.log",
+        "bytes": 47,
+        "sha256": "f257e69596cabda87b8db46eae0f21612062de9eee30c9d987c7c7693914e63a"
+      },
+      "all_assert_markers": [
+        34
+      ]
+    },
+    {
+      "name": "gui_dose_results",
+      "script": "gui/smoke_tests/smoke_dose_results.py",
+      "layer": "gui",
+      "registry_requirements": [
+        "qt"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 21,
+      "assert_sites": 21,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\gui_dose_results.log",
+        "bytes": 1215,
+        "sha256": "b18973c556dea7ebed5024d3b64a2cc4285aec06f390e75d5b47826c514f4643"
+      },
+      "all_assert_markers": [
+        21
+      ]
+    },
+    {
+      "name": "gui_plots",
+      "script": "gui/smoke_tests/smoke_plots.py",
+      "layer": "gui",
+      "registry_requirements": [
+        "qt"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 37,
+      "assert_sites": 37,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\gui_plots.log",
+        "bytes": 6830,
+        "sha256": "8eaa21ffb1f4eedab27e4bbab1818e607324100a8cc4e2254dfb22b35af0d07b"
+      },
+      "all_assert_markers": [
+        37
+      ]
+    },
+    {
+      "name": "gui_new_simulation_wizard",
+      "script": "gui/smoke_tests/smoke_new_simulation_wizard.py",
+      "layer": "gui",
+      "registry_requirements": [
+        "qt"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 60,
+      "assert_sites": 37,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\gui_new_simulation_wizard.log",
+        "bytes": 75,
+        "sha256": "2d4edf7661aa7231f0f4d3be620188baf189ab7c85ccbe20451ac9a5cf4bedfb"
+      },
+      "all_assert_markers": [
+        60
+      ]
+    },
+    {
+      "name": "scenario_page",
+      "script": "gui/smoke_tests/smoke_scenario_page.py",
+      "layer": "gui",
+      "registry_requirements": [
+        "qt"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 31,
+      "assert_sites": 31,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\scenario_page.log",
+        "bytes": 95,
+        "sha256": "0ae3199c6d6a496edb68b1c02e7e95dc223e04f32511881f583340c031e4b351"
+      },
+      "all_assert_markers": [
+        31
+      ]
+    },
+    {
+      "name": "gui_scans",
+      "script": "gui/smoke_tests/smoke_scans.py",
+      "layer": "gui",
+      "registry_requirements": [
+        "qt"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 58,
+      "assert_sites": 40,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\gui_scans.log",
+        "bytes": 68,
+        "sha256": "e38f0ec3d1c9041b5b9ce45f7a2cf7b8b3481c725341cd41df863839e323470b"
+      },
+      "all_assert_markers": [
+        58
+      ]
+    },
+    {
+      "name": "gui_start_page",
+      "script": "gui/smoke_tests/smoke_start_page.py",
+      "layer": "gui",
+      "registry_requirements": [
+        "qt"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 74,
+      "assert_sites": 41,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\gui_start_page.log",
+        "bytes": 7121,
+        "sha256": "54cd3a11f2ac7e89e6da1696045a805eb770efe2f57b9d85495b439a59327d6b"
+      },
+      "all_assert_markers": [
+        74
+      ]
+    },
+    {
+      "name": "gui_fluence_results",
+      "script": "gui/smoke_tests/smoke_fluence_results.py",
+      "layer": "gui",
+      "registry_requirements": [
+        "qt"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 31,
+      "assert_sites": 31,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\gui_fluence_results.log",
+        "bytes": 1218,
+        "sha256": "cdeb2594167051199994ce4126058b70bcc5d0bd7d502ec3439ea0d28f0522ae"
+      },
+      "all_assert_markers": [
+        31
+      ]
+    },
+    {
+      "name": "gui_output_extensions",
+      "script": "gui/smoke_tests/smoke_output_extensions_gui.py",
+      "layer": "gui",
+      "registry_requirements": [
+        "qt"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 61,
+      "assert_sites": 50,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\gui_output_extensions.log",
+        "bytes": 1224,
+        "sha256": "ed9e689e3e9f4292810276df7b38f54fd5d53085b1db517f086d2e98904d2918"
+      },
+      "all_assert_markers": [
+        61
+      ]
+    },
+    {
+      "name": "gui_output",
+      "script": "gui/smoke_tests/smoke_output_tools.py",
+      "layer": "gui",
+      "registry_requirements": [
+        "qt"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 15,
+      "assert_sites": 15,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\gui_output.log",
+        "bytes": 41,
+        "sha256": "5a63647ed317e8368ac31a5c180dff0fd92fd939be5abd2cc76227e4dca7e540"
+      },
+      "all_assert_markers": [
+        15
+      ]
+    },
+    {
+      "name": "gui_history",
+      "script": "gui/smoke_tests/smoke_history.py",
+      "layer": "gui",
+      "registry_requirements": [
+        "qt"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 7,
+      "assert_sites": 7,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\gui_history.log",
+        "bytes": 35,
+        "sha256": "6a590ec73966942743841e815af8794591482af191f57f1113ad15f64ab27e7a"
+      },
+      "all_assert_markers": [
+        7
+      ]
+    },
+    {
+      "name": "gui_duplicate_history_cli",
+      "script": "gui/smoke_tests/smoke_duplicate_history_cli.py",
+      "layer": "gui",
+      "registry_requirements": [
+        "qt"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 254,
+      "assert_sites": 31,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\gui_duplicate_history_cli.log",
+        "bytes": 51,
+        "sha256": "b77bd34dcb2d4dd67cee97e8af95cb7477eb4a786ab4eab0fa3ca7e8996a2bfe"
+      },
+      "all_assert_markers": [
+        254
+      ]
+    },
+    {
+      "name": "gui_run_result",
+      "script": "gui/smoke_tests/smoke_run_result.py",
+      "layer": "gui",
+      "registry_requirements": [
+        "qt"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 20,
+      "assert_sites": 20,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\gui_run_result.log",
+        "bytes": 39,
+        "sha256": "46dde4387f2cb08fb951874a6ecccc6987b480dd9e49f4d95146b7222ec9ab98"
+      },
+      "all_assert_markers": [
+        20
+      ]
+    },
+    {
+      "name": "gui_live_progress",
+      "script": "gui/smoke_tests/smoke_live_progress.py",
+      "layer": "gui",
+      "registry_requirements": [
+        "qt"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 71,
+      "assert_sites": 66,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\gui_live_progress.log",
+        "bytes": 99,
+        "sha256": "51cfee5c7dc48d2f8fe2b3d183bcc682fa07d045fbe4444cd55449acf3a3ea37"
+      },
+      "all_assert_markers": [
+        71
+      ]
+    },
+    {
+      "name": "gui_live_progress_backend",
+      "script": "gui/smoke_tests/smoke_live_progress_backend.py",
+      "layer": "integration",
+      "registry_requirements": [
+        "qt",
+        "exe"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 16,
+      "assert_sites": 12,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\gui_live_progress_backend.log",
+        "bytes": 195,
+        "sha256": "2aeea014e6ff1c43aace36889a6534c5896c1b58ff977423ecc0934caf8aed25"
+      },
+      "all_assert_markers": [
+        16
+      ]
+    },
+    {
+      "name": "gui_scenario_backend",
+      "script": "gui/smoke_tests/smoke_scenario_backend.py",
+      "layer": "integration",
+      "registry_requirements": [
+        "qt",
+        "exe"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 32,
+      "assert_sites": 32,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\gui_scenario_backend.log",
+        "bytes": 94,
+        "sha256": "40a1f2500e6ce2547c8902a7e03e0ba0356bea2b319e0a2c3fb9e6811a5a257b"
+      },
+      "all_assert_markers": [
+        32
+      ]
+    },
+    {
+      "name": "live_progress",
+      "script": "scripts/test_live_progress.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 138,
+      "assert_sites": 36,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\live_progress.log",
+        "bytes": 1275,
+        "sha256": "74ba59004870d5469c9a667fb2702027d4dc401b5a2baa42520854f315ba89b9"
+      },
+      "all_assert_markers": [
+        138
+      ]
+    },
+    {
+      "name": "gui_main_window",
+      "script": "gui/smoke_tests/smoke_main_window_ui.py",
+      "layer": "gui",
+      "registry_requirements": [
+        "qt"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 46,
+      "assert_sites": 30,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\gui_main_window.log",
+        "bytes": 43,
+        "sha256": "4478f913fc7f4d0bdcbfedee587f47c651b1ce15cd8fb3ff2cd4fa3f9fe03702"
+      },
+      "all_assert_markers": [
+        46
+      ]
+    },
+    {
+      "name": "gui_unsupported_features",
+      "script": "scripts/test_unsupported_features.py",
+      "layer": "gui",
+      "registry_requirements": [
+        "qt"
+      ],
+      "registry_args": [
+        "--layer",
+        "gui"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 6,
+      "assert_sites": 9,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\gui_unsupported_features.log",
+        "bytes": 68,
+        "sha256": "b483c90fc92d1addd7205126f14fe83c7319923d1db724f717e3342928895f59"
+      },
+      "all_assert_markers": [
+        6
+      ]
+    },
+    {
+      "name": "gui_geometry_safety",
+      "script": "scripts/test_geometry_safety_contract.py",
+      "layer": "gui",
+      "registry_requirements": [
+        "qt"
+      ],
+      "registry_args": [
+        "--layer",
+        "gui"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 11,
+      "assert_sites": 15,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\gui_geometry_safety.log",
+        "bytes": 52,
+        "sha256": "3080f410814041bc0be96dc521c50d1a83588d6f6187cf1d1c8cd1aa61aba96e"
+      },
+      "all_assert_markers": [
+        11
+      ]
+    },
+    {
+      "name": "gui_geometry_diagnostics",
+      "script": "scripts/test_geometry_config_diagnostics.py",
+      "layer": "gui",
+      "registry_requirements": [
+        "qt"
+      ],
+      "registry_args": [
+        "--layer",
+        "gui"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 15,
+      "assert_sites": 43,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\gui_geometry_diagnostics.log",
+        "bytes": 55,
+        "sha256": "3de5697d65e5cecce797deba4d7be02e4a587006b4ad5f4d84dbf72aac429e5f"
+      },
+      "all_assert_markers": [
+        15
+      ]
+    },
+    {
+      "name": "backend_capabilities",
+      "script": "scripts/test_backend_capabilities.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 21,
+      "assert_sites": 21,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\backend_capabilities.log",
+        "bytes": 48,
+        "sha256": "3c9893abe3721d3370f80a8d2d76f42d4223ebe9ee5db1053fc1c7b10f8dfce8"
+      },
+      "all_assert_markers": [
+        21
+      ]
+    },
+    {
+      "name": "config_precedence",
+      "script": "scripts/test_config_precedence.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 24,
+      "assert_sites": 24,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\config_precedence.log",
+        "bytes": 78,
+        "sha256": "835acfb65275893ec0de3976cdc10b655166027155582387fb8c92f80f430ae3"
+      },
+      "all_assert_markers": [
+        24
+      ]
+    },
+    {
+      "name": "config_duplicate_declarations",
+      "script": "scripts/test_config_duplicate_declarations.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 22,
+      "assert_sites": 11,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\config_duplicate_declarations.log",
+        "bytes": 57,
+        "sha256": "fbb0f763b228dcb2a19033fafd98980970580ed9081203f4f99d8cf9274188c5"
+      },
+      "all_assert_markers": [
+        22
+      ]
+    },
+    {
+      "name": "config_value_finiteness",
+      "script": "scripts/test_config_value_finiteness.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 8,
+      "assert_sites": 8,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\config_value_finiteness.log",
+        "bytes": 47,
+        "sha256": "e99a6a37d65b95b5a84932381a1a67be23e84c88291fdf95f3da1d619e32e1d6"
+      },
+      "all_assert_markers": [
+        8
+      ]
+    },
+    {
+      "name": "run_summary",
+      "script": "scripts/test_run_summary.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 1570,
+      "assert_sites": 460,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\run_summary.log",
+        "bytes": 61,
+        "sha256": "f96468b8f7cec0dd601c4b802b0a6034acef2a810cd7fedfe2105decd5a3e5b9"
+      },
+      "all_assert_markers": [
+        1570
+      ]
+    },
+    {
+      "name": "command_state_gating",
+      "script": "scripts/test_command_state_gating.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 23,
+      "assert_sites": 6,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\command_state_gating.log",
+        "bytes": 48,
+        "sha256": "0f8ebd611ae7274f20c9d1084eabdac030207607399bd1e0faebde1cf90651a7"
+      },
+      "all_assert_markers": [
+        23
+      ]
+    },
+    {
+      "name": "dose_scoring",
+      "script": "scripts/test_dose_scoring.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 79,
+      "assert_sites": 46,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\dose_scoring.log",
+        "bytes": 528,
+        "sha256": "4390a67f0aa21c26716a85e89fab40ede01910c77cf401f543864cd7c00ff404"
+      },
+      "all_assert_markers": [
+        79
+      ]
+    },
+    {
+      "name": "fluence_scoring",
+      "script": "scripts/test_fluence_scoring.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 96,
+      "assert_sites": 31,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\fluence_scoring.log",
+        "bytes": 136,
+        "sha256": "090ce4f9b47ee26340108e51aec715d5ee9cb8fd9c943e2b76c614b0b02819cb"
+      },
+      "all_assert_markers": [
+        96
+      ]
+    },
+    {
+      "name": "root_output",
+      "script": "scripts/test_root_output.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe",
+        "uproot"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 25,
+      "assert_sites": 20,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\root_output.log",
+        "bytes": 551,
+        "sha256": "6b8a807125ed73f00ccafe6885ece312800b61aeeb80602f34de96d8f894ce7f"
+      },
+      "all_assert_markers": [
+        25
+      ]
+    },
+    {
+      "name": "scoring_mesh",
+      "script": "scripts/test_scoring_mesh.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe",
+        "uproot"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 618,
+      "assert_sites": 31,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\scoring_mesh.log",
+        "bytes": 519,
+        "sha256": "08485d14a24efaa071e8280618ed269eb796a891cc41d3bc3ec9e5e9deb56869"
+      },
+      "all_assert_markers": [
+        618
+      ]
+    },
+    {
+      "name": "let_scoring",
+      "script": "scripts/test_let_scoring.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe",
+        "uproot"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 36,
+      "assert_sites": 12,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\let_scoring.log",
+        "bytes": 386,
+        "sha256": "7225a571da441a738ea26846d3e146b3d3fc054c9fbab01be49ac47b85ce8c4f"
+      },
+      "all_assert_markers": [
+        36
+      ]
+    },
+    {
+      "name": "statistical_uncertainty",
+      "script": "scripts/test_statistical_uncertainty.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe",
+        "uproot"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 153,
+      "assert_sites": 18,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\statistical_uncertainty.log",
+        "bytes": 708,
+        "sha256": "e245f5d8947aaf508b04c36a6cf49604a94d17ef621fcb2dc2d5255e5391c8de"
+      },
+      "all_assert_markers": [
+        153
+      ]
+    },
+    {
+      "name": "scoring_numeric",
+      "script": "scripts/test_scoring_numeric.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe",
+        "uproot"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 457,
+      "assert_sites": 23,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\scoring_numeric.log",
+        "bytes": 4992,
+        "sha256": "246b3328411903d138adf85723e4ac04346c46f54a52d72ce845f776b50952df"
+      },
+      "all_assert_markers": [
+        457
+      ]
+    },
+    {
+      "name": "sd_context_failure",
+      "script": "scripts/test_sd_context_failure.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 213,
+      "assert_sites": 19,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\sd_context_failure.log",
+        "bytes": 1276,
+        "sha256": "68cbee4b73f9ec8f062e1a0b9d7caa4e78780759ad6e2ec525922f283ddcfd4d"
+      },
+      "all_assert_markers": [
+        213
+      ]
+    },
+    {
+      "name": "q1_postprocessing",
+      "script": "scripts/test_q1_postprocessing.py",
+      "layer": "gui",
+      "registry_requirements": [
+        "qt",
+        "uproot"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 123,
+      "assert_sites": 35,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\q1_postprocessing.log",
+        "bytes": 1112,
+        "sha256": "810c14497142df3efe208183009b3b3b824648b2f00dec09446982787b54ba43"
+      },
+      "all_assert_markers": [
+        123
+      ]
+    },
+    {
+      "name": "output_provenance",
+      "script": "scripts/test_output_provenance.py",
+      "layer": "static",
+      "registry_requirements": [],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 46,
+      "assert_sites": 26,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\output_provenance.log",
+        "bytes": 1482,
+        "sha256": "8b883d184d51f046d0851f43748b6e7b3b04d57be51350de109686eb7f8f29be"
+      },
+      "all_assert_markers": [
+        46
+      ]
+    },
+    {
+      "name": "output_provenance_backend",
+      "script": "scripts/test_output_provenance.py",
+      "layer": "integration",
+      "registry_requirements": [
+        "exe"
+      ],
+      "registry_args": [
+        "--backend"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 60,
+      "assert_sites": 26,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\output_provenance_backend.log",
+        "bytes": 1482,
+        "sha256": "98db5bc906ced1fed86c46d9910c10e03920608f3a8d81c41ac27b258ad8e99e"
+      },
+      "all_assert_markers": [
+        60
+      ]
+    },
+    {
+      "name": "gui_output_provenance",
+      "script": "gui/smoke_tests/smoke_output_provenance.py",
+      "layer": "gui",
+      "registry_requirements": [
+        "qt"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 21,
+      "assert_sites": 14,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\gui_output_provenance.log",
+        "bytes": 1404,
+        "sha256": "4f59afdb358bf668db4dff34e03d018004d8a44aa584a2b08a4a69479b2cc5f8"
+      },
+      "all_assert_markers": [
+        21
+      ]
+    },
+    {
+      "name": "q1_public_paths",
+      "script": "gui/smoke_tests/smoke_q1_public_paths.py",
+      "layer": "gui",
+      "registry_requirements": [
+        "qt"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 32,
+      "assert_sites": 28,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\q1_public_paths.log",
+        "bytes": 2129,
+        "sha256": "4aaa4b637b2ebb40fc6d469cc9b1ede572f1a535cbacafb0f932839794d77e7c"
+      },
+      "all_assert_markers": [
+        32
+      ]
+    },
+    {
+      "name": "gps_sources",
+      "script": "scripts/test_gps_sources.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 219,
+      "assert_sites": 70,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\gps_sources.log",
+        "bytes": 2774,
+        "sha256": "98667dd06305cf9c31f70ba9d58ebdcb8c90cbd1c337d48d29e76314c3262536"
+      },
+      "all_assert_markers": [
+        219
+      ]
+    },
+    {
+      "name": "geometry_a5",
+      "script": "scripts/test_geometry_a5.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 4320,
+      "assert_sites": 48,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\geometry_a5.log",
+        "bytes": 3982,
+        "sha256": "e8208b5ea388e35c98d0b1b8a4b90cf3d3fdf0deb7f025d04cc3b46bac739b4f"
+      },
+      "all_assert_markers": [
+        4320
+      ]
+    },
+    {
+      "name": "physics_a6",
+      "script": "scripts/test_physics_a6.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 71,
+      "assert_sites": 27,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\physics_a6.log",
+        "bytes": 1421,
+        "sha256": "c82b87bc2d166bb8cd7c3ab85dc47b4561ada6f0b908a9d1909861abfc919207"
+      },
+      "all_assert_markers": [
+        71
+      ]
+    },
+    {
+      "name": "fields_a7",
+      "script": "scripts/test_fields_a7.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 336,
+      "assert_sites": 23,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\fields_a7.log",
+        "bytes": 9598,
+        "sha256": "9e06feb717ec8d3741ca66762e3e8794fc7028d662081abd0bcc7ba1f9c35806"
+      },
+      "all_assert_markers": [
+        336
+      ]
+    },
+    {
+      "name": "max_step_scope",
+      "script": "scripts/test_max_step_scope.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 54,
+      "assert_sites": 8,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\max_step_scope.log",
+        "bytes": 42,
+        "sha256": "e04c8d5c77bde6ae52249e7402441dd3ea7668f2ceebfeffcba34e50ef8c956d"
+      },
+      "all_assert_markers": [
+        54
+      ]
+    },
+    {
+      "name": "material_numeric",
+      "script": "scripts/test_material_numeric.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 66,
+      "assert_sites": 7,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\material_numeric.log",
+        "bytes": 1784,
+        "sha256": "1b982f3146174f24d692414a9aeb43bc65b83b8233c55dc2e28a94c69616b4ca"
+      },
+      "all_assert_markers": [
+        66
+      ]
+    },
+    {
+      "name": "gdml_bias_identity",
+      "script": "scripts/test_gdml_bias_identity.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 97,
+      "assert_sites": 10,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\gdml_bias_identity.log",
+        "bytes": 113,
+        "sha256": "d97ce10a32b52bfdba4c8a0e7cad260468571c914cd8a665060f064ec0dfa4db"
+      },
+      "all_assert_markers": [
+        97
+      ]
+    },
+    {
+      "name": "gdml_touchable_identity",
+      "script": "scripts/test_gdml_touchable_identity.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 65,
+      "assert_sites": 13,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\gdml_touchable_identity.log",
+        "bytes": 2057,
+        "sha256": "01999b44a20a9cb2141a104699724d2ed022d667f5e722502166ec9aecc33143"
+      },
+      "all_assert_markers": [
+        65
+      ]
+    },
+    {
+      "name": "q1_results_backend",
+      "script": "scripts/test_q1_results_backend.py",
+      "layer": "integration",
+      "registry_requirements": [
+        "exe",
+        "qt",
+        "uproot"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 125,
+      "assert_sites": 25,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\q1_results_backend.log",
+        "bytes": 2239,
+        "sha256": "b9420778ff426d0909081e0fcd1e4f4ef9d8568be1b1bc0999a5cd60de9306ea"
+      },
+      "all_assert_markers": [
+        125
+      ]
+    },
+    {
+      "name": "displacement_damage",
+      "script": "scripts/test_displacement_damage.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 44,
+      "assert_sites": 19,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\displacement_damage.log",
+        "bytes": 944,
+        "sha256": "30c24cdf88c24380c6628b4caf1c3a8c22ff4facefd58ee5eaa6c6b8a66e70d0"
+      },
+      "all_assert_markers": [
+        44
+      ]
+    },
+    {
+      "name": "shielding_coating",
+      "script": "scripts/test_shielding_coating.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 68,
+      "assert_sites": 25,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\shielding_coating.log",
+        "bytes": 1912,
+        "sha256": "9e8645662b6d5447d99a23cb84dbec08de715e23c8034b016c6d069d91070e48"
+      },
+      "all_assert_markers": [
+        68
+      ]
+    },
+    {
+      "name": "scenario_shielding_core",
+      "script": "scripts/test_scenario_shielding_core.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 46,
+      "assert_sites": 46,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\scenario_shielding_core.log",
+        "bytes": 51,
+        "sha256": "197d7b12fff3bc50c3874676ced4143dad4e6f06d2e2bd52e2294ac7ea9bb779"
+      },
+      "all_assert_markers": [
+        46
+      ]
+    },
+    {
+      "name": "semiconductor_device",
+      "script": "scripts/test_semiconductor_device.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 53,
+      "assert_sites": 10,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\semiconductor_device.log",
+        "bytes": 2151,
+        "sha256": "8fce5ffa359576341712571c1595c328da3033083fa6fd6f49f0a726c5393dab"
+      },
+      "all_assert_markers": [
+        53
+      ]
+    },
+    {
+      "name": "detector_response",
+      "script": "scripts/test_detector_response.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 19,
+      "assert_sites": 9,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\detector_response.log",
+        "bytes": 512,
+        "sha256": "9284d353e53dd91db0ef4097eefa9c12115c181f1d4a963a66fbf032ac213ac8"
+      },
+      "all_assert_markers": [
+        19
+      ]
+    },
+    {
+      "name": "trajectories",
+      "script": "scripts/test_trajectories.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 19257,
+      "assert_sites": 30,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\trajectories.log",
+        "bytes": 591,
+        "sha256": "425fb1f7de65793db3d5cd019281da37415a2e33a592f34aa6c1c9a9b78d4288"
+      },
+      "all_assert_markers": [
+        19257
+      ]
+    },
+    {
+      "name": "geant4_data_locator",
+      "script": "scripts/test_geant4_data_locator.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 12,
+      "assert_sites": 13,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\geant4_data_locator.log",
+        "bytes": 694,
+        "sha256": "956dd5d137f3d22d35ea7c45c5016d8fbf771e28e77b446d6d67e07cd4e1203b"
+      },
+      "all_assert_markers": [
+        12
+      ]
+    },
+    {
+      "name": "benchmarks",
+      "script": "scripts/run_benchmarks.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe"
+      ],
+      "registry_args": [
+        "--quick"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 1,
+      "assert_sites": 1,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\benchmarks.log",
+        "bytes": 3945,
+        "sha256": "6b7d9e3d531dc5fd662c9edf8d03b272e9086f17f4fff767b3d32bff65bd1886"
+      },
+      "all_assert_markers": [
+        1
+      ]
+    },
+    {
+      "name": "interactive_commands",
+      "script": "scripts/test_interactive_commands.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 309,
+      "assert_sites": 168,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\interactive_commands.log",
+        "bytes": 54,
+        "sha256": "5419a6f1add62c88c4464cfcffbaada7e8dc3e38a6393fad56168c299d1e0f75"
+      },
+      "all_assert_markers": [
+        309
+      ]
+    },
+    {
+      "name": "unsupported_features",
+      "script": "scripts/test_unsupported_features.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe"
+      ],
+      "registry_args": [
+        "--layer",
+        "backend"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 21,
+      "assert_sites": 9,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\unsupported_features.log",
+        "bytes": 70,
+        "sha256": "e6a16010b240e0bd10b6d41dfa7640994927fe57d434e4a47c7a5b4b3ee46f7e"
+      },
+      "all_assert_markers": [
+        21
+      ]
+    },
+    {
+      "name": "unconsumed_config",
+      "script": "scripts/test_unconsumed_config.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 20,
+      "assert_sites": 12,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\unconsumed_config.log",
+        "bytes": 67,
+        "sha256": "383409e62b923ca8ace2e8b5d9d249cb01e981003f9c1971e8b350f7e2a447a9"
+      },
+      "all_assert_markers": [
+        20
+      ]
+    },
+    {
+      "name": "material_schema",
+      "script": "scripts/test_material_config_schema.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 85,
+      "assert_sites": 8,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\material_schema.log",
+        "bytes": 55,
+        "sha256": "2cf0bd3d603116f4496528da8f0acec9f184fa6fabdf447d3d9017380484daa4"
+      },
+      "all_assert_markers": [
+        85
+      ]
+    },
+    {
+      "name": "geometry_safety",
+      "script": "scripts/test_geometry_safety_contract.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe"
+      ],
+      "registry_args": [
+        "--layer",
+        "backend"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 203,
+      "assert_sites": 15,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\geometry_safety.log",
+        "bytes": 53,
+        "sha256": "3a5185b6b8d7ad8c7ab1ff26f28fb6614d8e56dfa3db5d7b4fd6f9c947a8437c"
+      },
+      "all_assert_markers": [
+        203
+      ]
+    },
+    {
+      "name": "geometry_diagnostics",
+      "script": "scripts/test_geometry_config_diagnostics.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe"
+      ],
+      "registry_args": [
+        "--layer",
+        "backend"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 50,
+      "assert_sites": 43,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\geometry_diagnostics.log",
+        "bytes": 55,
+        "sha256": "3c165542467bd70d724755096505f54deea9de9db71b3a51b99800eb3d42477a"
+      },
+      "all_assert_markers": [
+        50
+      ]
+    },
+    {
+      "name": "macro_plan",
+      "script": "scripts/test_macro_plan.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 33,
+      "assert_sites": 33,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\macro_plan.log",
+        "bytes": 38,
+        "sha256": "6d61d5ac7b3a5328c151b8d4ac603fbbedb83a79ad51b6082a5ffdea410aadcd"
+      },
+      "all_assert_markers": [
+        33
+      ]
+    },
+    {
+      "name": "default_geometry",
+      "script": "scripts/test_default_geometry_batch.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 24,
+      "assert_sites": 19,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\default_geometry.log",
+        "bytes": 65,
+        "sha256": "1db7f2bcab92c969dcd22bf025fb2d415e7422c6f490d7bbd98b12a9027ff46a"
+      },
+      "all_assert_markers": [
+        24
+      ]
+    },
+    {
+      "name": "geometry_roundtrip",
+      "script": "scripts/test_geometry_roundtrip_backend.py",
+      "layer": "integration",
+      "registry_requirements": [
+        "exe",
+        "qt"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 45,
+      "assert_sites": 17,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\geometry_roundtrip.log",
+        "bytes": 83,
+        "sha256": "a94cd21580a8cf6c71b7108a740aded54330adc3ea3a59becda6caeac00ce307"
+      },
+      "all_assert_markers": [
+        45
+      ]
+    },
+    {
+      "name": "biasing_targets",
+      "script": "scripts/test_biasing_target_contract.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 80,
+      "assert_sites": 49,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\biasing_targets.log",
+        "bytes": 66,
+        "sha256": "27e922c562c59f5ef4427f364a93571ff3394aa7f3ac8f4069a9c021151e935d"
+      },
+      "all_assert_markers": [
+        80
+      ]
+    },
+    {
+      "name": "biasing_worker_runtime",
+      "script": "scripts/test_biasing_worker_runtime.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 3479,
+      "assert_sites": 40,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\biasing_worker_runtime.log",
+        "bytes": 931,
+        "sha256": "fe899a3daff8932fa4566bbe9355b378e22c81f17d3099a51e3685cc8eafb868"
+      },
+      "all_assert_markers": [
+        3479
+      ]
+    },
+    {
+      "name": "biasing_step_weight",
+      "script": "scripts/test_biasing_step_weight.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 79,
+      "assert_sites": 13,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\biasing_step_weight.log",
+        "bytes": 343,
+        "sha256": "56b486681d19c42a4f7721d94ff54c069a43e6d09909f26238cd4beaea1f0ec6"
+      },
+      "all_assert_markers": [
+        79
+      ]
+    },
+    {
+      "name": "random_command_semantics",
+      "script": "scripts/test_random_command_semantics.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 302,
+      "assert_sites": 23,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\random_command_semantics.log",
+        "bytes": 98,
+        "sha256": "748da783f08fdd035993ccd53f4aff1c1deb8a240dc2c07f54727f34f994032f"
+      },
+      "all_assert_markers": [
+        302
+      ]
+    },
+    {
+      "name": "run_reinitialization",
+      "script": "scripts/test_run_reinitialization.py",
+      "layer": "backend",
+      "registry_requirements": [
+        "exe"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 389,
+      "assert_sites": 29,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\run_reinitialization.log",
+        "bytes": 1956,
+        "sha256": "04bdfe4ecb339f774c6f2ea043bf0462e8836682a041a3bf5d632031938a0e0f"
+      },
+      "all_assert_markers": [
+        389
+      ]
+    },
+    {
+      "name": "gui_run_inputs",
+      "script": "gui/smoke_tests/smoke_run_input_modes.py",
+      "layer": "integration",
+      "registry_requirements": [
+        "exe",
+        "qt"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 103,
+      "assert_sites": 94,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\gui_run_inputs.log",
+        "bytes": 1291,
+        "sha256": "cb8e544fefc69f99d5bdc0e464b02d6831f6c59f29fdb29d9f9077eab434f9b9"
+      },
+      "all_assert_markers": [
+        103
+      ]
+    },
+    {
+      "name": "gui_backend_geometry",
+      "script": "gui/smoke_tests/smoke_backend_geometry.py",
+      "layer": "integration",
+      "registry_requirements": [
+        "exe",
+        "qt"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 14,
+      "assert_sites": 14,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\gui_backend_geometry.log",
+        "bytes": 1485,
+        "sha256": "810a12af3d3c6cd1a909e88a497935c218a9b2c117726b983ec0d6b168c57771"
+      },
+      "all_assert_markers": [
+        14
+      ]
+    },
+    {
+      "name": "gui_backend_package",
+      "script": "gui/smoke_tests/smoke_geometry_backend_package.py",
+      "layer": "integration",
+      "registry_requirements": [
+        "exe",
+        "qt"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 74,
+      "assert_sites": 22,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\gui_backend_package.log",
+        "bytes": 547,
+        "sha256": "726bc0082723c146b0366e6ecc7cb12833a5fa09d3a28992d1c64b01f003556c"
+      },
+      "all_assert_markers": [
+        74
+      ]
+    },
+    {
+      "name": "gui_plots_backend",
+      "script": "gui/smoke_tests/smoke_plots_backend.py",
+      "layer": "integration",
+      "registry_requirements": [
+        "exe",
+        "qt"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 32,
+      "assert_sites": 19,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\gui_plots_backend.log",
+        "bytes": 257,
+        "sha256": "5b72fc105273625cbf2796746558480af1212b51699f11170a8a74739498be31"
+      },
+      "all_assert_markers": [
+        32
+      ]
+    },
+    {
+      "name": "gui_new_simulation_backend",
+      "script": "gui/smoke_tests/smoke_new_simulation_backend.py",
+      "layer": "integration",
+      "registry_requirements": [
+        "exe",
+        "qt"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 17,
+      "assert_sites": 9,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\gui_new_simulation_backend.log",
+        "bytes": 281,
+        "sha256": "40c733889bbaa625922b4b1102e9b648c2ed1a96a9f27dedfdfe36458917238b"
+      },
+      "all_assert_markers": [
+        17
+      ]
+    },
+    {
+      "name": "gui_scans_backend",
+      "script": "gui/smoke_tests/smoke_scans_backend.py",
+      "layer": "integration",
+      "registry_requirements": [
+        "exe",
+        "qt"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 18,
+      "assert_sites": 14,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\gui_scans_backend.log",
+        "bytes": 269,
+        "sha256": "94a2bad8c3dd89e7ba73b442bd85293cf9d5cb650603a5b676b68b73bfba878b"
+      },
+      "all_assert_markers": [
+        18
+      ]
+    },
+    {
+      "name": "gui_backend_agreement",
+      "script": "scripts/test_gui_backend_agreement.py",
+      "layer": "integration",
+      "registry_requirements": [
+        "exe",
+        "qt"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 107,
+      "assert_sites": 2,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\gui_backend_agreement.log",
+        "bytes": 4791,
+        "sha256": "e2914f184e417a541de3d4636fb76487a92cc6fb31d2bd6b36907d14406884d1"
+      },
+      "all_assert_markers": [
+        107
+      ]
+    },
+    {
+      "name": "gui_backend_geometry_auto",
+      "script": "gui/smoke_tests/smoke_backend_geometry_auto.py",
+      "layer": "integration",
+      "registry_requirements": [
+        "exe",
+        "qt"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 30,
+      "assert_sites": 30,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\gui_backend_geometry_auto.log",
+        "bytes": 604,
+        "sha256": "5da869783a8ba882b754493bfcbe13fb64c259203abc9211bca2759ffd5528cd"
+      },
+      "all_assert_markers": [
+        30
+      ]
+    },
+    {
+      "name": "gui_3d_view",
+      "script": "gui/smoke_tests/smoke_3d_view.py",
+      "layer": "gui",
+      "registry_requirements": [
+        "qt"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 35,
+      "assert_sites": 35,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\gui_3d_view.log",
+        "bytes": 357,
+        "sha256": "67530f3e61bbaf47e4096016fad458e08e1e236e0ebd4919c83c0f41ff44ffea"
+      },
+      "all_assert_markers": [
+        35
+      ]
+    },
+    {
+      "name": "gui_config_editors",
+      "script": "gui/smoke_tests/smoke_config_editors.py",
+      "layer": "gui",
+      "registry_requirements": [
+        "qt"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 33,
+      "assert_sites": 23,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\gui_config_editors.log",
+        "bytes": 295,
+        "sha256": "8d7717b2addb5dc3ff15e90c282577590f1f4072d6ce9b61563c035be71c3556"
+      },
+      "all_assert_markers": [
+        33
+      ]
+    },
+    {
+      "name": "gui_trajectory_view",
+      "script": "gui/smoke_tests/smoke_trajectory_view.py",
+      "layer": "integration",
+      "registry_requirements": [
+        "exe",
+        "qt"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 35,
+      "assert_sites": 35,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\gui_trajectory_view.log",
+        "bytes": 2728,
+        "sha256": "5f6c7a2623ee434c0835e587fca6953f43a314e6c021dc465d02c006dfe4fc42"
+      },
+      "all_assert_markers": [
+        35
+      ]
+    },
+    {
+      "name": "gui_sketch_accuracy",
+      "script": "scripts/test_sketch_accuracy.py",
+      "layer": "integration",
+      "registry_requirements": [
+        "exe",
+        "qt"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 55,
+      "assert_sites": 3,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\gui_sketch_accuracy.log",
+        "bytes": 110,
+        "sha256": "013a84df8fe260a1fc62f9133340429c47e22eff054d783273dd2a7e3f112d91"
+      },
+      "all_assert_markers": [
+        55
+      ]
+    },
+    {
+      "name": "gui_source_glyphs",
+      "script": "gui/smoke_tests/smoke_source_glyphs.py",
+      "layer": "integration",
+      "registry_requirements": [
+        "exe",
+        "qt"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 40,
+      "assert_sites": 32,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\gui_source_glyphs.log",
+        "bytes": 331,
+        "sha256": "588ca23a88eb08566d477796a002ada630db45333f628a5dea28fa31d5061426"
+      },
+      "all_assert_markers": [
+        40
+      ]
+    },
+    {
+      "name": "config_schema",
+      "script": "scripts/test_config_schema.py",
+      "layer": "integration",
+      "registry_requirements": [
+        "exe",
+        "qt"
+      ],
+      "registry_args": [],
+      "status": "pass",
+      "exit_code": 0,
+      "assertions_executed": 309,
+      "assert_sites": 12,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\config_schema.log",
+        "bytes": 313,
+        "sha256": "04ee65bce4870c0662d6779e91bd0d9fba26168987c0fbd6ad5c44be222706c0"
+      },
+      "all_assert_markers": [
+        309
+      ]
+    }
+  ],
+  "independent_evidence_gates": [
+    {
+      "argv": [
+        "D:\\Geant4\\G4UniversalSim\\gui\\.venv\\Scripts\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-release-windows\\20261030-202435-a53c3ee6\\report.json",
+        "--baseline",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\docs\\verification\\f1-automated-20261030\\windows\\final-1\\report.json"
+      ],
+      "exit_code": 0,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\f4-windows-7d718d0-independent-gate.log",
+        "bytes": 359,
+        "sha256": "cc2edb7d5d41c25a4d9eeb48be48057a74015c82faf6c838d74ed15aa5c6785c"
+      }
+    },
+    {
+      "argv": [
+        "D:\\Geant4\\G4UniversalSim\\gui\\.venv\\Scripts\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\scripts\\check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\docs\\verification\\f1-automated-20261030\\windows\\final-1\\report.json"
+      ],
+      "exit_code": 0,
+      "raw_log": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\f4-windows-f1-baseline-independent-gate.log",
+        "bytes": 327,
+        "sha256": "d546a8621d5cb79acd3d6d726595896db003672be5eb3d8334eb21e52ac79adf"
+      }
+    }
+  ],
+  "binding_runtime": {
+    "identity": {
+      "python": "3.11.9 (tags/v3.11.9:de54cf5, Apr  2 2024, 10:12:12) [MSC v.1938 64 bit (AMD64)]",
+      "implementation": "CPython",
+      "PySide6": "6.11.1",
+      "shiboken6": "6.11.1",
+      "Qt": "6.11.1"
+    },
+    "operations": [
+      {
+        "operation": "QWidget.update",
+        "iterations": 100,
+        "none_ref_delta": 0
+      },
+      {
+        "operation": "QObject.setObjectName",
+        "iterations": 100,
+        "none_ref_delta": 0
+      },
+      {
+        "operation": "QObject.missing_property",
+        "iterations": 100,
+        "none_ref_delta": 0
+      },
+      {
+        "operation": "QObject.existing_false_property",
+        "iterations": 100,
+        "none_ref_delta": 0
+      }
+    ],
+    "assertions": 8,
+    "exit_code": 0
+  },
+  "root_actual_runner_completion": {
+    "acceptance_receipt": {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\f4-windows-7d718d0-acceptance.json",
+      "bytes": 741,
+      "sha256": "d79fd6f0b9630efb40214ac137907fdd33d1106354a0a3cdcbe9ff3c46dd9e8e"
+    },
+    "runner_log": {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\f4-release-windows-runner.log",
+      "bytes": 6314,
+      "sha256": "c2e21277e44a159b1db5ff8e2f128f23626d4af612f6ac872bfa267f42d5bda3"
+    },
+    "root_gate_log": {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\f4-windows-7d718d0-gate.log",
+      "bytes": 297,
+      "sha256": "b639c9729bee1cccea69ff58ef87f2d88a9e81204405b65c03be1fa85e5a2fc7"
+    },
+    "session_id": 16898,
+    "actual_exit_code": 0,
+    "attribution": "Actual outer process exit is recorded by parent from original session; this independent review verifies its persisted receipt and matching original completion log, not a new wait of that already-ended session.",
+    "all_152_runner_pass_lines_match_report": true
+  },
+  "native_scope": {
+    "review": {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\f4-native-7d718d0-independent-final-review.json",
+      "bytes": 38612,
+      "sha256": "80132c28ab738efb0144844eedfd2b644fe9d5d0c6f29e51d290d31342f9e182"
+    },
+    "unique_states": 13,
+    "images_actually_reviewed": 19,
+    "business_equal_input_pairs": 15,
+    "actual_process_exit": 0,
+    "session_id": 19960,
+    "scope": "Previously independently accepted Windows native navigation; Esc timer/source-fixture/theme-menu boundaries retained, not reobserved by this report audit"
+  },
+  "limitations": [
+    "No tests, backend, GUI, CI or desktop were rerun; only report gates read existing evidence.",
+    "Assertion counts are executed v3 assertion statements, not physical correctness or complete unexercised behavior coverage.",
+    "All report rows were checked against actual product7d registry, not just expected total152.",
+    "Optional PyVista coverage remains not_proven_by_this_runner as in original report.",
+    "Final CI a9 remains pending; Windows/native acceptance does not close F4 or substitute old CI reports."
+  ],
+  "original_evidence_unchanged": true,
+  "phase_closure": "pending_final_ci_and_archive_review"
+}

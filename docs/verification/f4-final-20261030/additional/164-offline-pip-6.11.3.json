@@ -1,0 +1,280 @@
+{
+  "version": "1",
+  "pip_version": "24.0",
+  "install": [
+    {
+      "download_info": {
+        "url": "file:///mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/f4-qt-dependency-validation/wheelhouse/pyside6-6.11.3-cp310-abi3-manylinux_2_34_x86_64.whl",
+        "archive_info": {
+          "hash": "sha256=ef2bdb61b1ad7e5e8db8ca7fb1a60d8b7960dfd490c582d005d8903044ab44f1",
+          "hashes": {
+            "sha256": "ef2bdb61b1ad7e5e8db8ca7fb1a60d8b7960dfd490c582d005d8903044ab44f1"
+          }
+        }
+      },
+      "is_direct": false,
+      "is_yanked": false,
+      "requested": true,
+      "metadata": {
+        "metadata_version": "2.4",
+        "name": "PySide6",
+        "version": "6.11.3",
+        "summary": "Python bindings for the Qt cross-platform application and UI framework",
+        "description": "# PySide6\n\n### Introduction\n\n**Important:** for Qt5 compatibility, check [PySide2](https://pypi.org/project/PySide2)\n\nPySide6 is the official Python module from the\n[Qt for Python project](https://wiki.qt.io/Qt_for_Python),\nwhich provides access to the complete Qt 6.0+ framework.\n\nThe Qt for Python project is developed in the open, with all facilities you'd expect\nfrom any modern OSS project such as all code in a git repository and an open\ndesign process. We welcome any contribution conforming to the\n[Qt Contribution Agreement](https://www.qt.io/contributionagreement/).\n\n### Installation\n\nIt is possible to install via `pip`, both from Qt's servers\nand [PyPi](https://pypi.org/project/PySide6/):\n\n```\npip install PySide6\n```\n\n> Please note: this wheel is an alias to other two wheels\n> [PySide6_Essentials](https://pypi.org/project/PySide6_Essentials) and\n> [PySide6_Addons](https://pypi.org/project/PySide6_Addons), which contains\n> a predefined list of Qt Modules.\n\n#### Dependencies\n\nPySide6 versions following 6.0 use a C++ parser based on\n[Clang](https://clang.llvm.org/). The Clang library (C-bindings),\nis required for building. Prebuilt versions of it can be downloaded from\n[download.qt.io](https://download.qt.io/development_releases/prebuilt/libclang/).\n\nAfter unpacking the archive, set the environment variable *LLVM_INSTALL_DIR* to\npoint to the folder containing the *include* and *lib* directories of Clang:\n\n```\n7z x .../libclang-release_22.1.8-based-linux-Rhel9.6-gcc11.4-x86_64.7z\nexport LLVM_INSTALL_DIR=$PWD/libclang\n```\n\nOn Windows:\n\n```\n7z x .../libclang-release_22.1.8-based-windows-vs2022_64.7z\nSET LLVM_INSTALL_DIR=%CD%\\libclang\n```\n\n### Building from source\n\nFor building PySide6 from scratch, please read about\n[Building from Source](https://doc.qt.io/qtforpython-6/building_from_source/index.html).\nThis process will include getting the code:\n\n```\ngit clone https://code.qt.io/pyside/pyside-setup\ncd pyside-setup\ngit checkout 6.x # if a specific version is needed\n```\n\nthen install the dependencies, and following the instructions per platform.\nA common build command will look like:\n\n```\npython setup.py install --qtpaths=/path/to/bin/qtpaths6 --build-tests\n```\n\nYou can obtain more information about the options to build PySide and Shiboken\nin [our wiki](https://wiki.qt.io/Qt_for_Python).\n\n### Documentation and Bugs\n\nYou can find more information about the PySide6 module API in the\n[official Qt for Python documentation](https://doc.qt.io/qtforpython/).\n\nIf you come across any issue, please file a bug report at our\n[JIRA tracker](https://qt-project.atlassian.net/browse/PYSIDE) following\nour [guidelines](https://wiki.qt.io/Qt_for_Python/Reporting_Bugs).\n\n### Community\n\nCheck our channels on IRC (Libera), Telegram, Gitter, Matrix, and mailing list,\nand [join our community](https://wiki.qt.io/Qt_for_Python#Community)!\n\n### Licensing\n\nPySide6 is available under both Open Source (LGPLv3 or GPLv2 or GPLv3) and commercial\nlicense. Using PyPi is the recommended installation source, because the\ncontent of the wheels is valid for both cases. For more information, refer to\nthe [Qt Licensing page](https://www.qt.io/licensing/).\n",
+        "description_content_type": "text/markdown",
+        "keywords": [
+          "Qt"
+        ],
+        "author_email": "Qt for Python Team <pyside@qt-project.org>",
+        "license": "LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only",
+        "classifier": [
+          "Development Status :: 5 - Production/Stable",
+          "Environment :: Console",
+          "Environment :: MacOS X",
+          "Environment :: X11 Applications :: Qt",
+          "Environment :: Win32 (MS Windows)",
+          "Intended Audience :: Developers",
+          "Operating System :: MacOS :: MacOS X",
+          "Operating System :: POSIX",
+          "Operating System :: POSIX :: Linux",
+          "Operating System :: Microsoft",
+          "Operating System :: Microsoft :: Windows",
+          "Programming Language :: C++",
+          "Programming Language :: Python",
+          "Programming Language :: Python :: 3",
+          "Programming Language :: Python :: 3.10",
+          "Programming Language :: Python :: 3.11",
+          "Programming Language :: Python :: 3.12",
+          "Programming Language :: Python :: 3.13",
+          "Programming Language :: Python :: 3.14",
+          "Topic :: Database",
+          "Topic :: Software Development",
+          "Topic :: Software Development :: Code Generators",
+          "Topic :: Software Development :: Libraries :: Application Frameworks",
+          "Topic :: Software Development :: User Interfaces",
+          "Topic :: Software Development :: Widget Sets"
+        ],
+        "requires_dist": [
+          "shiboken6==6.11.3",
+          "PySide6_Essentials==6.11.3",
+          "PySide6_Addons==6.11.3",
+          "tomli>=2.0.1; python_version < \"3.11\""
+        ],
+        "requires_python": "<3.15,>=3.10",
+        "project_url": [
+          "Homepage, https://pyside.org",
+          "Documentation, https://doc.qt.io/qtforpython",
+          "Repository, https://code.qt.io/cgit/pyside/pyside-setup.git/",
+          "Changelog, https://code.qt.io/cgit/pyside/pyside-setup.git/tree/doc/changelogs",
+          "Tracker, https://qt-project.atlassian.net/browse/PYSIDE"
+        ]
+      }
+    },
+    {
+      "download_info": {
+        "url": "file:///mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/f4-qt-dependency-validation/wheelhouse/pyside6_addons-6.11.3-cp310-abi3-manylinux_2_34_x86_64.whl",
+        "archive_info": {
+          "hash": "sha256=5cab663fbff1b7a1fa7e641754de3ca1ea410407fc70bd4e240144b42d09a69c",
+          "hashes": {
+            "sha256": "5cab663fbff1b7a1fa7e641754de3ca1ea410407fc70bd4e240144b42d09a69c"
+          }
+        }
+      },
+      "is_direct": false,
+      "is_yanked": false,
+      "requested": false,
+      "metadata": {
+        "metadata_version": "2.4",
+        "name": "PySide6_Addons",
+        "version": "6.11.3",
+        "summary": "Python bindings for the Qt cross-platform application and UI framework (Addons)",
+        "description": "# PySide6 Addons\n\nPySide6 is the official Python module from the\n[Qt for Python project](https://wiki.qt.io/Qt_for_Python),\nwhich provides access to the complete Qt 6.0+ framework.\n\nThe Qt for Python project is developed in the open, with all facilities you'd expect\nfrom any modern OSS project such as all code in a git repository and an open\ndesign process. We welcome any contribution conforming to the\n[Qt Contribution Agreement](https://www.qt.io/contributionagreement/).\n\nThis is a complementary wheel for [PySide6](https://pypi.org/project/PySide6),\nit includes the following Qt modules:\n\n* Qt3DAnimation\n* Qt3DCore\n* Qt3DExtras\n* Qt3DInput\n* Qt3DLogic\n* Qt3DRender\n* QtAxContainer\n* QtBluetooth\n* QtCanvasPainter\n* QtCharts\n* QtDataVisualization\n* QtGraphs\n* QtGraphsWidgets\n* QtMultimedia\n* QtMultimediaWidgets\n* QtNetworkAuth\n* QtNfc\n* QtPositioning\n* QtQuick3D\n* QtRemoteObjects\n* QtScxml\n* QtSensors\n* QtSerialPort\n* QtSerialBus\n* QtSpatialAudio\n* QtStateMachine\n* QtTextToSpeech\n* QtVirtualKeyboard\n* QtWebChannel\n* QtWebEngineCore\n* QtWebEngineQuick\n* QtWebEngineWidgets\n* QtWebSockets\n* QtPdf\n* QtPdfWidgets\n* QtHttpServer\n* QtLocation\n* QtAsyncio\n* QtWebView\n\n### Documentation and Bugs\n\nYou can find more information about the PySide6 module API in the\n[official Qt for Python documentation](https://doc.qt.io/qtforpython/).\n\nIf you come across any issue, please file a bug report at our\n[JIRA tracker](https://qt-project.atlassian.net/browse/PYSIDE) following\nour [guidelines](https://wiki.qt.io/Qt_for_Python/Reporting_Bugs).\n\n### Community\n\nCheck our channels on IRC (Libera), Telegram, Gitter, Matrix, and mailing list,\nand [join our community](https://wiki.qt.io/Qt_for_Python#Community)!\n\n### Licensing\n\nPySide6 is available under both Open Source (LGPLv3 or GPLv2 or GPLv3) and commercial\nlicense. Using PyPi is the recommended installation source, because the\ncontent of the wheels is valid for both cases. For more information, refer to\nthe [Qt Licensing page](https://www.qt.io/licensing/).\n",
+        "description_content_type": "text/markdown",
+        "keywords": [
+          "Qt"
+        ],
+        "author_email": "Qt for Python Team <pyside@qt-project.org>",
+        "license": "LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only",
+        "classifier": [
+          "Development Status :: 5 - Production/Stable",
+          "Environment :: Console",
+          "Environment :: MacOS X",
+          "Environment :: X11 Applications :: Qt",
+          "Environment :: Win32 (MS Windows)",
+          "Intended Audience :: Developers",
+          "Operating System :: MacOS :: MacOS X",
+          "Operating System :: POSIX",
+          "Operating System :: POSIX :: Linux",
+          "Operating System :: Microsoft",
+          "Operating System :: Microsoft :: Windows",
+          "Programming Language :: C++",
+          "Programming Language :: Python",
+          "Programming Language :: Python :: 3",
+          "Programming Language :: Python :: 3.10",
+          "Programming Language :: Python :: 3.11",
+          "Programming Language :: Python :: 3.12",
+          "Programming Language :: Python :: 3.13",
+          "Programming Language :: Python :: 3.14",
+          "Topic :: Database",
+          "Topic :: Software Development",
+          "Topic :: Software Development :: Code Generators",
+          "Topic :: Software Development :: Libraries :: Application Frameworks",
+          "Topic :: Software Development :: User Interfaces",
+          "Topic :: Software Development :: Widget Sets"
+        ],
+        "requires_dist": [
+          "shiboken6==6.11.3",
+          "PySide6_Essentials==6.11.3"
+        ],
+        "requires_python": "<3.15,>=3.10",
+        "project_url": [
+          "Homepage, https://pyside.org",
+          "Documentation, https://doc.qt.io/qtforpython",
+          "Repository, https://code.qt.io/cgit/pyside/pyside-setup.git/",
+          "Changelog, https://code.qt.io/cgit/pyside/pyside-setup.git/tree/doc/changelogs",
+          "Tracker, https://qt-project.atlassian.net/browse/PYSIDE"
+        ]
+      }
+    },
+    {
+      "download_info": {
+        "url": "file:///mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/f4-qt-dependency-validation/wheelhouse/pyside6_essentials-6.11.3-cp310-abi3-manylinux_2_34_x86_64.whl",
+        "archive_info": {
+          "hash": "sha256=c6a5c3b58bf55aef6e09a7de690ff6133335014ab81a7f22f56363ea08e8f6a3",
+          "hashes": {
+            "sha256": "c6a5c3b58bf55aef6e09a7de690ff6133335014ab81a7f22f56363ea08e8f6a3"
+          }
+        }
+      },
+      "is_direct": false,
+      "is_yanked": false,
+      "requested": false,
+      "metadata": {
+        "metadata_version": "2.4",
+        "name": "PySide6_Essentials",
+        "version": "6.11.3",
+        "summary": "Python bindings for the Qt cross-platform application and UI framework (Essentials)",
+        "description": "# PySide6 Essentials\n\nPySide6 is the official Python module from the\n[Qt for Python project](https://wiki.qt.io/Qt_for_Python),\nwhich provides access to the complete Qt 6.0+ framework.\n\nThe Qt for Python project is developed in the open, with all facilities you'd expect\nfrom any modern OSS project such as all code in a git repository and an open\ndesign process. We welcome any contribution conforming to the\n[Qt Contribution Agreement](https://www.qt.io/contributionagreement/).\n\nThis is a minimal wheel for [PySide6](https://pypi.org/project/PySide6),\nit includes only the essentials Qt modules:\n\n* QtCore\n* QtGui\n* QtWidgets\n* QtHelp\n* QtNetwork\n* QtConcurrent\n* QtDBus\n* QtDesigner\n* QtOpenGL\n* QtOpenGLWidgets\n* QtPrintSupport\n* QtQml\n* QtQuick\n* QtQuickControls2\n* QtQuickTest\n* QtQuickWidgets\n* QtXml\n* QtTest\n* QtSql\n* QtSvg\n* QtSvgWidgets\n* QtUiTools\n\n### Documentation and Bugs\n\nYou can find more information about the PySide6 module API in the\n[official Qt for Python documentation](https://doc.qt.io/qtforpython/).\n\nIf you come across any issue, please file a bug report at our\n[JIRA tracker](https://qt-project.atlassian.net/browse/PYSIDE) following\nour [guidelines](https://wiki.qt.io/Qt_for_Python/Reporting_Bugs).\n\n### Community\n\nCheck our channels on IRC (Libera), Telegram, Gitter, Matrix, and mailing list,\nand [join our community](https://wiki.qt.io/Qt_for_Python#Community)!\n\n### Licensing\n\nPySide6 is available under both Open Source (LGPLv3 or GPLv2 or GPLv3) and commercial\nlicense. Using PyPi is the recommended installation source, because the\ncontent of the wheels is valid for both cases. For more information, refer to\nthe [Qt Licensing page](https://www.qt.io/licensing/).\n",
+        "description_content_type": "text/markdown",
+        "keywords": [
+          "Qt"
+        ],
+        "author_email": "Qt for Python Team <pyside@qt-project.org>",
+        "license": "LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only",
+        "classifier": [
+          "Development Status :: 5 - Production/Stable",
+          "Environment :: Console",
+          "Environment :: MacOS X",
+          "Environment :: X11 Applications :: Qt",
+          "Environment :: Win32 (MS Windows)",
+          "Intended Audience :: Developers",
+          "Operating System :: MacOS :: MacOS X",
+          "Operating System :: POSIX",
+          "Operating System :: POSIX :: Linux",
+          "Operating System :: Microsoft",
+          "Operating System :: Microsoft :: Windows",
+          "Programming Language :: C++",
+          "Programming Language :: Python",
+          "Programming Language :: Python :: 3",
+          "Programming Language :: Python :: 3.10",
+          "Programming Language :: Python :: 3.11",
+          "Programming Language :: Python :: 3.12",
+          "Programming Language :: Python :: 3.13",
+          "Programming Language :: Python :: 3.14",
+          "Topic :: Database",
+          "Topic :: Software Development",
+          "Topic :: Software Development :: Code Generators",
+          "Topic :: Software Development :: Libraries :: Application Frameworks",
+          "Topic :: Software Development :: User Interfaces",
+          "Topic :: Software Development :: Widget Sets"
+        ],
+        "requires_dist": [
+          "shiboken6==6.11.3"
+        ],
+        "requires_python": "<3.15,>=3.10",
+        "project_url": [
+          "Homepage, https://pyside.org",
+          "Documentation, https://doc.qt.io/qtforpython",
+          "Repository, https://code.qt.io/cgit/pyside/pyside-setup.git/",
+          "Changelog, https://code.qt.io/cgit/pyside/pyside-setup.git/tree/doc/changelogs",
+          "Tracker, https://qt-project.atlassian.net/browse/PYSIDE"
+        ]
+      }
+    },
+    {
+      "download_info": {
+        "url": "file:///mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/f4-qt-dependency-validation/wheelhouse/shiboken6-6.11.3-cp310-abi3-manylinux_2_34_x86_64.whl",
+        "archive_info": {
+          "hash": "sha256=e601c957011345c741b88f661a12486f478db881d6777bdf37e3dc7a8d3387c6",
+          "hashes": {
+            "sha256": "e601c957011345c741b88f661a12486f478db881d6777bdf37e3dc7a8d3387c6"
+          }
+        }
+      },
+      "is_direct": false,
+      "is_yanked": false,
+      "requested": false,
+      "metadata": {
+        "metadata_version": "2.4",
+        "name": "shiboken6",
+        "version": "6.11.3",
+        "summary": "Python/C++ bindings helper module",
+        "description": "# Shiboken6 module\n\nThe purpose of the **shiboken6 Python module**\nis to access information related to the binding generation that could be used to integrate\nC++ programs to Python, or even to get useful information to debug\nan application.\n\nMostly the idea is to interact with Shiboken objects,\nwhere one can check if it is valid, or if the generated Python wrapper\nis invalid after the underlying C++ object has been destroyed.\n\nMore information on the available functions can be found\nin our [official documentation](https://doc.qt.io/qtforpython/shiboken6/shibokenmodule.html)\n",
+        "description_content_type": "text/markdown",
+        "keywords": [
+          "Qt"
+        ],
+        "author_email": "Qt for Python Team <pyside@qt-project.org>",
+        "license": "LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only",
+        "classifier": [
+          "Development Status :: 5 - Production/Stable",
+          "Environment :: Console",
+          "Environment :: MacOS X",
+          "Environment :: X11 Applications :: Qt",
+          "Environment :: Win32 (MS Windows)",
+          "Intended Audience :: Developers",
+          "Operating System :: MacOS :: MacOS X",
+          "Operating System :: POSIX",
+          "Operating System :: POSIX :: Linux",
+          "Operating System :: Microsoft",
+          "Operating System :: Microsoft :: Windows",
+          "Programming Language :: C++",
+          "Programming Language :: Python",
+          "Programming Language :: Python :: 3",
+          "Programming Language :: Python :: 3.10",
+          "Programming Language :: Python :: 3.11",
+          "Programming Language :: Python :: 3.12",
+          "Programming Language :: Python :: 3.13",
+          "Programming Language :: Python :: 3.14",
+          "Topic :: Database",
+          "Topic :: Software Development",
+          "Topic :: Software Development :: Code Generators",
+          "Topic :: Software Development :: Libraries :: Application Frameworks",
+          "Topic :: Software Development :: User Interfaces",
+          "Topic :: Software Development :: Widget Sets"
+        ],
+        "requires_python": "<3.15,>=3.10",
+        "project_url": [
+          "Homepage, https://pyside.org",
+          "Documentation, https://doc.qt.io/qtforpython",
+          "Repository, https://code.qt.io/cgit/pyside/pyside-setup.git/",
+          "Changelog, https://code.qt.io/cgit/pyside/pyside-setup.git/tree/doc/changelogs",
+          "Tracker, https://qt-project.atlassian.net/browse/PYSIDE"
+        ]
+      }
+    }
+  ],
+  "environment": {
+    "implementation_name": "cpython",
+    "implementation_version": "3.11.18",
+    "os_name": "posix",
+    "platform_machine": "x86_64",
+    "platform_release": "6.18.33.2-microsoft-standard-WSL2",
+    "platform_system": "Linux",
+    "platform_version": "#1 SMP PREEMPT_DYNAMIC Thu Jun 18 21:54:43 UTC 2026",
+    "python_full_version": "3.11.18",
+    "platform_python_implementation": "CPython",
+    "python_version": "3.11",
+    "sys_platform": "linux"
+  }
+}

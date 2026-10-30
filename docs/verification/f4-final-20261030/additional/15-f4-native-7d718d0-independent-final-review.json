@@ -1,0 +1,660 @@
+{
+  "schema": "f4_native_independent_final_review_v1",
+  "reviewed_utc": "2026-10-30T12:43:55.540799+00:00",
+  "reviewer": "/root/f4_acceptance_audit",
+  "scope": "Ended Windows native F4 diagnostic-navigation QA round, 13 synthetic states plus theme/language observations; independent read-only event/byte/source/image review",
+  "conclusion": "accepted_no_blocking_defect_found_within_reviewed_scope",
+  "product_head": "7d718d038a00d89995ea773b4772764116b620c3",
+  "product_clean_verified": true,
+  "backend_exe_sha256": "8055edd08ef07aa6eee7d710c8d360b83e8bec60cb410160f4b89aad61d6f25b",
+  "backend_build_git_commit": "7d718d038a00d89995ea773b4772764116b620c3",
+  "backend_source_fingerprint": "db253b7b1ed5f810789f1322faa75002df311d4aeb04572867dbb130c71d95cc",
+  "gui_manifest_files_checked": 121,
+  "host_version": 2,
+  "host_sha256": "aa59397f4711c17f7edcc9a39d927c9c4197e124d98ccafb58b8d1d886c11d6c",
+  "window_client_size": [
+    1366,
+    768
+  ],
+  "events": {
+    "audit": {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\f4-native-7d718d0-independent-event-audit.json",
+      "bytes": 41806,
+      "sha256": "2615ed35d55958f2b8037a1a2ce1133dc7d2fc9567ccfcb6be00cecab9852f47"
+    },
+    "count": 48,
+    "unique_states": 13,
+    "prepared_states_total": 14,
+    "matched_before_after_pairs": 15,
+    "all_business_hashes_equal": true,
+    "completed_navigation_or_source_actions": 12,
+    "selection_only_pairs": 2,
+    "escape_related_pair": 1,
+    "unmatched_or_ambiguous_pairs": 0,
+    "discarded_callbacks": 0,
+    "final_business_hash_matches_last_after": true
+  },
+  "images": [
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\01-energy-before.jpg",
+      "bytes": 133231,
+      "sha256": "c1b0ce52036021735fe7a4f0768dc79ae9f2a5f58cdf3136023ac0fe7af3061f",
+      "case": "energy",
+      "outcome": "pass",
+      "actual_image_observed": true,
+      "observation_method": "tools.view_image returned image, directly inspected by independent agent",
+      "independent_observation": "浅色配置页显示 energy 错误的列表与原文；Locate 可用，Source 灰显，未先跳转。",
+      "capture_sidecar": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\01-energy-before.json",
+        "bytes": 411,
+        "sha256": "6d5ab0608c825a3b40b5bf97bb34ebec12ba2d42a34c0ccab244db306733f3cc"
+      }
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\02-energy-highlight.jpg",
+      "bytes": 129034,
+      "sha256": "4b05d3e630baa56e508de08cba7d4fd84350baef0ab0eb20e73be1223349d6d6",
+      "case": "energy",
+      "outcome": "pass",
+      "actual_image_observed": true,
+      "observation_method": "tools.view_image returned image, directly inspected by independent agent",
+      "independent_observation": "Run Config / Source 已打开；invalid-energy 字段完整可见，绿边框和文本光标可见。",
+      "capture_sidecar": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\02-energy-highlight.json",
+        "bytes": 386,
+        "sha256": "9c076ca3e125e2449d371dca3ef6209802586d0408285722a3c4d2fc03aeaee7"
+      }
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\03-energy-after-escape.jpg",
+      "bytes": 128866,
+      "sha256": "c572beda3f64db0d00d3cf003822f5ad1c395ea7733434f24e6701e19ddce7b3",
+      "case": "energy",
+      "outcome": "pass_with_caveat",
+      "actual_image_observed": true,
+      "observation_method": "tools.view_image returned image, directly inspected by independent agent",
+      "independent_observation": "同一输入仍为 invalid-energy，边框恢复细线；不将此图单独归因为 Esc，定时器也可能已清除高亮。",
+      "capture_sidecar": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\03-energy-after-escape.json",
+        "bytes": 450,
+        "sha256": "7f15960678c693e6232c7180c5657968b5db2d2f98ca6041fbe907cd9549c8dd"
+      }
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\04-geometry-cell.jpg",
+      "bytes": 138299,
+      "sha256": "2395afa99b8e2c53cf71e095afe69217be2496cf3e46118af8c12ad241f3eb6f",
+      "case": "geometry",
+      "outcome": "pass",
+      "actual_image_observed": true,
+      "observation_method": "tools.view_image returned image, directly inspected by independent agent",
+      "independent_observation": "几何表第三行的 size/parameters=bad 完整可见并选中；不是旧轮白色空区域。名称列横向在视口外，重名身份结合模型/事件 cell[2,6] 核对。",
+      "capture_sidecar": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\04-geometry-cell.json",
+        "bytes": 432,
+        "sha256": "af62904f96fc062a6a5c7e981b25aec5b687904e30ab26d71c7938566aa38d32"
+      }
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\05-material-density.jpg",
+      "bytes": 112633,
+      "sha256": "5bd447c4ebeac8c674459f8fba949714a249bb2c3ac754c32090f953e29d2edf",
+      "case": "material",
+      "outcome": "pass",
+      "actual_image_observed": true,
+      "observation_method": "tools.view_image returned image, directly inspected by independent agent",
+      "independent_observation": "所选材料详情显示 SameMaterial、density=bad 和启用状态；目标输入可见。第二个同名对象身份由 row=1 事件与夹具确定，不从名称猜测。",
+      "capture_sidecar": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\05-material-density.json",
+        "bytes": 396,
+        "sha256": "3b236a3332dc442633c74626e68855725f80fd901384647a15d8bc9b2e92dfd0"
+      }
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\06-layer-thickness.jpg",
+      "bytes": 120230,
+      "sha256": "774971056b1d50938b97dbfd1831d3ba7578dd67727ad7bcf9de0511c591e015",
+      "case": "layer",
+      "outcome": "pass",
+      "actual_image_observed": true,
+      "observation_method": "tools.view_image returned image, directly inspected by independent agent",
+      "independent_observation": "Second 层详情的 thickness=bad 完整可见并高亮；G4_Si、启用及其他字段保留。",
+      "capture_sidecar": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\06-layer-thickness.json",
+        "bytes": 394,
+        "sha256": "dc822f1b98efc2a72f7b389702d978bfb3b8f38315efcaaba7fcd7c50fcdb4b1"
+      }
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\07-boolean-operation.jpg",
+      "bytes": 117559,
+      "sha256": "df261730c50805faaf7ff189263752dc8569b92c8b5ec9687f39bf7e239df81a",
+      "case": "boolean",
+      "outcome": "pass",
+      "actual_image_observed": true,
+      "observation_method": "tools.view_image returned image, directly inspected by independent agent",
+      "independent_observation": "布尔表可见 Sensor / index=2 / operation=invalid-operation；operation 单元格被选中，表格可见。",
+      "capture_sidecar": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\07-boolean-operation.json",
+        "bytes": 410,
+        "sha256": "9227461cea587ebb873ef150ad0c44f719a4c33511eb3ffa19e24425eab51cf3"
+      }
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\08-stale-report.jpg",
+      "bytes": 133600,
+      "sha256": "8644a7998f231b6882e481ac1dddd20d389c7d36e43e768ef191d20561bce3ca",
+      "case": "stale",
+      "outcome": "pass",
+      "actual_image_observed": true,
+      "observation_method": "tools.view_image returned image, directly inspected by independent agent",
+      "independent_observation": "原 source 错误仍保留；输入已变化、诊断已过期的警告可读，Locate 与 Source 均灰显；重新校验仍可用。",
+      "capture_sidecar": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\08-stale-report.json",
+        "bytes": 404,
+        "sha256": "7b0f8e653b9578980ed6b1ce0f7d69dbfb2f03706e436b6d5c44a77a89663b1a"
+      }
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\09-current-source.jpg",
+      "bytes": 127747,
+      "sha256": "4f92f7a2cf1f8cef9498cca023ac269645b38335cfdedfb4aaf3dee6548bc144",
+      "case": "source",
+      "outcome": "pass",
+      "actual_image_observed": true,
+      "observation_method": "tools.view_image returned image, directly inspected by independent agent",
+      "independent_observation": "运行页源查看器显示五行真实文本及选中的 mystery=bad；标明行5、快照一致和 source_only。底部 QA 提示明确是独立源文件审计夹具。",
+      "capture_sidecar": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\09-current-source.json",
+        "bytes": 451,
+        "sha256": "c30c3585fa8cde579848706dbb7bdf8089ad3854e40e31b2a89ef01306080009"
+      }
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\10-historical-source.jpg",
+      "bytes": 125326,
+      "sha256": "9a14f9b9e362d5480e2c2d257ebb19895382ff9d6d6a42f07d4589b07a7d765b",
+      "case": "history",
+      "outcome": "pass",
+      "actual_image_observed": true,
+      "observation_method": "tools.view_image returned image, directly inspected by independent agent",
+      "independent_observation": "查看器仍显示记录时 mystery=bad / 行5，并明确警告正在显示记录时的源文本快照、当前文件已改变或不可用。",
+      "capture_sidecar": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\10-historical-source.json",
+        "bytes": 442,
+        "sha256": "026ec280cbeec9f72d4e7516fb48fcc813f25be8eef6ad66ecfe756d5e628ba1"
+      }
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\11-project-crosspage.jpg",
+      "bytes": 120717,
+      "sha256": "c4d4e6961adb64f7df620caad37e85d9fc47d944d654ae7e552876c2617358c3",
+      "case": "project",
+      "outcome": "pass",
+      "actual_image_observed": true,
+      "observation_method": "tools.view_image returned image, directly inspected by independent agent",
+      "independent_observation": "Project 页空的可执行程序输入框已聚焦并绿框标记，下方缺少路径错误仍存在；没有自动填值。",
+      "capture_sidecar": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\11-project-crosspage.json",
+        "bytes": 419,
+        "sha256": "56ec9832f3a6b66b6e13cecd6d0ca8aa3f8af1c50c85306f11c34a8fa7c8fb9f"
+      }
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\12-scenario-advanced.jpg",
+      "bytes": 90917,
+      "sha256": "90aeeb8781c32f723e2699d425a54fc6d1093b8f6ccddea39356fe14d009fe7d",
+      "case": "scenario",
+      "outcome": "pass",
+      "actual_image_observed": true,
+      "observation_method": "tools.view_image returned image, directly inspected by independent agent",
+      "independent_observation": "场景高级字段勾选并展开，已滚到孔隙率输入2，目标字段完整可见且高亮。",
+      "capture_sidecar": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\12-scenario-advanced.json",
+        "bytes": 419,
+        "sha256": "25d0fcaa7f210be942c0f7c6f60a01dbd358b0b94470de69e42f023d42a823a0"
+      }
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\13-wizard-prior-page.jpg",
+      "bytes": 82924,
+      "sha256": "ea8f302f5f18cd9b3142d507d7a3fa50e0816aa4bf4fae99d4858153b141649f",
+      "case": "wizard",
+      "outcome": "pass",
+      "actual_image_observed": true,
+      "observation_method": "tools.view_image returned image, directly inspected by independent agent",
+      "independent_observation": "向导位于材料和几何页，空材料选择框完整可见并高亮；世界材料、厚度、横向尺寸仍显示。",
+      "capture_sidecar": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\13-wizard-prior-page.json",
+        "bytes": 439,
+        "sha256": "9fb561dcee31f65b6ad7aa520dfdd791cd6a3595017a9854177d1ba4c3a1024b"
+      }
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\14-scan-enter.jpg",
+      "bytes": 107835,
+      "sha256": "424f59cb9d134d3cd46173aa45b388ef7826d5d9744786471d21f67eb614fd61",
+      "case": "scan",
+      "outcome": "pass",
+      "actual_image_observed": true,
+      "observation_method": "tools.view_image returned image, directly inspected by independent agent",
+      "independent_observation": "扫描取值框获焦、高亮且仍为空，仅有占位提示；scan.values 错误及已定位 values、配置值未改变的状态可读。Enter 手势由原生动作记录和 KeyPress 旁证确定。",
+      "capture_sidecar": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\14-scan-enter.json",
+        "bytes": 444,
+        "sha256": "503c3a22101048fea1c69798e39ef171fb9b58514d60cc2d617adc6646f13eae"
+      }
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\15-backend-raw-no-location.jpg",
+      "bytes": 117534,
+      "sha256": "d7cf3800f101db8aa546565c1c7cfb9a9c8b4af8c7a6bf40a1078a45c3c465d5",
+      "case": "backend",
+      "outcome": "pass",
+      "actual_image_observed": true,
+      "observation_method": "tools.view_image returned image, directly inspected by independent agent",
+      "independent_observation": "运行控制台显示未运行、后端错误和无可编辑位置；Locate/Source 灰显。详情在下方，另由图16观察。",
+      "capture_sidecar": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\15-backend-raw-no-location.json",
+        "bytes": 448,
+        "sha256": "f89565c073aa3ab1481f96b3ee243129dce79ba3a031ff475c8b152cc8957f4b"
+      }
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\16-backend-raw-detail.jpg",
+      "bytes": 108902,
+      "sha256": "240f294eeb31cf3e4db452ede27c58ac20e00101b483127e0e1f5013803089fe",
+      "case": "backend",
+      "outcome": "pass",
+      "actual_image_observed": true,
+      "observation_method": "tools.view_image returned image, directly inspected by independent agent",
+      "independent_observation": "滚动后后端原始错误可读：子文件.mac 第2行 setdir 与显式 CLI 输出目录冲突；下方明确未提供结构化编辑位置，按钮仍灰显。",
+      "capture_sidecar": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\16-backend-raw-detail.json",
+        "bytes": 486,
+        "sha256": "41c729619f48bb65275a8774977ec557af7ec4f6e9c06afd7c01dca36c68e622"
+      }
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\17-dark-backend.jpg",
+      "bytes": 107459,
+      "sha256": "a733bb7997b4cd6d31cd88a99e94d16d303e449295bb11658b2e3beabaacedd6",
+      "case": "backend",
+      "outcome": "pass",
+      "actual_image_observed": true,
+      "observation_method": "tools.view_image returned image, directly inspected by independent agent",
+      "independent_observation": "深色主题下原始错误、无位置说明及两禁用按钮仍可辨读；未把 raw 原文翻译重写。",
+      "capture_sidecar": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\17-dark-backend.json",
+        "bytes": 398,
+        "sha256": "6b01844de967129762b1ae592ecc358d0e81e160650eab8a0aa45fa1e2a8052b"
+      }
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\18-english-dark-backend.jpg",
+      "bytes": 111584,
+      "sha256": "7acd96af5ed6df77f0c7065fdd69aaff7ccded6905aaca9240112272b6bf04c1",
+      "case": "backend",
+      "outcome": "pass",
+      "actual_image_observed": true,
+      "observation_method": "tools.view_image returned image, directly inspected by independent agent",
+      "independent_observation": "英文深色下表头 Severity/Code/Location/Message、Locate field/View source 等控件已英文显示；生成时中文消息前缀及后端原文保留，Location unavailable 理由可读。",
+      "capture_sidecar": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\18-english-dark-backend.json",
+        "bytes": 466,
+        "sha256": "6238a46ef03127a12877372cd62100fb8a6a1632d35110240a0c7f1a55e37361"
+      }
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\19-english-dark-energy-highlight.jpg",
+      "bytes": 127895,
+      "sha256": "471a20fc7abf63044f83193cd8c258bafb75e3b12d7b6e469dd9dbb9a4ab8af2",
+      "case": "energy",
+      "outcome": "pass",
+      "actual_image_observed": true,
+      "observation_method": "tools.view_image returned image, directly inspected by independent agent",
+      "independent_observation": "英文深色 Configuration/Run Config/Source 中 Energy=invalid-energy 完整可见、聚焦、高亮；这轮实际定位仍可用。",
+      "capture_sidecar": {
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\19-english-dark-energy-highlight.json",
+        "bytes": 466,
+        "sha256": "dd1b79c6f2613e91f1c0a95b7d629c9a1b286b2e1edc2b773307426e372e3e0c"
+      }
+    }
+  ],
+  "real_inspect": {
+    "program": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-f4\\Release\\G4UniversalSim.exe",
+    "arguments": [
+      "--inspect-run",
+      "--config",
+      "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\f4-visible-inputs\\20261030-202445-32076\\main.ini",
+      "--macro",
+      "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\f4-visible-inputs\\20261030-202445-32076\\top.mac",
+      "--output",
+      "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\f4-visible-inputs\\20261030-202445-32076\\inspect-no-output",
+      "--threads",
+      "1"
+    ],
+    "exit_code": 1,
+    "qprocess_exit_status": "NormalExit",
+    "simulation_requested": false,
+    "runner_running": false,
+    "run_summary_count": 0,
+    "stderr": {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\inspect.stderr",
+      "bytes": 256,
+      "sha256": "52fd6ecaf76f7ad1914c9d1fd27e134ca9c26e8763ac4ee635c09ba489976d58"
+    },
+    "raw_stderr_matches_recorded_process_receipt": true,
+    "gui_no_position_evidence": "actual images 15-18 plus current product raw-diagnostic producer; final state JSON later belongs to energy",
+    "gui_exact_raw_bytes_boundary": "Captured QProcess bytes are SHA verified. Original backend-state GUI record was not separately persisted; screenshot text and static producer corroborate display, not a fabricated saved GUI JSON equality assertion."
+  },
+  "exit": {
+    "host_requested_return": {
+      "exit_code": 0,
+      "close_requested": true,
+      "event_loop_used": true,
+      "visual_acceptance": "not_claimed",
+      "exit_code_scope": "python_requested_return; launcher_must_verify_actual_process_exit"
+    },
+    "independent_launcher": {
+      "schema": "g4usim_visible_launcher_v1",
+      "commit": "7d718d038a00d89995ea773b4772764116b620c3",
+      "session_id": 19960,
+      "process_exit_code": 0,
+      "normal_completion": true,
+      "native_acceptance": "root_observed_13_states_and_theme_language_pending_independent_review",
+      "completed_observation_files": 19,
+      "host_sha256": "aa59397f4711c17f7edcc9a39d927c9c4197e124d98ccafb58b8d1d886c11d6c",
+      "log_sha256": "9222aa24a675f88f96bbb4d277213eb9747c3b7c3249f7441e3d6f787c1798c6",
+      "note": "Sky native inputs and screenshots; QA toolbar prepares fixtures. Escape observation does not isolate timer clearance. Actual process exit 0 verified from original session."
+    },
+    "launcher_log": {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\f4-visible-host-7d718d0.log",
+      "bytes": 413,
+      "sha256": "9222aa24a675f88f96bbb4d277213eb9747c3b7c3249f7441e3d6f787c1798c6"
+    },
+    "launcher_log_sha_matches": true,
+    "actual_session_process_exit": 0,
+    "session_id": 19960,
+    "no_traceback_in_process_log": true
+  },
+  "caveats": [
+    "03 only observes a cleared highlight after an Esc-related input; elapsed highlight timer is a competing cause, so no exclusive Esc-clear claim.",
+    "Current/history source states are an independent actual-parser fixture, not the current generated project config or evidence that a simulation consumed it.",
+    "Image04 proves third-row size cell visible; names are offscreen horizontally. Exact repeated-name identity is established with row/cell events and fixture, not the rendered name alone.",
+    "Source viewer content and warning are visually observed. Readonly widget enforcement is not established by a screenshot alone; existing product/regression checks own that property.",
+    "Business equality covers the 15 recorded product input pairs and final unchanged state. Theme/language menu changes do not have separate observer pairs; images establish appearance and existing automated tests own strict identity invariance.",
+    "The observer samples 80 ms after press. Its hashes are bounded completed-action evidence, not a universal transactional guarantee or all possible delayed effects.",
+    "Stale/backend disabled navigation is a successful guard observation, not a fabricated successful navigation action.",
+    "Native covers this Windows build/client size and selected light/dark Chinese/English states; not Linux native desktop, every theme/DPI/layout, all error types, simulation success or physical validation.",
+    "Event parser intentionally remains mechanical-only. This separate review adds actual image observation; original receipts retain not_claimed/pending review wording."
+  ],
+  "blocking_findings": [],
+  "historical_failures_retained": {
+    "5d6f008": {
+      "process_exit_code": 0,
+      "exec_session": 23136,
+      "commit": "5d6f00854e1c7304f677c4ed033772aa2d95ae9d",
+      "native_acceptance": "failed_geometry_cell_not_visible",
+      "log_sha256": "4ea6fc44fd545d08c8aeda4a8df0bbd4db18f77be892ac9b4456156adc75ea66",
+      "evidence": "native/06-geometry-painted.png"
+    },
+    "096f4b3": {
+      "schema": "g4usim_visible_launcher_v1",
+      "commit": "096f4b37c15aac0a12206914b9b02ee1b8a3d976",
+      "session_id": 94739,
+      "process_exit_code": -1073740791,
+      "normal_completion": false,
+      "native_acceptance": "incomplete_host_abnormal_exit_after_scan_prepared",
+      "last_observed_state": "scan",
+      "completed_observation_files": 13,
+      "note": "实际窗口在扫描准备后消失；无exit.json，不把此前观察算完整验收。",
+      "log_sha256": "7ddd660855fa6ae6fc0ecc673552a8948b37cd3472fdd84574c528e5508088cf"
+    }
+  },
+  "original_evidence_files": [
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\backend-capabilities.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\backend-capabilities.stdout",
+      "bytes": 6156,
+      "sha256": "685139c430ac7febfd3921a12d7b1a8a5e38595e938ad7ac0f44659cbca20c4a"
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\events.jsonl",
+      "bytes": 26535,
+      "sha256": "7150468cb41e8e5f8044649836424f651b70142b05f56396bf0f071c5bc282d1"
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\exit.json",
+      "bytes": 190,
+      "sha256": "86121f52640490dd2eade0adb50a6cafcf270d467e9a647f69bf03c45281b278"
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\gui-file-hashes.json",
+      "bytes": 13717,
+      "sha256": "2337e6b7c4ceab9804d29d40335a893f6bf24ab169592f5bc56d92a4b923093d"
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\identity.json",
+      "bytes": 10700,
+      "sha256": "9c1be869e495e3149bdc05d4e3a02953dc08174894dc9aa85bde62702b870521"
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\inspect.stderr",
+      "bytes": 256,
+      "sha256": "52fd6ecaf76f7ad1914c9d1fd27e134ca9c26e8763ac4ee635c09ba489976d58"
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\launcher.json",
+      "bytes": 678,
+      "sha256": "52c29c307f92642cee9645e53d5cca24098aa243f9e8fa3d7c77e6c6db9d50d4"
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\01-energy-before.jpg",
+      "bytes": 133231,
+      "sha256": "c1b0ce52036021735fe7a4f0768dc79ae9f2a5f58cdf3136023ac0fe7af3061f"
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\01-energy-before.json",
+      "bytes": 411,
+      "sha256": "6d5ab0608c825a3b40b5bf97bb34ebec12ba2d42a34c0ccab244db306733f3cc"
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\02-energy-highlight.jpg",
+      "bytes": 129034,
+      "sha256": "4b05d3e630baa56e508de08cba7d4fd84350baef0ab0eb20e73be1223349d6d6"
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\02-energy-highlight.json",
+      "bytes": 386,
+      "sha256": "9c076ca3e125e2449d371dca3ef6209802586d0408285722a3c4d2fc03aeaee7"
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\03-energy-after-escape.jpg",
+      "bytes": 128866,
+      "sha256": "c572beda3f64db0d00d3cf003822f5ad1c395ea7733434f24e6701e19ddce7b3"
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\03-energy-after-escape.json",
+      "bytes": 450,
+      "sha256": "7f15960678c693e6232c7180c5657968b5db2d2f98ca6041fbe907cd9549c8dd"
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\04-geometry-cell.jpg",
+      "bytes": 138299,
+      "sha256": "2395afa99b8e2c53cf71e095afe69217be2496cf3e46118af8c12ad241f3eb6f"
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\04-geometry-cell.json",
+      "bytes": 432,
+      "sha256": "af62904f96fc062a6a5c7e981b25aec5b687904e30ab26d71c7938566aa38d32"
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\05-material-density.jpg",
+      "bytes": 112633,
+      "sha256": "5bd447c4ebeac8c674459f8fba949714a249bb2c3ac754c32090f953e29d2edf"
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\05-material-density.json",
+      "bytes": 396,
+      "sha256": "3b236a3332dc442633c74626e68855725f80fd901384647a15d8bc9b2e92dfd0"
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\06-layer-thickness.jpg",
+      "bytes": 120230,
+      "sha256": "774971056b1d50938b97dbfd1831d3ba7578dd67727ad7bcf9de0511c591e015"
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\06-layer-thickness.json",
+      "bytes": 394,
+      "sha256": "dc822f1b98efc2a72f7b389702d978bfb3b8f38315efcaaba7fcd7c50fcdb4b1"
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\07-boolean-operation.jpg",
+      "bytes": 117559,
+      "sha256": "df261730c50805faaf7ff189263752dc8569b92c8b5ec9687f39bf7e239df81a"
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\07-boolean-operation.json",
+      "bytes": 410,
+      "sha256": "9227461cea587ebb873ef150ad0c44f719a4c33511eb3ffa19e24425eab51cf3"
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\08-stale-report.jpg",
+      "bytes": 133600,
+      "sha256": "8644a7998f231b6882e481ac1dddd20d389c7d36e43e768ef191d20561bce3ca"
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\08-stale-report.json",
+      "bytes": 404,
+      "sha256": "7b0f8e653b9578980ed6b1ce0f7d69dbfb2f03706e436b6d5c44a77a89663b1a"
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\09-current-source.jpg",
+      "bytes": 127747,
+      "sha256": "4f92f7a2cf1f8cef9498cca023ac269645b38335cfdedfb4aaf3dee6548bc144"
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\09-current-source.json",
+      "bytes": 451,
+      "sha256": "c30c3585fa8cde579848706dbb7bdf8089ad3854e40e31b2a89ef01306080009"
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\10-historical-source.jpg",
+      "bytes": 125326,
+      "sha256": "9a14f9b9e362d5480e2c2d257ebb19895382ff9d6d6a42f07d4589b07a7d765b"
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\10-historical-source.json",
+      "bytes": 442,
+      "sha256": "026ec280cbeec9f72d4e7516fb48fcc813f25be8eef6ad66ecfe756d5e628ba1"
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\11-project-crosspage.jpg",
+      "bytes": 120717,
+      "sha256": "c4d4e6961adb64f7df620caad37e85d9fc47d944d654ae7e552876c2617358c3"
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\11-project-crosspage.json",
+      "bytes": 419,
+      "sha256": "56ec9832f3a6b66b6e13cecd6d0ca8aa3f8af1c50c85306f11c34a8fa7c8fb9f"
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\12-scenario-advanced.jpg",
+      "bytes": 90917,
+      "sha256": "90aeeb8781c32f723e2699d425a54fc6d1093b8f6ccddea39356fe14d009fe7d"
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\12-scenario-advanced.json",
+      "bytes": 419,
+      "sha256": "25d0fcaa7f210be942c0f7c6f60a01dbd358b0b94470de69e42f023d42a823a0"
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\13-wizard-prior-page.jpg",
+      "bytes": 82924,
+      "sha256": "ea8f302f5f18cd9b3142d507d7a3fa50e0816aa4bf4fae99d4858153b141649f"
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\13-wizard-prior-page.json",
+      "bytes": 439,
+      "sha256": "9fb561dcee31f65b6ad7aa520dfdd791cd6a3595017a9854177d1ba4c3a1024b"
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\14-scan-enter.jpg",
+      "bytes": 107835,
+      "sha256": "424f59cb9d134d3cd46173aa45b388ef7826d5d9744786471d21f67eb614fd61"
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\14-scan-enter.json",
+      "bytes": 444,
+      "sha256": "503c3a22101048fea1c69798e39ef171fb9b58514d60cc2d617adc6646f13eae"
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\15-backend-raw-no-location.jpg",
+      "bytes": 117534,
+      "sha256": "d7cf3800f101db8aa546565c1c7cfb9a9c8b4af8c7a6bf40a1078a45c3c465d5"
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\15-backend-raw-no-location.json",
+      "bytes": 448,
+      "sha256": "f89565c073aa3ab1481f96b3ee243129dce79ba3a031ff475c8b152cc8957f4b"
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\16-backend-raw-detail.jpg",
+      "bytes": 108902,
+      "sha256": "240f294eeb31cf3e4db452ede27c58ac20e00101b483127e0e1f5013803089fe"
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\16-backend-raw-detail.json",
+      "bytes": 486,
+      "sha256": "41c729619f48bb65275a8774977ec557af7ec4f6e9c06afd7c01dca36c68e622"
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\17-dark-backend.jpg",
+      "bytes": 107459,
+      "sha256": "a733bb7997b4cd6d31cd88a99e94d16d303e449295bb11658b2e3beabaacedd6"
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\17-dark-backend.json",
+      "bytes": 398,
+      "sha256": "6b01844de967129762b1ae592ecc358d0e81e160650eab8a0aa45fa1e2a8052b"
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\18-english-dark-backend.jpg",
+      "bytes": 111584,
+      "sha256": "7acd96af5ed6df77f0c7065fdd69aaff7ccded6905aaca9240112272b6bf04c1"
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\18-english-dark-backend.json",
+      "bytes": 466,
+      "sha256": "6238a46ef03127a12877372cd62100fb8a6a1632d35110240a0c7f1a55e37361"
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\19-english-dark-energy-highlight.jpg",
+      "bytes": 127895,
+      "sha256": "471a20fc7abf63044f83193cd8c258bafb75e3b12d7b6e469dd9dbb9a4ab8af2"
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\19-english-dark-energy-highlight.json",
+      "bytes": 466,
+      "sha256": "dd1b79c6f2613e91f1c0a95b7d629c9a1b286b2e1edc2b773307426e372e3e0c"
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\native\\observations.jsonl",
+      "bytes": 3544,
+      "sha256": "074364d0fe001927b5966e7a2631b0eee984c5e98fbe4630275504930f36ed08"
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f4-visible-7d718d0\\state.json",
+      "bytes": 13779,
+      "sha256": "a120b33ca5cbbe9a1ca1848045bd61f99663a03e2561975b8d72679676483cfd"
+    }
+  ],
+  "original_evidence_modified_by_review": false,
+  "desktop_control_or_backend_runs_performed_by_reviewer": false,
+  "stage_closure": "This accepts native review scope only; parent owns final automated matrix, archival review and phase closure."
+}

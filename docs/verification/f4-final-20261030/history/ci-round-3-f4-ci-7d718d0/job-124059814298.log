@@ -1,0 +1,532 @@
+﻿2026-10-30T12:22:55.9216842Z Current runner version: '2.338.0'
+2026-10-30T12:22:55.9235297Z ##[group]Runner Image Provisioner
+2026-10-30T12:22:55.9235839Z Hosted Compute Agent
+2026-10-30T12:22:55.9236264Z Version: 20261021.618
+2026-10-30T12:22:55.9236654Z Commit: 21505ad2541d5be6135ed84fc33697146cf75b8e
+2026-10-30T12:22:55.9237077Z Build Date: 2026-10-21T00:45:21Z
+2026-10-30T12:22:55.9237859Z Worker ID: {f018af05-590d-4739-af60-d91e218e9945}
+2026-10-30T12:22:55.9238308Z Region: centralus
+2026-10-30T12:22:55.9238674Z Cloud: Azure
+2026-10-30T12:22:55.9238999Z ##[endgroup]
+2026-10-30T12:22:55.9240070Z ##[group]Operating System
+2026-10-30T12:22:55.9240504Z Ubuntu
+2026-10-30T12:22:55.9240822Z 26.04.1
+2026-10-30T12:22:55.9241429Z LTS
+2026-10-30T12:22:55.9241754Z ##[endgroup]
+2026-10-30T12:22:55.9242128Z ##[group]Runner Image
+2026-10-30T12:22:55.9242549Z Image: ubuntu-26.04
+2026-10-30T12:22:55.9242903Z Version: 20261025.179.1
+2026-10-30T12:22:55.9243743Z Included Software: https://github.com/actions/runner-images/blob/ubuntu26/20261025.179/images/ubuntu/Ubuntu2604-Readme.md
+2026-10-30T12:22:55.9244686Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu26%2F20261025.179
+2026-10-30T12:22:55.9245335Z ##[endgroup]
+2026-10-30T12:22:55.9245999Z ##[group]GITHUB_TOKEN Permissions
+2026-10-30T12:22:55.9247598Z Contents: read
+2026-10-30T12:22:55.9247983Z Metadata: read
+2026-10-30T12:22:55.9248363Z ##[endgroup]
+2026-10-30T12:22:55.9249767Z Secret source: Actions
+2026-10-30T12:22:55.9250354Z Cache mode: write
+2026-10-30T12:22:55.9250928Z Prepare workflow directory
+2026-10-30T12:22:55.9528976Z Prepare all required actions
+2026-10-30T12:22:55.9560413Z Getting action download info
+2026-10-30T12:22:56.1994831Z Download action repository 'actions/checkout@v7' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-10-30T12:22:56.2951862Z Download action repository 'actions/setup-python@v7' (SHA:6d4fd22b20465ccc0f7354476588e8df7c9ca0e0)
+2026-10-30T12:22:56.7345593Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-10-30T12:22:56.9040376Z Complete job name: ubuntu-latest / Python 3.11
+2026-10-30T12:22:56.9568802Z ##[group]Run actions/checkout@v7
+2026-10-30T12:22:56.9569210Z with:
+2026-10-30T12:22:56.9569469Z   repository: doorfordoor/G4UniversalSim
+2026-10-30T12:22:56.9571612Z   token: ***
+2026-10-30T12:22:56.9571848Z   ssh-strict: true
+2026-10-30T12:22:56.9572087Z   ssh-user: git
+2026-10-30T12:22:56.9572333Z   persist-credentials: true
+2026-10-30T12:22:56.9572598Z   clean: true
+2026-10-30T12:22:56.9572846Z   sparse-checkout-cone-mode: true
+2026-10-30T12:22:56.9573135Z   fetch-depth: 1
+2026-10-30T12:22:56.9573377Z   fetch-tags: false
+2026-10-30T12:22:56.9573620Z   show-progress: true
+2026-10-30T12:22:56.9573868Z   lfs: false
+2026-10-30T12:22:56.9574096Z   submodules: false
+2026-10-30T12:22:56.9574344Z   set-safe-directory: true
+2026-10-30T12:22:56.9574629Z   allow-unsafe-pr-checkout: false
+2026-10-30T12:22:56.9574978Z env:
+2026-10-30T12:22:56.9575208Z   QT_QPA_PLATFORM: offscreen
+2026-10-30T12:22:56.9575495Z ##[endgroup]
+2026-10-30T12:22:57.1849609Z Syncing repository: doorfordoor/G4UniversalSim
+2026-10-30T12:22:57.1850724Z ##[group]Getting Git version info
+2026-10-30T12:22:57.1851141Z Working directory is '/home/runner/work/G4UniversalSim/G4UniversalSim'
+2026-10-30T12:22:57.1851712Z [command]/usr/bin/git version
+2026-10-30T12:22:57.1873101Z git version 2.56.0
+2026-10-30T12:22:57.1884993Z ##[endgroup]
+2026-10-30T12:22:57.1891971Z Temporarily overriding HOME='/home/runner/work/_temp/b4133ba1-c718-4b0c-aaf0-e182f521fe90' before making global git config changes
+2026-10-30T12:22:57.1892914Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-30T12:22:57.1895210Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/G4UniversalSim/G4UniversalSim
+2026-10-30T12:22:57.1958875Z Deleting the contents of '/home/runner/work/G4UniversalSim/G4UniversalSim'
+2026-10-30T12:22:57.1960753Z ##[group]Determining repository object format
+2026-10-30T12:22:57.1961838Z ##[endgroup]
+2026-10-30T12:22:57.1962534Z ##[group]Initializing the repository
+2026-10-30T12:22:57.1964725Z [command]/usr/bin/git init /home/runner/work/G4UniversalSim/G4UniversalSim
+2026-10-30T12:22:57.2055892Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-30T12:22:57.2056890Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-30T12:22:57.2057870Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-30T12:22:57.2058552Z hint: call:
+2026-10-30T12:22:57.2058913Z hint:
+2026-10-30T12:22:57.2059379Z hint: 	git config --global init.defaultBranch <name>
+2026-10-30T12:22:57.2059938Z hint:
+2026-10-30T12:22:57.2060454Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-30T12:22:57.2061307Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-30T12:22:57.2061984Z hint:
+2026-10-30T12:22:57.2062352Z hint: 	git branch -m <name>
+2026-10-30T12:22:57.2062812Z hint:
+2026-10-30T12:22:57.2063389Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-30T12:22:57.2067324Z Initialized empty Git repository in /home/runner/work/G4UniversalSim/G4UniversalSim/.git/
+2026-10-30T12:22:57.2076554Z [command]/usr/bin/git remote add origin https://github.com/doorfordoor/G4UniversalSim
+2026-10-30T12:22:57.2124205Z ##[endgroup]
+2026-10-30T12:22:57.2124883Z ##[group]Disabling automatic garbage collection
+2026-10-30T12:22:57.2127211Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-30T12:22:57.2156858Z ##[endgroup]
+2026-10-30T12:22:57.2158067Z ##[group]Setting up auth
+2026-10-30T12:22:57.2158533Z Removing SSH command configuration
+2026-10-30T12:22:57.2162057Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-30T12:22:57.2191723Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-30T12:22:57.2570958Z Removing HTTP extra header
+2026-10-30T12:22:57.2576216Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-30T12:22:57.2603626Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-30T12:22:57.2812806Z Removing includeIf entries pointing to credentials config files
+2026-10-30T12:22:57.2817144Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-30T12:22:57.2850419Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-30T12:22:57.3063329Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-90bc8f12-7dac-4a34-b411-202fb0b99f51.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-30T12:22:57.3094684Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/G4UniversalSim/G4UniversalSim/.git.path /home/runner/work/_temp/git-credentials-90bc8f12-7dac-4a34-b411-202fb0b99f51.config
+2026-10-30T12:22:57.3120587Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/G4UniversalSim/G4UniversalSim/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-90bc8f12-7dac-4a34-b411-202fb0b99f51.config
+2026-10-30T12:22:57.3150188Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-90bc8f12-7dac-4a34-b411-202fb0b99f51.config
+2026-10-30T12:22:57.3175209Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-90bc8f12-7dac-4a34-b411-202fb0b99f51.config
+2026-10-30T12:22:57.3199364Z ##[endgroup]
+2026-10-30T12:22:57.3199854Z ##[group]Fetching the repository
+2026-10-30T12:22:57.3203822Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +7d718d038a00d89995ea773b4772764116b620c3:refs/remotes/origin/roadmap/F4-validation-navigation
+2026-10-30T12:22:58.3180798Z From https://github.com/doorfordoor/G4UniversalSim
+2026-10-30T12:22:58.3182190Z  * [new ref]         7d718d038a00d89995ea773b4772764116b620c3 -> origin/roadmap/F4-validation-navigation
+2026-10-30T12:22:58.3189210Z [command]/usr/bin/git branch --list --remote origin/roadmap/F4-validation-navigation
+2026-10-30T12:22:58.3212405Z   origin/roadmap/F4-validation-navigation
+2026-10-30T12:22:58.3218236Z [command]/usr/bin/git rev-parse refs/remotes/origin/roadmap/F4-validation-navigation
+2026-10-30T12:22:58.3238507Z 7d718d038a00d89995ea773b4772764116b620c3
+2026-10-30T12:22:58.3242760Z ##[endgroup]
+2026-10-30T12:22:58.3244095Z ##[group]Determining the checkout info
+2026-10-30T12:22:58.3245550Z ##[endgroup]
+2026-10-30T12:22:58.3246387Z [command]/usr/bin/git sparse-checkout disable
+2026-10-30T12:22:58.3325369Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-30T12:22:58.3352538Z ##[group]Checking out the ref
+2026-10-30T12:22:58.3355101Z [command]/usr/bin/git checkout --progress --force -B roadmap/F4-validation-navigation refs/remotes/origin/roadmap/F4-validation-navigation
+2026-10-30T12:22:58.7711300Z Switched to a new branch 'roadmap/F4-validation-navigation'
+2026-10-30T12:22:58.7713453Z branch 'roadmap/F4-validation-navigation' set up to track 'origin/roadmap/F4-validation-navigation'.
+2026-10-30T12:22:58.7754098Z ##[endgroup]
+2026-10-30T12:22:58.7797342Z [command]/usr/bin/git log -1 --format=%H
+2026-10-30T12:22:58.7821922Z 7d718d038a00d89995ea773b4772764116b620c3
+2026-10-30T12:22:58.8112010Z ##[group]Run actions/setup-python@v7
+2026-10-30T12:22:58.8112348Z with:
+2026-10-30T12:22:58.8112608Z   python-version: 3.11
+2026-10-30T12:22:58.8112879Z   check-latest: false
+2026-10-30T12:22:58.8114504Z   token: ***
+2026-10-30T12:22:58.8114844Z   mirror: https://raw.githubusercontent.com/actions/python-versions/main
+2026-10-30T12:22:58.8115216Z   update-environment: true
+2026-10-30T12:22:58.8115483Z   allow-prereleases: false
+2026-10-30T12:22:58.8115735Z   freethreaded: false
+2026-10-30T12:22:58.8115969Z env:
+2026-10-30T12:22:58.8116199Z   QT_QPA_PLATFORM: offscreen
+2026-10-30T12:22:58.8116460Z ##[endgroup]
+2026-10-30T12:22:58.8935602Z ##[group]Installed versions
+2026-10-30T12:22:58.9008896Z Successfully set up CPython (3.11.17)
+2026-10-30T12:22:58.9009463Z ##[endgroup]
+2026-10-30T12:22:58.9182959Z ##[group]Run sudo apt-get update
+2026-10-30T12:22:58.9183519Z [36;1msudo apt-get update[0m
+2026-10-30T12:22:58.9184023Z [36;1msudo apt-get install --yes --no-install-recommends \[0m
+2026-10-30T12:22:58.9184631Z [36;1m  libegl1 libgl1 libxkbcommon0 libdbus-1-3 libfontconfig1[0m
+2026-10-30T12:22:58.9238306Z shell: /usr/bin/bash -e {0}
+2026-10-30T12:22:58.9238648Z env:
+2026-10-30T12:22:58.9238906Z   QT_QPA_PLATFORM: offscreen
+2026-10-30T12:22:58.9239214Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-30T12:22:58.9239655Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib/pkgconfig
+2026-10-30T12:22:58.9240048Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-30T12:22:58.9240392Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-30T12:22:58.9240739Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-30T12:22:58.9241089Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib
+2026-10-30T12:22:58.9241452Z ##[endgroup]
+2026-10-30T12:22:58.9842487Z Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [144 B]
+2026-10-30T12:22:59.0156020Z Get:6 https://packages.microsoft.com/ubuntu/26.04/prod resolute InRelease [3964 B]
+2026-10-30T12:22:59.0613983Z Hit:2 http://azure.archive.ubuntu.com/ubuntu resolute InRelease
+2026-10-30T12:22:59.0634061Z Get:3 http://azure.archive.ubuntu.com/ubuntu resolute-updates InRelease [137 kB]
+2026-10-30T12:22:59.0731849Z Get:7 https://packages.microsoft.com/ubuntu/26.04/prod resolute/main amd64 Packages [131 kB]
+2026-10-30T12:22:59.1099216Z Get:4 http://azure.archive.ubuntu.com/ubuntu resolute-backports InRelease [137 kB]
+2026-10-30T12:22:59.1239935Z Get:5 http://azure.archive.ubuntu.com/ubuntu resolute-security InRelease [137 kB]
+2026-10-30T12:22:59.1279892Z Get:8 http://azure.archive.ubuntu.com/ubuntu resolute-updates/main amd64v3 Packages [804 kB]
+2026-10-30T12:22:59.1315723Z Get:14 https://packages.microsoft.com/ubuntu/26.04/prod resolute/main arm64 Packages [120 kB]
+2026-10-30T12:22:59.1325431Z Get:9 http://azure.archive.ubuntu.com/ubuntu resolute-updates/main Translation-en [184 kB]
+2026-10-30T12:22:59.1344212Z Get:10 http://azure.archive.ubuntu.com/ubuntu resolute-updates/universe amd64v3 Packages [375 kB]
+2026-10-30T12:22:59.1353729Z Get:11 http://azure.archive.ubuntu.com/ubuntu resolute-updates/universe Translation-en [118 kB]
+2026-10-30T12:22:59.1395045Z Get:12 http://azure.archive.ubuntu.com/ubuntu resolute-updates/restricted amd64v3 Packages [543 kB]
+2026-10-30T12:22:59.1395917Z Get:13 http://azure.archive.ubuntu.com/ubuntu resolute-updates/restricted Translation-en [112 kB]
+2026-10-30T12:22:59.1503764Z Get:15 http://azure.archive.ubuntu.com/ubuntu resolute-security/main amd64v3 Packages [608 kB]
+2026-10-30T12:22:59.1531627Z Get:16 http://azure.archive.ubuntu.com/ubuntu resolute-security/main Translation-en [141 kB]
+2026-10-30T12:22:59.1542744Z Get:17 http://azure.archive.ubuntu.com/ubuntu resolute-security/universe amd64v3 Packages [206 kB]
+2026-10-30T12:22:59.1555341Z Get:18 http://azure.archive.ubuntu.com/ubuntu resolute-security/universe Translation-en [67.9 kB]
+2026-10-30T12:23:01.2363287Z Fetched 3824 kB in 0s (12.1 MB/s)
+2026-10-30T12:23:01.6789783Z Reading package lists...
+2026-10-30T12:23:01.7080595Z Reading package lists...
+2026-10-30T12:23:01.8519954Z Building dependency tree...
+2026-10-30T12:23:01.8525386Z Reading state information...
+2026-10-30T12:23:01.8771909Z libgl1 is already the newest version (1.7.0-3).
+2026-10-30T12:23:01.8772271Z libgl1 set to manually installed.
+2026-10-30T12:23:01.8772632Z libxkbcommon0 is already the newest version (1.13.1-1).
+2026-10-30T12:23:01.8772942Z libxkbcommon0 set to manually installed.
+2026-10-30T12:23:01.8773255Z libdbus-1-3 is already the newest version (1.16.2-2ubuntu4).
+2026-10-30T12:23:01.8773585Z libdbus-1-3 set to manually installed.
+2026-10-30T12:23:01.8773890Z libfontconfig1 is already the newest version (2.17.1-3ubuntu1).
+2026-10-30T12:23:01.8774207Z libfontconfig1 set to manually installed.
+2026-10-30T12:23:01.9152654Z Solving dependencies...
+2026-10-30T12:23:01.9813197Z The following additional packages will be installed:
+2026-10-30T12:23:01.9819294Z   libegl-mesa0
+2026-10-30T12:23:01.9973484Z The following NEW packages will be installed:
+2026-10-30T12:23:01.9975315Z   libegl-mesa0 libegl1
+2026-10-30T12:23:02.0142778Z 0 upgraded, 2 newly installed, 0 to remove and 16 not upgraded.
+2026-10-30T12:23:02.0143177Z Need to get 164 kB of archives.
+2026-10-30T12:23:02.0143492Z After this operation, 579 kB of additional disk space will be used.
+2026-10-30T12:23:02.0143976Z Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [144 B]
+2026-10-30T12:23:02.0682032Z Get:2 http://azure.archive.ubuntu.com/ubuntu resolute-updates/main amd64v3 libegl-mesa0 amd64 26.0.8-1ubuntu0.3 [134 kB]
+2026-10-30T12:23:02.1019918Z Get:3 http://azure.archive.ubuntu.com/ubuntu resolute/main amd64v3 libegl1 amd64 1.7.0-3 [29.8 kB]
+2026-10-30T12:23:02.3470163Z Fetched 164 kB in 0s (1666 kB/s)
+2026-10-30T12:23:02.3648851Z Selecting previously unselected package libegl-mesa0:amd64.
+2026-10-30T12:23:02.3884074Z (Reading database ... 
+2026-10-30T12:23:02.3884306Z (Reading database ... 5%
+2026-10-30T12:23:02.3884521Z (Reading database ... 10%
+2026-10-30T12:23:02.3884835Z (Reading database ... 15%
+2026-10-30T12:23:02.3885108Z (Reading database ... 20%
+2026-10-30T12:23:02.3885310Z (Reading database ... 25%
+2026-10-30T12:23:02.3885512Z (Reading database ... 30%
+2026-10-30T12:23:02.3885711Z (Reading database ... 35%
+2026-10-30T12:23:02.3885916Z (Reading database ... 40%
+2026-10-30T12:23:02.3886223Z (Reading database ... 45%
+2026-10-30T12:23:02.3886746Z (Reading database ... 50%
+2026-10-30T12:23:02.4728952Z (Reading database ... 55%
+2026-10-30T12:23:02.6712338Z (Reading database ... 60%
+2026-10-30T12:23:02.8323068Z (Reading database ... 65%
+2026-10-30T12:23:02.9757181Z (Reading database ... 70%
+2026-10-30T12:23:03.1328097Z (Reading database ... 75%
+2026-10-30T12:23:03.2762679Z (Reading database ... 80%
+2026-10-30T12:23:03.4803434Z (Reading database ... 85%
+2026-10-30T12:23:03.6859570Z (Reading database ... 90%
+2026-10-30T12:23:03.8329057Z (Reading database ... 95%
+2026-10-30T12:23:03.8329333Z (Reading database ... 100%
+2026-10-30T12:23:03.8329618Z (Reading database ... 212715 files and directories currently installed.)
+2026-10-30T12:23:03.8368013Z Preparing to unpack .../libegl-mesa0_26.0.8-1ubuntu0.3_amd64v3.deb ...
+2026-10-30T12:23:03.8398938Z Unpacking libegl-mesa0:amd64 (26.0.8-1ubuntu0.3) ...
+2026-10-30T12:23:03.8892423Z Selecting previously unselected package libegl1:amd64.
+2026-10-30T12:23:03.9000546Z Preparing to unpack .../libegl1_1.7.0-3_amd64v3.deb ...
+2026-10-30T12:23:03.9009135Z Unpacking libegl1:amd64 (1.7.0-3) ...
+2026-10-30T12:23:03.9358687Z Setting up libegl-mesa0:amd64 (26.0.8-1ubuntu0.3) ...
+2026-10-30T12:23:03.9387830Z Setting up libegl1:amd64 (1.7.0-3) ...
+2026-10-30T12:23:03.9525599Z Processing triggers for libc-bin (2.43-2ubuntu2.4) ...
+2026-10-30T12:23:05.0767077Z 
+2026-10-30T12:23:05.0767945Z Running kernel seems to be up-to-date.
+2026-10-30T12:23:05.0768230Z 
+2026-10-30T12:23:05.0768314Z Restarting services...
+2026-10-30T12:23:05.0840086Z 
+2026-10-30T12:23:05.0840720Z Service restarts being deferred:
+2026-10-30T12:23:05.0843454Z  systemctl restart hosted-compute-agent.service
+2026-10-30T12:23:05.0843654Z 
+2026-10-30T12:23:05.0844165Z No containers need to be restarted.
+2026-10-30T12:23:05.0844322Z 
+2026-10-30T12:23:05.0844429Z No user sessions are running outdated binaries.
+2026-10-30T12:23:05.0844609Z 
+2026-10-30T12:23:05.0844773Z No VM guests are running outdated hypervisor (qemu) binaries on this host.
+2026-10-30T12:23:05.8841973Z ##[group]Run python -m pip install -r gui/requirements.txt
+2026-10-30T12:23:05.8842361Z [36;1mpython -m pip install -r gui/requirements.txt[0m
+2026-10-30T12:23:05.8871375Z shell: /usr/bin/bash -e {0}
+2026-10-30T12:23:05.8871521Z env:
+2026-10-30T12:23:05.8871643Z   QT_QPA_PLATFORM: offscreen
+2026-10-30T12:23:05.8871821Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-30T12:23:05.8872064Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib/pkgconfig
+2026-10-30T12:23:05.8872311Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-30T12:23:05.8872524Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-30T12:23:05.8872736Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-30T12:23:05.8872949Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib
+2026-10-30T12:23:05.8873126Z ##[endgroup]
+2026-10-30T12:23:06.6223334Z Collecting PySide6<6.12,>=6.11.1 (from -r gui/requirements.txt (line 4))
+2026-10-30T12:23:06.6799293Z   Downloading pyside6-6.11.3-cp310-abi3-manylinux_2_34_x86_64.whl.metadata (5.2 kB)
+2026-10-30T12:23:06.7411959Z Collecting uproot (from -r gui/requirements.txt (line 5))
+2026-10-30T12:23:06.7524922Z   Downloading uproot-5.7.7-py3-none-any.whl.metadata (36 kB)
+2026-10-30T12:23:06.9073086Z Collecting numpy (from -r gui/requirements.txt (line 6))
+2026-10-30T12:23:06.9177437Z   Downloading numpy-2.4.6-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (6.6 kB)
+2026-10-30T12:23:06.9982012Z Collecting matplotlib (from -r gui/requirements.txt (line 7))
+2026-10-30T12:23:07.0087692Z   Downloading matplotlib-3.11.2-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (80 kB)
+2026-10-30T12:23:07.0743167Z Collecting shiboken6==6.11.3 (from PySide6<6.12,>=6.11.1->-r gui/requirements.txt (line 4))
+2026-10-30T12:23:07.0847965Z   Downloading shiboken6-6.11.3-cp310-abi3-manylinux_2_34_x86_64.whl.metadata (2.4 kB)
+2026-10-30T12:23:07.1121915Z Collecting PySide6_Essentials==6.11.3 (from PySide6<6.12,>=6.11.1->-r gui/requirements.txt (line 4))
+2026-10-30T12:23:07.1222962Z   Downloading pyside6_essentials-6.11.3-cp310-abi3-manylinux_2_34_x86_64.whl.metadata (3.6 kB)
+2026-10-30T12:23:07.1470819Z Collecting PySide6_Addons==6.11.3 (from PySide6<6.12,>=6.11.1->-r gui/requirements.txt (line 4))
+2026-10-30T12:23:07.1573723Z   Downloading pyside6_addons-6.11.3-cp310-abi3-manylinux_2_34_x86_64.whl.metadata (4.0 kB)
+2026-10-30T12:23:07.2049027Z Collecting awkward>=2.8.2 (from uproot->-r gui/requirements.txt (line 5))
+2026-10-30T12:23:07.2154147Z   Downloading awkward-2.14.0-py3-none-any.whl.metadata (7.1 kB)
+2026-10-30T12:23:07.3277776Z Collecting cramjam>=2.5.0 (from uproot->-r gui/requirements.txt (line 5))
+2026-10-30T12:23:07.3379294Z   Downloading cramjam-2.14.0-cp311-cp311-manylinux_2_28_x86_64.whl.metadata (6.6 kB)
+2026-10-30T12:23:07.3633681Z Collecting fsspec!=2026.2.0 (from uproot->-r gui/requirements.txt (line 5))
+2026-10-30T12:23:07.3732446Z   Downloading fsspec-2026.9.0-py3-none-any.whl.metadata (10 kB)
+2026-10-30T12:23:07.4036285Z Collecting packaging (from uproot->-r gui/requirements.txt (line 5))
+2026-10-30T12:23:07.4137239Z   Downloading packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+2026-10-30T12:23:07.5273570Z Collecting xxhash (from uproot->-r gui/requirements.txt (line 5))
+2026-10-30T12:23:07.5378379Z   Downloading xxhash-4.0.2-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (17 kB)
+2026-10-30T12:23:07.6310275Z Collecting contourpy>=1.0.1 (from matplotlib->-r gui/requirements.txt (line 7))
+2026-10-30T12:23:07.6413759Z   Downloading contourpy-1.3.3-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (5.5 kB)
+2026-10-30T12:23:07.6637278Z Collecting cycler>=0.10 (from matplotlib->-r gui/requirements.txt (line 7))
+2026-10-30T12:23:07.6740859Z   Downloading cycler-0.12.1-py3-none-any.whl.metadata (3.8 kB)
+2026-10-30T12:23:07.7677925Z Collecting fonttools>=4.28.2 (from matplotlib->-r gui/requirements.txt (line 7))
+2026-10-30T12:23:07.7782744Z   Downloading fonttools-4.68.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (139 kB)
+2026-10-30T12:23:07.8402693Z Collecting kiwisolver>=1.3.1 (from matplotlib->-r gui/requirements.txt (line 7))
+2026-10-30T12:23:07.8508411Z   Downloading kiwisolver-1.5.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (5.2 kB)
+2026-10-30T12:23:07.9553594Z Collecting pillow>=9 (from matplotlib->-r gui/requirements.txt (line 7))
+2026-10-30T12:23:07.9657823Z   Downloading pillow-13.0.0-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (9.1 kB)
+2026-10-30T12:23:07.9928987Z Collecting pyparsing>=3 (from matplotlib->-r gui/requirements.txt (line 7))
+2026-10-30T12:23:08.0027662Z   Downloading pyparsing-3.3.3-py3-none-any.whl.metadata (5.9 kB)
+2026-10-30T12:23:08.0269713Z Collecting python-dateutil>=2.7 (from matplotlib->-r gui/requirements.txt (line 7))
+2026-10-30T12:23:08.0367331Z   Downloading python_dateutil-3.0.0-py2.py3-none-any.whl.metadata (8.2 kB)
+2026-10-30T12:23:08.1462016Z Collecting awkward-cpp==57 (from awkward>=2.8.2->uproot->-r gui/requirements.txt (line 5))
+2026-10-30T12:23:08.1576828Z   Downloading awkward_cpp-57-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (2.1 kB)
+2026-10-30T12:23:08.1858134Z Collecting importlib-metadata>=4.13.0 (from awkward>=2.8.2->uproot->-r gui/requirements.txt (line 5))
+2026-10-30T12:23:08.1958266Z   Downloading importlib_metadata-10.1.0-py3-none-any.whl.metadata (4.5 kB)
+2026-10-30T12:23:08.2228573Z Collecting zipp>=3.20 (from importlib-metadata>=4.13.0->awkward>=2.8.2->uproot->-r gui/requirements.txt (line 5))
+2026-10-30T12:23:08.2325878Z   Downloading zipp-4.1.2-py3-none-any.whl.metadata (3.6 kB)
+2026-10-30T12:23:08.2650747Z Collecting six>=1.6 (from python-dateutil>=2.7->matplotlib->-r gui/requirements.txt (line 7))
+2026-10-30T12:23:08.2756177Z   Downloading six-1.17.0-py2.py3-none-any.whl.metadata (1.7 kB)
+2026-10-30T12:23:08.3073084Z Collecting tzdata (from python-dateutil>=2.7->matplotlib->-r gui/requirements.txt (line 7))
+2026-10-30T12:23:08.3181801Z   Downloading tzdata-2026.6-py2.py3-none-any.whl.metadata (1.4 kB)
+2026-10-30T12:23:08.3329813Z Downloading pyside6-6.11.3-cp310-abi3-manylinux_2_34_x86_64.whl (572 kB)
+2026-10-30T12:23:08.3467645Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 572.1/572.1 kB 33.1 MB/s  0:00:00
+2026-10-30T12:23:08.3581178Z Downloading pyside6_addons-6.11.3-cp310-abi3-manylinux_2_34_x86_64.whl (175.3 MB)
+2026-10-30T12:23:10.0106617Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 175.3/175.3 MB 106.0 MB/s  0:00:01
+2026-10-30T12:23:10.0211193Z Downloading pyside6_essentials-6.11.3-cp310-abi3-manylinux_2_34_x86_64.whl (80.3 MB)
+2026-10-30T12:23:10.7802412Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 80.3/80.3 MB 105.7 MB/s  0:00:00
+2026-10-30T12:23:10.7909339Z Downloading shiboken6-6.11.3-cp310-abi3-manylinux_2_34_x86_64.whl (272 kB)
+2026-10-30T12:23:10.8050001Z Downloading uproot-5.7.7-py3-none-any.whl (441 kB)
+2026-10-30T12:23:10.8176170Z Downloading numpy-2.4.6-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (16.9 MB)
+2026-10-30T12:23:10.9519172Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 16.9/16.9 MB 127.7 MB/s  0:00:00
+2026-10-30T12:23:10.9636776Z Downloading matplotlib-3.11.2-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (9.9 MB)
+2026-10-30T12:23:11.0268797Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 9.9/9.9 MB 161.5 MB/s  0:00:00
+2026-10-30T12:23:11.0396413Z Downloading awkward-2.14.0-py3-none-any.whl (1.0 MB)
+2026-10-30T12:23:11.0439946Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.0/1.0 MB 245.1 MB/s  0:00:00
+2026-10-30T12:23:11.0549283Z Downloading awkward_cpp-57-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (696 kB)
+2026-10-30T12:23:11.0836883Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 696.6/696.6 kB 15.8 MB/s  0:00:00
+2026-10-30T12:23:11.0936669Z Downloading contourpy-1.3.3-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (355 kB)
+2026-10-30T12:23:11.1081864Z Downloading cramjam-2.14.0-cp311-cp311-manylinux_2_28_x86_64.whl (2.0 MB)
+2026-10-30T12:23:11.1155375Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.0/2.0 MB 294.9 MB/s  0:00:00
+2026-10-30T12:23:11.1252692Z Downloading cycler-0.12.1-py3-none-any.whl (8.3 kB)
+2026-10-30T12:23:11.1366426Z Downloading fonttools-4.68.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (5.5 MB)
+2026-10-30T12:23:11.1660279Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.5/5.5 MB 190.3 MB/s  0:00:00
+2026-10-30T12:23:11.1760437Z Downloading fsspec-2026.9.0-py3-none-any.whl (221 kB)
+2026-10-30T12:23:11.1878772Z Downloading importlib_metadata-10.1.0-py3-none-any.whl (32 kB)
+2026-10-30T12:23:11.2115327Z Downloading kiwisolver-1.5.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (1.4 MB)
+2026-10-30T12:23:11.2169179Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.4/1.4 MB 326.2 MB/s  0:00:00
+2026-10-30T12:23:11.2269701Z Downloading packaging-26.3-py3-none-any.whl (129 kB)
+2026-10-30T12:23:11.2391049Z Downloading pillow-13.0.0-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (7.1 MB)
+2026-10-30T12:23:11.2867230Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 7.1/7.1 MB 154.4 MB/s  0:00:00
+2026-10-30T12:23:11.2965057Z Downloading pyparsing-3.3.3-py3-none-any.whl (126 kB)
+2026-10-30T12:23:11.3232935Z Downloading python_dateutil-3.0.0-py2.py3-none-any.whl (94 kB)
+2026-10-30T12:23:11.3748682Z Downloading six-1.17.0-py2.py3-none-any.whl (11 kB)
+2026-10-30T12:23:11.5215351Z Downloading zipp-4.1.2-py3-none-any.whl (10 kB)
+2026-10-30T12:23:11.5801963Z Downloading tzdata-2026.6-py2.py3-none-any.whl (348 kB)
+2026-10-30T12:23:11.6183472Z Downloading xxhash-4.0.2-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (260 kB)
+2026-10-30T12:23:12.0140478Z Installing collected packages: zipp, xxhash, tzdata, six, shiboken6, pyparsing, pillow, packaging, numpy, kiwisolver, fsspec, fonttools, cycler, cramjam, python-dateutil, PySide6_Essentials, importlib-metadata, contourpy, awkward-cpp, PySide6_Addons, matplotlib, awkward, uproot, PySide6
+2026-10-30T12:23:18.6278086Z 
+2026-10-30T12:23:18.6288792Z Successfully installed PySide6-6.11.3 PySide6_Addons-6.11.3 PySide6_Essentials-6.11.3 awkward-2.14.0 awkward-cpp-57 contourpy-1.3.3 cramjam-2.14.0 cycler-0.12.1 fonttools-4.68.0 fsspec-2026.9.0 importlib-metadata-10.1.0 kiwisolver-1.5.1 matplotlib-3.11.2 numpy-2.4.6 packaging-26.3 pillow-13.0.0 pyparsing-3.3.3 python-dateutil-3.0.0 shiboken6-6.11.3 six-1.17.0 tzdata-2026.6 uproot-5.7.7 xxhash-4.0.2 zipp-4.1.2
+2026-10-30T12:23:18.7460575Z ##[group]Run python -B scripts/run_m0_tests.py --profile static --require-tracked-sources --fail-on-skip
+2026-10-30T12:23:18.7460995Z [36;1mpython -B scripts/run_m0_tests.py --profile static --require-tracked-sources --fail-on-skip[0m
+2026-10-30T12:23:18.7487775Z shell: /usr/bin/bash -e {0}
+2026-10-30T12:23:18.7487932Z env:
+2026-10-30T12:23:18.7488069Z   QT_QPA_PLATFORM: offscreen
+2026-10-30T12:23:18.7488259Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-30T12:23:18.7488512Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib/pkgconfig
+2026-10-30T12:23:18.7488768Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-30T12:23:18.7488989Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-30T12:23:18.7489212Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-30T12:23:18.7489432Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib
+2026-10-30T12:23:18.7489622Z ##[endgroup]
+2026-10-30T12:23:18.8511199Z PASS f4_diagnostics: asserts=48/26
+2026-10-30T12:23:19.4808909Z PASS f4_producers: asserts=593/62
+2026-10-30T12:23:20.2905955Z PASS f4_document_diagnostics: asserts=119/100
+2026-10-30T12:23:20.8504746Z PASS build_identity: asserts=47/16
+2026-10-30T12:23:23.0009481Z PASS f1_input_provenance: asserts=37/7
+2026-10-30T12:23:30.0888821Z PASS f1_artifact_model: asserts=97/51
+2026-10-30T12:23:38.1566144Z PASS output_auto_model: asserts=4/41
+2026-10-30T12:23:38.2768990Z PASS merge_outputs: asserts=18/12
+2026-10-30T12:23:38.5839463Z PASS output_extensions: asserts=25/21
+2026-10-30T12:23:38.9276038Z PASS runner_contract: asserts=31/31
+2026-10-30T12:23:38.9995704Z PASS doc_links: asserts=11/11
+2026-10-30T12:23:39.0402161Z PASS platform_paths: asserts=3/3
+2026-10-30T12:23:39.1810724Z PASS ci_annotations: asserts=12/13
+2026-10-30T12:23:39.6831587Z PASS report_evidence: asserts=77/21
+2026-10-30T12:23:39.7668172Z PASS writer_boundary: asserts=24/7
+2026-10-30T12:23:39.9300367Z PASS shielding_scenario_model: asserts=93/61
+2026-10-30T12:23:40.0279086Z PASS shielding_analysis: asserts=113/73
+2026-10-30T12:23:41.7029528Z PASS effective_config_model: asserts=18/18
+2026-10-30T12:23:44.3089320Z PASS main_config_version_component: asserts=4/27
+2026-10-30T12:23:45.2937617Z PASS main_ini_migration: asserts=60/22
+2026-10-30T12:23:49.9227696Z PASS config_migration: asserts=420/53
+2026-10-30T12:23:50.6490503Z PASS project_snapshot_compat: asserts=69/25
+2026-10-30T12:23:51.7202800Z PASS duplicate_generated_package_model: asserts=128/42
+2026-10-30T12:23:52.1023620Z PASS geometry_diagnostic_identity: asserts=4/4
+2026-10-30T12:23:53.8737919Z PASS input_provenance: asserts=15/5
+2026-10-30T12:23:57.2313225Z PASS effective_consumer_state: asserts=3/3
+2026-10-30T12:23:59.5487094Z PASS effective_receipt_view: asserts=14/45
+2026-10-30T12:23:59.8991463Z PASS output_provenance: asserts=46/26
+2026-10-30T12:24:00.2967180Z Report: /home/runner/work/G4UniversalSim/G4UniversalSim/out/verification/20261030-122318-eece386b/report.json
+2026-10-30T12:24:00.2967978Z 28 pass / 0 fail / 0 skip of 28 cases; assertions executed 2133 (28 cases reported counts, 0 cases asserted nothing)
+2026-10-30T12:24:00.3071321Z ##[group]Run python -B scripts/check_report_evidence.py
+2026-10-30T12:24:00.3071584Z [36;1mpython -B scripts/check_report_evidence.py[0m
+2026-10-30T12:24:00.3097128Z shell: /usr/bin/bash -e {0}
+2026-10-30T12:24:00.3097275Z env:
+2026-10-30T12:24:00.3097401Z   QT_QPA_PLATFORM: offscreen
+2026-10-30T12:24:00.3097762Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-30T12:24:00.3098146Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib/pkgconfig
+2026-10-30T12:24:00.3098396Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-30T12:24:00.3098617Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-30T12:24:00.3098846Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-30T12:24:00.3099066Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib
+2026-10-30T12:24:00.3099254Z ##[endgroup]
+2026-10-30T12:24:00.3365389Z report evidence: OK /home/runner/work/G4UniversalSim/G4UniversalSim/out/verification/20261030-122318-eece386b/report.json
+2026-10-30T12:24:00.3366202Z   version 2, profile static, 28 cases, 2133 assertions executed, probe settrace_assert_lines_v3, digest sha256_raw_bytes_lf_v2
+2026-10-30T12:24:00.3366707Z   source db253b7b1ed5..., tests 92c2c470814b...
+2026-10-30T12:24:00.3440394Z ##[group]Run python -B scripts/run_m0_tests.py --profile gui --require-tracked-sources --fail-on-skip
+2026-10-30T12:24:00.3440825Z [36;1mpython -B scripts/run_m0_tests.py --profile gui --require-tracked-sources --fail-on-skip[0m
+2026-10-30T12:24:00.3467271Z shell: /usr/bin/bash -e {0}
+2026-10-30T12:24:00.3467431Z env:
+2026-10-30T12:24:00.3467722Z   QT_QPA_PLATFORM: offscreen
+2026-10-30T12:24:00.3467911Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-30T12:24:00.3468177Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib/pkgconfig
+2026-10-30T12:24:00.3468422Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-30T12:24:00.3468649Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-30T12:24:00.3468869Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-30T12:24:00.3469090Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib
+2026-10-30T12:24:00.3469275Z ##[endgroup]
+2026-10-30T12:24:01.6987122Z PASS gui_f4_navigation: asserts=224/77
+2026-10-30T12:24:04.8899503Z PASS gui_f4_entrypoints: asserts=62/62
+2026-10-30T12:24:12.1196537Z PASS gui_f4_layout: asserts=257/31
+2026-10-30T12:24:12.3566087Z PASS gui_f4_inspect_protocol: asserts=46/16
+2026-10-30T12:24:13.6714738Z PASS gui_f1_output_identity: asserts=28/29
+2026-10-30T12:24:16.0585827Z PASS gui_f1_async_identity: asserts=39/45
+2026-10-30T12:24:17.4372272Z PASS gui_config_migration: asserts=74/70
+2026-10-30T12:24:18.7494453Z PASS effective_config_collection: asserts=42/31
+2026-10-30T12:24:18.9545231Z PASS effective_config_viewer: asserts=22/23
+2026-10-30T12:24:19.1949236Z PASS gui_parsers: asserts=8/8
+2026-10-30T12:24:20.1786243Z PASS gui_qt_combo_data: asserts=29/16
+2026-10-30T12:24:20.3199904Z PASS gui_qt_binding_lifetime: asserts=8/5
+2026-10-30T12:24:20.7093007Z PASS gui_materials: asserts=42/42
+2026-10-30T12:24:21.6804829Z PASS gui_geometry: asserts=69/63
+2026-10-30T12:24:22.1297637Z PASS gui_preview: asserts=22/22
+2026-10-30T12:24:22.4681832Z PASS gui_preview_primitives: asserts=37/37
+2026-10-30T12:24:22.6884394Z PASS gui_project_io: asserts=6/6
+2026-10-30T12:24:25.8210581Z PASS gui_project_import_projection: asserts=393/34
+2026-10-30T12:24:27.6461491Z PASS gui_project_snapshot_restore: asserts=61/54
+2026-10-30T12:24:27.8851106Z PASS gui_source: asserts=50/39
+2026-10-30T12:24:28.4036538Z PASS gui_source_field_preservation: asserts=340/48
+2026-10-30T12:24:28.7463728Z PASS gui_run_config: asserts=34/34
+2026-10-30T12:24:29.7217581Z PASS gui_dose_results: asserts=21/21
+2026-10-30T12:24:32.4678493Z PASS gui_plots: asserts=37/37
+2026-10-30T12:24:33.8308090Z PASS gui_new_simulation_wizard: asserts=60/37
+2026-10-30T12:24:34.1674732Z PASS scenario_page: asserts=31/31
+2026-10-30T12:24:35.4534020Z PASS gui_scans: asserts=58/40
+2026-10-30T12:24:40.2902281Z PASS gui_start_page: asserts=74/41
+2026-10-30T12:24:41.4554903Z PASS gui_fluence_results: asserts=31/31
+2026-10-30T12:24:43.0933098Z PASS gui_output_extensions: asserts=61/50
+2026-10-30T12:24:43.1495934Z PASS gui_output: asserts=15/15
+2026-10-30T12:24:43.4702750Z PASS gui_history: asserts=7/7
+2026-10-30T12:24:48.0172973Z PASS gui_duplicate_history_cli: asserts=254/31
+2026-10-30T12:24:48.0648857Z PASS gui_run_result: asserts=20/20
+2026-10-30T12:24:48.8417298Z PASS gui_live_progress: asserts=71/66
+2026-10-30T12:24:52.4218014Z PASS gui_main_window: asserts=46/30
+2026-10-30T12:24:52.6476067Z PASS gui_unsupported_features: asserts=6/9
+2026-10-30T12:24:52.9953532Z PASS gui_geometry_safety: asserts=11/15
+2026-10-30T12:24:53.3711883Z PASS gui_geometry_diagnostics: asserts=15/43
+2026-10-30T12:24:54.5990574Z PASS q1_postprocessing: asserts=123/35
+2026-10-30T12:24:55.7039068Z PASS gui_output_provenance: asserts=21/14
+2026-10-30T12:24:59.2734721Z PASS q1_public_paths: asserts=32/28
+2026-10-30T12:24:59.5787390Z PASS gui_3d_view: asserts=18/35
+2026-10-30T12:25:00.9196551Z PASS gui_config_editors: asserts=33/23
+2026-10-30T12:25:00.9718347Z Report: /home/runner/work/G4UniversalSim/G4UniversalSim/out/verification/20261030-122400-b954aa4a/report.json
+2026-10-30T12:25:00.9794211Z 44 pass / 0 fail / 0 skip of 44 cases; assertions executed 2938 (44 cases reported counts, 0 cases asserted nothing)
+2026-10-30T12:25:00.9817237Z ##[group]Run python -B scripts/check_report_evidence.py
+2026-10-30T12:25:00.9817699Z [36;1mpython -B scripts/check_report_evidence.py[0m
+2026-10-30T12:25:00.9842681Z shell: /usr/bin/bash -e {0}
+2026-10-30T12:25:00.9842819Z env:
+2026-10-30T12:25:00.9842940Z   QT_QPA_PLATFORM: offscreen
+2026-10-30T12:25:00.9843118Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-30T12:25:00.9843360Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib/pkgconfig
+2026-10-30T12:25:00.9843602Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-30T12:25:00.9843816Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-30T12:25:00.9844026Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-30T12:25:00.9844241Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib
+2026-10-30T12:25:00.9844424Z ##[endgroup]
+2026-10-30T12:25:01.0107361Z report evidence: OK /home/runner/work/G4UniversalSim/G4UniversalSim/out/verification/20261030-122400-b954aa4a/report.json
+2026-10-30T12:25:01.0108496Z   version 2, profile gui, 44 cases, 2938 assertions executed, probe settrace_assert_lines_v3, digest sha256_raw_bytes_lf_v2
+2026-10-30T12:25:01.0109064Z   source db253b7b1ed5..., tests 92c2c470814b...
+2026-10-30T12:25:01.0208248Z ##[group]Run actions/upload-artifact@v4
+2026-10-30T12:25:01.0208442Z with:
+2026-10-30T12:25:01.0208571Z   name: m0-report-ubuntu-latest
+2026-10-30T12:25:01.0208725Z   path: out/verification
+2026-10-30T12:25:01.0208863Z   if-no-files-found: warn
+2026-10-30T12:25:01.0209000Z   compression-level: 6
+2026-10-30T12:25:01.0209129Z   overwrite: false
+2026-10-30T12:25:01.0209258Z   include-hidden-files: false
+2026-10-30T12:25:01.0209395Z env:
+2026-10-30T12:25:01.0209510Z   QT_QPA_PLATFORM: offscreen
+2026-10-30T12:25:01.0209688Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-30T12:25:01.0209967Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib/pkgconfig
+2026-10-30T12:25:01.0210223Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-30T12:25:01.0210439Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-30T12:25:01.0210658Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-30T12:25:01.0210928Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib
+2026-10-30T12:25:01.0211117Z ##[endgroup]
+2026-10-30T12:25:01.1397987Z (node:3233) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-30T12:25:01.1398688Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-30T12:25:01.1513281Z With the provided path, there will be 75 files uploaded
+2026-10-30T12:25:01.1516797Z Artifact name is valid!
+2026-10-30T12:25:01.1517094Z Root directory input is valid!
+2026-10-30T12:25:01.4646101Z Beginning upload of artifact content to blob storage
+2026-10-30T12:25:01.5205038Z (node:3233) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-10-30T12:25:01.7015338Z Uploaded bytes 32026
+2026-10-30T12:25:01.7417702Z Finished uploading artifact content to blob storage!
+2026-10-30T12:25:01.7418337Z SHA256 digest of uploaded artifact zip is 81879232517d3525734d119ad11e970a944f3ba10c1bb56c7b76e243caeff944
+2026-10-30T12:25:01.7418872Z Finalizing artifact upload
+2026-10-30T12:25:02.1854265Z Artifact m0-report-ubuntu-latest.zip successfully finalized. Artifact ID 12976532056
+2026-10-30T12:25:02.1854829Z Artifact m0-report-ubuntu-latest has been successfully uploaded! Final size is 32026 bytes. Artifact ID is 12976532056
+2026-10-30T12:25:02.1860529Z Artifact download URL: https://github.com/doorfordoor/G4UniversalSim/actions/runs/41054895506/artifacts/12976532056
+2026-10-30T12:25:02.2081205Z Post job cleanup.
+2026-10-30T12:25:02.3076764Z Post job cleanup.
+2026-10-30T12:25:02.3734696Z [command]/usr/bin/git version
+2026-10-30T12:25:02.3775512Z git version 2.56.0
+2026-10-30T12:25:02.3818711Z Temporarily overriding HOME='/home/runner/work/_temp/e10f9fe6-9605-4ab3-a22b-c33fc860e3f0' before making global git config changes
+2026-10-30T12:25:02.3829666Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-30T12:25:02.3832215Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/G4UniversalSim/G4UniversalSim
+2026-10-30T12:25:02.3846247Z Removing SSH command configuration
+2026-10-30T12:25:02.3858569Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-30T12:25:02.3901086Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-30T12:25:02.4266391Z Removing HTTP extra header
+2026-10-30T12:25:02.4272892Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-30T12:25:02.4360982Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-30T12:25:02.4641582Z Removing includeIf entries pointing to credentials config files
+2026-10-30T12:25:02.4646769Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-30T12:25:02.4674077Z includeif.gitdir:/home/runner/work/G4UniversalSim/G4UniversalSim/.git.path
+2026-10-30T12:25:02.4674911Z includeif.gitdir:/home/runner/work/G4UniversalSim/G4UniversalSim/.git/worktrees/*.path
+2026-10-30T12:25:02.4675934Z includeif.gitdir:/github/workspace/.git.path
+2026-10-30T12:25:02.4676521Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-30T12:25:02.4682004Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/G4UniversalSim/G4UniversalSim/.git.path
+2026-10-30T12:25:02.4705334Z /home/runner/work/_temp/git-credentials-90bc8f12-7dac-4a34-b411-202fb0b99f51.config
+2026-10-30T12:25:02.4713669Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/G4UniversalSim/G4UniversalSim/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-90bc8f12\-7dac\-4a34\-b411\-202fb0b99f51\.config
+2026-10-30T12:25:02.4756225Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/G4UniversalSim/G4UniversalSim/.git/worktrees/*.path
+2026-10-30T12:25:02.4779633Z /home/runner/work/_temp/git-credentials-90bc8f12-7dac-4a34-b411-202fb0b99f51.config
+2026-10-30T12:25:02.4788357Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/G4UniversalSim/G4UniversalSim/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-90bc8f12\-7dac\-4a34\-b411\-202fb0b99f51\.config
+2026-10-30T12:25:02.4820479Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-10-30T12:25:02.4843033Z /github/runner_temp/git-credentials-90bc8f12-7dac-4a34-b411-202fb0b99f51.config
+2026-10-30T12:25:02.4848974Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-90bc8f12\-7dac\-4a34\-b411\-202fb0b99f51\.config
+2026-10-30T12:25:02.4880721Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-30T12:25:02.4904020Z /github/runner_temp/git-credentials-90bc8f12-7dac-4a34-b411-202fb0b99f51.config
+2026-10-30T12:25:02.4910556Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-90bc8f12\-7dac\-4a34\-b411\-202fb0b99f51\.config
+2026-10-30T12:25:02.4943261Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-30T12:25:02.5193911Z Removing credentials config '/home/runner/work/_temp/git-credentials-90bc8f12-7dac-4a34-b411-202fb0b99f51.config'
+2026-10-30T12:25:02.5337018Z Cleaning up orphan processes
+2026-10-30T12:25:02.5624216Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

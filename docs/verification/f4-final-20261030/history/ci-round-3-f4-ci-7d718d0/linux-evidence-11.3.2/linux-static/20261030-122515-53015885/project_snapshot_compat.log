@@ -1,0 +1,19 @@
+G4USIM_ASSERTS=0
+Traceback (most recent call last):
+  File "/home/runner/work/G4UniversalSim/G4UniversalSim/tools/test_assert_probe.py", line 177, in <module>
+    raise SystemExit(main(sys.argv))
+                     ^^^^^^^^^^^^^^
+  File "/home/runner/work/G4UniversalSim/G4UniversalSim/tools/test_assert_probe.py", line 153, in main
+    runpy.run_path(str(target), run_name="__main__")
+  File "<frozen runpy>", line 291, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/runner/work/G4UniversalSim/G4UniversalSim/scripts/test_project_snapshot_compat.py", line 13, in <module>
+    from g4usim_gui.core.project import G4USimProject, load_project, load_project_snapshot, save_project
+  File "/home/runner/work/G4UniversalSim/G4UniversalSim/gui/g4usim_gui/core/project.py", line 17, in <module>
+    from g4usim_gui.editors.geometry_editor_model import (
+  File "/home/runner/work/G4UniversalSim/G4UniversalSim/gui/g4usim_gui/editors/geometry_editor_model.py", line 14, in <module>
+    from g4usim_gui.core.i18n import ui_format, ui_text
+  File "/home/runner/work/G4UniversalSim/G4UniversalSim/gui/g4usim_gui/core/i18n.py", line 6, in <module>
+    from PySide6.QtGui import QAction
+ImportError: libEGL.so.1: cannot open shared object file: No such file or directory

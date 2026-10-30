@@ -1,0 +1,34 @@
+# F4 native host crash: independent lifecycle diagnosis
+
+Conclusion: **confirmed QA host event-filter lifecycle defect**. The reproduced failure is inside the QA observer's object-tree traversal during a widget close/destruction event. This evidence does not identify a product `WidgetHighlighter` timer defect and does not justify editing the frozen product. All probes below ran in isolated offscreen processes, with Windows Python 3.11 / PySide6 6.11.1 and unchanged tracked GUI source at `096f4b37c15aac0a12206914b9b02ee1b8a3d976`. No desktop operation was performed by this reviewer.
+
+## Native incident correlation
+
+Root's `out/verification/f4-visible-096f4b3/events.jsonl` ends at sequence 34: scan state prepared after wizard diagnosis and cancellation. Wizard navigation has complete before/after records at sequences 32/33, identical business hashes, and target page 1. No host normal-exit receipt exists.
+
+Read-only Windows Application event lookup confirms event 1000 at local **2026-10-30 19:51:06**, process **0x9E08 = 40456**, exception **0xc0000409**, module **ucrtbase.dll 10.0.26100.6899**, offset **0x00000000000a4ace**. WER event 1001 at 19:51:10 reports BEX64 and report ID `0076789b-f764-4e1d-9ea7-f2a3b000b552`. This establishes the actual process abort; the faulting CRT module alone is not proof that the CRT is faulty. Metadata saved in `out/collab/f4-native-crash-windows-events.json`.
+
+## Controlled reproduction
+
+Probe `out/collab/f4-wizard-delete-repro.py` loads the original host definitions (does not edit its file), creates its real MainWindow and real wizard, and runs an actual Qt event loop. Sequence: prepare wizard; actual QTest click on diagnostic Locate; actual Cancel click; prepare scan, whose baseline closes/deletes the prior wizard; next scan Locate click; wait beyond highlight timeout; normal close. The original host's fixture setup, product implementations and UI model inputs are retained. `faulthandler` captures native abort stack where normal Python exception logging did not.
+
+| Controlled condition | Process result | Evidence |
+|---|---|---|
+| Original host filter, highlight still active at deletion | -1073740791 (0xc0000409) after SCAN RETURNED | `f4-wizard-delete-original.log` |
+| Original host filter, wait 4 s so highlight has expired before Cancel | -1073740791, same host line | `f4-wizard-delete-expired-original.log` |
+| Only remove the QA host filter; product highlighter unchanged | 0; scan Locate and later timer expiry complete | `f4-wizard-delete-no-filter.log` |
+| QA filter handles mouse/key AND Close | abort (exit 3); same host line | `f4-wizard-delete-input-with-close-traced.log` |
+| QA filter handles mouse/key only | 0; original before/after recording still runs for diagnostic clicks | `f4-wizard-delete-input-no-close.log` |
+
+Every abort stack points to **`out/collab/f4-visible-host.py:212`**, the expression beginning `self.window.findChildren(DiagnosticPanel)`, entered from the host `eventFilter`. The traced Close variant records `FILTER INPUT 19 QFrame` immediately after SCAN RETURNED, then aborts. Event 19 is `QEvent.Close`; the frame is closing during deferred deletion of the wizard subtree. Traversing Python-subclass wrappers in this partially destroyed QObject tree from the application-wide filter is the failing observer operation. It is not a callback that merely reads an old value, and Python `try/except` cannot safely suppress this native abort. An `isValid()` check alone is also insufficient for an object currently in a destructor.
+
+The original highlighter code uses weak references / `isValid`, a child timer and application filter cleanup. The no-host-filter comparison retains this code, deletes the highlighted wizard, navigates scan and waits beyond 3.5 s without failure. The expired-highlight comparison still aborts with the host filter. These two controls reject the proposed active-highlight-timeout explanation for this incident. They do not claim general lifetime proof for every future Qt scenario. This Windows 6.11.1 failure is separate from the historical Linux 6.12 combo None-reference issue.
+
+## Host-only correction proposal
+
+1. At the very start of `Host.eventFilter`, handle the main window's Close bookkeeping separately and return without panel traversal for **all** Close events. Ignore all event types except the intended mouse/key inputs before inspecting any panels. Merely restricting to input-plus-Close is insufficient; the negative control above proves this.
+2. Prefer the explicitly registered live current diagnostic panel/controls for input recording over scanning all descendant panels on every application event. During `baseline()`, suspend observation, detach the old wizard/panel references before scheduling deletion, clear any pending input generation, and re-enable observation only after the new fixture is ready.
+3. Bind the 80 ms after-input recorder to the originating case/generation, and discard it if the host closes or changes fixtures. The current incident is NOT that callback (seq33 completed), but the host correction should avoid stale observer writes while replacing a fixture.
+4. Re-run this exact event-loop sequence with input observation enabled and verify event pairs plus normal process exit. Then root repeats native acceptance on the **same product SHA**, using a new host/evidence directory. Preserve the failed native round and its missing-exit boundary as original history. Product matrix results remain separately attributable to the unchanged product SHA.
+
+No frozen source, formal test, original host, failed evidence or docs archive was edited by this reviewer. The probe artifacts and logs are diagnostic evidence, not a substitute for root's new native acceptance.

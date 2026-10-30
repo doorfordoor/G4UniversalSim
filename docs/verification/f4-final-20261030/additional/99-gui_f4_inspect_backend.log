@@ -1,0 +1,18 @@
+G4USIM_ASSERTS=0
+Traceback (most recent call last):
+  File "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/f4-qt-test-wrapper.py", line 13, in <module>
+    runpy.run_path(str(ROOT/'tools/test_assert_probe.py'),run_name='__main__')
+  File "<frozen runpy>", line 291, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/tools/test_assert_probe.py", line 177, in <module>
+    raise SystemExit(main(sys.argv))
+                     ^^^^^^^^^^^^^^
+  File "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/tools/test_assert_probe.py", line 153, in main
+    runpy.run_path(str(target), run_name="__main__")
+  File "<frozen runpy>", line 291, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/gui/smoke_tests/smoke_f4_inspect_backend.py", line 19, in <module>
+    from PySide6.QtWidgets import QApplication, QWidget
+ImportError: /home/u123/g4env114/lib/libQt6DBus.so.6: undefined symbol: _ZN8QVariantC1EO5QListI7QStringE, version Qt_6

@@ -1,0 +1,35 @@
+[
+  {
+    "command": [
+      "cmake",
+      "-S",
+      "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim",
+      "-B",
+      "/home/u123/g4-f4-qt-validation-build114-20261030",
+      "-DCMAKE_BUILD_TYPE=Release",
+      "-DCMAKE_PREFIX_PATH=/home/u123/g4env114",
+      "-DGeant4_DIR=/home/u123/g4env114/lib/cmake/Geant4",
+      "-DEXPAT_INCLUDE_DIR=/home/u123/g4env114/include",
+      "-DEXPAT_LIBRARY=/home/u123/g4env114/lib/libexpat.so",
+      "-DZLIB_INCLUDE_DIR=/home/u123/g4env114/include",
+      "-DZLIB_LIBRARY=/home/u123/g4env114/lib/libz.so",
+      "-DFREETYPE_INCLUDE_DIRS=/home/u123/g4env114/include/freetype2",
+      "-DFREETYPE_LIBRARY=/home/u123/g4env114/lib/libfreetype.so",
+      "-DXercesC_INCLUDE_DIR=/home/u123/g4env114/include",
+      "-DXercesC_LIBRARY_RELEASE=/home/u123/g4env114/lib/libxerces-c.so"
+    ],
+    "exit_code": 0
+  },
+  {
+    "command": [
+      "cmake",
+      "--build",
+      "/home/u123/g4-f4-qt-validation-build114-20261030",
+      "--target",
+      "G4UniversalSim",
+      "mergeHistograms",
+      "-j2"
+    ],
+    "exit_code": 0
+  }
+]

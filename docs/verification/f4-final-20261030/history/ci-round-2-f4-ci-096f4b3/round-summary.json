@@ -1,0 +1,345 @@
+{
+  "head_sha": "096f4b37c15aac0a12206914b9b02ee1b8a3d976",
+  "status": "failed",
+  "candidate_stage_status": "failed_ci_native_separate",
+  "evidence_collection_complete": true,
+  "report_profile_coverage_complete": false,
+  "missing_profiles": [
+    [
+      "linux-evidence-11.3.2",
+      "backend"
+    ],
+    [
+      "linux-evidence-11.3.2",
+      "integration"
+    ],
+    [
+      "linux-evidence-11.4.3",
+      "backend"
+    ],
+    [
+      "linux-evidence-11.4.3",
+      "integration"
+    ]
+  ],
+  "problems": [
+    "Run 41050259071: failure",
+    "Negative-control evidence absent for job 124044262255",
+    "Job 124044262255: failure",
+    "Negative-control evidence absent for job 124044262528",
+    "Job 124044262528: failure",
+    "Run 41050258833: failure",
+    "Job 124044262068: failure",
+    "Strict baseline gate failed: linux-evidence-11.4.3/gui",
+    "Nonpassing cases in linux-evidence-11.4.3/gui: ['gui_f4_layout']",
+    "Strict baseline gate failed: linux-evidence-11.3.2/gui",
+    "Nonpassing cases in linux-evidence-11.3.2/gui: ['gui_f4_layout']",
+    "Strict baseline gate failed: m0-report-ubuntu-latest/gui",
+    "Nonpassing cases in m0-report-ubuntu-latest/gui: ['gui_f4_layout']",
+    "Missing profiles after upstream workflow failure: [('linux-evidence-11.3.2', 'backend'), ('linux-evidence-11.3.2', 'integration'), ('linux-evidence-11.4.3', 'backend'), ('linux-evidence-11.4.3', 'integration')]"
+  ],
+  "runs": [
+    {
+      "id": 41050259071,
+      "head_sha": "096f4b37c15aac0a12206914b9b02ee1b8a3d976",
+      "head_branch": "roadmap/F4-validation-navigation",
+      "name": "Linux build and backend regression",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_attempt": 1,
+      "html_url": "https://github.com/doorfordoor/G4UniversalSim/actions/runs/41050259071"
+    },
+    {
+      "id": 41050258833,
+      "head_sha": "096f4b37c15aac0a12206914b9b02ee1b8a3d976",
+      "head_branch": "roadmap/F4-validation-navigation",
+      "name": "M0 static and GUI regression",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_attempt": 1,
+      "html_url": "https://github.com/doorfordoor/G4UniversalSim/actions/runs/41050258833"
+    }
+  ],
+  "jobs": [
+    {
+      "id": 124044262255,
+      "name": "ubuntu-24.04 / Geant4 11.4.3",
+      "run_id": 41050259071,
+      "head_sha": "096f4b37c15aac0a12206914b9b02ee1b8a3d976",
+      "status": "completed",
+      "conclusion": "failure",
+      "path": "job-124044262255.log",
+      "bytes": 117458,
+      "sha256": "789b78442a0852db4a3142b10a58e8075c84528493eae2dd4f42aada0f44088e",
+      "representation": "connector-decoded UTF-8 text",
+      "negative_control_passed": false
+    },
+    {
+      "id": 124044262528,
+      "name": "ubuntu-24.04 / Geant4 11.3.2",
+      "run_id": 41050259071,
+      "head_sha": "096f4b37c15aac0a12206914b9b02ee1b8a3d976",
+      "status": "completed",
+      "conclusion": "failure",
+      "path": "job-124044262528.log",
+      "bytes": 119443,
+      "sha256": "18a2ac115b9ee8f51cddd81c229c5cafb0b0c8616fdfcb1d599d16ffe148f941",
+      "representation": "connector-decoded UTF-8 text",
+      "negative_control_passed": false
+    },
+    {
+      "id": 124044261613,
+      "name": "windows-latest / Python 3.11",
+      "run_id": 41050258833,
+      "head_sha": "096f4b37c15aac0a12206914b9b02ee1b8a3d976",
+      "status": "completed",
+      "conclusion": "success",
+      "path": "job-124044261613.log",
+      "bytes": 83060,
+      "sha256": "4b9172c47b3e867dab6956c688de0697d43df25a4bd46b1540724935a37f24fd",
+      "representation": "connector-decoded UTF-8 text",
+      "negative_control_passed": null
+    },
+    {
+      "id": 124044262068,
+      "name": "ubuntu-latest / Python 3.11",
+      "run_id": 41050258833,
+      "head_sha": "096f4b37c15aac0a12206914b9b02ee1b8a3d976",
+      "status": "completed",
+      "conclusion": "failure",
+      "path": "job-124044262068.log",
+      "bytes": 51105,
+      "sha256": "a98d27e9af296484b99daeb3250ceea3ff739c3274f9f1b1720b3aa14814a975",
+      "representation": "connector-decoded UTF-8 text",
+      "negative_control_passed": null
+    }
+  ],
+  "artifacts": [
+    {
+      "id": 12974786563,
+      "run_id": 41050259071,
+      "name": "linux-evidence-11.4.3",
+      "official_digest": "sha256:33c1c97fc1b4dfdd46c4b89f0d6d12ec9492c30a8e1bcb0ffb8faf40ad167319",
+      "local_sha256": "sha256:33c1c97fc1b4dfdd46c4b89f0d6d12ec9492c30a8e1bcb0ffb8faf40ad167319",
+      "bytes": 33446
+    },
+    {
+      "id": 12974647006,
+      "run_id": 41050259071,
+      "name": "linux-evidence-11.3.2",
+      "official_digest": "sha256:450fbbb22d5a64aa9e16ec45db6a451f0167d5428e4db0749a8654d165501aca",
+      "local_sha256": "sha256:450fbbb22d5a64aa9e16ec45db6a451f0167d5428e4db0749a8654d165501aca",
+      "bytes": 33444
+    },
+    {
+      "id": 12974641852,
+      "run_id": 41050258833,
+      "name": "m0-report-ubuntu-latest",
+      "official_digest": "sha256:17259e2566e5ade353525fe2a3a28e4a9e49ffb0211a2d72e6f2bf5c1fc9a9e5",
+      "local_sha256": "sha256:17259e2566e5ade353525fe2a3a28e4a9e49ffb0211a2d72e6f2bf5c1fc9a9e5",
+      "bytes": 32092
+    },
+    {
+      "id": 12973818588,
+      "run_id": 41050258833,
+      "name": "m0-report-windows-latest",
+      "official_digest": "sha256:0738bc8b4e710c74df86a897b44c3fe99fb89756dee9c04ead3e6c87db4b828f",
+      "local_sha256": "sha256:0738bc8b4e710c74df86a897b44c3fe99fb89756dee9c04ead3e6c87db4b828f",
+      "bytes": 28908
+    }
+  ],
+  "reports": [
+    {
+      "artifact": "linux-evidence-11.4.3",
+      "profile": "gui",
+      "path": "linux-evidence-11.4.3/linux-gui/20261030-114741-099e7cf1/report.json",
+      "sha256": "d7753d9037aa4d2cd97e924a30e92eaf541ec061dbfbd0c283cb0b5af7039e41",
+      "cases": 43,
+      "assertions": 2930,
+      "git_dirty": true,
+      "backend_build_identity": null,
+      "backend_provenance": "backend executable is missing",
+      "merge_provenance": "mergeHistograms executable is missing",
+      "strict_baseline_gate_exit": 1,
+      "baseline": "docs/verification/f1-automated-20261030/ci/linux-evidence-11.4.3/linux-gui/20261030-085814-17086ea8/report.json",
+      "baseline_sha256": "29b32a46d775272c04eb3263d9518d41ec362486491227474ca7549341f4aaa7",
+      "gate_log": "baseline-gates/linux-evidence-11.4.3-gui.log",
+      "failures": [
+        "gui_f4_layout"
+      ]
+    },
+    {
+      "artifact": "linux-evidence-11.4.3",
+      "profile": "static",
+      "path": "linux-evidence-11.4.3/linux-static/20261030-114648-8bee0b77/report.json",
+      "sha256": "f3d75bda033adf37ebbb6000d1e85481e9253000ee38af611de4545b4ffc327c",
+      "cases": 28,
+      "assertions": 2133,
+      "git_dirty": true,
+      "backend_build_identity": null,
+      "backend_provenance": "backend executable is missing",
+      "merge_provenance": "mergeHistograms executable is missing",
+      "strict_baseline_gate_exit": 0,
+      "baseline": "docs/verification/f1-automated-20261030/ci/linux-evidence-11.4.3/linux-static/20261030-085719-90e72d82/report.json",
+      "baseline_sha256": "9ef914b0aad3bf8b1a5efe71b48bc52f4fe1e6345816f173a587c58c08661142",
+      "gate_log": "baseline-gates/linux-evidence-11.4.3-static.log",
+      "failures": []
+    },
+    {
+      "artifact": "linux-evidence-11.3.2",
+      "profile": "gui",
+      "path": "linux-evidence-11.3.2/linux-gui/20261030-114752-110e65d1/report.json",
+      "sha256": "705dd3ff7bb112ea389557dfb9c2ae9ee0e93c96238cbb07f169b73d9f72ffeb",
+      "cases": 43,
+      "assertions": 2930,
+      "git_dirty": true,
+      "backend_build_identity": null,
+      "backend_provenance": "backend executable is missing",
+      "merge_provenance": "mergeHistograms executable is missing",
+      "strict_baseline_gate_exit": 1,
+      "baseline": "docs/verification/f1-automated-20261030/ci/linux-evidence-11.3.2/linux-gui/20261030-085807-247d9d38/report.json",
+      "baseline_sha256": "7ed9bc0f64ecbe8e3e7e934d01d5ae64ce679f5705c02c6b909d5bcb424643b0",
+      "gate_log": "baseline-gates/linux-evidence-11.3.2-gui.log",
+      "failures": [
+        "gui_f4_layout"
+      ]
+    },
+    {
+      "artifact": "linux-evidence-11.3.2",
+      "profile": "static",
+      "path": "linux-evidence-11.3.2/linux-static/20261030-114656-8d3ccc0f/report.json",
+      "sha256": "011e87de3b48e2fd9ffe8e61c83c375934a18a79b478b0e56d187c53ecbf7c30",
+      "cases": 28,
+      "assertions": 2133,
+      "git_dirty": true,
+      "backend_build_identity": null,
+      "backend_provenance": "backend executable is missing",
+      "merge_provenance": "mergeHistograms executable is missing",
+      "strict_baseline_gate_exit": 0,
+      "baseline": "docs/verification/f1-automated-20261030/ci/linux-evidence-11.3.2/linux-static/20261030-085714-5a950ea2/report.json",
+      "baseline_sha256": "1ec4852ee0a75f7479d5f0d7399eda39e1eedfd179a938fc9dba843ae63188b3",
+      "gate_log": "baseline-gates/linux-evidence-11.3.2-static.log",
+      "failures": []
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "static",
+      "path": "m0-report-ubuntu-latest/20261030-114510-2ff87a6f/report.json",
+      "sha256": "ac48f486cbf63fab614cc9ab7f06f725a3ae0925b62194ebe46d42411b370823",
+      "cases": 28,
+      "assertions": 2133,
+      "git_dirty": false,
+      "backend_build_identity": null,
+      "backend_provenance": "backend executable is missing",
+      "merge_provenance": "mergeHistograms executable is missing",
+      "strict_baseline_gate_exit": 0,
+      "baseline": "docs/verification/f1-automated-20261030/ci/m0-report-ubuntu-latest/20261030-085531-34838c3e/report.json",
+      "baseline_sha256": "7b305c60a0d1bef6230705b0d0929ae3a312d564bbcd249f76fffbae91463e5e",
+      "gate_log": "baseline-gates/m0-report-ubuntu-latest-static.log",
+      "failures": []
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "gui",
+      "path": "m0-report-ubuntu-latest/20261030-114608-505a6641/report.json",
+      "sha256": "f916041064f3c13fd71dfa87d34e60fffcea69efc930cc0cbdbe780110dafbc8",
+      "cases": 43,
+      "assertions": 2930,
+      "git_dirty": false,
+      "backend_build_identity": null,
+      "backend_provenance": "backend executable is missing",
+      "merge_provenance": "mergeHistograms executable is missing",
+      "strict_baseline_gate_exit": 1,
+      "baseline": "docs/verification/f1-automated-20261030/ci/m0-report-ubuntu-latest/20261030-085606-197ce25c/report.json",
+      "baseline_sha256": "3c71b9e4437d4b1b9b384c9093bcc9e2b4e197f8a4ac005e7532aad0219e311f",
+      "gate_log": "baseline-gates/m0-report-ubuntu-latest-gui.log",
+      "failures": [
+        "gui_f4_layout"
+      ]
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "static",
+      "path": "m0-report-windows-latest/20261030-114606-6fa32e60/report.json",
+      "sha256": "810d54d0988b4abb6351a2b60494422af3902afebfa0c4b7c258b9778564c501",
+      "cases": 28,
+      "assertions": 2124,
+      "git_dirty": false,
+      "backend_build_identity": null,
+      "backend_provenance": "backend executable is missing",
+      "merge_provenance": "mergeHistograms executable is missing",
+      "strict_baseline_gate_exit": 0,
+      "baseline": "docs/verification/f1-automated-20261030/ci/m0-report-windows-latest/20261030-085559-fc139df5/report.json",
+      "baseline_sha256": "6608fd5a76ec8d9e92df8c94689d3bf900a14fee879f608a0fd76ab2d114b48d",
+      "gate_log": "baseline-gates/m0-report-windows-latest-static.log",
+      "failures": []
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "gui",
+      "path": "m0-report-windows-latest/20261030-114729-fa45c7eb/report.json",
+      "sha256": "32bbd02cf3333fa20387ad531d48f3f4cf7ab2e2009861a241c7113735777b06",
+      "cases": 43,
+      "assertions": 2932,
+      "git_dirty": false,
+      "backend_build_identity": null,
+      "backend_provenance": "backend executable is missing",
+      "merge_provenance": "mergeHistograms executable is missing",
+      "strict_baseline_gate_exit": 0,
+      "baseline": "docs/verification/f1-automated-20261030/ci/m0-report-windows-latest/20261030-085726-e56c442a/report.json",
+      "baseline_sha256": "7103b10ca386706e4cb574f5109486e25166fd646dcf0ed661a601d47def7602",
+      "gate_log": "baseline-gates/m0-report-windows-latest-gui.log",
+      "failures": []
+    }
+  ],
+  "case_executions": 284,
+  "report_count": 8,
+  "source_fingerprint": "db253b7b1ed5f810789f1322faa75002df311d4aeb04572867dbb130c71d95cc",
+  "tests_content_fingerprint": "fa32cb49760314c208f944b8c66be507b791f766ffeabeb7b01a8142cb10cc4c",
+  "boundary": "CI only; local Windows all-profile and native UI acceptance are separate. No physics validation is inferred.",
+  "expected_reports_for_complete_matrix": 12,
+  "strict_pass_reports": 5,
+  "failed_case_executions": 3,
+  "failures": [
+    {
+      "artifact": "linux-evidence-11.4.3",
+      "profile": "gui",
+      "case": "gui_f4_layout",
+      "status": "fail",
+      "exit_code": -6,
+      "assertions": 257,
+      "path": "linux-evidence-11.4.3/linux-gui/20261030-114741-099e7cf1/gui_f4_layout.log",
+      "bytes": 6881,
+      "sha256": "8378e235608782fc82607cab5e0b2671afd133847f4794fd3eaa899c9171b877"
+    },
+    {
+      "artifact": "linux-evidence-11.3.2",
+      "profile": "gui",
+      "case": "gui_f4_layout",
+      "status": "fail",
+      "exit_code": -6,
+      "assertions": 257,
+      "path": "linux-evidence-11.3.2/linux-gui/20261030-114752-110e65d1/gui_f4_layout.log",
+      "bytes": 6881,
+      "sha256": "045f865631e20f3ac9c20eea9ff63c10c3e813d4a83ed4d0349008eaf09a42c4"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "gui",
+      "case": "gui_f4_layout",
+      "status": "fail",
+      "exit_code": -6,
+      "assertions": 257,
+      "path": "m0-report-ubuntu-latest/20261030-114608-505a6641/gui_f4_layout.log",
+      "bytes": 6881,
+      "sha256": "427d78d7249d800a7fb1181b6b79882f56465030a4f72fd8947c850b831bfb3c"
+    }
+  ],
+  "skipped_case_executions": 0,
+  "evidence_integrity_checked": true,
+  "official_zip_count": 4,
+  "decoded_job_log_count": 4,
+  "zip_member_count": 294,
+  "stage_acceptance": "not_accepted",
+  "audit_sha256": "5e1f86db20faa7c4eea39c002e8a93fdc1d680ba48b91edd82c1de8470a91cc0"
+}

@@ -1,0 +1,228 @@
+name: Linux build and backend regression
+
+# Stage 2A: prove that the backend builds and its Geant4-dependent suites pass on
+# Linux, which the Windows-only developer machine cannot show. Two Geant4
+# versions are tested: 11.3.2 (the version this project targets) and 11.4.3
+# (probed locally on 2026-10-28; see docs/Linux构建与验证.md §8). The
+# environment is created with micromamba from conda-forge so the Geant4 datasets
+# are installed together with the libraries instead of being downloaded by hand.
+#
+# Geant4 11.4 raises three toolchain floors above Ubuntu 24.04's system
+# libraries (expat 2.8.5, zlib 1.3.2, freetype 2.14.3), so the 11.4 leg points
+# CMake at the conda prefix for all three. 11.3.2 keeps the plain configure.
+#
+# The static and GUI suites stay in m0-static-gui.yml (no Geant4 needed); this
+# workflow adds the backend and integration profiles on Linux and validates each
+# profile's own report before it can be considered green.
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  linux-geant4:
+    name: ubuntu-24.04 / Geant4 ${{ matrix.geant4 }}
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        geant4: ['11.3.2', '11.4.3']
+    env:
+      # job-level env cannot use the runner context; keep both prefixes inside the
+      # workspace instead (they are not source files, so the tracked-source gate
+      # does not care about them).
+      MAMBA_ROOT_PREFIX: ${{ github.workspace }}/.micromamba
+      G4_PREFIX: ${{ github.workspace }}/.g4env-${{ matrix.geant4 }}
+      GEANT4_VERSION: ${{ matrix.geant4 }}
+      REPORT_ROOT: ${{ github.workspace }}/out/verification/geant4-${{ matrix.geant4 }}
+      # The integration suite imports the desktop application; a headless runner has no display.
+      QT_QPA_PLATFORM: offscreen
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install micromamba
+        run: |
+          set -euo pipefail
+          curl -Ls https://micro.mamba.pm/api/micromamba/linux-64/latest | tar -xj bin/micromamba
+          ./bin/micromamba --version
+
+      - name: Create pinned Geant4 environment
+        run: |
+          set -euo pipefail
+          ./bin/micromamba create -y -p "$G4_PREFIX" -c conda-forge \
+            "geant4=$GEANT4_VERSION" "python=3.11" pip expat zlib freetype
+          "$G4_PREFIX/bin/geant4-config" --version
+          # The integration suite imports the desktop application, so the full GUI
+          # requirements are needed; uproot is what reads ROOT from the backend.
+          ./bin/micromamba run -p "$G4_PREFIX" -- python -m pip install --quiet\
+            -r gui/requirements.txt
+
+      # A missing dataset must fail the job instead of surfacing as a Geant4 abort
+      # in the middle of an unrelated test.
+      - name: Export the Geant4 dataset environment
+        run: |
+          set -euo pipefail
+          ./bin/micromamba run -p "$G4_PREFIX" -- printenv \
+            | grep -E '^(G4[A-Z0-9_]*DATA|GEANT4[A-Z0-9_]*)=' >> "$GITHUB_ENV"
+          # Keep the backend CMake RPATH and the PySide6 wheel Qt libraries separate.
+          # A global conda lib prefix can mix incompatible Qt libraries in Python.
+          echo "$G4_PREFIX/bin" >> "$GITHUB_PATH"
+
+      # PySide6 ships its own Qt6 plugins inside site-packages, but a conda prefix
+      # has <prefix>/plugins (the Qt5 plugins of qt-main) next to python's bin
+      # directory, and Qt derives its search path from that layout. The Qt6
+      # offscreen plugin is then never found and every GUI test dies with
+      # 'Could not find the Qt platform plugin "offscreen"'. Point Qt at the
+      # PySide6 plugins explicitly; verified locally in a conda env with the same
+      # Geant4 11.3.2 + python 3.11 + PySide6 6.12.0 combination.
+      - name: Point Qt at the PySide6 plugins
+        run: |
+          set -euo pipefail
+          plugins="$("$G4_PREFIX/bin/python" -c 'import pathlib, PySide6; print(pathlib.Path(PySide6.__file__).resolve().parent / "Qt" / "plugins")')"
+          test -d "$plugins/platforms"
+          test -f "$plugins/platforms/libqoffscreen.so"
+          echo "QT_PLUGIN_PATH=$plugins" >> "$GITHUB_ENV"
+
+      # Geant4 11.4 needs expat >= 2.8.5, zlib >= 1.3.2 and freetype >= 2.14.3;
+      # Ubuntu 24.04 ships older system copies that CMake finds first, so point
+      # the find modules at the conda prefix for the 11.4 leg only. 11.3.2 builds
+      # against the system libraries as before.
+      - name: Configure the backend
+        run: |
+          set -euo pipefail
+          if [[ "$GEANT4_VERSION" == 11.4.* ]]; then
+            cmake -S . -B build_linux -DCMAKE_BUILD_TYPE=Release \
+              -DCMAKE_PREFIX_PATH="$G4_PREFIX" \
+              -DEXPAT_INCLUDE_DIR="$G4_PREFIX/include" \
+              -DEXPAT_LIBRARY="$G4_PREFIX/lib/libexpat.so" \
+              -DZLIB_INCLUDE_DIR="$G4_PREFIX/include" \
+              -DZLIB_LIBRARY="$G4_PREFIX/lib/libz.so" \
+              -DFREETYPE_INCLUDE_DIRS="$G4_PREFIX/include/freetype2" \
+              -DFREETYPE_LIBRARY="$G4_PREFIX/lib/libfreetype.so"
+          else
+            cmake -S . -B build_linux -DCMAKE_BUILD_TYPE=Release \
+              -DCMAKE_PREFIX_PATH="$G4_PREFIX"
+          fi
+
+      - name: Build the backend
+        run: cmake --build build_linux -j"$(nproc)"
+
+      - name: Verify the Geant4 data lookup of the built executable
+        run: ./build_linux/G4UniversalSim --check-geant4-data
+
+      # The executable decides GDML availability from its own Geant4; the
+      # capabilities regression must be told the expectation for this build
+      # directory rather than assuming build_vs2026 exists. Ask the executable
+      # instead of grepping Geant4Config.cmake: the file's spelling differs
+      # between Geant4 releases and the executable is the fact being tested.
+      - name: Record GDML availability of this Geant4
+        run: |
+          set -euo pipefail
+          if ./build_linux/G4UniversalSim --capabilities               | python -c 'import json,sys; caps=json.load(sys.stdin); runtime={item["id"] for item in caps["templates"] if item.get("runtime")}; print(1 if "gdml" in runtime else 0)'               | grep -qx 1; then
+            echo "G4USIM_EXPECT_GDML=1" >> "$GITHUB_ENV"
+          else
+            echo "G4USIM_EXPECT_GDML=0" >> "$GITHUB_ENV"
+          fi
+
+      # E3 also asks for the platform-independent suites on this runner: static
+      # needs no Geant4, and the GUI suite runs headless through the offscreen
+      # platform (the Windows workflow is still disabled in the repository
+      # settings, so a Linux run is what proves those profiles on CI today).
+      - name: Run static tests on Linux
+        run: |
+          python -B scripts/run_m0_tests.py --profile static --require-tracked-sources --fail-on-skip --report-root "$REPORT_ROOT/linux-static"
+
+      - name: Validate the Linux static report
+        run: python -B scripts/check_report_evidence.py --report-root "$REPORT_ROOT/linux-static"
+
+      - name: Annotate failing static cases
+        if: failure()
+        run: python -B scripts/ci_annotate_failures.py --report-root "$REPORT_ROOT/linux-static"
+
+      - name: Run offscreen GUI tests on Linux
+        run: |
+          python -B scripts/run_m0_tests.py --profile gui --require-tracked-sources --fail-on-skip --report-root "$REPORT_ROOT/linux-gui"
+
+      - name: Validate the Linux GUI report
+        run: python -B scripts/check_report_evidence.py --report-root "$REPORT_ROOT/linux-gui"
+
+      - name: Annotate failing GUI cases
+        if: failure()
+        run: python -B scripts/ci_annotate_failures.py --report-root "$REPORT_ROOT/linux-gui"
+
+      # --fail-on-skip: a missing backend/uproot/Qt must fail the job instead of
+      # producing the skip exit status that a green run used to hide.
+      - name: Run backend tests on Linux
+        run: |
+          python -B scripts/run_m0_tests.py --profile backend --require-tracked-sources --fail-on-skip \
+            --executable build_linux/G4UniversalSim \
+            --merge-executable build_linux/mergeHistograms \
+            --report-root "$REPORT_ROOT/linux-backend"
+
+      - name: Validate the Linux backend report
+        run: python -B scripts/check_report_evidence.py --report-root "$REPORT_ROOT/linux-backend"
+
+      # The job log needs authentication on a public repository; surface the
+      # failing cases in the (public) annotations instead so the run stays
+      # diagnosable from outside.
+      - name: Annotate failing backend cases
+        if: failure()
+        run: python -B scripts/ci_annotate_failures.py --report-root "$REPORT_ROOT/linux-backend"
+
+      - name: Run integration tests on Linux
+        run: |
+          python -B scripts/run_m0_tests.py --profile integration --require-tracked-sources --fail-on-skip \
+            --executable build_linux/G4UniversalSim \
+            --merge-executable build_linux/mergeHistograms \
+            --report-root "$REPORT_ROOT/linux-integration"
+
+      - name: Validate the Linux integration report
+        run: python -B scripts/check_report_evidence.py --report-root "$REPORT_ROOT/linux-integration"
+
+      - name: Annotate failing integration cases
+        if: failure()
+        run: python -B scripts/ci_annotate_failures.py --report-root "$REPORT_ROOT/linux-integration"
+
+      # Negative control: a tampered log digest must be rejected by the evidence
+      # gate. A gate that only checks field presence would accept this copy.
+      - name: Verify the evidence gate rejects a tampered report
+        run: |
+          set -euo pipefail
+          cp -r "$REPORT_ROOT/linux-backend" "$RUNNER_TEMP/tampered"
+          python - "$RUNNER_TEMP/tampered" <<'PY'
+          import json, sys
+          from pathlib import Path
+
+          root = Path(sys.argv[1])
+          report = sorted(root.glob("*/report.json"), key=lambda p: p.stat().st_mtime)[-1]
+          data = json.loads(report.read_text(encoding="utf-8"))
+          record = next(item for item in data["results"] if item["status"] == "pass")
+          # Tamper the copy: the gate resolves logs relative to the report directory,
+          # so the original evidence stays untouched and the copy must be rejected.
+          log = report.parent / Path(record["log"]).name
+          if not log.is_file():
+              log = report.parent / "logs" / Path(record["log"]).name
+          if not log.is_file():
+              raise SystemExit(f"cannot locate the log of {record['name']} in the copied report")
+          log.write_bytes(log.read_bytes() + b"\n# tampered\n")
+          print("tampered", log)
+          PY
+          if python -B scripts/check_report_evidence.py --report-root "$RUNNER_TEMP/tampered"; then
+            echo "evidence gate accepted a tampered log digest"; exit 1
+          fi
+          echo "evidence gate rejected the tampered log digest"
+
+      - name: Upload Linux evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-evidence-${{ matrix.geant4 }}
+          path: |
+            out/verification/geant4-${{ matrix.geant4 }}/linux-static
+            out/verification/geant4-${{ matrix.geant4 }}/linux-gui
+            out/verification/geant4-${{ matrix.geant4 }}/linux-backend
+            out/verification/geant4-${{ matrix.geant4 }}/linux-integration
+          if-no-files-found: warn

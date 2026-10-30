@@ -1,0 +1,106 @@
+{
+  "status": "passed",
+  "positive_mapping": {
+    "status": "verified_exact_linux_runtime_child",
+    "product_commit": "7d718d038a00d89995ea773b4772764116b620c3",
+    "ci_commit": "a9ad09dfd6e99d287fa77ff7f38e7919c475e1b9",
+    "tracked_entries_verified": 11340,
+    "changed_files": [
+      ".github/workflows/linux-geant4.yml"
+    ],
+    "source_fingerprint": "db253b7b1ed5f810789f1322faa75002df311d4aeb04572867dbb130c71d95cc",
+    "tests_content_fingerprint": "92c2c470814b0bea95d918e3393394a9c39ff5897fc3d57e64d33ef7e6174ddb",
+    "phase_acceptance": false
+  },
+  "negative_cases": [
+    {
+      "case": "unmapped_heads",
+      "rejected": true,
+      "reason": "F4 identity mapping: mixed heads require an explicit archived mapping"
+    },
+    {
+      "case": "same_head_with_hidden_mapping",
+      "rejected": true,
+      "reason": "F4 identity mapping: same-head plan must not hide a mapping"
+    },
+    {
+      "case": "swapped_heads",
+      "rejected": true,
+      "reason": "F4 identity mapping: map heads differ from accepted identities"
+    },
+    {
+      "case": "modified_planned_mapping",
+      "rejected": true,
+      "reason": "F4 identity mapping: planned mapping differs from archived proof"
+    },
+    {
+      "case": "native_ci_sha_cannot_replace_product_sha",
+      "rejected": true,
+      "reason": "F4 identity mapping: accepted visible GUI head differs from product; CI mapping does not relabel native observations"
+    },
+    {
+      "case": "changed_dependency_blob_even_with_same_fingerprints",
+      "rejected": true,
+      "reason": "F4 identity mapping: changed product or extra workflow entry refused"
+    },
+    {
+      "case": "changed_test_blob_even_with_same_fingerprints",
+      "rejected": true,
+      "reason": "F4 identity mapping: changed product or extra workflow entry refused"
+    },
+    {
+      "case": "different_apt_body_same_path",
+      "rejected": true,
+      "reason": "F4 identity mapping: CI workflow must contain exactly the approved six-line apt insertion"
+    },
+    {
+      "case": "changed_workflow_mode",
+      "rejected": true,
+      "reason": "F4 identity mapping: workflow bytes/mode not bound to Git tree"
+    },
+    {
+      "case": "wrong_direct_parent",
+      "rejected": true,
+      "reason": "F4 identity mapping: CI must be the direct single-parent child of the product"
+    },
+    {
+      "case": "modified_raw_product_commit",
+      "rejected": true,
+      "reason": "F4 identity mapping: raw commit object does not match declared SHA"
+    },
+    {
+      "case": "wrong_frozen_fingerprint",
+      "rejected": true,
+      "reason": "F4 identity mapping: mapped/frozen fingerprint mismatch: source_fingerprint"
+    },
+    {
+      "case": "duplicate_map_key",
+      "rejected": true,
+      "reason": "F4 identity mapping: duplicate JSON key"
+    },
+    {
+      "case": "missing_raw_commit_proof",
+      "rejected": true,
+      "reason": "F4 identity mapping: missing or linked proof member ci-commit.txt"
+    },
+    {
+      "case": "planner_unmapped_ci_flag",
+      "rejected": true,
+      "reason": "Mixed product/CI heads require --identity-map; no implicit SHA exception"
+    },
+    {
+      "case": "stale_ci_receipt_wrong_head",
+      "rejected": true,
+      "reason": "CI topology: summary identity/terminal status mismatch"
+    },
+    {
+      "case": "one_mixed_old_new_profile",
+      "rejected": true,
+      "reason": "CI topology: actual report profile/head differs from summary association"
+    }
+  ],
+  "third_ci_history_retains_failed_complete_collection_incomplete_profiles": true,
+  "old_f1_helper_unchanged": true,
+  "new_ci_acceptance_claimed": false,
+  "formal_docs_published": false
+}

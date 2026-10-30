@@ -1,0 +1,9 @@
+# 7d718d0 Linux CI environment failure
+
+Both Linux jobs in run41054895374 fail static imports with `ImportError: libEGL.so.1: cannot open shared object file: No such file or directory`, at `g4usim_gui/core/i18n.py` importing `PySide6.QtGui`. This is not the prior none_dealloc error. Both M0 jobs in run41054895506 pass; Ubuntu actual binding log records Python3.11.17 / PySide6=shiboken6=Qt6.11.3, four100-call deltas0 and8 assertions with exit0.
+
+The Linux workflow had relied on global conda LD_LIBRARY_PATH to expose libEGL; removing that path correctly avoids incompatible condaQt/PySideQt mixing, but its Ubuntu runner does not have the equivalent system GUI runtime packages. M0 already explicitly installs them in `.github/workflows/m0-static-gui.yml:56-61`.
+
+Minimal root-owned correction: add that existing M0 `Install Linux GUI runtime libraries` step to `.github/workflows/linux-geant4.yml` before Qt-dependent static/GUI imports, with `libegl1 libgl1 libxkbcommon0 libdbus-1-3 libfontconfig1`. Keep removal of global conda LD_LIBRARY_PATH, selected PySide QT_PLUGIN_PATH and dataset exports. No product logic/test weakening is justified. Local ELF audit covered backend/merge loader resolution, not the completeness of the clean GitHub runner's system PySide dependencies; this newly observed gap must remain explicit.
+
+Official4 ZIPs and terminal metadata have been saved to `out/verification/f4-ci-7d718d0`. Full evidence audit continues; workflow rerun/cancel and tracked edits were not performed. New acceptance requires a new exact SHA and full real CI, not promotion of M0-only green.

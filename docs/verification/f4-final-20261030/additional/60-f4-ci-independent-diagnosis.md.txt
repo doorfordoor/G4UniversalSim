@@ -1,0 +1,36 @@
+# F4 Linux none_dealloc independent diagnosis — dependency-level blocker
+
+## Confirmed evidence
+
+Read original Linux 11.4.3 CI logs for `gui_f4_inspect_backend` / `gui_run_inputs`: both finish assertions (45/103) but end with Fatal Python `none_dealloc`, runtime finalizing/garbage collecting, exit -6. No C++ backtrace identifies a specific destructor. Glyph/legacy-output warnings are not a proven cause. Test 1 already closes/deletes/drains deferred deletes; simply adding this cleanup is not an adequate diagnosis.
+
+Existing WSL environment was used unchanged: `/home/u123/g4ci/bin/python`, Python **3.11.18**, PySide6 **6.12.0**, actual Qt plugins; no installs, CI reruns, full matrix or tracked edits. The CI logs do not directly print the installed PySide6 version (quiet pip); local 6.12 reproduction is direct evidence, exact CI binding version still needs explicit inventory in the new receipt.
+
+Independent smallest probe, no product imports/MainWindow/backend:
+
+| Call | Repetitions | Change in `sys.getrefcount(None)` |
+|---|---:|---:|
+| absent `QWidget.property('diagnosticFocus')` | 500 | -500 |
+| property guarded by `dynamicPropertyNames()` | 500 | 0 |
+| existing bool property read | 500 | 0 |
+| **`QWidget.update()`** | 100 | **-100** |
+| **`QWidget.setObjectName('probe')`** | 100 | **-100** |
+| **`widget.style().polish(widget)`** | 100 | **-100** |
+| `setProperty('probe', None)` | 100 | 0 |
+| `setProperty('probe', True)` | 100 | 0 |
+| `dynamicPropertyNames()` | 100 | 0 |
+
+Each small process naturally exited 0; this bounded probe demonstrates refcount depletion, not immediate crash on every call. Scripts: `f4-property-refcount-independent.py`, `f4-qt-return-control-independent.py`; logs `f4-property-{missing,guarded,present}.log`, `f4-qt-return-*.log`.
+
+Actual product path with one QWidget (no MainWindow, no Geant4): `apply_language()` 100 calls decreases None refs by 200; `WidgetHighlighter.highlight/clear()` 100 cycles decreases by 1600. This process then reproduces the same finalizing/garbage-collecting `none_dealloc`, WSL process exit **134** (shell representation of SIGABRT), log `f4-product-refcount-independent.log`.
+
+## Conclusion and minimal proposal
+
+**This is broader than missing-QVariant reads or a newly omitted QObject teardown.** Generic void-return methods themselves deplete None refs on this installed binding/runtime combination. The historical E6 guard reduced one hot path but cannot be assumed to fix all PySide6 6.12 / Python 3.11 calls. F4's new UI calls may push accumulated loss over the failure threshold; these experiments do not identify the exact failing call count in either original CI process.
+
+1. Do **not** fix by `os._exit`, skipping tests, ignoring -6, adding artificial None references, or replacing only the highlighter getter and declaring success. Product field/navigation semantics need no change based on the current evidence.
+2. First verify an isolated candidate PySide6/shiboken6 version, preferably existing Windows-tested **6.11.1** or another explicitly verified stable pair, under **Linux Python 3.11**. Do not change the running Windows matrix or global environment. Local Windows 3.11.9 currently reports PySide6 6.11.1, so its success does not cover the failing 6.12 environment.
+3. If the previous stable pair has no None-refcount decay in the same absent/void/property controls and both original integration tests exit naturally 0, narrow `gui/requirements.txt` to that verified supported binding range/pair. Ensure workflows install through that single requirements source and record **Python/PySide6/shiboken6/Qt** versions in receipts. File list: `gui/requirements.txt`; a meaningful dependency regression smoke with ordinary void and absent-property reads (new or extend existing `smoke_qt_combo_data.py` after owner decision); runner registration only if new; affected docs/CHANGELOG. Add workflow inventory only if no existing receipt captures versions.
+4. Acceptance: preserve all assertions/behavior in the two failing tests; natural process exits0 under Linux3.11; same minimal refcount controls do not decline after warmup; existing GUI static/integration matrix and real Linux dual-Geant4/M0OS receipts rerun on the actual new SHA/dependency environment; 13 native states remain required. A new library/version constraint is a compatibility fix and needs version evidence, not a speculative pin presented as proven.
+
+No tracked code changed. New safety getter in product may be independently useful, but **alone is insufficient** given the void-method controls. Please relay this broader result to core agent to avoid spending the fix on only `diagnosticFocus`/i18n guards.

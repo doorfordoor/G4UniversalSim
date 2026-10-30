@@ -1,0 +1,110 @@
+PASS f4_diagnostics: asserts=48/26
+PASS f4_producers: asserts=593/62
+PASS f4_document_diagnostics: asserts=119/100
+PASS gui_f4_navigation: asserts=224/77
+PASS gui_f4_entrypoints: asserts=62/62
+PASS gui_f4_layout: asserts=129/17
+PASS gui_f4_inspect_protocol: asserts=46/16
+PASS gui_f4_inspect_backend: asserts=45/40
+PASS build_identity: asserts=47/16
+PASS f1_input_provenance: asserts=37/7
+PASS f1_input_resources: asserts=561/38
+PASS f1_artifact_model: asserts=97/51
+PASS f1_output_identity: asserts=4129/51
+PASS output_auto_model: asserts=4/41
+PASS output_auto: asserts=734/41
+PASS gui_f1_output_identity: asserts=28/29
+PASS gui_f1_async_identity: asserts=39/45
+PASS merge_outputs: asserts=18/12
+PASS output_extensions: asserts=25/21
+PASS runner_contract: asserts=31/31
+PASS doc_links: asserts=11/11
+PASS platform_paths: asserts=3/3
+PASS ci_annotations: asserts=12/13
+PASS report_evidence: asserts=77/21
+PASS writer_boundary: asserts=24/7
+PASS shielding_scenario_model: asserts=93/61
+PASS shielding_analysis: asserts=113/73
+PASS effective_config_model: asserts=18/18
+PASS main_config_version_component: asserts=4/27
+PASS main_ini_migration: asserts=60/22
+PASS main_config_version: asserts=84/27
+PASS field_biasing_schema: asserts=278/49
+PASS field_biasing_schema_review: asserts=18/12
+PASS config_migration: asserts=420/53
+PASS project_snapshot_compat: asserts=69/25
+PASS duplicate_generated_package_model: asserts=128/42
+PASS duplicate_generated_package: asserts=135/42
+PASS geometry_diagnostic_identity: asserts=4/4
+PASS config_migration_backend: asserts=171/26
+PASS gui_config_migration: asserts=74/70
+PASS input_provenance: asserts=15/5
+PASS effective_consumer_state: asserts=3/3
+PASS effective_geometry_materials: asserts=11/15
+PASS effective_source_physics: asserts=372/59
+PASS effective_output_mesh: asserts=142/25
+PASS effective_biasing: asserts=302/39
+PASS effective_scoring: asserts=57/35
+PASS effective_modules: asserts=136/27
+PASS effective_receipt_view: asserts=14/45
+PASS effective_lifecycle: asserts=3102/45
+PASS effective_gdml: asserts=11/9
+PASS effective_config_collection: asserts=44/31
+PASS effective_config_export: asserts=109/41
+PASS effective_config_viewer: asserts=22/23
+PASS merge_histograms: asserts=29/21
+PASS gui_parsers: asserts=8/8
+PASS gui_qt_combo_data: asserts=29/16
+PASS gui_materials: asserts=42/42
+PASS gui_geometry: asserts=69/63
+PASS gui_preview: asserts=22/22
+PASS gui_preview_primitives: asserts=37/37
+PASS gui_project_io: asserts=6/6
+PASS gui_project_import_projection: asserts=393/34
+PASS gui_project_snapshot_restore: asserts=61/54
+PASS gui_source: asserts=50/39
+PASS gui_source_field_preservation: asserts=340/48
+PASS gui_run_config: asserts=34/34
+PASS gui_dose_results: asserts=21/21
+PASS gui_plots: asserts=37/37
+PASS gui_new_simulation_wizard: asserts=60/37
+PASS scenario_page: asserts=31/31
+PASS gui_scans: asserts=58/40
+PASS gui_start_page: asserts=74/41
+PASS gui_fluence_results: asserts=31/31
+PASS gui_output_extensions: asserts=61/50
+PASS gui_output: asserts=15/15
+PASS gui_history: asserts=7/7
+PASS gui_duplicate_history_cli: asserts=254/31
+PASS gui_run_result: asserts=20/20
+PASS gui_live_progress: asserts=71/66
+PASS gui_live_progress_backend: asserts=16/12
+PASS gui_scenario_backend: asserts=32/32
+PASS live_progress: asserts=138/36
+PASS gui_main_window: asserts=46/30
+PASS gui_unsupported_features: asserts=6/9
+PASS gui_geometry_safety: asserts=11/15
+PASS gui_geometry_diagnostics: asserts=15/43
+FAIL backend_capabilities: G4USIM_ASSERTS=6
+Traceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 177, in <module>
+    raise SystemExit(main(sys.argv))
+                     ^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 153, in main
+    runpy.run_path(str(target), run_name="__main__")
+  File "<frozen runpy>", line 291, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\scripts\test_backend_capabilities.py", line 93, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\scripts\test_backend_capabilities.py", line 59, in main
+    assert ("gdml" in capabilities.runtime_ids("templates")) == GDML_EXPECTED
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+ asserts=6/21
+PASS config_precedence: asserts=24/24
+PASS config_duplicate_declarations: asserts=22/11
+PASS config_value_finiteness: asserts=8/8
+PASS run_summary: asserts=1570/460
+PASS command_state_gating: asserts=23/6

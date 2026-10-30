@@ -1,0 +1,21 @@
+{
+  "schema": "g4usim_geant4_data_v1",
+  "geant4_version": "$Name: geant4-11-04-patch-03 [MT]$",
+  "geant4_data_dir": "/home/u123/g4env114/share/Geant4/data",
+  "note": "",
+  "datasets": [
+    {"env": "G4LEDATA", "folder": "G4EMLOW8.8", "required": true, "found": false, "path": null},
+    {"env": "G4LEVELGAMMADATA", "folder": "PhotonEvaporation6.1.2", "required": true, "found": true, "path": "/home/u123/g4env114/share/Geant4/data/PhotonEvaporation6.1.2"},
+    {"env": "G4RADIOACTIVEDATA", "folder": "RadioactiveDecay6.1.2", "required": true, "found": true, "path": "/home/u123/g4env114/share/Geant4/data/RadioactiveDecay6.1.2"},
+    {"env": "G4PARTICLEXSDATA", "folder": "G4PARTICLEXS4.2", "required": true, "found": false, "path": null},
+    {"env": "G4ENSDFSTATEDATA", "folder": "G4ENSDFSTATE3.0", "required": true, "found": false, "path": null},
+    {"env": "G4NEUTRONHPDATA", "folder": "G4NDL4.7.1", "required": false, "found": false, "path": null},
+    {"env": "G4PIIDATA", "folder": "G4PII1.3", "required": false, "found": false, "path": null},
+    {"env": "G4REALSURFACEDATA", "folder": "RealSurface2.2", "required": false, "found": true, "path": "/home/u123/g4env114/share/Geant4/data/RealSurface2.2"},
+    {"env": "G4SAIDXSDATA", "folder": "G4SAIDDATA2.0", "required": false, "found": false, "path": null},
+    {"env": "G4ABLADATA", "folder": "G4ABLA3.3", "required": false, "found": false, "path": null},
+    {"env": "G4INCLDATA", "folder": "G4INCL1.3", "required": false, "found": false, "path": null},
+    {"env": "G4CHANNELINGDATA", "folder": "G4CHANNELING2.0", "required": false, "found": false, "path": null}
+  ],
+  "required_complete": false
+}

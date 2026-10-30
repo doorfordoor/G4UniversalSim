@@ -1,0 +1,53 @@
+# Independent review: apt-only CI child and mixed-commit evidence
+
+## Decision
+
+**Accept the proposed evidence strategy, within the exact verified change below.** Retain the running clean Windows all152 and native observation on product `7d718d038a00d89995ea773b4772764116b620c3`. Require fresh complete CI on child `a9ad09dfd6e99d287fa77ff7f38e7919c475e1b9`. Repeating an otherwise unchanged 35-minute Windows matrix solely for this Linux apt step is not necessary. This is approval of evidence attribution, not a declaration that the current Windows/native/new CI already passed.
+
+Independent Git review verified **11,340 tracked path/mode/blob entries**: both trees have exactly the same path set and every entry is identical except `.github/workflows/linux-geant4.yml`. The new commit is a direct single-parent child of 7d. Its new workflow bytes equal the old bytes plus the exact six approved lines before micromamba installation. There are no removals, test changes, gate changes, runner changes, dependency-pin changes, dataset changes, backend changes or GUI changes. The apt command matches the existing M0 Linux step. Local HEAD stayed 7d and status was clean.
+
+Immutable identity evidence is under `out/collab/f4-ci-identity-map-a9ad09d/`: `identity-map.json`, both complete Git tree listings, full-index Git diff, and original/new workflow bytes. Generation script: `out/collab/review-f4-ci-runtime-identity.py`. Patch review receipt: `out/collab/f4-linux-runtime-independent-review.json`; original proposal patch SHA256 `ad1310c03b70a626d39104599222f94480b123a8058aac4e8b17a56eb484a71c`.
+
+## Failure evidence and limits
+
+- `out/verification/f4-ci-7d718d0/job-124059813413.log:899` and `job-124059813917.log:880` show `ImportError: libEGL.so.1: cannot open shared object file` on both Geant4 legs. The standalone `config_migration.log:19` shows failure while importing PySide6.QtGui, with zero assertions, before the intended test body.
+- `round-summary.json` records failed Linux run41054895374, successful M0 run41054895506, only six actual reports, and six Linux profiles not executed. Preserve these as historical facts, not a partial final acceptance.
+- The apt addition addresses the demonstrated missing shared-library dependency. Only the new actual Linux runs can prove that no further environment issue remains; installation text alone is not a pass.
+- Source fingerprint `db253b7b1ed5f810789f1322faa75002df311d4aeb04572867dbb130c71d95cc` and tests fingerprint `92c2c470814b0bea95d918e3393394a9c39ff5897fc3d57e64d33ef7e6174ddb` remain attributable to both trees. Fingerprints alone would NOT suffice: `scripts/run_m0_tests.py:23–31,237–270` omit the workflow and base requirements file from these particular hashes. The exhaustive Git-entry equality and exact workflow patch close that gap.
+
+The original commit receipt `out/collab/f4-ci-runtime-commit.json` still says `pushed:false`. That is a saved pre-push receipt and should remain unchanged. Use the actual push receipt or new Actions run association as separate evidence of publication; do not silently update the historical receipt.
+
+## Acceptance required before closure
+
+1. Windows report must finish naturally at product7d, clean, all152, zero fail/skip/zero-assert cases, with strict raw-log and F1 v3 baseline gates. The native record must identify the product/GUI commit actually loaded, final host SHA, real observations and natural process exit0. A later doc/CI commit must not be substituted into the executable's build identity.
+2. Both workflows at CI child a9ad09d must complete successfully. Retain the normal four official artifacts / twelve actual profile reports and all raw-log, baseline and negative-control evidence. Do not fill any missing new report using old7d M0 reports merely because those passed. Capture actual Python/PySide/shiboken/Qt runtime receipts and normal process exits.
+3. All accepted Windows and CI reports must share source/tests fingerprints and exactly the expected case sets; keep each original git_head, git_dirty and build identity unchanged.
+4. Publish the explicit product↔CI identity mapping beside final reports and reviewer acceptance. State that Windows/native validate product7d and CI validates identical product/test contents under a9's Linux environment setup. Do not claim one identical commit was run everywhere, and do not infer physics validation.
+5. If the CI child or later commits change anything beyond the approved apt insertion—especially requirements, tests, code, fixtures, commands or evidence gates—this review no longer applies. Re-audit the material difference and repeat affected validation.
+
+The temporary-index/commit-tree technique is sound here because it left the running test's real worktree, index and local HEAD unchanged. Keep the local HEAD unchanged until its report and native exit are final; then perform normal explicit fast-forward/integration and record that separately.
+
+## Archive helper: current behavior is intentionally insufficient
+
+Current `prepare-f4-archive.py:274–283` requires the CI frozen manifest and Windows report to share `--expected-head`, then checks CI against that same SHA. `archive-f1.py:736,770` also validates CI and every accepted report using one head. **Unmodified, it will reject this valid two-head topology. Do not relabel any report or loosen all HEAD checks.**
+
+Minimal F4-only handling:
+
+- Keep `--expected-head` as **product7d**. Add optional `--ci-head` (defaults to product for existing same-head plans) and required `--identity-map` whenever heads differ.
+- At plan creation, verify the mapping's product and CI SHAs against Git, require direct parent and the exact allowed six-line addition, and compare all other path/mode/blob entries. Archive the map, both workflow byte snapshots, tree listings, original proposal and independent review with source hashes.
+- A freshly generated CI `frozen-case-manifest.json` must carry **CI a9**, not a rewritten7d head. Continue matching its source/tests fingerprints and profiles against the unchanged Windows report. It can remain the plan's `frozen` record, but the plan must separately name product_expected_head and ci_expected_head so its meaning is explicit.
+- Call `validate_ci_topology(ci_root, ci_expected_head, actual_paths)`. Continue requiring each new run/job/artifact/report's real association with CI a9, four artifacts and twelve unique profiles.
+- Create a separate out-only F4 copy of the F1 archive engine (for example `archive-f4.py`); do not edit the established F1 helper or old archived copies. In `report_gates`, CI topology uses `plan.get('ci_expected_head', plan['expected_head'])`; accepted_windows requires product head, accepted_ci requires CI head. Fingerprint/case-set/strict exit/local-log gates remain unchanged. Reject mixed-head plans without the validated archived mapping.
+- Archive the actual F4 engine under its real filename and adjust the F4 helper's engine import/tool selection accordingly. Existing same-head selfchecks must still pass. Add negative controls for missing mapping, swapped heads, modified workflow body, changed requirements/test/source blob, stale CI receipt and mixed old/new profile reports; each must be refused.
+
+No helper code was relaxed or product/report file changed by this review. This is a concrete implementation proposal for root to apply to out tools before final archive publication.
+
+## Closure docs: minimal explicit attribution
+
+The out closure-template generator currently has final_product_sha and gui_observation_sha but no independent CI SHA. Add `ci_commit_sha`, `identity_mapping_receipt` and `ci_product_identity_explanation` to its parameter template; require the receipt in resolved mode and include it in the evidence paragraph. For this case set final_product_sha=7d, CI SHA=a9, actual GUI SHA from the host, and explain the single Linux workflow difference. Keep source/tests fingerprints, Windows assertions, run IDs, native observations and integration outcome as recorded values, not inferred successes.
+
+Suggested final wording once all evidence actually passes:
+
+> 产品与Windows/实窗验收绑定7d718d0；实际CI绑定a9ad09d。后者是仅补充Linux GUI系统运行库安装步骤的直接子提交，完整Git树差异审查确认所有产品、测试和其他文件相同，源码及测试指纹一致。两侧原始提交身份和报告均保留，详见身份映射与独立复核。F5仍待启动。
+
+This quoted paragraph is a future closure template, not a current pass declaration.

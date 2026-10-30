@@ -1,0 +1,36 @@
+# F4 双提交证据与原始日志归档工具交付
+
+仅修改 out 下工具及候选；受跟踪工作区 clean，交付时实际 HEAD 见 delivery.json（主负责人已在 Windows/native 结束后快进到 a9）。产品/实窗原始身份仍为7d。未发布 docs 归档，未改任何原始报告，不判断新 CI 或整个 F4 是否通过。
+
+## 使用接口
+
+继续使用 `out/collab/prepare-f4-archive.py`，它现在载入相邻的 `archive-f4.py` 和 `f4_archive_identity.py`；旧 `archive-f1.py` 原字节保留。新增参数：
+
+```
+--expected-head 7d718d038a00d89995ea773b4772764116b620c3
+--ci-head a9ad09dfd6e99d287fa77ff7f38e7919c475e1b9
+--identity-map out/collab/f4-ci-identity-map-a9ad09d-v2/identity-map.json
+```
+
+其余 Windows/CI/visible/history/readme/57 项 small argv、Qt139 及13份文字副本参数沿用原清单。没有重新排序或重新编号 additional 输入；原始 `.jsonl/.stdout/.stderr` 只在 visible/historical_visible 中另按原相对路径纳入，所有文件保持原字节。不能把上述例子当成已经取得新 CI 的成功证据。
+
+## 身份门禁
+
+不传 `--ci-head` 仍为严格单提交。不同提交必须显式映射；通过原始 Git commit 对象、完整递归树重新构造与工作流 blob 字节，将两棵 11340 项树绑定到真实 SHA。唯一差异必须是既定 Linux apt 六行新增。产品、依赖、测试、权限位、其他工作流任一改变均拒绝。Windows 与 accepted visible 保持产品 7d，CI十二份报告只接受 a9；不改写报告。原始证明归档后仍可离线复核。
+
+旧7d CI 优先读 round-summary，保留失败、6份实际报告、6个未执行 profile 与“证据收集完成但覆盖不完整”的区别。中断 Windows 无报告、旧 native 失败与其他 CI 历史规则保持。
+
+## 检查结果
+
+- 真实双树正例与17项负例通过；包括修改依赖/测试而保留旧 fingerprint 的一致构造负例、替换 apt 内容、模式/父提交/映射/原始 commit 篡改、旧新 CI 报告混合和给 native 改标 CI SHA。
+- 原 F1 历史夹具通过761文件独占复制与再次复核，保留原严格12报告拓扑、日志/断言/F1基线门禁。旧 F1 工具原字节一致。
+- 取实际 native 原始文件的副本检查4份 streams，加1份 CRLF 对照；原名字/字节保留。仅修改副本 events.jsonl 的负例被拒绝；源原件未变，其他类别仍不隐式纳入这些扩展名。
+- 12份关闭文档候选已生成，`git apply --check` 通过。所有最终参数仍未填写，不能发布。新增 Linux 文首说明明确当前 Python3.11、PySide6>=6.11.1,<6.12、五个系统库、数据集及 PySide6 plugin路径、当前CI后端RPATH范围，并保留旧 WSL 全文。
+
+## 文件与交付边界
+
+准确路径和最终 SHA256 见 delivery.json。out-helper-review.patch 供主负责人审阅 OUT 工具变化；f1-to-f4-engine-review.patch 展示新引擎相对旧副本的最小变化。它们不是产品补丁，不要应用到受跟踪的旧归档副本。
+
+关闭生成器增加 `ci_commit_sha`、`identity_mapping_receipt`、`ci_product_identity_explanation`。resolved 模式核对原 Windows/CI 收据及映射；产品/实窗不改标 CI。最新草稿是 `out/collab/f4-closure-docs-mixed-head-linux-preview`，早先11文件草稿保留历史，F5仍未启动。
+
+当前工具自检通过不能替代新 CI、Windows all 与 native 的最终验收。主负责人拿到完整原始收据后再运行 plan/review、独立复核并发布。
