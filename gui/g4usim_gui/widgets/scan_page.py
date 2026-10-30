@@ -10,6 +10,7 @@ their scan.json manifest.
 from __future__ import annotations
 
 from collections.abc import Callable
+from dataclasses import asdict
 import csv
 import os
 import tempfile
@@ -42,6 +43,10 @@ from g4usim_gui.core.scan_runner import ScanRunner
 from g4usim_gui.core.theme import current_colors
 from g4usim_gui.widgets.plot_panel import draw_empty, style_axes
 from g4usim_gui.widgets.qt_data import combo_data
+from g4usim_gui.core.diagnostics import emit_diagnostic
+from g4usim_gui.validators.config_validator import ValidationReport
+from g4usim_gui.widgets.diagnostic_panel import DiagnosticPanel
+from g4usim_gui.widgets.form_diagnostics import FormDiagnosticController
 
 # (base, runs root, executable, workspace root) for the current configuration; raises ValueError
 BaseProvider = Callable[[], tuple[scan.ScanBase, str, str, str]]
@@ -115,6 +120,9 @@ class ScanPage(QWidget):
         layout = QVBoxLayout(self)
         layout.addWidget(setup)
         layout.addWidget(self.status)
+        self.diagnostics_panel = DiagnosticPanel(self)
+        self.diagnostics_panel.hide()
+        layout.addWidget(self.diagnostics_panel)
         layout.addLayout(results_row)
         layout.addWidget(lower, 1)
 
@@ -131,6 +139,12 @@ class ScanPage(QWidget):
         self.runner.pointFinished.connect(self._on_point_finished)
         self.runner.allFinished.connect(self._on_all_finished)
         self.runner.logLine.connect(self.log.appendPlainText)
+        self.diagnostic_controller = FormDiagnosticController(
+            self, self.diagnostics_panel, 'scan',
+            {'parameter': self.parameter, 'values': self.values, 'name': self.name},
+            lambda: {'parameter': combo_data(self.parameter), 'values': self.values.text(),
+                     'name': self.name.text(), 'base': asdict(self._base) if self._base is not None else None})
+        self.diagnostics_panel.revalidateRequested.connect(self.validate_inputs)
         self._update_buttons()
 
     # --- API used by the main window and the smoke tests ------------------------------
@@ -144,6 +158,7 @@ class ScanPage(QWidget):
 
     def refresh_language(self) -> None:
         self._set_headers()
+        self.diagnostics_panel.refresh_language()
         self._show_results()
 
     def showEvent(self, event) -> None:  # noqa: N802 - Qt override
@@ -156,12 +171,14 @@ class ScanPage(QWidget):
         self._provider = provider
 
     def refresh_base(self) -> bool:
+        self.diagnostic_controller.invalidate(force=True)
         if self._provider is None:
             return False
         try:
             self._base, self._runs_root, self._executable, self._workspace = self._provider()
         except ValueError as error:
             self._base = None
+            self._show_diagnostic('scan.base', str(error))
             self.status.setText(ui_format("Cannot use the current configuration: {error}", error=error))
             self._update_buttons()
             return False
@@ -190,12 +207,22 @@ class ScanPage(QWidget):
         parameter = next((p for p in self._parameters if p.key == self.parameter.currentData()), None)
         if parameter is None:
             self.status.setText(ui_text("Choose a parameter to scan."))
+            self._show_diagnostic('scan.parameter', 'Choose a parameter to scan.', field='parameter')
             return False
         try:
             values = scan.expand_values(self.values.text())
+        except ValueError as error:
+            self.status.setText(ui_format("Scan not created: {error}", error=error))
+            self._show_diagnostic('scan.values', str(error), field='values')
+            return False
+        try:
             manifest = scan.create_scan(self._base, parameter, values, self.name.text().strip() or "scan",
                                         self._runs_root)
         except (ValueError, OSError) as error:
+            if isinstance(error, scan.ScanValidationError):
+                self._show_report(error.report)
+            else:
+                self._show_diagnostic('scan.creation', str(error))
             self.status.setText(ui_format("Scan not created: {error}", error=error))
             return False
         self.load_scan(manifest)
@@ -203,10 +230,41 @@ class ScanPage(QWidget):
                                       path=manifest.scan_dir))
         return True
 
+    def _show_report(self, report) -> None:
+        self.diagnostic_controller.set_report(report)
+        self.diagnostics_panel.setVisible(bool(report.diagnostics))
+
+    def _show_diagnostic(self, code: str, message: str, *, field: str = '') -> None:
+        report = ValidationReport()
+        emit_diagnostic(report, code, 'error', message, origin='scan_validation',
+                        editor='scan' if field else '', field=field,
+                        unavailable_reason='' if field else 'No single editable field is available.')
+        self._show_report(report)
+
+    def validate_inputs(self) -> bool:
+        """Revalidate without creating directories, packages or running a scan."""
+        if self._base is None:
+            self._show_diagnostic('scan.base', 'Use current configuration before validating a scan.')
+            return False
+        parameter = next((p for p in self._parameters if p.key == combo_data(self.parameter)), None)
+        if parameter is None:
+            self._show_diagnostic('scan.parameter', 'Choose a parameter to scan.', field='parameter')
+            return False
+        try:
+            values = scan.expand_values(self.values.text())
+        except ValueError as error:
+            self._show_diagnostic('scan.values', str(error), field='values')
+            return False
+        report = scan.validate_scan_report(self._base, parameter, values)
+        self._show_report(report)
+        return report.can_run
+
     def load_scan(self, manifest: scan.ScanManifest | str | Path) -> None:
         if not isinstance(manifest, scan.ScanManifest):
             manifest = scan.load_manifest(manifest)
         self._manifest = manifest
+        self.diagnostic_controller.clear()
+        self.diagnostics_panel.hide()
         self.refresh_results()
         if self.is_read_only():
             self.status.setText(ui_format("Showing the results of {path}; its run packages are not there, so "

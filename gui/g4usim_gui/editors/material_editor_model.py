@@ -3,6 +3,10 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from g4usim_gui.core.diagnostics import (
+    EditorLocation, collect_diagnostics, emit_diagnostic, extend_diagnostics, reset_diagnostics, source_location,
+)
+
 from g4usim_gui.editors.editable_models import EditableDocument
 from g4usim_gui.parsers.materials_parser import NIST_QUICK_LIST, MaterialsSummary, material_reference_status
 
@@ -59,6 +63,7 @@ def material_document_from_summary(summary: MaterialsSummary | None) -> Material
         return document
     document.source_path = summary.path
     document.raw_source_text = summary.raw_text
+    document._f4_source_diagnostics = collect_diagnostics(summary)
     document.source_errors = _deduplicate(summary.errors)
     document.warnings = list(summary.warnings)
     document.preserved_sections = list(summary.preserved_sections)
@@ -187,11 +192,16 @@ def mark_dirty(document: MaterialDocument) -> None:
 
 
 def validate_material_document(document: MaterialDocument, *, geometry_material_refs: set[str] | None = None) -> MaterialDocument:
+    reset_diagnostics(document)
+    extend_diagnostics(document, (item for item in getattr(document, "_f4_source_diagnostics", ())
+                                  if item.severity == "error"), append=False)
     validation_errors: list[str] = []
     document.warnings = []
     names: dict[str, int] = {}
     enabled_names: set[str] = set()
-    for row in document.rows:
+    for index, row in enumerate(document.rows):
+        reset_diagnostics(row)
+        row._f4_row_index = index
         row.errors = []
         row.warnings = []
         row.name = row.name.strip()
@@ -201,18 +211,18 @@ def validate_material_document(document: MaterialDocument, *, geometry_material_
         if not row.enabled:
             continue
         if not row.name:
-            row.errors.append("name is required")
+            _issue(row, 'materials.name.required', 'error', "name is required", 'name')
         else:
             key = row.name.lower()
             names[key] = names.get(key, 0) + 1
             enabled_names.add(row.name)
         if row.mode not in MATERIAL_MODES:
-            row.errors.append(f"unsupported mode '{row.mode}'")
+            _issue(row, 'materials.mode.unsupported', 'error', f"unsupported mode '{row.mode}'", 'mode')
         _validate_density(row)
         _validate_components(row, document)
     for row in document.rows:
         if row.enabled and row.name and names.get(row.name.lower(), 0) > 1:
-            row.errors.append("duplicate material name")
+            _issue(row, 'materials.name.duplicate', 'error', "duplicate material name", 'name')
     validation_errors.extend(_dependency_cycles(document))
     if geometry_material_refs:
         for ref in sorted(geometry_material_refs):
@@ -222,14 +232,18 @@ def validate_material_document(document: MaterialDocument, *, geometry_material_
             if status in {"custom", "nist"}:
                 continue
             if status == "g4":
-                document.warnings.append(f"Geometry references possible NIST material '{ref}', not in quick list.")
+                _issue(document, 'materials.geometry_reference.unlisted', 'warning', f"Geometry references possible NIST material '{ref}', not in quick list.", 'rows', reason='cross_document_reference', facts={'material': ref})
             else:
-                validation_errors.append(f"Geometry references custom material '{ref}' but it is not defined in edited materials.")
+                message = f"Geometry references custom material '{ref}' but it is not defined in edited materials."
+                validation_errors.append(message)
+                _issue(document, "materials.geometry_reference.undefined", "error", message, "rows",
+                       reason="cross_document_reference", facts={"material": ref}, append=False)
     for row in document.rows:
         for error in row.errors:
             validation_errors.append(f"{row.name or '<unnamed>'}: {error}")
         for warning in row.warnings:
             document.warnings.append(f"{row.name or '<unnamed>'}: {warning}")
+        extend_diagnostics(document, collect_diagnostics(row), prefix=f"{row.name or '<unnamed>'}: ", append=False)
     document.validation_errors = _deduplicate(validation_errors)
     document.errors = _deduplicate([*document.source_errors, *document.validation_errors])
     return document
@@ -247,7 +261,10 @@ def _dependency_cycles(document: MaterialDocument) -> list[str]:
         for used in uses[key]:
             if state.get(used) == "open":
                 loop = path[path.index(used):] + [used]
-                errors.append("Circular material dependency: " + " -> ".join(rows[k].name for k in loop))
+                message = "Circular material dependency: " + " -> ".join(rows[k].name for k in loop)
+                errors.append(message)
+                _issue(document, "materials.components.cycle", "error", message, "components_text",
+                       target=rows[key], facts={"cycle": loop}, append=False)
             elif used not in state:
                 visit(used, path + [used])
         state[key] = "done"
@@ -262,61 +279,87 @@ def _deduplicate(items: list[str]) -> list[str]:
     return list(dict.fromkeys(items))
 
 
+def _issue(owner, code: str, severity: str, message: str, field: str, *,
+           target=None, reason: str = "", facts: dict | None = None, append: bool = True, source=None) -> None:
+    """Emit at the rule site without changing the established text channel."""
+    if append:
+        getattr(owner, "errors" if severity == "error" else "warnings").append(message)
+    target = owner if target is None else target
+    row = getattr(target, "_f4_row_index", None)
+    location = None if reason else EditorLocation("materials", field, "rows" if row is not None else "",
+                                                   row, getattr(target, "name", ""))
+    value = getattr(target, field, None)
+    if not isinstance(value, (str, int, float, bool, type(None))):
+        value = None
+    identity = {"value": value, **(facts or {})}
+    if location is None:
+        identity.update(field=field, collection="rows" if row is not None else "", row=row,
+                        entity=getattr(target, "name", ""))
+    emit_diagnostic(owner, code, severity, message, origin="materials.editor", location=location, source=source,
+                    identity_parameters=identity,
+                    unavailable_reason=reason, append=False)
+
+
 def _validate_density(row: MaterialRow) -> None:
     if row.mode == "nist":
         if row.density:
-            row.warnings.append("density is ignored for nist rows")
+            _issue(row, 'materials.density.ignored', 'warning', "density is ignored for nist rows", 'density')
         return
     if row.mode == "volume_fraction" and row.density.lower() in {"", "auto"}:
         return   # the backend computes it from the components (no density means auto, as in MaterialIniReader)
     if not row.density:
-        row.errors.append("density is required")
+        _issue(row, 'materials.density.required', 'error', "density is required", 'density')
         return
     first = row.density.split()[0]
     try:
         value = float(first)
     except ValueError:
-        row.errors.append("density should start with a positive number or be auto for volume_fraction")
+        _issue(row, 'materials.density.numeric', 'error', "density should start with a positive number or be auto for volume_fraction", 'density')
         return
     if value <= 0.0:
-        row.errors.append("density must be > 0")
+        _issue(row, 'materials.density.positive', 'error', "density must be > 0", 'density')
 
 
 def _validate_components(row: MaterialRow, document: MaterialDocument) -> None:
     if row.mode == "nist":
         if row.components:
-            row.warnings.append("components are ignored for nist rows")
+            _issue(row, 'materials.components.ignored', 'warning', "components are ignored for nist rows", 'components_text')
         if not (row.name.startswith("G4_") or row.name in NIST_QUICK_LIST):
             target = row.nist_name.strip() or row.name
             if not target.startswith("G4_") and target not in NIST_QUICK_LIST:
-                row.warnings.append("nist target is not in the quick NIST list")
+                # The alias's retained NIST target has no dedicated editor control.
+                source = (source_location(document.source_path, document.raw_source_text)
+                          if row.nist_name.strip() and document.source_path else None)
+                _issue(row, 'materials.nist.unlisted', 'warning', "nist target is not in the quick NIST list",
+                       'nist_name' if row.nist_name.strip() else 'name',
+                       reason='unsupported_editor' if row.nist_name.strip() else '', source=source)
         return
     if not row.components:
-        row.errors.append("at least one component is required")
+        _issue(row, 'materials.components.required', 'error', "at least one component is required", 'components_text')
         return
     values: list[float] = []
     for index, component in enumerate(row.components, start=1):
         if not component.name:
-            row.errors.append(f"component line {index}: name is required")
+            _issue(row, 'materials.component.name_required', 'error', f"component line {index}: name is required", 'components_text', facts={'component': index})
         if not component.value:
-            row.errors.append(f"component line {index}: value is required")
+            _issue(row, 'materials.component.value_required', 'error', f"component line {index}: value is required", 'components_text', facts={'component': index})
             continue
         try:
             value = float(component.value)
         except ValueError:
-            row.errors.append(f"component line {index}: value must be numeric")
+            _issue(row, 'materials.component.numeric', 'error', f"component line {index}: value must be numeric", 'components_text', facts={'component': index})
             continue
         if value <= 0.0:
-            row.errors.append(f"component line {index}: value must be > 0")
+            _issue(row, 'materials.component.positive', 'error', f"component line {index}: value must be > 0", 'components_text', facts={'component': index})
         values.append(value)
         if row.mode == "atom_count" and abs(value - round(value)) > 1.0e-9:
-            row.errors.append(f"component line {index}: atom_count value must be an integer")
+            _issue(row, 'materials.component.integer', 'error', f"component line {index}: atom_count value must be an integer", 'components_text', facts={'component': index})
         if row.mode == "volume_fraction":
             _validate_volume_component(row, component, document)
     if row.mode in {"mass_fraction", "volume_fraction"} and values:
         total = sum(values)
         if abs(total - 1.0) > FRACTION_TOLERANCE:
-            row.errors.append(f"{row.mode} components must sum to 1.0; got {total:g}")
+            _issue(row, 'materials.components.total', 'error', f"{row.mode} components must sum to 1.0; got {total:g}", 'components_text')
 
 
 def _validate_volume_component(row: MaterialRow, component: MaterialComponent, document: MaterialDocument) -> None:
@@ -326,9 +369,9 @@ def _validate_volume_component(row: MaterialRow, component: MaterialComponent, d
     if component.name in NIST_QUICK_LIST:
         return
     if component.name.startswith("G4_"):
-        row.warnings.append(f"component '{component.name}' is a G4_ name outside the quick list; verify it is a material")
+        _issue(row, 'materials.component.unlisted', 'warning', f"component '{component.name}' is a G4_ name outside the quick list; verify it is a material", 'components_text', facts={'component_name': component.name})
         return
-    row.errors.append(f"volume_fraction component '{component.name}' is not defined as a material")
+    _issue(row, 'materials.component.undefined', 'error', f"volume_fraction component '{component.name}' is not defined as a material", 'components_text', facts={'component_name': component.name})
 
 
 def generate_materials_ini_text(document: MaterialDocument) -> str:
@@ -425,6 +468,8 @@ def clone_document(document: MaterialDocument) -> MaterialDocument:
                 warnings=list(row.warnings),
             )
         )
+    clone._f4_source_diagnostics = tuple(getattr(document, "_f4_source_diagnostics", ()))
+    extend_diagnostics(clone, collect_diagnostics(document), append=False)
     return clone
 
 

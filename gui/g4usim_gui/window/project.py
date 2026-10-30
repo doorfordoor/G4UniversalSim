@@ -76,6 +76,7 @@ class ProjectMixin:
 
     def _set_project(self, project: G4USimProject) -> None:
         self._check_project_projection(project)
+        self._clear_project_diagnostics()
         self.project = project
         self.scenario_page.set_executable(project.executable)
         self.run_page.set_macro_plan("")
@@ -112,6 +113,7 @@ class ProjectMixin:
             self.build_command_preview(show_errors=False)
 
     def _update_project_from_config_builder(self) -> None:
+        self._invalidate_project_diagnostics(force=True)
         self.config_builder_page.update_project(self.project)
         run = self.project.runSettings
         self.project.runName = run.run_name

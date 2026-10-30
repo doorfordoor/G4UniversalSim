@@ -2,7 +2,13 @@ from __future__ import annotations
 
 import re
 import math
+from contextvars import ContextVar
 from dataclasses import asdict, dataclass, field
+from types import SimpleNamespace
+
+from g4usim_gui.core.diagnostics import (
+    EditorLocation, collect_diagnostics, emit_diagnostic, extend_diagnostics, reset_diagnostics,
+)
 
 from g4usim_gui.editors.editable_models import EditableDocument
 from g4usim_gui.core.i18n import ui_format, ui_text
@@ -27,6 +33,7 @@ SUPPORTED_VISUAL_COLORS = {
 }
 STABLE_GUI_SHAPES = {"box", "tubs"}
 BOOLEAN_OPERATIONS = {"subtraction", "union", "intersection"}
+_ACTIVE_DOCUMENT: ContextVar[GeometryDocument | None] = ContextVar("geometry_diagnostic_document", default=None)
 
 
 @dataclass
@@ -148,6 +155,8 @@ def geometry_document_from_summary(summary: GeometrySummary | None, template_nam
         return document
 
     document.source_path = summary.path
+    document._f4_source_diagnostics = collect_diagnostics(summary)
+    document._f4_source_snapshot = getattr(summary, "_f4_source_snapshot", None)
     document.source_errors = _deduplicate(list(summary.errors))
     document.source_warnings = _deduplicate(list(summary.warnings))
     document.round_trip_blockers = _deduplicate(list(summary.round_trip_blockers))
@@ -326,10 +335,22 @@ def validate_geometry_document(
     scoring_hits_enabled: bool = True,
     physics_biasing_enabled: bool = False,
 ) -> None:
+    token = _ACTIVE_DOCUMENT.set(document)
+    try:
+        _validate_geometry_document(document, material_names=material_names,
+                                    scoring_hits_enabled=scoring_hits_enabled,
+                                    physics_biasing_enabled=physics_biasing_enabled)
+    finally:
+        _ACTIVE_DOCUMENT.reset(token)
+
+
+def _validate_geometry_document(document: GeometryDocument, *, material_names: set[str] | None,
+                                scoring_hits_enabled: bool, physics_biasing_enabled: bool) -> None:
+    _prepare_diagnostics(document)
     document.errors = []
     document.warnings = []
     if document.schema_version not in {None, 1, 2}:
-        document.errors.append("Geometry schema version must be 1, 2, or absent.")
+        _issue(document, 'geometry.schema_version', 'error', "Geometry schema version must be 1, 2, or absent.", 'schema_version', reason='unsupported_editor')
     known_materials = set(material_names or set()) | NIST_QUICK_LIST
     if document.mode == "simple_box":
         _validate_simple(document, known_materials)
@@ -338,98 +359,172 @@ def validate_geometry_document(
     elif document.mode in HIERARCHICAL_GEOMETRY_MODES:
         _validate_hierarchical(document, known_materials)
     else:
-        document.warnings.append("This geometry template is preview-only in the GUI MVP. Source geometry.ini will be copied unchanged.")
+        _issue(document, 'geometry.preview_only', 'warning', "This geometry template is preview-only in the GUI MVP. Source geometry.ini will be copied unchanged.", 'mode', reason='preview_only')
 
     if geometry_sensitive_count(document) and not scoring_hits_enabled:
-        document.warnings.append("Geometry marks sensitive volumes, but scoring hits output is disabled.")
+        _issue(document, 'geometry.scoring_hits_disabled', 'warning', "Geometry marks sensitive volumes, but scoring hits output is disabled.", 'hits', location=EditorLocation('scoring', 'hits'))
     if geometry_bias_count(document) and not physics_biasing_enabled:
-        document.warnings.append("Geometry marks bias volumes, but physics biasing hook is disabled.")
+        _issue(document, 'geometry.bias_hook_disabled', 'warning', "Geometry marks bias volumes, but physics biasing hook is disabled.", 'enable_biasing_physics', location=EditorLocation('physics', 'enable_biasing_physics'))
     if document.round_trip_blockers and not document.source_copy_mode:
-        document.errors.append(
-            "Source geometry contains fields that the current editor cannot preserve; use original source copy mode."
-        )
+        _issue(document, 'geometry.round_trip.blocked', 'error', "Source geometry contains fields that the current editor cannot preserve; use original source copy mode.", 'source_copy_mode', location=EditorLocation('geometry', 'source_copy_mode'))
         document.errors.extend(f"Round-trip blocker: {item}" for item in document.round_trip_blockers)
     if document.source_copy_mode and document.round_trip_blockers:
-        document.warnings.append(
-            "Original geometry source will be copied unchanged; Geometry Editor validation does not certify blocked fields."
-        )
+        _issue(document, 'geometry.round_trip.source_copy', 'warning', "Original geometry source will be copied unchanged; Geometry Editor validation does not certify blocked fields.", 'source_copy_mode', location=EditorLocation('geometry', 'source_copy_mode'))
 
     document.validation_errors = _deduplicate(document.errors)
     document.validation_warnings = _deduplicate(document.warnings)
     document.errors = _deduplicate([*document.source_errors, *document.validation_errors])
     document.warnings = _deduplicate([*document.source_warnings, *document.validation_warnings])
+    _finish_diagnostics(document)
+
+
+def _prepare_diagnostics(document: GeometryDocument) -> None:
+    reset_diagnostics(document)
+    extend_diagnostics(document, (item for item in getattr(document, "_f4_source_diagnostics", ())
+                                  if item.severity != "blocker"), append=False)
+    if document.mode == "layered_device":
+        document._f4_context = ("layers", "layered_device", None)
+    else:
+        document._f4_context = ("geometry", "simple_box" if document.mode == "simple_box" else "", None)
+    document._f4_target_context = {id(document): document._f4_context}
+    document._f4_row_diagnostics = {}
+    for model, editor, collection in ((document.simple_box, "geometry", "simple_box"),
+                                      (document.layered_device, "layers", "layered_device")):
+        document._f4_target_context[id(model)] = (editor, collection, None)
+    for editor, collection, rows in (("geometry", "volumes", document.volumes),
+                                     ("layers", "layers", document.layered_device.layers),
+                                     ("booleans", "boolean_ops", document.boolean_ops)):
+        for index, row in enumerate(rows):
+            # Layers and simple models have legacy __dict__ snapshot/clone paths.
+            # Keep every row's runtime metadata on the document, never on the row.
+            document._f4_row_diagnostics[id(row)] = SimpleNamespace()
+            document._f4_target_context[id(row)] = (editor, collection, index)
+
+
+def _finish_diagnostics(document: GeometryDocument) -> None:
+    if document.round_trip_blockers and not document.source_copy_mode:
+        extend_diagnostics(document, (item for item in getattr(document, "_f4_source_diagnostics", ())
+                                      if item.severity == "blocker"), prefix="Round-trip blocker: ", append=False)
+    if document.mode == "layered_device":
+        for row in document.layered_device.layers:
+            if row.enabled:
+                extend_diagnostics(document, collect_diagnostics(document._f4_row_diagnostics[id(row)]), prefix=f"[layer.{row.name}]: ", append=False)
+    elif document.mode in HIERARCHICAL_GEOMETRY_MODES:
+        for row in document.volumes:
+            if row.enabled:
+                for item in collect_diagnostics(document._f4_row_diagnostics[id(row)]):
+                    tag = "ERROR" if item.severity == "error" else "WARN"
+                    extend_diagnostics(document, (item,), prefix=f"[GEOMETRY][{tag}] {row.name or '<unnamed>'}: ", append=False)
+        for row in document.boolean_ops:
+            if row.enabled:
+                for item in collect_diagnostics(document._f4_row_diagnostics[id(row)]):
+                    tag = "ERROR" if item.severity == "error" else "WARN"
+                    extend_diagnostics(document, (item,), prefix=f"[BOOLEAN][{tag}] {row.target_volume or '<missing>'}[{row.index}]: ", append=False)
+
+
+def _issue(owner, code: str, severity: str, message: str, field: str, *, target=None,
+           location: EditorLocation | None = None, reason: str = "", facts: dict | None = None) -> None:
+    # Transient context lives only on the document: row __dict__ is a legacy API.
+    getattr(owner, "errors" if severity == "error" else "warnings").append(message)
+    target = owner if target is None else target
+    document = _ACTIVE_DOCUMENT.get()
+    editor, collection, index = document._f4_target_context.get(id(target), ("geometry", "", None))
+    if editor == "layers" and field == "metadata":
+        reason = "unsupported_editor"
+    if collection == "volumes" and (field in {"copy_no", "metadata"} or field.startswith(("vis.", "cut."))):
+        reason = "unsupported_editor"
+    entity = (f"{target.target_volume}[{target.index}]" if isinstance(target, BooleanOperationRow)
+              else getattr(target, "name", ""))
+    if location is None and not reason:
+        location = EditorLocation(editor, field, collection, index, entity)
+    value = getattr(target, field, None)
+    for attribute in ("visual", "production_cuts", "shape_properties"):
+        if field in getattr(target, attribute, {}):
+            value = getattr(target, attribute)[field]
+    if not isinstance(value, (str, int, float, bool, type(None))):
+        value = None
+    # Only the original successful parser read can provide historical text.
+    # Legacy restored documents without this runtime evidence remain unlocated.
+    source = getattr(document, "_f4_source_snapshot", None) if reason else None
+    identity = {"value": value, **(facts or {})}
+    if location is None:
+        identity.update(field=field, collection=collection, row=index, entity=entity)
+    destination = document if owner is document else document._f4_row_diagnostics[id(owner)]
+    emit_diagnostic(destination, code, severity, message, origin="geometry.editor", location=location,
+                    source=source, identity_parameters=identity,
+                    unavailable_reason=reason, append=False)
 
 
 def _validate_simple(document: GeometryDocument, known_materials: set[str]) -> None:
     simple = document.simple_box
-    _require_vec3(simple.world_size, "simple_box [world]/size", document)
-    _require_material(simple.world_material, "simple_box [world]/material", known_materials, document)
+    _require_vec3(simple.world_size, "simple_box [world]/size", document, target=simple, field='world_size')
+    _require_material(simple.world_material, "simple_box [world]/material", known_materials, document, target=simple, field='world_material')
     if not simple.target_name.strip():
-        document.errors.append("simple_box target name is required.")
+        _issue(document, 'geometry.simple.name_required', 'error', "simple_box target name is required.", 'target_name', target=simple)
     if simple.target_shape.strip().lower() != "box":
-        document.errors.append("simple_box target only supports shape=box.")
-    _require_vec3(simple.target_size, "simple_box [target]/size", document)
-    _require_vec3(simple.target_position, "simple_box [target]/position", document)
-    _require_vec3(simple.target_rotation, "simple_box [target]/rotation", document)
-    _require_material(simple.target_material, "simple_box [target]/material", known_materials, document)
+        _issue(document, 'geometry.simple.shape', 'error', "simple_box target only supports shape=box.", 'target_shape', target=simple)
+    _require_vec3(simple.target_size, "simple_box [target]/size", document, target=simple, field='target_size')
+    _require_vec3(simple.target_position, "simple_box [target]/position", document, target=simple, field='target_position')
+    _require_vec3(simple.target_rotation, "simple_box [target]/rotation", document, target=simple, field='target_rotation')
+    _require_material(simple.target_material, "simple_box [target]/material", known_materials, document, target=simple, field='target_material')
 
 
 def _validate_layered(document: GeometryDocument, known_materials: set[str]) -> None:
     layered = document.layered_device
-    _require_vec3(layered.world_size, "layered_device [world]/size", document)
-    _require_material(layered.world_material, "layered_device [world]/material", known_materials, document)
+    _require_vec3(layered.world_size, "layered_device [world]/size", document, target=layered, field='world_size')
+    _require_material(layered.world_material, "layered_device [world]/material", known_materials, document, target=layered, field='world_material')
     if layered.axis.strip().lower() != "z":
-        document.errors.append("layered_device currently supports axis=z only.")
+        _issue(document, 'geometry.layered.axis', 'error', "layered_device currently supports axis=z only.", 'axis', target=layered)
     if not _looks_like_value_with_unit(layered.gap):
-        document.warnings.append("layered_device gap should include a length unit, e.g. 0 um.")
+        _issue(document, 'geometry.layered.gap', 'warning', "layered_device gap should include a length unit, e.g. 0 um.", 'gap', target=layered)
 
     enabled_layers = [layer for layer in layered.layers if layer.enabled]
     if not enabled_layers:
-        document.errors.append("layered_device requires at least one enabled layer.")
+        _issue(document, 'geometry.layered.empty', 'error', "layered_device requires at least one enabled layer.", 'layers', reason='empty_collection')
     seen: set[str] = set()
     for index, layer in enumerate(enabled_layers, start=1):
         layer.errors.clear()
         if not layer.name.strip():
-            document.errors.append(f"layered_device layer #{index} name is required.")
+            _issue(document, 'geometry.layer.name_required', 'error', f"layered_device layer #{index} name is required.", 'name', target=layer)
             continue
         key = layer.name.strip().lower()
         if key in seen:
-            document.errors.append(f"layered_device duplicate layer name: {layer.name}")
+            _issue(document, 'geometry.layer.duplicate_name', 'error', f"layered_device duplicate layer name: {layer.name}", 'name', target=layer)
         seen.add(key)
-        _require_material(layer.material, f"layered_device [layer.{layer.name}]/material", known_materials, document)
+        _require_material(layer.material, f"layered_device [layer.{layer.name}]/material", known_materials, document, target=layer, field='material')
         if not _looks_like_value_with_unit(layer.thickness):
-            document.errors.append(f"layered_device layer '{layer.name}' thickness must include a positive length with unit.")
+            _issue(document, 'geometry.layer.thickness', 'error', f"layered_device layer '{layer.name}' thickness must include a positive length with unit.", 'thickness', target=layer)
         if not _looks_like_xy(layer.xy):
-            document.errors.append(f"layered_device layer '{layer.name}' xy must have two lengths, e.g. 10 mm, 10 mm.")
+            _issue(document, 'geometry.layer.xy', 'error', f"layered_device layer '{layer.name}' xy must have two lengths, e.g. 10 mm, 10 mm.", 'xy', target=layer)
         if layer.copy_no.strip() and not _is_int32(layer.copy_no):
-            document.errors.append(f"layered_device layer '{layer.name}' copyNo must be a signed 32-bit integer.")
+            _issue(document, 'geometry.layer.copy_no', 'error', f"layered_device layer '{layer.name}' copyNo must be a signed 32-bit integer.", 'copy_no', target=layer)
         if not layered.auto_stack and not layer.position.strip():
-            document.errors.append(f"layered_device layer '{layer.name}' requires position when auto_stack=false.")
+            _issue(document, 'geometry.layer.position_required', 'error', f"layered_device layer '{layer.name}' requires position when auto_stack=false.", 'position', target=layer)
         if layer.position.strip():
-            _require_vec3(layer.position, f"[layer.{layer.name}]/position", document)
+            _require_vec3(layer.position, f"[layer.{layer.name}]/position", document, target=layer, field='position')
         if layer.rotation.strip():
-            _require_vec3(layer.rotation, f"[layer.{layer.name}]/rotation", document)
+            _require_vec3(layer.rotation, f"[layer.{layer.name}]/rotation", document, target=layer, field='rotation')
         for field, value in layer.production_cuts.items():
             if field not in PRODUCTION_CUT_KEYS:
-                layer.errors.append(f"Unsupported production cut field '{field}'.")
+                _issue(layer, 'geometry.layer.cut_unknown', 'error', f"Unsupported production cut field '{field}'.", field, reason='unsupported_editor')
             elif not layer.region.strip():
-                layer.errors.append(f"{field} requires a non-empty region in the same layer.")
+                _issue(layer, 'geometry.layer.cut_region', 'error', f"{field} requires a non-empty region in the same layer.", 'region', facts={'cut_field': field})
             elif (parsed := parse_length_to_mm(value)) is None or parsed <= 0:
-                layer.errors.append(f"{field} must be a positive length.")
+                _issue(layer, 'geometry.layer.cut_positive', 'error', f"{field} must be a positive length.", field, reason='unsupported_editor')
         for field, value in layer.visual.items():
             if field not in VISUAL_KEYS:
-                layer.errors.append(f"Unsupported visual field '{field}'.")
+                _issue(layer, 'geometry.layer.visual_unknown', 'error', f"Unsupported visual field '{field}'.", field, reason='unsupported_editor')
             elif field == "vis.alpha":
                 try:
                     alpha = float(value.strip())
                     if not math.isfinite(alpha) or not 0 <= alpha <= 1:
-                        layer.errors.append("vis.alpha must be between 0 and 1.")
+                        _issue(layer, 'geometry.layer.alpha_range', 'error', "vis.alpha must be between 0 and 1.", 'vis.alpha', reason='unsupported_editor')
                 except ValueError:
-                    layer.errors.append("vis.alpha must be numeric.")
+                    _issue(layer, 'geometry.layer.alpha_numeric', 'error', "vis.alpha must be numeric.", 'vis.alpha', reason='unsupported_editor')
             elif field in {"vis.visible", "vis.wireframe"} and value.strip().lower() not in {"true", "false", "1", "0", "yes", "no", "on", "off"}:
-                layer.errors.append(f"{field} must be a boolean value.")
+                _issue(layer, 'geometry.layer.visual_bool', 'error', f"{field} must be a boolean value.", field, reason='unsupported_editor')
             elif field == "vis.color" and value.strip().lower() not in SUPPORTED_VISUAL_COLORS:
-                layer.errors.append("vis.color must be a color supported by the backend.")
+                _issue(layer, 'geometry.layer.color', 'error', "vis.color must be a color supported by the backend.", 'vis.color', reason='unsupported_editor')
         _validate_metadata_text(layer.metadata, layer)
         document.errors.extend(f"[layer.{layer.name}]: {message}" for message in layer.errors)
 
@@ -444,25 +539,25 @@ def _validate_hierarchical(document: GeometryDocument, known_materials: set[str]
 
     enabled = [row for row in document.volumes if row.enabled]
     if not enabled:
-        document.errors.append("hierarchical geometry requires at least one enabled volume.")
+        _issue(document, 'geometry.hierarchical.empty', 'error', "hierarchical geometry requires at least one enabled volume.", 'volumes', reason='empty_collection')
         return
 
     by_key: dict[str, HierarchicalVolumeRow] = {}
     for row in enabled:
         name = row.name.strip()
         if not name:
-            row.errors.append("Volume name is required.")
+            _issue(row, 'geometry.volume.name_required', 'error', "Volume name is required.", 'name')
             continue
         key = name.lower()
         if key in by_key:
-            row.errors.append(f"Duplicate volume name: {name}")
-            by_key[key].errors.append(f"Duplicate volume name: {name}")
-            document.errors.append(f"[GEOMETRY] duplicate volume name: {name}")
+            _issue(row, 'geometry.volume.duplicate_name', 'error', f"Duplicate volume name: {name}", 'name')
+            _issue(by_key[key], 'geometry.volume.duplicate_name', 'error', f"Duplicate volume name: {name}", 'name')
+            _issue(document, 'geometry.duplicate_name_summary', 'error', f"[GEOMETRY] duplicate volume name: {name}", 'name', target=row)
         else:
             by_key[key] = row
 
     if "world" not in by_key:
-        document.errors.append("[GEOMETRY] hierarchical geometry requires a world volume named 'world'.")
+        _issue(document, 'geometry.world_missing', 'error', "[GEOMETRY] hierarchical geometry requires a world volume named 'world'.", 'volumes', reason='missing_entity')
 
     for row in enabled:
         name = row.name.strip()
@@ -471,73 +566,74 @@ def _validate_hierarchical(document: GeometryDocument, known_materials: set[str]
         shape = row.shape.strip().lower()
         if key != "world":
             if not parent:
-                row.errors.append("Non-world volume requires parent.")
+                _issue(row, 'geometry.parent.required', 'error', "Non-world volume requires parent.", 'parent')
             elif parent.lower() == key:
-                row.errors.append("Volume parent cannot point to itself.")
+                _issue(row, 'geometry.parent.self', 'error', "Volume parent cannot point to itself.", 'parent')
             elif parent.lower() not in by_key:
-                row.errors.append(f"Parent volume does not exist: {parent}")
+                _issue(row, 'geometry.parent.missing', 'error', f"Parent volume does not exist: {parent}", 'parent')
         if shape in BACKEND_SHAPES and shape not in SUPPORTED_HIERARCHICAL_SHAPES:
             # valid for Geant4, but the editor cannot check or write it: an editor limit, not an input error
             message = ui_format("Shape '{shape}' is supported by the backend but not by the Geometry Editor; "
                                 "use original source copy mode.", shape=row.shape)
-            (row.warnings if document.source_copy_mode else row.errors).append(message)
+            _issue(row, "geometry.shape.editor_limit", "warning" if document.source_copy_mode else "error",
+                   message, "shape")
         elif shape not in SUPPORTED_HIERARCHICAL_SHAPES:
-            row.errors.append(ui_format("Unsupported shape '{shape}'. Supported in the editor: box, tubs, sphere, orb, cone, trd.", shape=row.shape))
+            _issue(row, 'geometry.shape.unsupported', 'error', ui_format("Unsupported shape '{shape}'. Supported in the editor: box, tubs, sphere, orb, cone, trd.", shape=row.shape), 'shape')
         elif shape not in STABLE_GUI_SHAPES:
-            row.warnings.append(f"Shape '{row.shape}' is backend-supported but preview/editor validation is approximate.")
+            _issue(row, 'geometry.shape.approximate', 'warning', f"Shape '{row.shape}' is backend-supported but preview/editor validation is approximate.", 'shape')
         if shape == "box":
-            _require_vec3(row.size, f"[volume.{name}]/size", document)
+            _require_vec3(row.size, f"[volume.{name}]/size", document, target=row, field='size')
             if row.parameters.strip():
-                row.errors.append("box does not accept parameters.")
+                _issue(row, 'geometry.box.parameters', 'error', "box does not accept parameters.", 'parameters')
         elif shape in {"tubs", "sphere", "orb", "cone"}:
             expected = {"tubs": 5, "sphere": 6, "orb": 1, "cone": 7}[shape]
             actual = _parameter_count(row.parameters)
             if actual != expected:
-                row.errors.append(f"{shape} requires exactly {expected} parameters; got {actual}.")
+                _issue(row, 'geometry.shape.parameters', 'error', f"{shape} requires exactly {expected} parameters; got {actual}.", 'parameters')
             if row.size.strip():
-                row.errors.append(f"{shape} does not accept size shorthand.")
+                _issue(row, 'geometry.shape.size', 'error', f"{shape} does not accept size shorthand.", 'size')
         elif shape == "trd":
             if row.size.strip() or row.parameters.strip():
-                row.errors.append(ui_text("trd uses dx1, dx2, dy1, dy2, dz instead of size/parameters."))
+                _issue(row, 'geometry.trd.parameters', 'error', ui_text("trd uses dx1, dx2, dy1, dy2, dz instead of size/parameters."), 'parameters')
             for field in TRD_PROPERTY_KEYS:
                 value = row.shape_properties.get(field, "")
                 parsed = parse_length_to_mm(value)
                 if parsed is None or not math.isfinite(parsed) or parsed <= 0:
-                    row.errors.append(ui_format("trd {field} must be a positive length.", field=field))
+                    _issue(row, 'geometry.trd.length', 'error', ui_format("trd {field} must be a positive length.", field=field), field)
             for field in row.shape_properties:
                 if field not in TRD_PROPERTY_KEYS:
-                    row.errors.append(ui_format("Unsupported trd shape field '{field}'.", field=field))
+                    _issue(row, 'geometry.trd.unknown_field', 'error', ui_format("Unsupported trd shape field '{field}'.", field=field), field, reason='unsupported_editor')
         backend_only = shape in BACKEND_SHAPES and shape not in SUPPORTED_HIERARCHICAL_SHAPES
         if shape != "trd" and row.shape_properties and not backend_only:   # backend-only: the limit above says it
-            row.errors.append(ui_text("Shape-specific fields are present but the selected shape is not trd."))
-        _require_material(row.material, f"[volume.{name}]/material", known_materials, document)
+            _issue(row, 'geometry.shape_properties.conflict', 'error', ui_text("Shape-specific fields are present but the selected shape is not trd."), 'shape')
+        _require_material(row.material, f"[volume.{name}]/material", known_materials, document, target=row, field='material')
         if row.position.strip():
-            _require_vec3(row.position, f"[volume.{name}]/position", document)
+            _require_vec3(row.position, f"[volume.{name}]/position", document, target=row, field='position')
         if row.rotation.strip():
-            _require_vec3(row.rotation, f"[volume.{name}]/rotation", document)
+            _require_vec3(row.rotation, f"[volume.{name}]/rotation", document, target=row, field='rotation')
         if row.copy_no.strip() and not _is_int32(row.copy_no):
-            row.errors.append("copyNo must be a signed 32-bit integer.")
+            _issue(row, 'geometry.copy_no', 'error', "copyNo must be a signed 32-bit integer.", 'copy_no')
         for field, value in row.production_cuts.items():
             if field not in PRODUCTION_CUT_KEYS:
-                row.errors.append(ui_format("Unsupported production cut field '{field}'.", field=field))
+                _issue(row, 'geometry.cut.unknown', 'error', ui_format("Unsupported production cut field '{field}'.", field=field), field, reason='unsupported_editor')
             elif not row.region.strip():
-                row.errors.append(ui_format("{field} requires a non-empty region in the same volume.", field=field))
+                _issue(row, 'geometry.cut.region', 'error', ui_format("{field} requires a non-empty region in the same volume.", field=field), 'region', facts={'cut_field': field})
             elif (parsed := parse_length_to_mm(value)) is None or parsed <= 0:
-                row.errors.append(ui_format("{field} must be a positive length.", field=field))
+                _issue(row, 'geometry.cut.positive', 'error', ui_format("{field} must be a positive length.", field=field), field)
         for field, value in row.visual.items():
             if field not in VISUAL_KEYS:
-                row.errors.append(ui_format("Unsupported visual field '{field}'.", field=field))
+                _issue(row, 'geometry.visual.unknown', 'error', ui_format("Unsupported visual field '{field}'.", field=field), field, reason='unsupported_editor')
             elif field == "vis.alpha":
                 try:
                     alpha = float(value.strip())
                     if not math.isfinite(alpha) or not 0 <= alpha <= 1:
-                        row.errors.append(ui_text("vis.alpha must be between 0 and 1."))
+                        _issue(row, 'geometry.visual.alpha_range', 'error', ui_text("vis.alpha must be between 0 and 1."), 'vis.alpha')
                 except ValueError:
-                    row.errors.append(ui_text("vis.alpha must be numeric."))
+                    _issue(row, 'geometry.visual.alpha_numeric', 'error', ui_text("vis.alpha must be numeric."), 'vis.alpha')
             elif field in {"vis.visible", "vis.wireframe"} and value.strip().lower() not in {"true", "false", "1", "0", "yes", "no", "on", "off"}:
-                row.errors.append(ui_format("{field} must be a boolean value.", field=field))
+                _issue(row, 'geometry.visual.boolean', 'error', ui_format("{field} must be a boolean value.", field=field), field)
             elif field == "vis.color" and value.strip().lower() not in SUPPORTED_VISUAL_COLORS:
-                row.errors.append(ui_text("vis.color must be a color supported by the backend."))
+                _issue(row, 'geometry.visual.color', 'error', ui_text("vis.color must be a color supported by the backend."), 'vis.color')
         _validate_metadata_text(row.metadata, row)
 
     _validate_tree_cycles(enabled, document)
@@ -570,8 +666,8 @@ def _validate_tree_cycles(enabled: list[HierarchicalVolumeRow], document: Geomet
         current = name
         while current:
             if current in visiting:
-                rows[name].errors.append("Parent cycle detected.")
-                document.errors.append(f"[GEOMETRY] parent cycle detected at volume '{rows[name].name}'.")
+                _issue(rows[name], 'geometry.parent.cycle', 'error', "Parent cycle detected.", 'parent')
+                _issue(document, 'geometry.parent.cycle_summary', 'error', f"[GEOMETRY] parent cycle detected at volume '{rows[name].name}'.", 'parent', target=rows[name])
                 break
             visiting.add(current)
             current = parents.get(current, "")
@@ -582,68 +678,67 @@ def _validate_boolean_operations(document: GeometryDocument, volumes_by_key: dic
     indices_by_target: dict[str, list[int]] = {}
     for row in document.boolean_ops:
         if not row.enabled:
-            row.warnings.append("Disabled boolean operation is ignored by writer.")
+            _issue(row, 'geometry.boolean.disabled', 'warning', "Disabled boolean operation is ignored by writer.", 'enabled')
             continue
         target = row.target_volume.strip()
         if not target:
-            row.errors.append("Target volume is required.")
+            _issue(row, 'geometry.boolean.target_required', 'error', "Target volume is required.", 'target_volume')
         elif target.lower() not in enabled_targets:
-            row.errors.append(f"Target volume does not exist or is disabled: {target}")
+            _issue(row, 'geometry.boolean.target_missing', 'error', f"Target volume does not exist or is disabled: {target}", 'target_volume')
         operation = row.operation.strip().lower()
         if operation not in BOOLEAN_OPERATIONS:
-            row.errors.append("Operation must be subtraction, union, or intersection.")
+            _issue(row, 'geometry.boolean.operation', 'error', "Operation must be subtraction, union, or intersection.", 'operation')
         shape = row.tool_shape.strip().lower()
         if shape not in SUPPORTED_BOOLEAN_TOOL_SHAPES:
-            row.errors.append(f"Unsupported boolean tool shape '{row.tool_shape}'.")
+            _issue(row, 'geometry.boolean.shape', 'error', f"Unsupported boolean tool shape '{row.tool_shape}'.", 'tool_shape')
         elif shape not in STABLE_GUI_SHAPES:
-            row.warnings.append(f"Tool shape '{row.tool_shape}' is backend-supported but preview is approximate.")
+            _issue(row, 'geometry.boolean.approximate_shape', 'warning', f"Tool shape '{row.tool_shape}' is backend-supported but preview is approximate.", 'tool_shape')
         if shape == "box":
             if len(_split_csv_or_space(row.tool_size)) < 3:
-                row.errors.append("box boolean tool requires size with three length components.")
+                _issue(row, 'geometry.boolean.size', 'error', "box boolean tool requires size with three length components.", 'tool_size')
             if row.tool_parameters.strip():
-                row.errors.append("box boolean tool does not accept parameters.")
+                _issue(row, 'geometry.boolean.box_parameters', 'error', "box boolean tool does not accept parameters.", 'tool_parameters')
         elif shape in {"tubs", "sphere", "orb", "cone"}:
             expected = {"tubs": 5, "sphere": 6, "orb": 1, "cone": 7}[shape]
             actual = _parameter_count(row.tool_parameters)
             if actual != expected:
-                row.errors.append(f"{shape} boolean tool requires exactly {expected} parameters; got {actual}.")
+                _issue(row, 'geometry.boolean.parameters', 'error', f"{shape} boolean tool requires exactly {expected} parameters; got {actual}.", 'tool_parameters')
             if row.tool_size.strip():
-                row.errors.append(f"{shape} boolean tool does not accept size shorthand.")
+                _issue(row, 'geometry.boolean.size_shorthand', 'error', f"{shape} boolean tool does not accept size shorthand.", 'tool_size')
         if row.position.strip() and len(_split_csv_or_space(row.position)) < 3:
-            row.errors.append("Tool position must have three components.")
+            _issue(row, 'geometry.boolean.position', 'error', "Tool position must have three components.", 'position')
         if row.rotation.strip() and len(_split_csv_or_space(row.rotation)) < 3:
-            row.errors.append("Tool rotation must have three components.")
+            _issue(row, 'geometry.boolean.rotation', 'error', "Tool rotation must have three components.", 'rotation')
         if target:
             indices_by_target.setdefault(target.lower(), []).append(row.index)
         if operation in {"union", "intersection"}:
-            row.warnings.append("Union/intersection results are shown approximately; Geant4 backend is authoritative.")
+            _issue(row, 'geometry.boolean.approximate_operation', 'warning', "Union/intersection results are shown approximately; Geant4 backend is authoritative.", 'operation')
 
     for target, indices in indices_by_target.items():
         ordered = sorted(indices)
         expected = list(range(len(ordered)))
         if ordered != expected:
-            document.warnings.append(
-                f"[BOOLEAN][WARN] target '{target}' indices are not contiguous; writer will renumber enabled ops from 0."
-            )
+            _issue(document, 'geometry.boolean.renumber', 'warning', f"[BOOLEAN][WARN] target '{target}' indices are not contiguous; writer will renumber enabled ops from 0.", 'index', reason='writer_assigned_index', facts={'target': target, 'indices': indices})
 
 
-def _require_material(value: str, label: str, known_materials: set[str], document: GeometryDocument) -> None:
+def _require_material(value: str, label: str, known_materials: set[str], document: GeometryDocument,
+                      *, target=None, field: str) -> None:
     material = value.strip()
     if not material:
-        document.errors.append(f"{label} is required.")
+        _issue(document, 'geometry.material.required', 'error', f"{label} is required.", field, target=target)
         return
     status = material_reference_status(material, known_materials)
     if status in {"custom", "nist"}:
         return
     if status == "g4":
-        document.warnings.append(f"{label} references possible NIST material '{material}', not in GUI quick list.")
+        _issue(document, 'geometry.material.unlisted', 'warning', f"{label} references possible NIST material '{material}', not in GUI quick list.", field, target=target)
     else:
-        document.errors.append(f"{label} references undefined custom material '{material}'.")
+        _issue(document, 'geometry.material.undefined', 'error', f"{label} references undefined custom material '{material}'.", field, target=target)
 
 
-def _require_vec3(value: str, label: str, document: GeometryDocument) -> None:
+def _require_vec3(value: str, label: str, document: GeometryDocument, *, target=None, field: str) -> None:
     if len([token for token in re.split(r"[,\s]+", value.strip()) if token]) < 3:
-        document.errors.append(f"{label} expects three components.")
+        _issue(document, 'geometry.vector.components', 'error', f"{label} expects three components.", field, target=target)
 
 
 def _split_csv_or_space(value: str) -> list[str]:
@@ -792,14 +887,12 @@ def _validate_metadata_text(metadata: str, row: HierarchicalVolumeRow | LayerRow
         if not text or text.startswith("#"):
             continue
         if "=" not in text:
-            row.errors.append(f"metadata line {line_no} must use metadata.<name> = value.")
+            _issue(row, 'geometry.metadata.syntax', 'error', f"metadata line {line_no} must use metadata.<name> = value.", 'metadata', facts={'line': line_no})
             continue
         key, _value = text.split("=", 1)
         key = key.strip()
         if not re.fullmatch(r"metadata\.[A-Za-z0-9_.-]+", key, flags=re.IGNORECASE):
-            row.errors.append(
-                f"metadata line {line_no} key '{key}' is not allowed; only metadata.<non-empty-name> is permitted."
-            )
+            _issue(row, 'geometry.metadata.key', 'error', f"metadata line {line_no} key '{key}' is not allowed; only metadata.<non-empty-name> is permitted.", 'metadata', facts={'line': line_no, 'key': key})
 
 
 def _deduplicate(items: list[str]) -> list[str]:

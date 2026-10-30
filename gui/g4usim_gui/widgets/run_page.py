@@ -2,17 +2,21 @@ from __future__ import annotations
 
 from PySide6.QtCore import QElapsedTimer, QTimer, Signal
 from PySide6.QtWidgets import (
-    QHBoxLayout,
+    QFrame,
+    QGridLayout,
     QLabel,
     QPlainTextEdit,
     QPushButton,
     QProgressBar,
+    QScrollArea,
     QTabWidget,
     QVBoxLayout,
     QWidget,
 )
 
 from g4usim_gui.core.i18n import ui_format, ui_text
+from g4usim_gui.widgets.diagnostic_panel import DiagnosticPanel
+from g4usim_gui.widgets.ui_helpers import toolbar_grid
 
 
 class RunPage(QWidget):
@@ -73,12 +77,13 @@ class RunPage(QWidget):
         self.exit_label = QLabel("Exit code: -")
         self.result_label = QLabel("")
         self.elapsed_label = QLabel("Elapsed: 00:00:00")
-        status = QHBoxLayout()
-        status.addWidget(self.state_label)
-        status.addWidget(self.exit_label)
-        status.addWidget(self.result_label)
-        status.addWidget(self.elapsed_label)
-        status.addStretch(1)
+        for label in (self.state_label, self.exit_label, self.result_label, self.elapsed_label):
+            label.setWordWrap(True)
+        status = QGridLayout()
+        status.addWidget(self.state_label, 0, 0)
+        status.addWidget(self.exit_label, 0, 1)
+        status.addWidget(self.elapsed_label, 0, 2)
+        status.addWidget(self.result_label, 1, 0, 1, 3)
 
         self.build_button = QPushButton("Build command")
         self.inspect_macro_button = QPushButton("Inspect inputs")
@@ -98,8 +103,7 @@ class RunPage(QWidget):
         self.clear_button.clicked.connect(self.clear_logs)
         self.save_logs_button.clicked.connect(self.saveLogsRequested.emit)
 
-        buttons = QHBoxLayout()
-        for button in [
+        buttons = toolbar_grid([
             self.build_button,
             self.inspect_macro_button,
             self.run_button,
@@ -107,19 +111,31 @@ class RunPage(QWidget):
             self.kill_button,
             self.clear_button,
             self.save_logs_button,
-        ]:
-            buttons.addWidget(button)
-        buttons.addStretch(1)
+        ], columns=4)
 
-        layout = QVBoxLayout(self)
-        layout.addWidget(QLabel("Build the command first when paths change. Validation errors usually point back to the Project page."))
+        content = QWidget()
+        layout = QVBoxLayout(content)
+        hint = QLabel("Build the command first when paths change. Validation errors usually point back to the Project page.")
+        hint.setWordWrap(True)
+        layout.addWidget(hint)
         layout.addWidget(QLabel("Command preview"))
         layout.addWidget(self.command_preview)
         layout.addLayout(buttons)
         layout.addLayout(status)
         layout.addWidget(self.progress_bar)
         layout.addWidget(self.progress_label)
+        self.diagnostics_panel = DiagnosticPanel(self)
+        self.diagnostics_panel.hide()
+        layout.addWidget(self.diagnostics_panel)
         layout.addWidget(tabs, 1)
+        self.content_scroll = QScrollArea(self)
+        self.content_scroll.setObjectName("runContentScroll")
+        self.content_scroll.setFrameShape(QFrame.NoFrame)
+        self.content_scroll.setWidgetResizable(True)
+        self.content_scroll.setWidget(content)
+        outer = QVBoxLayout(self)
+        outer.setContentsMargins(0, 0, 0, 0)
+        outer.addWidget(self.content_scroll)
 
     def set_progress(self, message: dict) -> None:
         if self._progress_state not in {"starting", "active"}:
@@ -216,6 +232,7 @@ class RunPage(QWidget):
         self.result_label.setText(ui_format("Result: {state}", state=ui_text(state)) if state else "")
 
     def refresh_language(self) -> None:
+        self.diagnostics_panel.refresh_language()
         self._render_progress()
         self.state_label.setText(ui_format("State: {state}", state=ui_text(self._current_state)))
         code = "-" if self._exit_code is None else self._exit_code

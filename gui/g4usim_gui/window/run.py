@@ -20,7 +20,9 @@ class RunMixin:
         if self.project.runInputMode == "generated" and self._generated_package_stale:
             self.run_page.set_command([ui_text("Configuration changed; the run package will be regenerated at run time.")])
             return
-        errors = self.runner.validate_project(self.project)
+        validation = self.runner.validation_report(self.project)
+        self._present_project_diagnostics(validation)
+        errors = validation.errors
         if errors:
             self.run_page.set_command(["Validation errors:", *errors])
             if show_errors:
@@ -56,7 +58,9 @@ class RunMixin:
                 "Input inspection is available in external mode."
             ))
             return
-        errors = self.runner.validate_project(self.project, ready_to_run=True)
+        validation = self.runner.validation_report(self.project, ready_to_run=True)
+        self._present_project_diagnostics(validation)
+        errors = validation.errors
         if errors:
             self.run_page.set_macro_plan("\n".join(errors))
             return
@@ -76,13 +80,19 @@ class RunMixin:
         if self._macro_inspection_snapshot != self._macro_inspection_inputs():
             self.run_page.set_macro_plan(ui_text("Run plan is stale; inputs changed."))
             return
-        stderr = bytes(self._macro_inspection.readAllStandardError()).decode("utf-8", errors="replace").strip()
+        stderr_raw = bytes(self._macro_inspection.readAllStandardError()).decode("utf-8", errors="replace")
+        stderr = stderr_raw.strip()
         stdout = bytes(self._macro_inspection.readAllStandardOutput()).decode("utf-8", errors="replace")
         if exit_status != QProcess.NormalExit or exit_code != 0:
             self.run_page.set_macro_plan(ui_format("Input inspection failed: {reason}", reason=stderr or exit_code))
+            self._present_raw_run_diagnostic('backend.inspect_failed',
+                ui_format("Input inspection failed: {reason}", reason=stderr or exit_code),
+                raw_message=stderr_raw or stdout or str(exit_code))
             return
         try:
             plan = json.loads(stdout)
+            if not isinstance(plan, dict):
+                raise ValueError('run plan must be a JSON object')
             if plan.get("schema") != "G4UniversalSimRunPlan" or plan.get("version") != 1:
                 raise ValueError("unsupported run plan schema")
             commands = plan["macro_plan"]["commands"]
@@ -103,16 +113,25 @@ class RunMixin:
                 lines.extend(["", ui_text("No beamOn command was found; no macro events are planned.")])
             if stderr:
                 lines.extend(["", ui_text("Backend diagnostics:"), stderr])
+                self._present_raw_run_diagnostic('backend.inspect_messages', stderr, severity='info',
+                                                 raw_message=stderr_raw)
             self.run_page.set_macro_plan("\n".join(lines))
             if run_after:
                 self._start_current_project()
         except (KeyError, TypeError, ValueError) as error:
             self.run_page.set_macro_plan(ui_format("Input inspection failed: {reason}", reason=str(error)))
+            self._present_raw_run_diagnostic('backend.inspect_protocol', str(error),
+                                             raw_message=stdout + '\n' + stderr_raw)
 
     def _on_macro_inspection_error(self, error: QProcess.ProcessError) -> None:
         if error == QProcess.FailedToStart:
             self._pending_inspection_run = False
+            self.project_page.apply_to_project(self.project)
+            if self._macro_inspection_snapshot != self._macro_inspection_inputs():
+                self.run_page.set_macro_plan(ui_text('Run plan is stale; inputs changed.'))
+                return
             self.run_page.set_macro_plan(ui_format("Input inspection failed: {reason}", reason=self._macro_inspection.errorString()))
+            self._present_raw_run_diagnostic('backend.inspect_start', self._macro_inspection.errorString())
 
     def start_run(self) -> None:
         if self.runner.is_running() or self._macro_inspection.state() != QProcess.NotRunning:
@@ -128,7 +147,9 @@ class RunMixin:
         self.inspect_external_macro(run_after=True)
 
     def _start_current_project(self) -> None:
-        errors = self.runner.validate_project(self.project, ready_to_run=True)
+        validation = self.runner.validation_report(self.project, ready_to_run=True)
+        self._present_project_diagnostics(validation)
+        errors = validation.errors
         if errors:
             message = "\n".join(errors)
             self.run_page.append_status_message(message)
@@ -151,7 +172,7 @@ class RunMixin:
             QMessageBox.warning(self, "Validation failed", str(exc))
             self.config_builder_page.set_validation_text(str(exc))
             return
-        self.config_builder_page.set_validation_text(report.to_text())
+        self.config_builder_page.set_validation_report(report)
         if report.can_run:
             self.statusBar().showMessage("Config Builder validation passed", 5000)
         else:
@@ -169,7 +190,7 @@ class RunMixin:
         try:
             pre_report = self.config_builder_page.validate_current(self.project)
             if not pre_report.can_run:
-                self.config_builder_page.set_validation_text(pre_report.to_text())
+                self.config_builder_page.set_validation_report(pre_report)
                 QMessageBox.warning(self, "Validation failed", "\n".join(pre_report.errors))
                 return False
             if pre_report.warnings:
@@ -195,7 +216,10 @@ class RunMixin:
             )
         except Exception as exc:  # noqa: BLE001
             message = str(exc)
-            self.config_builder_page.set_validation_text(message)
+            if getattr(exc, 'report', None) is not None:
+                self.config_builder_page.set_validation_report(exc.report)
+            else:
+                self.config_builder_page.set_validation_text(message)
             QMessageBox.warning(self, "Generate package failed", message)
             return False
 
@@ -211,7 +235,8 @@ class RunMixin:
         self._generated_package_dir = package.package_dir
         self._generated_package_stale = False
         self.config_builder_page.set_package_path(package.package_dir)
-        self.config_builder_page.set_validation_text(report_text)
+        self.config_builder_page.set_validation_report(pre_report)
+        self.config_builder_page.validation_text.setPlainText(report_text)
         self.output_page.set_package_dir(package.package_dir, package.output_dir)
         self.run_history_page.set_runs_root(self.project.runsRoot)
         self.run_history_page.refresh()

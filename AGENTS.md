@@ -4,6 +4,8 @@
 
 ## 0. 条目索引与历史全文
 
+- 2026-10-30 F4候选：诊断身份、字段和来源须由规则生产，不能解析翻译文本猜位置；旧文本报告与blocking保持，重复源行保留独立记录。定位不修改模型，编辑/重载/切项目后旧快照失效；源内容只读且区分逻辑文本SHA与F1原始字节SHA。完整契约见 `docs/agent-history.md` 同日F4条目及 `docs/结构化诊断与定位.md`；阶段验收以ROADMAP为准。
+
 - 2026-10-30 F1阶段关闭：产品f176d0e自动矩阵及14次Windows原生观察/正常退出、独立复核通过；GUI ede037f仅文档差异，不能伪改构建commit相等。合成历史行仍为结果未证实，07图像与滞后UIA分开解释；原自动归档pending保持原字节。完整契约见agent-history同日关闭条目与 `docs/verification/f1-visible-20261030/README.md`。
 - 2026-10-30 F1自动矩阵历史节点：产品f176d0e，Windows143/48511v3及E6基线、Linux双版本各143、M0双OS各64通过；自动归档原件保持。该节点实窗pending、阶段未关闭；最终状态见上条，不得追改历史收据。详情见agent-history同日自动归档条目及 `docs/verification/f1-automated-20261030/README.md`。
 

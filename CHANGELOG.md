@@ -7,6 +7,12 @@ Short, user-facing record of notable changes. Detailed support status lives in
 
 ## Unreleased
 
+### F4 结构化诊断与定位（实现候选）
+
+- 配置校验显示带稳定代号和真实字段/行/来源的问题列表，支持点击与键盘定位、滚动和临时高亮；修改输入后旧诊断失效。源文本只读，历史快照明确标注。
+- 项目/运行、向导、扫描和屏蔽场景使用共用诊断结构；运行包新增 `validation_diagnostics.json`，原文本报告与阻断规则保留。高级不可编辑字段、派生扫描点和无结构化位置的后端消息明确不假跳。
+- 使用和兼容边界见[结构化诊断与定位](docs/结构化诊断与定位.md)。本条尚不宣称整阶段矩阵/实窗验收通过，也不增加物理支持等级。
+
 ### F1 输出身份与来源（2026-10-30 已验收，未发布）
 
 - GDML 捕获在缓冲分配失败时关闭已打开的原生句柄；故障测试兼容 Xerces 独立内存异常，并在异常展开时恢复测试适配器。产品f176d0e已通过Windows143项、Linux双版本各143项及M0双OS各64项；14次Windows实窗观察、真实小运行输出及正常关闭证据独立复核通过，F1已关闭。见[最终验收](docs/verification/f1-visible-20261030/README.md)；[自动归档](docs/verification/f1-automated-20261030/README.md)中的失败及当时pending原样保留。

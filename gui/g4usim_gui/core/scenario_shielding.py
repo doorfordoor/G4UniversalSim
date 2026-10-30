@@ -33,6 +33,14 @@ _MODULES: dict[str, object] = {}
 class ScenarioRunError(RuntimeError):
     """The scenario could not be generated, executed or analysed."""
 
+    def __init__(self, message: str, *, field: str = '', code: str = '',
+                 message_key: str = '', params: dict | None = None) -> None:
+        super().__init__(message)
+        self.message_key = message_key
+        self.params = params or {}
+        self.field = field
+        self.code = code
+
 
 # --------------------------------------------------------------------------- fields
 
@@ -168,9 +176,13 @@ def _integer(values: dict[str, str], key: str, minimum: int | None = None) -> in
         number = int(text)
     except ValueError:
         raise ScenarioRunError(
-            f"{field_spec(key).label} must be an integer, got '{text}'") from None
+            f"{field_spec(key).label} must be an integer, got '{text}'", field=key, code='integer',
+            message_key="{field_label} must be an integer, got '{value}'",
+            params={'field_label': field_spec(key).label, 'value': text}) from None
     if minimum is not None and number < minimum:
-        raise ScenarioRunError(f"{field_spec(key).label} must be at least {minimum}")
+        raise ScenarioRunError(f"{field_spec(key).label} must be at least {minimum}", field=key, code='minimum',
+            message_key='{field_label} must be at least {minimum}',
+            params={'field_label': field_spec(key).label, 'minimum': minimum})
     return number
 
 
@@ -181,14 +193,22 @@ def _number(values: dict[str, str], key: str, *, low: float | None = None,
         number = float(text)
     except ValueError:
         raise ScenarioRunError(
-            f"{field_spec(key).label} must be a number, got '{text}'") from None
+            f"{field_spec(key).label} must be a number, got '{text}'", field=key, code='number',
+            message_key="{field_label} must be a number, got '{value}'",
+            params={'field_label': field_spec(key).label, 'value': text}) from None
     if not math.isfinite(number):
-        raise ScenarioRunError(f"{field_spec(key).label} must be finite, got '{text}'")
+        raise ScenarioRunError(f"{field_spec(key).label} must be finite, got '{text}'", field=key, code='finite',
+            message_key="{field_label} must be finite, got '{value}'",
+            params={'field_label': field_spec(key).label, 'value': text})
     if low is not None and (number <= low if low_open else number < low):
         symbol = ">" if low_open else ">="
-        raise ScenarioRunError(f"{field_spec(key).label} must be {symbol} {low:g}")
+        raise ScenarioRunError(f"{field_spec(key).label} must be {symbol} {low:g}", field=key, code='minimum',
+            message_key='{field_label} must be {symbol} {limit}',
+            params={'field_label': field_spec(key).label, 'symbol': symbol, 'limit': f'{low:g}'})
     if high is not None and number >= high:
-        raise ScenarioRunError(f"{field_spec(key).label} must be less than {high:g}")
+        raise ScenarioRunError(f"{field_spec(key).label} must be less than {high:g}", field=key, code='maximum',
+            message_key='{field_label} must be less than {limit}',
+            params={'field_label': field_spec(key).label, 'limit': f'{high:g}'})
     return number
 
 
@@ -198,7 +218,9 @@ def energy_mev(text: str) -> float:
     if value is None:
         raise ScenarioRunError(
             "[source]/energy must be a finite energy (units eV, keV, MeV, GeV), got '"
-            + text + "'")
+            + text + "'", field='energy', code='energy',
+            message_key="[source]/energy must be a finite energy (units eV, keV, MeV, GeV), got '{value}'",
+            params={'value': text})
     return value
 
 
@@ -208,7 +230,7 @@ def spec_kwargs(values: dict[str, str]) -> dict[str, object]:
     merged.update({key: str(value) for key, value in values.items()})
     unknown = sorted(set(values) - set(FIELD_BY_KEY))
     if unknown:
-        raise ScenarioRunError("Unknown scenario field(s): " + ", ".join(unknown))
+        raise ScenarioRunError("Unknown scenario field(s): " + ", ".join(unknown), code='unknown_fields')
     keyword: dict[str, object] = {
         "layers": merged["layers"],
         "size": merged["size"],
@@ -233,33 +255,62 @@ def spec_kwargs(values: dict[str, str]) -> dict[str, object]:
 
 def validate_values(values: dict[str, str]) -> list[str]:
     """Return the reasons the form cannot be generated; empty means it can."""
+    return [message for _field, _code, message in validate_value_records(values)]
+
+
+def validate_value_records(values: dict[str, str]) -> list[tuple[str, str, str]]:
+    """Existing three validation layers with positions assigned by their producers."""
     try:
         keyword = spec_kwargs(values)
     except ScenarioRunError as exc:
-        return [str(exc)]
+        return [(exc.field, exc.code or 'parse', str(exc))]
     try:
         spec = model().ShieldingSpec(**keyword)
     except TypeError as exc:  # pragma: no cover - a field-list bug, not a user error
-        return [f"Cannot build the scenario spec: {exc}"]
-    problems = list(spec.problems())
+        return [('', 'spec', f"Cannot build the scenario spec: {exc}")]
+    problems = list(spec.problem_records())
     if problems:
         return problems
     # The generated main.ini fields the user can influence are checked with the same
     # schema the configuration editor uses, so the GUI and the backend agree.
-    return _schema_problems(keyword)
+    return _schema_problem_records(keyword)
+
+
+def validate_value_report(values: dict[str, str]):
+    """Typed frontend report; translation facts come from numeric producers."""
+    from g4usim_gui.core.diagnostics import emit_diagnostic
+    from g4usim_gui.validators.config_validator import ValidationReport
+    report = ValidationReport()
+    try:
+        spec_kwargs(values)
+    except ScenarioRunError as exc:
+        emit_diagnostic(report, 'scenario.' + (exc.code or 'parse'), 'error', str(exc),
+                        origin='scenario_validation', editor='scenario' if exc.field else '', field=exc.field,
+                        message_key=exc.message_key, params=exc.params,
+                        unavailable_reason='' if exc.field else 'No single editable field is available.')
+        return report
+    for field, code, message in validate_value_records(values):
+        emit_diagnostic(report, 'scenario.' + code, 'error', message, origin='scenario_validation',
+                        editor='scenario' if field else '', field=field, message_key=message,
+                        unavailable_reason='' if field else 'No single editable field is available.')
+    return report
 
 
 def _schema_problems(keyword: dict[str, object]) -> list[str]:
-    problems: list[str] = []
-    problems.extend(filter(None, (
-        config_schema.check_value("run", "threads", str(int(keyword["threads"]))),
-        config_schema.check_value("run", "seed", str(int(keyword["seed"]))),
-    )))
+    return [message for _field, _code, message in _schema_problem_records(keyword)]
+
+
+def _schema_problem_records(keyword: dict[str, object]) -> list[tuple[str, str, str]]:
+    problems: list[tuple[str, str, str]] = []
+    for key in ('threads', 'seed'):
+        issue = config_schema.check_value('run', key, str(int(keyword[key])))
+        if issue:
+            problems.append((key, 'schema', issue))
     energy = keyword.get("energy_MeV")
     if energy is not None:
-        problems.extend(filter(None, (
-            config_schema.check_value("source", "energy", f"{float(energy):g} MeV"),
-        )))
+        issue = config_schema.check_value('source', 'energy', f'{float(energy):g} MeV')
+        if issue:
+            problems.append(('energy', 'schema', issue))
     return problems
 
 

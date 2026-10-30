@@ -41,7 +41,7 @@ E6补充导航：[不同写者归档复核](docs/verification/e6-full-20261030/i
 
 原始首轮失败 `out/verification/2c-full-windows/20261029-214410-a8c2b6e8`、旧CI `out/verification/2c-ci`、修后专项 `out/verification/2c-regression-repair`、build03/fee88d2可见检查 `out/verification/2c-visible` / `out/verification/2c-visible-final` 继续保留，不能冒充最终证据。实施与DeepSeek设计裁决见[开工信](docs/collab/inbox/20261029-1959-astra-full-2c-execution.md)和[设计记录](docs/collab/outbox/20261029-deepseek-full2c-design.md)。
 
-2C 后续 E6、F1 已完成；下一完整阶段为 F4，Q2、安装包及完整GUI编辑等保持各自未完成状态，按ROADMAP依赖推进。
+2C 后续 E6、F1 已完成；F4 已启动完整实施，正在完成结构化诊断、定位、审查与验收，尚未关闭。Q2、安装包及完整GUI编辑等保持各自未完成状态，按ROADMAP依赖推进。
 
 ## 2026-10-29 隔离开发工作区与2C子集历史
 
@@ -73,7 +73,7 @@ R03–R32现已完成修复与回归，旧[反例证据](docs/verification/r03-r
 
 - A 核心功能、B 场景包与基准、C 向导/绘图/扫描、D 安装包、G 3D 预览：已完成。
 - E 修复：E1（GUI 与后端规则一致）、E2（配置 schema）、E3（Linux CI，含 Geant4 11.3.2 / 11.4.3 版本矩阵）、E5（GUI 拆分）已完成（E3 见 ROADMAP 的“done for Linux”；M0 workflow 已由所有者启用并在 `402a9f2` 双平台全绿；11.2 未测）；E4 已做部分规范迁移和链接检查，仍需收尾；新增 E6/E7 的范围见 ROADMAP。
-- F 优化：F6（实时运行进度）已完成，2026-10-28 追加可选 `sequence`（进程级单调、跨 run 不重置，GUI 拒绝重复/回退行；旧后端仍可解析），契约见 [docs/实时运行进度.md](docs/实时运行进度.md)；F1 输出与来源已完成（见上方验收边界）；F2 运行会话、F3 性能/tasking、F4 校验定位、F5 undo/autosave、F7 二维扫描、F8 GUI 收尾未做。
+- F 优化：F6（实时运行进度）已完成，2026-10-28 追加可选 `sequence`（进程级单调、跨 run 不重置，GUI 拒绝重复/回退行；旧后端仍可解析），契约见 [docs/实时运行进度.md](docs/实时运行进度.md)；F1 输出与来源已完成（见上方验收边界）；F4 校验定位实施及验收中；F2 运行会话、F3 性能/tasking、F5 undo/autosave、F7 二维扫描、F8 GUI 收尾未做。
 - H 增量：H1（径迹输出）已完成；H2–H9（过滤计分、平行世界、方差降低、光学、活化、DNA、体素体模、通用直方图）未做。
 - M0 全模块 EffectiveConfig / 模块开关归已完成的2C；SolidRegistry 归 E7，仍未实现。M0–M5 是长期目标汇总，不与新工作项重复计算完成度。
 

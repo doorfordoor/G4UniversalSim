@@ -13,6 +13,7 @@ from PySide6.QtWidgets import (
 )
 
 from g4usim_gui.widgets.ui_helpers import set_table_compact_readonly, set_table_minimum_rows
+from g4usim_gui.widgets.diagnostic_panel import DiagnosticPanel
 
 
 class DetailsPanel(QTabWidget):
@@ -45,6 +46,7 @@ class DetailsPanel(QTabWidget):
         self.generated_main_ini_raw.setReadOnly(True)
         self.validation_text = QPlainTextEdit()
         self.validation_text.setReadOnly(True)
+        self.diagnostic_panel = DiagnosticPanel()
         self.setDocumentMode(True)
         self.addTab(self._messages_tab(), "Messages")
         self.addTab(self._raw_files_tab(), "Raw Files")
@@ -53,6 +55,7 @@ class DetailsPanel(QTabWidget):
     def _messages_tab(self) -> QWidget:
         tab = QWidget()
         layout = QVBoxLayout(tab)
+        layout.addWidget(self.diagnostic_panel)
         layout.addWidget(QLabel("Validation result"))
         layout.addWidget(self.validation_text, 1)
         layout.addWidget(QLabel("Materials messages"))

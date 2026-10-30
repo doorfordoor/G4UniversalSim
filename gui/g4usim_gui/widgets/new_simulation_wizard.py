@@ -13,11 +13,13 @@ from PySide6.QtWidgets import (
     QComboBox,
     QDoubleSpinBox,
     QFormLayout,
+    QFrame,
     QLabel,
     QLineEdit,
     QListWidget,
     QListWidgetItem,
     QPlainTextEdit,
+    QScrollArea,
     QSpinBox,
     QVBoxLayout,
     QWidget,
@@ -29,6 +31,11 @@ from g4usim_gui.core import icons
 from g4usim_gui.core import wizard as wz
 from g4usim_gui.core.i18n import ui_format, ui_text
 from g4usim_gui.core.theme import current_colors
+from g4usim_gui.core.diagnostics import emit_diagnostic
+from g4usim_gui.validators.config_validator import ValidationReport
+from g4usim_gui.widgets.diagnostic_panel import DiagnosticPanel
+from g4usim_gui.widgets.form_diagnostics import FormDiagnosticController
+from g4usim_gui.widgets.qt_data import combo_data
 
 SCENARIO_TEXT = {
     "single_target": ("Single target", "One sensitive box: energy deposit, dose and fluence in a slab of any material."),
@@ -226,7 +233,9 @@ class RunPage(QWizardPage):
         self.run_after.setChecked(True)
         self.summary = QPlainTextEdit()
         self.summary.setReadOnly(True)
+        self.summary.setMinimumHeight(100)
         form = QFormLayout()
+        form.setRowWrapPolicy(QFormLayout.WrapLongRows)
         form.addRow(ui_text("Physics list"), self.physics)
         form.addRow(ui_text("Events"), self.events)
         form.addRow(ui_text("Threads"), self.threads)
@@ -237,11 +246,23 @@ class RunPage(QWizardPage):
         for box in (self.event_edep, self.dose, self.fluence, self.hits):
             outputs_layout.addWidget(box)
         form.addRow(ui_text("Outputs"), outputs)
-        layout = QVBoxLayout(self)
+        content = QWidget()
+        layout = QVBoxLayout(content)
         layout.addLayout(form)
         layout.addWidget(QLabel(ui_text("Summary")))
         layout.addWidget(self.summary, 1)
+        self.diagnostics_panel = DiagnosticPanel(self)
+        self.diagnostics_panel.hide()
+        layout.addWidget(self.diagnostics_panel)
         layout.addWidget(self.run_after)
+        self.content_scroll = QScrollArea(self)
+        self.content_scroll.setObjectName("wizardRunScroll")
+        self.content_scroll.setFrameShape(QFrame.NoFrame)
+        self.content_scroll.setWidgetResizable(True)
+        self.content_scroll.setWidget(content)
+        outer = QVBoxLayout(self)
+        outer.setContentsMargins(0, 0, 0, 0)
+        outer.addWidget(self.content_scroll)
         for widget in (self.physics, self.events, self.threads, self.seed, self.hits, self.event_edep, self.dose,
                        self.fluence):
             signal = getattr(widget, "currentIndexChanged", None) or getattr(widget, "valueChanged", None) \
@@ -262,7 +283,7 @@ class RunPage(QWizardPage):
         self._loading = False
         self._update()
 
-    def _read(self) -> list[tuple[str, dict]]:
+    def _read_records(self) -> list[tuple[str, str, str, dict]]:
         spec = self._wizard.spec
         spec.physics = self.physics.currentData()
         spec.events = self.events.value()
@@ -274,13 +295,25 @@ class RunPage(QWizardPage):
         try:
             spec.seed = int(text) if text else None
         except ValueError:
-            errors.append(("The seed must be an integer.", {}))
-        return errors + wz.validate_spec(spec)
+            errors.append(('seed', 'seed_parse', "The seed must be an integer.", {}))
+        return errors + wz.validate_spec_records(spec)
+
+    def _read(self) -> list[tuple[str, dict]]:
+        return [(template, values) for _field, _code, template, values in self._read_records()]
 
     def _update(self) -> None:
         if self._loading:
             return
-        errors = self._read()
+        records = self._read_records()
+        errors = [(template, values) for _field, _code, template, values in records]
+        report = ValidationReport()
+        for field, code, template, values in records:
+            emit_diagnostic(report, 'wizard.' + code, 'error', ui_format(template, **values),
+                            origin='wizard_validation', editor='wizard', field=field,
+                            message_key=template, params=values)
+        if hasattr(self._wizard, 'diagnostic_controller'):
+            self._wizard.diagnostic_controller.set_report(report)
+            self.diagnostics_panel.setVisible(bool(report.diagnostics))
         lines = [ui_format(t, **v) for t, v in wz.summary(self._wizard.spec)]
         if errors:
             lines += ["", ui_text("Cannot finish:")] + [ui_format(t, **v) for t, v in errors]
@@ -302,7 +335,60 @@ class NewSimulationWizard(QWizard):
         self.run_page = RunPage(self)
         for page in (self.scenario_page, self.geometry_page, self.source_page, self.run_page):
             self.addPage(page)
+        self._diagnostic_navigation = False
+        self._diagnostic_fields = {
+            'scenario': self.scenario_page.list, 'project_name': self.scenario_page.name,
+            'target_material': self.geometry_page.target_material,
+            'world_material': self.geometry_page.world_material,
+            'detector_material': self.geometry_page.detector_material,
+            'thickness_mm': self.geometry_page.thickness, 'lateral_mm': self.geometry_page.lateral,
+            'detector_thickness_mm': self.geometry_page.detector_thickness, 'slabs': self.geometry_page.slabs,
+            'particle': self.source_page.particle, 'energy_MeV': self.source_page.energy,
+            'source_kind': self.source_page.kind, 'physics': self.run_page.physics,
+            'events': self.run_page.events, 'threads': self.run_page.threads,
+            'seed': self.run_page.seed, 'outputs': self.run_page.event_edep,
+        }
+        self.diagnostic_controller = FormDiagnosticController(
+            self, self.run_page.diagnostics_panel, 'wizard', self._diagnostic_fields,
+            self._diagnostic_values, reveal=self._reveal_diagnostic_field,
+            revealable_ancestors=lambda widget: tuple(self.page(i) for i in self.pageIds()
+                                                    if self.page(i).isAncestorOf(widget)))
+        self.run_page.diagnostics_panel.revalidateRequested.connect(self.run_page._update)
         self.resize(720, 560)
+
+    def _diagnostic_values(self) -> dict:
+        values = {}
+        for name, widget in self._diagnostic_fields.items():
+            if isinstance(widget, QComboBox):
+                values[name] = combo_data(widget)
+            elif isinstance(widget, QCheckBox):
+                values[name] = widget.isChecked()
+            elif isinstance(widget, QListWidget):
+                values[name] = widget.currentRow()
+            elif isinstance(widget, (QSpinBox, QDoubleSpinBox)):
+                values[name] = widget.value()
+            else:
+                values[name] = widget.text()
+        values['outputs'] = [box.isChecked() for box in
+                             (self.run_page.event_edep, self.run_page.hits, self.run_page.dose, self.run_page.fluence)]
+        return values
+
+    def _reveal_diagnostic_field(self, widget: QWidget) -> bool:
+        page_id = next((i for i in self.pageIds() if self.page(i).isAncestorOf(widget)), None)
+        if page_id is None or page_id not in self.visitedIds():
+            return False
+        # A diagnostic jump is presentation only. Normal forward navigation still
+        # initializes pages from the wizard model as before.
+        self._diagnostic_navigation = True
+        try:
+            self.setCurrentId(page_id)
+        finally:
+            self._diagnostic_navigation = False
+        return self.currentId() == page_id
+
+    def initializePage(self, page_id: int) -> None:  # noqa: N802
+        if not getattr(self, '_diagnostic_navigation', False):
+            super().initializePage(page_id)
 
     def run_after_finish(self) -> bool:
         return self.run_page.run_after.isChecked()

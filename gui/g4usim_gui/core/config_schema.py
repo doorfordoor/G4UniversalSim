@@ -106,18 +106,33 @@ def section_spec(section: str, file: str = "main_ini") -> dict:
 
 def check_value(section: str, key: str, text: str, *, base_dir: str | Path | None = None,
                 file: str = "main_ini") -> str | None:
+    diagnostic = check_diagnostic(section, key, text, base_dir=base_dir, file=file)
+    return None if diagnostic is None else diagnostic.message
+
+
+def check_diagnostic(section: str, key: str, text: str, *, base_dir: str | Path | None = None,
+                     file: str = "main_ini"):
     """Check a scalar, not a complete configuration. None means scalar checks pass.
 
     Structured values need their contextual parser; raise rather than silently
     accepting them. Cross-field, compiled-capability and runtime checks remain
     mandatory even when a scalar is valid.
     """
+    from g4usim_gui.core.diagnostics import Diagnostic
+
+    def problem(code: str, message: str | None):
+        if message is None:
+            return None
+        return Diagnostic('schema.' + code, 'error', 'schema.' + file, message,
+                          identity_parameters={'section': section, 'key': key, 'value': text},
+                          raw_message=message, unavailable_reason='schema_field_without_editor')
+
     field = spec(section, key, file)
     if field is None:
-        return f"[{section}]/{key} is not a known field"
+        return problem('unknown_field', f"[{section}]/{key} is not a known field")
     data, where = field.data, f"[{field.section}]/{key}"
     if data.get("support") == "unsupported":
-        return f"{where} is unsupported: {data['description']}"
+        return problem('unsupported', f"{where} is unsupported: {data['description']}")
     if field.type == "structured":
         raise ValueError(f"{where} requires contextual validation by {data.get('parser', 'the backend')}")
     # Backend StringUtils trims ASCII whitespace in UTF-8 input. Python's
@@ -127,33 +142,33 @@ def check_value(section: str, key: str, text: str, *, base_dir: str | Path | Non
         return None          # the backend reads an empty value as absent
     if field.type == "int":
         if not INTEGER.fullmatch(value):
-            return f"{where} must be an integer, got {text!r}"
+            return problem('integer', f"{where} must be an integer, got {text!r}")
         number = int(value)
         if not INT32[0] <= number <= INT32[1]:
-            return f"{where} = {value} is out of range for a 32-bit integer"
-        return _bounds(where, number, data)
+            return problem('integer_overflow', f"{where} = {value} is out of range for a 32-bit integer")
+        return problem('bounds', _bounds(where, number, data))
     if field.type == "bool":
-        return None if value.lower() in TRUE | FALSE else f"{where} must be true or false, got {text!r}"
+        return None if value.lower() in TRUE | FALSE else problem('boolean', f"{where} must be true or false, got {text!r}")
     if field.type == "enum":
         normalize = (lambda v: v) if data.get("case_sensitive") else str.lower
         allowed = [normalize(v) for v in data["allowed"]] + [normalize(v) for v in data.get("value_aliases", {})]
-        return None if normalize(value) in allowed else f"{where} must be one of {', '.join(data['allowed'])}, got {text!r}"
+        return None if normalize(value) in allowed else problem('enum', f"{where} must be one of {', '.join(data['allowed'])}, got {text!r}")
     if field.type in UNITS:
         number = quantity(value, field.type)
         if number is None:
-            return f"{where} must be a finite {field.type} (units {', '.join(UNITS[field.type])}), got {text!r}"
-        return _bounds(where, number, data)
+            return problem('quantity', f"{where} must be a finite {field.type} (units {', '.join(UNITS[field.type])}), got {text!r}")
+        return problem('bounds', _bounds(where, number, data))
     if field.type == "existing_file":
         if not value:
             return None
         path = Path(value)
         if not path.is_absolute() and base_dir is not None:
             path = Path(base_dir) / path
-        return None if path.is_file() else f"{where}: the file {value} does not exist"
+        return None if path.is_file() else problem('missing_file', f"{where}: the file {value} does not exist")
     if "\n" in text or "\r" in text:
-        return f"{where} must be a single line"
+        return problem('single_line', f"{where} must be a single line")
     if len(value) < data.get("min_length", 0):
-        return f"{where} must not be empty"
+        return problem('empty', f"{where} must not be empty")
     return None
 
 

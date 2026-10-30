@@ -90,46 +90,51 @@ def default_spec(scenario: str) -> WizardSpec:
     return replace(base, target_material="G4_WATER")
 
 
-def validate_spec(spec: WizardSpec) -> list[str]:
+def validate_spec(spec: WizardSpec) -> list[tuple[str, dict]]:
     """Errors as (message template, values) pairs, translated by the GUI."""
-    errors: list[tuple[str, dict]] = []
+    return [(template, values) for _field, _code, template, values in validate_spec_records(spec)]
 
-    def positive(value: float, label: str) -> None:
+
+def validate_spec_records(spec: WizardSpec) -> list[tuple[str, str, str, dict]]:
+    """The same rules with producer-owned fields and language-independent codes."""
+    errors: list[tuple[str, str, str, dict]] = []
+
+    def positive(value: float, label: str, field_name: str) -> None:
         if not (isinstance(value, (int, float)) and math.isfinite(value) and value > 0):
-            errors.append(("{field} must be a finite positive number.", {"field": label}))
+            errors.append((field_name, "positive", "{field} must be a finite positive number.", {"field": label}))
 
     if spec.scenario not in SCENARIOS:
-        errors.append(("Unknown scenario {scenario}.", {"scenario": spec.scenario}))
+        errors.append(("scenario", "scenario", "Unknown scenario {scenario}.", {"scenario": spec.scenario}))
     if not spec.project_name.strip():
-        errors.append(("A simulation name is required.", {}))
-    for label, material, allowed in (("target material", spec.target_material, MATERIALS),
-                                     ("world material", spec.world_material, WORLD_MATERIALS),
-                                     ("detector material", spec.detector_material, MATERIALS)):
+        errors.append(("project_name", "name", "A simulation name is required.", {}))
+    for field_name, label, material, allowed in (("target_material", "target material", spec.target_material, MATERIALS),
+                                     ("world_material", "world material", spec.world_material, WORLD_MATERIALS),
+                                     ("detector_material", "detector material", spec.detector_material, MATERIALS)):
         if material not in allowed:
-            errors.append(("{field} {value} is not offered by the wizard.", {"field": label, "value": material}))
-    positive(spec.thickness_mm, "thickness")
-    positive(spec.lateral_mm, "lateral size")
-    positive(spec.energy_MeV, "energy")
+            errors.append((field_name, "material", "{field} {value} is not offered by the wizard.", {"field": label, "value": material}))
+    positive(spec.thickness_mm, "thickness", "thickness_mm")
+    positive(spec.lateral_mm, "lateral size", "lateral_mm")
+    positive(spec.energy_MeV, "energy", "energy_MeV")
     if spec.scenario == "shielding":
-        positive(spec.detector_thickness_mm, "detector thickness")
+        positive(spec.detector_thickness_mm, "detector thickness", "detector_thickness_mm")
     if spec.scenario == "depth_dose" and not (1 <= spec.slabs <= 200):
-        errors.append(("The phantom needs 1 to 200 slabs.", {}))
+        errors.append(("slabs", "slabs", "The phantom needs 1 to 200 slabs.", {}))
     if spec.particle not in PARTICLES:
-        errors.append(("Particle {value} is not offered by the wizard.", {"value": spec.particle}))
+        errors.append(("particle", "particle", "Particle {value} is not offered by the wizard.", {"value": spec.particle}))
     if spec.source_kind not in SOURCE_KINDS:
-        errors.append(("Source type {value} is not offered by the wizard.", {"value": spec.source_kind}))
+        errors.append(("source_kind", "source_kind", "Source type {value} is not offered by the wizard.", {"value": spec.source_kind}))
     if spec.physics not in PHYSICS:
-        errors.append(("Physics list {value} is not offered by the wizard.", {"value": spec.physics}))
+        errors.append(("physics", "physics", "Physics list {value} is not offered by the wizard.", {"value": spec.physics}))
     if spec.events < 1:
-        errors.append(("At least one event is required.", {}))
+        errors.append(("events", "events", "At least one event is required.", {}))
     if spec.threads < 1:
-        errors.append(("At least one thread is required.", {}))
+        errors.append(("threads", "threads", "At least one thread is required.", {}))
     if spec.seed is not None and check_value("run", "seed", str(spec.seed)):
-        errors.append(("The seed must be an integer from 0 to 2147483647.", {}))
+        errors.append(("seed", "seed", "The seed must be an integer from 0 to 2147483647.", {}))
     if not any((spec.hits, spec.event_edep, spec.dose, spec.fluence)):
-        errors.append(("Choose at least one output.", {}))
+        errors.append(("outputs", "outputs", "Choose at least one output.", {}))
     if spec.target_material == spec.world_material:
-        errors.append(("The target material must differ from the world material.", {}))
+        errors.append(("target_material", "world_material_conflict", "The target material must differ from the world material.", {}))
     return errors
 
 

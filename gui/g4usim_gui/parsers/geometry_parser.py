@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
+from g4usim_gui.core.diagnostics import collect_diagnostics, emit_diagnostic, source_location, SourceLocation
 
 from g4usim_gui.parsers.ini_light_parser import IniSection, parse_ini_light
 
@@ -87,6 +88,13 @@ class GeometrySummary:
         self.diagnostics.append(diagnostic)
         channel = {"error": self.errors, "warning": self.warnings, "blocker": self.round_trip_blockers}[severity]
         channel.append(message)
+        read_success = getattr(self, "_f4_read_success", False)
+        source = (source_location(self.path, self.raw_text, line=line or None,
+                                  section=section, key=key, value=value)
+                  if read_success else SourceLocation(self.path))
+        emit_diagnostic(self, "geometry.source." + code, severity, message,
+                        origin="geometry.source", source=source, append=False,
+                        unavailable_reason="source_only" if read_success else "source_unavailable")
 
     @property
     def volume_names(self) -> set[str]:
@@ -118,9 +126,21 @@ class GeometrySourceDiagnostic:
 def parse_geometry(path: str | Path, template_name: str | None = None) -> GeometrySummary:
     document = parse_ini_light(path)
     summary = GeometrySummary(path=document.path, raw_text=document.raw_text)
+    summary._f4_read_success = getattr(document, "_f4_read_success", False)
+    # Capture read evidence once. A failed read is not a successful empty file;
+    # later editor validation must neither invent text nor resolve this path again.
+    summary._f4_source_snapshot = (
+        source_location(summary.path, summary.raw_text) if summary._f4_read_success
+        else SourceLocation(str(Path(summary.path).resolve()))
+    )
+    ini_records = collect_diagnostics(document)
     for severity, messages in (("warning", document.warnings), ("error", document.errors)):
         for message in messages:
-            summary.record("ini_syntax", severity, message, value=message)
+            record = next((item for item in ini_records if item.message == message and item.severity == severity), None)
+            source = record.source if record else None
+            summary.record("ini_syntax", severity, message, value=source.value if source else "",
+                           line=(source.line or 0) if source else 0,
+                           section=source.section if source else "", key=source.key if source else "")
     lower_text = document.raw_text.lower()
     summary.template_hint = (template_name or "").strip().lower() or _template_hint(lower_text)
 

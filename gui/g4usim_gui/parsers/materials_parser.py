@@ -4,6 +4,7 @@ from g4usim_gui.core.config_schema_data import SCHEMA
 
 from dataclasses import dataclass, field
 from pathlib import Path
+from g4usim_gui.core.diagnostics import collect_diagnostics, emit_diagnostic, extend_diagnostics, source_location
 
 from g4usim_gui.parsers.ini_light_parser import parse_ini_light
 from g4usim_gui.core.capability_messages import capability_message
@@ -76,6 +77,8 @@ def material_reference_status(name: str, custom_names: set[str]) -> str:
 def parse_materials(path: str | Path) -> MaterialsSummary:
     document = parse_ini_light(path)
     summary = MaterialsSummary(path=document.path, warnings=list(document.warnings), errors=list(document.errors), raw_text=document.raw_text)
+    summary._f4_read_success = getattr(document, "_f4_read_success", False)
+    extend_diagnostics(summary, collect_diagnostics(document), append=False)
     _validate_material_schema(summary)
     raw_sections = _raw_section_texts(summary.raw_text)
     for section in document.sections:
@@ -125,7 +128,9 @@ def parse_materials(path: str | Path) -> MaterialsSummary:
         )
 
     if not summary.materials and not summary.errors:
-        summary.warnings.append("No material sections were found.")
+        emit_diagnostic(summary, "materials.source.no_sections", "warning", "No material sections were found.",
+                        origin="materials.source", source=source_location(summary.path, summary.raw_text),
+                        unavailable_reason="source_only")
     return summary
 
 
@@ -163,13 +168,13 @@ def _validate_material_schema(summary: MaterialsSummary) -> None:
             section_lines[section_lower] = line_no
             section_keys.setdefault(section_lower, set())
             if section_lower == "global":
-                summary.errors.append(_schema_error(summary.path, line_no, current_section, "<section>", "", "global section must not contain fields"))
+                _schema_diagnostic(summary, "global_section", line_no, current_section, "<section>", "", "global section must not contain fields")
             elif section_lower in allowed:
                 pass
             elif any(section_lower.startswith(prefix + ".") for prefix in ("isotope", "element", "material")):
                 prefix, suffix = section_lower.split(".", 1)
                 if not suffix:
-                    summary.errors.append(_schema_error(summary.path, line_no, current_section, "<section>", "", "section suffix must not be empty"))
+                    _schema_diagnostic(summary, "empty_suffix", line_no, current_section, "<section>", "", "section suffix must not be empty")
             else:
                 # A non-reserved section is the legacy alias form only when it
                 # contains exactly material=...; the key check below decides it.
@@ -184,29 +189,33 @@ def _validate_material_schema(summary: MaterialsSummary) -> None:
         section_lower = current_section.lower()
         section_keys.setdefault(section_lower, set()).add(key_lower)
         if not section_seen:
-            summary.errors.append(_schema_error(summary.path, line_no, "global", key, value, "global section must not contain fields"))
+            _schema_diagnostic(summary, "implicit_global", line_no, "global", key, value, "global section must not contain fields")
             continue
         if section_lower == "global":
-            summary.errors.append(_schema_error(summary.path, line_no, current_section, key, value, "global section must not contain fields"))
+            _schema_diagnostic(summary, "global_field", line_no, current_section, key, value, "global section must not contain fields")
             continue
         if section_lower.startswith("material.") and key_lower in {"temperature", "pressure"}:
-            summary.errors.append(capability_message("materials.field.unsupported", field=key_lower))
+            emit_diagnostic(summary, "materials.source.unsupported_field", "error",
+                            capability_message("materials.field.unsupported", field=key_lower),
+                            origin="materials.source", unavailable_reason="unsupported_editor",
+                            source=source_location(summary.path, summary.raw_text, line=line_no,
+                                                   section=current_section, key=key, value=value))
             continue
         if section_lower.startswith("material.") and key_lower == "type":
             if value.strip().lower() != "material":
-                summary.errors.append(_schema_error(
-                    summary.path,
+                _schema_diagnostic(
+                    summary, "legacy_type",
                     line_no,
                     current_section,
                     key,
                     value,
                     "deprecated compatibility field 'type' only accepts 'material'",
-                ))
+                )
             continue
         is_legacy = section_lower not in allowed and not any(section_lower.startswith(prefix + ".") for prefix in ("isotope", "element", "material"))
         if is_legacy:
             if key_lower != "material":
-                summary.errors.append(_schema_error(summary.path, line_no, current_section, key, value, "unknown legacy alias field; only material is allowed"))
+                _schema_diagnostic(summary, "legacy_key", line_no, current_section, key, value, "unknown legacy alias field; only material is allowed")
             continue
         prefix = section_lower if section_lower in allowed else section_lower.split(".", 1)[0]
         if key_lower not in allowed[prefix]:
@@ -214,7 +223,7 @@ def _validate_material_schema(summary: MaterialsSummary) -> None:
             detail = "unknown material configuration key"
             if suggestion:
                 detail += f"; did you mean '{suggestion}'?"
-            summary.errors.append(_schema_error(summary.path, line_no, current_section, key, value, detail))
+            _schema_diagnostic(summary, "unknown_key", line_no, current_section, key, value, detail)
 
     for section_lower, keys in section_keys.items():
         if section_lower in allowed or section_lower == "global":
@@ -222,7 +231,18 @@ def _validate_material_schema(summary: MaterialsSummary) -> None:
         if any(section_lower.startswith(prefix + ".") for prefix in ("isotope", "element", "material")):
             continue
         if "material" not in keys:
-            summary.errors.append(_schema_error(summary.path, section_lines[section_lower], section_lower, "<section>", "", "unknown material configuration section"))
+            _schema_diagnostic(summary, "unknown_section", section_lines[section_lower], section_lower, "<section>", "", "unknown material configuration section")
+
+
+def _schema_diagnostic(summary: MaterialsSummary, code: str, line: int,
+                       section: str, key: str, value: str, detail: str) -> None:
+    message = _schema_error(summary.path, line, section, key, value, detail)
+    # Preserve the legacy text channel exactly; the sidecar adds source facts.
+    summary.errors.append(message)
+    emit_diagnostic(summary, "materials.source." + code, "error", message,
+                    origin="materials.source", append=False, unavailable_reason="source_only",
+                    source=source_location(summary.path, summary.raw_text, line=line,
+                                           section=section, key=key, value=value))
 
 
 def _schema_error(path: str, line_no: int, section: str, key: str, value: str, detail: str) -> str:

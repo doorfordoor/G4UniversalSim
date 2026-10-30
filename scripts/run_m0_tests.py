@@ -53,6 +53,14 @@ class Case:
 
 
 CASES = (
+    Case("f4_diagnostics", "scripts/test_f4_diagnostics.py", "static"),
+    Case("f4_producers", "scripts/test_f4_producers.py", "static"),
+    Case("f4_document_diagnostics", "scripts/test_f4_document_diagnostics.py", "static"),
+    Case("gui_f4_navigation", "gui/smoke_tests/smoke_f4_navigation.py", "gui", ("qt",)),
+    Case("gui_f4_entrypoints", "gui/smoke_tests/smoke_f4_entrypoints.py", "gui", ("qt",)),
+    Case("gui_f4_layout", "gui/smoke_tests/smoke_f4_layout.py", "gui", ("qt",)),
+    Case("gui_f4_inspect_protocol", "gui/smoke_tests/smoke_f4_inspect_protocol.py", "gui", ("qt",)),
+    Case("gui_f4_inspect_backend", "gui/smoke_tests/smoke_f4_inspect_backend.py", "integration", ("qt", "exe")),
     Case("build_identity", "scripts/test_build_identity.py", "static"),
     Case("f1_input_provenance", "scripts/test_f1_input_provenance.py", "static", ("cxx",)),
     Case("f1_input_resources", "scripts/test_f1_input_resources_backend.py", "backend", ("exe",)),

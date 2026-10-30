@@ -181,43 +181,47 @@ class ShieldingSpec:
 
     def problems(self) -> list[str]:
         """Every parameter problem, in the order the CLI would report them."""
-        found: list[str] = []
+        return [message for _field, _code, message in self.problem_records()]
+
+    def problem_records(self) -> list[tuple[str, str, str]]:
+        """Field/code/message from each original rule; independent of the GUI."""
+        found: list[tuple[str, str, str]] = []
         try:
             self.parsed_layers()
         except ScenarioError as exc:
-            found.append(str(exc))
+            found.append(("layers", "layers", str(exc)))
         for name in ("size", "device_thickness", "source_half", "pore_radius"):
             try:
                 length_mm(getattr(self, name))
             except ScenarioError as exc:
-                found.append(str(exc))
+                found.append((name, "length", str(exc)))
         if self.particle not in PARTICLES:
-            found.append(f"--particle must be one of {list(PARTICLES)}, got '{self.particle}'")
+            found.append(("particle", "particle", f"--particle must be one of {list(PARTICLES)}, got '{self.particle}'"))
         if self.mode not in MODES:
-            found.append(f"--mode must be one of {list(MODES)}, got '{self.mode}'")
+            found.append(("mode", "mode", f"--mode must be one of {list(MODES)}, got '{self.mode}'"))
         if not 0 <= self.junction_density < 1:
-            found.append("--junction-density must be in [0, 1)")
+            found.append(("junction_density", "fraction", "--junction-density must be in [0, 1)"))
         if not 0 <= self.pore_fraction < 1:
-            found.append("--pore-fraction must be in [0, 1)")
+            found.append(("pore_fraction", "fraction", "--pore-fraction must be in [0, 1)"))
         if self.energy_MeV < 0:
-            found.append(f"--energy must be >= 0, got {self.energy_MeV}")
+            found.append(("energy", "energy", f"--energy must be >= 0, got {self.energy_MeV}"))
         if self.particle == "mixed" and self.energy_MeV > 0:
-            found.append("--particle mixed needs the spectra (no --energy)")
+            found.append(("energy", "mixed_spectrum", "--particle mixed needs the spectra (no --energy)"))
         if self.events <= 0:
-            found.append(f"--events must be > 0, got {self.events}")
+            found.append(("events", "events", f"--events must be > 0, got {self.events}"))
         if self.threads <= 0:
-            found.append(f"--threads must be > 0, got {self.threads}")
+            found.append(("threads", "threads", f"--threads must be > 0, got {self.threads}"))
         try:
             self.parsed_niel()
         except ScenarioError as exc:
-            found.append(str(exc))
+            found.append(("niel", "niel", str(exc)))
         if self.pores_layer >= 0:
             try:
                 layers = self.parsed_layers()
             except ScenarioError:
                 layers = []
             if self.pores_layer >= len(layers):
-                found.append(f"--pores-layer {self.pores_layer} is outside the {len(layers)} layer stack")
+                found.append(("pores_layer", "layer_index", f"--pores-layer {self.pores_layer} is outside the {len(layers)} layer stack"))
         return found
 
     def validate(self) -> "ShieldingSpec":

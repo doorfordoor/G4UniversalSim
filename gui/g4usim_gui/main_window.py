@@ -21,9 +21,10 @@ from g4usim_gui.window.shell import ShellMixin
 from g4usim_gui.window.project import ProjectMixin
 from g4usim_gui.window.run import RunMixin
 from g4usim_gui.window.content import ContentMixin
+from g4usim_gui.window.diagnostics import DiagnosticsMixin
 
 
-class MainWindow(ShellMixin, ProjectMixin, RunMixin, ContentMixin, QMainWindow):
+class MainWindow(ShellMixin, ProjectMixin, RunMixin, ContentMixin, DiagnosticsMixin, QMainWindow):
     """The main window: pages, runner and controllers; its behaviour is split by area in g4usim_gui/window/."""
 
     def __init__(self) -> None:
@@ -59,6 +60,7 @@ class MainWindow(ShellMixin, ProjectMixin, RunMixin, ContentMixin, QMainWindow):
         self._build_workspace_shell()
         self._apply_visual_roles()
         self._run_chip = ("Idle", "")
+        self._setup_diagnostic_routes()
 
         self._connect_signals()
         self._create_menu()
@@ -152,6 +154,9 @@ class MainWindow(ShellMixin, ProjectMixin, RunMixin, ContentMixin, QMainWindow):
         # page.closeEvent. Close their jobs only after the ignore branch above.
         from g4usim_gui.core.evidence_job import close_evidence_jobs
         close_evidence_jobs(self)
+        from g4usim_gui.widgets.diagnostic_navigation import WidgetHighlighter
+        for highlighter in self.findChildren(WidgetHighlighter):
+            highlighter.clear()
         state = load_state()
         state["lastWorkspaceRoot"] = self.project.workspaceRoot
         state["lastRunsRoot"] = self.project.runsRoot

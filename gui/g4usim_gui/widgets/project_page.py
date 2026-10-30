@@ -5,6 +5,7 @@ from pathlib import Path
 from PySide6.QtCore import Signal
 from PySide6.QtWidgets import (
     QFileDialog,
+    QFrame,
     QFormLayout,
     QGroupBox,
     QHBoxLayout,
@@ -12,6 +13,7 @@ from PySide6.QtWidgets import (
     QComboBox,
     QLineEdit,
     QPushButton,
+    QScrollArea,
     QSplitter,
     QSpinBox,
     QVBoxLayout,
@@ -21,6 +23,8 @@ from PySide6.QtWidgets import (
 from g4usim_gui.core import install_layout
 from g4usim_gui.core.i18n import ui_format, ui_text
 from g4usim_gui.core.project import G4USimProject
+from g4usim_gui.widgets.diagnostic_panel import DiagnosticPanel
+from g4usim_gui.widgets.qt_data import combo_data
 from g4usim_gui.widgets.ui_helpers import create_hint_label, make_path_row
 
 
@@ -61,7 +65,8 @@ class ProjectPage(QWidget):
         self.status_summary.setWordWrap(True)
         self.status_summary.setMinimumHeight(120)
 
-        layout = QVBoxLayout(self)
+        content = QWidget()
+        layout = QVBoxLayout(content)
         layout.setContentsMargins(12, 12, 12, 12)
         layout.setSpacing(10)
         layout.addWidget(create_hint_label(
@@ -71,6 +76,7 @@ class ProjectPage(QWidget):
 
         setup_group = QGroupBox("Project Setup")
         setup_form = QFormLayout(setup_group)
+        setup_form.setRowWrapPolicy(QFormLayout.WrapLongRows)
         setup_form.addRow("Project name", self.project_name)
         setup_form.addRow("G4UniversalSim executable", make_path_row(self.executable, "Browse", self._browse_executable))
         setup_form.addRow("Workspace root", make_path_row(self.workspace_root, "Browse", self._browse_workspace))
@@ -80,6 +86,7 @@ class ProjectPage(QWidget):
 
         run_group = QGroupBox("Current Run Defaults")
         run_form = QFormLayout(run_group)
+        run_form.setRowWrapPolicy(QFormLayout.WrapLongRows)
         self.config_path_row = make_path_row(self.config_path, "Browse", self._browse_config)
         self.macro_path_row = make_path_row(self.macro_path, "Browse", self._browse_macro)
         run_form.addRow("Run input mode", self.run_input_mode)
@@ -98,6 +105,17 @@ class ProjectPage(QWidget):
         splitter.setStretchFactor(1, 1)
         splitter.setSizes([560, 760])
         layout.addWidget(splitter, 1)
+        self.diagnostics_panel = DiagnosticPanel(self)
+        self.diagnostics_panel.hide()
+        layout.addWidget(self.diagnostics_panel)
+        self.content_scroll = QScrollArea(self)
+        self.content_scroll.setObjectName("projectContentScroll")
+        self.content_scroll.setFrameShape(QFrame.NoFrame)
+        self.content_scroll.setWidgetResizable(True)
+        self.content_scroll.setWidget(content)
+        outer = QVBoxLayout(self)
+        outer.setContentsMargins(0, 0, 0, 0)
+        outer.addWidget(self.content_scroll)
 
         for widget in [
             self.project_name,
@@ -175,6 +193,17 @@ class ProjectPage(QWidget):
         self.run_input_mode.setCurrentIndex(max(0, index))
         self._update_mode_controls()
         self._update_status_summary()
+        self.diagnostics_panel.refresh_language()
+
+    def diagnostic_fields(self) -> dict[str, QWidget]:
+        return {name: getattr(self, name) for name in (
+            'project_name', 'run_input_mode', 'executable', 'workspace_root', 'config_path',
+            'macro_path', 'output_dir', 'runs_root', 'threads', 'seed', 'run_name')}
+
+    def diagnostic_values(self) -> dict:
+        return {name: (combo_data(widget) if isinstance(widget, QComboBox) else
+                       widget.value() if isinstance(widget, QSpinBox) else widget.text())
+                for name, widget in self.diagnostic_fields().items()}
 
     def _on_run_input_mode_changed(self) -> None:
         self._update_mode_controls()

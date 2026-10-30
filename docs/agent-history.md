@@ -491,3 +491,13 @@ Geant4 `ApplyCommand()` 返回 0 不足以确认命令成功；沿用材料命�
 14张原始JPEG与UIA、host身份和退出链由不同写者独立核验。07旧格式图像已观察，但同次UIA滞后，不能拿旧文本证明当前图像；合成历史条目因没有真实退出收据，运行结果保持未证实，身份状态独立。长hash省略/滚动和现有splitter扩宽不算全DPI或J1验收。最终原生Alt+F4，host closed、执行会话exit0、随后无F1窗口；不使用测试控制文件替代关闭。
 
 host原observation_acceptance=pending、真实夹具准备收据pending、build_commit_matches_expected_head=false均原样保留：前两者是采集时程序状态，最后一项反映文档HEAD与产品build确实不同。主审结论和独立核验另行追加；旧自动归档2797原件及38生成核验、旧README/manifest不得追改。F1完整约定范围关闭，详见[最终报告](verification/f1-visible-20261030/README.md)；正常集成事实单独登记，不因本条提前推定已推送。后续F4诊断定位、K1可移植工程与Q2科研验证仍按原依赖推进。
+
+## 2026-10-30 F4 结构化诊断与定位候选
+
+实现范围见[结构化诊断与定位](结构化诊断与定位.md)，阶段状态在ROADMAP。新增纯数据 Diagnostic/SourceLocation/EditorLocation、稳定canonical身份和严格g4usim_diagnostics_v1；生产处记录实际位置，不解析本地化文本。保留ValidationReport三类字符串、顺序、to_text与阻断规则；重复源行/对象虽同文仍分别保留typed身份。参数不可变，身份不依赖调用时cwd，不新增持久项目UUID或schema字段。
+
+来源在真实读取点绑定逻辑文本SHA和快照；不是原始bytes哈希。当前来源变化时仅能以明确historical_source显示合法记录快照，超限/缺身份/行号越界拒绝。GUI定位先验当前模型/草稿/源内容与generation，解析全部目标后再选页/行/滚动/焦点，不写值或dirty；输入修改、重载和换项目使旧报告失效，不因撤回输入而复活。语言/主题不构成业务改变。高级不可编辑字段、任意后端自由文本和派生扫描点均不得假跳当前控件。
+
+覆盖Config既有编辑字段、Project/Run路径检查、向导、扫描及屏蔽场景；跨页setup/project目标需双侧快照守卫。运行包新增validation_diagnostics.json并保留validation_report.txt；生成时校验不证明运行/物理正确。F5撤销与K1/L1执行服务仍是后续范围。专项scripts/test_f4_diagnostics.py、test_f4_producers.py、test_f4_document_diagnostics.py、gui/smoke_tests/smoke_f4_navigation.py和smoke_f4_entrypoints.py；正式矩阵/实窗未完成前不得宣称F4关闭。
+
+F4验收入口追加：smoke_f4_inspect_protocol.py覆盖合成协议及过期回调；smoke_f4_inspect_backend.py覆盖真实后端拒绝原文及无模拟启动；smoke_f4_layout.py覆盖小窗口滚动和字段可达。合成协议测试不得冒充真实Geant4输出。

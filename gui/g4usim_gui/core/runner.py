@@ -11,7 +11,8 @@ from g4usim_gui.core.run_progress import ProgressParser
 from g4usim_gui.core.log_parser import parse_log_line
 from g4usim_gui.core.paths import ensure_directory
 from g4usim_gui.core.i18n import ui_format, ui_text
-from g4usim_gui.core.project import G4USimProject, RUN_INPUT_MODES
+from g4usim_gui.core.project import G4USimProject
+from g4usim_gui.core.project_diagnostics import validate_project_report
 from g4usim_gui.core.run_result import RunResult, evaluate_run_result, summary_fingerprint
 
 
@@ -55,62 +56,11 @@ class G4USimRunner(QObject):
 
     @staticmethod
     def validate_project(project: G4USimProject, *, ready_to_run: bool = False) -> list[str]:
-        errors: list[str] = []
+        return validate_project_report(project, ready_to_run=ready_to_run).errors
 
-        if project.runInputMode not in RUN_INPUT_MODES:
-            errors.append(ui_text("Unsupported run input mode."))
-        if ready_to_run and project.runInputMode == "generated" and (
-            not project.configPath or not project.macroPath
-        ):
-            errors.append(ui_text("Generate a run package before starting generated input."))
-
-        executable = Path(project.executable).expanduser() if project.executable else None
-        if not project.executable:
-            errors.append("Executable path is required.")
-        elif not executable or not executable.exists():
-            errors.append(f"Executable does not exist: {project.executable}")
-        elif not executable.is_file():
-            errors.append(f"Executable path is not a file: {project.executable}")
-
-        if project.runInputMode == "external" and not project.configPath and not project.macroPath:
-            errors.append("External input mode requires a config file, a macro file, or both.")
-
-        if project.macroPath and not Path(project.macroPath).expanduser().exists():
-            errors.append(f"Macro file does not exist: {project.macroPath}")
-        elif project.macroPath and not Path(project.macroPath).expanduser().is_file():
-            errors.append(ui_format("Macro path is not a file: {path}", path=project.macroPath))
-
-        if project.configPath and not Path(project.configPath).expanduser().exists():
-            errors.append(f"Config file does not exist: {project.configPath}")
-        elif project.configPath and not Path(project.configPath).expanduser().is_file():
-            errors.append(ui_format("Config path is not a file: {path}", path=project.configPath))
-
-        if project.workspaceRoot and not Path(project.workspaceRoot).expanduser().is_dir():
-            errors.append(f"Workspace root does not exist: {project.workspaceRoot}")
-
-        if not project.outputDir:
-            errors.append("Output directory is required.")
-        else:
-            output_dir = Path(project.outputDir).expanduser()
-            if output_dir.exists() and not output_dir.is_dir():
-                errors.append(f"Output path exists but is not a directory: {project.outputDir}")
-            else:
-                existing_parent = output_dir
-                while not existing_parent.exists() and existing_parent.parent != existing_parent:
-                    existing_parent = existing_parent.parent
-                if not existing_parent.exists():
-                    errors.append(f"Output directory has no existing parent: {project.outputDir}")
-
-        if project.threads <= 0:
-            errors.append("Threads must be a positive integer.")
-
-        if project.seed:
-            try:
-                int(project.seed)
-            except ValueError:
-                errors.append("Seed must be an integer when provided.")
-
-        return errors
+    @staticmethod
+    def validation_report(project: G4USimProject, *, ready_to_run: bool = False):
+        return validate_project_report(project, ready_to_run=ready_to_run)
 
     @staticmethod
     def build_command(project: G4USimProject) -> list[str]:

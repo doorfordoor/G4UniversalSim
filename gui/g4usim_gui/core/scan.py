@@ -23,7 +23,7 @@ import csv
 import json
 import math
 import re
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass, field, replace
 from datetime import datetime
 from pathlib import Path
 
@@ -37,7 +37,8 @@ from g4usim_gui.editors.source_physics_scoring_model import (
 )
 from g4usim_gui.models.package_model import GeometrySettings, PathSettings
 from g4usim_gui.models.run_model import RunSettings
-from g4usim_gui.validators.config_validator import validate_config_builder
+from g4usim_gui.validators.config_validator import ValidationReport, validate_config_builder
+from g4usim_gui.core.diagnostics import emit_diagnostic, extend_diagnostics
 from g4usim_gui.writers.package_writer import create_run_package, safe_name
 
 MANIFEST = "scan.json"
@@ -206,12 +207,18 @@ class ScanManifest:
 
 def validate_scan(base: ScanBase, parameter: ScanParameter, values: list[str]) -> list[str]:
     """Problems of every point, found before anything is written."""
-    problems: list[str] = []
-    for value in values:
+    return validate_scan_report(base, parameter, values).errors
+
+
+def validate_scan_report(base: ScanBase, parameter: ScanParameter, values: list[str]) -> ValidationReport:
+    problems = ValidationReport()
+    for index, value in enumerate(values):
         try:
             point = apply_value(base, parameter, value)
         except ValueError as error:
-            problems.append(f"{value}: {error}")
+            emit_diagnostic(problems, 'scan.value', 'error', f"{value}: {error}",
+                            origin='scan_validation', editor='scan', field='values',
+                            identity_parameters={'point_index': index, 'value': value})
             continue
         report = validate_config_builder(
             paths=point.paths, run=point.run, geometry=point.geometry_settings, source=point.source.to_settings(),
@@ -220,15 +227,29 @@ def validate_scan(base: ScanBase, parameter: ScanParameter, values: list[str]) -
             geometry_document=point.geometry, source_model=point.source, physics_model=point.physics,
             scoring_model=point.scoring)
         if not report.can_run:
-            problems.extend(f"{value}: {error}" for error in report.errors)
+            # These records describe a derived point, not the current base editor.
+            # Preserve its location as context, but never jump to a different input.
+            extend_diagnostics(problems, [replace(record, message=f'{value}: {record.message}',
+                location=None, message_key='', params={},
+                identity_parameters={'point_index': index, 'value': value, 'original': record.identity},
+                related_locations=((record.location,) if record.location else ()) + record.related_locations,
+                unavailable_reason='This diagnostic describes a derived scan point; edit the base configuration and refresh it.')
+                for record in report.diagnostics if record.severity in ('error', 'blocker')], append=False)
+            problems.errors.extend(f'{value}: {error}' for error in report.errors)
     return problems
+
+
+class ScanValidationError(ValueError):
+    def __init__(self, report: ValidationReport) -> None:
+        self.report = report
+        super().__init__('\n'.join(report.errors))
 
 
 def create_scan(base: ScanBase, parameter: ScanParameter, values: list[str], name: str,
                 runs_root: str | Path) -> ScanManifest:
-    problems = validate_scan(base, parameter, values)
-    if problems:
-        raise ValueError("\n".join(problems))
+    report = validate_scan_report(base, parameter, values)
+    if not report.can_run:
+        raise ScanValidationError(report)
     stamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     scan_dir = Path(runs_root).expanduser() / f"{stamp}_scan_{safe_name(name)}"
     suffix = 1

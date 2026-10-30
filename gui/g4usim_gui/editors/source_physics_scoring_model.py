@@ -5,6 +5,7 @@ import re
 from dataclasses import asdict, dataclass, field
 
 from g4usim_gui.core.capability_messages import capability_message
+from g4usim_gui.core.diagnostics import EditorLocation, emit_diagnostic, reset_diagnostics
 from g4usim_gui.core.config_schema import check_value, spec, quantity
 from g4usim_gui.models.physics_model import PhysicsSettings
 from g4usim_gui.models.scoring_model import ScoringSettings
@@ -175,75 +176,90 @@ class ScoringEditableModel:
         )
 
 
+def _record_model(model, editor: str, code: str, severity: str, message: str, field: str) -> None:
+    value = getattr(model, field, None)
+    if isinstance(value, float) and not math.isfinite(value):
+        value = {"invalid_float": repr(value)}
+    related = ()
+    if code == "hist_range.order":
+        related = (EditorLocation("scoring", "hist_min"),)
+    elif code == "histogram.output_required":
+        related = (EditorLocation("scoring", "weighted_histogram"),)
+    emit_diagnostic(model, f"{editor}.{code}", severity, message,
+                    origin=f"{editor}.editor", editor=editor, field=field,
+                    identity_parameters={"value": value}, related_locations=related)
+
+
 def validate_source_model(model: SourceEditableModel) -> SourceEditableModel:
+    reset_diagnostics(model)
     model.errors = []
     model.warnings = []
     _sync_source_legacy_fields(model)
     if not model.enabled:
-        model.warnings.append("Source is disabled in the editor, but G4UniversalSim still requires a primary source.")
+        _record_model(model, 'source', 'disabled', 'warning', "Source is disabled in the editor, but G4UniversalSim still requires a primary source.", 'enabled')
     if not model.preset.strip():
-        model.errors.append("preset is required")
+        _record_model(model, 'source', 'preset.required', 'error', "preset is required", 'preset')
     elif model.preset not in SOURCE_PRESETS:
-        model.warnings.append(f"preset '{model.preset}' is not in the GUI quick list; final validation happens in C++")
+        _record_model(model, 'source', 'preset.unknown', 'warning', f"preset '{model.preset}' is not in the GUI quick list; final validation happens in C++", 'preset')
     if not model.particle.strip():
-        model.errors.append("particle is required")
+        _record_model(model, 'source', 'particle.required', 'error', "particle is required", 'particle')
     if not model.energy.strip():
-        model.errors.append("energy is required")
+        _record_model(model, 'source', 'energy.required', 'error', "energy is required", 'energy')
     else:
         problem = check_value("source", "energy", model.energy)
         if problem:
-            model.errors.append(problem)
+            _record_model(model, 'source', 'energy.invalid', 'error', problem, 'energy')
     for name, text in (("energy", model.energy), ("position", model.position),
                        ("direction", model.direction), ("radius", model.radius),
                        ("halfx", model.halfx), ("halfy", model.halfy)):
         if _contains_nonfinite_number(text):
-            model.errors.append(f"{name} must contain only finite numeric values")
+            _record_model(model, 'source', 'value.nonfinite', 'error', f"{name} must contain only finite numeric values", name)
     mode = model.position_mode.strip().lower()
     shape = model.source_shape.strip().lower() or ("point" if mode == "point" else "circle")
     angular = model.angular_mode.strip().lower()
     if mode not in {"point", "plane"}:
-        model.errors.append("position mode must be point or plane in this GUI MVP")
+        _record_model(model, 'source', 'position_mode.unsupported', 'error', "position mode must be point or plane in this GUI MVP", 'position_mode')
     if shape not in {"point", "circle", "rectangle", "square", "annulus"}:
-        model.errors.append("source shape must be point, circle, rectangle, square, or annulus")
+        _record_model(model, 'source', 'shape.unknown', 'error', "source shape must be point, circle, rectangle, square, or annulus", 'source_shape')
     if not _has_three_components(model.position):
-        model.errors.append("position should contain at least 3 components")
+        _record_model(model, 'source', 'position.components', 'error', "position should contain at least 3 components", 'position')
     if mode == "point" and shape != "point":
-        model.warnings.append("point source mode ignores source_shape; it will be treated as a point")
+        _record_model(model, 'source', 'shape.ignored', 'warning', "point source mode ignores source_shape; it will be treated as a point", 'source_shape')
     if mode == "plane":
         if shape == "circle" and model.radius.strip():
             problem = check_value("source", "radius", model.radius)
             if problem:
-                model.errors.append(problem)
+                _record_model(model, 'source', 'radius.invalid', 'error', problem, 'radius')
         if not _has_three_components(model.normal):
-            model.errors.append("plane normal should contain 3 components")
+            _record_model(model, 'source', 'normal.components', 'error', "plane normal should contain 3 components", 'normal')
         elif not _direction_is_nonzero(model.normal):
-            model.errors.append("plane normal cannot be all zero")
+            _record_model(model, 'source', 'normal.zero', 'error', "plane normal cannot be all zero", 'normal')
         if shape in {"circle", "annulus"} and not model.radius.strip():
-            model.errors.append("plane circle/annulus source requires radius")
+            _record_model(model, 'source', 'radius.required', 'error', "plane circle/annulus source requires radius", 'radius')
         if shape == "annulus" and not model.inner_radius.strip():
-            model.errors.append("annulus source requires inner_radius")
+            _record_model(model, 'source', 'inner_radius.required', 'error', "annulus source requires inner_radius", 'inner_radius')
         if shape in {"rectangle", "square"}:
             if not model.halfx.strip():
-                model.errors.append("rectangle/square source requires halfx")
+                _record_model(model, 'source', 'halfx.required', 'error', "rectangle/square source requires halfx", 'halfx')
             elif shape == "rectangle" and not _is_positive_length(model.halfx):
-                model.errors.append("rectangle source halfx must be a finite positive length (nm/um/mm/cm/m)")
+                _record_model(model, 'source', 'halfx.positive', 'error', "rectangle source halfx must be a finite positive length (nm/um/mm/cm/m)", 'halfx')
             if shape == "rectangle" and not model.halfy.strip():
-                model.errors.append("rectangle source requires halfy")
+                _record_model(model, 'source', 'halfy.required', 'error', "rectangle source requires halfy", 'halfy')
             elif shape == "rectangle" and not _is_positive_length(model.halfy):
-                model.errors.append("rectangle source halfy must be a finite positive length (nm/um/mm/cm/m)")
+                _record_model(model, 'source', 'halfy.positive', 'error', "rectangle source halfy must be a finite positive length (nm/um/mm/cm/m)", 'halfy')
         if shape == "rectangle" and model.normal.replace(" ", "") != "0,0,1":
-            model.errors.append("plane rectangle currently uses the XY plane; normal must be 0,0,1")
+            _record_model(model, 'source', 'normal.xy_only', 'error', "plane rectangle currently uses the XY plane; normal must be 0,0,1", 'normal')
         if shape in {"square", "annulus"}:
-            model.errors.append(f"plane {shape} source is preview-only in this GUI; the backend supports it via [source] shape = {shape} in a hand-written main INI")
+            _record_model(model, 'source', 'shape.preview_only', 'error', f"plane {shape} source is preview-only in this GUI; the backend supports it via [source] shape = {shape} in a hand-written main INI", 'source_shape')
     if not _has_three_components(model.direction):
-        model.errors.append("direction should contain at least 3 components")
+        _record_model(model, 'source', 'direction.components', 'error', "direction should contain at least 3 components", 'direction')
     elif not _direction_is_nonzero(model.direction):
-        model.errors.append("direction cannot be all zero")
+        _record_model(model, 'source', 'direction.zero', 'error', "direction cannot be all zero", 'direction')
     if angular == "beam":
         model.angular_mode = "fixed"
         angular = "fixed"
     if angular not in {"fixed", "isotropic", "cone", "cosine", "focused"}:
-        model.errors.append("angular mode must be fixed, isotropic, cone, cosine, or focused")
+        _record_model(model, 'source', 'angular_mode.unknown', 'error', "angular mode must be fixed, isotropic, cone, cosine, or focused", 'angular_mode')
     for label, value in [
         ("theta_min", model.theta_min),
         ("theta_max", model.theta_max),
@@ -251,88 +267,90 @@ def validate_source_model(model: SourceEditableModel) -> SourceEditableModel:
         ("phi_max", model.phi_max),
     ]:
         if value.strip() and not _looks_like_angle(value):
-            model.errors.append(f"{label} should be an angle such as '0 deg' or '0 rad'")
+            _record_model(model, 'source', 'angle.invalid', 'error', f"{label} should be an angle such as '0 deg' or '0 rad'", label)
     if angular == "cone":
         if not model.cone_half_angle.strip():
-            model.errors.append("cone angular mode requires cone_half_angle")
+            _record_model(model, 'source', 'cone_half_angle.required', 'error', "cone angular mode requires cone_half_angle", 'cone_half_angle')
         elif not _looks_like_angle(model.cone_half_angle):
-            model.errors.append("cone_half_angle should be an angle such as '5 deg'")
-        model.errors.append("cone angular mode is preview-only in this GUI; the backend supports it via [source] angular = isotropic with max_theta in a hand-written main INI")
+            _record_model(model, 'source', 'cone_half_angle.invalid', 'error', "cone_half_angle should be an angle such as '5 deg'", 'cone_half_angle')
+        _record_model(model, 'source', 'cone.preview_only', 'error', "cone angular mode is preview-only in this GUI; the backend supports it via [source] angular = isotropic with max_theta in a hand-written main INI", 'angular_mode')
     if angular in {"cosine", "focused"}:
-        model.errors.append(f"{angular} angular mode is preview-only in this GUI; the backend supports [source] angular = {'cos' if angular == 'cosine' else angular} in a hand-written main INI")
+        _record_model(model, 'source', 'angular_mode.preview_only', 'error', f"{angular} angular mode is preview-only in this GUI; the backend supports [source] angular = {'cos' if angular == 'cosine' else angular} in a hand-written main INI", 'angular_mode')
     if angular == "focused" and not _has_three_components(model.focus_point):
-        model.errors.append("focused angular mode requires focus_point with 3 components")
+        _record_model(model, 'source', 'focus.components', 'error', "focused angular mode requires focus_point with 3 components", 'focus_point')
     if model.preview_ray_count <= 0:
-        model.errors.append("preview_ray_count must be > 0")
+        _record_model(model, 'source', 'preview_rays.positive', 'error', "preview_ray_count must be > 0", 'preview_ray_count')
     if model.confine_volume.strip():
-        model.warnings.append("confine_volume is not generated by this GUI; the backend supports [source] confine with position_type = volume in a hand-written main INI")
+        _record_model(model, 'source', 'confine.not_generated', 'warning', "confine_volume is not generated by this GUI; the backend supports [source] confine with position_type = volume in a hand-written main INI", 'confine_volume')
     if mode == "plane" and shape == "circle":
-        model.warnings.append("plane circle source is generated as position_type=plane + radius; plane orientation is limited by the C++ backend")
+        _record_model(model, 'source', 'plane.limited', 'warning', "plane circle source is generated as position_type=plane + radius; plane orientation is limited by the C++ backend", 'normal')
     return model
 
 
 def validate_physics_model(model: PhysicsEditableModel) -> PhysicsEditableModel:
+    reset_diagnostics(model)
     model.errors = []
     model.warnings = []
     if model.mode != "reference":
-        model.errors.append("manual physics mode is not generated by this GUI MVP")
+        _record_model(model, 'physics', 'mode.unsupported', 'error', "manual physics mode is not generated by this GUI MVP", 'mode')
     if not model.reference_list.strip():
-        model.errors.append("reference list is required")
+        _record_model(model, 'physics', 'reference.required', 'error', "reference list is required", 'reference_list')
     elif model.reference_list not in REFERENCE_LIST_CANDIDATES:
-        model.warnings.append("reference list is not in the GUI quick list; Geant4 validates it at initialization")
+        _record_model(model, 'physics', 'reference.unknown', 'warning', "reference list is not in the GUI quick list; Geant4 validates it at initialization", 'reference_list')
     if not model.default_cut.strip():
-        model.errors.append("default cut is required")
+        _record_model(model, 'physics', 'cut.required', 'error', "default cut is required", 'default_cut')
     elif check_value("physics", "default_cut", model.default_cut):
-        model.errors.append(check_value("physics", "default_cut", model.default_cut))
+        _record_model(model, 'physics', 'cut.invalid', 'error', check_value("physics", "default_cut", model.default_cut), 'default_cut')
     elif not _looks_like_value_with_unit(model.default_cut):
-        model.warnings.append("default cut should include a value and unit, for example '1 mm'")
+        _record_model(model, 'physics', 'cut.unit_hint', 'warning', "default cut should include a value and unit, for example '1 mm'", 'default_cut')
     if model.enable_biasing_physics:
-        model.errors.append("Biasing rules cannot be edited or generated here. Disable the hook for generated packages, or use external config/macro with explicit process-level rules.")
+        _record_model(model, 'physics', 'biasing.not_editable', 'error', "Biasing rules cannot be edited or generated here. Disable the hook for generated packages, or use external config/macro with explicit process-level rules.", 'enable_biasing_physics')
     if model.extra_modules:
-        model.warnings.append("extra modules are preserved in the model but not edited by this MVP")
+        _record_model(model, 'physics', 'extra_modules.not_editable', 'warning', "extra modules are preserved in the model but not edited by this MVP", 'extra_modules')
     if model.manual_modules:
-        model.warnings.append("manual modules are preserved in the model but not generated by this MVP")
+        _record_model(model, 'physics', 'manual_modules.not_generated', 'warning', "manual modules are preserved in the model but not generated by this MVP", 'manual_modules')
     return model
 
 
 def validate_scoring_model(model: ScoringEditableModel) -> ScoringEditableModel:
+    reset_diagnostics(model)
     model.errors = []
     model.warnings = []
     if model.enabled and not any([model.hits, model.event_edep, model.edep, model.dose, model.fluence]):
-        model.errors.append("enabled scoring requires at least one of hits/event_edep/edep/dose/fluence")
+        _record_model(model, 'scoring', 'output.required', 'error', "enabled scoring requires at least one of hits/event_edep/edep/dose/fluence", 'enabled')
     if model.hist_bins <= 0:
-        model.errors.append("histogram bins must be > 0")
+        _record_model(model, 'scoring', 'hist_bins.positive', 'error', "histogram bins must be > 0", 'hist_bins')
     if not model.hist_min.strip():
-        model.errors.append("histogram min is required")
+        _record_model(model, 'scoring', 'hist_min.required', 'error', "histogram min is required", 'hist_min')
     if not model.hist_max.strip():
-        model.errors.append("histogram max is required")
+        _record_model(model, 'scoring', 'hist_max.required', 'error', "histogram max is required", 'hist_max')
     for key, value in (("bins", str(model.hist_bins)), ("min", model.hist_min), ("max", model.hist_max)):
         if value.strip():
             problem = check_value("scoring.edep", key, value)
             if problem:
-                model.errors.append(problem)
+                _record_model(model, 'scoring', 'hist_value.invalid', 'error', problem, 'hist_' + key)
     low, high = quantity(model.hist_min, "energy"), quantity(model.hist_max, "energy")
     if low is not None and high is not None and high <= low:
-        model.errors.append("histogram max must be greater than min")
+        _record_model(model, 'scoring', 'hist_range.order', 'error', "histogram max must be greater than min", 'hist_max')
     if not model.edep and (model.raw_histogram or model.weighted_histogram):
-        model.warnings.append("edep scorer is disabled; edep histogram settings will not produce output")
+        _record_model(model, 'scoring', 'histogram.edep_disabled', 'warning', "edep scorer is disabled; edep histogram settings will not produce output", 'edep')
     if model.edep and not (model.raw_histogram or model.weighted_histogram):
-        model.errors.append("edep histogram output requires raw_histogram or weighted_histogram")
+        _record_model(model, 'scoring', 'histogram.output_required', 'error', "edep histogram output requires raw_histogram or weighted_histogram", 'raw_histogram')
     if model.let:
-        model.errors.append(capability_message("scoring.let.unsupported"))
+        _record_model(model, 'scoring', 'let.unsupported', 'error', capability_message("scoring.let.unsupported"), 'let')
     if model.dose and not model.auto_create_default_scorers:
-        model.errors.append("Dose requires auto-create default scorers")
+        _record_model(model, 'scoring', 'dose.requires_default', 'error', "Dose requires auto-create default scorers", 'auto_create_default_scorers')
     if model.fluence and not model.auto_create_default_scorers:
-        model.errors.append("Fluence requires auto-create default scorers")
+        _record_model(model, 'scoring', 'fluence.requires_default', 'error', "Fluence requires auto-create default scorers", 'auto_create_default_scorers')
     # the backend's limits come from the configuration schema; the GUI keeps its own lower maximum
     trajectories = spec("output", "trajectories")
     gui_max = trajectories.data.get("gui", {}).get("max")
     problem = (check_value("output", "trajectories", str(model.trajectory_events))
                if isinstance(model.trajectory_events, int) else "[output]/trajectories must be an integer")
     if problem or (gui_max is not None and model.trajectory_events > gui_max):
-        model.errors.append(f"trajectories must be 0 (off) to {gui_max} events")
+        _record_model(model, 'scoring', 'trajectories.range', 'error', f"trajectories must be 0 (off) to {gui_max} events", 'trajectory_events')
     elif model.trajectory_events > 100:
-        model.warnings.append("trajectory files grow quickly with secondaries; use a few events")
+        _record_model(model, 'scoring', 'trajectories.size_hint', 'warning', "trajectory files grow quickly with secondaries; use a few events", 'trajectory_events')
     return model
 
 

@@ -294,6 +294,7 @@ class ShellMixin:
         self.language_button.setMenu(language_menu)
 
     def _set_theme(self, mode: ThemeMode) -> None:
+        self._clear_diagnostic_highlights()
         app = QApplication.instance()
         if app is None:
             return
@@ -310,6 +311,7 @@ class ShellMixin:
             action.setChecked(True)
 
     def _set_language(self, language: LanguageCode, *, persist: bool = True) -> None:
+        self._clear_diagnostic_highlights()
         app = QApplication.instance()
         if app is None:
             return

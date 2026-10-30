@@ -263,7 +263,7 @@ is marked experimental in the support matrix until benchmarked.
 | **F1** | 输出身份、commit/config/项目实际读取资源 hash，未观测输入明确标记；版本化输出与测量后决定缓存/format=auto | 来源/格式节点分开提交；默认CSV不变。依赖 2C/E6，支持 K1/Q2 | 已完成：产品f176d0e；Windows143/143及E6基线、Linux双版本各143、M0双OS各64通过，14次实窗观察/正常关闭与独立复核通过。[最终证据及集成](verification/f1-visible-20261030/README.md)。[自动归档](verification/f1-automated-20261030/README.md)保留两轮失败及当时pending；72次测量完成、缓冲候选撤回。[契约](collab/inbox/20261030-1410-astra-f1-scope.md) |
 | **F2** | GUI 受控 run session、Idle 白名单、逐 run 输入/来源/重放协议 | 完整换配置用新进程；三轮调整的真实状态与限定环境重放；不承诺跨平台/线程数逐位一致。可在 L1 后交付 | 待开始 |
 | **F3** | hits-heavy/mesh-heavy 的耗时、内存、输出基线及瓶颈优化；tasking 单列实验 | 测量→单一瓶颈变更→前后对照；统计/种子/输出契约不改变。性能优化不能成为接受结果差异的理由 | 待开始 |
-| **F4** | 定位到 editor/row/field/code 的诊断及点击跳转 | 诊断身份不随语言改变，不抹除来源错误；K1/L1 复用同一结构 | 待开始 |
+| **F4** | 定位到 editor/row/field/code 的诊断及点击跳转 | 诊断身份不随语言改变，不抹除来源错误；K1/L1 复用同一结构 | 实施中：结构化生产、共享列表、编辑器及辅助入口；正式回归、真实 CI 与实窗未验收。见 [执行契约](collab/inbox/20261030-1830-astra-f4-execution.md) |
 | **F5** | 配置事务 undo/redo、自动保存、异常恢复 | 撤销后生成语义一致；恢复文件不覆盖原件；自动操作走相同事务接口 | 待开始 |
 | **F6** | 实时进度与 sequence | 已完成，Q1 复核解析、取消和失败边界；进度不替代成功证据 | 保持完成 |
 | **F7** | 二维扫描、线程预算内并发、场景生成器扫描 | 依赖 K1/F3；每点独立 seed/目录/证据，失败/重试不重复发布，缺点可见 | 待开始；已有单参数串行扫描保留 |

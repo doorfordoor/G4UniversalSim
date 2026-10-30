@@ -31,7 +31,15 @@ from g4usim_gui.writers.macro_writer import write_run_macro
 from g4usim_gui.writers.main_ini_writer import write_main_ini
 from g4usim_gui.writers.geometry_ini_writer import write_geometry_ini
 from g4usim_gui.writers.materials_ini_writer import write_materials_ini
-from g4usim_gui.writers.validation_report_writer import write_validation_report
+from g4usim_gui.writers.validation_report_writer import write_diagnostic_report, write_validation_report
+
+
+class PackageValidationError(ValueError):
+    """A refused package retains the producer report, including field/source facts."""
+
+    def __init__(self, report) -> None:
+        self.report = report
+        super().__init__(report.to_text())
 
 
 def safe_name(value: str) -> str:
@@ -69,7 +77,7 @@ def create_run_package(
         scoring_model=scoring_model,
     )
     if not report.can_run:
-        raise ValueError(report.to_text())
+        raise PackageValidationError(report)
 
     package = _allocate_package(paths.runs_root, run.run_name or project.projectName)
     materials_source_mode, geometry_source_mode = _copy_or_generate_inputs(package, paths, geometry, material_document, geometry_document)
@@ -94,6 +102,7 @@ def create_run_package(
     )
     write_run_macro(package.run_macro_path, run)
     write_validation_report(package.validation_report_path, report, summary_text)
+    write_diagnostic_report(Path(package.package_dir) / "validation_diagnostics.json", report)
     _write_snapshot(
         package.project_snapshot_path,
         project,

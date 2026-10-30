@@ -403,6 +403,9 @@ QLineEdit:focus, QSpinBox:focus, QDoubleSpinBox:focus, QComboBox:focus,
 QPlainTextEdit:focus, QTextEdit:focus, QTableWidget:focus, QTreeWidget:focus {{
     border: 1px solid {c.accent};
 }}
+QWidget[diagnosticFocus="true"] {{
+    border: 2px solid {c.accent};
+}}
 QComboBox QAbstractItemView {{
     background: {c.surface};
     color: {c.text};

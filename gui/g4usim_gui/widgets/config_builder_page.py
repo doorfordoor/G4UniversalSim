@@ -1,8 +1,11 @@
 from __future__ import annotations
 
+from dataclasses import replace
+
 from PySide6.QtCore import QTimer, Signal
 from PySide6.QtWidgets import (
     QFrame,
+    QLineEdit,
     QScrollArea,
     QComboBox,
     QLabel,
@@ -14,6 +17,7 @@ from PySide6.QtWidgets import (
 )
 
 from g4usim_gui.core.config_schema import check_value
+from g4usim_gui.core.diagnostics import Diagnostic
 from g4usim_gui.core.i18n import ui_format, ui_text
 from g4usim_gui.core.project import G4USimProject
 from g4usim_gui.editors.geometry_editor_model import GeometryDocument
@@ -36,6 +40,10 @@ from g4usim_gui.widgets.config.layers import LayersMixin
 from g4usim_gui.widgets.config.preview3d import Preview3DPanel, Preview3DMixin
 from g4usim_gui.widgets.config.run_config import RunConfigEditor, RunConfigMixin
 from g4usim_gui.widgets.config.details import DetailsPanel
+from g4usim_gui.widgets.diagnostic_navigation import (
+    ConfigDiagnosticNavigator, DiagnosticDraftDelegate, NavigationResult, configuration_snapshot,
+    reveal_widget, source_view_text,
+)
 
 
 class ConfigBuilderPage(SetupMixin, MaterialsMixin, GeometryMixin, LayersMixin, BooleansMixin,
@@ -55,6 +63,8 @@ class ConfigBuilderPage(SetupMixin, MaterialsMixin, GeometryMixin, LayersMixin, 
     backendGeometryRequested = Signal()
     tracksRequested = Signal()                # overlay a run's particle tracks in the 3D view (G6)
     autoBackendGeometryRequested = Signal()   # the 3D tab wants the Geant4 world after a change (G1)
+    diagnosticPageRequested = Signal()
+    diagnosticNavigationRequested = Signal(object)
 
     GEOMETRY_PRIMARY_OPTIONS = (
         ("layered_device", "Layered Model"),
@@ -78,6 +88,9 @@ class ConfigBuilderPage(SetupMixin, MaterialsMixin, GeometryMixin, LayersMixin, 
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         self._building = False
+        self._diagnostic_generation = 0
+        self._diagnostic_snapshot = ""
+        self._diagnostic_report = None
         self.materials_summary: MaterialsSummary | None = None
         self.geometry_summary: GeometrySummary | None = None
         self.material_document = MaterialDocument()
@@ -113,7 +126,12 @@ class ConfigBuilderPage(SetupMixin, MaterialsMixin, GeometryMixin, LayersMixin, 
         self._adopt(self.details_tabs)
 
         self._build_layout()
+        self.diagnostic_navigator = ConfigDiagnosticNavigator(self)
+        self.diagnostic_panel.activationRequested.connect(self.navigate_diagnostic)
+        self.diagnostic_panel.sourceRequested.connect(self.view_diagnostic_source)
+        self.diagnostic_panel.revalidateRequested.connect(self.validateRequested.emit)
         self._connect_signals()
+        self._connect_diagnostic_drafts()
         self._populate_nist_table()
 
     def _adopt(self, editor: QWidget) -> None:
@@ -186,6 +204,7 @@ class ConfigBuilderPage(SetupMixin, MaterialsMixin, GeometryMixin, LayersMixin, 
         self._connect_sps_summary_signals()
 
     def set_from_project(self, project: G4USimProject) -> None:
+        self.invalidate_diagnostics()
         self._building = True
         run = project.runSettings
         paths = project.pathSettings
@@ -274,12 +293,121 @@ class ConfigBuilderPage(SetupMixin, MaterialsMixin, GeometryMixin, LayersMixin, 
         if seed_text:
             problem = check_value("run", "seed", seed_text)   # as the backend reads it: 0..2147483647
             if problem:
-                report.errors.append(ui_format("Seed must be an integer from 0 to 2147483647 ({problem}).",
-                                               problem=problem))
+                template = "Seed must be an integer from 0 to 2147483647 ({problem})."
+                report.add("run.seed.invalid", "error", ui_format(template, problem=problem),
+                           origin="run", editor="run", field="seed", message_key=template,
+                           params={"problem": problem}, identity_parameters={"value": seed_text})
+        report._f4_editor_snapshot = self._current_diagnostic_snapshot()
         return report
 
     def set_validation_text(self, text: str) -> None:
+        self.clear_diagnostic_navigation()
+        self._diagnostic_report = None
+        self._diagnostic_snapshot = ""
+        self.diagnostic_panel.clear()
         self.validation_text.setPlainText(text)
+
+    def _current_diagnostic_snapshot(self) -> str:
+        return configuration_snapshot(self, self._diagnostic_generation)
+
+    def _connect_diagnostic_drafts(self) -> None:
+        # Detail selection populates under _building. Programmatic raw drafts
+        # outside that guard still invalidate even where old slots use textEdited.
+        for widget in self.findChildren(QLineEdit):
+            widget.textChanged.connect(self._diagnostic_draft_changed)
+        for table in (self.geometry_table, self.boolean_table):
+            table.setItemDelegate(DiagnosticDraftDelegate(table, self._diagnostic_draft_changed))
+
+    def _diagnostic_draft_changed(self, *_args) -> None:
+        if not self._building:
+            self.invalidate_diagnostics()
+
+    def set_validation_report(self, report: ValidationReport) -> None:
+        """Bind typed locations to this exact editor revision, preserving raw text."""
+        self.clear_diagnostic_navigation()
+        self.validation_text.setPlainText(report.to_text())
+        current = self._current_diagnostic_snapshot()
+        captured = getattr(report, "_f4_editor_snapshot", current)
+        report._f4_editor_snapshot = captured
+        self._diagnostic_report = report
+        self._diagnostic_snapshot = captured
+        records = tuple(replace(record, location=replace(record.location, snapshot_id=captured))
+                        if record.location is not None and not record.location.snapshot_id else record
+                        for record in report.diagnostics)
+        self.diagnostic_panel.set_records(records)
+        if captured != current:
+            self.diagnostic_panel.set_stale()
+
+    def invalidate_diagnostics(self) -> None:
+        """A new edit/load generation cannot revive an old report by undoing values."""
+        self._diagnostic_generation += 1
+        if hasattr(self, "diagnostic_navigator"):
+            self.clear_diagnostic_navigation()
+        if hasattr(self, "diagnostic_panel") and self._diagnostic_snapshot:
+            self.diagnostic_panel.set_stale()
+
+    def clear_diagnostic_navigation(self) -> None:
+        self.diagnostic_navigator.clear()
+
+    def _current_diagnostic_record(self, diagnostic: Diagnostic) -> Diagnostic | None:
+        if (not self._diagnostic_snapshot or self.diagnostic_panel.stale or
+                self._diagnostic_snapshot != self._current_diagnostic_snapshot()):
+            self.clear_diagnostic_navigation()
+            self.diagnostic_panel.set_stale()
+            return None
+        if (diagnostic.location is not None and diagnostic.location.snapshot_id and
+                diagnostic.location.snapshot_id != self._diagnostic_snapshot):
+            self.diagnostic_panel.show_status("This diagnostic belongs to a different editor or snapshot.", "warning")
+            return None
+        record = next((item for item in self.diagnostic_panel.records
+                       if item.identity == diagnostic.identity), None)
+        if record is None or (record.location is not None and
+                              record.location.snapshot_id != self._diagnostic_snapshot):
+            self.diagnostic_panel.show_status("This diagnostic belongs to a different editor or snapshot.", "warning")
+            return None
+        return record
+
+    def is_diagnostic_current(self, diagnostic: Diagnostic) -> bool:
+        return self._current_diagnostic_record(diagnostic) is not None
+
+    def navigate_diagnostic(self, diagnostic: Diagnostic) -> NavigationResult:
+        record = self._current_diagnostic_record(diagnostic)
+        if record is None:
+            return NavigationResult("stale", ui_text("Diagnostics are stale. Validate the current inputs again."))
+        if record.location is None:
+            if record.source is not None:
+                return self.view_diagnostic_source(record)
+            result = NavigationResult("unavailable", ui_text("This diagnostic has no editable location."))
+        elif (record.location.editor == "project" or
+              record.location.editor == "setup" and record.location.field in
+              {"executable", "workspace_root", "runs_root"}):
+            self.diagnosticNavigationRequested.emit(record)
+            return NavigationResult("delegated", ui_text("The target is in the project settings."))
+        else:
+            result = self.diagnostic_navigator.navigate(record)
+        self.diagnostic_panel.show_status("{message}", "info" if result.ok else "warning", message=result.message)
+        return result
+
+    def view_diagnostic_source(self, diagnostic: Diagnostic) -> NavigationResult:
+        record = self._current_diagnostic_record(diagnostic)
+        if record is None or record.source is None:
+            return NavigationResult("unavailable", ui_text("This diagnostic has no recorded source location."))
+        result, text = source_view_text(record.source)
+        if result.ok:
+            self.diagnosticPageRequested.emit()
+            self.diagnostic_panel.show_source(record.source, text)
+            reveal_widget(self.diagnostic_panel.source_view, allow_read_only=True)
+        self.diagnostic_panel.show_status("{message}", "warning" if result.status != "source_shown" else "info",
+                                          message=result.message)
+        return result
+
+    def reload_materials(self) -> None:
+        self.invalidate_diagnostics()
+        MaterialsMixin.reload_materials(self)
+
+    def reload_geometry(self) -> None:
+        self.invalidate_diagnostics()
+        GeometryMixin.reload_geometry(self)
 
     def set_package_path(self, path: str) -> None:
         self.package_label.setText(f"Generated package: {path or '<none>'}")
@@ -296,6 +424,7 @@ class ConfigBuilderPage(SetupMixin, MaterialsMixin, GeometryMixin, LayersMixin, 
 
     def _emit_changed(self) -> None:
         if not self._building:
+            self.invalidate_diagnostics()
             self._mark_preview_stale()
             self.schedule_backend_geometry()
             self.settingsChanged.emit()
@@ -338,11 +467,14 @@ class ConfigBuilderPage(SetupMixin, MaterialsMixin, GeometryMixin, LayersMixin, 
         return "\n".join(lines)
 
     def refresh_theme(self) -> None:
+        self.clear_diagnostic_navigation()
         set_theme = getattr(self.preview3d_widget, "set_theme", None)
         if set_theme is not None:
             set_theme()
 
     def refresh_language(self) -> None:
+        self.clear_diagnostic_navigation()
+        self.diagnostic_panel.refresh_language()
         refresh = getattr(self.preview3d_widget, "refresh_language", None)
         if refresh is not None:
             refresh()
@@ -350,6 +482,10 @@ class ConfigBuilderPage(SetupMixin, MaterialsMixin, GeometryMixin, LayersMixin, 
         self._update_material_count_label()
         self._update_hierarchical_count_labels()
         self._update_workspace_summary()
+
+    def closeEvent(self, event) -> None:
+        self.clear_diagnostic_navigation()
+        super().closeEvent(event)
 
     def _messages_text(self, errors: list[str], warnings: list[str]) -> str:
         lines: list[str] = []

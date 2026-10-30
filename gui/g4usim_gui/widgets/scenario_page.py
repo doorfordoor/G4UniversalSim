@@ -19,6 +19,7 @@ from PySide6.QtWidgets import (
     QCheckBox,
     QComboBox,
     QFileDialog,
+    QFrame,
     QFormLayout,
     QGroupBox,
     QHBoxLayout,
@@ -27,6 +28,7 @@ from PySide6.QtWidgets import (
     QLineEdit,
     QPlainTextEdit,
     QPushButton,
+    QScrollArea,
     QSplitter,
     QTableWidget,
     QTableWidgetItem,
@@ -37,6 +39,8 @@ from PySide6.QtWidgets import (
 from g4usim_gui.core import scenario_shielding as shielding
 from g4usim_gui.core.i18n import ui_format, ui_text
 from g4usim_gui.core.install_layout import default_runs_root
+from g4usim_gui.widgets.diagnostic_panel import DiagnosticPanel
+from g4usim_gui.widgets.form_diagnostics import FormDiagnosticController
 
 _COLUMNS = ("Group", "Label", "Value", "Unit", "Evidence")
 _MAX_LOG_LINES = 5000
@@ -74,6 +78,7 @@ class ScenarioPage(QWidget):
 
         self.basic_group = QGroupBox()
         self.basic_form = QFormLayout(self.basic_group)
+        self.basic_form.setRowWrapPolicy(QFormLayout.WrapLongRows)
         for field in shielding.visible_fields():
             self._add_field(self.basic_form, field)
 
@@ -81,6 +86,7 @@ class ScenarioPage(QWidget):
         self.advanced_check.toggled.connect(self._toggle_advanced)
         self.advanced_group = QGroupBox()
         self.advanced_form = QFormLayout(self.advanced_group)
+        self.advanced_form.setRowWrapPolicy(QFormLayout.WrapLongRows)
         for field in shielding.visible_fields(advanced=True):
             self._add_field(self.advanced_form, field)
         self.advanced_group.setVisible(False)
@@ -161,12 +167,25 @@ class ScenarioPage(QWidget):
         left_layout.addLayout(buttons)
         left_layout.addWidget(self.status_label)
         left_layout.addWidget(self.problems_view)
+        self.diagnostics_panel = DiagnosticPanel(self)
+        self.diagnostics_panel.hide()
+        left_layout.addWidget(self.diagnostics_panel)
         left_layout.addStretch(1)
 
+        self.input_scroll = QScrollArea(self)
+        self.input_scroll.setObjectName("scenarioInputScroll")
+        self.input_scroll.setFrameShape(QFrame.NoFrame)
+        self.input_scroll.setWidgetResizable(True)
+        self.input_scroll.setWidget(left)
         main = QHBoxLayout(self)
-        main.addWidget(left, 1)
+        main.addWidget(self.input_scroll, 1)
         main.addWidget(results_split, 2)
 
+        self.diagnostic_controller = FormDiagnosticController(
+            self, self.diagnostics_panel, 'scenario', self._fields, self.values,
+            reveal=self._reveal_diagnostic_field,
+            revealable_ancestors=lambda _widget: (self.advanced_group,))
+        self.diagnostics_panel.revalidateRequested.connect(self.validate_form)
         self.refresh_language()
         self._parse_problems = []
         self.status_label.setText(ui_text("Not run yet."))
@@ -236,12 +255,21 @@ class ScenarioPage(QWidget):
     # --------------------------------------------------------------------- validation
 
     def validate_form(self, *, update_ui: bool = True) -> list[str]:
-        problems = shielding.validate_values(self.values())
+        records = shielding.validate_value_records(self.values())
+        problems = [message for _field, _code, message in records]
         if update_ui:
+            report = shielding.validate_value_report(self.values())
+            self.diagnostic_controller.set_report(report)
+            self.diagnostics_panel.setVisible(bool(report.diagnostics))
             self._show_problems(problems)
             self.status_label.setText(
                 ui_text("The form is valid.") if not problems else ui_text("Fix the validation messages first."))
         return problems
+
+    def _reveal_diagnostic_field(self, widget: QWidget) -> bool:
+        if self.advanced_group.isAncestorOf(widget):
+            self.advanced_check.setChecked(True)
+        return True
 
     def _show_problems(self, problems: list[str]) -> None:
         self._parse_problems = list(problems)
@@ -453,6 +481,7 @@ class ScenarioPage(QWidget):
         self.run_button.setText(ui_text("Run scenario"))
         self.stop_button.setText(ui_text("Stop"))
         self.problems_view.setPlaceholderText(ui_text("Validation messages"))
+        self.diagnostics_panel.refresh_language()
         self.evidence_view.setPlaceholderText(ui_text("Evidence and warnings"))
         self._results_label.setText(ui_text("Results"))
         self._evidence_label.setText(ui_text("Evidence and warnings"))
