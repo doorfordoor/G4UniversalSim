@@ -33,4 +33,6 @@ Linux八份报告git_dirty=true、M0四份false，原值保留。已安装依赖
 
 ## 集成记录
 
-当前：阶段实现和约定验收通过，归档发布完成；codex正常快进及最终Git字节核对尚待同日追加实际结果。下一完整代号F5，未启动。
+关闭提交`20f8562d9787234fece40f2a82bc08f3c1284e3f`已从`0456253`正常快进至codex并推送；记录时本地两工作树与两远端分支均为该提交，工作树干净。原D分支仍为roadmap/F6-live-progress、HEAD5465dbd，未修改。见[实际集成收据](../../verification/f4-close-20261030/integration.json)。本回信随后仅追加事实记录，不改变已验产品及测试指纹。
+
+发布后[独立索引审查](../../verification/f4-close-20261030/f4-final-postpublication-index-review.md)确认固定2561路径中的2548份证据raw blob全部一致。随后新增测试平台状态说明和两份独审原件；原2561 blob保持不变，最终2564路径增量已核对。文档链接514条/198文件无断链；原证据CRLF/尾空格按原字节保存。完整阶段关闭，下一完整代号F5，未启动。
