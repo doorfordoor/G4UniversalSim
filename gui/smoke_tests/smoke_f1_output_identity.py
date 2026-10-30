@@ -1,4 +1,5 @@
 """F1 strict identity and automatic-consumer regression."""
+from async_wait import wait_for_idle
 from pathlib import Path
 import sys, json, tempfile, shutil, os, subprocess
 ROOT=Path(__file__).resolve().parents[2]
@@ -47,6 +48,7 @@ def main():
     app = QApplication.instance() or QApplication([])
     with tempfile.TemporaryDirectory() as temp:
         root=Path(temp)/'out';doc=upgrade(root)
+        doc['values']={'output_format_requested':'auto','output_format':'root','output_format_selection_reason':'auto_enabled_scoring_with_hits_or_event_edep'}
         doc['runs'].append({'run_id':1,'completed_events':1})
         for prefix in ('effective_config_run_', 'effective_config_final_r'):
             for thread in (0, 1, -1, -2):
@@ -77,9 +79,13 @@ def main():
         shutil.rmtree(root);assert output_evidence(moved).status=='verified'
         root=moved
         page=OutputPage();page.set_workspace_root(str(ROOT));page.set_output_dir(str(root))
+        wait_for_idle(page)
         assert 'identity_status = verified' in page.summary_text.toPlainText()
         panel=page.identity_panel
         assert panel.build.topLevelItemCount() >= 8 and panel.inputs.topLevelItemCount()==2
+        decisions={panel.build.topLevelItem(i).text(0):panel.build.topLevelItem(i).text(1) for i in range(panel.build.topLevelItemCount())}
+        assert decisions['Requested output format']=='auto' and decisions['Actual output format']=='root'
+        assert decisions['Format selection reason']=='auto_enabled_scoring_with_hits_or_event_edep'
         assert panel.outputs.topLevelItemCount()==len(doc['generated_files'])
         assert panel.raw.isHidden()
         from g4usim_gui.core.i18n import set_application_language
@@ -91,6 +97,7 @@ def main():
         from g4usim_gui.widgets.run_history_page import RunHistoryPage
         from PySide6.QtWidgets import QTableWidgetItem
         history=RunHistoryPage();history._filtered=[entry];history.table.setRowCount(1);history.table.setItem(0,0,QTableWidgetItem('test'));history.table.setCurrentCell(0,0);history._show_selected()
+        wait_for_idle(history)
         assert 'failed' in history.identity_panel.run_label.text() or '失败' in history.identity_panel.run_label.text()
         assert history.identity_panel.outputs.topLevelItemCount()==len(doc['generated_files'])
         history.close();history.deleteLater();app.processEvents()
@@ -102,7 +109,7 @@ def main():
         runner=MergeRunner();runner._process=probe=StartProbe();errors=[]
         runner.errorOccurred.connect(errors.append);runner.run_task(task,Path(temp)/"logs")
         assert errors and probe.starts==0 and "bytes mismatch" in errors[0]
-        page.refresh();assert "identity_status = tampered" in page.summary_text.toPlainText()
+        page.refresh();wait_for_idle(page);assert "identity_status = tampered" in page.summary_text.toPlainText()
         assert not page.plot_panel.datasets()
         assert panel.build.topLevelItemCount()==panel.inputs.topLevelItemCount()==panel.outputs.topLevelItemCount()==0
         assert panel.raw.toPlainText()==""
@@ -140,6 +147,12 @@ def main():
         del doc['provenance'];doc['generated_files']=[{'path':row['path'],'schema':row['schema']} for row in doc['generated_files']];publish(root,doc)
         assert output_evidence(root).status=='registered_manifest'
         assert output_evidence(root).warnings
+        doc['values']={};publish(root,doc)
+        from g4usim_gui.widgets.output_identity_panel import OutputIdentityPanel
+        legacy_panel=OutputIdentityPanel();legacy_panel.set_evidence(output_evidence(root))
+        labels={legacy_panel.build.topLevelItem(i).text(0) for i in range(legacy_panel.build.topLevelItemCount())}
+        assert not {'Requested output format','Actual output format','Format selection reason'} & labels
+        legacy_panel.close();legacy_panel.deleteLater();app.processEvents()
     print('F1 identity consumers passed')
 
 if __name__=='__main__':main()

@@ -41,9 +41,11 @@ def run(args):
               "executables": [{"label": label, "path": str(path), "sha256": digest(path)}
                               for label, path in executables], "samples": []}
     counts = {"hits": args.events, "events": args.events * 5, "mesh": args.events}
+    workloads = args.workload or list(counts)
+    formats = args.format or ["csv", "root", "both"]
     for repeat in range(args.rounds):
-        for workload in ("hits", "events", "mesh"):
-            for fmt in ("csv", "root", "both"):
+        for workload in workloads:
+            for fmt in formats:
                 # Alternate the pair order to reduce systematic warm-cache/order bias.
                 order = executables if repeat % 2 == 0 else executables[::-1]
                 for label, executable in order:
@@ -114,8 +116,8 @@ auto_create_default_scorers = true
                     print(f"{name}: {elapsed:.3f}s, {sample['registered_bytes']} bytes", flush=True)
     result["medians"] = []
     for label, _ in executables:
-        for workload in counts:
-            for fmt in ("csv", "root", "both"):
+        for workload in workloads:
+            for fmt in formats:
                 rows = [s for s in result["samples"] if (s["label"], s["workload"], s["format"]) == (label, workload, fmt)]
                 result["medians"].append({"label": label, "workload": workload, "format": fmt,
                     **{key: statistics.median(s[key] for s in rows)
@@ -129,6 +131,8 @@ if __name__ == "__main__":
     parser.add_argument("--output", type=Path, required=True, help="new measurement directory")
     parser.add_argument("--rounds", type=int, default=3)
     parser.add_argument("--events", type=int, default=4000)
+    parser.add_argument("--workload", action="append", choices=("hits", "events", "mesh"))
+    parser.add_argument("--format", action="append", choices=("csv", "root", "both"))
     arguments = parser.parse_args()
     assert arguments.rounds > 0 and arguments.events > 0
     run(arguments)

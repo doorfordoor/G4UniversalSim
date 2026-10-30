@@ -17,6 +17,10 @@ class RunHistoryEntry:
     config_path: str = ""
     macro_path: str = ""
     output_dir: str = ""
+    recorded_output_dir: str = ""
+    recorded_config_path: str = ""
+    recorded_macro_path: str = ""
+    identity_warnings: list[str] = field(default_factory=list)
     threads: int | None = None
     seed: int | None = None
     beam_on: int | None = None

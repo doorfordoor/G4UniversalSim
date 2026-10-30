@@ -25,6 +25,13 @@ from g4usim_gui.core.config_schema import check_value, quantity, section_spec, s
 
 
 def check_api() -> None:
+    output_format = spec("output", "format")
+    assert output_format.type == "enum" and output_format.default == "csv"
+    assert output_format.data["allowed"] == ["csv", "root", "both", "auto"]
+    assert output_format.data["value_aliases"] == {"csv+root": "both", "root+csv": "both"}
+    for mode in ("csv", "root", "both", "auto", "AUTO", "csv+root", "root+csv", ""):
+        assert check_value("output", "format", mode) is None, mode
+    assert check_value("output", "format", "automatic") is not None
     assert spec("source.Alpha", "intensity").type == "number"
     assert spec("source.a.b", "intensity") is None
     assert spec("physics.region.Sensor", "max_time").type == "time"

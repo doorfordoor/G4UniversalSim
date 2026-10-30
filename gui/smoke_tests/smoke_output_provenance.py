@@ -1,4 +1,5 @@
 """R27: GUI sources, stale inputs, errors and merge plan use the common manifest."""
+from async_wait import wait_for_idle
 from pathlib import Path
 import json
 import os
@@ -71,6 +72,7 @@ def main():
         root=Path(temp)/"results";fixture(root)
         shutil.copyfile(root/"event_edep_t0.csv",root/"event_edep_t9.csv")
         page=OutputPage();page.set_workspace_root(str(ROOT));page.set_output_dir(str(root))
+        wait_for_idle(page)
         assert len(page.plot_panel.datasets())==1
         pulse=page.plot_panel.datasets()[0]
         assert any(a.get("events")==1 for _,a in plot_data.build_plot(root,pulse).notes)
@@ -81,11 +83,13 @@ def main():
         runner.run_task(task,Path(temp)/"logs")
         assert errors and "registered file is missing" in errors[0] and not runner.is_running()
         page.refresh()
+        wait_for_idle(page)
         assert not page.plot_panel.datasets()
         assert "registered file is missing" in page.plot_panel.message.text()
         assert not any(t.available for t in page._merge_plan.tasks)
         (root/"run_metadata.json").write_text("broken")
         page.refresh()
+        wait_for_idle(page)
         assert "Invalid output provenance" in page.plot_panel.message.text()
         page.close()
     print("smoke_output_provenance: OK")

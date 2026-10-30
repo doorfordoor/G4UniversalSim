@@ -140,7 +140,8 @@ def main() -> int:
         caps = json.loads(subprocess.run([str(EXE), "--capabilities"], capture_output=True, text=True,
                                          check=True, cwd=EXE.parent).stdout)
         outputs = caps["outputs"]
-        assert outputs["formats"] == ["csv", "root", "both"], outputs
+        assert outputs["formats"] == ["csv", "root", "both", "auto"], outputs
+        assert outputs["default_format"] == "csv", outputs
         assert outputs["root"]["thread_merge"] is True and outputs["root"]["schema_version"] == 4, outputs
         print("capabilities: ok")
     finally:

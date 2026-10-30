@@ -6,6 +6,7 @@
 #include "Output/OutputRecord.hh"
 #include "Output/RunSummary.hh"
 
+#include <functional>
 #include <map>
 #include <memory>
 #include <mutex>
@@ -19,7 +20,8 @@ public:
     enum class Format {
         Csv,
         Root,
-        Both
+        Both,
+        Auto
     };
     static Format ParseFormat(const std::string& value);
     static const char* FormatName(Format format);
@@ -54,6 +56,10 @@ public:
 
     void SetFormat(Format format);
     Format GetFormat() const;
+    Format GetRequestedFormat() const;
+    // Root binds immutable scoring configuration; clones only read it.
+    void SetAutoFormatSelector(std::function<bool()> selector);
+    std::string FormatSelectionReason() const;
     bool WritesCsv() const;
     bool WritesRoot() const;
     // ROOT file for the current run: g4usim.root (run 0) or g4usim_rN.root.
@@ -146,7 +152,9 @@ private:
     int threadId_ = 0;
     int runId_ = -1;
     bool threadSuffixEnabled_ = true;
-    Format format_ = Format::Csv;
+    Format format_ = Format::Csv; // requested policy; GetFormat returns its resolution
+    bool formatExplicit_ = false;
+    std::function<bool()> autoFormatSelector_;
     // True once Initialize() has created the output directory; current file-open state is HasOpenFiles().
     bool initialized_ = false;
     // Shared by master and worker clones. Only finalized output files enter the manifest.

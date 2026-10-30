@@ -1,4 +1,5 @@
 """Regression for Q1 project, results, asynchronous preview and owned process shutdown."""
+from async_wait import wait_for_idle
 from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import patch
@@ -79,10 +80,12 @@ def main():
         (stale_dir / "hist_edep_raw_t0.csv").write_text("bin_low,bin_high,count\n0,1,1\n", encoding="utf-8")
         page.set_workspace_root(str(ROOT), str(backend))
         page.set_output_dir(str(stale_dir))
+        wait_for_idle(page)
         task = next(t for t in page._merge_plan.tasks if t.kind == "hist_raw")
         assert task.available and task.command_program == str(merge)
         assert "OLD_RUN" in page.summary_text.toPlainText()
         page.set_output_dir(str(work / "missing-results"))
+        wait_for_idle(page)
         facts["old_summary_after_missing_results_switch"] = "OLD_RUN" in page.summary_text.toPlainText()
         assert not facts["old_summary_after_missing_results_switch"]
         page.close();page.deleteLater()

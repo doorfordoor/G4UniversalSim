@@ -1,6 +1,7 @@
 """Exercise the real M5 CLI via the asynchronous Results-page QProcess."""
 
 from __future__ import annotations
+from async_wait import wait_for_idle
 
 import json
 import math
@@ -56,6 +57,7 @@ def main() -> None:
         assert not page.export_dose_button.isEnabled()
         assert not page.run_output_extension("dose_json", str(root / "empty.json"))
         page.set_output_dir(str(out))
+        wait_for_idle(page)
         assert page.export_dose_button.isEnabled()
         assert page.export_fluence_button.isEnabled()
         assert not page.cancel_extension_button.isEnabled()
@@ -65,6 +67,7 @@ def main() -> None:
         assert not page.export_dose_button.isEnabled()
         assert not page.run_output_extension("fluence_json", str(out / "concurrent.json"))
         assert wait_for_completion(app, page, 1, completed)[2] is True, completed
+        wait_for_idle(page)
         dose = json.loads(dose_json.read_text(encoding="utf-8"))
         assert dose["extension_id"] == "dose_json"
         assert dose["data"]["physical_validation"] == "not_established"
@@ -75,6 +78,7 @@ def main() -> None:
         fluence_json = out / "fluence.json"
         assert page.run_output_extension("fluence_json", str(fluence_json))
         assert wait_for_completion(app, page, 2, completed)[2] is True, completed
+        wait_for_idle(page)
         fluence = json.loads(fluence_json.read_text(encoding="utf-8"))
         assert fluence["extension_id"] == "fluence_json"
         assert len(fluence["data"]["volumes"]) == 1
@@ -95,9 +99,11 @@ def main() -> None:
         empty = root / "empty"
         empty.mkdir()
         page.set_output_dir(str(empty))
+        wait_for_idle(page)
         target = empty / "missing_data.json"
         assert page.run_output_extension("fluence_json", str(target))
         assert wait_for_completion(app, page, 3, completed)[2] is False
+        wait_for_idle(page)
         assert not target.exists()
         assert "No valid fluence" in page.extension_log.toPlainText()
         assert "Failed" in page.extension_status.text()
@@ -107,8 +113,10 @@ def main() -> None:
         assert not page.run_output_extension("dose_json", str(root / "missing" / "invalid.json"))
         assert not page.run_output_extension("dose_json", str(empty / "wrong.txt"))
         page.set_output_dir(str(root / "no_such_output"))
+        wait_for_idle(page)
         assert not page.run_output_extension("dose_json", str(root / "invalid.json"))
         page.set_output_dir(str(out))
+        wait_for_idle(page)
 
         # Actual QProcess cancellation of a long-running child.
         sleepy = root / "slow_extension.py"

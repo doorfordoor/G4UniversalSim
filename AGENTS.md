@@ -4,6 +4,8 @@
 
 ## 0. 条目索引与历史全文
 
+- 2026-10-30 F1候选：来源扩展严格区分读取/接受/运行/字节一致；不得重读源文件伪造历史hash。产物显式scope，metadata唯一自排除，新协议缺损不得降级；auto仅显式选择、默认CSV不变。GUI每次新动作后台重验，搬移锚定当前根。完整契约及候选验收边界见 `docs/agent-history.md` 同日F1条目与 `docs/输出身份与来源.md`。
+
 - 2026-10-30 E6阶段关闭：实现a779634的自动矩阵与12状态实窗补验通过；合成Inspect命令检查、真实运行与原生截图观察分开计证，旧自动归档pending不得追改。完整范围与首个GUI host退出码unknown边界见 `docs/agent-history.md` 同日“E6 实窗补验与阶段关闭”及 `docs/verification/e6-visible-20261030/README.md`。
 
 - 2026-10-30 E6候选：主INI版本标记与独立几何版本严格分开，版本拒绝须保持旧reader；迁移副本源SHA复核/exclusive发布，发布后清理失败仅warning；旧项目已知兼容、未知/类型冲突拒绝；schema394项，GUI编辑范围不扩。改动前读 `docs/agent-history.md` 同日E6条目与 `docs/配置兼容与迁移.md`，阶段证据以STATUS/ROADMAP为准。

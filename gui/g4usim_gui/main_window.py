@@ -148,6 +148,10 @@ class MainWindow(ShellMixin, ProjectMixin, RunMixin, ContentMixin, QMainWindow):
             event.ignore()
             self._closing = False
             return
+        # QWidget ancestor close hides embedded pages without invoking each
+        # page.closeEvent. Close their jobs only after the ignore branch above.
+        from g4usim_gui.core.evidence_job import close_evidence_jobs
+        close_evidence_jobs(self)
         state = load_state()
         state["lastWorkspaceRoot"] = self.project.workspaceRoot
         state["lastRunsRoot"] = self.project.runsRoot

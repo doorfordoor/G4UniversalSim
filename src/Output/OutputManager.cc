@@ -68,6 +68,8 @@ std::unique_ptr<OutputManager> OutputManager::CloneForThread(int threadId) const
     clone->runId_ = runId_;
     clone->threadSuffixEnabled_ = threadSuffixEnabled_;
     clone->format_ = format_;
+    clone->formatExplicit_ = formatExplicit_;
+    clone->autoFormatSelector_ = autoFormatSelector_;
     clone->runSummary_ = runSummary_;
     clone->generatedFiles_ = generatedFiles_;
     clone->effectiveState_ = effectiveState_->Clone();
@@ -140,7 +142,8 @@ OutputManager::Format OutputManager::ParseFormat(const std::string& value)
     if (normalized == "csv") return Format::Csv;
     if (normalized == "root") return Format::Root;
     if (normalized == "both" || normalized == "csv+root" || normalized == "root+csv") return Format::Both;
-    throw std::runtime_error("Unknown output format '" + value + "'; expected csv, root or both");
+    if (normalized == "auto") return Format::Auto;
+    throw std::runtime_error("Unknown output format '" + value + "'; expected csv, root, both or auto");
 }
 
 const char* OutputManager::FormatName(Format format)
@@ -149,6 +152,7 @@ const char* OutputManager::FormatName(Format format)
     case Format::Csv: return "csv";
     case Format::Root: return "root";
     case Format::Both: return "both";
+    case Format::Auto: return "auto";
     }
     return "csv";
 }
@@ -158,22 +162,57 @@ void OutputManager::SetFormat(Format format)
     if (HasOpenFiles() || AnalysisOutput::IsOpen()) {
         throw std::runtime_error("Output format cannot change while output files are open");
     }
+    if (format != Format::Csv && format != Format::Root && format != Format::Both && format != Format::Auto)
+        throw std::invalid_argument("Unsupported output format enum");
+    if (format == Format::Auto) {
+        if (!autoFormatSelector_) throw std::runtime_error("Auto output format requires an explicit scoring selector");
+        (void)autoFormatSelector_(); // Validate before publishing the new request.
+    }
     format_ = format;
+    formatExplicit_ = true;
 }
 
-OutputManager::Format OutputManager::GetFormat() const
+OutputManager::Format OutputManager::GetRequestedFormat() const
 {
     return format_;
 }
 
+void OutputManager::SetAutoFormatSelector(std::function<bool()> selector)
+{
+    if (HasOpenFiles() || AnalysisOutput::IsOpen())
+        throw std::runtime_error("Auto format selector cannot change while output files are open");
+    if (format_ == Format::Auto) {
+        if (!selector) throw std::runtime_error("Cannot remove the selector of an active auto format request");
+        (void)selector();
+    }
+    autoFormatSelector_ = std::move(selector);
+}
+
+OutputManager::Format OutputManager::GetFormat() const
+{
+    if (format_ != Format::Auto) return format_;
+    if (!autoFormatSelector_) throw std::runtime_error("Auto output format requires an explicit scoring selector");
+    return autoFormatSelector_() ? Format::Root : Format::Csv;
+}
+
+std::string OutputManager::FormatSelectionReason() const
+{
+    if (format_ == Format::Auto) return GetFormat() == Format::Root
+        ? "auto_enabled_scoring_with_hits_or_event_edep"
+        : "auto_no_enabled_hit_or_event_edep_output";
+    return !formatExplicit_ ? "default_csv" : std::string("explicit_") + FormatName(format_);
+}
+
 bool OutputManager::WritesCsv() const
 {
-    return format_ == Format::Csv || format_ == Format::Both;
+    const auto actual = GetFormat();
+    return actual == Format::Csv || actual == Format::Both;
 }
 
 bool OutputManager::WritesRoot() const
 {
-    return format_ == Format::Root || format_ == Format::Both;
+    const auto actual = GetFormat();
+    return actual == Format::Root || actual == Format::Both;
 }
 
 std::string OutputManager::RootFilename() const

@@ -3,6 +3,9 @@ from __future__ import annotations
 import hashlib
 import re
 from pathlib import Path
+from contextvars import ContextVar
+
+cancelled = ContextVar("g4usim_hash_cancelled", default=lambda: False)
 
 
 def strict_object(pairs):
@@ -19,6 +22,8 @@ def hash_file(path: Path) -> tuple[str, int]:
     size = 0
     with path.open('rb') as handle:
         for chunk in iter(lambda: handle.read(1024 * 1024), b''):
+            if cancelled.get()():
+                raise ValueError('Output verification cancelled')
             digest.update(chunk)
             size += len(chunk)
     return digest.hexdigest(), size
@@ -78,6 +83,8 @@ def validate_extension(document: dict, files: list[Path], root: Path, run_ids: s
             require((thread is None) if scope == 'run' else (type(thread) is int and thread >= 0), 'invalid thread scope')
         else:
             require(False, 'invalid artifact scope')
+        if local.name in {'run_summary.txt','effective_config_configure.json','effective_config_finalization.json'}:
+            require(scope == 'process' and run is None and thread is None, 'process artifact scope conflicts with its role')
         effective = re.fullmatch(r'effective_config_(?:run_|final_r)(\d+)_t(-?\d+)\.json', local.name)
         if effective:
             named_run, named_thread = map(int, effective.groups())

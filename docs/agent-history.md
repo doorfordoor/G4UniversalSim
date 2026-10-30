@@ -437,3 +437,17 @@ Geant4 `ApplyCommand()` 返回 0 不足以确认命令成功；沿用材料命�
 用户解锁后，在838e2e3文档检出上执行a779634同产品/测试：Windows原生12个状态、20张截图由主审实际查看；迁移取消/新副本/拒绝、当前包snapshot恢复与再生成、六组合法duplicate最终命令及1025拒绝，另有真实Inspect→Run的1轮2线程2/2事件。合成Inspect/截获命令仅验证命令构造，独立真实运行另有正常退出0、GUI success、新摘要和metadata。普通Open/Recent/Snapshot越界及普通Open拒绝包envelope的四个真实模态均拒绝并保持完整状态；Open为critical、Recent/Snapshot为warning。主审原生输入负责取消及切换/关闭，其他步骤为程序化Qt，不冒称真人点击。
 
 独立155项证据检查通过，58原资源/13专项源码/完整双指纹/exe身份不变；135份新证据4749003字节逐一SHA核对，旧2711原件及旧README/manifest保持。首个GUI host因一次性launcher未保留退出码记unknown，仅closed+进程消失；补充GUI host执行会话与app.exec均0，不能追改前者。不同写者检查及实际窗口观察共同支持阶段关闭，不新增Q2物理、J2编辑、K1任意资源导出或全DPI/原生Linux桌面承诺。见[E6最终报告](verification/e6-visible-20261030/README.md)；合入事实以机器状态与集成收据为准。
+
+## 2026-10-30 F1 输出身份与来源候选
+
+来源首提交5373d57；本条记录新接口约束，最终阶段状态由STATUS/ROADMAP及新归档决定，不能用定向回归冒充完整验收。
+
+- InputProvenance以实际读缓冲/流记录连续追加序列、kind/role/method与SHA，不在最终化重读源路径。完整读取但解析拒绝仍是读取事实；unknown为null并写原因。覆盖项目读取器，不承诺Geant4内部数据集和任意原生IO。GDML为实际Xerces依赖，STL多次读取保留各自版本，RNG恢复验证先登记已读完整快照，再尝试语义接受。
+- OutputManager共享execution_id和显式scope/run/thread登记。关闭后流式hash；登记文件缺失不可静默删除，锁存artifact_integrity并非零失败。文本摘要单独hash，metadata最后写且唯一self_reference_excluded。继续保留R02的metadata失败首因及failed文本收尾。
+- build.git_source_state的clean只比较实际C++构建输入raw blob与HEAD，不是整个工作区clean。assume-unchanged/ignored实际源码必须检查，Git不可用/源码归档是unknown。cmake模块属于源码指纹；HEAD/ref/index变化更新下一构建的commit。
+- 消费者新扩展严格类型/重复key/schema/身份与SHA校验，缺损不能降级glob。旧v1仍可读但说明未验证。当前根映射是唯一自动消费位置，不要求源路径仍存在，额外未登记文件不加入本轮身份集合。运行结果与字节身份分开。
+- GUI后台SHA及历史扫描通过请求序号、取消事件和Qt回传丢弃过期结果；一次操作可复用同一证据，下一独立动作仍fresh SHA，合并执行前强制fresh。主窗口接受关闭也要取消嵌入页任务，ignore关闭不能使页面失效。大数据解析/Matplotlib绘图不因这项改动自动宣称后台执行。
+- auto仅显式请求；scoring.enabled且(hits或event_edep)选择ROOT，其余CSV，省略字段仍CSV，不修改计分开关。requested/resolved及选择原因分别记录；PreInit依赖调整保留原策略来源，初始化后拒绝。54次格式及18次缓冲对照未证明256KiB缓冲稳定收益，候选已撤回。
+- 定向回归入口test_build_identity、test_f1_input_provenance、test_f1_input_resources_backend、test_f1_output_identity、test_output_auto、smoke_f1_output_identity、smoke_f1_async_identity；既有run_summary/ROOT/GDML/RNG/后处理全量仍须通过。真实窗口与合成夹具、历史性能与最终冻结版本分别计证。
+
+详细接口：[输出身份与来源](输出身份与来源.md)，决策：[F1格式与缓冲](collab/inbox/20261030-1500-astra-f1-format-decision.md)。

@@ -68,7 +68,7 @@ class MergeRunner(QObject):
         self._current = self._queue.pop(0)
         if self._current.automatic_inputs:
             try:
-                evidence = output_evidence(self._current.input_dir)
+                evidence = output_evidence(self._current.input_dir, fresh=True)
                 if (evidence.status != self._current.provenance_status or
                         evidence.manifest_digest != self._current.manifest_digest):
                     raise ValueError("Output provenance changed after the merge plan was created; refresh the plan.")

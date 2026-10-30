@@ -721,6 +721,8 @@ bool SimulationManager::FinalizeRunSummary(const std::string& status,
                 (workersValidated ? "validated" : "failed"));
     summary.SetPath("actual_output_dir", outputManager_->GetOutputDir());
     summary.Set("output_format", OutputManager::FormatName(outputManager_->GetFormat()));
+    summary.Set("output_format_requested", OutputManager::FormatName(outputManager_->GetRequestedFormat()));
+    summary.Set("output_format_selection_reason", outputManager_->FormatSelectionReason());
     summary.Set("scoring_mesh_ini_command_count", static_cast<int>(scoringMeshCommands_.size()));
     summary.Set("output_root_schema_version",
                 outputManager_->WritesRoot() ? std::to_string(AnalysisOutput::kRootSchemaVersion) : "not_applicable");
@@ -1322,7 +1324,15 @@ void SimulationManager::EnsureConfigManager()
 
 void SimulationManager::EnsureOutputManager()
 {
-    if (!outputManager_) outputManager_ = std::make_unique<OutputManager>();
+    if (!outputManager_) {
+        outputManager_ = std::make_unique<OutputManager>();
+        // Format selection only observes final scoring flags. The selector is
+        // shared by workers, whose configuration is frozen before Initialize.
+        outputManager_->SetAutoFormatSelector([this]() {
+            return scoringManager_ && scoringManager_->IsEnabled() &&
+                (scoringManager_->IsHitOutputEnabled() || scoringManager_->IsEventEdepOutputEnabled());
+        });
+    }
 }
 
 void SimulationManager::EnsureMaterialManager()

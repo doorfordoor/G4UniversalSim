@@ -21,7 +21,7 @@ Values are run totals; normalization="per_event" divides them by the run's compl
 
 from __future__ import annotations
 
-from .provenance import output_evidence, output_files
+from .provenance import output_evidence, output_files, verified_operation
 
 import csv
 import json
@@ -89,11 +89,13 @@ def _worker_files(output: Path, stem: str, run_id: int) -> list[Path]:
     return sorted(p for p in output_files(output, f"{stem}_t*.csv") if pattern.fullmatch(p.name))
 
 
+@verified_operation
 def metadata_values(output: Path) -> dict[str, str]:
     evidence = output_evidence(output)
     return {str(k): str(v) for k, v in (evidence.document or {}).get("values", {}).items()}
 
 
+@verified_operation
 def discover(output_dir: str | Path) -> list[DataSet]:
     output = Path(output_dir)
     if not output.is_dir():
@@ -165,6 +167,7 @@ def uncertainty(row: dict[str, str]) -> tuple[str, str]:
     return row.get("uncertainty_estimator", method), "approximate"
 
 
+@verified_operation
 def statistic_uncertainty(output_dir: str | Path, metric: tuple[str, str, str]) -> tuple[str, str]:
     path = Path(output_dir) / "scorer_statistics.csv"
     if path in output_evidence(output_dir).files:
@@ -174,6 +177,7 @@ def statistic_uncertainty(output_dir: str | Path, metric: tuple[str, str, str]) 
     return "unknown", "insufficient_events"
 
 
+@verified_operation
 def scorer_plot(output_dir: str | Path, dataset: DataSet) -> Plot:
     output = Path(output_dir)
     name = "scorer_statistics.csv" if dataset.run_id == 0 else f"scorer_statistics_r{dataset.run_id}.csv"
@@ -210,6 +214,7 @@ class MeshData:
     coordinate_unit: str = "bin" # "mm" when the centres are positions
 
 
+@verified_operation
 def load_mesh(output_dir: str | Path, dataset: DataSet) -> MeshData:
     output = Path(output_dir)
     mesh, quantity, source = dataset.detail
@@ -294,6 +299,7 @@ def mesh_map(data: MeshData, axis_x: int, axis_y: int) -> Plot:
     return plot
 
 
+@verified_operation
 def edep_plot(output_dir: str | Path, dataset: DataSet) -> Plot:
     output = Path(output_dir)
     stem = dataset.detail[0]
@@ -316,6 +322,7 @@ def edep_plot(output_dir: str | Path, dataset: DataSet) -> Plot:
     return plot
 
 
+@verified_operation
 def pulse_plot(output_dir: str | Path, dataset: DataSet, bins: int = 200, top: float | None = None) -> Plot:
     output = Path(output_dir)
     values = []
@@ -340,6 +347,7 @@ def pulse_plot(output_dir: str | Path, dataset: DataSet, bins: int = 200, top: f
     return plot
 
 
+@verified_operation
 def phase_plot(output_dir: str | Path, dataset: DataSet, per_decade: int = 10) -> Plot:
     output = Path(output_dir)
     energies: dict[str, list[tuple[float, float]]] = {}
@@ -362,6 +370,7 @@ def phase_plot(output_dir: str | Path, dataset: DataSet, per_decade: int = 10) -
     return plot
 
 
+@verified_operation
 def run_events(output_dir: str | Path, run_id: int) -> int | None:
     """Completed events of a run from run_summary.txt (run_<R>_completed_events)."""
     evidence = output_evidence(output_dir)
@@ -380,6 +389,7 @@ def run_events(output_dir: str | Path, run_id: int) -> int | None:
     return None
 
 
+@verified_operation
 def build_plot(output_dir: str | Path, dataset: DataSet, per_primary: bool | None = None,
                *, normalization: str | None = None, **options) -> Plot:
     """Normalize by completed events, never by an assumed primary-particle count.

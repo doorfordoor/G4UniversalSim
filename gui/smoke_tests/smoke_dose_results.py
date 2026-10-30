@@ -1,6 +1,7 @@
 """Dose CSV aggregation and Results-page smoke with isolated worker fixtures."""
 
 from __future__ import annotations
+from async_wait import wait_for_idle
 
 import csv
 import math
@@ -80,6 +81,7 @@ def main() -> None:
 
         page = OutputPage()
         page.set_output_dir(str(root))
+        wait_for_idle(page)
         assert page.tabs.tabText(2) == "Tables" and page.data_tabs.tabText(1) == "Dose (Gy)"
         assert page.dose_table.rowCount() == 2
         assert float(page.dose_table.item(0, 4).text()) == 314
@@ -87,8 +89,10 @@ def main() -> None:
         assert "Skipped dose_volume_summary_t2.csv" in page.dose_message.toPlainText()
         assert "未证明线程文件完整" in page.dose_message.toPlainText()
         page.set_output_dir(str(root / "missing"))
+        wait_for_idle(page)
         assert page.dose_table.rowCount() == 0
         page.set_output_dir("")
+        wait_for_idle(page)
         assert page.dose_table.rowCount() == 0
         page.close()
     print("smoke_dose_results: ok")

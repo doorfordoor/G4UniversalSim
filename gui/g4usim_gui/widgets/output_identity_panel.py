@@ -6,7 +6,8 @@ from PySide6.QtCore import Qt
 from PySide6.QtGui import QKeySequence
 from PySide6.QtWidgets import QWidget, QLabel, QVBoxLayout, QHBoxLayout, QTreeWidget, QTreeWidgetItem, QTabWidget, QPushButton, QPlainTextEdit, QApplication
 from g4usim_gui.core.i18n import ui_text
-from g4usim_gui.output.provenance import output_evidence
+from g4usim_gui.output.provenance import output_evidence, verification_active, evidence_key
+from g4usim_gui.core.evidence_job import EvidenceJob, verify_roots
 
 
 class IdentityTree(QTreeWidget):
@@ -28,6 +29,7 @@ class IdentityTree(QTreeWidget):
 class OutputIdentityPanel(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
+        self._identity_job=EvidenceJob(self)
         self.run_label=QLabel();self.state_label=QLabel();self.note=QLabel()
         for label in (self.run_label,self.state_label,self.note):
             label.setTextInteractionFlags(Qt.TextSelectableByMouse)
@@ -61,6 +63,7 @@ class OutputIdentityPanel(QWidget):
         if self._evidence is not None:self.set_evidence(self._evidence,self._run)
         else:self.clear(self._run,self._error)
     def clear(self,run_status='unknown',error=''):
+        self._identity_job.cancel()
         self._evidence=None;self._run=run_status;self._error=error
         for tree in (self.build,self.inputs,self.outputs):tree.clear()
         self.raw.clear()
@@ -68,10 +71,20 @@ class OutputIdentityPanel(QWidget):
         state='Bytes differ from recorded hashes' if 'bytes mismatch' in error else 'Identity evidence unavailable'
         self.state_label.setText(ui_text('Output byte identity')+': '+ui_text(state))
         self.note.setText(error or ui_text('Select output evidence to inspect.'))
+    def closeEvent(self,event):
+        self._identity_job.close()
+        super().closeEvent(event)
     def load_directory(self,directory,run_status='unknown'):
-        self.clear(run_status)
-        try:self.set_evidence(output_evidence(directory),run_status)
-        except (ValueError,OSError) as error:self.clear(run_status,str(error))
+        self.clear(run_status,ui_text("Checking output hashes..."))
+        if verification_active():
+            try:self.set_evidence(output_evidence(directory),run_status)
+            except (ValueError,OSError) as error:self.clear(run_status,str(error))
+            return
+        def complete(seeds,error):
+            result=error if error else seeds[evidence_key(directory)]
+            if isinstance(result,Exception):self.clear(run_status,str(result))
+            else:self.set_evidence(result,run_status)
+        self._identity_job.submit(lambda:verify_roots([directory]),complete)
     @staticmethod
     def _row(tree,values):
         row=QTreeWidgetItem([str(x) for x in values])
@@ -83,6 +96,9 @@ class OutputIdentityPanel(QWidget):
         self.state_label.setText(ui_text('Output byte identity')+': '+ui_text('Verified against recorded hashes' if p is not None else 'Legacy: content hashes unavailable'))
         self.note.setText(ui_text('Input rows describe historical bytes read, not current source verification or semantic acceptance.')+' '+ui_text('Hash consistency does not establish authenticated origin or physical correctness.')+' '+ui_text('Metadata excludes its own hash to avoid a circular self-reference. Unregistered extra files are outside this evidence set.'))
         self.raw.setPlainText(json.dumps({'provenance':p,'generated_files':document.get('generated_files',[])},ensure_ascii=False,indent=2))
+        values=document.get('values',{})
+        for key,title in (('output_format_requested','Requested output format'),('output_format','Actual output format'),('output_format_selection_reason','Format selection reason')):
+            if key in values:self._row(self.build,[ui_text(title),values[key],ui_text('Recorded identity')])
         if p is None:
             self._row(self.build,['schema',document.get('schema','legacy'),ui_text('Legacy: content hashes unavailable')])
             for path in evidence.files:self._row(self.outputs,[str(path.relative_to(evidence.root)),'—','—',ui_text('Legacy: content hashes unavailable')])

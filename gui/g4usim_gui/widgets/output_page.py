@@ -43,6 +43,8 @@ else:
 
 
 from .output_identity_panel import OutputIdentityPanel
+from g4usim_gui.core.evidence_job import EvidenceJob, verify_roots
+from g4usim_gui.output.provenance import evidence_operation, verification_active
 
 
 class OutputPage(QWidget):
@@ -50,6 +52,7 @@ class OutputPage(QWidget):
 
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
+        self._identity_job = EvidenceJob(self)
         self._output_dir = ""
         self._package_dir = ""
         self._workspace_root = ""
@@ -275,17 +278,36 @@ class OutputPage(QWidget):
         self.refresh()
 
     def refresh(self) -> None:
+        self._identity_job.cancel()
+        self.identity_panel.clear(error=ui_text("Checking output hashes..."))
+        self.summary_text.clear();self.overview_text.clear();self.preview_text.clear();self.file_tree.clear()
+        self._files=[];self._selected_file=None;self.csv_table.setRowCount(0)
+        self.dose_table.setRowCount(0);self.fluence_table.setRowCount(0)
+        self.dose_message.clear();self.fluence_message.clear()
+        self.merge_table.setRowCount(0);self._merge_plan=MergePlan([])
+        self._update_merge_buttons(False)
+        if self.plot_panel is not None:self.plot_panel.clear_pending()
+        directory=self._output_dir
+        roots=[directory,*(self.plot_panel._comparisons if self.plot_panel is not None else [])]
+        if not directory:
+            self._render_refresh()
+            return
+        def complete(seeds,error):
+            if error:
+                self.identity_panel.clear(error=str(error));return
+            with evidence_operation(seeds):self._render_refresh()
+        self._identity_job.submit(lambda: verify_roots(roots),complete)
+
+    def _render_refresh(self) -> None:
         self.file_tree.clear()
         self.preview_text.clear()
         self._files = []
-        self._update_run_summary()
-        self._update_logs_tab()
-        self.refresh_merge_plan()
         if self.plot_panel is not None:
             self.plot_panel.set_output_dir(self._output_dir if self._output_dir and Path(self._output_dir).is_dir()
                                            else "")
         root_text = self._package_dir or self._output_dir
         if not root_text:
+            self._update_run_summary()
             self._files = []
             self._update_dose_summary()
             self._update_fluence_summary()
@@ -295,6 +317,7 @@ class OutputPage(QWidget):
             return
         root = Path(root_text)
         if not root.exists():
+            self._update_run_summary()
             self._files = []
             self._update_dose_summary()
             self._update_fluence_summary()
@@ -359,10 +382,15 @@ class OutputPage(QWidget):
         self.cancel_extension_button.setEnabled(not idle)
 
     def closeEvent(self, event) -> None:
+        self._identity_job.close()
+        if self.plot_panel is not None:self.plot_panel.close()
         self._extension_runner.shutdown()
         super().closeEvent(event)
 
     def refresh_merge_plan(self) -> None:
+        if not verification_active():
+            self.refresh()
+            return
         if not self._output_dir:
             self._merge_plan = MergePlan([])
         else:

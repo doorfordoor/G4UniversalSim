@@ -95,9 +95,9 @@ def _apply_snapshot(entry: RunHistoryEntry, snapshot: dict[str, Any]) -> None:
     entry.materials_config = paths.get("materials_config", entry.materials_config)
     entry.geometry_config = geom.get("config_path") or paths.get("geometry_config", entry.geometry_config)
     package = snapshot.get("runPackage", {})
-    entry.config_path = package.get("main_ini_path", entry.config_path)
-    entry.macro_path = package.get("run_macro_path", entry.macro_path)
-    entry.output_dir = package.get("output_dir", entry.output_dir)
+    entry.recorded_config_path = package.get("main_ini_path", "")
+    entry.recorded_macro_path = package.get("run_macro_path", "")
+    entry.recorded_output_dir = package.get("output_dir", "")
 
 
 def _apply_status(entry: RunHistoryEntry, status: dict[str, Any]) -> None:
@@ -161,14 +161,23 @@ def _int_or_none(value) -> int | None:
         return None
 
 
+def publish_identity(entry, evidence=None, error=None):
+    entry.warnings = [item for item in entry.warnings if item not in entry.identity_warnings]
+    entry.identity_warnings = []
+    if error is None:
+        entry.identity_status = evidence.verification_status
+        entry.identity_warnings = list(evidence.warnings)
+        entry.identity_details = json.dumps(evidence.document.get("provenance", {}) if evidence.document else {}, ensure_ascii=False, indent=2)
+    else:
+        entry.identity_status = "tampered" if "bytes mismatch" in str(error) else "unavailable"
+        entry.identity_details = str(error)
+        entry.identity_warnings = [str(error)]
+    entry.warnings.extend(entry.identity_warnings)
+
+
 def _apply_identity(entry, package):
     from g4usim_gui.output.provenance import output_evidence
     try:
-        evidence = output_evidence(package / "output")
-        entry.identity_status = evidence.verification_status
-        entry.warnings.extend(evidence.warnings)
-        entry.identity_details = json.dumps(evidence.document.get("provenance", {}) if evidence.document else {}, ensure_ascii=False, indent=2)
-    except ValueError as error:
-        entry.identity_status = "tampered" if "bytes mismatch" in str(error) else "unavailable"
-        entry.identity_details = str(error)
-        entry.warnings.append(str(error))
+        publish_identity(entry, output_evidence(package / "output"))
+    except (ValueError, OSError) as error:
+        publish_identity(entry, error=error)

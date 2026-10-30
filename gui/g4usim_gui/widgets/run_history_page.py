@@ -22,7 +22,9 @@ from PySide6.QtWidgets import (
 from g4usim_gui.core.paths import open_directory
 from g4usim_gui.core.i18n import ui_text
 from g4usim_gui.history.run_history_model import RunHistoryEntry
-from g4usim_gui.history.run_history_scanner import scan_runs_root
+from g4usim_gui.history.run_history_scanner import scan_runs_root, publish_identity
+from g4usim_gui.core.evidence_job import EvidenceJob, verify_roots
+from g4usim_gui.output.provenance import evidence_key
 
 
 from .output_identity_panel import OutputIdentityPanel
@@ -36,6 +38,8 @@ class RunHistoryPage(QWidget):
 
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
+        self._scan_job=EvidenceJob(self)
+        self._selection_job=EvidenceJob(self)
         self._entries: list[RunHistoryEntry] = []
         self._filtered: list[RunHistoryEntry] = []
 
@@ -146,14 +150,22 @@ class RunHistoryPage(QWidget):
         self.runs_root.setText(runs_root)
 
     def refresh(self) -> None:
+        self._scan_job.cancel();self._selection_job.cancel()
         root = self.runs_root.text().strip()
         if root and not Path(root).exists():
             self._entries = []
             self._apply_filter()
             self.details.setPlainText("Runs root does not exist. Create one or choose another directory.")
             return
-        self._entries = scan_runs_root(root)
-        self._apply_filter()
+        self._selection_job.cancel();self.identity_panel.clear(error=ui_text("Checking output hashes..."))
+        self.details.setPlainText(ui_text("Checking output hashes..."))
+        self._entries=[];self._filtered=[];self.table.setRowCount(0)
+        self.identity_panel.clear(error=ui_text("Checking output hashes..."))
+        self.details.setPlainText(ui_text("Checking output hashes..."))
+        def complete(entries,error):
+            if error:self.details.setPlainText(str(error));return
+            self._entries=entries;self._apply_filter()
+        self._scan_job.submit(lambda:scan_runs_root(root),complete)
 
     def _apply_filter(self) -> None:
         term = self.search.text().strip().lower()
@@ -200,12 +212,27 @@ class RunHistoryPage(QWidget):
     def _show_selected(self) -> None:
         entry = self._selected()
         if not entry:
+            self._selection_job.cancel()
             self.identity_panel.clear()
-            if self._filtered:
-                self.details.setPlainText("Select a run to view details, logs, output and rerun options.")
+            self.details.setPlainText("Select a run to view details, logs, output and rerun options.")
             self._update_action_buttons()
             return
-        self.identity_panel.load_directory(Path(entry.package_dir) / "output", entry.status)
+        self._selection_job.cancel()
+        entry.identity_status="unavailable";entry.identity_details=ui_text("Checking output hashes...")
+        self.identity_panel.clear(entry.status,ui_text("Checking output hashes..."))
+        self._render_selected(entry)
+        directory=Path(entry.package_dir)/"output"
+        def complete(seeds,error):
+            if self._selected() is not entry:return
+            result=error if error else seeds[evidence_key(directory)]
+            if isinstance(result,Exception):
+                publish_identity(entry,error=result);self.identity_panel.run_title="Recorded run state";self.identity_panel.clear(entry.status,str(result))
+            else:
+                publish_identity(entry,result);self.identity_panel.run_title="Run state";self.identity_panel.set_evidence(result,entry.status)
+            self._render_selected(entry)
+        self._selection_job.submit(lambda:verify_roots([directory]),complete)
+
+    def _render_selected(self,entry):
         lines = [
             f"package = {entry.package_dir}",
             f"status = {entry.status}",
@@ -219,6 +246,7 @@ class RunHistoryPage(QWidget):
             f"config = {entry.config_path}",
             f"macro = {entry.macro_path}",
             f"output = {entry.output_dir}",
+            f"recorded_output = {entry.recorded_output_dir}",
             f"threads = {entry.threads}",
             f"seed = {entry.seed}",
             f"beam_on = {entry.beam_on}",
@@ -248,6 +276,10 @@ class RunHistoryPage(QWidget):
         self.details.setPlainText("\n".join(lines))
         self._update_action_buttons()
 
+    def closeEvent(self,event):
+        self._scan_job.close();self._selection_job.close()
+        super().closeEvent(event)
+
     def _selected(self) -> RunHistoryEntry | None:
         row = self.table.currentRow()
         if row < 0 or row >= len(self._filtered):
@@ -268,7 +300,7 @@ class RunHistoryPage(QWidget):
     def _emit_open_output(self) -> None:
         entry = self._selected()
         if entry:
-            self.openOutputRequested.emit(entry.package_dir, entry.output_dir)
+            self.openOutputRequested.emit(entry.package_dir, str(Path(entry.package_dir) / "output"))
 
     def _emit_duplicate(self) -> None:
         entry = self._selected()

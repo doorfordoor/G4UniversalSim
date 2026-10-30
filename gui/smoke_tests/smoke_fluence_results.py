@@ -1,6 +1,7 @@
 """GUI Fluence parsing, worker aggregation, editor and Results smoke."""
 
 from __future__ import annotations
+from async_wait import wait_for_idle
 
 import csv
 import math
@@ -95,6 +96,7 @@ def main() -> None:
 
         page = OutputPage()
         page.set_output_dir(str(root))
+        wait_for_idle(page)
         assert page.data_tabs.tabText(1) == "Dose (Gy)"
         assert page.data_tabs.tabText(2) == "Fluence (mm^-2)"
         assert page.fluence_table.rowCount() == 2
@@ -103,6 +105,7 @@ def main() -> None:
         assert "Skipped fluence_volume_summary_t2.csv" in page.fluence_message.toPlainText()
         assert "未证明线程文件完整" in page.fluence_message.toPlainText()
         page.set_output_dir(str(root / "missing"))
+        wait_for_idle(page)
         assert page.fluence_table.rowCount() == 0
         page.close()
 

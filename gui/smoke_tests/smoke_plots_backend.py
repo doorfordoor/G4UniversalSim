@@ -9,6 +9,7 @@ scorer_statistics.csv, and that run overlay and directory comparison draw.
 """
 
 from __future__ import annotations
+from async_wait import wait_for_idle
 
 import csv
 import os
@@ -138,23 +139,36 @@ def main() -> None:
 
         panel = PlotPanel()
         panel.set_output_dir(str(both))
-        assert panel.select("mesh/depth/dose/r0") and panel.select_view("profile:2")
+        wait_for_idle(panel)
+        assert panel.select("mesh/depth/dose/r0")
+        wait_for_idle(panel)
+        assert panel.select_view("profile:2")
+        wait_for_idle(panel)
         panel.all_runs.setChecked(True)
+        wait_for_idle(panel)
         assert len(panel.current_plot().series) == 2, "run overlay"
         totals = [s.y.sum() for s in panel.current_plot().series]
         panel.per_event.setChecked(True)
+        wait_for_idle(panel)
         per_event = [s.y.sum() for s in panel.current_plot().series]
         assert np.allclose(per_event, [totals[0] / 300, totals[1] / 200]), (totals, per_event)
         # per event, the two runs agree within their statistics (same beam, 300 vs 200 events)
         assert abs(per_event[0] / per_event[1] - 1) < 0.1, per_event
         panel.per_event.setChecked(False)
+        wait_for_idle(panel)
         panel.all_runs.setChecked(False)
+        wait_for_idle(panel)
         panel.add_comparison(str(root_only))
+        wait_for_idle(panel)
         compared = panel.current_plot().series
         assert len(compared) == 2 and compared[1].label == "root_only", [s.label for s in compared]
-        assert panel.select_view("map:2:0") and panel.current_plot().image.shape == (20, 100)
+        assert panel.select_view("map:2:0")
+        wait_for_idle(panel)
+        assert panel.current_plot().image.shape == (20, 100)
         for key in ("hist_edep_raw/r0", "event_edep/r1", "phase_space/r0", "scorer/fluence/weighted_fluence/r1"):
-            assert panel.select(key) and panel.current_plot() is not None, key
+            assert panel.select(key), key
+            wait_for_idle(panel)
+            assert panel.current_plot() is not None, key
         png = work / "plot.png"
         panel.export_png(str(png))
         assert png.stat().st_size > 1000

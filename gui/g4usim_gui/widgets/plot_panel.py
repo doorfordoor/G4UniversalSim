@@ -29,6 +29,8 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from g4usim_gui.core.evidence_job import EvidenceJob, verify_roots
+from g4usim_gui.output.provenance import evidence_operation, verification_active
 from g4usim_gui.core import icons
 from g4usim_gui.core.i18n import ui_format, ui_text
 from g4usim_gui.core.theme import ThemeColors, current_colors
@@ -68,6 +70,7 @@ def draw_empty(figure: Figure, colors: ThemeColors, text: str) -> None:
 class PlotPanel(QWidget):
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
+        self._identity_job = EvidenceJob(self)
         self._output_dir = ""
         self._datasets: list[plot_data.DataSet] = []
         self._comparisons: list[str] = []
@@ -168,7 +171,31 @@ class PlotPanel(QWidget):
 
     # --- public API (also used by the smoke test) ---------------------------------
 
+    def clear_pending(self):
+        self._identity_job.cancel()
+        self._datasets=[];self._plot=None
+        self.dataset_combo.blockSignals(True);self.dataset_combo.clear();self.dataset_combo.blockSignals(False)
+        self._draw_empty();self.message.setText(ui_text("Checking output hashes..."));self._update_buttons()
+
+    def _verify_then(self,roots,action):
+        self._plot=None;self.figure.clear();self.canvas.draw_idle()
+        self.message.setText(ui_text("Checking output hashes..."));self._update_buttons()
+        def complete(seeds,error):
+            if error:self.message.setText(str(error));return
+            with evidence_operation(seeds):action()
+        self._identity_job.submit(lambda:verify_roots(roots),complete)
+
+    def closeEvent(self,event):
+        self._identity_job.close()
+        super().closeEvent(event)
+
     def set_output_dir(self, output_dir: str) -> None:
+        self._identity_job.cancel()
+        if not verification_active() and output_dir:
+            self._output_dir=output_dir
+            self.clear_pending()
+            self._verify_then([output_dir,*self._comparisons],lambda:self.set_output_dir(output_dir))
+            return
         self._output_dir = output_dir or ""
         current = self.current_dataset()
         discovery_error = ""
@@ -242,6 +269,9 @@ class PlotPanel(QWidget):
     # --- building and drawing ------------------------------------------------------
 
     def _on_dataset_changed(self) -> None:
+        if not verification_active() and self._output_dir:
+            self._verify_then([self._output_dir,*self._comparisons],self._on_dataset_changed)
+            return
         dataset = self.current_dataset()
         self.view_combo.blockSignals(True)
         self.view_combo.clear()
@@ -292,6 +322,9 @@ class PlotPanel(QWidget):
         return sources
 
     def redraw(self) -> None:
+        if not verification_active() and self.current_dataset() is not None:
+            self._verify_then([self._output_dir,*self._comparisons],self.redraw)
+            return
         self.refresh_icons()
         self.figure.clear()
         self._plot = None

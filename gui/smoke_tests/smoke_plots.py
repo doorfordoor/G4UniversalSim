@@ -8,6 +8,7 @@ comparison, CSV export, PNG export, translated notes, and the empty-directory st
 """
 
 from __future__ import annotations
+from async_wait import wait_for_idle
 
 import csv
 import json
@@ -139,42 +140,62 @@ def main() -> None:
         print("panel")
         panel = PlotPanel()
         panel.set_output_dir(str(root))
+        wait_for_idle(panel)
         assert {d.key for d in panel.datasets()} == expected
-        assert panel.select("mesh/m/dose/r0") and panel.select_view("profile:2")
+        assert panel.select("mesh/m/dose/r0")
+        wait_for_idle(panel)
+        assert panel.select_view("profile:2")
+        wait_for_idle(panel)
         assert panel.current_plot() is not None and np.allclose(panel.current_plot().series[0].y, [12, 14, 16])
         panel.add_comparison(str(other))
+        wait_for_idle(panel)
         series = panel.current_plot().series
         assert len(series) == 2 and np.allclose(series[1].y, [24, 28, 32]), [s.y for s in series]
-        assert panel.select_view("map:2:0") and panel.current_plot().kind == "image"
+        assert panel.select_view("map:2:0")
+        wait_for_idle(panel)
+        assert panel.current_plot().kind == "image"
         assert panel.select("scorer/dose/weighted_dose/r0")
+        wait_for_idle(panel)
         assert len(panel.current_plot().series) == 2
         (root / "run_summary.txt").write_text("run_0_completed_events = 4\n", encoding="utf-8")
         (other / "run_summary.txt").write_text("run_0_completed_events = 4\n", encoding="utf-8")
         panel.per_event.setChecked(True)
+        wait_for_idle(panel)
         assert panel.current_plot().normalization == "per_event"
         assert panel.current_plot().ylabel.endswith(" / event")
-        assert panel.select("mesh/m/dose/r0") and panel.select_view("map:2:0")
+        assert panel.select("mesh/m/dose/r0")
+        wait_for_idle(panel)
+        assert panel.select_view("map:2:0")
+        wait_for_idle(panel)
         assert panel.current_plot().value_label.endswith(" / event")
         assert panel.figure.axes[-1].get_ylabel().endswith(" / event")
         panel.per_event.setChecked(False)
+        wait_for_idle(panel)
         assert panel.select("scorer/dose/weighted_dose/r0")
+        wait_for_idle(panel)
         panel.clear_comparisons()
+        wait_for_idle(panel)
         panel.all_runs.setChecked(True)
+        wait_for_idle(panel)
         values = sorted(float(s.y[0]) for s in panel.current_plot().series)
         assert values == [2.0, 4.0], values   # A_PV in run 0 and run 1
         panel.all_runs.setChecked(False)
+        wait_for_idle(panel)
         png = Path(temp) / "plot.png"
         panel.export_png(str(png))
         assert png.stat().st_size > 1000
         set_application_language(app, "zh_CN")
         panel.select("hist_edep_raw/r0")
+        wait_for_idle(panel)
         assert "泊松" in panel.message.text(), panel.message.text()
         set_application_language(app, "en")
         panel.set_output_dir(str(Path(temp) / "missing"))
+        wait_for_idle(panel)
         assert panel.current_plot() is None and not panel.export_png_button.isEnabled()
 
         page = OutputPage()
         page.set_output_dir(str(root))
+        wait_for_idle(page)
         assert page.plot_panel is not None and len(page.plot_panel.datasets()) == len(expected)
         assert "Plots" in [page.tabs.tabText(i) for i in range(page.tabs.count())]
 

@@ -135,15 +135,20 @@ SCHEMA = {'main_ini': {'run': {'migrated': True,
                                           'description_zh': '输出目录；为空时使用 output。CLI --output 优先',
                                           'gui': {'editable': 'generated_subset'}},
                                   'format': {'type': 'enum',
-                                             'allowed': ['csv', 'root', 'both'],
+                                             'allowed': ['csv', 'root', 'both', 'auto'],
                                              'value_aliases': {'csv+root': 'both', 'root+csv': 'both'},
                                              'default': 'csv',
                                              'empty': 'default',
                                              'support': 'supported',
                                              'since': 'M0',
-                                             'description': 'Scorer output format; root needs a build with '
-                                                            'ROOT output',
-                                             'description_zh': '计分输出格式；root 需要以 ROOT 输出支持构建',
+                                             'description': 'Scorer output format; default csv. Explicit '
+                                                            'auto selects root only when scoring is enabled '
+                                                            'and hits or event_edep output is enabled, '
+                                                            'otherwise csv; root requires ROOT output '
+                                                            'support',
+                                             'description_zh': '计分输出格式，默认 csv；显式 auto 仅在计分启用且 hits 或 '
+                                                               'event_edep 输出启用时选择 root，否则选择 csv；root 需要 '
+                                                               'ROOT 输出支持',
                                              'gui': {'editable': 'generated_subset'}},
                                   'trajectories': {'type': 'int',
                                                    'min': 0,

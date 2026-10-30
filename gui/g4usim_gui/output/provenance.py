@@ -8,7 +8,36 @@ import json
 from pathlib import Path, PurePosixPath, PureWindowsPath
 import re
 import warnings
+from contextlib import contextmanager
+from contextvars import ContextVar
+from functools import wraps
 from .identity import strict_object, validate_extension
+
+# An operation-local verified snapshot, never a cross-action file cache.
+_operation = ContextVar("g4usim_evidence_operation", default=None)
+
+def evidence_key(path):
+    return str(Path(path).resolve())
+
+def verification_active():
+    return _operation.get() is not None
+
+@contextmanager
+def evidence_operation(seeds=None):
+    token = _operation.set(dict(seeds or {}))
+    try:
+        yield
+    finally:
+        _operation.reset(token)
+
+def verified_operation(function):
+    @wraps(function)
+    def call(*args, **kwargs):
+        if verification_active():
+            return function(*args, **kwargs)
+        with evidence_operation():
+            return function(*args, **kwargs)
+    return call
 
 LEGACY_WARNING = "Legacy/unverified directory: run_metadata.json is absent; file ownership and completeness are unverified."
 
@@ -55,7 +84,24 @@ def _path(value: str):
     return PureWindowsPath(value) if "\\" in value or re.match(r"^[A-Za-z]:", value) else PurePosixPath(value)
 
 
-def output_evidence(directory: str | Path) -> OutputEvidence:
+def output_evidence(directory: str | Path, *, fresh: bool = False) -> OutputEvidence:
+    operation = None if fresh else _operation.get()
+    key = evidence_key(directory)
+    if operation is not None and key in operation:
+        result = operation[key]
+        if isinstance(result, Exception):
+            raise result
+        return result
+    try:
+        result = _read_output_evidence(directory)
+    except (ValueError, OSError) as error:
+        if operation is not None: operation[key] = error
+        raise
+    if operation is not None: operation[key] = result
+    return result
+
+
+def _read_output_evidence(directory: str | Path) -> OutputEvidence:
     root = Path(directory)
     manifest = root / "run_metadata.json"
     if not manifest.exists() and not manifest.is_symlink():

@@ -7,6 +7,12 @@ Short, user-facing record of notable changes. Detailed support status lives in
 
 ## Unreleased
 
+### F1 输出身份与来源（2026-10-30 候选，尚未完整验收）
+
+- 记录构建身份、进程执行ID、实际输入读字节和已关闭产物的SHA-256；输入读取不等于配置接受，文件字节一致不等于物理验证。旧metadata兼容，新扩展损坏明确拒绝。
+- 结果与历史页分别显示运行状态和输出身份；复制目录只读取当前副本。后台校验支持过期结果丢弃，一次操作复用结果，下一次操作及合并执行前重新校验。
+- 显式`format=auto`按最终计分开关选择ROOT或CSV，默认CSV不变。72次格式/缓冲测量未证明显式256KiB缓冲有稳定收益，因此保留现有缓冲；[契约与证据边界](docs/输出身份与来源.md)。
+
 ### E6 配置兼容（2026-10-30 已验收，未发布）
 
 代码 `a779634`：Windows134/134、真实Linux Geant4 11.3.2/11.4.3各134及M0双平台各58通过；Windows实窗12状态与真实2/2事件补验通过，阶段已关闭；[完整证据、集成状态与限制](docs/verification/e6-visible-20261030/README.md)。

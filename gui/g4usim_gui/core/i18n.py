@@ -20,6 +20,10 @@ LanguageCode = Literal["en", "zh_CN"]
 
 
 ZH_CN: dict[str, str] = {
+    "Requested output format": "请求的输出格式",
+    "Actual output format": "实际输出格式",
+    "Format selection reason": "格式选择原因",
+    "Checking output hashes...": "正在校验输出哈希…",
     "Recorded run state": "记录的运行状态",
     'Program build identity': '程序构建身份',
     'Historical input reads': '输入历史读取',
