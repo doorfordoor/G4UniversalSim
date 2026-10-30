@@ -70,10 +70,10 @@ std::vector<std::array<Vertex, 3>> ReadBinary(const std::string& data, const std
 
 namespace StlReader {
 
-StlMesh Read(const std::string& path, double lengthUnit)
+StlMesh Read(const std::string& path, double lengthUnit, const std::string& role)
 {
     if (!(lengthUnit > 0.0)) throw std::runtime_error("STL length unit must be > 0");
-    const auto input=input_provenance::ReadFile(path);
+    const auto input=input_provenance::ReadFile(path, "stl", role);
     const auto& data=input.bytes;
 
     // Binary files may also start with "solid"; trust the size check first.

@@ -1,6 +1,7 @@
 #include "Output/OutputManager.hh"
 
 #include "Output/AnalysisOutput.hh"
+#include "Config/InputProvenance.hh"
 #include "Scoring/HistoryStatistics.hh"
 #include "Scoring/NumericChecks.hh"
 #include "Scoring/ScoringMeshExport.hh"
@@ -9,6 +10,8 @@
 
 #include <cmath>
 #include <iomanip>
+#include <random>
+#include <limits>
 #include <algorithm>
 #include <cstdlib>
 #include <exception>
@@ -34,6 +37,19 @@ std::string TestOutputFault()
 }
 
 }  // namespace
+
+OutputManager::GeneratedFileRegistry::GeneratedFileRegistry()
+{
+    // Independent OS-backed entropy: never consume or reseed the Geant4 engine.
+    std::random_device entropy;
+    std::uniform_int_distribution<unsigned> byte(0, 255);
+    const char* hex = "0123456789abcdef";
+    executionId.reserve(32);
+    for (int i = 0; i < 16; ++i) {
+        const auto value = byte(entropy);
+        executionId += hex[value >> 4]; executionId += hex[value & 15];
+    }
+}
 
 OutputManager::~OutputManager() noexcept
 {
@@ -180,7 +196,9 @@ void OutputManager::WriteRunMetadataJson()
     {
         std::lock_guard<std::mutex> guard(generatedFiles_->mutex);
         auto& files = generatedFiles_->files;
-        files.erase(std::remove(files.begin(), files.end(), absolute), files.end());
+        files.erase(std::remove_if(files.begin(), files.end(), [&](const ArtifactEvidence& file) {
+            return file.path == absolute;
+        }), files.end());
     }
     try {
         runSummary_.WriteJson(filename);
@@ -191,7 +209,7 @@ void OutputManager::WriteRunMetadataJson()
         RecordOutputFailure("run_metadata_write", error.what());
         throw;
     }
-    RegisterGeneratedFile(filename);
+    RegisterGeneratedFile(filename, ArtifactScope::Process);
 }
 
 void OutputManager::FillScoringMeshesRoot(int runId, long long threadEvents)
@@ -225,7 +243,7 @@ void OutputManager::WriteScoringMeshesCsv(int runId, long long events)
                          "uncorrected_event_moments_v1", HistoryStatistics::UncertaintyStatus(events, c.sum)});
     }
     writer.Close();
-    RegisterGeneratedFile(filename);
+    RegisterGeneratedFile(filename, ArtifactScope::Run, runId);
 }
 
 void OutputManager::WriteScorerStatisticsCsv(int runId, long long events, double wallSeconds)
@@ -268,7 +286,7 @@ void OutputManager::WriteScorerStatisticsCsv(int runId, long long events, double
                          HistoryStatistics::UncertaintyStatus(events, e.sum, e.ratio, e.denSum)});
     }
     writer.Close();
-    RegisterGeneratedFile(filename);
+    RegisterGeneratedFile(filename, ArtifactScope::Run, runId);
 }
 
 void OutputManager::EnableThreadSuffix(bool enable)
@@ -520,7 +538,7 @@ void OutputManager::WriteHistogram1D(const std::string& name)
     const std::string filename = MakeOutputPath(MakeThreadFilename("hist_" + safeName + ".csv"));
     const std::string axisUnit = name == "edep_raw" || name == "edep_weighted" ? "MeV" : "";
     hist.WriteCSV(filename, axisUnit);
-    RegisterGeneratedFile(filename);
+    RegisterGeneratedFile(filename, ArtifactScope::Thread, runId_, threadId_);
 }
 
 void OutputManager::WriteAllHistograms()
@@ -547,10 +565,12 @@ void OutputManager::WriteRunSummary()
     {
         std::lock_guard<std::mutex> guard(generatedFiles_->mutex);
         auto& files = generatedFiles_->files;
-        files.erase(std::remove(files.begin(), files.end(), absolute), files.end());
+        files.erase(std::remove_if(files.begin(), files.end(), [&](const ArtifactEvidence& file) {
+            return file.path == absolute;
+        }), files.end());
     }
     runSummary_.WriteText(filename);
-    RegisterGeneratedFile(filename);
+    RegisterGeneratedFile(filename, ArtifactScope::Process);
 }
 
 void OutputManager::RecordRun(int runId, std::int64_t plannedEvents, std::int64_t completedEvents)
@@ -558,13 +578,45 @@ void OutputManager::RecordRun(int runId, std::int64_t plannedEvents, std::int64_
     runSummary_.AddRun(runId, plannedEvents, completedEvents);
 }
 
+const std::string& OutputManager::GetExecutionId() const
+{
+    return generatedFiles_->executionId;
+}
+
 void OutputManager::RegisterGeneratedFile(const std::string& filename)
 {
+    if (runId_ < 0) RegisterGeneratedFile(filename, ArtifactScope::Process);
+    else if (threadId_ < 0) RegisterGeneratedFile(filename, ArtifactScope::Run, runId_);
+    else RegisterGeneratedFile(filename, ArtifactScope::Thread, runId_, threadId_);
+}
+
+void OutputManager::RegisterGeneratedFile(const std::string& filename, ArtifactScope scope,
+                                          std::optional<int> runId, std::optional<int> threadId)
+{
+    if (filename.empty()) throw std::invalid_argument("Generated artifact path cannot be empty");
+    if (scope != ArtifactScope::Process && scope != ArtifactScope::Run && scope != ArtifactScope::Thread)
+        throw std::invalid_argument("Unknown generated artifact scope");
+    if ((scope == ArtifactScope::Process && (runId || threadId)) ||
+        (scope == ArtifactScope::Run && (!runId || *runId < 0 || threadId)) ||
+        (scope == ArtifactScope::Thread && (!runId || *runId < 0 || !threadId || *threadId < 0)))
+        throw std::invalid_argument("Generated artifact scope requires explicit valid run/thread identity");
     const std::string absolute = FileUtils::AbsolutePath(filename);
-    std::lock_guard<std::mutex> guard(generatedFiles_->mutex);
-    if (std::find(generatedFiles_->files.begin(), generatedFiles_->files.end(), absolute) ==
-        generatedFiles_->files.end()) {
-        generatedFiles_->files.push_back(absolute);
+    bool conflict = false;
+    {
+        std::lock_guard<std::mutex> guard(generatedFiles_->mutex);
+        const auto found = std::find_if(generatedFiles_->files.begin(), generatedFiles_->files.end(),
+            [&](const ArtifactEvidence& file) { return file.path == absolute; });
+        if (found == generatedFiles_->files.end()) {
+            ArtifactEvidence file;
+            file.path = absolute; file.execution_id = GetExecutionId(); file.scope = scope;
+            file.run_id = runId; file.thread_id = threadId;
+            generatedFiles_->files.push_back(std::move(file));
+        } else conflict = found->scope != scope || found->run_id != runId || found->thread_id != threadId;
+    }
+    if (conflict) {
+        const auto message = "Conflicting explicit scope for generated artifact: '" + absolute + "'";
+        RecordOutputFailure("artifact_integrity", message, runId.value_or(-1));
+        throw std::runtime_error(message);
     }
 }
 
@@ -573,13 +625,61 @@ std::vector<std::string> OutputManager::GetGeneratedFiles() const
     std::vector<std::string> generated;
     {
         std::lock_guard<std::mutex> guard(generatedFiles_->mutex);
-        generated = generatedFiles_->files;
+        for (const auto& file : generatedFiles_->files) generated.push_back(file.path);
     }
-    generated.erase(std::remove_if(generated.begin(), generated.end(), [](const std::string& file) {
-        return !FileUtils::IsFile(file);
-    }), generated.end());
+    // A vanished registered artifact is a failure, never silently erased.
     std::sort(generated.begin(), generated.end());
     return generated;
+}
+
+std::vector<OutputManager::ArtifactEvidence> OutputManager::CollectArtifactEvidence(bool includeMetadataSelf, bool excludeSummary)
+{
+    std::vector<ArtifactEvidence> evidence;
+    {
+        std::lock_guard<std::mutex> guard(generatedFiles_->mutex);
+        evidence = generatedFiles_->files;
+    }
+    const auto metadata = FileUtils::AbsolutePath(MakeOutputPath("run_metadata.json"));
+    if (excludeSummary) {
+        // An explicit finalization bridge will rewrite and independently hash
+        // this process summary. Do not carry its previous bytes into that pass.
+        const auto summary = FileUtils::AbsolutePath(MakeOutputPath("run_summary.txt"));
+        evidence.erase(std::remove_if(evidence.begin(), evidence.end(), [&](const ArtifactEvidence& file) {
+            return file.path == summary;
+        }), evidence.end());
+    }
+    if (includeMetadataSelf && std::none_of(evidence.begin(), evidence.end(),
+            [&](const ArtifactEvidence& file) { return file.path == metadata; })) {
+        ArtifactEvidence self; self.path = metadata; self.execution_id = GetExecutionId();
+        evidence.push_back(std::move(self));
+    }
+    for (auto& file : evidence) {
+        file.sha256.reset(); file.size_bytes.reset(); file.reason.clear();
+        if (file.path == metadata) {
+            file.scope = ArtifactScope::Process; file.run_id.reset(); file.thread_id.reset();
+            file.integrity_status = "self_reference_excluded";
+            file.reason = "Metadata cannot contain its own byte hash or size";
+            continue;
+        }
+        try {
+            if (TestOutputFault() == "artifact_hash_master")
+                throw std::runtime_error("Injected artifact hash read failure");
+            const auto digest = input_provenance::HashFile(file.path);
+            if (digest.size_bytes > static_cast<std::uint64_t>(std::numeric_limits<std::int64_t>::max()))
+                throw std::runtime_error("Artifact byte size exceeds metadata integer range");
+            file.sha256 = digest.sha256; file.size_bytes = digest.size_bytes;
+            file.integrity_status = "hashed";
+        } catch (const std::exception& error) {
+            file.integrity_status = "unavailable"; file.reason = error.what();
+            // Preserve the first output failure, including any earlier worker cause.
+            RecordOutputFailure("artifact_integrity", "Artifact '" + file.path + "': " + error.what(),
+                                file.run_id.value_or(-1));
+        }
+    }
+    std::sort(evidence.begin(), evidence.end(), [](const ArtifactEvidence& a, const ArtifactEvidence& b) {
+        return a.path < b.path;
+    });
+    return evidence;
 }
 
 void OutputManager::RecordOutputFailure(const std::string& stage, const std::string& message,
@@ -644,7 +744,7 @@ void OutputManager::Close()
         if (!writer || !writer->IsOpen()) return;
         try {
             writer->Close();
-            RegisterGeneratedFile(writer->GetFilename());
+            RegisterGeneratedFile(writer->GetFilename(), ArtifactScope::Thread, runId_, threadId_);
         } catch (...) {
             if (!firstError) firstError = std::current_exception();
         }

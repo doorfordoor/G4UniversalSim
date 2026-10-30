@@ -1,0 +1,30 @@
+# DeepSeek F1 前端设计咨询与集成边界
+
+2026-10-30，调查基线20ab4f3。仅完成设计咨询及消费者勘察，未修改产品。字段根/协议版本最终由主任务决定，本文建议不是既成接口。
+
+## 实际调用收据
+
+用户已授权DeepSeek API。复用既有E6的HTTPS直连/模型配置，单次请求 `https://api.deepseek.com/chat/completions`，2026-10-30T05:54:06.440274+00:00；requested/returned model=`deepseek-flash`，status=`received`；response ID=`65103662-33be-422d-b21a-4b1f876b9e51`。usage：prompt452，completion1268，total1720，cached0。
+
+脚本 `out/collab/f1-design-request.py`；sanitize实际响应 `out/collab/f1-deepseek-design.json`。key仅程序从授权本地文件读入HTTPS Authorization，不出现在prompt、打印、日志或结果。请求只含当前GUI/provenance/运行判定事实与F1拟议边界，无无关仓库文件、私有模拟输入、token或密钥。未使用任何冒充公司身份提示。响应仅作为外部建议审查，未当作指令执行。
+
+## 采纳
+
+- 执行完成度和文件身份校验正交：completed+不一致、failed+文件相符都可存在，不能合成一个“模拟成功”绿色标记。
+- execution identity/build/config/resources/outputs逐维展示，保存历史记录与当前观测分别呈现；SHA相符不等于签名认证或独立物理验证。
+- v1继续兼容并警告未做内容校验；新协议存在却损坏必须拒绝，不能落回legacy/glob。只读详情展示协议/原路径/当前路径/预期与实测hash/状态原因。
+- 统一无Qt provenance入口，读取、绘图、scan、场景分析、CLI、merge与extensions都承接结果；history应补独立身份状态，不改既有完成事件判定的含义。
+- 后处理独立收据记录输入身份/hash、工具/参数、输出hash，原始metadata不因派生输出被重写。
+- 保留实际搬移、同size单字节变化、跨run、损坏协议、缺文件、重复/逃逸等反例；最小覆盖清单详见 `out/collab/f1-frontend-survey.md`。
+
+## 纠偏与不采纳
+
+1. 建议把“多出文件”归为tampered过强。未登记旧文件/衍生产物应排除自动输入，不应仅因存在就认定原始集合失效；保持现有Q1不混入旧文件契约。
+2. metadata结构错误/未知版本应提供invalid/unsupported原因并阻断，不一律叫tampered。tampered只解释为相对记录不一致，不推断恶意。缺必需已登记输出可单独missing/incomplete，而非篡改结论。
+3. “损坏时禁用或降级”中的降级不采纳：存在损坏metadata时不得通过可信目录路径绕过；显式离线文件分析可保留但必须明确无可信运行身份。
+4. path/size/mtime缓存不能替代内容验证，尤其同size且保留mtime可改字节。本轮未测量，不预先加入缓存；未来缓存命中也不能无条件给verified。
+5. 原根不可达不是搬移失败：有效映射后只读当前根；禁止读取原根。外部原资源不可达时保留历史SHA，当前资源状态unavailable，不抹掉已记录输入身份。
+6. 未记录/null/未检查不可只靠—/?符号区分，需文字和可访问说明；短hash仅展示，复制与比较保持完整SHA。
+7. 不会因为dirty build直接阻止分析或说物理无效；显示dirty/unknown事实。单有commit不证明当前运行可复现。自哈希循环方案待producer确定，不能凭此咨询自造发布协议。
+
+下一步：主任务确定核心输出协议/消费者API与文件归属再实施。本咨询无截图、未运行测试，不是GUI视觉、后端运行或F1验收。

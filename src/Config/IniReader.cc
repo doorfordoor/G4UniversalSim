@@ -13,9 +13,9 @@ constexpr const char* kDefaultSection = "global";
 
 }  // namespace
 
-void IniReader::Load(const std::string& filename)
+void IniReader::Load(const std::string& filename, const std::string& kind)
 {
-    const auto input = input_provenance::ReadFile(filename);
+    const auto input = input_provenance::ReadFile(filename, kind, "configuration_parse");
     LoadBytes(filename, input.bytes);
 }
 

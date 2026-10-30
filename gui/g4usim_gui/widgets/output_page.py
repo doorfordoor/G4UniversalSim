@@ -42,6 +42,9 @@ else:
     PLOT_IMPORT_ERROR = ""
 
 
+from .output_identity_panel import OutputIdentityPanel
+
+
 class OutputPage(QWidget):
     MAX_PREVIEW_BYTES = 50 * 1024 * 1024
 
@@ -73,6 +76,7 @@ class OutputPage(QWidget):
         self.tool_tabs = QTabWidget()
         for group in (self.data_tabs, self.file_tabs, self.tool_tabs):
             group.setDocumentMode(True)
+        self.identity_panel = OutputIdentityPanel()
         self.overview_text = QPlainTextEdit()
         self.overview_text.setReadOnly(True)
         self.preview_text = QPlainTextEdit()
@@ -134,7 +138,11 @@ class OutputPage(QWidget):
         top.addWidget(self.open_package_button)
         top.addWidget(self.open_output_button)
 
-        self.tabs.addTab(self.overview_text, "Overview")
+        overview = QWidget()
+        overview_layout = QVBoxLayout(overview)
+        overview_layout.addWidget(self.identity_panel, 3)
+        overview_layout.addWidget(self.overview_text, 1)
+        self.tabs.addTab(overview, "Overview")
         self.tabs.addTab(self.plot_panel if self.plot_panel is not None else self.plot_unavailable, "Plots")
         self.file_tabs.addTab(self.preview_text, "Preview")
         self.file_tabs.addTab(self.summary_text, "Run Summary")
@@ -238,6 +246,7 @@ class OutputPage(QWidget):
             self.plot_panel.redraw()
 
     def refresh_language(self) -> None:
+        self.identity_panel.refresh_language()
         if self.plot_panel is not None:
             self.plot_panel.redraw()   # notes and view names are translated when drawn
 
@@ -557,10 +566,14 @@ class OutputPage(QWidget):
         self.overview_text.setPlainText("\n".join(lines))
 
     def _update_run_summary(self) -> None:
+        recorded_run = parse_run_summary(Path(self._output_dir) / "run_summary.txt").key_values.get("status", "unknown") if self._output_dir else "unknown"
+        self.identity_panel.clear(recorded_run)
         try:
             evidence = output_evidence(self._output_dir) if self._output_dir else None
         except ValueError as error:
-            self.summary_text.setPlainText(str(error))
+            self.identity_panel.clear(recorded_run, str(error))
+            state = "tampered" if "bytes mismatch" in str(error) else "unavailable"
+            self.summary_text.setPlainText("identity_status = " + state + "\n" + ui_text("Bytes differ from recorded hashes" if state == "tampered" else "Identity evidence unavailable") + "\n" + str(error))
             return
         path = self._find_first(OutputFileType.RUN_SUMMARY)
         if evidence and evidence.document is not None and path and Path(path) not in evidence.files:
@@ -570,9 +583,13 @@ class OutputPage(QWidget):
             self.summary_text.setPlainText("run_summary.txt not found.")
             return
         summary = parse_run_summary(path)
+        if evidence:
+            self.identity_panel.set_evidence(evidence, summary.key_values.get("status", "unknown"))
         lines = [f"path = {summary.path}", f"exists = {str(summary.exists).lower()}", "", "[key values]"]
         if evidence:
-            lines = ["provenance = " + evidence.status, *evidence.warnings, *lines]
+            lines = ["provenance = " + evidence.status, "identity_status = " + evidence.verification_status, ui_text("Verified against recorded hashes" if evidence.verification_status == "verified" else "Legacy: content hashes unavailable"), ui_text("Hash consistency does not establish authenticated origin or physical correctness."), *evidence.warnings, *lines]
+            if evidence.document and "provenance" in evidence.document:
+                lines.extend(["", "[identity]", json.dumps(evidence.document["provenance"], ensure_ascii=False, indent=2)])
         if summary.key_values:
             lines.extend(f"{key} = {value}" for key, value in sorted(summary.key_values.items()))
         else:

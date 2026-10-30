@@ -1,4 +1,5 @@
 #include "Core/RandomCommandGuard.hh"
+#include "Config/InputProvenance.hh"
 
 #include "G4StateManager.hh"
 #include "Randomize.hh"
@@ -55,8 +56,16 @@ void InvalidRestore(CLHEP::HepRandomEngine& engine, const std::filesystem::path&
 {
     Write(file, bytes);
     const auto before = engine.put();
+    const auto observations = input_provenance::Snapshot().size();
     Reject([&]() { RandomCommandGuard::ExecuteRestoreIfRequested(Command(file)); }, "invalid restore refused");
     Require(engine.put() == before, "invalid restore preserves current engine");
+    const auto after = input_provenance::Snapshot();
+    // Empty/oversize/read-failed files have no complete bounded snapshot.
+    if (!bytes.empty() && bytes.size() <= 1024*1024) {
+        Require(after.size() == observations + 1, "invalid complete restore bytes are observed");
+        Require(after.back().sha256 == input_provenance::Sha256(bytes), "invalid restore records original read hash");
+        Require(after.back().role == "engine_restore_validation", "invalid restore is not called successful application");
+    } else Require(after.size() == observations, "unread restore has no complete-byte evidence");
 }
 
 std::string ReplaceField(std::string bytes, const std::string& field, const std::string& replacement)
@@ -81,6 +90,11 @@ template<class Engine> void NativeRoundTrip(Engine& engine, const std::filesyste
     Require(engine.put() != saved, "engine advanced before restore");
     Require(RandomCommandGuard::ExecuteRestoreIfRequested(Command(file)), "quoted native restore handled");
     Require(engine.put() == saved, "native restore exact state");
+    const auto observed = input_provenance::Snapshot().back();
+    const auto nativeBytes = Read(file);
+    Require(observed.kind == "random_restore" && observed.role == "engine_restore_validation", "restore observation classified");
+    Require(observed.sha256 == input_provenance::Sha256(nativeBytes) && observed.size_bytes == nativeBytes.size(), "restore actual bytes hashed");
+    Require(observed.path == file.generic_string(), "restore actual path recorded");
     Require(RandomCommandGuard::ExecuteRestoreIfRequested(Command(file)), "same-state restore accepted");
     Require(engine.put() == saved, "same-state restore exact state");
     Require(RandomCommandGuard::ExecuteRestoreIfRequested("/random/resetEngineFrom " + file.generic_string()), "unquoted space path accepted");

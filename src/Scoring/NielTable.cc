@@ -12,7 +12,7 @@
 
 std::shared_ptr<const NielTable> NielTable::Load(const std::string& path)
 {
-    const auto acceptedInput = input_provenance::ReadFile(path);
+    const auto acceptedInput = input_provenance::ReadFile(path, "niel_table", "displacement_table_parse");
     std::istringstream input(acceptedInput.bytes);
     auto table = std::make_shared<NielTable>();
     table->file_ = path;

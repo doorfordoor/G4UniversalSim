@@ -3,6 +3,7 @@
 #include "Actions/ActionInitialization.hh"
 #include "Config/ConfigManager.hh"
 #include "Config/EffectiveConfig.hh"
+#include "Config/InputProvenance.hh"
 #include "Core/AppMessenger.hh"
 #include "Detector/DetectorConstruction.hh"
 #include "Geometry/GeometryManager.hh"
@@ -51,6 +52,35 @@
 #include <vector>
 
 namespace {
+
+effective_config::Value OutputProvenance(const std::string& executionId)
+{
+    using effective_config::Value;
+    Value::Array inputs;
+    for (const auto& item : input_provenance::Snapshot()) {
+        inputs.emplace_back(Value::Object{
+            {"sequence", static_cast<std::int64_t>(item.sequence)},
+            {"path", item.path}, {"kind", item.kind}, {"role", item.role},
+            {"capture_method", item.capture_method}, {"status", item.status},
+            {"sha256", item.sha256 ? Value(*item.sha256) : Value()},
+            {"size_bytes", item.size_bytes ? Value(static_cast<std::int64_t>(*item.size_bytes)) : Value()},
+            {"reason", item.reason}});
+    }
+    return Value::Object{
+        {"schema", "g4usim_provenance_v1"}, {"execution_id", executionId},
+        {"build", Value::Object{
+            {"git_commit", G4USIM_GIT_COMMIT}, {"git_source_state", G4USIM_GIT_SOURCE_STATE},
+            {"git_state_scope", "cpp_build_inputs"},
+            {"source_fingerprint", G4USIM_SOURCE_FINGERPRINT},
+            {"compiler_id", G4USIM_COMPILER_ID}, {"compiler_version", G4USIM_COMPILER_VERSION},
+            {"configuration", G4USIM_BUILD_CONFIGURATION}, {"geant4_version", G4Version}}},
+        {"input_coverage", "project_readers_observed"},
+        {"input_observation", "bytes_read_not_semantic_acceptance"},
+        {"input_exclusions", Value::Array{
+            "Geant4 internal datasets and external physics-table reads are not byte-captured",
+            "Native command input IO outside the project readers is not comprehensively observed; known references are marked unobserved"}},
+        {"inputs", std::move(inputs)}};
+}
 
 std::string BoolText(bool value)
 {
@@ -441,6 +471,19 @@ void SimulationManager::RecordSuccessfulMacroCommand(const std::string& command,
     // The command is recorded only after ApplyCommand and the corresponding
     // Messenger failure checks succeed. Never attribute an attempted command.
     const std::string token = FirstCommandToken(command);
+    // These native paths bypass project readers. Record a reference, never a
+    // final-path hash pretending to describe bytes actually read by Geant4.
+    // The physics-table command only schedules a possible future retrieval.
+    if (token == "/gps/hist/file" || token == "/run/particle/retrievephysicstable") {
+        const auto separator = command.find_first_of(" \t");
+        const auto argument = separator == std::string::npos ? std::string() :
+            StringUtils::Trim(command.substr(separator + 1));
+        if (token != "/run/particle/retrievephysicstable" || StringUtils::ToLower(argument) != "off") {
+            input_provenance::MarkUnobserved(argument.empty() ? "(native default directory)" : argument,
+                "Successful native command reference; consumed bytes and later retrieval are unobserved: " + token,
+                "native_command", token, "command_reference_not_read");
+        }
+    }
     std::string field;
     if (token == "/aihl/app/setoutputdir" || token == "/aihl/output/setdir") field = "output_dir";
     else if (token == "/aihl/app/setnumthreads") field = "threads";
@@ -615,6 +658,12 @@ bool SimulationManager::FinalizeRunSummary(const std::string& status,
         outputManager_->RecordOutputFailure("biasing_worker_evidence",
             "Incomplete or failed execution-thread biasing receipts (run/thread/EndRun coverage)");
 
+    // One streaming pass over closed ordinary artifacts. A registered file
+    // disappearing is a failure, not permission to silently shorten the list.
+    auto artifacts = outputManager_->CollectArtifactEvidence(true, true);
+    summary.SetProvenance(OutputProvenance(outputManager_->GetExecutionId()));
+    summary.Set("execution_id", outputManager_->GetExecutionId());
+    summary.Set("output_provenance_schema", "g4usim_provenance_v1");
     std::string finalStatus = status;
     const bool outputFailed = outputManager_->HasOutputFailure();
     const auto outputFailure = outputManager_->GetOutputFailure();
@@ -677,6 +726,8 @@ bool SimulationManager::FinalizeRunSummary(const std::string& status,
                 outputManager_->WritesRoot() ? std::to_string(AnalysisOutput::kRootSchemaVersion) : "not_applicable");
     summary.Set("geant4_version", G4Version);
     summary.Set("source_fingerprint", G4USIM_SOURCE_FINGERPRINT);
+    summary.Set("build_git_commit", G4USIM_GIT_COMMIT);
+    summary.Set("build_git_source_state", G4USIM_GIT_SOURCE_STATE);
     summary.Set("initial_seed", initialSeed_ ? std::to_string(*initialSeed_) : "unset");
     summary.Set("configured_seed", context_.HasSeed() ? std::to_string(context_.GetSeed()) : "unset");
     summary.Set("initial_engine_seed", "unknown");
@@ -705,6 +756,31 @@ bool SimulationManager::FinalizeRunSummary(const std::string& status,
     summary.Set("summary_write_status", "completed");
 
     outputManager_->WriteRunSummary();
+    OutputManager::ArtifactEvidence textArtifact;
+    textArtifact.path = FileUtils::AbsolutePath(outputManager_->MakeOutputPath("run_summary.txt"));
+    textArtifact.execution_id = outputManager_->GetExecutionId();
+    try {
+        const auto digest = input_provenance::HashFile(textArtifact.path);
+        textArtifact.sha256 = digest.sha256;
+        textArtifact.size_bytes = digest.size_bytes;
+        textArtifact.integrity_status = "hashed";
+    } catch (const std::exception& error) {
+        textArtifact.integrity_status = "unavailable";
+        textArtifact.reason = error.what();
+        outputManager_->RecordOutputFailure("artifact_integrity", error.what());
+        const auto failure = outputManager_->GetOutputFailure();
+        summary.Set("status", "failed");
+        summary.Set("program_exit_code", EXIT_FAILURE);
+        summary.Set("output_failure_status", "failed");
+        summary.Set("output_failure_run_id", std::to_string(failure.runId));
+        summary.Set("output_failure_thread_id", std::to_string(failure.threadId));
+        summary.Set("output_failure_stage", failure.stage);
+        summary.Set("output_failure_message", failure.message);
+        outputManager_->WriteRunSummary();
+    }
+    artifacts.push_back(std::move(textArtifact));
+    std::sort(artifacts.begin(), artifacts.end(), [](const auto& a, const auto& b) { return a.path < b.path; });
+    summary.SetArtifactEvidence(artifacts);
     // Metadata may fail after the first text summary was closed. Latch its
     // precise cause, then correct the still-writable text artifact instead of
     // leaving status=completed/exit=0 behind. This is not an atomic two-file

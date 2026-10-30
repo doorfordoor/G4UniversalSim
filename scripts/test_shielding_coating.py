@@ -23,6 +23,7 @@ checks physical or exact properties:
 from __future__ import annotations
 
 import csv
+import hashlib
 import json
 import os
 import re
@@ -196,7 +197,20 @@ def main() -> int:
         def metadata_of(case):
             return json.loads((case / "output" / "run_metadata.json").read_text(encoding="utf-8"))
 
+        def reseal_synthetic_summary(case, metadata):
+            # This is a deliberately modified temporary COPY for a semantic test,
+            # never the backend's original evidence and never a validation bypass.
+            if "provenance" not in metadata:
+                return
+            assert case != out and case.parent == work
+            path = case / "output" / "run_summary.txt"
+            data = path.read_bytes()
+            records = [entry for entry in metadata["generated_files"] if entry["path"].endswith("run_summary.txt")]
+            assert len(records) == 1
+            records[0].update(sha256=hashlib.sha256(data).hexdigest(), size_bytes=len(data), integrity_status="hashed")
+
         def write_metadata(case, metadata):
+            reseal_synthetic_summary(case, metadata)
             (case / "output" / "run_metadata.json").write_text(
                 json.dumps(metadata, indent=2), encoding="utf-8")
 
@@ -219,6 +233,7 @@ def main() -> int:
         # 2. a failed run summary
         case = copy_case("evidence_failed_run")
         edit_summary(case, {"status": "failed"})
+        write_metadata(case, metadata_of(case))
         expect_evidence_error(case, "only a completed run can be analysed")
 
         # 3. a run that completed no events

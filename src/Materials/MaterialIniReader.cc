@@ -99,7 +99,7 @@ std::string SchemaMessage(const std::string& key, const std::vector<std::string>
 
 void MaterialIniReader::Load(const std::string& filename)
 {
-    const auto input=input_provenance::ReadFile(filename);
+    const auto input=input_provenance::ReadFile(filename, "material_ini", "material_parse");
     MaterialIniReader candidate;
     candidate.LoadBytes(filename,input.bytes);
     *this=std::move(candidate);

@@ -274,7 +274,7 @@ def check_report(report: dict) -> None:
     assert evidence["scorer_statistics"] == STATISTICS_NAME
     assert evidence["phase_space_files"] == ["phase_space_t0.csv", "phase_space_t1.csv"]
     assert evidence["niel_tables"] == []   # no NIEL table in this fixture
-    assert evidence["warnings"] == [WARNING], evidence["warnings"]
+    assert evidence["warnings"] == [WARNING, "Legacy metadata: content hashes are not recorded; byte identity is unverified."], evidence["warnings"]
 
 
 @contextmanager
@@ -299,7 +299,7 @@ def check_zero_deposition(output: Path) -> None:
     assert report["ddd"]["evidence"] == ZERO_STATISTICS_LABEL
     assert report["ddd"]["total"] == 0.0
     assert report["evidence"]["scorer_statistics"] == ZERO_STATISTICS_LABEL
-    assert report["evidence"]["warnings"] == [WARNING], report["evidence"]["warnings"]
+    assert report["evidence"]["warnings"] == [WARNING, "Legacy metadata: content hashes are not recorded; byte identity is unverified."], report["evidence"]["warnings"]
     close(report["particles"]["proton"]["per_primary"], 5 / EVENTS, "zero.proton.per_primary")
     close(report["primary_transmission"], 4 / EVENTS, "zero.primary_transmission")
 
@@ -356,6 +356,7 @@ def run() -> None:
             "  e-: 0.03 per primary, mean 1.333 MeV",
             "  proton: 0.05 per primary, mean 80.1 MeV",
             f"  warning: {WARNING}",
+            "  warning: Legacy metadata: content hashes are not recorded; byte identity is unverified.",
             f"report: {expected_output / 'shielding_report.json'}, "
             f"spectra: {expected_output / 'spectra.csv'}",
             "",

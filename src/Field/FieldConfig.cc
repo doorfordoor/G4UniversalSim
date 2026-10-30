@@ -147,7 +147,7 @@ G4ThreeVector FieldConfig::ParseFieldVector(const std::string& text, char kind)
 
 std::shared_ptr<const FieldMap> FieldConfig::LoadMap(const std::string& path, char kind)
 {
-    const auto acceptedInput = input_provenance::ReadFile(path);
+    const auto acceptedInput = input_provenance::ReadFile(path, "field_map", "field_map_parse");
     std::istringstream input(acceptedInput.bytes);
     auto map = std::make_shared<FieldMap>();
     map->file = path;

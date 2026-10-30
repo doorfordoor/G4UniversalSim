@@ -8,6 +8,7 @@ import json
 from pathlib import Path, PurePosixPath, PureWindowsPath
 import re
 import warnings
+from .identity import strict_object, validate_extension
 
 LEGACY_WARNING = "Legacy/unverified directory: run_metadata.json is absent; file ownership and completeness are unverified."
 
@@ -22,14 +23,23 @@ class OutputEvidence:
     files: tuple[Path, ...]
     document: dict | None
     manifest_digest: str | None = None
+    records: tuple[dict, ...] = ()
 
     @property
     def status(self) -> str:
-        return "registered_manifest" if self.document is not None else "legacy_unverified"
+        return "verified" if self.document is not None and "provenance" in self.document else ("registered_manifest" if self.document is not None else "legacy_unverified")
+
+    @property
+    def verification_status(self) -> str:
+        return "verified" if self.status == "verified" else "legacy"
 
     @property
     def warnings(self) -> list[str]:
-        return [] if self.document is not None else [LEGACY_WARNING]
+        return (["Legacy metadata: content hashes are not recorded; byte identity is unverified."] if self.document is not None and "provenance" not in self.document else ([] if self.document is not None else [LEGACY_WARNING]))
+
+    def artifact(self, path: str | Path) -> dict | None:
+        target = Path(path).resolve()
+        return next((record for local, record in zip(self.files, self.records) if local.resolve() == target), None)
 
     def matching(self, pattern: str) -> list[Path]:
         return sorted(p for p in self.files if fnmatchcase(p.name, pattern))
@@ -48,16 +58,23 @@ def _path(value: str):
 def output_evidence(directory: str | Path) -> OutputEvidence:
     root = Path(directory)
     manifest = root / "run_metadata.json"
-    if not manifest.exists():
+    if not manifest.exists() and not manifest.is_symlink():
         return OutputEvidence(root, tuple(sorted(p for p in root.glob("*") if p.is_file())), None)
     try:
         manifest_bytes = manifest.read_bytes()
-        document = json.loads(manifest_bytes.decode("utf-8"))
+        document = json.loads(manifest_bytes.decode("utf-8"), object_pairs_hook=strict_object, parse_constant=lambda token: (_ for _ in ()).throw(ValueError(f"non-finite JSON: {token}")))
         if not isinstance(document, dict) or document.get("schema") != "run_metadata_json_v1":
             raise ValueError("unsupported metadata schema")
         records = document.get("generated_files")
         if not isinstance(records, list):
             raise ValueError("generated_files must be a list")
+        values = document.get("values", {})
+        if not isinstance(values, dict):
+            raise ValueError("metadata values must be an object")
+        f1_fields = {"execution_id", "scope", "run_id", "thread_id", "sha256", "size_bytes", "integrity_status"}
+        declares_f1 = any(key in values for key in ("output_provenance_schema", "execution_id")) or any(isinstance(row, dict) and f1_fields.intersection(row) for row in records)
+        if "provenance" not in document and declares_f1:
+            raise ValueError("F1 identity markers require the provenance extension; legacy downgrade is forbidden")
         paths = []
         for row in records:
             if not isinstance(row, dict) or not isinstance(row.get("path"), str) or not row["path"]:
@@ -110,7 +127,10 @@ def output_evidence(directory: str | Path) -> OutputEvidence:
         for required in ("run_metadata.json", "run_summary.txt"):
             if root / required not in files:
                 raise ValueError(f"required generated file is not registered: {required}")
-        return OutputEvidence(root, tuple(sorted(files)), document, hashlib.sha256(manifest_bytes).hexdigest())
+        if "provenance" in document:
+            validate_extension(document, files, root, run_ids)
+        ordered = sorted(zip(files, records), key=lambda item: item[0])
+        return OutputEvidence(root, tuple(item[0] for item in ordered), document, hashlib.sha256(manifest_bytes).hexdigest(), tuple(item[1] for item in ordered))
     except (ValueError, OSError, TypeError) as error:
         raise ProvenanceError(f"Invalid output provenance in {manifest}: {error}") from error
 

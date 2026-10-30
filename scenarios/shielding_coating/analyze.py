@@ -74,7 +74,7 @@ def load_metadata(output: Path) -> dict:
     if not path.is_file():
         fail(f"{path} is missing; without it a missing statistics file cannot be "
              "told apart from a run that scored nothing")
-    metadata = json.loads(path.read_text(encoding="utf-8"))
+    metadata = output_evidence(output).document
     if metadata.get("schema") != RUN_METADATA_SCHEMA:
         fail(f"{path} has schema {metadata.get('schema')!r}, expected {RUN_METADATA_SCHEMA!r}")
     return metadata
@@ -141,7 +141,7 @@ def statistics(output: Path, metadata: dict) -> tuple[dict[tuple[str, str], dict
     if listed:
         fail(f"{path} was listed in run_metadata.json generated_files but is missing; "
              "the statistics evidence was removed or moved, refusing to report zero")
-    stale = sorted(p.name for p in output_files(output, "scorer_statistics_r*.csv"))
+    stale = sorted(p.name for p in output_evidence(output).matching("scorer_statistics_r*.csv"))
     if stale:
         fail(f"found statistics of another run ({', '.join(stale)}) but no {STATISTICS_NAME}; "
              "the output directory mixes runs")
@@ -149,7 +149,7 @@ def statistics(output: Path, metadata: dict) -> tuple[dict[tuple[str, str], dict
 
 
 def phase_space(output: Path, completed: int) -> tuple[list[dict[str, str]], list[str]]:
-    paths = sorted(p for p in output_files(output, "phase_space_t*.csv")
+    paths = sorted(p for p in output_evidence(output).matching("phase_space_t*.csv")
                    if re.fullmatch(r"phase_space_t\d+\.csv", p.name))
     if not paths:
         fail("no phase_space_t*.csv files were found; make_scenario always requests a "
@@ -255,7 +255,7 @@ def _build_report(output: Path) -> tuple[dict, dict[str, list[float]], list[floa
         "scorer_statistics": stats_evidence,
         "phase_space_files": phase_files,
         "niel_tables": meta.get("niel") or [],
-        "warnings": warnings,
+        "warnings": [*warnings, *output_evidence(output).warnings],
     }
     return report, counts, edges
 

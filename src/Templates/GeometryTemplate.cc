@@ -12,7 +12,7 @@ VolumeNode GeometryTemplate::BuildNodesFromFile(const std::string& filename) con
         throw std::runtime_error("Template '" + Name() + "' config file does not exist: '" + filename + "'");
     }
 
-    const auto input=input_provenance::ReadFile(filename);
+    const auto input=input_provenance::ReadFile(filename, "geometry_ini", "template_parse");
     ConfigManager config;
     config.LoadGeometryConfigBytes(filename,input.bytes);
     diagnostics_.clear();

@@ -76,6 +76,7 @@ def _mesh_bins_from_metadata(root_path: Path, mesh: str) -> tuple[int, int, int]
 
 def mesh_names(root_path: str | Path) -> list[tuple[str, str]]:
     """(mesh, quantity) pairs present in the file."""
+    output_evidence(Path(root_path).parent)  # Reject invalid adjacent evidence before reading data.
     with uproot.open(root_path) as root:
         data = root["mesh"].arrays(["mesh", "quantity"], library="np")
     return sorted({(str(m), str(q)) for m, q in zip(data["mesh"], data["quantity"])})
@@ -85,6 +86,7 @@ def load_mesh(root_path: str | Path, mesh: str, quantity: str,
               bins: tuple[int, int, int] | None = None, *, n_events: int | None = None) -> MeshQuantity:
     """Merge the per-worker rows of one mesh quantity into dense arrays."""
     root_path = Path(root_path)
+    output_evidence(Path(root_path).parent)  # Reject invalid adjacent evidence before reading data.
     with uproot.open(root_path) as root:
         data = root["mesh"].arrays(library="np")
     selected = (data["mesh"] == mesh) & (data["quantity"] == quantity)
@@ -165,6 +167,11 @@ def _run_events(root_path: Path) -> int | None:
     evidence = output_evidence(root_path.parent)
     if evidence.document is None or root_path not in evidence.files:
         return None
+    if "provenance" in evidence.document:
+        record = evidence.artifact(root_path)
+        if record is None or record["scope"] not in {"run", "thread"}:
+            raise ValueError("ROOT artifact lacks explicit run identity")
+        return next(run["completed_events"] for run in evidence.document["runs"] if run["run_id"] == record["run_id"])
     match = re.fullmatch(r"g4usim(?:_r([0-9]+))?", root_path.stem)
     if match is None:
         return None
@@ -216,6 +223,7 @@ def load_scorer_statistics(root_path: str | Path, n_events: int | None = None) -
     """
     root_path = Path(root_path)
     tables: dict[str, dict] = {}
+    output_evidence(Path(root_path).parent)  # Reject invalid adjacent evidence before reading data.
     with uproot.open(root_path) as root:
         for tree in ("edep_volume", "edep_particle", "dose", "fluence", "let"):
             if tree in root:

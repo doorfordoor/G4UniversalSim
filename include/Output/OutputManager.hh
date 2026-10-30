@@ -30,6 +30,8 @@ public:
         std::string stage;
         std::string message;
     };
+    using ArtifactScope = RunSummary::ArtifactScope;
+    using ArtifactEvidence = RunSummary::ArtifactEvidence;
     OutputManager() = default;
     void AcceptEffectiveConfig(const IniReader& reader);
     std::vector<effective_config::Field> ExportEffectiveConfigFields() const;
@@ -103,7 +105,14 @@ public:
     const RunSummary& GetRunSummary() const;
     void WriteRunSummary();
     void RecordRun(int runId, std::int64_t plannedEvents, std::int64_t completedEvents);
+    const std::string& GetExecutionId() const;
     void RegisterGeneratedFile(const std::string& filename);
+    void RegisterGeneratedFile(const std::string& filename, ArtifactScope scope,
+                               std::optional<int> runId = std::nullopt,
+                               std::optional<int> threadId = std::nullopt);
+    // Missing/failed reads remain unavailable entries and latch artifact_integrity.
+    // HashFile never adds an input observation. Metadata alone excludes itself.
+    std::vector<ArtifactEvidence> CollectArtifactEvidence(bool includeMetadataSelf = false, bool excludeSummary = false);
     std::vector<std::string> GetGeneratedFiles() const;
     void RecordOutputFailure(const std::string& stage, const std::string& message,
                              int attemptedRunId = -1);
@@ -119,8 +128,10 @@ public:
 
 private:
     struct GeneratedFileRegistry {
+        GeneratedFileRegistry();
         std::mutex mutex;
-        std::vector<std::string> files;
+        std::string executionId;
+        std::vector<ArtifactEvidence> files;
         bool hasFailure = false;
         OutputFailure firstFailure;
     };

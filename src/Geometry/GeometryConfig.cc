@@ -77,7 +77,7 @@ int ParseCount(const std::string& text)
 
 void GeometryConfig::Load(const std::string& filename)
 {
-    const auto input=input_provenance::ReadFile(filename);
+    const auto input=input_provenance::ReadFile(filename, "geometry_ini", "geometry_parse");
     GeometryConfig candidate;
     candidate.LoadBytes(filename,input.bytes);
     *this=std::move(candidate);
@@ -673,7 +673,7 @@ void GeometryConfig::ValidateShapeContract(
                 try { unit = UnitParser::ParseLength("1 " + StringUtils::Trim(unitText->second)); }
                 catch (const std::exception& error) { fail("file_unit", error.what(), "Use a length unit such as mm, cm or m."); }
             }
-            try { (void)StlReader::Read(ResolveNextTo(filename_, file->second), unit); }
+            try { (void)StlReader::Read(ResolveNextTo(filename_, file->second), unit, "geometry_validation"); }
             catch (const std::exception& error) { fail("file", error.what()); }
         }
     } catch (const std::runtime_error&) {
@@ -858,7 +858,7 @@ void GeometryConfig::ParsePlacement(const std::string& sectionName, VolumeNode& 
                 fail("copies_file", "copies_file defines every copy's position and rotation; remove position and rotation.");
             }
             const std::string path = ResolveNextTo(filename_, values.at("copies_file"));
-            const auto acceptedInput=input_provenance::ReadFile(path);
+            const auto acceptedInput=input_provenance::ReadFile(path, "copies_table", "parameterised_copies_parse");
             std::istringstream input(acceptedInput.bytes);
             inputs_.push_back({path,{},acceptedInput.sha256});
             std::string line;

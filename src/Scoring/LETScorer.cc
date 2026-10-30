@@ -159,7 +159,8 @@ void LETScorer::Write(OutputManager& output)
                          std::to_string(events_)});
     }
     writer.Close();
-    output.RegisterGeneratedFile(writer.GetFilename());
+    output.RegisterGeneratedFile(writer.GetFilename(), OutputManager::ArtifactScope::Thread,
+                                 output.GetRunId(), output.GetThreadId());
 }
 
 void LETScorer::Reset()

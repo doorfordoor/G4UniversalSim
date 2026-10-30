@@ -453,7 +453,8 @@ void ScoringManager::EndRun(int runID)
 {
     EndPhaseSpaceRun();
     const std::string trajectoryFile = trajectories_.EndRun();
-    if (!trajectoryFile.empty() && outputManager_) outputManager_->RegisterGeneratedFile(trajectoryFile);
+    if (!trajectoryFile.empty() && outputManager_) outputManager_->RegisterGeneratedFile(trajectoryFile, OutputManager::ArtifactScope::Thread,
+        outputManager_->GetRunId(), outputManager_->GetThreadId());
     if (!enabled_) return;
     for (ScorerBase* scorer : EnabledScorers()) scorer->EndRun(runID);
 }
@@ -854,7 +855,8 @@ void ScoringManager::EndPhaseSpaceRun()
 {
     if (!phaseSpaceWriter_) return;
     phaseSpaceWriter_->Close();
-    if (outputManager_) outputManager_->RegisterGeneratedFile(phaseSpaceWriter_->GetFilename());
+    if (outputManager_) outputManager_->RegisterGeneratedFile(phaseSpaceWriter_->GetFilename(), OutputManager::ArtifactScope::Thread,
+        outputManager_->GetRunId(), outputManager_->GetThreadId());
     phaseSpaceWriter_.reset();
 }
 

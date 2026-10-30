@@ -1,5 +1,6 @@
 
 #include "Geometry/GdmlInputCapture.hh"
+#include "Config/InputProvenance.hh"
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLFileMgr.hpp>
 #include <xercesc/util/XMLNetAccessor.hpp>
@@ -13,6 +14,18 @@
 #include <stdexcept>
 #include <cstring>
 #include <thread>
+#include <cstdlib>
+#include <new>
+// One-shot allocation failure after a successful native open. This is only
+// this component executable's allocator, never a production runtime hook.
+thread_local bool failNextAllocation = false;
+void* operator new(std::size_t count) {
+    if (failNextAllocation) { failNextAllocation = false; throw std::bad_alloc(); }
+    if (void* p = std::malloc(count ? count : 1)) return p;
+    throw std::bad_alloc();
+}
+void operator delete(void* p) noexcept { std::free(p); }
+void operator delete(void* p, std::size_t) noexcept { std::free(p); }
 using namespace xercesc;
 void Check(bool value, const char* why) { if (!value) throw std::runtime_error(why); }
 void Print(const GdmlIO::GdmlInputCapture& capture) {
@@ -35,7 +48,55 @@ public:
     const XMLCh* getId() const override { return u"test-native"; }
     BinInputStream* makeNew(const XMLURL&, const XMLNetHTTPInfo*) override { return new FakeStream; }
 };
-int main(int argc,char** argv) {
+class AllocationFaultFiles final : public XMLFileMgr {
+    XMLFileMgr& source_;
+    std::string path_;
+public:
+    int opens=0, closes=0;
+    AllocationFaultFiles(XMLFileMgr& source, std::string path):source_(source),path_(std::move(path)){}
+    FileHandle fileOpen(const XMLCh* p,bool write,MemoryManager* const m) override {
+        auto handle=source_.fileOpen(p,write,m);if(handle){++opens;failNextAllocation=true;}return handle;
+    }
+    FileHandle fileOpen(const char* p,bool write,MemoryManager* const m) override {
+        auto handle=source_.fileOpen(p,write,m);if(handle){++opens;failNextAllocation=true;}return handle;
+    }
+    FileHandle openStdIn(MemoryManager* const m) override {
+        auto handle=source_.fileOpen(path_.c_str(),false,m);if(handle){++opens;failNextAllocation=true;}return handle;
+    }
+    void fileClose(FileHandle h,MemoryManager* const m) override {++closes;source_.fileClose(h,m);}
+    void fileReset(FileHandle h,MemoryManager* const m) override {source_.fileReset(h,m);}
+    XMLFilePos curPos(FileHandle h,MemoryManager* const m) override {return source_.curPos(h,m);}
+    XMLFilePos fileSize(FileHandle h,MemoryManager* const m) override {return source_.fileSize(h,m);}
+    XMLSize_t fileRead(FileHandle h,XMLSize_t n,XMLByte* b,MemoryManager* const m) override {return source_.fileRead(h,n,b,m);}
+    void fileWrite(FileHandle h,XMLSize_t n,const XMLByte* b,MemoryManager* const m) override {source_.fileWrite(h,n,b,m);}
+    XMLCh* getFullPath(const XMLCh* const p,MemoryManager* const m) override {return source_.getFullPath(p,m);}
+    XMLCh* getCurrentDirectory(MemoryManager* const m) override {return source_.getCurrentDirectory(m);}
+    bool isRelative(const XMLCh* const p,MemoryManager* const m) override {return source_.isRelative(p,m);}
+};
+void CheckOpenFailureCloses(XMLFileMgr& original,const std::string& path) {
+    AllocationFaultFiles fault(original,path);
+    XMLPlatformUtils::fgFileMgr=&fault;
+    {
+        GdmlIO::GdmlInputCapture capture;
+        bool refused=false;
+        std::thread foreign([&]{
+            try { XMLPlatformUtils::fgFileMgr->fileOpen(path.c_str(),false,XMLPlatformUtils::fgMemoryManager); }
+            catch(const std::bad_alloc&) { refused=true; }
+        });
+        foreign.join();
+        Check(refused && fault.opens==1 && fault.closes==1,"foreign native handle closed on observation allocation failure");
+        refused=false;
+        try { XMLPlatformUtils::fgFileMgr->openStdIn(XMLPlatformUtils::fgMemoryManager); }
+        catch(const std::bad_alloc&) { refused=true; }
+        Check(refused && fault.opens==2 && fault.closes==2,"stdin native handle closed on observation allocation failure");
+        refused=false;
+        try { XMLPlatformUtils::fgFileMgr->fileOpen(path.c_str(),false,XMLPlatformUtils::fgMemoryManager); }
+        catch(const std::bad_alloc&) { refused=true; }
+        Check(refused && fault.opens==3 && fault.closes==3,"owner native handle still closed on capture allocation failure");
+    }
+    XMLPlatformUtils::fgFileMgr=&original;
+}
+int RunCaptureChecks(int argc,char** argv) {
     Check(argc==2,"path missing"); std::string directory=argv[1];
     XMLPlatformUtils::Initialize();
     auto* originalFiles=XMLPlatformUtils::fgFileMgr;
@@ -61,6 +122,10 @@ int main(int argc,char** argv) {
         files->fileWrite(write,4,reinterpret_cast<const XMLByte*>("keep"),XMLPlatformUtils::fgMemoryManager);
         files->fileClose(write,XMLPlatformUtils::fgMemoryManager);
         Check(capture.AcceptedInputs().size()==1,"writes not captured as inputs");
+        const auto observations = input_provenance::Snapshot();
+        Check(observations.size()==1,"ledger excludes native writes");
+        Check(observations[0].sha256==input_provenance::Sha256("original bytes\r\n"),"ledger preserves original bytes after replace");
+        Check(observations[0].size_bytes==16 && observations[0].capture_method=="xerces_file_buffer","ledger native buffered metadata");
         Print(capture);
     }
     Check(XMLPlatformUtils::fgFileMgr==originalFiles,"restore file manager");
@@ -102,6 +167,7 @@ int main(int argc,char** argv) {
         Check(XMLString::equals(root->getTextContent(),u"accepted entity"),"entity content");
         Print(capture);
     }
+    CheckOpenFailureCloses(*originalFiles,directory+"/entity.txt");
     FakeNetwork native;
     XMLPlatformUtils::fgNetAccessor=&native;
     {
@@ -117,10 +183,27 @@ int main(int argc,char** argv) {
         stream->readBytes(bytes,1); delete stream;
         Check(capture.AcceptedInputs().size()==1,"complete network only");
         Check(capture.UntrackedInputs().size()==1,"partial is unknown");
+        const auto observations = input_provenance::Snapshot();
+        const auto& incomplete = observations.back();
+        const auto& complete = observations[observations.size()-2];
+        Check(complete.path=="http://example.test/schema.xsd" && complete.sha256==input_provenance::Sha256("network bytes\r\n"),"network EOF ledger original bytes");
+        Check(incomplete.status=="unobserved" && !incomplete.sha256 && !incomplete.size_bytes,"partial network ledger cannot invent hash");
         Print(capture);
     }
     Check(XMLPlatformUtils::fgNetAccessor==&native,"network restore");
     XMLPlatformUtils::fgNetAccessor=originalNetwork;
     XMLPlatformUtils::Terminate();
     std::cout << "PASS native capture\n";
+    return 0;
+}
+
+// Keep assertion failures visible on Windows too: an uncaught C++ exception
+// otherwise terminates with 0xC0000409 and can leave redirected stdout empty.
+int main(int argc,char** argv) {
+    try { return RunCaptureChecks(argc,argv); }
+    catch(const std::exception& error) {
+        std::cerr << "GDML capture check failed: " << error.what() << "\n"
+                  << "Usage: gdmlInputCaptureCheck <fixture-directory>; normally run scripts/test_effective_gdml.py\n";
+        return 1;
+    }
 }

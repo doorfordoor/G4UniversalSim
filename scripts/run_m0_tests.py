@@ -20,15 +20,15 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE_DIRECTORIES = ("src", "include", "gui/g4usim_gui", "gui/smoke_tests", "scripts", "tools")
-SOURCE_SUFFIXES = (".py", ".cc", ".hh", ".h", ".in")
+SOURCE_DIRECTORIES = ("src", "include", "cmake", "gui/g4usim_gui", "gui/smoke_tests", "scripts", "tools")
+SOURCE_SUFFIXES = (".py", ".cc", ".hh", ".h", ".in", ".cmake")
 # Test code, fixtures and schema inputs a green report must be tied to. ``src`` and
 # ``include`` keep their own compiled-source fingerprint; this fingerprint covers what
 # a case actually reads, so a report cannot silently mix today's binary with
 # yesterday's test script or fixture.
 TEST_CONTENT_DIRECTORIES = (
     "scripts", "tools", "gui/smoke_tests", "gui/g4usim_gui",
-    "config", "scenarios", "schema", "macros", "test",
+    "config", "scenarios", "schema", "macros", "test", "cmake",
 )
 ASSERT_PROBE = ROOT / "tools" / "test_assert_probe.py"
 ASSERT_MARKER = "G4USIM_ASSERTS="
@@ -53,6 +53,12 @@ class Case:
 
 
 CASES = (
+    Case("build_identity", "scripts/test_build_identity.py", "static"),
+    Case("f1_input_provenance", "scripts/test_f1_input_provenance.py", "static", ("cxx",)),
+    Case("f1_input_resources", "scripts/test_f1_input_resources_backend.py", "backend", ("exe",)),
+    Case("f1_artifact_model", "scripts/test_f1_output_identity.py", "static", ("cxx",), args=("--component",)),
+    Case("f1_output_identity", "scripts/test_f1_output_identity.py", "backend", ("exe",)),
+    Case("gui_f1_output_identity", "gui/smoke_tests/smoke_f1_output_identity.py", "gui", ("qt",)),
     Case("merge_outputs", "scripts/test_merge_outputs.py", "static"),
     Case("output_extensions", "scripts/test_output_extensions.py", "static"),
     Case("runner_contract", "scripts/test_m0_runner.py", "static"),
@@ -220,6 +226,7 @@ def workspace_source_fingerprint() -> str:
     source_paths = [ROOT / "main.cc", ROOT / "CMakeLists.txt", ROOT / "include/Core/BuildInfo.hh.in"]
     source_paths.extend((ROOT / "src").rglob("*.cc"))
     source_paths.extend((ROOT / "include").rglob("*.hh"))
+    source_paths.extend((ROOT / "cmake").rglob("*.cmake"))
     manifest = "".join(
         f"{path.relative_to(ROOT).as_posix()}:{hashlib.sha256(path.read_bytes()).hexdigest()}\n"
         for path in sorted(source_paths, key=lambda item: item.relative_to(ROOT).as_posix())

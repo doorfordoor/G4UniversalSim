@@ -174,7 +174,7 @@ std::string ResolveRelativeToConfig(const ConfigManager& config, const std::stri
 // interpolation between points). <unit> is keV or MeV; '#' starts a comment.
 std::vector<std::pair<double, double>> ReadSpectrumFile(const std::string& path, const std::string& type, std::string& sha256)
 {
-    const auto acceptedInput = input_provenance::ReadFile(path);
+    const auto acceptedInput = input_provenance::ReadFile(path, "spectrum", "source_spectrum_parse");
     std::istringstream input(acceptedInput.bytes);
     std::vector<std::vector<std::string>> rows;
     std::string line;

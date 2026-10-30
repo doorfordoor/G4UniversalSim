@@ -49,6 +49,7 @@ def scan_package(package_dir: str | Path) -> RunHistoryEntry:
         _apply_status(entry, status)
         _apply_output_counts(entry, package)
         _infer_status(entry, package, status)
+        _apply_identity(entry, package)
     except Exception as exc:  # noqa: BLE001
         entry.status = "unknown"
         entry.errors.append(f"Failed to scan package: {exc}")
@@ -158,3 +159,16 @@ def _int_or_none(value) -> int | None:
         return int(value)
     except Exception:
         return None
+
+
+def _apply_identity(entry, package):
+    from g4usim_gui.output.provenance import output_evidence
+    try:
+        evidence = output_evidence(package / "output")
+        entry.identity_status = evidence.verification_status
+        entry.warnings.extend(evidence.warnings)
+        entry.identity_details = json.dumps(evidence.document.get("provenance", {}) if evidence.document else {}, ensure_ascii=False, indent=2)
+    except ValueError as error:
+        entry.identity_status = "tampered" if "bytes mismatch" in str(error) else "unavailable"
+        entry.identity_details = str(error)
+        entry.warnings.append(str(error))

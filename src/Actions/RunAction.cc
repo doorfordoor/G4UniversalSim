@@ -242,7 +242,8 @@ void RunAction::EndOfRunAction(const G4Run* run)
         // can finish merging. Workers end before the master in Geant4 MT.
         attempt("root_write_close", [&]() {
             if (AnalysisOutput::EndRun() && role_ != Role::Worker) {
-                outputManager->RegisterGeneratedFile(outputManager->RootFilePath());
+                outputManager->RegisterGeneratedFile(outputManager->RootFilePath(),
+                                                     OutputManager::ArtifactScope::Run, runID);
             }
         });
         if (role_ == Role::Worker) {

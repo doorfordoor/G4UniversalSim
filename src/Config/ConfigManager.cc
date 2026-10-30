@@ -105,7 +105,7 @@ std::vector<std::string> DynamicKeys(const std::string& section)
 void ConfigManager::LoadMainConfig(const std::string& filename)
 {
     IniReader candidate;
-    candidate.Load(filename);
+    candidate.Load(filename, "main_ini");
     ValidateMainIniFormat(candidate);
     mainConfig_ = std::move(candidate);
 }
@@ -131,7 +131,7 @@ void ConfigManager::LoadConfigFile(const std::string& name, const std::string& f
     }
 
     IniReader reader;
-    reader.Load(filename);
+    reader.Load(filename, "named_ini");
     namedConfigs_[normalizedName] = reader;
 }
 

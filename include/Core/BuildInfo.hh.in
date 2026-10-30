@@ -1,8 +1,10 @@
 #pragma once
 
 // SHA-256 of sorted C++ source/header paths and contents, the build-info
-// template, and CMakeLists.txt.
+// template, CMakeLists.txt and cmake modules.
 // Includes uncommitted worktree edits; not a physics-validation identifier.
 #define G4USIM_SOURCE_FINGERPRINT "@G4USIM_SOURCE_FINGERPRINT@"
 #define G4USIM_COMPILER_ID "@CMAKE_CXX_COMPILER_ID@"
 #define G4USIM_COMPILER_VERSION "@CMAKE_CXX_COMPILER_VERSION@"
+#define G4USIM_GIT_COMMIT "@G4USIM_GIT_COMMIT@"
+#define G4USIM_GIT_SOURCE_STATE "@G4USIM_GIT_SOURCE_STATE@"

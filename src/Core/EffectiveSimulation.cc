@@ -269,7 +269,8 @@ std::string SimulationManager::ExportEffectiveConfigJson() const
     return configuredEffective_->ToJson();
 }
 
-void SimulationManager::WriteEffectiveSnapshot(const effective_config::Snapshot& snapshot, const std::string& filename, OutputManager* output) const
+void SimulationManager::WriteEffectiveSnapshot(const effective_config::Snapshot& snapshot, const std::string& filename,
+    OutputManager* output, std::optional<int> runId, std::optional<int> threadId) const
 {
     if (!output) throw std::runtime_error("EffectiveConfig output manager unavailable");
     std::filesystem::path temporary;
@@ -306,7 +307,10 @@ void SimulationManager::WriteEffectiveSnapshot(const effective_config::Snapshot&
 #endif
         temporary.clear();
         failureStage="effective_config_register";
-        output->RegisterGeneratedFile(path.u8string());
+        const auto scope = !runId ? OutputManager::ArtifactScope::Process :
+            (threadId && *threadId >= 0 ? OutputManager::ArtifactScope::Thread : OutputManager::ArtifactScope::Run);
+        output->RegisterGeneratedFile(path.u8string(), scope, runId,
+            scope == OutputManager::ArtifactScope::Thread ? threadId : std::nullopt);
     } catch(const std::exception& error) {
         if(stream)std::fclose(stream);
         if(!temporary.empty()){std::error_code ignored;std::filesystem::remove(temporary,ignored);}
@@ -336,7 +340,7 @@ void SimulationManager::CaptureEffectiveRunBegin(int runId, ScoringManager* scor
     }
     const int thread=G4Threading::G4GetThreadId();
     WriteEffectiveSnapshot(EffectiveSnapshot("run_begin",runId,scoring,output),
-        "effective_config_run_"+std::to_string(runId)+"_t"+std::to_string(thread)+".json",output);
+        "effective_config_run_"+std::to_string(runId)+"_t"+std::to_string(thread)+".json",output,runId,thread);
 }
 
 void SimulationManager::CaptureEffectiveThreadFinalization(int runId, ScoringManager* scoring, OutputManager* output) const
@@ -345,7 +349,7 @@ void SimulationManager::CaptureEffectiveThreadFinalization(int runId, ScoringMan
     output->RecordEffectiveConfigState("finalization");
     auto snapshot=EffectiveSnapshot("finalization",runId,scoring,output);
     const std::string name="effective_config_final_r"+std::to_string(runId)+"_t"+std::to_string(G4Threading::G4GetThreadId())+".json";
-    WriteEffectiveSnapshot(snapshot,name,output);
+    WriteEffectiveSnapshot(snapshot,name,output,runId,G4Threading::G4GetThreadId());
     effectiveThreadFinals_.emplace_back(Value::Object{{"file",output->MakeOutputPath(name)},{"run_id",runId},
         {"thread_id",G4Threading::G4GetThreadId()},{"revision",static_cast<std::int64_t>(snapshot.Revision())}});
 }

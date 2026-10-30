@@ -54,7 +54,7 @@ def fixture(root):
 
 def check(root):
     d,w=read_dose_summaries(root);f,fw=read_fluence_summaries(root)
-    assert not w and not fw and len(d)==len(f)==1
+    assert all("content hashes" in item for item in [*w, *fw]) and w and fw and len(d)==len(f)==1
     assert d[0].raw_edep_MeV == f[0].raw_track_length_mm == 1
     assert dose_json(root)["volumes"][0]["raw_edep_MeV"] == d[0].raw_edep_MeV
     assert fluence_json(root)["provenance"] == "registered_manifest"

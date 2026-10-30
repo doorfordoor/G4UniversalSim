@@ -285,7 +285,7 @@ private:
             ThrowMacroError(filename, 0, "recursive /control/execute cycle detected");
         }
         input_provenance::InputFile accepted;
-        try { accepted = input_provenance::ReadFile(filename.u8string()); }
+        try { accepted = input_provenance::ReadFile(filename.u8string(), "macro", "recursive_preflight"); }
         catch (const std::exception&) { ThrowMacroError(filename, 0, "cannot open macro file"); }
         std::istringstream input(accepted.bytes);
         inputs_.emplace_back(accepted.path, accepted.sha256);

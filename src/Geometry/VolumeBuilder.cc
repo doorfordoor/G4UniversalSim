@@ -761,7 +761,7 @@ G4VSolid* VolumeBuilder::CreateTessellatedSolid(const VolumeNode& node)
 {
     const std::string path = node.HasProperty("file.resolved") ? node.GetProperty("file.resolved") : node.GetProperty("file");
     const std::string unitText = StringUtils::Trim(node.GetProperty("file_unit", "mm"));
-    const StlMesh mesh = StlReader::Read(path, UnitParser::ParseLength("1 " + unitText));
+    const StlMesh mesh = StlReader::Read(path, UnitParser::ParseLength("1 " + unitText), "geometry_construct");
     auto* solid = new G4TessellatedSolid(G4NameUtils::SolidName(node.name));
     RecordCreatedGeometryObject();
     auto vertex = [&](int index) {

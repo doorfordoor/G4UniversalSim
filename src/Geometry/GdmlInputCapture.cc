@@ -26,10 +26,13 @@ std::string Utf8(const XMLCh* text) {
 struct Records {
     std::vector<AcceptedInput> accepted;
     std::vector<std::string> unknown;
-    void Accept(const std::string& path, const std::string& bytes) {
+    void Accept(const std::string& path, const std::string& bytes, const std::string& method) {
         // Reopening an input is a distinct native parse observation. Do not
         // collapse different bytes under one path into a false unique hash.
-        accepted.push_back({path, input_provenance::Sha256(bytes)});
+        const auto digest = input_provenance::Sha256(bytes);
+        input_provenance::RecordRead(path, {digest, static_cast<std::uint64_t>(bytes.size())},
+            "gdml_dependency", "native_gdml_parse", method);
+        accepted.push_back({path, digest});
     }
 };
 struct FileBuffer { std::string bytes; std::size_t offset = 0; };
@@ -39,7 +42,13 @@ public:
         : source_(source), records_(std::move(records)), owner_(std::this_thread::get_id()) {}
     FileHandle fileOpen(const XMLCh* path, bool write, MemoryManager* const manager) override {
         auto handle = source_.fileOpen(path, write, manager);
-        if (!handle || write || std::this_thread::get_id() != owner_) return handle;
+        if (!handle || write) return handle;
+        if (std::this_thread::get_id() != owner_) {
+            try {
+                input_provenance::MarkUnobserved("gdml:non_owner_file_stream", "Xerces non-owner thread file input is passed through without byte capture", "gdml_dependency", "native_gdml_parse");
+            } catch (...) { source_.fileClose(handle, manager); throw; }
+            return handle;
+        }
         XMLCh* full = nullptr;
         std::string name;
         try {
@@ -56,7 +65,13 @@ public:
     FileHandle fileOpen(const char* path, bool write, MemoryManager* const manager) override {
         // Keep the native overload's opening and locale semantics unchanged.
         auto handle = source_.fileOpen(path, write, manager);
-        if (!handle || write || std::this_thread::get_id() != owner_) return handle;
+        if (!handle || write) return handle;
+        if (std::this_thread::get_id() != owner_) {
+            try {
+                input_provenance::MarkUnobserved("gdml:non_owner_file_stream", "Xerces non-owner thread file input is passed through without byte capture", "gdml_dependency", "native_gdml_parse");
+            } catch (...) { source_.fileClose(handle, manager); throw; }
+            return handle;
+        }
         XMLCh* wide = nullptr;
         XMLCh* full = nullptr;
         std::string name;
@@ -76,7 +91,12 @@ public:
     }
     FileHandle openStdIn(MemoryManager* const manager) override {
         auto handle = source_.openStdIn(manager);
-        if (handle && std::this_thread::get_id() == owner_) records_->unknown.push_back("stdin: native stream not captured");
+        if (handle) {
+            try {
+                input_provenance::MarkUnobserved("stdin:", "Native GDML stdin stream is not captured", "gdml_dependency", "native_gdml_parse");
+                if (std::this_thread::get_id() == owner_) records_->unknown.push_back("stdin: native stream not captured");
+            } catch (...) { source_.fileClose(handle, manager); throw; }
+        }
         return handle;
     }
     void fileClose(FileHandle file, MemoryManager* const manager) override {
@@ -126,7 +146,7 @@ private:
                 buffer->bytes.append(reinterpret_cast<const char*>(block.data()), count);
             }
             // Digest the retained buffer before making it visible to Xerces.
-            records_->Accept(name, buffer->bytes);
+            records_->Accept(name, buffer->bytes, "xerces_file_buffer");
         } catch (...) { source_.fileClose(source, manager); throw; }
         source_.fileClose(source, manager);
         auto key = static_cast<FileHandle>(buffer.get());
@@ -146,7 +166,10 @@ public:
         : stream_(stream), records_(std::move(records)), url_(std::move(url)) {}
     ~ObservedStream() override {
         if (!complete_) {
-            try { records_->unknown.push_back(url_ + " (stream did not reach EOF)"); } catch (...) {}
+            try {
+                input_provenance::MarkUnobserved(url_, "Native GDML network stream did not reach EOF", "gdml_dependency", "native_gdml_parse", "xerces_network_stream");
+                records_->unknown.push_back(url_ + " (stream did not reach EOF)");
+            } catch (...) {}
         }
     }
     XMLFilePos curPos() const override { return stream_->curPos(); }
@@ -156,7 +179,7 @@ public:
         auto read = stream_->readBytes(output, count);
         if (read) bytes_.append(reinterpret_cast<const char*>(output), read);
         else if (count && !complete_) {
-            records_->Accept(url_, bytes_);
+            records_->Accept(url_, bytes_, "xerces_network_eof");
             bytes_.clear();
             complete_ = true;
         }
@@ -175,7 +198,11 @@ public:
     const XMLCh* getId() const override { return source_.getId(); }
     BinInputStream* makeNew(const XMLURL& url, const XMLNetHTTPInfo* info = nullptr) override {
         std::unique_ptr<BinInputStream> native(source_.makeNew(url, info));
-        if (!native || std::this_thread::get_id() != owner_) return native.release();
+        if (!native) return nullptr;
+        if (std::this_thread::get_id() != owner_) {
+            input_provenance::MarkUnobserved(Utf8(url.getURLText()), "Xerces non-owner network stream is passed through without byte capture", "gdml_dependency", "native_gdml_parse");
+            return native.release();
+        }
         // Preserve native URL resolution, HTTP options, content type and encoding.
         auto wrapper = std::make_unique<ObservedStream>(native.get(), records_, Utf8(url.getURLText()));
         native.release();

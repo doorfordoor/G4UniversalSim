@@ -40,7 +40,7 @@ class IniReader {
 public:
     IniReader() = default;
 
-    void Load(const std::string& filename);
+    void Load(const std::string& filename, const std::string& kind = "ini");
     void LoadBytes(const std::string& filename, const std::string& bytes);
 
     bool HasSection(const std::string& section) const;

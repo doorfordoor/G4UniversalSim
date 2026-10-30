@@ -68,7 +68,7 @@ std::vector<std::vector<PhaseSpaceParticle>> ReadHistories(const std::vector<std
     std::vector<input_provenance::InputFile> inputs;
     if (files.empty()) throw std::runtime_error("PhaseSpace needs at least one file");
     for (const std::string& file : files) {
-        auto fileInput = input_provenance::ReadFile(file);
+        auto fileInput = input_provenance::ReadFile(file, "phase_space", "source_histories_parse");
         std::istringstream input(fileInput.bytes);
         // Retain accepted identity/hash, not another copy of all replay bytes.
         if (acceptedInputs) inputs.push_back({fileInput.path, {}, fileInput.sha256});

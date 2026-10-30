@@ -40,7 +40,9 @@ file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS ${PROJECT_SOURCE_DIR}/src/*.cc)
 # CONFIGURE_DEPENDS makes a source/header edit regenerate this header before
 # the next build, even when Git HEAD is unchanged by uncommitted work.
 file(GLOB_RECURSE G4USIM_HEADERS CONFIGURE_DEPENDS ${PROJECT_SOURCE_DIR}/include/*.hh)
+file(GLOB_RECURSE G4USIM_CMAKE_INPUTS CONFIGURE_DEPENDS ${PROJECT_SOURCE_DIR}/cmake/*.cmake)
 set(G4USIM_BUILD_INPUTS ${SOURCES} ${G4USIM_HEADERS}
+    ${G4USIM_CMAKE_INPUTS}
     ${PROJECT_SOURCE_DIR}/main.cc ${PROJECT_SOURCE_DIR}/CMakeLists.txt
     ${PROJECT_SOURCE_DIR}/include/Core/BuildInfo.hh.in)
 list(SORT G4USIM_BUILD_INPUTS)
@@ -52,6 +54,9 @@ foreach(input_file IN LISTS G4USIM_BUILD_INPUTS)
     string(APPEND G4USIM_SOURCE_MANIFEST "${input_name}:${input_sha}\n")
 endforeach()
 string(SHA256 G4USIM_SOURCE_FINGERPRINT "${G4USIM_SOURCE_MANIFEST}")
+include(${PROJECT_SOURCE_DIR}/cmake/BuildIdentity.cmake)
+g4usim_capture_build_identity("${PROJECT_SOURCE_DIR}" "${G4USIM_BUILD_INPUTS}"
+    G4USIM_GIT_COMMIT G4USIM_GIT_SOURCE_STATE)
 configure_file(
     ${PROJECT_SOURCE_DIR}/include/Core/BuildInfo.hh.in
     ${PROJECT_BINARY_DIR}/generated/BuildInfo.hh
@@ -75,7 +80,7 @@ else()
 endif()
 target_include_directories(G4UniversalSim PRIVATE ${PROJECT_BINARY_DIR}/generated)
 target_compile_definitions(G4UniversalSim PRIVATE
-    G4USIM_BUILD_CONFIGURATION="$<CONFIG>")
+    G4USIM_BUILD_CONFIGURATION="$<IF:$<BOOL:$<CONFIG>>,$<CONFIG>,unknown>")
 
 # Link Geant4 libraries
 target_link_libraries(G4UniversalSim ${Geant4_LIBRARIES})
@@ -104,7 +109,8 @@ if(BUILD_TESTING)
     # Exercise real numeric accumulation/merge code independently of transport.
     add_executable(scoringNumericCheck tools/scoringNumericCheck.cc src/Scoring/HistoryStatistics.cc)
     target_compile_features(scoringNumericCheck PRIVATE cxx_std_17)
-    add_executable(randomCommandGuardCheck tools/randomCommandGuardCheck.cc src/Core/RandomCommandGuard.cc)
+    add_executable(randomCommandGuardCheck tools/randomCommandGuardCheck.cc src/Core/RandomCommandGuard.cc
+        src/Config/InputProvenance.cc)
     target_compile_features(randomCommandGuardCheck PRIVATE cxx_std_17)
     target_link_libraries(randomCommandGuardCheck ${Geant4_LIBRARIES})
     find_package(Python3 COMPONENTS Interpreter QUIET)

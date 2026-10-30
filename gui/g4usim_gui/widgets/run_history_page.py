@@ -25,6 +25,9 @@ from g4usim_gui.history.run_history_model import RunHistoryEntry
 from g4usim_gui.history.run_history_scanner import scan_runs_root
 
 
+from .output_identity_panel import OutputIdentityPanel
+
+
 class RunHistoryPage(QWidget):
     loadSnapshotRequested = Signal(str)
     openOutputRequested = Signal(str, str)
@@ -58,6 +61,8 @@ class RunHistoryPage(QWidget):
             "merged",
             "package path",
         ])
+        self.identity_panel = OutputIdentityPanel()
+        self.identity_panel.run_title = "Run state"
         self.details = QPlainTextEdit()
         self.details.setReadOnly(True)
         self.details.setPlainText("Select a run to view details, logs, output and rerun options.")
@@ -106,7 +111,11 @@ class RunHistoryPage(QWidget):
         splitter = QSplitter()
         self.splitter = splitter
         splitter.addWidget(self.table)
-        splitter.addWidget(self.details)
+        identity_details = QWidget()
+        identity_layout = QVBoxLayout(identity_details)
+        identity_layout.addWidget(self.identity_panel, 3)
+        identity_layout.addWidget(self.details, 1)
+        splitter.addWidget(identity_details)
         splitter.setStretchFactor(0, 2)
         splitter.setStretchFactor(1, 1)
         splitter.setSizes([900, 460])
@@ -185,16 +194,25 @@ class RunHistoryPage(QWidget):
             self.details.setPlainText("No run packages found under this runs root.")
         self._update_action_buttons()
 
+    def refresh_language(self) -> None:
+        self.identity_panel.refresh_language()
+
     def _show_selected(self) -> None:
         entry = self._selected()
         if not entry:
+            self.identity_panel.clear()
             if self._filtered:
                 self.details.setPlainText("Select a run to view details, logs, output and rerun options.")
             self._update_action_buttons()
             return
+        self.identity_panel.load_directory(Path(entry.package_dir) / "output", entry.status)
         lines = [
             f"package = {entry.package_dir}",
             f"status = {entry.status}",
+            f"identity_status = {entry.identity_status}",
+            ui_text({"verified": "Verified against recorded hashes", "legacy": "Legacy: content hashes unavailable", "tampered": "Bytes differ from recorded hashes"}.get(entry.identity_status, "Identity evidence unavailable")),
+            ui_text("Hash consistency does not establish authenticated origin or physical correctness."),
+
             f"result_reason = {ui_text(entry.result_reason)}",
             f"exit_code = {entry.exit_code}",
             f"executable = {entry.executable}",

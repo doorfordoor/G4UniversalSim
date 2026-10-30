@@ -90,14 +90,8 @@ def _worker_files(output: Path, stem: str, run_id: int) -> list[Path]:
 
 
 def metadata_values(output: Path) -> dict[str, str]:
-    output_evidence(output)  # A present but damaged manifest must not become a legacy fallback.
-    path = output / "run_metadata.json"
-    if not path.is_file():
-        return {}
-    try:
-        return {str(k): str(v) for k, v in json.loads(path.read_text(encoding="utf-8")).get("values", {}).items()}
-    except (ValueError, OSError):
-        return {}
+    evidence = output_evidence(output)
+    return {str(k): str(v) for k, v in (evidence.document or {}).get("values", {}).items()}
 
 
 def discover(output_dir: str | Path) -> list[DataSet]:

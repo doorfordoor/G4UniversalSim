@@ -166,7 +166,9 @@ private:
     void ConfirmEffectiveCommand(const std::string&, const effective_config::Origin&);
     effective_config::Snapshot EffectiveSnapshot(const std::string& stage, std::optional<std::int64_t> runId,
         ScoringManager* scoring = nullptr, OutputManager* output = nullptr) const;
-    void WriteEffectiveSnapshot(const effective_config::Snapshot&, const std::string&, OutputManager*) const;
+    void WriteEffectiveSnapshot(const effective_config::Snapshot&, const std::string&, OutputManager*,
+                                std::optional<int> runId = std::nullopt,
+                                std::optional<int> threadId = std::nullopt) const;
     void WriteEffectiveFinalization();
     void ApplyModuleModes();
 

@@ -1,4 +1,5 @@
 #include "Core/RandomCommandGuard.hh"
+#include "Config/InputProvenance.hh"
 
 #include "G4ApplicationState.hh"
 #include "G4RunManager.hh"
@@ -136,7 +137,7 @@ private:
     std::size_t position_ = 0;
 };
 
-std::string ReadSnapshot(const std::string& argument)
+std::string ReadSnapshot(const std::string& argument, std::string& resolvedPath)
 {
     std::string path = argument;
     // Match G4RunManager::RestoreRandomNumberStatus exactly, including its
@@ -145,6 +146,7 @@ std::string ReadSnapshot(const std::string& argument)
         auto* runManager = G4RunManager::GetRunManager();
         path = (runManager ? std::string(runManager->GetRandomNumberStoreDir()) : "./") + path;
     }
+    resolvedPath = path;
     const auto file = std::filesystem::u8path(path);
     std::error_code error;
     if (!std::filesystem::is_regular_file(file, error)) Refuse("restore file is missing or is not a regular file: '" + path + "'");
@@ -159,6 +161,9 @@ std::string ReadSnapshot(const std::string& argument)
     char extra = 0;
     if (input.get(extra)) Refuse("restore file grew while its state snapshot was read");
     if (input.bad()) Refuse("restore file encountered an I/O failure after its snapshot");
+    input.clear();
+    input.close();
+    if (input.fail()) Refuse("restore file could not be closed after its snapshot");
     return bytes;
 }
 
@@ -256,7 +261,13 @@ bool ExecuteRestoreIfRequested(const std::string& command)
     if (!mixmax && !james) Refuse("restore for current engine '" + current->name() + "' is unsupported; use /random/setSeeds instead");
     const auto before = current->put();
     std::unique_ptr<CLHEP::HepRandomEngine> candidate;
-    const std::string bytes = ReadSnapshot(path);
+    std::string resolvedPath;
+    const std::string bytes = ReadSnapshot(path, resolvedPath);
+    // Observe the complete bounded bytes before parsing or mutating the engine.
+    // A rejected native state is still a read; ledger failures leave the engine unchanged.
+    input_provenance::RecordRead(resolvedPath,
+        {input_provenance::Sha256(bytes), static_cast<std::uint64_t>(bytes.size())},
+        "random_restore", "engine_restore_validation", "bounded_binary_snapshot");
     std::vector<unsigned long> restored;
     if (mixmax) {
         candidate = std::make_unique<CLHEP::MixMaxRng>(*mixmax);

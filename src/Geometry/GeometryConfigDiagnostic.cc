@@ -211,7 +211,7 @@ void CollectGeometryConfigDiagnostics(
     const std::string* acceptedBytes
 )
 {
-    const auto bytes=acceptedBytes?*acceptedBytes:input_provenance::ReadFile(filename).bytes;
+    const auto bytes=acceptedBytes?*acceptedBytes:input_provenance::ReadFile(filename, "geometry_ini", "geometry_diagnostics").bytes;
     RejectDuplicateGeometryVersion(filename,bytes);
     const std::string mode = Normalize(templateName);
     const auto layerNames = SplitNames(fields, "layers", "names");

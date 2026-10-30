@@ -26,6 +26,6 @@ struct StlMesh {
 namespace StlReader {
 
 // lengthUnit: value of one file unit in Geant4 units (e.g. CLHEP::mm).
-StlMesh Read(const std::string& path, double lengthUnit);
+StlMesh Read(const std::string& path, double lengthUnit, const std::string& role = "mesh_parse");
 
 }  // namespace StlReader

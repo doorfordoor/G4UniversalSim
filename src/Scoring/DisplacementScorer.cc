@@ -117,7 +117,8 @@ void DisplacementScorer::Write(OutputManager& output)
         }
     }
     writer.Close();
-    output.RegisterGeneratedFile(writer.GetFilename());
+    output.RegisterGeneratedFile(writer.GetFilename(), OutputManager::ArtifactScope::Thread,
+                                 output.GetRunId(), output.GetThreadId());
 }
 
 void DisplacementScorer::Reset()

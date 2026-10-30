@@ -5,6 +5,10 @@
 #include "Utils/FileUtils.hh"
 
 #include <fstream>
+#include <algorithm>
+#include <cmath>
+#include <limits>
+#include <set>
 #include <cstdlib>
 #include <filesystem>
 #include <iomanip>
@@ -284,10 +288,167 @@ std::string JsonString(const std::string& value)
     out << '"';
     return out.str();
 }
+bool LowerHex(const std::string& text, std::size_t length)
+{
+    return text.size() == length && text.find_first_not_of("0123456789abcdef") == std::string::npos;
+}
+
+const effective_config::Value::Object& Object(const effective_config::Value& value, const char* name)
+{
+    const auto* object = std::get_if<effective_config::Value::Object>(&value.data);
+    if (!object) throw std::invalid_argument(std::string("Invalid provenance object: ") + name);
+    return *object;
+}
+const effective_config::Value& Required(const effective_config::Value::Object& object, const char* key)
+{
+    const auto found = object.find(key);
+    if (found == object.end()) throw std::invalid_argument(std::string("Missing provenance field: ") + key);
+    return found->second;
+}
+std::string Text(const effective_config::Value::Object& object, const char* key)
+{
+    const auto* text = std::get_if<std::string>(&Required(object,key).data);
+    if (!text) throw std::invalid_argument(std::string("Provenance field must be text: ") + key);
+    return *text;
+}
+void FiniteJson(const effective_config::Value& value)
+{
+    if (const auto* real=std::get_if<double>(&value.data)) {
+        if (!std::isfinite(*real)) throw std::invalid_argument("Nonfinite provenance JSON value");
+    } else if (const auto* array=std::get_if<effective_config::Value::Array>(&value.data)) {
+        for (const auto& item:*array) FiniteJson(item);
+    } else if (const auto* object=std::get_if<effective_config::Value::Object>(&value.data)) {
+        for (const auto& item:*object) FiniteJson(item.second);
+    }
+}
+void ValidateProvenance(const effective_config::Value& value)
+{
+    FiniteJson(value);
+    const auto& object=Object(value,"provenance");
+    if (Text(object,"schema")!="g4usim_provenance_v1" || !LowerHex(Text(object,"execution_id"),32))
+        throw std::invalid_argument("Unsupported provenance schema or execution ID");
+    if (Text(object,"input_coverage")!="project_readers_observed" ||
+        Text(object,"input_observation")!="bytes_read_not_semantic_acceptance")
+        throw std::invalid_argument("Unsupported input observation contract");
+    const auto& build=Object(Required(object,"build"),"build");
+    const auto commit=Text(build,"git_commit");
+    if (commit!="unknown" && !LowerHex(commit,40) && !LowerHex(commit,64))
+        throw std::invalid_argument("Invalid build Git commit");
+    const auto state=Text(build,"git_source_state");
+    if (state!="clean" && state!="dirty" && state!="unknown") throw std::invalid_argument("Invalid build Git state");
+    const auto fingerprint=Text(build,"source_fingerprint");
+    if (fingerprint!="unknown" && !LowerHex(fingerprint,64)) throw std::invalid_argument("Invalid source fingerprint");
+    for (const char* key:{"compiler_id","compiler_version","configuration","geant4_version"})
+        if (Text(build,key).empty()) throw std::invalid_argument("Build identity must use unknown, not empty values");
+    const auto* exclusions=std::get_if<effective_config::Value::Array>(&Required(object,"input_exclusions").data);
+    if (!exclusions || exclusions->size()<2) throw std::invalid_argument("Input exclusions must describe uncovered IO");
+    for (const auto& item:*exclusions) {
+        const auto* text=std::get_if<std::string>(&item.data);
+        if (!text || text->empty()) throw std::invalid_argument("Invalid input exclusion");
+    }
+    const auto* inputs=std::get_if<effective_config::Value::Array>(&Required(object,"inputs").data);
+    if (!inputs) throw std::invalid_argument("Provenance inputs must be an array");
+    std::int64_t previous=0;
+    for (const auto& input:*inputs) {
+        const auto& row=Object(input,"input");
+        const auto* sequence=std::get_if<std::int64_t>(&Required(row,"sequence").data);
+        if (!sequence || previous==std::numeric_limits<std::int64_t>::max() || *sequence!=previous+1)
+            throw std::invalid_argument("Input observation sequence must be continuous from 1");
+        previous=*sequence;
+        const auto path=Text(row,"path");
+        if (path.empty())throw std::invalid_argument("Input path must use an explicit placeholder when unknown");
+        for (const char* key:{"kind","role","capture_method"})
+            if (Text(row,key).empty()) throw std::invalid_argument("Empty input observation classification");
+        const auto status=Text(row,"status");
+        const auto reason=Text(row,"reason");
+        const auto& sha=Required(row,"sha256");const auto& size=Required(row,"size_bytes");
+        if (status=="recorded") {
+            const auto* count=std::get_if<std::int64_t>(&size.data);
+            if (path.empty() || !LowerHex(Text(row,"sha256"),64) || !count || *count<0)
+                throw std::invalid_argument("Recorded input requires original SHA256 and nonnegative byte size");
+        } else if (status=="unobserved") {
+            if (!std::holds_alternative<std::nullptr_t>(sha.data) ||
+                !std::holds_alternative<std::nullptr_t>(size.data) || reason.empty())
+                throw std::invalid_argument("Unobserved input must retain null digest/size and a reason");
+        } else throw std::invalid_argument("Unknown input observation status");
+    }
+}
+const char* ScopeName(RunSummary::ArtifactScope scope)
+{
+    switch (scope) {
+    case RunSummary::ArtifactScope::Process:return "process";
+    case RunSummary::ArtifactScope::Run:return "run";
+    case RunSummary::ArtifactScope::Thread:return "thread";
+    }
+    throw std::invalid_argument("Invalid artifact scope");
+}
+void ValidateArtifact(const RunSummary::ArtifactEvidence& file)
+{
+    ScopeName(file.scope);
+    if (file.path.empty() || !LowerHex(file.execution_id,32)) throw std::invalid_argument("Invalid artifact path/execution identity");
+    if ((file.scope==RunSummary::ArtifactScope::Process && (file.run_id || file.thread_id)) ||
+        (file.scope==RunSummary::ArtifactScope::Run && (!file.run_id || *file.run_id<0 || file.thread_id)) ||
+        (file.scope==RunSummary::ArtifactScope::Thread && (!file.run_id || *file.run_id<0 || !file.thread_id || *file.thread_id<0)))
+        throw std::invalid_argument("Artifact scope and run/thread identity disagree");
+    if (file.integrity_status=="hashed") {
+        if (!file.sha256 || !LowerHex(*file.sha256,64) || !file.size_bytes ||
+            *file.size_bytes>static_cast<std::uint64_t>(std::numeric_limits<std::int64_t>::max()))
+            throw std::invalid_argument("Hashed artifact requires SHA256 and nonnegative integer byte size");
+    } else if (file.integrity_status=="unavailable" || file.integrity_status=="self_reference_excluded") {
+        if (file.sha256 || file.size_bytes || file.reason.empty())
+            throw std::invalid_argument("Unhashed artifact requires null digest/size and reason");
+        if (file.integrity_status=="self_reference_excluded" &&
+            (FileUtils::Filename(file.path)!="run_metadata.json" || file.scope!=RunSummary::ArtifactScope::Process))
+            throw std::invalid_argument("Only process metadata can exclude its own identity");
+    } else throw std::invalid_argument("Unknown artifact integrity status");
+}
 }  // namespace
+
+void RunSummary::SetProvenance(effective_config::Value provenance)
+{
+    ValidateProvenance(provenance);
+    provenance_ = std::move(provenance);
+}
+
+void RunSummary::SetArtifactEvidence(const std::vector<ArtifactEvidence>& evidence)
+{
+    std::set<std::string> identities;
+    std::vector<std::string> files;
+    std::string execution;
+    for (const auto& file:evidence) {
+        ValidateArtifact(file);
+        if (!identities.insert(FileUtils::AbsolutePath(file.path)).second)
+            throw std::invalid_argument("Duplicate artifact identity");
+        if (execution.empty())execution=file.execution_id;
+        if (execution!=file.execution_id)throw std::invalid_argument("Mixed artifact execution IDs");
+        files.push_back(file.path);
+    }
+    generatedFiles_=std::move(files);artifactEvidence_=evidence;
+}
 
 void RunSummary::WriteJson(const std::string& filename) const
 {
+    if (provenance_) {
+        ValidateProvenance(*provenance_);
+        if (artifactEvidence_.size()!=generatedFiles_.size())
+            throw MetadataWriteError("run_metadata_write", "F1 artifact evidence is incomplete");
+        const auto execution=Text(Object(*provenance_,"provenance"),"execution_id");
+        bool self=false;
+        for (std::size_t i=0;i<artifactEvidence_.size();++i) {
+            const auto& file=artifactEvidence_[i];ValidateArtifact(file);
+            if (file.path!=generatedFiles_[i] || file.execution_id!=execution)
+                throw MetadataWriteError("run_metadata_write", "F1 artifact identity does not match provenance/list");
+            if (file.run_id && std::none_of(runs_.begin(),runs_.end(),[&](const RunRecord& run){return run.runId==*file.run_id;}))
+                throw MetadataWriteError("run_metadata_write", "Artifact refers to an unrecorded run");
+            const bool own=FileUtils::AbsolutePath(file.path)==FileUtils::AbsolutePath(filename);
+            if (own!=(file.integrity_status=="self_reference_excluded"))
+                throw MetadataWriteError("run_metadata_write", "Metadata self-reference exclusion is not unique/correct");
+            self=self || own;
+        }
+        if (!self)throw MetadataWriteError("run_metadata_write", "F1 metadata must include its self-excluded entry");
+    } else if (!artifactEvidence_.empty()) {
+        throw MetadataWriteError("run_metadata_write", "Artifact evidence requires provenance identity");
+    }
     const std::string parent = FileUtils::ParentPath(filename);
     try {
         if (!parent.empty()) FileUtils::CreateDirectories(parent);
@@ -313,7 +474,19 @@ void RunSummary::WriteJson(const std::string& filename) const
     out << "\n  ],\n  \"generated_files\": [";
     for (std::size_t index = 0; index < generatedFiles_.size(); ++index) {
         out << (index ? "," : "") << "\n    {\"path\": " << JsonString(PathForSummary(generatedFiles_[index]))
-            << ", \"schema\": " << JsonString(GeneratedFileSchema(generatedFiles_[index])) << '}';
+            << ", \"schema\": " << JsonString(GeneratedFileSchema(generatedFiles_[index]));
+        if (provenance_) {
+            const auto& file=artifactEvidence_[index];
+            out << ", \"execution_id\": " << JsonString(file.execution_id)
+                << ", \"scope\": " << JsonString(ScopeName(file.scope))
+                << ", \"run_id\": " << (file.run_id?std::to_string(*file.run_id):"null")
+                << ", \"thread_id\": " << (file.thread_id?std::to_string(*file.thread_id):"null")
+                << ", \"sha256\": " << (file.sha256?JsonString(*file.sha256):"null")
+                << ", \"size_bytes\": " << (file.size_bytes?std::to_string(*file.size_bytes):"null")
+                << ", \"integrity_status\": " << JsonString(file.integrity_status)
+                << ", \"reason\": " << JsonString(file.reason);
+        }
+        out << '}';
     }
     const auto writeList = [&out](const char* key, const std::vector<std::string>& items) {
         out << "\n  ],\n  \"" << key << "\": [";
@@ -323,7 +496,9 @@ void RunSummary::WriteJson(const std::string& filename) const
     };
     writeList("messages", messages_);
     writeList("warnings", warnings_);
-    out << "\n  ]\n}\n";
+    out << "\n  ]";
+    if (provenance_) out << ",\n  \"provenance\": " << provenance_->ToJson();
+    out << "\n}\n";
     const char* faultValue = std::getenv("G4USIM_TEST_OUTPUT_FAULT");
     const std::string fault = faultValue ? faultValue : "";
     // Deterministic test hooks exercise these real finalization boundaries;
@@ -343,4 +518,5 @@ void RunSummary::Clear()
     warnings_.clear();
     runs_.clear();
     generatedFiles_.clear();
+    provenance_.reset();artifactEvidence_.clear();
 }

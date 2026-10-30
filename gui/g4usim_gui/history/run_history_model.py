@@ -10,6 +10,8 @@ class RunHistoryEntry:
     timestamp: str = ""
     status: str = "unknown"
     result_reason: str = ""
+    identity_status: str = "unavailable"
+    identity_details: str = ""
     exit_code: int | None = None
     executable: str = ""
     config_path: str = ""
