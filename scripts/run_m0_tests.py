@@ -414,10 +414,13 @@ def main() -> int:
             if case.name == "merge_histograms":
                 command.extend(["--executable", str(args.merge_executable.resolve())])
             command.extend(case.args)
+            case_environment = environment.copy()
+            case_evidence_dir = report_dir / f"{case.name}-evidence"
+            case_environment["G4USIM_TEST_EVIDENCE_DIR"] = str(case_evidence_dir.resolve())
             start = time.monotonic()
             try:
                 process = subprocess.run(
-                    command, cwd=ROOT, env=environment, capture_output=True,
+                    command, cwd=ROOT, env=case_environment, capture_output=True,
                     text=True, encoding="utf-8", errors="replace", timeout=case.timeout,
                     check=False,
                 )
@@ -439,6 +442,8 @@ def main() -> int:
             record["log"] = str(log_path)
             record["log_sha256"] = hashlib.sha256(log_bytes).hexdigest()
             record["log_digest_algorithm"] = LOG_DIGEST_ALGORITHM
+            if case_evidence_dir.is_dir():
+                record["evidence_directory"] = case_evidence_dir.name
             if not args.no_assert_probe and record["status"] != "skip":
                 executed = parse_assert_marker(log)
                 record["assertions_executed"] = executed
@@ -458,13 +463,22 @@ def main() -> int:
 
     executed_cases = [record for record in results if record.get("assertions_executed") is not None]
     zero_assert_cases = [record["name"] for record in executed_cases if not record["assertions_executed"]]
+    git_status_result = subprocess.run(
+        ["git", "status", "--porcelain"], cwd=ROOT, capture_output=True,
+        text=True, check=False,
+    )
+    # Preserve the two status columns, including a leading space. The original
+    # dirty flag alone cannot distinguish generated files from changed sources.
+    git_status_porcelain = (git_status_result.stdout.rstrip("\n")
+                            if git_status_result.returncode == 0 else "unavailable")
     report = {
         "schema": "G4UniversalSimM0TestReport", "version": 2,
         "profile": args.profile, "platform": platform.platform(),
         "python": sys.version.split()[0], "git_head": git_value("rev-parse", "HEAD"),
         "source_fingerprint": workspace_source_fingerprint(),
         "tests_content_fingerprint": tests_content_fingerprint(),
-        "git_dirty": bool(git_value("status", "--porcelain")),
+        "git_dirty": bool(git_status_porcelain),
+        "git_status_porcelain": git_status_porcelain,
         "backend_executable": str(args.executable.resolve()),
         "backend_provenance": requirements["exe"] or "source_sha256_manifest_matches_executable",
         "backend_build_identity": backend_build_identity,

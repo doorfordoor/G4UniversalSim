@@ -18,6 +18,10 @@ DDD = sum w l NIEL(E_mean) / V (MeV/g). Checks:
 from __future__ import annotations
 
 import csv
+import copy
+import hashlib
+import json
+import math
 import os
 import re
 import shutil
@@ -94,8 +98,14 @@ class Runner:
         mac = self.work / f"{name}.mac"
         mac.write_text(f"/run/initialize\n/run/beamOn {events}\n", encoding="utf-8")
         output = self.work / name
-        result = subprocess.run([str(EXE), "--config", str(ini), "--macro", str(mac), "--output", str(output)],
-                                cwd=self.work, capture_output=True, text=True, errors="replace", timeout=900)
+        result = None
+        try:
+            result = subprocess.run([str(EXE), "--config", str(ini), "--macro", str(mac), "--output", str(output)],
+                                    cwd=self.work, capture_output=True, text=True, errors="replace", timeout=900)
+        finally:
+            if self.count == 1:
+                preserve_first_run(output, [ini, geo, mac, ROOT / "config/materials/material.ini",
+                                            *(Path(path) for path in tables.values())], result)
         log = result.stdout + result.stderr
         if expect_ok:
             assert result.returncode == 0, f"{name} failed:\n{log[-3000:]}"
@@ -116,6 +126,138 @@ def statistics(output: Path) -> dict[str, dict[str, str]]:
         return {r["quantity"]: r for r in csv.DictReader(handle) if r["scorer"] == "displacement"}
 
 
+def preserve_first_run(output: Path, inputs: list[Path], result) -> None:
+    """Keep original CSV/input bytes even when a later check rejects this run."""
+    configured = os.environ.get("G4USIM_TEST_EVIDENCE_DIR")
+    if configured:
+        root = Path(configured)
+    else:
+        parent = ROOT / "out/verification/ddd-standalone"
+        parent.mkdir(parents=True, exist_ok=True)
+        root = Path(tempfile.mkdtemp(prefix="run-", dir=parent))
+    destination = root / "first-run"
+    destination.mkdir(parents=True, exist_ok=False)
+    files = []
+    sources = [(path, Path("inputs") / path.name) for path in inputs]
+    sources += [(path, Path("outputs") / path.name) for path in sorted(output.iterdir())
+                if path.is_file() and (path.suffix == ".csv" or
+                                      path.name in ("run_metadata.json", "run_summary.txt"))] if output.is_dir() else []
+    for source, relative in sources:
+        target = destination / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        data = source.read_bytes()
+        target.write_bytes(data)
+        files.append({"path": relative.as_posix(), "source": str(source), "size_bytes": len(data),
+                      "sha256": hashlib.sha256(data).hexdigest()})
+    manifest = {"schema": "g4usim_ddd_first_run_evidence_v1", "files": files,
+                "returncode": result.returncode if result is not None else None,
+                "command": result.args if result is not None else None,
+                "note": "Original inputs/CSV/metadata/summary subset, not a complete run bundle. "
+                        "Absolute paths describe the original temporary run, not a relocated replay."}
+    (destination / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+    if result is not None:
+        (destination / "captured-process.log").write_text(result.stdout + result.stderr, encoding="utf-8")
+    print(f"  first-run evidence: {destination} ({sum(item['size_bytes'] for item in files)} raw bytes)")
+
+
+def summary_workers(output: Path) -> dict[int, list[dict[str, str]]]:
+    workers = {}
+    for path in sorted(output.glob("displacement_volume_summary_t*.csv")):
+        match = re.fullmatch(r"displacement_volume_summary_t(0|[1-9]\d*)\.csv", path.name)
+        if not match:
+            raise ValueError(f"unexpected worker summary filename: {path.name}")
+        with path.open(newline="", encoding="utf-8") as handle:
+            workers[int(match[1])] = list(csv.DictReader(handle))
+    return workers
+
+
+def muon_summary_checks(workers, stats, tables, volume_mm3=10000.0, events=200):
+    """Check sparse CSV rows without inferring unobserved worker event counts.
+
+    The scorer writes n_events once on *every particle row*. Count it once per
+    worker, never once per row. A header-only worker may have no events or events
+    without a tabulated-particle hit; only the master supplies the complete N.
+    """
+    summary = [(worker, row) for worker, values in workers.items() for row in values]
+    checks = dict.fromkeys(("nonempty", "volume", "particles", "worker_identity", "row_identity",
+                            "unique_rows", "niel_identity", "finite_nonnegative", "worker_events",
+                            "master_events"), True)
+    checks["nonempty"] = bool(summary)
+    checks["worker_identity"] = bool(workers) and set(workers) <= {0, 1}
+    checks["particles"] = {row["particle"] for _, row in summary} == set(tables)
+    identities = set()
+    paths = set()
+    counts = {}
+    for worker, row in summary:
+        particle = row["particle"]
+        checks["volume"] &= row["volume_name"] == "Die_PV" and abs(float(row["volume_mm3"]) - volume_mm3) < 1e-6
+        checks["row_identity"] &= row["runID"] == "0" and bool(row["volume_path"])
+        paths.add(row["volume_path"])
+        identity = (worker, row["runID"], row["volume_path"], particle)
+        checks["unique_rows"] &= identity not in identities
+        identities.add(identity)
+        checks["niel_identity"] &= particle in tables and Path(row["niel_table"]).resolve() == Path(tables.get(particle, "")).resolve()
+        for key in ("track_length_mm", "out_of_range_track_length_mm", "ddd_MeV_g", "ddd_sum_sq_MeV2_g2"):
+            number = float(row[key])
+            checks["finite_nonnegative"] &= math.isfinite(number) and number >= 0
+        text = row["n_events"]
+        count = int(text) if re.fullmatch(r"[1-9]\d*", text) else -1
+        checks["worker_events"] &= count > 0 and counts.get(worker, count) == count
+        counts.setdefault(worker, count)
+    checks["row_identity"] &= len(paths) == 1
+    # Master statistics use the actual run event count, including zero-deposit events.
+    checks["master_events"] = bool(stats) and all(int(row["n_events"]) == events for row in stats.values())
+    checks["master_events"] &= 0 < sum(counts.values()) <= events
+    return checks
+
+
+def check_summary_counterexamples() -> None:
+    """Deterministic checker tests, independent of Geant4 worker scheduling."""
+    tables = {"mu-": "mu.csv", "e-": "far.csv"}
+    def row(particle, count):
+        return dict(runID="0", volume_path="/World_PV[0]/Die_PV[0]", volume_name="Die_PV", particle=particle,
+                    niel_table=tables[particle], volume_mm3="10000", track_length_mm="1",
+                    out_of_range_track_length_mm="0", ddd_MeV_g="0.1", ddd_sum_sq_MeV2_g2="0.01",
+                    n_events=str(count))
+    stats = {"ddd_total": {"n_events": "200"}, "ddd_mu-": {"n_events": "200"}, "ddd_e-": {"n_events": "200"}}
+    one = {0: [row("mu-", 200), row("e-", 200)], 1: []}
+    two = {0: [row("mu-", 80), row("e-", 80)], 1: [row("mu-", 120), row("e-", 120)]}
+    sparse = copy.deepcopy(two)
+    sparse[0].pop()  # A participating worker need not see an electron.
+    unobserved = {0: [row("mu-", 199), row("e-", 199)], 1: []}
+    sparse_muon = copy.deepcopy(two)
+    sparse_muon[0].pop(0)  # No per-worker muon coverage is inferred from the source direction.
+    for label, valid in (("one observed worker", one), ("two observed workers", two),
+                         ("sparse electron", sparse), ("unobserved worker events", unobserved),
+                         ("sparse muon", sparse_muon)):
+        checks = muon_summary_checks(valid, stats, tables)
+        assert all(checks.values()), (label, checks)
+    mutations = (
+        ("volume", "volume_name", "Wrong_PV"), ("volume", "volume_mm3", "9999"),
+        ("particles", "particle", "protom"), ("niel_identity", "niel_table", "other.csv"),
+        ("row_identity", "runID", "1"), ("row_identity", "volume_path", "/another/path"),
+        ("worker_events", "n_events", "119"), ("worker_events", "n_events", "0"),
+        ("worker_events", "n_events", "1.5"),
+        ("finite_nonnegative", "ddd_MeV_g", "nan"), ("finite_nonnegative", "track_length_mm", "-1"),
+    )
+    for category, key, value in mutations:
+        damaged = copy.deepcopy(two)
+        damaged[1][-1][key] = value  # Check the last row, not just the first.
+        assert not muon_summary_checks(damaged, stats, tables)[category], (category, key, value)
+    duplicate = copy.deepcopy(two)
+    duplicate[1].append(copy.deepcopy(duplicate[1][0]))
+    assert not muon_summary_checks(duplicate, stats, tables)["unique_rows"]
+    excess = {0: [row("mu-", 80), row("e-", 80)], 1: [row("mu-", 121), row("e-", 121)]}
+    assert not muon_summary_checks(excess, stats, tables)["master_events"]
+    wrong_master = copy.deepcopy(stats)
+    wrong_master["ddd_mu-"]["n_events"] = "199"
+    assert not muon_summary_checks(two, wrong_master, tables)["master_events"]
+    wrong_worker = {2: copy.deepcopy(one[0])}
+    assert not muon_summary_checks(wrong_worker, stats, tables)["worker_identity"]
+    assert not muon_summary_checks({0: [], 1: []}, stats, tables)["nonempty"]
+    print("  summary checker: 5 complete/sparse layouts accepted; 16 corruptions rejected")
+
+
 def close(label, got, expected, rel):
     print(f"  {label}: {got:.9g} (expected {expected:.9g}, rel. tolerance {rel:g})")
     assert abs(got - expected) <= rel * abs(expected), (label, got, expected)
@@ -133,6 +275,7 @@ def main() -> int:
         return 1
     work = Path(tempfile.mkdtemp(prefix="g4usim_ddd_"))
     try:
+        check_summary_counterexamples()
         r = Runner(work)
         mu = table(work / "mu.csv", [(500, 1e-3), (2000, 4e-3)])          # NIEL = 2e-6 * E (log-log exact)
         far = table(work / "far.csv", [(1e5, 1.0), (1e6, 1.0)])           # outside every electron energy
@@ -148,12 +291,19 @@ def main() -> int:
             length[hit["particle"]] += l
             if hit["particle"] == "mu-":
                 expected_ddd += l * 2e-6 * float(hit["kineticEnergy_MeV"]) * 100.0 / volume_mm3
-        summary = list(rows(output, "displacement_volume_summary"))
+        workers = summary_workers(output)
+        summary = [row for values in workers.values() for row in values]
+        stats = statistics(output)
+        checks = muon_summary_checks(workers, stats, {"mu-": mu, "e-": far}, volume_mm3)
+        print("  summary worker rows/events:", {worker: {"rows": len(values),
+              "n_events": sorted({row["n_events"] for row in values})} for worker, values in workers.items()})
+        # One assertion per invariant, not per scheduling-dependent CSV row.
+        for category, passed in checks.items():
+            assert passed, (category, workers, stats)
         by_particle = defaultdict(lambda: defaultdict(float))
         for row in summary:
             for key in ("track_length_mm", "out_of_range_track_length_mm", "ddd_MeV_g", "ddd_sum_sq_MeV2_g2"):
                 by_particle[row["particle"]][key] += float(row[key])
-            assert row["volume_name"] == "Die_PV" and abs(float(row["volume_mm3"]) - volume_mm3) < 1e-6, row
         close("mu- track length [mm]", by_particle["mu-"]["track_length_mm"], length["mu-"], 1e-9)
         # hits carry the pre-step energy; the scorer uses the step mean (dE << E)
         close("mu- DDD [MeV/g]", by_particle["mu-"]["ddd_MeV_g"], expected_ddd, 1e-3)
@@ -162,7 +312,6 @@ def main() -> int:
         out_of_range = by_particle["e-"]["out_of_range_track_length_mm"]
         print(f"  e- out-of-range track length {out_of_range:.6g} mm (hits {length['e-']:.6g} mm)")
         assert out_of_range >= length["e-"] * (1 - 1e-9) and out_of_range > 0, (out_of_range, length["e-"])
-        stats = statistics(output)
         close("statistics ddd_mu-", float(stats["ddd_mu-"]["value"]), by_particle["mu-"]["ddd_MeV_g"], 1e-9)
         close("statistics ddd_total", float(stats["ddd_total"]["value"]), by_particle["mu-"]["ddd_MeV_g"], 1e-9)
         close("statistics sum_sq", float(stats["ddd_mu-"]["sum_sq"]), by_particle["mu-"]["ddd_sum_sq_MeV2_g2"], 1e-9)
