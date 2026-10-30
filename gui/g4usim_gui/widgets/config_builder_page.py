@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import replace
+from pathlib import Path
 
 from PySide6.QtCore import QTimer, Signal
 from PySide6.QtWidgets import (
@@ -40,10 +41,29 @@ from g4usim_gui.widgets.config.layers import LayersMixin
 from g4usim_gui.widgets.config.preview3d import Preview3DPanel, Preview3DMixin
 from g4usim_gui.widgets.config.run_config import RunConfigEditor, RunConfigMixin
 from g4usim_gui.widgets.config.details import DetailsPanel
+from g4usim_gui.window.transactions import edit_operation
 from g4usim_gui.widgets.diagnostic_navigation import (
     ConfigDiagnosticNavigator, DiagnosticDraftDelegate, NavigationResult, configuration_snapshot,
     reveal_widget, source_view_text,
 )
+
+
+class LiveDraftDelegate(DiagnosticDraftDelegate):
+    """Capture pending cell text without committing it to the business model."""
+
+    def createEditor(self, parent, option, index):  # noqa: N802
+        editor = super().createEditor(parent, option, index)
+        if isinstance(editor, QLineEdit):
+            editor._f5_cell_row = index.row()
+            editor._f5_cell_column = index.column()
+            page = self.parent()
+            while page is not None and not isinstance(page, ConfigBuilderPage):
+                page = page.parentWidget()
+            if page is not None:
+                owner = getattr(page, '_history_owner', None)
+                if owner is not None:
+                    editor.textEdited.connect(owner._queue_history_change)
+        return editor
 
 
 class ConfigBuilderPage(SetupMixin, MaterialsMixin, GeometryMixin, LayersMixin, BooleansMixin,
@@ -101,6 +121,7 @@ class ConfigBuilderPage(SetupMixin, MaterialsMixin, GeometryMixin, LayersMixin, 
         self._selected_layer_row = -1
         self.preview_scene = PreviewScene()
         self.geometry_document = GeometryDocument()
+        self._f5_frozen_sources: set[str] = set()
         # debounce: one export after a burst of edits
         self._backend_timer = QTimer(self)
         self._backend_timer.setSingleShot(True)
@@ -203,7 +224,7 @@ class ConfigBuilderPage(SetupMixin, MaterialsMixin, GeometryMixin, LayersMixin, 
         self._connect_sps_editor_signals()
         self._connect_sps_summary_signals()
 
-    def set_from_project(self, project: G4USimProject) -> None:
+    def set_from_project(self, project: G4USimProject, *, reload_sources: bool = True) -> None:
         self.invalidate_diagnostics()
         self._building = True
         run = project.runSettings
@@ -246,8 +267,14 @@ class ConfigBuilderPage(SetupMixin, MaterialsMixin, GeometryMixin, LayersMixin, 
         self.physics_editor = getattr(project, "physicsEditor", PhysicsEditableModel.from_settings(physics))
         self.scoring_editor = getattr(project, "scoringEditor", ScoringEditableModel.from_settings(scoring))
         self._populate_sps_editors()
+        if not reload_sources:
+            return
         self.reload_materials()
         self.reload_geometry()
+        saved_materials = getattr(project, 'materialEditor', None)
+        if isinstance(saved_materials, MaterialDocument):
+            self.material_document = saved_materials
+            self._populate_material_editor()
         saved_geometry = getattr(project, "geometryEditor", None)
         if isinstance(saved_geometry, GeometryDocument) and (
             saved_geometry.is_dirty or saved_geometry.source_copy_mode
@@ -270,11 +297,12 @@ class ConfigBuilderPage(SetupMixin, MaterialsMixin, GeometryMixin, LayersMixin, 
         project.sourceSettings = self.source_settings()
         project.physicsSettings = self.physics_settings()
         project.scoringSettings = self.scoring_settings()
+        project.materialEditor = self.material_document
 
     def validate_current(self, project: G4USimProject) -> ValidationReport:
-        if not self.material_document.is_dirty:
+        if not self.material_document.is_dirty and 'materials' not in self._f5_frozen_sources:
             self.reload_materials()
-        if not self.geometry_document.is_dirty and not self.geometry_document.source_copy_mode:
+        if not self.geometry_document.is_dirty and not self.geometry_document.source_copy_mode and 'geometry' not in self._f5_frozen_sources:
             self.reload_geometry()
         report = validate_config_builder(
             paths=self.path_settings(project),
@@ -289,6 +317,22 @@ class ConfigBuilderPage(SetupMixin, MaterialsMixin, GeometryMixin, LayersMixin, 
             physics_model=self.physics_editor,
             scoring_model=self.scoring_editor,
         )
+        for kind, document, control in (
+            ('materials', self.material_document, self.materials_config),
+            ('geometry', self.geometry_document, self.geometry_config),
+        ):
+            if kind not in self._f5_frozen_sources or not document.source_path:
+                continue
+            try:
+                current = Path(control.text().strip()).expanduser().resolve()
+                same = current == Path(document.source_path).resolve() and current.read_text(encoding='utf-8', errors='replace') == document.raw_source_text
+            except OSError:
+                same = False
+            if not same:
+                message = ('Materials source changed since the editor was loaded; reload materials before generating a package.'
+                           if kind == 'materials' else 'Geometry source changed since the editor was loaded; reload geometry before generating a package.')
+                report.add(f'config.source.{kind}.recovered_changed', 'error', ui_text(message),
+                           editor='setup', field=f'{kind}_config')
         seed_text = self.seed.text().strip()
         if seed_text:
             problem = check_value("run", "seed", seed_text)   # as the backend reads it: 0..2147483647
@@ -316,7 +360,7 @@ class ConfigBuilderPage(SetupMixin, MaterialsMixin, GeometryMixin, LayersMixin, 
         for widget in self.findChildren(QLineEdit):
             widget.textChanged.connect(self._diagnostic_draft_changed)
         for table in (self.geometry_table, self.boolean_table):
-            table.setItemDelegate(DiagnosticDraftDelegate(table, self._diagnostic_draft_changed))
+            table.setItemDelegate(LiveDraftDelegate(table, self._diagnostic_draft_changed))
 
     def _diagnostic_draft_changed(self, *_args) -> None:
         if not self._building:
@@ -401,13 +445,21 @@ class ConfigBuilderPage(SetupMixin, MaterialsMixin, GeometryMixin, LayersMixin, 
                                           message=result.message)
         return result
 
+    @edit_operation('Reload materials')
     def reload_materials(self) -> None:
         self.invalidate_diagnostics()
         MaterialsMixin.reload_materials(self)
+        self._f5_frozen_sources.discard('materials')
+        if getattr(self, '_history_owner', None) is not None and not self._history_owner._history_restoring:
+            self._emit_changed()
 
+    @edit_operation('Reload geometry')
     def reload_geometry(self) -> None:
         self.invalidate_diagnostics()
         GeometryMixin.reload_geometry(self)
+        self._f5_frozen_sources.discard('geometry')
+        if getattr(self, '_history_owner', None) is not None and not self._history_owner._history_restoring:
+            self._emit_changed()
 
     def set_package_path(self, path: str) -> None:
         self.package_label.setText(f"Generated package: {path or '<none>'}")

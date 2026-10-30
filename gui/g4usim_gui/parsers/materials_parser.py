@@ -6,7 +6,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from g4usim_gui.core.diagnostics import collect_diagnostics, emit_diagnostic, extend_diagnostics, source_location
 
-from g4usim_gui.parsers.ini_light_parser import parse_ini_light
+from g4usim_gui.parsers.ini_light_parser import IniLightDocument, parse_ini_light, parse_ini_light_text
 from g4usim_gui.core.capability_messages import capability_message
 
 
@@ -75,7 +75,15 @@ def material_reference_status(name: str, custom_names: set[str]) -> str:
 
 
 def parse_materials(path: str | Path) -> MaterialsSummary:
-    document = parse_ini_light(path)
+    return _materials_from_document(parse_ini_light(path))
+
+
+def parse_materials_text(raw_text: str, *, source_path: str | Path) -> MaterialsSummary:
+    """Rebuild the summary of a captured source without consulting disk."""
+    return _materials_from_document(parse_ini_light_text(raw_text, source_path=source_path))
+
+
+def _materials_from_document(document: IniLightDocument) -> MaterialsSummary:
     summary = MaterialsSummary(path=document.path, warnings=list(document.warnings), errors=list(document.errors), raw_text=document.raw_text)
     summary._f4_read_success = getattr(document, "_f4_read_success", False)
     extend_diagnostics(summary, collect_diagnostics(document), append=False)

@@ -10,8 +10,9 @@ from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "gui"))
-from g4usim_gui.core.project import G4USimProject, load_project, load_project_snapshot, save_project
+from g4usim_gui.core.project import G4USimProject, SCHEMA_VERSION, load_project, load_project_snapshot, save_project
 from g4usim_gui.core.project_migration import plan_project_migration
+from g4usim_gui.core.edit_state import empty_editing_state
 from g4usim_gui.editors.geometry_editor_model import geometry_document_from_summary
 from g4usim_gui.editors.material_editor_model import MaterialRow, material_document_from_summary
 from g4usim_gui.editors.source_physics_scoring_model import SourceEditableModel, PhysicsEditableModel, ScoringEditableModel
@@ -60,6 +61,11 @@ def build_package_fixture(work: Path, executable: Path | None = None):
     settings = GeometrySettings(template="hierarchical", config_path=str(geometry_file))
     project = G4USimProject(projectName="snapshot fixture", executable=str(executable), workspaceRoot=str(ROOT),
                             runsRoot=paths.runs_root, threads=64, seed="999", runName="stale-mirror")
+    # Real v7 writer envelope: project drafts can contain rows that were never
+    # emitted, while generated package files remain the restoration authority.
+    project.materialEditor = copy.deepcopy(materials)
+    project.editingState = empty_editing_state()
+    project.editingState["drafts"] = {"config.seed": "unfinished seed"}
     package, _ = create_run_package(project=project, paths=paths, run=run, geometry=settings,
                                     source=source.to_settings(), physics=physics.to_settings(), scoring=scoring.to_settings(),
                                     material_document=materials, geometry_document=geometry,
@@ -94,6 +100,9 @@ def main():
         assert project.geometrySettings.config_path == package.geometry_ini_path
         assert next(row for row in project.geometryEditor.volumes if row.name == "Target").size == "12 mm,14 mm,16 mm"
         assert project.sourceEditor.energy == "5 MeV" and project.sourceEditor.particle == "proton"
+        assert project.editingState is None
+        assert project.materialEditor is not None and not project.materialEditor.is_dirty
+        assert all(row.name != "UnwrittenDraft" for row in project.materialEditor.rows)
         assert any("drafts" in note for note in restored.notes) and any("no original resource hashes" in note for note in restored.notes)
         assert len(restored.inputs) == 4 and all(len(item.sha256) == 64 for item in restored.inputs)
         ordinary = work / "restored-project.json"
@@ -126,6 +135,16 @@ def main():
         now = load_project_snapshot(snapshot)
         assert next(row for row in now.project.geometryEditor.volumes if row.name == "Target").size == "13 mm,14 mm,16 mm"
         geometry_current.write_bytes(previous_geometry)
+        material_current = Path(package.materials_ini_path)
+        previous_material = material_current.read_bytes()
+        assert b"density = 2 g/cm3" in previous_material
+        material_current.write_bytes(previous_material.replace(b"density = 2 g/cm3", b"density = 2.5 g/cm3"))
+        now = load_project_snapshot(snapshot)
+        assert next(row for row in now.project.materialEditor.rows if row.name == "ActiveMix").density == "2.5 g/cm3"
+        assert now.project.materialEditor.raw_source_text == material_current.read_text(encoding="utf-8")
+        assert now.project.editingState is None and not now.project.materialEditor.is_dirty
+        assert next(row for row in data["materialEditor"]["rows"] if row["name"] == "ActiveMix")["density"] == "2 g/cm3"
+        material_current.write_bytes(previous_material)
 
         def attempt(value, fragment=""):
             snapshot.write_text(json.dumps(value), encoding="utf-8")
@@ -135,7 +154,7 @@ def main():
 
         for mutate, fragment in (
             (lambda value: value.update(futureMetadata={}), "Unsupported snapshot field"),
-            (lambda value: value.update(version=7), "Unsupported project version"),
+            (lambda value: value.update(version=SCHEMA_VERSION + 1), "Unsupported project version"),
             (lambda value: value["runPackage"].update(future_path="x"), "future_path"),
             (lambda value: value["materialsSummary"].update(count=999), "count"),
             (lambda value: value["materialDocument"]["rows"][0].update(future_recipe="x"), "future_recipe"),
@@ -148,7 +167,9 @@ def main():
                                                      geometry_ini_path=str(work / "different/config/geometry/geometry.ini")), "one old"),
         ):
             invalid = copy.deepcopy(data); mutate(invalid); attempt(invalid, fragment)
-        for raw in (original_snapshot.replace(b'"version": 6', b'"version": 6, "version": 6', 1),
+        version_token = f'"version": {data["version"]}'.encode("ascii")
+        assert version_token in original_snapshot
+        for raw in (original_snapshot.replace(version_token, version_token + b', ' + version_token, 1),
                     original_snapshot.replace(b'"threads": 64', b'"threads": NaN', 1)):
             snapshot.write_bytes(raw)
             rejected(lambda: load_project_snapshot(snapshot))

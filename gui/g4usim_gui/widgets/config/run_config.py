@@ -450,6 +450,11 @@ class RunConfigMixin:
         """
         if self._building:
             return
+        # Keep the exact in-progress input while model fields use their existing
+        # trimmed semantics. Refreshing the mirror used to eat a just-typed
+        # space ("123 " became "123" before the unit could be entered).
+        edited = self.sender()
+        draft = (edited.text(), edited.cursorPosition()) if isinstance(edited, QLineEdit) else None
         self.source_editor.preset = self.source_preset.currentText().strip()
         self.source_editor.particle = self.source_particle.text().strip()
         self.source_editor.energy = self.source_energy.text().strip()
@@ -469,6 +474,13 @@ class RunConfigMixin:
         self.physics_editor.is_dirty = True
         self.scoring_editor.is_dirty = True
         self._populate_sps_editors()
+        if draft is not None:
+            self._building = True
+            try:
+                edited.setText(draft[0])
+                edited.setCursorPosition(draft[1])
+            finally:
+                self._building = False
         self._emit_changed()
 
     def _sync_sps_summary_widgets(self) -> None:

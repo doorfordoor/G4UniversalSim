@@ -12,7 +12,7 @@ from PySide6.QtGui import QPalette
 from PySide6.QtWidgets import QApplication
 
 from g4usim_gui.core.theme import apply_theme
-from g4usim_gui.main_window import MainWindow
+from gui_test_window import MainWindow
 
 
 def main() -> None:

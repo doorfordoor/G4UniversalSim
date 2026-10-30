@@ -14,9 +14,9 @@ sys.path.insert(0, str(ROOT / "gui"))
 from PySide6.QtCore import QTimer
 from PySide6.QtWidgets import QApplication
 from g4usim_gui.core.i18n import set_application_language
-from g4usim_gui.core.project import load_project
+from g4usim_gui.core.project import SCHEMA_VERSION, load_project
 from g4usim_gui.history import run_history_store
-from g4usim_gui.main_window import MainWindow
+from gui_test_window import MainWindow
 from g4usim_gui.widgets.migration_dialog import MigrationDialog
 from g4usim_gui.window import project as project_window
 
@@ -38,7 +38,7 @@ def main() -> None:
         dialog.source_path.setText(str(original))
         assert dialog.preview(), dialog.status.text()
         assert "输入版本 5" in dialog.version_label.text()
-        assert "输出版本 6" in dialog.version_label.text()
+        assert f"输出版本 {SCHEMA_VERSION}" in dialog.version_label.text()
         assert dialog.changes.rowCount() > 0
         assert "未执行模拟" in dialog.boundary_label.text()
         assert dialog.write_button.isEnabled()

@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from g4usim_gui.window.transactions import edit_operation
+
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QStandardItemModel
 from PySide6.QtWidgets import (
@@ -289,12 +291,14 @@ class SetupMixin:
     def scoring_settings(self) -> ScoringSettings:
         return self.scoring_editor.to_settings()
 
+    @edit_operation('Choose materials source')
     def _browse_materials(self) -> None:
         path, _ = QFileDialog.getOpenFileName(self, "Select materials config", filter="INI files (*.ini);;All files (*)")
         if path:
             self.materials_config.setText(path)
             self.reload_materials()
 
+    @edit_operation('Choose geometry source')
     def _browse_geometry(self) -> None:
         path, _ = QFileDialog.getOpenFileName(self, "Select geometry config", filter="INI files (*.ini);;All files (*)")
         if path:

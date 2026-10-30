@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+from g4usim_gui.window.transactions import edit_operation, capture_detail_raw, restore_detail_raw
+from pathlib import Path
+
 from PySide6.QtWidgets import (
     QCheckBox,
     QComboBox,
@@ -129,6 +132,8 @@ class MaterialsMixin:
     def reload_materials(self) -> None:
         path = self.materials_config.text().strip()
         self.materials_summary = parse_materials(path) if path else None
+        if self.materials_summary is not None:
+            self.materials_summary._f5_source_anchor = str(Path(path).expanduser().resolve())
         self.materials_messages.clear()
         self.materials_raw.clear()
         self.generated_materials_raw.clear()
@@ -139,6 +144,7 @@ class MaterialsMixin:
             self._update_workspace_summary()
             return
         self.material_document = material_document_from_summary(self.materials_summary)
+        self.material_document.source_path = self.materials_summary._f5_source_anchor
         self._selected_material_row = -1
         self._populate_material_editor()
         self.materials_messages.setPlainText(self._messages_text(self.materials_summary.errors, self.materials_summary.warnings))
@@ -225,6 +231,7 @@ class MaterialsMixin:
         if not notes:
             notes.append("[INFO] OK")
         self.material_notes.setPlainText("\n".join(notes))
+        restore_detail_raw(self, "material", item)
         self._building = False
 
     def _on_material_selection_changed(self) -> None:
@@ -237,6 +244,7 @@ class MaterialsMixin:
         if row < 0 or row >= len(self.material_document.rows):
             return
         item = self.material_document.rows[row]
+        capture_detail_raw(self, "material", item)
         item.name = self.material_name.text().strip()
         item.mode = self.material_mode.currentText().strip()
         item.density = self.material_density.text().strip()
@@ -250,6 +258,7 @@ class MaterialsMixin:
         self.materials_table.selectRow(row)
         self._emit_changed()
 
+    @edit_operation('Add material')
     def _add_material(self, mode: str) -> None:
         row = add_default_row(self.material_document, mode)
         self._selected_material_row = self.material_document.rows.index(row)
@@ -257,6 +266,7 @@ class MaterialsMixin:
         self.materials_table.selectRow(self._selected_material_row)
         self._emit_changed()
 
+    @edit_operation('Duplicate material')
     def _duplicate_material(self) -> None:
         row = self.materials_table.currentRow()
         duplicated = duplicate_row(self.material_document, row)
@@ -267,6 +277,7 @@ class MaterialsMixin:
         self.materials_table.selectRow(self._selected_material_row)
         self._emit_changed()
 
+    @edit_operation('Delete material')
     def _delete_material(self) -> None:
         row = self.materials_table.currentRow()
         if self.geometry_summary and 0 <= row < len(self.material_document.rows):

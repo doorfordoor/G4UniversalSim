@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from g4usim_gui.window.transactions import edit_operation
+
 from PySide6.QtWidgets import QTableWidgetItem
 
 from g4usim_gui.editors.geometry_editor_model import BooleanOperationRow
@@ -32,6 +34,7 @@ class BooleansMixin:
         op.rotation = values[8]
         self._mark_geometry_dirty()
 
+    @edit_operation('Add boolean operation')
     def _add_boolean_op(self) -> None:
         target = self._first_non_world_volume_name()
         index = sum(1 for op in self.geometry_document.boolean_ops if op.target_volume == target)
@@ -52,6 +55,7 @@ class BooleansMixin:
         self._mark_geometry_dirty()
         self._populate_hierarchical_tables()
 
+    @edit_operation('Duplicate boolean operation')
     def _duplicate_boolean_op(self) -> None:
         row = self.boolean_table.currentRow()
         if row < 0 or row >= len(self.geometry_document.boolean_ops):
@@ -68,6 +72,7 @@ class BooleansMixin:
         self._populate_hierarchical_tables()
         self.boolean_table.selectRow(row + 1)
 
+    @edit_operation('Delete boolean operation')
     def _delete_boolean_op(self) -> None:
         row = self.boolean_table.currentRow()
         if row < 0 or row >= len(self.geometry_document.boolean_ops):
@@ -77,6 +82,7 @@ class BooleansMixin:
         self._mark_geometry_dirty()
         self._populate_hierarchical_tables()
 
+    @edit_operation('Move boolean operation')
     def _move_boolean_op(self, direction: int) -> None:
         row = self.boolean_table.currentRow()
         target = row + direction

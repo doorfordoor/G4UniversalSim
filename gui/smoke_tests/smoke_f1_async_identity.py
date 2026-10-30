@@ -138,7 +138,7 @@ def main():
         assert 'not-present-queued/r0' in selection.plot_panel.message.text() and 'unavailable' in selection.plot_panel.message.text()
         selection.close();selection.deleteLater();app.processEvents()
         # Actual MainWindow accepted/ignored ancestor closes, not direct page.close.
-        from g4usim_gui.main_window import MainWindow
+        from gui_test_window import MainWindow
         from g4usim_gui.core.evidence_job import EvidenceJob
         from PySide6.QtCore import QProcess
         from PySide6.QtWidgets import QMessageBox

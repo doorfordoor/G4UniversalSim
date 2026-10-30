@@ -18,7 +18,7 @@ from g4usim_gui.core.project import G4USimProject, project_from_dict
 from g4usim_gui.core.runner import G4USimRunner
 from g4usim_gui.editors.geometry_editor_model import GeometryDocument
 from g4usim_gui.editors.source_physics_scoring_model import SourceEditableModel
-from g4usim_gui.main_window import MainWindow
+from gui_test_window import MainWindow
 from g4usim_gui.models.package_model import GeometrySettings, PathSettings
 from g4usim_gui.output.run_summary_parser import parse_run_summary
 from g4usim_gui.widgets.project_page import ProjectPage

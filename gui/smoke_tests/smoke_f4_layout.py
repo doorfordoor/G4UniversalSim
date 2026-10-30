@@ -22,7 +22,7 @@ from g4usim_gui.editors.material_editor_model import (  # noqa: E402
 from g4usim_gui.validators.config_validator import ValidationReport  # noqa: E402
 from g4usim_gui.core.i18n import apply_language, set_application_language  # noqa: E402
 from g4usim_gui.core.theme import apply_theme  # noqa: E402
-from g4usim_gui.main_window import MainWindow  # noqa: E402
+from gui_test_window import MainWindow  # noqa: E402
 from g4usim_gui.widgets.new_simulation_wizard import NewSimulationWizard  # noqa: E402
 from g4usim_gui.widgets.scenario_page import ScenarioPage  # noqa: E402
 from g4usim_gui.widgets.project_page import ProjectPage  # noqa: E402

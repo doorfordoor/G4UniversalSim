@@ -41,7 +41,20 @@ def parse_ini_light(path: str | Path) -> IniLightDocument:
                         unavailable_reason="source_unavailable")
         return result
 
-    result = IniLightDocument(str(source), [], warnings, errors, raw_text)
+    return parse_ini_light_text(raw_text, source_path=source)
+
+
+def parse_ini_light_text(raw_text: str, *, source_path: str | Path) -> IniLightDocument:
+    """Parse captured logical source text without reading the current source file.
+
+    ``source_path`` identifies the captured source; it is not a new read receipt.
+    Callers must only use this for a successful historical text capture, not for
+    a failed read represented by an empty string.
+    """
+    if not isinstance(raw_text, str):
+        raise TypeError("Captured INI source text must be a string")
+    source = Path(source_path)
+    result = IniLightDocument(str(source), [], [], [], raw_text)
     result._f4_read_success = True
 
     def problem(code: str, message: str, line_no: int, *, section: str = "", key: str = "", value: str = "") -> None:

@@ -20,7 +20,7 @@ from g4usim_gui.editors.geometry_editor_model import geometry_document_from_summ
 from g4usim_gui.editors.material_editor_model import MaterialRow, material_document_from_summary
 from g4usim_gui.editors.source_physics_scoring_model import PhysicsEditableModel, ScoringEditableModel, SourceEditableModel
 from g4usim_gui.history import run_history_store
-from g4usim_gui.main_window import MainWindow
+from gui_test_window import MainWindow
 from g4usim_gui.models.package_model import GeometrySettings, PathSettings
 from g4usim_gui.models.run_model import RunSettings
 from g4usim_gui.parsers.geometry_parser import parse_geometry

@@ -51,6 +51,30 @@ def default_runs_root() -> Path:
     return application_root() / "gui_runs"
 
 
+def default_recovery_root() -> Path:
+    """A per-user recovery store, separate from projects and installation files.
+
+    Tests and portable deployments can explicitly supply G4USIM_RECOVERY_DIR.
+    GenericDataLocation plus a fixed product name keeps self-tests and window
+    application titles from silently selecting different recovery stores.
+    """
+    override = os.environ.get("G4USIM_RECOVERY_DIR", "")
+    if override:
+        return Path(override).expanduser().absolute()
+    try:
+        from PySide6.QtCore import QStandardPaths
+        location = QStandardPaths.writableLocation(QStandardPaths.GenericDataLocation)
+        if location:
+            return Path(location) / "G4UniversalSim" / "recovery"
+    except ImportError:
+        pass  # The pure recovery model is also usable without Qt.
+    if os.name == "nt":
+        base = Path(os.environ.get("LOCALAPPDATA", str(Path.home() / "AppData" / "Local")))
+    else:
+        base = Path(os.environ.get("XDG_DATA_HOME", str(Path.home() / ".local" / "share")))
+    return base / "G4UniversalSim" / "recovery"
+
+
 def scripts_dir() -> Path:
     return application_root() / "scripts"
 

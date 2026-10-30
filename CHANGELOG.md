@@ -7,6 +7,8 @@ Short, user-facing record of notable changes. Detailed support status lives in
 
 ## Unreleased
 
+- F5 候选：主项目配置统一撤销/重做，保存完整材料、几何及原始输入草稿；项目 JSON 升为版本 7，兼容已知旧版。独立自动恢复副本支持未命名项目、异常退出恢复与活跃窗口锁定；恢复不覆盖原件、不恢复旧运行成功标志。完整验收状态见 `docs/ROADMAP.md`。
+
 ### F4 结构化诊断与定位（2026-10-30 已完成，未发布）
 
 产品 `7d718d038a00d89995ea773b4772764116b620c3`；Windows 152/152、49913 个 v3 入口与 F1 原始143/48511同代基线门禁；Linux11.3.2 为 152 项、11.4.3 为 152 项（run 41056994075），M0 Windows 为 72 项、Ubuntu 为 72 项（run 41056993987）。CI实际提交 `a9ad09dfd6e99d287fa77ff7f38e7919c475e1b9`，与产品的关系见[提交身份映射](docs/verification/f4-final-20261030/identity/identity-map.json)。Windows原生 13 态、19 次实际观察与进程退出 0；[最终证据](docs/verification/f4-final-20261030/README.md)，[独立审查](docs/collab/reviews/20261030-astra-f4-close-review.md)。

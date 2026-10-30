@@ -1,5 +1,7 @@
 # G4UniversalSim GUI Agent 开发约束
 
+2026-10-30 F5候选：Project/Configuration共用完整事务，raw非法草稿必须保留并正常阻断Generate；不能由get_project同步清空。普通项目v7恢复完整编辑内容，历史包仍从当前包材料/几何重建。Undo/恢复使包与F4诊断身份失效，不恢复旧运行成功；自动保存独立于普通保存。投影及回滚双失败需冻结保存/生成/运行并保留最后可证实快照。测试必须显式隔离recovery/history，产品不得按offscreen旁路交互。详见 `../docs/配置撤销与恢复.md` 和agent-history；下方F4“F5未启动”仅是旧关闭时记录。
+
 2026-10-30 F4阶段关闭记录（已完成）：产品 `7d718d038a00d89995ea773b4772764116b620c3`；Windows 152/152、49913 个 v3 入口与 F1 原始143/48511同代基线门禁；Linux11.3.2 为 152 项、11.4.3 为 152 项（run 41056994075），M0 Windows 为 72 项、Ubuntu 为 72 项（run 41056993987）。CI实际提交 `a9ad09dfd6e99d287fa77ff7f38e7919c475e1b9`，与产品的关系见[提交身份映射](../docs/verification/f4-final-20261030/identity/identity-map.json)。Windows原生 13 态、19 次实际观察与进程退出 0；[最终证据](../docs/verification/f4-final-20261030/README.md)，[独立审查](../docs/collab/reviews/20261030-astra-f4-close-review.md)。原生观察须使用产品Fusion和主题初始化；QA生命周期修正不冒充产品修复。保留下方旧候选原文，F5未启动。
 
 2026-10-30 F4候选：`core/diagnostics` 是统一结构，producer记录 code/editor/collection/row/field/source，不能从翻译报错反推。导航先检查当前快照和完整目标，不得改业务值或dirty；旧报告不可重绑定到新项目。无控件/源身份/完整预览范围就明确拒绝，源文本只能只读。瞬态记录不进入dataclass持久快照；Project与Config跨页也须失效守卫。运行包保留txt并写diagnostics v1 JSON。全文见 `../docs/结构化诊断与定位.md`，此条不宣称完整验收。

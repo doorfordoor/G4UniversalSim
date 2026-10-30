@@ -45,7 +45,7 @@ def rejected(call, fragment=""):
 
 def project_contract(work):
     source = work / "old.json"
-    for version in (None, 1, 2, 3, 4, 5, 6):
+    for version in (None, *range(1, SCHEMA_VERSION + 1)):
         original = {"projectName": "中文项目", "macroPath": "old.mac",
                     "geometryEditor": {"mode": "hierarchical", "schemaVersion": 1,
                                        "preview": {"volumes": [], "boolean_ops": []}}}
@@ -68,7 +68,7 @@ def project_contract(work):
         save_project(loaded, saved)
         assert project_to_dict(load_project(saved)) == project_to_dict(loaded)
     for invalid in (
-        {"version": 7}, {"version": True}, {"unknown": 1},
+        {"version": SCHEMA_VERSION + 1}, {"version": True}, {"unknown": 1},
         {"geometryEditor": {"preview": {"unknown": []}}},
         {"geometryEditor": {"sourcePath": "a", "source_path": "b"}},
         {"geometryEditor": {"preview": {"volumes": [{}]}, "volumes": []}},
@@ -222,7 +222,7 @@ def editor_presence_contract(work):
         for key, value in expected.items():
             assert getattr(getattr(reloaded, editor), key) == value, (editor, key)
         assert source.read_bytes() == raw
-    for version in (None, 1, 2, 3, 4, 5, 6):
+    for version in (None, *range(1, SCHEMA_VERSION + 1)):
         historical = {"sourceSettings": {"particle": "gamma", "energy": "3 MeV"},
                       "physicsSettings": {"reference": "Shielding"},
                       "scoringSettings": {"dose": True, "hist_bins": 42, "trajectory_events": 7}}

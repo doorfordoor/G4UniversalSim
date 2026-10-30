@@ -23,7 +23,7 @@ from g4usim_gui.core.i18n import set_application_language
 from g4usim_gui.core.project import load_project, project_to_dict
 from g4usim_gui.core.wizard import WizardSpec
 from g4usim_gui.history import run_history_store
-from g4usim_gui.main_window import MainWindow
+from gui_test_window import MainWindow
 from g4usim_gui.widgets.migration_dialog import MigrationDialog
 from g4usim_gui.widgets.qt_data import combo_data
 from g4usim_gui.window import project as project_window

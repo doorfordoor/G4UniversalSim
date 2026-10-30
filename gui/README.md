@@ -301,7 +301,9 @@ If `seed` is empty, `--seed` is not passed. If `config` is empty, the GUI can ru
 
 ## Project JSON
 
-The **Save project** and **Load project** buttons store GUI state only:
+The **Save project** and **Load project** buttons store the main project's editing state. F5 writes version 7, including material and geometry drafts and invalid raw input; known versions 1–6 remain readable. Undo/Redo uses the same configuration history for widgets and programmatic edits. Autosave protects a separate recovery copy, including unnamed projects, and never silently overwrites the original. Recovery opens an unsaved copy and requires fresh validation before generating or running. Independent scan/scenario forms and an un-applied wizard are outside this history. See [configuration undo and recovery](../docs/配置撤销与恢复.md) for limits and acceptance status.
+
+This historical version 1 example illustrates the old compatibility format, not the current full writer:
 
 ```json
 {

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import copy
 
-from PySide6.QtWidgets import QFileDialog, QMessageBox
+from PySide6.QtWidgets import QFileDialog, QLabel, QMessageBox
 
 from g4usim_gui.core import examples as gallery, scan as parameter_scan, wizard as simulation_wizard
 from g4usim_gui.core.i18n import ui_format, ui_text
@@ -33,13 +33,20 @@ class ContentMixin:
         return base, paths.runs_root, self.project.executable or paths.executable, self.project.workspaceRoot
 
     def open_new_simulation_wizard(self) -> None:
+        if not self.can_mutate_workspace('wizard'):
+            return
         wizard = NewSimulationWizard(self)
+        hint = QLabel(ui_text('Wizard drafts are temporary. Finish applies one undoable change to the project; Cancel discards the draft.'))
+        hint.setWordWrap(True)
+        wizard.scenario_page.layout().insertWidget(0, hint)
         if wizard.exec() != NewSimulationWizard.Accepted:
             return
         self.apply_simulation_wizard(wizard.spec, run_after=wizard.run_after_finish())
 
     def apply_simulation_wizard(self, spec: simulation_wizard.WizardSpec, *, run_after: bool) -> bool:
         """Put a wizard result into the current project (in place) and show the Configuration page."""
+        if not self.can_mutate_workspace('wizard'):
+            return False
         try:
             result = simulation_wizard.build(spec)
             candidate = copy.deepcopy(self.project)
@@ -49,9 +56,17 @@ class ContentMixin:
         except ValueError as error:
             QMessageBox.warning(self, ui_text("New simulation"), str(error))
             return False
-        self._update_project_from_page_without_preview()
-        simulation_wizard.apply_to_project(self.project, result)
-        self._set_project(self.project)
+        with self.workspace_transaction('Apply simulation wizard'):
+            self._update_project_from_page_without_preview()
+            simulation_wizard.apply_to_project(self.project, result)
+            self.project.materialEditor = None
+            self.project.editingState = None
+            previous = self._history_restoring
+            self._history_restoring = True
+            try:
+                self._project_initial_projection(self.project)
+            finally:
+                self._history_restoring = previous
         index = self.page_stack.indexOf(self.config_builder_page)
         self.page_stack.setCurrentIndex(index)
         self._nav_buttons[index].setChecked(True)

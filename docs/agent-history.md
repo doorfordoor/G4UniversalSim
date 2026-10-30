@@ -517,3 +517,15 @@ F4首轮5d6f008实窗反例：重名几何的size诊断虽选中[2,6]，外层�
 5d6f008几何定位空白反例与Windows中断轮（92 PASS/1 FAIL、无完整report）、旧CI失败/未执行profile，以及096f4b3原生host异常退出均保留历史原件，不计最终通过。QA host的Close事件对象树遍历缺陷只在out辅助程序修正；第三轮7d718d0的Linux CI因缺少libEGL.so.1失败，仅有6份实际报告，后续6个Linux profile未执行；其旧报告与失败日志仍属历史，不能用新CI回填或冒充当轮通过。PID40456、2026-10-30 19:51:06的0xc0000409与缺失退出收据不得改写。合成夹具、离屏交互、真实后端Inspect拒绝与原生图像观察分别计证；本阶段不声称新增模拟或物理基准。
 
 正常原生host SHA256 `aa59397f4711c17f7edcc9a39d927c9c4197e124d98ccafb58b8d1d886c11d6c`。保持Diagnostic/SourceLocation/EditorLocation及JSON v1语义；不新增项目持久UUID。实际来源先核验逻辑文本身份，历史快照明确标注；表格单元格须与所有祖先视口实际裁剪相交。导航不改值/dirty，换项目/重载/任何草稿修改后旧报告不得复活。
+
+## 2026-10-30 F5 候选：配置事务与恢复契约
+
+F5统一主Project/Configuration、材料/组分、几何/层/布尔、Source/Physics/Scoring和运行参数的完整编辑快照；向导成功应用一个事务。独立scan/scenario和未应用向导草稿不保存，需界面说明。无新物理字段；当前验收状态只看STATUS/ROADMAP。
+
+`core/edit_snapshot.py`持久快照携带raw draft、源文本/绝对读取锚点、读取成败及材料/几何模型；瞬态parser对象不序列化。`edit_transactions.py`默认100命令/32MiB编码载荷预算，保存点按语义fingerprint、revision单调，撤销不能使旧F4诊断或运行成功复活。保存/结构/失焦切断输入合并；撤销后新编辑清redo。失败保持旧历史；UI投影和回滚双失败须冻结，不能把坏投影保存或发布为恢复内容。
+
+项目JSON v7新增materialEditor/editingState，已知1–6继续兼容，缺失旧快照与显式空内容有别。`core/edit_sources.py`从捕获原文重建不可编辑源限制，不能信任可清空的诊断缓存；失败读不能伪装为空文本成功。不重读当前磁盘。普通Open恢复完整草稿；E6 run-package adapter仍解析CURRENT包内材料/几何，丢弃历史未输出草稿，不恢复旧执行配置和成功事实。
+
+`workspace_recovery.py`每会话OS lease防活跃窗口接管、严格版本/摘要/路径和原子发布，控制器拒绝迟到revision/同revision换payload/已退役revision复活。恢复为未命名dirty副本，不覆盖原项目/INI/macro，不触发运行。自动保存不等于普通保存，失败保持原有效副本。`ProjectFileReceipt`来自实际读取或本次写入的原始字节；os.replace为保存提交点，发布后不清理已经转移的临时名称。
+
+专项：test_f5_transactions/source_snapshots/project_receipts/recovery；smoke_f5_editor_history/recovery_ui/recovery_process；test_f5_transactions_backend（Undo/Redo生成后真实Geant4的源能量和几何读回，非物理正确性基准）。旧GUI用专用test MainWindow隔离恢复/history并明确Discard，产品不按offscreen绕过恢复或未保存保护。原失败实验/报告保留out，再归档；完整验收尚未完成。

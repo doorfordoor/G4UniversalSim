@@ -22,7 +22,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from PySide6.QtCore import QProcess  # noqa: E402
 from PySide6.QtWidgets import QApplication  # noqa: E402
 
-from g4usim_gui.main_window import MainWindow  # noqa: E402
+from gui_test_window import MainWindow  # noqa: E402
 from g4usim_gui.preview3d.backend_mesh import load_backend_mesh  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[2]

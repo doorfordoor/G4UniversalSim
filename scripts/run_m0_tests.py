@@ -53,6 +53,14 @@ class Case:
 
 
 CASES = (
+    Case("f5_source_snapshots", "scripts/test_f5_source_snapshots.py", "static"),
+    Case("f5_project_receipts", "scripts/test_f5_project_receipts.py", "static"),
+    Case("f5_transactions", "scripts/test_f5_transactions.py", "static"),
+    Case("f5_recovery", "scripts/test_f5_recovery.py", "static"),
+    Case("gui_f5_recovery", "gui/smoke_tests/smoke_f5_recovery_ui.py", "gui", ("qt",)),
+    Case("f5_transactions_backend", "scripts/test_f5_transactions_backend.py", "integration", ("exe",)),
+    Case("gui_f5_editor_history", "gui/smoke_tests/smoke_f5_editor_history.py", "gui", ("qt",)),
+    Case("gui_f5_recovery_process", "gui/smoke_tests/smoke_f5_recovery_process.py", "gui", ("qt",)),
     Case("f4_diagnostics", "scripts/test_f4_diagnostics.py", "static"),
     Case("f4_producers", "scripts/test_f4_producers.py", "static"),
     Case("f4_document_diagnostics", "scripts/test_f4_document_diagnostics.py", "static"),

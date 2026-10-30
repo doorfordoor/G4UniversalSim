@@ -16,7 +16,7 @@ from g4usim_gui.core import wizard
 from g4usim_gui.core.project import G4USimProject, load_project
 from g4usim_gui.models.package_model import PathSettings
 from g4usim_gui.history import run_history_store
-from g4usim_gui.main_window import MainWindow
+from gui_test_window import MainWindow
 
 
 def wait(predicate, seconds=90):

@@ -187,7 +187,7 @@ def check_widget() -> None:
     app.processEvents()
 
     from PySide6.QtCore import QSettings   # noqa: PLC0415
-    from g4usim_gui.main_window import MainWindow   # noqa: PLC0415
+    from gui_test_window import MainWindow   # noqa: PLC0415
     app.setOrganizationName("G4UniversalSimSmoke")
     app.setApplicationName("View3D")
     QSettings().clear()

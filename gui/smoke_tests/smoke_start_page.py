@@ -123,7 +123,7 @@ def main() -> None:
     QMessageBox.warning = staticmethod(lambda *args, **kwargs: QMessageBox.Ok)
     QMessageBox.information = staticmethod(lambda *args, **kwargs: QMessageBox.Ok)
     apply_theme(app, "light")
-    from g4usim_gui.main_window import MainWindow   # noqa: PLC0415 - after the application exists
+    from gui_test_window import MainWindow   # noqa: PLC0415 - after the application exists
 
     stamps = {p: p.stat().st_mtime_ns for p in examples.gallery_root().rglob("*") if p.is_file()}
     window = MainWindow()

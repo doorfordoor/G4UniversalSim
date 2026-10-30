@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from g4usim_gui.core.diagnostics import collect_diagnostics, emit_diagnostic, source_location, SourceLocation
 
-from g4usim_gui.parsers.ini_light_parser import IniSection, parse_ini_light
+from g4usim_gui.parsers.ini_light_parser import IniLightDocument, IniSection, parse_ini_light, parse_ini_light_text
 
 
 FORBIDDEN_BOOLEAN_KEYS = {"material", "sensitive", "bias", "region", "parent", "placement", "copyno"}
@@ -124,7 +124,16 @@ class GeometrySourceDiagnostic:
 
 
 def parse_geometry(path: str | Path, template_name: str | None = None) -> GeometrySummary:
-    document = parse_ini_light(path)
+    return _geometry_from_document(parse_ini_light(path), template_name)
+
+
+def parse_geometry_text(raw_text: str, *, source_path: str | Path,
+                        template_name: str | None = None) -> GeometrySummary:
+    """Rebuild a captured source summary, preserving source-only diagnostics."""
+    return _geometry_from_document(parse_ini_light_text(raw_text, source_path=source_path), template_name)
+
+
+def _geometry_from_document(document: IniLightDocument, template_name: str | None) -> GeometrySummary:
     summary = GeometrySummary(path=document.path, raw_text=document.raw_text)
     summary._f4_read_success = getattr(document, "_f4_read_success", False)
     # Capture read evidence once. A failed read is not a successful empty file;

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from PySide6.QtCore import QProcess, QTimer
-from PySide6.QtWidgets import QMainWindow
+from PySide6.QtWidgets import QApplication, QMainWindow
 
 from pathlib import Path
 from g4usim_gui.core.i18n import current_language, ui_text
@@ -22,12 +22,14 @@ from g4usim_gui.window.project import ProjectMixin
 from g4usim_gui.window.run import RunMixin
 from g4usim_gui.window.content import ContentMixin
 from g4usim_gui.window.diagnostics import DiagnosticsMixin
+from g4usim_gui.window.transactions import TransactionsMixin
+from g4usim_gui.window.recovery import RecoveryMixin
 
 
-class MainWindow(ShellMixin, ProjectMixin, RunMixin, ContentMixin, DiagnosticsMixin, QMainWindow):
+class MainWindow(ShellMixin, ProjectMixin, RunMixin, ContentMixin, DiagnosticsMixin, TransactionsMixin, RecoveryMixin, QMainWindow):
     """The main window: pages, runner and controllers; its behaviour is split by area in g4usim_gui/window/."""
 
-    def __init__(self) -> None:
+    def __init__(self, *, recovery_root=None, offer_recovery: bool = True) -> None:
         super().__init__()
         self.setWindowTitle("G4UniversalSim Runner")
         self.resize(1500, 950)
@@ -45,6 +47,7 @@ class MainWindow(ShellMixin, ProjectMixin, RunMixin, ContentMixin, DiagnosticsMi
         self._pending_inspection_run = False
         self._macro_inspection.finished.connect(self._on_macro_inspection_finished)
         self._macro_inspection.errorOccurred.connect(self._on_macro_inspection_error)
+        self._macro_inspection.stateChanged.connect(self._update_editor_busy)
 
         self.start_page = StartPage()
         self.project_page = ProjectPage()
@@ -67,6 +70,12 @@ class MainWindow(ShellMixin, ProjectMixin, RunMixin, ContentMixin, DiagnosticsMi
         self._restore_app_state()
         self._set_project(self.project)
         self._set_language(current_language(), persist=False)
+        self._setup_edit_history()
+        self._recovery_root = recovery_root
+        self._offer_recovery = offer_recovery
+        setup_recovery = getattr(self, '_setup_recovery', None)
+        if setup_recovery is not None:
+            setup_recovery()
         self.statusBar().showMessage(ui_text("Ready"), 5000)
 
     def _connect_signals(self) -> None:
@@ -118,6 +127,9 @@ class MainWindow(ShellMixin, ProjectMixin, RunMixin, ContentMixin, DiagnosticsMi
         self._on_runner_error(message)
 
     def closeEvent(self, event) -> None:  # noqa: N802 - Qt override.
+        if not self._confirm_unsaved_edits():
+            event.ignore()
+            return
         self._closing = True
         # Stop producers before waiting: completion signals must not launch queued jobs.
         for timer in self.findChildren(QTimer):
@@ -149,7 +161,15 @@ class MainWindow(ShellMixin, ProjectMixin, RunMixin, ContentMixin, DiagnosticsMi
             self.statusBar().showMessage(ui_text("Waiting for owned processes to stop before closing."))
             event.ignore()
             self._closing = False
+            self.history_changed()
             return
+        finish_recovery = getattr(self, '_recovery_before_close', None)
+        if finish_recovery is not None:
+            if not finish_recovery(discard=self._history_discard_on_close):
+                self._closing = False
+                event.ignore()
+                self.history_changed()
+                return
         # QWidget ancestor close hides embedded pages without invoking each
         # page.closeEvent. Close their jobs only after the ignore branch above.
         from g4usim_gui.core.evidence_job import close_evidence_jobs
@@ -161,4 +181,5 @@ class MainWindow(ShellMixin, ProjectMixin, RunMixin, ContentMixin, DiagnosticsMi
         state["lastWorkspaceRoot"] = self.project.workspaceRoot
         state["lastRunsRoot"] = self.project.runsRoot
         save_state(state)
+        QApplication.instance().removeEventFilter(self._history_filter)
         super().closeEvent(event)

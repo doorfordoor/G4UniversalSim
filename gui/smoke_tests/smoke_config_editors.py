@@ -57,7 +57,7 @@ def main() -> int:
     assert tab_texts(details) == ["Messages", "Raw Files", "NIST Quick List"]
     print("each editor widget builds on its own")
 
-    from g4usim_gui.main_window import MainWindow   # noqa: PLC0415
+    from gui_test_window import MainWindow   # noqa: PLC0415
     from g4usim_gui.window.content import ContentMixin   # noqa: PLC0415
     from g4usim_gui.window.project import ProjectMixin   # noqa: PLC0415
     from g4usim_gui.window.run import RunMixin   # noqa: PLC0415

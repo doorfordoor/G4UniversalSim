@@ -20,7 +20,7 @@ from g4usim_gui.core.i18n import set_application_language
 from g4usim_gui.core.project import G4USimProject
 from g4usim_gui.core.project_diagnostics import validate_project_report
 from g4usim_gui.core.runner import G4USimRunner
-from g4usim_gui.main_window import MainWindow
+from gui_test_window import MainWindow
 from g4usim_gui.editors.material_editor_model import MaterialDocument, MaterialRow
 from g4usim_gui.validators.config_validator import validate_config_builder
 from g4usim_gui.widgets.new_simulation_wizard import NewSimulationWizard

@@ -22,7 +22,7 @@ from PySide6.QtWidgets import QApplication, QMessageBox
 from g4usim_gui.core import wizard as wz
 from g4usim_gui.core.i18n import set_application_language, ui_format
 from g4usim_gui.core.project import G4USimProject
-from g4usim_gui.main_window import MainWindow
+from gui_test_window import MainWindow
 from g4usim_gui.widgets.new_simulation_wizard import NewSimulationWizard
 
 

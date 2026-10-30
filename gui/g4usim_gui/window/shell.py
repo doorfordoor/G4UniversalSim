@@ -246,6 +246,9 @@ class ShellMixin:
         open_action = file_menu.addAction("Open Project...")
         save_action = file_menu.addAction("Save Project")
         save_as_action = file_menu.addAction("Save Project As...")
+        open_action.setShortcut('Ctrl+O')
+        save_action.setShortcut('Ctrl+S')
+        save_as_action.setShortcut('Ctrl+Shift+S')
         migration_action = file_menu.addAction("Configuration migration copy...")
         self.recent_menu = file_menu.addMenu("Recent Projects")
         clear_recent_action = file_menu.addAction("Clear Recent Projects")
@@ -259,6 +262,7 @@ class ShellMixin:
         clear_recent_action.triggered.connect(self.clear_recent_projects)
         exit_action.triggered.connect(self.close)
         self._refresh_recent_menu()
+        self._create_history_actions()
 
         view_menu = self.menuBar().addMenu(self.tr("View"))
         theme_menu = view_menu.addMenu(self.tr("Theme"))
@@ -333,6 +337,7 @@ class ShellMixin:
         self.project_context.setText(
             ui_format("Project: {name}", name=self.project.projectName or ui_text("untitled"))
         )
+        self.history_changed()
 
     def _set_run_chip(self, state: str, role: str) -> None:
         """Header status chip: a dot and the state in words; colour only repeats what the text says."""

@@ -16,6 +16,8 @@ class RunMixin:
     """Running: command preview, input inspection, package generation, start/stop and the runner's signals. Mixed into MainWindow."""
 
     def build_command_preview(self, *, show_errors: bool = True) -> None:
+        if getattr(self, '_workspace_fault', ''):
+            return
         self._update_project_from_page_without_preview()
         if self.project.runInputMode == "generated" and self._generated_package_stale:
             self.run_page.set_command([ui_text("Configuration changed; the run package will be regenerated at run time.")])
@@ -45,11 +47,15 @@ class RunMixin:
         return lines
 
     def _macro_inspection_inputs(self) -> tuple[object, ...]:
-        return (self.project.runInputMode, self.project.executable,
+        session = getattr(self, '_edit_session', None)
+        return (session.revision if session is not None else 0, self.project.runInputMode, self.project.executable,
                 self.project.workspaceRoot, self.project.configPath, self.project.macroPath,
                 self.project.outputDir, self.project.threads, self.project.seed, self.project.runName)
 
     def inspect_external_macro(self, *, run_after: bool = False) -> None:
+        if not self.can_mutate_workspace('inspect'):
+            return
+        self.flush_pending_edit()
         if self._macro_inspection.state() != QProcess.NotRunning:
             return
         self._update_project_from_page_without_preview()
@@ -134,9 +140,12 @@ class RunMixin:
             self._present_raw_run_diagnostic('backend.inspect_start', self._macro_inspection.errorString())
 
     def start_run(self) -> None:
+        if not self.can_mutate_workspace('run'):
+            return
         if self.runner.is_running() or self._macro_inspection.state() != QProcess.NotRunning:
             self.run_page.append_status_message(ui_text("A run is already active."))
             return
+        self._finish_history_merge()
         self._update_project_from_page_without_preview()
         self.config_builder_page.update_project(self.project)
         if self.project.runInputMode == "generated":
@@ -147,6 +156,8 @@ class RunMixin:
         self.inspect_external_macro(run_after=True)
 
     def _start_current_project(self) -> None:
+        if not self.can_mutate_workspace('run'):
+            return
         validation = self.runner.validation_report(self.project, ready_to_run=True)
         self._present_project_diagnostics(validation)
         errors = validation.errors
@@ -164,6 +175,8 @@ class RunMixin:
         self.runner.start(self.project, command)
 
     def validate_generated_config(self) -> None:
+        if not self.can_mutate_workspace('validate'):
+            return
         self._update_project_from_page_without_preview()
         self.config_builder_page.update_project(self.project)
         try:
@@ -179,6 +192,9 @@ class RunMixin:
             QMessageBox.warning(self, "Validation failed", "\n".join(report.errors))
 
     def generate_package(self, run_after_generate: bool) -> None:
+        if not self.can_mutate_workspace('generate'):
+            return
+        self._finish_history_merge()
         self._update_project_from_page_without_preview()
         self.config_builder_page.update_project(self.project)
         if not self._generate_current_package():
@@ -187,6 +203,9 @@ class RunMixin:
             self._start_current_project()
 
     def _generate_current_package(self) -> bool:
+        if not self.can_mutate_workspace('generate'):
+            return False
+        original_paths = self.capture_workspace().project
         try:
             pre_report = self.config_builder_page.validate_current(self.project)
             if not pre_report.can_run:
@@ -231,6 +250,10 @@ class RunMixin:
         seed = self.config_builder_page.run_settings().seed
         self.project.seed = "" if seed is None else str(seed)
         self.project.runInputMode = "generated"
+        self._generated_edit_binding = {
+            name: (getattr(original_paths, name), getattr(self.project, name))
+            for name in ('configPath', 'macroPath', 'outputDir')
+        }
         self.project_page.set_project(self.project)
         self._generated_package_dir = package.package_dir
         self._generated_package_stale = False
@@ -260,6 +283,7 @@ class RunMixin:
         running = state in {"Starting", "Running"}
         self._set_run_chip(state, "running" if running else "")
         self.project_page.set_inputs_enabled(not running)
+        self._update_editor_busy()
 
     def _on_finished(self, exit_code: int) -> None:
         self.run_page.set_exit_code(exit_code)
@@ -269,6 +293,7 @@ class RunMixin:
         self.run_page.set_result(state)
         self.run_page.append_status_message(ui_format("Run result: {state}. {reason}", state=ui_text(state), reason=ui_text(reason)))
         self.project_page.set_inputs_enabled(True)
+        self._update_editor_busy()
         self.output_page.set_output_dir(self.project.outputDir)
         self.output_page.refresh()
         self.run_history_page.refresh()

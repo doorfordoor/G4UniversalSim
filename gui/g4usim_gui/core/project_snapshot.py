@@ -13,6 +13,7 @@ from pathlib import Path
 from g4usim_gui.core.config_migration import digest, load_json_strict
 from g4usim_gui.core.project_migration import normalize_project_data, validate_dataclass_fields
 from g4usim_gui.editors.geometry_editor_model import geometry_document_from_summary
+from g4usim_gui.editors.material_editor_model import material_document_from_summary
 from g4usim_gui.models.package_model import RunPackage
 from g4usim_gui.models.run_model import RunSettings
 from g4usim_gui.parsers.geometry_parser import parse_geometry
@@ -300,6 +301,10 @@ def load_snapshot(path: str | Path) -> ProjectSnapshotLoad:
     project.geometryEditor = geometry_document_from_summary(geometry_summary, project.geometrySettings.template)
     project.geometryEditor.source_copy_mode = bypass
     project.geometryEditor.is_dirty = False
+    # A run-package restore uses current package inputs, not the v7 project's
+    # historical materials or unsaved UI drafts captured before generation.
+    project.materialEditor = material_document_from_summary(material_summary)
+    project.editingState = None
     # Flat mirrors must reflect the recorded run, not stale project-page values
     # that happened to exist before package generation.
     project.runName = project.runSettings.run_name

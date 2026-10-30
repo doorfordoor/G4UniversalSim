@@ -9,7 +9,7 @@ from PySide6.QtWidgets import QFileDialog, QMessageBox
 from pathlib import Path
 from g4usim_gui.core import install_layout
 from g4usim_gui.core.i18n import ui_format, ui_text
-from g4usim_gui.core.project import G4USimProject, load_project, save_project
+from g4usim_gui.core.project import G4USimProject, load_project, load_project_with_receipt, save_project
 from g4usim_gui.history.run_history_store import (
     add_recent_project,
     clear_recent_projects,
@@ -75,6 +75,31 @@ class ProjectMixin:
                 ))
 
     def _set_project(self, project: G4USimProject) -> None:
+        if getattr(self, '_workspace_fault', ''):
+            raise ValueError('Restore the last verified editor state before opening another project.')
+        verified = self._edit_session.current() if hasattr(self, '_edit_session') else None
+        try:
+            if getattr(project, 'editingState', None) is not None:
+                from g4usim_gui.core.edit_snapshot import WorkspaceSnapshot
+                self.apply_workspace(WorkspaceSnapshot(project), reason='open')
+            else:
+                previous = getattr(self, '_history_restoring', False)
+                self._history_restoring = True
+                try:
+                    self._project_initial_projection(project)
+                finally:
+                    self._history_restoring = previous
+        except Exception as original:
+            if verified is not None:
+                try:
+                    self.apply_workspace(verified, reason='open-rollback')
+                except Exception as rollback:
+                    from g4usim_gui.core.edit_transactions import TransactionApplyError
+                    raise TransactionApplyError(original, rollback) from original
+            raise
+        self._reset_edit_history()
+
+    def _project_initial_projection(self, project: G4USimProject) -> None:
         self._check_project_projection(project)
         self._clear_project_diagnostics()
         self.project = project
@@ -93,9 +118,12 @@ class ProjectMixin:
         self.build_command_preview(show_errors=False)
 
     def _update_project_from_page(self) -> None:
+        if getattr(self, '_workspace_fault', '') and not self._history_restoring:
+            return
         before = self._project_page_stale_signature(self.project)
         macro_before = self._macro_inspection_inputs()
         self.project_page.apply_to_project(self.project)
+        self.project.seed = self.project_page.seed.text()
         after = self._project_page_stale_signature(self.project)
         if macro_before != self._macro_inspection_inputs():
             self.run_page.set_macro_plan(ui_text("Run plan is stale; inputs changed."))
@@ -113,17 +141,24 @@ class ProjectMixin:
             self.build_command_preview(show_errors=False)
 
     def _update_project_from_config_builder(self) -> None:
+        if getattr(self, '_workspace_fault', '') and not self._history_restoring:
+            return
         self._invalidate_project_diagnostics(force=True)
         self.config_builder_page.update_project(self.project)
         run = self.project.runSettings
         self.project.runName = run.run_name
         self.project.threads = run.threads
-        self.project.seed = "" if run.seed is None else str(run.seed)
+        # The parsed setting is None for both empty and invalid input. Preserve
+        # the raw mirror so Generate cannot erase an invalid seed before validation.
+        self.project.seed = self.config_builder_page.seed.text()
         self.project_page.set_project(self.project)
         self._mark_generated_package_stale()
 
     def _update_project_from_page_without_preview(self) -> None:
+        if getattr(self, '_workspace_fault', '') and not self._history_restoring:
+            return
         self.project_page.apply_to_project(self.project)
+        self.project.seed = self.project_page.seed.text()
         self._sync_flat_project_to_nested_paths()
         self.config_builder_page.set_run_defaults(self.project)
         self.output_page.set_workspace_root(self.project.workspaceRoot, self.project.executable)
@@ -157,6 +192,8 @@ class ProjectMixin:
         self.run_page.set_command([ui_text("Configuration changed; the run package will be regenerated at run time.")])
 
     def open_project(self) -> None:
+        if not self.can_mutate_workspace('open'):
+            return
         path, _ = QFileDialog.getOpenFileName(
             self, "Open G4UniversalSim project", filter="JSON files (*.json);;All files (*)"
         )
@@ -165,16 +202,22 @@ class ProjectMixin:
         self._load_project_path(path)
 
     def _load_project_path(self, path: str, *, snapshot: bool = False, recent: bool = False) -> bool:
+        if not self.can_mutate_workspace('open'):
+            return False
         try:
             restored = None
+            receipt = None
             if snapshot:
                 from g4usim_gui.core.project import load_project_snapshot
 
                 restored = load_project_snapshot(path)
                 project = restored.project
             else:
-                project = load_project(path)
+                project, receipt = load_project_with_receipt(path)
             self._check_project_projection(project)
+            if project.editingState is not None:
+                from g4usim_gui.core.edit_snapshot import WorkspaceSnapshot
+                self._check_workspace_projection(WorkspaceSnapshot(project))
         except Exception as exc:  # noqa: BLE001 - reject predictable failures before publishing.
             if snapshot:
                 QMessageBox.warning(self, ui_text("Load snapshot failed"), str(exc))
@@ -183,7 +226,12 @@ class ProjectMixin:
             else:
                 QMessageBox.critical(self, ui_text("Open project failed"), str(exc))
             return False
+        if not self._confirm_unsaved_edits():
+            return False
         self._set_project(project)
+        if snapshot:
+            self.project_file = None
+            self._edit_session.mark_saved()  # imported snapshot is a new document baseline
         if not snapshot:
             self.project_file = Path(path)
             add_recent_project(path)
@@ -192,6 +240,11 @@ class ProjectMixin:
             self._show_snapshot_restore_notes(restored)
         else:
             self.statusBar().showMessage(ui_format("Loaded project: {path}", path=path), 5000)
+        self._history_discard_on_close = False
+        callback = getattr(self, '_recovery_project_replaced', None)
+        if callback is not None:
+            callback(origin_path=receipt.path if receipt is not None else '',
+                     origin_sha256=receipt.sha256 if receipt is not None else None)
         return True
 
     def _show_snapshot_restore_notes(self, restored) -> None:
@@ -222,12 +275,16 @@ class ProjectMixin:
         self.statusBar().showMessage(ui_text(status), 8000)
 
     def save_project(self) -> None:
+        if not self.can_mutate_workspace('save'):
+            return
         if self.project_file is None:
             self.save_project_as()
             return
         self._save_project_to(self.project_file)
 
     def save_project_as(self) -> None:
+        if not self.can_mutate_workspace('save'):
+            return
         path, _ = QFileDialog.getSaveFileName(
             self, "Save G4UniversalSim project", filter="JSON files (*.json);;All files (*)"
         )
@@ -237,13 +294,24 @@ class ProjectMixin:
             self.project_file = Path(path)
 
     def _save_project_to(self, target: Path) -> bool:
-        self._update_project_from_page()
-        self.config_builder_page.update_project(self.project)
+        from g4usim_gui.core.edit_snapshot import project_for_snapshot
+        if not self.can_mutate_workspace('save'):
+            return False
+        self._finish_history_merge()
+        if not self.can_mutate_workspace('save'):
+            return False
+        snapshot = self.capture_workspace()
         try:
-            save_project(self.project, target)
+            receipt = save_project(project_for_snapshot(snapshot), target)
         except Exception as exc:  # noqa: BLE001 - keep the previous project path on failure.
             QMessageBox.critical(self, ui_text("Save project failed"), str(exc))
             return False
+        self._edit_session.mark_saved(snapshot)
+        self._history_discard_on_close = False
+        self.history_changed()
+        callback = getattr(self, '_recovery_project_saved', None)
+        if callback is not None:
+            callback(origin_path=receipt.path, origin_sha256=receipt.sha256)
         self.statusBar().showMessage(ui_format("Saved project: {path}", path=target), 5000)
         add_recent_project(str(target))
         self._refresh_recent_menu()
@@ -263,6 +331,8 @@ class ProjectMixin:
         self.tabs.setCurrentWidget(self.output_page)
 
     def duplicate_history_package(self, package_dir: str, *, run_after: bool) -> None:
+        if not self.can_mutate_workspace('duplicate') or not self._confirm_unsaved_edits():
+            return
         new_package = ""
         try:
             candidate = copy.deepcopy(self.project)

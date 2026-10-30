@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+from g4usim_gui.window.transactions import edit_operation, capture_detail_raw, restore_detail_raw
+import copy
+
 from PySide6.QtWidgets import QTableWidgetItem
 
 from g4usim_gui.editors.geometry_editor_model import LayerRow
@@ -70,6 +73,7 @@ class LayersMixin:
         self.layer_copy_no.setText(layer.copy_no)
         self.layer_position.setText(layer.position)
         self.layer_rotation.setText(layer.rotation)
+        restore_detail_raw(self, "layer", layer)
         self._building = False
 
     def _update_selected_layer_from_detail(self) -> None:
@@ -78,6 +82,7 @@ class LayersMixin:
         if row < 0 or row >= len(layers):
             return
         layer = layers[row]
+        capture_detail_raw(self, "layer", layer)
         layer.enabled = self.layer_enabled.isChecked()
         layer.name = self.layer_name.text().strip()
         layer.material = self.layer_material.currentText().strip()
@@ -93,6 +98,7 @@ class LayersMixin:
         if 0 <= row < self.layer_table.rowCount():
             self.layer_table.selectRow(row)
 
+    @edit_operation('Add layer')
     def _add_layer(self) -> None:
         layer = LayerRow(name=f"Layer{len(self.geometry_document.layered_device.layers) + 1}", material="G4_Si", thickness="1 um", xy="10 mm, 10 mm")
         self.geometry_document.layered_device.layers.append(layer)
@@ -103,13 +109,14 @@ class LayersMixin:
         self._update_generated_geometry_preview()
         self._emit_changed()
 
+    @edit_operation('Duplicate layer')
     def _duplicate_layer(self) -> None:
         row = self._selected_layer_row
         layers = self.geometry_document.layered_device.layers
         if row < 0 or row >= len(layers):
             return
         source = layers[row]
-        duplicate = LayerRow(**source.__dict__.copy())
+        duplicate = copy.deepcopy(source)
         duplicate.name = f"{source.name}_copy"
         layers.insert(row + 1, duplicate)
         self.geometry_document.is_dirty = True
@@ -119,6 +126,7 @@ class LayersMixin:
         self._update_generated_geometry_preview()
         self._emit_changed()
 
+    @edit_operation('Delete layer')
     def _delete_layer(self) -> None:
         row = self._selected_layer_row
         layers = self.geometry_document.layered_device.layers
@@ -132,6 +140,7 @@ class LayersMixin:
         self._update_generated_geometry_preview()
         self._emit_changed()
 
+    @edit_operation('Move layer')
     def _move_layer(self, direction: int) -> None:
         row = self._selected_layer_row
         layers = self.geometry_document.layered_device.layers

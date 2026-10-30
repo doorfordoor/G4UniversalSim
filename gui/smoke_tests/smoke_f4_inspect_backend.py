@@ -19,7 +19,7 @@ from PySide6.QtCore import QCoreApplication, QEvent, QProcess, QSettings
 from PySide6.QtWidgets import QApplication, QWidget
 from g4usim_gui.core.i18n import set_application_language
 from g4usim_gui.core.project import G4USimProject
-from g4usim_gui.main_window import MainWindow
+from gui_test_window import MainWindow
 from g4usim_gui.widgets.diagnostic_navigation import configuration_snapshot
 
 

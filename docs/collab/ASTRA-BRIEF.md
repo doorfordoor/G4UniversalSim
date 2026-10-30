@@ -1,5 +1,9 @@
 # 给 Astra 的当前状态简报
 
+## 2026-10-30 F5 当前推进
+
+用户已启动完整 F5。隔离分支 `roadmap/F5-transactions-recovery`，基线676ffb2，范围提交75b1a19；[实施约定](inbox/20261030-2155-astra-f5-execution.md)。事务/完整编辑快照、GUI入口、自动保存/恢复三块独占协同，DeepSeek已实际提供[前端设计](outbox/20261030-2155-deepseek-f5-design.md)。当前尚未实现/验收关闭；下文F4记录中的“F5未启动”为当时状态。
+
 ## 2026-10-30 F4 阶段关闭记录（已完成）
 
 2026-10-30 集成补记：关闭提交`20f8562`已正常快进到codex并推送，原D检出保持独立；[实际收据](../verification/f4-close-20261030/integration.json)。下文“记录形成时尚待快进”保留其生成时间点，当前F4已关闭，F5未启动。

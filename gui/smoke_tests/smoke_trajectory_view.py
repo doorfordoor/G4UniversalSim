@@ -219,7 +219,7 @@ def check_backend(temp: Path) -> None:
     QSettings().clear()
     QMessageBox.warning = staticmethod(lambda *args, **kwargs: QMessageBox.Ok)
     QMessageBox.information = staticmethod(lambda *args, **kwargs: QMessageBox.Ok)
-    from g4usim_gui.main_window import MainWindow   # noqa: PLC0415
+    from gui_test_window import MainWindow   # noqa: PLC0415
     window = MainWindow()
     window.show()
     window.project_page.executable.setText(str(EXE))

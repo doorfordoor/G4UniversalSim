@@ -42,9 +42,49 @@ def validate_dataclass_fields(data: Any, model: type, path: str) -> None:
         _check_json_type(value, hints[key], f"{path}.{key}")
 
 
+def require_complete_dataclass(data: Any, model: type, path: str) -> None:
+    """Closed complete snapshots may not replace missing data with defaults.
+
+    Ordinary legacy project imports deliberately do not use this stronger rule.
+    """
+    validate_dataclass_fields(data, model, path)
+    hints = get_type_hints(model)
+    if set(data) != set(hints):
+        raise ValueError(f"Incomplete snapshot fields: {path}")
+    for key, expected in hints.items():
+        _require_complete_value(data[key], expected, f"{path}.{key}")
+
+
+def _require_complete_value(value: Any, expected: Any, path: str) -> None:
+    origin, args = get_origin(expected), get_args(expected)
+    if origin in (types.UnionType, Union):
+        for choice in args:
+            try:
+                _check_json_type(value, choice, path)
+            except ValueError:
+                continue
+            _require_complete_value(value, choice, path)
+            return
+    elif is_dataclass(expected):
+        require_complete_dataclass(value, expected, path)
+    elif origin is list:
+        for index, item in enumerate(value):
+            _require_complete_value(item, args[0], f"{path}[{index}]")
+    elif origin is dict:
+        for key, item in value.items():
+            _require_complete_value(item, args[1], f"{path}.{key}")
+
+
 def _check_json_type(value: Any, expected: Any, path: str) -> None:
     origin, args = get_origin(expected), get_args(expected)
     if origin in (types.UnionType, Union):
+        # Optional typed editor documents should retain the exact nested error
+        # path; trying None after a bad component must not hide that evidence.
+        if len(args) == 2 and type(None) in args:
+            if value is None:
+                return
+            _check_json_type(value, next(choice for choice in args if choice is not type(None)), path)
+            return
         for choice in args:
             try:
                 _check_json_type(value, choice, path)

@@ -2,6 +2,10 @@
 
 from __future__ import annotations
 
+from g4usim_gui.window.transactions import edit_operation
+import copy
+from pathlib import Path
+
 from PySide6.QtWidgets import (
     QCheckBox,
     QComboBox,
@@ -301,6 +305,8 @@ class GeometryMixin:
         path = self.geometry_config.text().strip()
         template = self._geometry_template_token()
         self.geometry_summary = parse_geometry(path, template) if path else None
+        if self.geometry_summary is not None:
+            self.geometry_summary._f5_source_anchor = str(Path(path).expanduser().resolve())
         self.geometry_table.setRowCount(0)
         self.boolean_table.setRowCount(0)
         self.geometry_messages.clear()
@@ -314,6 +320,7 @@ class GeometryMixin:
             self._update_workspace_summary()
             return
         self.geometry_document = geometry_document_from_summary(self.geometry_summary, template)
+        self.geometry_document.source_path = self.geometry_summary._f5_source_anchor
         self.geometry_document.is_dirty = False
         self._populate_hierarchical_tables()
         self.geometry_messages.setPlainText(self._messages_text(self.geometry_summary.errors, self.geometry_summary.warnings))
@@ -327,6 +334,7 @@ class GeometryMixin:
         self._populate_material_editor()
         self._update_workspace_summary()
 
+    @edit_operation('Change geometry mode')
     def _on_geometry_template_changed(self) -> None:
         if self._building:
             return
@@ -362,6 +370,7 @@ class GeometryMixin:
         self.geometry_editor_tabs.setTabEnabled(2, editable and mode in HIERARCHICAL_GEOMETRY_MODES)
         self.geometry_editor_tabs.setTabEnabled(3, editable and mode in HIERARCHICAL_GEOMETRY_MODES)
 
+    @edit_operation('Change source-copy mode')
     def _on_geometry_source_copy_toggled(self, checked: bool) -> None:
         if self._building:
             return
@@ -525,6 +534,7 @@ class GeometryMixin:
         self._update_workspace_summary()
         self._emit_changed()
 
+    @edit_operation('Add volume')
     def _add_hierarchical_volume(self) -> None:
         existing = {volume.name for volume in self.geometry_document.volumes}
         name = self._unique_name("Volume", existing)
@@ -535,12 +545,13 @@ class GeometryMixin:
         self._mark_geometry_dirty()
         self._populate_hierarchical_tables()
 
+    @edit_operation('Duplicate volume')
     def _duplicate_hierarchical_volume(self) -> None:
         row = self.geometry_table.currentRow()
         if row < 0 or row >= len(self.geometry_document.volumes):
             return
         source = self.geometry_document.volumes[row]
-        duplicate = HierarchicalVolumeRow(**{k: v for k, v in source.__dict__.items() if k in HierarchicalVolumeRow.__dataclass_fields__})
+        duplicate = copy.deepcopy(source)
         duplicate.name = self._unique_name(f"{source.name}_copy", {volume.name for volume in self.geometry_document.volumes})
         duplicate.errors = []
         duplicate.warnings = []
@@ -549,6 +560,7 @@ class GeometryMixin:
         self._populate_hierarchical_tables()
         self.geometry_table.selectRow(row + 1)
 
+    @edit_operation('Delete volume')
     def _delete_hierarchical_volume(self) -> None:
         row = self.geometry_table.currentRow()
         if row < 0 or row >= len(self.geometry_document.volumes):
@@ -561,6 +573,7 @@ class GeometryMixin:
         self._mark_geometry_dirty()
         self._populate_hierarchical_tables()
 
+    @edit_operation('Move volume')
     def _move_hierarchical_volume(self, direction: int) -> None:
         row = self.geometry_table.currentRow()
         target = row + direction

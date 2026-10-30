@@ -18,7 +18,7 @@ from g4usim_gui.widgets.output_page import OutputPage
 from g4usim_gui.history import run_history_store
 from g4usim_gui.preview3d.backend_geometry_controller import BackendGeometryController
 from g4usim_gui.preview3d.backend_inputs import GeometryInputs
-from g4usim_gui.main_window import MainWindow
+from gui_test_window import MainWindow
 
 
 def main():

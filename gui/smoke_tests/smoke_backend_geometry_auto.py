@@ -121,7 +121,7 @@ def wait_until(app: QApplication, condition, timeout_s: float = 300.0) -> bool:
 def check_window(app: QApplication, temp: Path) -> None:
     QMessageBox.warning = staticmethod(lambda *args, **kwargs: QMessageBox.Ok)
     QMessageBox.information = staticmethod(lambda *args, **kwargs: QMessageBox.Ok)
-    from g4usim_gui.main_window import MainWindow   # noqa: PLC0415
+    from gui_test_window import MainWindow   # noqa: PLC0415
     window = MainWindow()
     window.resize(1300, 850)
     window.show()
