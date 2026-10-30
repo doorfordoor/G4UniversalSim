@@ -64,6 +64,7 @@ ZH_CN: dict[str, str] = {
     "Edit": "编辑",
     "Edit history": "编辑历史",
     "Undo": "撤销",
+    "Project opened, but its status update failed: {reason}": "项目已打开，但状态更新失败：{reason}",
     "Redo": "重做",
     "Undo: {action}": "撤销：{action}",
     "Redo: {action}": "重做：{action}",

@@ -58,6 +58,9 @@ class EditSession:
         fingerprint = snapshot_fingerprint(self._current)
         if snapshot_size(self._current) > max_bytes:
             raise TransactionCapacityError("Initial workspace exceeds history capacity")
+        # Only cache our private, defensively cloned state. External candidates
+        # still cross the complete snapshot validation/source-rebuild boundary.
+        self._current_fingerprint = fingerprint
         self._saved_fingerprint = fingerprint if saved else None
         self._commands: list[_Command] = []
         self._cursor = 0
@@ -74,7 +77,7 @@ class EditSession:
 
     @property
     def is_modified(self) -> bool:
-        return snapshot_fingerprint(self._current) != self._saved_fingerprint
+        return self._current_fingerprint != self._saved_fingerprint
 
     @property
     def saved_fingerprint(self) -> str | None:
@@ -132,7 +135,7 @@ class EditSession:
 
     def mark_saved(self, snapshot: WorkspaceSnapshot | None = None) -> None:
         self._check()
-        fingerprint = snapshot_fingerprint(self._current if snapshot is None else snapshot)
+        fingerprint = self._current_fingerprint if snapshot is None else snapshot_fingerprint(snapshot)
         self._saved_fingerprint = fingerprint
         self._merge_generation += 1
 
@@ -143,7 +146,7 @@ class EditSession:
             raise ValueError("Transaction label/key must be text")
         candidate = clone_snapshot(after)
         candidate_fingerprint = snapshot_fingerprint(candidate)
-        if candidate_fingerprint == snapshot_fingerprint(self._current):
+        if candidate_fingerprint == self._current_fingerprint:
             return self.current()
         commands = list(self._commands[:self._cursor])
         before = self._current
@@ -163,6 +166,7 @@ class EditSession:
         self._commands = commands
         self._cursor = len(commands)
         self._current = candidate
+        self._current_fingerprint = candidate_fingerprint
         self._revision += 1
         return self.current()
 
@@ -191,8 +195,10 @@ class EditSession:
         if not self.can_undo:
             return self.current()
         candidate = clone_snapshot(self._commands[self._cursor - 1].before)
+        fingerprint = snapshot_fingerprint(candidate)
         self._apply(candidate, apply)
         self._current = candidate
+        self._current_fingerprint = fingerprint
         self._cursor -= 1
         self._revision += 1
         self._merge_generation += 1
@@ -203,8 +209,10 @@ class EditSession:
         if not self.can_redo:
             return self.current()
         candidate = clone_snapshot(self._commands[self._cursor].after)
+        fingerprint = snapshot_fingerprint(candidate)
         self._apply(candidate, apply)
         self._current = candidate
+        self._current_fingerprint = fingerprint
         self._cursor += 1
         self._revision += 1
         self._merge_generation += 1
@@ -219,6 +227,7 @@ class EditSession:
             raise TransactionCapacityError("Workspace exceeds history capacity")
         self._apply(candidate, apply)
         self._current = candidate
+        self._current_fingerprint = fingerprint
         self._commands = []
         self._cursor = 0
         self._saved_fingerprint = fingerprint if saved else None

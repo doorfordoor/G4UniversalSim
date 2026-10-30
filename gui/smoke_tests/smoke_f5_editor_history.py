@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import copy
+import json
 import os
 from pathlib import Path
 import sys
@@ -16,9 +17,9 @@ from PySide6.QtCore import QEvent, Qt
 from PySide6.QtGui import QContextMenuEvent
 from PySide6.QtTest import QTest
 from PySide6.QtWidgets import QApplication, QLineEdit, QMenu, QMessageBox
-from g4usim_gui.core.edit_snapshot import snapshot_fingerprint, snapshot_to_json, snapshot_from_json, project_for_snapshot
-from g4usim_gui.core.project import load_project, project_to_dict
-from g4usim_gui.core.edit_transactions import TransactionApplyError
+from g4usim_gui.core.edit_snapshot import snapshot_fingerprint, snapshot_to_json, snapshot_from_json, project_for_snapshot, snapshot_size
+from g4usim_gui.core.project import load_project, project_to_dict, save_project
+from g4usim_gui.core.edit_transactions import TransactionApplyError, TransactionCapacityError
 from g4usim_gui.core.wizard import default_spec
 from g4usim_gui.main_window import MainWindow
 from g4usim_gui.history import run_history_store
@@ -513,6 +514,92 @@ def main():
             assert scan._base is None and scan.manifest() is corrected_manifest
             assert set((root / 'packages').rglob('main.ini')) == files_before
             assert 'source changed' in scan.status.text().lower()
+    # Ordinary Open: capacity preflight must reject without publishing a view;
+    # late reset rejection must roll back; post-commit notification is a warning.
+    with tempfile.TemporaryDirectory(prefix='g4usim-f5-open-capacity-') as temp, owned_window(app, Path(temp) / 'recovery') as w:
+        root = Path(temp)
+        page = w.config_builder_page
+        old_path = root / 'original.json'
+        assert w._save_project_to(old_path)
+        assert w._load_project_path(str(old_path))
+        page.run_name.setText('branch-to-preserve')
+        w._finish_history_merge()
+        w.undo_edit()
+        assert w._edit_session.can_redo
+        before = w._edit_session.current()
+        before_hash = snapshot_fingerprint(before)
+        before_revision = w._edit_session.revision
+        before_saved = w._edit_session.saved_fingerprint
+        before_project_id = id(w.project)
+        before_editor_ids = (id(page.geometry_document), id(page.source_editor), id(page.material_document))
+        before_diagnostics = page._diagnostic_generation
+        before_package = (w._generated_package_dir, w._generated_package_stale)
+        before_inspect = (w._macro_inspection_snapshot, w._pending_inspection_run)
+        candidate = project_for_snapshot(before)
+        candidate.projectName = 'large replacement ' + ('x' * 500)
+        candidate.editingState['drafts']['project.project_name'] = candidate.projectName
+        candidate_path = root / 'candidate.json'
+        save_project(candidate, candidate_path)
+        candidate_bytes = candidate_path.read_bytes()
+        old_bytes = old_path.read_bytes()
+        limit = w._edit_session.max_bytes
+        w._edit_session.max_bytes = snapshot_size(before) + 1
+        boxes = []
+        with patch.object(QMessageBox, 'critical', side_effect=lambda *args: boxes.append(str(args[-1]))):
+            assert not w._load_project_path(str(candidate_path))
+        assert boxes and 'capacity' in boxes[-1]
+        assert id(w.project) == before_project_id
+        assert (id(page.geometry_document), id(page.source_editor), id(page.material_document)) == before_editor_ids
+        assert page._diagnostic_generation == before_diagnostics
+        assert (w._generated_package_dir, w._generated_package_stale) == before_package
+        assert (w._macro_inspection_snapshot, w._pending_inspection_run) == before_inspect
+        assert snapshot_fingerprint(w.capture_workspace()) == before_hash
+        assert snapshot_fingerprint(w._edit_session.current()) == before_hash
+        assert w._edit_session.revision == before_revision and w._edit_session.saved_fingerprint == before_saved
+        assert w._edit_session.can_redo and w.project_file == old_path
+        assert candidate_path.read_bytes() == candidate_bytes and old_path.read_bytes() == old_bytes
+        assert not w._workspace_fault
+        w._edit_session.max_bytes = limit
+        legacy_path = root / 'legacy.json'
+        legacy_path.write_text(json.dumps({'projectName': 'legacy replacement'}), encoding='utf-8')
+        with (patch.object(w, '_reset_edit_history', side_effect=TransactionCapacityError('injected late capacity rejection')),
+              patch.object(QMessageBox, 'critical', side_effect=lambda *args: boxes.append(str(args[-1])))):
+            assert not w._load_project_path(str(legacy_path))
+        assert snapshot_fingerprint(w.capture_workspace()) == before_hash
+        assert snapshot_fingerprint(w._edit_session.current()) == before_hash
+        assert w._edit_session.revision == before_revision and w._edit_session.saved_fingerprint == before_saved
+        assert w._edit_session.can_redo and w.project_file == old_path and not w._workspace_fault
+
+        real_projection = page.set_from_project
+        attempts = []
+        def fail_rollback(*args, **kwargs):
+            attempts.append(True)
+            if len(attempts) == 1:
+                return real_projection(*args, **kwargs)
+            page.beam_on.setValue(2569)
+            raise RuntimeError('injected capacity rollback failure')
+        with (patch.object(w, '_reset_edit_history', side_effect=TransactionCapacityError('late capacity rejection')),
+              patch.object(page, 'set_from_project', fail_rollback),
+              patch.object(QMessageBox, 'critical', side_effect=lambda *args: boxes.append(str(args[-1])))):
+            assert not w._load_project_path(str(legacy_path))
+        assert w._workspace_fault and not w.can_mutate_workspace()
+        assert snapshot_fingerprint(w._edit_session.current()) == before_hash and w.project_file == old_path
+        assert w.restore_last_verified_workspace()
+        assert snapshot_fingerprint(w.capture_workspace()) == before_hash
+
+        reset_history = w._reset_edit_history
+        def fail_notification(*args, **kwargs):
+            with patch.object(w, 'history_changed', side_effect=RuntimeError('injected post-commit notification failure')):
+                return reset_history(*args, **kwargs)
+        with patch.object(w, '_reset_edit_history', fail_notification):
+            assert w._load_project_path(str(candidate_path))
+        assert w.project_file == candidate_path and w.project.projectName == candidate.projectName
+        assert w._edit_session.current().project.projectName == candidate.projectName
+        assert snapshot_fingerprint(w.capture_workspace()) == snapshot_fingerprint(w._edit_session.current())
+        assert w._edit_session.revision > before_revision and not w._edit_session.is_modified
+        assert not w._edit_session.can_redo
+        assert 'status update failed' in w.statusBar().currentMessage().lower()
+        assert old_path.read_bytes() == old_bytes and candidate_path.read_bytes() == candidate_bytes
     print('smoke_f5_editor_history: ok')
 
 

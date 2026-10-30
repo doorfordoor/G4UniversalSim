@@ -526,6 +526,8 @@ F5统一主Project/Configuration、材料/组分、几何/层/布尔、Source/Ph
 
 项目JSON v7新增materialEditor/editingState，已知1–6继续兼容，缺失旧快照与显式空内容有别。`core/edit_sources.py`从捕获原文重建不可编辑源限制，不能信任可清空的诊断缓存；失败读不能伪装为空文本成功。不重读当前磁盘。普通Open恢复完整草稿；E6 run-package adapter仍解析CURRENT包内材料/几何，丢弃历史未输出草稿，不恢复旧执行配置和成功事实。
 
+普通Open的纯投影校验和完整快照容量必须先于界面发布及旧项目保存/丢弃询问；后期历史reset拒绝须回滚，reset已发布后的状态通知失败则保持新view/history/path并提示。`EditSession`只缓存私有深拷贝当前快照的指纹；构造、replace、undo、redo、reset成功时同步维护，任何失败不得发布缓存；外部候选仍完整校验/来源重建，显式`mark_saved(snapshot)`仍独立计算。原F1关闭时延阈值保留，不得通过跳过raw draft捕获或来源校验换取通过。
+
 `workspace_recovery.py`每会话OS lease防活跃窗口接管、严格版本/摘要/路径和原子发布，控制器拒绝迟到revision/同revision换payload/已退役revision复活。恢复为未命名dirty副本，不覆盖原项目/INI/macro，不触发运行。自动保存不等于普通保存，失败保持原有效副本。`ProjectFileReceipt`来自实际读取或本次写入的原始字节；os.replace为保存提交点，发布后不清理已经转移的临时名称。
 
 专项：test_f5_transactions/source_snapshots/project_receipts/recovery；smoke_f5_editor_history/recovery_ui/recovery_process；test_f5_transactions_backend（Undo/Redo生成后真实Geant4的源能量和几何读回，非物理正确性基准）。旧GUI用专用test MainWindow隔离恢复/history并明确Discard，产品不按offscreen绕过恢复或未保存保护。原失败实验/报告保留out，再归档；完整验收尚未完成。

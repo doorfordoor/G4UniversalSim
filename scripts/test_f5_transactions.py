@@ -270,6 +270,157 @@ def projection_failure():
     assert history.current().project.projectName == initial.project.projectName and history.revision == 2 and history.can_redo
 
 
+def fingerprint_checkpoint(history):
+    current = history.current()
+    actual = snapshot_fingerprint(current)
+    assert history._current_fingerprint == actual
+    assert history.is_modified == (actual != history.saved_fingerprint)
+    return (snapshot_to_json(current), actual, history.saved_fingerprint,
+            history.revision, history.history_count, history.history_bytes,
+            history.can_undo, history.can_redo, history.undo_label, history.redo_label)
+
+
+def fingerprint_cache_isolation():
+    """Dirty queries reuse only private state; mutable public copies cannot alter it."""
+    initial = fixture()
+    saved = clone_snapshot(initial)
+    history = EditSession(initial)
+    baseline = fingerprint_checkpoint(history)
+    initial.project.materialEditor.rows[0].components.clear()
+    initial.state['drafts']['config.seed'] = 'external input change'
+    exposed = history.current()
+    exposed.project.sourceEditor.energy = 'external output change'
+    exposed.state['tables']['geometry_table'][0][1] = 'external table change'
+    assert fingerprint_checkpoint(history) == baseline
+
+    with patch('g4usim_gui.core.edit_transactions.snapshot_fingerprint', wraps=snapshot_fingerprint) as digest:
+        assert not history.is_modified
+        assert not history.is_modified
+        history.mark_saved()
+        assert not history.is_modified
+        assert digest.call_count == 0
+        history.mark_saved(saved)
+        assert digest.call_count == 1
+        # Even a no-op external candidate must still be cloned and validated.
+        history.replace('no-op', history.current())
+        assert digest.call_count == 2
+    assert fingerprint_checkpoint(history) == baseline
+
+    candidate = changed(saved, 'published')
+    callback_copies = []
+    def projection(view):
+        callback_copies.append(view)
+        view.project.projectName = 'projection only'
+        view.state['drafts']['config.seed'] = 'projection only'
+    returned = history.replace('publish', candidate, apply=projection)
+    published = fingerprint_checkpoint(history)
+    assert history.current().project.projectName == 'published' and history.is_modified
+    candidate.project.projectName = 'caller retained input'
+    returned.project.projectName = 'caller retained return'
+    callback_copies[0].project.materialEditor.rows.clear()
+    assert fingerprint_checkpoint(history) == published
+
+    escaped = []
+    def transform(draft):
+        escaped.append(draft)
+        draft.state['drafts']['config.seed'] = 'unfinished-'
+    returned = history.transact('raw draft', transform)
+    transformed = fingerprint_checkpoint(history)
+    escaped[0].state['drafts']['config.seed'] = 'escaped transform'
+    returned.state['drafts']['config.seed'] = 'escaped return'
+    assert fingerprint_checkpoint(history) == transformed
+    assert history.current().state['drafts']['config.seed'] == 'unfinished-'
+
+
+def fingerprint_saved_cursor():
+    initial = fixture()
+    history = EditSession(initial, saved=False)
+    assert history.is_modified and history.saved_fingerprint is None
+    fingerprint_checkpoint(history)
+    history.mark_saved()
+    assert not history.is_modified
+    history.replace('first', changed(initial, 'first'))
+    fingerprint_checkpoint(history)
+    first = history.current()
+    history.mark_saved(first)
+    assert not history.is_modified
+    history.replace('second', changed(initial, 'second'))
+    second = fingerprint_checkpoint(history)
+    assert history.is_modified
+    history.undo()
+    fingerprint_checkpoint(history)
+    assert not history.is_modified
+    history.redo()
+    assert fingerprint_checkpoint(history)[:3] == second[:3]
+    assert history.is_modified
+    history.mark_saved(initial)
+    assert history.saved_fingerprint == snapshot_fingerprint(initial) and history.is_modified
+    history.undo()
+    fingerprint_checkpoint(history)
+    assert history.is_modified
+    history.undo()
+    fingerprint_checkpoint(history)
+    assert not history.is_modified
+    returned = history.reset(first, saved=False)
+    reset = fingerprint_checkpoint(history)
+    returned.project.projectName = 'reset return changed'
+    assert fingerprint_checkpoint(history) == reset
+    assert history.is_modified and history.saved_fingerprint is None
+    history.reset(initial, saved=True)
+    fingerprint_checkpoint(history)
+    assert not history.is_modified and not history.can_undo and not history.can_redo
+    history.replace('merge', changed(initial, 'merge away'), merge_key='name')
+    history.replace('merge', initial, merge_key='name')
+    fingerprint_checkpoint(history)
+    assert not history.is_modified and not history.can_undo
+
+
+def fingerprint_failed_publication():
+    initial = fixture()
+    for operation in ('replace', 'undo', 'redo', 'reset'):
+        history = EditSession(initial)
+        history.replace('first', changed(initial, 'first'))
+        history.mark_saved()
+        history.replace('second', changed(initial, 'second'))
+        if operation == 'redo':
+            history.undo()
+        baseline = fingerprint_checkpoint(history)
+        def publish(apply):
+            if operation == 'replace':
+                return history.replace('third', changed(initial, 'third'), apply=apply)
+            if operation == 'reset':
+                return history.reset(initial, apply=apply)
+            return getattr(history, operation)(apply=apply)
+        for double_failure in (False, True):
+            calls = []
+            def projection(view):
+                calls.append(view.project.projectName)
+                view.project.projectName = 'mutated failed projection'
+                if len(calls) == 1 or double_failure:
+                    raise ValueError('projection/cache fault')
+            error = rejected(lambda: publish(projection), 'projection/cache fault')
+            assert isinstance(error, TransactionApplyError)
+            assert (error.rollback is not None) == double_failure and len(calls) == 2
+            assert fingerprint_checkpoint(history) == baseline
+        # New-state hash failure is detected before a projection can alter UI.
+        calls = []
+        with patch('g4usim_gui.core.edit_transactions.snapshot_fingerprint', side_effect=ValueError('digest fault')):
+            rejected(lambda: publish(lambda view: calls.append(view)), 'digest fault')
+        assert not calls
+        assert fingerprint_checkpoint(history) == baseline
+
+    history = EditSession(initial, max_bytes=snapshot_size(initial) + 1)
+    baseline = fingerprint_checkpoint(history)
+    rejected(lambda: history.replace('too large', changed(initial, 'large')), 'capacity')
+    rejected(lambda: history.reset(changed(initial, 'x' * 4096)), 'capacity')
+    rejected(lambda: history.replace('stale', initial, expected_revision=-1), 'changed')
+    invalid = history.current()
+    invalid.project.threads = True
+    rejected(lambda: history.replace('invalid type', invalid), 'threads')
+    rejected(lambda: history.mark_saved(invalid), 'threads')
+    assert fingerprint_checkpoint(history) == baseline
+
+
 def writer_semantics():
     original = fixture()
     history = EditSession(original)
@@ -437,6 +588,9 @@ def main():
     history_contract()
     grouping_and_capacity()
     projection_failure()
+    fingerprint_cache_isolation()
+    fingerprint_saved_cursor()
+    fingerprint_failed_publication()
     writer_semantics()
     source_constraint_contract()
     print("F5 transactions: persistence, failure atomicity, branching, capacity and writer semantics passed")

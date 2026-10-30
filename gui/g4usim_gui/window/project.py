@@ -74,14 +74,32 @@ class ProjectMixin:
                     path=path, value=value, minimum=widget.minimum(), maximum=widget.maximum(),
                 ))
 
+    def _check_project_history_capacity(self, snapshot) -> None:
+        from g4usim_gui.core.edit_snapshot import snapshot_size
+        from g4usim_gui.core.edit_transactions import TransactionCapacityError
+        size = snapshot_size(snapshot)  # also checks the complete codec limit
+        session = getattr(self, '_edit_session', None)
+        if session is not None and size > session.max_bytes:
+            raise TransactionCapacityError('Workspace exceeds history capacity')
+
     def _set_project(self, project: G4USimProject) -> None:
         if getattr(self, '_workspace_fault', ''):
             raise ValueError('Restore the last verified editor state before opening another project.')
+        # Pure rejection must leave even object identities and UI evidence
+        # untouched. Rollback is only for failures after projection begins.
+        self._check_project_projection(project)
+        snapshot = None
+        if getattr(project, 'editingState', None) is not None:
+            from g4usim_gui.core.edit_snapshot import WorkspaceSnapshot
+            snapshot = WorkspaceSnapshot(project)
+            self._check_workspace_projection(snapshot)
+            self._check_project_history_capacity(snapshot)
         verified = self._edit_session.current() if hasattr(self, '_edit_session') else None
+        revision = self._edit_session.revision if verified is not None else None
+        self._project_open_notification_warning = ''
         try:
-            if getattr(project, 'editingState', None) is not None:
-                from g4usim_gui.core.edit_snapshot import WorkspaceSnapshot
-                self.apply_workspace(WorkspaceSnapshot(project), reason='open')
+            if snapshot is not None:
+                self.apply_workspace(snapshot, reason='open')
             else:
                 previous = getattr(self, '_history_restoring', False)
                 self._history_restoring = True
@@ -89,7 +107,16 @@ class ProjectMixin:
                     self._project_initial_projection(project)
                 finally:
                     self._history_restoring = previous
+            # Legacy projection and GUI normalization can change encoded size;
+            # a late capture/reset rejection must still roll back the view.
+            self._reset_edit_history()
         except Exception as original:
+            if revision is not None and self._edit_session.revision != revision:
+                # reset has published the new history. A subsequent UI/recovery
+                # notification failure must not restore an obsolete view or
+                # prevent the caller assigning the newly opened file identity.
+                self._project_open_notification_warning = str(original)
+                return
             if verified is not None:
                 try:
                     self.apply_workspace(verified, reason='open-rollback')
@@ -97,7 +124,6 @@ class ProjectMixin:
                     from g4usim_gui.core.edit_transactions import TransactionApplyError
                     raise TransactionApplyError(original, rollback) from original
             raise
-        self._reset_edit_history()
 
     def _project_initial_projection(self, project: G4USimProject) -> None:
         self._check_project_projection(project)
@@ -204,6 +230,13 @@ class ProjectMixin:
     def _load_project_path(self, path: str, *, snapshot: bool = False, recent: bool = False) -> bool:
         if not self.can_mutate_workspace('open'):
             return False
+        def show_failure(exc):
+            if snapshot:
+                QMessageBox.warning(self, ui_text('Load snapshot failed'), str(exc))
+            elif recent:
+                QMessageBox.warning(self, ui_text('Open recent project failed'), str(exc))
+            else:
+                QMessageBox.critical(self, ui_text('Open project failed'), str(exc))
         try:
             restored = None
             receipt = None
@@ -217,18 +250,19 @@ class ProjectMixin:
             self._check_project_projection(project)
             if project.editingState is not None:
                 from g4usim_gui.core.edit_snapshot import WorkspaceSnapshot
-                self._check_workspace_projection(WorkspaceSnapshot(project))
+                candidate = WorkspaceSnapshot(project)
+                self._check_workspace_projection(candidate)
+                self._check_project_history_capacity(candidate)
         except Exception as exc:  # noqa: BLE001 - reject predictable failures before publishing.
-            if snapshot:
-                QMessageBox.warning(self, ui_text("Load snapshot failed"), str(exc))
-            elif recent:
-                QMessageBox.warning(self, ui_text("Open recent project failed"), str(exc))
-            else:
-                QMessageBox.critical(self, ui_text("Open project failed"), str(exc))
+            show_failure(exc)
             return False
         if not self._confirm_unsaved_edits():
             return False
-        self._set_project(project)
+        try:
+            self._set_project(project)
+        except Exception as exc:  # noqa: BLE001 - projection/reset rolled back, or explicitly froze.
+            show_failure(exc)
+            return False
         if snapshot:
             self.project_file = None
             self._edit_session.mark_saved()  # imported snapshot is a new document baseline
@@ -245,6 +279,11 @@ class ProjectMixin:
         if callback is not None:
             callback(origin_path=receipt.path if receipt is not None else '',
                      origin_sha256=receipt.sha256 if receipt is not None else None)
+        if self._project_open_notification_warning:
+            message = ui_format('Project opened, but its status update failed: {reason}',
+                                reason=self._project_open_notification_warning)
+            self.run_page.append_status_message(message)
+            self.statusBar().showMessage(message)
         return True
 
     def _show_snapshot_restore_notes(self, restored) -> None:
