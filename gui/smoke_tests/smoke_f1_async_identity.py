@@ -81,7 +81,7 @@ def main():
         started=threading.Event();release=threading.Event();finished=threading.Event();blocked=[False]
         def delayed(path):
             if Path(path).parent==root and not blocked[0]:
-                blocked[0]=True;started.set();release.wait(5);finished.set()
+                blocked[0]=True;started.set();release.wait(10);finished.set()
             return real_hash(path)
         page=OutputPage();page.set_workspace_root(str(ROOT));heartbeat=[]
         with patch.object(identity,'hash_file',side_effect=delayed):
@@ -99,6 +99,44 @@ def main():
             page.set_output_dir(str(root));spin(started.is_set)
             begin=time.monotonic();page.close();assert time.monotonic()-begin < .25
             page.deleteLater();app.processEvents();release.set();spin(finished.is_set)
+        # Hold A's actual hash while a newer directory/plot B completes.
+        from g4usim_gui.core import examples
+        example=examples.find('shielding_slab')
+        selection=OutputPage()
+        started.clear();release.clear();finished.clear();blocked[0]=False
+        from g4usim_gui.core import evidence_job as job_module
+        original_submit=job_module._pool.submit;submitted=[]
+        def capture_submit(*args,**kwargs):
+            future=original_submit(*args,**kwargs);submitted.append(future);return future
+        with patch.object(identity,'hash_file',side_effect=delayed), patch.object(job_module._pool,'submit',side_effect=capture_submit):
+            selection.set_output_dir(str(root))
+            assert submitted
+            late_a=submitted[0]
+            assert selection.show_plot('event_edep/r0')
+            spin(started.is_set)
+            selection.set_output_dir(str(example.output_dir()))
+            assert selection.show_plot(example.plot)
+            wait_for_idle(selection)
+            assert not release.is_set() and not finished.is_set()
+            assert Path(selection.plot_panel._output_dir)==example.output_dir()
+            assert selection.plot_panel.current_dataset().key==example.plot
+            assert selection.plot_panel.current_plot() is not None
+            release.set();spin(late_a.done);wait_for_idle(selection)
+            assert Path(selection.plot_panel._output_dir)==example.output_dir()
+            assert selection.plot_panel.current_dataset().key==example.plot
+            assert selection.plot_panel.current_plot() is not None
+        selection.refresh();wait_for_idle(selection)
+        assert selection.plot_panel.current_dataset().key==example.plot
+        # Unknown keys must not leave the previous/default plot on screen.
+        assert not selection.show_plot('not-present-ready/r0')
+        assert selection.plot_panel.current_dataset() is None and selection.plot_panel.current_plot() is None
+        assert 'not-present-ready/r0' in selection.plot_panel.message.text() and 'unavailable' in selection.plot_panel.message.text()
+        selection.refresh()
+        assert selection.show_plot('not-present-queued/r0')
+        wait_for_idle(selection)
+        assert selection.plot_panel.current_dataset() is None and selection.plot_panel.current_plot() is None
+        assert 'not-present-queued/r0' in selection.plot_panel.message.text() and 'unavailable' in selection.plot_panel.message.text()
+        selection.close();selection.deleteLater();app.processEvents()
         # Actual MainWindow accepted/ignored ancestor closes, not direct page.close.
         from g4usim_gui.main_window import MainWindow
         from g4usim_gui.core.evidence_job import EvidenceJob

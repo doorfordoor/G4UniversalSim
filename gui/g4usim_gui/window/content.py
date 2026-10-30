@@ -80,7 +80,6 @@ class ContentMixin:
             self.page_stack.setCurrentWidget(self.scan_page)
         elif example.has_results():
             self.output_page.set_output_dir(str(example.output_dir()))
-            self.output_page.refresh()
             self.output_page.show_plot(example.plot)
             self.page_stack.setCurrentWidget(self.output_page)
         message = ("Example {name} loaded with its bundled scan results; Create scan makes new run packages."

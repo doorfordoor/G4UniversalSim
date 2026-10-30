@@ -59,6 +59,7 @@ class OutputPage(QWidget):
         self._files: list[OutputFileInfo] = []
         self._merge_plan = MergePlan([])
         self._selected_file: Path | None = None
+        self._pending_plot: tuple[str, str, int] | None = None
         self._merge_runner = MergeRunner(self)
         self._extension_runner = OutputExtensionRunner(self)
 
@@ -254,11 +255,41 @@ class OutputPage(QWidget):
             self.plot_panel.redraw()   # notes and view names are translated when drawn
 
     def show_plot(self, key: str) -> bool:
-        """Show the Plots tab with the data set of that key selected (if the output has it)."""
+        """Request a plot; True also means queued for the current directory verification."""
         if self.plot_panel is None:
             return False
         self.tabs.setCurrentWidget(self.plot_panel)
-        return self.plot_panel.select(key)
+        if self._identity_job.pending:
+            # Selection is an intent bound to this exact directory/request.
+            # It must survive asynchronous discovery, not select an old data set.
+            self._pending_plot = (self._output_dir, key, self._identity_job._serial)
+            return True
+        return self._select_requested_plot(key)
+
+    def _select_requested_plot(self, key: str) -> bool:
+        if self.plot_panel.select(key):
+            return True
+        # A previously queued redraw must not repaint a default/old plot after
+        # this explicit unavailable request has cleared it.
+        self.plot_panel._identity_job.cancel()
+        self.plot_panel.dataset_combo.blockSignals(True)
+        self.plot_panel.dataset_combo.setCurrentIndex(-1)
+        self.plot_panel.dataset_combo.blockSignals(False)
+        self.plot_panel._plot = None
+        self.plot_panel._draw_empty()
+        self.plot_panel._update_buttons()
+        self.plot_panel.message.setText(ui_format("Requested plot {key} is unavailable for this output.", key=key))
+        return False
+
+    def _apply_pending_plot(self) -> None:
+        request = self._pending_plot
+        self._pending_plot = None
+        if (request is None or self.plot_panel is None or request[0] != self._output_dir
+                or request[2] != self._identity_job._serial):
+            return
+        if not self.plot_panel.datasets():
+            return  # Retain the original validation/discovery diagnostic.
+        self._select_requested_plot(request[1])
 
     def set_workspace_root(self, workspace_root: str, backend_executable: str = "") -> None:
         self._workspace_root = workspace_root
@@ -278,6 +309,13 @@ class OutputPage(QWidget):
         self.refresh()
 
     def refresh(self) -> None:
+        desired = (self._pending_plot[1] if self._pending_plot is not None
+                   and self._pending_plot[0] == self._output_dir else None)
+        if (desired is None and self.plot_panel is not None
+                and self.plot_panel._output_dir == self._output_dir):
+            current = self.plot_panel.current_dataset()
+            desired = current.key if current is not None else None
+        self._pending_plot = None
         self._identity_job.cancel()
         self.identity_panel.clear(error=ui_text("Checking output hashes..."))
         self.summary_text.clear();self.overview_text.clear();self.preview_text.clear();self.file_tree.clear()
@@ -294,9 +332,14 @@ class OutputPage(QWidget):
             return
         def complete(seeds,error):
             if error:
+                self._pending_plot = None
                 self.identity_panel.clear(error=str(error));return
-            with evidence_operation(seeds):self._render_refresh()
+            with evidence_operation(seeds):
+                self._render_refresh()
+                self._apply_pending_plot()
         self._identity_job.submit(lambda: verify_roots(roots),complete)
+        if desired is not None:
+            self._pending_plot = (directory, desired, self._identity_job._serial)
 
     def _render_refresh(self) -> None:
         self.file_tree.clear()

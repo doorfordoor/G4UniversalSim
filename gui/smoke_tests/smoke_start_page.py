@@ -24,6 +24,7 @@ import shutil
 import sys
 import tempfile
 from pathlib import Path
+from async_wait import wait_for_idle
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 GUI = Path(__file__).resolve().parents[1]
@@ -146,6 +147,7 @@ def main() -> None:
         example = card.example
         card.open_button.click()
         app.processEvents()
+        wait_for_idle(window.output_page)
         assert window.project.projectName == example.id and window._generated_package_stale
         assert not Path(window.project.outputDir).resolve().is_relative_to(examples.gallery_root().resolve())
         assert window.page_stack.currentWidget() is window.output_page

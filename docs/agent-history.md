@@ -451,3 +451,13 @@ Geant4 `ApplyCommand()` 返回 0 不足以确认命令成功；沿用材料命�
 - 定向回归入口test_build_identity、test_f1_input_provenance、test_f1_input_resources_backend、test_f1_output_identity、test_output_auto、smoke_f1_output_identity、smoke_f1_async_identity；既有run_summary/ROOT/GDML/RNG/后处理全量仍须通过。真实窗口与合成夹具、历史性能与最终冻结版本分别计证。
 
 详细接口：[输出身份与来源](输出身份与来源.md)，决策：[F1格式与缓冲](collab/inbox/20261030-1500-astra-f1-format-decision.md)。
+
+## 2026-10-30 F1 首轮冻结失败与异步图表修复
+
+冻结候选cd0f44a：Windows143项141通过/2失败/0跳过，48450个v3入口；报告out/verification/f1-freeze-windows/20261030-154131-deadf201/report.json。真实Linux run41021459195（11.3.2/11.4.3）和M0 run41021459196（Windows/Ubuntu）每job25static通过，GUI38/39；Linux在GUI失败后未运行backend/integration。4官方ZIP摘要与元数据相符，8原报告/4job日志保留out/verification/f1-ci-final，目录名不表示最终通过。
+
+确定缺陷：开始页set_output_dir后立即show_plot时后台尚未发现数据集，返回false并丢失预设选择；实际等待后3/4示例仍显示错误默认图。修复为OutputPage保存目录/key/request serial意图，完成后在同一验证操作内应用；同根refresh保留意图，新根取消旧请求。EvidenceJob明确QueuedConnection防极快future在submit返回前同步发布；去掉重复refresh。ready与queued未知key均取消重画、清空选择和图并明确报错。测试保留所有原图表断言，等待实际任务完成，增加阻塞A/切B/释放A的迟到隔离、同根刷新及未知key两路径。
+
+环境缺口：本轮未传G4USIM_GEANT4_DATA，定位测试退到symlink构造而遭WinError1314。E6原日志已使用该参数指向真实数据根，原基线12入口；同环境控制本次12入口通过。下一全量显式提供该已有参数，不修改系统权限/数据定位源码，不把失败旧报告追改成绿色。
+
+本条描述已审修复及首轮事实，不能作为新冻结/阶段完成结论。后续新提交、新完整Windows报告与真实CI仍须独立验收。

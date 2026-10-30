@@ -1,5 +1,7 @@
 # G4UniversalSim GUI Agent 开发约束
 
+2026-10-30 F1异步预设图：OutputPage.show_plot返回true可表示已排队，并不证明图已显示；意图绑定目录和EvidenceJob请求序号，过期完成丢弃，同根refresh保留选择。未知key在ready和queued两路径都清旧图并报错。Qt回传显式QueuedConnection；示例入口不能重复刷新丢失请求。测试等真实任务完成并断言预设dataset/current_plot，不能只加sleep或接受默认第一图。
+
 2026-10-30 F1候选：output/provenance统一严格校验新扩展，旧记录明确unverified；历史输入hash不代表当前源文件复核。当前结果根是唯一自动读取锚点，历史快照路径仅作记录。运行与文件身份分别显示。身份SHA和历史扫描后台执行，新请求/关窗取消且拒绝过期发布；一次操作内复用、下一动作fresh SHA、Merge执行前强制fresh，不用mtime缓存。父窗口接受关闭也须清理嵌入页任务，关闭被ignore不能永久禁用页面。见 `../docs/输出身份与来源.md` 与agent-history；本条不宣称阶段完整验收。
 
 2026-10-30 E6阶段已关闭：自动回归与Windows实窗补验见 `../docs/verification/e6-visible-20261030/README.md`；下方候选条目保留实现契约，不能把历史pending或合成Inspect当当前验收结论。

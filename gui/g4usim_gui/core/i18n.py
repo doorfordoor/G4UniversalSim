@@ -20,6 +20,7 @@ LanguageCode = Literal["en", "zh_CN"]
 
 
 ZH_CN: dict[str, str] = {
+    "Requested plot {key} is unavailable for this output.": "此输出中无法使用请求的图表 {key}。",
     "Requested output format": "请求的输出格式",
     "Actual output format": "实际输出格式",
     "Format selection reason": "格式选择原因",

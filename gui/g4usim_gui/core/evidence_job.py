@@ -1,7 +1,7 @@
 """Bounded, cancellable file verification with GUI-thread result publication."""
 from concurrent.futures import ThreadPoolExecutor
 import threading
-from PySide6.QtCore import QObject, Signal
+from PySide6.QtCore import QObject, Signal, Qt
 from g4usim_gui.output.identity import cancelled
 from g4usim_gui.output.provenance import evidence_operation, evidence_key, output_evidence
 
@@ -23,7 +23,7 @@ class EvidenceJob(QObject):
     def __init__(self,owner):
         super().__init__(owner)
         self.pending=False;self._serial=0;self._event=threading.Event();self._closed=False;self._done=None
-        self.delivered.connect(self._publish)
+        self.delivered.connect(self._publish, Qt.QueuedConnection)
         owner.destroyed.connect(self.close)
     def cancel(self):
         self._serial+=1;self._event.set();self.pending=False
