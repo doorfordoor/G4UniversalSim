@@ -137,8 +137,9 @@ public:
     bool isRelative(const XMLCh* const path, MemoryManager* const manager) override { return source_.isRelative(path, manager); }
 private:
     FileHandle Capture(FileHandle source, const std::string& name, MemoryManager* manager) {
-        auto buffer = std::make_unique<FileBuffer>();
+        std::unique_ptr<FileBuffer> buffer;
         try {
+            buffer = std::make_unique<FileBuffer>();
             std::array<XMLByte, 65536> block;
             for (;;) {
                 auto count = source_.fileRead(source, block.size(), block.data(), manager);

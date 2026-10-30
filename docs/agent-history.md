@@ -461,3 +461,13 @@ Geant4 `ApplyCommand()` 返回 0 不足以确认命令成功；沿用材料命�
 环境缺口：本轮未传G4USIM_GEANT4_DATA，定位测试退到symlink构造而遭WinError1314。E6原日志已使用该参数指向真实数据根，原基线12入口；同环境控制本次12入口通过。下一全量显式提供该已有参数，不修改系统权限/数据定位源码，不把失败旧报告追改成绿色。
 
 本条描述已审修复及首轮事实，不能作为新冻结/阶段完成结论。后续新提交、新完整Windows报告与真实CI仍须独立验收。
+
+## 2026-10-30 F1 第二轮 GDML 异常与资源收尾
+
+冻结3d1faf1：Windows全量143通过/0失败/0跳过，48511个v3入口，E6同probe逐例/总数门禁通过；M0实际run41024949832两OS通过。Linux run41024949824两Geant4版本static/gui/backend通过，integration的effective_gdml因未捕获Xerces OutOfMemoryException失败。旧报告及原日志不追改；跨平台完整验收仍未成立。
+
+确定缺陷：GdmlInputCapture::Capture在已取得原生句柄后于try外分配FileBuffer，分配失败漏关句柄。独立同harness/原适配器复现opens=4/closes=3；候选将分配移入既有关闭保护后4/4，进一步Xerces读失败为5/5。新故障在宽路径转换完成并释放full path后武装，不再让更早的路径分配消费故障。
+
+测试修复：std::thread经exception_ptr将异常转回join后的调用线程，仅std::bad_alloc与Xerces独立OutOfMemoryException视为预期分配拒绝；catch(...)仅运输或顶层明确返回失败，不当作通过。局部RAII恢复fgFileMgr，正常/异常展开均验证原指针。原31条Check和Python断言保留，增加精确故障及非分配异常传播检查。Windows Xerces3.2独立测试不代表Linux3.3通过；后续新冻结必须实跑双版本CI。
+
+范围与验收见[GDML修复提案](collab/inbox/20261030-1643-astra-f1-gdml-repair.md)。本修复不改解析契约、GUI编辑白名单、输出协议或物理计算，不新增系统内存耗尽/磁盘故障实测承诺。
