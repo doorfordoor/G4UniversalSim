@@ -20,6 +20,7 @@ LanguageCode = Literal["en", "zh_CN"]
 
 
 ZH_CN: dict[str, str] = {
+    "The current editor is unavailable for a new scan base. Finish the active operation or restore the last verified editor state.": "当前编辑区暂时无法作为新的扫描基础。请先结束正在进行的操作，或恢复最后一次已确认的编辑状态。",
     "Editor recovery required": "编辑状态需要恢复",
     "Restore last verified editor state": "恢复最后一次已确认的编辑状态",
     "Editor recovery required. Use Edit > Restore last verified editor state before saving or running.": "编辑状态需要恢复。请先使用“编辑 > 恢复最后一次已确认的编辑状态”，再保存或运行。",

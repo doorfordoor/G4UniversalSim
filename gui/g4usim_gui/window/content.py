@@ -18,11 +18,25 @@ class ContentMixin:
 
     def scan_base(self) -> tuple[parameter_scan.ScanBase, str, str, str]:
         """Snapshot of the Configuration page for a parameter scan (same inputs as Generate & Run)."""
+        if not self.can_mutate_workspace('scan'):
+            raise ValueError(ui_text('The current editor is unavailable for a new scan base. Finish the active operation or restore the last verified editor state.'))
+        self._finish_history_merge()
         self._update_project_from_page_without_preview()
         self.config_builder_page.update_project(self.project)
         if self.project.runInputMode != "generated":
             raise ValueError(ui_text("Parameter scans use the Configuration page as run input (generated mode)."))
         page = self.config_builder_page
+        report = page.validate_current(self.project)
+        # Scan points validate the other fields after applying their parameter.
+        # Keep that existing behavior (e.g. a source-energy scan can replace an
+        # invalid base energy). Raw seed and recovered source identity would
+        # otherwise be lost when converting the editor into the typed ScanBase.
+        capture_codes = {'run.seed.invalid', 'config.source.materials.recovered_changed',
+                         'config.source.geometry.recovered_changed'}
+        capture_errors = [record.message for record in report.diagnostics
+                          if record.code in capture_codes and record.severity in ('error', 'blocker')]
+        if capture_errors:
+            raise ValueError('\n'.join(capture_errors))
         paths = page.path_settings(self.project)
         base = parameter_scan.ScanBase(
             project=copy.deepcopy(self.project), paths=paths, run=page.run_settings(),
@@ -105,6 +119,8 @@ class ContentMixin:
 
     def export_backend_geometry(self, auto: bool = False) -> None:
         """Show the world Geant4 builds (roadmap A5/G1); generated mode needs no run package."""
+        if not self.can_mutate_workspace('preview'):
+            return
         self._update_project_from_page_without_preview()
         page = self.config_builder_page
         executable = self.project.executable

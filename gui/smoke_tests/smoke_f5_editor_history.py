@@ -436,6 +436,83 @@ def main():
                 main_ini = Path(w.project.configPath).read_text(encoding='utf-8')
                 assert ('seed = 42' in main_ini) if raw else ('seed =' not in main_ini)
                 assert page.seed.text() == raw
+
+            # The scan page owns a separate draft, but importing its base must
+            # never bypass the current main editor's raw-input or fault guards.
+            page.seed.setText('42')
+            page.beam_on.setValue(101)
+            w._finish_history_merge()
+            scan = w.scan_page
+            scan.refresh_button.click()
+            assert scan._base is not None and scan._base.run.beam_on == 101 and scan._base.run.seed == 42
+            assert scan.select_parameter('source.energy')
+            scan.values.setText('2 MeV')
+            scan.name.setText('valid-base')
+            scan.create_button.click()
+            original_manifest = scan.manifest()
+            assert original_manifest is not None
+            original_macro = Path(original_manifest.points[0].macro).read_bytes()
+            assert b'/run/beamOn 101' in original_macro
+            files_before = set((root / 'packages').rglob('main.ini'))
+            page.seed.setText('not-an-integer')
+            w._finish_history_merge()
+            scan.refresh_button.click()
+            assert scan._base is None and 'seed' in scan.status.text().lower()
+            scan.create_button.click()
+            assert scan._base is None and scan.manifest() is original_manifest
+            assert set((root / 'packages').rglob('main.ini')) == files_before
+            assert Path(original_manifest.points[0].macro).read_bytes() == original_macro
+            assert page.seed.text() == 'not-an-integer'
+            page.seed.setText('42')
+            w._finish_history_merge()
+            safe_scan_snapshot = w._edit_session.current()
+            with patch.object(page, 'set_from_project', broken_projection):
+                try:
+                    w.undo_edit()
+                except TransactionApplyError as exc:
+                    assert exc.rollback is not None
+            assert w._workspace_fault and page.beam_on.value() == 2569
+            scan.refresh_button.click()
+            scan.create_button.click()
+            assert scan._base is None and scan.manifest() is original_manifest
+            assert set((root / 'packages').rglob('main.ini')) == files_before
+            assert Path(original_manifest.points[0].macro).read_bytes() == original_macro
+            assert w._edit_session.current().project.runSettings.beam_on == 101
+            requests = []
+            with patch.object(w.geometry_controller, 'request', side_effect=lambda *args: requests.append(args)):
+                page.backendGeometryRequested.emit()
+                page.autoBackendGeometryRequested.emit()
+            assert not requests
+            assert w.restore_last_verified_workspace()
+            assert snapshot_fingerprint(w.capture_workspace()) == snapshot_fingerprint(safe_scan_snapshot)
+
+            # Keep per-point correction: scanning energy can replace an invalid
+            # base energy; it is not a reason to require every base field valid.
+            page.source_editor_energy.setText('invalid-energy')
+            w._finish_history_merge()
+            scan.refresh_button.click()
+            assert scan._base is not None
+            assert scan.select_parameter('source.energy')
+            scan.values.setText('3 MeV')
+            scan.name.setText('corrected-energy')
+            scan.create_button.click()
+            corrected_manifest = scan.manifest()
+            assert corrected_manifest is not original_manifest
+            assert 'energy = 3 MeV' in Path(corrected_manifest.points[0].main_ini).read_text(encoding='utf-8')
+            page.source_editor_energy.setText('3 MeV')
+            materials = root / 'captured-materials.ini'
+            materials.write_text('[NIST]\nmaterials = G4_AIR, G4_Si\n', encoding='utf-8')
+            page.materials_config.setText(str(materials))
+            page.reload_materials()
+            w._finish_history_merge()
+            w.apply_workspace(w._edit_session.current())
+            materials.write_text('[NIST]\nmaterials = G4_AIR, G4_Si\n# external change\n', encoding='utf-8')
+            files_before = set((root / 'packages').rglob('main.ini'))
+            scan.refresh_button.click()
+            scan.create_button.click()
+            assert scan._base is None and scan.manifest() is corrected_manifest
+            assert set((root / 'packages').rglob('main.ini')) == files_before
+            assert 'source changed' in scan.status.text().lower()
     print('smoke_f5_editor_history: ok')
 
 

@@ -2,7 +2,7 @@
 
 ## 2026-10-30 F5 当前推进
 
-用户已启动完整 F5。隔离分支 `roadmap/F5-transactions-recovery`，基线676ffb2，范围提交75b1a19；[实施约定](inbox/20261030-2155-astra-f5-execution.md)。事务/完整编辑快照、GUI入口、自动保存/恢复三块独占协同，DeepSeek已实际提供[前端设计](outbox/20261030-2155-deepseek-f5-design.md)。当前尚未实现/验收关闭；下文F4记录中的“F5未启动”为当时状态。
+用户已启动完整 F5。隔离分支 `roadmap/F5-transactions-recovery`，基线676ffb2，范围提交75b1a19；[实施约定](inbox/20261030-2155-astra-f5-execution.md)。事务/完整编辑快照、GUI入口、自动保存/恢复三块独占协同，DeepSeek已实际提供[前端设计](outbox/20261030-2155-deepseek-f5-design.md)。当前已实现并经过交叉审查，尚未完整验收关闭；下文F4记录中的“F5未启动”为当时状态。
 
 ## 2026-10-30 F4 阶段关闭记录（已完成）
 
