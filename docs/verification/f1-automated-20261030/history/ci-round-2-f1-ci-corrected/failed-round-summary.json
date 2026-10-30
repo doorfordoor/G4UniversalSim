@@ -1,0 +1,279 @@
+{
+  "head_sha": "3d1faf1b256a945ac800c08bacf51db57f8ca416",
+  "status": "failed",
+  "stage_acceptance": "not_passed",
+  "evidence_collection_complete": true,
+  "linux_run": 41024949824,
+  "m0_run": 41024949832,
+  "reports_total": 12,
+  "strict_pass_reports": 10,
+  "strict_rejected_reports": 2,
+  "case_executions": 414,
+  "passed_case_executions": 412,
+  "failed_case_executions": 2,
+  "artifacts": [
+    {
+      "name": "linux-evidence-11.3.2",
+      "id": 12964720266,
+      "run_id": 41024949824,
+      "official_digest": "sha256:d398479ea0bb97fc482bb2ff78b7609e7347e6eda4c9d4608134dd48f17e6677",
+      "actual_sha256": "sha256:d398479ea0bb97fc482bb2ff78b7609e7347e6eda4c9d4608134dd48f17e6677",
+      "zip_bytes": 75826
+    },
+    {
+      "name": "linux-evidence-11.4.3",
+      "id": 12963878132,
+      "run_id": 41024949824,
+      "official_digest": "sha256:f32c22b515588140ce22b4109128e7c8f7477d906203177323377b474d0555ef",
+      "actual_sha256": "sha256:f32c22b515588140ce22b4109128e7c8f7477d906203177323377b474d0555ef",
+      "zip_bytes": 75801
+    },
+    {
+      "name": "m0-report-windows-latest",
+      "id": 12963231561,
+      "run_id": 41024949832,
+      "official_digest": "sha256:110c1db1bf99df523cb9f4e410459132de30cca071c2fb11fca4e7f32a59cad2",
+      "actual_sha256": "sha256:110c1db1bf99df523cb9f4e410459132de30cca071c2fb11fca4e7f32a59cad2",
+      "zip_bytes": 26449
+    },
+    {
+      "name": "m0-report-ubuntu-latest",
+      "id": 12962959000,
+      "run_id": 41024949832,
+      "official_digest": "sha256:11041968f56b47f6ef934b4b2a28f64c582ad6dea73e4c5505f2c95cbb12a3cb",
+      "actual_sha256": "sha256:11041968f56b47f6ef934b4b2a28f64c582ad6dea73e4c5505f2c95cbb12a3cb",
+      "zip_bytes": 28522
+    }
+  ],
+  "job_logs": [
+    {
+      "id": 123960735990,
+      "run_id": 41024949824,
+      "name": "ubuntu-24.04 / Geant4 11.4.3",
+      "status": "completed",
+      "conclusion": "failure",
+      "log": "job-123960735990.log",
+      "log_bytes": 129106,
+      "log_sha256": "b0ba00314712c0fdb21884d6b00d0cf7fd2ffcb1ce313a466398311392fa134a"
+    },
+    {
+      "id": 123960736266,
+      "run_id": 41024949824,
+      "name": "ubuntu-24.04 / Geant4 11.3.2",
+      "status": "completed",
+      "conclusion": "failure",
+      "log": "job-123960736266.log",
+      "log_bytes": 131091,
+      "log_sha256": "96dbd901da8e460dcbab52b87c248bb8cb212af80aa6cbfcb0b96db55332fd59"
+    },
+    {
+      "id": 123960735905,
+      "run_id": 41024949832,
+      "name": "windows-latest / Python 3.11",
+      "status": "completed",
+      "conclusion": "success",
+      "log": "job-123960735905.log",
+      "log_bytes": 79697,
+      "log_sha256": "f3ff57a21e32a3f338fa6b3e6d60a2fb88de488ad545421b988da936b7788bad"
+    },
+    {
+      "id": 123960736307,
+      "run_id": 41024949832,
+      "name": "ubuntu-latest / Python 3.11",
+      "status": "completed",
+      "conclusion": "success",
+      "log": "job-123960736307.log",
+      "log_bytes": 47910,
+      "log_sha256": "44e49de5da37b4d9904c74cf7db0908e3ecfc053f21d69c324038e83cffd89f6"
+    }
+  ],
+  "reports": [
+    {
+      "artifact": "linux-evidence-11.3.2",
+      "profile": "backend",
+      "path": "linux-evidence-11.3.2/linux-backend/20261030-081715-48563028/report.json",
+      "report_sha256": "8ad2326182b4c02bac7ee40f7786c7b7e2c8c27638c3c9a69cee0c2fc363f0bc",
+      "cases": 59,
+      "assertions": 40389,
+      "failures": [],
+      "strict_gate_exit_code": 0,
+      "triage_integrity_only": false,
+      "release_accepted": true,
+      "git_dirty": true
+    },
+    {
+      "artifact": "linux-evidence-11.3.2",
+      "profile": "gui",
+      "path": "linux-evidence-11.3.2/linux-gui/20261030-081612-05bbfab7/report.json",
+      "report_sha256": "076c904b999845e16620059c9cb09ea70e1610a50ed9045007ae9bcae477aefa",
+      "cases": 39,
+      "assertions": 2341,
+      "failures": [],
+      "strict_gate_exit_code": 0,
+      "triage_integrity_only": false,
+      "release_accepted": true,
+      "git_dirty": true
+    },
+    {
+      "artifact": "linux-evidence-11.3.2",
+      "profile": "integration",
+      "path": "linux-evidence-11.3.2/linux-integration/20261030-083153-b3c72c50/report.json",
+      "report_sha256": "3a032bc8682e18e0b5dc7a8ab446031dc13493e960c1025ad03b00b24372c773",
+      "cases": 20,
+      "assertions": 4369,
+      "failures": [
+        "effective_gdml"
+      ],
+      "strict_gate_exit_code": 1,
+      "triage_integrity_only": true,
+      "release_accepted": false,
+      "git_dirty": true
+    },
+    {
+      "artifact": "linux-evidence-11.3.2",
+      "profile": "static",
+      "path": "linux-evidence-11.3.2/linux-static/20261030-081517-64764b63/report.json",
+      "report_sha256": "2aaf39427b550ff3b8065953ef01221cc7c7645f3d66c84ac20b103d0f0895b6",
+      "cases": 25,
+      "assertions": 1373,
+      "failures": [],
+      "strict_gate_exit_code": 0,
+      "triage_integrity_only": false,
+      "release_accepted": true,
+      "git_dirty": true
+    },
+    {
+      "artifact": "linux-evidence-11.4.3",
+      "profile": "backend",
+      "path": "linux-evidence-11.4.3/linux-backend/20261030-081628-6f5fd398/report.json",
+      "report_sha256": "7afa7c4f83374521681a5a0a93b6e18bb51873902d23b2fda9a71c994d6bdfe0",
+      "cases": 59,
+      "assertions": 39795,
+      "failures": [],
+      "strict_gate_exit_code": 0,
+      "triage_integrity_only": false,
+      "release_accepted": true,
+      "git_dirty": true
+    },
+    {
+      "artifact": "linux-evidence-11.4.3",
+      "profile": "gui",
+      "path": "linux-evidence-11.4.3/linux-gui/20261030-081540-4775f775/report.json",
+      "report_sha256": "5d823d65d8ed39141afe8d89063b8f1d2ef6de8069e6866ac7a4a20afaecb44d",
+      "cases": 39,
+      "assertions": 2341,
+      "failures": [],
+      "strict_gate_exit_code": 0,
+      "triage_integrity_only": false,
+      "release_accepted": true,
+      "git_dirty": true
+    },
+    {
+      "artifact": "linux-evidence-11.4.3",
+      "profile": "integration",
+      "path": "linux-evidence-11.4.3/linux-integration/20261030-082752-810fad59/report.json",
+      "report_sha256": "f4435bf5dd68c3d3fdaa1e25a81f096213ec9834a2453fc4f3bebc5b42face28",
+      "cases": 20,
+      "assertions": 4369,
+      "failures": [
+        "effective_gdml"
+      ],
+      "strict_gate_exit_code": 1,
+      "triage_integrity_only": true,
+      "release_accepted": false,
+      "git_dirty": true
+    },
+    {
+      "artifact": "linux-evidence-11.4.3",
+      "profile": "static",
+      "path": "linux-evidence-11.4.3/linux-static/20261030-081458-f2806abd/report.json",
+      "report_sha256": "8af24cc600092e1d2c415e0b339a33d97b8c73f2086f09c4ae9c583bf56fcb61",
+      "cases": 25,
+      "assertions": 1373,
+      "failures": [],
+      "strict_gate_exit_code": 0,
+      "triage_integrity_only": false,
+      "release_accepted": true,
+      "git_dirty": true
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "static",
+      "path": "m0-report-ubuntu-latest/20261030-081325-9aa5aa70/report.json",
+      "report_sha256": "527d606d2fd22dfc68d750f8b862a1dc95979aa8cb2b49817382487baa6b19ec",
+      "cases": 25,
+      "assertions": 1373,
+      "failures": [],
+      "strict_gate_exit_code": 0,
+      "triage_integrity_only": false,
+      "release_accepted": true,
+      "git_dirty": false
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "gui",
+      "path": "m0-report-ubuntu-latest/20261030-081422-718f4268/report.json",
+      "report_sha256": "7383c6fc14773409b53d1ab457c194bc8c7324a3add4b693c317bd5c1bd8de68",
+      "cases": 39,
+      "assertions": 2341,
+      "failures": [],
+      "strict_gate_exit_code": 0,
+      "triage_integrity_only": false,
+      "release_accepted": true,
+      "git_dirty": false
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "static",
+      "path": "m0-report-windows-latest/20261030-081347-01d08433/report.json",
+      "report_sha256": "da6e0546b4f15541794a86ab901eeb6d7179099a57e3af0c9d3a97b29cdd835b",
+      "cases": 25,
+      "assertions": 1364,
+      "failures": [],
+      "strict_gate_exit_code": 0,
+      "triage_integrity_only": false,
+      "release_accepted": true,
+      "git_dirty": false
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "gui",
+      "path": "m0-report-windows-latest/20261030-081442-86a8a4cd/report.json",
+      "report_sha256": "437a1395a1c63371cb9884ea1258cb05f998c9e65905e2423825e87aa94840b7",
+      "cases": 39,
+      "assertions": 2343,
+      "failures": [],
+      "strict_gate_exit_code": 0,
+      "triage_integrity_only": false,
+      "release_accepted": true,
+      "git_dirty": false
+    }
+  ],
+  "failures": [
+    {
+      "artifact": "linux-evidence-11.3.2",
+      "profile": "integration",
+      "case": "effective_gdml",
+      "status": "fail",
+      "exit_code": 1,
+      "assertions": 2,
+      "path": "linux-evidence-11.3.2/linux-integration/20261030-083153-b3c72c50/effective_gdml.log",
+      "log_sha256": "aa67d3d6a59e46665b672ae34de8db2ded512e3162d968e94962842b687ebf5c",
+      "log_bytes": 990,
+      "diagnostic": "helper terminated after throwing xercesc_3_3::OutOfMemoryException; script assertion run.returncode==0 failed; this is a failure receipt, not proof of physical-memory exhaustion"
+    },
+    {
+      "artifact": "linux-evidence-11.4.3",
+      "profile": "integration",
+      "case": "effective_gdml",
+      "status": "fail",
+      "exit_code": 1,
+      "assertions": 2,
+      "path": "linux-evidence-11.4.3/linux-integration/20261030-082752-810fad59/effective_gdml.log",
+      "log_sha256": "aa67d3d6a59e46665b672ae34de8db2ded512e3162d968e94962842b687ebf5c",
+      "log_bytes": 990,
+      "diagnostic": "helper terminated after throwing xercesc_3_3::OutOfMemoryException; script assertion run.returncode==0 failed; this is a failure receipt, not proof of physical-memory exhaustion"
+    }
+  ],
+  "boundary": "Both Linux integrations failed effective_gdml. Original reports/logs remain unchanged. Integrity-complete is not a passing report gate, not a passed frozen stage, and not UI or physics validation."
+}

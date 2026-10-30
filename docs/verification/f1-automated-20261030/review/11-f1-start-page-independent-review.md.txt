@@ -1,0 +1,25 @@
+# F1 启动页异步补丁独立审查
+
+结论：6文件提案的核心修复方向正确，尚有一个可复现的P2遗漏：未知key的明确空图仅在pending完成路径实现，已完成路径仍保留上一张图。应补齐后再冻结。未修改tracked、未构建、未跑backend。此报告审out提案，不把提案当已经应用。
+
+已读f1-start-page-async-diagnosis.md、原probe.json及当前patch。原probe准确显示bragg_peak只是默认首项碰巧相同，其余三卡等待后仍选错；只加等待不能修复。
+
+P2：候选output_page.py show_plot末尾仍直接return self.plot_panel.select(key)。PlotPanel.select在找不到key时仅return False、不清原选择。独立加载out提案的EvidenceJob/OutputPage（未应用tracked），shielding_slab正常完成并选event_edep/r0后调用show_plot('does-not-exist')，结果unknown_return=false、after仍event_edep/r0、plot_remains=true，message仍原有效图说明。原始log out/collab/f1-start-page-independent-probe.log、执行脚本同名前缀.py。最小修复：抽取统一选择/未知清空函数，让pending完成及非pending show_plot都走它；保留错误返回语义。新增已完成未知key与异步未知key两例，不仅测试等待时的未知key。
+
+其他已检查的源码逻辑：
+
+- pending意图存(directory,key,serial)，新目录refresh先取消旧请求、清意图；完成回调先由EvidenceJob的serial/closed保护，再核对意图目录及serial。因此受支持单GUI线程调用下A旧完成不能应用到B。
+- 同根refresh优先保留待应用key，否则读取当前dataset key，仅在PlotPanel根等于当前根时继承；跨根不会继承原图key。refresh后重新绑定新serial。
+- Qt.QueuedConnection是必要的：future可能在add_done_callback前完成，回调可在submit调用线程立即执行；明确queued保证refresh在返回事件循环前先绑定desired。_publish仍检验serial，所以已经排队的旧完成也拒绝。
+- _render_refresh在evidence_operation内同步发现数据后再应用意图，不新增独立hash；无数据时保留原诊断，不抹去验证失败。删除open_example重复refresh合理。
+- smoke_start_page保留原预设图与current_plot断言，新增等待是正确配套；目前提案async测试连续A->B但未强制A迟到，前端正在补的阻塞反例仍须核验。未把未运行提案smoke宣称通过。
+
+下一步：前端补统一unknown处理、强制A阻塞/B完成/释放A的结果隔离与同根pending refresh反例后，应用授权修复节点再跑定向GUI。当前正式Windows冻结报告继续保留。
+
+## 最新提案复核：原P2已修，允许进入应用/定向验证节点
+
+前端更新为统一_select_requested_plot，ready与pending均调用；未知key先cancel PlotPanel尚在排队的验证/重画，再清combo、plot、绘图区与按钮并显示明确key。独立同一反例重跑：after=null、plot_remains=false、message明确Requested plot does-not-exist unavailable，原始日志f1-start-page-independent-probe-fixed.log；旧失败log保留。
+
+随后独立加载out提案EvidenceJob/OutputPage（不写tracked），执行候选smoke_f1_async_identity.py，以真实仓库脚本路径上下文保留fixture定位，exit0；日志f1-start-page-independent-candidate-smoke.log，启动器f1-start-page-independent-candidate-smoke.py。实际覆盖首个A真实hash受控阻塞、B完成仍不释放A、释放A后B目录/预设图不变；同根refresh保持已选key；ready与queued未知key均current_dataset/current_plot为空且明确诊断。Qt主窗口接受/忽略关闭回归也由该smoke通过。仅此轻量候选运行，不是应用后完整start_page/GUI或CI结论。
+
+最终独立结论：当前更新提案无新增确定阻断，可在root授权节点应用后跑指定GUI专项。tracked始终未改、无backend/编译、无运行中session。data_locator junction提案按root通知取消，现有G4USIM_GEANT4_DATA真实根分支由root下一正式run显式设置。

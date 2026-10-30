@@ -1,0 +1,18 @@
+{
+  "status": "received",
+  "started_utc": "2026-10-30T05:54:06.440274+00:00",
+  "requested_model": "deepseek-flash",
+  "returned_model": "deepseek-flash",
+  "id": "65103662-33be-422d-b21a-4b1f876b9e51",
+  "usage": {
+    "prompt_tokens": 452,
+    "completion_tokens": 1268,
+    "total_tokens": 1720,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 452
+  },
+  "review": "# F1 provenance 前端/消费者设计建议\n\n## 一、状态模型：分离“执行完成”与“文件身份校验”\n\n建议顶层暴露两套正交状态，不要合成单一布尔值：\n\n1. **`run_completion`**（执行完成度）：来自 run_status/summary，如 `completed / failed / interrupted / running / unknown`。这是“这次执行跑到哪”。\n2. **`provenance_state`**（文件身份校验）：`verified / legacy_unverified / unavailable / tampered / unknown`。这是“当前文件是否与清单记录一致”。\n\n关键语义：`completed + tampered` 是合法组合（实验跑完了，但文件被改过）；`failed + verified` 也合法（执行失败但残留文件与清单一致）。UI 不得把二者压成“成功/失败”二态。\n\n`tampered` 定义严格限定为“**发现不一致**”（缺失、多出、size/hash 不符、路径逃逸、重复登记、run 归属不符），文案避免“恶意/篡改”措辞，用“与清单不符”。\n\n## 二、逐维状态\n\n`provenance_state` 是聚合，需给出 `dimensions` 字典，每维独立取值 `verified / missing / mismatch / not_recorded / not_checked / error`：\n\n- `identity`（execution unique id）\n- `build`（commit、dirty、version；dirty 应显式展示警告）\n- `config`（实际读取配置，区分“记录值”与“当前可达性”）\n- `resources`（全部引用资源 sha256 列表）\n- `outputs`（已关闭输出文件 sha256）\n- `manifest_integrity`（清单自身合法性与归属）\n- `self_registration`（若协议含自身登记，需显式协议避免自 hash 循环——见下）\n\n聚合规则建议：任一项 `mismatch` → `tampered`；全部 `verified` 且覆盖协议要求维度 → `verified`；仅 v1 metadata → `legacy_unverified`；metadata 损坏 → `tampered`（拒绝，不降级）；文件整体不可读/原根不可达且无重定位映射 → `unavailable`；其余缺失 → `unknown`。不要用“缺项当通过”。\n\n## 三、表格与摘要\n\n摘要区固定展示：`provenance_state` 徽标、`run_completion`、协议版本（v1 / 新协议版本号）、`registered_manifest` 合法性、重定位标记、当前根路径、警告数。\n\n明细表按维度分 tab 或折叠区，每行字段：维度、记录值、当前观测、状态、说明。**未知/null/失败必须保留语义**：用 `—` 表示“未记录”，`?` 表示“未检查”，`✗` 表示“检查失败”，不得显示为空串或 0。hash 显示前 12 位 + 可复制全长，避免误导为“完整即正确”。\n\n`registered_manifest=true` 仅表示清单结构与归属合法，**不表示内容已验证**；UI 文案必须写清，且与 `verified` 徽标分开。SHA 只能证明“与 manifest 相对一致”，非签名、非独立物理正确，需在 help/工具提示中保留该声明。\n\n## 四、旧 v1 兼容\n\n`legacy_unverified` 显示黄色警告条：“仅 v1 metadata，未含内容 hash，无法做文件身份校验；不要据此声称资源已验证”。若检测到新协议 metadata 但解析/校验失败 → `tampered` 严格拒绝，**禁止退回 v1 或 glob 兜底**；在 UI 中给出“拒绝原因 + 建议人工检查”，并禁用依赖 provenance 的导出/合并入口（或标注降级）。\n\n## 五、读取/合并/导出前的一致校验\n\n统一经过 `output/provenance` 单入口（dose/fluence/plots/trajectories/scan、CLI 合并、ROOT 读取、场景分析复用）。入口前置检查：协议版本 → 清单合法性 → 路径逃逸/重复/归属 → 当前根映射 → 按需 hash。大文件 hash 采用流式 + 有界缓存（按 (path, size, mtime, 协议) 键，LRU 上限可配，缓存命中不改变 `not_checked` 语义，只加速）。history/run_result 当前独立读取 summary/run_status，建议保留但不宣称 provenance 已验；若其展示入口可显示“provenance 未检查”提示。merge_plan 保存 manifest digest，执行前重检清单与文件列表；当前不检内容 hash 需在 UI 明示“清单级校验，非内容级”。\n\n## 六、后处理衍生产物\n\n衍生产物（重采样、绘图缓存等）使用**独立收据 (receipt)**，记录输入 provenance 摘要、操作、参数、产物 hash，**不修改原始清单**。收据状态独立于原始 provenance，且明确“输入为 legacy/tampered 时产物继承警告级”。\n\n## 七、重定位与测试\n\n重定位：manifest 原根 → 当前根映射，绝对路径改写后再校验；**不可读回原目录时，保留历史 hash 身份但标 `unavailable`**，禁止声称“当前资源已验证”。最小负例测试建议：缺失文件、多出文件、size 改、单字节改、路径逃逸(`../`)、重复登记、run id 不符、metadata 损坏、新协议错误、v1 兼容、重定位成功/失败、自 hash 循环协议误用、dirty build 警告、衍生产物收据不改原清单。\n\n本回复仅为设计咨询，未运行、无截图，不构成验收结论。"
+}

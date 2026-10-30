@@ -1,0 +1,26 @@
+G4USIM_ASSERTS=40
+C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\output\plot_data.py:104: RuntimeWarning: Legacy metadata: content hashes are not recorded; byte identity is unverified.
+  for path in sorted(output_files(output, "scorer_statistics*.csv")):
+C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\output\plot_data.py:113: RuntimeWarning: Legacy metadata: content hashes are not recorded; byte identity is unverified.
+  for path in sorted(output_files(output, "scoring_mesh*.csv")):
+C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\output\plot_data.py:119: RuntimeWarning: Legacy metadata: content hashes are not recorded; byte identity is unverified.
+  for path in sorted(output_files(output, "g4usim*.root")):
+C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\output\plot_data.py:140: RuntimeWarning: Legacy metadata: content hashes are not recorded; byte identity is unverified.
+  runs = sorted({_run_of(p.stem) for p in output_files(output, f"{stem}_t*.csv")})
+C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\output\plot_data.py:89: RuntimeWarning: Legacy metadata: content hashes are not recorded; byte identity is unverified.
+  return sorted(p for p in output_files(output, f"{stem}_t*.csv") if pattern.fullmatch(p.name))
+Traceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 177, in <module>
+    raise SystemExit(main(sys.argv))
+                     ^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 153, in main
+    runpy.run_path(str(target), run_name="__main__")
+  File "<frozen runpy>", line 291, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\smoke_tests\smoke_start_page.py", line 200, in <module>
+    main()
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\smoke_tests\smoke_start_page.py", line 153, in main
+    assert Path(panel._output_dir) == example.output_dir() and panel.current_dataset().key == example.plot
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

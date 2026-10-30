@@ -1,0 +1,71 @@
+{
+  "head": "cd0f44a8bf885609c3636e7b8b367982baf0debc",
+  "status": "failed",
+  "reports": [
+    {
+      "path": "linux-evidence-11.3.2\\linux-gui\\20261030-074258-1a218f7a\\report.json",
+      "cases": 39,
+      "failures": [
+        {
+          "name": "gui_start_page",
+          "status": "fail",
+          "exit_code": 1
+        }
+      ]
+    },
+    {
+      "path": "linux-evidence-11.3.2\\linux-static\\20261030-074208-9931d0fa\\report.json",
+      "cases": 25,
+      "failures": []
+    },
+    {
+      "path": "linux-evidence-11.4.3\\linux-gui\\20261030-074305-3d7dda45\\report.json",
+      "cases": 39,
+      "failures": [
+        {
+          "name": "gui_start_page",
+          "status": "fail",
+          "exit_code": 1
+        }
+      ]
+    },
+    {
+      "path": "linux-evidence-11.4.3\\linux-static\\20261030-074213-8ece84c5\\report.json",
+      "cases": 25,
+      "failures": []
+    },
+    {
+      "path": "m0-report-ubuntu-latest\\20261030-074038-708b033f\\report.json",
+      "cases": 25,
+      "failures": []
+    },
+    {
+      "path": "m0-report-ubuntu-latest\\20261030-074135-a8a39b8c\\report.json",
+      "cases": 39,
+      "failures": [
+        {
+          "name": "gui_start_page",
+          "status": "fail",
+          "exit_code": 1
+        }
+      ]
+    },
+    {
+      "path": "m0-report-windows-latest\\20261030-074048-aa0a9c30\\report.json",
+      "cases": 25,
+      "failures": []
+    },
+    {
+      "path": "m0-report-windows-latest\\20261030-074207-fd37950f\\report.json",
+      "cases": 39,
+      "failures": [
+        {
+          "name": "gui_start_page",
+          "status": "fail",
+          "exit_code": 1
+        }
+      ]
+    }
+  ],
+  "boundary": "Backend/integration not executed on Linux after GUI failure; do not count missing profiles as passing."
+}

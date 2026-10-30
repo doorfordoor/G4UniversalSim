@@ -1,0 +1,37 @@
+# F1产物身份与最终化独立审查
+
+2026-10-30。只读审查当前OutputManager/RunSummary、SimulationManager最终化、显式登记调用点和test_f1_output_identity.py。未修改产品、主负责人文件或测试。
+
+## 结论
+
+**当前范围未发现阻塞缺陷。** 读入账本、产物身份和2C接受/应用证据分离；实际关闭/哈希/摘要/JSON顺序、失败首因及作用域在已审路径一致。此结论不是全量平台验收或性能验收。
+
+## 代码核对
+
+- `SimulationManager::FinalizeRunSummary`先分别尝试Flush/Close，捕获并锁存失败，再写已配置路径的EffectiveFinalization；随后CollectArtifactEvidence(true,true)只对普通已登记产物做一次流式hash，排除将被重写的文本摘要。后面的WriteFinalConfigSnapshot只更改summary字段，不会在普通产物hash后偷偷写另一个文件。
+- `WriteRunSummary`关闭成功才登记process摘要；最终化随后单独HashFile实际摘要。文本hash失败登记unavailable、保留首因并重写failed文本，不伪造新hash。最后SetArtifactEvidence并写metadata；metadata自己唯一self_reference_excluded，不能替别的文件排除。
+- `OutputManager::CollectArtifactEvidence`从mutex共享注册表复制，既不扫描目录也不因缺文件删名单。HashFile失败保留unavailable/null/reason并调用首因锁存。HashFile不调用输入RecordRead；组件中实际检查Snapshot数量不变。
+- `RecordOutputFailure`只有首次hasFailure=false才写firstFailure。后续artifact_integrity或JSON错误不能覆盖已有worker/finalization首因。最终化的状态/exit同步检查HasOutputFailure，文本hash晚失败分支也明确改failed/EXIT_FAILURE。
+- `WriteRunMetadataJson`在重写前先撤销旧JSON登记；open/write/close的精确MetadataWriteError阶段由OutputManager先锁存，root外层泛化run_metadata_write不会覆盖首因。失败后corrective文本只列已完成注册并排除metadata；失败/部分JSON可能留在磁盘，但不注册，不能作为成功产物。重写后的文本hash与旧/部分JSON不一致时新消费者拒绝，符合失败边界。
+- 重复最终化：旧summary在Collect阶段显式排除，新summary关闭后重新hash；metadata重写前撤销旧登记、成功后再发布；注册表同路径同scope幂等，scope冲突则artifact_integrity失败。组件实际连续publish两次，未重复/使用旧摘要hash。
+- 已查ROOT、mesh/statistics、所有scorer、phase-space、trajectory、CSV关闭及EffectiveConfig登记调用点：各点显式给process/run/thread；ROOT/mesh/statistics是run；worker CSV和trajectory是thread；无run/主线程负thread的有效配置不会伪装worker。RunSummary在WriteJson再次校验有对应真实RunRecord、execution一致、scope/null约束与唯一self排除。
+- ledger只被OutputProvenance快照转成typed JSON；生成文件hash不登记输入、输入原路径不重开。sequence/size均严格整数；producer/consumer的连续sequence和非空unknown占位当前已一致。
+
+## 新测试是否实质
+
+`test_f1_output_identity.py`不是只检查字段存在：
+
+1. 组件真实编译OutputManager/RunSummary/InputProvenance/CsvWriter，两个独立进程ID、clone共享ID；对实际落盘含NUL/CRLF字节用Python hashlib复核、metadata自身排除；重复发布两次；删已登记文件保持unavailable；有旧首因时不覆盖；metadata写/关故障不登记JSON；坏schema/sequence gap/空path/重复artifact/缺thread身份均拒绝。
+2. backend有csv/root/both ×1/2/4worker×两run真实组合，逐产物重算SHA/size并检查run/thread scope及EffectiveConfig内嵌身份，独立进程ID不复用；no-run/dry-run不得补run文件；真实BeginRun与artifact hash故障须非零、failed摘要/JSON及原阶段，实际run关联不能消失。
+3. 这轮独立实际重跑 `python scripts/test_f1_output_identity.py --component` exit0；日志 `out/collab/f1-output-independent-component.log`。backend矩阵本轮未重复运行，不能把代码审查说成本代理新运行证据；此前本代理输入11case已真实经过最终化和GUI统一validator。
+
+## 保留边界与后续检查
+
+- 组件的AnalysisOutput/mesh是明确stub，因此ROOT合并/mesh关闭必须依赖backend与既有专项，组件本身不证明它们的运行安全。
+- 组件的重复publish覆盖真实writer/registry/serializer，但没有直接调用整个SimulationManager::FinalizeRunSummary两次；当前root代码顺序审查正确，正常CLI只执行一次。若未来公开重试finalize接口，应加完整Manager级重复调用测试。
+- metadata_open失败、文本摘要自身写失败及旧R02行为继续靠原test_run_summary等专项；新脚本的组件只额外直接注入metadata write/close。不能以新脚本替代旧回归。
+- 测试故障是确定性异常注入，不是实际磁盘满/设备断连；外部同时改文件/跨文件原子性/不可篡改签名不在契约。hash只证明那次读取到的字节。
+- 真实已登记文件删除由组件覆盖，真实backend目前主要注入hash失败；若进一步声称实测OS权限/删除竞态，需另有同步故障证据。
+- 性能节点尚未审查，不得从HashFile流式结构或已通过身份测试推断性能收益；默认格式保持CSV。
+
+本代理会话98659已poll至exit0，无运行中命令；按父任务安排空闲等待。

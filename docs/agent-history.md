@@ -471,3 +471,13 @@ Geant4 `ApplyCommand()` 返回 0 不足以确认命令成功；沿用材料命�
 测试修复：std::thread经exception_ptr将异常转回join后的调用线程，仅std::bad_alloc与Xerces独立OutOfMemoryException视为预期分配拒绝；catch(...)仅运输或顶层明确返回失败，不当作通过。局部RAII恢复fgFileMgr，正常/异常展开均验证原指针。原31条Check和Python断言保留，增加精确故障及非分配异常传播检查。Windows Xerces3.2独立测试不代表Linux3.3通过；后续新冻结必须实跑双版本CI。
 
 范围与验收见[GDML修复提案](collab/inbox/20261030-1643-astra-f1-gdml-repair.md)。本修复不改解析契约、GUI编辑白名单、输出协议或物理计算，不新增系统内存耗尽/磁盘故障实测承诺。
+
+## 2026-10-30 F1 自动矩阵与不可变归档，实窗待验
+
+最终产品f176d0ed4cea60b7ca5a80ed81017c9404ec1257干净Release构建；Windows正式all143/143、48511个v3入口、0fail/skip/零断言用例，E6同probe逐例和总数门禁通过。实际Linux run41028779177的11.3.2/11.4.3各143项，M0 run41028779326的Windows/Ubuntu各64项全部通过；4官方ZIP摘要、12报告/414次执行及原日志SHA/断言标记核对通过。两个Linux effective_gdml原日志均实见四开四关、故障五开五关、adapter恢复与native capture通过，不只引用CI绿灯。
+
+程序SHA f02d3bdc94121dcf35de05e152773fdec8c87f5c8759e53fd1f95d3f51f43ea8；sourcefp db253b7b1ed5f810789f1322faa75002df311d4aeb04572867dbb130c71d95cc；testfp 57a80e4f5e73a2d07b5b834b6ca91ac482161622ca1d5e1d558cbd37d79b5f35。后续仅文档提交不能冒称已测exe的构建提交。构建输入clean和通用CI git_dirty为不同事实，保留原值。
+
+[自动验收归档](verification/f1-automated-20261030/README.md)按独立审查批准的计划独占发布，2797原件逐字节复制，重新核验严格/E6基线门禁及23个本地链接；两轮失败、54次格式/18次缓冲测量、DeepSeek设计响应、构建收据和独立审查均保留。首轮旧README误称4份joblog已落盘，实际只1份；本轮补收另外3份，新增更正收据，不追改旧README。ZIP/程序/大数据输出保留在清单的本机源位置，归档不等于K1可移植实验包。
+
+最终真实夹具为2线程、2轮各2/2事件、auto实际ROOT，20登记文件身份verified。它尚未完成实窗观察：旧host被其他窗口遮挡，两次激活/恢复失败；17:19只读刷新仍看到遮挡，没有继续输入或把无关窗口截图归档。须用户将验收窗口置前后，正常关闭旧host，再用最终代码host补验及取得正常退出收据。显式状态为visible_acceptance=pending、phase_complete=false、integrated_to_codex=false；不得用合成状态、后台运行或原生UIA树替代实际视觉观察，F1保持进行中。

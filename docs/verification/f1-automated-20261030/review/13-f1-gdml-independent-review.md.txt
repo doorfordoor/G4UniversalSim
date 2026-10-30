@@ -1,0 +1,34 @@
+# F1 GDML 补丁独立审查
+
+结论：**approve，未发现需要阻断应用的新增缺陷**。这是对两文件补丁的源码与 Windows 独立组件审查，不是 Linux 矩阵验收或 F1 阶段关闭。
+
+审查基线为 `3d1faf1b256a945ac800c08bacf51db57f8ca416`；补丁为 `out/collab/f1-gdml-portability/proposal.patch`，SHA-256 `184ee1fc64f554a697b90f582854e64cb0e4a01f97bdead1da455a68c1adb1ee`。已阅读根 AGENTS.md、agent-history 的 F1 契约、当前适配器/测试、完整提案、原/修复日志、独立构建配置及本机 Xerces 异常类定义。下列候选行号指该目录 `candidate/` 下的相应文件。
+
+1. **确定为缺陷，补丁修复正确**：当前 `src/Geometry/GdmlInputCapture.cc:140` 的 FileBuffer 分配在关闭原生句柄的 try/catch 外。候选将该分配置于 try 内，分配失败也经原 catch 关闭并继续抛出；读取、记录失败仍走同一关闭路径。缓冲区登记发生在原生句柄关闭之后，未引入双重关闭或伪造成功。
+2. **无问题，新故障点精确覆盖漏洞**：候选 `tools/gdmlInputCaptureCheck.cc:82-93,119-125,145-154` 在 UTF 路径转换完成、释放 full path 后武装一次分配失败，并调用 XMLCh 重载以免 char 重载后续释放 wide 造成混淆。此后至 Capture 的 make_unique 无其他分配；断言同时要求两故障标记已消费、opens/closes=4/4。独立重跑同一加强 harness：原适配器退出 1、`opens=4 closes=3 refused=1`；候选退出 0、`opens=4 closes=4 refused=1`。不是只按异常类型推测关闭成功。
+3. **确定为缺陷，测试修复没有弱化**：原 harness 只捕获 std::bad_alloc，但本机 `OutOfMemoryException.hpp:40` 及 `XMemory.hpp:40` 证明 Xerces OOM 不继承 std::exception。候选 `tools/gdmlInputCaptureCheck.cc:56-69` 用 exception_ptr 跨 join 传回异常，只有两种明确的分配异常可返回 true；catch(...) 仅转送。原三个 1/1、2/2、3/3 关闭断言及其他原 Check 表达式全部保留。`:163-172` 新增 runtime_error 必须继续传播的负例，以及 Xerces OOM 跨线程传播检查。顶层未知异常返回 1，不能冒充成功。
+4. **无问题，恢复顺序安全**：候选 `tools/gdmlInputCaptureCheck.cc:71-78,130-172` 的覆盖器先创建、capture 后创建，正常与异常展开时均先销毁 capture 恢复到仍存活的 fault adapter，再由覆盖器恢复原指针。新增两种恢复路径的明确断言。线程异常数据仅在线程写、join 后读；未引入数据竞争。
+
+独立验证：`git apply --check` 成功；重新计算 proposal/candidate/原日志/构建日志的全部已登记 SHA 均相符；机械比较确认原 Check 调用文本未丢失。未重建主 exe，也未调用或干预主全量会话。复用独立构建的 original/fixed 两组件，经正式 `scripts/test_effective_gdml.py` 分别重跑，获得上述 1/0 退出码；修复组件最终 `opens=5 closes=5 adapter_restored=true` 且 `PASS native capture`。既有 v3 probe 日志为 11 个 Python 断言入口，不能把它称为 38 个 C++ 检查的探针计数。
+
+**需实验**：下一冻结必须实际重跑 Linux Geant4 11.3.2/11.4.3 的 integration effective_gdml 和完整证据门禁。本次组件运行仅 Windows/Xerces 3.2，不能声称已证明 Linux/Xerces 3.3 通过。旧 Linux 日志足以证明 OOM 未捕获导致 terminate，不能仅凭该日志定位具体是 foreign、stdin 或 owner 的抛出点。真实资源耗尽、底层 close 自身失败不在这次确定性故障注入的结论范围内。
+
+2026-10-30；本审查仅新增本 ignored 报告，无 tracked 修改。
+
+## 最终应用核对：f176d0e
+
+`f176d0ed4cea60b7ca5a80ed81017c9404ec1257` 的两个落盘文件与已审 candidate **逐字节一致**：生产文件 SHA `a0ee9349399e137f3ff34c3ffd2d347e097602d0d63566705b120d9df4fbb855`，组件文件 SHA `44861cec93a1d1b5f8ca8aebbd40b270453b5e63260fcf8eb9a76b2f1a51c94e`。应用核对通过，未发现提交时偏离提案。
+
+提交内 AGENTS/history/修复提案/STATUS/ROADMAP/CHANGELOG 均保留 Windows 与 Linux、定向组件与完整验收的区别，未把修复候选描述为双平台已通过。第二轮 Windows 原 report 再核对为 head=3d1faf1、143 pass/0 fail/0 skip、48511 入口、零断言列表为空，与新说明匹配。Linux 具体抛出点仍标为不能从 terminate 日志确定，符合证据边界。本轮不重建、不运行整套测试、不操作桌面。
+
+## 归档只读预检：发布前需补的证据
+
+预检归档器 SHA `017d26fa8fbd9e28c8126474426a64ed5c6c8373b1c3b4d69b9eeb192cc7f3a6`；这是选定逻辑的阅读，不替代最终 plan、复制结果与门禁复核。
+
+- **确定的计划阻断项**：`out/collab/archive-f1.py:372-379` 对每个 historical CI root 只接受 `ci-evidence.json`。首轮 `out/verification/f1-ci-final` 目前只有 `failed-round-summary.json`（head=cd0f44a、status=failed），没有前者。因此直接把首轮作为 `--historical-ci-root` 会报 `Historical CI round has no collected summary`。应明确支持该失败摘要格式并记录其 head/status/report 数量，或提供独立、明确标注失败的历史收集收据；不得删除首轮、改旧报告或把 failed 伪装为 passed。第二轮已存在 `ci-evidence.json`，status=not_passed、complete=true，表示收集完成而非验收通过。
+- `f1-final-readme-template.md` 仍是首轮后的草稿：需补 3d1faf1/f176d0e 修复链、首轮 Windows 141/143 两项失败及第二轮 Windows 143/143 与 Linux GDML 失败；最终只引用新冻结真正完成的报告/run。143 个用例和 414 条 CI 执行记录应分别说明，避免把两 Linux 各 143 项写成含混的“143profile”。
+- 最终 build receipt、完整构建日志、capabilities、exe SHA、冻结提交和双指纹需用 `--include-root/--include-file` **显式纳入 plan**；归档器没有专用 build receipt 必选项，不能只因测试报告通过就漏掉这条二进制来源证据。两个历史构建/实窗夹具可选保留，但只能作为历史，不能混作最终 exe/host。
+- `--visible-root` 当前只要求显式目录，不判断观察是否完成；归档器 policy 也明确“归档不建立实窗完成”。因此 pending README、自动夹具或 host-ready 记录不能支持阶段关闭。最终必须另有实际观察/原生截图、真实运行与合成状态区分、最终 host 代码身份及退出收据；若 UI 仍阻塞，只能发布明确标注自动验收完成、F1 实窗待验的证据归档。
+- 将本次 GDML proposal/原适配器失败/候选通过/独立 review、已完成异步图表独立审查、两个失败冻结的原始报告与原日志列入明确清单；旧 Markdown 内相对链接如需按 literal text 归档，用已有 `--plain-markdown-source`，不要改原文字节。最终 plan 仍需独立核对来源/目标、缺失项与可携带链接，并在复制后重新走 strict/E6 基线门禁。
+
+以上预检不要求在当前冻结中改 tracked；归档准备与文档关闭应在最终自动验收/实窗证据确定后分别完成。

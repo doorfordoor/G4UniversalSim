@@ -1,0 +1,219 @@
+{
+  "recorded_at_utc": "2026-10-30T09:19:06.399939+00:00",
+  "head_sha": "f176d0ed4cea60b7ca5a80ed81017c9404ec1257",
+  "status": "passed",
+  "complete": true,
+  "runs": [
+    {
+      "id": 41028779177,
+      "head_sha": "f176d0ed4cea60b7ca5a80ed81017c9404ec1257",
+      "conclusion": "success",
+      "name": "Linux build and backend regression",
+      "path": ".github/workflows/linux-geant4.yml",
+      "event": "push",
+      "html_url": "https://github.com/doorfordoor/G4UniversalSim/actions/runs/41028779177",
+      "run_attempt": 1,
+      "jobs": [
+        {
+          "id": 123973207024,
+          "name": "ubuntu-24.04 / Geant4 11.3.2",
+          "conclusion": "success",
+          "log_present": true
+        },
+        {
+          "id": 123973207198,
+          "name": "ubuntu-24.04 / Geant4 11.4.3",
+          "conclusion": "success",
+          "log_present": true
+        }
+      ]
+    },
+    {
+      "id": 41028779326,
+      "head_sha": "f176d0ed4cea60b7ca5a80ed81017c9404ec1257",
+      "conclusion": "success",
+      "name": "M0 static and GUI regression",
+      "path": ".github/workflows/m0-static-gui.yml",
+      "event": "push",
+      "html_url": "https://github.com/doorfordoor/G4UniversalSim/actions/runs/41028779326",
+      "run_attempt": 1,
+      "jobs": [
+        {
+          "id": 123973207214,
+          "name": "windows-latest / Python 3.11",
+          "conclusion": "success",
+          "log_present": true
+        },
+        {
+          "id": 123973207657,
+          "name": "ubuntu-latest / Python 3.11",
+          "conclusion": "success",
+          "log_present": true
+        }
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "name": "linux-evidence-11.4.3",
+      "id": 12966617063,
+      "official_digest": "sha256:ac9493728091780df683f8e25d9a9f88053427a1e11df0e063cb7f0f16e717cc",
+      "sha256": "sha256:ac9493728091780df683f8e25d9a9f88053427a1e11df0e063cb7f0f16e717cc"
+    },
+    {
+      "name": "linux-evidence-11.3.2",
+      "id": 12965413991,
+      "official_digest": "sha256:e67ed98e4daae7c52479cd756fd4b4242b49b950595298a1c8b9c3886ed451dd",
+      "sha256": "sha256:e67ed98e4daae7c52479cd756fd4b4242b49b950595298a1c8b9c3886ed451dd"
+    },
+    {
+      "name": "m0-report-windows-latest",
+      "id": 12965581764,
+      "official_digest": "sha256:d614dd380db940aaa0336d7463818fd693fd085bd70b339573f7418e57e6107c",
+      "sha256": "sha256:d614dd380db940aaa0336d7463818fd693fd085bd70b339573f7418e57e6107c"
+    },
+    {
+      "name": "m0-report-ubuntu-latest",
+      "id": 12965402013,
+      "official_digest": "sha256:5e59ca69017e85d537d4f7c0bafd75a8312c254e63c0c665d8890ddf513ca122",
+      "sha256": "sha256:5e59ca69017e85d537d4f7c0bafd75a8312c254e63c0c665d8890ddf513ca122"
+    }
+  ],
+  "reports": [
+    {
+      "artifact": "linux-evidence-11.3.2",
+      "path": "linux-evidence-11.3.2\\linux-backend\\20261030-085908-442e5e41\\report.json",
+      "profile": "backend",
+      "cases": 59,
+      "assertions": 40387,
+      "strict_gate_exit_code": 0,
+      "git_dirty": true,
+      "tracked_source_gate": "pass",
+      "problems": []
+    },
+    {
+      "artifact": "linux-evidence-11.3.2",
+      "path": "linux-evidence-11.3.2\\linux-gui\\20261030-085807-247d9d38\\report.json",
+      "profile": "gui",
+      "cases": 39,
+      "assertions": 2341,
+      "strict_gate_exit_code": 0,
+      "git_dirty": true,
+      "tracked_source_gate": "pass",
+      "problems": []
+    },
+    {
+      "artifact": "linux-evidence-11.3.2",
+      "path": "linux-evidence-11.3.2\\linux-integration\\20261030-091347-3c389cd8\\report.json",
+      "profile": "integration",
+      "cases": 20,
+      "assertions": 4378,
+      "strict_gate_exit_code": 0,
+      "git_dirty": true,
+      "tracked_source_gate": "pass",
+      "problems": []
+    },
+    {
+      "artifact": "linux-evidence-11.3.2",
+      "path": "linux-evidence-11.3.2\\linux-static\\20261030-085714-5a950ea2\\report.json",
+      "profile": "static",
+      "cases": 25,
+      "assertions": 1373,
+      "strict_gate_exit_code": 0,
+      "git_dirty": true,
+      "tracked_source_gate": "pass",
+      "problems": []
+    },
+    {
+      "artifact": "linux-evidence-11.4.3",
+      "path": "linux-evidence-11.4.3\\linux-backend\\20261030-085917-b668dfa4\\report.json",
+      "profile": "backend",
+      "cases": 59,
+      "assertions": 39795,
+      "strict_gate_exit_code": 0,
+      "git_dirty": true,
+      "tracked_source_gate": "pass",
+      "problems": []
+    },
+    {
+      "artifact": "linux-evidence-11.4.3",
+      "path": "linux-evidence-11.4.3\\linux-gui\\20261030-085814-17086ea8\\report.json",
+      "profile": "gui",
+      "cases": 39,
+      "assertions": 2341,
+      "strict_gate_exit_code": 0,
+      "git_dirty": true,
+      "tracked_source_gate": "pass",
+      "problems": []
+    },
+    {
+      "artifact": "linux-evidence-11.4.3",
+      "path": "linux-evidence-11.4.3\\linux-integration\\20261030-091345-ccb2c6a0\\report.json",
+      "profile": "integration",
+      "cases": 20,
+      "assertions": 4378,
+      "strict_gate_exit_code": 0,
+      "git_dirty": true,
+      "tracked_source_gate": "pass",
+      "problems": []
+    },
+    {
+      "artifact": "linux-evidence-11.4.3",
+      "path": "linux-evidence-11.4.3\\linux-static\\20261030-085719-90e72d82\\report.json",
+      "profile": "static",
+      "cases": 25,
+      "assertions": 1373,
+      "strict_gate_exit_code": 0,
+      "git_dirty": true,
+      "tracked_source_gate": "pass",
+      "problems": []
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "path": "m0-report-ubuntu-latest\\20261030-085531-34838c3e\\report.json",
+      "profile": "static",
+      "cases": 25,
+      "assertions": 1373,
+      "strict_gate_exit_code": 0,
+      "git_dirty": false,
+      "tracked_source_gate": "pass",
+      "problems": []
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "path": "m0-report-ubuntu-latest\\20261030-085606-197ce25c\\report.json",
+      "profile": "gui",
+      "cases": 39,
+      "assertions": 2341,
+      "strict_gate_exit_code": 0,
+      "git_dirty": false,
+      "tracked_source_gate": "pass",
+      "problems": []
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "path": "m0-report-windows-latest\\20261030-085559-fc139df5\\report.json",
+      "profile": "static",
+      "cases": 25,
+      "assertions": 1364,
+      "strict_gate_exit_code": 0,
+      "git_dirty": false,
+      "tracked_source_gate": "pass",
+      "problems": []
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "path": "m0-report-windows-latest\\20261030-085726-e56c442a\\report.json",
+      "profile": "gui",
+      "cases": 39,
+      "assertions": 2343,
+      "strict_gate_exit_code": 0,
+      "git_dirty": false,
+      "tracked_source_gate": "pass",
+      "problems": []
+    }
+  ],
+  "collection_problems": [],
+  "source_fingerprint": "db253b7b1ed5f810789f1322faa75002df311d4aeb04572867dbb130c71d95cc",
+  "tests_content_fingerprint": "57a80e4f5e73a2d07b5b834b6ca91ac482161622ca1d5e1d558cbd37d79b5f35"
+}

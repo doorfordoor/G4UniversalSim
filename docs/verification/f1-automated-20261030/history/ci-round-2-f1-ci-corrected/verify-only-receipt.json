@@ -1,0 +1,19 @@
+{
+  "command": [
+    "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+    "out/collab/verify-e6-ci.py",
+    "verify",
+    "--head",
+    "3d1faf1b256a945ac800c08bacf51db57f8ca416",
+    "--linux-run",
+    "41024949824",
+    "--m0-run",
+    "41024949832",
+    "--evidence",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f1-ci-corrected"
+  ],
+  "mode": "verify_only_no_credentials_or_network",
+  "exit_code": 1,
+  "expected": "nonzero because both Linux integrations failed",
+  "report_gate_release_status": "not_passed"
+}

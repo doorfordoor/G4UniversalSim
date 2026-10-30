@@ -1,0 +1,18 @@
+G4USIM_ASSERTS=2
+Traceback (most recent call last):
+  File "/home/runner/work/G4UniversalSim/G4UniversalSim/tools/test_assert_probe.py", line 177, in <module>
+    raise SystemExit(main(sys.argv))
+                     ^^^^^^^^^^^^^^
+  File "/home/runner/work/G4UniversalSim/G4UniversalSim/tools/test_assert_probe.py", line 153, in main
+    runpy.run_path(str(target), run_name="__main__")
+  File "<frozen runpy>", line 291, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/runner/work/G4UniversalSim/G4UniversalSim/scripts/test_effective_gdml.py", line 57, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/home/runner/work/G4UniversalSim/G4UniversalSim/scripts/test_effective_gdml.py", line 45, in main
+    assert run.returncode==0, run.stdout+run.stderr
+           ^^^^^^^^^^^^^^^^^
+AssertionError: terminate called after throwing an instance of 'xercesc_3_3::OutOfMemoryException'
+

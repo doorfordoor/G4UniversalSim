@@ -1,0 +1,51 @@
+# F1 资源代理独立只读审查（2026-10-30）
+
+范围：当前工作区diff的InputProvenance.hh/.cc、GDML capture、RNG restore、INI/STL/field/NIEL/phase-space/spectrum/macro各调用点；另只读核对RunSummary序列化与Python消费者。没有修改资源文件或前端实现，未重跑C++/后端测试；以下是静态代码证据，不能称运行验收。
+
+## 需要修复的发现
+
+### [P2] RNG读取账本在语义接受与引擎提交之后，拒绝的已读取文件完全漏记
+
+`src/Core/RandomCommandGuard.cc:265` 已取得 ReadSnapshot 的完整原始bytes；实际 RecordRead 在282–284，且role=`successful_engine_restore`。中间MixMax/James格式校验、候选restore或真实commit任何拒绝，均跳过账本。这与固定 `input_observation=bytes_read_not_semantic_acceptance` 及INI“解析拒绝仍记已读字节”不一致；一个坏restore文件确实被完整读取却无法在最终来源中找到。更具体地，282行SHA/ledger分配若抛异常，真实engine已经在276行改完，而新增操作处于rollback try之外，失败命令留下已改变引擎的状态。
+
+建议把原字节digest与RecordRead放在成功取得snapshot之后、语义解析与引擎提交之前；role表达restore验证/读取而非成功应用。应用成功继续由现有2C/命令收据表达。这样记账失败也发生在engine变更之前。原文件缺失/未读取任何字节时不应伪造recorded。
+
+必要反例：先执行一个合法run，再尝试“文件存在、完整可读取、格式非法”的restore；应失败、保留原engine状态，而ledger必须出现该原始文件hash；有效snapshot但候选状态拒绝也相同。再在新增ledger步骤注入抛错，证明真实engine未改。不能只测成功restore。
+
+### [P2] ReadFile仍用istreambuf_iterator，不能可靠检测底层短读/I/O错误
+
+`src/Config/InputProvenance.cc:107–108` 从istreambuf_iterator构造string，然后只检查input.bad()。迭代器直接通过streambuf取字符，底层underflow返回EOF不保证给所属istream设置badbit；因此不能用此检查证明“读到真实EOF而非I/O提前终止”。如果可解析前缀后遇读错误，可能把短前缀作为完整读取并登记SHA。HashFile的新input.read/gcount/状态检查循环比这里严谨，但实际输入读取没有同步。
+
+建议ReadFile也用有界read循环累积解析缓冲、检查bad/fail/eof，并对同一缓冲hash与parse。累积全部bytes用于现有解析是既有契约，并不要求此处把parser改为流式。若已部分读取但失败，不能给recorded完整文件身份；可明确unobserved/失败原因，或至少保证异常传播且不误登记完整值。
+
+必要反例：可控故障streambuf/文件读取器提供一段合法INI前缀后发生I/O失败，不能解析成功或得到recorded成功条目。普通缺文件/目录测试只覆盖打开前失败，不覆盖此路径。此读法早于F1存在，但本轮宣称失败读和精确身份时必须补证。
+
+### [P2] GDML非owner与stdin新增记账异常可泄漏刚打开的原生句柄
+
+`src/Geometry/GdmlInputCapture.cc:43–48`、64–69和88–93：source_.fileOpen/openStdIn已返回handle，随后MarkUnobserved会分配字符串/vector并可能抛异常；这些新分支不在下方owner捕获/close的try中，异常时未return给Xerces，也未source_.fileClose。owner路径已有关闭保护；Network非owner持有unique_ptr，因此没有同样的漏句柄问题。
+
+建议对已打开原生handle设小RAII guard，只有返回给调用者后release；或在新增记账失败时close再throw。不能简单吞记账异常后继续且宣称覆盖完整。
+
+必要反例：fake XMLFileMgr计数open/close，在非owner fileOpen与stdin的MarkUnobserved处注入失败，断言close一次且无handle逃逸；owner Capture异常保持原有一次close。此项是异常安全边界，常规GDML happy-path不足以证明。
+
+## 不列为缺陷的已确认点
+
+- SHA块处理看起来正确：56/64字节padding、长度上限、uint32回绕及流式64KiB有界HashFile；HashFile不调用RecordRead，因此输出哈希不会污染输入账本。现有新增测试覆盖空文件、55/56/63/64等边界、64KiB边界、Python hashlib对照；这是测试代码覆盖观察，未在本审查重跑。
+- ledger互斥保护Append/Snapshot；序列在push成功后才占位置，分配失败不留下空洞，Snapshot返回值不受后续追加污染。账本只留元数据，不保留巨量输入bytes；重复路径/重复版本不会去重。
+- INI/几何/材料/field/NIEL/phase-space/spectrum/macro已把同一个ReadFile返回bytes交parser；parser拒绝前已记read，未用最终化重开源路径代替真实消费。STL验证与构造有不同role，两次读若字节变化会分别留hash；旧2C构造收据不被新的历史读账覆盖。
+- GDML本地预缓冲与Xerces回放同一bytes，网络到EOF时才recorded；未到EOF析构MarkUnobserved；非owner放行但标unobserved。原全局Xerceshook通过NativeMutex串行安装与恢复。GDML记录不应被解读为语义接受。
+- 没有观察到本轮新增输入总bytes常驻账本或重复hash输入重新打开的问题。HashFile本身对并发外部改写不提供原子快照，这与scope明确边界一致，不另列bug。
+- ReadFile打开前失败当前不追加条目（新增测试明确断言），没有读到字节时这不等于虚假完整身份；不能为了数量补一个recorded。
+
+## producer/consumer只读协议核对
+
+RunSummary.cc:327–373与477–499已输出匹配的provenance和generated_files字段；reason是额外兼容字段，consumer接受。exclusions至少两个string、build固定字段、recorded/unobserved/null、self-reference排除均与消费者一致。unavailable artifact允许写失败证据，Python拒绝自动可信分析符合scope，不是兼容故障。
+
+发现需协调而不在此擅改：
+
+1. producer sequence校验是“首个1、随后严格递增”（可1,3）；Python identity.py目前要求恰好enumerate 1,2。真实ledger目前连续，所以正常输出不受影响，但正式scope只说单调，消费者应按producer/契约允许gap，或双方明确连续契约再冻结。
+2. producer build.source_fingerprint必须64小写hex或unknown；Python目前只检查非空string，较宽；producer git_commit只收小写hex，Python允许大写（也是较宽）。建议消费者收紧到producer规则以保持严格输入拒绝语义；本次遵照只读要求未改。
+3. producer unobserved path允许空，Python要求非空；当前实际MarkUnobserved调用传非空标识/命令/URL，暂未发现实际触发。建议统一明确未知路径用稳定非空token，避免一个合法producer文档在GUI被拒。
+4. Python对已知per-run ROOT/scorer/mesh文件强制run scope，producer ValidateArtifact只做通用scope及真实run登记；真实调用点应确保这些文件确为run，而不是process。等待root桥接产物实测。
+
+以上不替代资源代理的实际GDML/RNG测试、主任务桥接、故障注入或全量门禁。

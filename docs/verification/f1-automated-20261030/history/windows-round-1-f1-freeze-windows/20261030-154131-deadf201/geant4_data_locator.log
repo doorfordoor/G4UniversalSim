@@ -1,0 +1,21 @@
+G4USIM_ASSERTS=2
+Traceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 177, in <module>
+    raise SystemExit(main(sys.argv))
+                     ^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 153, in main
+    runpy.run_path(str(target), run_name="__main__")
+  File "<frozen runpy>", line 291, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\scripts\test_geant4_data_locator.py", line 137, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\scripts\test_geant4_data_locator.py", line 89, in main
+    linked = build_data_root(discovery, data)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\scripts\test_geant4_data_locator.py", line 61, in build_data_root
+    target.symlink_to(Path(source), target_is_directory=True)
+  File "C:\Users\123\AppData\Local\Programs\Python\Python311\Lib\pathlib.py", line 1198, in symlink_to
+    os.symlink(target, self, target_is_directory)
+OSError: [WinError 1314] 客户端没有所需的特权。: 'D:\\ProgramFiles\\Geant4\\share\\Geant4\\data\\G4EMLOW8.6.1' -> 'D:\\Temp\\g4usim-data-jzqi70ul\\data\\G4EMLOW8.6.1'

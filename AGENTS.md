@@ -4,6 +4,8 @@
 
 ## 0. 条目索引与历史全文
 
+- 2026-10-30 F1自动矩阵：产品f176d0e，Windows143/48511v3及E6基线、Linux双版本各143、M0双OS各64通过；自动归档原件保持。实窗pending、F1未关闭、未集成codex；不得用真实小run或合成页面替代窗口观察。详情见agent-history同日自动归档条目及 `docs/verification/f1-automated-20261030/README.md`。
+
 - 2026-10-30 F1 GDML 收尾：原生句柄取得后的缓冲分配必须在关闭保护范围内；测试线程异常须转回调用线程，仅 `std::bad_alloc`/Xerces `OutOfMemoryException` 作为预期分配拒绝，全局测试适配器须异常安全恢复。Windows通过不能覆盖Linux异常族差异。详情见agent-history同日第二轮条目。
 
 - 2026-10-30 F1首轮回归：后台加载时预设图表必须绑定当前目录/请求序号，完成后再选择；未知key必须清空旧图并明确报错，不能仅加等待掩盖默认图。Qt回传显式排队，旧请求完成不得覆盖新请求。Windows全量显式传实际 `G4USIM_GEANT4_DATA`，沿用E6普通权限路径，不更改系统链接权限。详见agent-history同日F1首轮失败条目。

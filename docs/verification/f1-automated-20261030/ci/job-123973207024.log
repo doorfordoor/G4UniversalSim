@@ -1,0 +1,1366 @@
+﻿2026-10-30T08:55:04.0885822Z Current runner version: '2.338.0'
+2026-10-30T08:55:04.0925543Z ##[group]Runner Image Provisioner
+2026-10-30T08:55:04.0927136Z Hosted Compute Agent
+2026-10-30T08:55:04.0928257Z Version: 20261021.618
+2026-10-30T08:55:04.0929405Z Commit: 21505ad2541d5be6135ed84fc33697146cf75b8e
+2026-10-30T08:55:04.0930724Z Build Date: 2026-10-21T00:45:21Z
+2026-10-30T08:55:04.0931907Z Worker ID: {1da9bb15-75ed-47ad-b58b-03fe962fc1a3}
+2026-10-30T08:55:04.0933559Z Region: eastus
+2026-10-30T08:55:04.0934677Z Cloud: Azure
+2026-10-30T08:55:04.0935650Z ##[endgroup]
+2026-10-30T08:55:04.0938418Z ##[group]Operating System
+2026-10-30T08:55:04.0939675Z Ubuntu
+2026-10-30T08:55:04.0940777Z 24.04.5
+2026-10-30T08:55:04.0941751Z LTS
+2026-10-30T08:55:04.0942576Z ##[endgroup]
+2026-10-30T08:55:04.0943964Z ##[group]Runner Image
+2026-10-30T08:55:04.0944977Z Image: ubuntu-24.04
+2026-10-30T08:55:04.0945992Z Version: 20261025.353.1
+2026-10-30T08:55:04.0948170Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261025.353/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-30T08:55:04.0950977Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261025.353
+2026-10-30T08:55:04.0952769Z ##[endgroup]
+2026-10-30T08:55:04.0955345Z ##[group]GITHUB_TOKEN Permissions
+2026-10-30T08:55:04.0958488Z Contents: read
+2026-10-30T08:55:04.0959610Z Metadata: read
+2026-10-30T08:55:04.0960611Z ##[endgroup]
+2026-10-30T08:55:04.0964349Z Secret source: Actions
+2026-10-30T08:55:04.0966073Z Cache mode: write
+2026-10-30T08:55:04.0967420Z Prepare workflow directory
+2026-10-30T08:55:04.1801515Z Prepare all required actions
+2026-10-30T08:55:04.1880939Z Getting action download info
+2026-10-30T08:55:04.3398032Z Download action repository 'actions/checkout@v7' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-10-30T08:55:04.4948883Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-10-30T08:55:04.8573214Z Complete job name: ubuntu-24.04 / Geant4 11.3.2
+2026-10-30T08:55:04.9519439Z ##[group]Run actions/checkout@v7
+2026-10-30T08:55:04.9520440Z with:
+2026-10-30T08:55:04.9520980Z   repository: doorfordoor/G4UniversalSim
+2026-10-30T08:55:04.9525486Z   token: ***
+2026-10-30T08:55:04.9526026Z   ssh-strict: true
+2026-10-30T08:55:04.9526526Z   ssh-user: git
+2026-10-30T08:55:04.9527034Z   persist-credentials: true
+2026-10-30T08:55:04.9527576Z   clean: true
+2026-10-30T08:55:04.9528092Z   sparse-checkout-cone-mode: true
+2026-10-30T08:55:04.9528672Z   fetch-depth: 1
+2026-10-30T08:55:04.9529157Z   fetch-tags: false
+2026-10-30T08:55:04.9529798Z   show-progress: true
+2026-10-30T08:55:04.9530583Z   lfs: false
+2026-10-30T08:55:04.9531086Z   submodules: false
+2026-10-30T08:55:04.9531600Z   set-safe-directory: true
+2026-10-30T08:55:04.9532165Z   allow-unsafe-pr-checkout: false
+2026-10-30T08:55:04.9533470Z env:
+2026-10-30T08:55:04.9534318Z   MAMBA_ROOT_PREFIX: /home/runner/work/G4UniversalSim/G4UniversalSim/.micromamba
+2026-10-30T08:55:04.9535405Z   G4_PREFIX: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2
+2026-10-30T08:55:04.9536208Z   GEANT4_VERSION: 11.3.2
+2026-10-30T08:55:04.9537048Z   REPORT_ROOT: /home/runner/work/G4UniversalSim/G4UniversalSim/out/verification/geant4-11.3.2
+2026-10-30T08:55:04.9537983Z   QT_QPA_PLATFORM: offscreen
+2026-10-30T08:55:04.9538519Z ##[endgroup]
+2026-10-30T08:55:05.6515198Z Syncing repository: doorfordoor/G4UniversalSim
+2026-10-30T08:55:05.6518565Z ##[group]Getting Git version info
+2026-10-30T08:55:05.6519798Z Working directory is '/home/runner/work/G4UniversalSim/G4UniversalSim'
+2026-10-30T08:55:05.6522335Z [command]/usr/bin/git version
+2026-10-30T08:55:05.6809956Z git version 2.56.0
+2026-10-30T08:55:05.6838863Z ##[endgroup]
+2026-10-30T08:55:05.6852145Z Temporarily overriding HOME='/home/runner/work/_temp/618fa911-9466-44c1-ac02-9be354751c13' before making global git config changes
+2026-10-30T08:55:05.6856675Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-30T08:55:05.6867028Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/G4UniversalSim/G4UniversalSim
+2026-10-30T08:55:05.6939370Z Deleting the contents of '/home/runner/work/G4UniversalSim/G4UniversalSim'
+2026-10-30T08:55:05.6943847Z ##[group]Determining repository object format
+2026-10-30T08:55:05.6947131Z ##[endgroup]
+2026-10-30T08:55:05.6951515Z ##[group]Initializing the repository
+2026-10-30T08:55:05.6955408Z [command]/usr/bin/git init /home/runner/work/G4UniversalSim/G4UniversalSim
+2026-10-30T08:55:05.7313121Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-30T08:55:05.7317025Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-30T08:55:05.7320749Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-30T08:55:05.7324139Z hint: call:
+2026-10-30T08:55:05.7325899Z hint:
+2026-10-30T08:55:05.7328037Z hint: 	git config --global init.defaultBranch <name>
+2026-10-30T08:55:05.7330663Z hint:
+2026-10-30T08:55:05.7333494Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-30T08:55:05.7337575Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-30T08:55:05.7340880Z hint:
+2026-10-30T08:55:05.7342795Z hint: 	git branch -m <name>
+2026-10-30T08:55:05.7345177Z hint:
+2026-10-30T08:55:05.7347802Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-30T08:55:05.7352684Z Initialized empty Git repository in /home/runner/work/G4UniversalSim/G4UniversalSim/.git/
+2026-10-30T08:55:05.7360245Z [command]/usr/bin/git remote add origin https://github.com/doorfordoor/G4UniversalSim
+2026-10-30T08:55:05.7407426Z ##[endgroup]
+2026-10-30T08:55:05.7410801Z ##[group]Disabling automatic garbage collection
+2026-10-30T08:55:05.7413824Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-30T08:55:05.7462385Z ##[endgroup]
+2026-10-30T08:55:05.7466039Z ##[group]Setting up auth
+2026-10-30T08:55:05.7468416Z Removing SSH command configuration
+2026-10-30T08:55:05.7472216Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-30T08:55:05.7666105Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-30T08:55:05.8265538Z Removing HTTP extra header
+2026-10-30T08:55:05.8272477Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-30T08:55:05.8318828Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-30T08:55:05.8556206Z Removing includeIf entries pointing to credentials config files
+2026-10-30T08:55:05.8561427Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-30T08:55:05.8609436Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-30T08:55:05.8856081Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-76cc3fc8-2b4d-48e7-b529-bcf9b9eae3ae.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-30T08:55:05.8907875Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/G4UniversalSim/G4UniversalSim/.git.path /home/runner/work/_temp/git-credentials-76cc3fc8-2b4d-48e7-b529-bcf9b9eae3ae.config
+2026-10-30T08:55:05.9250510Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/G4UniversalSim/G4UniversalSim/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-76cc3fc8-2b4d-48e7-b529-bcf9b9eae3ae.config
+2026-10-30T08:55:05.9297920Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-76cc3fc8-2b4d-48e7-b529-bcf9b9eae3ae.config
+2026-10-30T08:55:05.9343582Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-76cc3fc8-2b4d-48e7-b529-bcf9b9eae3ae.config
+2026-10-30T08:55:05.9411731Z ##[endgroup]
+2026-10-30T08:55:05.9414668Z ##[group]Fetching the repository
+2026-10-30T08:55:05.9420566Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +f176d0ed4cea60b7ca5a80ed81017c9404ec1257:refs/remotes/origin/roadmap/F1-output-provenance
+2026-10-30T08:55:06.9939300Z From https://github.com/doorfordoor/G4UniversalSim
+2026-10-30T08:55:06.9940468Z  * [new ref]         f176d0ed4cea60b7ca5a80ed81017c9404ec1257 -> origin/roadmap/F1-output-provenance
+2026-10-30T08:55:06.9963632Z [command]/usr/bin/git branch --list --remote origin/roadmap/F1-output-provenance
+2026-10-30T08:55:06.9988188Z   origin/roadmap/F1-output-provenance
+2026-10-30T08:55:06.9997630Z [command]/usr/bin/git rev-parse refs/remotes/origin/roadmap/F1-output-provenance
+2026-10-30T08:55:07.0034422Z f176d0ed4cea60b7ca5a80ed81017c9404ec1257
+2026-10-30T08:55:07.0038838Z ##[endgroup]
+2026-10-30T08:55:07.0039420Z ##[group]Determining the checkout info
+2026-10-30T08:55:07.0040183Z ##[endgroup]
+2026-10-30T08:55:07.0045114Z [command]/usr/bin/git sparse-checkout disable
+2026-10-30T08:55:07.0111214Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-30T08:55:07.0153101Z ##[group]Checking out the ref
+2026-10-30T08:55:07.0157368Z [command]/usr/bin/git checkout --progress --force -B roadmap/F1-output-provenance refs/remotes/origin/roadmap/F1-output-provenance
+2026-10-30T08:55:07.4405345Z Switched to a new branch 'roadmap/F1-output-provenance'
+2026-10-30T08:55:07.4412567Z branch 'roadmap/F1-output-provenance' set up to track 'origin/roadmap/F1-output-provenance'.
+2026-10-30T08:55:07.4433547Z ##[endgroup]
+2026-10-30T08:55:07.4523759Z [command]/usr/bin/git log -1 --format=%H
+2026-10-30T08:55:07.4546280Z f176d0ed4cea60b7ca5a80ed81017c9404ec1257
+2026-10-30T08:55:07.4772639Z ##[group]Run set -euo pipefail
+2026-10-30T08:55:07.4773249Z [36;1mset -euo pipefail[0m
+2026-10-30T08:55:07.4773769Z [36;1mcurl -Ls https://micro.mamba.pm/api/micromamba/linux-64/latest | tar -xj bin/micromamba[0m
+2026-10-30T08:55:07.4774282Z [36;1m./bin/micromamba --version[0m
+2026-10-30T08:55:07.4798031Z shell: /usr/bin/bash -e {0}
+2026-10-30T08:55:07.4798316Z env:
+2026-10-30T08:55:07.4798665Z   MAMBA_ROOT_PREFIX: /home/runner/work/G4UniversalSim/G4UniversalSim/.micromamba
+2026-10-30T08:55:07.4799206Z   G4_PREFIX: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2
+2026-10-30T08:55:07.4799618Z   GEANT4_VERSION: 11.3.2
+2026-10-30T08:55:07.4800039Z   REPORT_ROOT: /home/runner/work/G4UniversalSim/G4UniversalSim/out/verification/geant4-11.3.2
+2026-10-30T08:55:07.4800502Z   QT_QPA_PLATFORM: offscreen
+2026-10-30T08:55:07.4800779Z ##[endgroup]
+2026-10-30T08:55:09.2283326Z 2.10.0
+2026-10-30T08:55:09.2330662Z ##[group]Run set -euo pipefail
+2026-10-30T08:55:09.2331009Z [36;1mset -euo pipefail[0m
+2026-10-30T08:55:09.2331359Z [36;1m./bin/micromamba create -y -p "$G4_PREFIX" -c conda-forge \[0m
+2026-10-30T08:55:09.2331850Z [36;1m  "geant4=$GEANT4_VERSION" "python=3.11" pip expat zlib freetype[0m
+2026-10-30T08:55:09.2332261Z [36;1m"$G4_PREFIX/bin/geant4-config" --version[0m
+2026-10-30T08:55:09.2332707Z [36;1m# The integration suite imports the desktop application, so the full GUI[0m
+2026-10-30T08:55:09.2333594Z [36;1m# requirements are needed; uproot is what reads ROOT from the backend.[0m
+2026-10-30T08:55:09.2334131Z [36;1m./bin/micromamba run -p "$G4_PREFIX" -- python -m pip install --quiet\[0m
+2026-10-30T08:55:09.2334538Z [36;1m  -r gui/requirements.txt[0m
+2026-10-30T08:55:09.2354490Z shell: /usr/bin/bash -e {0}
+2026-10-30T08:55:09.2354743Z env:
+2026-10-30T08:55:09.2355095Z   MAMBA_ROOT_PREFIX: /home/runner/work/G4UniversalSim/G4UniversalSim/.micromamba
+2026-10-30T08:55:09.2355666Z   G4_PREFIX: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2
+2026-10-30T08:55:09.2356071Z   GEANT4_VERSION: 11.3.2
+2026-10-30T08:55:09.2356482Z   REPORT_ROOT: /home/runner/work/G4UniversalSim/G4UniversalSim/out/verification/geant4-11.3.2
+2026-10-30T08:55:09.2357096Z   QT_QPA_PLATFORM: offscreen
+2026-10-30T08:55:09.2357333Z ##[endgroup]
+2026-10-30T08:55:09.2884789Z Fetch Shard Index for conda-forge/linux-64                                                      ⧖ Starting
+2026-10-30T08:55:09.3285899Z Fetch Shard Index for conda-forge/linux-64                                                ✔ Done (0.0 sec)
+2026-10-30T08:55:09.3287237Z Fetch Shard Index for conda-forge/noarch                                                        ⧖ Starting
+2026-10-30T08:55:09.3774733Z Fetch Shard Index for conda-forge/noarch                                                  ✔ Done (0.0 sec)
+2026-10-30T08:55:09.3776032Z Fetching and Parsing Packages' Shards                                                           ⧖ Starting
+2026-10-30T08:55:12.1313224Z Fetching and Parsing Packages' Shards                                                     ✔ Done (2.8 sec)
+2026-10-30T08:55:12.3881219Z 
+2026-10-30T08:55:12.3882542Z Resolving Environment                                                                           ⧖ Starting
+2026-10-30T08:55:12.8118030Z Resolving Environment                                                                     ✔ Done (0.4 sec)
+2026-10-30T08:55:12.8120132Z 
+2026-10-30T08:55:12.8120339Z Transaction
+2026-10-30T08:55:12.8120572Z 
+2026-10-30T08:55:12.8121163Z   Prefix: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2
+2026-10-30T08:55:12.8121746Z 
+2026-10-30T08:55:12.8122085Z   Updating specs:
+2026-10-30T08:55:12.8125049Z 
+2026-10-30T08:55:12.8125509Z    - geant4=11.3.2
+2026-10-30T08:55:12.8125998Z    - python=3.11
+2026-10-30T08:55:12.8126454Z    - pip
+2026-10-30T08:55:12.8126865Z    - expat
+2026-10-30T08:55:12.8127277Z    - zlib
+2026-10-30T08:55:12.8127671Z    - freetype
+2026-10-30T08:55:12.8127924Z 
+2026-10-30T08:55:12.8127931Z 
+2026-10-30T08:55:12.9526344Z   Package                               Version  Build                 Channel          Size
+2026-10-30T08:55:12.9528924Z warning  libmamba Security Warning: This transaction includes executing package scripts (pre/post-link/unlink) if present. These scripts can contain arbitrary code. Please ensure you trust the package sources.
+2026-10-30T08:55:12.9531013Z ──────────────────────────────────────────────────────────────────────────────────────────────
+2026-10-30T08:55:12.9531682Z   Install:
+2026-10-30T08:55:12.9532392Z ──────────────────────────────────────────────────────────────────────────────────────────────
+2026-10-30T08:55:12.9533178Z 
+2026-10-30T08:55:12.9533543Z   + _openmp_mutex                           4.5  20_gnu                conda-forge      29kB
+2026-10-30T08:55:12.9534298Z   + alsa-lib                           1.2.16.1  h7cc23a3_1            conda-forge     595kB
+2026-10-30T08:55:12.9535105Z   + bzip2                                 1.0.8  hda65f42_10           conda-forge     258kB
+2026-10-30T08:55:12.9535641Z   + c-ares                               1.34.9  hebe6cf0_0            conda-forge     234kB
+2026-10-30T08:55:12.9536267Z   + ca-certificates                  2026.10.23  hbd8a1cb_0            conda-forge     130kB
+2026-10-30T08:55:12.9536837Z   + cairo                                1.18.6  h3c89d7e_0            conda-forge       1MB
+2026-10-30T08:55:12.9537355Z   + clhep                               2.4.7.1  h59595ed_0            conda-forge       1MB
+2026-10-30T08:55:12.9537885Z   + cyrus-sasl                           2.1.28  hac629b4_1            conda-forge     210kB
+2026-10-30T08:55:12.9538409Z   + dbus                                 1.16.2  he8c428d_2            conda-forge     450kB
+2026-10-30T08:55:12.9538937Z   + expat                                 2.9.0  hd2095e1_0            conda-forge     153kB
+2026-10-30T08:55:12.9539535Z   + font-ttf-dejavu-sans-mono              2.37  hab24e00_0            conda-forge     397kB
+2026-10-30T08:55:12.9540171Z   + font-ttf-inconsolata                  3.000  h77eed37_0            conda-forge      97kB
+2026-10-30T08:55:12.9540736Z   + font-ttf-source-code-pro              2.038  h77eed37_0            conda-forge     701kB
+2026-10-30T08:55:12.9541396Z   + font-ttf-ubuntu                        0.83  h77eed37_3            conda-forge       2MB
+2026-10-30T08:55:12.9541861Z   + fontconfig                           2.18.3  h4db4eae_1            conda-forge     296kB
+2026-10-30T08:55:12.9542342Z   + fonts-conda-ecosystem                     1  0                     conda-forge       4kB
+2026-10-30T08:55:12.9543059Z   + fonts-conda-forge                         1  hc364b38_1            conda-forge       4kB
+2026-10-30T08:55:12.9543681Z   + freetype                             2.14.3  ha770c72_2            conda-forge     175kB
+2026-10-30T08:55:12.9544114Z   + fribidi                              1.0.18  h7cc23a3_0            conda-forge      65kB
+2026-10-30T08:55:12.9544545Z   + geant4                               11.3.2  py311h866470e_7       conda-forge      38MB
+2026-10-30T08:55:12.9544999Z   + geant4-data-abla                        3.3  hd8ed1ab_1            conda-forge     116kB
+2026-10-30T08:55:12.9545498Z   + geant4-data-channeling                1.0.0  hd8ed1ab_0            conda-forge       2MB
+2026-10-30T08:55:12.9545997Z   + geant4-data-emlow                     8.6.1  hd8ed1ab_0            conda-forge     307MB
+2026-10-30T08:55:12.9546488Z   + geant4-data-ensdfstate                  3.0  hd8ed1ab_0            conda-forge     230kB
+2026-10-30T08:55:12.9546976Z   + geant4-data-incl                        1.2  hd8ed1ab_1            conda-forge      78kB
+2026-10-30T08:55:12.9547448Z   + geant4-data-ndl                       4.7.1  hd8ed1ab_1            conda-forge       1GB
+2026-10-30T08:55:12.9547936Z   + geant4-data-particlexs                4.1.0  hd8ed1ab_0            conda-forge       6MB
+2026-10-30T08:55:12.9548483Z   + geant4-data-photonevaporation           6.1  hd8ed1ab_0            conda-forge       8MB
+2026-10-30T08:55:12.9549011Z   + geant4-data-pii                         1.3  hd8ed1ab_2            conda-forge       3MB
+2026-10-30T08:55:12.9549523Z   + geant4-data-radioactivedecay          6.1.2  hd8ed1ab_0            conda-forge     765kB
+2026-10-30T08:55:12.9550059Z   + geant4-data-realsurface                 2.2  hd8ed1ab_1            conda-forge     132MB
+2026-10-30T08:55:12.9550556Z   + geant4-data-saiddata                    2.0  hd8ed1ab_1            conda-forge      33kB
+2026-10-30T08:55:12.9551007Z   + glib                                 2.90.0  h5e3c387_0            conda-forge      86kB
+2026-10-30T08:55:12.9551428Z   + glib-tools                           2.90.0  h3d503d9_0            conda-forge     237kB
+2026-10-30T08:55:12.9551865Z   + graphite2                            1.3.15  h54a6638_1            conda-forge     103kB
+2026-10-30T08:55:12.9552479Z   + gst-plugins-base                    1.26.11  h6d08254_0            conda-forge       3MB
+2026-10-30T08:55:12.9553305Z   + gstreamer                           1.26.11  h29cf534_0            conda-forge       2MB
+2026-10-30T08:55:12.9553756Z   + harfbuzz                             15.0.0  ha770c72_0            conda-forge      11kB
+2026-10-30T08:55:12.9554187Z   + hdf5                                 1.14.6  nompi_h19486de_110    conda-forge       4MB
+2026-10-30T08:55:12.9554604Z   + icu                                    78.3  py310h44b86e0_2       conda-forge      14MB
+2026-10-30T08:55:12.9555027Z   + keyutils                              1.6.3  h7cc23a3_1            conda-forge     135kB
+2026-10-30T08:55:12.9555444Z   + krb5                                 1.22.2  hbc21106_2            conda-forge       1MB
+2026-10-30T08:55:12.9555855Z   + lame                                    4.0  h770b6ad_1            conda-forge     304kB
+2026-10-30T08:55:12.9556286Z   + ld_impl_linux-64                     2.46.1  default_hbd61a6d_103  conda-forge     742kB
+2026-10-30T08:55:12.9556737Z   + libaec                                1.1.7  h659bb9a_0            conda-forge      38kB
+2026-10-30T08:55:12.9557167Z   + libblas                              3.11.0  11_h4a7cf45_openblas  conda-forge      18kB
+2026-10-30T08:55:12.9557746Z   + libboost                             1.90.0  h1101c1b_3            conda-forge       3MB
+2026-10-30T08:55:12.9558196Z   + libboost-python                      1.90.0  py311hffe79c6_3       conda-forge     127kB
+2026-10-30T08:55:12.9558648Z   + libcap                                 2.78  h084b8d7_1            conda-forge     124kB
+2026-10-30T08:55:12.9559080Z   + libcblas                             3.11.0  11_h0358290_openblas  conda-forge      18kB
+2026-10-30T08:55:12.9559601Z   + libclang-cpp22.1                     22.1.8  default_h0acdd01_11   conda-forge      25MB
+2026-10-30T08:55:12.9560115Z   + libclang-cpp23.1                     23.1.4  default_h0acdd01_1    conda-forge      25MB
+2026-10-30T08:55:12.9560578Z   + libclang13                           23.1.4  default_h6e6c352_1    conda-forge      15MB
+2026-10-30T08:55:12.9561019Z   + libcups                               2.3.3  h7a8fb5f_6            conda-forge       5MB
+2026-10-30T08:55:12.9561440Z   + libcurl                              8.23.0  ha042cf0_0            conda-forge     506kB
+2026-10-30T08:55:12.9561870Z   + libdrm                              2.4.129  h7cc23a3_0            conda-forge     313kB
+2026-10-30T08:55:12.9562306Z   + libedit                        3.1.20260512  pl5321h373387f_0      conda-forge     136kB
+2026-10-30T08:55:12.9562740Z   + libegl                                1.7.0  ha4b6fd6_5            conda-forge      47kB
+2026-10-30T08:55:12.9563311Z   + libev                                  4.33  h280c20c_3            conda-forge      43kB
+2026-10-30T08:55:12.9563736Z   + libevent                             2.1.12  h5348a74_2            conda-forge     431kB
+2026-10-30T08:55:12.9564166Z   + libexpat                              2.9.0  hd2095e1_0            conda-forge      79kB
+2026-10-30T08:55:12.9564595Z   + libffi                                3.7.0  h81df57d_1            conda-forge      68kB
+2026-10-30T08:55:12.9565021Z   + libflac                               1.5.0  he200343_1            conda-forge     425kB
+2026-10-30T08:55:12.9565462Z   + libfreetype                          2.14.3  ha770c72_2            conda-forge       8kB
+2026-10-30T08:55:12.9565915Z   + libfreetype6                         2.14.3  h5e6c136_2            conda-forge     388kB
+2026-10-30T08:55:12.9566460Z   + libgcc                               16.2.0  ha9f2e26_7            conda-forge       1MB
+2026-10-30T08:55:12.9566889Z   + libgcc-ng                            16.2.0  h69a702a_7            conda-forge      29kB
+2026-10-30T08:55:12.9567325Z   + libgfortran                          16.2.0  h69a702a_7            conda-forge      29kB
+2026-10-30T08:55:12.9567773Z   + libgfortran5                         16.2.0  h6b99dfc_7            conda-forge       3MB
+2026-10-30T08:55:12.9568343Z   + libgl                                 1.7.0  ha4b6fd6_5            conda-forge     132kB
+2026-10-30T08:55:12.9568778Z   + libgl-devel                           1.7.0  ha4b6fd6_5            conda-forge     116kB
+2026-10-30T08:55:12.9569224Z   + libglib                              2.90.0  h569388d_0            conda-forge       5MB
+2026-10-30T08:55:12.9569646Z   + libglu                                9.0.3  h5888daf_1            conda-forge     325kB
+2026-10-30T08:55:12.9570069Z   + libglvnd                              1.7.0  ha4b6fd6_5            conda-forge     134kB
+2026-10-30T08:55:12.9570489Z   + libglx                                1.7.0  ha4b6fd6_5            conda-forge      80kB
+2026-10-30T08:55:12.9570927Z   + libglx-devel                          1.7.0  ha4b6fd6_5            conda-forge      28kB
+2026-10-30T08:55:12.9571368Z   + libgomp                              16.2.0  he0feb66_7            conda-forge     641kB
+2026-10-30T08:55:12.9571822Z   + libharfbuzz                          15.0.0  h23af247_0            conda-forge       2MB
+2026-10-30T08:55:12.9572291Z   + libharfbuzz-devel                    15.0.0  h23af247_0            conda-forge       2MB
+2026-10-30T08:55:12.9572746Z   + libiconv                               1.18  h0cb94f2_3            conda-forge     789kB
+2026-10-30T08:55:12.9573659Z   + libjpeg-turbo                         3.2.1  h7cc23a3_0            conda-forge     654kB
+2026-10-30T08:55:12.9574117Z   + liblapack                            3.11.0  11_h47877c9_openblas  conda-forge      18kB
+2026-10-30T08:55:12.9574555Z   + libllvm22                            22.1.8  h474f4eb_3            conda-forge      45MB
+2026-10-30T08:55:12.9574987Z   + libllvm23                            23.1.4  h474f4eb_1            conda-forge      45MB
+2026-10-30T08:55:12.9575425Z   + liblzma                               5.8.3  hb03c661_1            conda-forge     113kB
+2026-10-30T08:55:12.9575864Z   + libnghttp2                           1.70.0  hc5e5977_0            conda-forge     833kB
+2026-10-30T08:55:12.9576300Z   + libnsl                                2.0.1  hb9d3cd8_1            conda-forge      34kB
+2026-10-30T08:55:12.9576744Z   + libntlm                                 1.8  hb9d3cd8_0            conda-forge      33kB
+2026-10-30T08:55:12.9577170Z   + libogg                                1.3.5  hd0c01bc_1            conda-forge     218kB
+2026-10-30T08:55:12.9577625Z   + libopenblas                          0.3.34  pthreads_hf13c14d_2   conda-forge       7MB
+2026-10-30T08:55:12.9578076Z   + libopengl                             1.7.0  ha4b6fd6_5            conda-forge      51kB
+2026-10-30T08:55:12.9578508Z   + libopus                               1.6.1  hebe6cf0_1            conda-forge     330kB
+2026-10-30T08:55:12.9578938Z   + libpango                             1.58.2  hce4e988_3            conda-forge     344kB
+2026-10-30T08:55:12.9579383Z   + libpango-devel                       1.58.2  h317d9d0_3            conda-forge     211kB
+2026-10-30T08:55:12.9579859Z   + libpciaccess                           0.19  hb03c661_1            conda-forge      30kB
+2026-10-30T08:55:12.9580293Z   + libpng                               1.6.59  h922cc85_0            conda-forge     317kB
+2026-10-30T08:55:12.9580710Z   + libpq                                  18.6  h3883810_3            conda-forge       3MB
+2026-10-30T08:55:12.9581131Z   + libpsl                               0.23.1  hd9e3e90_1            conda-forge      73kB
+2026-10-30T08:55:12.9581565Z   + libpython                           3.11.18  ha57cdbe_0_cpython    conda-forge       8MB
+2026-10-30T08:55:12.9582008Z   + libsndfile                            1.2.2  hbc6d301_3            conda-forge     388kB
+2026-10-30T08:55:12.9582444Z   + libsqlite                            3.54.1  h13e7031_0            conda-forge     984kB
+2026-10-30T08:55:12.9583118Z   + libssh2                              1.11.1  h6154650_1            conda-forge     306kB
+2026-10-30T08:55:12.9583564Z   + libstdcxx                            16.2.0  h934c35e_7            conda-forge       7MB
+2026-10-30T08:55:12.9584146Z   + libstdcxx-ng                         16.2.0  hdf11a46_7            conda-forge      29kB
+2026-10-30T08:55:12.9584598Z   + libsystemd0                           262.1  h26e0ef7_0            conda-forge     575kB
+2026-10-30T08:55:12.9585043Z   + libuuid                              2.42.4  hcfc3c73_0            conda-forge      34kB
+2026-10-30T08:55:12.9585471Z   + libvorbis                             1.3.7  h54a6638_2            conda-forge     286kB
+2026-10-30T08:55:12.9585896Z   + libxcb                               1.17.0  hb83e432_2            conda-forge     395kB
+2026-10-30T08:55:12.9586317Z   + libxcrypt                            4.4.38  h280c20c_0            conda-forge     102kB
+2026-10-30T08:55:12.9586761Z   + libxkbcommon                         1.13.2  h59c2f34_2            conda-forge     945kB
+2026-10-30T08:55:12.9587198Z   + libxml2                              2.15.4  h7df9aa5_1            conda-forge      47kB
+2026-10-30T08:55:12.9587630Z   + libxml2-16                           2.15.4  hf3af7cc_1            conda-forge     569kB
+2026-10-30T08:55:12.9588058Z   + libzlib                               1.3.2  h25fd6f3_3            conda-forge      64kB
+2026-10-30T08:55:12.9588662Z   + mpg123                               1.33.7  h877a99e_1            conda-forge     491kB
+2026-10-30T08:55:12.9589106Z   + ncurses                                 6.6  hdb14827_1            conda-forge     911kB
+2026-10-30T08:55:12.9589521Z   + nspr                                   4.40  h29cc59b_0            conda-forge     231kB
+2026-10-30T08:55:12.9589930Z   + nss                                   3.118  h445c969_0            conda-forge       2MB
+2026-10-30T08:55:12.9590341Z   + numpy                                 2.4.6  py311h2e04523_0       conda-forge       9MB
+2026-10-30T08:55:12.9590774Z   + openldap                             2.6.13  hbde042b_0            conda-forge     786kB
+2026-10-30T08:55:12.9591203Z   + openssl                               3.6.5  h781a0a9_0            conda-forge       3MB
+2026-10-30T08:55:12.9591634Z   + packaging                              26.3  pyhc364b38_0          conda-forge     116kB
+2026-10-30T08:55:12.9592071Z   + pango                                1.58.2  h2f58602_3            conda-forge      15kB
+2026-10-30T08:55:12.9592498Z   + pcre2                                 10.47  h8b3dc9c_1            conda-forge       1MB
+2026-10-30T08:55:12.9593168Z   + pip                                  26.2.2  pyh8b19718_0          conda-forge       1MB
+2026-10-30T08:55:12.9593595Z   + pixman                               0.46.4  h54a6638_3            conda-forge     377kB
+2026-10-30T08:55:12.9594034Z   + pthread-stubs                           0.4  h7cc23a3_1004         conda-forge      10kB
+2026-10-30T08:55:12.9594502Z   + pulseaudio-client                      17.0  hb10c1b2_4            conda-forge     755kB
+2026-10-30T08:55:12.9594957Z   + python                              3.11.18  h5f976f7_0_cpython    conda-forge      23MB
+2026-10-30T08:55:12.9595393Z   + python_abi                             3.11  9_cp311               conda-forge       7kB
+2026-10-30T08:55:12.9595818Z   + qt-main                             5.15.15  h0c412b5_8            conda-forge      53MB
+2026-10-30T08:55:12.9596247Z   + readline                                8.3  hd6e31c0_1            conda-forge     349kB
+2026-10-30T08:55:12.9596689Z   + setuptools                           84.2.1  pyhe730653_0          conda-forge     567kB
+2026-10-30T08:55:12.9597117Z   + tk                                   8.6.13  noxft_h1df4ec4_4      conda-forge       4MB
+2026-10-30T08:55:12.9597529Z   + tzdata                                2026e  h5d301ff_0            conda-forge     119kB
+2026-10-30T08:55:12.9597953Z   + wheel                                0.48.0  pyhd8ed1ab_0          conda-forge      35kB
+2026-10-30T08:55:12.9598381Z   + xcb-util                              0.4.1  h4f16b4b_2            conda-forge      21kB
+2026-10-30T08:55:12.9599032Z   + xcb-util-image                        0.4.0  hb711507_2            conda-forge      25kB
+2026-10-30T08:55:12.9599501Z   + xcb-util-keysyms                      0.4.1  hb711507_0            conda-forge      14kB
+2026-10-30T08:55:12.9599988Z   + xcb-util-renderutil                  0.3.10  hb711507_0            conda-forge      17kB
+2026-10-30T08:55:12.9600452Z   + xcb-util-wm                           0.4.2  hb711507_0            conda-forge      52kB
+2026-10-30T08:55:12.9600881Z   + xerces-c                              3.3.0  h78fed68_2            conda-forge       2MB
+2026-10-30T08:55:12.9601330Z   + xkeyboard-config                       2.48  hebe6cf0_1            conda-forge     442kB
+2026-10-30T08:55:12.9601822Z   + xorg-libice                           1.1.2  h280c20c_0            conda-forge      63kB
+2026-10-30T08:55:12.9602258Z   + xorg-libsm                            1.2.6  h0d788c3_1            conda-forge      31kB
+2026-10-30T08:55:12.9602694Z   + xorg-libx11                          1.8.14  hb83e432_0            conda-forge     847kB
+2026-10-30T08:55:12.9603279Z   + xorg-libxau                          1.0.12  h7cc23a3_2            conda-forge      19kB
+2026-10-30T08:55:12.9603744Z   + xorg-libxdamage                       1.1.6  hb9d3cd8_0            conda-forge      13kB
+2026-10-30T08:55:12.9604324Z   + xorg-libxdmcp                         1.1.5  h7cc23a3_2            conda-forge      23kB
+2026-10-30T08:55:12.9604774Z   + xorg-libxext                          1.3.7  h7cc23a3_1            conda-forge      53kB
+2026-10-30T08:55:12.9605230Z   + xorg-libxfixes                        6.0.2  h7cc23a3_1            conda-forge      21kB
+2026-10-30T08:55:12.9605684Z   + xorg-libxmu                           1.3.1  hb03c661_0            conda-forge      90kB
+2026-10-30T08:55:12.9606138Z   + xorg-libxrender                      0.9.13  h7cc23a3_0            conda-forge      35kB
+2026-10-30T08:55:12.9606611Z   + xorg-libxshmfence                     1.3.3  h7cc23a3_0            conda-forge      15kB
+2026-10-30T08:55:12.9607081Z   + xorg-libxt                            1.3.1  h7cc23a3_1            conda-forge     384kB
+2026-10-30T08:55:12.9607529Z   + xorg-libxxf86vm                       1.1.7  hb03c661_0            conda-forge      19kB
+2026-10-30T08:55:12.9607999Z   + xorg-xorgproto                       2025.1  hebe6cf0_3            conda-forge     596kB
+2026-10-30T08:55:12.9608434Z   + zlib                                  1.3.2  h25fd6f3_3            conda-forge      96kB
+2026-10-30T08:55:12.9608839Z   + zstd                                  1.5.7  hb78ec9c_7            conda-forge     601kB
+2026-10-30T08:55:12.9609098Z 
+2026-10-30T08:55:12.9609175Z   Summary:
+2026-10-30T08:55:12.9609287Z 
+2026-10-30T08:55:12.9609375Z   Install: 158 packages
+2026-10-30T08:55:12.9609514Z 
+2026-10-30T08:55:12.9609597Z   Total download: 2GB
+2026-10-30T08:55:12.9609744Z 
+2026-10-30T08:55:12.9610114Z ──────────────────────────────────────────────────────────────────────────────────────────────
+2026-10-30T08:55:12.9610385Z 
+2026-10-30T08:55:12.9610388Z 
+2026-10-30T08:55:12.9610409Z 
+2026-10-30T08:55:12.9610497Z Transaction starting
+2026-10-30T08:55:25.4065713Z Linking geant4-data-emlow-8.6.1-hd8ed1ab_0
+2026-10-30T08:55:26.1015056Z Linking geant4-data-radioactivedecay-6.1.2-hd8ed1ab_0
+2026-10-30T08:55:26.2927519Z Linking geant4-data-photonevaporation-6.1-hd8ed1ab_0
+2026-10-30T08:55:26.5804604Z Linking geant4-data-particlexs-4.1.0-hd8ed1ab_0
+2026-10-30T08:55:26.8339960Z Linking geant4-data-ensdfstate-3.0-hd8ed1ab_0
+2026-10-30T08:55:26.8358504Z Linking geant4-data-channeling-1.0.0-hd8ed1ab_0
+2026-10-30T08:55:26.8372387Z Linking tzdata-2026e-h5d301ff_0
+2026-10-30T08:55:26.8679263Z Linking ca-certificates-2026.10.23-hbd8a1cb_0
+2026-10-30T08:55:26.8688585Z Linking python_abi-3.11-9_cp311
+2026-10-30T08:55:26.8693486Z Linking geant4-data-ndl-4.7.1-hd8ed1ab_1
+2026-10-30T08:55:27.8870012Z Linking geant4-data-abla-3.3-hd8ed1ab_1
+2026-10-30T08:55:27.8887180Z Linking geant4-data-realsurface-2.2-hd8ed1ab_1
+2026-10-30T08:55:27.8920291Z Linking geant4-data-saiddata-2.0-hd8ed1ab_1
+2026-10-30T08:55:27.8950595Z Linking geant4-data-pii-1.3-hd8ed1ab_2
+2026-10-30T08:55:28.2741637Z Linking geant4-data-incl-1.2-hd8ed1ab_1
+2026-10-30T08:55:28.2758727Z Linking font-ttf-dejavu-sans-mono-2.37-hab24e00_0
+2026-10-30T08:55:28.2766840Z Linking font-ttf-inconsolata-3.000-h77eed37_0
+2026-10-30T08:55:28.2773812Z Linking font-ttf-source-code-pro-2.038-h77eed37_0
+2026-10-30T08:55:28.2788044Z Linking font-ttf-ubuntu-0.83-h77eed37_3
+2026-10-30T08:55:28.2800612Z Linking fonts-conda-forge-1-hc364b38_1
+2026-10-30T08:55:28.2806669Z Linking fonts-conda-ecosystem-1-0
+2026-10-30T08:55:28.2812001Z Linking libzlib-1.3.2-h25fd6f3_3
+2026-10-30T08:55:28.2819412Z Linking libglvnd-1.7.0-ha4b6fd6_5
+2026-10-30T08:55:28.2827121Z Linking libgomp-16.2.0-he0feb66_7
+2026-10-30T08:55:28.2835265Z Linking zstd-1.5.7-hb78ec9c_7
+2026-10-30T08:55:28.2853959Z Linking zlib-1.3.2-h25fd6f3_3
+2026-10-30T08:55:28.2863240Z Linking libopengl-1.7.0-ha4b6fd6_5
+2026-10-30T08:55:28.2869818Z Linking libegl-1.7.0-ha4b6fd6_5
+2026-10-30T08:55:28.2878400Z Linking _openmp_mutex-4.5-20_gnu
+2026-10-30T08:55:28.2897179Z Linking ld_impl_linux-64-2.46.1-default_hbd61a6d_103
+2026-10-30T08:55:28.3035275Z Linking libgcc-16.2.0-ha9f2e26_7
+2026-10-30T08:55:28.3050078Z Linking libev-4.33-h280c20c_3
+2026-10-30T08:55:28.3058388Z Linking c-ares-1.34.9-hebe6cf0_0
+2026-10-30T08:55:28.3153868Z Linking libpciaccess-0.19-hb03c661_1
+2026-10-30T08:55:28.3164437Z Linking fribidi-1.0.18-h7cc23a3_0
+2026-10-30T08:55:28.3185563Z Linking xorg-libxshmfence-1.3.3-h7cc23a3_0
+2026-10-30T08:55:28.3196241Z Linking keyutils-1.6.3-h7cc23a3_1
+2026-10-30T08:55:28.3240931Z Linking xorg-libxdmcp-1.1.5-h7cc23a3_2
+2026-10-30T08:55:28.3250592Z Linking libgfortran5-16.2.0-h6b99dfc_7
+2026-10-30T08:55:28.3259609Z Linking xorg-libxau-1.0.12-h7cc23a3_2
+2026-10-30T08:55:28.3269116Z Linking xorg-xorgproto-2025.1-hebe6cf0_3
+2026-10-30T08:55:28.3403955Z Linking libogg-1.3.5-hd0c01bc_1
+2026-10-30T08:55:28.3475178Z Linking libopus-1.6.1-hebe6cf0_1
+2026-10-30T08:55:28.3487406Z Linking libcap-2.78-h084b8d7_1
+2026-10-30T08:55:28.3547071Z Linking libiconv-1.18-h0cb94f2_3
+2026-10-30T08:55:28.3607375Z Linking xorg-libice-1.1.2-h280c20c_0
+2026-10-30T08:55:28.3627331Z Linking alsa-lib-1.2.16.1-h7cc23a3_1
+2026-10-30T08:55:28.3765839Z Linking libntlm-1.8-hb9d3cd8_0
+2026-10-30T08:55:28.3776453Z Linking libjpeg-turbo-3.2.1-h7cc23a3_0
+2026-10-30T08:55:28.3806692Z Linking bzip2-1.0.8-hda65f42_10
+2026-10-30T08:55:28.3824989Z Linking libnsl-2.0.1-hb9d3cd8_1
+2026-10-30T08:55:28.3837555Z Linking openssl-3.6.5-h781a0a9_0
+2026-10-30T08:55:28.4012766Z Linking libffi-3.7.0-h81df57d_1
+2026-10-30T08:55:28.4025949Z Linking liblzma-5.8.3-hb03c661_1
+2026-10-30T08:55:28.4032090Z Linking ncurses-6.6-hdb14827_1
+2026-10-30T08:55:29.6604508Z Linking tk-8.6.13-noxft_h1df4ec4_4
+2026-10-30T08:55:29.6898415Z Linking libpng-1.6.59-h922cc85_0
+2026-10-30T08:55:29.6920872Z Linking pthread-stubs-0.4-h7cc23a3_1004
+2026-10-30T08:55:29.6928492Z Linking libstdcxx-16.2.0-h934c35e_7
+2026-10-30T08:55:29.6937618Z Linking libgcc-ng-16.2.0-h69a702a_7
+2026-10-30T08:55:29.6943047Z Linking libuuid-2.42.4-hcfc3c73_0
+2026-10-30T08:55:29.6954281Z Linking libpython-3.11.18-ha57cdbe_0_cpython
+2026-10-30T08:55:29.7307787Z Linking libxcrypt-4.4.38-h280c20c_0
+2026-10-30T08:55:29.7324696Z Linking libexpat-2.9.0-hd2095e1_0
+2026-10-30T08:55:29.7331641Z Linking libdrm-2.4.129-h7cc23a3_0
+2026-10-30T08:55:29.7380953Z Linking libgfortran-16.2.0-h69a702a_7
+2026-10-30T08:55:29.7386548Z Linking libsystemd0-262.1-h26e0ef7_0
+2026-10-30T08:55:29.7415609Z Linking pcre2-10.47-h8b3dc9c_1
+2026-10-30T08:55:29.7554011Z Linking libssh2-1.11.1-h6154650_1
+2026-10-30T08:55:29.7677536Z Linking libevent-2.1.12-h5348a74_2
+2026-10-30T08:55:29.7728619Z Linking libedit-3.1.20260512-pl5321h373387f_0
+2026-10-30T08:55:29.7778962Z Linking readline-8.3-hd6e31c0_1
+2026-10-30T08:55:29.7801213Z Linking libfreetype6-2.14.3-h5e6c136_2
+2026-10-30T08:55:29.7808763Z Linking libxcb-1.17.0-hb83e432_2
+2026-10-30T08:55:29.7932430Z Linking libnghttp2-1.70.0-hc5e5977_0
+2026-10-30T08:55:29.7945003Z Linking pixman-0.46.4-h54a6638_3
+2026-10-30T08:55:29.7955986Z Linking libaec-1.1.7-h659bb9a_0
+2026-10-30T08:55:29.7969220Z Linking libvorbis-1.3.7-h54a6638_2
+2026-10-30T08:55:29.7989711Z Linking libflac-1.5.0-he200343_1
+2026-10-30T08:55:29.8014496Z Linking mpg123-1.33.7-h877a99e_1
+2026-10-30T08:55:29.8038758Z Linking graphite2-1.3.15-h54a6638_1
+2026-10-30T08:55:29.8051889Z Linking nspr-4.40-h29cc59b_0
+2026-10-30T08:55:29.8094095Z Linking icu-78.3-py310h44b86e0_2
+2026-10-30T08:55:29.8265978Z Linking libglu-9.0.3-h5888daf_1
+2026-10-30T08:55:29.8276446Z Linking libstdcxx-ng-16.2.0-hdf11a46_7
+2026-10-30T08:55:29.8281862Z Linking xorg-libsm-1.2.6-h0d788c3_1
+2026-10-30T08:55:29.8292739Z Linking expat-2.9.0-hd2095e1_0
+2026-10-30T08:55:29.8309339Z Linking libopenblas-0.3.34-pthreads_hf13c14d_2
+2026-10-30T08:55:29.8318858Z Linking libglib-2.90.0-h569388d_0
+2026-10-30T08:55:29.8715382Z Linking krb5-1.22.2-hbc21106_2
+2026-10-30T08:55:29.8884001Z Linking libfreetype-2.14.3-ha770c72_2
+2026-10-30T08:55:29.8889915Z Linking xcb-util-0.4.1-h4f16b4b_2
+2026-10-30T08:55:29.8905385Z Linking xcb-util-renderutil-0.3.10-hb711507_0
+2026-10-30T08:55:29.8917035Z Linking xcb-util-keysyms-0.4.1-hb711507_0
+2026-10-30T08:55:29.8927998Z Linking xcb-util-wm-0.4.2-hb711507_0
+2026-10-30T08:55:29.8943308Z Linking xorg-libx11-1.8.14-hb83e432_0
+2026-10-30T08:55:29.9102066Z Linking lame-4.0-h770b6ad_1
+2026-10-30T08:55:29.9121152Z Linking libpsl-0.23.1-hd9e3e90_1
+2026-10-30T08:55:29.9131174Z Linking libboost-1.90.0-h1101c1b_3
+2026-10-30T08:55:29.9209184Z Linking xerces-c-3.3.0-h78fed68_2
+2026-10-30T08:55:29.9471083Z Linking libxml2-16-2.15.4-hf3af7cc_1
+2026-10-30T08:55:29.9497113Z Linking libsqlite-3.54.1-h13e7031_0
+2026-10-30T08:55:29.9508154Z Linking clhep-2.4.7.1-h59595ed_0
+2026-10-30T08:55:29.9707437Z Linking libblas-3.11.0-11_h4a7cf45_openblas
+2026-10-30T08:55:30.0319775Z Linking dbus-1.16.2-he8c428d_2
+2026-10-30T08:55:30.0375854Z Linking glib-tools-2.90.0-h3d503d9_0
+2026-10-30T08:55:30.0444586Z Linking cyrus-sasl-2.1.28-hac629b4_1
+2026-10-30T08:55:30.0505767Z Linking libcups-2.3.3-h7a8fb5f_6
+2026-10-30T08:55:30.0581553Z Linking fontconfig-2.18.3-h4db4eae_1
+2026-10-30T08:55:30.0665738Z Linking freetype-2.14.3-ha770c72_2
+2026-10-30T08:55:30.0711462Z Linking xcb-util-image-0.4.0-hb711507_2
+2026-10-30T08:55:30.0723967Z Linking xorg-libxrender-0.9.13-h7cc23a3_0
+2026-10-30T08:55:30.0735174Z Linking xkeyboard-config-2.48-hebe6cf0_1
+2026-10-30T08:55:30.0905804Z Linking libglx-1.7.0-ha4b6fd6_5
+2026-10-30T08:55:30.0913397Z Linking xorg-libxfixes-6.0.2-h7cc23a3_1
+2026-10-30T08:55:30.0924148Z Linking xorg-libxt-1.3.1-h7cc23a3_1
+2026-10-30T08:55:30.0968410Z Linking xorg-libxext-1.3.7-h7cc23a3_1
+2026-10-30T08:55:30.0987405Z Linking libsndfile-1.2.2-hbc6d301_3
+2026-10-30T08:55:30.1017562Z Linking libcurl-8.23.0-ha042cf0_0
+2026-10-30T08:55:30.1051568Z Linking libxml2-2.15.4-h7df9aa5_1
+2026-10-30T08:55:30.1061741Z Linking nss-3.118-h445c969_0
+2026-10-30T08:55:30.1214693Z Linking python-3.11.18-h5f976f7_0_cpython
+2026-10-30T08:55:30.2749056Z Linking libcblas-3.11.0-11_h0358290_openblas
+2026-10-30T08:55:30.3362094Z Linking liblapack-3.11.0-11_h47877c9_openblas
+2026-10-30T08:55:30.3971051Z Linking openldap-2.6.13-hbde042b_0
+2026-10-30T08:55:30.4403890Z Linking libglx-devel-1.7.0-ha4b6fd6_5
+2026-10-30T08:55:30.4416877Z Linking libgl-1.7.0-ha4b6fd6_5
+2026-10-30T08:55:30.4424015Z Linking cairo-1.18.6-h3c89d7e_0
+2026-10-30T08:55:30.4468300Z Linking xorg-libxdamage-1.1.6-hb9d3cd8_0
+2026-10-30T08:55:30.4479959Z Linking xorg-libxxf86vm-1.1.7-hb03c661_0
+2026-10-30T08:55:30.4490769Z Linking xorg-libxmu-1.3.1-hb03c661_0
+2026-10-30T08:55:30.4519210Z Linking pulseaudio-client-17.0-hb10c1b2_4
+2026-10-30T08:55:30.4627267Z Linking hdf5-1.14.6-nompi_h19486de_110
+2026-10-30T08:55:30.4808389Z Linking libllvm23-23.1.4-h474f4eb_1
+2026-10-30T08:55:30.4817442Z Linking libxkbcommon-1.13.2-h59c2f34_2
+2026-10-30T08:55:30.4884700Z Linking libllvm22-22.1.8-h474f4eb_3
+2026-10-30T08:55:30.4893440Z Linking numpy-2.4.6-py311h2e04523_0
+2026-10-30T08:55:30.5918958Z Linking libpq-18.6-h3883810_3
+2026-10-30T08:55:30.6540831Z Linking libgl-devel-1.7.0-ha4b6fd6_5
+2026-10-30T08:55:30.6559194Z Linking libharfbuzz-15.0.0-h23af247_0
+2026-10-30T08:55:30.6584915Z Linking libclang-cpp23.1-23.1.4-default_h0acdd01_1
+2026-10-30T08:55:30.6591819Z Linking libclang-cpp22.1-22.1.8-default_h0acdd01_11
+2026-10-30T08:55:30.6599552Z Linking libboost-python-1.90.0-py311hffe79c6_3
+2026-10-30T08:55:30.6609206Z Linking libpango-1.58.2-hce4e988_3
+2026-10-30T08:55:30.6631319Z Linking libharfbuzz-devel-15.0.0-h23af247_0
+2026-10-30T08:55:30.6679273Z Linking libclang13-23.1.4-default_h6e6c352_1
+2026-10-30T08:55:30.6686639Z Linking libpango-devel-1.58.2-h317d9d0_3
+2026-10-30T08:55:30.6721719Z Linking harfbuzz-15.0.0-ha770c72_0
+2026-10-30T08:55:30.6728092Z Linking pango-1.58.2-h2f58602_3
+2026-10-30T08:55:30.6733958Z Linking packaging-26.3-pyhc364b38_0
+2026-10-30T08:55:30.6863584Z Linking setuptools-84.2.1-pyhe730653_0
+2026-10-30T08:55:30.7103534Z Linking wheel-0.48.0-pyhd8ed1ab_0
+2026-10-30T08:55:30.7124858Z Linking pip-26.2.2-pyh8b19718_0
+2026-10-30T08:55:30.7441401Z Linking glib-2.90.0-h5e3c387_0
+2026-10-30T08:55:30.7463323Z Linking gstreamer-1.26.11-h29cf534_0
+2026-10-30T08:55:30.7676162Z Linking gst-plugins-base-1.26.11-h6d08254_0
+2026-10-30T08:55:30.8143930Z Linking qt-main-5.15.15-h0c412b5_8
+2026-10-30T08:55:33.2654476Z Linking geant4-11.3.2-py311h866470e_7
+2026-10-30T08:55:34.3469853Z 
+2026-10-30T08:55:34.3470350Z Transaction finished
+2026-10-30T08:55:34.3470637Z 
+2026-10-30T08:55:34.3478907Z 
+2026-10-30T08:55:34.3479113Z To activate this environment, use:
+2026-10-30T08:55:34.3479431Z 
+2026-10-30T08:55:34.3479846Z     micromamba activate /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2
+2026-10-30T08:55:34.3480262Z 
+2026-10-30T08:55:34.3480422Z Or to execute a single command in this environment, use:
+2026-10-30T08:55:34.3480660Z 
+2026-10-30T08:55:34.3480949Z     micromamba run -p /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2 mycommand
+2026-10-30T08:55:34.3481334Z 
+2026-10-30T08:55:34.3674479Z 11.3.2
+2026-10-30T08:55:45.1485486Z ##[group]Run set -euo pipefail
+2026-10-30T08:55:45.1485816Z [36;1mset -euo pipefail[0m
+2026-10-30T08:55:45.1486129Z [36;1m./bin/micromamba run -p "$G4_PREFIX" -- printenv \[0m
+2026-10-30T08:55:45.1486554Z [36;1m  | grep -E '^(G4[A-Z0-9_]*DATA|GEANT4[A-Z0-9_]*)=' >> "$GITHUB_ENV"[0m
+2026-10-30T08:55:45.1487054Z [36;1mecho "LD_LIBRARY_PATH=$G4_PREFIX/lib:${LD_LIBRARY_PATH:-}" >> "$GITHUB_ENV"[0m
+2026-10-30T08:55:45.1487654Z [36;1mecho "$G4_PREFIX/bin" >> "$GITHUB_PATH"[0m
+2026-10-30T08:55:45.1508246Z shell: /usr/bin/bash -e {0}
+2026-10-30T08:55:45.1508499Z env:
+2026-10-30T08:55:45.1508848Z   MAMBA_ROOT_PREFIX: /home/runner/work/G4UniversalSim/G4UniversalSim/.micromamba
+2026-10-30T08:55:45.1509379Z   G4_PREFIX: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2
+2026-10-30T08:55:45.1509761Z   GEANT4_VERSION: 11.3.2
+2026-10-30T08:55:45.1510184Z   REPORT_ROOT: /home/runner/work/G4UniversalSim/G4UniversalSim/out/verification/geant4-11.3.2
+2026-10-30T08:55:45.1510694Z   QT_QPA_PLATFORM: offscreen
+2026-10-30T08:55:45.1511011Z ##[endgroup]
+2026-10-30T08:55:45.2028637Z ##[group]Run set -euo pipefail
+2026-10-30T08:55:45.2028955Z [36;1mset -euo pipefail[0m
+2026-10-30T08:55:45.2029579Z [36;1mplugins="$("$G4_PREFIX/bin/python" -c 'import pathlib, PySide6; print(pathlib.Path(PySide6.__file__).resolve().parent / "Qt" / "plugins")')"[0m
+2026-10-30T08:55:45.2030243Z [36;1mtest -d "$plugins/platforms"[0m
+2026-10-30T08:55:45.2030568Z [36;1mtest -f "$plugins/platforms/libqoffscreen.so"[0m
+2026-10-30T08:55:45.2030933Z [36;1mecho "QT_PLUGIN_PATH=$plugins" >> "$GITHUB_ENV"[0m
+2026-10-30T08:55:45.2055096Z shell: /usr/bin/bash -e {0}
+2026-10-30T08:55:45.2055355Z env:
+2026-10-30T08:55:45.2055699Z   MAMBA_ROOT_PREFIX: /home/runner/work/G4UniversalSim/G4UniversalSim/.micromamba
+2026-10-30T08:55:45.2056235Z   G4_PREFIX: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2
+2026-10-30T08:55:45.2056623Z   GEANT4_VERSION: 11.3.2
+2026-10-30T08:55:45.2057049Z   REPORT_ROOT: /home/runner/work/G4UniversalSim/G4UniversalSim/out/verification/geant4-11.3.2
+2026-10-30T08:55:45.2057562Z   QT_QPA_PLATFORM: offscreen
+2026-10-30T08:55:45.2058075Z   G4ENSDFSTATEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/ENSDFSTATE3.0
+2026-10-30T08:55:45.2058806Z   G4PIIDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/PII1.3
+2026-10-30T08:55:45.2059475Z   G4INCLDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/INCL1.2
+2026-10-30T08:55:45.2060151Z   G4LEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/EMLOW8.6.1
+2026-10-30T08:55:45.2060867Z   G4CHANNELINGDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/CHANNELING1.0
+2026-10-30T08:55:45.2061649Z   G4PARTICLEXSDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/PARTICLEXS4.1
+2026-10-30T08:55:45.2062410Z   G4NEUTRONHPDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/NDL4.7.1
+2026-10-30T08:55:45.2063418Z   G4SAIDXSDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/SAIDDATA2.0
+2026-10-30T08:55:45.2064194Z   G4REALSURFACEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/RealSurface2.2
+2026-10-30T08:55:45.2065088Z   G4ABLADATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/ABLA3.3
+2026-10-30T08:55:45.2065842Z   G4LEVELGAMMADATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/PhotonEvaporation6.1
+2026-10-30T08:55:45.2066672Z   G4RADIOACTIVEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/RadioactiveDecay6.1.2
+2026-10-30T08:55:45.2067368Z   LD_LIBRARY_PATH: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/lib:
+2026-10-30T08:55:45.2067779Z ##[endgroup]
+2026-10-30T08:55:45.2922637Z ##[group]Run set -euo pipefail
+2026-10-30T08:55:45.2923308Z [36;1mset -euo pipefail[0m
+2026-10-30T08:55:45.2923601Z [36;1mif [[ "$GEANT4_VERSION" == 11.4.* ]]; then[0m
+2026-10-30T08:55:45.2923988Z [36;1m  cmake -S . -B build_linux -DCMAKE_BUILD_TYPE=Release \[0m
+2026-10-30T08:55:45.2924373Z [36;1m    -DCMAKE_PREFIX_PATH="$G4_PREFIX" \[0m
+2026-10-30T08:55:45.2924723Z [36;1m    -DEXPAT_INCLUDE_DIR="$G4_PREFIX/include" \[0m
+2026-10-30T08:55:45.2925085Z [36;1m    -DEXPAT_LIBRARY="$G4_PREFIX/lib/libexpat.so" \[0m
+2026-10-30T08:55:45.2925442Z [36;1m    -DZLIB_INCLUDE_DIR="$G4_PREFIX/include" \[0m
+2026-10-30T08:55:45.2925785Z [36;1m    -DZLIB_LIBRARY="$G4_PREFIX/lib/libz.so" \[0m
+2026-10-30T08:55:45.2926173Z [36;1m    -DFREETYPE_INCLUDE_DIRS="$G4_PREFIX/include/freetype2" \[0m
+2026-10-30T08:55:45.2926592Z [36;1m    -DFREETYPE_LIBRARY="$G4_PREFIX/lib/libfreetype.so"[0m
+2026-10-30T08:55:45.2926908Z [36;1melse[0m
+2026-10-30T08:55:45.2927223Z [36;1m  cmake -S . -B build_linux -DCMAKE_BUILD_TYPE=Release \[0m
+2026-10-30T08:55:45.2927622Z [36;1m    -DCMAKE_PREFIX_PATH="$G4_PREFIX"[0m
+2026-10-30T08:55:45.2927900Z [36;1mfi[0m
+2026-10-30T08:55:45.2949603Z shell: /usr/bin/bash -e {0}
+2026-10-30T08:55:45.2949854Z env:
+2026-10-30T08:55:45.2950192Z   MAMBA_ROOT_PREFIX: /home/runner/work/G4UniversalSim/G4UniversalSim/.micromamba
+2026-10-30T08:55:45.2950738Z   G4_PREFIX: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2
+2026-10-30T08:55:45.2951134Z   GEANT4_VERSION: 11.3.2
+2026-10-30T08:55:45.2951549Z   REPORT_ROOT: /home/runner/work/G4UniversalSim/G4UniversalSim/out/verification/geant4-11.3.2
+2026-10-30T08:55:45.2952002Z   QT_QPA_PLATFORM: offscreen
+2026-10-30T08:55:45.2952495Z   G4ENSDFSTATEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/ENSDFSTATE3.0
+2026-10-30T08:55:45.2953491Z   G4PIIDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/PII1.3
+2026-10-30T08:55:45.2954172Z   G4INCLDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/INCL1.2
+2026-10-30T08:55:45.2954844Z   G4LEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/EMLOW8.6.1
+2026-10-30T08:55:45.2955570Z   G4CHANNELINGDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/CHANNELING1.0
+2026-10-30T08:55:45.2956364Z   G4PARTICLEXSDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/PARTICLEXS4.1
+2026-10-30T08:55:45.2957118Z   G4NEUTRONHPDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/NDL4.7.1
+2026-10-30T08:55:45.2957847Z   G4SAIDXSDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/SAIDDATA2.0
+2026-10-30T08:55:45.2958608Z   G4REALSURFACEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/RealSurface2.2
+2026-10-30T08:55:45.2959349Z   G4ABLADATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/ABLA3.3
+2026-10-30T08:55:45.2960110Z   G4LEVELGAMMADATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/PhotonEvaporation6.1
+2026-10-30T08:55:45.2960947Z   G4RADIOACTIVEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/RadioactiveDecay6.1.2
+2026-10-30T08:55:45.2961805Z   LD_LIBRARY_PATH: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/lib:
+2026-10-30T08:55:45.2962504Z   QT_PLUGIN_PATH: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/lib/python3.11/site-packages/PySide6/Qt/plugins
+2026-10-30T08:55:45.2963310Z ##[endgroup]
+2026-10-30T08:55:45.5571981Z -- The CXX compiler identification is GNU 13.3.0
+2026-10-30T08:55:45.5773091Z -- Detecting CXX compiler ABI info
+2026-10-30T08:55:45.6832337Z -- Detecting CXX compiler ABI info - done
+2026-10-30T08:55:45.7013512Z -- Check for working CXX compiler: /usr/bin/c++ - skipped
+2026-10-30T08:55:45.7020564Z -- Detecting CXX compile features
+2026-10-30T08:55:45.7029875Z -- Detecting CXX compile features - done
+2026-10-30T08:55:45.7713606Z -- Found EXPAT: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/lib/libexpat.so (found suitable version "2.9.0", minimum required is "2.8.1")
+2026-10-30T08:55:45.7848777Z -- Found ZLIB: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/lib/libz.so (found suitable version "1.3.2", minimum required is "1.3.2")
+2026-10-30T08:55:45.7885377Z -- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+2026-10-30T08:55:45.9038826Z -- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+2026-10-30T08:55:45.9051148Z -- Found Threads: TRUE
+2026-10-30T08:55:45.9401920Z -- Found XercesC: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/lib/libxerces-c.so (found suitable version "3.3.0", minimum required is "3.3.0")
+2026-10-30T08:55:45.9557287Z -- Found Freetype: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/lib/libfreetype.so (found suitable version "2.14.3", minimum required is "2.14.3")
+2026-10-30T08:55:46.0118593Z -- HDF5 C compiler wrapper is unable to compile a minimal HDF5 program.
+2026-10-30T08:55:46.0216814Z -- Found HDF5: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/lib/libhdf5.so (found version "1.14.6")
+2026-10-30T08:55:46.0233690Z -- Looking for H5_HAVE_THREADSAFE
+2026-10-30T08:55:46.0901582Z -- Looking for H5_HAVE_THREADSAFE - found
+2026-10-30T08:55:46.1462713Z -- Found X11: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/include
+2026-10-30T08:55:46.1470567Z -- Looking for XOpenDisplay in /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/lib/libX11.so;/home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/lib/libXext.so
+2026-10-30T08:55:46.2218177Z -- Looking for XOpenDisplay in /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/lib/libX11.so;/home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/lib/libXext.so - found
+2026-10-30T08:55:46.2219277Z -- Looking for gethostbyname
+2026-10-30T08:55:46.2866837Z -- Looking for gethostbyname - found
+2026-10-30T08:55:46.2867529Z -- Looking for connect
+2026-10-30T08:55:46.3509353Z -- Looking for connect - found
+2026-10-30T08:55:46.3509992Z -- Looking for remove
+2026-10-30T08:55:46.4157233Z -- Looking for remove - found
+2026-10-30T08:55:46.4157765Z -- Looking for shmat
+2026-10-30T08:55:46.4805920Z -- Looking for shmat - found
+2026-10-30T08:55:46.4806937Z -- Looking for IceConnectionNumber in ICE
+2026-10-30T08:55:46.5471477Z -- Looking for IceConnectionNumber in ICE - found
+2026-10-30T08:55:46.5828033Z -- Found OpenGL: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/lib/libGL.so
+2026-10-30T08:55:46.5873318Z -- Found Geant4: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/lib/cmake/Geant4/Geant4Config.cmake (found version "11.3.2")
+2026-10-30T08:55:46.6478449Z -- G4UniversalSim: GDML support enabled
+2026-10-30T08:55:47.4649160Z -- Configuring done (2.1s)
+2026-10-30T08:55:47.5194016Z -- Generating done (0.1s)
+2026-10-30T08:55:47.5200765Z -- Build files have been written to: /home/runner/work/G4UniversalSim/G4UniversalSim/build_linux
+2026-10-30T08:55:47.5310615Z ##[group]Run cmake --build build_linux -j"$(nproc)"
+2026-10-30T08:55:47.5311026Z [36;1mcmake --build build_linux -j"$(nproc)"[0m
+2026-10-30T08:55:47.5333926Z shell: /usr/bin/bash -e {0}
+2026-10-30T08:55:47.5334186Z env:
+2026-10-30T08:55:47.5334540Z   MAMBA_ROOT_PREFIX: /home/runner/work/G4UniversalSim/G4UniversalSim/.micromamba
+2026-10-30T08:55:47.5335250Z   G4_PREFIX: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2
+2026-10-30T08:55:47.5335648Z   GEANT4_VERSION: 11.3.2
+2026-10-30T08:55:47.5336073Z   REPORT_ROOT: /home/runner/work/G4UniversalSim/G4UniversalSim/out/verification/geant4-11.3.2
+2026-10-30T08:55:47.5336564Z   QT_QPA_PLATFORM: offscreen
+2026-10-30T08:55:47.5337090Z   G4ENSDFSTATEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/ENSDFSTATE3.0
+2026-10-30T08:55:47.5337855Z   G4PIIDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/PII1.3
+2026-10-30T08:55:47.5338587Z   G4INCLDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/INCL1.2
+2026-10-30T08:55:47.5339290Z   G4LEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/EMLOW8.6.1
+2026-10-30T08:55:47.5340054Z   G4CHANNELINGDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/CHANNELING1.0
+2026-10-30T08:55:47.5340913Z   G4PARTICLEXSDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/PARTICLEXS4.1
+2026-10-30T08:55:47.5341691Z   G4NEUTRONHPDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/NDL4.7.1
+2026-10-30T08:55:47.5342454Z   G4SAIDXSDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/SAIDDATA2.0
+2026-10-30T08:55:47.5343555Z   G4REALSURFACEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/RealSurface2.2
+2026-10-30T08:55:47.5344323Z   G4ABLADATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/ABLA3.3
+2026-10-30T08:55:47.5345118Z   G4LEVELGAMMADATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/PhotonEvaporation6.1
+2026-10-30T08:55:47.5345960Z   G4RADIOACTIVEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/RadioactiveDecay6.1.2
+2026-10-30T08:55:47.5346663Z   LD_LIBRARY_PATH: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/lib:
+2026-10-30T08:55:47.5347376Z   QT_PLUGIN_PATH: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/lib/python3.11/site-packages/PySide6/Qt/plugins
+2026-10-30T08:55:47.5347931Z ##[endgroup]
+2026-10-30T08:55:47.5694230Z [  1%] Building CXX object CMakeFiles/mergeHistograms.dir/tools/mergeHistograms.cc.o
+2026-10-30T08:55:47.5695576Z [  2%] Building CXX object CMakeFiles/scoringNumericCheck.dir/tools/scoringNumericCheck.cc.o
+2026-10-30T08:55:47.5734046Z [  3%] Building CXX object CMakeFiles/gdmlInputCaptureCheck.dir/tools/gdmlInputCaptureCheck.cc.o
+2026-10-30T08:55:47.5780893Z [  3%] Building CXX object CMakeFiles/G4UniversalSim.dir/main.cc.o
+2026-10-30T08:55:48.5876355Z [  4%] Building CXX object CMakeFiles/scoringNumericCheck.dir/src/Scoring/HistoryStatistics.cc.o
+2026-10-30T08:55:49.8404323Z [  5%] Building CXX object CMakeFiles/gdmlInputCaptureCheck.dir/src/Geometry/GdmlInputCapture.cc.o
+2026-10-30T08:55:50.5964092Z [  6%] Linking CXX executable scoringNumericCheck
+2026-10-30T08:55:50.6773185Z [  6%] Linking CXX executable mergeHistograms
+2026-10-30T08:55:50.6786002Z [  6%] Built target scoringNumericCheck
+2026-10-30T08:55:50.6954168Z [  7%] Building CXX object CMakeFiles/randomCommandGuardCheck.dir/tools/randomCommandGuardCheck.cc.o
+2026-10-30T08:55:50.7674191Z [  7%] Built target mergeHistograms
+2026-10-30T08:55:50.7723954Z [  8%] Building CXX object CMakeFiles/gdmlInputCaptureCheck.dir/src/Config/InputProvenance.cc.o
+2026-10-30T08:55:52.2464443Z [  9%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Actions/ActionInitialization.cc.o
+2026-10-30T08:55:52.7434033Z [ 10%] Building CXX object CMakeFiles/randomCommandGuardCheck.dir/src/Core/RandomCommandGuard.cc.o
+2026-10-30T08:55:52.7853820Z [ 11%] Linking CXX executable gdmlInputCaptureCheck
+2026-10-30T08:55:53.5386494Z [ 11%] Built target gdmlInputCaptureCheck
+2026-10-30T08:55:53.5443852Z [ 12%] Building CXX object CMakeFiles/randomCommandGuardCheck.dir/src/Config/InputProvenance.cc.o
+2026-10-30T08:55:54.9684175Z [ 13%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Actions/EventAction.cc.o
+2026-10-30T08:55:55.1134203Z [ 14%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Actions/RunAction.cc.o
+2026-10-30T08:55:55.6194327Z [ 15%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Actions/RunProgress.cc.o
+2026-10-30T08:55:56.3664359Z [ 16%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Actions/SteppingAction.cc.o
+2026-10-30T08:55:56.5334075Z [ 17%] Linking CXX executable randomCommandGuardCheck
+2026-10-30T08:55:56.9354324Z [ 17%] Built target randomCommandGuardCheck
+2026-10-30T08:55:56.9404004Z [ 18%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Actions/TrackingAction.cc.o
+2026-10-30T08:55:57.6144829Z [ 18%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Actions/WorkerRunContext.cc.o
+2026-10-30T08:55:58.3847132Z [ 19%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Biasing/BiasingImportance.cc.o
+2026-10-30T08:55:58.4155387Z [ 20%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Biasing/BiasingManager.cc.o
+2026-10-30T08:55:58.4824430Z [ 21%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Biasing/BiasingMessenger.cc.o
+2026-10-30T08:55:59.0106895Z [ 22%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Biasing/BiasingMultiParticleXS.cc.o
+2026-10-30T08:55:59.1094174Z [ 23%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Biasing/BiasingRegion.cc.o
+2026-10-30T08:55:59.1364100Z [ 24%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Biasing/BiasingXS.cc.o
+2026-10-30T08:56:01.2094326Z [ 25%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Biasing/EffectiveBiasing.cc.o
+2026-10-30T08:56:01.5274148Z [ 25%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Config/ConfigManager.cc.o
+2026-10-30T08:56:04.2394334Z [ 26%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Config/ConfigValue.cc.o
+2026-10-30T08:56:05.0744147Z [ 27%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Config/EffectiveConfig.cc.o
+2026-10-30T08:56:06.1544232Z [ 28%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Config/IniReader.cc.o
+2026-10-30T08:56:06.9913329Z [ 29%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Config/InputProvenance.cc.o
+2026-10-30T08:56:07.9054124Z [ 30%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Core/AppMessenger.cc.o
+2026-10-30T08:56:09.0252153Z [ 31%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Core/EffectiveSimulation.cc.o
+2026-10-30T08:56:09.4483560Z [ 32%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Core/Geant4DataLocator.cc.o
+2026-10-30T08:56:09.5226778Z [ 32%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Core/MacroPreflight.cc.o
+2026-10-30T08:56:09.9581566Z [ 33%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Core/RandomCommandGuard.cc.o
+2026-10-30T08:56:11.0862406Z [ 34%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Core/SimulationContext.cc.o
+2026-10-30T08:56:11.5067763Z [ 35%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Core/SimulationManager.cc.o
+2026-10-30T08:56:12.0262474Z [ 36%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Detector/DetectorConstruction.cc.o
+2026-10-30T08:56:13.2654374Z [ 37%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Detector/DetectorMessenger.cc.o
+2026-10-30T08:56:14.5684328Z [ 38%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Field/FieldConfig.cc.o
+2026-10-30T08:56:14.8194364Z [ 38%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Field/FieldSetup.cc.o
+2026-10-30T08:56:18.2414379Z [ 39%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Geometry/GdmlIO.cc.o
+2026-10-30T08:56:19.5934610Z [ 40%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Geometry/GdmlInputCapture.cc.o
+2026-10-30T08:56:21.0674379Z [ 41%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Geometry/GeometryConfig.cc.o
+2026-10-30T08:56:21.6034479Z [ 42%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Geometry/GeometryConfigDiagnostic.cc.o
+2026-10-30T08:56:22.0279310Z [ 43%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Geometry/GeometryExport.cc.o
+2026-10-30T08:56:22.7132639Z [ 44%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Geometry/GeometryManager.cc.o
+2026-10-30T08:56:24.5904340Z [ 45%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Geometry/GeometryMessenger.cc.o
+2026-10-30T08:56:25.9354406Z [ 45%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Geometry/GeometryRegistry.cc.o
+2026-10-30T08:56:27.9354450Z [ 46%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Geometry/GeometrySafety.cc.o
+2026-10-30T08:56:27.9934356Z [ 47%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Geometry/GeometryUtils.cc.o
+2026-10-30T08:56:28.5064240Z [ 48%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Geometry/StlReader.cc.o
+2026-10-30T08:56:28.9064306Z [ 49%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Geometry/VolumeBuilder.cc.o
+2026-10-30T08:56:29.1294309Z [ 50%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Geometry/VolumeNode.cc.o
+2026-10-30T08:56:30.3804312Z [ 51%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Hits/ParticleHit.cc.o
+2026-10-30T08:56:30.7515952Z [ 52%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Hits/ParticleHitCollection.cc.o
+2026-10-30T08:56:31.9774465Z [ 52%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Hits/SensitiveDetector.cc.o
+2026-10-30T08:56:32.1715658Z [ 53%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Hits/TrackInformation.cc.o
+2026-10-30T08:56:33.7014503Z [ 54%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Materials/MaterialCommandParser.cc.o
+2026-10-30T08:56:33.9664680Z [ 55%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Materials/MaterialFactory.cc.o
+2026-10-30T08:56:34.1326660Z [ 56%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Materials/MaterialIniReader.cc.o
+2026-10-30T08:56:34.8504391Z [ 57%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Materials/MaterialManager.cc.o
+2026-10-30T08:56:34.9794507Z [ 58%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Materials/MaterialMessenger.cc.o
+2026-10-30T08:56:36.2824138Z [ 58%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Output/AnalysisOutput.cc.o
+2026-10-30T08:56:37.6924357Z [ 59%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Output/CsvWriter.cc.o
+2026-10-30T08:56:38.5474263Z [ 60%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Output/EffectiveOutput.cc.o
+2026-10-30T08:56:38.6509599Z [ 61%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Output/Histogram1D.cc.o
+2026-10-30T08:56:39.5994332Z [ 62%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Output/Histogram2D.cc.o
+2026-10-30T08:56:39.6364402Z [ 63%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Output/OutputManager.cc.o
+2026-10-30T08:56:40.5447541Z [ 64%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Output/OutputMessenger.cc.o
+2026-10-30T08:56:42.6495473Z [ 65%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Output/RunSummary.cc.o
+2026-10-30T08:56:43.9444399Z [ 65%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Physics/ElectronCapture.cc.o
+2026-10-30T08:56:44.7978873Z [ 66%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Physics/MicroElecPhysics.cc.o
+2026-10-30T08:56:45.5497263Z [ 67%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Physics/PhysicsFactory.cc.o
+2026-10-30T08:56:45.6224262Z [ 68%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Physics/PhysicsList.cc.o
+2026-10-30T08:56:46.6963731Z [ 69%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Physics/PhysicsManager.cc.o
+2026-10-30T08:56:47.0294906Z [ 70%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Physics/PhysicsMessenger.cc.o
+2026-10-30T08:56:48.0454407Z [ 71%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Physics/ProcessDump.cc.o
+2026-10-30T08:56:49.2384408Z [ 72%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Scoring/DisplacementScorer.cc.o
+2026-10-30T08:56:50.6004337Z [ 72%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Scoring/DoseScorer.cc.o
+2026-10-30T08:56:51.1224330Z [ 73%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Scoring/EdepScorer.cc.o
+2026-10-30T08:56:51.8720002Z [ 74%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Scoring/EffectiveScoring.cc.o
+2026-10-30T08:56:52.6874329Z [ 75%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Scoring/FluenceScorer.cc.o
+2026-10-30T08:56:53.3767334Z [ 76%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Scoring/HistoryStatistics.cc.o
+2026-10-30T08:56:54.8874206Z [ 77%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Scoring/LETScorer.cc.o
+2026-10-30T08:56:55.1030040Z [ 78%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Scoring/NielTable.cc.o
+2026-10-30T08:56:55.1204364Z [ 78%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Scoring/ParticleAggregator.cc.o
+2026-10-30T08:56:55.1464172Z [ 79%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Scoring/PhaseSpace.cc.o
+2026-10-30T08:56:56.5064339Z [ 80%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Scoring/ScorerBase.cc.o
+2026-10-30T08:56:56.8874180Z [ 81%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Scoring/ScoringManager.cc.o
+2026-10-30T08:56:57.1744478Z [ 82%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Scoring/ScoringMeshConfig.cc.o
+2026-10-30T08:56:57.6286886Z [ 83%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Scoring/ScoringMeshExport.cc.o
+2026-10-30T08:56:58.9496058Z [ 84%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Scoring/ScoringMessenger.cc.o
+2026-10-30T08:56:59.9665698Z [ 85%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Scoring/ThreadLocalScoringContext.cc.o
+2026-10-30T08:56:59.9954219Z [ 85%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Scoring/TrajectoryRecorder.cc.o
+2026-10-30T08:57:00.9104498Z [ 86%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Source/PrimaryGeneratorAction.cc.o
+2026-10-30T08:57:02.4794235Z [ 87%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Source/SourceManager.cc.o
+2026-10-30T08:57:03.0394260Z [ 88%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Source/SourceMessenger.cc.o
+2026-10-30T08:57:03.5894238Z [ 89%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Templates/ArrayTemplate.cc.o
+2026-10-30T08:57:04.7044569Z [ 90%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Templates/GDMLTemplate.cc.o
+2026-10-30T08:57:05.2929731Z [ 91%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Templates/GeometryTemplate.cc.o
+2026-10-30T08:57:05.3894242Z [ 92%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Templates/HierarchicalVolumeTemplate.cc.o
+2026-10-30T08:57:06.7584390Z [ 92%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Templates/LayeredDeviceTemplate.cc.o
+2026-10-30T08:57:07.6844396Z [ 93%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Templates/ShieldingTemplate.cc.o
+2026-10-30T08:57:07.9384453Z [ 94%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Templates/SimpleBoxTemplate.cc.o
+2026-10-30T08:57:09.0111578Z [ 95%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Templates/TemplateFactory.cc.o
+2026-10-30T08:57:09.2887702Z [ 96%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Utils/CommandParser.cc.o
+2026-10-30T08:57:09.6056404Z [ 97%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Utils/FileUtils.cc.o
+2026-10-30T08:57:10.0031499Z [ 98%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Utils/G4NameUtils.cc.o
+2026-10-30T08:57:10.3784041Z [ 98%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Utils/StringUtils.cc.o
+2026-10-30T08:57:10.5664182Z [ 99%] Building CXX object CMakeFiles/G4UniversalSim.dir/src/Utils/UnitParser.cc.o
+2026-10-30T08:57:13.7237083Z [100%] Linking CXX executable G4UniversalSim
+2026-10-30T08:57:14.3709535Z Copying config/ to runtime output directory
+2026-10-30T08:57:14.3775943Z Copying macros/ to runtime output directory
+2026-10-30T08:57:14.3837124Z Copying scripts/ to runtime output directory
+2026-10-30T08:57:14.4076510Z [100%] Built target G4UniversalSim
+2026-10-30T08:57:14.4235053Z ##[group]Run ./build_linux/G4UniversalSim --check-geant4-data
+2026-10-30T08:57:14.4235525Z [36;1m./build_linux/G4UniversalSim --check-geant4-data[0m
+2026-10-30T08:57:14.4257726Z shell: /usr/bin/bash -e {0}
+2026-10-30T08:57:14.4257973Z env:
+2026-10-30T08:57:14.4258310Z   MAMBA_ROOT_PREFIX: /home/runner/work/G4UniversalSim/G4UniversalSim/.micromamba
+2026-10-30T08:57:14.4258844Z   G4_PREFIX: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2
+2026-10-30T08:57:14.4259242Z   GEANT4_VERSION: 11.3.2
+2026-10-30T08:57:14.4259659Z   REPORT_ROOT: /home/runner/work/G4UniversalSim/G4UniversalSim/out/verification/geant4-11.3.2
+2026-10-30T08:57:14.4260129Z   QT_QPA_PLATFORM: offscreen
+2026-10-30T08:57:14.4260641Z   G4ENSDFSTATEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/ENSDFSTATE3.0
+2026-10-30T08:57:14.4261383Z   G4PIIDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/PII1.3
+2026-10-30T08:57:14.4262247Z   G4INCLDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/INCL1.2
+2026-10-30T08:57:14.4263382Z   G4LEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/EMLOW8.6.1
+2026-10-30T08:57:14.4264216Z   G4CHANNELINGDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/CHANNELING1.0
+2026-10-30T08:57:14.4265227Z   G4PARTICLEXSDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/PARTICLEXS4.1
+2026-10-30T08:57:14.4321893Z   G4NEUTRONHPDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/NDL4.7.1
+2026-10-30T08:57:14.4323444Z   G4SAIDXSDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/SAIDDATA2.0
+2026-10-30T08:57:14.4324837Z   G4REALSURFACEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/RealSurface2.2
+2026-10-30T08:57:14.4326262Z   G4ABLADATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/ABLA3.3
+2026-10-30T08:57:14.4327722Z   G4LEVELGAMMADATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/PhotonEvaporation6.1
+2026-10-30T08:57:14.4329371Z   G4RADIOACTIVEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/RadioactiveDecay6.1.2
+2026-10-30T08:57:14.4330364Z   LD_LIBRARY_PATH: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/lib:
+2026-10-30T08:57:14.4331067Z   QT_PLUGIN_PATH: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/lib/python3.11/site-packages/PySide6/Qt/plugins
+2026-10-30T08:57:14.4331646Z ##[endgroup]
+2026-10-30T08:57:14.4810505Z {
+2026-10-30T08:57:14.4810997Z   "schema": "g4usim_geant4_data_v1",
+2026-10-30T08:57:14.4811747Z   "geant4_version": "$Name: geant4-11-03-patch-02 [MT]$",
+2026-10-30T08:57:14.4812266Z   "geant4_data_dir": null,
+2026-10-30T08:57:14.4812615Z   "note": "",
+2026-10-30T08:57:14.4813236Z   "datasets": [
+2026-10-30T08:57:14.4814303Z     {"env": "G4LEDATA", "folder": "G4EMLOW8.6.1", "required": true, "found": true, "path": "/home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/EMLOW8.6.1"},
+2026-10-30T08:57:14.4816365Z     {"env": "G4LEVELGAMMADATA", "folder": "PhotonEvaporation6.1", "required": true, "found": true, "path": "/home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/PhotonEvaporation6.1"},
+2026-10-30T08:57:14.4818555Z     {"env": "G4RADIOACTIVEDATA", "folder": "RadioactiveDecay6.1.2", "required": true, "found": true, "path": "/home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/RadioactiveDecay6.1.2"},
+2026-10-30T08:57:14.4820680Z     {"env": "G4PARTICLEXSDATA", "folder": "G4PARTICLEXS4.1", "required": true, "found": true, "path": "/home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/PARTICLEXS4.1"},
+2026-10-30T08:57:14.4823149Z     {"env": "G4ENSDFSTATEDATA", "folder": "G4ENSDFSTATE3.0", "required": true, "found": true, "path": "/home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/ENSDFSTATE3.0"},
+2026-10-30T08:57:14.4825297Z     {"env": "G4NEUTRONHPDATA", "folder": "G4NDL4.7.1", "required": false, "found": true, "path": "/home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/NDL4.7.1"},
+2026-10-30T08:57:14.4827108Z     {"env": "G4PIIDATA", "folder": "G4PII1.3", "required": false, "found": true, "path": "/home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/PII1.3"},
+2026-10-30T08:57:14.4829894Z     {"env": "G4REALSURFACEDATA", "folder": "RealSurface2.2", "required": false, "found": true, "path": "/home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/RealSurface2.2"},
+2026-10-30T08:57:14.4832320Z     {"env": "G4SAIDXSDATA", "folder": "G4SAIDDATA2.0", "required": false, "found": true, "path": "/home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/SAIDDATA2.0"},
+2026-10-30T08:57:14.4833935Z     {"env": "G4ABLADATA", "folder": "G4ABLA3.3", "required": false, "found": true, "path": "/home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/ABLA3.3"},
+2026-10-30T08:57:14.4835122Z     {"env": "G4INCLDATA", "folder": "G4INCL1.2", "required": false, "found": true, "path": "/home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/INCL1.2"},
+2026-10-30T08:57:14.4836346Z     {"env": "G4CHANNELINGDATA", "folder": "G4CHANNELING1.0", "required": false, "found": true, "path": "/home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/CHANNELING1.0"}
+2026-10-30T08:57:14.4837118Z   ],
+2026-10-30T08:57:14.4837313Z   "required_complete": true
+2026-10-30T08:57:14.4837546Z }
+2026-10-30T08:57:14.4866424Z ##[group]Run set -euo pipefail
+2026-10-30T08:57:14.4866741Z [36;1mset -euo pipefail[0m
+2026-10-30T08:57:14.4867705Z [36;1mif ./build_linux/G4UniversalSim --capabilities               | python -c 'import json,sys; caps=json.load(sys.stdin); runtime={item["id"] for item in caps["templates"] if item.get("runtime")}; print(1 if "gdml" in runtime else 0)'               | grep -qx 1; then[0m
+2026-10-30T08:57:14.4868752Z [36;1m  echo "G4USIM_EXPECT_GDML=1" >> "$GITHUB_ENV"[0m
+2026-10-30T08:57:14.4869057Z [36;1melse[0m
+2026-10-30T08:57:14.4869296Z [36;1m  echo "G4USIM_EXPECT_GDML=0" >> "$GITHUB_ENV"[0m
+2026-10-30T08:57:14.4869601Z [36;1mfi[0m
+2026-10-30T08:57:14.4891473Z shell: /usr/bin/bash -e {0}
+2026-10-30T08:57:14.4891727Z env:
+2026-10-30T08:57:14.4892078Z   MAMBA_ROOT_PREFIX: /home/runner/work/G4UniversalSim/G4UniversalSim/.micromamba
+2026-10-30T08:57:14.4892633Z   G4_PREFIX: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2
+2026-10-30T08:57:14.4893322Z   GEANT4_VERSION: 11.3.2
+2026-10-30T08:57:14.4893775Z   REPORT_ROOT: /home/runner/work/G4UniversalSim/G4UniversalSim/out/verification/geant4-11.3.2
+2026-10-30T08:57:14.4894250Z   QT_QPA_PLATFORM: offscreen
+2026-10-30T08:57:14.4894770Z   G4ENSDFSTATEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/ENSDFSTATE3.0
+2026-10-30T08:57:14.4895557Z   G4PIIDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/PII1.3
+2026-10-30T08:57:14.4896260Z   G4INCLDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/INCL1.2
+2026-10-30T08:57:14.4896962Z   G4LEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/EMLOW8.6.1
+2026-10-30T08:57:14.4897718Z   G4CHANNELINGDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/CHANNELING1.0
+2026-10-30T08:57:14.4898568Z   G4PARTICLEXSDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/PARTICLEXS4.1
+2026-10-30T08:57:14.4899355Z   G4NEUTRONHPDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/NDL4.7.1
+2026-10-30T08:57:14.4900100Z   G4SAIDXSDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/SAIDDATA2.0
+2026-10-30T08:57:14.4901029Z   G4REALSURFACEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/RealSurface2.2
+2026-10-30T08:57:14.4901772Z   G4ABLADATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/ABLA3.3
+2026-10-30T08:57:14.4902541Z   G4LEVELGAMMADATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/PhotonEvaporation6.1
+2026-10-30T08:57:14.4903728Z   G4RADIOACTIVEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/RadioactiveDecay6.1.2
+2026-10-30T08:57:14.4904445Z   LD_LIBRARY_PATH: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/lib:
+2026-10-30T08:57:14.4905157Z   QT_PLUGIN_PATH: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/lib/python3.11/site-packages/PySide6/Qt/plugins
+2026-10-30T08:57:14.4905713Z ##[endgroup]
+2026-10-30T08:57:14.5465394Z ##[group]Run python -B scripts/run_m0_tests.py --profile static --require-tracked-sources --fail-on-skip --report-root "$REPORT_ROOT/linux-static"
+2026-10-30T08:57:14.5466492Z [36;1mpython -B scripts/run_m0_tests.py --profile static --require-tracked-sources --fail-on-skip --report-root "$REPORT_ROOT/linux-static"[0m
+2026-10-30T08:57:14.5491314Z shell: /usr/bin/bash -e {0}
+2026-10-30T08:57:14.5491569Z env:
+2026-10-30T08:57:14.5491923Z   MAMBA_ROOT_PREFIX: /home/runner/work/G4UniversalSim/G4UniversalSim/.micromamba
+2026-10-30T08:57:14.5492464Z   G4_PREFIX: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2
+2026-10-30T08:57:14.5493261Z   GEANT4_VERSION: 11.3.2
+2026-10-30T08:57:14.5493687Z   REPORT_ROOT: /home/runner/work/G4UniversalSim/G4UniversalSim/out/verification/geant4-11.3.2
+2026-10-30T08:57:14.5494165Z   QT_QPA_PLATFORM: offscreen
+2026-10-30T08:57:14.5494724Z   G4ENSDFSTATEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/ENSDFSTATE3.0
+2026-10-30T08:57:14.5495466Z   G4PIIDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/PII1.3
+2026-10-30T08:57:14.5496151Z   G4INCLDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/INCL1.2
+2026-10-30T08:57:14.5496822Z   G4LEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/EMLOW8.6.1
+2026-10-30T08:57:14.5497552Z   G4CHANNELINGDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/CHANNELING1.0
+2026-10-30T08:57:14.5498355Z   G4PARTICLEXSDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/PARTICLEXS4.1
+2026-10-30T08:57:14.5499128Z   G4NEUTRONHPDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/NDL4.7.1
+2026-10-30T08:57:14.5499874Z   G4SAIDXSDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/SAIDDATA2.0
+2026-10-30T08:57:14.5500647Z   G4REALSURFACEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/RealSurface2.2
+2026-10-30T08:57:14.5501382Z   G4ABLADATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/ABLA3.3
+2026-10-30T08:57:14.5502155Z   G4LEVELGAMMADATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/PhotonEvaporation6.1
+2026-10-30T08:57:14.5503131Z   G4RADIOACTIVEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/RadioactiveDecay6.1.2
+2026-10-30T08:57:14.5503839Z   LD_LIBRARY_PATH: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/lib:
+2026-10-30T08:57:14.5504545Z   QT_PLUGIN_PATH: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/lib/python3.11/site-packages/PySide6/Qt/plugins
+2026-10-30T08:57:14.5505105Z   G4USIM_EXPECT_GDML: 1
+2026-10-30T08:57:14.5505327Z ##[endgroup]
+2026-10-30T08:57:15.2117688Z PASS build_identity: asserts=47/16
+2026-10-30T08:57:18.1146266Z PASS f1_input_provenance: asserts=37/7
+2026-10-30T08:57:29.0358289Z PASS f1_artifact_model: asserts=97/51
+2026-10-30T08:57:42.0609999Z PASS output_auto_model: asserts=4/41
+2026-10-30T08:57:42.1775366Z PASS merge_outputs: asserts=18/12
+2026-10-30T08:57:42.5812026Z PASS output_extensions: asserts=25/21
+2026-10-30T08:57:43.0226395Z PASS runner_contract: asserts=31/31
+2026-10-30T08:57:43.1268996Z PASS doc_links: asserts=11/11
+2026-10-30T08:57:43.1834783Z PASS platform_paths: asserts=3/3
+2026-10-30T08:57:43.3730531Z PASS ci_annotations: asserts=12/13
+2026-10-30T08:57:44.0519921Z PASS report_evidence: asserts=77/21
+2026-10-30T08:57:44.1481121Z PASS writer_boundary: asserts=24/7
+2026-10-30T08:57:44.3791158Z PASS shielding_scenario_model: asserts=93/61
+2026-10-30T08:57:44.5093686Z PASS shielding_analysis: asserts=113/73
+2026-10-30T08:57:47.1824725Z PASS effective_config_model: asserts=18/18
+2026-10-30T08:57:51.1197644Z PASS main_config_version_component: asserts=4/27
+2026-10-30T08:57:51.2639094Z PASS main_ini_migration: asserts=60/22
+2026-10-30T08:57:52.1167827Z PASS config_migration: asserts=420/53
+2026-10-30T08:57:52.9251306Z PASS project_snapshot_compat: asserts=69/25
+2026-10-30T08:57:54.3322636Z PASS duplicate_generated_package_model: asserts=128/42
+2026-10-30T08:57:54.8772558Z PASS geometry_diagnostic_identity: asserts=4/4
+2026-10-30T08:57:57.6191812Z PASS input_provenance: asserts=15/5
+2026-10-30T08:58:02.6400072Z PASS effective_consumer_state: asserts=3/3
+2026-10-30T08:58:06.2481458Z PASS effective_receipt_view: asserts=14/45
+2026-10-30T08:58:06.7054274Z PASS output_provenance: asserts=46/26
+2026-10-30T08:58:07.0021488Z Report: /home/runner/work/G4UniversalSim/G4UniversalSim/out/verification/geant4-11.3.2/linux-static/20261030-085714-5a950ea2/report.json
+2026-10-30T08:58:07.0022425Z 25 pass / 0 fail / 0 skip of 25 cases; assertions executed 1373 (25 cases reported counts, 0 cases asserted nothing)
+2026-10-30T08:58:07.0133485Z ##[group]Run python -B scripts/check_report_evidence.py --report-root "$REPORT_ROOT/linux-static"
+2026-10-30T08:58:07.0134273Z [36;1mpython -B scripts/check_report_evidence.py --report-root "$REPORT_ROOT/linux-static"[0m
+2026-10-30T08:58:07.0157533Z shell: /usr/bin/bash -e {0}
+2026-10-30T08:58:07.0157799Z env:
+2026-10-30T08:58:07.0158140Z   MAMBA_ROOT_PREFIX: /home/runner/work/G4UniversalSim/G4UniversalSim/.micromamba
+2026-10-30T08:58:07.0158685Z   G4_PREFIX: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2
+2026-10-30T08:58:07.0159070Z   GEANT4_VERSION: 11.3.2
+2026-10-30T08:58:07.0159479Z   REPORT_ROOT: /home/runner/work/G4UniversalSim/G4UniversalSim/out/verification/geant4-11.3.2
+2026-10-30T08:58:07.0159939Z   QT_QPA_PLATFORM: offscreen
+2026-10-30T08:58:07.0160454Z   G4ENSDFSTATEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/ENSDFSTATE3.0
+2026-10-30T08:58:07.0161225Z   G4PIIDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/PII1.3
+2026-10-30T08:58:07.0161896Z   G4INCLDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/INCL1.2
+2026-10-30T08:58:07.0162569Z   G4LEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/EMLOW8.6.1
+2026-10-30T08:58:07.0163579Z   G4CHANNELINGDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/CHANNELING1.0
+2026-10-30T08:58:07.0164368Z   G4PARTICLEXSDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/PARTICLEXS4.1
+2026-10-30T08:58:07.0165114Z   G4NEUTRONHPDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/NDL4.7.1
+2026-10-30T08:58:07.0165844Z   G4SAIDXSDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/SAIDDATA2.0
+2026-10-30T08:58:07.0166605Z   G4REALSURFACEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/RealSurface2.2
+2026-10-30T08:58:07.0167343Z   G4ABLADATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/ABLA3.3
+2026-10-30T08:58:07.0168105Z   G4LEVELGAMMADATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/PhotonEvaporation6.1
+2026-10-30T08:58:07.0168953Z   G4RADIOACTIVEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/RadioactiveDecay6.1.2
+2026-10-30T08:58:07.0169852Z   LD_LIBRARY_PATH: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/lib:
+2026-10-30T08:58:07.0170550Z   QT_PLUGIN_PATH: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/lib/python3.11/site-packages/PySide6/Qt/plugins
+2026-10-30T08:58:07.0171109Z   G4USIM_EXPECT_GDML: 1
+2026-10-30T08:58:07.0171332Z ##[endgroup]
+2026-10-30T08:58:07.0506852Z report evidence: OK /home/runner/work/G4UniversalSim/G4UniversalSim/out/verification/geant4-11.3.2/linux-static/20261030-085714-5a950ea2/report.json
+2026-10-30T08:58:07.0508200Z   version 2, profile static, 25 cases, 1373 assertions executed, probe settrace_assert_lines_v3, digest sha256_raw_bytes_lf_v2
+2026-10-30T08:58:07.0509082Z   source db253b7b1ed5..., tests 57a80e4f5e73...
+2026-10-30T08:58:07.0593626Z ##[group]Run python -B scripts/run_m0_tests.py --profile gui --require-tracked-sources --fail-on-skip --report-root "$REPORT_ROOT/linux-gui"
+2026-10-30T08:58:07.0594856Z [36;1mpython -B scripts/run_m0_tests.py --profile gui --require-tracked-sources --fail-on-skip --report-root "$REPORT_ROOT/linux-gui"[0m
+2026-10-30T08:58:07.0617305Z shell: /usr/bin/bash -e {0}
+2026-10-30T08:58:07.0617558Z env:
+2026-10-30T08:58:07.0617903Z   MAMBA_ROOT_PREFIX: /home/runner/work/G4UniversalSim/G4UniversalSim/.micromamba
+2026-10-30T08:58:07.0618446Z   G4_PREFIX: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2
+2026-10-30T08:58:07.0618853Z   GEANT4_VERSION: 11.3.2
+2026-10-30T08:58:07.0619291Z   REPORT_ROOT: /home/runner/work/G4UniversalSim/G4UniversalSim/out/verification/geant4-11.3.2
+2026-10-30T08:58:07.0619786Z   QT_QPA_PLATFORM: offscreen
+2026-10-30T08:58:07.0620333Z   G4ENSDFSTATEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/ENSDFSTATE3.0
+2026-10-30T08:58:07.0621149Z   G4PIIDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/PII1.3
+2026-10-30T08:58:07.0621877Z   G4INCLDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/INCL1.2
+2026-10-30T08:58:07.0622601Z   G4LEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/EMLOW8.6.1
+2026-10-30T08:58:07.0623679Z   G4CHANNELINGDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/CHANNELING1.0
+2026-10-30T08:58:07.0624524Z   G4PARTICLEXSDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/PARTICLEXS4.1
+2026-10-30T08:58:07.0625330Z   G4NEUTRONHPDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/NDL4.7.1
+2026-10-30T08:58:07.0626127Z   G4SAIDXSDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/SAIDDATA2.0
+2026-10-30T08:58:07.0626948Z   G4REALSURFACEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/RealSurface2.2
+2026-10-30T08:58:07.0627738Z   G4ABLADATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/ABLA3.3
+2026-10-30T08:58:07.0628555Z   G4LEVELGAMMADATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/PhotonEvaporation6.1
+2026-10-30T08:58:07.0629457Z   G4RADIOACTIVEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/RadioactiveDecay6.1.2
+2026-10-30T08:58:07.0630191Z   LD_LIBRARY_PATH: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/lib:
+2026-10-30T08:58:07.0630909Z   QT_PLUGIN_PATH: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/lib/python3.11/site-packages/PySide6/Qt/plugins
+2026-10-30T08:58:07.0631503Z   G4USIM_EXPECT_GDML: 1
+2026-10-30T08:58:07.0631731Z ##[endgroup]
+2026-10-30T08:58:09.3539290Z PASS gui_f1_output_identity: asserts=28/29
+2026-10-30T08:58:12.4367106Z PASS gui_f1_async_identity: asserts=39/45
+2026-10-30T08:58:14.1786575Z PASS gui_config_migration: asserts=74/70
+2026-10-30T08:58:16.3788988Z PASS effective_config_collection: asserts=42/31
+2026-10-30T08:58:16.6622734Z PASS effective_config_viewer: asserts=22/23
+2026-10-30T08:58:16.9493503Z PASS gui_parsers: asserts=8/8
+2026-10-30T08:58:18.1996901Z PASS gui_qt_combo_data: asserts=29/16
+2026-10-30T08:58:18.5993574Z PASS gui_materials: asserts=42/42
+2026-10-30T08:58:19.5325382Z PASS gui_geometry: asserts=69/63
+2026-10-30T08:58:20.1200741Z PASS gui_preview: asserts=22/22
+2026-10-30T08:58:20.5715606Z PASS gui_preview_primitives: asserts=37/37
+2026-10-30T08:58:20.8470509Z PASS gui_project_io: asserts=6/6
+2026-10-30T08:58:24.6556201Z PASS gui_project_import_projection: asserts=393/34
+2026-10-30T08:58:26.8201242Z PASS gui_project_snapshot_restore: asserts=61/54
+2026-10-30T08:58:27.1106742Z PASS gui_source: asserts=50/39
+2026-10-30T08:58:27.7266061Z PASS gui_source_field_preservation: asserts=340/48
+2026-10-30T08:58:28.0907156Z PASS gui_run_config: asserts=34/34
+2026-10-30T08:58:29.2754842Z PASS gui_dose_results: asserts=21/21
+2026-10-30T08:58:33.1642086Z PASS gui_plots: asserts=37/37
+2026-10-30T08:58:34.8607379Z PASS gui_new_simulation_wizard: asserts=60/37
+2026-10-30T08:58:35.1931864Z PASS scenario_page: asserts=31/31
+2026-10-30T08:58:36.7710306Z PASS gui_scans: asserts=58/40
+2026-10-30T08:58:43.2390211Z PASS gui_start_page: asserts=74/41
+2026-10-30T08:58:44.6743277Z PASS gui_fluence_results: asserts=31/31
+2026-10-30T08:58:46.6224354Z PASS gui_output_extensions: asserts=61/50
+2026-10-30T08:58:46.6950563Z PASS gui_output: asserts=15/15
+2026-10-30T08:58:47.1066909Z PASS gui_history: asserts=7/7
+2026-10-30T08:58:52.1541421Z PASS gui_duplicate_history_cli: asserts=254/31
+2026-10-30T08:58:52.2091714Z PASS gui_run_result: asserts=20/20
+2026-10-30T08:58:53.0082451Z PASS gui_live_progress: asserts=71/66
+2026-10-30T08:58:57.8010608Z PASS gui_main_window: asserts=46/30
+2026-10-30T08:58:58.0881259Z PASS gui_unsupported_features: asserts=6/9
+2026-10-30T08:58:58.5354194Z PASS gui_geometry_safety: asserts=11/15
+2026-10-30T08:58:58.9937173Z PASS gui_geometry_diagnostics: asserts=15/43
+2026-10-30T08:59:00.5784750Z PASS q1_postprocessing: asserts=123/35
+2026-10-30T08:59:02.0274775Z PASS gui_output_provenance: asserts=21/14
+2026-10-30T08:59:06.0619897Z PASS q1_public_paths: asserts=32/28
+2026-10-30T08:59:06.4788837Z PASS gui_3d_view: asserts=18/35
+2026-10-30T08:59:08.2359823Z PASS gui_config_editors: asserts=33/23
+2026-10-30T08:59:08.2984364Z Report: /home/runner/work/G4UniversalSim/G4UniversalSim/out/verification/geant4-11.3.2/linux-gui/20261030-085807-247d9d38/report.json
+2026-10-30T08:59:08.2985896Z 39 pass / 0 fail / 0 skip of 39 cases; assertions executed 2341 (39 cases reported counts, 0 cases asserted nothing)
+2026-10-30T08:59:08.3117291Z ##[group]Run python -B scripts/check_report_evidence.py --report-root "$REPORT_ROOT/linux-gui"
+2026-10-30T08:59:08.3118475Z [36;1mpython -B scripts/check_report_evidence.py --report-root "$REPORT_ROOT/linux-gui"[0m
+2026-10-30T08:59:08.3141741Z shell: /usr/bin/bash -e {0}
+2026-10-30T08:59:08.3142006Z env:
+2026-10-30T08:59:08.3142364Z   MAMBA_ROOT_PREFIX: /home/runner/work/G4UniversalSim/G4UniversalSim/.micromamba
+2026-10-30T08:59:08.3143276Z   G4_PREFIX: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2
+2026-10-30T08:59:08.3143858Z   GEANT4_VERSION: 11.3.2
+2026-10-30T08:59:08.3144296Z   REPORT_ROOT: /home/runner/work/G4UniversalSim/G4UniversalSim/out/verification/geant4-11.3.2
+2026-10-30T08:59:08.3144790Z   QT_QPA_PLATFORM: offscreen
+2026-10-30T08:59:08.3145322Z   G4ENSDFSTATEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/ENSDFSTATE3.0
+2026-10-30T08:59:08.3146249Z   G4PIIDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/PII1.3
+2026-10-30T08:59:08.3146977Z   G4INCLDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/INCL1.2
+2026-10-30T08:59:08.3147705Z   G4LEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/EMLOW8.6.1
+2026-10-30T08:59:08.3148539Z   G4CHANNELINGDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/CHANNELING1.0
+2026-10-30T08:59:08.3149615Z   G4PARTICLEXSDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/PARTICLEXS4.1
+2026-10-30T08:59:08.3150430Z   G4NEUTRONHPDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/NDL4.7.1
+2026-10-30T08:59:08.3151232Z   G4SAIDXSDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/SAIDDATA2.0
+2026-10-30T08:59:08.3152049Z   G4REALSURFACEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/RealSurface2.2
+2026-10-30T08:59:08.3153142Z   G4ABLADATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/ABLA3.3
+2026-10-30T08:59:08.3154019Z   G4LEVELGAMMADATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/PhotonEvaporation6.1
+2026-10-30T08:59:08.3154880Z   G4RADIOACTIVEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/RadioactiveDecay6.1.2
+2026-10-30T08:59:08.3155614Z   LD_LIBRARY_PATH: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/lib:
+2026-10-30T08:59:08.3156328Z   QT_PLUGIN_PATH: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/lib/python3.11/site-packages/PySide6/Qt/plugins
+2026-10-30T08:59:08.3156893Z   G4USIM_EXPECT_GDML: 1
+2026-10-30T08:59:08.3157128Z ##[endgroup]
+2026-10-30T08:59:08.3514636Z report evidence: OK /home/runner/work/G4UniversalSim/G4UniversalSim/out/verification/geant4-11.3.2/linux-gui/20261030-085807-247d9d38/report.json
+2026-10-30T08:59:08.3516284Z   version 2, profile gui, 39 cases, 2341 assertions executed, probe settrace_assert_lines_v3, digest sha256_raw_bytes_lf_v2
+2026-10-30T08:59:08.3517210Z   source db253b7b1ed5..., tests 57a80e4f5e73...
+2026-10-30T08:59:08.3616582Z ##[group]Run python -B scripts/run_m0_tests.py --profile backend --require-tracked-sources --fail-on-skip \
+2026-10-30T08:59:08.3617986Z [36;1mpython -B scripts/run_m0_tests.py --profile backend --require-tracked-sources --fail-on-skip \[0m
+2026-10-30T08:59:08.3619005Z [36;1m  --executable build_linux/G4UniversalSim \[0m
+2026-10-30T08:59:08.3619675Z [36;1m  --merge-executable build_linux/mergeHistograms \[0m
+2026-10-30T08:59:08.3620372Z [36;1m  --report-root "$REPORT_ROOT/linux-backend"[0m
+2026-10-30T08:59:08.3654363Z shell: /usr/bin/bash -e {0}
+2026-10-30T08:59:08.3654789Z env:
+2026-10-30T08:59:08.3655374Z   MAMBA_ROOT_PREFIX: /home/runner/work/G4UniversalSim/G4UniversalSim/.micromamba
+2026-10-30T08:59:08.3656326Z   G4_PREFIX: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2
+2026-10-30T08:59:08.3657046Z   GEANT4_VERSION: 11.3.2
+2026-10-30T08:59:08.3657784Z   REPORT_ROOT: /home/runner/work/G4UniversalSim/G4UniversalSim/out/verification/geant4-11.3.2
+2026-10-30T08:59:08.3658750Z   QT_QPA_PLATFORM: offscreen
+2026-10-30T08:59:08.3659668Z   G4ENSDFSTATEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/ENSDFSTATE3.0
+2026-10-30T08:59:08.3661012Z   G4PIIDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/PII1.3
+2026-10-30T08:59:08.3662285Z   G4INCLDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/INCL1.2
+2026-10-30T08:59:08.3663868Z   G4LEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/EMLOW8.6.1
+2026-10-30T08:59:08.3665235Z   G4CHANNELINGDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/CHANNELING1.0
+2026-10-30T08:59:08.3666684Z   G4PARTICLEXSDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/PARTICLEXS4.1
+2026-10-30T08:59:08.3668183Z   G4NEUTRONHPDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/NDL4.7.1
+2026-10-30T08:59:08.3669609Z   G4SAIDXSDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/SAIDDATA2.0
+2026-10-30T08:59:08.3671066Z   G4REALSURFACEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/RealSurface2.2
+2026-10-30T08:59:08.3672806Z   G4ABLADATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/ABLA3.3
+2026-10-30T08:59:08.3674590Z   G4LEVELGAMMADATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/PhotonEvaporation6.1
+2026-10-30T08:59:08.3676194Z   G4RADIOACTIVEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/RadioactiveDecay6.1.2
+2026-10-30T08:59:08.3677525Z   LD_LIBRARY_PATH: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/lib:
+2026-10-30T08:59:08.3678848Z   QT_PLUGIN_PATH: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/lib/python3.11/site-packages/PySide6/Qt/plugins
+2026-10-30T08:59:08.3679913Z   G4USIM_EXPECT_GDML: 1
+2026-10-30T08:59:08.3680334Z ##[endgroup]
+2026-10-30T08:59:15.2280318Z PASS f1_input_resources: asserts=565/38
+2026-10-30T08:59:32.5307103Z PASS f1_output_identity: asserts=4129/51
+2026-10-30T09:00:02.9142150Z PASS output_auto: asserts=734/41
+2026-10-30T09:00:03.8780448Z PASS main_config_version: asserts=84/27
+2026-10-30T09:00:09.1126288Z PASS field_biasing_schema: asserts=278/49
+2026-10-30T09:00:09.3976973Z PASS field_biasing_schema_review: asserts=18/12
+2026-10-30T09:00:12.8330881Z PASS duplicate_generated_package: asserts=135/42
+2026-10-30T09:00:12.9463727Z PASS effective_geometry_materials: asserts=11/15
+2026-10-30T09:00:15.0893689Z PASS effective_source_physics: asserts=372/59
+2026-10-30T09:00:15.8136698Z PASS effective_output_mesh: asserts=142/25
+2026-10-30T09:00:19.3340742Z PASS effective_biasing: asserts=302/39
+2026-10-30T09:00:20.7923527Z PASS effective_scoring: asserts=57/35
+2026-10-30T09:00:22.7971676Z PASS effective_modules: asserts=136/27
+2026-10-30T09:00:24.1450673Z PASS effective_config_export: asserts=109/41
+2026-10-30T09:00:24.2194811Z PASS merge_histograms: asserts=29/21
+2026-10-30T09:00:35.9465906Z PASS live_progress: asserts=138/36
+2026-10-30T09:00:36.1531397Z PASS backend_capabilities: asserts=21/21
+2026-10-30T09:00:47.6991496Z PASS config_precedence: asserts=24/24
+2026-10-30T09:00:48.0409156Z PASS config_duplicate_declarations: asserts=22/11
+2026-10-30T09:00:48.3914521Z PASS config_value_finiteness: asserts=8/8
+2026-10-30T09:03:25.7680696Z PASS run_summary: asserts=1570/460
+2026-10-30T09:03:33.2748024Z PASS command_state_gating: asserts=23/6
+2026-10-30T09:04:03.0862015Z PASS dose_scoring: asserts=79/46
+2026-10-30T09:04:10.0941927Z PASS fluence_scoring: asserts=96/31
+2026-10-30T09:04:19.9625306Z PASS root_output: asserts=25/20
+2026-10-30T09:04:27.2716781Z PASS scoring_mesh: asserts=618/31
+2026-10-30T09:04:34.8833873Z PASS let_scoring: asserts=36/12
+2026-10-30T09:04:43.8871314Z PASS statistical_uncertainty: asserts=153/18
+2026-10-30T09:05:26.4430417Z PASS scoring_numeric: asserts=457/23
+2026-10-30T09:05:32.5952472Z PASS sd_context_failure: asserts=213/19
+2026-10-30T09:06:24.2121475Z PASS gps_sources: asserts=219/70
+2026-10-30T09:06:48.7341590Z PASS geometry_a5: asserts=4320/48
+2026-10-30T09:08:18.4936947Z PASS physics_a6: asserts=71/27
+2026-10-30T09:08:58.1758700Z PASS fields_a7: asserts=336/23
+2026-10-30T09:09:03.5993852Z PASS max_step_scope: asserts=54/8
+2026-10-30T09:09:05.5695386Z PASS material_numeric: asserts=66/7
+2026-10-30T09:09:15.8248533Z PASS gdml_bias_identity: asserts=97/10
+2026-10-30T09:09:22.7288209Z PASS gdml_touchable_identity: asserts=65/13
+2026-10-30T09:09:28.8859467Z PASS displacement_damage: asserts=44/19
+2026-10-30T09:09:51.1165455Z PASS shielding_coating: asserts=68/25
+2026-10-30T09:09:54.1211453Z PASS scenario_shielding_core: asserts=46/46
+2026-10-30T09:10:15.9239812Z PASS semiconductor_device: asserts=53/10
+2026-10-30T09:10:23.9823869Z PASS detector_response: asserts=19/9
+2026-10-30T09:10:31.5707096Z PASS trajectories: asserts=19257/30
+2026-10-30T09:10:31.9020064Z PASS geant4_data_locator: asserts=13/13
+2026-10-30T09:11:10.1673882Z PASS benchmarks: asserts=1/1
+2026-10-30T09:11:44.1856718Z PASS interactive_commands: asserts=309/168
+2026-10-30T09:11:44.9296789Z PASS unsupported_features: asserts=21/9
+2026-10-30T09:11:45.7558253Z PASS unconsumed_config: asserts=20/12
+2026-10-30T09:11:47.1715459Z PASS material_schema: asserts=85/8
+2026-10-30T09:11:51.1382120Z PASS geometry_safety: asserts=203/15
+2026-10-30T09:11:53.9373457Z PASS geometry_diagnostics: asserts=50/43
+2026-10-30T09:11:54.3178840Z PASS macro_plan: asserts=33/33
+2026-10-30T09:12:07.8274244Z PASS default_geometry: asserts=24/19
+2026-10-30T09:12:39.6399434Z PASS biasing_targets: asserts=80/49
+2026-10-30T09:13:10.6803540Z PASS biasing_worker_runtime: asserts=3479/40
+2026-10-30T09:13:18.9407073Z PASS biasing_step_weight: asserts=79/13
+2026-10-30T09:13:32.3036451Z PASS random_command_semantics: asserts=302/23
+2026-10-30T09:13:47.3977207Z PASS run_reinitialization: asserts=389/29
+2026-10-30T09:13:47.4599959Z Report: /home/runner/work/G4UniversalSim/G4UniversalSim/out/verification/geant4-11.3.2/linux-backend/20261030-085908-442e5e41/report.json
+2026-10-30T09:13:47.4601636Z 59 pass / 0 fail / 0 skip of 59 cases; assertions executed 40387 (59 cases reported counts, 0 cases asserted nothing)
+2026-10-30T09:13:47.4718122Z ##[group]Run python -B scripts/check_report_evidence.py --report-root "$REPORT_ROOT/linux-backend"
+2026-10-30T09:13:47.4719020Z [36;1mpython -B scripts/check_report_evidence.py --report-root "$REPORT_ROOT/linux-backend"[0m
+2026-10-30T09:13:47.4741411Z shell: /usr/bin/bash -e {0}
+2026-10-30T09:13:47.4741681Z env:
+2026-10-30T09:13:47.4742051Z   MAMBA_ROOT_PREFIX: /home/runner/work/G4UniversalSim/G4UniversalSim/.micromamba
+2026-10-30T09:13:47.4742649Z   G4_PREFIX: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2
+2026-10-30T09:13:47.4743494Z   GEANT4_VERSION: 11.3.2
+2026-10-30T09:13:47.4744026Z   REPORT_ROOT: /home/runner/work/G4UniversalSim/G4UniversalSim/out/verification/geant4-11.3.2
+2026-10-30T09:13:47.4744585Z   QT_QPA_PLATFORM: offscreen
+2026-10-30T09:13:47.4745195Z   G4ENSDFSTATEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/ENSDFSTATE3.0
+2026-10-30T09:13:47.4746128Z   G4PIIDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/PII1.3
+2026-10-30T09:13:47.4746984Z   G4INCLDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/INCL1.2
+2026-10-30T09:13:47.4747838Z   G4LEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/EMLOW8.6.1
+2026-10-30T09:13:47.4748740Z   G4CHANNELINGDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/CHANNELING1.0
+2026-10-30T09:13:47.4749699Z   G4PARTICLEXSDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/PARTICLEXS4.1
+2026-10-30T09:13:47.4750632Z   G4NEUTRONHPDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/NDL4.7.1
+2026-10-30T09:13:47.4751579Z   G4SAIDXSDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/SAIDDATA2.0
+2026-10-30T09:13:47.4752523Z   G4REALSURFACEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/RealSurface2.2
+2026-10-30T09:13:47.4753741Z   G4ABLADATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/ABLA3.3
+2026-10-30T09:13:47.4754682Z   G4LEVELGAMMADATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/PhotonEvaporation6.1
+2026-10-30T09:13:47.4755736Z   G4RADIOACTIVEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/RadioactiveDecay6.1.2
+2026-10-30T09:13:47.4756600Z   LD_LIBRARY_PATH: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/lib:
+2026-10-30T09:13:47.4757468Z   QT_PLUGIN_PATH: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/lib/python3.11/site-packages/PySide6/Qt/plugins
+2026-10-30T09:13:47.4758163Z   G4USIM_EXPECT_GDML: 1
+2026-10-30T09:13:47.4758425Z ##[endgroup]
+2026-10-30T09:13:47.5108426Z report evidence: OK /home/runner/work/G4UniversalSim/G4UniversalSim/out/verification/geant4-11.3.2/linux-backend/20261030-085908-442e5e41/report.json
+2026-10-30T09:13:47.5110528Z   version 2, profile backend, 59 cases, 40387 assertions executed, probe settrace_assert_lines_v3, digest sha256_raw_bytes_lf_v2
+2026-10-30T09:13:47.5112081Z   source db253b7b1ed5..., tests 57a80e4f5e73...
+2026-10-30T09:13:47.5184998Z ##[group]Run python -B scripts/run_m0_tests.py --profile integration --require-tracked-sources --fail-on-skip \
+2026-10-30T09:13:47.5185912Z [36;1mpython -B scripts/run_m0_tests.py --profile integration --require-tracked-sources --fail-on-skip \[0m
+2026-10-30T09:13:47.5186540Z [36;1m  --executable build_linux/G4UniversalSim \[0m
+2026-10-30T09:13:47.5186962Z [36;1m  --merge-executable build_linux/mergeHistograms \[0m
+2026-10-30T09:13:47.5187389Z [36;1m  --report-root "$REPORT_ROOT/linux-integration"[0m
+2026-10-30T09:13:47.5219348Z shell: /usr/bin/bash -e {0}
+2026-10-30T09:13:47.5219684Z env:
+2026-10-30T09:13:47.5220094Z   MAMBA_ROOT_PREFIX: /home/runner/work/G4UniversalSim/G4UniversalSim/.micromamba
+2026-10-30T09:13:47.5220748Z   G4_PREFIX: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2
+2026-10-30T09:13:47.5221235Z   GEANT4_VERSION: 11.3.2
+2026-10-30T09:13:47.5221777Z   REPORT_ROOT: /home/runner/work/G4UniversalSim/G4UniversalSim/out/verification/geant4-11.3.2
+2026-10-30T09:13:47.5222380Z   QT_QPA_PLATFORM: offscreen
+2026-10-30T09:13:47.5223378Z   G4ENSDFSTATEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/ENSDFSTATE3.0
+2026-10-30T09:13:47.5224366Z   G4PIIDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/PII1.3
+2026-10-30T09:13:47.5225268Z   G4INCLDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/INCL1.2
+2026-10-30T09:13:47.5226175Z   G4LEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/EMLOW8.6.1
+2026-10-30T09:13:47.5227144Z   G4CHANNELINGDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/CHANNELING1.0
+2026-10-30T09:13:47.5228224Z   G4PARTICLEXSDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/PARTICLEXS4.1
+2026-10-30T09:13:47.5229229Z   G4NEUTRONHPDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/NDL4.7.1
+2026-10-30T09:13:47.5230079Z   G4SAIDXSDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/SAIDDATA2.0
+2026-10-30T09:13:47.5230942Z   G4REALSURFACEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/RealSurface2.2
+2026-10-30T09:13:47.5231789Z   G4ABLADATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/ABLA3.3
+2026-10-30T09:13:47.5232656Z   G4LEVELGAMMADATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/PhotonEvaporation6.1
+2026-10-30T09:13:47.5233863Z   G4RADIOACTIVEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/RadioactiveDecay6.1.2
+2026-10-30T09:13:47.5234667Z   LD_LIBRARY_PATH: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/lib:
+2026-10-30T09:13:47.5235480Z   QT_PLUGIN_PATH: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/lib/python3.11/site-packages/PySide6/Qt/plugins
+2026-10-30T09:13:47.5236128Z   G4USIM_EXPECT_GDML: 1
+2026-10-30T09:13:47.5236381Z ##[endgroup]
+2026-10-30T09:14:19.1086092Z PASS config_migration_backend: asserts=171/26
+2026-10-30T09:14:22.8001977Z PASS effective_lifecycle: asserts=3102/45
+2026-10-30T09:14:22.8598893Z PASS effective_gdml: asserts=11/9
+2026-10-30T09:14:27.0183673Z PASS gui_live_progress_backend: asserts=16/12
+2026-10-30T09:14:30.2167348Z PASS gui_scenario_backend: asserts=32/32
+2026-10-30T09:14:37.7798612Z PASS output_provenance_backend: asserts=60/26
+2026-10-30T09:14:48.1041649Z PASS q1_results_backend: asserts=125/25
+2026-10-30T09:15:00.4486196Z PASS geometry_roundtrip: asserts=45/17
+2026-10-30T09:15:05.5544746Z PASS gui_run_inputs: asserts=103/94
+2026-10-30T09:15:09.9759575Z PASS gui_backend_geometry: asserts=14/14
+2026-10-30T09:15:19.0709358Z PASS gui_backend_package: asserts=74/22
+2026-10-30T09:15:28.1700607Z PASS gui_plots_backend: asserts=32/19
+2026-10-30T09:15:38.5886734Z PASS gui_new_simulation_backend: asserts=17/9
+2026-10-30T09:15:49.6090641Z PASS gui_scans_backend: asserts=18/14
+2026-10-30T09:16:38.0032029Z PASS gui_backend_agreement: asserts=107/2
+2026-10-30T09:16:51.4257238Z PASS gui_backend_geometry_auto: asserts=30/30
+2026-10-30T09:16:56.0387322Z PASS gui_trajectory_view: asserts=23/35
+2026-10-30T09:17:18.2451747Z PASS gui_sketch_accuracy: asserts=55/3
+2026-10-30T09:17:25.7007484Z PASS gui_source_glyphs: asserts=34/32
+2026-10-30T09:17:33.6838632Z PASS config_schema: asserts=309/12
+2026-10-30T09:17:33.7453030Z Report: /home/runner/work/G4UniversalSim/G4UniversalSim/out/verification/geant4-11.3.2/linux-integration/20261030-091347-3c389cd8/report.json
+2026-10-30T09:17:33.7454309Z 20 pass / 0 fail / 0 skip of 20 cases; assertions executed 4378 (20 cases reported counts, 0 cases asserted nothing)
+2026-10-30T09:17:33.7574025Z ##[group]Run python -B scripts/check_report_evidence.py --report-root "$REPORT_ROOT/linux-integration"
+2026-10-30T09:17:33.7575004Z [36;1mpython -B scripts/check_report_evidence.py --report-root "$REPORT_ROOT/linux-integration"[0m
+2026-10-30T09:17:33.7598304Z shell: /usr/bin/bash -e {0}
+2026-10-30T09:17:33.7598619Z env:
+2026-10-30T09:17:33.7599058Z   MAMBA_ROOT_PREFIX: /home/runner/work/G4UniversalSim/G4UniversalSim/.micromamba
+2026-10-30T09:17:33.7599752Z   G4_PREFIX: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2
+2026-10-30T09:17:33.7600258Z   GEANT4_VERSION: 11.3.2
+2026-10-30T09:17:33.7600787Z   REPORT_ROOT: /home/runner/work/G4UniversalSim/G4UniversalSim/out/verification/geant4-11.3.2
+2026-10-30T09:17:33.7601399Z   QT_QPA_PLATFORM: offscreen
+2026-10-30T09:17:33.7602064Z   G4ENSDFSTATEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/ENSDFSTATE3.0
+2026-10-30T09:17:33.7603419Z   G4PIIDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/PII1.3
+2026-10-30T09:17:33.7604322Z   G4INCLDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/INCL1.2
+2026-10-30T09:17:33.7605233Z   G4LEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/EMLOW8.6.1
+2026-10-30T09:17:33.7606203Z   G4CHANNELINGDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/CHANNELING1.0
+2026-10-30T09:17:33.7607234Z   G4PARTICLEXSDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/PARTICLEXS4.1
+2026-10-30T09:17:33.7608238Z   G4NEUTRONHPDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/NDL4.7.1
+2026-10-30T09:17:33.7609211Z   G4SAIDXSDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/SAIDDATA2.0
+2026-10-30T09:17:33.7610231Z   G4REALSURFACEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/RealSurface2.2
+2026-10-30T09:17:33.7611217Z   G4ABLADATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/ABLA3.3
+2026-10-30T09:17:33.7612239Z   G4LEVELGAMMADATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/PhotonEvaporation6.1
+2026-10-30T09:17:33.7613569Z   G4RADIOACTIVEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/RadioactiveDecay6.1.2
+2026-10-30T09:17:33.7614414Z   LD_LIBRARY_PATH: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/lib:
+2026-10-30T09:17:33.7615233Z   QT_PLUGIN_PATH: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/lib/python3.11/site-packages/PySide6/Qt/plugins
+2026-10-30T09:17:33.7615888Z   G4USIM_EXPECT_GDML: 1
+2026-10-30T09:17:33.7616132Z ##[endgroup]
+2026-10-30T09:17:33.7951826Z report evidence: OK /home/runner/work/G4UniversalSim/G4UniversalSim/out/verification/geant4-11.3.2/linux-integration/20261030-091347-3c389cd8/report.json
+2026-10-30T09:17:33.7954506Z   version 2, profile integration, 20 cases, 4378 assertions executed, probe settrace_assert_lines_v3, digest sha256_raw_bytes_lf_v2
+2026-10-30T09:17:33.7955910Z   source db253b7b1ed5..., tests 57a80e4f5e73...
+2026-10-30T09:17:33.8029800Z ##[group]Run set -euo pipefail
+2026-10-30T09:17:33.8030162Z [36;1mset -euo pipefail[0m
+2026-10-30T09:17:33.8030579Z [36;1mcp -r "$REPORT_ROOT/linux-backend" "$RUNNER_TEMP/tampered"[0m
+2026-10-30T09:17:33.8031032Z [36;1mpython - "$RUNNER_TEMP/tampered" <<'PY'[0m
+2026-10-30T09:17:33.8031381Z [36;1mimport json, sys[0m
+2026-10-30T09:17:33.8031654Z [36;1mfrom pathlib import Path[0m
+2026-10-30T09:17:33.8031928Z [36;1m[0m
+2026-10-30T09:17:33.8032146Z [36;1mroot = Path(sys.argv[1])[0m
+2026-10-30T09:17:33.8032596Z [36;1mreport = sorted(root.glob("*/report.json"), key=lambda p: p.stat().st_mtime)[-1][0m
+2026-10-30T09:17:33.8033494Z [36;1mdata = json.loads(report.read_text(encoding="utf-8"))[0m
+2026-10-30T09:17:33.8034031Z [36;1mrecord = next(item for item in data["results"] if item["status"] == "pass")[0m
+2026-10-30T09:17:33.8034628Z [36;1m# Tamper the copy: the gate resolves logs relative to the report directory,[0m
+2026-10-30T09:17:33.8035249Z [36;1m# so the original evidence stays untouched and the copy must be rejected.[0m
+2026-10-30T09:17:33.8035753Z [36;1mlog = report.parent / Path(record["log"]).name[0m
+2026-10-30T09:17:33.8036107Z [36;1mif not log.is_file():[0m
+2026-10-30T09:17:33.8036461Z [36;1m    log = report.parent / "logs" / Path(record["log"]).name[0m
+2026-10-30T09:17:33.8036848Z [36;1mif not log.is_file():[0m
+2026-10-30T09:17:33.8037309Z [36;1m    raise SystemExit(f"cannot locate the log of {record['name']} in the copied report")[0m
+2026-10-30T09:17:33.8037890Z [36;1mlog.write_bytes(log.read_bytes() + b"\n# tampered\n")[0m
+2026-10-30T09:17:33.8038271Z [36;1mprint("tampered", log)[0m
+2026-10-30T09:17:33.8038536Z [36;1mPY[0m
+2026-10-30T09:17:33.8038979Z [36;1mif python -B scripts/check_report_evidence.py --report-root "$RUNNER_TEMP/tampered"; then[0m
+2026-10-30T09:17:33.8039620Z [36;1m  echo "evidence gate accepted a tampered log digest"; exit 1[0m
+2026-10-30T09:17:33.8040013Z [36;1mfi[0m
+2026-10-30T09:17:33.8040306Z [36;1mecho "evidence gate rejected the tampered log digest"[0m
+2026-10-30T09:17:33.8061868Z shell: /usr/bin/bash -e {0}
+2026-10-30T09:17:33.8062129Z env:
+2026-10-30T09:17:33.8062481Z   MAMBA_ROOT_PREFIX: /home/runner/work/G4UniversalSim/G4UniversalSim/.micromamba
+2026-10-30T09:17:33.8063357Z   G4_PREFIX: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2
+2026-10-30T09:17:33.8063815Z   GEANT4_VERSION: 11.3.2
+2026-10-30T09:17:33.8064286Z   REPORT_ROOT: /home/runner/work/G4UniversalSim/G4UniversalSim/out/verification/geant4-11.3.2
+2026-10-30T09:17:33.8064810Z   QT_QPA_PLATFORM: offscreen
+2026-10-30T09:17:33.8065374Z   G4ENSDFSTATEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/ENSDFSTATE3.0
+2026-10-30T09:17:33.8066197Z   G4PIIDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/PII1.3
+2026-10-30T09:17:33.8066957Z   G4INCLDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/INCL1.2
+2026-10-30T09:17:33.8067746Z   G4LEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/EMLOW8.6.1
+2026-10-30T09:17:33.8068574Z   G4CHANNELINGDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/CHANNELING1.0
+2026-10-30T09:17:33.8069477Z   G4PARTICLEXSDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/PARTICLEXS4.1
+2026-10-30T09:17:33.8070328Z   G4NEUTRONHPDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/NDL4.7.1
+2026-10-30T09:17:33.8071161Z   G4SAIDXSDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/SAIDDATA2.0
+2026-10-30T09:17:33.8072035Z   G4REALSURFACEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/RealSurface2.2
+2026-10-30T09:17:33.8073129Z   G4ABLADATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/ABLA3.3
+2026-10-30T09:17:33.8074363Z   G4LEVELGAMMADATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/PhotonEvaporation6.1
+2026-10-30T09:17:33.8075346Z   G4RADIOACTIVEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/RadioactiveDecay6.1.2
+2026-10-30T09:17:33.8076103Z   LD_LIBRARY_PATH: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/lib:
+2026-10-30T09:17:33.8076858Z   QT_PLUGIN_PATH: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/lib/python3.11/site-packages/PySide6/Qt/plugins
+2026-10-30T09:17:33.8077466Z   G4USIM_EXPECT_GDML: 1
+2026-10-30T09:17:33.8077695Z ##[endgroup]
+2026-10-30T09:17:33.8379959Z tampered /home/runner/work/_temp/tampered/20261030-085908-442e5e41/f1_input_resources.log
+2026-10-30T09:17:33.8717433Z report evidence: FAIL /home/runner/work/_temp/tampered/20261030-085908-442e5e41/report.json
+2026-10-30T09:17:33.8719339Z   log digest mismatch for case 'f1_input_resources': report says 9fc8c9caab6e01a28e0ae66e99410eb879e39253a826fb2df94797463857e3aa, file /home/runner/work/_temp/tampered/20261030-085908-442e5e41/f1_input_resources.log hashes to f8018f1a3e950bee716c13633e4390d2ee47ebad430849a1efc478e99273f4dc
+2026-10-30T09:17:33.8759874Z evidence gate rejected the tampered log digest
+2026-10-30T09:17:33.8831602Z ##[group]Run actions/upload-artifact@v4
+2026-10-30T09:17:33.8831938Z with:
+2026-10-30T09:17:33.8832222Z   name: linux-evidence-11.3.2
+2026-10-30T09:17:33.8833513Z   path: out/verification/geant4-11.3.2/linux-static
+out/verification/geant4-11.3.2/linux-gui
+out/verification/geant4-11.3.2/linux-backend
+out/verification/geant4-11.3.2/linux-integration
+
+2026-10-30T09:17:33.8834404Z   if-no-files-found: warn
+2026-10-30T09:17:33.8834656Z   compression-level: 6
+2026-10-30T09:17:33.8834885Z   overwrite: false
+2026-10-30T09:17:33.8835113Z   include-hidden-files: false
+2026-10-30T09:17:33.8835361Z env:
+2026-10-30T09:17:33.8835708Z   MAMBA_ROOT_PREFIX: /home/runner/work/G4UniversalSim/G4UniversalSim/.micromamba
+2026-10-30T09:17:33.8836293Z   G4_PREFIX: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2
+2026-10-30T09:17:33.8836706Z   GEANT4_VERSION: 11.3.2
+2026-10-30T09:17:33.8837137Z   REPORT_ROOT: /home/runner/work/G4UniversalSim/G4UniversalSim/out/verification/geant4-11.3.2
+2026-10-30T09:17:33.8837659Z   QT_QPA_PLATFORM: offscreen
+2026-10-30T09:17:33.8838192Z   G4ENSDFSTATEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/ENSDFSTATE3.0
+2026-10-30T09:17:33.8838978Z   G4PIIDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/PII1.3
+2026-10-30T09:17:33.8839704Z   G4INCLDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/INCL1.2
+2026-10-30T09:17:33.8840432Z   G4LEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/EMLOW8.6.1
+2026-10-30T09:17:33.8841213Z   G4CHANNELINGDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/CHANNELING1.0
+2026-10-30T09:17:33.8842048Z   G4PARTICLEXSDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/PARTICLEXS4.1
+2026-10-30T09:17:33.8843073Z   G4NEUTRONHPDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/NDL4.7.1
+2026-10-30T09:17:33.8843893Z   G4SAIDXSDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/SAIDDATA2.0
+2026-10-30T09:17:33.8844708Z   G4REALSURFACEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/RealSurface2.2
+2026-10-30T09:17:33.8845491Z   G4ABLADATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/ABLA3.3
+2026-10-30T09:17:33.8846468Z   G4LEVELGAMMADATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/PhotonEvaporation6.1
+2026-10-30T09:17:33.8847343Z   G4RADIOACTIVEDATA: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/share/Geant4/data/RadioactiveDecay6.1.2
+2026-10-30T09:17:33.8848064Z   LD_LIBRARY_PATH: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/lib:
+2026-10-30T09:17:33.8849012Z   QT_PLUGIN_PATH: /home/runner/work/G4UniversalSim/G4UniversalSim/.g4env-11.3.2/lib/python3.11/site-packages/PySide6/Qt/plugins
+2026-10-30T09:17:33.8849620Z   G4USIM_EXPECT_GDML: 1
+2026-10-30T09:17:33.8849848Z ##[endgroup]
+2026-10-30T09:17:34.0603264Z (node:8273) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-30T09:17:34.0605068Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-30T09:17:34.1154216Z Multiple search paths detected. Calculating the least common ancestor of all paths
+2026-10-30T09:17:34.1158826Z The least common ancestor is /home/runner/work/G4UniversalSim/G4UniversalSim/out/verification/geant4-11.3.2. This will be the root directory of the artifact
+2026-10-30T09:17:34.1160213Z With the provided path, there will be 147 files uploaded
+2026-10-30T09:17:34.1169588Z Artifact name is valid!
+2026-10-30T09:17:34.1170406Z Root directory input is valid!
+2026-10-30T09:17:34.3327734Z Beginning upload of artifact content to blob storage
+2026-10-30T09:17:34.4765722Z (node:8273) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-10-30T09:17:34.5049187Z Uploaded bytes 75520
+2026-10-30T09:17:34.5192707Z Finished uploading artifact content to blob storage!
+2026-10-30T09:17:34.5194348Z SHA256 digest of uploaded artifact zip is e67ed98e4daae7c52479cd756fd4b4242b49b950595298a1c8b9c3886ed451dd
+2026-10-30T09:17:34.5196401Z Finalizing artifact upload
+2026-10-30T09:17:34.9156041Z Artifact linux-evidence-11.3.2.zip successfully finalized. Artifact ID 12965413991
+2026-10-30T09:17:34.9157609Z Artifact linux-evidence-11.3.2 has been successfully uploaded! Final size is 75520 bytes. Artifact ID is 12965413991
+2026-10-30T09:17:34.9162498Z Artifact download URL: https://github.com/doorfordoor/G4UniversalSim/actions/runs/41028779177/artifacts/12965413991
+2026-10-30T09:17:34.9403233Z Post job cleanup.
+2026-10-30T09:17:35.0313944Z [command]/usr/bin/git version
+2026-10-30T09:17:35.0364541Z git version 2.56.0
+2026-10-30T09:17:35.0407918Z Temporarily overriding HOME='/home/runner/work/_temp/facaa0aa-4598-4df7-9229-eb1309bfc6c8' before making global git config changes
+2026-10-30T09:17:35.0409889Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-30T09:17:35.0414007Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/G4UniversalSim/G4UniversalSim
+2026-10-30T09:17:35.0460205Z Removing SSH command configuration
+2026-10-30T09:17:35.0470283Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-30T09:17:35.0503576Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-30T09:17:35.0812325Z Removing HTTP extra header
+2026-10-30T09:17:35.0820765Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-30T09:17:35.0868068Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-30T09:17:35.1166956Z Removing includeIf entries pointing to credentials config files
+2026-10-30T09:17:35.1174131Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-30T09:17:35.1219817Z includeif.gitdir:/home/runner/work/G4UniversalSim/G4UniversalSim/.git.path
+2026-10-30T09:17:35.1222051Z includeif.gitdir:/home/runner/work/G4UniversalSim/G4UniversalSim/.git/worktrees/*.path
+2026-10-30T09:17:35.1223860Z includeif.gitdir:/github/workspace/.git.path
+2026-10-30T09:17:35.1225528Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-30T09:17:35.1234002Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/G4UniversalSim/G4UniversalSim/.git.path
+2026-10-30T09:17:35.1270849Z /home/runner/work/_temp/git-credentials-76cc3fc8-2b4d-48e7-b529-bcf9b9eae3ae.config
+2026-10-30T09:17:35.1284860Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/G4UniversalSim/G4UniversalSim/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-76cc3fc8\-2b4d\-48e7\-b529\-bcf9b9eae3ae\.config
+2026-10-30T09:17:35.1343635Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/G4UniversalSim/G4UniversalSim/.git/worktrees/*.path
+2026-10-30T09:17:35.1384620Z /home/runner/work/_temp/git-credentials-76cc3fc8-2b4d-48e7-b529-bcf9b9eae3ae.config
+2026-10-30T09:17:35.1393823Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/G4UniversalSim/G4UniversalSim/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-76cc3fc8\-2b4d\-48e7\-b529\-bcf9b9eae3ae\.config
+2026-10-30T09:17:35.1441984Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-10-30T09:17:35.1481042Z /github/runner_temp/git-credentials-76cc3fc8-2b4d-48e7-b529-bcf9b9eae3ae.config
+2026-10-30T09:17:35.1492045Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-76cc3fc8\-2b4d\-48e7\-b529\-bcf9b9eae3ae\.config
+2026-10-30T09:17:35.1540300Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-30T09:17:35.1577292Z /github/runner_temp/git-credentials-76cc3fc8-2b4d-48e7-b529-bcf9b9eae3ae.config
+2026-10-30T09:17:35.1585881Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-76cc3fc8\-2b4d\-48e7\-b529\-bcf9b9eae3ae\.config
+2026-10-30T09:17:35.1635743Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-30T09:17:35.1929483Z Removing credentials config '/home/runner/work/_temp/git-credentials-76cc3fc8-2b4d-48e7-b529-bcf9b9eae3ae.config'
+2026-10-30T09:17:35.2086111Z Cleaning up orphan processes
+2026-10-30T09:17:35.2516334Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

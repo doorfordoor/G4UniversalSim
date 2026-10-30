@@ -1,0 +1,11 @@
+# 第二冻结CI收集完成检查点
+
+head 3d1faf1b256a945ac800c08bacf51db57f8ca416；本目录第二轮CI未通过，不是新freeze或阶段接受。
+
+Linux run41024949824：11.4 job123960735990、11.3 job123960736266均completed/failure；terminal run/jobs/artifacts已保存，两个完整decoded job日志、两原ZIP及解包字节齐全。M0 run41024949832既有两份success证据原样复用，未覆盖。
+
+4原ZIP官方digest匹配，428个解包文件与原ZIP成员字节一致；12报告、414case日志及断言marker/原始SHA全部核对；10成功报告strict exit0，2integration报告strict非零，effective_gdml均exit1、2条断言、xercesc_3_3::OutOfMemoryException。仅triage完整性通过，不把失败报告变绿。
+
+failed-round-summary.json、evidence-integrity-audit.json、zip-members-audit.json、README.md为交接入口。ci-evidence.json status=not_passed/complete=true（集合完整）；verify-only-receipt.json确认只执行verify，未走collect凭据fallback。
+
+无本代理运行中session，无待保存URL/下载缓冲；未启动主exe、重建、主全量、CI重跑或UI操作。下一步由root安排GDML异常诊断，保留这轮所有失败原字节后另做修复节点；不要追改成绿色。根的Windows session15944未触碰。

@@ -1,0 +1,13 @@
+# F1 FE-05 父窗口关闭独立复核
+
+结论：本次定向复核未发现阻断，FE-05 在已测接受/忽略关闭边界关闭。仅只读源码与轻量 offscreen 专项；未修改产品，未运行 backend、编译或操作用户真实窗口。
+
+原反例已读：out/collab/f1-frontend-final-review.md、f1-frontend-outputpage-parent-close.log。旧版父关闭后 pending=true/closed=false/cancelled=false，释放 hash 后仍发布，属于真实缺口；本次没有改写这些历史失败证据。
+
+修复机制：core/evidence_job.py 的 EvidenceJob 现在 QObject(owner)，嵌入页所有请求可由主窗口 findChildren 枚举；MainWindow.closeEvent 在残余 QProcess 导致 event.ignore 的分支之后，调用 close_evidence_jobs(self)。close 设置 closed、增加 serial、设置 cancellation event、清 callback，旧信号即使已排队也被 _publish 拒绝。忽略关闭分支不永久关闭请求，允许新目录请求。关闭函数不等待文件 hash worker。逐页直接 close 与 owner destroyed 的防线保留。
+
+独立实际运行：D:/Geant4/G4UniversalSim/gui/.venv/Scripts/python.exe gui/smoke_tests/smoke_f1_async_identity.py，QT_QPA_PLATFORM=offscreen，exit 0。原始日志 out/collab/f1-parent-close-independent.log。测试实际构造 MainWindow，阻塞第一条真实 hash，以无法停止的受控 QProcess 替身使 close 返回 false，确认原请求仍 pending/未取消且能提交 B 并显示；随后在新阻塞请求下接受 close，检查返回时间 <0.5s、至少6个真实 EvidenceJob 全部 closed、pending=false、event 已设置，释放后不发布旧结果。save_state/load_state 被替换避免写用户状态；替身只用于 ignore 分支，接受关闭使用真实窗口拥有的对象树。
+
+源码稳定：运行前后 main_window.py、evidence_job.py、smoke_f1_async_identity.py 三文件 SHA256 一致，记录 f1-parent-close-before.json / f1-parent-close-after.json。复核还重跑了该 smoke 已有搬移锚点、process scope、身份失效、单次 hash 复用及取消顺序断言。
+
+边界：仅取消合作式工作及抑制旧结果，不强制打断 OS 单次阻塞 I/O；全局 executor 在解释器退出可能等待尚未返回的不可中断读取。没有把这次受控阻塞测试当作真实磁盘卡死/进程退出时长证明。关闭忽略分支既有停止 timer/producer 行为不在本次身份请求修复范围内。无全量、CI 或可见窗口验收结论。auto C++ 保持冻结，统一构建 session58442 由 root 管理。

@@ -1,0 +1,11 @@
+# F1 archive-f1.py 独立只读审查
+
+未执行归档、未修改helper或tracked。检查版本为当前out/collab/archive-f1.py；本次源码审查，不声称完成发布演练。
+
+P2 门禁缺口：build_plan对CI只核验artifacts/reports数量及summary passed/complete，report_gates对accepted_ci逐报告核对profile对应case集合/指纹/head，再仅比较总数expected_ci_reports。没有要求4artifact的平台/Geant4版本身份与12份报告profile分布一一对应，也没有将ci-evidence.reports路径集与实际入档报告集闭合。故12份重复static profile的真实合法报告，配合4个ZIP和自洽summary计数，可以替代缺失backend/integration而通过该层“topology”检查（即使各报告strict gate都合法）。位置build_plan约340–359、report_gates约448–466。建议校验明确artifact身份->必需profile集合（M0 Windows/Ubuntu各static/gui，Linux两个Geant4版本各四profile），禁止重复身份，要求实际报告路径/摘要清单精确一致。门禁之前先独立确认官方job终态与head；summary passed是输入声明，不是原始job事实。
+
+安全与字节方面未见当前正常使用路径的确定阻断：execute拒绝已存在/悬空链接destination，exclusive mkdir/xb从不覆盖旧证据，异常留下无complete的部分目录；source选择检查ROOT边界及祖先reparse/symlink；成员检查拒绝盘符/反斜线/上溯并验证resolve边界。复制前后source与destination raw SHA一致，completion绑定manifest/verification，重验复核所有复制字节/生成gate日志。ZIP官方digest与解包成员字节核对，发布前再次检查ZIP。报告日志要求archive-local同SHA，避免旧绝对路径偷读；release strict gate、source/tests/head及Windows clean/all、case全集、same-probe baseline均有检查。历史失败允许保留但不算release。
+
+性能留存计划清晰：54组主测与18组buffer实验分别检查schema/sample数/每项exit0、有限非负计时、输入macro日志原字节SHA、唯一组合及由报告rounds推导的完整矩阵；保留每组输入/日志/summary/metadata/effective快照，原大CSV/ROOT和可执行文件不复制，仅保留原记录hash且明确不从可能被重建的路径重算。这只能证明记录及原输入日志自洽，不是重做性能实验或当前binary认证。源ZIP也明确留源、不复制container；若正式归档要求ZIP可搬移离线取证，应由root明确调整留存政策（不是字节复制错误）。
+
+本次没有执行--execute/--review-plan，未读取凭据，未跑重CPU测试。启动页补丁另报告f1-start-page-independent-review.md；当前尚有已完成未知key未清旧图的P2待前端补齐。

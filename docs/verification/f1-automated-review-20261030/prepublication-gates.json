@@ -1,0 +1,680 @@
+{
+  "status": "review_passed_not_published",
+  "archive_published": false,
+  "source_files_verified": 2797,
+  "link_check": {
+    "scope": "Exact existing doc-links parser; Git tracked plus planned archive paths only, case-sensitive future layout; no source-out existence fallback; external URLs and anchors not asserted",
+    "markdown_files": 3,
+    "local_links": 23,
+    "broken_links": 0,
+    "records": [
+      {
+        "archive_path": "README.md",
+        "links": [
+          {
+            "line": 15,
+            "target": "windows/final-1/report.json",
+            "future_resolved": "docs/verification/f1-automated-20261030/windows/final-1/report.json",
+            "portable": true
+          },
+          {
+            "line": 18,
+            "target": "ci/ci-evidence.json",
+            "future_resolved": "docs/verification/f1-automated-20261030/ci/ci-evidence.json",
+            "portable": true
+          },
+          {
+            "line": 19,
+            "target": "additional/1-f1-gdml-build/receipt.json",
+            "future_resolved": "docs/verification/f1-automated-20261030/additional/1-f1-gdml-build/receipt.json",
+            "portable": true
+          },
+          {
+            "line": 40,
+            "target": "history/ci-round-1-f1-ci-final/failed-round-summary.json",
+            "future_resolved": "docs/verification/f1-automated-20261030/history/ci-round-1-f1-ci-final/failed-round-summary.json",
+            "portable": true
+          },
+          {
+            "line": 41,
+            "target": "history/ci-round-2-f1-ci-corrected/failed-round-summary.json",
+            "future_resolved": "docs/verification/f1-automated-20261030/history/ci-round-2-f1-ci-corrected/failed-round-summary.json",
+            "portable": true
+          },
+          {
+            "line": 43,
+            "target": "history/ci-round-1-f1-ci-final/job-log-backfill-20261030.json",
+            "future_resolved": "docs/verification/f1-automated-20261030/history/ci-round-1-f1-ci-final/job-log-backfill-20261030.json",
+            "portable": true
+          },
+          {
+            "line": 53,
+            "target": "performance/1-f1-performance-before-auto/report.json",
+            "future_resolved": "docs/verification/f1-automated-20261030/performance/1-f1-performance-before-auto/report.json",
+            "portable": true
+          },
+          {
+            "line": 53,
+            "target": "buffer_performance/1-f1-buffer-performance/report.json",
+            "future_resolved": "docs/verification/f1-automated-20261030/buffer_performance/1-f1-buffer-performance/report.json",
+            "portable": true
+          }
+        ],
+        "broken_count": 0
+      },
+      {
+        "archive_path": "ci/README.md",
+        "links": [
+          {
+            "line": 9,
+            "target": "linux-evidence-11.3.2/linux-backend/20261030-085908-442e5e41/report.json",
+            "future_resolved": "docs/verification/f1-automated-20261030/ci/linux-evidence-11.3.2/linux-backend/20261030-085908-442e5e41/report.json",
+            "portable": true
+          },
+          {
+            "line": 10,
+            "target": "linux-evidence-11.3.2/linux-gui/20261030-085807-247d9d38/report.json",
+            "future_resolved": "docs/verification/f1-automated-20261030/ci/linux-evidence-11.3.2/linux-gui/20261030-085807-247d9d38/report.json",
+            "portable": true
+          },
+          {
+            "line": 11,
+            "target": "linux-evidence-11.3.2/linux-integration/20261030-091347-3c389cd8/report.json",
+            "future_resolved": "docs/verification/f1-automated-20261030/ci/linux-evidence-11.3.2/linux-integration/20261030-091347-3c389cd8/report.json",
+            "portable": true
+          },
+          {
+            "line": 12,
+            "target": "linux-evidence-11.3.2/linux-static/20261030-085714-5a950ea2/report.json",
+            "future_resolved": "docs/verification/f1-automated-20261030/ci/linux-evidence-11.3.2/linux-static/20261030-085714-5a950ea2/report.json",
+            "portable": true
+          },
+          {
+            "line": 13,
+            "target": "linux-evidence-11.4.3/linux-backend/20261030-085917-b668dfa4/report.json",
+            "future_resolved": "docs/verification/f1-automated-20261030/ci/linux-evidence-11.4.3/linux-backend/20261030-085917-b668dfa4/report.json",
+            "portable": true
+          },
+          {
+            "line": 14,
+            "target": "linux-evidence-11.4.3/linux-gui/20261030-085814-17086ea8/report.json",
+            "future_resolved": "docs/verification/f1-automated-20261030/ci/linux-evidence-11.4.3/linux-gui/20261030-085814-17086ea8/report.json",
+            "portable": true
+          },
+          {
+            "line": 15,
+            "target": "linux-evidence-11.4.3/linux-integration/20261030-091345-ccb2c6a0/report.json",
+            "future_resolved": "docs/verification/f1-automated-20261030/ci/linux-evidence-11.4.3/linux-integration/20261030-091345-ccb2c6a0/report.json",
+            "portable": true
+          },
+          {
+            "line": 16,
+            "target": "linux-evidence-11.4.3/linux-static/20261030-085719-90e72d82/report.json",
+            "future_resolved": "docs/verification/f1-automated-20261030/ci/linux-evidence-11.4.3/linux-static/20261030-085719-90e72d82/report.json",
+            "portable": true
+          },
+          {
+            "line": 17,
+            "target": "m0-report-ubuntu-latest/20261030-085531-34838c3e/report.json",
+            "future_resolved": "docs/verification/f1-automated-20261030/ci/m0-report-ubuntu-latest/20261030-085531-34838c3e/report.json",
+            "portable": true
+          },
+          {
+            "line": 18,
+            "target": "m0-report-ubuntu-latest/20261030-085606-197ce25c/report.json",
+            "future_resolved": "docs/verification/f1-automated-20261030/ci/m0-report-ubuntu-latest/20261030-085606-197ce25c/report.json",
+            "portable": true
+          },
+          {
+            "line": 19,
+            "target": "m0-report-windows-latest/20261030-085559-fc139df5/report.json",
+            "future_resolved": "docs/verification/f1-automated-20261030/ci/m0-report-windows-latest/20261030-085559-fc139df5/report.json",
+            "portable": true
+          },
+          {
+            "line": 20,
+            "target": "m0-report-windows-latest/20261030-085726-e56c442a/report.json",
+            "future_resolved": "docs/verification/f1-automated-20261030/ci/m0-report-windows-latest/20261030-085726-e56c442a/report.json",
+            "portable": true
+          },
+          {
+            "line": 22,
+            "target": "ci-evidence.json",
+            "future_resolved": "docs/verification/f1-automated-20261030/ci/ci-evidence.json",
+            "portable": true
+          },
+          {
+            "line": 22,
+            "target": "evidence-integrity-audit.json",
+            "future_resolved": "docs/verification/f1-automated-20261030/ci/evidence-integrity-audit.json",
+            "portable": true
+          },
+          {
+            "line": 22,
+            "target": "round-summary.json",
+            "future_resolved": "docs/verification/f1-automated-20261030/ci/round-summary.json",
+            "portable": true
+          }
+        ],
+        "broken_count": 0
+      },
+      {
+        "archive_path": "ci/monitor-checkpoint.md",
+        "links": [],
+        "broken_count": 0
+      }
+    ]
+  },
+  "report_gates": {
+    "reports": [
+      {
+        "report": "baseline/1/report.json",
+        "category": "baseline",
+        "strict_gate_exit_code": 0,
+        "all_pass": true,
+        "gate_log": null,
+        "meaning": "retained original history, not release acceptance"
+      },
+      {
+        "report": "ci/linux-evidence-11.3.2/linux-backend/20261030-085908-442e5e41/report.json",
+        "category": "accepted_ci",
+        "strict_gate_exit_code": 0,
+        "all_pass": true,
+        "gate_log": null,
+        "meaning": "release evidence"
+      },
+      {
+        "report": "ci/linux-evidence-11.3.2/linux-gui/20261030-085807-247d9d38/report.json",
+        "category": "accepted_ci",
+        "strict_gate_exit_code": 0,
+        "all_pass": true,
+        "gate_log": null,
+        "meaning": "release evidence"
+      },
+      {
+        "report": "ci/linux-evidence-11.3.2/linux-integration/20261030-091347-3c389cd8/report.json",
+        "category": "accepted_ci",
+        "strict_gate_exit_code": 0,
+        "all_pass": true,
+        "gate_log": null,
+        "meaning": "release evidence"
+      },
+      {
+        "report": "ci/linux-evidence-11.3.2/linux-static/20261030-085714-5a950ea2/report.json",
+        "category": "accepted_ci",
+        "strict_gate_exit_code": 0,
+        "all_pass": true,
+        "gate_log": null,
+        "meaning": "release evidence"
+      },
+      {
+        "report": "ci/linux-evidence-11.4.3/linux-backend/20261030-085917-b668dfa4/report.json",
+        "category": "accepted_ci",
+        "strict_gate_exit_code": 0,
+        "all_pass": true,
+        "gate_log": null,
+        "meaning": "release evidence"
+      },
+      {
+        "report": "ci/linux-evidence-11.4.3/linux-gui/20261030-085814-17086ea8/report.json",
+        "category": "accepted_ci",
+        "strict_gate_exit_code": 0,
+        "all_pass": true,
+        "gate_log": null,
+        "meaning": "release evidence"
+      },
+      {
+        "report": "ci/linux-evidence-11.4.3/linux-integration/20261030-091345-ccb2c6a0/report.json",
+        "category": "accepted_ci",
+        "strict_gate_exit_code": 0,
+        "all_pass": true,
+        "gate_log": null,
+        "meaning": "release evidence"
+      },
+      {
+        "report": "ci/linux-evidence-11.4.3/linux-static/20261030-085719-90e72d82/report.json",
+        "category": "accepted_ci",
+        "strict_gate_exit_code": 0,
+        "all_pass": true,
+        "gate_log": null,
+        "meaning": "release evidence"
+      },
+      {
+        "report": "ci/m0-report-ubuntu-latest/20261030-085531-34838c3e/report.json",
+        "category": "accepted_ci",
+        "strict_gate_exit_code": 0,
+        "all_pass": true,
+        "gate_log": null,
+        "meaning": "release evidence"
+      },
+      {
+        "report": "ci/m0-report-ubuntu-latest/20261030-085606-197ce25c/report.json",
+        "category": "accepted_ci",
+        "strict_gate_exit_code": 0,
+        "all_pass": true,
+        "gate_log": null,
+        "meaning": "release evidence"
+      },
+      {
+        "report": "ci/m0-report-windows-latest/20261030-085559-fc139df5/report.json",
+        "category": "accepted_ci",
+        "strict_gate_exit_code": 0,
+        "all_pass": true,
+        "gate_log": null,
+        "meaning": "release evidence"
+      },
+      {
+        "report": "ci/m0-report-windows-latest/20261030-085726-e56c442a/report.json",
+        "category": "accepted_ci",
+        "strict_gate_exit_code": 0,
+        "all_pass": true,
+        "gate_log": null,
+        "meaning": "release evidence"
+      },
+      {
+        "report": "history/ci-round-1-f1-ci-final/linux-evidence-11.3.2/linux-gui/20261030-074258-1a218f7a/report.json",
+        "category": "historical_ci",
+        "strict_gate_exit_code": 1,
+        "all_pass": false,
+        "gate_log": null,
+        "meaning": "retained original history, not release acceptance"
+      },
+      {
+        "report": "history/ci-round-1-f1-ci-final/linux-evidence-11.3.2/linux-static/20261030-074208-9931d0fa/report.json",
+        "category": "historical_ci",
+        "strict_gate_exit_code": 0,
+        "all_pass": true,
+        "gate_log": null,
+        "meaning": "retained original history, not release acceptance"
+      },
+      {
+        "report": "history/ci-round-1-f1-ci-final/linux-evidence-11.4.3/linux-gui/20261030-074305-3d7dda45/report.json",
+        "category": "historical_ci",
+        "strict_gate_exit_code": 1,
+        "all_pass": false,
+        "gate_log": null,
+        "meaning": "retained original history, not release acceptance"
+      },
+      {
+        "report": "history/ci-round-1-f1-ci-final/linux-evidence-11.4.3/linux-static/20261030-074213-8ece84c5/report.json",
+        "category": "historical_ci",
+        "strict_gate_exit_code": 0,
+        "all_pass": true,
+        "gate_log": null,
+        "meaning": "retained original history, not release acceptance"
+      },
+      {
+        "report": "history/ci-round-1-f1-ci-final/m0-report-ubuntu-latest/20261030-074038-708b033f/report.json",
+        "category": "historical_ci",
+        "strict_gate_exit_code": 0,
+        "all_pass": true,
+        "gate_log": null,
+        "meaning": "retained original history, not release acceptance"
+      },
+      {
+        "report": "history/ci-round-1-f1-ci-final/m0-report-ubuntu-latest/20261030-074135-a8a39b8c/report.json",
+        "category": "historical_ci",
+        "strict_gate_exit_code": 1,
+        "all_pass": false,
+        "gate_log": null,
+        "meaning": "retained original history, not release acceptance"
+      },
+      {
+        "report": "history/ci-round-1-f1-ci-final/m0-report-windows-latest/20261030-074048-aa0a9c30/report.json",
+        "category": "historical_ci",
+        "strict_gate_exit_code": 0,
+        "all_pass": true,
+        "gate_log": null,
+        "meaning": "retained original history, not release acceptance"
+      },
+      {
+        "report": "history/ci-round-1-f1-ci-final/m0-report-windows-latest/20261030-074207-fd37950f/report.json",
+        "category": "historical_ci",
+        "strict_gate_exit_code": 1,
+        "all_pass": false,
+        "gate_log": null,
+        "meaning": "retained original history, not release acceptance"
+      },
+      {
+        "report": "history/ci-round-2-f1-ci-corrected/linux-evidence-11.3.2/linux-backend/20261030-081715-48563028/report.json",
+        "category": "historical_ci",
+        "strict_gate_exit_code": 0,
+        "all_pass": true,
+        "gate_log": null,
+        "meaning": "retained original history, not release acceptance"
+      },
+      {
+        "report": "history/ci-round-2-f1-ci-corrected/linux-evidence-11.3.2/linux-gui/20261030-081612-05bbfab7/report.json",
+        "category": "historical_ci",
+        "strict_gate_exit_code": 0,
+        "all_pass": true,
+        "gate_log": null,
+        "meaning": "retained original history, not release acceptance"
+      },
+      {
+        "report": "history/ci-round-2-f1-ci-corrected/linux-evidence-11.3.2/linux-integration/20261030-083153-b3c72c50/report.json",
+        "category": "historical_ci",
+        "strict_gate_exit_code": 1,
+        "all_pass": false,
+        "gate_log": null,
+        "meaning": "retained original history, not release acceptance"
+      },
+      {
+        "report": "history/ci-round-2-f1-ci-corrected/linux-evidence-11.3.2/linux-static/20261030-081517-64764b63/report.json",
+        "category": "historical_ci",
+        "strict_gate_exit_code": 0,
+        "all_pass": true,
+        "gate_log": null,
+        "meaning": "retained original history, not release acceptance"
+      },
+      {
+        "report": "history/ci-round-2-f1-ci-corrected/linux-evidence-11.4.3/linux-backend/20261030-081628-6f5fd398/report.json",
+        "category": "historical_ci",
+        "strict_gate_exit_code": 0,
+        "all_pass": true,
+        "gate_log": null,
+        "meaning": "retained original history, not release acceptance"
+      },
+      {
+        "report": "history/ci-round-2-f1-ci-corrected/linux-evidence-11.4.3/linux-gui/20261030-081540-4775f775/report.json",
+        "category": "historical_ci",
+        "strict_gate_exit_code": 0,
+        "all_pass": true,
+        "gate_log": null,
+        "meaning": "retained original history, not release acceptance"
+      },
+      {
+        "report": "history/ci-round-2-f1-ci-corrected/linux-evidence-11.4.3/linux-integration/20261030-082752-810fad59/report.json",
+        "category": "historical_ci",
+        "strict_gate_exit_code": 1,
+        "all_pass": false,
+        "gate_log": null,
+        "meaning": "retained original history, not release acceptance"
+      },
+      {
+        "report": "history/ci-round-2-f1-ci-corrected/linux-evidence-11.4.3/linux-static/20261030-081458-f2806abd/report.json",
+        "category": "historical_ci",
+        "strict_gate_exit_code": 0,
+        "all_pass": true,
+        "gate_log": null,
+        "meaning": "retained original history, not release acceptance"
+      },
+      {
+        "report": "history/ci-round-2-f1-ci-corrected/m0-report-ubuntu-latest/20261030-081325-9aa5aa70/report.json",
+        "category": "historical_ci",
+        "strict_gate_exit_code": 0,
+        "all_pass": true,
+        "gate_log": null,
+        "meaning": "retained original history, not release acceptance"
+      },
+      {
+        "report": "history/ci-round-2-f1-ci-corrected/m0-report-ubuntu-latest/20261030-081422-718f4268/report.json",
+        "category": "historical_ci",
+        "strict_gate_exit_code": 0,
+        "all_pass": true,
+        "gate_log": null,
+        "meaning": "retained original history, not release acceptance"
+      },
+      {
+        "report": "history/ci-round-2-f1-ci-corrected/m0-report-windows-latest/20261030-081347-01d08433/report.json",
+        "category": "historical_ci",
+        "strict_gate_exit_code": 0,
+        "all_pass": true,
+        "gate_log": null,
+        "meaning": "retained original history, not release acceptance"
+      },
+      {
+        "report": "history/ci-round-2-f1-ci-corrected/m0-report-windows-latest/20261030-081442-86a8a4cd/report.json",
+        "category": "historical_ci",
+        "strict_gate_exit_code": 0,
+        "all_pass": true,
+        "gate_log": null,
+        "meaning": "retained original history, not release acceptance"
+      },
+      {
+        "report": "history/windows-round-1-f1-freeze-windows/20261030-154131-deadf201/report.json",
+        "category": "historical_windows",
+        "strict_gate_exit_code": 1,
+        "all_pass": false,
+        "gate_log": null,
+        "meaning": "retained original history, not release acceptance"
+      },
+      {
+        "report": "history/windows-round-2-f1-corrected-windows/20261030-161421-4b8472b7/report.json",
+        "category": "historical_windows",
+        "strict_gate_exit_code": 0,
+        "all_pass": true,
+        "gate_log": null,
+        "meaning": "retained original history, not release acceptance"
+      },
+      {
+        "report": "windows/final-1/report.json",
+        "category": "accepted_windows",
+        "strict_gate_exit_code": 0,
+        "all_pass": true,
+        "gate_log": null,
+        "meaning": "release evidence"
+      }
+    ],
+    "baseline_comparisons": [
+      {
+        "report": "windows/final-1/report.json",
+        "baseline": "baseline/1/report.json",
+        "exit_code": 0
+      }
+    ],
+    "ci_topology_check": {
+      "status": "passed",
+      "head_sha": "f176d0ed4cea60b7ca5a80ed81017c9404ec1257",
+      "workflow_runs": {
+        ".github/workflows/linux-geant4.yml": 41028779177,
+        ".github/workflows/m0-static-gui.yml": 41028779326
+      },
+      "artifacts": {
+        "linux-evidence-11.4.3": {
+          "run_id": 41028779177,
+          "job_id": 123973207198,
+          "workflow": ".github/workflows/linux-geant4.yml",
+          "profiles": [
+            "static",
+            "gui",
+            "backend",
+            "integration"
+          ]
+        },
+        "linux-evidence-11.3.2": {
+          "run_id": 41028779177,
+          "job_id": 123973207024,
+          "workflow": ".github/workflows/linux-geant4.yml",
+          "profiles": [
+            "static",
+            "gui",
+            "backend",
+            "integration"
+          ]
+        },
+        "m0-report-windows-latest": {
+          "run_id": 41028779326,
+          "job_id": 123973207214,
+          "workflow": ".github/workflows/m0-static-gui.yml",
+          "profiles": [
+            "static",
+            "gui"
+          ]
+        },
+        "m0-report-ubuntu-latest": {
+          "run_id": 41028779326,
+          "job_id": 123973207657,
+          "workflow": ".github/workflows/m0-static-gui.yml",
+          "profiles": [
+            "static",
+            "gui"
+          ]
+        }
+      },
+      "reports": [
+        {
+          "path": "linux-evidence-11.3.2/linux-backend/20261030-085908-442e5e41/report.json",
+          "artifact": "linux-evidence-11.3.2",
+          "profile": "backend",
+          "run_id": 41028779177,
+          "job_id": 123973207024,
+          "workflow": ".github/workflows/linux-geant4.yml",
+          "profiles": [
+            "static",
+            "gui",
+            "backend",
+            "integration"
+          ]
+        },
+        {
+          "path": "linux-evidence-11.3.2/linux-gui/20261030-085807-247d9d38/report.json",
+          "artifact": "linux-evidence-11.3.2",
+          "profile": "gui",
+          "run_id": 41028779177,
+          "job_id": 123973207024,
+          "workflow": ".github/workflows/linux-geant4.yml",
+          "profiles": [
+            "static",
+            "gui",
+            "backend",
+            "integration"
+          ]
+        },
+        {
+          "path": "linux-evidence-11.3.2/linux-integration/20261030-091347-3c389cd8/report.json",
+          "artifact": "linux-evidence-11.3.2",
+          "profile": "integration",
+          "run_id": 41028779177,
+          "job_id": 123973207024,
+          "workflow": ".github/workflows/linux-geant4.yml",
+          "profiles": [
+            "static",
+            "gui",
+            "backend",
+            "integration"
+          ]
+        },
+        {
+          "path": "linux-evidence-11.3.2/linux-static/20261030-085714-5a950ea2/report.json",
+          "artifact": "linux-evidence-11.3.2",
+          "profile": "static",
+          "run_id": 41028779177,
+          "job_id": 123973207024,
+          "workflow": ".github/workflows/linux-geant4.yml",
+          "profiles": [
+            "static",
+            "gui",
+            "backend",
+            "integration"
+          ]
+        },
+        {
+          "path": "linux-evidence-11.4.3/linux-backend/20261030-085917-b668dfa4/report.json",
+          "artifact": "linux-evidence-11.4.3",
+          "profile": "backend",
+          "run_id": 41028779177,
+          "job_id": 123973207198,
+          "workflow": ".github/workflows/linux-geant4.yml",
+          "profiles": [
+            "static",
+            "gui",
+            "backend",
+            "integration"
+          ]
+        },
+        {
+          "path": "linux-evidence-11.4.3/linux-gui/20261030-085814-17086ea8/report.json",
+          "artifact": "linux-evidence-11.4.3",
+          "profile": "gui",
+          "run_id": 41028779177,
+          "job_id": 123973207198,
+          "workflow": ".github/workflows/linux-geant4.yml",
+          "profiles": [
+            "static",
+            "gui",
+            "backend",
+            "integration"
+          ]
+        },
+        {
+          "path": "linux-evidence-11.4.3/linux-integration/20261030-091345-ccb2c6a0/report.json",
+          "artifact": "linux-evidence-11.4.3",
+          "profile": "integration",
+          "run_id": 41028779177,
+          "job_id": 123973207198,
+          "workflow": ".github/workflows/linux-geant4.yml",
+          "profiles": [
+            "static",
+            "gui",
+            "backend",
+            "integration"
+          ]
+        },
+        {
+          "path": "linux-evidence-11.4.3/linux-static/20261030-085719-90e72d82/report.json",
+          "artifact": "linux-evidence-11.4.3",
+          "profile": "static",
+          "run_id": 41028779177,
+          "job_id": 123973207198,
+          "workflow": ".github/workflows/linux-geant4.yml",
+          "profiles": [
+            "static",
+            "gui",
+            "backend",
+            "integration"
+          ]
+        },
+        {
+          "path": "m0-report-ubuntu-latest/20261030-085531-34838c3e/report.json",
+          "artifact": "m0-report-ubuntu-latest",
+          "profile": "static",
+          "run_id": 41028779326,
+          "job_id": 123973207657,
+          "workflow": ".github/workflows/m0-static-gui.yml",
+          "profiles": [
+            "static",
+            "gui"
+          ]
+        },
+        {
+          "path": "m0-report-ubuntu-latest/20261030-085606-197ce25c/report.json",
+          "artifact": "m0-report-ubuntu-latest",
+          "profile": "gui",
+          "run_id": 41028779326,
+          "job_id": 123973207657,
+          "workflow": ".github/workflows/m0-static-gui.yml",
+          "profiles": [
+            "static",
+            "gui"
+          ]
+        },
+        {
+          "path": "m0-report-windows-latest/20261030-085559-fc139df5/report.json",
+          "artifact": "m0-report-windows-latest",
+          "profile": "static",
+          "run_id": 41028779326,
+          "job_id": 123973207214,
+          "workflow": ".github/workflows/m0-static-gui.yml",
+          "profiles": [
+            "static",
+            "gui"
+          ]
+        },
+        {
+          "path": "m0-report-windows-latest/20261030-085726-e56c442a/report.json",
+          "artifact": "m0-report-windows-latest",
+          "profile": "gui",
+          "run_id": 41028779326,
+          "job_id": 123973207214,
+          "workflow": ".github/workflows/m0-static-gui.yml",
+          "profiles": [
+            "static",
+            "gui"
+          ]
+        }
+      ],
+      "report_count": 12
+    }
+  }
+}

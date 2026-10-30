@@ -1,0 +1,345 @@
+{
+  "scope": "Historical schema and plan-only checks; no final F1 acceptance, no archive publication",
+  "source_before_sha256": "e803a3c9f76aa12cae23b11e34dc8044415c38b0cfcd80b8f1fbf4d7711a8f24",
+  "source_after_sha256": "c164beaa0cfe9026224acda6ca00c4257574f4d9caf85d9dc96fa5d2060aad0c",
+  "original_ci_trees_unchanged": true,
+  "release_gate_functions_ast_unchanged": [
+    "validate_ci_topology",
+    "report_gates",
+    "verify_existing",
+    "execute"
+  ],
+  "preserved_source_files": 757,
+  "results": [
+    {
+      "case": "real_failed_round_1",
+      "record": {
+        "summary_file": "failed-round-summary.json",
+        "summary_format": "failed_round_compact_v1",
+        "recorded_head": "cd0f44a8bf885609c3636e7b8b367982baf0debc",
+        "recorded_status": "failed",
+        "recorded_complete": true,
+        "reports": 8,
+        "failed_case_executions": 4,
+        "case_executions": 256,
+        "collection_blockers": [],
+        "zip_digest_checks": [
+          {
+            "zip_source": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f1-ci-final\\linux-evidence-11.3.2.zip",
+            "name": "linux-evidence-11.3.2",
+            "official_digest": "sha256:c7dcba4de74d56295052ff89e4c3be16b628feb435a69590e56aceba96996140",
+            "matches": true,
+            "category": "historical_ci"
+          },
+          {
+            "zip_source": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f1-ci-final\\linux-evidence-11.4.3.zip",
+            "name": "linux-evidence-11.4.3",
+            "official_digest": "sha256:57c4676ccc33bc132bf7ecade686382ad67c53585614c477fc67f4bb1a588b1f",
+            "matches": true,
+            "category": "historical_ci"
+          },
+          {
+            "zip_source": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f1-ci-final\\m0-report-windows-latest.zip",
+            "name": "m0-report-windows-latest",
+            "official_digest": "sha256:2f16b30ffc3d95cba0ae946e8048c43789098f21af1ed7df57f0f8db49c0ffb2",
+            "matches": true,
+            "category": "historical_ci"
+          },
+          {
+            "zip_source": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f1-ci-final\\m0-report-ubuntu-latest.zip",
+            "name": "m0-report-ubuntu-latest",
+            "official_digest": "sha256:35254467b36b1cb6d522d9c62cb9ab0c906539551374d6ac9e4726d762b7ad8a",
+            "matches": true,
+            "category": "historical_ci"
+          }
+        ],
+        "job_log_backfill": {
+          "path": "job-log-backfill-20261030.json",
+          "sha256": "2705d3b9a924e6f6446154ca8beb4d0bc3be33187bd86ab8cfc6da179f17fbaf",
+          "verified_job_ids": [
+            123949508743,
+            123949508758,
+            123949508802
+          ],
+          "legacy_presence_only_job_ids": [
+            123949509175
+          ],
+          "meaning": "Three decoded connector logs match their saved receipt; the older Ubuntu M0 log has no backfill hash attestation. SHA is not a signature."
+        },
+        "meaning": "retained original failure, not release acceptance"
+      }
+    },
+    {
+      "case": "real_failed_round_2",
+      "record": {
+        "summary_file": "failed-round-summary.json",
+        "summary_format": "failed_round_audited_v1",
+        "recorded_head": "3d1faf1b256a945ac800c08bacf51db57f8ca416",
+        "recorded_status": "failed",
+        "recorded_complete": true,
+        "reports": 12,
+        "failed_case_executions": 2,
+        "case_executions": 414,
+        "collection_blockers": [],
+        "zip_digest_checks": [
+          {
+            "zip_source": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f1-ci-corrected\\linux-evidence-11.3.2.zip",
+            "name": "linux-evidence-11.3.2",
+            "official_digest": "sha256:d398479ea0bb97fc482bb2ff78b7609e7347e6eda4c9d4608134dd48f17e6677",
+            "matches": true,
+            "category": "historical_ci"
+          },
+          {
+            "zip_source": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f1-ci-corrected\\linux-evidence-11.4.3.zip",
+            "name": "linux-evidence-11.4.3",
+            "official_digest": "sha256:f32c22b515588140ce22b4109128e7c8f7477d906203177323377b474d0555ef",
+            "matches": true,
+            "category": "historical_ci"
+          },
+          {
+            "zip_source": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f1-ci-corrected\\m0-report-windows-latest.zip",
+            "name": "m0-report-windows-latest",
+            "official_digest": "sha256:110c1db1bf99df523cb9f4e410459132de30cca071c2fb11fca4e7f32a59cad2",
+            "matches": true,
+            "category": "historical_ci"
+          },
+          {
+            "zip_source": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f1-ci-corrected\\m0-report-ubuntu-latest.zip",
+            "name": "m0-report-ubuntu-latest",
+            "official_digest": "sha256:11041968f56b47f6ef934b4b2a28f64c582ad6dea73e4c5505f2c95cbb12a3cb",
+            "matches": true,
+            "category": "historical_ci"
+          }
+        ],
+        "job_log_backfill": null,
+        "meaning": "retained original failure, not release acceptance"
+      }
+    },
+    {
+      "case": "unknown_schema",
+      "status": "rejected",
+      "reason": "Historical CI: unknown or incomplete failed summary schema"
+    },
+    {
+      "case": "missing_complete_field",
+      "status": "rejected",
+      "reason": "Historical CI: unknown or incomplete failed summary schema"
+    },
+    {
+      "case": "incomplete_collection_flag",
+      "status": "rejected",
+      "reason": "Historical CI: audited summary must explicitly separate complete collection from failed acceptance"
+    },
+    {
+      "case": "failed_summary_as_passed",
+      "status": "rejected",
+      "reason": "Historical CI: failed receipt status/boundary missing"
+    },
+    {
+      "case": "missing_report_row",
+      "status": "rejected",
+      "reason": "Historical CI: declared report set differs from all preserved reports"
+    },
+    {
+      "case": "duplicate_report_row",
+      "status": "rejected",
+      "reason": "Historical CI: duplicate/unknown report path"
+    },
+    {
+      "case": "report_count_lie",
+      "status": "rejected",
+      "reason": "Historical CI: audited aggregate counts mismatch"
+    },
+    {
+      "case": "report_digest_lie",
+      "status": "rejected",
+      "reason": "Historical CI: audited report association/hash mismatch"
+    },
+    {
+      "case": "failure_list_dropped",
+      "status": "rejected",
+      "reason": "Historical CI: audited failure list mismatch"
+    },
+    {
+      "case": "failure_report_marked_accepted",
+      "status": "rejected",
+      "reason": "Historical CI: audited report acceptance mismatch"
+    },
+    {
+      "case": "failed_case_count_lie",
+      "status": "rejected",
+      "reason": "Historical CI: audited aggregate counts mismatch"
+    },
+    {
+      "case": "missing_artifact_receipt",
+      "status": "rejected",
+      "reason": "Historical CI: audited artifact list incomplete"
+    },
+    {
+      "case": "wrong_official_artifact_digest",
+      "status": "rejected",
+      "reason": "Historical CI: audited artifact receipt mismatch"
+    },
+    {
+      "case": "missing_job_receipt",
+      "status": "rejected",
+      "reason": "Historical CI: audited job-log list incomplete"
+    },
+    {
+      "case": "wrong_job_log_digest",
+      "status": "rejected",
+      "reason": "Historical CI: audited job log missing/changed"
+    },
+    {
+      "case": "missing_failure_detail",
+      "status": "rejected",
+      "reason": "Historical CI: audited failure detail list incomplete"
+    },
+    {
+      "case": "compact_incomplete_schema",
+      "status": "rejected",
+      "reason": "Historical CI: unknown or incomplete failed summary schema"
+    },
+    {
+      "case": "compact_cases_count_lie",
+      "status": "rejected",
+      "reason": "Historical CI: report case count mismatch"
+    },
+    {
+      "case": "compact_failure_exit_lie",
+      "status": "rejected",
+      "reason": "Historical CI: compact failure list mismatch"
+    },
+    {
+      "case": "compact_traversal",
+      "status": "rejected",
+      "reason": "Historical CI: duplicate/unknown report path"
+    },
+    {
+      "case": "compact_backfill_nonempty_placeholder",
+      "status": "rejected",
+      "reason": "Historical CI: compact backfill job log differs from receipt"
+    },
+    {
+      "case": "compact_backfill_digest_lie",
+      "status": "rejected",
+      "reason": "Historical CI: compact backfill job log differs from receipt"
+    },
+    {
+      "case": "compact_backfill_length_lie",
+      "status": "rejected",
+      "reason": "Historical CI: compact backfill job log differs from receipt"
+    },
+    {
+      "case": "compact_backfill_missing_row",
+      "status": "rejected",
+      "reason": "Historical CI: compact backfill log roster incomplete"
+    },
+    {
+      "case": "compact_backfill_duplicate_row",
+      "status": "rejected",
+      "reason": "Historical CI: duplicate/unknown compact backfill job ID"
+    },
+    {
+      "case": "compact_backfill_unknown_job",
+      "status": "rejected",
+      "reason": "Historical CI: duplicate/unknown compact backfill job ID"
+    },
+    {
+      "case": "compact_backfill_wrong_path",
+      "status": "rejected",
+      "reason": "Historical CI: compact backfill path/size/digest invalid"
+    },
+    {
+      "case": "compact_backfill_receipt_missing",
+      "status": "rejected",
+      "reason": "Historical CI: missing original evidence job-log-backfill-20261030.json"
+    },
+    {
+      "case": "successful_job_with_failed_profile",
+      "status": "rejected",
+      "reason": "Historical CI: successful original job contains an unsuccessful step"
+    },
+    {
+      "case": "successful_run_with_failed_job",
+      "status": "rejected",
+      "reason": "Historical CI: successful original run contains an unsuccessful job"
+    },
+    {
+      "case": "extra_unofficial_bundle_member",
+      "status": "rejected",
+      "reason": "Historical CI: historical artifact file set differs from official ZIP members: linux-evidence-11.3.2"
+    },
+    {
+      "case": "collector_log_outside_bundle_allowed",
+      "status": "accepted_as_independent_collector_file"
+    },
+    {
+      "case": "companion_summary_green",
+      "status": "rejected",
+      "reason": "Historical CI: companion CI summary contradicts failed collection"
+    },
+    {
+      "case": "original_run_foreign_head",
+      "status": "rejected",
+      "reason": "Historical CI: nonterminal or mismatched original run"
+    },
+    {
+      "case": "job_steps_drop_executed_profile",
+      "status": "rejected",
+      "reason": "Historical CI: preserved reports do not match executed profile steps"
+    },
+    {
+      "case": "missing_actual_job_log",
+      "status": "rejected",
+      "reason": "Historical CI: audited job log missing/changed"
+    },
+    {
+      "case": "tampered_zip",
+      "status": "rejected",
+      "reason": "Historical CI: original historical ZIP missing/changed: linux-evidence-11.3.2"
+    },
+    {
+      "case": "tampered_extracted_report",
+      "status": "rejected",
+      "reason": "Historical CI: audited report association/hash mismatch"
+    },
+    {
+      "case": "unlisted_extra_report",
+      "status": "rejected",
+      "reason": "Historical CI: declared report set differs from all preserved reports"
+    },
+    {
+      "case": "failed_history_never_final_release",
+      "status": "rejected",
+      "reason": "CI topology: summary identity/terminal status mismatch"
+    },
+    {
+      "case": "real_plan_round_1",
+      "files": 1972,
+      "historical_reports": 8,
+      "blockers": [],
+      "missing": [],
+      "archive_published": false
+    },
+    {
+      "case": "real_plan_round_2",
+      "files": 2159,
+      "historical_reports": 12,
+      "blockers": [],
+      "missing": [],
+      "archive_published": false
+    },
+    {
+      "case": "explicit_source_nul",
+      "status": "rejected",
+      "reason": "Binary or NUL content refused: C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\f1-archive-history-compat\\revision2\\archive-history-controls-hm68rqbt\\source.hh"
+    },
+    {
+      "case": "explicit_source_credential",
+      "status": "rejected",
+      "reason": "Potential bearer authorization refused in C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\f1-archive-history-compat\\revision2\\archive-history-controls-hm68rqbt\\source.hh"
+    }
+  ],
+  "archive_published": false
+}

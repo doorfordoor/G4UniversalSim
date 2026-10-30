@@ -1,0 +1,15 @@
+Traceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\scripts\test_effective_gdml.py", line 57, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\scripts\test_effective_gdml.py", line 45, in main
+    assert run.returncode==0, run.stdout+run.stderr
+           ^^^^^^^^^^^^^^^^^
+AssertionError: INPUT D:\Temp\g4usim-gdml-capture-_wu04ipv\replace.xml 37c803bf4b77306bb6b8cf59a197cd7e923967afcaacbaac4b8763b53f5447e6
+INPUT D:\Temp\g4usim-gdml-capture-_wu04ipv\main.xml 5d839f3336775755b5130477e728272f0c824950b75bd0fa3cd61db72339055a
+INPUT D:\Temp\g4usim-gdml-capture-_wu04ipv\schema.xsd 922d6d68d939f598f1c5fb0716bf755b5845fa9bcb9a207d5dfe36c1340150e4
+INPUT D:\Temp\g4usim-gdml-capture-_wu04ipv\entity.txt a98391239ba585d8fa513edf9c635176571aa02b3565da3da2ce320166fc7eb4
+FAULT FileBuffer opens=4 closes=3 refused=1
+GDML capture check failed: FileBuffer allocation failure closes native handle
+Usage: gdmlInputCaptureCheck <fixture-directory>; normally run scripts/test_effective_gdml.py
+

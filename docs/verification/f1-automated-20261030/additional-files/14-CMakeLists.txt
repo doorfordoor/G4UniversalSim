@@ -1,0 +1,21 @@
+cmake_minimum_required(VERSION 3.20)
+project(F1GdmlProposalOnly LANGUAGES CXX)
+find_package(XercesC REQUIRED)
+get_filename_component(REPO "${CMAKE_CURRENT_SOURCE_DIR}/../../.." ABSOLUTE)
+foreach(variant fixed original)
+    if(variant STREQUAL "fixed")
+        set(adapter "${CMAKE_CURRENT_SOURCE_DIR}/candidate/src/Geometry/GdmlInputCapture.cc")
+    else()
+        set(adapter "${REPO}/src/Geometry/GdmlInputCapture.cc")
+    endif()
+    add_executable(capture_${variant}
+        "${CMAKE_CURRENT_SOURCE_DIR}/candidate/tools/gdmlInputCaptureCheck.cc"
+        "${adapter}" "${REPO}/src/Config/InputProvenance.cc")
+    target_include_directories(capture_${variant} PRIVATE "${REPO}/include")
+    target_compile_features(capture_${variant} PRIVATE cxx_std_17)
+    target_compile_definitions(capture_${variant} PRIVATE G4USIM_HAVE_GDML=1)
+    target_link_libraries(capture_${variant} PRIVATE XercesC::XercesC)
+    set_target_properties(capture_${variant} PROPERTIES
+        OUTPUT_NAME gdmlInputCaptureCheck
+        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${variant}")
+endforeach()

@@ -1,0 +1,25 @@
+{
+  "recorded_utc": "2026-10-30T09:06:36.623231+00:00",
+  "source": "GitHub connector fetch_workflow_job_logs decoded content",
+  "correction": "Earlier README/checkpoint claimed four persisted job logs; only one was actually present. Three missing original job logs are now collected. Original README and failed reports were not edited.",
+  "logs": [
+    {
+      "job_id": 123949508758,
+      "path": "job-123949508758.log",
+      "bytes": 117018,
+      "sha256": "9ad655c7b629a3734a4566faa450ae5d043b365ceb7eac35f43ce96c96e4d88c"
+    },
+    {
+      "job_id": 123949508802,
+      "path": "job-123949508802.log",
+      "bytes": 119010,
+      "sha256": "6fdf6513b92c92c27538f1e80bc8401114e4a411f813aead62a4338bb254c9f0"
+    },
+    {
+      "job_id": 123949508743,
+      "path": "job-123949508743.log",
+      "bytes": 84996,
+      "sha256": "e6b3e4a77003d08323277084d657e18ac6019d5c298dd9c7421c0b8fca15bf53"
+    }
+  ]
+}

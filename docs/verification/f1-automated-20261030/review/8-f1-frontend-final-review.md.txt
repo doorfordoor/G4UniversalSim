@@ -1,0 +1,54 @@
+# F1前端FE-01～04独立复审
+
+2026-10-30。已读f1-frontend-review-fixes.md、`out/collab/f1-frontend-tests/async-final-results.json`（10项exit0）及当前相关源码；没有修改产品。独立重跑smoke_f1_async_identity exit0。**原FE-01～04修复在所测边界成立，但新增发现P2关闭路径缺口，修复后才能以“主窗口关闭取消全部身份请求”闭合。**
+
+## FE-05 / P2：主窗口关闭没有取消嵌入页面的EvidenceJob
+
+位置：`gui/g4usim_gui/main_window.py:118–155`；`core/evidence_job.py:24–30`；`widgets/output_page.py:384–388`（history/plot/identity panel同类closeEvent）。
+
+原因：EvidenceJob只连接owner.destroyed和页面自身closeEvent；MainWindow.closeEvent停止QProcess等，却没有cancel/close新evidence jobs。Qt父窗口close只隐藏子页面，不会自动调用子页面closeEvent，也不保证立即destroy。EvidenceJob还用无parent的QObject初始化，不能简单依赖MainWindow.findChildren(EvidenceJob)覆盖它们。因此主窗口隐藏后当前请求仍pending、取消event未设置，完成回调仍可更新页面。解释器退出时全局ThreadPoolExecutor还可能等待这些未取消的磁盘任务；本次没有声称实测实际磁盘卡住或测量app退出时长。
+
+**实际定向复现（不是猜测）：** 在真实OutputPage外包一层正常QWidget父窗口，阻塞第一条真实hash后关闭父窗口，再释放hash；记录：
+
+```
+actual_OutputPage_after_parent_close={"pending": true, "closed": false, "cancelled": false}
+actual_OutputPage_published_after_parent_close=True
+```
+
+日志 `out/collab/f1-frontend-outputpage-parent-close.log`；另最小EvidenceJob父子QObject复现 `out/collab/f1-frontend-parent-close-repro.log`。没有实例化/关闭用户真实MainWindow，也没有写用户应用状态。源码中主窗口确实没有显式关闭这些页，所以该Qt父关闭路径适用于实际嵌入方式。
+
+必要修复：主窗口真实接受关闭时显式取消并永久关闭其所有身份/扫描请求（OutputPage、嵌入PlotPanel/IdentityPanel、RunHistory扫描/选择等），或提供等效统一生命周期机制。考虑当前MainWindow可能event.ignore后继续使用，不能在尚可能拒绝关闭前永久禁用所有job。不要只等owner.destroyed，不应同步等待读完大文件；取消及serial失效应使旧结果永远不发布。
+
+必要反例：真实MainWindow或等效实际嵌入页的父关闭，阻塞真实hash，关闭有界返回、所有job取消token生效、释放后不发布；另覆盖关闭被ignore后页面仍能提交新操作。现有`smoke_f1_async_identity.py:95–100`直接page.close，因此即使通过也未覆盖祖先关闭。
+
+该发现已在本轮进度消息明确通知root；本代理可用工具没有直接team send_message入口，随本报告交付请root同步前端写者，不使用用户聊天工具代发跨线程消息。
+
+## 原四项复核
+
+### FE-01：历史搬移锚点 — 关闭
+
+`history/run_history_scanner.py:44–46`把实际config/macro/output固定当前package；`:98–100`仅把snapshot原绝对路径保留到recorded_*。RunHistoryPage打开输出动作锚定当前package/output。新smoke保留A并把A改成另一合法execution，B仍展示与打开B；不会因为旧机器/旧根仍存在而读错运行。
+
+### FE-02：process scope — 关闭
+
+`output/identity.py:86–87`强制run_summary.txt、effective_config_configure.json、effective_config_finalization.json为process/null/null；metadata自排除在104行另强制。smoke对三类分别改run与thread但不改产物字节，均拒绝。这是结构身份校验，不把SHA相符当scope合法。
+
+### FE-03：重新选择后的证据一致性 — 关闭
+
+RunHistoryPage `_show_selected`在启动前清旧verified与表，selection serial隔离且回调再检查当前entry对象；`publish_identity`统一更新entry.identity_status/details/warnings与面板。身份失败仅标tampered/unavailable，运行状态保留记录值并用Recorded run state区分。独立smoke确认扫描后同长度/恢复mtime改CSV、不重扫而重新选择后不残留verified。
+
+### FE-04：同次复用/跨次fresh — 关闭
+
+`output/provenance.py:17–41,87–102`使用ContextVar词法作用域，退出必reset；public discover/build_plot等通过verified_operation建立独立操作，GUI后台核验结果仅作为同请求续段的seeds。没有全局按mtime/size跨操作缓存。`merge_runner.py:71`fresh=True独立绕过当前作用域旧seeds。smoke实际计数单次discover/OutputPage每非self文件只hash一次，下一独立操作同长同mtime变更仍拒绝。
+
+## 已正确实现的异步边界
+
+- `EvidenceJob`全局最多2worker；submit先cancel旧event并更新serial，完成signal走GUI对象_publish；event取消或serial不一致均不发布。worker只传纯Python验证/扫描结果，不碰Qt控件。
+- 正常新目录/刷新先撤销旧证据；hash_file每1MiB检查ContextVar取消；阻塞A时B可完成、释放A后不覆盖B由独立smoke实际通过。
+- 直接页面close/destroy路径不等待磁盘worker并丢弃旧完成，当前独立smoke通过；**这不覆盖上面的主窗口父关闭缺口**。
+- 身份验证与历史扫描异步，不代表CSV解析、Matplotlib构图、文件系统单次阻塞read可被强制中断；这一边界与交接说明一致。两个运行worker均陷入不可中断IO时，后续请求仍会排队，不能声称任意IO环境下新请求立即完成。
+- 统一consumer仍无跨文件原子快照保证；验证后到同操作解析之间外部改文件仍是既定TOCTOU边界，执行合并前fresh检查保持。未把该既有明确边界再列为FE缺陷。
+
+## 实际运行与剩余工作
+
+`python gui/smoke_tests/smoke_f1_async_identity.py`本轮exit0，日志`out/collab/f1-frontend-independent-async.log`。上述父关闭反例exit0表示断言成功重现缺陷，不表示产品通过。原10项回执是前端代理的已读证据，本代理只独立重跑本专项，没有全量/CI/实窗结论；实际可见窗口检查仍由root负责。无运行中命令。

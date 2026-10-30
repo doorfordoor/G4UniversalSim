@@ -1,0 +1,26 @@
+# F1 前端独立审查修复交接（2026-10-30）
+
+独立审查 `f1-frontend-independent-review.md` 的 FE-01/P1 与 FE-02–04/P2 均已修复，未重建主exe。候选已稳定，可由root启动可见host。
+
+## 四项修复与证据
+
+1. 历史实际路径固定当前package/output、config/main.ini、macros/run.mac；快照原路径只进recorded_*字段。打开输出动作额外锚定当前package/output，不再emit原根。新整包复制用例保留原A，并把A变成另一合法execution；B的身份、打开动作及读取仍来自B。
+2. run_summary.txt / effective_config_configure.json / effective_config_finalization.json必须process/null/null；新增每类分别误标run、thread的反例，原字节/hash不变也拒绝。
+3. 历史选择重新校验只有一份结果，同步发布当前entry.identity_status/details/warnings与面板；启动时先撤销旧verified/清表。扫描后改CSV不重扫而重新选择的用例证明details不再残留verified，独立运行状态枚举不被改成failed。身份失败的运行轴明确称“记录的运行状态”。
+4. `evidence_operation`是一次操作的显式词法作用域，内部output_evidence按当前根复用同一结果/错误；public discover/build_plot等纯入口自行建立/退出作用域，GUI worker验证结果只传给同一请求的UI续段。没有跨操作存储或mtime/size信任。单次discover与单次OutputPage刷新都以hash_file计数证明每个登记的非self文件只hash一次；下一独立操作同长度/恢复mtime改字节仍重新hash并拒绝。MergeRunner显式fresh=True，连同作用域内旧Evidence也不能跳过执行前重验。
+
+## 真正异步与关闭
+
+新增 `core/evidence_job.py`：全局最多2个纯Python验证worker，Qt信号只传结果回GUI线程；每个请求有serial+取消event。新目录/新刷新取消旧请求并立刻清旧证据，旧完成按serial丢弃；关闭/销毁撤销请求，不同步等待磁盘任务，流式SHA每1MiB检查取消。历史扫描、选中项、结果首次刷新、独立PlotPanel发现/重画及身份面板直接加载均走此机制。worker不访问/更新任何Qt控件。数据表/Matplotlib绘制仍在GUI线程，本文只声称身份校验及历史扫描异步，不声称所有既有数据解析/绘图都是后台计算。
+
+新smoke阻塞首个真实hash调用，验证setter及时返回、Qt timer继续执行；B目录能在A的hash仍被控制阻塞时完成显示；释放A后不能覆盖B；关闭在同样阻塞下有界返回并丢弃旧完成。没有offscreen/test产品绕过分支。
+
+新增测试需root登记：`gui/smoke_tests/smoke_f1_async_identity.py`（GUI）。共10项定向GUI回归均exit0，结果 `out/collab/f1-frontend-tests/async-final-results.json` 与同目录*-async-final.log；包括F1 identity、async、provenance、history、plots、Dose、Fluence、extensions、Q1 public paths、main window。原smoke只添加 `async_wait.wait_for_idle` 等待真实完成或将先前组合断言按真实异步顺序分开，数值/错误断言均保留。`smoke_plots_backend.py`也已加真实等待，尚未在本代理重复跑后端，交root统一矩阵。compileall与diff check通过。
+
+## Host已可启动
+
+`out/collab/f1-visible-host.py`已适配异步。先写constructed=true/ready=false，所有结果页验证和历史首次选择完成后才写ready=true与逐页identity_states；root应等state JSON ready=true再用sky观察。ready只说明请求完成，不替代实际窗口观察或物理结论。
+
+    python out/collab/f1-visible-host.py --real-dir <真实F1目录> --state-file out/collab/f1-visible-state.json
+
+请使用正常Windows平台（不要继承QT_QPA_PLATFORM=offscreen）。--real-dir可重复。offscreen构造/退出自检已完成，`f1-visible-host-async-offscreen.json` ready=true/closed=true，含verified、legacy与故障页状态；没有由本代理操纵桌面或保存冒充可见验收的截图。

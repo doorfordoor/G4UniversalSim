@@ -1,0 +1,36 @@
+{
+  "scope": "All four official raw ZIPs and their current extracted file bytes rechecked; no extraction/overwrite performed by this check",
+  "artifacts": [
+    {
+      "artifact": "linux-evidence-11.3.2",
+      "official_digest": "sha256:d398479ea0bb97fc482bb2ff78b7609e7347e6eda4c9d4608134dd48f17e6677",
+      "zip_sha256": "sha256:d398479ea0bb97fc482bb2ff78b7609e7347e6eda4c9d4608134dd48f17e6677",
+      "extracted_file_members_verified": 147,
+      "all_member_bytes_match": true
+    },
+    {
+      "artifact": "linux-evidence-11.4.3",
+      "official_digest": "sha256:f32c22b515588140ce22b4109128e7c8f7477d906203177323377b474d0555ef",
+      "zip_sha256": "sha256:f32c22b515588140ce22b4109128e7c8f7477d906203177323377b474d0555ef",
+      "extracted_file_members_verified": 147,
+      "all_member_bytes_match": true
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "official_digest": "sha256:110c1db1bf99df523cb9f4e410459132de30cca071c2fb11fca4e7f32a59cad2",
+      "zip_sha256": "sha256:110c1db1bf99df523cb9f4e410459132de30cca071c2fb11fca4e7f32a59cad2",
+      "extracted_file_members_verified": 67,
+      "all_member_bytes_match": true
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "official_digest": "sha256:11041968f56b47f6ef934b4b2a28f64c582ad6dea73e4c5505f2c95cbb12a3cb",
+      "zip_sha256": "sha256:11041968f56b47f6ef934b4b2a28f64c582ad6dea73e4c5505f2c95cbb12a3cb",
+      "extracted_file_members_verified": 67,
+      "all_member_bytes_match": true
+    }
+  ],
+  "artifact_count": 4,
+  "verified_file_members": 428,
+  "release_status": "failed_round_not_accepted"
+}

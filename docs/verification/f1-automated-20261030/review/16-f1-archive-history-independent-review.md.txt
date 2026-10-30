@@ -1,0 +1,69 @@
+# F1 历史归档兼容独立审查
+
+2026-10-30；产品冻结 `f176d0ed4cea60b7ca5a80ed81017c9404ec1257`。只审 ignored 工具，未改 tracked、写者源文件、CI 原证据，未发布归档、未启动 GUI、未合入 codex。
+
+结论：真实首轮/第二轮证据现可完整生成 plan，最终严格门禁未被放宽；历史验证器仍有两个已复现的 P2 校验缺口，建议补齐后再宣称这些反例会被拒绝。缺口不表示当前真实补收日志已损坏：我独立复核三份 backfill 日志 SHA/长度均与补收收据一致，两处真实 artifact 解包树无额外文件，原 job/step 结论没有已发现矛盾。
+
+## 已复现问题
+
+### P2：compact 历史的补收日志完整性收据未参与校验
+
+`out/collab/archive-f1.py:401-402` 只检查 job log 存在且非空；`447-449` 的 hash/字节数比较仅适用于 audited schema。新补收的 `job-log-backfill-20261030.json` 虽随树入档，但 helper 没有读取并验证它。
+
+在独立临时副本把 `job-123949508758.log` 改为非空占位文字，`read_historical_ci` 仍返回 `recorded_complete=true`、无 blocker；保持真实日志但把 backfill 对应 SHA 改成全零也同样接受。该结果与“原 log 核验完成”的宽泛表述不符，且后续 plan 会把这个错误起点的新字节作为合法来源固定下来。这里只谈检测与既有补收收据的矛盾，不要求把 SHA 当成真实性签名。
+
+建议识别当前明确的 backfill sidecar；校验 job ID/文件名集合、路径、正数字节数、SHA 与实际字节一致，重复/遗漏/未知关联拒绝。有 sidecar 时不能仅以非空放行；没有 hash 收据的旧日志应保留其证据边界，不能声称已获得外部完整性核验。新增两个拒绝负例，原日志与旧 README 均保持原字节。
+
+### P2：允许原 job 成功与已失败 profile 步骤同时成立
+
+`out/collab/archive-f1.py:400` 允许任一 completed success/failure；`:410-414` 只把 profile step 与报告失败对应，没有交叉约束所属 job 的 conclusion。在 compact 临时副本，将首个 Linux job 的 conclusion 从 failure 改为 success、保留 GUI step failure 与失败报告，helper 仍认定收集完整。audited schema 的 job-log summary 通常会额外挡住单点篡改，但 compact 没有这层关联。
+
+建议至少拒绝 `job.conclusion=success` 且任一原 step 为 failure/cancelled/timed_out 的矛盾；同理原 run success 不应容纳 failed job。不能反向要求“所有测试通过就必须 job success”，因为打包/上传等其他步骤可以失败。当前真实两轮没有本反例矛盾。
+
+### P3：ZIP 到解包文件校验只有单向覆盖
+
+`out/collab/archive-f1.py:423-428` 验证 ZIP 中每个文件对应解包字节，但不要求 artifact 解包树文件集合恰好等于 ZIP 成员集合。加入 `linux-evidence-11.3.2/unofficial-extra.log` 的副本仍接受，并会被 add_tree 纳入历史。此额外文件不应被描述成官方 ZIP 内的原日志。当前真实两轮不存在额外文件。
+
+建议对四个 artifact 目录增加反向集合检查，根目录独立采集的 run/job/backfill 文件保持其独立身份。该问题不影响现有已核对的官方 ZIP 摘要，也不需要改变生产协议。
+
+## 34 项检查重跑与过时预期
+
+直接执行现有检查的独立原文副本，退出 1，唯一已触发原因是 `check.py:27` 仍断言首轮缺 3 份日志；当前真实 blocker 为 0。不是新 helper 把缺失偷偷放行，补收后的源状态确实变化了。
+
+提案只将该断言替换为 `len(result['collection_blockers'])==0`，补丁写在 `out/collab/f1-archive-history-independent/check-expectation-proposal.patch`，未修改写者的 check.py。执行自己的适配副本：34 项通过，其中 30 个拒绝负例；首轮 8 报告、第二轮 12 报告的真实历史 plan 均无 blocker/missing，未创建任何发布目标。
+
+两个 plan 使用 E6 成功报告作为最终证据控制输入，只验证历史兼容，不能视为 F1 自动验收。原 34 项通过也不能覆盖上述新增反例；它们正是这次独立扩展检查发现的遗漏。
+
+## 已确认保持的边界
+
+- helper SHA `e803a3c9f76aa12cae23b11e34dc8044415c38b0cfcd80b8f1fbf4d7711a8f24` 与写者 receipt 一致。
+- 比较修改前后 AST，`validate_ci_topology`、`report_gates`、`verify_existing`、`execute` 四个函数完全一致；final CI 的成功 job/head/拓扑、逐例日志、断言、baseline 与独占发布门禁未放宽。修改的 `check_source_zips` 在既有 final 检查外追加历史 ZIP，review/execute 前重验。
+- compact/audited 两种已保存 schema 精确识别；未知字段/缺字段拒绝，历史失败始终标作 failed，不进入最终 release 报告集合；首轮未执行 backend/integration 由原 skipped step 对应，未改成通过。
+- `.patch/.cc/.hh` 只在显式 include/review 下接纳；递归树白名单未扩张，UTF-8/NUL/凭据规则仍执行。
+- 两处原 CI 树 757 个已落盘文件的 SHA 前后相同；其中新增 4 个文件是先前根任务采集的三份原 joblog 加 backfill 收据，不是本审查写入。旧 README 的错误声明保留，backfill 撤回说明与原件同时保留。
+- `prepare-f1-automated-archive.py` 未被我执行。当前 argv 没有 `--execute`，helper 默认只生成 plan；其 README 明确实窗 pending/F1 未关闭，不能拿真实 backend fixture 或 visible-root 选择当作实窗已观察。最终发布仍应在独立 review-plan 通过后进行。
+
+## 可复核产物
+
+全部在 `out/collab/f1-archive-history-independent/`：
+
+- `original-check.log`：过时的 3 份缺日志预期导致退出 1。
+- `check-current-complete.py` / `check-current-complete.log` / `receipt.json`：仅适配当前完整源状态的独立 34 项重跑。
+- `plan-real-round-1.json`、`plan-real-round-2.json`：新的只读 plan，两个目的地均未发布。
+- `extra-controls.py` / `extra-controls.json` / `extra-controls.log`：四个遗漏反例、真实 backfill SHA/字节数、反向 ZIP 文件集与实际 job/step 一致性检查、最终门禁 AST 比较和原树不变证明。
+
+建议正式自动归档显式选入本审查、写者 history-compat README/helper.patch/receipt，以及修复后新增负例收据；保留旧收据，不把旧 34 项记录追改成覆盖本次反例。
+
+## revision2 独立复查：批准本次限定修复
+
+2026-10-30 追加。当前 helper SHA `c164beaa0cfe9026224acda6ca00c4257574f4d9caf85d9dc96fa5d2060aad0c`，与写者 revision2 收据一致。本节关闭上文两个 P2 与一个 P3，旧诊断保留为修复前事实；批准的是这三处历史归档校验修复，不是 F1 阶段关闭或实际归档发布。
+
+- `archive-f1.py:450-473` 对 compact 的已保存 backfill sidecar 严格核对 schema、三份 job roster、文件名、正数字节数和 SHA；原 Ubuntu M0 job `123949509175` 明确列为 `legacy_presence_only_job_ids`，未把本地 plan 摘要冒充其外部哈希收据。
+- `:397-405` 检查 run success 不容纳非成功 job，job success 不容纳失败/取消/超时等步骤；没有扩大为“测试通过就要求整个 job 成功”。
+- `:428-439` 对官方 artifact 文件成员实施双向集合校验，重复 ZIP 文件成员和额外解包文件均拒绝；artifact 根之外的采集器日志仍可保留。
+
+将最新检查入口原文复制到独立审查目录后重跑，退出 0：**46 项检查、41 个拒绝负例通过**。再次独立运行我原来的四个具体反例（两个反例对应第一个 P2），全部从“接受且收集完整”变为拒绝：非空占位 joblog、backfill SHA 与实际字节矛盾、官方 ZIP 外额外 artifact 文件、成功 job 与失败 profile 步骤矛盾。拒绝原因分别命中补收摘要、成员集合和 job/step 一致性检查。
+
+两个真实历史 plan 重新生成：首轮 8 报告、第二轮 12 报告，`preflight_blockers=[]`、`missing_sources=[]`，两个目标均未发布。三份真实 backfill 日志 SHA/字节数仍匹配；两处原 CI 树 757 个文件验证前后逐项 SHA 不变。四个 final 严格门禁函数 AST 与修复前一致。
+
+本次独立收据和原反例复验结果位于 `out/collab/f1-archive-history-independent/revision2/receipt.json`、`check.log`、`extra-controls.json`、`extra-controls.log`，两份新 plan 也在该独立目录。未修改写者/helper/CI 原件、tracked 或主程序；未执行完整 F1 发布 plan、未发布归档，实窗仍 pending。

@@ -1,0 +1,216 @@
+--- a/src/Geometry/GdmlInputCapture.cc
++++ b/src/Geometry/GdmlInputCapture.cc
+@@ -137,8 +137,9 @@
+     bool isRelative(const XMLCh* const path, MemoryManager* const manager) override { return source_.isRelative(path, manager); }
+ private:
+     FileHandle Capture(FileHandle source, const std::string& name, MemoryManager* manager) {
+-        auto buffer = std::make_unique<FileBuffer>();
++        std::unique_ptr<FileBuffer> buffer;
+         try {
++            buffer = std::make_unique<FileBuffer>();
+             std::array<XMLByte, 65536> block;
+             for (;;) {
+                 auto count = source_.fileRead(source, block.size(), block.data(), manager);
+--- a/tools/gdmlInputCaptureCheck.cc
++++ b/tools/gdmlInputCaptureCheck.cc
+@@ -6,6 +6,8 @@
+ #include <xercesc/util/XMLNetAccessor.hpp>
+ #include <xercesc/util/BinInputStream.hpp>
+ #include <xercesc/util/XMLString.hpp>
++#include <xercesc/util/OutOfMemoryException.hpp>
++#include <xercesc/framework/MemoryManager.hpp>
+ #include <xercesc/parsers/XercesDOMParser.hpp>
+ #include <xercesc/dom/DOM.hpp>
+ #include <xercesc/sax/HandlerBase.hpp>
+@@ -16,6 +18,7 @@
+ #include <thread>
+ #include <cstdlib>
+ #include <new>
++#include <exception>
+ // One-shot allocation failure after a successful native open. This is only
+ // this component executable's allocator, never a production runtime hook.
+ thread_local bool failNextAllocation = false;
+@@ -48,53 +51,126 @@
+     const XMLCh* getId() const override { return u"test-native"; }
+     BinInputStream* makeNew(const XMLURL&, const XMLNetHTTPInfo*) override { return new FakeStream; }
+ };
++// Move every worker exception to the joining thread. Only the two concrete
++// allocation families below count as an expected refusal.
++template<class Operation> void InThread(Operation&& operation) {
++    std::exception_ptr failure;
++    std::thread worker([&] {
++        try { operation(); }
++        catch (...) { failure = std::current_exception(); }
++    });
++    worker.join();
++    if (failure) std::rethrow_exception(failure);
++}
++template<class Operation> bool AllocationRefused(Operation&& operation) {
++    try { operation(); }
++    catch (const std::bad_alloc&) { return true; }
++    catch (const OutOfMemoryException&) { return true; }
++    return false;
++}
++class FileManagerOverride {
++    XMLFileMgr* original_;
++public:
++    explicit FileManagerOverride(XMLFileMgr& replacement):original_(XMLPlatformUtils::fgFileMgr) {
++        XMLPlatformUtils::fgFileMgr = &replacement;
++    }
++    ~FileManagerOverride() { XMLPlatformUtils::fgFileMgr = original_; }
++};
++// Arm after UTF conversion, when the adapter releases getFullPath's result.
++// This makes FileBuffer's own allocation the first failing allocation rather
++// than relying on implementation-specific path/transcode allocation counts.
++class CaptureFaultMemory final : public MemoryManager {
++    MemoryManager& source_;
++public:
++    bool armOnRelease = false;
++    explicit CaptureFaultMemory(MemoryManager& source):source_(source) {}
++    MemoryManager* getExceptionMemoryManager() override { return source_.getExceptionMemoryManager(); }
++    void* allocate(XMLSize_t size) override { return source_.allocate(size); }
++    void deallocate(void* p) override {
++        source_.deallocate(p);
++        if (armOnRelease) { armOnRelease = false; failNextAllocation = true; }
++    }
++};
+ class AllocationFaultFiles final : public XMLFileMgr {
+     XMLFileMgr& source_;
+     std::string path_;
+ public:
+     int opens=0, closes=0;
++    bool failOnOpen=true, failBuffer=false, failReadXerces=false;
+     AllocationFaultFiles(XMLFileMgr& source, std::string path):source_(source),path_(std::move(path)){}
+     FileHandle fileOpen(const XMLCh* p,bool write,MemoryManager* const m) override {
+-        auto handle=source_.fileOpen(p,write,m);if(handle){++opens;failNextAllocation=true;}return handle;
++        auto handle=source_.fileOpen(p,write,m);if(handle){++opens;if(failOnOpen)failNextAllocation=true;}return handle;
+     }
+     FileHandle fileOpen(const char* p,bool write,MemoryManager* const m) override {
+-        auto handle=source_.fileOpen(p,write,m);if(handle){++opens;failNextAllocation=true;}return handle;
++        auto handle=source_.fileOpen(p,write,m);if(handle){++opens;if(failOnOpen)failNextAllocation=true;}return handle;
+     }
+     FileHandle openStdIn(MemoryManager* const m) override {
+-        auto handle=source_.fileOpen(path_.c_str(),false,m);if(handle){++opens;failNextAllocation=true;}return handle;
++        auto handle=source_.fileOpen(path_.c_str(),false,m);if(handle){++opens;if(failOnOpen)failNextAllocation=true;}return handle;
+     }
+     void fileClose(FileHandle h,MemoryManager* const m) override {++closes;source_.fileClose(h,m);}
+     void fileReset(FileHandle h,MemoryManager* const m) override {source_.fileReset(h,m);}
+     XMLFilePos curPos(FileHandle h,MemoryManager* const m) override {return source_.curPos(h,m);}
+     XMLFilePos fileSize(FileHandle h,MemoryManager* const m) override {return source_.fileSize(h,m);}
+-    XMLSize_t fileRead(FileHandle h,XMLSize_t n,XMLByte* b,MemoryManager* const m) override {return source_.fileRead(h,n,b,m);}
++    XMLSize_t fileRead(FileHandle h,XMLSize_t n,XMLByte* b,MemoryManager* const m) override {
++        if(failReadXerces) { failReadXerces=false; throw OutOfMemoryException(); }
++        return source_.fileRead(h,n,b,m);
++    }
+     void fileWrite(FileHandle h,XMLSize_t n,const XMLByte* b,MemoryManager* const m) override {source_.fileWrite(h,n,b,m);}
+-    XMLCh* getFullPath(const XMLCh* const p,MemoryManager* const m) override {return source_.getFullPath(p,m);}
++    XMLCh* getFullPath(const XMLCh* const p,MemoryManager* const m) override {
++        auto* full=source_.getFullPath(p,m);
++        if(failBuffer) {
++            Check(full!=nullptr,"full path for deterministic buffer failure");
++            static_cast<CaptureFaultMemory*>(m)->armOnRelease=true;
++        }
++        return full;
++    }
+     XMLCh* getCurrentDirectory(MemoryManager* const m) override {return source_.getCurrentDirectory(m);}
+     bool isRelative(const XMLCh* const p,MemoryManager* const m) override {return source_.isRelative(p,m);}
+ };
+ void CheckOpenFailureCloses(XMLFileMgr& original,const std::string& path) {
+     AllocationFaultFiles fault(original,path);
+-    XMLPlatformUtils::fgFileMgr=&fault;
+-    {
+-        GdmlIO::GdmlInputCapture capture;
+-        bool refused=false;
+-        std::thread foreign([&]{
+-            try { XMLPlatformUtils::fgFileMgr->fileOpen(path.c_str(),false,XMLPlatformUtils::fgMemoryManager); }
+-            catch(const std::bad_alloc&) { refused=true; }
+-        });
+-        foreign.join();
+-        Check(refused && fault.opens==1 && fault.closes==1,"foreign native handle closed on observation allocation failure");
+-        refused=false;
+-        try { XMLPlatformUtils::fgFileMgr->openStdIn(XMLPlatformUtils::fgMemoryManager); }
+-        catch(const std::bad_alloc&) { refused=true; }
+-        Check(refused && fault.opens==2 && fault.closes==2,"stdin native handle closed on observation allocation failure");
+-        refused=false;
+-        try { XMLPlatformUtils::fgFileMgr->fileOpen(path.c_str(),false,XMLPlatformUtils::fgMemoryManager); }
+-        catch(const std::bad_alloc&) { refused=true; }
+-        Check(refused && fault.opens==3 && fault.closes==3,"owner native handle still closed on capture allocation failure");
+-    }
+-    XMLPlatformUtils::fgFileMgr=&original;
++    {
++        FileManagerOverride replacement(fault);
++        {
++            GdmlIO::GdmlInputCapture capture;
++            bool refused=AllocationRefused([&] {
++                InThread([&] { XMLPlatformUtils::fgFileMgr->fileOpen(path.c_str(),false,XMLPlatformUtils::fgMemoryManager); });
++            });
++            Check(refused && fault.opens==1 && fault.closes==1,"foreign native handle closed on observation allocation failure");
++            refused=AllocationRefused([&] { XMLPlatformUtils::fgFileMgr->openStdIn(XMLPlatformUtils::fgMemoryManager); });
++            Check(refused && fault.opens==2 && fault.closes==2,"stdin native handle closed on observation allocation failure");
++            refused=AllocationRefused([&] { XMLPlatformUtils::fgFileMgr->fileOpen(path.c_str(),false,XMLPlatformUtils::fgMemoryManager); });
++            Check(refused && fault.opens==3 && fault.closes==3,"owner native handle still closed on capture allocation failure");
++
++            fault.failOnOpen=false;
++            fault.failBuffer=true;
++            CaptureFaultMemory memory(*XMLPlatformUtils::fgMemoryManager);
++            XMLCh* wide=XMLString::transcode(path.c_str());
++            try {
++                refused=AllocationRefused([&] { XMLPlatformUtils::fgFileMgr->fileOpen(wide,false,&memory); });
++            } catch (...) { XMLString::release(&wide); throw; }
++            XMLString::release(&wide);
++            std::cout << "FAULT FileBuffer opens=" << fault.opens << " closes=" << fault.closes << " refused=" << refused << "\n";
++            Check(refused && !failNextAllocation && !memory.armOnRelease && fault.opens==4 && fault.closes==4,"FileBuffer allocation failure closes native handle");
++            fault.failBuffer=false;
++            fault.failReadXerces=true;
++            refused=AllocationRefused([&] { XMLPlatformUtils::fgFileMgr->fileOpen(path.c_str(),false,XMLPlatformUtils::fgMemoryManager); });
++            Check(refused && fault.opens==5 && fault.closes==5,"Xerces allocation failure during buffered read closes native handle");
++        }
++        Check(XMLPlatformUtils::fgFileMgr==&fault,"capture restores fault adapter after allocation checks");
++    }
++    Check(XMLPlatformUtils::fgFileMgr==&original,"fault check restores original file manager");
++    bool unexpected=false;
++    try {
++        FileManagerOverride replacement(fault);
++        GdmlIO::GdmlInputCapture capture;
++        AllocationRefused([&] { InThread([] { throw std::runtime_error("unexpected worker test failure"); }); });
++    }
++    catch(const std::runtime_error& error) { unexpected=std::strcmp(error.what(),"unexpected worker test failure")==0; }
++    Check(unexpected,"non-allocation worker exception propagates to the joining thread");
++    Check(XMLPlatformUtils::fgFileMgr==&original,"fault scope restores original file manager during exception unwind");
++    Check(AllocationRefused([&] { InThread([] { throw OutOfMemoryException(); }); }),"Xerces worker allocation exception propagates to the joining thread");
++    std::cout << "PASS allocation fault checks opens=" << fault.opens << " closes=" << fault.closes << " adapter_restored=true\n";
+ }
+ int RunCaptureChecks(int argc,char** argv) {
+     Check(argc==2,"path missing"); std::string directory=argv[1];
+@@ -134,11 +210,10 @@
+     FileHandle other=nullptr;
+     {
+         GdmlIO::GdmlInputCapture capture;
+-        std::thread reader([&] {
++        InThread([&] {
+             other=XMLPlatformUtils::fgFileMgr->fileOpen((directory+"/entity.txt").c_str(),false,XMLPlatformUtils::fgMemoryManager);
+             Check(other!=nullptr,"other thread native handle");
+         });
+-        reader.join();
+         Check(capture.AcceptedInputs().empty(),"other client not attributed to GDML");
+         {
+             GdmlIO::GdmlInputCapture nested;
+@@ -201,9 +276,17 @@
+ // otherwise terminates with 0xC0000409 and can leave redirected stdout empty.
+ int main(int argc,char** argv) {
+     try { return RunCaptureChecks(argc,argv); }
++    catch(const OutOfMemoryException&) {
++        std::cerr << "GDML capture check failed: unexpected Xerces OutOfMemoryException\n";
++        return 1;
++    }
+     catch(const std::exception& error) {
+         std::cerr << "GDML capture check failed: " << error.what() << "\n"
+                   << "Usage: gdmlInputCaptureCheck <fixture-directory>; normally run scripts/test_effective_gdml.py\n";
+         return 1;
+     }
+-}
++    catch (...) {
++        std::cerr << "GDML capture check failed: unexpected non-standard exception\n";
++        return 1;
++    }
++}

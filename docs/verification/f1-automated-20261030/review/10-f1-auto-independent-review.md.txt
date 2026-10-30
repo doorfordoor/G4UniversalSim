@@ -1,0 +1,43 @@
+# F1显式auto输出节点独立只读审查
+
+2026-10-30。审查当前OutputManager/EffectiveOutput/OutputMessenger、SimulationManager selector/summary/capabilities和正在完成的test_output_auto.py。未修改文件、未启动编译或主exe测试；等待输出代理可编译通知后由root统一构建。
+
+## 结论
+
+**本次已读实现未发现阻塞项。** auto为显式请求，默认CSV不变；selector只读最终master scoring开关，worker采用同一只读配置；requested/resolved、成功依赖来源和实际writer门控目前一致。以下为源码判断，不预写新auto运行验收。
+
+## 生命周期与MT
+
+- `SimulationManager.cc:1328–1335`只在创建master OutputManager时绑定一次selector，lambda捕获SimulationManager并返回`scoringManager_ && IsEnabled() && (hits || event_edep)`。没有调用Geant4 RNG，没有修改scoring开关。
+- 构造顺序BuildManagers先EnsureOutputManager后EnsureScoringManager，但绑定时format仍默认CSV、不执行callback；Configure解析auto时master scoring指针已创建。即使SetFormat(auto)的验证回调在INI scoring加载前读取旧默认，只用于检查selector可调用、不冻结该次返回值；最终GetFormat在scoring及ApplyModuleModes之后重新解析。
+- `OutputManager.cc:70–72`clone复制requested policy与selector，worker只读master冻结flags；ScoringMessenger enable/hits/eventEdep均仅PreInit（132–134），OutputMessenger setFormat也仅PreInit（58），所以正常受支持入口不会在运行中写这些bool，不存在当前路径的并发读写。
+- main.cc:576的SimulationManager在try外，runManager在try内719创建，正常结束/异常展开先销毁runManager与worker context，后销毁sim，selector在当前所有权路径没有悬空。OutputManager析构Close不调用GetFormat。此结论不承诺把clone从生命周期外逃逸后仍可使用，也不承诺任意用户自定义selector线程安全。
+
+## INI接受顺序与实际writer
+
+- `SimulationManager.cc:849`读output.format；scoring加载在896，ApplyModuleModes在931，InitializeEffectiveConfig在936。2C配置阶段实际读取的是最终scoring/modules结果，不将初始化前那次临时selector值当最终解析。
+- `OutputManager.cc:160–172`先检查open files/非法enum/auto selector，再发布format_及explicit标志；没有selector或selector抛异常时requested保留旧值。SetAutoFormatSelector先检查active-auto非空及可调用，再替换std::function。
+- `GetFormat:191–195`对auto返回真正Csv/Root；WritesCsv/Root:206–215都通过GetFormat。RunAction的ROOT打开和hits/event/mesh/scorer CSV/ROOT门控均通过Writes*，不直接将Format::Auto当最终格式。
+- OutputManager output-target预检中的临时candidate仅用RootFilename/MakeThreadFilename，并不调用其未绑定selector的GetFormat；其candidate.format_=auto没有形成当前崩溃路径。所有真正worker clone有selector。
+- scoring disabled而hits/event残留true会选CSV；aggregate-only及mesh-only也不因此开ROOT。该选择不新增enabled/hits/event/scorer或改变实验参数。
+
+## requested/resolved与来源
+
+- `EffectiveOutput.cc:13–34,38–39`每次投影resolved使用GetFormat，保留已有accepted field的requested、requested_known和origins；初次从INI保留原auto或别名字符串，reason为真正选择原因。
+- setFormat成功确认在`:52–89`包含显式目标`/output/format`，即使同样resolved也产生成功新来源/代次，并把requested设为命令参数。auto→显式root、root→auto不因同解析值而丢请求身份。
+- enable/hits/eventEdep的成功依赖在`:61–76`只在auto且resolved改变时更新output消费者，保留auto requested及旧来源链，追加derived原命令/file/line；不会把scoring命令伪装成format请求。解析值不变的计分变化只在scoring自己的来源字段记录，不给output制造无意义新事务。
+- `EffectiveSimulation.cc:185–198`在成功命令记录路径先确认scoring后确认output，因此selector读取更新后的flags。macro/csh都仅在真实ApplyCommand与Messenger失败检查成功后进入该路径；初始化后拒绝不会发布format值/来源。
+- `SimulationManager.cc:723–725`摘要同时输出实际output_format、GetRequestedFormat及FormatSelectionReason；capabilities列四种模式、默认csv和同一规则，不把auto说成默认。旧csv/root/both与INI两别名保留；macro candidates现在也显式允许旧别名。
+
+## 专项实质与后续验收
+
+正在完成的test_output_auto.py已读源码包括：无selector原子拒绝、默认reason、八种bool真值、1/2/4clone并发读取、INI请求与实际解析、同解析不同请求来源、依赖derived/无关变化不改output代次、active selector移除拒绝、CSV/ROOT已打开时拒绝；backend部分覆盖省略、显式模式/别名、disabled残留flags、hits/event/aggregate及1/2/4worker、两run、前后macro依赖顺序、init后失败来源保持，逐产物真实hash/scope及ROOT/CSV存在对应关系。
+
+这些断言不是当前代理的运行收据。输出代理仍在写专项，root应在可编译通知后统一构建全部目标，先跑component与backend，再跑schema/旧2C/output以及正式全量。特别核对：
+
+1. 真实worker finalization snapshot的`/output/format` requested/resolved与master摘要一致，writer产物确实同格式。
+2. CLI输出目录成功覆盖不使auto的INI请求回退；模块scoring off/auto也应遵循最终enabled。
+3. 受支持csh成功setFormat auto与依赖修改至少一条实链可作额外定向证据；目前新增backend专项主要是preflighted macro，虽然成功确认共享同路径，不能称所有csh变体已验。
+4. 失败之后的unchanged配置/来源/代次和非零摘要要看真实输出，不只看命令返回码。
+
+没有改product或输出代理文件，没有运行中session。本报告只关闭源码审查，不关闭auto运行/性能/平台/完整阶段验收。

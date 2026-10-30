@@ -1,0 +1,69 @@
+# F1 producer桥接与消费者测试独立审查（2026-10-30）
+
+只读范围：当前落盘OutputManager/RunSummary、SimulationManager/EffectiveSimulation及现有Python消费者测试。未改产品/测试，未占用root构建session79610，未把静态分析当实际失败。资源审查另见 `out/collab/f1-resources-independent-review.md`。
+
+## 确定问题
+
+### [P1] Python通用_tN推断错误拒绝第二run的合法2C快照（本代理候选自身缺陷）
+
+`gui/g4usim_gui/output/identity.py:74–78` 对任何`_tN.json`按CSV命名约定推断run，缺少文件尾`_rR`就推0。真实桥接 `EffectiveSimulation.cc:343,352` 写 `effective_config_run_1_t0.json`、`effective_config_final_r1_t0.json`，它们明确run_id=1/thread_id=0，却都被该正则推0而拒绝。第一run的所有合成smoke都可能过，真实两run目录的所有自动消费者将失败。
+
+建议仅对明确CSV/ROOT既定家族做文件名交叉核对，effective snapshots依显式scope/run_id/thread_id，或按其真实独立命名解析；不要用通用文件名猜测覆盖明确身份。必要反例：真实两run/1和2worker，打开结果/plots/dose/fluence并逐项校验所有effective快照，不能只测CSV。遵照本轮只读要求尚未修前端。
+
+### [P2] 重复finalize把旧summary证据和新summary证据一起放入，重复identity抛错
+
+`SimulationManager.cc:663` CollectArtifactEvidence(true)会收已登记run_summary.txt；首次finalize后summary已在registry（WriteRunSummary）。重复finalize时该旧summary被哈希入artifacts，758又重写摘要，781再次push一个textArtifact同路径，783 SetArtifactEvidence因重复identity抛invalid_argument。此调用位于metadata try外，无法走现有metadata失败纠正，且旧summary哈希已过时。若首次metadata写失败并被调用者再次finalize，同样重现。
+
+建议收集常规产物时明确排除summary和metadata（metadata用唯一self），summary只在最后一次实际写关后追加一次，或按身份替换已有项。每次finalize从新结果重建artifact列表，不能沿用旧text hash。必要反例：同一manager连续finalize两次；第一次正常第二次failed；首次metadata_close失败后再次finalize；每次最终列表无重复且summarySHA对应最后字节。
+
+## 必须补运行证据的失败路径风险（未认定已实测P1/P2）
+
+RunSummary.cc:440–441拒绝任何不存在于runs_的run/thread artifact。RunRecord仅在RunAction::EndOfRunAction:199登记，而effective run_begin/CSV可在BeginRun阶段落盘；如果某个异常退出路径没有执行master EndOfRun，失败最终化有合法尝试run的文件却没有RunRecord，JSON必定被拒绝并改成run_metadata_write失败。先前真实首因是否保留取决于该异常是否已经进入output registry；普通macro错误只记macro状态时，新的metadata错误可能变成output首因。
+
+这里拒绝悬空run的consumer规则是正确的，不能改成接受“失败就忽略run归属”。应在真实run创建/开始边界登记attempted run事实（计划数、已观察完成数、完成状态明确），或保证失败收尾以真实G4Run补记录；不能伪造已完成run/事件数。必要反例：已写effective run_begin后强制回调异常并跳过正常EndRun；验证首因、run事实、现存artifact的身份以及JSON/summary一致性。若Geant4保证所有可收尾路径必有EndRun，请用现有故障用例实证，不以推断关项。
+
+## 其他桥接核对
+
+- 普通文件先Flush/Close，effective finalization关闭后才Collect；HashFile返回实际读到的长度和SHA，不用mtime。artifact hash失败先锁存artifact_integrity，之后才计算finalStatus/outputFailed，因此通常能够写failed摘要并保留更早worker首因。
+- 文本摘要在WriteRunSummary真正关闭后单独hash；文本hash失败重写failed文本但将该artifact标unavailable/null，consumer拒绝可信分析是正确的，不能改成沿用旧SHA。
+- metadata打开/写/关错误由WriteRunMetadataJson按MetadataWriteError.stage先锁存，外层一般run_metadata_write不会覆盖已锁存首因。metadata失败后从登记表除去JSON并重写文本是正确失败边界；失败JSON可能保留旧summary hash但未登记，不应称有效完整产物。
+- SetProvenance/SetArtifactEvidence在metadata try外抛错时，目前不走精准metadata纠正；正常生成字段通常合法，但内部协议/序列化异常需单独注入验证外层收尾。不要为了接受坏字段放宽验证。
+- producer允许的build.git_state_scope与artifact.reason是扩展字段，Python接受，字段名/nullable/size类型与scope主契约匹配。sequence跳号及source fingerprint严格度差异详见资源审查；真实ledger连续不代表schema必须连续。
+- registry显式scope冲突会锁artifact_integrity；RunSummary写出前检查真实run存在。当前没有独立“文件内容不可被外部并发改写”的保证，scope已明确仅hash该次读取，因此不把普通TOCTOU列为缺陷。
+
+## 现有测试兼容影响与保留办法
+
+### 确切受影响：scripts/test_shielding_coating.py 的真实输出拷贝反例
+
+- 219–222改summary.status模拟失败：新增校验会先报summary字节不一致，遮住原“only completed”语义。保留这个语义断言：仅在拷贝后的合成fixture重新计算summary SHA/长度，再断言failed run不能分析；另保留未经reseal的同改动为独立integrity拒绝反例。
+- 224–231零事件：修改summary及metadata runs。metadata自身本来self-excluded，不需自hash；需更新改后summary的登记SHA/长度，使原“空run不能推导rate”的断言继续抵达科学门禁。
+- 234–240陈旧phase space：把完成数缩到10，需要reseal summary；phase bytes保持原hash不动，原“eventID超出完成事件数/文件陈旧”断言必须保留，不能只改成hash mismatch就算通过。
+- 243–255真零沉积：原实现删除stats并从generated_files删除，代表“该轮本未生成统计”的合成证据。新扩展可保持，但需同步文本中generated_file_count/生成名单（若该测试要求跨格式一致），最后reseal summary；其余既有输出hash保留。继续assert total=0以及no_statistics_file_zero_deposition标签，不能删掉该正例。
+- 214–217已登记统计文件被删除：保持原缺失文件错误，绝不能reseal或从名单移除以变绿。
+
+建议只在测试工具中提供明确命名的seal_synthetic_copy：限定临时副本，按指定变更文件更新digest/size，保留provenance/schema/显式scope，不全局禁用validator，不对原始真实运行结果改签。必要时为合成副本分配固定test execution ID并更新所有行，明确它不是原运行证明。不能在生产代码添加“测试跳过hash”开关。
+
+### 主要不需reseal的测试
+
+- scripts/test_q1_postprocessing.py：ROOT/summary/metadata都是测试自己生成的旧v1合成fixture，故意没有provenance；这是合法旧版兼容覆盖，不是把真实新producer降级。保留原small-N、稀疏worker分母、LET比值、overflow、每event归一化断言；可另增F1封装副本重复同组科学断言，不能全体删除旧v1覆盖。
+- scripts/test_q1_results_backend.py：真实producer结果只读；offline_root仅复制单ROOT无metadata的明确离线反例，保留“没有可靠N就拒绝”，不需要把离线ROOT补成可信运行。其真实目录将受上面的第二run snapshot bug影响时应修validator，而非重签或删快照。
+- scripts/test_root_output.py、smoke_plots_backend.py、smoke_scans_backend.py、smoke_dose_backend.py、smoke_fluence_backend.py：主要只读真实结果；现观察未发现为了科学反例改其已登记字节，不需reseal。ROOT/CSV逐值和run overlay/归一化断言必须保留。多run消费者是P1触发点。
+- scripts/test_output_provenance.py --backend：复制未登记_t99旧文件后应继续不混入；复制重定位后结果一致；第二次进程复用目录只使用新manifest。这些不应因额外文件存在就失败；无需reseal。真实两run读取可触发P1。
+- scripts/test_scenario_shielding_core.py:109删除登记stats：继续assert缺失登记错误；不修清单。
+- scripts/test_shielding_analysis.py、smoke_output_provenance.py：现有合成旧v1清单继续合法；新警告已同步但不降低科学断言。新F1 smoke另测hash守卫，不把旧语义全部替换成integrity错误。
+
+本审查没有执行改签、产品修补或构建；等待root初始build整合后按具体失败定向修改。
+
+
+## 后续修复状态
+
+root随后授权并复现同一P1（日志out/collab/f1-root-output-initial.log）。本代理已定向修复：有效配置run_/final_r命名各自解析run与有符号thread，负thread要求run scope/null thread；普通文件名交叉校验限定已知CSV/ROOT家族，不再通用_t推run0。source_fingerprint同步严格64小写hex或unknown。新增两类快照run1、thread0/1/-1/-2正例与错误run/scope/thread负例、非法fingerprint；smoke_f1_output_identity已通过。按root决定sequence仍连续从1，producer待同步。未重复执行root的真实ROOT测试，等待root重跑。其余审查问题仍只读未改。
+
+
+## 节点提交前只读复核与防降级补丁
+
+已按root最新要求补缺provenance但留F1标记的拒绝：values.output_provenance_schema/execution_id，或任一generated_files记录的execution_id/scope/run_id/thread_id/sha256/size_bytes/integrity_status均阻止legacy降级。扩展存在时values声明若存在必须与顶层schema/execution ID一致。普通旧v1 path/schema清单继续兼容。测试覆盖每个孤立标记（即便null）、声明不符、合法声明及真正旧v1；F1 smoke和test_output_provenance已通过，日志分别在f1-frontend-tests/*-marker-final.log。没有声称防止同时改掉所有字段的签名安全。
+
+当前root桥接已改CollectArtifactEvidence(true,true)，excludeSummary在普通扫描中按实际summary身份排除旧summary，新textArtifact仅追加一次；此前重复finalize确定P2的直接原因已消除。Effective finalization快照按原子替换更新，普通artifact在这之后取hash，summary在最后实际关闭后取hash，列表排序与序列化对应。metadata写失败仍先按precise stage锁存并改写failed文本、不登记JSON；没有发现新的已确认P1/P2。序列现producer连续从1、unobserved path非空placeholder、source fingerprint严格，与Python一致。
+
+先前“已产生run文件但缺RunRecord”仍只是一条需要真实可达故障证明的风险：serializer拒绝悬空run本身正确，不能据静态可能性认定已发生bug或放宽consumer。root已有failure-no-run/metadata等整合测试应保留；本轮不重复启动其命令，也不把代码阅读当运行通过。未改C++文件。

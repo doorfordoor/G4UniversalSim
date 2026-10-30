@@ -1,0 +1,231 @@
+{
+  "head_sha": "f176d0ed4cea60b7ca5a80ed81017c9404ec1257",
+  "status": "passed",
+  "ci_acceptance_passed": true,
+  "stage_acceptance": "pending_other_required_evidence",
+  "evidence_collection_complete": true,
+  "reports_total": 12,
+  "strict_pass_reports": 12,
+  "case_executions": 414,
+  "failed_case_executions": 0,
+  "failures": [],
+  "reports": [
+    {
+      "artifact": "linux-evidence-11.3.2",
+      "profile": "backend",
+      "path": "linux-evidence-11.3.2/linux-backend/20261030-085908-442e5e41/report.json",
+      "sha256": "8b965bdb89e94fcc4f968461c2ac295d0d4a616f4dfea761f2138a201452a241",
+      "cases": 59,
+      "assertions": 40387,
+      "failures": [],
+      "strict_gate_exit_code": 0,
+      "triage_integrity_only": false,
+      "git_dirty": true
+    },
+    {
+      "artifact": "linux-evidence-11.3.2",
+      "profile": "gui",
+      "path": "linux-evidence-11.3.2/linux-gui/20261030-085807-247d9d38/report.json",
+      "sha256": "7ed9bc0f64ecbe8e3e7e934d01d5ae64ce679f5705c02c6b909d5bcb424643b0",
+      "cases": 39,
+      "assertions": 2341,
+      "failures": [],
+      "strict_gate_exit_code": 0,
+      "triage_integrity_only": false,
+      "git_dirty": true
+    },
+    {
+      "artifact": "linux-evidence-11.3.2",
+      "profile": "integration",
+      "path": "linux-evidence-11.3.2/linux-integration/20261030-091347-3c389cd8/report.json",
+      "sha256": "9d71bbe41881f9a1173063570e458a0225f8970b68b85215f69ba6389543d71e",
+      "cases": 20,
+      "assertions": 4378,
+      "failures": [],
+      "strict_gate_exit_code": 0,
+      "triage_integrity_only": false,
+      "git_dirty": true
+    },
+    {
+      "artifact": "linux-evidence-11.3.2",
+      "profile": "static",
+      "path": "linux-evidence-11.3.2/linux-static/20261030-085714-5a950ea2/report.json",
+      "sha256": "1ec4852ee0a75f7479d5f0d7399eda39e1eedfd179a938fc9dba843ae63188b3",
+      "cases": 25,
+      "assertions": 1373,
+      "failures": [],
+      "strict_gate_exit_code": 0,
+      "triage_integrity_only": false,
+      "git_dirty": true
+    },
+    {
+      "artifact": "linux-evidence-11.4.3",
+      "profile": "backend",
+      "path": "linux-evidence-11.4.3/linux-backend/20261030-085917-b668dfa4/report.json",
+      "sha256": "77946583a828029cb928bbc04e8e30ee77eef58c41e1e3505de2ca570a688589",
+      "cases": 59,
+      "assertions": 39795,
+      "failures": [],
+      "strict_gate_exit_code": 0,
+      "triage_integrity_only": false,
+      "git_dirty": true
+    },
+    {
+      "artifact": "linux-evidence-11.4.3",
+      "profile": "gui",
+      "path": "linux-evidence-11.4.3/linux-gui/20261030-085814-17086ea8/report.json",
+      "sha256": "29b32a46d775272c04eb3263d9518d41ec362486491227474ca7549341f4aaa7",
+      "cases": 39,
+      "assertions": 2341,
+      "failures": [],
+      "strict_gate_exit_code": 0,
+      "triage_integrity_only": false,
+      "git_dirty": true
+    },
+    {
+      "artifact": "linux-evidence-11.4.3",
+      "profile": "integration",
+      "path": "linux-evidence-11.4.3/linux-integration/20261030-091345-ccb2c6a0/report.json",
+      "sha256": "935593072b47e7b131613e65fdf423f0adb4208e4cf6c74e5218a87b62bec5f7",
+      "cases": 20,
+      "assertions": 4378,
+      "failures": [],
+      "strict_gate_exit_code": 0,
+      "triage_integrity_only": false,
+      "git_dirty": true
+    },
+    {
+      "artifact": "linux-evidence-11.4.3",
+      "profile": "static",
+      "path": "linux-evidence-11.4.3/linux-static/20261030-085719-90e72d82/report.json",
+      "sha256": "9ef914b0aad3bf8b1a5efe71b48bc52f4fe1e6345816f173a587c58c08661142",
+      "cases": 25,
+      "assertions": 1373,
+      "failures": [],
+      "strict_gate_exit_code": 0,
+      "triage_integrity_only": false,
+      "git_dirty": true
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "static",
+      "path": "m0-report-ubuntu-latest/20261030-085531-34838c3e/report.json",
+      "sha256": "7b305c60a0d1bef6230705b0d0929ae3a312d564bbcd249f76fffbae91463e5e",
+      "cases": 25,
+      "assertions": 1373,
+      "failures": [],
+      "strict_gate_exit_code": 0,
+      "triage_integrity_only": false,
+      "git_dirty": false
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "gui",
+      "path": "m0-report-ubuntu-latest/20261030-085606-197ce25c/report.json",
+      "sha256": "3c71b9e4437d4b1b9b384c9093bcc9e2b4e197f8a4ac005e7532aad0219e311f",
+      "cases": 39,
+      "assertions": 2341,
+      "failures": [],
+      "strict_gate_exit_code": 0,
+      "triage_integrity_only": false,
+      "git_dirty": false
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "static",
+      "path": "m0-report-windows-latest/20261030-085559-fc139df5/report.json",
+      "sha256": "6608fd5a76ec8d9e92df8c94689d3bf900a14fee879f608a0fd76ab2d114b48d",
+      "cases": 25,
+      "assertions": 1364,
+      "failures": [],
+      "strict_gate_exit_code": 0,
+      "triage_integrity_only": false,
+      "git_dirty": false
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "gui",
+      "path": "m0-report-windows-latest/20261030-085726-e56c442a/report.json",
+      "sha256": "7103b10ca386706e4cb574f5109486e25166fd646dcf0ed661a601d47def7602",
+      "cases": 39,
+      "assertions": 2343,
+      "failures": [],
+      "strict_gate_exit_code": 0,
+      "triage_integrity_only": false,
+      "git_dirty": false
+    }
+  ],
+  "artifacts": [
+    {
+      "id": 12966617063,
+      "name": "linux-evidence-11.4.3",
+      "run_id": 41028779177,
+      "official_digest": "sha256:ac9493728091780df683f8e25d9a9f88053427a1e11df0e063cb7f0f16e717cc",
+      "sha256": "sha256:ac9493728091780df683f8e25d9a9f88053427a1e11df0e063cb7f0f16e717cc",
+      "member_files_verified": 147
+    },
+    {
+      "id": 12965413991,
+      "name": "linux-evidence-11.3.2",
+      "run_id": 41028779177,
+      "official_digest": "sha256:e67ed98e4daae7c52479cd756fd4b4242b49b950595298a1c8b9c3886ed451dd",
+      "sha256": "sha256:e67ed98e4daae7c52479cd756fd4b4242b49b950595298a1c8b9c3886ed451dd",
+      "member_files_verified": 147
+    },
+    {
+      "id": 12965581764,
+      "name": "m0-report-windows-latest",
+      "run_id": 41028779326,
+      "official_digest": "sha256:d614dd380db940aaa0336d7463818fd693fd085bd70b339573f7418e57e6107c",
+      "sha256": "sha256:d614dd380db940aaa0336d7463818fd693fd085bd70b339573f7418e57e6107c",
+      "member_files_verified": 67
+    },
+    {
+      "id": 12965402013,
+      "name": "m0-report-ubuntu-latest",
+      "run_id": 41028779326,
+      "official_digest": "sha256:5e59ca69017e85d537d4f7c0bafd75a8312c254e63c0c665d8890ddf513ca122",
+      "sha256": "sha256:5e59ca69017e85d537d4f7c0bafd75a8312c254e63c0c665d8890ddf513ca122",
+      "member_files_verified": 67
+    }
+  ],
+  "job_logs": [
+    {
+      "id": 123973207024,
+      "run_id": 41028779177,
+      "name": "ubuntu-24.04 / Geant4 11.3.2",
+      "conclusion": "success",
+      "path": "job-123973207024.log",
+      "bytes": 134309,
+      "sha256": "8b04a593c245bcae34a0ac2913083bd37a5386642febc406c804d29726c9b1dd"
+    },
+    {
+      "id": 123973207198,
+      "run_id": 41028779177,
+      "name": "ubuntu-24.04 / Geant4 11.4.3",
+      "conclusion": "success",
+      "path": "job-123973207198.log",
+      "bytes": 132324,
+      "sha256": "7a9eae03fb4b3459103fcb4044925aa7c72ab89d568c4fd0c25fce64af0a5b69"
+    },
+    {
+      "id": 123973207214,
+      "run_id": 41028779326,
+      "name": "windows-latest / Python 3.11",
+      "conclusion": "success",
+      "path": "job-123973207214.log",
+      "bytes": 80333,
+      "sha256": "51c1c8ceea4e794d28e6d534686b53ebb06ff1af22a007a60140038a8f2df16d"
+    },
+    {
+      "id": 123973207657,
+      "run_id": 41028779326,
+      "name": "ubuntu-latest / Python 3.11",
+      "conclusion": "success",
+      "path": "job-123973207657.log",
+      "bytes": 47918,
+      "sha256": "5241c51f8c7d59af49bcf158f9f8e9c5418fadd8bc51c3649d6a7787d83674ff"
+    }
+  ],
+  "boundary": "CI acceptance is distinct from Windows all-profile, visible UI and physical validation."
+}

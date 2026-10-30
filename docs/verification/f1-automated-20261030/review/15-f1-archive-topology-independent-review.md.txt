@@ -1,0 +1,15 @@
+# F1 归档拓扑修复独立复核
+
+结论：原P2（报告总数冒充平台/profile完整）在当前helper闭合，未发现新增确定阻断；允许准备最终真实报告plan/review，但本次没有发布或阶段验收结论。受审helper SHA256：017d26fa8fbd9e28c8126474426a64ed5c6c8373b1c3b4d69b9eeb192cc7f3a6。
+
+已读f1-archive-topology-fix.md及receipt，逐段复核validate_ci_topology与build_plan/report_gates接线。固定四个artifact对应M0 Windows/Ubuntu各static/gui、Linux11.3.2/11.4.3各四profile，与当前workflow矩阵job名及upload artifact名一致。两个workflow唯一、push冻结head、completed/success、run_attempt、原jobs集合与run身份、原artifacts官方id/digest/workflow_run身份均闭合；summary逐项交叉核对。每artifact/profile唯一，report磁盘实际profile/head与summary一致，实际路径集合精确等于声明集合；report_gates在归档副本重新执行该校验并将plan路径集合对应，之后原严格断言/日志字节/case集合/双指纹/head/baseline门禁继续生效。数量参数不能缩小固定必需集合。
+
+独立实际证据（轻量helper，无产品运行）：
+
+- 重新运行14个负模型，全部拒绝，结果另存f1-archive-topology-independent-controls.json，未覆盖作者收据。
+- 对docs/verification/e6-full-20261030/ci原文件只读执行真实schema正例，12report/4artifact/2workflow通过；结果f1-archive-topology-independent-real-schema.json。这仅验证现有collector schema兼容，不把E6通过当作F1验收。
+- 从真实E6 schema必要文件建立独立临时副本，另外篡改矩阵job名、summary run_attempt、summary官方digest、保持12报告却全部static四例，全部拒绝。结果f1-archive-topology-independent-real-negative.json。原E6文件未修改，临时目录已正常清理。
+
+边界：当前新冻结3d1faf1b的CI/Windows最终通过证据尚未齐备，未对其生成plan/review，也未执行归档。离线关系校验只能验证已采集原始JSON的自洽性，不是GitHub签名认证或在线重新查询；官方ZIP原字节digest/成员对照仍由既有后续路径执行，本轮未再次下载。性能留存范围及只保留原artifact hash、不从后续构建路径重算的边界沿用f1-archive-independent-review.md。source/tests指纹与143case完整性最终须用新的真实freeze及平台报告严格验证，不能用本次拓扑合成模型替代。
+
+未改tracked或helper、未执行归档、未跑重CPU/后端/编译、无运行中session。旧draft helper SHA已失效，正式报告到齐后必须重新生成plan与review。

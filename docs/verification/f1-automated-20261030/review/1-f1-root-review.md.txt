@@ -1,0 +1,34 @@
+# F1 主负责人改动独立审查
+
+2026-10-30。只读审查BuildIdentity/CMake/BuildInfo/capabilities、test_build_identity、SimulationManager新provenance与成功命令记录。未修改主负责人文件。主任务仍在并行实施，未把暂未接线视为最终缺陷。
+
+## 已重现的缺陷
+
+**P2：build输入实际不同于commit时，git_source_state仍可能是clean。** `cmake/BuildIdentity.cmake:30–36`只依据git status porcelain。该命令遵循assume-unchanged/skip-worktree/ignore，不能证明实际构建输入与HEAD一致。用当前生产cmake helper在独立临时Git夹具运行了两项：
+
+1. 提交source.cc为 `int x = 1;`，`git update-index --assume-unchanged source.cc`，实际改为 `int x = 2;`，重新configure返回 `state=clean`。
+2. 显式把 `.gitignore` 忽略的未跟踪ignored.cc列入input_files，重新configure仍 `state=clean`。
+
+原始执行exit0，输出分别 `assume_unchanged_changed_input_state=clean`、`ignored_untracked_build_input_state=clean`。source_fingerprint仍区分内容，故不是身份哈希碰撞，但“git_state_scope=cpp_build_inputs/clean”的语义过强。最小修复：除status外逐实际input确认HEAD有对应blob，并比较HEAD内容身份与构建时实际读入内容，注意git EOL/filter语义；或为受忽略/假定不变的输入降级unknown/dirty。增加上述两项反例、skip-worktree、tracked同长度同mtime字节变化反例。`scripts/test_build_identity.py:60–86`当前只有普通dirty/staged/docs等，未覆盖这些标志/ignored实际输入。
+
+## 其他审查结论
+
+- BuildIdentity正确检查仓库根与`.git`存在，避免archive继承父库；worktree的.git文件可用；HEAD/branch/index/packed-refs增量监听与独立fixture覆盖合理。
+- OutputProvenance将optional hash/size序列化null、快照不重读原文件、明确bytes_read_not_semantic_acceptance与内部dataset exclusion，未发现把应用收据冒充输入身份的问题。uint64转int64只在超过INT64_MAX的理论极端溢出，现实文件不能轻易达到；可顺手加边界校验，但不列当前阻塞项。
+- `RecordSuccessfulMacroCommand`在成功后才登记；GPS文件为unknown而非重开hash；真实`/run/particle/retrievePhysicsTable`且OFF不登记，符合本轮边界。命令reference不应被UI说成实际读取成功。调用处的控制流仍须端到端验证失败命令不登记。
+- 暂不把OutputProvenance当前尚未调用视作缺陷，因为root明确仍在接最终化。
+
+## 必补端到端输入kind场景（真实主metadata读取链）
+
+1. **基础运行**：main_ini、geometry_ini、material_ini、macro（至少两层nested且重复引用）、copies_table；逐条对运行时真实原bytes/hash/size验证，重复macro顺序不丢。
+2. **源数据**：至少一个命名源spectrum、一组多文件phase_space；不必强凑同一配置，两个真实运行验证输入kind与源模式并确保失败解析不伪造accepted。
+3. **计分/场**：NIEL表与field_map真实配置进入主metadata；不能只验证单个模块的2C字段。
+4. **STL双读**：csh配置后暂停，在initialize前改变有效STL内容（维持合法封闭网格）；主metadata保留geometry_validation与geometry_construct两次不同hash、size和序列。不应只assert含一个stl条目。
+5. **GDML**：主文件+本地引用依赖/schema或外部实体，最终metadata含实际capture条目；网络partial在native helper验unknown即可，不依赖外网。至少一项真实GDML运行而非只有Xerces helper。
+6. **随机恢复**：受支持native saveStatus文件经真实 `/random/resetEngineFrom`，hash对应已提交保留bytes；坏checksum恢复拒绝，状态不变且不发布successful_engine_restore；缺文件同样拒绝。真实metadata含random_restore。
+7. **读取后改/删**：读取完成后改变或删除主INI/材料/spectrum至少一项，然后完成run；metadata仍保留原hash，最终化不要求原路径存在。可用csh同步ready后外部修改，避免不确定时间sleep。
+8. **原生文件命令**：真实成功 `/gps/hist/file` unknown引用；失败命令不登记；retrieve ON/目录保留unknown、OFF不登记。不能靠ApplyCommand合成调用替代实际backend状态。
+9. **作用域一致性**：2runs及1/2/4workers至少组合验证共享账本与sequence不重置、不串成每worker读；metadata进入新版validator后通过搬移验证，输入路径不存在不应被当成产物缺失。
+10. **失败运行**：已成功读取但随后配置/运行失败，凡实际生成主metadata的路径保留已读观察、状态仍failed；dry-run可有配置输入而无运行资源/假run关联。
+
+无需每个kind都重跑所有worker/格式笛卡尔积；按覆盖矩阵分配case即可。当前组件测试不能替代上述跨最终化/序列化/validator链。

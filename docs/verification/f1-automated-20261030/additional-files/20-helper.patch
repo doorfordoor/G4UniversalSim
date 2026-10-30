@@ -1,0 +1,79 @@
+--- archive-f1-before.py
++++ archive-f1.py
+@@ -394,10 +394,15 @@
+         original_jobs=read(f"{run_id}-jobs.json").get("jobs")
+         expected_jobs={x["job"] for x in CI_TOPOLOGY.values() if x["workflow"]==workflow}
+         need(isinstance(original_jobs,list) and len(original_jobs)==len(expected_jobs) and {x.get("name") for x in original_jobs}==expected_jobs,"original matrix jobs incomplete")
++        if raw["conclusion"]=="success":
++            need(all(job.get("conclusion")=="success" for job in original_jobs),"successful original run contains an unsuccessful job")
+         for job in original_jobs:
+             jid=job.get("id")
+             need(type(jid) is int and jid>0 and jid not in jobs and job.get("run_id")==run_id,"invalid/duplicate job identity")
+             need(job.get("status")=="completed" and job.get("conclusion") in {"success","failure"},"nonterminal original job")
++            if job["conclusion"]=="success":
++                need(not any(step.get("conclusion") in {"failure","cancelled","timed_out","action_required","startup_failure"}
++                             for step in job.get("steps",[])),"successful original job contains an unsuccessful step")
+             log=folder/f"job-{jid}.log"
+             if not log.is_file() or not log.stat().st_size:blockers.append("Historical job log missing/empty: "+str(log))
+             jobs[jid]=job
+@@ -420,17 +425,52 @@
+             need(ref.get("id")==run_id and ref.get("head_sha")==head and re.fullmatch(r"sha256:[0-9a-f]{64}",sha),"official artifact association/hash missing")
+             archive=folder/(name+".zip")
+             need(archive.is_file() and "sha256:"+file_digest(archive)==sha,"original historical ZIP missing/changed: "+name)
++            official_members=set()
+             with zipfile.ZipFile(archive) as bundle:
+                 for member in bundle.infolist():
+                     need(not stat.S_ISLNK(member.external_attr>>16),"linked historical ZIP member")
+                     if member.is_dir():continue
+                     extracted=safe_relative(folder/name,member.filename)
++                    relative=extracted.relative_to(folder/name).as_posix()
++                    need(relative not in official_members,"duplicate historical ZIP file member")
++                    official_members.add(relative)
+                     need(extracted.is_file() and file_digest(extracted)==digest(bundle.read(member)),"historical ZIP/extracted bytes mismatch")
++            extracted_members={path.relative_to(folder/name).as_posix() for path in (folder/name).rglob("*") if path.is_file()}
++            need(extracted_members==official_members,"historical artifact file set differs from official ZIP members: "+name)
+             official[name]={**artifact,"run_id":run_id}
+             zip_checks.append({"zip_source":str(archive.absolute()),"name":name,"official_digest":sha,"matches":True,"category":"historical_ci"})
+     need(set(pairs)==expected_pairs,"preserved reports do not match executed profile steps")
+     need(set(official)==set(CI_TOPOLOGY) and len({x["id"] for x in official.values()})==4,"official artifact identity set mismatch")
+     need(any(x["conclusion"]=="failure" for x in runs.values()),"failed summary has no failed original run")
++    backfill=None
++    if schema=="failed_round_compact_v1":
++        # This is the explicitly saved first-round sidecar, not a generic
++        # invented attestation. The Ubuntu M0 log predates this three-log
++        # backfill and has presence/manifest evidence only, not this receipt.
++        sidecar_name="job-log-backfill-20261030.json"
++        sidecar=read(sidecar_name)
++        need(isinstance(sidecar,dict) and set(sidecar)=={"recorded_utc","source","correction","logs"},"unknown or incomplete compact backfill receipt")
++        need(sidecar["source"]=="GitHub connector fetch_workflow_job_logs decoded content" and
++             isinstance(sidecar["recorded_utc"],str) and sidecar["recorded_utc"].strip() and
++             isinstance(sidecar["correction"],str) and sidecar["correction"].strip(),"compact backfill source/time/correction missing")
++        expected_ids={jid for jid,job in jobs.items() if job["name"]!="ubuntu-latest / Python 3.11"}
++        legacy_ids=set(jobs)-expected_ids
++        rows=sidecar["logs"]
++        need(len(expected_ids)==3 and len(legacy_ids)==1 and isinstance(rows,list) and len(rows)==len(expected_ids),"compact backfill log roster incomplete")
++        seen=set()
++        for row in rows:
++            need(isinstance(row,dict) and set(row)=={"job_id","path","bytes","sha256"},"unknown or incomplete compact backfill log row")
++            jid=row["job_id"]
++            need(type(jid) is int and jid in expected_ids and jid not in seen,"duplicate/unknown compact backfill job ID")
++            seen.add(jid)
++            need(row["path"]==f"job-{jid}.log" and type(row["bytes"]) is int and row["bytes"]>0 and
++                 isinstance(row["sha256"],str) and re.fullmatch(r"[0-9a-f]{64}",row["sha256"]),"compact backfill path/size/digest invalid")
++            log=safe_relative(folder,row["path"])
++            need(log.is_file() and log.stat().st_size==row["bytes"] and file_digest(log)==row["sha256"],"compact backfill job log differs from receipt")
++        need(seen==expected_ids,"compact backfill job roster mismatch")
++        backfill={"path":sidecar_name,"sha256":file_digest(folder/sidecar_name),"verified_job_ids":sorted(seen),
++                  "legacy_presence_only_job_ids":sorted(legacy_ids),
++                  "meaning":"Three decoded connector logs match their saved receipt; the older Ubuntu M0 log has no backfill hash attestation. SHA is not a signature."}
+     if schema=="failed_round_audited_v1":
+         need(summary["linux_run"]==runs[".github/workflows/linux-geant4.yml"]["id"] and summary["m0_run"]==runs[".github/workflows/m0-static-gui.yml"]["id"],"summary workflow association mismatch")
+         counts={"reports_total":len(reports),"strict_pass_reports":sum(not x["failures"] for x in reports.values()),"strict_rejected_reports":sum(bool(x["failures"]) for x in reports.values()),
+@@ -461,6 +501,7 @@
+             "recorded_status":"failed","recorded_complete":not blockers,"reports":len(reports),
+             "failed_case_executions":len(failures),"case_executions":cases_total,
+             "collection_blockers":blockers,"zip_digest_checks":zip_checks,
++            "job_log_backfill":backfill,
+             "meaning":"retained original failure, not release acceptance"}
+ 
+ 

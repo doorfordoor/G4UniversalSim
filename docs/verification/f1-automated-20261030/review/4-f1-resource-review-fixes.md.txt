@@ -1,0 +1,32 @@
+# F1资源独立审查修复与后端补验交接
+
+2026-10-30。已阅读f1-resources-independent-review.md，三项P2均确认并修改；以下覆盖此前实施报告的RNG记录时机说明。
+
+## 修复
+
+- InputProvenance::ReadFile改用显式64KiB input.read/gcount循环，检查bad与非EOF fail；完整读入后clear EOF、显式close检查，再hash/登记。同一原bytes交parser。内部ReadBuffered可由单翻译单元fault-stream测试直接验证，无生产故障开关。
+- GDML foreign两个fileOpen overload和stdin在新增MarkUnobserved及unknown vector操作异常时close原生handle后重抛；不吞记账失败。owner捕获仍保留原close保护。
+- RNG：完整有界ReadSnapshot+显式close后立即hash/RecordRead，然后才解析/候选验证/实际engine提交。role改为 `engine_restore_validation`；格式/校验拒绝仍保留真实读取，缺失/空/过大没有完整快照则不登记。账本操作再无engine commit之后抛错窗口。旧 `successful_engine_restore` role已经废弃。
+
+## 新增/调整测试
+
+- test_f1_input_provenance.py：注入streambuf在一个64KiB块后抛IO异常，ReadBuffered必须拒绝且不能生成recorded；其余16 SHA边界、改删原文件、重复/搬移、4线程连续读、未知null等保持。已实际exit0。
+- test_input_provenance.py再次exit0。
+- randomCommandGuardCheck：非法但完整可读状态现在必须新增一条原hash，且真实引擎状态不变；合法restore检查新role与原bytes。
+- gdmlInputCaptureCheck：组件独有one-shot allocation fault allocator，fake XMLFileMgr在成功open后触发分配失败，foreign fileOpen/stdin/owner三路要求open/close次数各一次。这个operator new只在helper，不进产品；**等待root重建并运行helper**。
+- 新scripts/test_f1_input_resources_backend.py：真实metadata+output_evidence链，不使用mtime替代hash；运行前冻结全部输入原bytes。三个1/2/4worker两run组合覆盖main、geometry、material、copies、STL验证与构建双观察、命名源spectrum、NIEL、fieldmap、重复nestedmacro；另多文件phase-space、真实native保存/恢复及拒绝的RNG原bytes、原生GPS unknown+retrieve OFF、真实GDML外部实体依赖。root需登记backend profile。
+
+## 已执行的真实后端证据
+
+使用旧轮构建 `out/build-f1/Release/G4UniversalSim.exe`（14:24:43，早于RNG修复14:25:32）先跑，保留证据 `out/verification/f1-input-resources-first`、`out/collab/f1-input-backend-first.log`。三个worker组合、phase-space和save-rng均已完成metadata/consumer断言；在restore-success的新role断言处失败，原因是该旧exe仍输出successful_engine_restore。**整个新脚本尚未通过，必须重建后完整重跑。**
+
+独立跑新脚本相同Cases的native-spectrum与GDML依赖场景：`out/verification/f1-input-extra-second`、`out/collab/f1-input-extra-second.log`，实际通过（原生GPS unobserved、OFF不登记、GDML主文件与外部materials.fragment真实捕获、最终consumer verified）。该补验使用同旧轮exe，不冒充新异常分支已运行。
+
+首次把native User histogram配置放在initialize前并随后beamOn，旧exe真实出现访问违例退出3221225477，日志保留 `out/verification/f1-input-extra-first/native-spectrum/run.log` 和 `out/collab/f1-input-extra-first.log`。这不是F1账本异常修复的验证；本测试仅需要验证已执行native文件命令的unknown引用，现将命令放到一个真实成功run之后、无后续beamOn，已实测通过。未修改后端GPS行为，也不声称该原生命令后采样安全。
+
+## 剩余边界
+
+- 按root决策RNG失败解析现在也记录字节，不是accepted/applied。
+- 真正磁盘故障用可控streambuf验证读失败传播，非磁盘硬件故障实测。
+- STL配置到构建期间更换合法文件、读取后删除源并继续run，需要同步csh barrier；本次backend脚本没有实现，不宣称已测。纯组件的读取后更改/删除、真实GDML原生open后更换覆盖各自可控边界。
+- root构建的运行状态仍由root持有；本代理没有启动重复构建或改主/输出/CMake文件。

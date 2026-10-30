@@ -1,0 +1,52 @@
+# F1 前端独立只读审查
+
+2026-10-30；读取时 HEAD `5373d57ffed4b6b0106a93737c3f50e3755617cf`，本轮存在并行修改，行号对应本次读取。未修改 GUI/产品/测试，未运行后端、编译或重 CPU 测试；仅对几个百字节文件执行纯 Python 夹具与一次无 Qt 的方法边界探针。机器收据：`out/collab/f1-frontend-review-probe.json`。
+
+结论：**1 项 P1、3 项 P2**。以下均为具体行为，不是样式或泛化优化建议。
+
+## F1-FE-01 / P1：搬移历史包的“打开输出”仍回到旧目录
+
+位置：`gui/g4usim_gui/history/run_history_scanner.py:100`；动作 `gui/g4usim_gui/widgets/run_history_page.py:271`；接收器 `gui/g4usim_gui/window/project.py:259-260`。
+
+`scan_package()` 原本在 :46 设置当前 package/output，但 `_apply_snapshot()` 又用旧 `project_snapshot.json/runPackage/output_dir` 的绝对路径覆盖它。新增 `_apply_identity()` 验的是当前 package/output，面板也加载当前根，因此搬移后的记录可显示 verified；“打开输出”却直接 emit 旧路径，接收器不重定位，OutputPage 的绘图/Dose/Fluence 都使用该旧 `_output_dir`。旧根存在且已被后续运行更新时，用户从新历史包打开的会是另一个执行的数据，违背本轮当前根搬移契约。
+
+纯 Python 实测：创建合法 F1 包 A，snapshot 指向 A/output，再复制为 B；`scan_package(B)` 得到 identity_status=verified、package_dir=B，但 output_dir 仍为 A/output，旧根仍存在。该绝对路径覆盖是既有逻辑，但 F1 新身份面板与动作接线没有闭合此场景；不能仅以 output_evidence 的裸目录搬移用例通过视为 GUI 历史入口也通过。
+
+最小修复：历史包内输出动作统一锚定当前 package/output，把 snapshot 的原路径只作为历史记录显示。补包含 project_snapshot 的整包复制正反例，保留 A、改变 A 的有效输出，再断言 B 的打开动作/数据读取仍用 B；不要用“旧根不存在”作为唯一搬移测试。
+
+## F1-FE-02 / P2：进程摘要被伪标成 thread 仍判 verified
+
+位置：`gui/g4usim_gui/output/identity.py:74-101`。
+
+当前仅对 run/thread 文件名和 metadata 自身绑定 scope；`run_summary.txt`、configure/process-final 快照没有进程角色约束。合法 F1 fixture 中只把摘要条目改为 scope=thread、run_id=0、thread_id=0，不改摘要字节及 SHA，`output_evidence()` 实测仍返回 verified。这与 producer 的 process 摘要契约冲突，作用域损坏被当成合法身份。configure/finalization 同样缺少固定角色检查，不能靠通用“非负 ID 且 run 存在”代替其实际角色。
+
+最小修复：对 run_summary.txt、effective_config_configure.json、effective_config_finalization.json 的已知进程角色要求 process/null/null；保留既有 run/thread 文件的精确绑定。补上述进程文件改成 run/thread 的反例；不要仅测 `effective_config_run_1_t0.json` 的三种冲突。
+
+## F1-FE-03 / P2：历史选择复验失败后，详情仍宣称 verified
+
+位置：`gui/g4usim_gui/widgets/run_history_page.py:208-213`。
+
+选择动作先调用 identity_panel.load_directory() 重新校验，但随后详情仍使用扫描时缓存的 entry.identity_status。扫描 verified 后，改一个已登记 CSV 字节再重新选择：面板正确进入 invalid、清空行；详情却仍写 identity_status=verified 和 Verified against recorded hashes。新的坏证据与旧的好声明同屏，属于失效清理不完整，而不是运行状态两轴的合理差异。
+
+边界实测执行未改动的 `_show_selected` 方法 AST（仅用 display stand-in 避免启动 Qt）：panel_state=invalid，details_still_verified=true，details_still_verified_caption=true。此证据不是实窗验收，但直接执行了当前详情拼接路径。
+
+最小修复：同次选择只产生一份当前 evidence/错误状态，用它同时更新 panel 与详情；失败时移除旧 verified 声明，保留独立运行记录轴。补“初次扫描成功→改内容→不重新扫描直接重新选择”的用例。摘要自身哈希失败时，运行记录轴应明确是未通过字节核对的摘要记录，不能借旧身份状态继续给可信标签，也不要把所有身份错误一刀改成运行失败。
+
+## F1-FE-04 / P2：一次数据发现同步重复哈希同一批输出 8 遍
+
+位置：`gui/g4usim_gui/output/plot_data.py:97-140`、`:86-89`；上游同步调用为 `gui/g4usim_gui/widgets/output_page.py:277-317`，历史扫描同步入口为 `run_history_page.py:155`。
+
+每个 output_files(pattern) 都重新调用 output_evidence，再流式读取全部已登记文件。使用只有一个 event 数据集、4 个需哈希文件的小夹具，对 identity.hash_file 加只计数的包装，单次 discover() 实测 32 次 hash_file，每个同文件被完整读取 8 次。OutputPage.refresh 又两次调用摘要校验、两次 merge-plan 校验，并同步触发 plot discover、Dose、Fluence；history refresh 也会在 GUI 调用栈内逐包完整哈希。有效 GB 级 hits 文件因此会被一次界面刷新重复串行读取，且 UI 线程同步等待。这是确定的重复 IO/响应性问题；本次没有大文件计时，不声称已测得多少秒延迟。
+
+最小修复：在一个有界的刷新/发现操作内只获取一次不可变 evidence，向同操作的 matching/metadata/loader 传递该快照，避免按 pattern 重验全目录；首轮大文件校验需移出 GUI 事件线程并支持过时请求丢弃。保留合并执行前的新一轮内容校验，不能改成跨操作缓存，也不能只凭 size/mtime 复用，以免破坏已有同长度同 mtime 篡改门禁。补 hash 调用计数与 GUI 非阻塞/过时清理的专项。
+
+## 已确认的正确边界与当前 smoke 缺口
+
+- strict_object 拒重复键、parse_constant 拒非有限 JSON、未知 provenance schema 拒绝；F1 values/row 标记残留时不降级 legacy。旧元数据明确 content-unverified，未将其变成新协议 verified。
+- 裸 output_evidence 的当前根映射正确：按 metadata 原锚点取相对路径，再绑定当前根，并检查 resolve 后逃逸、重复与缺文件；不会在缺文件时借旧根。FE-01 是更上层历史动作重新引入旧根。
+- 同长度同 mtime 改字节会重算 SHA 并拒绝；无 mtime 信任缓存。MergeRunner 执行前再次比较 manifest digest、当前名单并完整校验，失败会清队列、发 error，不启动合并。这个跨动作再校验应保留；FE-04 指同一次刷新内部的重复读取。
+- OutputIdentityPanel.clear 确实清 build/input/output 树及 raw；OutputPage 的 Dose/Fluence/plot 错误路径会清旧数据。运行结果与身份验证是两轴，_apply_identity 不修改 entry.status，此设计本身正确；FE-03 是旧 verified 文字残留。
+- 当前 smoke 覆盖裸目录搬移、坏数据清面板、多个 protocol 反例、merge 计划后篡改；未覆盖带 snapshot 的历史打开动作、进程文件 scope、历史缓存状态重新选择及 hash 调用次数，因此这些成功 smoke 不能反驳上述复现。
+- manifest 当前 read_bytes/json loads、raw JSON 及错误文字未见显式尺寸上界；本次没有尺寸压力测试，不宣称任意输入大小下的清理/响应有界，也未据此额外列风险猜测。
+
+本记录不修改实现，不作阶段关闭。建议由单写者逐项修复后在对应层定向复验，再进入统一全量与实际窗口验收。

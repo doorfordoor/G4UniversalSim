@@ -1,0 +1,9 @@
+# F1 启动页已应用diff独立复核
+
+结论：当前6文件实际字节与最新已审out提案文件逐一完全一致，未发现额外改动或断言降低，可进入root新冻结节点。比对明细及6文件SHA：out/collab/f1-start-page-applied-comparison.json。
+
+实际git diff仅6文件，90增/7删。smoke_start_page.py只新增async_wait导入及真实完成等待；对HEAD和当前文件逐条提取Assert AST，41个断言站点顺序/表达式完全一致。示例目标目录、example.plot key、current_plot非空、几何volume/NaI名单、scan数值与状态等原断言均保留，不是只等后默认第一图。异步专项新增强制A阻塞/B完成、实际捕获A Future等其done后确认B不污染、同根refresh、ready/queued未知key空图；原断言保留，阻塞上限5->10秒仅为受控测试释放窗口。
+
+产品部分仍为已审机制：EvidenceJob QueuedConnection避免同步完成抢先于intent绑定；OutputPage意图绑定目录/serial，ready/pending统一选择失败清空旧图并取消潜在旧重画；open_example去除重复refresh；明确中英错误消息。完整源码审查与候选轻量实跑见f1-start-page-independent-review.md，本轮不重复root session97097七项专项。
+
+只读检查，未改tracked、未编译、未跑backend，无运行中session。root告知原正式Windows64186终态141pass/2fail/0skip是旧冻结的gui_start_page与data_locator环境遗漏；本报告不替代新候选正式矩阵。data_locator脚本未改，现有G4USIM_GEANT4_DATA分支由root按E6环境控制验证，未制作junction/权限变更。归档helper拓扑P2等前端交接后另行只读复核。

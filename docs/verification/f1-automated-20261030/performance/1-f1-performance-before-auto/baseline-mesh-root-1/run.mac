@@ -1,0 +1,9 @@
+/score/create/boxMesh benchmarkMesh
+/score/mesh/boxSize 10 10 10 mm
+/score/mesh/nBin 24 24 24
+/score/quantity/energyDeposit edep MeV
+/score/quantity/doseDeposit dose Gy
+/score/quantity/cellFlux flux
+/score/close
+/run/initialize
+/run/beamOn 1000
