@@ -1,0 +1,71 @@
+{
+  "purpose": "Frozen F1 real backend fixture for pending visible observation; no physical validation",
+  "expected": {
+    "head": "f176d0ed4cea60b7ca5a80ed81017c9404ec1257",
+    "exe_sha256": "f02d3bdc94121dcf35de05e152773fdec8c87f5c8759e53fd1f95d3f51f43ea8",
+    "source_fingerprint": "db253b7b1ed5f810789f1322faa75002df311d4aeb04572867dbb130c71d95cc",
+    "tests_content_fingerprint": "57a80e4f5e73a2d07b5b834b6ca91ac482161622ca1d5e1d558cbd37d79b5f35"
+  },
+  "started_utc": "2026-10-30T08:52:16.671207+00:00",
+  "command": [
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-f1\\Release\\G4UniversalSim.exe",
+    "--config",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f1-visible-gdml\\inputs\\main.ini",
+    "--macro",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f1-visible-gdml\\inputs\\run.mac",
+    "--output",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f1-visible-gdml"
+  ],
+  "backend_exit_code": 0,
+  "capabilities_exit_code": 0,
+  "loaded_git_head": "f176d0ed4cea60b7ca5a80ed81017c9404ec1257",
+  "source_fingerprint": "db253b7b1ed5f810789f1322faa75002df311d4aeb04572867dbb130c71d95cc",
+  "tests_content_fingerprint": "57a80e4f5e73a2d07b5b834b6ca91ac482161622ca1d5e1d558cbd37d79b5f35",
+  "exe_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-f1\\Release\\G4UniversalSim.exe",
+  "exe_sha256": "f02d3bdc94121dcf35de05e152773fdec8c87f5c8759e53fd1f95d3f51f43ea8",
+  "fixture_script_sha256": "51051e7337f8868b715a082e2171b075ed24902dd3e57edf91a8cb1467677f6e",
+  "input_sha256": {
+    "geometry.ini": "ae192c17021673f793bb700f23cefe609974eb6a9fd585e96ca42e7b6ee5577a",
+    "main.ini": "e4ae8098031c7c2b63a07bc9a8146490a872efcdde7c975a9c8867275168b002",
+    "run.mac": "2120bd62058d93da4ccc5f8ead3f5da553e54d9e60d8d7254f2f5ad8484434cf"
+  },
+  "strict_identity_status": "verified",
+  "visible_observation": "pending",
+  "window_started": false,
+  "desktop_operations": false,
+  "close_file_control": false,
+  "finished_utc": "2026-10-30T08:52:18.186037+00:00",
+  "backend_log_sha256": "79989e7440816406c96064181b070891fb67d79eb3d1bc9109a721b9b12c8a2d",
+  "identity_status": "verified",
+  "manifest_sha256": "4284260a76299214b50d846fc9340efac16835175a6fb70c7bed7e8db5eb4f65",
+  "metadata_sha256": "4284260a76299214b50d846fc9340efac16835175a6fb70c7bed7e8db5eb4f65",
+  "execution_id": "27ff230e45cdc20b7f282f690188e5e9",
+  "recorded_build": {
+    "compiler_id": "MSVC",
+    "compiler_version": "19.51.36246.0",
+    "configuration": "Release",
+    "geant4_version": "$Name: geant4-11-03-patch-02 [MT]$",
+    "git_commit": "f176d0ed4cea60b7ca5a80ed81017c9404ec1257",
+    "git_source_state": "clean",
+    "git_state_scope": "cpp_build_inputs",
+    "source_fingerprint": "db253b7b1ed5f810789f1322faa75002df311d4aeb04572867dbb130c71d95cc"
+  },
+  "runs": [
+    {
+      "run_id": 0,
+      "planned_events": 2,
+      "completed_events": 2
+    },
+    {
+      "run_id": 1,
+      "planned_events": 2,
+      "completed_events": 2
+    }
+  ],
+  "actual_threads": "2",
+  "output_format_requested": "auto",
+  "output_format_actual": "root",
+  "output_format_selection_reason": "auto_enabled_scoring_with_hits_or_event_edep",
+  "generated_files_count": 20,
+  "tracked_porcelain": ""
+}

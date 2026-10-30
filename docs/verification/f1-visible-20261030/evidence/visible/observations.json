@@ -1,0 +1,245 @@
+{
+  "phase": "F1",
+  "product_commit": "f176d0ed4cea60b7ca5a80ed81017c9404ec1257",
+  "gui_checkout": "ede037f26db63f606e3ca086d5d586f222f428df",
+  "entries": [
+    {
+      "label": "01-synthetic-verified-build",
+      "observed": "合成标识清晰；completed与字节一致分别显示；构建字段和未覆盖输入可读，原始JSON默认隐藏；长哈希单元格省略显示，不等于全部字节可直接看全。",
+      "window": {
+        "app": "process:C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "id": 593824,
+        "title": "G4UniversalSim F1 ede037f26db6 | 身份请求完成 | 观察pending"
+      },
+      "screenshot_id": "screenshot-0",
+      "width": 1502,
+      "height": 991,
+      "image": "01-synthetic-verified-build.jpg",
+      "sha256": "167e12439ba0da24b9cfe85bff76606e3cb10c98cbdc3eceee7087dfe0a5f254",
+      "saved_utc": "2026-10-30T09:41:51.398Z",
+      "observation": "direct_native_tool_image_seen_by_root",
+      "input": "native sky action unless initial capture"
+    },
+    {
+      "label": "02-synthetic-inputs",
+      "observed": "历史输入表区分已读SHA与未观察null；源文件missing-original.ini不存在仍作为历史记录展示；横向滚动条可用，长状态在当前列宽下省略。",
+      "window": {
+        "app": "process:C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "id": 593824,
+        "title": "G4UniversalSim F1 ede037f26db6 | 身份请求完成 | 观察pending"
+      },
+      "screenshot_id": "screenshot-0",
+      "width": 1502,
+      "height": 991,
+      "image": "02-synthetic-inputs.jpg",
+      "sha256": "fae3a2c1bb66b29ecf2c4d3659307ab8e8940bbb08fc1689b490055356d06f44",
+      "saved_utc": "2026-10-30T09:42:21.780Z",
+      "observation": "direct_native_tool_image_seen_by_root",
+      "input": "native sky action unless initial capture"
+    },
+    {
+      "label": "03-synthetic-outputs",
+      "observed": "thread/run归属与process/null分开，metadata行明确自引用排除且SHA/字节数null，其他输出一致。",
+      "window": {
+        "app": "process:C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "id": 593824,
+        "title": "G4UniversalSim F1 ede037f26db6 | 身份请求完成 | 观察pending"
+      },
+      "screenshot_id": "screenshot-0",
+      "width": 1502,
+      "height": 991,
+      "image": "03-synthetic-outputs.jpg",
+      "sha256": "a9a7824e9fd09f19cc80666cc7ace1ee6c5d5798e93a28d5e4cd3a49b0dc8f48",
+      "saved_utc": "2026-10-30T09:42:42.664Z",
+      "observation": "direct_native_tool_image_seen_by_root",
+      "input": "native sky action unless initial capture"
+    },
+    {
+      "label": "04-synthetic-raw-json",
+      "observed": "点击原始身份JSON后才出现可滚动JSON文本区；表格和状态保持可见。",
+      "window": {
+        "app": "process:C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "id": 593824,
+        "title": "G4UniversalSim F1 ede037f26db6 | 身份请求完成 | 观察pending"
+      },
+      "screenshot_id": "screenshot-0",
+      "width": 1502,
+      "height": 991,
+      "image": "04-synthetic-raw-json.jpg",
+      "sha256": "e0a58b71ee3c0b58e4b8a9ea7d9ce6e134194aa3bcab4ee28b22111e8e891c30",
+      "saved_utc": "2026-10-30T09:42:59.542Z",
+      "observation": "direct_native_tool_image_seen_by_root",
+      "input": "native sky action unless initial capture"
+    },
+    {
+      "label": "05-synthetic-failed-verified",
+      "observed": "运行失败与字节身份一致同时呈现，哈希一致未覆盖失败结论。",
+      "window": {
+        "app": "process:C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "id": 593824,
+        "title": "G4UniversalSim F1 ede037f26db6 | 身份请求完成 | 观察pending"
+      },
+      "screenshot_id": "screenshot-0",
+      "width": 1502,
+      "height": 991,
+      "image": "05-synthetic-failed-verified.jpg",
+      "sha256": "f57ec0562eb6bef51c2c88fa1a5be351e63a1177742eb1273534bcc8a2a8c917",
+      "saved_utc": "2026-10-30T09:43:11.753Z",
+      "observation": "direct_native_tool_image_seen_by_root",
+      "input": "native sky action unless initial capture"
+    },
+    {
+      "label": "06-synthetic-tampered",
+      "observed": "completed运行记录与字节不一致分别显示；诊断明确event_edep_t0.csv及expected/observed哈希，表格清空，没有降级为可信旧记录。",
+      "window": {
+        "app": "process:C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "id": 593824,
+        "title": "G4UniversalSim F1 ede037f26db6 | 身份请求完成 | 观察pending"
+      },
+      "screenshot_id": "screenshot-0",
+      "width": 1502,
+      "height": 991,
+      "image": "06-synthetic-tampered.jpg",
+      "sha256": "caaaeedac0ff6244389cacd95269c67a1104305ad3bfe50b7840f523200529f8",
+      "saved_utc": "2026-10-30T09:43:39.120Z",
+      "observation": "direct_native_tool_image_seen_by_root",
+      "input": "native sky action unless initial capture"
+    },
+    {
+      "label": "07-synthetic-legacy",
+      "observed": "图像明确显示历史格式：无内容哈希；旧v1可读但未冒称字节已验证。此捕获同步UIA仍带上一页文本，视觉结论依据直接看到的图像；下一步刷新文本。",
+      "window": {
+        "app": "process:C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "id": 593824,
+        "title": "G4UniversalSim F1 ede037f26db6 | 身份请求完成 | 观察pending"
+      },
+      "screenshot_id": "screenshot-0",
+      "width": 1502,
+      "height": 991,
+      "image": "07-synthetic-legacy.jpg",
+      "sha256": "4b5278a13e9af6e73882b60d6fe2435e8b1ba65ebd0f433ccfd62839588de9ec",
+      "saved_utc": "2026-10-30T09:44:50.816Z",
+      "observation": "direct_native_tool_image_seen_by_root",
+      "input": "native sky action unless initial capture"
+    },
+    {
+      "label": "08-synthetic-missing",
+      "observed": "缺少已登记event_edep文件时显示身份依据不可用，明确文件名与登记关系；不当作零结果。",
+      "window": {
+        "app": "process:C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "id": 593824,
+        "title": "G4UniversalSim F1 ede037f26db6 | 身份请求完成 | 观察pending"
+      },
+      "screenshot_id": "screenshot-0",
+      "width": 1502,
+      "height": 991,
+      "image": "08-synthetic-missing.jpg",
+      "sha256": "8ee9e44db8d41813808ff0466dc9f2df88b8c6a5e1577918c176b9d1f52841b9",
+      "saved_utc": "2026-10-30T09:45:11.754Z",
+      "observation": "direct_native_tool_image_seen_by_root",
+      "input": "native sky action unless initial capture"
+    },
+    {
+      "label": "09-history-missing",
+      "observed": "合成历史表显示结果未证实（未提供真实进程退出证据），身份面板独立显示缺登记文件而不可用；未由摘要completed推断成功。",
+      "window": {
+        "app": "process:C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "id": 593824,
+        "title": "G4UniversalSim F1 ede037f26db6 | 身份请求完成 | 观察pending"
+      },
+      "screenshot_id": "screenshot-0",
+      "width": 1502,
+      "height": 991,
+      "image": "09-history-missing.jpg",
+      "sha256": "909753b5e9776385fe1eb73a9ff719727fe6621497c68a026fdba8b5197cb67c",
+      "saved_utc": "2026-10-30T09:46:05.879Z",
+      "observation": "direct_native_tool_image_seen_by_root",
+      "input": "native sky action unless initial capture"
+    },
+    {
+      "label": "10-history-verified",
+      "observed": "选中已核验字节的合成历史记录后，身份一致与结果未证实同时显示；右侧详情较窄有横向滚动条。",
+      "window": {
+        "app": "process:C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "id": 593824,
+        "title": "G4UniversalSim F1 ede037f26db6 | 身份请求完成 | 观察pending"
+      },
+      "screenshot_id": "screenshot-0",
+      "width": 1502,
+      "height": 991,
+      "image": "10-history-verified.jpg",
+      "sha256": "6a56341aeec064a1de7625028ec20b495fe5bbb893666c1148ffbbb9baf436d1",
+      "saved_utc": "2026-10-30T09:46:34.115Z",
+      "observation": "direct_native_tool_image_seen_by_root",
+      "input": "native sky action unless initial capture"
+    },
+    {
+      "label": "11-history-resized",
+      "observed": "原生拖动现有splitter后右侧详情扩宽，身份/状态列可读，结果未证实与字节一致仍分开。仅此既有splitter验收，不外推J1自由布局。",
+      "window": {
+        "app": "process:C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "id": 593824,
+        "title": "G4UniversalSim F1 ede037f26db6 | 身份请求完成 | 观察pending"
+      },
+      "screenshot_id": "screenshot-0",
+      "width": 1502,
+      "height": 991,
+      "image": "11-history-resized.jpg",
+      "sha256": "b9ef3ae7a54349672ce864d02fe0ced96b4f7f5c0d8b0daf18d52d0dd7603b12",
+      "saved_utc": "2026-10-30T09:46:47.417Z",
+      "observation": "direct_native_tool_image_seen_by_root",
+      "input": "native sky action unless initial capture"
+    },
+    {
+      "label": "12-real-build-auto",
+      "observed": "真实F1目录独立标记；completed与字节一致，requested auto/actual root及选择原因均可见；构建f176d0e、MSVC Release和cpp_build_inputs clean明确，与顶部GUI文档提交ede037f不同。",
+      "window": {
+        "app": "process:C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "id": 593824,
+        "title": "G4UniversalSim F1 ede037f26db6 | 身份请求完成 | 观察pending"
+      },
+      "screenshot_id": "screenshot-0",
+      "width": 1502,
+      "height": 991,
+      "image": "12-real-build-auto.jpg",
+      "sha256": "59c916de7b16a227118b7b88fa6039f7b0a021869d6dd936fe0bee6a3bcf0a8a",
+      "saved_utc": "2026-10-30T09:47:05.889Z",
+      "observation": "direct_native_tool_image_seen_by_root",
+      "input": "native sky action unless initial capture"
+    },
+    {
+      "label": "13-real-inputs",
+      "observed": "真实输入序列1到3，main_ini/geometry_ini/macro分别记录用途、路径、SHA和历史已读字节；表头提示不等同当前源复核/语义接受。",
+      "window": {
+        "app": "process:C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "id": 593824,
+        "title": "G4UniversalSim F1 ede037f26db6 | 身份请求完成 | 观察pending"
+      },
+      "screenshot_id": "screenshot-0",
+      "width": 1502,
+      "height": 991,
+      "image": "13-real-inputs.jpg",
+      "sha256": "cf7c8a8fd417aa22e49dcf34d17275f3603164d043dff725f2e03923834e9ac9",
+      "saved_utc": "2026-10-30T09:47:21.884Z",
+      "observation": "direct_native_tool_image_seen_by_root",
+      "input": "native sky action unless initial capture"
+    },
+    {
+      "label": "14-real-outputs",
+      "observed": "真实20项输出可见；process/run/thread归属与run0/run1、worker0/1分别展示，ROOT及统计文件逐run，metadata唯一自引用排除。",
+      "window": {
+        "app": "process:C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "id": 593824,
+        "title": "G4UniversalSim F1 ede037f26db6 | 身份请求完成 | 观察pending"
+      },
+      "screenshot_id": "screenshot-0",
+      "width": 1502,
+      "height": 991,
+      "image": "14-real-outputs.jpg",
+      "sha256": "5acc5bfa804914e1eecfed83c9d49606bcdca7055e5c8918a3f361299f056c22",
+      "saved_utc": "2026-10-30T09:48:16.083Z",
+      "observation": "direct_native_tool_image_seen_by_root",
+      "input": "native sky action unless initial capture"
+    }
+  ]
+}

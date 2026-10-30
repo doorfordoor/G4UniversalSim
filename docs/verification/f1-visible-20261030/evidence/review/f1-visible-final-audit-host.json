@@ -1,0 +1,46 @@
+{
+  "status": "host_identity_checked_visual_pending",
+  "current": {
+    "head": "ede037f26db63f606e3ca086d5d586f222f428df",
+    "source": "db253b7b1ed5f810789f1322faa75002df311d4aeb04572867dbb130c71d95cc",
+    "tests": "57a80e4f5e73a2d07b5b834b6ca91ac482161622ca1d5e1d558cbd37d79b5f35"
+  },
+  "product_build_commit": "f176d0ed4cea60b7ca5a80ed81017c9404ec1257",
+  "exe_sha256": "f02d3bdc94121dcf35de05e152773fdec8c87f5c8759e53fd1f95d3f51f43ea8",
+  "documentation_only_changed_paths": 2857,
+  "visual_acceptance": "pending_root_observations",
+  "close_acceptance": "pending_root_native_close_and_process_exit",
+  "archive_policy": "Old automated archive remains byte unchanged and pending. New visible archive must be separate.",
+  "state": {
+    "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f1-visible-20261030\\host-state.json",
+    "sha256": "295556e20e5bf4d4c76fc4e0939e6869b173a889df30f233d2e9f5a1bbdf9a0c",
+    "closed": true,
+    "real_records": [
+      {
+        "label": "真实F1 1",
+        "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f1-visible-gdml",
+        "identity_status": "verified",
+        "manifest_sha256": "4284260a76299214b50d846fc9340efac16835175a6fb70c7bed7e8db5eb4f65",
+        "execution_id": "27ff230e45cdc20b7f282f690188e5e9",
+        "recorded_build": {
+          "compiler_id": "MSVC",
+          "compiler_version": "19.51.36246.0",
+          "configuration": "Release",
+          "geant4_version": "$Name: geant4-11-03-patch-02 [MT]$",
+          "git_commit": "f176d0ed4cea60b7ca5a80ed81017c9404ec1257",
+          "git_source_state": "clean",
+          "git_state_scope": "cpp_build_inputs",
+          "source_fingerprint": "db253b7b1ed5f810789f1322faa75002df311d4aeb04572867dbb130c71d95cc"
+        },
+        "output_format_requested": "auto",
+        "output_format_actual": "root",
+        "output_format_selection_reason": "auto_enabled_scoring_with_hits_or_event_edep",
+        "recorded_run_status": "completed",
+        "explicit_auto_recorded": true,
+        "source_matches_loaded_code": true,
+        "build_commit_matches_expected_head": false
+      }
+    ],
+    "commit_mismatch_explanation": "Expected false: host docs HEAD ede037f differs from unchanged tested product build f176d0e; source/tests match. Do not rewrite boolean."
+  }
+}

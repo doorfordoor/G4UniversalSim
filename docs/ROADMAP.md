@@ -24,7 +24,7 @@ This file is the single source of truth for progress. Every work session updates
 | C Wizard + built-in plotting | Done (C1 built-in plots, C2 wizard, C3 parameter scans) | see log |
 | D Installer | Done (portable ZIP + Inno Setup installer; uses an existing Geant4 data folder) | see log |
 | E Fixes and foundations | In progress: E1, E2, E3 (Linux incl. Geant4 11.3.2/11.4.3 matrix, done 2026-10-28), E5 done; E4 pending | see log |
-| F System optimisation (backend + GUI) | In progress: F6 done (2026-10-27); F1–F5, F7, F8 pending | see log |
+| F System optimisation (backend + GUI) | In progress: F1 and F6 done; F2–F5, F7, F8 pending | see log |
 | G 3D view redesign | Done (G1-G6) | see log |
 | H Geant4 capability increments | In progress: H1 done | see log |
 | Q1 完整可靠性审查、修复与验收 | **已完成**：九域审查及R01–R32闭合；Windows105、Linux双版本各105与实窗通过 | 验收代码 `8ecad66`；[最终证据](verification/q1-final-20261029/README.md) |
@@ -260,7 +260,7 @@ is marked experimental in the support matrix until benchmarked.
 | 代号 | 整项交付内容 | 验收/归属与提交重点 | 当前状态 |
 | --- | --- | --- | --- |
 | **E4** | 当前规范瘦身、历史状态校准、中文快速入门、文档单一事实入口 | 历史条目迁移已有成果；补规则逐项映射，清除 stale 状态，链接与必要 smoke 通过。阶段关闭交 `docs(E4)` | 部分完成，继续收尾 |
-| **F1** | 输出身份、commit/config/项目实际读取资源 hash，未观测输入明确标记；版本化输出与测量后决定缓存/format=auto | 来源/格式节点分开提交；默认CSV不变。依赖 2C/E6，支持 K1/Q2 | 自动验收通过、实窗待验，阶段未关闭：产品f176d0e；Windows143/143及E6基线、Linux双版本各143、M0双OS各64全部通过。[自动归档](verification/f1-automated-20261030/README.md)保留两轮失败及修复。72次测量完成、缓冲候选撤回；尚未合入codex。[契约](collab/inbox/20261030-1410-astra-f1-scope.md) |
+| **F1** | 输出身份、commit/config/项目实际读取资源 hash，未观测输入明确标记；版本化输出与测量后决定缓存/format=auto | 来源/格式节点分开提交；默认CSV不变。依赖 2C/E6，支持 K1/Q2 | 已完成：产品f176d0e；Windows143/143及E6基线、Linux双版本各143、M0双OS各64通过，14次实窗观察/正常关闭与独立复核通过。[最终证据及集成](verification/f1-visible-20261030/README.md)。[自动归档](verification/f1-automated-20261030/README.md)保留两轮失败及当时pending；72次测量完成、缓冲候选撤回。[契约](collab/inbox/20261030-1410-astra-f1-scope.md) |
 | **F2** | GUI 受控 run session、Idle 白名单、逐 run 输入/来源/重放协议 | 完整换配置用新进程；三轮调整的真实状态与限定环境重放；不承诺跨平台/线程数逐位一致。可在 L1 后交付 | 待开始 |
 | **F3** | hits-heavy/mesh-heavy 的耗时、内存、输出基线及瓶颈优化；tasking 单列实验 | 测量→单一瓶颈变更→前后对照；统计/种子/输出契约不改变。性能优化不能成为接受结果差异的理由 | 待开始 |
 | **F4** | 定位到 editor/row/field/code 的诊断及点击跳转 | 诊断身份不随语言改变，不抹除来源错误；K1/L1 复用同一结构 | 待开始 |

@@ -1,0 +1,95 @@
+{
+  "pid": 38052,
+  "ready": true,
+  "constructed": true,
+  "synthetic_root": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\f1-final-visible-djpgkgu2",
+  "directories": {
+    "合成：字节一致": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\f1-final-visible-djpgkgu2\\verified\\output",
+    "合成：运行失败／字节一致": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\f1-final-visible-djpgkgu2\\failed\\output",
+    "合成：字节不一致": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\f1-final-visible-djpgkgu2\\tampered\\output",
+    "合成：旧v1": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\f1-final-visible-djpgkgu2\\legacy\\output",
+    "合成：缺登记文件": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\f1-final-visible-djpgkgu2\\missing\\output",
+    "真实F1 1": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f1-visible-gdml"
+  },
+  "real_directories": [
+    "out/verification/f1-visible-gdml"
+  ],
+  "purpose": "UI observation only; synthetic fixtures are not simulations",
+  "identity_before_import": {
+    "captured_utc": "2026-10-30T09:39:31.858822+00:00",
+    "git_head": "ede037f26db63f606e3ca086d5d586f222f428df",
+    "source_fingerprint": "db253b7b1ed5f810789f1322faa75002df311d4aeb04572867dbb130c71d95cc",
+    "tests_content_fingerprint": "57a80e4f5e73a2d07b5b834b6ca91ac482161622ca1d5e1d558cbd37d79b5f35",
+    "git_dirty": false,
+    "case_count": 143,
+    "host_sha256": "bc0bce9a3b7e7479662315a2d29c023db998e3338c425c660ccb3183c9a50158",
+    "host_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\f1-visible-final-host.py",
+    "fingerprint_method": "unchanged scripts/run_m0_tests.py functions"
+  },
+  "identity_at_load": {
+    "captured_utc": "2026-10-30T09:39:32.997870+00:00",
+    "git_head": "ede037f26db63f606e3ca086d5d586f222f428df",
+    "source_fingerprint": "db253b7b1ed5f810789f1322faa75002df311d4aeb04572867dbb130c71d95cc",
+    "tests_content_fingerprint": "57a80e4f5e73a2d07b5b834b6ca91ac482161622ca1d5e1d558cbd37d79b5f35",
+    "git_dirty": false,
+    "case_count": 143,
+    "host_sha256": "bc0bce9a3b7e7479662315a2d29c023db998e3338c425c660ccb3183c9a50158",
+    "host_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\f1-visible-final-host.py",
+    "fingerprint_method": "unchanged scripts/run_m0_tests.py functions"
+  },
+  "expected_identity": {
+    "git_head": "ede037f26db63f606e3ca086d5d586f222f428df",
+    "source_fingerprint": "db253b7b1ed5f810789f1322faa75002df311d4aeb04572867dbb130c71d95cc",
+    "tests_content_fingerprint": "57a80e4f5e73a2d07b5b834b6ca91ac482161622ca1d5e1d558cbd37d79b5f35"
+  },
+  "observation_acceptance": "pending",
+  "host_read_only_actions": true,
+  "launch_platform": "native/default",
+  "identity_states": {
+    "合成：字节一致": "verified",
+    "合成：运行失败／字节一致": "verified",
+    "合成：字节不一致": "unavailable_or_mismatch",
+    "合成：旧v1": "legacy",
+    "合成：缺登记文件": "unavailable_or_mismatch",
+    "真实F1 1": "verified"
+  },
+  "real_output_records": [
+    {
+      "label": "真实F1 1",
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\f1-visible-gdml",
+      "identity_status": "verified",
+      "manifest_sha256": "4284260a76299214b50d846fc9340efac16835175a6fb70c7bed7e8db5eb4f65",
+      "execution_id": "27ff230e45cdc20b7f282f690188e5e9",
+      "recorded_build": {
+        "compiler_id": "MSVC",
+        "compiler_version": "19.51.36246.0",
+        "configuration": "Release",
+        "geant4_version": "$Name: geant4-11-03-patch-02 [MT]$",
+        "git_commit": "f176d0ed4cea60b7ca5a80ed81017c9404ec1257",
+        "git_source_state": "clean",
+        "git_state_scope": "cpp_build_inputs",
+        "source_fingerprint": "db253b7b1ed5f810789f1322faa75002df311d4aeb04572867dbb130c71d95cc"
+      },
+      "output_format_requested": "auto",
+      "output_format_actual": "root",
+      "output_format_selection_reason": "auto_enabled_scoring_with_hits_or_event_edep",
+      "recorded_run_status": "completed",
+      "explicit_auto_recorded": true,
+      "source_matches_loaded_code": true,
+      "build_commit_matches_expected_head": false
+    }
+  ],
+  "closed": true,
+  "closed_utc": "2026-10-30T09:48:16.207351+00:00",
+  "identity_at_exit": {
+    "captured_utc": "2026-10-30T09:48:16.207351+00:00",
+    "git_head": "ede037f26db63f606e3ca086d5d586f222f428df",
+    "source_fingerprint": "db253b7b1ed5f810789f1322faa75002df311d4aeb04572867dbb130c71d95cc",
+    "tests_content_fingerprint": "57a80e4f5e73a2d07b5b834b6ca91ac482161622ca1d5e1d558cbd37d79b5f35",
+    "git_dirty": false,
+    "case_count": 143,
+    "host_sha256": "bc0bce9a3b7e7479662315a2d29c023db998e3338c425c660ccb3183c9a50158",
+    "host_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\f1-visible-final-host.py",
+    "fingerprint_method": "unchanged scripts/run_m0_tests.py functions"
+  }
+}

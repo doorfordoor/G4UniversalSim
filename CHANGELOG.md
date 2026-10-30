@@ -7,9 +7,9 @@ Short, user-facing record of notable changes. Detailed support status lives in
 
 ## Unreleased
 
-### F1 输出身份与来源（2026-10-30 自动验收通过，实窗待验）
+### F1 输出身份与来源（2026-10-30 已验收，未发布）
 
-- GDML 捕获在缓冲分配失败时关闭已打开的原生句柄；故障测试兼容 Xerces 独立内存异常，并在异常展开时恢复测试适配器。产品f176d0e已通过Windows143项、Linux双版本各143项及M0双OS各64项，第二轮Linux失败历史保留；[自动验收归档](docs/verification/f1-automated-20261030/README.md)不代表实窗或F1阶段关闭。
+- GDML 捕获在缓冲分配失败时关闭已打开的原生句柄；故障测试兼容 Xerces 独立内存异常，并在异常展开时恢复测试适配器。产品f176d0e已通过Windows143项、Linux双版本各143项及M0双OS各64项；14次Windows实窗观察、真实小运行输出及正常关闭证据独立复核通过，F1已关闭。见[最终验收](docs/verification/f1-visible-20261030/README.md)；[自动归档](docs/verification/f1-automated-20261030/README.md)中的失败及当时pending原样保留。
 
 - 记录构建身份、进程执行ID、实际输入读字节和已关闭产物的SHA-256；输入读取不等于配置接受，文件字节一致不等于物理验证。旧metadata兼容，新扩展损坏明确拒绝。
 - 结果与历史页分别显示运行状态和输出身份；复制目录只读取当前副本。后台校验支持过期结果丢弃，一次操作复用结果，下一次操作及合并执行前重新校验。

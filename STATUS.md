@@ -15,15 +15,15 @@
 
 2026-10-29 Q1已完成：九域审查、R01–R32闭合并交叉复核；验收代码 `8ecad66`。干净Windows **105 PASS / 0 FAIL / 0 SKIP**，83770个v3入口；旧同代98项基线79303，逐例/总数与原始日志门禁通过。Linux11.3.2/11.4.3真实CI各105（run40855144863），Windows/Ubuntu static+GUI各42（run40855144672），Windows实窗保存/生成/运行/取消/关窗通过。[完整收据](docs/verification/q1-final-20261029/README.md)；旧失败证据保留，历史偏置结果须重跑，原生交互迁移显式csh。
 
-## F1 进行中（2026-10-30）
+## F1 已完成（2026-10-30）
 
 [归档独立复核](docs/verification/f1-automated-review-20261030/README.md)已完成：发布前批准、发布后2797原件与38个生成核验文件一致，正式与历史报告分开验真。
 
-用户已启动完整F1。来源首提交5373d57实现构建身份、实际输入读账、显式输出归属及流式SHA，兼容旧记录；GUI独立展示运行结果与文件身份并后台重验。最终产品f176d0e的Windows全量143/143、48511个v3入口及E6逐项基线通过；Linux11.3.2/11.4.3各143项（run41028779177）、M0 Windows/Ubuntu各64项（run41028779326）通过，12报告/4官方ZIP/414次执行的日志证据核验通过。[自动验收归档](docs/verification/f1-automated-20261030/README.md)已发布。**实窗仍待验，F1尚未关闭，未合入codex**。见[执行契约](docs/collab/inbox/20261030-1410-astra-f1-scope.md)与[输出身份说明](docs/输出身份与来源.md)。默认CSV保持不变；72次性能测量完成，无稳定收益的缓冲候选已撤回。
+来源首提交5373d57实现构建身份、实际输入读账、显式输出归属及流式SHA，兼容旧记录；GUI独立展示运行结果与文件身份并后台重验。最终产品f176d0e的Windows全量143/143、48511个v3入口及E6逐项基线通过；Linux11.3.2/11.4.3各143项（run41028779177）、M0 Windows/Ubuntu各64项（run41028779326）通过，12报告/4官方ZIP/414次执行的日志证据核验通过。实际Windows窗口14次原生图像观察、真实2线程/2轮各2事件输出与正常退出收据已独立核对，**F1阶段已关闭**；[最终验收报告](docs/verification/f1-visible-20261030/README.md)集中记录证据与集成事实。[自动验收归档](docs/verification/f1-automated-20261030/README.md)保留当时pending原件。见[执行契约](docs/collab/inbox/20261030-1410-astra-f1-scope.md)与[输出身份说明](docs/输出身份与来源.md)。默认CSV保持不变；72次性能测量完成，无稳定收益的缓冲候选已撤回。
 
 首冻结cd0f44a全量发现异步示例图表丢失预设选择，已修复并通过7项定向GUI回归及最终全量，原断言保留；另一个Windows数据定位失败为漏传已有环境参数，同E6环境控制通过。首轮Windows141/143、四CI任务GUI各38/39的失败证据原样保留。归档复核发现旧README误称四份job日志均落盘，实际缺三份，已补收原日志并新增更正收据，未改旧报告。
 
-第二冻结3d1faf1的Windows143/143、48,511个v3断言及E6逐例基线通过，M0 run41024949832双平台通过；Linux run41024949824两个版本均在GDML集成故障测试失败。审查进一步复现缓冲分配失败漏关原生句柄，按[修复提案](docs/collab/inbox/20261030-1643-astra-f1-gdml-repair.md)在f176d0e修复并完成上述全平台重验。最终真实小运行2线程、2轮各2/2事件、auto实际ROOT及身份一致性通过；窗口仍被遮挡且激活恢复失败，等待手动置前后补验，不将自动或合成测试冒充实窗观察。
+第二冻结3d1faf1的Windows143/143、48,511个v3断言及E6逐例基线通过，M0 run41024949832双平台通过；Linux run41024949824两个版本均在GDML集成故障测试失败。审查进一步复现缓冲分配失败漏关原生句柄，按[修复提案](docs/collab/inbox/20261030-1643-astra-f1-gdml-repair.md)在f176d0e修复并完成上述全平台重验。窗口遮挡曾使实窗验收暂停；用户置前后旧host正常退出，最终GUI加载ede037f（相对产品仅文档变化），完成实际观察并正常退出。合成状态、真实CLI运行及原生观察分别计证，历史合成行仍为结果未证实，不扩张物理验证。
 
 ## E6 已完成（2026-10-30）
 
@@ -41,7 +41,7 @@ E6补充导航：[不同写者归档复核](docs/verification/e6-full-20261030/i
 
 原始首轮失败 `out/verification/2c-full-windows/20261029-214410-a8c2b6e8`、旧CI `out/verification/2c-ci`、修后专项 `out/verification/2c-regression-repair`、build03/fee88d2可见检查 `out/verification/2c-visible` / `out/verification/2c-visible-final` 继续保留，不能冒充最终证据。实施与DeepSeek设计裁决见[开工信](docs/collab/inbox/20261029-1959-astra-full-2c-execution.md)和[设计记录](docs/collab/outbox/20261029-deepseek-full2c-design.md)。
 
-2C 后续 E6 已完成；下一完整阶段为 F1，Q2、安装包及完整GUI编辑等保持各自未完成状态，按ROADMAP依赖推进。
+2C 后续 E6、F1 已完成；下一完整阶段为 F4，Q2、安装包及完整GUI编辑等保持各自未完成状态，按ROADMAP依赖推进。
 
 ## 2026-10-29 隔离开发工作区与2C子集历史
 
@@ -73,7 +73,7 @@ R03–R32现已完成修复与回归，旧[反例证据](docs/verification/r03-r
 
 - A 核心功能、B 场景包与基准、C 向导/绘图/扫描、D 安装包、G 3D 预览：已完成。
 - E 修复：E1（GUI 与后端规则一致）、E2（配置 schema）、E3（Linux CI，含 Geant4 11.3.2 / 11.4.3 版本矩阵）、E5（GUI 拆分）已完成（E3 见 ROADMAP 的“done for Linux”；M0 workflow 已由所有者启用并在 `402a9f2` 双平台全绿；11.2 未测）；E4 已做部分规范迁移和链接检查，仍需收尾；新增 E6/E7 的范围见 ROADMAP。
-- F 优化：F6（实时运行进度）已完成，2026-10-28 追加可选 `sequence`（进程级单调、跨 run 不重置，GUI 拒绝重复/回退行；旧后端仍可解析），契约见 [docs/实时运行进度.md](docs/实时运行进度.md)；F1 输出与来源进行中（见上方候选与验收边界）；F2 运行会话、F3 性能/tasking、F4 校验定位、F5 undo/autosave、F7 二维扫描、F8 GUI 收尾未做。
+- F 优化：F6（实时运行进度）已完成，2026-10-28 追加可选 `sequence`（进程级单调、跨 run 不重置，GUI 拒绝重复/回退行；旧后端仍可解析），契约见 [docs/实时运行进度.md](docs/实时运行进度.md)；F1 输出与来源已完成（见上方验收边界）；F2 运行会话、F3 性能/tasking、F4 校验定位、F5 undo/autosave、F7 二维扫描、F8 GUI 收尾未做。
 - H 增量：H1（径迹输出）已完成；H2–H9（过滤计分、平行世界、方差降低、光学、活化、DNA、体素体模、通用直方图）未做。
 - M0 全模块 EffectiveConfig / 模块开关归已完成的2C；SolidRegistry 归 E7，仍未实现。M0–M5 是长期目标汇总，不与新工作项重复计算完成度。
 
