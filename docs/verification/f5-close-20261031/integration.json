@@ -1,0 +1,42 @@
+{
+  "schema": "g4usim_f5_integration_v1",
+  "recorded_utc": "2026-10-30T17:18:59.822870+00:00",
+  "status": "integrated_and_pushed",
+  "acceptance_commit": "5c1eec5007cd29cbe12949c19bed81457f1f825b",
+  "closure_commit": "71b52e7107f5c4bfde687db38f708867af00783c",
+  "integration_branch": "codex",
+  "integration_before": "676ffb2b27a56d636a2c984012c9442a6091337b",
+  "integration_after": "71b52e7107f5c4bfde687db38f708867af00783c",
+  "operation": "merge --ff-only; normal push; no force",
+  "remote_heads": [
+    "71b52e7107f5c4bfde687db38f708867af00783c\trefs/heads/codex",
+    "71b52e7107f5c4bfde687db38f708867af00783c\trefs/heads/roadmap/F5-transactions-recovery"
+  ],
+  "integration_checkout_clean": true,
+  "original_checkout": {
+    "path": "D:\\Geant4\\G4UniversalSim",
+    "branch": "roadmap/F6-live-progress",
+    "head": "5465dbdddf36dae921a885d2a18a1d049c383a1e",
+    "status_porcelain": "?? docs/collab/inbox/20261029-1010-astra-2c-execution.md\n?? docs/collab/inbox/20261029-1103-astra-2c-configure-review.md\n?? docs/collab/inbox/20261029-1112-astra-m0-priority.md\n?? docs/collab/inbox/20261029-1154-astra-roadmap-notice.md\n?? docs/collab/inbox/20261029-1310-astra-plan-codes.md\n?? docs/collab/inbox/20261029-1312-astra-new-audit-receipt.md\n?? docs/collab/reviews/20261029-1051-astra-5465dbd-m0-review.md\n?? docs/collab/reviews/20261029-1105-astra-5465dbd-material-geometry-review.md\n?? docs/collab/reviews/20261029-1117-astra-5465dbd-scoring-review.md\n?? docs/collab/reviews/20261029-1128-astra-5465dbd-uncertainty-review.md\n?? docs/collab/reviews/20261029-1254-astra-5465dbd-source-physics-field-review.md\n?? docs/collab/reviews/20261029-1314-astra-5465dbd-biasing-weight-review.md\n?? docs/collab/reviews/20261029-1330-astra-5465dbd-output-contract-review.md\n?? docs/collab/reviews/20261029-1350-astra-5465dbd-rng-repro-review.md\n?? docs/verification/independent-biasing-weight-5465dbd-20261029/\n?? docs/verification/independent-material-geometry-5465dbd-20261029/\n?? docs/verification/independent-output-contract-5465dbd-20261029/\n?? docs/verification/independent-rng-repro-5465dbd-20261029/\n?? docs/verification/independent-scoring-5465dbd-20261029/\n?? docs/verification/independent-source-physics-field-5465dbd-20261029/\n?? docs/verification/independent-uncertainty-5465dbd-20261029/",
+    "untracked_entries": 21,
+    "writes_by_this_task": false
+  },
+  "logs": [
+    {
+      "path": "f5-close-push.log",
+      "bytes": 145,
+      "sha256": "cd5e1f2f091f8d2a47beb4df0c28a4c6326ba10d24e4cc64a007df3c3a5748fd"
+    },
+    {
+      "path": "f5-codex-fast-forward.log",
+      "bytes": 419972,
+      "sha256": "0441b44bed6675dabacf0695918798f307dbf2a30808f942b34b5e43c425a5f5"
+    },
+    {
+      "path": "f5-codex-push.log",
+      "bytes": 91,
+      "sha256": "512d0318b1194aab71f7d7ec312c1c70cc98300a28730e8ecf16fb29721a42e6"
+    }
+  ],
+  "boundary": "This receipt records the actual closure-commit integration. The later receipt-only commit does not claim its own future hash or a new product build. Validation remains tied to the acceptance commit; native observations remain at 5d."
+}
