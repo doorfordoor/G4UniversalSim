@@ -1,5 +1,7 @@
 # G4UniversalSim GUI Agent 开发约束
 
+2026-10-31 K1 已完成阶段验收：资源路径 P1 与永久回归 P2 已独审关闭；5644e1e 新增精确晚变化测试，产品保持2914b39，原生证据沿原身份映射且保留勘误。详见 `../docs/agent-history.md` 的“K1 资源路径 P1 与阶段验收关闭”及[最终证据](../docs/verification/k1-final-20261031/README.md)；下方实施中/未关闭条目按历史节点理解。
+
 K1 成功且非陈旧的 Generate/Run 完成记录（含 external 无 package）回绑命令预览时，有效 launch 收据的实际 argv 优先；否则显示 record.command 兼容回退，不能把它称为实际启动。逻辑目录来自收据或计划隔离输入树，进程创建目录不同时单列，缺失为未知，不回填编辑项目目录。动作前预览保持原行为，不修改 F5 workspaceRoot。服务 producer 对某项报告 pending 时该项显示进行中，其他层保持各自事实；未知状态保守回退未观测。详见 agent-history 的“K1 命令预览目录与进行中状态”，回归 smoke_k1_workflow.py 与 smoke_k1_panel.py。
 
 K1 搬移配置包时，F5 原始路径草稿只有在与规范模型指向同一已核验资源时才随路径一起重定位；保留首尾空白，不覆盖不同、空白或非法草稿。导入后下一次 GUI 收集不得把规范绝对路径改回无基准相对路径。资源包 staging 与 writer 收据比较规范路径前仍执行原链接拒绝检查；Windows 8.3 拼写不能导致删除后的中间文件被当成外部资源重读。具体反例与验收边界见 docs/agent-history.md 的“K1 配置包搬移与临时目录别名”；候选修复不等于阶段验收。

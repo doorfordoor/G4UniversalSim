@@ -1,0 +1,72 @@
+{
+  "formal_receipt_sha256": "23e49bda5d4275a33d953133dfd456f17d50d44f7697ee56a1258353b0280a60",
+  "command_logs_verified": [
+    {
+      "name": "windows-canonical-runner",
+      "exit_code": 0,
+      "log_sha256": "a6e369deb76cb76abb712f3cd85ca57df76f70904dda779c8efcc6b0d9b4532f"
+    },
+    {
+      "name": "windows-strict-gate",
+      "exit_code": 0,
+      "log_sha256": "22072e9957811fb9261643e9a8e9b2ccd101ede914d23c97ed358bc7b1649178"
+    },
+    {
+      "name": "wsl-linux-canonical-and-gates",
+      "exit_code": 0,
+      "log_sha256": "8ea178e5d761f9ba7751564454e9f90431445ade0ad470e12773add4e39e42ea"
+    },
+    {
+      "name": "windows-recheck-linux-copy-gate",
+      "exit_code": 0,
+      "log_sha256": "ae29c78b2199bf078b902ce8a08d1eb0861aa7737c668486ee6d3f4983424177"
+    },
+    {
+      "name": "wsl-native-canonical-runner",
+      "exit_code": 0,
+      "log_sha256": "b5a1b79aa710644d2e88065bd4b007159b87801972079223e9ed300639d91392"
+    },
+    {
+      "name": "wsl-native-strict-gate",
+      "exit_code": 0,
+      "log_sha256": "968c296de8162ddf65184448668d80408f6b8cc0b180de946dfcf473f486c8c2"
+    },
+    {
+      "name": "wsl-copied-strict-gate",
+      "exit_code": 0,
+      "log_sha256": "cb41cd5cc3041f10816578f13eadd7ce2442369c0211c4705cf1425bde781a67"
+    }
+  ],
+  "reports_verified": [
+    {
+      "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-p1-permanent-regression-20261031\\formal\\windows-reports\\20261031-204100-503276c4\\report.json",
+      "report_sha256": "bbf6e7430e9c6ea78cf982afd2cb21eb901aa9cea3fc20cf00b791ba12f1fc29",
+      "platform": "Windows-10-10.0.26200-SP0",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0,
+      "case_exit_code": 0,
+      "assertions": 36,
+      "case_log_sha256": "67b1a8db69e1164adef1238679e90aa8b0e93c89a2e0e8eb2e079241e17b7cae",
+      "late_receipt_sha256": "2f45fdbe4d3cdfbae8678d5c355f2d06db29dd399cb70d5a208a0fc7bba7ee4a"
+    },
+    {
+      "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-p1-permanent-regression-20261031\\formal\\wsl-linux-reports-copy\\20261031-204115-b1ea9108\\report.json",
+      "report_sha256": "75cc78a08a66d085b203e614b334b62b23e5b3b7d0bc77ef162c8141b2eaf4d3",
+      "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0,
+      "case_exit_code": 0,
+      "assertions": 33,
+      "case_log_sha256": "d98322850e49d168f12e3351ab0b748a4d3a2a80cae6b960e804d025d91f1eb9",
+      "late_receipt_sha256": "bc06263f069e0573459633dbaf1dc64f2139493723228647dc316c254912f2fb"
+    }
+  ],
+  "wsl_copy_files_verified": 34,
+  "wsl_copy_manifest_sha256": "4092bbd8c523b7f7b5f22a8a290cd2dda5e4e77145ec1054ee7600a2bf56d41e",
+  "source_fingerprint": "890635b6d521659e43cf735d07f862c6ebd5959e6c5ea68d023d55332a8a930a",
+  "tests_content_fingerprint": "2402bc3c9d69b0696f46b2cd4d777239366c4508cd05e22b4bb6404306e6b0ea",
+  "current_product_sha256": "5c1dff0338e80a673ba8f3427aeb7bfe1abe9d2b5315efca564310be8118385a",
+  "current_test_sha256": "0d5cb4db40d50417e16a316ec8825ddd30c7265a0b8d468679529288e9a95de2"
+}

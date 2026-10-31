@@ -1,0 +1,17 @@
+# K1 P1 永久防回归补充
+
+授权范围：只修改 scripts/test_k1_staging_alias.py；不写产品/其他正式文件、不commit/push。所有探索证据在本新根。
+
+已完成源码：在现有case中追加late_receipt_link；真实inspect成功后，将独占external-source改为指向owned staging/resources的目录链接。Windows真实NTFS junction，POSIX真实symlink。要求拒绝发布、无staging残留、恢复源目录并前后SHA相同。原断言保留。
+
+冻结顺序：先Windows/WSL探索性正例及旧r2加载同一测试的失败对照，交root和独审看最终SHA/diff；root提交测试后再跑clean提交上的规范单例runner和严格证据门禁。禁止用dirty探索报告冒充clean最终报告。
+
+探索已完成：Windows新测试exit0/36入口；WSL本地/tmp新测试exit0/33；Windows进程内加载旧r2、同一新测试exit1/33，准确失败在新增必须拒绝的assert（error=null/published=true），源仍恢复。旧17个assert AST及exercise原语句顺序全部保留，新增后39 AST。当前唯一正式修改+73/0，最终SHA 0d5cb4db40d50417e16a316ec8825ddd30c7265a0b8d468679529288e9a95de2。产品SHA不变，diff-check通过。
+
+WSL首次/mnt/c夹具在原control发布renameat2 EINVAL，0入口失败已保留。随后用tempfile独占Linux本地/tmp，全部证据SHA复制回本根并保留原件；见wsl-runtime.json。没有改产品。WSL只有Python3.11.18/PySide6 6.11.1一个平台，不称双Geant4版本。
+
+冻结后已完成：root提交5644e1e52b9c2dd5b463217e9e601c8116f8a913，正式单例Windows1/1、36入口；WSL Linux1/1、33入口，两份report均clean且tracked gate pass。Windows严格门禁、Linux原件门禁及Linux/Windows复制件门禁均exit0。34份WSL报告/日志/夹具文件逐SHA复制相同；两平台source/tests指纹相同。报告及父进程实际退出/完整日志SHA见formal/README.md和formal/formal-validation-receipt.json。
+
+WSL最终以Linux本地同提交临时detached源码副本运行，避开共享Windows工作树Git状态查询RPC等待；未改共享仓库配置。Native源码/报告原件保留在/tmp/k1-p1-canonical-20261031-n7_ik251。仅Python3.11.18/PySide6 6.11.1一个Linux平台，不启用后端；两份report的backend provenance均如实为missing，不造新HEAD构建。
+
+最终下一步：root/独审终审与归档。无运行会话，主工作区clean；无产品修改，无本写者commit/push，未重跑全矩阵。

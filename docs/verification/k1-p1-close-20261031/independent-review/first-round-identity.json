@@ -1,0 +1,82 @@
+{
+  "utc": "2026-10-31T12:29:36.528022+00:00",
+  "phase": "first_round_static_review",
+  "head": "e93072867021ae1978a7de3834c51caf0f9fb839",
+  "test_freeze": "2914b3962167325628ede699b1c14a9d224dec41",
+  "git_status_short": "",
+  "focus_diff_from_freeze": "",
+  "file_identities": [
+    {
+      "file": "AGENTS.md",
+      "sha256": "6848cbbf21fa79d703466871b25bd2626f4071693accdddc81066839310eec49"
+    },
+    {
+      "file": "gui/AGENTS.md",
+      "sha256": "fdf49b297c6295b8b52d7b7a859bf3617114c44b02721080b554402c543cd779"
+    },
+    {
+      "file": "docs/agent-history.md",
+      "sha256": "ff3c0d875db3f3c4c055060109d7d3c95a75d16cd1068386318f1f3af18e936e"
+    },
+    {
+      "file": "gui/g4usim_gui/core/experiment_bundle.py",
+      "sha256": "5c1dff0338e80a673ba8f3427aeb7bfe1abe9d2b5315efca564310be8118385a"
+    },
+    {
+      "file": "gui/smoke_tests/smoke_k1_relocation.py",
+      "sha256": "4fddfec77f40d00e0f052b147386aaf3d3adddd305bc656fe57f480fdf0732ad"
+    },
+    {
+      "file": "scripts/test_k1_staging_alias.py",
+      "sha256": "0e33fc7c8990cfe9d5aed535561420f7c34e38b225872ce33056a179f9672d8d"
+    },
+    {
+      "file": "gui/g4usim_gui/writers/package_writer.py",
+      "sha256": "733c9d345a21be79f15063168df541f648cd038935bd90e1eda699080d10b4d4"
+    },
+    {
+      "file": "scripts/test_k1_bundle.py",
+      "sha256": "d5f872b2fe8a5b39d927866282c06057148bcf67bcdc4673aff1e4d6dbf5caa4"
+    },
+    {
+      "file": "gui/g4usim_gui/core/experiment_workflow.py",
+      "sha256": "9f8f800aee380f8b060b95fcc8d1c776ed580ddbec0bbd398d104bda58156403"
+    },
+    {
+      "file": "gui/g4usim_gui/core/experiment_identity.py",
+      "sha256": "b982093fdd9d19ce9a52a13f59094169c8bbf03e0acb1b4bf3c57a2e6a91442e"
+    },
+    {
+      "file": "gui/g4usim_gui/window/experiment.py",
+      "sha256": "0ff241b88dfa03dc24743a9a10145db681e542006c00f4c8e55d53f3f9252d8f"
+    },
+    {
+      "file": "out/collab/k1-relocation-candidate/README.md",
+      "sha256": "bd2568f66318b1e6a18732957bfe3fd91971b2e922b29dd8f4612850625c976d"
+    },
+    {
+      "file": "out/collab/k1-relocation-independent-validation/late_reparse.py",
+      "sha256": "76831ded527d5a827a6f1a1832b30fdb630ea0d38e617cd37f272c9f44b96a42"
+    },
+    {
+      "file": "out/collab/k1-relocation-independent-validation/late-reparse-exits.json",
+      "sha256": "7c455e2b29d66001d6d8324629602aaa112158ea32f634f4278774c6f92fa515"
+    },
+    {
+      "file": "out/collab/k1-relocation-independent-validation/late-reparse-base/receipt.json",
+      "sha256": "5b40edcdbd573b22b920e1bd543f23a229959d3dc009d9f6783f1a9fb83922df"
+    },
+    {
+      "file": "out/collab/k1-relocation-independent-validation/late-reparse-candidate/receipt.json",
+      "sha256": "cca39fddfe9c1d682448bee587c70495a347556cfe3eb8ca8f2d48c61a19ed50"
+    },
+    {
+      "file": "out/collab/k1-final-review-coverage/4167c44-validation-pending-r2.md",
+      "sha256": "4c4991e2e5f33149cc94582c235bc3c5fac3420f975fb20cab384fcd6938516a"
+    }
+  ],
+  "static_parse": "passed for three focus files; no imports and no dynamic test run",
+  "runtime": "not_run; original late_reparse.py read only; dedicated tester owns new dynamic evidence",
+  "verdict": "no confirmed P1 blocker in r3 static review; closure pending fresh exact-sha runtime evidence",
+  "memory": "quick registry search found no relevant K1 entry; no memory facts used"
+}

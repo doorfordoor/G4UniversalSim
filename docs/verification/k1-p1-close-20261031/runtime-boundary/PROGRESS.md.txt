@@ -1,0 +1,17 @@
+# K1 P1 恢复独立验证
+
+目标：补齐 r3 晚变化资源路径拒绝边界的独立 Windows 证据；不改产品、正式测试、旧证据，不签署整个 K1。
+
+基线：HEAD e93072867021ae1978a7de3834c51caf0f9fb839；初始 git status --short 为空。当前 experiment_bundle.py SHA256 5c1dff0338e80a673ba8f3427aeb7bfe1abe9d2b5315efca564310be8118385a；旧 r2 SHA256 34db09d96260841411dc92306f4eab438d75792a4f74abacde3322c10b3d66c2。
+
+已读 root/gui AGENTS、agent-history 的 K1 配置包资源/别名契约、候选 README、原 late_reparse.py 和两个收据。旧探针 exit0 表示其预期反例行为得到观察：base 拒绝、r2 错误发布；不是 r2 通过边界验收。
+
+计划：仅在本证据根的新独占 fixture 中，重放旧 r2 晚变化 junction 反例，当前 r3 对照须拒绝且无发布/暂存残留；补当前 r3 普通外部内容变化 SHA 拒绝；以真实 Windows 8.3 >260 字符 writer 路径正常导出，再复制到新根、隐藏原输入/原导出并完整 inspect/load。所有移动/链接先核定绝对路径位于本根，清理只删除自建链接本身，源字节前后复核。
+
+Linux：本缺口为实际 Windows NTFS junction/8.3 行为，已有当前全量平台收据由主任务核验；本独审不重复整套 Linux，也不从 Windows 推定 Linux。
+
+已完成：四 case 全部 exit0，v3 入口 21/21/14/15，合计71。r2错误发布反例重现；r3晚变化junction及普通内容变化均拒绝，无发布/暂存残留、原源SHA相等。真实8.3导出实际writer最长318 UTF16单元，搬移10文件SHA一致，隐藏旧源/旧包后inspect/load成功。原始日志SHA与逐case收据已逐一回读核验，保护文件SHA前后相同，git status为空。完整路径/命令/实际产品SHA见validation-receipt.json。
+
+正式覆盖裁决待root：现有scripts/test_k1_staging_alias.py仅静态link拒绝，未覆盖收据捕获后变化。README已给最小同用例补充及Windows junction/Linux symlink专项建议。未改产品或正式测试，不以独立out夹具冒充永久回归，也未签整个K1。
+
+下一步：root和k1_p1_resumed_review读取README与原始收据，裁决是否补正式回归及P1关闭条件。无运行会话，无上游新拒绝。

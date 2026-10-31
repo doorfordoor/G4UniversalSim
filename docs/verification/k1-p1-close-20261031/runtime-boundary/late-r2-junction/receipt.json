@@ -1,0 +1,35 @@
+{
+  "target": "r2",
+  "change": "junction",
+  "product_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-relocation-candidate\\archive-r2\\experiment_bundle.py",
+  "product_sha256": "34db09d96260841411dc92306f4eab438d75792a4f74abacde3322c10b3d66c2",
+  "error": null,
+  "published": true,
+  "observations": [
+    {
+      "lexical_external": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-p1-resumed-validation-20261031\\late-r2-junction\\external-source\\materials.ini",
+      "canonical_after_change": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-p1-resumed-validation-20261031\\late-r2-junction\\.published.k1-5vaqqgys\\resources\\materials.ini",
+      "inside_staging_after_resolve": true,
+      "direct_guard_error": "Bundle refuses reparse point: C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-p1-resumed-validation-20261031\\late-r2-junction\\external-source",
+      "stage": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-p1-resumed-validation-20261031\\late-r2-junction\\.published.k1-5vaqqgys",
+      "real_ntfs_junction": true
+    }
+  ],
+  "backend": "not_started",
+  "verdict": "reproduced_old_r2_regression_published",
+  "source_sha256_before": {
+    "geometry.ini": "db8821b23e1c0831b35ca8ca4e84d20037f36fe74b2e06c4981ed2207a08aa46",
+    "main.ini": "2aec87d351caae5f324a864ec061cb90ba7129664ab9d7f74455356f40039d71",
+    "materials.ini": "e0890dd3f187f52a61220bf0ee29da1ad7427117819e7a906d7dd134b6b08393",
+    "run.mac": "03e748bfe181fc0f397c326157189d27128d9fb7a612fd6f9c61895a4e5d79e4",
+    "nested\\events.mac": "21188795beffe0dfbb3a1a3720e0f1f012d35e1604b0e1b8aea03223261eb074"
+  },
+  "source_sha256_after": {
+    "geometry.ini": "db8821b23e1c0831b35ca8ca4e84d20037f36fe74b2e06c4981ed2207a08aa46",
+    "main.ini": "2aec87d351caae5f324a864ec061cb90ba7129664ab9d7f74455356f40039d71",
+    "materials.ini": "e0890dd3f187f52a61220bf0ee29da1ad7427117819e7a906d7dd134b6b08393",
+    "run.mac": "03e748bfe181fc0f397c326157189d27128d9fb7a612fd6f9c61895a4e5d79e4",
+    "nested\\events.mac": "21188795beffe0dfbb3a1a3720e0f1f012d35e1604b0e1b8aea03223261eb074"
+  },
+  "owned_link_removed_source_restored": true
+}

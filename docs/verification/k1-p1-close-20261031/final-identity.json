@@ -1,0 +1,1423 @@
+{
+  "schema": "k1_p1_final_identity_v1",
+  "recorded_utc": "2026-10-31T12:38:27.318360+00:00",
+  "base_full_matrix_commit": "2914b3962167325628ede699b1c14a9d224dec41",
+  "current_test_commit": "5644e1e52b9c2dd5b463217e9e601c8116f8a913",
+  "product_files_unchanged": 350,
+  "products": [
+    {
+      "path": "CMakeLists.txt",
+      "sha256": "0f95fd4fdca12a72b67a669b9abdb9bcc94c2fd1e69d211938d668d4ef02dde7"
+    },
+    {
+      "path": "gui/g4usim_gui/__init__.py",
+      "sha256": "9b6216b78e7402eca54a07a6640455f9484a5f7b95bc829d7b93225c0e45c15d"
+    },
+    {
+      "path": "gui/g4usim_gui/app.py",
+      "sha256": "cfbbd16998d474f21b71a1f38f97038cb84a751bbd35913fb9ac28a8215f9fff"
+    },
+    {
+      "path": "gui/g4usim_gui/core/__init__.py",
+      "sha256": "0c020ce586636894747e624b65f5ce35d423bdeb677f0f16ecd9be1795bd17f4"
+    },
+    {
+      "path": "gui/g4usim_gui/core/backend_capabilities.py",
+      "sha256": "5daf5006b7a577d83f37d0f1c8cc4a350ead81b244566420c44c8067dfc12349"
+    },
+    {
+      "path": "gui/g4usim_gui/core/backend_launch.py",
+      "sha256": "9ae08264564111987a3627ec255706b9c419a2e58046732b35e49ea746d3e102"
+    },
+    {
+      "path": "gui/g4usim_gui/core/capability_messages.py",
+      "sha256": "cbc664d3112b21f02e06ee722209f24389be032db1dc588bf3d8e0e2f4532e34"
+    },
+    {
+      "path": "gui/g4usim_gui/core/config_migration.py",
+      "sha256": "c79f997882ab330673bf6fc64a49cc4c5e3dc91f9634ae9cb030c1326e42ba97"
+    },
+    {
+      "path": "gui/g4usim_gui/core/config_schema.py",
+      "sha256": "e6075842ef18a84a93c5953491511d521ec3f2b57e2ee9cadec8f6a5ce7c1dcd"
+    },
+    {
+      "path": "gui/g4usim_gui/core/config_schema_data.py",
+      "sha256": "60275636e1cdfead19e32ae8bfad39b1e082a8aedfcf37fdb7419ac75752928c"
+    },
+    {
+      "path": "gui/g4usim_gui/core/diagnostics.py",
+      "sha256": "9d2273665b5fd0aad8f6f5440f24372e73bb22a1dc8061cc36e7184bc5586199"
+    },
+    {
+      "path": "gui/g4usim_gui/core/edit_snapshot.py",
+      "sha256": "075b10caf0a9ea7e95992a76eb7843fe0eb98640f20c567972b2cf0677eb153f"
+    },
+    {
+      "path": "gui/g4usim_gui/core/edit_sources.py",
+      "sha256": "dd77fb4b6d723d1dc488bf03a7879e1fcf68f1d0e5a9c06b56ed29217f0d9986"
+    },
+    {
+      "path": "gui/g4usim_gui/core/edit_state.py",
+      "sha256": "5b4a5b33d49175870ed34303628ecf095c0d3e32e2d11b46d89431ff4adf7cb4"
+    },
+    {
+      "path": "gui/g4usim_gui/core/edit_transactions.py",
+      "sha256": "b29b1059924d54ddd78a01df518d1d35bb98adcc9d0dcc863c5a5b5932d410cc"
+    },
+    {
+      "path": "gui/g4usim_gui/core/effective_config.py",
+      "sha256": "4f339072eb785ff04b09ff03950bf2574447b3ff50956740b1c804af93f69d36"
+    },
+    {
+      "path": "gui/g4usim_gui/core/environment_discovery.py",
+      "sha256": "7ee71c78b51d00cc79a112f82f51b5e9d929dc224719fa95e8a6427baa686f91"
+    },
+    {
+      "path": "gui/g4usim_gui/core/evidence_job.py",
+      "sha256": "af8a2daaa120546ad55a52b6e144a7886c5b531e593e74d1a7b780ae36c5eb5e"
+    },
+    {
+      "path": "gui/g4usim_gui/core/examples.py",
+      "sha256": "25695c6a22cf157bb12686f6c8a9f16d34b7fba75c8d99475ae33ceae81d1f7f"
+    },
+    {
+      "path": "gui/g4usim_gui/core/experiment_bundle.py",
+      "sha256": "5c1dff0338e80a673ba8f3427aeb7bfe1abe9d2b5315efca564310be8118385a"
+    },
+    {
+      "path": "gui/g4usim_gui/core/experiment_identity.py",
+      "sha256": "b982093fdd9d19ce9a52a13f59094169c8bbf03e0acb1b4bf3c57a2e6a91442e"
+    },
+    {
+      "path": "gui/g4usim_gui/core/experiment_workflow.py",
+      "sha256": "9f8f800aee380f8b060b95fcc8d1c776ed580ddbec0bbd398d104bda58156403"
+    },
+    {
+      "path": "gui/g4usim_gui/core/geometry_migration.py",
+      "sha256": "ed5a5053721095bdf956ea32f2baea470b2bd01fa55c6a182fced05ba9cfb7a0"
+    },
+    {
+      "path": "gui/g4usim_gui/core/i18n.py",
+      "sha256": "002de76b33480160415c3c4b2fb9e38455b2ce94b1aedacfcd83121387ecdf0a"
+    },
+    {
+      "path": "gui/g4usim_gui/core/icons.py",
+      "sha256": "f5716505666a0880136fbc366dd9fd27b24e883f96710c83dbada8176c66e463"
+    },
+    {
+      "path": "gui/g4usim_gui/core/install_layout.py",
+      "sha256": "5f535b261bbccd93516ee051d65ed95d62f2901f288bdc7e31f826ca9c3b60a8"
+    },
+    {
+      "path": "gui/g4usim_gui/core/log_parser.py",
+      "sha256": "694b2b68b0714b347c6829ddfdf4c5815a673a80459a1df3995adef030b29b3f"
+    },
+    {
+      "path": "gui/g4usim_gui/core/main_ini_migration.py",
+      "sha256": "f6ba27fd26f7ed831e13d6cb44771300a4d515d98cbcf6fe424446629a9494af"
+    },
+    {
+      "path": "gui/g4usim_gui/core/paths.py",
+      "sha256": "86106466bc727180fd287feb1244446f8ec6a8462c9d4e2300c46de4f1d39208"
+    },
+    {
+      "path": "gui/g4usim_gui/core/project.py",
+      "sha256": "9cd408f4454527f94c29db5736063e3de8b04cb0af01bef407443494ddc4487a"
+    },
+    {
+      "path": "gui/g4usim_gui/core/project_diagnostics.py",
+      "sha256": "dbf3081f60849dc6ff3e9de37ee25e96516fd7234b930912d949839be1002ec0"
+    },
+    {
+      "path": "gui/g4usim_gui/core/project_migration.py",
+      "sha256": "214763a6a38dd5aa236e1cdaa6c11d322122ef490d6ade4d4fb4f9061e88fecb"
+    },
+    {
+      "path": "gui/g4usim_gui/core/project_snapshot.py",
+      "sha256": "832711b1690cfea72cdda4914093960bc3dc495c1301853a00d3c42644330206"
+    },
+    {
+      "path": "gui/g4usim_gui/core/run_progress.py",
+      "sha256": "624e459c8105193d8bf10149e6de4baafe761dcfe0c791cda1e83b79cde311fe"
+    },
+    {
+      "path": "gui/g4usim_gui/core/run_result.py",
+      "sha256": "4e6da8e2196a5dc8d473c7016796d15d2dac38c0c1c555e4835255e5d1e47646"
+    },
+    {
+      "path": "gui/g4usim_gui/core/runner.py",
+      "sha256": "456912e161a3ee46ae879b9d9d76abb7e8d0691c393504d00ab714c5ce2770e9"
+    },
+    {
+      "path": "gui/g4usim_gui/core/scan.py",
+      "sha256": "27e863b05261cdd5964de367d7eb26cbf2db7349b64f49d7e499dc8667b90868"
+    },
+    {
+      "path": "gui/g4usim_gui/core/scan_runner.py",
+      "sha256": "594eb0f42c137646e209fdd0e616970f246697076cfa94bce43bd8793d11ea65"
+    },
+    {
+      "path": "gui/g4usim_gui/core/scenario_shielding.py",
+      "sha256": "f48f8f412bb6a589bfdc011e28ccfecaa86366f32c32a1576d524a472f788990"
+    },
+    {
+      "path": "gui/g4usim_gui/core/theme.py",
+      "sha256": "baec76e3f5e4c1af2fcabd0106ddc52da9d28fc9aa65e439aefa3cdcf387d4ac"
+    },
+    {
+      "path": "gui/g4usim_gui/core/wizard.py",
+      "sha256": "1936058da74812cc127b703115f4bb9606ff496a4a1c352813d998a471695ff5"
+    },
+    {
+      "path": "gui/g4usim_gui/core/workspace_recovery.py",
+      "sha256": "fb03b12e19b5fa97e1a668bc1c8f3ee013113339a40e7d3ee1abd2f5953c5d7f"
+    },
+    {
+      "path": "gui/g4usim_gui/editors/__init__.py",
+      "sha256": "edb1cf0d2782775b8bc1e9b2a860bd71ae586a20fe95d365a21992f1779ef7c6"
+    },
+    {
+      "path": "gui/g4usim_gui/editors/editable_models.py",
+      "sha256": "89a014e97047475b81dec6a86b0af3980a7dcee638e31010d5a2816fada4a4dd"
+    },
+    {
+      "path": "gui/g4usim_gui/editors/geometry_editor_model.py",
+      "sha256": "a902af8b3873d000f5dbcdf2ca3688768e8bf94240c74e045b1ae44e9743492d"
+    },
+    {
+      "path": "gui/g4usim_gui/editors/material_editor_model.py",
+      "sha256": "d63843dced4f4a15b715d3989df7a615c73e2f259d99b4a004012262d5554e27"
+    },
+    {
+      "path": "gui/g4usim_gui/editors/source_physics_scoring_model.py",
+      "sha256": "fb140f3226aca347ee44c9e829237e40fbc69f0d3922d810a107a73aa0ff905d"
+    },
+    {
+      "path": "gui/g4usim_gui/experiment_cli.py",
+      "sha256": "20d7bb876ef91d80d31a4806640730dff011fd65ceb7204b9b323ec7920c74f6"
+    },
+    {
+      "path": "gui/g4usim_gui/history/__init__.py",
+      "sha256": "f100299c223ca1c56e441010d842fb5f17e60f51b2eb8ec85cbafc5fe8250081"
+    },
+    {
+      "path": "gui/g4usim_gui/history/run_history_model.py",
+      "sha256": "6dca3372f3456dcf86c99ac6421629ffe58cf9682c772e400aeec405adbf4234"
+    },
+    {
+      "path": "gui/g4usim_gui/history/run_history_scanner.py",
+      "sha256": "6dab15850261ffe1ec66e161a262c756dff81a36799be2da7e1f21783714d4eb"
+    },
+    {
+      "path": "gui/g4usim_gui/history/run_history_store.py",
+      "sha256": "dd1520be832f35295ee7fd1400483a59de8ed6b64330c3fb44887497440e5b2a"
+    },
+    {
+      "path": "gui/g4usim_gui/history/run_package_actions.py",
+      "sha256": "7c2f495cce22083fd47e8017516f25e1f5abdf89be23d2dcdbdd007ffbe84b42"
+    },
+    {
+      "path": "gui/g4usim_gui/main_window.py",
+      "sha256": "3dbece37b6eef22363f6eb772836f8918dce95c762f94decd312c4381a74a7ce"
+    },
+    {
+      "path": "gui/g4usim_gui/models/__init__.py",
+      "sha256": "b6286dd36352b6383be1d40a58254a9f9c1caca7b43c16ecd5f787295b26ac31"
+    },
+    {
+      "path": "gui/g4usim_gui/models/package_model.py",
+      "sha256": "af4e99a94408c5ce3ae2f99c0c3f4853956670bff60764306e9fa97d94eedb60"
+    },
+    {
+      "path": "gui/g4usim_gui/models/physics_model.py",
+      "sha256": "3e858746905252832d9da8348cd59612e3a573bff579491b726649bbef8f7374"
+    },
+    {
+      "path": "gui/g4usim_gui/models/run_model.py",
+      "sha256": "70b2ad29fbc187cae70c33965d170b114c5675593622b3b3e5dce43fa6c05380"
+    },
+    {
+      "path": "gui/g4usim_gui/models/scoring_model.py",
+      "sha256": "cd4b1f5b05b13ff462c631c070c08eb5307fc0d78bb0ce8ead3908d0bbdc8b2f"
+    },
+    {
+      "path": "gui/g4usim_gui/models/source_model.py",
+      "sha256": "2cba41b4d936a278b33ea13f481b8866caf4b5552387d5b33053615288678ade"
+    },
+    {
+      "path": "gui/g4usim_gui/output/__init__.py",
+      "sha256": "85803b2c0654f492f1a7fdf0bb9af6cc88dc9cb80bf769cd9b1cfccf01b858de"
+    },
+    {
+      "path": "gui/g4usim_gui/output/csv_preview.py",
+      "sha256": "91254228f5530aeda315de65c719cda16caecc26df276bec8c1f02264bc576f4"
+    },
+    {
+      "path": "gui/g4usim_gui/output/dose_summary.py",
+      "sha256": "baa7c5d2e86c61106a6416a28a07ab2fe56d1f30d9aa2b113c04ade1fc542a61"
+    },
+    {
+      "path": "gui/g4usim_gui/output/extension_runner.py",
+      "sha256": "e1b5419d43eaf57a0fbbfff212ffee2616f02bcd97999c75ca1bf19a7ca709a2"
+    },
+    {
+      "path": "gui/g4usim_gui/output/file_classifier.py",
+      "sha256": "23011f797ea18db9769eebe93ea955c65d17e1e1837a46beeaaf0a43fff7c8de"
+    },
+    {
+      "path": "gui/g4usim_gui/output/fluence_summary.py",
+      "sha256": "acf36f798fad8276dea5aa89c0e3151e3eb534d59e5c954563b2ec29866a0dca"
+    },
+    {
+      "path": "gui/g4usim_gui/output/identity.py",
+      "sha256": "3a44b74a31e6c37f142409a3a14436abef0a284684b6f42ead3d7ea012035fce"
+    },
+    {
+      "path": "gui/g4usim_gui/output/merge_plan.py",
+      "sha256": "b8550480b81bae4cf0ff5c4154529a867694dbec504bc1db230b3fbf9cc37ebf"
+    },
+    {
+      "path": "gui/g4usim_gui/output/merge_runner.py",
+      "sha256": "75d98f908aa0f6fee555395898d347e4f55b32878412cf1c91fbac29eab10ade"
+    },
+    {
+      "path": "gui/g4usim_gui/output/plot_data.py",
+      "sha256": "32081a938a72741027f96cd1ea917bbf391f4718cd5f22c66e8ff4b24e20a800"
+    },
+    {
+      "path": "gui/g4usim_gui/output/provenance.py",
+      "sha256": "54983c9c185c307c2fac747dd0e23ed88c30d9bec25a62edacc6f932685dd00f"
+    },
+    {
+      "path": "gui/g4usim_gui/output/run_summary_parser.py",
+      "sha256": "7e0570e8dca39ad8292bc0ce8793a53b6aeeb32832cb647165cfc1d6c27230e0"
+    },
+    {
+      "path": "gui/g4usim_gui/parsers/__init__.py",
+      "sha256": "9f59e4d2433203f3458c766acd0314b9da37f439ef7d2f2d2a2fedd031dcd1a3"
+    },
+    {
+      "path": "gui/g4usim_gui/parsers/geometry_parser.py",
+      "sha256": "4d7b5fafc9a28fe8aabcdf66ca21277fd3a62f83a92e21c71ae179af4cc64be3"
+    },
+    {
+      "path": "gui/g4usim_gui/parsers/ini_light_parser.py",
+      "sha256": "248e213abc95646c94af41bb6b6500175dd06c12e0f9e4b7d4881447c8409603"
+    },
+    {
+      "path": "gui/g4usim_gui/parsers/materials_parser.py",
+      "sha256": "47271bc2149a0a3ddc3ea8552a13399d61b8cce8d7a6f69a1ef134076717d2fe"
+    },
+    {
+      "path": "gui/g4usim_gui/preview3d/__init__.py",
+      "sha256": "62fe40ab965f9cb9f27e829a8274202250898695e93199e2bc649879bb3188fb"
+    },
+    {
+      "path": "gui/g4usim_gui/preview3d/backend_geometry_controller.py",
+      "sha256": "d3e06751a51d5df372c5d036bbcbfbfd4267e892e35ef59acbf9d1fcb0b54567"
+    },
+    {
+      "path": "gui/g4usim_gui/preview3d/backend_inputs.py",
+      "sha256": "beb446de538bbb3e8a3b469b4b3a50f9a03898eb1809f33f9cced79a2689a984"
+    },
+    {
+      "path": "gui/g4usim_gui/preview3d/backend_mesh.py",
+      "sha256": "558c2773ed09fcf6c8ca2ee2888a5bfc28563c1ac3cdf43b056042343edc097d"
+    },
+    {
+      "path": "gui/g4usim_gui/preview3d/fallback_preview_widget.py",
+      "sha256": "1556002d27927bafc663da29edec80c6a174d8cb55ace6c1ba3b50f2cc87c29c"
+    },
+    {
+      "path": "gui/g4usim_gui/preview3d/geometry_primitives.py",
+      "sha256": "2fe55eae2f1b422544f38db291f4538a69b2c7e971ff4b178d1683956ff318eb"
+    },
+    {
+      "path": "gui/g4usim_gui/preview3d/pyvista_preview_widget.py",
+      "sha256": "7fc1d7b0b51f3a77c1a7e411388b849bd1d6ab03d4718e3c4e7c2ada995a277c"
+    },
+    {
+      "path": "gui/g4usim_gui/preview3d/scene_builder.py",
+      "sha256": "eb97e6cf94e905b52042669682c4c865fd0c075908bc5042654c9ab0f8d767e6"
+    },
+    {
+      "path": "gui/g4usim_gui/preview3d/scene_model.py",
+      "sha256": "3a64acb950200d7e5a6d0645b275c1e2c939ec60dc34448a2b3288d893f6479c"
+    },
+    {
+      "path": "gui/g4usim_gui/preview3d/sketch_geometry.py",
+      "sha256": "992a42ba818e71a4a041b7e41c9ee2296a52a8df7ab85ac16261555a21a4ba66"
+    },
+    {
+      "path": "gui/g4usim_gui/preview3d/source_builder.py",
+      "sha256": "3d43905f50d3028234f426fae09e5bd9024c8c99dd7536165338e5a63a2b238b"
+    },
+    {
+      "path": "gui/g4usim_gui/preview3d/trajectories.py",
+      "sha256": "5bdab803f4a60b14f907c88654187d0eb7c8dbb64c979fc11f1bc04c9c19ce3f"
+    },
+    {
+      "path": "gui/g4usim_gui/preview3d/units.py",
+      "sha256": "5c889d69ae603d5286c714f84f8e30c982c8a65870c18641999a5fa933eec25e"
+    },
+    {
+      "path": "gui/g4usim_gui/preview3d/view_model.py",
+      "sha256": "f27a5d1dd220b7bdd36017d8e6e0b278891bd6fffcefa018c5c7804cc7378473"
+    },
+    {
+      "path": "gui/g4usim_gui/validators/__init__.py",
+      "sha256": "8a01edf1f2e02b2337b71f9818003cb8a67d03706e2cdba84fd5684c050e4dcc"
+    },
+    {
+      "path": "gui/g4usim_gui/validators/config_validator.py",
+      "sha256": "f0c7f1ff84fdab2ef0464ce65d6ca6b885253ec9a0ae5d62c75fa241c614ecca"
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/__init__.py",
+      "sha256": "26ce130eb22aad510f294e78f2ac9c5f59efb88a18f832c6755da7b4fa27ac03"
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/config/__init__.py",
+      "sha256": "4d1006749e367cb40aabfc5a9185058f3b738bcaabd684af9ac983ff4b648d3b"
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/config/booleans.py",
+      "sha256": "98106164402674e997842914dc61931e44b2c3571746c4cf27c5e84e8d021400"
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/config/details.py",
+      "sha256": "3bd3a70263ebbf1ee57ec4481e8b87e58bb1e230ff59e9a91b6b32998783db17"
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/config/geometry.py",
+      "sha256": "fa6df074c3c16f91bbe3e19f60255b5dee6357de5a8b95e1bb7830cdc4a995c9"
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/config/layers.py",
+      "sha256": "3e148dc891f7783ca2a741afb66fd611606687926f093c2cb468fe82e1106f13"
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/config/materials.py",
+      "sha256": "0d6365ffcd0351bed66a99ce1539159a8e2407a6d7d87968afa15b09b74d929a"
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/config/preview3d.py",
+      "sha256": "22fa8b3cffc036760b22cd84b500f73cc2f29e54841025355fc7c396d958ab76"
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/config/run_config.py",
+      "sha256": "e83d3244504ee07c0516a02d558f15e6955e9592d5ec9491d802f9ad4aabe5dc"
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/config/setup_panel.py",
+      "sha256": "45d59fcabe32b88ae269f90e467d0c53f58c62f3dfe0f50259cfbcc56c92f985"
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/config_builder_page.py",
+      "sha256": "5eec776be3b763a4ef47c0859833bdb3c3dd9c9eec035820609968194912cd51"
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/diagnostic_navigation.py",
+      "sha256": "041ddbada211e6f45f080926742ae70dc0ce90c01400fd36b4c59e2006513437"
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/diagnostic_panel.py",
+      "sha256": "64e5020201cc1a897bfeab7eaab8576715cb912b1d81ebc85b9f84434e20893e"
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/effective_config_page.py",
+      "sha256": "5b31ba501c59ff5d24673bfaf72433aed83fff1572613a15abb59fba4b63f584"
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/environment_dialog.py",
+      "sha256": "a5de75745c822e8c6184f82a2942a8716119465f103d476f5d559cd03a9e79cc"
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/experiment_panel.py",
+      "sha256": "01f91f3db0081536110e2acc9958ec76783af485dbbc1f378ec52231f94133f3"
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/form_diagnostics.py",
+      "sha256": "3ceda335de1863db895835dbae128f80b89e51f56f756c331978de15c82c2755"
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/migration_dialog.py",
+      "sha256": "bcc83177ce167842d8df0397c3c7016a11f79be1ff398abf8c2aa71f30d97a0f"
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/new_simulation_wizard.py",
+      "sha256": "5697964118f121b252da420befd5bbbb0cab3a95a45c60ecf8163e70437d1d84"
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/output_identity_panel.py",
+      "sha256": "5a218cd7b4755c8e72740997020b70f79a335b6f3e09d395212fe1afeed86d73"
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/output_page.py",
+      "sha256": "3807354352baf88276eb5f592bf3b386543e86b033d153c492b6720ff0461849"
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/plot_panel.py",
+      "sha256": "752520ffbcf897c8f0c0be90540efc33c50d7e047802798dc89e052f462bc707"
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/project_page.py",
+      "sha256": "02bc744b8f4d59b6f2991bf3779c577ec6672f48ce4f93bc98b300950371f93a"
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/qt_data.py",
+      "sha256": "c69e7be1644faf99c56ec54791e66ac9e9d804e492f767a20e406534ffa6fdc1"
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/recovery_dialog.py",
+      "sha256": "65d28ff63930345d1e181ec49667e9d87b0c67ebc283feebd1f4f242b955e73c"
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/run_history_page.py",
+      "sha256": "c84990c20b6af4aa727bc38d49b7e2106025ddf192673fdefcc31bb568369005"
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/run_page.py",
+      "sha256": "15f1825c9d0c8564eb83b506405e62d3d6eed84139e7919504e10cee303c3078"
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/scan_page.py",
+      "sha256": "647bf9c3b542f11394570a6d50e1b2a825befbf09bee0baebbb87e0223e12072"
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/scenario_page.py",
+      "sha256": "ec1a09f108115f69e00aa2b58e57c7d84cccaeabcc0dcf7bbb798f20ff6d8ecf"
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/start_page.py",
+      "sha256": "e3712db10a4055d8d39ae9610dfd3e88da806b4b0b85d4c0aaafa4ee28eb8377"
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/ui_helpers.py",
+      "sha256": "6890d67b482bafe86142e2e333cd60d1bfc890b9e849d0bdd76e4768e557cb35"
+    },
+    {
+      "path": "gui/g4usim_gui/window/__init__.py",
+      "sha256": "8c209cf275b86a9e905dd327795b7e5c24897f15743a0df1edf09550e22b7f8b"
+    },
+    {
+      "path": "gui/g4usim_gui/window/content.py",
+      "sha256": "295e0c6442f300eb133c9393f0a1ddf7cf48ab3f92f18c7a6e397cad7990558b"
+    },
+    {
+      "path": "gui/g4usim_gui/window/diagnostics.py",
+      "sha256": "a6c4e499059493c51fa79c7efa5ba0923fba893ba850be1595a6df22b6dc634b"
+    },
+    {
+      "path": "gui/g4usim_gui/window/experiment.py",
+      "sha256": "0ff241b88dfa03dc24743a9a10145db681e542006c00f4c8e55d53f3f9252d8f"
+    },
+    {
+      "path": "gui/g4usim_gui/window/project.py",
+      "sha256": "0ee7aae9de33147015a9f18d16effec4fdce82f97c6ffdb58532e24e2f2e9537"
+    },
+    {
+      "path": "gui/g4usim_gui/window/recovery.py",
+      "sha256": "c88379ccaf98a958e0e71d437a5ab173b707743123fee9e834a8e1ae1b57010d"
+    },
+    {
+      "path": "gui/g4usim_gui/window/run.py",
+      "sha256": "3af4daefa4c0818fba9879acffe14e15ece2c8b908d2b26b0526e9fa7e873d56"
+    },
+    {
+      "path": "gui/g4usim_gui/window/shell.py",
+      "sha256": "21c8c3a32d99c56ada8e028b642c7f519abaccc64db61763397cdd5290bc603c"
+    },
+    {
+      "path": "gui/g4usim_gui/window/transactions.py",
+      "sha256": "93e194afae749b52c3a8c9871211ecc8fe129256050e9e88ef1287f67b1b3210"
+    },
+    {
+      "path": "gui/g4usim_gui/writers/__init__.py",
+      "sha256": "5572c30cd5720fd7fc12f9a01dd911aba9379501f84bd34d8d897ac36b3212a7"
+    },
+    {
+      "path": "gui/g4usim_gui/writers/geometry_ini_writer.py",
+      "sha256": "646bc637a401b4c07b4e664619b871d19f053647f022ff834836e7fe93933853"
+    },
+    {
+      "path": "gui/g4usim_gui/writers/macro_writer.py",
+      "sha256": "984034b3ddd01230d4e7b8ad8183c33aa61e2c5ac56a65b8ba0c8534a78fd80a"
+    },
+    {
+      "path": "gui/g4usim_gui/writers/main_ini_writer.py",
+      "sha256": "7560b2617d70482999569edc4d3794334f56f895517c505956e6d4c616fbb002"
+    },
+    {
+      "path": "gui/g4usim_gui/writers/materials_ini_writer.py",
+      "sha256": "0d73818090b1bc247c50be6d4698a0b93d082764768c10e9aa8202c6ba94fdb8"
+    },
+    {
+      "path": "gui/g4usim_gui/writers/package_writer.py",
+      "sha256": "733c9d345a21be79f15063168df541f648cd038935bd90e1eda699080d10b4d4"
+    },
+    {
+      "path": "gui/g4usim_gui/writers/validation_report_writer.py",
+      "sha256": "44984752ba91e08e0db084c725c1cf6fdcd62f322529dd1c3eae27194514db35"
+    },
+    {
+      "path": "include/Actions/ActionInitialization.hh",
+      "sha256": "fdc9b8dae445e1747973e312733d105ed7ff81bfaf582f9a40cba855e35cba30"
+    },
+    {
+      "path": "include/Actions/EventAction.hh",
+      "sha256": "222d5b41f57e94d99e951ebc3c763bb53c819286eb352414094f546d5d949397"
+    },
+    {
+      "path": "include/Actions/RunAction.hh",
+      "sha256": "344d162133c97b07a8ab6fa1d7a147fe2799b89fbc7650f5068a8058b5351c49"
+    },
+    {
+      "path": "include/Actions/RunProgress.hh",
+      "sha256": "68e163d86d40b36ce3a95800b164b05c2cfb4d6ab821059ccc4f982f742f298a"
+    },
+    {
+      "path": "include/Actions/SteppingAction.hh",
+      "sha256": "abea910c65ee057c61fb86e02a3b2741a411069b42842a79a3efe533ebad4a7a"
+    },
+    {
+      "path": "include/Actions/TrackingAction.hh",
+      "sha256": "e333476ab6431b57285274b237621fe5b49b0aa0a6567a9280f5d7618ada80e0"
+    },
+    {
+      "path": "include/Actions/WorkerRunContext.hh",
+      "sha256": "a7ba7753d7f6ade96008c0d49cc46c34408237833bfc5db854ccdc60077a7739"
+    },
+    {
+      "path": "include/Biasing/BiasingConfig.hh",
+      "sha256": "335906129499270534d8cbd9b2af67f03391dfb530b2dd9b23ffe597c144fe95"
+    },
+    {
+      "path": "include/Biasing/BiasingImportance.hh",
+      "sha256": "baf765d839bb40c24d1e2db21c9c3505b66bcd0b4fb30466ff5c3e1f35e1dc43"
+    },
+    {
+      "path": "include/Biasing/BiasingManager.hh",
+      "sha256": "e91f6d0225198a46b87210012d43f000feaf16ad7e3cddbea279855485eed16a"
+    },
+    {
+      "path": "include/Biasing/BiasingMessenger.hh",
+      "sha256": "aaca5d41a210ab509a2c92488e12ebde3ebababff50528d485257bce8d5c8e43"
+    },
+    {
+      "path": "include/Biasing/BiasingMultiParticleXS.hh",
+      "sha256": "6ea4481a8853165ec042954f09f158533eba96b1889579db160776ff84e7f61c"
+    },
+    {
+      "path": "include/Biasing/BiasingRegion.hh",
+      "sha256": "3dd98d2c2673402b4aeeb6df2f6fc94547be318554ccc1879c630cc4e378f345"
+    },
+    {
+      "path": "include/Biasing/BiasingXS.hh",
+      "sha256": "25493f94bddaa4c004bffdd8c47f48b78dd133c51f55e857d056ebb41d60b4b3"
+    },
+    {
+      "path": "include/Config/ConfigManager.hh",
+      "sha256": "4b78174fde66d1a456a272825426ea6dc394213b193ee2362482ec8acd9711db"
+    },
+    {
+      "path": "include/Config/ConfigSchemaTable.hh",
+      "sha256": "76057862943c4b1e2d8b5e60c7a57223a7712fc7e7f14843df809292bfb44e83"
+    },
+    {
+      "path": "include/Config/ConfigValue.hh",
+      "sha256": "b805d5b1de60d6b00f96b679085a7fb9dc7a483a821ac8dcc14ab0ba81d886ab"
+    },
+    {
+      "path": "include/Config/EffectiveConfig.hh",
+      "sha256": "cd320186f051f8637b81164da234299cf7a79b10c587e5e87beb9dc01ed56d6e"
+    },
+    {
+      "path": "include/Config/EffectiveConfigSupport.hh",
+      "sha256": "22d0d3f4bc96ac6aa3232061871ad346ffbe472bd00d9ecc0e58b7b6ce91fa82"
+    },
+    {
+      "path": "include/Config/EffectiveReceiptView.hh",
+      "sha256": "d536eb299c81e65c0ccb70dc4e428d22c1719797c4a2df3dff36a807217df680"
+    },
+    {
+      "path": "include/Config/EffectiveRuntime.hh",
+      "sha256": "a54639224c18f3bcbf315c84568781500ab6c7e380403974697dbeb6ffba83ac"
+    },
+    {
+      "path": "include/Config/IniReader.hh",
+      "sha256": "4790dbb2e42c6e217872d58f13eba2c4f8ef773f0328865e9b05412d211cf757"
+    },
+    {
+      "path": "include/Config/InputProvenance.hh",
+      "sha256": "be541ec48bd7d4d50be804e4f3a538049b1a5339a477e6d1d8c96c07236d012d"
+    },
+    {
+      "path": "include/Config/MainConfigVersion.hh",
+      "sha256": "441bbdcc55ae824466fa9355a39754b53ae4e5e1ccec93f208e1f0579047313f"
+    },
+    {
+      "path": "include/Core/AppMessenger.hh",
+      "sha256": "72f177a648c389fe09023328c7760aabaea9570c56e987b383c45c75c5bc1a12"
+    },
+    {
+      "path": "include/Core/BackendCapabilities.hh",
+      "sha256": "40e0f7c33f081ed63b0989c7d5a0151f939b747184012f41c4127f2dcf399c6c"
+    },
+    {
+      "path": "include/Core/BuildInfo.hh.in",
+      "sha256": "1886acb1d4731fbe00ebd19b8864878a3faf2eca7449ee41748cb456051bd2a1"
+    },
+    {
+      "path": "include/Core/Geant4DataLocator.hh",
+      "sha256": "15c5801ae7e829ac06db43a22ff606c1af71f3bc1b6dcc622265ebcb187c07a5"
+    },
+    {
+      "path": "include/Core/MacroPreflight.hh",
+      "sha256": "479a04d5877483a9926d551c9f3cb466fa67937c14189784da0f5e0614ef6681"
+    },
+    {
+      "path": "include/Core/RandomCommandGuard.hh",
+      "sha256": "b00a46293ea9482c53e889401d9d784c62c967bab47326a259e288f12840dabc"
+    },
+    {
+      "path": "include/Core/SimulationContext.hh",
+      "sha256": "98da9a85a7bce20e3eaa4ad3dada91a583ff642051efcd9536744024799fe333"
+    },
+    {
+      "path": "include/Core/SimulationManager.hh",
+      "sha256": "68b025e7a0119dbe8dc8f8167e6ece4d039c0bbda1350b7e7376e58c037eb2a8"
+    },
+    {
+      "path": "include/Detector/DetectorConstruction.hh",
+      "sha256": "5e7317c217a0dc8e4556aba15e0a2344dfc7faa219ba2c8640ed550da6a51d29"
+    },
+    {
+      "path": "include/Detector/DetectorMessenger.hh",
+      "sha256": "22c11d95b54be2c4788ca9fa8c4e674fd269a0e2713528b90d48af9a3e22875d"
+    },
+    {
+      "path": "include/Field/FieldConfig.hh",
+      "sha256": "780b5de4cd18da101ff9418a57a0cf52b4e32c4588eda8da722d993c60ca8d1f"
+    },
+    {
+      "path": "include/Field/FieldSetup.hh",
+      "sha256": "4f5dbe682cda0325cc700511df7ee650ebff82ee94f279d18679647f332d1668"
+    },
+    {
+      "path": "include/Geometry/GdmlIO.hh",
+      "sha256": "e3d4b619cafffc063556ec3c44d6c6b98004e3ac2c8f6a0e9ca9d8a72312f801"
+    },
+    {
+      "path": "include/Geometry/GdmlInputCapture.hh",
+      "sha256": "454188028b4e7960f191748cdf0a8b1b226d7a9d25fb0459f237c930a1a60891"
+    },
+    {
+      "path": "include/Geometry/GeometryConfig.hh",
+      "sha256": "86630110c16beced72927e54faa7412080734dbfd6b1ff02b4a11387d7772452"
+    },
+    {
+      "path": "include/Geometry/GeometryConfigDiagnostic.hh",
+      "sha256": "e81965d264075099a6e578f89aad7ee23e73bcadce6b578ae99cf0b842ddcf69"
+    },
+    {
+      "path": "include/Geometry/GeometryExport.hh",
+      "sha256": "56f1ea49d805735fd986b5f9254b3370a11eb7125ecf995affb807810d17bbaf"
+    },
+    {
+      "path": "include/Geometry/GeometryManager.hh",
+      "sha256": "a19a9e4e9ff78a6cd0ad308ab6213caaee2454bf5631578e8775a3225aa7c262"
+    },
+    {
+      "path": "include/Geometry/GeometryMessenger.hh",
+      "sha256": "7d510ac2b951ff9dbbcdfdc441c991caaceb0a1a06d3a2a4d0d2f4b938704921"
+    },
+    {
+      "path": "include/Geometry/GeometryRegistry.hh",
+      "sha256": "7401824f614c7c1f7b19f94a29c81d40c4165781f8eddd17c94cb199e8d3e655"
+    },
+    {
+      "path": "include/Geometry/GeometrySafety.hh",
+      "sha256": "e8744ee0ada7d8f0d918da70a6817fcac267524d6f65a9936ea99f754271e3ca"
+    },
+    {
+      "path": "include/Geometry/GeometryTypes.hh",
+      "sha256": "158a17672e115d319a2033c9f2b42bd66ed32de033d816e24408ed8d2e7d0c4d"
+    },
+    {
+      "path": "include/Geometry/GeometryUtils.hh",
+      "sha256": "047ce7d6d3ac55f3c46a3e3f232d36827a097808559fae804496bf2eff8cb434"
+    },
+    {
+      "path": "include/Geometry/StlReader.hh",
+      "sha256": "99943e22a427fae9495b68c5816e17c1e8877afc1017930dfd6741ec4ef6e5c0"
+    },
+    {
+      "path": "include/Geometry/VolumeBuilder.hh",
+      "sha256": "d7abd6e42d06336134d2c0cb9bfd215848182eb31b0e3da83eacc40ddf99ddcc"
+    },
+    {
+      "path": "include/Geometry/VolumeNode.hh",
+      "sha256": "faa0c6afa899be823ea4f9af85a3d5cf2e4325f7f41c5ca72bfb66074df24775"
+    },
+    {
+      "path": "include/Hits/ParticleHit.hh",
+      "sha256": "349d1341bf52a584b937157f5f7d0aa275866346d7d37cf8c3bbdf789d75e3c5"
+    },
+    {
+      "path": "include/Hits/ParticleHitCollection.hh",
+      "sha256": "75b5e798f9764c3a9140253110b86b7bd935c350d0b22e2e10741c8b5e9eb61a"
+    },
+    {
+      "path": "include/Hits/SensitiveDetector.hh",
+      "sha256": "1205dbbe2ec37cf94c85eb68e93435b966cba2225a3f83086896cb795eafe4cb"
+    },
+    {
+      "path": "include/Hits/TrackInformation.hh",
+      "sha256": "f87d7d4850194780942207f5a0fb794de87b0758eb8fe713f8cd05cd553fce4e"
+    },
+    {
+      "path": "include/Materials/MaterialCommandParser.hh",
+      "sha256": "f1084ec0f24566a43505a5f823fe36993944e61f848b99328ff0dd444bcb7d20"
+    },
+    {
+      "path": "include/Materials/MaterialDefinition.hh",
+      "sha256": "7f7487832c51eb2505a273cde51580f5f216aca329f406cd46212ade8e0d68bb"
+    },
+    {
+      "path": "include/Materials/MaterialFactory.hh",
+      "sha256": "2d2a0d4c1e10a107ad69aecaabef2cce466ab0fca189b487c761b4ece48cc171"
+    },
+    {
+      "path": "include/Materials/MaterialIniReader.hh",
+      "sha256": "3ecef35b1420d3b516cd9f04bb0cbf0cd0b845e09d6402055ed006ee8dfe0d89"
+    },
+    {
+      "path": "include/Materials/MaterialManager.hh",
+      "sha256": "925a8c125646f3d62626984d45a768256d93e9c3a24d071fec236a76c7e302c1"
+    },
+    {
+      "path": "include/Materials/MaterialMessenger.hh",
+      "sha256": "d21172e220b270fc5f8b5f81683e0847f1f3a9d40f845a256327249727814a94"
+    },
+    {
+      "path": "include/Output/AnalysisOutput.hh",
+      "sha256": "b2beae48a0162215d5b911ef8162e4c98693e62faec9cee69893d4e4b28d44a6"
+    },
+    {
+      "path": "include/Output/CsvWriter.hh",
+      "sha256": "9a5513e7c4d0bd76d036b711021262e3651e7534884e22f244e1ed43ba5e74fa"
+    },
+    {
+      "path": "include/Output/Histogram1D.hh",
+      "sha256": "1c34f7e013e48c4ee22c57b59c1c3c4f0c3840bc65fa06942b7926d868318cff"
+    },
+    {
+      "path": "include/Output/Histogram2D.hh",
+      "sha256": "354ed15c1fa16e08bab7936512e7a5b0d5373391526de7b61955a840a9169ed9"
+    },
+    {
+      "path": "include/Output/OutputManager.hh",
+      "sha256": "1b0e0ca53548abaa95f1e2b4c399cb62bb8678231c0f4bb5d5b5376ab1f3c2cc"
+    },
+    {
+      "path": "include/Output/OutputMessenger.hh",
+      "sha256": "d04e02a98792a7032448cda9d50e97183c42f8832260785a8bc20d72ffa17d6d"
+    },
+    {
+      "path": "include/Output/OutputRecord.hh",
+      "sha256": "a36eaff4d48988eaf90f5eaa9f6618f9f3cfc2d3d2135faacdd58b79861bfc1d"
+    },
+    {
+      "path": "include/Output/RunSummary.hh",
+      "sha256": "0760e038ed6cf9ed24f60fc09c29ce0008fb14cd41e14d8999e3ebe7432dd802"
+    },
+    {
+      "path": "include/Physics/ElectronCapture.hh",
+      "sha256": "bac1b7329cc6c6834832d576c554006acb741d17d7a7b4c6a700fec61bb28542"
+    },
+    {
+      "path": "include/Physics/MicroElecPhysics.hh",
+      "sha256": "aad3e2b6e2d84bf044a75e9e40e7b86ccdb09a999f83b4a48c1c0845654313d1"
+    },
+    {
+      "path": "include/Physics/PhysicsFactory.hh",
+      "sha256": "bcf2b80a4a4eca33be6a9c15f15935d3acdc906c98a9451ef219aa46bfc605fd"
+    },
+    {
+      "path": "include/Physics/PhysicsList.hh",
+      "sha256": "7ab8d8af96f6e321c23f4533a7c0cff2437a6c959e06e05cbfdb3d077725f523"
+    },
+    {
+      "path": "include/Physics/PhysicsManager.hh",
+      "sha256": "9ce69ca06db1991c938f665be0f0e91e0f2180ee100fe89fba42db020e768370"
+    },
+    {
+      "path": "include/Physics/PhysicsMessenger.hh",
+      "sha256": "1a38cc0a593861b0974e657894bfa3d82771b33461c98b598b076f6ad0bd2f38"
+    },
+    {
+      "path": "include/Physics/ProcessDump.hh",
+      "sha256": "b57a4cfb7083c90a5b1d7f4f54c1456fb716b5a4e849755ca58eb8f302305197"
+    },
+    {
+      "path": "include/Physics/RegionPhysics.hh",
+      "sha256": "d7706d22623416ab7f065dd286b8218f562d84d2c5b6ab3c7add4b9b82c47046"
+    },
+    {
+      "path": "include/Scoring/DisplacementScorer.hh",
+      "sha256": "f4bc301d44aef3c3d800afc6fec5d6a94951d860ac9d68a4397db2e07e41b65e"
+    },
+    {
+      "path": "include/Scoring/DoseContext.hh",
+      "sha256": "6dc39d7211fe9d752b0cf19d96e37e75f0bee16d3478a30cad16372a1118038c"
+    },
+    {
+      "path": "include/Scoring/DoseScorer.hh",
+      "sha256": "bbb659c973a54475206084aa5300a5432c6cbd203027078ed91f3fce57b2b2fb"
+    },
+    {
+      "path": "include/Scoring/EdepScorer.hh",
+      "sha256": "9474d0d8359e07585e660830b6d32effeefb98dcbae6d43c60238b1aa1f29f39"
+    },
+    {
+      "path": "include/Scoring/FluenceScorer.hh",
+      "sha256": "127b100527ab5dcb4973976ed61a5f66b0376cc8169bf78c31e485ea9fe77ca1"
+    },
+    {
+      "path": "include/Scoring/HistoryStatistics.hh",
+      "sha256": "abad43750bb5403683a9da638e375a936ebdab76526b4c18790cba4815056643"
+    },
+    {
+      "path": "include/Scoring/LETScorer.hh",
+      "sha256": "93d73c8510f987c2141f32b174ffd04ad74d6a6428cdcade96e995b2151cf2cd"
+    },
+    {
+      "path": "include/Scoring/NielTable.hh",
+      "sha256": "59c3e7116e0bb4b5f0ab8460ababb43226334476a7ca30d7bee4654a9e81c5b9"
+    },
+    {
+      "path": "include/Scoring/NumericChecks.hh",
+      "sha256": "dae1399a57fee4a04bd949acef9b8dfd9a1a1b60ce44ab6d6b8b5d5b6d70f448"
+    },
+    {
+      "path": "include/Scoring/ParticleAggregator.hh",
+      "sha256": "27c4399ba015ed4718da185558c101274d71664699ad3325619adbe4a93a448e"
+    },
+    {
+      "path": "include/Scoring/PhaseSpace.hh",
+      "sha256": "093aea036eb3f609ce869e5a14e0591aff390301d54a661dc5ca03cc49c50fc3"
+    },
+    {
+      "path": "include/Scoring/ScorerBase.hh",
+      "sha256": "0b853e1c9c31fb942d30585a2ed3d5bda7de88167b59c607a63b3c6df8ac90b4"
+    },
+    {
+      "path": "include/Scoring/ScoringManager.hh",
+      "sha256": "30dbd91f7dea7184697aa3b29ce7f67ad44d80d674d6f322278edc9282fb40a3"
+    },
+    {
+      "path": "include/Scoring/ScoringMeshConfig.hh",
+      "sha256": "d57f7664f86fef7a7222a74ee271cac3e40d86ba10a4f9012f56d5891db697a9"
+    },
+    {
+      "path": "include/Scoring/ScoringMeshExport.hh",
+      "sha256": "639c8fd00b745dcf38f15141a19cd0bcdc4d83835b90f0743e8ccc27f35c5aeb"
+    },
+    {
+      "path": "include/Scoring/ScoringMessenger.hh",
+      "sha256": "58b08f77575e1c5b8dedd103e9327ae8200e6400231b9a49a406fa9dc0072709"
+    },
+    {
+      "path": "include/Scoring/ThreadLocalScoringContext.hh",
+      "sha256": "1cdfe4783264a101ac66616f2fba983058b99da7e6e70b65a41c683c9e345293"
+    },
+    {
+      "path": "include/Scoring/TrajectoryRecorder.hh",
+      "sha256": "20db075a07429ca7228e5818da0319bcf74639e4b8b0b1912780262acf5618f5"
+    },
+    {
+      "path": "include/Source/PrimaryGeneratorAction.hh",
+      "sha256": "eb97b0966a2ee043e780d8409d164fa31e7ac9ad3fc8f554f99ffe11bc436d9e"
+    },
+    {
+      "path": "include/Source/SourceManager.hh",
+      "sha256": "b30c1294ee3161d1cae1eee41880afbd808bc2a85f845f557b65da80c9db88fc"
+    },
+    {
+      "path": "include/Source/SourceMessenger.hh",
+      "sha256": "19ff9f5f5cad362875d8ab472ac746ce5ac21d4b5f8a93795309c07c8cf450d3"
+    },
+    {
+      "path": "include/Templates/ArrayTemplate.hh",
+      "sha256": "1eab3879894ec4101442d74d6c3726ddebce4dd2b4f18d952fd6e24d2c6821df"
+    },
+    {
+      "path": "include/Templates/GDMLTemplate.hh",
+      "sha256": "bbaebd2a3537ee28536a05952d4471726c3fd5fbaa1fc4fb9d5b33a2c2ded21a"
+    },
+    {
+      "path": "include/Templates/GeometryTemplate.hh",
+      "sha256": "a0660fabee5d633e1116cb0043792de6ca3b0c1181af42b4d86bb5c56a826c77"
+    },
+    {
+      "path": "include/Templates/HierarchicalVolumeTemplate.hh",
+      "sha256": "d84409b8b5dd3f2ca212e2d8da6cc33d3e66084c56caee7c30f524880a0a0c55"
+    },
+    {
+      "path": "include/Templates/LayeredDeviceTemplate.hh",
+      "sha256": "9c206a701a4a767a47b09db5ef3671c5cb3dcd06fdb48326e6b39f85b4f8355f"
+    },
+    {
+      "path": "include/Templates/ShieldingTemplate.hh",
+      "sha256": "e2a10108677fd83b13eae5f3393f32c8a3be5a9b8d30e6ea2b899775f5474868"
+    },
+    {
+      "path": "include/Templates/SimpleBoxTemplate.hh",
+      "sha256": "6e2ffba72099e86328f5f5513d68cd724f00544b1b5870b7ccb6f064f84c36bc"
+    },
+    {
+      "path": "include/Templates/TemplateFactory.hh",
+      "sha256": "889e6a9a8feb7e4a757e65a9ed7c30ede85196999fda73a6ebff40b49207eec1"
+    },
+    {
+      "path": "include/Utils/CommandParser.hh",
+      "sha256": "051fbd267a947b36d2f74fef4c3e1b1b3522ea6047788d38dd67c090cf81d38f"
+    },
+    {
+      "path": "include/Utils/FileUtils.hh",
+      "sha256": "18666c7e1f105dc68d7dbe0eb86ba585f02a417f76b97543ebb6db1a25056600"
+    },
+    {
+      "path": "include/Utils/G4NameUtils.hh",
+      "sha256": "b243b6b8c65c9cd95794bec679a05fcaca8a955f96592b072168515fcd0d850f"
+    },
+    {
+      "path": "include/Utils/StringUtils.hh",
+      "sha256": "8eef99d91a58377b0daf958804f9af50019a8f9d9d84363a907bf58c626bb926"
+    },
+    {
+      "path": "include/Utils/UnitParser.hh",
+      "sha256": "4d41455ca364fc936c776982886239f20cef7dfaaefa0a86eb247d7aac3fc7f8"
+    },
+    {
+      "path": "main.cc",
+      "sha256": "202a8e13c6ab9aff756cfbfc0fa0a57b67d0f9a576ee48fdb9f0a7b161db5714"
+    },
+    {
+      "path": "src/Actions/ActionInitialization.cc",
+      "sha256": "699d63b15ba9fe5a55535ba9ce426cc602ce2c48b8dd9cf117cf43d465dd9b33"
+    },
+    {
+      "path": "src/Actions/EventAction.cc",
+      "sha256": "611315ebf2cc866ce399e0c71d82d0adcdaed6f3b2a36b469c198a64a4e59981"
+    },
+    {
+      "path": "src/Actions/RunAction.cc",
+      "sha256": "80f8b3c57dc57d438b71c809d3e9651a60a00646d72f2106a95218199a8edf59"
+    },
+    {
+      "path": "src/Actions/RunProgress.cc",
+      "sha256": "8ebb1b25714cf1f9dba39dcc9d1cf5615ee37729fc56692d1e7508787f686bce"
+    },
+    {
+      "path": "src/Actions/SteppingAction.cc",
+      "sha256": "2ff451f32e0aba6722ac3977f1c02c0d98b132929cce9bfabdce6eba61e97ebd"
+    },
+    {
+      "path": "src/Actions/TrackingAction.cc",
+      "sha256": "98b950b80cfa6daf34d28d15b62c5c400f2419c716f6860188f3a0c5a703c761"
+    },
+    {
+      "path": "src/Actions/WorkerRunContext.cc",
+      "sha256": "884670bbe0a3a134e689e8cf334505d4a76a97f2734b3817c80ee6d224a6cc41"
+    },
+    {
+      "path": "src/Biasing/BiasingImportance.cc",
+      "sha256": "d7089f184925c4f047338c9140bcfadeee0c0d399403573f8ce42db154f7686e"
+    },
+    {
+      "path": "src/Biasing/BiasingManager.cc",
+      "sha256": "3c0aa7645c5c0cfe53068a27f8578d8cff5bb05a5f1e7f9d8cb090871fa8566c"
+    },
+    {
+      "path": "src/Biasing/BiasingMessenger.cc",
+      "sha256": "b4cf99ae72426f01db1a6ba24ded153d3dc22f284c817682b86e08b6809e10f6"
+    },
+    {
+      "path": "src/Biasing/BiasingMultiParticleXS.cc",
+      "sha256": "ede998d0a4814fc2bc3b90eb93fb5d24bc6a2ee350222cf4be7901f08dc2cd30"
+    },
+    {
+      "path": "src/Biasing/BiasingRegion.cc",
+      "sha256": "9f0033201506d508452b4ac44f4b73e7071621702a19e6b1d3e5b3e4922d17f7"
+    },
+    {
+      "path": "src/Biasing/BiasingXS.cc",
+      "sha256": "1961f36dca8bcae83538c3de765c7c1d982e0082d8be07f915abbc3a6421497b"
+    },
+    {
+      "path": "src/Biasing/EffectiveBiasing.cc",
+      "sha256": "ddf43095c287a85cfc337a32a6dfc4967291336f06670a12f9a12adb9c4bdc87"
+    },
+    {
+      "path": "src/Config/ConfigManager.cc",
+      "sha256": "a81f5798dadfb224ea539f2098a5987b0fb23b063fad08ad5807f6cdfc05d284"
+    },
+    {
+      "path": "src/Config/ConfigValue.cc",
+      "sha256": "1926e59b0abc1d28ddbbc0ee5be93543f0567404bb8eaeb0d1ec926c42b9c1a5"
+    },
+    {
+      "path": "src/Config/EffectiveConfig.cc",
+      "sha256": "0672df7a2f7430cb6e24f75e5724ded733a3269c84c03dd5ec08a16397b5aaa4"
+    },
+    {
+      "path": "src/Config/IniReader.cc",
+      "sha256": "b32018dc026e15881e5243125406d1c654101fbe31c50b8f5ef5a2d85bb9684a"
+    },
+    {
+      "path": "src/Config/InputProvenance.cc",
+      "sha256": "c1051668c8601acac3c1225e7aff3e0f9016496d5afbf39e25dd869d463e810f"
+    },
+    {
+      "path": "src/Core/AppMessenger.cc",
+      "sha256": "ba167f560b6725459beeda0154abbb79c7706b0aa9fe318e2ae753d8a4bfe72a"
+    },
+    {
+      "path": "src/Core/EffectiveSimulation.cc",
+      "sha256": "280e388da61ea4988c868b609f3eeac408ce80e3e7ad7cdaf2842f463e07c170"
+    },
+    {
+      "path": "src/Core/Geant4DataLocator.cc",
+      "sha256": "027a444c377b61fbb90ccbfa5d7b4718afb896964b97d41fb05f338b7f049477"
+    },
+    {
+      "path": "src/Core/MacroPreflight.cc",
+      "sha256": "939c247a2ded98a78129ca7d9af0b62308e7c44cdf6969cae283d8adcd972e2c"
+    },
+    {
+      "path": "src/Core/RandomCommandGuard.cc",
+      "sha256": "2f514d2172495ae2ad60f8588e95554dd1db198993d45d96342c9e71fba65469"
+    },
+    {
+      "path": "src/Core/SimulationContext.cc",
+      "sha256": "725d032f6eaec573774658c754edddfdc134a020424ec95316beb1e3d39df0ff"
+    },
+    {
+      "path": "src/Core/SimulationManager.cc",
+      "sha256": "232be3e31eaa37b3f568e29a86a8b01de4b4875c5c29930675509059bb06d624"
+    },
+    {
+      "path": "src/Detector/DetectorConstruction.cc",
+      "sha256": "3034c1fb40bef368b5d2f5c88e1bba87be667aa523cb42fa375f68922acc3e36"
+    },
+    {
+      "path": "src/Detector/DetectorMessenger.cc",
+      "sha256": "8319c821f9bea7bbb3d8803f580ee79f3589e73d57d4821056109c07e3e5ee24"
+    },
+    {
+      "path": "src/Field/FieldConfig.cc",
+      "sha256": "a0a3cd7daad1e467aeff64a5ae9297ab9797bd5475674b2f05939d54f75d5708"
+    },
+    {
+      "path": "src/Field/FieldSetup.cc",
+      "sha256": "c41c1af12a3b4db55903b3c57b8d6f21818f81cb79f242c83add578dabdc2b74"
+    },
+    {
+      "path": "src/Geometry/GdmlIO.cc",
+      "sha256": "32ada38ec0710ee7265061c4c88d3363c3d20542425d64ea8273786176982815"
+    },
+    {
+      "path": "src/Geometry/GdmlInputCapture.cc",
+      "sha256": "a0ee9349399e137f3ff34c3ffd2d347e097602d0d63566705b120d9df4fbb855"
+    },
+    {
+      "path": "src/Geometry/GeometryConfig.cc",
+      "sha256": "217870e255baa4cc90f06b86f87745d0ad8e11ca246abc142e1ac2e6c00d267f"
+    },
+    {
+      "path": "src/Geometry/GeometryConfigDiagnostic.cc",
+      "sha256": "24d7d61b22abd5d9b572d64429a0792bfbbb058288003feb3203a01ea931edf2"
+    },
+    {
+      "path": "src/Geometry/GeometryExport.cc",
+      "sha256": "81f5da6b6884a8ad36a76528c1077dcdeea1315da1cf22148ff1a7035da5fd91"
+    },
+    {
+      "path": "src/Geometry/GeometryManager.cc",
+      "sha256": "cd5ded2deeb0da71e5be00e09f6112dcd318e6a5e2c37e9dcbae00ea4380016a"
+    },
+    {
+      "path": "src/Geometry/GeometryMessenger.cc",
+      "sha256": "d8a1d835e7261c4a75e304f5bb01e3215714089d4fe7cdfbec9cb180d2befd69"
+    },
+    {
+      "path": "src/Geometry/GeometryRegistry.cc",
+      "sha256": "97e6a1058b23ee51bde1e217eeeb8ab6e44e6f887b08d37a804353ac46c891a2"
+    },
+    {
+      "path": "src/Geometry/GeometrySafety.cc",
+      "sha256": "c8dfa2360a0bae6697c0dd2f6f74f9b0356a65114fb520bb29a7ed63560b313c"
+    },
+    {
+      "path": "src/Geometry/GeometryUtils.cc",
+      "sha256": "21f7b89511814d051021168ae5aebc8ab8901e0cdb3f61ec9613f7eeb116dc91"
+    },
+    {
+      "path": "src/Geometry/StlReader.cc",
+      "sha256": "5b458821568e832e8da85634eaae2d1c748786d15d088e6a06b8dd7eed2e5b2a"
+    },
+    {
+      "path": "src/Geometry/VolumeBuilder.cc",
+      "sha256": "64226e08194e5740db630b2fad90644552e63bd005d3464f198882dfcd06f6c0"
+    },
+    {
+      "path": "src/Geometry/VolumeNode.cc",
+      "sha256": "1e10078863fa1de476098f8087899a0f314e9ed3b6c4ee39c1423897175511d0"
+    },
+    {
+      "path": "src/Hits/ParticleHit.cc",
+      "sha256": "ec12242c0c64d979436d45be00c9de57e772b14dc3c6bacae2681d3092bd1733"
+    },
+    {
+      "path": "src/Hits/ParticleHitCollection.cc",
+      "sha256": "8360e2745f102884506f758a368336df57a85a12529a5de1d0e2eb55fcdb998b"
+    },
+    {
+      "path": "src/Hits/SensitiveDetector.cc",
+      "sha256": "cdd3969d89acbdbe9a3fe1e8e9ffa8435f3717e6d29766d613986ffe6ef5f132"
+    },
+    {
+      "path": "src/Hits/TrackInformation.cc",
+      "sha256": "5bae158b36f6605ad8793e885abdc82eabe5413a864ef1c4b8fa2154fae09f91"
+    },
+    {
+      "path": "src/Materials/MaterialCommandParser.cc",
+      "sha256": "73e619d2b6fcd2710650ddb621876c5b8d332d8904cbc4b1c7a8dcf107ee85b7"
+    },
+    {
+      "path": "src/Materials/MaterialFactory.cc",
+      "sha256": "eee8b9fa8c8a138c98bcfba02d5ae43ed679fb82dcac17e56c8980cf00fd8db8"
+    },
+    {
+      "path": "src/Materials/MaterialIniReader.cc",
+      "sha256": "fb4e956bbdbcf1d0d2130c1bdab9557925bd57168c043fb043d7cf289ca28b42"
+    },
+    {
+      "path": "src/Materials/MaterialManager.cc",
+      "sha256": "b49a395218bd1b72fe85b5575f5426f0cb3109b2abe1ffbb9d4a3fa137f0f63d"
+    },
+    {
+      "path": "src/Materials/MaterialMessenger.cc",
+      "sha256": "97a1414bc6bde4f68024d7364aa9953f08addccadc172dc2fc0cd6b5d8551594"
+    },
+    {
+      "path": "src/Output/AnalysisOutput.cc",
+      "sha256": "bcc96058fb0e05da188e33b51781883eae86f86f994a9b12d0668fd79ea6ef31"
+    },
+    {
+      "path": "src/Output/CsvWriter.cc",
+      "sha256": "cc26f8304c394b30c3514ab2e8f219641205a97705ba7b78093810788b9ad6a7"
+    },
+    {
+      "path": "src/Output/EffectiveOutput.cc",
+      "sha256": "8b605849f3c7928dcaa75249195fbd6100ef9ff18f425f7e7ccd8b81fd627498"
+    },
+    {
+      "path": "src/Output/Histogram1D.cc",
+      "sha256": "e81243a0a25bf62b586d7e3c6ed58cf79490b07c9f47c1e34c12b607f07ba756"
+    },
+    {
+      "path": "src/Output/Histogram2D.cc",
+      "sha256": "589089b18de3a5a0c336a181201a5156f3ce075885a9e02be73f405c1d7a1645"
+    },
+    {
+      "path": "src/Output/OutputManager.cc",
+      "sha256": "9a54c79b68ab5c4c883f55e3215914c8d8af4b800034e4360aad7f4caa7fa128"
+    },
+    {
+      "path": "src/Output/OutputMessenger.cc",
+      "sha256": "d6a0385e6ec81d997c3f2bae9bc39b4a4a96ae05d8aa9681621dd176ef939ac1"
+    },
+    {
+      "path": "src/Output/RunSummary.cc",
+      "sha256": "8d838f91f95ffcfbb7e3dd95d6c685f963138b33795ad61a1265e25c5b1676ed"
+    },
+    {
+      "path": "src/Physics/ElectronCapture.cc",
+      "sha256": "a153e29285128d2bc4a63f7a36ebf5e25df257b98a32599f6afbde4df706d9c2"
+    },
+    {
+      "path": "src/Physics/MicroElecPhysics.cc",
+      "sha256": "faa23af33e4aa13205dd60661dfdf29387e75f58805c516843fde6db9e75ecdb"
+    },
+    {
+      "path": "src/Physics/PhysicsFactory.cc",
+      "sha256": "04ce19c9f0c0f6bb3cfc63629a56dab74dadb1391d6dba5f23632e32953095ea"
+    },
+    {
+      "path": "src/Physics/PhysicsList.cc",
+      "sha256": "d9f3adc3b1dc27c0291a07b1ec46da8f3b38534fe3e745e5bbbd986638029fa9"
+    },
+    {
+      "path": "src/Physics/PhysicsManager.cc",
+      "sha256": "ddff732bf98dc100f76247375844b5d3341b1df39cf2144106a892d498e48bf4"
+    },
+    {
+      "path": "src/Physics/PhysicsMessenger.cc",
+      "sha256": "214a6b26a58f8650a5b9b9a9a0b6998d27fcd5318e9f14d1145253fbd617913a"
+    },
+    {
+      "path": "src/Physics/ProcessDump.cc",
+      "sha256": "66584a4b4c6378692d4b860cd20f42c5cb204eeef28bc97555362884002f27e4"
+    },
+    {
+      "path": "src/Scoring/DisplacementScorer.cc",
+      "sha256": "6a95ed51835c8ee17bf44bc3d321db41d2b62ace4ce91be86592344f678ba484"
+    },
+    {
+      "path": "src/Scoring/DoseScorer.cc",
+      "sha256": "9bec14defcc3cecd7cf2e175d405750921cbb7490493c11dd1bb8abc2dba0a64"
+    },
+    {
+      "path": "src/Scoring/EdepScorer.cc",
+      "sha256": "26fe947bc47f19e0509e5589bc3614f9d56d6d2e8d539f8485e4252f7e50ecce"
+    },
+    {
+      "path": "src/Scoring/EffectiveScoring.cc",
+      "sha256": "b39a7949faeb6b6c34ae83691cccb620109b7a2e872dfab3643f04ccd2edacbc"
+    },
+    {
+      "path": "src/Scoring/FluenceScorer.cc",
+      "sha256": "53ab6bbe407d8e514e27ef2508c161ad7b3f2e3a60c9b99fe4093458195e4fef"
+    },
+    {
+      "path": "src/Scoring/HistoryStatistics.cc",
+      "sha256": "91fdcc6421507286ffddc1a021e716acac6d2bb43f4ac4a841ac8001b7b4eaaa"
+    },
+    {
+      "path": "src/Scoring/LETScorer.cc",
+      "sha256": "7d039c70bf76ee4d328d6ed8a56ee7ef9cfff67f39367ff5c22c1bc1fabec757"
+    },
+    {
+      "path": "src/Scoring/NielTable.cc",
+      "sha256": "c49924810f616fdefd9381869c6c2524f4307d39c47081b0fdccbc18df2df1a4"
+    },
+    {
+      "path": "src/Scoring/ParticleAggregator.cc",
+      "sha256": "df200335f60eb3e3ade4a9e238f3b353585aa21d57d188357dccfa284932520d"
+    },
+    {
+      "path": "src/Scoring/PhaseSpace.cc",
+      "sha256": "6f518a5eea257f62cdfd7b0ad86d81d80525852495884367845ca7444d5192c2"
+    },
+    {
+      "path": "src/Scoring/ScorerBase.cc",
+      "sha256": "b7af30c1fea65c1d5c46fa41f3f9382c09568170094659c32dbd28ba097ea2d0"
+    },
+    {
+      "path": "src/Scoring/ScoringManager.cc",
+      "sha256": "d520792a79ba8eecf477b34a83f1c3b4060e026ef083c9d3a2f3d53d7f478ff0"
+    },
+    {
+      "path": "src/Scoring/ScoringMeshConfig.cc",
+      "sha256": "b1b9f95cfed9e12d5f5069d7aa36b369023eeb240b297e14604099c9d81a9b50"
+    },
+    {
+      "path": "src/Scoring/ScoringMeshExport.cc",
+      "sha256": "d7ba2b74ee18a5101a4ffe69ad0b909b3fae4c29f834b2a2acfb3023ae95eda4"
+    },
+    {
+      "path": "src/Scoring/ScoringMessenger.cc",
+      "sha256": "c9516351af59ad2124065a3a1cc52a2dd7a2d4eedd93de47c50621ff402ee6da"
+    },
+    {
+      "path": "src/Scoring/ThreadLocalScoringContext.cc",
+      "sha256": "1cd9a1b47b3bdc0fd9bf2cbe7eac12b9460dc8babc6e9f08c6603c01d184669b"
+    },
+    {
+      "path": "src/Scoring/TrajectoryRecorder.cc",
+      "sha256": "51d90742935f10d3185acb645d3365ed05532a11b8a58492c9638d6b73a79e90"
+    },
+    {
+      "path": "src/Source/PrimaryGeneratorAction.cc",
+      "sha256": "caa2578057f75dfd87ad44bbe8bf945bfa6e002ec2b3ab5c39db6507b0199951"
+    },
+    {
+      "path": "src/Source/SourceManager.cc",
+      "sha256": "3ce50c0ff018020aaa4b80755f63995e491b7bba1b03e75f1c4beb0ab0e078e4"
+    },
+    {
+      "path": "src/Source/SourceMessenger.cc",
+      "sha256": "f2dc206165bb5873682bcb2c11ebd553babdecdc9a4e3137a527ca0e8e9b327a"
+    },
+    {
+      "path": "src/Templates/ArrayTemplate.cc",
+      "sha256": "d05ec0b18d3b6614ff917a6a6a56b9670d3163250cc06b277789f3a12f71b930"
+    },
+    {
+      "path": "src/Templates/GDMLTemplate.cc",
+      "sha256": "f5cc5157397dd69e78b5c21ef5648dc29c924e5d6c6f38a476be3757f996c816"
+    },
+    {
+      "path": "src/Templates/GeometryTemplate.cc",
+      "sha256": "3f4f551a2e5912321f82c5e802bec044545e86adfa38029f8f161a29509c30fe"
+    },
+    {
+      "path": "src/Templates/HierarchicalVolumeTemplate.cc",
+      "sha256": "87c3bb70ea31664234684a23dbc9b350d4bde5236039fb7335337451a9ca2de5"
+    },
+    {
+      "path": "src/Templates/LayeredDeviceTemplate.cc",
+      "sha256": "92f471e616e365b346d1a7c28e46f2098fd0bd423f2ddd88fecfef3e7d086656"
+    },
+    {
+      "path": "src/Templates/ShieldingTemplate.cc",
+      "sha256": "9a5147e93ebc3de28e3de24b452ac7be556cd6cd3400ac9912898da6d732c31b"
+    },
+    {
+      "path": "src/Templates/SimpleBoxTemplate.cc",
+      "sha256": "b831c66f67ee760741584ce9c6e93cc17bbc8db1ea16ac4a6a6cb732d8ce435a"
+    },
+    {
+      "path": "src/Templates/TemplateFactory.cc",
+      "sha256": "84ee5550392f69d5ab1678a418421433092afb223306c0c2274493735a6f541f"
+    },
+    {
+      "path": "src/Utils/CommandParser.cc",
+      "sha256": "710668b94d12c3ceeb2fbaa99bfe55cd39c2c989ba71a8d107b86c16e63703f0"
+    },
+    {
+      "path": "src/Utils/FileUtils.cc",
+      "sha256": "ce09aa3929150e8f4b2febc9eacd5650edf9623c043a1c14dd397053e911c57b"
+    },
+    {
+      "path": "src/Utils/G4NameUtils.cc",
+      "sha256": "9b04f598d2c15599e08d79ada8bd278b904cb4b8781beccbf32864f7a5eb3f70"
+    },
+    {
+      "path": "src/Utils/StringUtils.cc",
+      "sha256": "d9a7056b9b5fe73ada6bf7d36e49c9ad1429807fc303223bb8b3bd823a23feb8"
+    },
+    {
+      "path": "src/Utils/UnitParser.cc",
+      "sha256": "ef657f5cfa443d4ecec8acc3e472b70776e6b9235e180e5965daf11f3997981f"
+    }
+  ],
+  "source_fingerprint": "890635b6d521659e43cf735d07f862c6ebd5959e6c5ea68d023d55332a8a930a",
+  "current_tests_content_fingerprint": "2402bc3c9d69b0696f46b2cd4d777239366c4508cd05e22b4bb6404306e6b0ea",
+  "base_tests_content_fingerprint": "210da0c83b5c52c1fbf5999c8b2d11bd48eccb428727ab65df414ce1410f5e46",
+  "only_code_test_change": [
+    "scripts/test_k1_staging_alias.py"
+  ],
+  "test_sha256": "0d5cb4db40d50417e16a316ec8825ddd30c7265a0b8d468679529288e9a95de2",
+  "original_test_sha256": "0e33fc7c8990cfe9d5aed535561420f7c34e38b225872ce33056a179f9672d8d",
+  "original_assert_ast_count": 17,
+  "current_assert_ast_count": 39,
+  "old_asserts_retained": true,
+  "matrix_scope": "Original 730 executions keep their original test identity. New targeted reports cover appended regression, not a full-matrix rerun.",
+  "native_scope": "Seventh native identity mapping retains its original scope and corrections; unchanged product byte mapping does not claim a new native interaction.",
+  "performance_scope": "No product code changed; no new performance benchmark or physical-validation claim."
+}

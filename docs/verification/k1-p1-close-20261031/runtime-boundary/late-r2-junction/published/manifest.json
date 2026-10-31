@@ -1,0 +1,86 @@
+{
+  "history_trust": "stale_requires_revalidation",
+  "integrity": "sha256_not_signature",
+  "members": [
+    {
+      "bytes": 311,
+      "captured_text": false,
+      "distribution": "unknown",
+      "path": "resources/r0000-main.ini",
+      "redistribution_override": false,
+      "role": "main",
+      "sha256": "c5e98269d34f76f0f39ad4293ea422e4a581e7a16733541d9956e25a1b103848",
+      "source_sha256": "2aec87d351caae5f324a864ec061cb90ba7129664ab9d7f74455356f40039d71"
+    },
+    {
+      "bytes": 34,
+      "captured_text": false,
+      "distribution": "unknown",
+      "path": "resources/r0001-run.mac",
+      "redistribution_override": false,
+      "role": "macro",
+      "sha256": "e20ab1d67de04cfcea45aba011058295a4ad10b7a47ea1c6799e4b59810c83d1",
+      "source_sha256": "03e748bfe181fc0f397c326157189d27128d9fb7a612fd6f9c61895a4e5d79e4"
+    },
+    {
+      "bytes": 30,
+      "captured_text": false,
+      "distribution": "unknown",
+      "path": "resources/r0002-events.mac",
+      "redistribution_override": false,
+      "role": "macro",
+      "sha256": "21188795beffe0dfbb3a1a3720e0f1f012d35e1604b0e1b8aea03223261eb074",
+      "source_sha256": "21188795beffe0dfbb3a1a3720e0f1f012d35e1604b0e1b8aea03223261eb074"
+    },
+    {
+      "bytes": 38,
+      "captured_text": false,
+      "distribution": "unknown",
+      "path": "resources/r0003-materials.ini",
+      "redistribution_override": false,
+      "role": "materials",
+      "sha256": "e0890dd3f187f52a61220bf0ee29da1ad7427117819e7a906d7dd134b6b08393",
+      "source_sha256": "e0890dd3f187f52a61220bf0ee29da1ad7427117819e7a906d7dd134b6b08393"
+    },
+    {
+      "bytes": 98,
+      "captured_text": false,
+      "distribution": "unknown",
+      "path": "resources/r0004-geometry.ini",
+      "redistribution_override": false,
+      "role": "geometry",
+      "sha256": "db8821b23e1c0831b35ca8ca4e84d20037f36fe74b2e06c4981ed2207a08aa46",
+      "source_sha256": "db8821b23e1c0831b35ca8ca4e84d20037f36fe74b2e06c4981ed2207a08aa46"
+    },
+    {
+      "bytes": 5506,
+      "path": "workspace.json",
+      "role": "snapshot",
+      "sha256": "2f75d5ca10311e836ac3ebafca84c381b3dc4c0580a28b07334f844a6a857aa9"
+    },
+    {
+      "bytes": 71,
+      "path": "validation_records.json",
+      "role": "validation_history",
+      "sha256": "e7153946374c1e029196ca4351f9632e5818c56159662d01b4d101b506e50146"
+    },
+    {
+      "bytes": 329,
+      "path": "replay.py",
+      "role": "replay_entry",
+      "sha256": "d6bea3d772050305bca3b9bfa4d3d0bc85cdbd3f5fdc621795ee3ef193b452ff"
+    }
+  ],
+  "outputs_included": false,
+  "replay_entry": "replay.py",
+  "replay_inputs": {
+    "config": "resources/r0000-main.ini",
+    "macro": "resources/r0001-run.mac",
+    "working_directory": "."
+  },
+  "replay_verified": false,
+  "schema": "g4usim_experiment_bundle",
+  "snapshot": "workspace.json",
+  "validation_history": "validation_records.json",
+  "version": 1
+}

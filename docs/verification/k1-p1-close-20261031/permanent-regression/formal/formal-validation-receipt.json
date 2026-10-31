@@ -1,0 +1,86 @@
+{
+  "head": "5644e1e52b9c2dd5b463217e9e601c8116f8a913",
+  "git_status_short": "",
+  "test_sha256": "0d5cb4db40d50417e16a316ec8825ddd30c7265a0b8d468679529288e9a95de2",
+  "product_sha256": "5c1dff0338e80a673ba8f3427aeb7bfe1abe9d2b5315efca564310be8118385a",
+  "commands": [
+    {
+      "name": "windows-canonical-runner",
+      "command": [
+        "D:\\Geant4\\G4UniversalSim\\gui\\.venv\\Scripts\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\scripts\\run_m0_tests.py",
+        "--profile",
+        "static",
+        "--case",
+        "k1_staging_alias",
+        "--report-root",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-p1-permanent-regression-20261031\\formal\\windows-reports",
+        "--require-tracked-sources",
+        "--fail-on-skip"
+      ],
+      "started_utc": "2026-10-31T12:41:00.726191+00:00",
+      "finished_utc": "2026-10-31T12:41:07.669608+00:00",
+      "actual_exit_code": 0,
+      "raw_log_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-p1-permanent-regression-20261031\\formal\\windows-canonical-runner.log",
+      "raw_log_sha256": "a6e369deb76cb76abb712f3cd85ca57df76f70904dda779c8efcc6b0d9b4532f"
+    },
+    {
+      "name": "windows-strict-gate",
+      "command": [
+        "D:\\Geant4\\G4UniversalSim\\gui\\.venv\\Scripts\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\scripts\\check_report_evidence.py",
+        "--report-root",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-p1-permanent-regression-20261031\\formal\\windows-reports\\20261031-204100-503276c4"
+      ],
+      "started_utc": "2026-10-31T12:41:07.677612+00:00",
+      "finished_utc": "2026-10-31T12:41:07.836058+00:00",
+      "actual_exit_code": 0,
+      "raw_log_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-p1-permanent-regression-20261031\\formal\\windows-strict-gate.log",
+      "raw_log_sha256": "22072e9957811fb9261643e9a8e9b2ccd101ede914d23c97ed358bc7b1649178"
+    },
+    {
+      "name": "wsl-linux-canonical-and-gates",
+      "command": [
+        "wsl.exe",
+        "-d",
+        "Ubuntu",
+        "--",
+        "/home/u123/venvs/g4-f4-qt-6.11.1-20261030/bin/python",
+        "-B",
+        "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-p1-permanent-regression-20261031/formal/linux_formal.py"
+      ],
+      "started_utc": "2026-10-31T12:41:07.843053+00:00",
+      "finished_utc": "2026-10-31T12:41:17.978004+00:00",
+      "actual_exit_code": 0,
+      "raw_log_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-p1-permanent-regression-20261031\\formal\\wsl-linux-canonical-and-gates.log",
+      "raw_log_sha256": "8ea178e5d761f9ba7751564454e9f90431445ade0ad470e12773add4e39e42ea"
+    },
+    {
+      "name": "windows-recheck-linux-copy-gate",
+      "command": [
+        "D:\\Geant4\\G4UniversalSim\\gui\\.venv\\Scripts\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\scripts\\check_report_evidence.py",
+        "--report-root",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-p1-permanent-regression-20261031\\formal\\wsl-linux-reports-copy\\20261031-204115-b1ea9108"
+      ],
+      "started_utc": "2026-10-31T12:41:17.985515+00:00",
+      "finished_utc": "2026-10-31T12:41:18.105466+00:00",
+      "actual_exit_code": 0,
+      "raw_log_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-p1-permanent-regression-20261031\\formal\\windows-recheck-linux-copy-gate.log",
+      "raw_log_sha256": "ae29c78b2199bf078b902ce8a08d1eb0861aa7737c668486ee6d3f4983424177"
+    }
+  ],
+  "windows_report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-p1-permanent-regression-20261031\\formal\\windows-reports\\20261031-204100-503276c4\\report.json",
+  "windows_report_sha256": "bbf6e7430e9c6ea78cf982afd2cb21eb901aa9cea3fc20cf00b791ba12f1fc29",
+  "wsl_linux_copied_report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-p1-permanent-regression-20261031\\formal\\wsl-linux-reports-copy\\20261031-204115-b1ea9108\\report.json",
+  "wsl_linux_report_sha256": "75cc78a08a66d085b203e614b334b62b23e5b3b7d0bc77ef162c8141b2eaf4d3",
+  "source_fingerprint": "890635b6d521659e43cf735d07f862c6ebd5959e6c5ea68d023d55332a8a930a",
+  "tests_content_fingerprint": "2402bc3c9d69b0696f46b2cd4d777239366c4508cd05e22b4bb6404306e6b0ea",
+  "windows_assertions": 36,
+  "linux_assertions": 33,
+  "backend_simulation": "not_started; static case does not require executable",
+  "scope": "canonical single-case static reports, not a full matrix rerun"
+}

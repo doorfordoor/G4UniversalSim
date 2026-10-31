@@ -1,0 +1,53 @@
+{
+  "validation_receipt_sha256": "19f54a0ca98fe30a0c60079e52899c2efe03e6505e27fd70a9a4f0c4cee09cb9",
+  "checks": [
+    {
+      "name": "old-r2-junction",
+      "log_sha_verified": true,
+      "assertions": 21,
+      "verdicts": [
+        "reproduced_old_r2_regression_published"
+      ],
+      "error": [
+        null
+      ]
+    },
+    {
+      "name": "current-r3-junction",
+      "log_sha_verified": true,
+      "assertions": 21,
+      "verdicts": [
+        "current_r3_correctly_refused_without_publication"
+      ],
+      "error": [
+        "Bundle refuses reparse point: C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-p1-resumed-validation-20261031\\late-r3-junction\\external-source"
+      ]
+    },
+    {
+      "name": "current-r3-content-change",
+      "log_sha_verified": true,
+      "assertions": 14,
+      "verdicts": [
+        "current_r3_correctly_refused_without_publication"
+      ],
+      "error": [
+        "Resource changed before publication: C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-p1-resumed-validation-20261031\\late-r3-content\\external-source\\materials.ini"
+      ]
+    },
+    {
+      "name": "current-r3-real-alias-relocation",
+      "log_sha_verified": true,
+      "assertions": 15,
+      "verdicts": [
+        "current_r3_real_8dot3_export_and_relocation_passed"
+      ],
+      "error": [
+        null
+      ]
+    }
+  ],
+  "total": 71,
+  "source_receipts_equal_and_r3_stage_absent": true,
+  "protected_files_sha_verified": true,
+  "read_only_reviewer_no_dynamic_run": true
+}

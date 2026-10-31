@@ -1,0 +1,29 @@
+{
+  "schema": "k1_p1_review_resumption_v1",
+  "created_utc": "2026-10-31T12:28:22.475693+00:00",
+  "head": "e93072867021ae1978a7de3834c51caf0f9fb839",
+  "user_report": "已收到官方解除通知",
+  "notice_verified_independently": false,
+  "authority": "Current user reply; not inferred from quota or unauthenticated account page",
+  "account_page_observation": "Redirected to login; no account permissions inspected",
+  "safeguard_configuration_changed": false,
+  "new_review_scope": [
+    {
+      "path": "gui/g4usim_gui/core/experiment_bundle.py",
+      "sha256": "5c1dff0338e80a673ba8f3427aeb7bfe1abe9d2b5315efca564310be8118385a",
+      "same_as_seventh_freeze": true
+    },
+    {
+      "path": "gui/smoke_tests/smoke_k1_relocation.py",
+      "sha256": "4fddfec77f40d00e0f052b147386aaf3d3adddd305bc656fe57f480fdf0732ad",
+      "same_as_seventh_freeze": true
+    },
+    {
+      "path": "scripts/test_k1_staging_alias.py",
+      "sha256": "0e33fc7c8990cfe9d5aed535561420f7c34e38b225872ce33056a179f9672d8d",
+      "same_as_seventh_freeze": true
+    }
+  ],
+  "prior_refusal_records_preserved": true,
+  "on_new_refusal": "Stop and preserve exact error; no automatic retry or rerouting"
+}

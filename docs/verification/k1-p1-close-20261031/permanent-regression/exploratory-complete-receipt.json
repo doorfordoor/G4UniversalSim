@@ -1,0 +1,93 @@
+{
+  "head": "e93072867021ae1978a7de3834c51caf0f9fb839",
+  "git_status": " M scripts/test_k1_staging_alias.py\n",
+  "test_sha256": "0d5cb4db40d50417e16a316ec8825ddd30c7265a0b8d468679529288e9a95de2",
+  "current_product_sha256": "5c1dff0338e80a673ba8f3427aeb7bfe1abe9d2b5315efca564310be8118385a",
+  "old_assert_ast_count": 17,
+  "new_assert_ast_count": 39,
+  "old_asserts_unchanged": true,
+  "cases": [
+    {
+      "name": "windows-current",
+      "command": [
+        "D:\\Geant4\\G4UniversalSim\\gui\\.venv\\Scripts\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\tools\\test_assert_probe.py",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\scripts\\test_k1_staging_alias.py",
+        "--evidence-root",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-p1-permanent-regression-20261031\\windows-current-evidence"
+      ],
+      "started_utc": "2026-10-31T12:34:18.167735+00:00",
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "assertions": 36,
+      "assert_probe": "settrace_assert_lines_v3",
+      "raw_log_sha256": "b4d65ce93a6b7b5932d867ada3f4dbb383db25da391ce8eac83ce2a5f274aa6f",
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-p1-permanent-regression-20261031\\windows-current.log",
+      "test_sha256": "0d5cb4db40d50417e16a316ec8825ddd30c7265a0b8d468679529288e9a95de2",
+      "product_sha256": "5c1dff0338e80a673ba8f3427aeb7bfe1abe9d2b5315efca564310be8118385a"
+    },
+    {
+      "name": "wsl-linux-current",
+      "command": [
+        "wsl.exe",
+        "-d",
+        "Ubuntu",
+        "--",
+        "/home/u123/venvs/g4-f4-qt-6.11.1-20261030/bin/python",
+        "-B",
+        "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/tools/test_assert_probe.py",
+        "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/scripts/test_k1_staging_alias.py",
+        "--evidence-root",
+        "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-p1-permanent-regression-20261031/wsl-linux-current-evidence"
+      ],
+      "started_utc": "2026-10-31T12:34:23.581927+00:00",
+      "exit_code": 1,
+      "expected_exit_code": 0,
+      "assertions": 0,
+      "assert_probe": "settrace_assert_lines_v3",
+      "raw_log_sha256": "c645f2aad4e4b08343b0ce265075bec7ef8ec08e41bc09036d91c8b0ffbc0ddf",
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-p1-permanent-regression-20261031\\wsl-linux-current.log",
+      "test_sha256": "0d5cb4db40d50417e16a316ec8825ddd30c7265a0b8d468679529288e9a95de2",
+      "product_sha256": "5c1dff0338e80a673ba8f3427aeb7bfe1abe9d2b5315efca564310be8118385a"
+    },
+    {
+      "name": "wsl-linux-ext4-current",
+      "command": [
+        "wsl.exe",
+        "-d",
+        "Ubuntu",
+        "--",
+        "/home/u123/venvs/g4-f4-qt-6.11.1-20261030/bin/python",
+        "-B",
+        "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-p1-permanent-regression-20261031/linux_ext4_explore.py"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "assertions": 33,
+      "assert_probe": "settrace_assert_lines_v3",
+      "raw_log_sha256": "d98322850e49d168f12e3351ab0b748a4d3a2a80cae6b960e804d025d91f1eb9",
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-p1-permanent-regression-20261031\\wsl-linux-ext4-current.log",
+      "test_sha256": "0d5cb4db40d50417e16a316ec8825ddd30c7265a0b8d468679529288e9a95de2"
+    },
+    {
+      "name": "windows-old-r2",
+      "command": [
+        "D:\\Geant4\\G4UniversalSim\\gui\\.venv\\Scripts\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-p1-permanent-regression-20261031\\old_r2_same_test.py"
+      ],
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "assertions": 33,
+      "assert_probe": "settrace_assert_lines_v3",
+      "raw_log_sha256": "94e156660a473ab7582c2abcd5a3d121b912917d7e48ac9f2c8687e21b6225c9",
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-p1-permanent-regression-20261031\\windows-old-r2.log",
+      "test_sha256": "0d5cb4db40d50417e16a316ec8825ddd30c7265a0b8d468679529288e9a95de2",
+      "negative_control": "same_formal_test_failed_at_required_refusal_assertion"
+    }
+  ],
+  "scope": "exploratory dirty test change; not frozen canonical report",
+  "initial_wsl_drvfs_failure_retained": true,
+  "backend": "not_started"
+}

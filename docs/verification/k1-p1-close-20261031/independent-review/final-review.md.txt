@@ -1,0 +1,26 @@
+# K1 P1 恢复独立审查结论
+
+产品 SHA 5c1dff0338e80a673ba8f3427aeb7bfe1abe9d2b5315efca564310be8118385a 上的原 P1 资源路径缺陷，**代码修复与本次独立运行边界审查通过，可补足旧独审中断的专项签字**。没有发现当前 r3 产品的确定 P1 阻断缺陷。该结论不等于 K1 整阶段已关闭；正式防回归缺口见下项。
+
+## 发现
+
+- **[P2] 正式回归仍缺少本 P1 的精确时间边界用例**（scripts/test_k1_staging_alias.py:74–115）。该段仅把导出前已经存在的 linked destination 拒绝；r2 也会通过。已确认的晚变外部 receipt 行为是“收据已捕获、inspect 已验证、最终发布复核前，原外部源父目录变成指向 staging 的 junction”。本轮独立 late_boundary.py:43–98 已以真实夹具重放，具备可转为正式专项的最小实现。建议作为**阶段正式关闭前必要的持久防回归补充**，纳入现有 staging 专项/runner，而非仅以 out 下临时证据脚本作为以后自动回归覆盖。只需相关测试变更与受影响平台定向验证，不要求无依据重跑既有 730 次矩阵。P1 代码与独审缺口已闭合，正式防回归项需要主任务落实后再签整阶段。
+
+## 独立证据核验
+
+已读验证者三个适配器及复用的 archived Windows 8.3 脚本，独立复核所有四份落盘日志 SHA、适配器 SHA、唯一 v3 marker/入口数、实际 source receipts 与 protected 文件当前 SHA。记录见 independent-receipt-check.json，4 个进程 exit0，入口 21+21+14+15=71。并未以 exit0 单独判成功。
+
+1. old-r2-junction：加载旧 34db09d9，真实 NTFS junction 指向 staging，观察到 error=null/published=true，准确复现旧错误。
+2. current-r3-junction：加载当前 5c1dff03，同样的实际 junction/canonical inside-staging 条件，得到 Bundle refuses reparse point。target 不存在、该 stage 已消失；夹具链接移除、源目录恢复、全部源 SHA 前后一致。
+3. current-r3-content-change：同一时序普通材料文件字节变化，得到 Resource changed before publication；target 不存在、stage 已清理、源恢复。
+4. current-r3-real-alias-relocation：真实 8.3 samefile、writer 收据 canonical 长度 >260 UTF16、收据在 writer 返回时实际存在；长拼写 control 与短别名导出 inspect 通过，无 missing reads。复制成员 SHA 相等后令原输入和原导出路径不可读，moved 包 inspect/load 与资源归属通过。这里未启动后端，不冒充 GUI 或物理测试。
+
+## 代码裁决
+
+experiment_bundle.py:745 的 _no_links(path) 在 resolve 前执行，因此稳定存在的 late reparse 不会进入 canonical containment 的 continue；_no_links(staging) 同样在比较前检查。外部普通文件仍走 747 的 _read+原 SHA 比较；_read:125–136 保留普通单链接文件约束。writer 中间文件的 canonical identity 比较符合 package_writer.py:149–159 的收据，未改变 721 清理时机。最终失败进入 753–755 的清理，提交仍由 exclusive directory rename 控制；没有新增进程或事务所有者。
+
+Windows NTFS 行为已由新证据验证。POSIX 机制在代码上仍先拒绝 symlink，已有平台矩阵及静态 symlink 测试可按其原范围继承；本次未重跑 Linux，不能称此新晚变用例已在 POSIX 执行。更广泛的任意并发目录替换/TOCTOU 不在该专项保证之内。
+
+## 身份与交付
+
+HEAD e93072867021ae1978a7de3834c51caf0f9fb839，目标三文件与 2914b3962167325628ede699b1c14a9d224dec41 无差异，产品/测试未被本审查者更改。原始三个目标 SHA 和审查范围见 first-round-identity.json；新验证器与证据 SHA 见 supplemental-file-identities.json。用户报告解除通知的恢复依据已单独保留，本审查没有改变模型、账户、连接器或保护设置，未重试任何上游拒绝。

@@ -1,0 +1,21 @@
+# 追加审查 01：永久回归源码可冻结
+
+本追加意见不改写 final-review.md。当前唯一测试修改 SHA 0d5cb4db40d50417e16a316ec8825ddd30c7265a0b8d468679529288e9a95de2，与写者 exploratory-complete-receipt.json 对应；此字节的**源码独立审查通过，可由 root 冻结提交**。正式 clean runner 报告尚待提交后执行，故本文件不是对尚未产生收据的签字。
+
+## 新测试审查
+
+scripts/test_k1_staging_alias.py:24–94 的 late_receipt_link 先调用真实 inspect_bundle 完成捕获与闭包核验，再把独占 source 改名，建立指向 staging/resources 的真实目录链接（Windows junction / POSIX symlink），断言 samefile 与 canonical 相等。export 真实运行，不替换拒绝守卫或复制 containment 算法；只捕获期望 ValueError，非预期错误仍失败。finally 用 lexists 覆盖 dangling-link 情况，先只移除链接对象再恢复原目录；断言全部源 SHA 不变、源不再为 symlink/reparse。90–92 明确要求拒绝、无 target、无 staging。195 把其并入现有正式 case。未发现新测试缺陷。
+
+AST 独立比较原 17 个 assert 站点全部保留，追加后 39 个；git diff 73 行增加、0 行删除。产品及所有其他正式测试未改。
+
+## 探索结果已核验
+
+逐份日志原始 SHA 与 marker 核对：Windows 当前产品 exit0/36；WSL 原生 Linux 临时文件系统当前产品 exit0/33；加载固定旧 r2 后执行同一正式新测试 exit1/33，准确失败在 90 的 required-refusal 断言，error=None/published=True。旧 r2 对照证明新增用例能检出原 P1。首次 WSL /mnt/c 普通 control 的 renameat2 EINVAL（exit1/0）保留为失败，不计作新用例通过；原生 Linux 补验另根且成功，不更改产品规避失败。
+
+## 不重跑全部矩阵的范围依据
+
+当前仅测试追加，产品 5c1dff03 不变，原测试断言、全部其他测试未变；新时序分支已定向 Windows/POSIX 实际验证并有旧 r2 对照。既有 730 次矩阵可保留各自原始产品/测试身份，本追加不将它们表述为当前新 test fingerprint 下重跑。提交后应只对受影响 case 跑 clean 规范 runner 与严格证据门禁，补新的测试指纹和落盘日志身份；没有此处范围之外的新产品风险依据要求全部矩阵重跑。
+
+## 恢复事实澄清
+
+本轮是依据用户明确报告“已收到官方解除通知”后恢复该专项独立审查。新调用未被拒绝，保护配置未改。通知由用户提供，未由我们登录账户独立核验。原 final-review.md 末尾“未重试任何上游拒绝”准确限定为没有自动反复重试先前被拒调用、没有绕过保护；不应解读为本轮没有按新用户报告恢复专项。原独审拒绝及本轮恢复记录各自保留。

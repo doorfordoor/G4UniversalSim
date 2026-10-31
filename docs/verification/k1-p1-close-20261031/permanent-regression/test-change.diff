@@ -1,0 +1,98 @@
+diff --git a/scripts/test_k1_staging_alias.py b/scripts/test_k1_staging_alias.py
+index 555b13b..6994356 100644
+--- a/scripts/test_k1_staging_alias.py
++++ b/scripts/test_k1_staging_alias.py
+@@ -3,6 +3,7 @@
+ The controlled equivalent spelling calls the real exporter, not a second
+ containment implementation. Actual symlink/junction inputs remain rejected.
+ Windows additionally uses an actual 8.3 alias when available, never a fake one.
++Post-capture external paths must also remain unlinked before publication.
+ """
+ from __future__ import annotations
+ import argparse
+@@ -21,6 +22,77 @@ ROOT = Path(os.environ.get('K1_WORKSPACE_ROOT', Path(__file__).resolve().parents
+ sys.path[:0] = [str(ROOT / 'gui'), str(ROOT / 'scripts')]
+ 
+ 
++def late_receipt_link(root, fixture, bundle, digest):
++    """Change only owned input after real inspection, before receipt recheck."""
++    case = root / 'late-receipt-link'
++    assert case.absolute().is_relative_to(root)
++    case.mkdir()
++    source, backup = case / 'external-source', case / 'external-source-original'
++    destination = case / 'must-not-publish'
++    snapshot = fixture(source, generated=False)
++    before = {str(p.relative_to(source)): digest(p) for p in source.rglob('*') if p.is_file()}
++    observations = []
++    real_inspect = bundle.inspect_bundle
++    def inspected_then_link(staging):
++        result = real_inspect(staging)
++        staging = Path(staging)
++        assert not observations
++        assert staging.resolve().is_relative_to(case.resolve())
++        assert source.resolve().is_relative_to(case.resolve())
++        assert backup.absolute().is_relative_to(case.resolve())
++        target = staging / 'resources'
++        assert target.resolve().is_relative_to(case.resolve())
++        source.rename(backup)
++        if sys.platform == 'win32':
++            linked = subprocess.run(['cmd.exe', '/d', '/c', 'mklink', '/J', str(source), str(target)],
++                                    stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
++            assert linked.returncode == 0, linked.stdout.decode(errors='replace')
++            assert source.lstat().st_file_attributes & 0x400
++        else:
++            source.symlink_to(target, target_is_directory=True)
++            assert source.is_symlink()
++        assert os.path.samefile(source, target)
++        assert source.resolve() == target.resolve()
++        observations.append({'stage': str(staging), 'lexical_external': str(source),
++                             'canonical_after_change': str(source.resolve()),
++                             'inside_staging_after_resolve': True})
++        return result
++    error = None
++    try:
++        with patch.object(bundle, 'inspect_bundle', side_effect=inspected_then_link):
++            try:
++                bundle.export_bundle(snapshot, destination)
++            except ValueError as rejected:
++                error = str(rejected)
++    finally:
++        # Restore only this fixture; never recurse through the temporary link.
++        if backup.exists():
++            assert source.absolute().is_relative_to(case.resolve())
++            if os.path.lexists(source):
++                if sys.platform == 'win32':
++                    assert source.lstat().st_file_attributes & 0x400
++                    source.rmdir()
++                else:
++                    assert source.is_symlink()
++                    source.unlink()
++            assert backup.resolve().is_relative_to(case.resolve())
++            backup.rename(source)
++        after = {str(p.relative_to(source)): digest(p) for p in source.rglob('*') if p.is_file()}
++        assert before == after
++        assert not source.is_symlink()
++        assert not getattr(source.lstat(), 'st_file_attributes', 0) & 0x400
++    row = {'kind': 'post_capture_external_receipt_link', 'error': error,
++           'published': os.path.lexists(destination), 'observations': observations,
++           'source_sha256_before': before, 'source_sha256_after': after,
++           'source_restored': True, 'expected_behavior': 'refused_before_publication'}
++    (case / 'receipt.json').write_text(json.dumps(row, indent=2) + '\n', encoding='utf-8')
++    assert len(observations) == 1
++    assert error and ('linked path' in error or 'reparse point' in error), row
++    assert not os.path.lexists(destination)
++    assert not Path(observations[0]['stage']).exists()
++    return row
++
++
+ def exercise(root):
+     from test_k1_bundle import fixture
+     from g4usim_gui.core import experiment_bundle as bundle
+@@ -120,6 +192,7 @@ def exercise(root):
+                                  'path': str(short_root), 'export': 'passed'})
+     elif sys.platform == 'win32':
+         receipt['windows_8dot3'] = 'unavailable; real junction refusal covered, not claimed as 8.3'
++    receipt['cases'].append(late_receipt_link(root, fixture, bundle, digest))
+     assert {path: digest(path) for path in source_hashes} == source_hashes
+     persist()
+     print(json.dumps({'platform': sys.platform, 'cases': [r['kind'] for r in receipt['cases']],

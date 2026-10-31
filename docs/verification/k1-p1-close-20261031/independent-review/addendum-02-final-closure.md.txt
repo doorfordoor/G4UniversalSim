@@ -1,0 +1,45 @@
+# 追加审查 02：P1 / P2 最终关闭意见
+
+**同意关闭原资源路径 P1，以及本审查发现的永久防回归 P2。当前专项没有剩余阻断项。** 本追加独立签字基于已批准测试字节的 clean 提交、正式单例与严格门禁；不改写 final-review.md 或追加 01 的历史状态。整 K1 的文档归档、其他范围验收与正常快进集成仍由 root 汇总裁决。
+
+## 当前精确身份
+
+- 当前提交：5644e1e52b9c2dd5b463217e9e601c8116f8a913；核验时 git status --short 为空。
+- 产品 gui/g4usim_gui/core/experiment_bundle.py SHA256：5c1dff0338e80a673ba8f3427aeb7bfe1abe9d2b5315efca564310be8118385a。
+- 永久正式测试 scripts/test_k1_staging_alias.py SHA256：0d5cb4db40d50417e16a316ec8825ddd30c7265a0b8d468679529288e9a95de2。
+- C++ source fingerprint：890635b6d521659e43cf735d07f862c6ebd5959e6c5ea68d023d55332a8a930a。
+- 当前 tests fingerprint：2402bc3c9d69b0696f46b2cd4d777239366c4508cd05e22b4bb6404306e6b0ea。
+- 原正式矩阵冻结：2914b3962167325628ede699b1c14a9d224dec41；原 tests fingerprint：210da0c83b5c52c1fbf5999c8b2d11bd48eccb428727ab65df414ce1410f5e46。
+
+已独立核对 root 的 out/collab/k1-p1-final-identity-20261031.json：350 份产品 SHA 全部匹配当前原字节，并以 git cat-file --batch 比对原 2914 冻结的每份 blob，全部一致。重新计算当前 C++ 与 tests fingerprint，均匹配映射。相对原冻结的整个 code/test/workflow 范围只有这一正式测试变化，+73/-0，原17个assert AST及其他正式测试保留，新增后39站点。核验记录见 addendum-02-identity-check.json。
+
+## 正式运行与门禁
+
+正式收据：out/collab/k1-p1-permanent-regression-20261031/formal/formal-validation-receipt.json。已核对其 SHA、7份所引用 runner/gate 日志的落盘 SHA 与退出码、2份 v2 report 的原字节 SHA、实际 case 日志唯一 v3 marker、逐项计数及无零断言/跳过状态。Linux原生报告和复制报告的严格门禁都通过；复制件34份文件与原生SHA清单逐份一致。完整机器记录在 addendum-02-formal-evidence-check.json。
+
+| 正式报告 | 结果 | v3入口 | report SHA256 | case log SHA256 |
+|---|---|---:|---|---|
+| Windows windows-reports/20261031-204100-503276c4 | 1 pass / 0 fail / 0 skip，case退出0，runner及门禁0 | 36 | bbf6e7430e9c6ea78cf982afd2cb21eb901aa9cea3fc20cf00b791ba12f1fc29 | 67b1a8db69e1164adef1238679e90aa8b0e93c89a2e0e8eb2e079241e17b7cae |
+| WSL Linux wsl-linux-reports-copy/20261031-204115-b1ea9108 | 1 pass / 0 fail / 0 skip，case退出0，原生及复制门禁0 | 33 | 75cc78a08a66d085b203e614b334b62b23e5b3b7d0bc77ef162c8141b2eaf4d3 | d98322850e49d168f12e3351ab0b748a4d3a2a80cae6b960e804d025d91f1eb9 |
+
+两份报告均绑定上述 clean HEAD、当前source/tests fingerprint、tracked_source_gate=pass、skip_policy=failure。本轮正式合计69个v3入口，只是两次同一用例的执行入口；不与先前71个独立适配器入口混称，不当作物理事实数。backend_provenance显示缺少默认后端不影响此static用例：该case无后端运行依赖，也没有启动模拟。Linux是WSL2、CPython3.11.18/PySide6 6.11.1的一个运行平台，不声称双Geant4版本新测试。
+
+## 精确回归确实有效
+
+新增 late_receipt_link 在真实 inspect 完成后，最终 source receipt 复核前替换独占源目录，实际使用 NTFS junction / POSIX symlink，并证明samefile/canonical目标是staging/resources。当前产品拒绝、无发布、无stage残留；finally仅去掉自建链接对象、恢复源目录，源SHA前后一致。正式两平台的逐case receipt均已读取并核对这些事实。
+
+同一新正式测试在进程内加载固定旧 r2（SHA 34db09d96260841411dc92306f4eab438d75792a4f74abacde3322c10b3d66c2）时，exit1/33，准确失败于 scripts/test_k1_staging_alias.py:90 的必须拒绝断言；error=None、published=True。源恢复断言仍通过。原始 windows-old-r2.log SHA256为94e156660a473ab7582c2abcd5a3d121b912917d7e48ac9f2c8687e21b6225c9。该对照为真正失败的回归判据，不是观察旧错误后人为记pass。
+
+## Linux文件系统失败边界
+
+首次探索把fixture放于/mnt/c，原control在既有renameat2发布处EINVAL，exit1/0入口，尚未进入新增反例。该失败日志 wsl-linux-current.log 原件保留，SHA256 c645f2aad4e4b08343b0ce265075bec7ef8ec08e41bc09036d91c8b0ffbc0ddf，不能用后续成功追改。后续探索以及正式运行改用tempfile独占的Linux原生/tmp；正式源是同一提交的clean detached临时checkout，产品未改。通过范围为该原生文件系统路径，不声称此处DrvfS/renameat2限制被修复。
+
+## 原矩阵与原生证据沿用范围
+
+允许主审按已核验的350产品身份映射，沿用原730次矩阵和第七轮原生观察各自的原身份、范围与已有更正；这里没有逐例重新执行或重新签署那些旧数据。当前仅追加测试，原断言和全部其他测试未变，新增分支已Windows/POSIX定向正式执行并有旧r2失败对照，故没有依据要求整套矩阵再跑。新69入口单列，旧矩阵不改报告/日志/测试指纹，不称在2402bc3c新tests fingerprint下重跑。
+
+不扩大物理准确性、性能或任意并发目录替换/通用TOCTOU保证。本次检查的是稳定晚变链接在最终检查前存在的已知回归；原生UI未重新操作。
+
+## 恢复事实与原件保留
+
+本轮依据用户明确报告“已收到官方解除通知”恢复该专项；新调用未被拒绝，模型/账户/连接器/保护配置未改。官方通知是用户提供的事实，未由我们登录账户独立核验。旧审查拒绝与本轮恢复依据分别保留。原final中的“未重试任何上游拒绝”限定为未自动反复重试旧拒绝或绕过保护，并不否认此次根据新用户报告恢复审查。

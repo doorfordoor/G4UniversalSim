@@ -1,0 +1,26 @@
+{
+  "test_sha256": "0d5cb4db40d50417e16a316ec8825ddd30c7265a0b8d468679529288e9a95de2",
+  "code_review": "accepted for freeze",
+  "old_assert_sites": 17,
+  "new_assert_sites": 39,
+  "old_asserts_unchanged": true,
+  "all_4_exploratory_log_hashes_verified": true,
+  "windows_r3": {
+    "exit": 0,
+    "assertions": 36
+  },
+  "wsl_native_r3": {
+    "exit": 0,
+    "assertions": 33
+  },
+  "old_r2": {
+    "exit": 1,
+    "assertions": 33,
+    "failure": "new required refusal assertion; error None, published True"
+  },
+  "drvfs_initial_failure": "retained; ordinary control renameat2 EINVAL before new assertions",
+  "changed_tracked_files": [
+    "scripts/test_k1_staging_alias.py"
+  ],
+  "canonical_clean_report": "pending parent commit and writer run"
+}

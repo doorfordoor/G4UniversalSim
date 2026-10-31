@@ -1,0 +1,23 @@
+# K1 P1 恢复独立审查：首轮静态意见
+
+当前仅签静态审查，不签 P1 已关闭。独立审查者不是实现作者，未改产品或运行原 late_reparse.py。基线 HEAD e93072867021ae1978a7de3834c51caf0f9fb839；三份目标文件与 2914b3962167325628ede699b1c14a9d224dec41 冻结无差异，完整 SHA 见 first-round-identity.json。
+
+## 范围与结论
+
+1. **P1 r3 拒绝顺序正确，未发现确定阻断缺陷。** experiment_bundle.py:741–748 对每个 source receipt 在 resolve 之前先调用 _no_links(path)，并对 staging 同样检查。_no_links:111–122 遍历词法路径及全部祖先，在 abspath 折叠之前拒绝 symlink / junction / st_file_attributes 的 reparse 位。历史“外部源父目录在 inspect 后变为指向 staging 的 junction”会在 745 左侧拒绝，不再因 canonical containment 直接 continue。父路径已有链接的正常读取由 _read:125–136 / _Closure.add:177–192 同样约束。
+2. **8.3 与长拼写不应再触发中间文件误重读。** package_writer.py:149–159 使用 resolve 写入收据，export_bundle:721 有意清除 writer；745 在无链接前提下比较规范身份，Path.resolve 默认 strict=False 可处理已删除的 writer 尾部。需要当前平台运行证明具体路径表现。普通外部收据在 747 仍由 _read 检查单硬链接普通文件并比较最初 SHA；未把原始读取 SHA 替换成重定位后的成员 SHA。
+3. **异常传播与失败清理结构未因 r3 改变。** export_bundle:749–755 在拒绝或发布失败时 committed 仍为 false，清理 staging；成功 exclusive rename 后才 committed=true。Windows os.rename 与 Linux renameat2(RENAME_NOREPLACE) 的发布差异在 655–670。被拒异常不会走 return 成功。外部源从不由 exporter 写入；恢复测试源是夹具自己的责任。清理本身抛错可覆盖原异常，这是原有行为，最小 P1 动态证据须确认这次实际清理完成。
+4. **搬移草稿身份未放宽。** _snapshot_paths:393/459–472 仅 loading 时、原模型值与 raw.strip() 经同一 _resolve 后相等才改草稿；非法/空白/不同草稿保留，保留首尾空白。真实 GUI 下一动作回归在 smoke_k1_relocation:121–177；backend 选择在 144–152/178–183。组件、真实后端、实窗各自计证。
+5. **测试缺口明确。** test_k1_staging_alias:46–73 测真实 exporter 的等价词法拼写；74–115 为导出前已存在的静态 junction/symlink 拒绝；116–122 的真实 Windows 8.3 在不可用时只记录缺失。它本身不覆盖 post-capture 改变。smoke_k1_relocation 也不覆盖该时间边界。旧 late-reparse-base 与 candidate receipt 已读：base error+published=false；r2 error=null+published=true。两个脚本 exit=0 是反例观察成功，绝非 r2 行为通过。
+
+## 最小关闭证据（当前 SHA，新根，不覆盖旧证据）
+
+- 专属测试在完全自有临时目录使用真实 exporter，记录实际加载 module 路径、三个目标文件 SHA、Python/OS；在 collection 与 inspect 完成后、最终 receipt 复核前构造相同的真实 NTFS junction 变化（POSIX 声明另以真实 symlink）。记录 lexical 路径、实际 reparse/symlink 状态、canonical 指向 staging 的事实。
+- 当前 r3 必须抛出链接/reparse 拒绝；目标不存在；没有遗留该目标的 .*.k1-* staging；移除夹具链接并恢复源后，全部原文件 SHA/数量一致。不能仅断言异常或进程 exit=0。
+- 至少一个普通正例通过 inspect_bundle；等价 staging 拼写正例显示 writer 收据在 writer 返回时确实存在。Windows 8.3 声明必须实际 samefile 且别名可用；无别名不得称 8.3 已通过。
+- 普通外部源在捕获后变更字节须仍被最终 SHA 拒绝，目标不存在、staging 清理。已有 scripts/test_k1_bundle.py 的 atomic/write/publish failure 与竞争目标保留断言（419–445）可复用新冻结运行，不必改产品或重写同义测试。
+- 新日志/收据绑定当前产品 SHA 5c1dff0338e80a673ba8f3427aeb7bfe1abe9d2b5315efca564310be8118385a。原失败候选、旧独审拒绝与旧报告保留原文。收到测试文件和收据后，本审查者将核对测试实现、断言、实际结果和落盘 SHA，再给最终 P1 裁决。
+
+## 明确边界
+
+_no_links + resolve 是顺序检查，不是对任意并发目录替换的 OS 句柄锁定。此次 P1 是已知稳定晚变链接在最终检查前存在的回归；不能把修复签为所有 TOCTOU 或恶意并发文件系统变更均安全。未运行真实 Geant4、GUI、正式矩阵；本意见不代替 K1 阶段关闭。

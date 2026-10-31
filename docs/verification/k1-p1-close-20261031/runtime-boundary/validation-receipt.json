@@ -1,0 +1,118 @@
+{
+  "head": "e93072867021ae1978a7de3834c51caf0f9fb839",
+  "git_status_short": "",
+  "python": "D:\\Geant4\\G4UniversalSim\\gui\\.venv\\Scripts\\python.exe",
+  "cases": [
+    {
+      "name": "old-r2-junction",
+      "command": [
+        "D:\\Geant4\\G4UniversalSim\\gui\\.venv\\Scripts\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\tools\\test_assert_probe.py",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-p1-resumed-validation-20261031\\late_boundary.py",
+        "--target",
+        "r2"
+      ],
+      "cwd": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim",
+      "started_utc": "2026-10-31T12:29:36.724440+00:00",
+      "finished_utc": "2026-10-31T12:29:38.463767+00:00",
+      "exit_code": 0,
+      "assert_probe": "settrace_assert_lines_v3",
+      "assertions": 21,
+      "raw_log_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-p1-resumed-validation-20261031\\old-r2-junction.log",
+      "raw_log_sha256": "363f3d0b924fdcc372ebb43b3640c60e728177ca61426895e2e7ce78e7f6412d",
+      "adapter_sha256": "4973bd7f3ff2f728ee006a938a93daba816b54a4b69727c3c0aeed9181738567"
+    },
+    {
+      "name": "current-r3-junction",
+      "command": [
+        "D:\\Geant4\\G4UniversalSim\\gui\\.venv\\Scripts\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\tools\\test_assert_probe.py",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-p1-resumed-validation-20261031\\late_boundary.py",
+        "--target",
+        "r3"
+      ],
+      "cwd": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim",
+      "started_utc": "2026-10-31T12:29:38.471768+00:00",
+      "finished_utc": "2026-10-31T12:29:40.054926+00:00",
+      "exit_code": 0,
+      "assert_probe": "settrace_assert_lines_v3",
+      "assertions": 21,
+      "raw_log_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-p1-resumed-validation-20261031\\current-r3-junction.log",
+      "raw_log_sha256": "254eb4d00e947f927e8df17bffb8eb4432d786f750e220b257e298c43045772b",
+      "adapter_sha256": "4973bd7f3ff2f728ee006a938a93daba816b54a4b69727c3c0aeed9181738567"
+    },
+    {
+      "name": "current-r3-content-change",
+      "command": [
+        "D:\\Geant4\\G4UniversalSim\\gui\\.venv\\Scripts\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\tools\\test_assert_probe.py",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-p1-resumed-validation-20261031\\late_boundary.py",
+        "--target",
+        "r3",
+        "--change",
+        "content"
+      ],
+      "cwd": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim",
+      "started_utc": "2026-10-31T12:29:40.061930+00:00",
+      "finished_utc": "2026-10-31T12:29:41.633995+00:00",
+      "exit_code": 0,
+      "assert_probe": "settrace_assert_lines_v3",
+      "assertions": 14,
+      "raw_log_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-p1-resumed-validation-20261031\\current-r3-content-change.log",
+      "raw_log_sha256": "1d2deb26d8fd2276e4b36ea7a7ecaea3df48796ac91b39bbb6e23bde572b680b",
+      "adapter_sha256": "4973bd7f3ff2f728ee006a938a93daba816b54a4b69727c3c0aeed9181738567"
+    },
+    {
+      "name": "current-r3-real-alias-relocation",
+      "command": [
+        "D:\\Geant4\\G4UniversalSim\\gui\\.venv\\Scripts\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\tools\\test_assert_probe.py",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-p1-resumed-validation-20261031\\alias_relocate.py"
+      ],
+      "cwd": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim",
+      "started_utc": "2026-10-31T12:29:41.644999+00:00",
+      "finished_utc": "2026-10-31T12:29:45.873480+00:00",
+      "exit_code": 0,
+      "assert_probe": "settrace_assert_lines_v3",
+      "assertions": 15,
+      "raw_log_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-p1-resumed-validation-20261031\\current-r3-real-alias-relocation.log",
+      "raw_log_sha256": "340fc6a7d06d2a156e5a250af86c07eab4552a3d62501656cb8fabe823027c23",
+      "adapter_sha256": "7c0a42bbf181c925747648bd1d075b8591bd4e54dd19e11141dac9ee9a5c936d"
+    }
+  ],
+  "assertions_executed_total": 71,
+  "protected_before": {
+    "gui/g4usim_gui/core/experiment_bundle.py": "5c1dff0338e80a673ba8f3427aeb7bfe1abe9d2b5315efca564310be8118385a",
+    "gui/smoke_tests/smoke_k1_relocation.py": "4fddfec77f40d00e0f052b147386aaf3d3adddd305bc656fe57f480fdf0732ad",
+    "scripts/test_k1_staging_alias.py": "0e33fc7c8990cfe9d5aed535561420f7c34e38b225872ce33056a179f9672d8d",
+    "tools/test_assert_probe.py": "fd6515504cdec5ab86046e53e390cb366f49ee5facbf7acbe21314943ad8568c",
+    "out/collab/k1-relocation-independent-validation/late_reparse.py": "76831ded527d5a827a6f1a1832b30fdb630ea0d38e617cd37f272c9f44b96a42",
+    "out/collab/k1-relocation-independent-validation/late-reparse-exits.json": "7c455e2b29d66001d6d8324629602aaa112158ea32f634f4278774c6f92fa515",
+    "out/collab/k1-relocation-independent-validation/late-reparse-base/receipt.json": "5b40edcdbd573b22b920e1bd543f23a229959d3dc009d9f6783f1a9fb83922df",
+    "out/collab/k1-relocation-independent-validation/late-reparse-candidate/receipt.json": "cca39fddfe9c1d682448bee587c70495a347556cfe3eb8ca8f2d48c61a19ed50",
+    "out/collab/k1-relocation-candidate/README.md": "bd2568f66318b1e6a18732957bfe3fd91971b2e922b29dd8f4612850625c976d",
+    "out/collab/k1-relocation-candidate/archive-r2/experiment_bundle.py": "34db09d96260841411dc92306f4eab438d75792a4f74abacde3322c10b3d66c2",
+    "out/collab/k1-relocation-candidate/archive-windows-only/test_k1_staging_alias.py": "2a9e52e9fe5a74b7316466e42cc42b313566f41e9896050fbc067f0397eb42ef"
+  },
+  "protected_after": {
+    "gui/g4usim_gui/core/experiment_bundle.py": "5c1dff0338e80a673ba8f3427aeb7bfe1abe9d2b5315efca564310be8118385a",
+    "gui/smoke_tests/smoke_k1_relocation.py": "4fddfec77f40d00e0f052b147386aaf3d3adddd305bc656fe57f480fdf0732ad",
+    "scripts/test_k1_staging_alias.py": "0e33fc7c8990cfe9d5aed535561420f7c34e38b225872ce33056a179f9672d8d",
+    "tools/test_assert_probe.py": "fd6515504cdec5ab86046e53e390cb366f49ee5facbf7acbe21314943ad8568c",
+    "out/collab/k1-relocation-independent-validation/late_reparse.py": "76831ded527d5a827a6f1a1832b30fdb630ea0d38e617cd37f272c9f44b96a42",
+    "out/collab/k1-relocation-independent-validation/late-reparse-exits.json": "7c455e2b29d66001d6d8324629602aaa112158ea32f634f4278774c6f92fa515",
+    "out/collab/k1-relocation-independent-validation/late-reparse-base/receipt.json": "5b40edcdbd573b22b920e1bd543f23a229959d3dc009d9f6783f1a9fb83922df",
+    "out/collab/k1-relocation-independent-validation/late-reparse-candidate/receipt.json": "cca39fddfe9c1d682448bee587c70495a347556cfe3eb8ca8f2d48c61a19ed50",
+    "out/collab/k1-relocation-candidate/README.md": "bd2568f66318b1e6a18732957bfe3fd91971b2e922b29dd8f4612850625c976d",
+    "out/collab/k1-relocation-candidate/archive-r2/experiment_bundle.py": "34db09d96260841411dc92306f4eab438d75792a4f74abacde3322c10b3d66c2",
+    "out/collab/k1-relocation-candidate/archive-windows-only/test_k1_staging_alias.py": "2a9e52e9fe5a74b7316466e42cc42b313566f41e9896050fbc067f0397eb42ef"
+  },
+  "protected_bytes_unchanged": true,
+  "scope": "Independent Windows P1 late resource and normal alias checks; not whole K1 acceptance",
+  "backend": "not_started",
+  "linux": "not rerun; Windows-specific independent gap"
+}

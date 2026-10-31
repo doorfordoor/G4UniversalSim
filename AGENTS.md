@@ -4,6 +4,8 @@
 
 ## 0. 条目索引与历史全文
 
+- 2026-10-31 K1 验收关闭：资源路径 P1 与永久回归 P2 经独审和 Windows/Linux 正式单例关闭；5644e1e 仅追加回归，350 产品字节保持2914b39，原矩阵与原生证据按原身份沿用。晚变化链接仍须在 resolve 前拒绝；WSL /mnt/c 发布限制及旧失败不抹去。全文见 `docs/agent-history.md` 的“K1 资源路径 P1 与阶段验收关闭”，[最终证据](docs/verification/k1-final-20261031/README.md)。
+
 - 2026-10-31 K1 显示契约：成功且非陈旧的生成/运行命令投影覆盖 external 无 package；有效 launch 的实际 argv 优先，兼容计划命令不冒实际事实，目录未知不回填编辑 cwd。pending 按服务逐项显示，不联动其他层。全文见 `docs/agent-history.md`，回归 `smoke_k1_workflow.py`、`smoke_k1_panel.py`。
 
 - 2026-10-31 K1 配置包搬移：匹配资源的四个路径草稿随规范路径搬移，非法草稿保留；staging 与 writer 收据先检查链接再比较规范路径。真实 GUI 下一动作、Windows 别名及旧异步 smoke 反例见 `docs/agent-history.md`；第三冻结失败和未完成独审不得用局部通过覆盖。

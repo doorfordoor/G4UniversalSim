@@ -1,0 +1,60 @@
+{
+  "platform": "linux",
+  "backend": "not_started",
+  "cases": [
+    {
+      "kind": "controlled_real_parent_navigation_spelling",
+      "spelling": [
+        {
+          "lexical": "/tmp/k1-p1-permanent-regression-20261031-tw_to3_p/evidence/parent_navigation/../.equivalent-staging.k1-zlmn42dr",
+          "canonical": "/tmp/k1-p1-permanent-regression-20261031-tw_to3_p/evidence/.equivalent-staging.k1-zlmn42dr",
+          "samefile": true
+        }
+      ],
+      "writer_receipts": [
+        {
+          "path": "/tmp/k1-p1-permanent-regression-20261031-tw_to3_p/evidence/.equivalent-staging.k1-zlmn42dr/writer/20261031_203516_gui_run/config/main.ini",
+          "exists_at_return": true
+        }
+      ],
+      "export_error": null,
+      "scope": "portable controlled regression, not the original Linux/CI cause"
+    },
+    {
+      "kind": "real_posix_directory_symlink",
+      "samefile": true,
+      "error": "Bundle refuses linked path: /tmp/k1-p1-permanent-regression-20261031-tw_to3_p/evidence/linked-parent",
+      "expected_behavior": "refused_by_existing_link_policy"
+    },
+    {
+      "kind": "post_capture_external_receipt_link",
+      "error": "Bundle refuses linked path: /tmp/k1-p1-permanent-regression-20261031-tw_to3_p/evidence/late-receipt-link/external-source",
+      "published": false,
+      "observations": [
+        {
+          "stage": "/tmp/k1-p1-permanent-regression-20261031-tw_to3_p/evidence/late-receipt-link/.must-not-publish.k1-4sw7lx78",
+          "lexical_external": "/tmp/k1-p1-permanent-regression-20261031-tw_to3_p/evidence/late-receipt-link/external-source",
+          "canonical_after_change": "/tmp/k1-p1-permanent-regression-20261031-tw_to3_p/evidence/late-receipt-link/.must-not-publish.k1-4sw7lx78/resources",
+          "inside_staging_after_resolve": true
+        }
+      ],
+      "source_sha256_before": {
+        "main.ini": "2e850562e19178a907c0b65ed3a4b5f5b74427977c5e396db4084d84ddf58297",
+        "materials.ini": "e0890dd3f187f52a61220bf0ee29da1ad7427117819e7a906d7dd134b6b08393",
+        "run.mac": "03e748bfe181fc0f397c326157189d27128d9fb7a612fd6f9c61895a4e5d79e4",
+        "geometry.ini": "db8821b23e1c0831b35ca8ca4e84d20037f36fe74b2e06c4981ed2207a08aa46",
+        "nested/events.mac": "21188795beffe0dfbb3a1a3720e0f1f012d35e1604b0e1b8aea03223261eb074"
+      },
+      "source_sha256_after": {
+        "main.ini": "2e850562e19178a907c0b65ed3a4b5f5b74427977c5e396db4084d84ddf58297",
+        "materials.ini": "e0890dd3f187f52a61220bf0ee29da1ad7427117819e7a906d7dd134b6b08393",
+        "run.mac": "03e748bfe181fc0f397c326157189d27128d9fb7a612fd6f9c61895a4e5d79e4",
+        "geometry.ini": "db8821b23e1c0831b35ca8ca4e84d20037f36fe74b2e06c4981ed2207a08aa46",
+        "nested/events.mac": "21188795beffe0dfbb3a1a3720e0f1f012d35e1604b0e1b8aea03223261eb074"
+      },
+      "source_restored": true,
+      "expected_behavior": "refused_before_publication"
+    }
+  ],
+  "original_CI_complete_temp_path": "not archived; exact cause unknown"
+}

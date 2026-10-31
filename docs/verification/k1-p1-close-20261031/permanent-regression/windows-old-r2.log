@@ -1,0 +1,21 @@
+G4USIM_ASSERTS=33
+Traceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\k1-p1-permanent-regression-20261031\old_r2_same_test.py", line 21, in <module>
+    raise SystemExit(probe.main(['test_assert_probe.py', str(ROOT / 'scripts/test_k1_staging_alias.py'),
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 153, in main
+    runpy.run_path(str(target), run_name="__main__")
+  File "<frozen runpy>", line 291, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\scripts\test_k1_staging_alias.py", line 219, in <module>
+    main()
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\scripts\test_k1_staging_alias.py", line 208, in main
+    exercise(args.evidence_root)
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\scripts\test_k1_staging_alias.py", line 195, in exercise
+    receipt['cases'].append(late_receipt_link(root, fixture, bundle, digest))
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\scripts\test_k1_staging_alias.py", line 90, in late_receipt_link
+    assert error and ('linked path' in error or 'reparse point' in error), row
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'kind': 'post_capture_external_receipt_link', 'error': None, 'published': True, 'observations': [{'stage': 'C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-p1-permanent-regression-20261031\\windows-old-r2-evidence\\late-receipt-link\\.must-not-publish.k1-6isauk6h', 'lexical_external': 'C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-p1-permanent-regression-20261031\\windows-old-r2-evidence\\late-receipt-link\\external-source', 'canonical_after_change': 'C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-p1-permanent-regression-20261031\\windows-old-r2-evidence\\late-receipt-link\\.must-not-publish.k1-6isauk6h\\resources', 'inside_staging_after_resolve': True}], 'source_sha256_before': {'geometry.ini': 'db8821b23e1c0831b35ca8ca4e84d20037f36fe74b2e06c4981ed2207a08aa46', 'main.ini': 'db445c5b62bea4f850ce2f9343718fafaaf27c64ece1a56913a7ef8b496c4a2c', 'materials.ini': 'e0890dd3f187f52a61220bf0ee29da1ad7427117819e7a906d7dd134b6b08393', 'run.mac': '03e748bfe181fc0f397c326157189d27128d9fb7a612fd6f9c61895a4e5d79e4', 'nested\\events.mac': '21188795beffe0dfbb3a1a3720e0f1f012d35e1604b0e1b8aea03223261eb074'}, 'source_sha256_after': {'geometry.ini': 'db8821b23e1c0831b35ca8ca4e84d20037f36fe74b2e06c4981ed2207a08aa46', 'main.ini': 'db445c5b62bea4f850ce2f9343718fafaaf27c64ece1a56913a7ef8b496c4a2c', 'materials.ini': 'e0890dd3f187f52a61220bf0ee29da1ad7427117819e7a906d7dd134b6b08393', 'run.mac': '03e748bfe181fc0f397c326157189d27128d9fb7a612fd6f9c61895a4e5d79e4', 'nested\\events.mac': '21188795beffe0dfbb3a1a3720e0f1f012d35e1604b0e1b8aea03223261eb074'}, 'source_restored': True, 'expected_behavior': 'refused_before_publication'}

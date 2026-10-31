@@ -1,0 +1,22 @@
+G4USIM_ASSERTS=0
+Traceback (most recent call last):
+  File "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/tools/test_assert_probe.py", line 177, in <module>
+    raise SystemExit(main(sys.argv))
+                     ^^^^^^^^^^^^^^
+  File "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/tools/test_assert_probe.py", line 153, in main
+    runpy.run_path(str(target), run_name="__main__")
+  File "<frozen runpy>", line 291, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/scripts/test_k1_staging_alias.py", line 219, in <module>
+    main()
+  File "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/scripts/test_k1_staging_alias.py", line 208, in main
+    exercise(args.evidence_root)
+  File "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/scripts/test_k1_staging_alias.py", line 109, in exercise
+    control = bundle.export_bundle(snapshot, root / 'control')
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/gui/g4usim_gui/core/experiment_bundle.py", line 749, in export_bundle
+    _publish_directory(staging, target)
+  File "/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/gui/g4usim_gui/core/experiment_bundle.py", line 668, in _publish_directory
+    raise OSError(code, os.strerror(code), str(destination))
+OSError: [Errno 22] Invalid argument: '/mnt/c/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-p1-permanent-regression-20261031/wsl-linux-current-evidence/control'

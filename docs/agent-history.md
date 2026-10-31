@@ -607,3 +607,11 @@ RunMixin._format_command_preview增加仅供显示的显式cwd参数，未传时
 首次UI候选仅在有generated package的分支投影，独审复现external完成记录没有package时早返回，仍显示旧目录。命令投影必须独立于generated配置路径回绑，让无package但有command/execution_bundle/launch的真实external记录同样展示。此为同一预览契约的修正；保留第一候选及独审失败证据，并增加无package完成记录反例，不能只从generated记录复制夹具。
 
 smoke_k1_workflow保留旧39个assert站点，新增前置预览完整相等、真实生成完成目录、direct/restore受控launch收据、argv与两类目录、未知事实、中英文和F5不变检查；受控显示收据不声称启动模拟。smoke_k1_panel保留旧67站点，使用真实producer分别给出新运行pending与后台freshness pending，固定断言In progress/进行中而非从消费者字典计算期望；保持payload、历史事实与未知回退。正式冻结矩阵和实际窗口观察另行计证。
+
+## 2026-10-31 K1 资源路径 P1 与阶段验收关闭
+
+用户报告官方解除通知后恢复独审；原 cyber_policy 记录不改写。产品 `experiment_bundle.py` 的 5c1dff03 原字节经独立代码与真实 NTFS 反例审查通过：收据捕获后、最终复核前的链接必须在 resolve 比较前被拒绝，失败不发布并清理暂存；普通内容 SHA 复核、真实 8.3 与离线搬移正例保持。该专项不保证任意并发目录替换。
+
+`5644e1e` 仅在 `scripts/test_k1_staging_alias.py` 新增精确晚变化回归；原 17 个 assert AST 保留。Windows junction/Linux symlink 使用独占临时夹具，旧 r2 在同一新测试的拒绝断言处失败；当前 clean 正式单例 Windows36/Linux33 入口及严格证据门禁通过。首次 WSL /mnt/c 的 renameat2 EINVAL 原失败保留，Linux 验收为本地文件系统，不把该挂载限制说成已修。
+
+P1 与正式防回归 P2 均获独立关闭结论。350 产品字节与第七冻结2914b39一致，只有专项测试追加；原730次正式矩阵与原生适用性各自保留旧身份，新单例单列，禁止回填旧报告或称全矩阵在新指纹下重跑。K1阶段验收通过，I1已独立完成；正常集成事实以[最终证据](verification/k1-final-20261031/README.md)及其后续收据为准。[补充审查与验证](verification/k1-p1-close-20261031/README.md)。
