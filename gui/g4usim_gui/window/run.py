@@ -33,17 +33,23 @@ class RunMixin:
         command = self.runner.build_command(self.project)
         self.run_page.set_command(self._format_command_preview(command))
 
-    def _format_command_preview(self, command: list[str]) -> list[str]:
+    def _format_command_preview(self, command: list[str], *, working_directory: str | None = None,
+                                launch_working_directory: str | None = None) -> list[str]:
         if not command:
             return []
-        working_directory = self.project.workspaceRoot or "<not set>"
+        directory_label = "working directory:" if working_directory is None else ui_text("Logical working directory:")
+        if working_directory is None:
+            working_directory = self.project.workspaceRoot or "<not set>"
         lines = [
             "program:",
             f"  {command[0]}",
             "arguments:",
         ]
         lines.extend(f"  {arg}" for arg in command[1:])
-        lines.extend(["working directory:", f"  {working_directory}", "", "human-readable:", "  " + " ".join(command)])
+        lines.extend([directory_label, f"  {working_directory}"])
+        if launch_working_directory and launch_working_directory != working_directory:
+            lines.extend([ui_text("Process launch directory:"), f"  {launch_working_directory}"])
+        lines.extend(["", "human-readable:", "  " + " ".join(command)])
         return lines
 
     def _macro_inspection_inputs(self) -> tuple[object, ...]:

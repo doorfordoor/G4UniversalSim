@@ -19,7 +19,7 @@ ACTION_TOKENS = (
 )
 LEVEL_TOKENS = ("fields", "initialization", "execution", "physics")
 VALID_LEVEL_STATUS_TOKENS = (
-    "unverified", "passed", "failed", "stale", "unobserved", "cancelled",
+    "unverified", "passed", "failed", "stale", "unobserved", "cancelled", "pending",
 )
 # These are source messages for the existing central i18n dictionary, not translations.
 ACTION_TEXT = {
@@ -34,6 +34,7 @@ LEVEL_TEXT = {
 }
 STATUS_TEXT = {
     "unverified": "Unverified", "passed": "Passed", "failed": "Failed",
+    "pending": "In progress",
     "stale": "Stale", "unobserved": "Unobserved", "cancelled": "Cancelled",
 }
 EXPORT_NOTE = "Export includes configuration, resources and evidence; excludes C++ projects, secrets and machine settings."

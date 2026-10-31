@@ -40,6 +40,178 @@ def close_window(app, window, timeout=45):
     app.processEvents()
 
 
+def check_execution_command_preview(window, record, root):
+    """Actual completed Generate + planner receipts; no simulation is launched."""
+    from copy import deepcopy
+    from g4usim_gui.core import backend_launch as launch
+    from g4usim_gui.core.edit_snapshot import snapshot_fingerprint
+    from g4usim_gui.core.i18n import current_language, set_application_language
+    from PySide6.QtWidgets import QApplication
+
+    editor_cwd = window.project.workspaceRoot
+    editor_path_cwd = window.project.pathSettings.workspace_root
+    editor_text = window.project_page.workspace_root.text()
+    before = snapshot_fingerprint(window.capture_workspace())
+    command = [sys.executable, '--config', 'relative-input.ini']
+    # Keep the complete old pre-dispatch preview contract, not just a substring.
+    assert window._format_command_preview(command) == [
+        'program:', '  ' + command[0], 'arguments:', '  --config', '  relative-input.ini',
+        'working directory:', '  ' + (editor_cwd or '<not set>'), '',
+        'human-readable:', '  ' + ' '.join(command)]
+    assert window._format_command_preview([]) == []
+    # This is the real service's completed Generate record, before fixture receipt rendering.
+    assert record['action'] == 'generate' and record['status'] == 'passed'
+    execution_cwd = record['execution_bundle']['path']
+    assert Path(execution_cwd).resolve() != Path(editor_cwd).resolve()
+    assert '\n  ' + execution_cwd + '\n' in window.run_page.command_preview.toPlainText()
+    original_record = deepcopy(record)
+    short = root / 'preview-observed-cwd'
+    short.mkdir()
+    deep = root / 'preview-logical-cwd'
+    deep.mkdir()
+    while launch.utf16_units(str(deep.resolve())) <= 270:
+        deep /= 'logical-中文😀-segment'
+        deep.mkdir()
+    app = QApplication.instance()
+    previous_language = current_language()
+    try:
+        for directory in (short, deep):
+            # Windows route planning is exercised on both hosts; Python is never started.
+            with patch.object(launch, 'WINDOWS', True):
+                receipt = launch.prepare_backend_launch([sys.executable, '-c', "print('preview only')"], directory)
+            assert receipt.requires_working_directory == (directory == deep)
+            observed = deepcopy(record)
+            observed['launch'] = receipt.to_dict()
+            untouched_observation = deepcopy(observed)
+            for language, logical_label, physical_label in (
+                    ('en', 'Logical working directory:', 'Process launch directory:'),
+                    ('zh_CN', '逻辑工作目录：', '进程启动目录：')):
+                set_application_language(app, language)
+                window._bind_experiment_package(observed)
+                text = window.run_page.command_preview.toPlainText()
+                assert logical_label + '\n  ' + str(directory.resolve()) + '\n' in text
+                if directory == deep:
+                    assert physical_label + '\n  ' + receipt.launch_cwd + '\n' in text
+                else:
+                    assert physical_label not in text
+                assert 'human-readable:\n  ' + ' '.join(receipt.command) in text
+                assert observed == untouched_observation
+                assert window.project.workspaceRoot == editor_cwd
+                assert window.project.pathSettings.workspace_root == editor_path_cwd
+                assert window.project_page.workspace_root.text() == editor_text
+                assert snapshot_fingerprint(window.capture_workspace()) == before
+        # A legacy/incomplete display record cannot fabricate an observed editor cwd.
+        missing = deepcopy(record)
+        missing.pop('launch', None)
+        missing.pop('execution_bundle', None)
+        set_application_language(app, 'en')
+        window._bind_experiment_package(missing)
+        assert 'Logical working directory:\n  Unknown\n' in window.run_page.command_preview.toPlainText()
+        assert record == original_record
+        assert snapshot_fingerprint(window.capture_workspace()) == before
+    finally:
+        set_application_language(app, previous_language)
+        window._bind_experiment_package(record)
+
+
+def check_external_completed_preview(window, generated, root):
+    """Real external preparation, controlled completion display; no backend run."""
+    from copy import deepcopy
+    import json
+    from g4usim_gui.core import backend_launch as launch
+    from g4usim_gui.core.edit_snapshot import WorkspaceSnapshot, snapshot_fingerprint
+    from g4usim_gui.core.i18n import current_language, set_application_language
+    from PySide6.QtWidgets import QApplication
+
+    editor_cwd = window.project.workspaceRoot
+    editor_path_cwd = window.project.pathSettings.workspace_root
+    editor_text = window.project_page.workspace_root.text()
+    before = snapshot_fingerprint(window.capture_workspace())
+    snapshot = window._edit_session.current()
+    project = snapshot.project
+    project.runInputMode = 'external'
+    project.configPath = generated['package']['main_ini_path']
+    project.macroPath = generated['package']['run_macro_path']
+    project.workspaceRoot = generated['execution_bundle']['path']
+    # Align these four fixture edits with F5's captured raw text; preserve all
+    # other drafts/source evidence. Only the environment probe is a ready fixture.
+    snapshot.state['drafts'].update({
+        'project.run_input_mode': 'external', 'project.workspace_root': project.workspaceRoot,
+        'project.config_path': project.configPath, 'project.macro_path': project.macroPath})
+    request = dict(record_id='external-preview-preparation', revision=window._edit_session.revision,
+                   record_dir=str(root / 'external-preview-preparation'))
+    with patch.object(window.experiment, '_probe', lambda executable, *, cwd: {'status': 'ready'}):
+        prepared = window.experiment._prepare(WorkspaceSnapshot(project, snapshot.state), request, 'run')
+    assert prepared['can_run'], prepared['report'].errors
+    assert 'package' not in prepared
+    assert prepared['execution_bundle']['path'] != editor_cwd
+    assert prepared['command'] and '--config' in prepared['command']
+    public = {key: deepcopy(value) for key, value in prepared.items() if not key.startswith('_')}
+    # This status drives the display only, never a service success/physics assertion.
+    public.update(action='run', status='passed', reason='display_fixture_only')
+    direct = Path(prepared['execution_bundle']['path'])
+    deep = root / 'external-preview-deep'
+    deep.mkdir()
+    while launch.utf16_units(str(deep.resolve())) <= 270:
+        deep /= 'external-logical-中文😀-segment'
+        deep.mkdir()
+    app = QApplication.instance()
+    previous_language = current_language()
+    try:
+        variants = []
+        for directory in (direct, deep):
+            with patch.object(launch, 'WINDOWS', True):
+                receipt = launch.prepare_backend_launch(prepared['command'], directory)
+            assert receipt.requires_working_directory == (directory == deep)
+            observed = deepcopy(public)
+            observed['launch'] = receipt.to_dict()
+            # Ensure planned argv differs, so a stale planned preview cannot pass.
+            observed['command'] = ['planned-command-must-not-be-shown', '--planned']
+            variants.append((observed, receipt.command, str(directory.resolve()), receipt.launch_cwd))
+        fallback = deepcopy(public)
+        fallback['launch'] = dict(program='', arguments=['invalid-observed-argv'])
+        variants.append((fallback, prepared['command'], str(direct), None))
+        launch_only = deepcopy(variants[0][0])
+        launch_only.pop('command')
+        variants.append((launch_only, variants[0][1], variants[0][2], variants[0][3]))
+        missing = deepcopy(public)
+        missing.pop('execution_bundle')
+        missing.pop('launch', None)
+        variants.append((missing, prepared['command'], None, None))
+        for index, (observed, command, logical, physical) in enumerate(variants):
+            for language, logical_label, physical_label, unknown in (
+                    ('en', 'Logical working directory:', 'Process launch directory:', 'Unknown'),
+                    ('zh_CN', '逻辑工作目录：', '进程启动目录：', '未知')):
+                set_application_language(app, language)
+                observed['record_id'] = f'external-completed-display-{index}-{language}'
+                untouched = deepcopy(observed)
+                window.run_page.set_command(window._format_command_preview(['editor-planned-command']))
+                window._experiment_completed(observed)
+                text = window.run_page.command_preview.toPlainText()
+                print('external_completed_preview=' + json.dumps(dict(
+                    variant=index, language=language, package_present='package' in observed,
+                    producer='ExperimentWorkflow._prepare external run; environment fixture only',
+                    logical=logical, physical=physical, command=command, displayed=text), ensure_ascii=False))
+                assert logical_label + '\n  ' + (logical or unknown) + '\n' in text, \
+                    'completed external no-package preview omitted the recorded cwd'
+                if physical and physical != logical:
+                    assert physical_label + '\n  ' + physical + '\n' in text
+                else:
+                    assert physical_label not in text
+                assert 'human-readable:\n  ' + ' '.join(command) in text
+                assert 'editor-planned-command' not in text
+                assert observed == untouched
+                assert window.project.workspaceRoot == editor_cwd
+                assert window.project.pathSettings.workspace_root == editor_path_cwd
+                assert window.project_page.workspace_root.text() == editor_text
+                assert snapshot_fingerprint(window.capture_workspace()) == before
+        assert window.experiment.runner is window.runner
+        assert not window.runner.is_running()
+    finally:
+        set_application_language(app, previous_language)
+        window._bind_experiment_package(generated)
+
+
 def main():
     from PySide6.QtCore import QCoreApplication, QEvent
     from PySide6.QtWidgets import QApplication, QFileDialog, QMessageBox
@@ -91,6 +263,8 @@ def main():
             assert snapshot_fingerprint(window.capture_workspace()) == before
             assert not window._generated_package_stale
             assert window.project_page.isEnabled()
+            check_execution_command_preview(window, results[-1], root)
+            check_external_completed_preview(window, results[-1], root)
             count = len(results)
             window._experiment_completed(results[-1])
             assert len(results) == count

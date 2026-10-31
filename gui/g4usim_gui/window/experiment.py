@@ -276,6 +276,9 @@ class ExperimentMixin:
     def _bind_experiment_package(self, record):
         package = record.get('package')
         if not isinstance(package, dict):
+            # External preparation has no generated package, but completion
+            # still carries the command and execution/launch directory facts.
+            self._project_experiment_command(record)
             return
         original = self._edit_session.current().project
         for field, key in (('configPath', 'main_ini_path'), ('macroPath', 'run_macro_path'), ('outputDir', 'output_dir')):
@@ -298,9 +301,26 @@ class ExperimentMixin:
         self.run_history_page.set_runs_root(self.project.runsRoot)
         self.run_history_page.refresh()
         # This display binding must never publish generated paths into F5.
+        self._project_experiment_command(record)
+
+    def _project_experiment_command(self, record):
+        """Display observed command facts independently of generated paths."""
+        launch = record.get('launch')
+        launch = launch if isinstance(launch, dict) else {}
         command = record.get('command')
+        # A launch receipt may exist even when the older planned argv does not.
+        if (isinstance(launch.get('program'), str) and launch['program']
+                and isinstance(launch.get('arguments'), list)
+                and all(isinstance(argument, str) for argument in launch['arguments'])):
+            command = [launch['program'], *launch['arguments']]
         if command:
-            self.run_page.set_command(self._format_command_preview(command))
+            execution = record.get('execution_bundle')
+            execution = execution if isinstance(execution, dict) else {}
+            working_directory = (launch.get('working_directory') or execution.get('path')
+                                 or ui_text('Unknown'))
+            self.run_page.set_command(self._format_command_preview(
+                command, working_directory=working_directory,
+                launch_working_directory=launch.get('launch_working_directory')))
 
     def _open_environment(self):
         from g4usim_gui.widgets.environment_dialog import EnvironmentDialog

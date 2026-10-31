@@ -18,6 +18,42 @@ from g4usim_gui.widgets.experiment_panel import (
 )
 
 
+def check_producer_pending(panel, app):
+    """Use the real producer projection; this fixture owns no run or eligibility."""
+    from copy import deepcopy
+    from types import SimpleNamespace
+    from g4usim_gui.core.experiment_workflow import ExperimentWorkflow
+
+    previous_language = current_language()
+    try:
+        for level, status, freshness, busy in (
+                ('fields', 'passed', 'checking', False),
+                ('execution', 'pending', 'as_observed', True)):
+            records = [dict(record_id='pending-view-fixture', run_id='view-run', revision=7,
+                            level=level, status=status, stale=False)]
+            observation = SimpleNamespace(session=SimpleNamespace(revision=7),
+                busy=busy, _freshness=freshness, records=lambda: deepcopy(records))
+            payload = ExperimentWorkflow._state(observation)
+            assert payload['status'] == 'pending'
+            assert next(row for row in payload['levels'] if row['level'] == level)['status'] == 'pending'
+            original = deepcopy(payload)
+            for language, expected in (('en', 'In progress'), ('zh_CN', '进行中')):
+                set_application_language(app, language)
+                panel.set_state(payload)
+                panel.retranslate_ui()
+                assert panel._level_labels[level].text() == expected
+                assert expected in panel._summary_label.text()
+                assert panel._history_table.item(0, 1).text() == (
+                    ('Passed' if language == 'en' else '通过') if status == 'passed' else expected)
+                assert panel._level_labels['physics'].text() == (
+                    'Unobserved' if language == 'en' else '未观测')
+                assert payload == original
+    finally:
+        set_application_language(app, previous_language)
+        panel.set_state({})
+        panel.retranslate_ui()
+
+
 def main() -> int:
     app = QApplication.instance() or QApplication([])
     old_language = current_language()
@@ -37,6 +73,8 @@ def main() -> int:
         for level in LEVEL_TOKENS:
             assert panel._level_names[level].text() == ui_text(LEVEL_TEXT[level])
             assert panel._level_labels[level].text() == ui_text("Unverified")
+
+        check_producer_pending(panel, app)
 
         spy = QSignalSpy(panel.action_requested)
         for token in ACTION_TOKENS:

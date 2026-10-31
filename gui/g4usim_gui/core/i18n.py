@@ -20,6 +20,9 @@ LanguageCode = Literal["en", "zh_CN"]
 
 
 ZH_CN: dict[str, str] = {
+    "Logical working directory:": "逻辑工作目录：",
+    "Process launch directory:": "进程启动目录：",
+    "In progress": "进行中",
     'Previous run (configuration changed): {detail}': '上次运行（配置已变更）：{detail}',
     'Previous run: {detail}': '上次运行：{detail}',
     'Previous run (current inputs unverified): {detail}': '上次运行（当前输入未验证）：{detail}',

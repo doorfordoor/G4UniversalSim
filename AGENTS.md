@@ -4,6 +4,8 @@
 
 ## 0. 条目索引与历史全文
 
+- 2026-10-31 K1 显示契约：成功且非陈旧的生成/运行命令投影覆盖 external 无 package；有效 launch 的实际 argv 优先，兼容计划命令不冒实际事实，目录未知不回填编辑 cwd。pending 按服务逐项显示，不联动其他层。全文见 `docs/agent-history.md`，回归 `smoke_k1_workflow.py`、`smoke_k1_panel.py`。
+
 - 2026-10-31 K1 配置包搬移：匹配资源的四个路径草稿随规范路径搬移，非法草稿保留；staging 与 writer 收据先检查链接再比较规范路径。真实 GUI 下一动作、Windows 别名及旧异步 smoke 反例见 `docs/agent-history.md`；第三冻结失败和未完成独审不得用局部通过覆盖。
 
 - 2026-10-31 K1 实施中：统一动作服务复用 F4/F5/runner，四层验证独立；输入变化及 Undo 后历史不得恢复当前资格。资源包重写路径后的哈希与原始读取证据分别保存；I1 只给环境事实。范围与验收见 `docs/collab/inbox/20261031-k1-execution.md`，不得以专项通过提前关闭 K1。
