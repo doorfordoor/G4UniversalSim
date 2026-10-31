@@ -20,3 +20,5 @@
 [复制清单](copy-manifest.json)记录 326 个补充证据文件、444111 字节的原始 SHA；历史 Markdown 仅改扩展名为 `.md.txt`，内容字节不变。清单不含本索引及后续交付复核，不覆盖或重封存既有完整矩阵归档。
 
 [最终交付独立复核](delivery-review.md.txt)及[机器收据](delivery-review.json)核验归档、两报告、350 份产品身份与活动文稿，未发现阻断项。[入库字节检查](staged-archive-check.json)保留当时 338 个暂存文件的范围；这三份后续交付记录不纳入先前 326 项复制清单。
+
+正常快进集成及推送已完成，见[实际集成收据](integration/receipt.json)与[检出后字节核验](integration/checkout-verification.json)。这些后续交付记录同样不纳入先前 326 项复制清单。

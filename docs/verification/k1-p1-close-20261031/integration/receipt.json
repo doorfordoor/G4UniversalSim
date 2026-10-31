@@ -1,0 +1,178 @@
+{
+  "schema": "k1_accepted_stage_integration_v1",
+  "recorded_utc": "2026-10-31T12:52:26.486128+00:00",
+  "codex_before": "e701c7fa5b5b8899d8dd8b9f6a0b4b305614e5c9",
+  "accepted_commit": "864bb2f9040e189d459565ef3b3a41317cb4682f",
+  "codex_after": "864bb2f9040e189d459565ef3b3a41317cb4682f",
+  "remote_codex": "864bb2f9040e189d459565ef3b3a41317cb4682f",
+  "merge_mode": "normal_fast_forward",
+  "force_or_reset_used": false,
+  "codex_worktree_clean": true,
+  "product_freeze": "2914b3962167325628ede699b1c14a9d224dec41",
+  "targeted_test_commit": "5644e1e52b9c2dd5b463217e9e601c8116f8a913",
+  "commands": [
+    {
+      "name": "task-head",
+      "argv": [
+        "git",
+        "-c",
+        "core.longpaths=true",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim",
+      "exit_code": 0,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-p1-integration-task-head.log"
+    },
+    {
+      "name": "task-status",
+      "argv": [
+        "git",
+        "-c",
+        "core.longpaths=true",
+        "status",
+        "--porcelain"
+      ],
+      "cwd": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim",
+      "exit_code": 0,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-p1-integration-task-status.log"
+    },
+    {
+      "name": "codex-before-status",
+      "argv": [
+        "git",
+        "-c",
+        "core.longpaths=true",
+        "status",
+        "--porcelain"
+      ],
+      "cwd": "C:\\Users\\123\\.codex\\worktrees\\q1-final\\G4UniversalSim",
+      "exit_code": 0,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-p1-integration-codex-before-status.log"
+    },
+    {
+      "name": "codex-before-head",
+      "argv": [
+        "git",
+        "-c",
+        "core.longpaths=true",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "C:\\Users\\123\\.codex\\worktrees\\q1-final\\G4UniversalSim",
+      "exit_code": 0,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-p1-integration-codex-before-head.log"
+    },
+    {
+      "name": "codex-branch",
+      "argv": [
+        "git",
+        "-c",
+        "core.longpaths=true",
+        "branch",
+        "--show-current"
+      ],
+      "cwd": "C:\\Users\\123\\.codex\\worktrees\\q1-final\\G4UniversalSim",
+      "exit_code": 0,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-p1-integration-codex-branch.log"
+    },
+    {
+      "name": "remote-before",
+      "argv": [
+        "git",
+        "-c",
+        "core.longpaths=true",
+        "ls-remote",
+        "origin",
+        "refs/heads/codex"
+      ],
+      "cwd": "C:\\Users\\123\\.codex\\worktrees\\q1-final\\G4UniversalSim",
+      "exit_code": 0,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-p1-integration-remote-before.log"
+    },
+    {
+      "name": "ancestor",
+      "argv": [
+        "git",
+        "-c",
+        "core.longpaths=true",
+        "merge-base",
+        "--is-ancestor",
+        "e701c7fa5b5b8899d8dd8b9f6a0b4b305614e5c9",
+        "864bb2f9040e189d459565ef3b3a41317cb4682f"
+      ],
+      "cwd": "C:\\Users\\123\\.codex\\worktrees\\q1-final\\G4UniversalSim",
+      "exit_code": 0,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-p1-integration-ancestor.log"
+    },
+    {
+      "name": "fast-forward",
+      "argv": [
+        "git",
+        "-c",
+        "core.longpaths=true",
+        "merge",
+        "--ff-only",
+        "--quiet",
+        "864bb2f9040e189d459565ef3b3a41317cb4682f"
+      ],
+      "cwd": "C:\\Users\\123\\.codex\\worktrees\\q1-final\\G4UniversalSim",
+      "exit_code": 0,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-p1-integration-fast-forward.log"
+    },
+    {
+      "name": "codex-after-head",
+      "argv": [
+        "git",
+        "-c",
+        "core.longpaths=true",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "C:\\Users\\123\\.codex\\worktrees\\q1-final\\G4UniversalSim",
+      "exit_code": 0,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-p1-integration-codex-after-head.log"
+    },
+    {
+      "name": "codex-after-status",
+      "argv": [
+        "git",
+        "-c",
+        "core.longpaths=true",
+        "status",
+        "--porcelain"
+      ],
+      "cwd": "C:\\Users\\123\\.codex\\worktrees\\q1-final\\G4UniversalSim",
+      "exit_code": 0,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-p1-integration-codex-after-status.log"
+    },
+    {
+      "name": "push-codex",
+      "argv": [
+        "git",
+        "-c",
+        "core.longpaths=true",
+        "push",
+        "origin",
+        "codex"
+      ],
+      "cwd": "C:\\Users\\123\\.codex\\worktrees\\q1-final\\G4UniversalSim",
+      "exit_code": 0,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-p1-integration-push-codex.log"
+    },
+    {
+      "name": "remote-after",
+      "argv": [
+        "git",
+        "-c",
+        "core.longpaths=true",
+        "ls-remote",
+        "origin",
+        "refs/heads/codex"
+      ],
+      "cwd": "C:\\Users\\123\\.codex\\worktrees\\q1-final\\G4UniversalSim",
+      "exit_code": 0,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-p1-integration-remote-after.log"
+    }
+  ]
+}
