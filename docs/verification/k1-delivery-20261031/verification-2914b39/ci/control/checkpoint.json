@@ -1,0 +1,41 @@
+{
+  "schema": "k1_seventh_ci_checkpoint_v1",
+  "head": "2914b3962167325628ede699b1c14a9d224dec41",
+  "state": "Official four jobs / four ZIPs / twelve reports passed strict and F5 audit",
+  "runs": {
+    "linux": 41189260366,
+    "m0": 41189260331
+  },
+  "jobs": {
+    "linux": [
+      124502461038,
+      124502461137
+    ],
+    "m0": [
+      124502460896,
+      124502461095
+    ]
+  },
+  "whole_CI_evidence": "complete_passed",
+  "next": "CI ready for archive. Seventh payload awaits root final Windows audit and gate receipts.",
+  "source_and_test_files_modified": false,
+  "phase_complete": false,
+  "collected_artifacts": [
+    "m0-report-ubuntu-latest",
+    "m0-report-windows-latest",
+    "linux-evidence-11.4.3",
+    "linux-evidence-11.3.2"
+  ],
+  "m0_terminal": true,
+  "M0_gui_k1_window": {
+    "status": "pass",
+    "exit_code": 0,
+    "assertions": 178
+  },
+  "sixth_archive": "out/collab/k1-delivery-staging/verification-4167c44",
+  "sixth_archive_ready": true,
+  "running_sessions": {},
+  "last_observed_utc": "2026-10-31T10:02:55.341862+00:00",
+  "completed_utc": "2026-10-31T10:09:12.660560+00:00",
+  "final_byte_inventory": "evidence-manifest-r2.json"
+}

@@ -1,0 +1,32 @@
+{
+  "status": "passed_archive_bytes_with_explicit_later_checkpoint_append",
+  "checks": {
+    "selection_count": true,
+    "archive_manifest_digest": true,
+    "final_index_digest": true,
+    "phase_still_incomplete": true,
+    "sixth_native_original_334_files_unchanged": true,
+    "all3122_archived_payloads_match_original_registered_SHA": true,
+    "archived_payload_bytes_match": true,
+    "one_explicit_append_only_checkpoint_change": true
+  },
+  "registered_source_entries": 3122,
+  "registered_original_bytes_verified": 97083728,
+  "later_source_drifts": [
+    {
+      "source": "out/collab/k1-sixth-checkpoint.md",
+      "archive_SHA": "ee7d1a3ac65ce05efe6fb7e7609ee8be5b0abcca337768b2d594b5b4d954e088",
+      "current_SHA": "d92bde053b5f4465fff2e03fad466100195d633d8754d2697b83679bd115fde9",
+      "archive_bytes": 12789,
+      "current_bytes": 13236,
+      "current_is_original_plus_append": true,
+      "appended_bytes": 447
+    }
+  ],
+  "prior_attempt_preserved": "out/collab/k1-seventh-archive-byte-audit-verification-4167c44.json",
+  "prior_attempt_explanation": "initial comparison required live mutable checkpoint to equal archival snapshot; current checkpoint adds seventh completion only. Archive original SHA and exact prefix verified. No archive rewritten.",
+  "archive_manifest_SHA": "7dce58d7afb9a52e38dfc476b0cfc3c67cfd7c9b7958e46a94a268b98e95aa12",
+  "phase_complete": false,
+  "frozen_verification_outcome": "failed",
+  "scope": "bytes, counts, index only; no resource-boundary review"
+}

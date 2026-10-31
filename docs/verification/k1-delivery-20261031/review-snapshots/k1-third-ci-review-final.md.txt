@@ -1,0 +1,94 @@
+# K1 第三冻结真实 CI 独立审核
+
+**判定：自动化未通过；另有独立的 native 失败，K1 不可最终验收。** 原件收集、严格门禁尝试和十二 profile 独立核对均已完成。
+
+冻结：`11c92d361369cda4b2412451ff2841eff940f810`；179 个唯一用例（static35 / gui55 / backend61 / integration28）。实际模型 `gpt-6.1-sol`，推理档 `medium`，消耗未知。
+
+## 真实 run / jobs 终态
+
+| run | 终态 | jobs / 范围 |
+| --- | --- | --- |
+| [Linux 41169369850](https://github.com/doorfordoor/G4UniversalSim/actions/runs/41169369850) | success | Geant4 11.3.2、11.4.3 两 job 均 success；各179/179通过 |
+| [M0 41169369890](https://github.com/doorfordoor/G4UniversalSim/actions/runs/41169369890) | failure | Ubuntu90/90通过；Windows85pass/5fail |
+
+两个 run 都是此冻结head、run_attempt=1；本任务没有调用任何rerun/cancel/job修改工具。M0 Windows的Run offscreen GUI tests步骤失败，其后Validate GUI report evidence被CI跳过；下面的本地严格audit确实运行并拒绝了该失败报告，不能说云端跳过的门禁已经执行。
+
+完整原API响应：[linux-run.json](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/verification/k1-11c92d3/ci/linux-run.json), [m0-run.json](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/verification/k1-11c92d3/ci/m0-run.json), [linux-jobs.json](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/verification/k1-11c92d3/ci/linux-jobs.json), [m0-jobs.json](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/verification/k1-11c92d3/ci/m0-jobs.json), [linux-artifacts.json](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/verification/k1-11c92d3/ci/linux-artifacts.json), [m0-artifacts.json](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/verification/k1-11c92d3/ci/m0-artifacts.json)。
+
+## 四份官方 ZIP 与原件
+
+通过已连接GitHub工具读取官方metadata和下载引用，仅把临时signed URL送入禁回显下载器stdin；未写入URL文件或打印URL。每份均先核对官方字节数和SHA256，再安全展开。
+
+| artifact | 官方ID | 字节数 | 原 ZIP |
+| --- | ---: | ---: | --- |
+| linux-evidence-11.3.2 | 13031227096 | 26356515 | [下载原件](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/verification/k1-11c92d3/ci/linux-evidence-11.3.2.zip) |
+| linux-evidence-11.4.3 | 13031217324 | 26354926 | [下载原件](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/verification/k1-11c92d3/ci/linux-evidence-11.4.3.zip) |
+| m0-report-ubuntu-latest | 13030632116 | 306119 | [下载原件](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/verification/k1-11c92d3/ci/m0-report-ubuntu-latest.zip) |
+| m0-report-windows-latest | 13030053264 | 358904 | [下载原件](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/verification/k1-11c92d3/ci/m0-report-windows-latest.zip) |
+
+共53,376,464字节原ZIP、4,477个文件成员、162,124,883字节展开数据。`collect`保留独立的ZIP/成员原字节副本；跨OS日志路径只在内存中按同目录basename定位，原report/log不改写。
+
+官方metadata digest、全部文件索引和封存副本：[原件/审核入口SHA清单](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/verification/k1-11c92d3/ci/evidence-manifest.json)、[4,477成员收集清单](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/verification/k1-11c92d3/ci/collection/collection.json)。
+
+## 严格门禁与独立逐项结果
+
+| 步骤 | 实际退出码 | 结论 |
+| --- | ---: | --- |
+| ci_helper prepare | 0 | 4 artifact / 12 profile计划与179冻结清单绑定 |
+| ci_helper collect | 0 | 4 ZIP / 4,477成员原字节收集完成 |
+| ci_helper audit | 1 | 拒绝含5 fail的M0 Windows GUI；没有生成通过版audit.json |
+
+完整命令、退出码、日志SHA：[pipeline-result.json](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/verification/k1-11c92d3/ci/pipeline-result.json)；门禁失败原文：[audit.log](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/verification/k1-11c92d3/ci/audit.log)。没有使用allow-incomplete、legacy绕行或降低基线。错误文本本身提到的triage开关仅是原门禁提示，本次命令未使用。
+
+辅助audit遇首个失败会停止，因此另做全十二profile独立核对，完整结果：[independent-profiles.json](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/verification/k1-11c92d3/ci/independent-profiles.json)。该程序退出0表示收集审核记录完成，其内部明确checks_passed=false / k1_ci_verified=false，不是绿色验收。
+
+| artifact | profile | cases | pass/fail | 已执行断言入口 | 严格/F5同平台门禁 |
+| --- | --- | ---: | --- | ---: | --- |
+| linux-evidence-11.3.2 | backend | 61 | 61/0 | 41118 | 通过 |
+| linux-evidence-11.3.2 | gui | 55 | 55/0 | 6118 | 通过 |
+| linux-evidence-11.3.2 | integration | 28 | 28/0 | 5847 | 通过 |
+| linux-evidence-11.3.2 | static | 35 | 35/0 | 3538 | 通过 |
+| linux-evidence-11.4.3 | backend | 61 | 61/0 | 40526 | 通过 |
+| linux-evidence-11.4.3 | gui | 55 | 55/0 | 6118 | 通过 |
+| linux-evidence-11.4.3 | integration | 28 | 28/0 | 5847 | 通过 |
+| linux-evidence-11.4.3 | static | 35 | 35/0 | 3538 | 通过 |
+| m0-report-windows-latest | static | 35 | 35/0 | 3528 | 通过 |
+| m0-report-windows-latest | gui | 55 | 50/5 | 5656 | 拒绝 |
+| m0-report-ubuntu-latest | static | 35 | 35/0 | 3538 | 通过 |
+| m0-report-ubuntu-latest | gui | 55 | 55/0 | 6118 | 通过 |
+
+总计12份报告、538次用例执行：**533pass / 5fail / 0skip**。131,490是包括失败用例已执行部分的探针入口数，不能写成整轮绿色验收断言数。所有报告匹配同一head/source/tests指纹及冻结分profile名称/顺序；全部538份原日志SHA、断言marker以及计数合计一致。封存collection中的12份report和538份log也与独立审核对应字节SHA再次一致。
+
+F5各原始报告/日志按同artifact、OS、Geant4版本和profile核对。11份profile严格门禁及逐例/总量基线通过；M0 Windows GUI虽然profile总入口数没有下降，仍有以下既有用例下降，不能靠新增测试或profile总量掩盖：
+
+- gui_f5_editor_history：当前173 < F5同平台237。
+- gui_duplicate_history_cli：当前19 < F5同平台254。
+
+保留各报告原始git_dirty/git_status_porcelain，不把source/tests指纹一致冒称整个CI检出干净。源fingerprint：`890635b6d521659e43cf735d07f862c6ebd5959e6c5ea68d023d55332a8a930a`；tests fingerprint：`86f3a7598be26593c48297526678cd5e45ccbec09fde2c0e0545b5c56f5cf07e`。
+
+## 五项失败事实与原始 traceback 入口
+
+结构化首因、退出码、基线下降和原日志SHA：[m0-failure-facts.json](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/verification/k1-11c92d3/ci/m0-failure-facts.json)。完整Windows job解码日志：[job124443787428.log](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/verification/k1-11c92d3/ci/m0-windows-job-124443787428.log)（保存前未检出signed URL）。
+
+| 用例 | 原始关键失败 | 已证实与待定位边界 |
+| --- | --- | --- |
+| gui_backend_launch | smoke_backend_launch.py:79，launchWorkingDirectory == str(short) 的AssertionError | 目录字符串不同；Windows归一化/短名为优先排查方向，日志未给两侧实际值，未冒称已定更深根因 |
+| gui_k1_cli | test_k1_cli.py:132，期望passed+timeout，实得cancelled+timeout，[False]，约0.047秒 | timeout与完成/取消回调顺序分歧；不能直接当物理/后端失败 |
+| gui_k1_window | smoke_k1_workflow.py:88，report=None后访问.errors，AttributeError | 动作未通过且诊断格式化遮住reason；现有原日志不含更早reason，待单独定位 |
+| gui_f5_editor_history | smoke_f5_editor_history.py:440，读取Path(configPath)，PermissionError: . | configPath为空而访问当前目录；包为何未绑定未从该日志确定 |
+| gui_duplicate_history_cli | smoke_duplicate_history_cli.py:145，inspection.workingDirectory == project.workspaceRoot 的AssertionError | 路径字符串比较先失败，WinError32恢复锁异常在后；进程最终0xC0000005也须独立保留，不能仅归cleanup |
+
+上述原件都在 [M0 Windows GUI原始目录](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/verification/k1-11c92d3/ci/m0-report-windows-latest/20261031-044222-fb5176ab)。失败事实已在收集过程中立即通知主线程，没有等待Linux结束才报，也没有尝试替任何写者修复。
+
+## 自动化与 native 严格分开
+
+1. 自动化：Linux两版本通过；M0 Windows五项失败，严格audit拒绝，所以本轮automation_checks_passed=false。
+2. native：主线程另报告11c92d3在GUI搬移bundle load→下一initialize时丢失relative resource base；由Franklin候选/主线程复验。本审查未操作窗口、未独立重演该现象，按用户提供的失败事实单列，不能被任何CI绿色覆盖。
+3. 因此stage_acceptance=not_passed；本报告不宣布K1或物理正确性验收通过，不触碰Windows46966/现有native host。
+
+## 辅助程序、异常与交接
+
+- 使用out/collab/k1-ci/README.md与既有ci_helper.py prepare/collect/audit。复制到本ci目录后，仅将ROOT的parents[2]改为parents[3]适应目录深度；原辅助程序未改，门禁逻辑未变。download-stdin.py副本与原件SHA完全一致。
+- GitHub读连接两次出现transport send error，只读重试各一次后恢复；没有重试CI job。原诊断：[首次读传输诊断](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/verification/k1-11c92d3/ci/connector-read-incidents.json)、[第二次读传输诊断](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/verification/k1-11c92d3/ci/connector-read-incident-02.json)。下载引用未存盘。
+- 所有新写入限本轮ci目录和out/collab/k1-third-ci-review-*；不写源码、旧报告、旧ZIP或F5基线。没有触碰Windows46966及任何原生窗口/其他进程。
+- 最终机器可读判定：[review-result.json](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/verification/k1-11c92d3/ci/review-result.json)；恢复检查点：[checkpoint.json](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/verification/k1-11c92d3/ci/checkpoint.json)。四ZIP/API/jobs/原失败日志/严格失败收据/独立十二profile审核均已完整交接。

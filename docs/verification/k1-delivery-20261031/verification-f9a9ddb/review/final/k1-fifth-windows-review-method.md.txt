@@ -1,0 +1,9 @@
+# 第五Windows独立审核方法
+
+冻结f9a9ddbfcabe69067707a5a209caff005748f510；182=36/56/61/29。只读等待out/verification/k1-f9a9ddb/windows最终report.json，每60秒一次，不启动测试，不接触父测试session/窗口。先等build-identity/capabilities到齐并核对独立冻结身份，再等待完整稳定报告。
+
+复用第四独立审核器，新增第四原report逐例/总量不下降门禁：同时执行当前strict、F5 strict、第四strict、当前对F5 baseline、当前对第四baseline五道门禁，不用legacy/skip放宽。原字节SHA、v3 marker、声明计数、全部用例身份/顺序/分层、clean/head/source/tests/实际exe/merge/GUI bytes均核对；逐项下降不能以总数抵消。
+
+F5基准160/50898，原report SHA07cb528df9840b83b962514c8b2595031ef4e6a7158a55252cdee55f5900d832。第四基准182/56976，原report SHA75562577d028f2eefe6b8785d316ee4879d851b034ec32df000566d6e24dd8cb。保存三代全部用例/日志SHA及双基准差值；所有原件审核前后字节不变。
+
+只写out/collab/k1-fifth-windows-review-*；完整报告不等于独立观察原进程exit。第五I1最终范围收据须使用第五实际本机/CI证据，第四I1/native收据可供第四归档，不冒充第五。P3候选窄审通过不是第五或K1整体通过；仍不承接被拒资源专项。

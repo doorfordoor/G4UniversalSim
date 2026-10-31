@@ -1,0 +1,151 @@
+# K1 取消终态卡住：独立契约/现象核对与候选复审判据
+
+## 最终独立判定（已核 Bohr delivery.md）
+
+**通过这份6行产品候选的独立窄复审，无必须返工项。** 可交主线程在现有冻结正常结束、允许应用后集成；不表示可以现在改正式文件，也不表示原生取消、新冻结或整阶段已经验收。Windows10992未轮询、未干预；两原生窗口及其他进程未操作。本次只更新本OUT报告。
+
+已核对 delivery.md、receipt.json、candidate.diff 及最终测试。候选workflow SHA=8419770c31176e35d53d5744202bb92d1641cce72714fcbc3bf27c326b7da009，测试SHA=b14e9ad84704397425330da8674b53021d8eda18636bb761cb9f6297e2eb2653，均与前次本审查独立执行的256断言版本相同；未把不同版本结果串用，也未无理由重复测试。
+
+### published补写：在成功持久化的本竞态中，最终盘上投影与completed一致
+
+1. _finish先设置同一context.finishing，再用_json_record(record)取得深拷贝快照persisted。_persist执行fsync/replace后，EvidenceJob只把结果排队交回Qt owner线程。
+2. 晚到_run_finished仍先写入已知launch、exit_code、output_dir和RunResult，再由新增guard挡住verify提交。因此killed事实没有被丢弃，也不会再推进job serial去取消终态published。
+3. published先确认self._active is context，再重判取消与epoch/revision变化；若最新_json_record(record)与刚写入的persisted不同，更新persisted，直接self._job.submit(_persist(...), published)，随即return。这里没有清_active或发completed。
+4. 下一次published执行同样比较；晚事实若在补写期间再变化，会继续补写，并非硬编码最多两次。只有成功落盘的快照与当前投影一致时才清_active、通知状态并发completed一次。深拷贝和owner线程发布使持久化工作不会一边读取同一可变record一边被Qt槽改写。
+5. 本审查独立测试实际观察到取消/失败记录先写缺少晚事实的版本，再写含exit_code9/result.killed的版本；最终落盘JSON与完成回调记录相等，busy=false，callback在owner线程，重复信号不再次完成。
+
+准确保证是“完成时已观察到的持久化投影一致”。_json_record按既有协议排除report和下划线私有字段，正常completed可能仍带非持久化的内存report对象，所以不能对所有动作声称原始Python回调对象与JSON逐字段完全相同。该九例的记录没有这些额外字段，因此能直接比较整个字典。未来在终态之后才到达的事实、外部改盘或任意通知槽重入修改，不属于此次保证。
+
+若第一次或补写_persist失败，published会明确改为failed并附record_persistence_failed、终结活动上下文；盘上可能不存在记录或仍是旧版本。此时**不能保证磁盘与completed一致，也不能宣称cancelled已最终持久化成功**。这是显式失败语义，不能用“无论存储成功与否都相等”来批准；当前候选和故障反例保留该区分。
+
+### finishing挡_work：没有掩盖本次必要收尾
+
+逐一检查了当前全部_work调用点：准备输入/包、候选校验、Inspect后验证、初始化前缀准备、运行结果F1验证、物理比较、资源导出、历史导入，都是普通阶段工作或阶段继续，不是关闭进程/刷新日志/发布终态的独占收尾器。当前context已经finishing时再启动这些工作，反而会覆盖终态job；拒绝它们是正确的所有权裁决。
+
+必要收尾路径不经过新增guard：
+
+- 终态首次写入和每次补写都由_finish/published直接调用_job.submit，不经过_work，所以不会被finishing拦截。
+- runner仍在自己的_on_finished中排空stdout/stderr/解析尾流、写低层run_status并关闭日志后才发finished；workflow guard发生在其后，不跳过这些收尾。
+- 迟到进程事实在_run_finished的guard之前保留；cancelled/failed无需再通过“成功资格F1验证”才能成为终态，不应把缺少成功证据又当作启动新验证的理由。
+- 正常完成尚未finishing时仍走原_run_finished→_work(verify)→_finish，原F1/请求归属/内容身份校验全部保留，没有凭exit0或信号判passed。
+- close的job/watchers排空仍走既有close路径，并非靠_work完成；guard本身不提前关闭job、不清_active、不伪造closed。
+
+本报告前节已保留“旧verify已被替换但仍阻塞”完整drain未验证的边界。候选没有修复EvidenceJob对任意旧worker的通用跟踪问题，不能将本次busy修复扩大为所有旧worker排空证明；这不构成本6行改动新引入的必要收尾遗漏。
+
+### 证据与交接
+
+本审查独立证据：out/collab/k1-cancel-independent-evidence/20261031-120948-final-test/receipts.json；原件exit1/11，候选九例exit0/256。Bohr既有组件230断言为写者证据，与独立256明确分开。测试仅QtCore/EvidenceJob/受控QObject信号，没有把合成记录当真实Geant4或物理结果。
+
+正式workflow仍为ec8c123e13e4bcb5f90d33fe69ed1a6545215e456648e38deac58ad829288e3b，本审查未应用任何候选。剩余项为主线程在允许解冻后集成、正式测试登记、新冻结及真实原生“取消→强制结束→completed→恢复动作/正常退出”复验。**源码冻结解除前不操作现有卡住host。**
+
+模型沿用gpt-6.1-sol / medium；消耗未知。
+
+---
+
+阶段：已对下述锁定SHA的Bohr当前候选完成独立窄审查，未发现阻断本次终态竞争修复的问题；仍不宣称原生取消或阶段验收通过。Bohr 独占 workflow/tests 的 out 候选，本审查者不实现或修改这些文件。源码全量冻结保持，不操作两原生窗口或任何进程，不重跑全套。
+
+实际模型 gpt-6.1-sol；reasoning_effort=medium；消耗未知。
+
+## 已确认的事实与证据界限
+
+- 观察记录 out/verification/k1-c644bb1/visible/observations.md 的06–08：真实1000000事件任务→K1取消→现有强制结束；观察到进程NotRunning、runner结果killed，超过60秒新动作仍禁用。此处是主线程已有原生观察，本审查没有重新观察窗口，也没有轮询/终止进程。
+- 本次独立解析 current-state.json：workflow.status=pending；同一JSON的execution层及history中目标record已为cancelled，不应把“current-state仍pending”误读为它的所有字段都pending。
+- 目标record_id=639bdcf1db534dffad8db411baa79577。原 record.json 已落盘cancelled，reason=QProcess error: Crashed，finished_at=2026-10-31T03:58:47.501702+00:00；actions.jsonl有4份既有动作完成收据，没有此record。该文件的完成收据缺失，与仅看取消记录已写盘是两回事。
+- current-state history还带exit_code=62097、result.state=killed，而落盘取消记录的result/exit_code为空。这与 _run_finished 在终态写入开始后继续改内存record相符；是另一个“磁盘事实与回调尚未一致”的迹象，不等于独立证明了现场的每次信号时序。
+
+本次未重放原生1000000事件；以下因果链来自当前冻结源码与上述原件的相互印证，不能冒称现场完整trace已经记录。
+
+## 冻结源码中的明确竞争路径
+
+1. _run_error 在活动phase为run/initialization且runner不再运行时调用 _finish。_finish 设置 context.finishing=true，并把cancelled标志优先折为cancelled，向 self._job 提交原子终态持久化。
+2. _active 只有在该持久化的 published 回调中才清空；随后 _notify(record) 与 completed(record) 才发布真正服务终态。这符合“落盘后完成”的契约。
+3. 同一进程的 finished 信号随后到达时，冻结 _run_finished 仅检查_active与phase，没有检查finishing，继续更新record并调用 _work(verify, ...)。冻结 _work 也没有finishing入口守卫。
+4. EvidenceJob.submit 的第一步就是 cancel：递增serial、设置旧event、pending=false，再建立新任务。旧持久化可能已完成os.replace，但它的回调会因event已取消或serial不匹配而丢弃。
+5. 后来的verify回调进入 _work.delivered，因context.cancelled而调用 _finish(cancelled, ...)，却被finishing=true的重复终结守卫拒绝。于是没有剩余路径负责清_active/completed，busy永远被_active占用。
+
+关键位置：experiment_workflow.py:554–606、909–994；evidence_job.py:31–54。_finish自己的防重入守卫不能保护在它之外提交的新工作。根因并不要求磁盘IO失败、Qt主线程异常或后端仍活着。
+
+## 最小正确所有权
+
+- 同一活动context只允许一个终态发布者。进入finishing后，终态持久化及其必要的二次写入独占该EvidenceJob的提交/回调所有权，直到published成功或明确持久化失败已完成服务通知。
+- runner仅继续拥有真实进程与低层运行事实；workflow拥有record、busy和completed；UI不能通过直接清busy、伪造completed、删除_active或修改控件来代替服务收尾。
+- 迟到/重复error、finished与旧验证任务不得再次submit以取消终态回调。至少应在_run_finished提交verify之前拦截finishing（可先记录已观察到的低层进程事实），且在共享_work入口防止向finishing或不存在的context提交普通工作；不是仅在某个GUI取消槽补sleep。
+- 不能全局改变EvidenceJob的“新请求取代旧请求”语义来修本问题，其他页面依赖该语义。也不能新建第二runner或调用os级广域终止。
+- finishing期间cancel、输入修改或revision变化仍由published的既有重新比较/必要重写逻辑处理；不可提前丢弃持久化回调、在写入未完成时解锁新动作，或让迟到passed重新获得当前资格。
+- 终态成功发布应恰好一次，_active清空且busy在无本方活进程时释放。存储失败可以明确failed并结束，不能假造cancelled落盘成功。观察者拿到的完成记录应与最终落盘JSON归一化内容相符；对已错过的事实明确unknown，不得补造。
+- close/drain仍等待当前回调与所拥有工作完成。完成新动作和安全关闭必须继续可用；不通过预先job.close/cancel掩盖未排空。
+
+以上来自 docs/agent-history.md K1的“取消/迟到回调不升passed、终态信号与落盘一致、关闭等待排空”契约，以及 docs/可信实验工作流.md 的CLI服务终态/取消规则。
+
+## Bohr候选必须覆盖的复审反例
+
+| 反例/顺序 | 必查结果 |
+| --- | --- |
+| cancel→runner不运行→error先到→第一次_persist已开始但published尚未执行→finished后到 | 不提交新verify取代终态；放行屏障后completed恰好1次；record=cancelled；busy=false |
+| 两次/多次迟到finished、error，以及普通_work在finishing阶段被调用 | 终态任务serial/所有权不被覆盖，无第二终态，无多写成功事实 |
+| 正常success的证据验证→_finish→晚到error/finished | 不重新取消已合法发起的终态；保持原当前性与证据判定，不能因guard跳过F1检查 |
+| error而没有finished（例如FailedToStart） | 不依赖后续finished来清busy；failed completed一次，能够开始下一动作 |
+| finished先到，验证任务尚未完成时cancel | 有界终结为cancelled，不发布passed；保留所需任务drain与磁盘一致性 |
+| 初始终态写入在飞行时cancel/编辑/Undo | 二次持久化仍执行；完成记录与磁盘一致；cancelled/stale不恢复passed |
+| _persist受控失败 | 明确failed通知并释放该活动上下文；不凭写入尝试宣称成功，不永久busy |
+| completed后启动下一合法动作；服务close排空 | 下一record独立身份；旧信号/回调不污染新动作；closed正常到达 |
+| run与initialization两phase，同样的error/finished竞态 | 两phase不遗漏；真实输出失败不能提升passed |
+
+复现应使用明确线程屏障/事件控制_persist与Qt queued publication的交错，而非靠随机sleep碰时序；后续集成建议补一个由真实runner管理的独立Python测试子进程产生error/finished序列的反例，不接触两原生host或其child。不必在候选审查中重复1000000事件或调用真实物理计算。合成服务/真实QProcess/真实原生观察分开计证。
+
+## 候选接收状态（预审时快照，当前结论见文末追加）
+
+已只读看到 out/collab/k1-c644bb1-cancel-candidate 中进行中的candidate.diff，方向是_work与_run_finished的finishing守卫；该目录由Bohr维护。尚未收到其最终测试/收据交付，不能把正在写入的文件或目录存在当成完成。等候选定稿后核其源码前SHA、差异和上述边界证据，再追加明确通过/返工结论到本报告。
+
+## 本次只读核对的源与证据SHA256
+
+- `gui/g4usim_gui/core/experiment_workflow.py`：`ec8c123e13e4bcb5f90d33fe69ed1a6545215e456648e38deac58ad829288e3b`
+- `gui/g4usim_gui/core/evidence_job.py`：`af8a2daaa120546ad55a52b6e144a7886c5b531e593e74d1a7b780ae36c5eb5e`
+- `scripts/test_k1_workflow.py`：`e7c585aa910699f92982edeadc25ed13ff552e407620814e21280a45ccf8b758`
+- `gui/g4usim_gui/core/runner.py`：`497431704c75f4cf37c5e6136d0800f54804120b90f5bc9358b85e0222ff320c`
+- `out/verification/k1-c644bb1/visible/observations.md`：`0ad8cbe9ed780f3c6dce5ee5ea35cc3e21bd4da56b72377ac5c2a1ccb7d598a2`
+- `out/verification/k1-c644bb1/visible/current-state.json`：`8e8c2a64bef82c31f89b22b825d463737382986592ff90bf60f03b2ad36d5de8`
+- `out/verification/k1-c644bb1/visible/actions.jsonl`：`cf68d67e2ef2e6678e78c24ba5523ff4b6f5e0503ec16d38ab17ec38dbe67b92`
+- `out\verification\k1-c644bb1\visible\fixture-inputs\packages\experiment-records\639bdcf1db534dffad8db411baa79577\record.json`：`f91cbb38ca281197adc00ddb86e3a4026c2fa73a36a2634f809905302309b351`
+
+
+## Bohr当前候选独立复审结论（后续追加）
+
+结论：对本节锁定的候选与测试，未发现需要阻止这个窄修复的代码问题。这里通过的是终态发布所有权修复和已实测组件行为，不是Bohr全部交付定稿、源码已应用或真实native取消已经验收。候选变更需按新SHA复核。
+
+### 实现
+
+当前996字节diff在_work入口拒绝active不存在/已finishing的普通工作；_run_finished则先记录已知exit_code/output_dir/runner.last_result/launch，再在finishing时返回，不提交verify或_work。这比在入口丢弃全部晚事实更完整：既有published逻辑看见record与首次落盘不同，会再写一次，再清_active并发completed。正常完成的F1校验未被删减，没有引入第二job/runner或改变EvidenceJob的通用替换语义。
+
+### 独立复跑
+
+本审查者运行Bohr out测试与原tools/test_assert_probe，分别指定冻结workflow和候选workflow。只用QCoreApplication、可控线程屏障、真实EvidenceJob池与原子_persist；手动发真实QObject信号，没有创建实际QProcess子进程、Geant4或任何原生窗口。
+
+| 对象 | 范围 | 退出码 | 探针断言 |
+| --- | --- | ---: | ---: |
+| 冻结原件 | cancel_error_finished | 1 | 11 |
+| 当前候选 | 九种终态生命周期反例 | 0 | 256 |
+
+原件独立观察busy=true、completed_count=0、finishing=true、verification_calls=2、cancelled已落盘，late信号令job serial由1到3，在completed必须恰好一次处真实失败。测试finally里的discard仅在失败输出/断言后清理隔离夹具，没有把该轮判通过；exit1和完整日志保持。
+
+候选独立九例：run/init的cancel/error→finished、未取消error→finished、首次持久化期间晚cancel/晚edit、持久化故障、晚_work、finished先于error。均completed_count=1、busy=false、finishing=false。取消/error例verification_calls=0；带晚事实的记录写两次后才completed；completed与磁盘JSON精确相等，包含受控exit_code9/result.killed。还检查owner-thread发布、重复信号不再完成、后续新动作可用、close及watcher释放。合成首写passed在晚cancel/晚edit时分别重写cancelled/stale，未把合成记录称为科学资格。
+
+第一次独立证据在out/collab/k1-cancel-independent-evidence/20261031-120801。结束核SHA时发现Bohr仍在更新测试ROOT定位；workflow SHA未变，因此未把先前结果套到新测试。随后按新测试SHA重跑，最终独立证据位于out/collab/k1-cancel-independent-evidence/20261031-120948-final-test；original.log、candidate.log、receipts.json保留退出码/断言/原始字节SHA。新ROOT按祖先evidence_job.py定位，可用于out与正式布局；正式登记仍需主线程为--workflow等参数安排入口。
+
+Bohr另有existing-component.log实见既有K1合成组件230断言；本审查仅只读核对，未把230算成本次独立执行，也不从该日志单独推断完整退出收据。
+
+### 保留的边界
+
+- 九例为QObject受控信号时序；真实Qt子进程crash/finished序列和原1000000事件→取消→强杀→completed/恢复操作/正常关闭仍待主线程复验。两原生窗口未被本审查触碰。
+- finished_before_error例在等待终态前释放旧verify屏障，所以没有证明“被替换的旧verify仍阻塞时，close必定等该旧worker”的完整drain边界。这是既有EvidenceJob语义，本候选未改该类；不能借此宣布任意旧worker排空均已验证。
+- 下一动作测试在旧重复信号已处理后才开始，未涵盖对新动作人工注入旧进程信号。不能把本次窄修复扩大为任意信号序列都正确。
+- 所有正式源码仍冻结，用户旧原生失败与全量原件保持；主线程正常解冻/应用、正式测试登记、新冻结/平台矩阵仍是独立后续事项。
+
+### 本节锁定SHA
+
+- `out\collab\k1-c644bb1-cancel-candidate\gui\g4usim_gui\core\experiment_workflow.py`：`8419770c31176e35d53d5744202bb92d1641cce72714fcbc3bf27c326b7da009`
+- `out\collab\k1-c644bb1-cancel-candidate\scripts\test_k1_terminal_publication.py`：`b14e9ad84704397425330da8674b53021d8eda18636bb761cb9f6297e2eb2653`
+- `out\collab\k1-c644bb1-cancel-candidate\candidate.diff`：`e622e008f864a2006d867a3c477107f162a8e52ac150108898aac38f5616ca1e`
+- `out\collab\k1-cancel-independent-evidence\20261031-120948-final-test\original.log`：`58241b0a7db963ace0d112fb41a045ef828cc6bcd80e8a138d586e108db6aae7`
+- `out\collab\k1-cancel-independent-evidence\20261031-120948-final-test\candidate.log`：`6f737c39af4cff48f8fd315649bbbf0558bb4d7ed10ee305f55e01b5a2fded70`
+- `out\collab\k1-cancel-independent-evidence\20261031-120948-final-test\receipts.json`：`a8c10c641c672df2d776244efee8ddf9a7128b86b66707e5b43110f18d895ec2`

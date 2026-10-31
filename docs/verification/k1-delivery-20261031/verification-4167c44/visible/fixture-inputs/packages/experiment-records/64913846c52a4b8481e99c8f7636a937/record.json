@@ -1,0 +1,1153 @@
+{
+  "action": "validate",
+  "actual_inputs": [
+    {
+      "capture_method": "binary_buffer",
+      "kind": "main_ini",
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\execution-inputs\\resources\\r0002-main.ini",
+      "reason": "",
+      "role": "configuration_parse",
+      "sequence": 1,
+      "sha256": "d733fe3643fb191a41ec5251b9aa77afd79fbc537e743793c76d98754f5fa45f",
+      "size_bytes": 949,
+      "status": "recorded"
+    },
+    {
+      "capture_method": "binary_buffer",
+      "kind": "material_ini",
+      "path": "resources/r0003-material.ini",
+      "reason": "",
+      "role": "material_parse",
+      "sequence": 2,
+      "sha256": "d77923cdd8a0020c205b2287cfcbbe6e05b09d8e65359c33278a743c51361665",
+      "size_bytes": 297,
+      "status": "recorded"
+    },
+    {
+      "capture_method": "binary_buffer",
+      "kind": "geometry_ini",
+      "path": "resources/r0004-geometry.ini",
+      "reason": "",
+      "role": "geometry_parse",
+      "sequence": 3,
+      "sha256": "e6d77380889a38f16b6c2ad2f309bd33edb81060d29b30b3055b3f0b6e7e5a2e",
+      "size_bytes": 398,
+      "status": "recorded"
+    },
+    {
+      "capture_method": "binary_buffer",
+      "kind": "macro",
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\initialize-prefix.mac",
+      "reason": "",
+      "role": "recursive_preflight",
+      "sequence": 4,
+      "sha256": "c8135cc1b57473fa722ac92f04fdaa3ab5d18d4762cb5b13d6de71956e3b58f1",
+      "size_bytes": 332,
+      "status": "recorded"
+    }
+  ],
+  "build": {
+    "compiler_id": "MSVC",
+    "compiler_version": "19.51.36246.0",
+    "configuration": "Release",
+    "geant4_version": "$Name: geant4-11-03-patch-02 [MT]$",
+    "git_commit": "4167c4421b13464dec54213ea7652ee321868c4e",
+    "git_source_state": "clean",
+    "git_state_scope": "cpp_build_inputs",
+    "source_fingerprint": "890635b6d521659e43cf735d07f862c6ebd5959e6c5ea68d023d55332a8a930a"
+  },
+  "can_run": true,
+  "command": [
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-k1\\Release\\G4UniversalSim.exe",
+    "--config",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\execution-inputs\\resources\\r0002-main.ini",
+    "--macro",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\initialize-prefix.mac",
+    "--output",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\20261031_151918_k1-visible\\output",
+    "--threads",
+    "1",
+    "--seed",
+    "4242",
+    "--run-name",
+    "k1-visible"
+  ],
+  "coverage": "closed_resource_tree",
+  "created_at": "2026-10-31T07:19:18.245140+00:00",
+  "diagnostics": {
+    "can_run": true,
+    "diagnostics": [
+      {
+        "code": "config.information.add_edited_geometry_summary_info.1",
+        "identity": "64799e9eb189ede0f80dc9d42fe4b42aee7ee1125bfa86a00f68d8e9bec1971d",
+        "identity_parameters": {},
+        "location": null,
+        "message": "Geometry Editor summary: mode=hierarchical, dirty=True",
+        "message_key": "",
+        "origin": "config.validation",
+        "params": {},
+        "raw_message": "Geometry Editor summary: mode=hierarchical, dirty=True",
+        "related_locations": [],
+        "severity": "info",
+        "source": null,
+        "unavailable_reason": "informational"
+      },
+      {
+        "code": "config.information.add_edited_geometry_summary_info.2",
+        "identity": "171f4bfa83f18b14b3a3e3fb32a198acb41794a251cf4d504c5449fccbb06d29",
+        "identity_parameters": {},
+        "location": null,
+        "message": "Geometry Editor material refs: FirstTarget, G4_Galactic",
+        "message_key": "",
+        "origin": "config.validation",
+        "params": {},
+        "raw_message": "Geometry Editor material refs: FirstTarget, G4_Galactic",
+        "related_locations": [],
+        "severity": "info",
+        "source": null,
+        "unavailable_reason": "informational"
+      },
+      {
+        "code": "config.information.add_edited_geometry_summary_info.3",
+        "identity": "baba83bbddcc8c915230b75beb7f6d53683b6419013d1017a15101bd3ab211b1",
+        "identity_parameters": {},
+        "location": null,
+        "message": "Geometry Editor sensitive volumes/layers: 1",
+        "message_key": "",
+        "origin": "config.validation",
+        "params": {},
+        "raw_message": "Geometry Editor sensitive volumes/layers: 1",
+        "related_locations": [],
+        "severity": "info",
+        "source": null,
+        "unavailable_reason": "informational"
+      },
+      {
+        "code": "config.information.add_edited_geometry_summary_info.4",
+        "identity": "933538ff70eb279e0509002e3566c99013e5b8d2471eb8308960b5a7b57f1a36",
+        "identity_parameters": {},
+        "location": null,
+        "message": "Geometry Editor bias volumes/layers: 0",
+        "message_key": "",
+        "origin": "config.validation",
+        "params": {},
+        "raw_message": "Geometry Editor bias volumes/layers: 0",
+        "related_locations": [],
+        "severity": "info",
+        "source": null,
+        "unavailable_reason": "informational"
+      },
+      {
+        "code": "config.information.add_edited_geometry_summary_info.5",
+        "identity": "bdc87997777c28033bed719ad88087d8a9f19060a864bdb774ef75a69b4dcc57",
+        "identity_parameters": {},
+        "location": null,
+        "message": "Geometry Editor hierarchical volumes: 2 enabled / 2 rows",
+        "message_key": "",
+        "origin": "config.validation",
+        "params": {},
+        "raw_message": "Geometry Editor hierarchical volumes: 2 enabled / 2 rows",
+        "related_locations": [],
+        "severity": "info",
+        "source": null,
+        "unavailable_reason": "informational"
+      },
+      {
+        "code": "config.information.add_editor_summary_info.1",
+        "identity": "076621de6d5f9d1ebd4e62868ccb49f737cba8ce77d8104cc0d1466438feb785",
+        "identity_parameters": {},
+        "location": null,
+        "message": "Source summary: preset=proton_beam, particle=geantino, energy=1 MeV",
+        "message_key": "",
+        "origin": "config.validation",
+        "params": {},
+        "raw_message": "Source summary: preset=proton_beam, particle=geantino, energy=1 MeV",
+        "related_locations": [],
+        "severity": "info",
+        "source": null,
+        "unavailable_reason": "informational"
+      },
+      {
+        "code": "config.information.add_editor_summary_info.2",
+        "identity": "bec34ce34da794f9ac60aee2015471e1923ef869b68f88d42f016a862efb53d6",
+        "identity_parameters": {},
+        "location": null,
+        "message": "Physics summary: mode=reference, reference=FTFP_BERT, default_cut=0.1 mm, biasing=False",
+        "message_key": "",
+        "origin": "config.validation",
+        "params": {},
+        "raw_message": "Physics summary: mode=reference, reference=FTFP_BERT, default_cut=0.1 mm, biasing=False",
+        "related_locations": [],
+        "severity": "info",
+        "source": null,
+        "unavailable_reason": "informational"
+      },
+      {
+        "code": "config.information.add_editor_summary_info.3",
+        "identity": "d91acc777a7b14b1d3460ae8828b7559d510acd72772d733b727a9e9477cda70",
+        "identity_parameters": {},
+        "location": null,
+        "message": "Scoring summary: enabled=True, hits=True, event_edep=True, edep=True, hist_bins=100",
+        "message_key": "",
+        "origin": "config.validation",
+        "params": {},
+        "raw_message": "Scoring summary: enabled=True, hits=True, event_edep=True, edep=True, hist_bins=100",
+        "related_locations": [],
+        "severity": "info",
+        "source": null,
+        "unavailable_reason": "informational"
+      },
+      {
+        "code": "config.information.validate_config_builder.1",
+        "identity": "05dbfe9a24bcea20f94ecc1f5a606036c9e5ccce854fa634adb55aad271f06f4",
+        "identity_parameters": {},
+        "location": null,
+        "message": "Validation passed.",
+        "message_key": "",
+        "origin": "config.validation",
+        "params": {},
+        "raw_message": "Validation passed.",
+        "related_locations": [],
+        "severity": "info",
+        "source": null,
+        "unavailable_reason": "informational"
+      }
+    ],
+    "errors": [],
+    "info": [
+      "Geometry Editor summary: mode=hierarchical, dirty=True",
+      "Geometry Editor material refs: FirstTarget, G4_Galactic",
+      "Geometry Editor sensitive volumes/layers: 1",
+      "Geometry Editor bias volumes/layers: 0",
+      "Geometry Editor hierarchical volumes: 2 enabled / 2 rows",
+      "Source summary: preset=proton_beam, particle=geantino, energy=1 MeV",
+      "Physics summary: mode=reference, reference=FTFP_BERT, default_cut=0.1 mm, biasing=False",
+      "Scoring summary: enabled=True, hits=True, event_edep=True, edep=True, hist_bins=100",
+      "Validation passed."
+    ],
+    "schema": "g4usim_diagnostics_v1",
+    "snapshot_id": "9afb543c8789ae6680d79042c674a713722fd4aa9abca3ae304ed7a4a02e39fd",
+    "warnings": []
+  },
+  "events": "unobserved",
+  "execution_bundle": {
+    "coverage": "closed_resource_tree",
+    "manifest_sha256": "c8cdc6385c5c3ef4d1fe81d47242d333ed9e9a7e6953d857f2780b6f6a1aa6c0",
+    "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\execution-inputs"
+  },
+  "execution_id": "beae1caebec24f90afb9b8210e362cda",
+  "exit_code": 0,
+  "expected_inputs": {
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\execution-inputs\\resources\\r0000-original-materials.ini": {
+      "role": "materials",
+      "sha256": "4bfb64cc63dad229525137f14e64412a94eee8790b449ee64e10a8906cb67da5",
+      "size_bytes": 249
+    },
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\execution-inputs\\resources\\r0001-original-geometry.ini": {
+      "role": "geometry",
+      "sha256": "b6f500fb680f4aa13393e2545824321f15e6c63815bb396821ad4b7b1d930fc2",
+      "size_bytes": 264
+    },
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\execution-inputs\\resources\\r0002-main.ini": {
+      "role": "main",
+      "sha256": "d733fe3643fb191a41ec5251b9aa77afd79fbc537e743793c76d98754f5fa45f",
+      "size_bytes": 949
+    },
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\execution-inputs\\resources\\r0003-material.ini": {
+      "role": "materials",
+      "sha256": "d77923cdd8a0020c205b2287cfcbbe6e05b09d8e65359c33278a743c51361665",
+      "size_bytes": 297
+    },
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\execution-inputs\\resources\\r0004-geometry.ini": {
+      "role": "geometry",
+      "sha256": "e6d77380889a38f16b6c2ad2f309bd33edb81060d29b30b3055b3f0b6e7e5a2e",
+      "size_bytes": 398
+    },
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\execution-inputs\\resources\\r0005-run.mac": {
+      "role": "macro",
+      "sha256": "94bb20a5221f8851fee38ca2ce990ec0bef841f8879c4b7327fc82c669dbba5a",
+      "size_bytes": 147
+    },
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\initialize-prefix.mac": {
+      "role": "macro",
+      "sha256": "c8135cc1b57473fa722ac92f04fdaa3ab5d18d4762cb5b13d6de71956e3b58f1",
+      "size_bytes": 332
+    }
+  },
+  "finished_at": "2026-10-31T07:19:21.965503+00:00",
+  "geometry_check": "executed_no_reported_overlap",
+  "identity": {
+    "backend": {
+      "sha256": "2baf8dc7e64005f9d56e4edf8ef8203868db2b273f2b4b0fc69fcac8f4301b83",
+      "size_bytes": 2420736,
+      "status": "recorded"
+    },
+    "configuration_fingerprint": "c3074596566458deb808f6c097bbcacaf517d04d4321836b4f323210262f0ddf",
+    "coverage": "closed_resource_tree",
+    "environment": {
+      "architecture": {
+        "bits": 64,
+        "format": "PE",
+        "machine": "x86_64"
+      },
+      "binary": {
+        "sha256": "2baf8dc7e64005f9d56e4edf8ef8203868db2b273f2b4b0fc69fcac8f4301b83",
+        "stable": true
+      },
+      "build": {
+        "compiler_id": "MSVC",
+        "compiler_version": "19.51.36246.0",
+        "geant4_version_number": 1132
+      },
+      "capabilities": {
+        "data": {
+          "configuration": "Release",
+          "geant4_version_number": 1132,
+          "git_commit": "4167c4421b13464dec54213ea7652ee321868c4e",
+          "git_source_state": "clean",
+          "multithreaded": true,
+          "schema": "G4UniversalSimCapabilities",
+          "source_fingerprint": "890635b6d521659e43cf735d07f862c6ebd5959e6c5ea68d023d55332a8a930a",
+          "version": 1
+        },
+        "status": "available"
+      },
+      "coverage": "observed_selection_and_presence_not_dataset_bytes",
+      "data": {
+        "datasets": [
+          {
+            "env": "G4LEDATA",
+            "folder": "G4EMLOW8.6.1",
+            "found": true,
+            "required": true,
+            "selected_path_sha256": "b35349933329a837554648255c4d45b530f8572d4a14b927adc0ce3894edbec4"
+          },
+          {
+            "env": "G4LEVELGAMMADATA",
+            "folder": "PhotonEvaporation6.1",
+            "found": true,
+            "required": true,
+            "selected_path_sha256": "99a58131c7c7f067ec079675ed46fb35a9e6964dce140e6824e63fa0c6fb0935"
+          },
+          {
+            "env": "G4RADIOACTIVEDATA",
+            "folder": "RadioactiveDecay6.1.2",
+            "found": true,
+            "required": true,
+            "selected_path_sha256": "35e382c3c173f64bcceddca30b2e78b34d877b8840d19833fe01539fc22f4e14"
+          },
+          {
+            "env": "G4PARTICLEXSDATA",
+            "folder": "G4PARTICLEXS4.1",
+            "found": true,
+            "required": true,
+            "selected_path_sha256": "1fdac8c46599707b6489e95741c77fc49d772bc8f9aba3aea642c3c3be1c2e92"
+          },
+          {
+            "env": "G4ENSDFSTATEDATA",
+            "folder": "G4ENSDFSTATE3.0",
+            "found": true,
+            "required": true,
+            "selected_path_sha256": "e8057e3a01bf3a19720c92b2e047d60f0b653ea59777a040491b327841b00eab"
+          },
+          {
+            "env": "G4NEUTRONHPDATA",
+            "folder": "G4NDL4.7.1",
+            "found": true,
+            "required": false,
+            "selected_path_sha256": "a74ffaeb75f7a1564c481d8624100fb52b98b980b36c6c910352027049136415"
+          },
+          {
+            "env": "G4PIIDATA",
+            "folder": "G4PII1.3",
+            "found": true,
+            "required": false,
+            "selected_path_sha256": "eb05280dc338e7d8f3fdcf073227833e729ae51eca08e3c8625d43615c1cf753"
+          },
+          {
+            "env": "G4REALSURFACEDATA",
+            "folder": "RealSurface2.2",
+            "found": true,
+            "required": false,
+            "selected_path_sha256": "bde5d4bf7a54435592c52c76165a9daca059ecaa4a737a34b09e996b3ce86385"
+          },
+          {
+            "env": "G4SAIDXSDATA",
+            "folder": "G4SAIDDATA2.0",
+            "found": true,
+            "required": false,
+            "selected_path_sha256": "c53751713c5d3e60864eaa28f0a950ded5b257bf8b75833254448d4f7e41ef4f"
+          },
+          {
+            "env": "G4ABLADATA",
+            "folder": "G4ABLA3.3",
+            "found": true,
+            "required": false,
+            "selected_path_sha256": "ce49b9c652bf030d0c7ab1227cf20477aa99b7ef6cb448e3c76d9029acdb1de2"
+          },
+          {
+            "env": "G4INCLDATA",
+            "folder": "G4INCL1.2",
+            "found": true,
+            "required": false,
+            "selected_path_sha256": "df2976f9fba2ec8d971d1e6da6321eb62ac0062e1f9428095d6068ac963756d8"
+          },
+          {
+            "env": "G4CHANNELINGDATA",
+            "folder": "G4CHANNELING1.0",
+            "found": true,
+            "required": false,
+            "selected_path_sha256": "07ae82dfde3d65ea0603c304c13fa1403815780777590903c4c91336bb62b331"
+          }
+        ],
+        "required_complete": true,
+        "status": "available"
+      },
+      "dataset_content_identity": "unknown",
+      "schema": "g4usim_environment_v1",
+      "status": "ready"
+    },
+    "execution_fingerprint": "6d53bff86e57afd3f513753cdc6356e12b56b740f06dc032ba9cc201a4398ff8",
+    "fingerprint": "f7702fa734ab8b2bfde82b4b86d9530a31a986c8aa15c20f54fde0203fb12fb8",
+    "resource_fingerprint": "1cfe90f00c2efa10ee220ad691f45c5e4b8de4973810db24cbccf123d472df0f",
+    "resources": [
+      {
+        "captured_text": false,
+        "distribution": "unknown",
+        "path": "resources/r0000-original-materials.ini",
+        "role": "materials",
+        "sha256": "4bfb64cc63dad229525137f14e64412a94eee8790b449ee64e10a8906cb67da5",
+        "source_sha256": "4bfb64cc63dad229525137f14e64412a94eee8790b449ee64e10a8906cb67da5"
+      },
+      {
+        "captured_text": false,
+        "distribution": "unknown",
+        "path": "resources/r0001-original-geometry.ini",
+        "role": "geometry",
+        "sha256": "b6f500fb680f4aa13393e2545824321f15e6c63815bb396821ad4b7b1d930fc2",
+        "source_sha256": "b6f500fb680f4aa13393e2545824321f15e6c63815bb396821ad4b7b1d930fc2"
+      }
+    ],
+    "revision": 2,
+    "schema": "g4usim_experiment_identity_v1",
+    "snapshot_fingerprint": "9afb543c8789ae6680d79042c674a713722fd4aa9abca3ae304ed7a4a02e39fd"
+  },
+  "identity_after_prepare": {
+    "backend": {
+      "sha256": "2baf8dc7e64005f9d56e4edf8ef8203868db2b273f2b4b0fc69fcac8f4301b83",
+      "size_bytes": 2420736,
+      "status": "recorded"
+    },
+    "configuration_fingerprint": "c3074596566458deb808f6c097bbcacaf517d04d4321836b4f323210262f0ddf",
+    "coverage": "closed_resource_tree",
+    "environment": {
+      "architecture": {
+        "bits": 64,
+        "format": "PE",
+        "machine": "x86_64"
+      },
+      "binary": {
+        "sha256": "2baf8dc7e64005f9d56e4edf8ef8203868db2b273f2b4b0fc69fcac8f4301b83",
+        "stable": true
+      },
+      "build": {
+        "compiler_id": "MSVC",
+        "compiler_version": "19.51.36246.0",
+        "geant4_version_number": 1132
+      },
+      "capabilities": {
+        "data": {
+          "configuration": "Release",
+          "geant4_version_number": 1132,
+          "git_commit": "4167c4421b13464dec54213ea7652ee321868c4e",
+          "git_source_state": "clean",
+          "multithreaded": true,
+          "schema": "G4UniversalSimCapabilities",
+          "source_fingerprint": "890635b6d521659e43cf735d07f862c6ebd5959e6c5ea68d023d55332a8a930a",
+          "version": 1
+        },
+        "status": "available"
+      },
+      "coverage": "observed_selection_and_presence_not_dataset_bytes",
+      "data": {
+        "datasets": [
+          {
+            "env": "G4LEDATA",
+            "folder": "G4EMLOW8.6.1",
+            "found": true,
+            "required": true,
+            "selected_path_sha256": "b35349933329a837554648255c4d45b530f8572d4a14b927adc0ce3894edbec4"
+          },
+          {
+            "env": "G4LEVELGAMMADATA",
+            "folder": "PhotonEvaporation6.1",
+            "found": true,
+            "required": true,
+            "selected_path_sha256": "99a58131c7c7f067ec079675ed46fb35a9e6964dce140e6824e63fa0c6fb0935"
+          },
+          {
+            "env": "G4RADIOACTIVEDATA",
+            "folder": "RadioactiveDecay6.1.2",
+            "found": true,
+            "required": true,
+            "selected_path_sha256": "35e382c3c173f64bcceddca30b2e78b34d877b8840d19833fe01539fc22f4e14"
+          },
+          {
+            "env": "G4PARTICLEXSDATA",
+            "folder": "G4PARTICLEXS4.1",
+            "found": true,
+            "required": true,
+            "selected_path_sha256": "1fdac8c46599707b6489e95741c77fc49d772bc8f9aba3aea642c3c3be1c2e92"
+          },
+          {
+            "env": "G4ENSDFSTATEDATA",
+            "folder": "G4ENSDFSTATE3.0",
+            "found": true,
+            "required": true,
+            "selected_path_sha256": "e8057e3a01bf3a19720c92b2e047d60f0b653ea59777a040491b327841b00eab"
+          },
+          {
+            "env": "G4NEUTRONHPDATA",
+            "folder": "G4NDL4.7.1",
+            "found": true,
+            "required": false,
+            "selected_path_sha256": "a74ffaeb75f7a1564c481d8624100fb52b98b980b36c6c910352027049136415"
+          },
+          {
+            "env": "G4PIIDATA",
+            "folder": "G4PII1.3",
+            "found": true,
+            "required": false,
+            "selected_path_sha256": "eb05280dc338e7d8f3fdcf073227833e729ae51eca08e3c8625d43615c1cf753"
+          },
+          {
+            "env": "G4REALSURFACEDATA",
+            "folder": "RealSurface2.2",
+            "found": true,
+            "required": false,
+            "selected_path_sha256": "bde5d4bf7a54435592c52c76165a9daca059ecaa4a737a34b09e996b3ce86385"
+          },
+          {
+            "env": "G4SAIDXSDATA",
+            "folder": "G4SAIDDATA2.0",
+            "found": true,
+            "required": false,
+            "selected_path_sha256": "c53751713c5d3e60864eaa28f0a950ded5b257bf8b75833254448d4f7e41ef4f"
+          },
+          {
+            "env": "G4ABLADATA",
+            "folder": "G4ABLA3.3",
+            "found": true,
+            "required": false,
+            "selected_path_sha256": "ce49b9c652bf030d0c7ab1227cf20477aa99b7ef6cb448e3c76d9029acdb1de2"
+          },
+          {
+            "env": "G4INCLDATA",
+            "folder": "G4INCL1.2",
+            "found": true,
+            "required": false,
+            "selected_path_sha256": "df2976f9fba2ec8d971d1e6da6321eb62ac0062e1f9428095d6068ac963756d8"
+          },
+          {
+            "env": "G4CHANNELINGDATA",
+            "folder": "G4CHANNELING1.0",
+            "found": true,
+            "required": false,
+            "selected_path_sha256": "07ae82dfde3d65ea0603c304c13fa1403815780777590903c4c91336bb62b331"
+          }
+        ],
+        "required_complete": true,
+        "status": "available"
+      },
+      "dataset_content_identity": "unknown",
+      "schema": "g4usim_environment_v1",
+      "status": "ready"
+    },
+    "execution_fingerprint": "6d53bff86e57afd3f513753cdc6356e12b56b740f06dc032ba9cc201a4398ff8",
+    "fingerprint": "f7702fa734ab8b2bfde82b4b86d9530a31a986c8aa15c20f54fde0203fb12fb8",
+    "resource_fingerprint": "1cfe90f00c2efa10ee220ad691f45c5e4b8de4973810db24cbccf123d472df0f",
+    "resources": [
+      {
+        "captured_text": false,
+        "distribution": "unknown",
+        "path": "resources/r0000-original-materials.ini",
+        "role": "materials",
+        "sha256": "4bfb64cc63dad229525137f14e64412a94eee8790b449ee64e10a8906cb67da5",
+        "source_sha256": "4bfb64cc63dad229525137f14e64412a94eee8790b449ee64e10a8906cb67da5"
+      },
+      {
+        "captured_text": false,
+        "distribution": "unknown",
+        "path": "resources/r0001-original-geometry.ini",
+        "role": "geometry",
+        "sha256": "b6f500fb680f4aa13393e2545824321f15e6c63815bb396821ad4b7b1d930fc2",
+        "source_sha256": "b6f500fb680f4aa13393e2545824321f15e6c63815bb396821ad4b7b1d930fc2"
+      }
+    ],
+    "revision": 2,
+    "schema": "g4usim_experiment_identity_v1",
+    "snapshot_fingerprint": "9afb543c8789ae6680d79042c674a713722fd4aa9abca3ae304ed7a4a02e39fd"
+  },
+  "initialization_mesh": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\initialized-geometry.json",
+  "initialization_mesh_identity": {
+    "sha256": "1fda5bdd3494f697de34046a1e1175288f69b1ae4e7abea6c3140d83e52766f7",
+    "size_bytes": 830
+  },
+  "input_coverage": "project_readers_observed",
+  "input_exclusions": [
+    "Geant4 internal datasets and external physics-table reads are not byte-captured",
+    "Native command input IO outside the project readers is not comprehensively observed; known references are marked unobserved"
+  ],
+  "inspection_launch": {
+    "arguments": [
+      "--inspect-run",
+      "--config",
+      "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\execution-inputs\\resources\\r0002-main.ini",
+      "--macro",
+      "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\execution-inputs\\resources\\r0005-run.mac",
+      "--output",
+      "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\20261031_151918_k1-visible\\output",
+      "--threads",
+      "1",
+      "--seed",
+      "4242",
+      "--run-name",
+      "k1-visible"
+    ],
+    "launch_cwd_utf16_units": 190,
+    "launch_route": "direct",
+    "launch_working_directory": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\execution-inputs",
+    "logical_cwd_utf16_units": 190,
+    "program": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-k1\\Release\\G4UniversalSim.exe",
+    "working_directory": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\execution-inputs"
+  },
+  "launch": {
+    "arguments": [
+      "--config",
+      "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\execution-inputs\\resources\\r0002-main.ini",
+      "--macro",
+      "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\initialize-prefix.mac",
+      "--output",
+      "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\20261031_151918_k1-visible\\output",
+      "--threads",
+      "1",
+      "--seed",
+      "4242",
+      "--run-name",
+      "k1-visible"
+    ],
+    "launch_cwd_utf16_units": 190,
+    "launch_route": "direct",
+    "launch_working_directory": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\execution-inputs",
+    "logical_cwd_utf16_units": 190,
+    "program": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-k1\\Release\\G4UniversalSim.exe",
+    "working_directory": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\execution-inputs"
+  },
+  "level": "initialization",
+  "metadata_sha256": "ac3ed8692e1f1572860f51f702b5ba94ea4c6e9d4d5a9ef26e960d6888cb16fc",
+  "needs_initialization_plan": true,
+  "observed_run_name": "k1-visible",
+  "original_macro": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\execution-inputs\\resources\\r0005-run.mac",
+  "original_macro_identity": {
+    "sha256": "94bb20a5221f8851fee38ca2ce990ec0bef841f8879c4b7327fc82c669dbba5a",
+    "size_bytes": 147
+  },
+  "output_dir": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\20261031_151918_k1-visible\\output",
+  "package": {
+    "config_dir": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\20261031_151918_k1-visible\\config",
+    "geometry_ini_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\20261031_151918_k1-visible\\config\\geometry\\geometry.ini",
+    "logs_dir": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\20261031_151918_k1-visible\\logs",
+    "macro_dir": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\20261031_151918_k1-visible\\macros",
+    "main_ini_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\execution-inputs\\resources\\r0002-main.ini",
+    "materials_ini_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\20261031_151918_k1-visible\\config\\materials\\material.ini",
+    "output_dir": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\20261031_151918_k1-visible\\output",
+    "package_dir": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\20261031_151918_k1-visible",
+    "project_snapshot_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\20261031_151918_k1-visible\\project_snapshot.json",
+    "run_macro_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\execution-inputs\\resources\\r0005-run.mac",
+    "validation_report_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\20261031_151918_k1-visible\\validation_report.txt"
+  },
+  "package_report": "can_run = true\n\n[errors]\n<none>\n\n[warnings]\n<none>\n\n[info]\nGeometry Editor summary: mode=hierarchical, dirty=True\nGeometry Editor material refs: FirstTarget, G4_Galactic\nGeometry Editor sensitive volumes/layers: 1\nGeometry Editor bias volumes/layers: 0\nGeometry Editor hierarchical volumes: 2 enabled / 2 rows\nSource summary: preset=proton_beam, particle=geantino, energy=1 MeV\nPhysics summary: mode=reference, reference=FTFP_BERT, default_cut=0.1 mm, biasing=False\nScoring summary: enabled=True, hits=True, event_edep=True, edep=True, hist_bins=100\nValidation passed.\n[selected input files]\nmaterials = C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\original-materials.ini\ngeometry = C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\original-geometry.ini\n\n[copied files]\nmaterials_source_mode = generated by Materials Editor\ngeometry_source_mode = generated by Geometry Editor\nmaterials = C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\20261031_151918_k1-visible\\config\\materials\\material.ini\ngeometry = C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\20261031_151918_k1-visible\\config\\geometry\\geometry.ini\nmain_ini = C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\20261031_151918_k1-visible\\config\\main.ini\nrun_macro = C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\20261031_151918_k1-visible\\macros\\run.mac\noutput = C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\20261031_151918_k1-visible\\output\n\n[materials summary]\npath = C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\20261031_151918_k1-visible\\config\\materials\\material.ini\ncount = 2\n- FirstTarget kind=mass_fraction density=2.33 g/cm3 components=1 section=[material.FirstTarget]\n- SecondTarget kind=mass_fraction density=2.7 g/cm3 components=1 section=[material.SecondTarget]\n\n[geometry summary]\npath = C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\20261031_151918_k1-visible\\config\\geometry\\geometry.ini\ntemplate_hint = hierarchical\nvolumes = 2\n- world parent=<none> shape=box material=G4_Galactic boolean_ops=0 \n- Target parent=world shape=box material=FirstTarget boolean_ops=0 sensitive\n\nSensitive volumes:\n- Target\n\nBias volumes:\n- <none>\n\nBoolean operations:\n- <none>",
+  "plan": {
+    "configuration_evaluated": true,
+    "configuration_phase": "before_macro",
+    "execution_performed": false,
+    "initial_configuration": [
+      {
+        "name": "main_config",
+        "source": "cli",
+        "value": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\execution-inputs\\resources\\r0002-main.ini"
+      },
+      {
+        "name": "macro_file",
+        "source": "cli",
+        "value": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\execution-inputs\\resources\\r0005-run.mac"
+      },
+      {
+        "name": "output_dir",
+        "source": "cli",
+        "value": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\20261031_151918_k1-visible\\output"
+      },
+      {
+        "name": "threads",
+        "source": "cli",
+        "value": "1"
+      },
+      {
+        "name": "seed",
+        "source": "cli",
+        "value": "4242"
+      },
+      {
+        "name": "run_name",
+        "source": "cli",
+        "value": "k1-visible"
+      },
+      {
+        "file": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\execution-inputs\\resources\\r0002-main.ini",
+        "key": "dry_run",
+        "line": 13,
+        "name": "dry_run",
+        "section": "run",
+        "source": "main_ini",
+        "value": "false"
+      },
+      {
+        "file": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\execution-inputs\\resources\\r0002-main.ini",
+        "key": "interactive",
+        "line": 10,
+        "name": "interactive",
+        "section": "run",
+        "source": "main_ini",
+        "value": "false"
+      },
+      {
+        "file": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\execution-inputs\\resources\\r0002-main.ini",
+        "key": "check_overlaps",
+        "line": 25,
+        "name": "check_overlaps",
+        "section": "geometry",
+        "source": "main_ini",
+        "value": "true"
+      },
+      {
+        "file": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\execution-inputs\\resources\\r0002-main.ini",
+        "key": "template",
+        "line": 23,
+        "name": "geometry_template",
+        "section": "geometry",
+        "source": "main_ini",
+        "value": "hierarchical"
+      },
+      {
+        "file": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\execution-inputs\\resources\\r0002-main.ini",
+        "key": "config",
+        "line": 24,
+        "name": "geometry_config",
+        "section": "geometry",
+        "source": "main_ini",
+        "value": "resources/r0004-geometry.ini"
+      },
+      {
+        "file": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\execution-inputs\\resources\\r0002-main.ini",
+        "key": "file",
+        "line": 20,
+        "name": "materials_file",
+        "section": "materials",
+        "source": "main_ini",
+        "value": "resources/r0003-material.ini"
+      }
+    ],
+    "macro_execution_planned": true,
+    "macro_plan": {
+      "commands": [
+        {
+          "category": "other",
+          "command": "/control/verbose",
+          "file": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\execution-inputs\\resources\\r0005-run.mac",
+          "line": 2,
+          "text": "/control/verbose 1"
+        },
+        {
+          "category": "other",
+          "command": "/run/verbose",
+          "file": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\execution-inputs\\resources\\r0005-run.mac",
+          "line": 3,
+          "text": "/run/verbose 1"
+        },
+        {
+          "category": "other",
+          "command": "/event/verbose",
+          "file": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\execution-inputs\\resources\\r0005-run.mac",
+          "line": 4,
+          "text": "/event/verbose 0"
+        },
+        {
+          "category": "other",
+          "command": "/tracking/verbose",
+          "file": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\execution-inputs\\resources\\r0005-run.mac",
+          "line": 5,
+          "text": "/tracking/verbose 0"
+        },
+        {
+          "category": "other",
+          "command": "/run/initialize",
+          "file": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\execution-inputs\\resources\\r0005-run.mac",
+          "line": 6,
+          "text": "/run/initialize"
+        },
+        {
+          "category": "beam_on",
+          "command": "/run/beamon",
+          "file": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\execution-inputs\\resources\\r0005-run.mac",
+          "line": 7,
+          "text": "/run/beamOn 3"
+        }
+      ],
+      "configuration_evaluated": false,
+      "macro_file": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\execution-inputs\\resources\\r0005-run.mac",
+      "runtime_command_validation_required": true,
+      "schema": "G4UniversalSimMacroPlan",
+      "status": "preflight_passed",
+      "version": 1
+    },
+    "main_ini_fields": [
+      {
+        "consumed": true,
+        "key": "enabled",
+        "line": 63,
+        "section": "biasing",
+        "value": "false"
+      },
+      {
+        "consumed": true,
+        "key": "schema_version",
+        "line": 4,
+        "section": "general",
+        "value": "1"
+      },
+      {
+        "consumed": true,
+        "key": "check_overlaps",
+        "line": 25,
+        "section": "geometry",
+        "value": "true"
+      },
+      {
+        "consumed": true,
+        "key": "config",
+        "line": 24,
+        "section": "geometry",
+        "value": "resources/r0004-geometry.ini"
+      },
+      {
+        "consumed": true,
+        "key": "default_world_material",
+        "line": 26,
+        "section": "geometry",
+        "value": "G4_AIR"
+      },
+      {
+        "consumed": true,
+        "key": "template",
+        "line": 23,
+        "section": "geometry",
+        "value": "hierarchical"
+      },
+      {
+        "consumed": true,
+        "key": "file",
+        "line": 20,
+        "section": "materials",
+        "value": "resources/r0003-material.ini"
+      },
+      {
+        "consumed": true,
+        "key": "dir",
+        "line": 16,
+        "section": "output",
+        "value": "output"
+      },
+      {
+        "consumed": true,
+        "key": "trajectories",
+        "line": 17,
+        "section": "output",
+        "value": "3"
+      },
+      {
+        "consumed": true,
+        "key": "biasing",
+        "line": 31,
+        "section": "physics",
+        "value": "false"
+      },
+      {
+        "consumed": true,
+        "key": "default_cut",
+        "line": 30,
+        "section": "physics",
+        "value": "0.1 mm"
+      },
+      {
+        "consumed": true,
+        "key": "reference",
+        "line": 29,
+        "section": "physics",
+        "value": "FTFP_BERT"
+      },
+      {
+        "consumed": true,
+        "key": "verbose",
+        "line": 32,
+        "section": "physics",
+        "value": "1"
+      },
+      {
+        "consumed": true,
+        "key": "check_overlaps",
+        "line": 12,
+        "section": "run",
+        "value": "true"
+      },
+      {
+        "consumed": true,
+        "key": "dry_run",
+        "line": 13,
+        "section": "run",
+        "value": "false"
+      },
+      {
+        "consumed": true,
+        "key": "interactive",
+        "line": 10,
+        "section": "run",
+        "value": "false"
+      },
+      {
+        "consumed": true,
+        "key": "name",
+        "line": 7,
+        "section": "run",
+        "value": "k1-visible"
+      },
+      {
+        "consumed": true,
+        "key": "seed",
+        "line": 9,
+        "section": "run",
+        "value": "4242"
+      },
+      {
+        "consumed": true,
+        "key": "threads",
+        "line": 8,
+        "section": "run",
+        "value": "1"
+      },
+      {
+        "consumed": true,
+        "key": "verbose",
+        "line": 11,
+        "section": "run",
+        "value": "1"
+      },
+      {
+        "consumed": true,
+        "key": "auto_create_default_scorers",
+        "line": 50,
+        "section": "scoring",
+        "value": "true"
+      },
+      {
+        "consumed": true,
+        "key": "dose",
+        "line": 48,
+        "section": "scoring",
+        "value": "false"
+      },
+      {
+        "consumed": true,
+        "key": "edep",
+        "line": 46,
+        "section": "scoring",
+        "value": "true"
+      },
+      {
+        "consumed": true,
+        "key": "enabled",
+        "line": 43,
+        "section": "scoring",
+        "value": "true"
+      },
+      {
+        "consumed": true,
+        "key": "event_edep",
+        "line": 45,
+        "section": "scoring",
+        "value": "true"
+      },
+      {
+        "consumed": true,
+        "key": "fluence",
+        "line": 49,
+        "section": "scoring",
+        "value": "false"
+      },
+      {
+        "consumed": true,
+        "key": "hits",
+        "line": 44,
+        "section": "scoring",
+        "value": "true"
+      },
+      {
+        "consumed": true,
+        "key": "let",
+        "line": 47,
+        "section": "scoring",
+        "value": "false"
+      },
+      {
+        "consumed": true,
+        "key": "verbose",
+        "line": 51,
+        "section": "scoring",
+        "value": "1"
+      },
+      {
+        "consumed": true,
+        "key": "bins",
+        "line": 56,
+        "section": "scoring.edep",
+        "value": "100"
+      },
+      {
+        "consumed": true,
+        "key": "max",
+        "line": 58,
+        "section": "scoring.edep",
+        "value": "10 MeV"
+      },
+      {
+        "consumed": true,
+        "key": "min",
+        "line": 57,
+        "section": "scoring.edep",
+        "value": "0 eV"
+      },
+      {
+        "consumed": true,
+        "key": "particle_summary",
+        "line": 60,
+        "section": "scoring.edep",
+        "value": "true"
+      },
+      {
+        "consumed": true,
+        "key": "raw_histogram",
+        "line": 54,
+        "section": "scoring.edep",
+        "value": "true"
+      },
+      {
+        "consumed": true,
+        "key": "volume_summary",
+        "line": 59,
+        "section": "scoring.edep",
+        "value": "true"
+      },
+      {
+        "consumed": true,
+        "key": "weighted_histogram",
+        "line": 55,
+        "section": "scoring.edep",
+        "value": "true"
+      },
+      {
+        "consumed": true,
+        "key": "direction",
+        "line": 39,
+        "section": "source",
+        "value": "0,0,1"
+      },
+      {
+        "consumed": true,
+        "key": "energy",
+        "line": 37,
+        "section": "source",
+        "value": "1 MeV"
+      },
+      {
+        "consumed": true,
+        "key": "particle",
+        "line": 36,
+        "section": "source",
+        "value": "geantino"
+      },
+      {
+        "consumed": true,
+        "key": "position",
+        "line": 40,
+        "section": "source",
+        "value": "0,0,-20 mm"
+      },
+      {
+        "consumed": true,
+        "key": "position_type",
+        "line": 38,
+        "section": "source",
+        "value": "point"
+      },
+      {
+        "consumed": true,
+        "key": "preset",
+        "line": 35,
+        "section": "source",
+        "value": "proton_beam"
+      }
+    ],
+    "schema": "G4UniversalSimRunPlan",
+    "version": 1,
+    "working_directory": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\execution-inputs"
+  },
+  "prefix_identity": {
+    "sha256": "c8135cc1b57473fa722ac92f04fdaa3ab5d18d4762cb5b13d6de71956e3b58f1",
+    "size_bytes": 332
+  },
+  "random_settings": {
+    "configured_seed": "4242",
+    "effective_configured_seed": "4242",
+    "effective_seed_origin_file": "not_applicable",
+    "effective_seed_origin_key": "not_applicable",
+    "effective_seed_origin_kind": "cli",
+    "effective_seed_origin_line": "0",
+    "effective_seed_origin_section": "not_applicable",
+    "initial_engine_seed": "unknown",
+    "initial_seed": "4242",
+    "macro_seed_modified": "false",
+    "planned_seed": "4242",
+    "seed": "4242"
+  },
+  "reason": "experiment.initialization_evidence_confirmed",
+  "record_dir": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937",
+  "record_id": "64913846c52a4b8481e99c8f7636a937",
+  "requested_run_name": "k1-visible",
+  "required_inputs": [
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\execution-inputs\\resources\\r0002-main.ini",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\fixture-inputs\\packages\\experiment-records\\64913846c52a4b8481e99c8f7636a937\\initialize-prefix.mac"
+  ],
+  "result": {
+    "completed_events": 0,
+    "planned_events": 0,
+    "reason": "Process completed but no Geant4 run occurred.",
+    "run_count": 0,
+    "state": "no_run",
+    "summary_status": "completed"
+  },
+  "revision": 2,
+  "run_id": "64913846c52a4b8481e99c8f7636a937",
+  "schema": "g4usim_experiment_record_v1",
+  "session_id": "6a2406e36d2c4fdaaff4ac2f34dc870d",
+  "stale": false,
+  "status": "passed"
+}

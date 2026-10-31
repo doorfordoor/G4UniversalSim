@@ -1,0 +1,105 @@
+{
+  "head": "4167c4421b13464dec54213ea7652ee321868c4e",
+  "official_runs": [
+    {
+      "label": "linux",
+      "run_id": 41179691486,
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 124474368962,
+          "conclusion": "success"
+        },
+        {
+          "id": 124474369122,
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "label": "m0",
+      "run_id": 41179691469,
+      "conclusion": "failure",
+      "jobs": [
+        {
+          "id": 124474368833,
+          "conclusion": "failure"
+        },
+        {
+          "id": 124474368948,
+          "conclusion": "success"
+        }
+      ]
+    }
+  ],
+  "operations": [
+    {
+      "operation": "prepare",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\ci\\ci_helper.py",
+        "prepare",
+        "--head",
+        "4167c4421b13464dec54213ea7652ee321868c4e",
+        "--artifact-root",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\ci",
+        "--frozen",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\frozen-case-manifest.json",
+        "--artifact-metadata",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\ci\\linux-artifacts.json",
+        "--artifact-metadata",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\ci\\m0-artifacts.json",
+        "--output",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\ci\\plan.json"
+      ],
+      "exit_code": 0,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\ci\\prepare.log",
+      "log_sha256": "7585015a76e8679bd05ae492ef7038fe76a6558d966a5639c77a4297f8ab7b69"
+    },
+    {
+      "operation": "collect",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\ci\\ci_helper.py",
+        "collect",
+        "--head",
+        "4167c4421b13464dec54213ea7652ee321868c4e",
+        "--plan",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\ci\\plan.json",
+        "--destination",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\ci\\collection"
+      ],
+      "exit_code": 0,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\ci\\collect.log",
+      "log_sha256": "957bd6f38ca0177389716ce24611d28ef808f3bad2d155a329aee3e4a298ec52"
+    },
+    {
+      "operation": "audit",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\ci\\ci_helper.py",
+        "audit",
+        "--head",
+        "4167c4421b13464dec54213ea7652ee321868c4e",
+        "--plan",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\ci\\plan.json",
+        "--collection",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\ci\\collection",
+        "--output",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\ci\\audit.json"
+      ],
+      "exit_code": 1,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\ci\\audit.log",
+      "log_sha256": "b35ad172cba107a5f424a72ab870eabf92c030b5f572d9c347676454bf71afba"
+    }
+  ],
+  "independent_exit_code": 0,
+  "independent_semantic_pass": false,
+  "checks_passed": false,
+  "no_allow_incomplete": true,
+  "stage_acceptance": "not_decided_resource_boundary_rejection_independent_review_gap",
+  "CI_pass_does_not_close_stage": true
+}

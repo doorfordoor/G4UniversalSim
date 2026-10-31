@@ -1,0 +1,222 @@
+{
+  "schema": "k1_independent_freeze_integration_identity_v1",
+  "recorded_utc": "2026-10-31T04:40:51.751826+00:00",
+  "status": "freeze_source_tests_integration_and_build_identity_passed",
+  "scope": "read_only_freeze_identity_and_previously_reviewed_diff_mapping_no_test_runs",
+  "head": "11c92d361369cda4b2412451ff2841eff940f810",
+  "base_head": "c644bb1acc67658d2ff61fae695340f02ac58503",
+  "checks": {
+    "head_matches": true,
+    "parent_is_c644bb1": true,
+    "worktree_clean": true,
+    "upstream_tracking_matches": true,
+    "commit_exact_19_files": true,
+    "diff_912_added_25_removed": true,
+    "committed_content_matches": true,
+    "all_14_review_mappings_match": true,
+    "manifest_head_matches": true,
+    "source_fingerprint_matches": true,
+    "source_fingerprint_unchanged_from_c644": true,
+    "tests_fingerprint_matches": true,
+    "all_profile_names_order_match": true,
+    "179_cases_35_55_61_28": true,
+    "manifest_gui_raw_sha_match": true,
+    "build_head_matches_freeze": true,
+    "build_source_state_clean": true,
+    "build_source_fingerprint_matches": true,
+    "actual_backend_sha_matches": true,
+    "actual_merge_sha_matches": true,
+    "saved_capabilities_launch_true": true,
+    "postbuild_worktree_clean": true,
+    "postbuild_head_unchanged": true,
+    "postbuild_tests_fingerprint_unchanged": true,
+    "postbuild_source_fingerprint_unchanged": true
+  },
+  "source_fingerprint": "890635b6d521659e43cf735d07f862c6ebd5959e6c5ea68d023d55332a8a930a",
+  "tests_content_fingerprint": "86f3a7598be26593c48297526678cd5e45ccbec09fde2c0e0545b5c56f5cf07e",
+  "manifest_sha256": "7096422b7304e2a01d1aacd5ee23d16701afe52b37335475f49330a7fa619687",
+  "case_counts": {
+    "static": 35,
+    "gui": 55,
+    "backend": 61,
+    "integration": 28
+  },
+  "commit_file_count": 19,
+  "insertions": 912,
+  "deletions": 25,
+  "commit_files": [
+    "AGENTS.md",
+    "STATUS.md",
+    "docs/agent-history.md",
+    "docs/可信实验工作流.md",
+    "gui/AGENTS.md",
+    "gui/g4usim_gui/core/experiment_workflow.py",
+    "gui/g4usim_gui/core/i18n.py",
+    "gui/g4usim_gui/core/runner.py",
+    "gui/g4usim_gui/widgets/run_page.py",
+    "gui/g4usim_gui/window/experiment.py",
+    "gui/g4usim_gui/window/run.py",
+    "gui/g4usim_gui/window/shell.py",
+    "gui/smoke_tests/smoke_backend_launch.py",
+    "gui/smoke_tests/smoke_k1_history_scope.py",
+    "gui/smoke_tests/smoke_live_progress.py",
+    "gui/smoke_tests/smoke_trajectory_view.py",
+    "scripts/run_m0_tests.py",
+    "scripts/test_i1_environment.py",
+    "scripts/test_k1_terminal_publication.py"
+  ],
+  "review_mapping": [
+    {
+      "path": "gui/smoke_tests/smoke_backend_launch.py",
+      "scope": "A_path_test_normalization",
+      "review_evidence": "out/collab/k1-c644bb1-windows-independent-candidate-review.md",
+      "reviewed_sha256": "a111d8a9cf3490cdee8db344da17a0ab1d0d50caa352c0efed976d4fc1ad7fd2",
+      "current_sha256": "a111d8a9cf3490cdee8db344da17a0ab1d0d50caa352c0efed976d4fc1ad7fd2",
+      "matches": true
+    },
+    {
+      "path": "scripts/test_i1_environment.py",
+      "scope": "A_path_test_normalization",
+      "review_evidence": "out/collab/k1-c644bb1-windows-independent-candidate-review.md",
+      "reviewed_sha256": "9b31654e94ebf5c3344c126ab1c668bb1df865f7e8f840940ab97d6920c74851",
+      "current_sha256": "9b31654e94ebf5c3344c126ab1c668bb1df865f7e8f840940ab97d6920c74851",
+      "matches": true
+    },
+    {
+      "path": "gui/g4usim_gui/core/runner.py",
+      "scope": "B_failed_progress",
+      "review_evidence": "out/collab/k1-c644bb1-windows-independent-candidate-review.md",
+      "reviewed_sha256": "456912e161a3ee46ae879b9d9d76abb7e8d0691c393504d00ab714c5ce2770e9",
+      "current_sha256": "456912e161a3ee46ae879b9d9d76abb7e8d0691c393504d00ab714c5ce2770e9",
+      "matches": true
+    },
+    {
+      "path": "gui/smoke_tests/smoke_live_progress.py",
+      "scope": "B_failed_progress",
+      "review_evidence": "out/collab/k1-c644bb1-windows-independent-candidate-review.md",
+      "reviewed_sha256": "dd7e7a7cb3434cad366dd387e35afe700979bb6d74075b285b6a68f6309f3606",
+      "current_sha256": "dd7e7a7cb3434cad366dd387e35afe700979bb6d74075b285b6a68f6309f3606",
+      "matches": true
+    },
+    {
+      "path": "gui/g4usim_gui/core/experiment_workflow.py",
+      "scope": "C_terminal_publication_delegated_Averroes",
+      "review_evidence": "out/collab/k1-cancel-ownership-independent.md",
+      "reviewed_sha256": "8419770c31176e35d53d5744202bb92d1641cce72714fcbc3bf27c326b7da009",
+      "current_sha256": "8419770c31176e35d53d5744202bb92d1641cce72714fcbc3bf27c326b7da009",
+      "matches": true
+    },
+    {
+      "path": "scripts/test_k1_terminal_publication.py",
+      "scope": "C_test_defaults_delegated_Averroes",
+      "review_evidence": "out/collab/k1-terminal-test-defaults-independent.md",
+      "reviewed_sha256": "b4fc161221ba6e69cb2c483c2955bf7cec6deca4f18d6a5c739e6ed5168d9ae9",
+      "current_sha256": "b4fc161221ba6e69cb2c483c2955bf7cec6deca4f18d6a5c739e6ed5168d9ae9",
+      "matches": true
+    },
+    {
+      "path": "gui/g4usim_gui/core/i18n.py",
+      "scope": "D_history_scope_products",
+      "review_evidence": "out/collab/k1-c644bb1-windows-independent-history-scope-review.md",
+      "reviewed_sha256": "5bbc3d1057741844cd76903bb4f36a83f85eff8bd4307fb946512c09b5efc60c",
+      "current_sha256": "5bbc3d1057741844cd76903bb4f36a83f85eff8bd4307fb946512c09b5efc60c",
+      "matches": true
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/run_page.py",
+      "scope": "D_history_scope_products",
+      "review_evidence": "out/collab/k1-c644bb1-windows-independent-history-scope-review.md",
+      "reviewed_sha256": "15f1825c9d0c8564eb83b506405e62d3d6eed84139e7919504e10cee303c3078",
+      "current_sha256": "15f1825c9d0c8564eb83b506405e62d3d6eed84139e7919504e10cee303c3078",
+      "matches": true
+    },
+    {
+      "path": "gui/g4usim_gui/window/experiment.py",
+      "scope": "D_history_scope_products",
+      "review_evidence": "out/collab/k1-c644bb1-windows-independent-history-scope-review.md",
+      "reviewed_sha256": "bfe38e02552f831027d59480331e3805c16955b69cbccdb5a94c26963a005d46",
+      "current_sha256": "bfe38e02552f831027d59480331e3805c16955b69cbccdb5a94c26963a005d46",
+      "matches": true
+    },
+    {
+      "path": "gui/g4usim_gui/window/run.py",
+      "scope": "D_history_scope_products",
+      "review_evidence": "out/collab/k1-c644bb1-windows-independent-history-scope-review.md",
+      "reviewed_sha256": "67043150fdf3661ceda82be112c481ef252c8f7bb75ce6b47b5153ddd1442a29",
+      "current_sha256": "67043150fdf3661ceda82be112c481ef252c8f7bb75ce6b47b5153ddd1442a29",
+      "matches": true
+    },
+    {
+      "path": "gui/g4usim_gui/window/shell.py",
+      "scope": "D_history_scope_products",
+      "review_evidence": "out/collab/k1-c644bb1-windows-independent-history-scope-review.md",
+      "reviewed_sha256": "21c8c3a32d99c56ada8e028b642c7f519abaccc64db61763397cdd5290bc603c",
+      "current_sha256": "21c8c3a32d99c56ada8e028b642c7f519abaccc64db61763397cdd5290bc603c",
+      "matches": true
+    },
+    {
+      "path": "gui/smoke_tests/smoke_k1_history_scope.py",
+      "scope": "D_registration_evidence_default_or_trajectory_restore",
+      "review_evidence": "out/collab/k1-c644bb1-windows-independent-history-registration.json",
+      "reviewed_sha256": "01259679fd5ef23c8e49a0d096f634a59908bd91111e01104866acfc1a0e69fb",
+      "current_sha256": "01259679fd5ef23c8e49a0d096f634a59908bd91111e01104866acfc1a0e69fb",
+      "matches": true
+    },
+    {
+      "path": "gui/smoke_tests/smoke_trajectory_view.py",
+      "scope": "D_registration_evidence_default_or_trajectory_restore",
+      "review_evidence": "out/collab/k1-c644bb1-windows-independent-history-registration.json",
+      "reviewed_sha256": "11d2edc2ef768f9b26d4475f8578796c28c124eda6d4395e66d1c5dfde041734",
+      "current_sha256": "11d2edc2ef768f9b26d4475f8578796c28c124eda6d4395e66d1c5dfde041734",
+      "matches": true
+    },
+    {
+      "path": "scripts/run_m0_tests.py",
+      "scope": "D_registration_evidence_default_or_trajectory_restore",
+      "review_evidence": "out/collab/k1-c644bb1-windows-independent-history-registration.json",
+      "reviewed_sha256": "ddfedc7ea237ee0f08fc66ce48b7132db1838a8513d2d4ead6149859961e7127",
+      "current_sha256": "ddfedc7ea237ee0f08fc66ce48b7132db1838a8513d2d4ead6149859961e7127",
+      "matches": true
+    }
+  ],
+  "documentation_files_identity_only": [
+    "AGENTS.md",
+    "STATUS.md",
+    "docs/agent-history.md",
+    "docs/可信实验工作流.md",
+    "gui/AGENTS.md"
+  ],
+  "manifest_gui_files_checked": 138,
+  "mismatches": {
+    "commit_content": [],
+    "manifest_gui": [],
+    "reviewed_mapping": []
+  },
+  "build_identity": {
+    "status": "matched",
+    "build_identity_file_sha256": "c93e9ebd9f2c5ab992a0d2ee9ad292134a750f2041f416f170c86700a5411975",
+    "capabilities_file_sha256": "d3b6ebf9f73c4fddce316697bc938f1fff3930e882e0874c61c89f867066e42e",
+    "backend": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-k1\\Release\\G4UniversalSim.exe",
+    "backend_sha256": "d45fb1e18cd2a56cf1d020ae9a742841d5ad9236becaf43b13853fe018ec33ee",
+    "merge_sha256": "a1a52b422238d1937ee56787b168d1d8dfc651a682ba2e85a7d448bb40ba993a",
+    "build_head": "11c92d361369cda4b2412451ff2841eff940f810",
+    "source_state": "clean",
+    "source_fingerprint": "890635b6d521659e43cf735d07f862c6ebd5959e6c5ea68d023d55332a8a930a",
+    "python_recorded": "D:\\Geant4\\G4UniversalSim\\gui\\.venv\\Scripts\\python.exe",
+    "new_windows_session_supplied_by_parent": 46966,
+    "original_build_session_supplied_by_parent": 5968,
+    "no_test_or_capability_process_started_by_reviewer": true
+  },
+  "ci_ids_supplied_by_parent": {
+    "linux": 41169369850,
+    "m0": 41169369890
+  },
+  "notes": [
+    "C terminal-publication code/test review belongs to Averroes; this pass maps its signed artifact hashes only, without duplicating that review.",
+    "D evidence-root env default, two history registrations and original trajectory Windows branch are included in the matching mapping.",
+    "Source fingerprint covers native inputs and is unchanged; test/content fingerprint covers Python GUI/test integrations and changes as expected.",
+    "Local upstream tracking ref matches; no new remote query performed.",
+    "Original c644bb1 Windows failure and 13 baseline drops remain archived; no new runtime/CI/stage success claimed.",
+    "New clean build is bound to this freeze by supplied saved capabilities/build identity plus independently matching actual EXE/merge bytes; prior c644bb1 and dirty development binaries are not reused. Windows179 and CI outcomes remain pending parent review."
+  ]
+}

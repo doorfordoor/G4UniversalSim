@@ -1,0 +1,41 @@
+# 第三冻结 Windows 独立最终审核
+
+**Windows 原报告、严格证据门禁及 F5 逐例/总量比较通过；不代表 K1 总体通过。**
+
+- 冻结：11c92d361369cda4b2412451ff2841eff940f810。原正式179项：179 pass / 0 fail / 0 skip；独立求和56655入口，零断言用例为空。
+- F5原基线：160项 / 50898入口；160项均在，逐例无下降、无缺失；新增19项，总量+5757。原基线不修改，不以总量抵消单例下降。
+- 原报告严格门禁、原F5严格门禁、原报告加F5基线严格门禁，三次实际命令均exit0；没有allow-incomplete/legacy放宽。
+- 当前179份及F5原160份日志均逐项原字节SHA匹配，marker/报告计数一致；当前日志自包含于报告目录。完整逐例SHA、计数和比较见audit.json。
+- 33项身份/数量/门禁检查全部通过。35/55/61/28 profile名称与顺序、clean/head、source/tests指纹、saved build/capabilities、当前GUI原字节、EXE/merge实际SHA与第三冻结收据一致。
+
+原报告：C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\verification\k1-11c92d3\windows\20261031-123927-cf48cf5f\report.json
+
+原报告 SHA-256：de282e483cff428bfe1510e6fc6cf7f6fc65229eeb2db976eb6a1c47fcf281fd
+
+原F5报告：C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\docs\verification\f5-final-20261031\windows\final-1\report.json
+
+原F5 SHA-256：07cb528df9840b83b962514c8b2595031ef4e6a7158a55252cdee55f5900d832
+
+source_fingerprint：890635b6d521659e43cf735d07f862c6ebd5959e6c5ea68d023d55332a8a930a
+
+tests_content_fingerprint：86f3a7598be26593c48297526678cd5e45ccbec09fde2c0e0545b5c56f5cf07e
+
+EXE SHA-256：d45fb1e18cd2a56cf1d020ae9a742841d5ad9236becaf43b13853fe018ec33ee
+
+主负责人已通知原session46966自然exit0；独立审核器自己的session67347也自然exit0。独立审核器只观察稳定最终报告、执行只读证据门禁，没有轮询/停止原测试进程，没有重复全测、修改源码或原报告/日志。原报告与基线审核前后SHA不变。
+
+环境按正式build-identity：既有F5 venv Python、PyVista/VTK原记录、CXX unset/g++ PATH。该说明来自原构建/主任务记录，审核器没有声称直接读取原进程环境；每个旧用例恢复的实际断言数量已经逐例核验。
+
+## 总体边界仍未通过
+
+主任务报告的CI 5 fail与native/Qt补充搬移后initialize缺relative resources的P1不被Windows全绿覆盖。CI由Averroes独占归档复审；搬移修复Franklin/Bohr另审。默认Windows chooser仍manual pending，原生完整导出/搬移加载/后续动作/正常退出验收不得由本Windows报告代签。原c644bb1失败原件及13下降报告保持。
+
+输出均为out/collab/k1-third-windows-review-*：audit.json为完整最终收据；gates.json与strict/baseline-strict/strict-baseline.log为原始门禁输出；auditor.py与method.md为可复核方法；known-boundaries.json保留总体阻断项。
+
+## 独立勘误（父任务后续明确更正）
+
+默认 Windows chooser 的人工选择请求已明确撤回，**不存在待答请求**。前文“manual pending”仅保留为原审核时记录，不再代表当前待办。父任务确认原 host71575 和 Qt74889 均正常 exit0，退出 receipts 已落盘；本次只据明确补充追加，不重新复审这些收据。
+
+第三冻结 Qt 实际搬移后的 initialize 确实失败，未计通过，原失败不变。开发 preflight26945 随后正常 exit0，但“pin产品34”不是最终r3，不能替代或覆盖第三冻结失败。Windows179/56655严格门禁签字不变；不能由本机或开发结果升级为总体通过。
+
+此勘误同步到audit.json的errata。供Averroes归档第三冻结最终收据；下一freeze前不重复审查或测试。

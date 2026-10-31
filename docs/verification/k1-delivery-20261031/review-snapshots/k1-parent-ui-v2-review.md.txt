@@ -1,0 +1,11 @@
+# 父任务独立增量审查：UI v2
+
+结论：v1 的 external 无 package 漏投影已修复，本次增量无新增可操作发现，可待正式冻结条件满足后集成。父任务不是此候选作者；实际阅读 v1→v2 两文件完整差异，以及现有 external producer、完成回调、generated 绑定与 formatter 上下文。没有重跑已通过专项，也不以哈希相同替代语义审查。
+
+无 package 分支现在在早返回前执行命令投影；generated 分支复用同一方法。合法实际启动 argv 优先、launch-only 可以显示，缺失 cwd 显示未知，未使用编辑目录填补运行事实。新增 helper 只写命令预览，不改变 F5、服务资格或进程所有权。pending 映射和其余四个文件与 v1 一致，其范围仍依据既有独立审查的限定认可。
+
+回归先通过真实 external _prepare，明确无 package，随后经真实 completed 回调检查投影；ready probe 与完成/启动事实是明确的受控显示夹具，不声称实际模拟。direct/restore、刻意不同的 planned argv、非法实际 argv 回退、launch-only、未知 cwd、双语和 F5 不变均有针对性断言。原产品39/67与v1新增断言完整保留。
+
+用户给出的三个 SHA 均匹配。旧 v1 在修正夹具后的 r2 负例精确失败于 external cwd 断言（68入口）；初次 can_run 前夹具失败单列保留。v2 原日志 workflow178、panel1629、实际旧记录显示重放3、producer pending2 均退出0，原日志 SHA 核对一致。详细逐文件身份与断言检查见同名JSON。
+
+v1 REQUEST_CHANGES 保持历史。第五正式矩阵未结束，不改冻结源码；仍待另一路独立复审、第六正式矩阵与实窗。该审查不涉及被拒资源专项，也不关闭 K1。

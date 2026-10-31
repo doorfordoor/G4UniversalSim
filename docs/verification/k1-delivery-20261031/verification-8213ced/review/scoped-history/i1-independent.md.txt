@@ -1,0 +1,130 @@
+# K1 / I1 环境发现与对话框独立审查
+
+2026-10-31；工作区 `C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim`。
+审查角色独立于实现；按委派信息模型 `gpt-6.1-sol/medium`，消耗未知。未修改源码、测试或现有自验记录。
+
+**当前结论：下文初审的两项 P2 均已独立复核关闭，修复复核见文末。没有这两项遗留阻断；覆盖 E 与 runner E0 的集成限制仍保留。本报告不签发 I1/K1 整阶段完成结论。** 以下初审原文与原始源码身份保留为历史，不能据此认定新代码仍有同一缺陷。
+
+初审曾发现两个需修复的 P2，均在当时进程中独立复现，其中第一个经过真实 Qt 控件逻辑确认；初审没有启动真实 Geant4 或进行原生视觉观察。
+
+## 1. [P2] 指数溢出的 JSON 被接受为 ready，破坏严格事实协议
+
+位置：`gui/g4usim_gui/core/environment_discovery.py:97-107`、`:110-131`；传播位置 `:269-284`，GUI `gui/g4usim_gui/widgets/environment_dialog.py:188-195`。
+
+`_json()` 只用 `parse_constant` 拒绝 NaN/Infinity 字面量，未拒绝 JSON 数字 `1e999` 经 Python 转成 `float('inf')`。数据报告的未验证字段可携带这种值，`_data_report()` 原样返回。能力路径后续有 `json.dumps(..., allow_nan=False)`，数据路径没有相同检查，因而状态被发布为 available/ready。对话框默认 JSON 编码又将它显示成 Infinity，且允许选择。
+
+**具体输入**：
+
+```json
+{"schema":"g4usim_geant4_data_v1","required_complete":true,"datasets":[{"env":"G4XDATA","folder":"X1","required":true,"found":true,"path":"/fixture"}],"geant4_version":1e999}
+```
+
+独立运行结果：
+
+```text
+parser_accepted=true
+version_repr=inf
+json.dumps(facts, allow_nan=False): Out of range float values are not JSON compliant
+probe status=ready, identity.stable=true
+Use selected environment enabled=true
+details contains Infinity=true
+```
+
+直接 parser 调用是真实执行；probe 的 `_command` 使用内存合成能力/数据响应，二进制 hash 使用实际 Python 可执行文件；Qt 为 PySide6 6.11.1/offscreen，执行真实 `_completed()` 与控件状态查询。没有将 Python 可执行文件当作真实 Geant4 后端，也没有让合成 ready 冒充真实环境验收。
+
+**影响**：违背文档“返回可由 `json.dumps(..., allow_nan=False)` 序列化”“非有限数值拒绝”的明确契约；后续 K1 canonical identity/记录持久化可在接受环境之后才失败，且已有“环境可选”状态无法代表严格协议已通过。
+
+**修复判据**：在共同 JSON 边界拒绝任意层级的非有限数值，包含合法数字语法导致的指数溢出；数据路径必须保留 protocol_error，不能进入 ready。覆盖顶层附加字段、dataset 附加字段与嵌套对象，不只补查 geant4_version。拒绝后 GUI 不应因该次数据报告宣称数据已发现完整；是否仍允许仅选择能力可读的路径，应保持已有 partial 的明确语义。
+
+## 2. [P2] 在裸名称按 PATH 解析前去重，会丢掉另一明确后端
+
+位置：`gui/g4usim_gui/core/environment_discovery.py:323-332`；对比真实路径选择 `:242-245`。
+
+去重 key 使用 `abspath(raw executable)`，但 probe 对裸名称另按子进程 PATH 执行 `shutil.which()`。两套规范化不一致：
+
+```text
+当前目录 W
+PATH 中有 P/G4UniversalSim
+输入候选 ["G4UniversalSim", "W/G4UniversalSim"]
+```
+
+若裸名称实际解析到 P（例如 W 中缺失该文件，或平台 PATH 选择 P），两个候选意图分别为 P 的真实后端与 W 的显式缺失路径。去重却先把两者都归成 `W/G4UniversalSim`，后一个完全不 probe，不保留其 not_found 诊断。在遵循 PATH 而不默认搜索 cwd 的平台上，W 也有文件时还可吞掉第二个真实后端。反向顺序则可能吞掉正常 PATH 候选。
+
+独立内存反例：patch `probe_environment` 仅模拟上述裸名/显式路径的不同解析，patch host/sdk 为无操作，调用真实 `discover_environments()`：
+
+```text
+requested_candidates=2
+different_intended_paths=true
+observed_probe_count=1
+explicit_candidate_probed=false
+```
+
+这个反例验证真实的去重分支，不宣称已在 Linux 启动两份后端。它不依赖执行任意未知程序，未产生测试文件。
+
+**影响**：用户明确提供的候选及其错误诊断被静默丢弃，与“顺序保留、相同路径与相同环境覆盖去重”契约不符。不能从返回的一项结果推断另一候选也已探测。
+
+**修复判据**：以与 probe 相同的子进程 env/PATH 规则解析候选，再按实际解析身份和环境覆盖去重；解析失败候选仍保留自己的失败事实。相同规范路径的别名可去重，实际不同路径绝不能被字符串预规范化吞掉。补两种顺序、PATH 裸名称与显式 cwd 路径、相同 exe 不同 env 的组合；保持子进程覆盖隔离。
+
+## 已确认的边界与交接点
+
+- 初始化与物理层：`probe_environment()` 仅执行能力与数据查询，ready 的文案只称协议可读/数据目录发现，不声称初始化、事件或物理通过。SDK 明确 `build_verified=False`，可选 Python 模块明确 `import_tested=False`。这些边界合理，不将未知 SDK 当作后端失败。
+- 进程与线程：不经过 shell；直接子进程有各命令 timeout；缺库、加载器错误、超时、编码和协议问题分开。输出返回有长度限制，临时流文件的写入并不是全过程磁盘配额。文档也没有承诺终止全部后代进程，因此不把它误报为已违反的整进程树取消契约。
+- GUI：后台 worker 经 QueuedConnection 发布；刷新清空旧候选、busy 拒绝重复刷新；关闭/代次失效丢弃旧回调；选择发副本；数据不完整允许选路径是明确设计，不能据此报告“假运行成功”。对话框控件逻辑 smoke 已独立执行，未作可见性/实窗签字。
+- **环境覆盖交接仍需主代理裁决**：`discover_environments()` 支持同二进制不同 child env，且故意不回显环境变量值；`EnvironmentDialog.environment_selected` 只返回事实。当前 `window/experiment.py:134-144` 只把 facts.executable 写入项目，既不交接覆盖也不把所选事实交给运行服务。由此，某候选在覆盖 E 下探测成功，不意味着 runner 的继承环境 E0 可运行。此处作为已确认的接口限制，不归为 I1 自身新增确定缺陷：它声明只选择路径、不拥有运行。集成方应明确选择仅路径并在实际运行环境重新探测，或提供受控的激活上下文；不能静默把 E 的 ready 当作 E0 的证据，不能为此把完整 env/凭据写进配置包。
+
+## 独立执行与证据界限
+
+1. `python -B scripts/test_i1_environment.py`：退出 0，`PASS I1 7 contract groups; real backend: not requested`。
+2. `gui/smoke_tests/smoke_i1_environment.py` 经 Python `runpy.run_path(..., run_name='__main__')` 执行，子进程移除 G4USIM_EXE，offscreen：退出 0，`PASS I1 GUI: worker/event loop, selection, empty/failure, close/delete, stale receipts; real backend: False`。仅对子进程环境做隔离，无系统/仓库设置修改。
+3. 两轮内存反例均退出 0，输出如上；真实 parser/collector/Qt 控件执行与合成协议边界已分别说明。不修改测试文件，不追改写者的通过记录。
+
+以上不是 test_assert_probe/v3 正式矩阵收据，不能计入主任务断言总量或代替冻结矩阵。stdout 关键结果原样写在本报告，未另造“真实环境通过”报告。
+
+审查时文件 SHA256：
+
+| 文件 | SHA256 |
+| --- | --- |
+| `gui/g4usim_gui/core/environment_discovery.py` | `a6425149d422ab42310dfd5c67eb280bc2a4b28c6173c054cd4069d05d6a0f59` |
+| `gui/g4usim_gui/widgets/environment_dialog.py` | `996424b559dac95bb8ee020e940a95e7ad5686a409130060d3c7ae33be7dccfb` |
+| `scripts/test_i1_environment.py` | `dfb684d765649214ee5e6501449c96f290c230873475e58b62b66f4f60df7d8f` |
+| `gui/smoke_tests/smoke_i1_environment.py` | `6df1f49d8b89eda5ac74f883caa12d4ea938035b43e0fed6b0db10ceaf9c4332` |
+
+这些是读取后审查身份，不意味着并行写者已经冻结。后续修复须按新字节重新复核。
+
+## 续审状态
+
+前一份 `out/collab/k1-contract-independent.md` 已完成。服务/身份及 `window/experiment.py` 的独立审查继续保留，输出约定为 `out/collab/k1-core-independent-review.md`；本轮最后检查时 `core/experiment_workflow.py` 尚未落盘，未对不存在的实现签字。源码到齐后重点追查当前 run 身份、actual inputs、初始化事实、raw draft、物理比较口径，以及本报告中的环境覆盖交接。
+
+## 2026-10-31 修复后独立复核（两项 P2 关闭）
+
+本节取代前文关于问题仍待修复的历史状态。复核未修改实现、测试、写者交付证据或旧失败记录，仅更新本报告。
+
+### P2-1：已关闭
+
+当前 `environment_discovery.py:97-112` 在共同 `_json()` 边界新增 finite `parse_float`，正负指数溢出在任意嵌套层级进入协议错误，不等到 GUI/持久化才失败。独立重新执行新测试覆盖顶层、dataset、嵌套对象/数组；有限大数、下溢和数值字符串对照保留。
+
+独立重新执行 GUI component v3 专项，包含真实 `probe_environment()` 消费合成溢出响应后的真实 Qt 控件逻辑：data 为 protocol_error、required_complete/report 不伪造，总状态 partial，详情无 Infinity，严格 JSON 可编码。仍允许选择能力可读的路径且选择事实保持 partial，符合原设计，不是该缺陷复发。没有将合成协议称作真实 Geant4 查询或实窗观察。
+
+### P2-2：已关闭
+
+当前 `environment_discovery.py:115-119` 的 `_resolve_executable()` 被 collection/probe 共用；集合在候选实际 child env/PATH 解析之后，以解析路径及 env/SDK 身份去重，并传入同一解析路径。解析失败不建立猜测 key，保留候选失败事实。独立重跑涵盖 PATH/显式路径两种顺序、本地文件缺失/存在、同路径别名、不同 env 以及非法候选。受控 PATH lookup 是跨平台解析语义的模拟，不声称已在 Linux 启动后端。
+
+### 独立复跑与原件复核
+
+| 检查 | 独立结果 |
+| --- | --- |
+| `python -B tools/test_assert_probe.py scripts/test_i1_environment.py --component` | exit 0；9 contract groups；`G4USIM_ASSERTS=142`；real backend not requested |
+| `python -B tools/test_assert_probe.py gui/smoke_tests/smoke_i1_environment.py --component` | exit 0；`G4USIM_ASSERTS=48`；real backend False |
+| 五个修前原字节副本与 before manifest | SHA256 逐一相符 |
+| 修前两份失败记录及日志 | 均保留 exit 1；对应非有限接受与候选丢失断言失败 |
+| 当前五文件与 `k1-i1-review-fix/evidence.json` 的 after SHA | 全部相符；dialog 原字节未改 |
+| 原 assert AST 多重集合 | 核心原 54、GUI 原 35 全部保留；分别新增 18、8 个位置 |
+| 四份修后日志原字节 SHA 与探针 marker | 逐份相符；static142 / gui48 / backend145 / integration52，登记 exit 均为 0 |
+
+backend145/integration52 是对写者现有日志原字节、marker 与 evidence 退出状态的独立核验，本审查者本次**没有重跑真实后端两组**。compileall exit0 仅沿用交付登记，本次不追加独立 compileall 声明；本次重新 import/执行了相关模块及组件专项。四组直接专项仍不等同统一冻结矩阵。
+
+本次复核的产品 SHA：`environment_discovery.py = 6e430c164d672ac68208157b3818400de225cbd7632173203fd79fae60c2da44`；dialog 仍为前表 SHA。两测试及中文文档的新身份以已逐一核验的 `out/collab/k1-i1-review-fix/evidence.json` 为准。旧报告与旧129入口未被覆盖。
+
+**剩余边界**：覆盖 E 的探测不能沿用成 runner E0 的运行证据；仍交主负责人，不提升为已解决或 I1 内核缺陷。没有本次两项 P2 的遗留阻断。本次复核不扩大 Linux/11.4/视觉/初始化/物理验证范围。
+
+服务文件随后已落盘，独立 core 审查已开始；其问题与 I1 这两项关闭独立记录，避免串用通过结论。

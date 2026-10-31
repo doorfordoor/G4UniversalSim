@@ -1,0 +1,26 @@
+{
+  "schema": "g4usim_physical_reference_v1",
+  "quantity": "energy_deposition",
+  "unit": "MeV",
+  "value": 0,
+  "source": "Geantino noninteracting test particle: analytic zero deposition special case; https://geant4.web.cern.ch/documentation/pipelines/master/bfad_html/ForApplicationDevelopers/TrackingAndPhysics/particle.html",
+  "source_kind": "analytic",
+  "weighted": false,
+  "normalization": "per_event",
+  "object": "sensitive_total",
+  "run": 0,
+  "conditions": {
+    "particle": "geantino",
+    "energy": "1 MeV",
+    "direction": "+Z",
+    "source_mm": [
+      0,
+      0,
+      -20
+    ],
+    "world": "100 mm G4_Galactic box",
+    "target": "8 mm FirstTarget silicon box, sensitive",
+    "biasing": false,
+    "scope": "noninteracting scoring special case; not general radiation validation"
+  }
+}

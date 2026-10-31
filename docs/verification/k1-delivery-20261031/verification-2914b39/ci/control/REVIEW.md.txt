@@ -1,0 +1,14 @@
+# 第七冻结官方 CI 终态审核
+
+冻结 `2914b3962167325628ede699b1c14a9d224dec41`：4 jobs、4 官方 ZIP、12 reports、548/0/0 执行通过；133720 断言。12 份报告严格门禁与 F5 同平台逐例/总量比较全部通过。
+
+- [linux 41189260366](https://github.com/doorfordoor/G4UniversalSim/actions/runs/41189260366)：普通 push / attempt 1 / success。
+- [m0 41189260331](https://github.com/doorfordoor/G4UniversalSim/actions/runs/41189260331)：普通 push / attempt 1 / success。
+
+官方 ZIP 大小/SHA、5277 个文件成员、12 份报告及 548 个日志在直接展开与 sealed 副本间全部一致；完整列表见 audit.json，联网身份及汇总见 review-result.json。
+
+第七仅单行将诊断序列化改为 ASCII 安全输出。UI v2 的 4 平台40条 external 无 package 完成观察均通过；终态组件四平台各11模式和8份 cancel/edit 观察通过。两者均为自动组件证据，不能冒 native 或物理验收。
+
+报告内原 git dirty/status 如实保留：指纹和 tracked source gate 不代表所有工作目录完全 clean。原官方 ZIP、报告和日志未改写，未重试 job，未使用 allow-incomplete。decoded job logs 是 connector 解码文本保存，不能称 HTTP 原始压缩字节。
+
+本收据只确认第七 CI；本机 Windows/原生映射由 root 另收。required 资源边界独审缺口保持，K1 不阶段关闭。第六 cp1252 失败历史保持原件，不回写为通过。

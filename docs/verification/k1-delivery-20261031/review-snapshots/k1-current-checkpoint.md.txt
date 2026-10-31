@@ -1,0 +1,13 @@
+# K1 当前检查点
+
+2026-10-31；roadmap/K1-trusted-workflow，HEAD e5ff80009975fc9d7d783eaa0865c7c894d1975b，修复未提交。K1未完成，codex未集成。D盘检出不写入。
+
+首冻结Windows173项165pass/8fail，54851入口；Linux41161341378/M041161341423在static失败，四官方ZIP已验大小/SHA，原件在out/verification/k1-e5ff800。首冻结后端原件SHA400a0ffb…已保留frozen-binary，不能以当前开发exe冒充。
+
+已修：Windows longPathAware+UTF8 manifest、早期绝对--working-directory、共用Python启动计划；三旧smoke等待真实异步完成/accepted close；测试UTF8生产者、跨平台fixture、文档链接。开发后端SHAaf6c9ae0…，build_git_source_state=dirty。真实深路径77断言、原失败深度workflow455断言、roundtrip/CLI/caps共215断言通过，均只属开发专项。旧报告不改写。
+
+独立复审Dalton确认测试门禁未降低，仍有P2：选项形状run label误被helper当cwd。Bohr独占backend_launch.py和相关helper/Qt测试修复；Dalton随后独立复核。其余写者已停止。模型实际gpt-6.1-sol high/medium，账本out/collab/k1-model-ledger.json；DeepSeek实际deepseek-flash交付保留。
+
+原生开发演练session59648/PID54636仍运行，window21235814。初始化通过(no_run)，真实运行3/3通过；physics未观测。当前阻塞在导出父目录原生文件对话框：工具可见但set_value报element unavailable、坐标操作未改变焦点。已请求用户手动选out/verification/k1-path-native-development。不得把开发演练当最终实窗验收，不盲目重试或伪造窗口句柄。
+
+下一步：helper修复和独立签字→显式暂存检查→新冻结提交/普通推送→重构建clean身份→Windows176项及CI12profile完整矩阵/严格F5逐例总量门禁→最终实窗/导出搬移重载修改失效重跑→归档、文档、正常集成推送。冻结期间不改源码和测试。失败或必要验收缺口则继续保持未完成。

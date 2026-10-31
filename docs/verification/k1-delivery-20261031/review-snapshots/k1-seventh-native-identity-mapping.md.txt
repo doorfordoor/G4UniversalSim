@@ -1,0 +1,19 @@
+# 第六实窗到第七源码身份映射
+
+结论：passed_identity_mapping_only。独立逐文件核对 350 个 GUI/C++/构建入口 Git blob 全同，138 个冻结 GUI SHA 与当前字节全同；C++ 指纹相同。第七唯一变化为 smoke_k1_workflow.py 的诊断 ensure_ascii=False→True，测试指纹因此改变。
+
+原实窗证据仍属4167c44；未在2914b39重开或点击GUI，不把重构建二进制哈希说成相同。原始实窗/CLI 334 个文件的SHA基线另存JSON，供收尾时核无改写。
+
+No seventh GUI was clicked or launched by this reviewer. Sixth native build/commit and images remain sixth evidence.
+
+Build identity and binary hash differ with rebuilt commit; source identity does not imply binary equality.
+
+Sixth initial visible runs were both generated; actual external no-package coverage is separate UUID5a69e6de81624882b9d3560c20611599.
+
+External images02/03/04 duplicate01 and do not prove intended states; only01/05 are distinct. Original files and correction remain.
+
+CLI replay UUIDbe4a8c5b6ac64c5195212073234f4d3f is execution proof, not MainWindow callback proof.
+
+Resource-boundary independent review remains incomplete; no replacement review performed.
+
+UI-PROCESS-IDLE-P3 and native chooser limitation retained.

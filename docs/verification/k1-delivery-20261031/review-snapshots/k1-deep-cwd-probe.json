@@ -1,0 +1,78 @@
+{
+  "schema": "g4usim_environment_v1",
+  "executable": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-k1\\Release\\G4UniversalSim.exe",
+  "status": "unavailable",
+  "capabilities": {
+    "status": "spawn_error",
+    "data": null,
+    "probe": {
+      "argv": [
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-k1\\Release\\G4UniversalSim.exe",
+        "--capabilities"
+      ],
+      "status": "spawn_error",
+      "exit_code": null,
+      "elapsed_seconds": 0.015,
+      "stderr": "",
+      "working_directory": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-e5ff800\\windows\\20261031-104457-02050896\\k1_workflow_backend-evidence\\k1-workflow-5d6fb02cde874c3fab5e78680c3c9558\\真实 后端\\records\\6750efab2f0044829cf16154b20c032f\\execution-inputs",
+      "error": "[WinError 267] 目录名称无效。",
+      "errno": 20,
+      "winerror": 267
+    }
+  },
+  "data": {
+    "status": "spawn_error",
+    "required_complete": null,
+    "report": null,
+    "probe": {
+      "argv": [
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-k1\\Release\\G4UniversalSim.exe",
+        "--check-geant4-data"
+      ],
+      "status": "spawn_error",
+      "exit_code": null,
+      "elapsed_seconds": 0.0,
+      "stderr": "",
+      "working_directory": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-e5ff800\\windows\\20261031-104457-02050896\\k1_workflow_backend-evidence\\k1-workflow-5d6fb02cde874c3fab5e78680c3c9558\\真实 后端\\records\\6750efab2f0044829cf16154b20c032f\\execution-inputs",
+      "error": "[WinError 267] 目录名称无效。",
+      "errno": 20,
+      "winerror": 267
+    }
+  },
+  "identity": {
+    "sha256": "400a0ffbda4bd7e21f0450d1852b4afab36ce40dac32b46b23caa6dc43682dfa",
+    "stable": true
+  },
+  "architecture": {
+    "format": "PE",
+    "machine": "x86_64",
+    "bits": 64,
+    "evidence": "binary_header"
+  },
+  "build": {
+    "compiler_id": null,
+    "compiler_version": null,
+    "geant4_version_number": null
+  },
+  "sdk": [
+    {
+      "path": "D:\\ProgramFiles\\root_v6.38.00\\cmake",
+      "source": "CMAKE_PREFIX_PATH",
+      "exists": false,
+      "config_files": [],
+      "headers": [],
+      "status": "not_found",
+      "build_verified": false
+    }
+  ],
+  "diagnostics": [
+    {
+      "stage": "capabilities",
+      "code": "spawn_error"
+    },
+    {
+      "stage": "data",
+      "code": "spawn_error"
+    }
+  ]
+}

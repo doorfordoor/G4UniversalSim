@@ -1,0 +1,19 @@
+# 第五冻结原生定向独立审核
+
+结论：**定向取消/强制结束/恢复证据核对成立，普通后台返回P3原因码修复已由实际记录证实；不代表K1总体通过。** gpt-6.1-sol/medium，消耗未知。只读核验、不重跑或操作窗口。
+
+桌面由主负责人assistant通过Sky实际操作，非用户亲验。本审实际view_image查看03、05、06：分别为强制结束62097、用户停止exit0与恢复3/3通过；其他三图的观察归属主负责人，六图原SHA全部核对。
+
+| UUID | 服务事实 | 后端事实 |
+|---|---|---|
+|576efbdcf8434907bf0206d1de976f16|cancelled / QProcess error: Crashed / killed /62097|无summary和metadata；完成数未知，部分CSV和遥测不算完整事件证据|
+|4aec0e6cd38a47e3a286be9e5693aaf2|cancelled / experiment.cancelled / stopped /0；服务事件数None|独立解析summary及metadata：run0实际1000000/1000000，status completed，F1 fresh verified；不能称中途停止|
+|5528e27cb3f94c70bf3e16a9de88d8b4|独立新UUID passed / success /0；3/3|summary、metadata与F1一致；仅事件层passed，字段/初始化/物理仍未观测|
+
+三UUID均只有一次terminal回调，actions投影与record.json逐项相等，targeted收据的三record原SHA匹配。两个完整输出共8项实际输入的原SHA/大小、UUID独占输入树、主配置/macro实际请求及actual_output_dir精确路径均核对；取消输出的raw F1成立并不授予服务passed。强制结束不同reason由QProcess错误路径保留，未被本次普通delivered分支修复冒称统一。
+
+host为f9a9ddb clean、Qt windows、无模块替换；实际后端79914f…与冻结一致，全部GUI原字节与manifest一致。相对第四仅experiment_workflow.py变化，其余GUI字节相同；LF源码/测试与候选规范化一致见窄审收据。host与launcher独立退出收据均0，host.log及host/launcher源SHA匹配；两个PID字段分别记录，不假设数值相等或据此推定进程链。
+
+第四完整导出/搬移/重验流程仍是第四历史证据，本轮没有重跑该流程；六图只是取消与恢复定向复验。Qt目录选择器变体不冒充默认Windows chooser；用户未参与桌面且无待人工请求。
+
+既有前端P2 completed preview cwd、P3 pending fallback标签仍由父任务/Tesla候选处理，本审不关闭。第五Windows严格矩阵和I1/CI证据仍待各自最终收据；required专项未完成，不关闭K1。完整原SHA、身份映射、摘要字段、8项输入及各项检查见k1-fifth-native-audit.json。

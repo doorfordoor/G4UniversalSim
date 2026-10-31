@@ -1,0 +1,35 @@
+NIEL table conversion
+50 MeV protons behind 1 mm Al
+  GateOxide DDD per fluence: 0.00455707 (expected 0.00452581, rel. tolerance 0.02)
+  GateOxide Phi_eq: 2.23714 (expected 2.23715, rel. tolerance 0.001)
+  Active DDD per fluence: 0.00455543 (expected 0.00452636, rel. tolerance 0.02)
+  Active Phi_eq: 2.23634 (expected 2.23634, rel. tolerance 0.001)
+  Slice0 DDD per fluence: 0.00454629 (expected 0.00452855, rel. tolerance 0.02)
+  Slice0 Phi_eq: 2.23185 (expected 2.23186, rel. tolerance 0.001)
+  Slice1 DDD per fluence: 0.00453608 (expected 0.00453184, rel. tolerance 0.02)
+  Slice1 Phi_eq: 2.22684 (expected 2.22684, rel. tolerance 0.001)
+  Slice2 DDD per fluence: 0.0045533 (expected 0.00453514, rel. tolerance 0.02)
+  Slice2 Phi_eq: 2.23529 (expected 2.2353, rel. tolerance 0.001)
+  Slice3 DDD per fluence: 0.00453318 (expected 0.00453846, rel. tolerance 0.02)
+  Slice3 Phi_eq: 2.22541 (expected 2.22542, rel. tolerance 0.001)
+  Slice4 DDD per fluence: 0.00454774 (expected 0.00454178, rel. tolerance 0.02)
+  Slice4 Phi_eq: 2.23256 (expected 2.23257, rel. tolerance 0.001)
+  Slice5 DDD per fluence: 0.00454732 (expected 0.00454512, rel. tolerance 0.02)
+  Slice5 Phi_eq: 2.23235 (expected 2.23236, rel. tolerance 0.001)
+  Slice6 DDD per fluence: 0.00453827 (expected 0.00454847, rel. tolerance 0.02)
+  Slice6 Phi_eq: 2.22791 (expected 2.22792, rel. tolerance 0.001)
+  Slice7 DDD per fluence: 0.0045398 (expected 0.00455183, rel. tolerance 0.02)
+  Slice7 Phi_eq: 2.22866 (expected 2.22867, rel. tolerance 0.001)
+  Slice8 DDD per fluence: 0.00454671 (expected 0.0045552, rel. tolerance 0.02)
+  Slice8 Phi_eq: 2.23205 (expected 2.23206, rel. tolerance 0.001)
+  Slice9 DDD per fluence: 0.00459772 (expected 0.00455858, rel. tolerance 0.02)
+  Slice9 Phi_eq: 2.2571 (expected 2.2571, rel. tolerance 0.001)
+production-cut independence of the substrate dose
+  middle slice TID: cut 1 um 9.7248e-10 +- 9e-12, cut 1 mm 9.6697e-10 +- 7.5e-12
+14 MeV neutrons
+  substrate DDD per fluence: 0.0038188 (expected 0.0038072, rel. tolerance 0.0126942)
+mixed spectrum device
+failures
+  3 invalid option sets rejected
+test_semiconductor_device: OK
+G4USIM_ASSERTS=53

@@ -1,0 +1,145 @@
+# K1 I1 独立交付
+
+本次已完成授权范围内的独立环境发现服务、异步选择对话框、两项专项和中文接口文档。未提交、未暂存、未重置任何文件；未修改模拟状态、安装器、i18n 主词典或主窗口。K1 整阶段验收由主负责人继续。
+
+## 工作区与范围
+
+- 工作区：`C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim`。
+- 起始 HEAD：`ccb813a8540b83d5015daabebd5047929a16af2c`；起始 `git status --short` 为空。工作期间其他写者新增的工作流、资源包、面板、STATUS/ROADMAP 等改动保持原样。
+- 任务指定模型/推理：`gpt-6.1-sol/high`。本执行环境没有返回实际服务路由模型或 token/费用读数，实际服务路由及消耗未知。
+- 已读根/gui AGENTS、`docs/collab/inbox/20261031-k1-execution.md`、历史“Phase D 安装包”“Geant4 11.4 兼容性探测与版本矩阵”和测试探针相关全文；核对真实 BackendCapabilities、Geant4DataLocator、main 入口、纯 Python 能力解析器和统一 ui_text。
+- 本写者新增五个文件：
+  1. `gui/g4usim_gui/core/environment_discovery.py`
+  2. `gui/g4usim_gui/widgets/environment_dialog.py`
+  3. `scripts/test_i1_environment.py`
+  4. `gui/smoke_tests/smoke_i1_environment.py`
+  5. `docs/环境发现与诊断.md`
+- 本报告和 `out/collab/k1-i1-*` 是本写者独立证据；未写其他协作者的报告。
+
+## 可直接接线的接口
+
+```python
+from g4usim_gui.core.environment_discovery import discover_environments, probe_environment
+
+facts = discover_environments(candidates=[
+    executable,
+    {"executable": other_executable, "label": "另一环境",
+     "env": {"GEANT4_DATA_DIR": other_data, "LD_LIBRARY_PATH": other_lib},
+     "sdk_roots": [other_sdk]},
+], timeout=5.0, env=None, sdk_roots=())
+one = probe_environment(executable, timeout=5.0, env=None, sdk_roots=())
+```
+
+两个返回值都是可 `json.dumps(..., allow_nan=False)` 的字典。单环境协议 `g4usim_environment_v1`；集合协议 `g4usim_environment_discovery_v1`。集合包含 `environments`、`host`、`sdk`。单环境包含 `executable/status/capabilities/data/identity/architecture/build/sdk/diagnostics`。`candidates=None` 仅发现 G4USIM_EXE/PATH；`[]` 只做主机依赖诊断，不扫描后端。相同路径及覆盖去重，不同子环境覆盖保留。覆盖只传给子进程，不序列化完整环境。
+
+能力通过真实 `--capabilities` 查询并复用 BackendCapabilities.from_json 校验；数据通过真实 `--check-geant4-data`，结构、逐项状态、汇总和退出码共同校验。没有内置数据版本表，也没有假定目录存在就物理可用。能力与数据命令独立，即便前者失败仍保存后者证据。
+
+`ready` 仅指能力协议可读、必需数据目录完整、二进制探测前后 SHA 相同。数据内容、初始化、实际事件和物理比较不在此状态含义内。其余状态区分 data_incomplete、partial、unavailable、not_found、error 和 changed_during_probe。命令单独保留 timeout/spawn_error/missing_library/loader_error/protocol_error/output_limit/invalid_encoding、真实退出码、耗时、stderr；超时回收直接子进程，未声称终止任意后代。输出返回有 4 MiB 限制，stderr 有长度限制。
+
+二进制 PE/ELF 架构来自文件头，与主机/Python 位数分开。未知格式保持 unknown。SDK 仅报告显式根/环境线索的配置及头文件存在，build_verified=false。host.tools 与后端构建编译器分开，记录 CMake/编译器版本命令事实。可选 Python 组件只 find_spec/发行版本，不导入，import_tested=false；GDML 等后端能力保持原协议事实。无 Qt、Geant4 或后端也能 import 核心并读取诊断。
+
+```python
+from g4usim_gui.widgets.environment_dialog import EnvironmentDialog
+
+dialog = EnvironmentDialog(candidates=[executable], parent=parent)
+dialog.environment_selected.connect(on_selected_facts)
+dialog.open()  # 或 show()；调用方按既有窗口生命周期保留实例
+# 接受后：dialog.selected_environment() / dialog.selected_executable()
+```
+
+`environment_selected(dict)`、两个 getter 都给接受后的选择；高亮行不接受选择。能力可读、字节前后稳定才允许选择；缺数据仍可选路径并显示警示，由既有 runner 继续运行前校验。对话框使用全局 Qt 线程池和显式 QueuedConnection；刷新期间旧行失效，重复刷新不排队，窗口关闭不等待探测。关闭/删除/旧请求的结果不得发布。工作线程仅调用独立发现服务，未引入新进程控制器。没有自动安装、修复、修改项目或启动模拟。
+
+## 本轮真实证据
+
+| 检查 | 结果 | 独立证据 |
+| --- | --- | --- |
+| 核心专项，包含真实 F5 后端 | exit 0；84 个 v3 assert 入口 | `out/collab/k1-i1-core-final.log`、`k1-i1-core-final.json` |
+| GUI 专项，Fusion/统一主题，含真实后端、截图保存 | exit 0；45 个 v3 assert 入口 | `out/collab/k1-i1-gui-themed-final.log` |
+| `python -m compileall -q gui`，最终源码 | exit 0 | `out/collab/k1-i1-compileall-final.log`（空日志表示无编译错误；退出码见本次工具回执与证据清单） |
+| 核心无 Qt import、清空后端/工具/SDK线索的独立 Python 进程 | exit 0 | `out/collab/k1-i1-import-isolation.log` |
+| 真实集合/主机工具/显式 SDK 探测 | exit 0 | `out/collab/k1-i1-host-real.json`、`k1-i1-host-real.log` |
+| 授权文件 UTF-8/LF、尾部空白、Python AST 与文档引用复核 | 见最终文件检查 | `out/collab/k1-i1-file-check.log` |
+
+核心和 GUI 共 129 个 v3 assert 入口，属于保守执行入口计数，不是独立命题数量。专项直接经 `tools/test_assert_probe.py` 执行，尚未登记到统一 runner；本独立清单不冒充统一 report v2 或整矩阵证据。日志/产物及本写者源码 SHA 在 `out/collab/k1-i1-evidence.json`。
+
+实际命令（执行时 G4USIM_EXE 指向下述 F5 现有构建；GUI另设置 QT_QPA_PLATFORM=offscreen 和独立截图路径）：
+
+```text
+python -B tools/test_assert_probe.py scripts/test_i1_environment.py --report out/collab/k1-i1-core-final.json
+python -B tools/test_assert_probe.py gui/smoke_tests/smoke_i1_environment.py
+python -m compileall -q gui
+```
+
+真实后端：`out/build-f5/Release/G4UniversalSim.exe`。SHA-256：`9790aa71a4fa7e9c2ca7d98f617fd983e328db09591766832f37a4ee138386d0`，探测前后相同。协议返回 build_git_commit=`5c1eec5007cd29cbe12949c19bed81457f1f825b`、build_git_source_state=clean、source_fingerprint=`db253b7b1ed5f810789f1322faa75002df311d4aeb04572867dbb130c71d95cc`，Geant4=1132、MSVC=19.51.36246.0、PE x86_64 64位，12/12 数据集目录 found。它是现有 F5 二进制，不伪称本轮重构建或与当前 K1 Git HEAD 相同；I1 仅查询两个诊断入口，没有执行初始化/事件。
+
+真实主机：CMake/c++/g++ 的版本命令有实测；cl/clang++ 在本次子进程 PATH 中未找到，这不等于系统未安装它们，也不影响已有 MSVC 构建后端的诊断。SDK 配置文件来自显式传入的当前 F5 CMakeCache 中 Geant4_DIR/安装前缀及当前环境线索，不执行配置文件。PySide6/uproot/numpy/matplotlib 为候选，pyvista/vtk 未发现；核心未导入这些可选模块。
+
+覆盖：中文/空格路径、多个后端与同后端不同环境、无后端诊断、PE/ELF、SDK 存在但未构建、可选数据缺失、必需数据缺失、协议损坏/重复键/NaN/汇总矛盾、能力与数据独立失败、真实 Python 子进程超时回收/非零退出/输出上限/无法启动、二进制探测中变化、GUI 事件循环心跳、后台线程身份、选择不运行、刷新拒旧结果、失败恢复按钮、关窗/删除后回执。Windows 缺 DLL/错误映像状态为注入；Linux 缺库诊断使用真实 Python 子进程写加载器诊断并退出，未声称真正删除库或在 Linux 运行。
+
+首轮 GUI 专项在测试的 `dialog.Accepted` 旧枚举处失败，保留 `k1-i1-gui-first.log`（17入口）；已改为 `QDialog.DialogCode.Accepted`，后续 GUI/真实后端专项通过。核心首轮日志和早期真实查询也保留，不把早期结果冒充最终源码验证。
+
+离屏截图 `k1-i1-dialog.png` 已经由 image-capable 工具打开查看：表格/详情区/按钮布局存在，但本机 offscreen 平台字体呈方框，连英文协议文字也不可读。首次未初始化主题图保留为 `k1-i1-dialog-uninitialized.png`，随后使用产品 Fusion/统一主题重取仍有此字体问题。**不将这两张图记为文字可读性或原生实窗通过**；GUI 自动状态断言与可读视觉验收分开。未操作真实 Windows 桌面窗口，待主负责人随 K1 原生实窗补验。
+
+## 待 i18n 写者集中合入的词条
+
+所有显示文本已通过统一 ui_text/ui_format；本文件不改主词典。词条清单生成时尚缺以下23项（英文为精确键，参数保持不变；共享主词典由其他写者继续维护）：
+
+| 键 | 建议中文 |
+| --- | --- |
+| Add backend executable… | 添加后端程序… |
+| Architecture | 架构 |
+| Backend changed during discovery; refresh required | 探测期间后端已变化，请刷新 |
+| Backend executable | 后端程序 |
+| Backend executable was not found | 未找到后端程序 |
+| Backend probe failed | 后端探测失败 |
+| Backend responds; data availability is unknown | 后端可响应，数据可用性未知 |
+| Backend responds; required data directories found | 后端可响应，已找到必需数据目录 |
+| Backend responds; required data is missing | 后端可响应，缺少必需数据 |
+| Build compiler | 构建所用编译器 |
+| Choose backend executable | 选择后端程序 |
+| Discovered {count} backend candidates. Selection does not start a simulation. | 发现 {count} 个后端候选。选择环境不会启动模拟。 |
+| Discovering environments… | 正在发现环境… |
+| Discovery reports backend and dependency facts. It does not initialize or validate a simulation. | 环境发现仅报告后端与依赖事实，不初始化或验证模拟。 |
+| Discovery status | 发现状态 |
+| Environment could not be inspected | 无法检查环境 |
+| Environment diagnostic facts | 环境诊断事实 |
+| Environment discovery and diagnostics | 环境发现与诊断 |
+| Environment discovery failed: {error} | 环境发现失败：{error} |
+| Geant4 | Geant4 |
+| Invalid environment candidate | 无效的环境候选 |
+| Refresh environments | 刷新环境 |
+| Use selected environment | 使用所选环境 |
+
+## 集成交接与边界
+
+主负责人拥有并继续：主窗口/CLI接线、主词典23项、统一测试登记（建议 static=`i1_environment`、gui=`i1_environment`）、相关 AGENTS/agent-history/支持矩阵/ROADMAP/人类快速说明同步、独立审查与 K1 Windows/Linux 全矩阵及原生实窗。这里的两项测试和模块可独立运行；本写者不越权改这些共享文件。静态专项默认不要求真实后端；设置 G4USIM_EXE 后才额外要求真实诊断协议成功。GUI 有 PySide6 依赖，缺 Qt 不伪装通过。
+
+尚未验证：Linux 真实 I1 运行、11.4 实际二进制、真正缺失动态库的系统加载器、GUI 原生桌面/高 DPI/屏幕阅读器、数据内容完整性、SDK/CMake配置编译链接、初始化/真实事件/物理正确性。不做任何安装操作。
+
+当前无本写者运行中会话。后续独立审查如需修正，只继续这五个授权文件；本报告保留已有证据与限制。
+
+
+## 2026-10-31 独立审查两项 P2 修复补充
+
+依据 `out/collab/k1-i1-independent.md`，本轮仅改原授权五文件中的四个：core/environment_discovery.py、scripts/test_i1_environment.py、gui/smoke_tests/smoke_i1_environment.py、docs/环境发现与诊断.md。widgets/environment_dialog.py 保持本轮修前原字节；i18n、主入口与测试登记未改。没有提交或暂存。当前执行模型按本轮系统信息为 gpt-6-astra；早先分派账本不追改。
+
+**修前失败保留**：五文件修前字节、SHA和原 assert AST 在 `out/collab/k1-i1-review-fix-before/`。先加入反例而未修产品时，两个独立函数都 exit 1：`exponent_regression.log` 明确在 top/1e999 拒绝断言失败；`candidate_resolution_regression.log` 在要求保留两个候选的断言失败。`regression-failures.json` 记录退出码；原独立审查和上轮自验日志均未改写。
+
+**P2-1**：共同 `_json()` 通过 `parse_float` 在数值转换时要求 finite，拒绝合法 JSON 指数语法溢出的正负无穷；任意层级统一生效。六种组合覆盖顶层/dataset/嵌套对象数组 × 1e999/-1e999，另保留有限大数、下溢和数值字符串对照。真正调用 `_data_report`、`probe_environment` 和 Qt 控件：失败保持 data.protocol_error、required_complete=null、report=null，总状态 partial；`json.dumps(..., allow_nan=False)` 成功。GUI不再声明数据完整、不显示 Infinity。能力可读时仍可按原契约选择路径，选出事实保持 partial。
+
+**P2-2**：新增共享 `_resolve_executable()`；集合使用候选的实际子进程 PATH 先解析，再按规范路径与环境覆盖/SDK线索去重，并将已解析路径交给探测。解析异常直接保留该候选的失败诊断，不使用猜测 key 抑制其他候选。反例覆盖两种顺序、cwd显式文件缺失/存在、同一规范路径别名去重、同一exe不同env保留、非法候选之后仍发现有效候选。PATH选择用受控lookup模拟不默认搜索cwd的平台，实际collector/probe/hash执行，后端协议为合成响应；不伪称Linux真实后端验证。
+
+**专项结果**（全部在子进程仍注入真实 G4USIM_EXE 的条件下运行）：
+
+| 登记对应组 | 开关/后端 | 退出码 | v3 assert入口 | 新证据 |
+| --- | --- | --- | --- | --- |
+| static i1_environment | --component | 0 | 142 | k1-i1-review-fix/static.log、static.json |
+| gui gui_i1_environment | --component | 0 | 48 | k1-i1-review-fix/gui.log |
+| backend i1_environment_backend | 真实F5后端 | 0 | 145 | k1-i1-review-fix/backend.log、backend.json |
+| integration gui_i1_environment_backend | 真实F5后端 | 0 | 52 | k1-i1-review-fix/integration.log |
+
+路径均相对 `out/collab/`。四组通过属于直接 `test_assert_probe.py` 专项，不冒充统一 runner 的整矩阵冻结报告。原有每条断言以 AST 多重集合核对全部保留；核心新增18个 assert位置、GUI新增8个位置，循环计数另按真实探针入口记录。主负责人新增的两个 `--component` 分支原样保留；static报告明确 real_backend=null，GUI component输出 real backend: False。真实组继续查询已记录的F5后端，两协议通过，不执行事件。
+
+最终 `python -m compileall -q gui` exit 0。四组日志采用 UTF-8/LF 字节落盘并对落盘原字节哈希，所有源码修前/修后身份、断言保留检查及退出码在 `out/collab/k1-i1-review-fix/evidence.json`。此前129入口是上一轮历史结果，本轮不替换它；视觉与Linux验证边界仍沿用前文。
+
+已通过 send_input 通知原独立审查者 `01a18f97-f404-7fa0-89f3-b826cadd8055` 接续复核（submission_id=`01a18fa4-0b35-7de1-80e5-30137a8f8ef0`），当前等待其独立结论。本修复不为自己签发独立复核通过。环境覆盖与runner实际继承环境的接线限制仍由主负责人处理；不能把覆盖E下的ready沿用为E0运行证据。

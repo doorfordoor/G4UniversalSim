@@ -1,0 +1,63 @@
+# 第六冻结真实 CI：完整证据、严格拒绝
+
+冻结 `4167c4421b13464dec54213ea7652ee321868c4e`。**Automation FAILED**；完整采证不等于验收通过。四官方 ZIP / 12报告 / 548次执行已收齐，所有字节核验通过，严格 gate 仍按真实失败拒绝。
+
+实际状态：{'pass': 547, 'fail': 1}；断言合计 133618。strict prepare/collect/audit 退出码 0/0/1；独立程序 exit0，其语义 checks_passed=false，不能把进程成功当通过。
+
+## 官方终态及原件
+
+- [linux run 41179691486](https://github.com/doorfordoor/G4UniversalSim/actions/runs/41179691486)：success，push/attempt1，原 API/jobs/artifact metadata 为 `linux-run.json` / `linux-jobs.json` / `linux-artifacts.json`。
+  - 124474368962 ubuntu-24.04 / Geant4 11.4.3：success；官方 decoded job 日志 `job-124474368962.log`，解码后按LF保存，不冒 HTTP 压缩原字节。
+  - 124474369122 ubuntu-24.04 / Geant4 11.3.2：success；官方 decoded job 日志 `job-124474369122.log`，解码后按LF保存，不冒 HTTP 压缩原字节。
+- [m0 run 41179691469](https://github.com/doorfordoor/G4UniversalSim/actions/runs/41179691469)：failure，push/attempt1，原 API/jobs/artifact metadata 为 `m0-run.json` / `m0-jobs.json` / `m0-artifacts.json`。
+  - 124474368833 windows-latest / Python 3.11：failure；官方 decoded job 日志 `job-124474368833.log`，解码后按LF保存，不冒 HTTP 压缩原字节。
+  - 124474368948 ubuntu-latest / Python 3.11：success；官方 decoded job 日志 `job-124474368948.log`，解码后按LF保存，不冒 HTTP 压缩原字节。
+
+| 官方 ZIP | artifact ID | bytes | 官方SHA256 |
+|---|---:|---:|---|
+| [linux-evidence-11.4.3.zip](linux-evidence-11.4.3.zip) | 13034732899 | 26825893 | sha256:712ee235cbae895275526d842824c6ac223b98ddfadd42329df8320cfb123d81 |
+| [linux-evidence-11.3.2.zip](linux-evidence-11.3.2.zip) | 13034544303 | 26827155 | sha256:ed021e9c8225b05ffb54f0bc1c0285389cc48e72a9db9c2b96be601048340158 |
+| [m0-report-windows-latest.zip](m0-report-windows-latest.zip) | 13035115075 | 456731 | sha256:3c962963ead2fca339853320c7452b5183ccd890a76756248e01e60af35488a9 |
+| [m0-report-ubuntu-latest.zip](m0-report-ubuntu-latest.zip) | 13034596348 | 405618 | sha256:9b9238dd256f77b5bedcb525c083a936ad96b5c8349571318281fdf7b4ac18bd |
+
+原ZIP先核官方size/SHA后展开；collect完整封存，独立逐字节核对全部 5277 成员、12原报告及548原case日志。详见 archive-member-verification.json。旧报告和失败原件不改写。
+
+## 失败事实
+
+- m0-report-windows-latest / gui_k1_window：fail，exit1，76个v3入口。[原case日志](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/verification/k1-4167c44/ci/m0-report-windows-latest/20261031-071655-573fefc8/gui_k1_window.log)。
+
+首因：smoke_k1_workflow.py:191 的 `print(...json.dumps(...ensure_ascii=False))` 遇 Windows stdout cp1252，UnicodeEncodeError（position1575–1581）。direct/en 已有一次成功显示观察，随后中文诊断打印失败，不能声称十次全部完成，也不是当前停止点的cwd产品断言失败。prior v2独审未覆盖此编码环境；历史通过收据保留，encoding-failure-facts.json明确补记，不追改历史。
+
+## 全profile与F5严格门禁
+
+| artifact | profile | cases | statuses | assertions | strict | F5 |
+|---|---|---:|---|---:|---|---|
+| linux-evidence-11.3.2 | backend | 61 | {'pass': 61} | 41118 | pass | pass |
+| linux-evidence-11.3.2 | gui | 56 | {'pass': 56} | 6465 | pass | pass |
+| linux-evidence-11.3.2 | integration | 29 | {'pass': 29} | 6010 | pass | pass |
+| linux-evidence-11.3.2 | static | 36 | {'pass': 36} | 3552 | pass | pass |
+| linux-evidence-11.4.3 | backend | 61 | {'pass': 61} | 40526 | pass | pass |
+| linux-evidence-11.4.3 | gui | 56 | {'pass': 56} | 6465 | pass | pass |
+| linux-evidence-11.4.3 | integration | 29 | {'pass': 29} | 6010 | pass | pass |
+| linux-evidence-11.4.3 | static | 36 | {'pass': 36} | 3552 | pass | pass |
+| m0-report-windows-latest | static | 36 | {'pass': 36} | 3542 | pass | pass |
+| m0-report-windows-latest | gui | 56 | {'pass': 55, 'fail': 1} | 6361 | REJECT | REJECT |
+| m0-report-ubuntu-latest | static | 36 | {'pass': 36} | 3552 | pass | pass |
+| m0-report-ubuntu-latest | gui | 56 | {'pass': 56} | 6465 | pass | pass |
+
+原始日志SHA/marker/退出信息、12报告head/source/tests指纹、冻结名单/顺序和身份检查保持真实。没有放宽failed/skip；F5按相同artifact/平台/Geant4/profile逐例及总量比较，失败profile不签通过。audit.log保留原严格错误，失败即无audit.json成功收据；independent-profiles.json继续列全12项，不allow-incomplete。
+
+## 专项边界
+
+P3旧终态11模式在四GUI报告中继续通过，8份取消/真实编辑组件观察与磁盘回调一致，p3-evidence.json；不代替native。UI v2显示观察仅 31/40，逐报告如下，缺失由失败保留，不能用另外平台绿色覆盖。
+
+| GUI artifact | case | observations/10 |
+|---|---|---:|
+| linux-evidence-11.3.2 | pass | 10/10 |
+| linux-evidence-11.4.3 | pass | 10/10 |
+| m0-report-windows-latest | fail | 1/10 |
+| m0-report-ubuntu-latest | pass | 10/10 |
+
+六源码SHA与批准v2精确相同，集成收据/原独审副本/差异见本目录，不表示本轮测试全绿。native/Windows本地矩阵由父线程另行负责，此处未操作。编码修复需新冻结及新矩阵；不重跑第六job、不改当前tracked、不重试被拒资源边界。阶段不关闭。
+
+模型 gpt-6.1-sol / medium，消耗未知。

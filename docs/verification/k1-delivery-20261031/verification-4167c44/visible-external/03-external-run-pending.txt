@@ -1,0 +1,118 @@
+Window: "G4UniversalSim Runner — K1 冻结工作流验收 *", App: python.exe.
+	0 窗口 (settable, string) G4UniversalSim Runner — K1 冻结工作流验收 * Secondary Actions: Raise ID: QApplication.MainWindow
+		1 标题栏 (settable, string) Value: G4UniversalSim Runner — K1 冻结工作流验收 *
+			2 菜单栏 系统 ID: MenuBar
+				3 菜单项 系统
+			4 按钮 最小化
+			5 按钮 最大化
+			6 按钮 关闭
+		7 组 (settable, string) ID: QApplication.MainWindow.appShell
+			8 组 (settable, string) ID: QApplication.MainWindow.appShell.sidebar
+				9 图像 ID: QApplication.MainWindow.appShell.sidebar.brandLogo
+				10 文本 G4UniversalSim ID: QApplication.MainWindow.appShell.sidebar.brandMark
+				11 文本 仿真工作台 ID: QApplication.MainWindow.appShell.sidebar.brandCaption
+				12 文本 工作流程 ID: QApplication.MainWindow.appShell.sidebar.sidebarSection
+				13 复选框 (settable, string) Start ID: QApplication.MainWindow.appShell.sidebar.QToolButton
+				14 复选框 (settable, string) Project ID: QApplication.MainWindow.appShell.sidebar.QToolButton
+				15 复选框 (settable, string) Configuration ID: QApplication.MainWindow.appShell.sidebar.QToolButton
+				16 复选框 (settable, string) Scenario ID: QApplication.MainWindow.appShell.sidebar.QToolButton
+				17 复选框 (settable, string) Effective Configuration ID: QApplication.MainWindow.appShell.sidebar.QToolButton
+				18 复选框 (settable, string) Run Console ID: QApplication.MainWindow.appShell.sidebar.QToolButton
+				19 复选框 (settable, string) Results ID: QApplication.MainWindow.appShell.sidebar.QToolButton
+				20 复选框 (settable, string) Run History ID: QApplication.MainWindow.appShell.sidebar.QToolButton
+				21 复选框 (settable, string) Parameter Scans ID: QApplication.MainWindow.appShell.sidebar.QToolButton
+				22 文本 G4UniversalSim 0.1.0 ID: QApplication.MainWindow.appShell.sidebar.sidebarFooter
+			23 组 (settable, string) ID: QApplication.MainWindow.appShell.contentHost
+				24 自定义 (settable, string) ID: QApplication.MainWindow.appShell.contentHost.pageHeader
+					25 文本 项目 ID: QApplication.MainWindow.appShell.contentHost.pageHeader.pageTitle
+					26 文本 连接可执行程序、工作区和运行默认值。 ID: QApplication.MainWindow.appShell.contentHost.pageHeader.pageSubtitle
+					27 文本 项目：K1 冻结工作流验收 ID: QApplication.MainWindow.appShell.contentHost.pageHeader.QLabel
+					28 文本 ● 待验证 ID: QApplication.MainWindow.appShell.contentHost.pageHeader.QLabel
+					29 按钮 (settable, string) Theme ID: QApplication.MainWindow.appShell.contentHost.pageHeader.QToolButton
+					30 按钮 (settable, string) Language ID: QApplication.MainWindow.appShell.contentHost.pageHeader.QToolButton
+				31 窗格 (settable, string) ID: QApplication.MainWindow.appShell.contentHost.pageViewport
+					101 组 (settable, string) ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage
+						102 组 (settable, string) ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll
+							103 组 (settable, string) ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport
+								104 组 (settable, string) ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget
+									105 文本 选择可执行程序，然后使用配置页生成的输入（默认）或外部 config/macro 文件。点击 Run 时会校验并重新生成已失效的运行包。 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.QLabel
+									106 自定义 (settable, string) ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.QSplitter
+										107 组 (settable, string) 当前运行默认值 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.QSplitter.QGroupBox
+											108 文本 运行来源 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.QSplitter.QGroupBox.QLabel
+											109 组合框 (settable, string) 运行来源 Value: 使用外部文件 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.QSplitter.QGroupBox.QComboBox
+											110 文本 配置文件 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.QSplitter.QGroupBox.QLabel
+											111 组 (settable, string) 配置文件 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.QSplitter.QGroupBox.QWidget
+												112 编辑 (settable, string) ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.QSplitter.QGroupBox.QWidget.QLineEdit
+												113 按钮 (settable, string) 浏览 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.QSplitter.QGroupBox.QWidget.QPushButton
+											114 文本 Macro 文件 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.QSplitter.QGroupBox.QLabel
+											115 组 (settable, string) Macro 文件 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.QSplitter.QGroupBox.QWidget
+												116 编辑 (settable, string) ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.QSplitter.QGroupBox.QWidget.QLineEdit
+												117 按钮 (settable, string) 浏览 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.QSplitter.QGroupBox.QWidget.QPushButton
+											118 文本 输出目录 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.QSplitter.QGroupBox.QLabel
+											119 组 (settable, string) 输出目录 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.QSplitter.QGroupBox.QWidget
+												120 编辑 (settable, string) ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.QSplitter.QGroupBox.QWidget.QLineEdit
+												121 按钮 (settable, string) 浏览 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.QSplitter.QGroupBox.QWidget.QPushButton
+											122 文本 线程数 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.QSplitter.QGroupBox.QLabel
+											123 旋转图标 (settable, float) 线程数 Value: 1 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.QSplitter.QGroupBox.QSpinBox
+											124 文本 随机种子 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.QSplitter.QGroupBox.QLabel
+											125 编辑 (settable, string) 随机种子 Value: 4242 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.QSplitter.QGroupBox.QLineEdit
+											126 文本 运行名称 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.QSplitter.QGroupBox.QLabel
+											127 编辑 (settable, string) 运行名称 Value: k1-visible ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.QSplitter.QGroupBox.QLineEdit
+											128 文本 状态 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.QSplitter.QGroupBox.QLabel
+											129 文本 可执行程序：正常 配置：未设置 Macro：未设置 输出：缺失 工作区：正常 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.QSplitter.QGroupBox.QLabel
+										130 组 (settable, string) 项目设置 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.QSplitter.QGroupBox
+											131 文本 项目名称 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.QSplitter.QGroupBox.QLabel
+											132 编辑 (settable, string) 项目名称 Value: K1 冻结工作流验收 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.QSplitter.QGroupBox.QLineEdit
+											133 文本 G4UniversalSim 可执行程序 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.QSplitter.QGroupBox.QLabel
+											134 组 (settable, string) G4UniversalSim 可执行程序 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.QSplitter.QGroupBox.QWidget
+												135 编辑 (settable, string) Value: C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\build-k1\Release\G4UniversalSim.exe ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.QSplitter.QGroupBox.QWidget.QLineEdit
+												136 按钮 (settable, string) 浏览 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.QSplitter.QGroupBox.QWidget.QPushButton
+											137 文本 工作区根目录 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.QSplitter.QGroupBox.QLabel
+											138 组 (settable, string) 工作区根目录 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.QSplitter.QGroupBox.QWidget
+												139 编辑 (settable, string) Value: C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\verification\k1-4167c44\visible-external\fixture-inputs ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.QSplitter.QGroupBox.QWidget.QLineEdit
+												140 按钮 (settable, string) 浏览 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.QSplitter.QGroupBox.QWidget.QPushButton
+											141 文本 运行包根目录 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.QSplitter.QGroupBox.QLabel
+											142 组 (settable, string) 运行包根目录 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.QSplitter.QGroupBox.QWidget
+												143 编辑 (settable, string) Value: C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\verification\k1-4167c44\visible-external\fixture-inputs\packages ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.QSplitter.QGroupBox.QWidget.QLineEdit
+												144 按钮 (settable, string) 浏览 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.QSplitter.QGroupBox.QWidget.QPushButton
+											145 组 (settable, string) 项目设置 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.QSplitter.QGroupBox.QWidget
+											146 按钮 (settable, string) 保存项目 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.QSplitter.QGroupBox.QPushButton
+											147 按钮 (settable, string) 加载项目 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.QSplitter.QGroupBox.QPushButton
+										148 缩略图 (settable, string) ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.QSplitter.qt_splithandle_
+									152 组 (settable, string) ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel
+										153 表格 (settable, string) 校验诊断 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel.diagnosticTable
+											154 窗格 (selectable, settable, string) ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel.diagnosticTable
+											155 标头 (selectable, settable, string) 严重度 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel.diagnosticTable
+											156 标头 (selectable, settable, string) 代号 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel.diagnosticTable
+											157 标头 (selectable, settable, string) 位置 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel.diagnosticTable
+											158 标头 (selectable, settable, string) 消息 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel.diagnosticTable
+											159 项 (selectable, settable, string) 错误 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel.diagnosticTable
+											160 项 (selectable, settable, string) project.external_input_required ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel.diagnosticTable
+											161 项 (selectable, settable, string) project.config_path ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel.diagnosticTable
+											162 项 (selectable, settable, string) 外部输入模式需要配置文件或宏文件，也可同时提供。 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel.diagnosticTable
+											163 项 (selectable, settable, string) 错误 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel.diagnosticTable
+											164 项 (selectable, settable, string) project.output_required ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel.diagnosticTable
+											165 项 (selectable, settable, string) project.output_dir ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel.diagnosticTable
+											166 项 (selectable, settable, string) 请填写输出目录。 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel.diagnosticTable
+										167 按钮 (settable, string) 定位字段 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel.QPushButton
+										168 按钮 (disabled, settable, string) 查看来源 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel.QPushButton
+										169 按钮 (settable, string) 重新校验 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel.QPushButton
+										170 文本 信息: 选择一条诊断，再定位字段或查看来源。 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel.diagnosticStatus
+										171 编辑 Value: External input mode requires a config file, a macro file, or both. ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel.diagnosticRawMessage
+											172 组 (settable, string) ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel.diagnosticRawMessage.qt_scrollarea_viewport
+							173 组 (settable, string) ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_vcontainer
+								174 滚动条 (settable, float) Value: 0 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.ProjectPage.projectContentScroll.qt_scrollarea_vcontainer.QScrollBar
+		91 菜单栏 (settable, string) ID: QApplication.MainWindow.QMenuBar
+			92 菜单项 (settable, string) 文件 ID: QApplication.MainWindow.QMenuBar.QAction
+			93 菜单项 (settable, string) 编辑 ID: QApplication.MainWindow.QMenuBar.QAction
+			94 菜单项 (settable, string) 视图 ID: QApplication.MainWindow.QMenuBar.QAction
+		95 工具栏 (settable, string) 编辑历史 ID: QApplication.MainWindow.editHistoryToolbar
+			96 按钮 (settable, string) 撤销：编辑配置 ID: QApplication.MainWindow.editHistoryToolbar.QToolButton
+			97 按钮 (disabled, settable, string) 重做 ID: QApplication.MainWindow.editHistoryToolbar.QToolButton
+		98 状态栏 ID: QApplication.MainWindow.QStatusBar
+			99 缩略图 (settable, string) ID: QApplication.MainWindow.QStatusBar.QSizeGrip
+			100 文本 恢复保护：修改等待保存到副本 ID: QApplication.MainWindow.QStatusBar.QLabel
+
+Document text: ```
+External input mode requires a config file, a macro file, or both.
+```

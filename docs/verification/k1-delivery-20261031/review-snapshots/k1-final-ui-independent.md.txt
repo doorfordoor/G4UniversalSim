@@ -1,0 +1,39 @@
+# K1 最终 UI 六文件候选独立复审
+
+判定：**请求修改，尚不能接收 cwd 修复整体。** 发现 1 项 P2：external Run 完成仍绕过新增真实 cwd/argv 投影。pending 显式映射修复及 generated 预览部分可以限定认可。
+
+基线 `f9a9ddbfcabe69067707a5a209caff005748f510`；补丁 SHA `6e7c23632dd46b7123bfebde736e627e0f41a2a2a28af53ccc5796caef94c0a0`。本审查者未写六个候选文件，无自审冲突。实际模型 gpt-6.1-sol / medium，消耗未知。
+
+## P2：package 早返回漏掉现有 external 完成记录
+
+位置：[候选 window/experiment.py:277](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-final-ui-candidate/files/gui/g4usim_gui/window/experiment.py:277)，新增投影在约303行、package guard 之后。
+
+真实 producer 的 `_prepare` 只在 generated 分支写 package；external 分支仍产生 execution_bundle、command，运行后另有 launch 收据，但没有 package。成功 run 的 `_experiment_completed` 仍调用 `_bind_experiment_package`，该函数在 `not isinstance(package, dict)` 时立即返回；changed 路径也仅在有 package_dir 时绑定。因此 external 运行完成后仍可显示动作前编辑 workspaceRoot 和 planned argv，未显示本次已观测的 logical cwd、physical launch cwd 和实际 argv。
+
+已对候选原 AST 抽取这一方法，以纯 Python display sink 和当前 external 记录形状做最小控制流检查：输入有 command/execution_bundle/launch、无 package，调用后仍是 `working directory: EDITOR_CWD`。没有启动 Qt、后端、模拟、原 smoke 或重复矩阵。此检查是新风险的针对性证据，不声称真实 external 模拟已重跑。
+
+最小修改建议：将记录命令/cwd投影与 generated 路径/F5显示绑定拆开；generated/external 成功完成均执行投影。先选合法 observed launch program/arguments，再选 record.command 作为兼容显示；cwd 无事实时为 Unknown，不能回退编辑器路径。增加无 package 的 completed external 记录回归，保留原 legacy 动作前列表。只需原六文件 scope，毋须 core/runner/资源规则变更。
+
+新增 workflow smoke 确实验证实际 completed Generate，但之后 direct/restore/unknown 都由该 Generate 记录复制，package 始终存在，所以 80 入口绿不能覆盖本反例。
+
+## 已确认正确的部分
+
+- formatter 的两个可选显示参数保留无参数时的完整旧列表；空 command 仍为空；human-readable 仍只是便于阅读的拼接文本，不是 shell quoting 或可执行命令保证。
+- 有 package 的 generated 记录中，launch.working_directory 优先于 execution_bundle.path；launch program/arguments 覆盖 planned command，restore transport 参数不会丢失。物理启动目录只在与逻辑目录不同时单列；全部 cwd 事实缺失时明确 Unknown，没有偷取编辑路径。
+- pending 使用真实 producer `_state` 的两个状态路径构造，而非消费者自造 token；新增固定英文/中文期望，summary/level/history 分开检查、物理层仍未观测、payload 不变。产品只新增 token/i18n，未知值仍 Unobserved，不改变四层资格或持久化记录。
+- 六文件及补丁、manifest 所列全部证据原字节 SHA 已独立核验；两个 smoke 的完整原 assert AST 多重集（含消息）分别39/67，无删除，最终57/74。原 source/F5/Qt 所有权不改。
+
+## 原证据核查（未重跑）
+
+baseline cwd/pending 两项 exit1 的 traceback 确实落在目标断言，非 fixture/setup 故障。候选同真实 generated record 显示为 cwd绿3、producer pending绿2；增强 panel1629、workflow80 均 exit0，日志与收据 SHA 匹配。overlay harness 使用正式 __file__ 定位 fixture、候选编译文件名计探针，未将合成显示当模拟或 native 复验。上述绿证据保留原含义，不扩张到漏测 external 分支。
+
+| 文件 | 基线 SHA-256 | 候选 SHA-256 |
+|---|---|---|
+| gui/g4usim_gui/window/run.py | `67043150fdf3661ceda82be112c481ef252c8f7bb75ce6b47b5153ddd1442a29` | `3af4daefa4c0818fba9879acffe14e15ece2c8b908d2b26b0526e9fa7e873d56` |
+| gui/g4usim_gui/window/experiment.py | `bfe38e02552f831027d59480331e3805c16955b69cbccdb5a94c26963a005d46` | `2cb03d1ad4d83fb5ae0608ddb79e82976e1df0c742aabdd1819e0766de224258` |
+| gui/g4usim_gui/widgets/experiment_panel.py | `741adb59951cbf8adc9428eca4703612efafa737396dc5025d350c8ad53bbfd1` | `01f91f3db0081536110e2acc9958ec76783af485dbbc1f378ec52231f94133f3` |
+| gui/g4usim_gui/core/i18n.py | `5bbc3d1057741844cd76903bb4f36a83f85eff8bd4307fb946512c09b5efc60c` | `002de76b33480160415c3c4b2fb9e38455b2ce94b1aedacfcd83121387ecdf0a` |
+| gui/smoke_tests/smoke_k1_workflow.py | `fa387c6b551e06331cb3203d4d8f748ee3852939aefc573d5f2c527ae08c7524` | `05ff02dae6a38375ecb5e39f3f79a33a80cef29318fa003f41aec4c94f3f5968` |
+| gui/smoke_tests/smoke_k1_panel.py | `4e90b351f3d934cc07abf2f519d9dd1476117b0e3c28714c1b93426632673c7a` | `658fcb292ca0b2ab60b8ef73bd3a4d285593c13824076850e4bd8cfbef8d38a0` |
+
+第五 CI 仍按 f9a9ddb 原冻结继续；此报告不应用候选、不改候选/正式文件、不关闭 K1，也不重试已拒资源边界 scope。需 writer 修好并重新冻结候选身份后复查增量，再由父线程决定第六集成。JSON 含发现、原证据索引、SHA 和针对性控制流输入/结果。

@@ -1,0 +1,25 @@
+# K1 CP1252 单行诊断候选独立复审
+
+**判定：通过单测试诊断变更复审，待新冻结及新矩阵。** 无修复项。本审未参与实现，未重跑充分已有专项，不修改候选、tracked 或旧报告。实际模型 gpt-6.1-sol / medium，消耗未知。
+
+基线 `4167c4421b13464dec54213ea7652ee321868c4e`。manifest `4d404f1c3d204c3dcd0309ca9a5db41ceef074aeef51da808785e19d6b139b01`，patch `903d079875c6933f0321b2707bfd95a225a4ad3d20a5da04ef76b179ebef2fe8`，候选源码 `e653d5d67d50ba2956a5e6b16d378b74abf085075c8093800b85b2c1d71c6632`，均与指定最终字节匹配。
+
+## 原红例身份与首因
+
+已独立核第六 run41179691469 / job124474368833 原 facts、report、case log 字节及SHA。gui_k1_window 原exit1/76，原log先有direct/en观察，再在第191行diagnostic print经cp1252.py抛UnicodeEncodeError；该回合尚未执行后面的cwd断言。并非cwd断言失败，也不能由已有一次观察冒称全十次完成。
+
+原facts SHA `57f56db493b3b3308cac8ace46d7b047c9ee974cf1f5b99dde4d76ffae44a029`；原case log SHA `ac9b6aa0d0015cd47461038f7eec54b5bdfd6b19e3c04eb5ebb883678e120346`；原report SHA `3de0462014b40965a3ab671d432e81c0c79387dd678c65c7c8488082271d5ea9`。候选内证据副本与原件身份均对上；第六原始失败保持不变。
+
+## 一行逻辑及门禁是否减弱
+
+实际raw diff仅 `json.dumps` 的 ensure_ascii=False→True；同一诊断、同一八字段全部保留。ASCII JSON只将中文/emoji等写为标准转义，json.loads恢复原Unicode字符串、实际argv和逻辑/物理cwd；不改变Qt显示、F5模型、记录资格或业务比较。默认CP1252严格stdout可编码全部该诊断字节，不依赖更改机器/父环境或宽松errors。原human-readable语义和全部判断保持。
+
+原与候选74条完整assert AST（含消息及顺序）完全相同；将唯一ensure_ascii布尔值还原后，全文件AST与基线相同。原probe SHA fd651550...完全不变，当前tracked/head仍冻结4167c44。未删断言、未删输出或放宽成功判据。
+
+## 真实完整脚本执行证据（只读核验，未重跑）
+
+run_case.py直接 subprocess 调用原tools/test_assert_probe.py和完整镜像脚本，子进程明确PYTHONIOENCODING=cp1252，stdout/stderr保存原字节日志；不是截AST运行、import/runpy hook或伪造产品成功。实际checkout产品/fixture由PYTHONPATH加载；镜像脚本ROOT仅作sys.path插入，没有改变fixture业务路径。负正例使用同一临时根策略和实际第六产品，未启动Geant4模拟。
+
+包装脚本保存收据后可能自身exit0，本审依据实际child returncode及原始probe marker：原版1/76，目标print/cp1252同因；候选0/178，整脚本结束。正例十条诊断逐字节ASCII，五形状×中英文齐全，JSON八字段/中文/emoji往返核验通过；后续原assert、F5不变与close流程随完整脚本执行完。现有脚本print之前/之后的真实producer准备、受控完成记录与物理模拟边界保持原义。
+
+该修复补上此前v2独审遗漏的stdout编码边界；旧v2签字仍为历史过程，不追改。第六Windows CI仍失败、不能全绿；候选局部通过不替代第七正式矩阵、native或阶段验收。无资源边界复审或重试。JSON附完整身份、原红绿收据及十条解码观察。

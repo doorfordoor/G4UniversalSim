@@ -1,0 +1,8 @@
+# 第六显示契约草稿独立核对
+
+结论：**需两处P3措辞收窄；不是产品候选新阻断。** gpt-6.1-sol/medium，消耗未知。已读v2实际候选与独审，六文件SHA均相符；未改草稿/源码、未重测。四份拟集成文档归父任务作者，不归Franklin。
+
+1. “已执行/已完成记录使用实际argv”应区分有效launch收据与record.command兼容回退。实际代码仅在launch program/arguments有效时优先它们，否则显示record.command，不能把计划命令称实际启动；Generate的execution_bundle.path也是计划逻辑目录。新增完成回调覆盖passed且非stale的Generate/Run（含external无package），不要承诺所有失败/取消/其他动作完成后均回绑。来源：v2 window/experiment.py:223–233、306–323，window/run.py:36–53。
+2. 人类段落“四层验证在等待…显示进行中”应改为“服务对某一动作/层报告pending时，该项显示进行中；重新核验时原passed层可暂为pending，其他层保留各自事实”。实际producer不会因一个工作进行中把四层都变pending；未知仍未观测。来源：experiment_workflow.py:426–440、v2 experiment_panel.py:35–38、225–226。
+
+其余目录分离、Unknown、外部无package、F5不变、原失败保留及组件不冒充模拟等描述与v2一致。建议按上述两点修改拟集成文案；无需为此改产品或再跑已过专项。draft原SHA和候选身份见同名JSON；第六正式数据仍待后补，第五Windows/CI继续按原冻结。

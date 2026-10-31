@@ -1,0 +1,187 @@
+{
+  "schema": "k1_historical_verification_archive_v1",
+  "head": "8213ced419c8c6bca512bf8413b674c1265cf3bf",
+  "overall_state": "verification_complete_but_K1_unaccepted",
+  "phase_complete": false,
+  "created_utc": "2026-10-31T06:51:06.096127+00:00",
+  "resource_boundary_independent_review": "upstream_refused_incomplete_not_retried",
+  "evidence_generation": 4,
+  "archive_kind": "historical_generation_not_automatic_K1_acceptance",
+  "next_candidate_receipts_are_not_fourth_verification": [
+    {
+      "source": "out/collab/k1-cancel-reason-independent.json",
+      "sha256": "356cda84907ce344aa334fab3ebb46d9de180b29b2e2fc017fb5d997a4dccb81",
+      "scope": "fifth narrow cancellation fix; not fourth verification or candidate source",
+      "operation": "reference_only_not_copied",
+      "not_fourth_verification": true
+    }
+  ],
+  "known_findings": [
+    {
+      "severity": "P3",
+      "fact": "cancelled public reason can incorrectly be inputs_changed",
+      "disposition": "present in fourth; separate fifth narrow fix approved; no retroactive rewrite"
+    },
+    {
+      "severity": "P2",
+      "scope": "fourth frontend review",
+      "fact": "completed command preview can show editor cwd",
+      "next": "sixth freeze pending"
+    },
+    {
+      "severity": "P3",
+      "scope": "fourth frontend review",
+      "fact": "producer pending shown as unobserved",
+      "next": "sixth freeze pending"
+    }
+  ],
+  "release_spec_sha256": "7ac8dd65ad3cc5bd5cf8b4c75dbf3399b8862b18a5a619cd894ec1277afcda8d",
+  "original_backend_sha256": "6e02ce583aff7f711d3a280e7e60a267226f468e6c98170523ce3ef0be8ff8ed",
+  "archive_builder_sha256": "3eb39adaee256a7007160a8946c89e4d56df51927d8c9074605747745ff936db",
+  "backend_binary_copied": false,
+  "all_scientific_data_selected": "all selected visible/replay/case non-EXE files, including cancelled-run CSV",
+  "standalone_executables_excluded": [
+    {
+      "source": "out/verification/k1-8213ced/windows/20261031-134548-c2aab2e8/backend_working_directory-evidence/deep-be5b83c63a1847d99ca6cf7f358b66e1/locator-copy/G4UniversalSim.exe",
+      "bytes": 2420736,
+      "sha256": "6e02ce583aff7f711d3a280e7e60a267226f468e6c98170523ce3ef0be8ff8ed",
+      "reason": "no new ZIP EXE member; source retained"
+    },
+    {
+      "source": "out/verification/k1-8213ced/windows/20261031-134548-c2aab2e8/gui_k1_workflow-evidence/k1-workflow-6e374976d3d646ca8a9804dfd05f132a/synthetic/G4UniversalSim-component.exe",
+      "bytes": 274712,
+      "sha256": "21bb438c0d4a6f1f164b9a646f6ee000340185e5871180aec06db8d3f07c0082",
+      "reason": "no new ZIP EXE member; source retained"
+    },
+    {
+      "source": "out/verification/k1-8213ced/windows/20261031-134548-c2aab2e8/k1_workflow_backend-evidence/k1-workflow-bc63f42177ab4bb99bbaf429d090e3e7/synthetic/G4UniversalSim-component.exe",
+      "bytes": 274712,
+      "sha256": "21bb438c0d4a6f1f164b9a646f6ee000340185e5871180aec06db8d3f07c0082",
+      "reason": "no new ZIP EXE member; source retained"
+    }
+  ],
+  "selection_records": 3176,
+  "parent_audit_attestations": {
+    "windows": {
+      "path": "out/collab/k1-fourth-windows-review-audit.json",
+      "sha256": "3f442af5c02802f7b6529c1a0be4ee120751af2fb901054cbce0461c9bb5ed65",
+      "bytes": 300150,
+      "complete": true,
+      "outcome": "passed"
+    },
+    "ci": {
+      "path": "out/verification/k1-8213ced/ci/review-result.json",
+      "sha256": "8c33dd11d52e32a3d16cb4a1889688300d5d3bfa49c9b669aff5c154c2a56a91",
+      "bytes": 12349,
+      "complete": true,
+      "outcome": "passed"
+    },
+    "native": {
+      "path": "out/collab/k1-fourth-native-audit.json",
+      "sha256": "d829a857554e39cc31286b050398a3780b3a14fcf825f5629e74314c4f0c77da",
+      "bytes": 90985,
+      "complete": true,
+      "outcome": "passed"
+    },
+    "i1": {
+      "path": "out/collab/k1-i1-acceptance-fourth.json",
+      "sha256": "42f499ad1018633f3aae3a48d0ccf4cd586302c427edd3537a23745dfba87ffe",
+      "bytes": 27107,
+      "complete": true,
+      "outcome": "passed"
+    },
+    "review_coverage": {
+      "path": "out/collab/k1-review-coverage-map.json",
+      "sha256": "1299a0fd148e0d8f5473c6153451188fc8b4e7077a8fa230279f16150814bc71",
+      "bytes": 198423,
+      "complete": true,
+      "outcome": "gap_retained"
+    }
+  },
+  "prior_archives_not_modified": [
+    {
+      "source": "out/collab/k1-delivery-staging/failed-e5ff800/archive-manifest.json",
+      "sha256": "cb71a1ede23da5ee5ed43a7be3658d8c343e3a1cd50af150c1608c7600b4b357",
+      "operation": "reference_only_not_modified"
+    },
+    {
+      "source": "out/collab/k1-delivery-staging/failed-c644bb1/archive-manifest.json",
+      "sha256": "5d1ac9f84f5d2cffd72e28ea4e7efd74feb37d1a8d343c05541c5369a385ec0d",
+      "operation": "reference_only_not_modified"
+    },
+    {
+      "source": "out/collab/k1-delivery-staging/failed-11c92d3/archive-manifest.json",
+      "sha256": "0395177b9652780e414750ed0803297e59f6920df3cf6288de93db871e8134a8",
+      "operation": "reference_only_not_modified"
+    }
+  ],
+  "generated_files": [
+    {
+      "destination": "archive-started.json",
+      "bytes": 233,
+      "sha256": "c8a1047a80f035389e62535ba530f675485e3fcb3277d83e28260663b1a4c004"
+    },
+    {
+      "destination": "release-spec-original.json",
+      "bytes": 17830,
+      "sha256": "7ac8dd65ad3cc5bd5cf8b4c75dbf3399b8862b18a5a619cd894ec1277afcda8d"
+    },
+    {
+      "destination": "windows/case-originals.zip",
+      "bytes": 3389648,
+      "sha256": "2c7c16e8470d7654c45f6af517ae3a9c7075043133e121f1d08c97588b80039e",
+      "uncompressed_members_verified": 1929
+    },
+    {
+      "destination": "identity/full-tracked-source-and-test-objects.json",
+      "bytes": 6007992,
+      "sha256": "2ed508ad5e469b51825409f3936d222fdadf3037c5a823fc957f386bab98c09c"
+    },
+    {
+      "destination": "selection.json",
+      "bytes": 1563651,
+      "sha256": "e43933c1b3f94691a68891161b7afed473230171272a18f19ba4ce01657799a9"
+    },
+    {
+      "destination": "source-trees.json",
+      "bytes": 472020,
+      "sha256": "3b7a7f03bf522fecbee87494bc9516f930d9d638d11fc5033e62eb4a696fefee"
+    },
+    {
+      "destination": "excluded-executable-inventory.json",
+      "bytes": 1066,
+      "sha256": "089571caf172ec11369e9408a4551819566d439739bd0f8c7c59aa10c33456f6"
+    },
+    {
+      "destination": "official-archives.json",
+      "bytes": 2000515,
+      "sha256": "5bc9e67a988da04a78449ca6bb6b0f8ef1fe1c6d91b9d3f08aa7fe5d60021080"
+    },
+    {
+      "destination": "report-original-facts.json",
+      "bytes": 24143,
+      "sha256": "75ff0887c104132e6bc39976fd46f429d892f30a69c1927b2f9674d93c63c6fe"
+    },
+    {
+      "destination": "history-references.json",
+      "bytes": 672,
+      "sha256": "4f2bca2f1fa559de5d96b4d9ce47f422a82534786c0fcc61f0f537d9c16acdb5"
+    },
+    {
+      "destination": "next-generation-references.json",
+      "bytes": 329,
+      "sha256": "ca7150752e15b4fe5bb94451cada9ef757913b24309d7b6fbc82550e70d6cadd"
+    },
+    {
+      "destination": "native-record-facts.json",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "destination": "README.md",
+      "bytes": 1191,
+      "sha256": "ed5964a9e5645c51c81acd591075e5c8635b4dd265dfbba832a65abfe5729532"
+    }
+  ],
+  "tool_does_not_decide_phase_acceptance": true
+}

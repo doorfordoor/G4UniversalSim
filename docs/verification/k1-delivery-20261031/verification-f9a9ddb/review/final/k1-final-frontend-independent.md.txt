@@ -1,0 +1,63 @@
+# K1 8213ced 最终普通前端独立代码复核
+
+**结论：仍有1项P2、1项P3显示缺陷，不给无条件“前端无剩余缺陷”签字。** 已实际读取作者实现、父修复以及新增要求的window/run.py、window/shell.py完整K1差异和必要上下文；不是SHA盖章。源码/测试零修改，未重跑测试、未操作原生窗口、未改第四覆盖图/旧报告。消耗未知。
+
+本审查者只曾编写smoke_duplicate_history_cli.py、smoke_f5_editor_history.py、smoke_k1_workflow.py；三文件均不在本次八文件范围，交集为空。它们的实现不在本次自审。资源边界/late-reparse及被拒审查重试一律排除。
+
+## 剩余发现
+
+### F1 [P2] K1实际命令预览搭配了编辑项目cwd
+
+`window/run.py:39–47` 的 `_format_command_preview()` 无条件读取 `self.project.workspaceRoot`。K1的 `_bind_experiment_package()`（window/experiment.py:277–303）只回绑config/macro/output，随后把record.command交给该formatter；真实执行的工作目录却来自隔离执行快照。
+
+现有冻结原生末轮record `880d4e7eb8e0481da3cf0c2d380bafbc` 的实际cwd为 `relocated-clean/runs/experiment-records/880d4e7eb8e0481da3cf0c2d380bafbc/execution-inputs`，而保存项目仍为 `relocated-clean/geantino-history`，两者resolve后也不同。此项是源码调用链+原模型/实际launch收据的证据，未冒称本轮新截屏看见了预览中被滚动遮住的cwd行。
+
+实际runner这次用对了目录，问题在显示给用户复制/手工重放的命令可能改变相对资源/数据/后续macro的解释基准。建议formatter接收明确的record逻辑cwd（必要时另列launch cwd），保持dispatch前编辑预览不变，不能为显示而改F5编辑快照。既有preview测试主要覆盖external编辑字段/包含字符串，没有核对同一完成record的实际cwd。
+
+### F2 [P3] 正常pending状态被映射成“未观测”
+
+`widgets/experiment_panel.py:223–225` 仅识别六种终态/未知状态，缺少服务真实返回的pending。`ExperimentWorkflow._state():432–439` 在新动作及passed层后台freshness checking时正常给出pending，window适配器未转换它，因此层级与快照状态会显示“未观测”，丢掉进行中/核验中含义。
+
+这不是资格提升或假成功，只是轻度显示信息丢失。既有checking快照（独立partial JSON）确有initialization/execution=pending；本次直接查看的13原生图也显示运行中而事件层未观测，但不以图片单独证明精确payload。smoke_k1_panel:73只遍历自己的STATUS_TEXT，未知未来值回退断言不能覆盖真实pending生产者值。建议补显式进行中翻译，未知状态仍保守回退，并用固定pending输入分别核对中英文，勿仅遍历消费者已有键。
+
+## 实际代码复核结论
+
+- **EnvironmentDialog async/selection/close**：QRunnable calls existing discovery only; explicit queued signals; busy de-duplicates refresh; cleared old rows/facts; generation and _closed discard late results; done returns promptly and leaves bounded pool worker owned by pool. Selection requires available capabilities/stable identity, deep-copies facts, and emits a path choice without run approval. Parent applies the existing workspace transaction. 结论：no additional confirmed defect in reviewed scope。边界：Close invalidates publication and does not promise instant cancellation of every discovery child; per-command bounded probes remain separate from simulation controller.
+- **Independent evidence layers/history/scientific meaning**：Each level is rendered separately, no layer propagation. Missing/unknown values are conservative; historical records retain original past statuses while current levels are projected stale. Details/accessibility remain available. The pending display omission is separately F2. 结论：F2 remains; no observed cross-layer promotion。边界：Original historical passed is not rewritten as a new current qualification; physics comparison remains explicit-reference only.
+- **RunPage full rendering and i18n**：Retained UI data is detached display-only state; real Starting clears it. Changed/historical/unverified/checking prefix result/progress/exit/time. Counts retained and 100% never by itself makes passed. i18n machinery uses explicit source keys and parameterized templates; K1 additions and 1054 unique translation keys inspected via AST for placeholder shape. 结论：no additional confirmed defect; placeholder sets match。边界：10 duplicate dictionary keys pre-exist K1 and none is newly introduced here; not raised as a new K1 finding.
+- **Full K1 window/run.py diff**：Read all 59 added/3 removed K1 lines and surrounding module: inspect/start/internal-start/validate/generate dispatch to same experiment service when installed; legacy standalone callbacks remain fallback and normal constructor disconnects old inspection consumers. Pending generation returns None without binding success. Stop and Kill call same workflow cancel/force. Finished uses actual runner output_dir, retains observed result, then refreshes qualification. 结论：F1 remains in completed-command presentation。边界：Fallback paths are not reclassified as a second active controller; no new process or transaction owner was introduced.
+- **Full K1 window/shell.py diff**：Read all 14 added/1 removed K1 lines plus complete shell context. Chip uses the same RunPage scope/identity; retained result only supplies historical wording, neutral role for changed/historical/unverified/checking; source snapshots are not written. Language switch refreshes the dynamic page and chip. 结论：no additional confirmed defect。边界：No general visual/high-DPI claim beyond inspected existing snapshots.
+- **Two requested smoke sources**：Reviewed actual fixtures and assertions: heartbeat/worker thread/selection isolation/partial reports/stale generation/close-delete; real Chinese glyph guard and long-path wrapping; panel signals/busy cancel/four isolated levels/history/translation/no per-widget style/layout at360/480/640. 结论：tests retain meaning but do not cover F1/F2 fully。边界：No new execution; old CI and native evidence are reused with explicit source/byte association.
+
+## 已有证据与科学意义
+
+只读核对原M0 Windows GUI日志SHA：I1 458、panel1598、history-scope78、live-progress79，四项均记录exit0；八个当前范围文件从11c92d3到8213ced字节未变。没有据此把旧整轮五失败矩阵说成绿，也没有重跑当前正式矩阵。
+
+直接查看8213ced原生02/06/08/13/14五图：环境摘要/选择不模拟、四层分别显示、编辑后明确上次运行、活动期取消可达、取消exit0仍为用户停止及历史未验证。native identity无module override，六个产品模块SHA均匹配；两smoke未列入native产品清单，分别用提交字节和旧CI关联。
+
+物理比较图四层通过的原记录scope仍为 `explicit_reference_only_not_general_physics_validation`，参考是geantino逐事件敏感体raw MeV解析零沉积特例。四层文案、展开信息/完整记录没有把它改成普遍辐射物理已验证，本审查也不替其重新做物理或资源验证。
+
+QThreadPool仍拥有有界发现worker，关闭只使旧generation失效且不等待；选择只发脱离原对象的事实字典，经现有workspace_transaction改变后端路径。面板/RunPage/window接线没有另建模拟进程或事务控制器。
+
+## 锁定最终源码SHA
+
+| 文件 | SHA256 |
+|---|---|
+| `gui/g4usim_gui/widgets/environment_dialog.py` | `a5de75745c822e8c6184f82a2942a8716119465f103d476f5d559cd03a9e79cc` |
+| `gui/g4usim_gui/widgets/experiment_panel.py` | `741adb59951cbf8adc9428eca4703612efafa737396dc5025d350c8ad53bbfd1` |
+| `gui/g4usim_gui/core/i18n.py` | `5bbc3d1057741844cd76903bb4f36a83f85eff8bd4307fb946512c09b5efc60c` |
+| `gui/g4usim_gui/widgets/run_page.py` | `15f1825c9d0c8564eb83b506405e62d3d6eed84139e7919504e10cee303c3078` |
+| `gui/smoke_tests/smoke_i1_environment.py` | `48ae5f2b7fba134b28c4b51efc63b70e0dd7b2dfb7676d70e1bdcc0ee7e1f870` |
+| `gui/smoke_tests/smoke_k1_panel.py` | `4e90b351f3d934cc07abf2f519d9dd1476117b0e3c28714c1b93426632673c7a` |
+| `gui/g4usim_gui/window/run.py` | `67043150fdf3661ceda82be112c481ef252c8f7bb75ce6b47b5153ddd1442a29` |
+| `gui/g4usim_gui/window/shell.py` | `21c8c3a32d99c56ada8e028b642c7f519abaccc64db61763397cdd5290bc603c` |
+
+## 外部已知项与边界
+
+父任务最新已接收的取消reason=inputs_changed P3属于核心公开reason分支，计划第五冻结；本报告单列为外部已知项，不把它伪称本前端发现或已修复，也不审/应用该out候选。
+
+父提供第四Windows自然exit0、182/56976，最终CI548/132900 strict pass；本审查没有重复核跑矩阵，绿色结果不消除F1/F2。源码签字仅针对8213ced八文件的普通前端范围，不裁决K1完成，不关闭资源边界拒绝缺口。
+
+完整问题证据、八文件SHA、逐项逻辑、照片SHA、测试/实窗来源和范围限制见 [JSON](k1-final-frontend-independent.json)。
+
+交付前父任务HEAD已推进至 `f9a9ddbfcabe69067707a5a209caff005748f510`；再次核对八个本审范围文件仍与8213ced锁定SHA逐字节相同，故上述两项前端发现仍适用于这些字节。没有顺带复审新核心/terminal测试delta，不将第四原报告改贴第五身份。

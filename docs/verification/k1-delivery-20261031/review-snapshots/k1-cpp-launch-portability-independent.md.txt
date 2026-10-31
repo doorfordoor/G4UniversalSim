@@ -1,0 +1,62 @@
+# K1 C++ 启动目录可移植性独立窄审查
+
+结论：本次指定 diff 未发现必须阻止集成的缺陷。Linux 11.3.2/11.4.3 使用同一测试的逻辑成立；这不是两个 Linux 版本已实际通过的结论。最终 Linux 矩阵、新冻结和整项验收仍由主负责人完成。
+
+实际选择别名：gpt-6.1-sol；reasoning_effort=medium；消耗未知。该执行者此前只实现三个 smoke，本次未实现被审 C++、CMake 或新目录回归测试。全程无源码/测试写入、无窗口操作、无重复全套，仅本报告落盘。
+
+## 审查范围与结论依据
+
+审查 main.cc、CMakeLists.txt、include/Core/BackendCapabilities.hh 的当前 Git diff，以及新增 cmake/WindowsRuntime.cmake 和 scripts/test_backend_working_directory.py；沿调用链只读核对 Geant4DataLocator、environment_discovery 的 None overlay、backend_launch、测试登记、Linux workflow 和 F5 初始真实输入夹具。所审五文件首尾 SHA 一致，见末尾。
+
+### Linux 两版本：相同测试成立，真实运行仍待矩阵
+
+- 测试 line110–123 从实际环境报告提取每个 dataset 的 env/folder，未写死 11.3/11.4 的版本目录。先清 GEANT4_DATA_DIR 和全部已报告 G4…DATA，再在 bundle_root/relative-data 创建各目录；覆盖相对数据目录的 cwd 解析，不读取这些空目录的数据内容。
+- 核对 Geant4 11.3.2 与 11.4.3 上游 G4FindDataDir.cc：两版均先检查单数据集环境变量，再按 GEANT4_DATA_DIR 查找已知数据集目录；该逻辑用 is_directory 判断，不要求目录内有 transport 数据。因此空目录用于此次 discovery 正例是有效夹具，不是 transport 的假数据。
+- 错误 cwd 下，项目 ApplyGeant4DataFile 会报告相对目录不存在而不设置 GEANT4_DATA_DIR；内核仍可能从编译默认位置找齐真实数据。line127–129 只要求 geant4_data_dir 为 None、note 不同及错误根没有 relative-data，不要求 required_complete=false。这在 Linux conda 安装上尤其必要，属于正确负例语义，不是降门禁。当前 Windows 独立负例也实际观测 required_complete=true、geant4_data_dir=null。
+- None overlay 在 environment_discovery.py:38–47 对 os.environ.copy() 执行 pop，而非写入字符串 None；不会污染主进程。后续服务 transport 仍使用原 executable 和未覆盖的真实环境（测试 line132–138），未把 copied discovery 进程或 data_env 传给 transport。
+- Linux 的长路径构造每段长度远小于常规 NAME_MAX，累计约数百字节，未依赖 Windows 盘符、扩展路径前缀或 UTF16 文件系统实现；UTF16 计数只是为 Windows 反例设置下界。copy2 保留 POSIX 执行权限。CMake 仍用既有外部库链接路径；复制后的 Linux ELF 动态库可加载性须由对应 CI 运行证明，Windows 结果不能替代。
+
+上游依据：[Geant4 11.3.2 G4FindDataDir.cc](https://raw.githubusercontent.com/Geant4/geant4/v11.3.2/source/global/management/src/G4FindDataDir.cc)、[Geant4 11.4.3 G4FindDataDir.cc](https://raw.githubusercontent.com/Geant4/geant4/v11.4.3/source/global/management/src/G4FindDataDir.cc)，重点 line72–111。此处只引用目录发现行为，不据此推断数据内容或物理正确性。
+
+### early cwd / error / datafile
+
+- main.cc:584–600 先做纯命令行解析，检查唯一、非空、绝对、存在目录，再用 error_code 的 current_path 切换。相对/不存在/文件/重复参数均在 SimulationManager 构造（line602）和 Geant4DataLocator（line608）之前返回非零；不会经过正常收尾去祖先目录写失败摘要。is_directory 成功但 chdir 因竞态/权限失败时，也走独立 Cannot apply 错误，未继续读取输入。
+- 正常 cwd 后才解释 config/macro/output、读取 geant4-data.txt 的相对目录值。保留原 argv0 的绝对基础（line593）使 Linux 上以绝对或带目录的相对 executable 调用时，不因 chdir 把 sidecar 定位到目标输入目录。Windows locator 仍用 GetModuleFileNameW。
+- 此项没有改变 sidecar 相对目录值的解释策略：文件在程序旁查找，文件内 relative-data 相对最终 cwd。测试正反对照实际检查后端报告的 dataset path，不止 Python 的 requested cwd 回显。
+- capabilities.version 仍为 1，新增 launch.working_directory 为真正 JSON bool；它表示后端可执行该入口，不代表任意依赖或任意路径运行都成功。
+
+### Windows runtime / 测试门禁
+
+- WindowsRuntime.cmake 仅 WIN32 AND MSVC 时为该 target 生成、嵌入 longPathAware=true 与 activeCodePage=UTF-8；Linux 不生成 manifest，也不加 Windows 编译/链接参数。CMakeLists.txt:43–55 已把 *.cmake 纳入源码指纹与 configure 依赖，新增模块没有绕过构建身份。
+- 不以注册 capability 代替实现：既有 r3 EXE 内 manifest XML 和 capability bool 已独立核对（下节）。现代 Windows/系统长路径策略前提保持，不能推断 MinGW 或第三方组件全面支持。
+- 新测试保留真实 CLI inspect、真实 3/3 transport、初始化 no_run、后续服务真实 run、summary/output_failure 状态、effective snapshot/metadata 存在及临时发布清理、祖先同名错误输入 SHA 未变、逐条 F1 实际路径/归属/内容 SHA。错误目录六例仍非零、stdout 空且摘要集合不增加。不是靠减少断言或把 skip 变 pass 处理旧反例。
+- runner 将此项登记为 integration 的 qt/exe 用例；现有 Linux workflow 用同一 built executable 跑 integration，并有 fail-on-skip 与报告证据门禁。新增测试并未替代原统计/物理测试，也没有修改其容差。
+
+## 本次实际执行的只读组件检查
+
+选择已有 r3 证据中 locator-copy/G4UniversalSim.exe，先核验它与 result.json 的 SHA 相同：af6c9ae0b257589f73316b81add1c58e394e37c5efc2e12b3e140605797d2c98。没有读写主负责人正在重建的 EXE，没有复制/构建/修改任何二进制。
+
+- 六种非法 working-directory：缺值、空值、相对路径、不存在路径、普通文件、重复参数。均 exit1，stdout 为空，stderr 含明确 working-directory 错误。测试缺值时不附加 capability，以保持真正缺值；其余病例附加 capabilities，证明错误仍在只读操作前拒绝。
+- 指定已有深目录的 --capabilities：exit0，schema version1，launch.working_directory is True。
+- 指定深目录的 --check-geant4-data，清除数据变量：exit0，geant4_data_dir=relative-data、required_complete=true、12个 dataset 均 found；每个 path 等于目标目录对应的 relative-data/folder。
+- 指定错误 cwd 的 --check-geant4-data，同样清变量：exit0、geant4_data_dir=null、note=geant4-data.txt names a missing directory: relative-data；本机真实默认数据令 required_complete=true。正反例明确分开，不把 fallback 当作相对数据目录命中。
+- 内存检查 _environment(None overlay) 确实移除变量，新增临时标志仅在返回副本，主进程环境字典前后完全相同。
+- 直接从既有 EXE 的嵌入 XML 解析两项 manifest 值，分别为 true 和 UTF-8；不是只检查生成文件存在。
+- 新测试源码内存 compile 成功。没有重跑 77 断言的 transport/Qt 全组件，更没有跑 fullsuite。
+
+既有主负责人证据：out/collab/k1-working-directory-r3.log 实见 G4USIM_ASSERTS=77，result 记录 cwd296 UTF16单元、output337单元、3事件及 run_id=6e5cba7cff11499f868819c19302a311；本次只核对这些原件，不把其77次入口记为本次独立执行。原日志 SHA256：c5859a4aff3b07f86a2be1b7479621adbe93f515695f93456d1028456e8e156f。详细证据在 out/verification/k1-path-development-r3/deep-99d278b3fc2d43c1a0835ddfad29a4ac，未追改。
+
+## 非阻断边界与后续
+
+- 未在本审查运行 Linux 11.3.2/11.4.3，也未验证 copied ELF 的实际 RPATH/loader；静态可成立不等于两版 CI 已通过，必须保留该验收缺口。
+- 非 Windows 的既有 ExecutableDirectory 依赖 argv0；裸程序名经 PATH 启动时，absolute(argv0) 不搜索 PATH，不能保证找到真实程序旁 sidecar。这是 locator 已存在的边界，本次改动只保留切 cwd 前的基础，并未新引入；新测试和 Python launch helper 都用绝对 executable，故不阻断本次范围。如果未来声称支持任意 PATH/符号链接启动后的同目录 sidecar，应单列实际程序定位回归。
+- is_directory 通过但 current_path 失败的权限/竞态分支有实现守卫，但本次六例不覆盖该分支的实际触发。未为此扩大测试或更改权限。
+- 本报告无必须返工项；可由主线程继续独立复审、新冻结和双版本 Linux 矩阵，不应以本报告关闭 K1。
+
+## 所审文件 SHA256
+
+- `scripts/test_backend_working_directory.py`：`1a127cf4c7adf6154de1fe09498639d99a2e3dd8c71e5fe0461982445946bae5`
+- `main.cc`：`202a8e13c6ab9aff756cfbfc0fa0a57b67d0f9a576ee48fdb9f0a7b161db5714`
+- `CMakeLists.txt`：`0f95fd4fdca12a72b67a669b9abdb9bcc94c2fd1e69d211938d668d4ef02dde7`
+- `cmake/WindowsRuntime.cmake`：`48ea39aca32bfd60d1237e8ad05215499ee70735c1a5c86d50bbcc86411c4659`
+- `include/Core/BackendCapabilities.hh`：`40e0f7c33f081ed63b0989c7d5a0151f939b747184012f41c4127f2dcf399c6c`

@@ -1,0 +1,46 @@
+[
+  {
+    "name": "strict",
+    "command": [
+      "D:\\Geant4\\G4UniversalSim\\gui\\.venv\\Scripts\\python.exe",
+      "-B",
+      "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\scripts\\check_report_evidence.py",
+      "--report",
+      "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-11c92d3\\windows\\20261031-123927-cf48cf5f\\report.json"
+    ],
+    "exit_code": 0,
+    "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-third-windows-review-strict.log",
+    "log_sha256": "5ba10173e2f760fa798f1593fcccae160ed60f228a467929ea0fc6006f2d626e",
+    "diagnostic": "report evidence: OK C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-11c92d3\\windows\\20261031-123927-cf48cf5f\\report.json\r\n  version 2, profile all, 179 cases, 56655 assertions executed, probe settrace_assert_lines_v3, digest sha256_raw_bytes_lf_v2\r\n  source 890635b6d521..., tests 86f3a7598be2..."
+  },
+  {
+    "name": "baseline-strict",
+    "command": [
+      "D:\\Geant4\\G4UniversalSim\\gui\\.venv\\Scripts\\python.exe",
+      "-B",
+      "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\scripts\\check_report_evidence.py",
+      "--report",
+      "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\docs\\verification\\f5-final-20261031\\windows\\final-1\\report.json"
+    ],
+    "exit_code": 0,
+    "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-third-windows-review-baseline-strict.log",
+    "log_sha256": "55c2d766143c58c0d709c771598e620005d54c4aeff067d644d8364d61c68cd6",
+    "diagnostic": "report evidence: OK C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\docs\\verification\\f5-final-20261031\\windows\\final-1\\report.json\r\n  version 2, profile all, 160 cases, 50898 assertions executed, probe settrace_assert_lines_v3, digest sha256_raw_bytes_lf_v2\r\n  source db253b7b1ed5..., tests 5328e3515e88..."
+  },
+  {
+    "name": "strict-baseline",
+    "command": [
+      "D:\\Geant4\\G4UniversalSim\\gui\\.venv\\Scripts\\python.exe",
+      "-B",
+      "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\scripts\\check_report_evidence.py",
+      "--report",
+      "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-11c92d3\\windows\\20261031-123927-cf48cf5f\\report.json",
+      "--baseline",
+      "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\docs\\verification\\f5-final-20261031\\windows\\final-1\\report.json"
+    ],
+    "exit_code": 0,
+    "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-third-windows-review-strict-baseline.log",
+    "log_sha256": "84a72cb6a9dcd5d5180218849152c76840728718efbacdc6e2756c7bd86bb2a1",
+    "diagnostic": "report evidence: OK C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-11c92d3\\windows\\20261031-123927-cf48cf5f\\report.json\r\n  version 2, profile all, 179 cases, 56655 assertions executed, baseline 50898 assertions, probe settrace_assert_lines_v3, digest sha256_raw_bytes_lf_v2\r\n  source 890635b6d521..., tests 86f3a7598be2..."
+  }
+]

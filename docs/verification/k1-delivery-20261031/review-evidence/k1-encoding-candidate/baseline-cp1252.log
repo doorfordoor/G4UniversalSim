@@ -1,0 +1,29 @@
+C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\output\plot_data.py:104: RuntimeWarning: Legacy/unverified directory: run_metadata.json is absent; file ownership and completeness are unverified.
+  for path in sorted(output_files(output, "scorer_statistics*.csv")):
+C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\output\plot_data.py:113: RuntimeWarning: Legacy/unverified directory: run_metadata.json is absent; file ownership and completeness are unverified.
+  for path in sorted(output_files(output, "scoring_mesh*.csv")):
+C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\output\plot_data.py:119: RuntimeWarning: Legacy/unverified directory: run_metadata.json is absent; file ownership and completeness are unverified.
+  for path in sorted(output_files(output, "g4usim*.root")):
+C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\output\plot_data.py:140: RuntimeWarning: Legacy/unverified directory: run_metadata.json is absent; file ownership and completeness are unverified.
+  runs = sorted({_run_of(p.stem) for p in output_files(output, f"{stem}_t*.csv")})
+external_completed_preview={"variant": 0, "language": "en", "package_present": false, "producer": "ExperimentWorkflow._prepare external run; environment fixture only", "logical": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-encoding-candidate\\tmp\\k1-gui-kufb4x6q\\external-preview-preparation\\execution-inputs", "physical": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-encoding-candidate\\tmp\\k1-gui-kufb4x6q\\external-preview-preparation\\execution-inputs", "command": ["C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe", "--config", "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-encoding-candidate\\tmp\\k1-gui-kufb4x6q\\external-preview-preparation\\execution-inputs\\resources\\r0000-r0002-main.ini", "--macro", "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-encoding-candidate\\tmp\\k1-gui-kufb4x6q\\external-preview-preparation\\execution-inputs\\resources\\r0003-r0005-run.mac", "--output", "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-encoding-candidate\\tmp\\k1-gui-kufb4x6q\\external-preview-preparation\\output", "--threads", "2", "--seed", "12345", "--run-name", "single_target"], "displayed": "program:\n  C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe\narguments:\n  --config\n  C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-encoding-candidate\\tmp\\k1-gui-kufb4x6q\\external-preview-preparation\\execution-inputs\\resources\\r0000-r0002-main.ini\n  --macro\n  C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-encoding-candidate\\tmp\\k1-gui-kufb4x6q\\external-preview-preparation\\execution-inputs\\resources\\r0003-r0005-run.mac\n  --output\n  C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-encoding-candidate\\tmp\\k1-gui-kufb4x6q\\external-preview-preparation\\output\n  --threads\n  2\n  --seed\n  12345\n  --run-name\n  single_target\nLogical working directory:\n  C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-encoding-candidate\\tmp\\k1-gui-kufb4x6q\\external-preview-preparation\\execution-inputs\n\nhuman-readable:\n  C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe --config C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-encoding-candidate\\tmp\\k1-gui-kufb4x6q\\external-preview-preparation\\execution-inputs\\resources\\r0000-r0002-main.ini --macro C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-encoding-candidate\\tmp\\k1-gui-kufb4x6q\\external-preview-preparation\\execution-inputs\\resources\\r0003-r0005-run.mac --output C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-encoding-candidate\\tmp\\k1-gui-kufb4x6q\\external-preview-preparation\\output --threads 2 --seed 12345 --run-name single_target"}
+G4USIM_ASSERTS=76
+Traceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 177, in <module>
+    raise SystemExit(main(sys.argv))
+                     ^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 153, in main
+    runpy.run_path(str(target), run_name="__main__")
+  File "<frozen runpy>", line 291, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\k1-encoding-candidate\baseline\gui\smoke_tests\smoke_k1_workflow.py", line 335, in <module>
+    main()
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\k1-encoding-candidate\baseline\gui\smoke_tests\smoke_k1_workflow.py", line 267, in main
+    check_external_completed_preview(window, results[-1], root)
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\k1-encoding-candidate\baseline\gui\smoke_tests\smoke_k1_workflow.py", line 191, in check_external_completed_preview
+    print('external_completed_preview=' + json.dumps(dict(
+  File "C:\Users\123\AppData\Local\Programs\Python\Python311\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode characters in position 2125-2131: character maps to <undefined>

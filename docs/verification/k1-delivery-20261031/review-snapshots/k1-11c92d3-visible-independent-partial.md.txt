@@ -1,0 +1,55 @@
+# 11c92d3 新实窗：已完成部分独立审核
+
+2026-10-31；gpt-6.1-sol/medium（原 ledger），消耗未知。只读 observations/identity/actions/current-state、原 record/summary/F1文件，image工具直接查看04、08、10三张实际截图。未操作窗口、进程、目录对话框或运行测试；CI归档由Averroes负责，本轮不进入其目录。
+
+**结论：已完成部分证据核对通过，未发现新增已确认缺陷；只能部分签字。** 字段、初始化no_run、三次真实3/3、seed变更后的明确历史范围、取消→kill终态持久化与随后恢复运行、I1发现界面均有相应事实支持。导出、搬移加载/应用及原生正常关闭未完成，不能签完整实窗或K1阶段通过。
+
+## 实际看见的三张图
+
+- **04-edited-history**：顶栏中性“上次运行（配置已变更）：模拟成功”；状态/结果/退出码/耗时/100%与3/3进度均有历史主语，前三层“陈旧”、物理“未观测”。中文可读、关键范围标识完整。旧运行事实保留而不再无主语表示当前成功：原c644bb1显示P2在这一真实场景中的修复得到直接视觉支持。
+- **08-cancel-complete**：事件层“已取消”，顶栏“上次运行（当前输入未验证）：强制结束”，退出62097；旧9%明确属于上次运行，并非完成100%。运行/检查动作呈可用状态、停止/强制结束不再处于活动外观；后续实际初始化和新3/3进一步证明服务可继续使用，而非只凭按钮颜色认定恢复。
+- **10-environment**：原生I1发现对话框可读，显示当前后端可响应、必需数据目录已找到、x86_64、Geant4 11.3.2、MSVC 19.51.36246.0；列表长路径采用省略，摘要提供完整路径；技术JSON折叠。文案明确发现/选择不会启动模拟。这里证明协议/目录发现，不证明数据集内容完整或物理结果正确。
+
+三图原SHA在JSON的 images_directly_viewed。01/02/03/05/06/07/09的操作顺序参考主任务observations，运行事实另由下述原记录与摘要核对；不声称本轮直接查看了这些图片。
+
+## 运行事实、UUID与持久化
+
+actions.jsonl当前捕获7条completed，7个record_id/run_id均唯一，每个恰出现一次；其中取消是第五条。7条回调记录去除协议明确不持久化的report/私有字段后，**全部与各自磁盘record.json完整相等**，不是只比内存状态。
+
+| 完成序号 | 动作 | revision | 原结果 | 摘要/实际事实 |
+| --- | --- | ---: | --- | --- |
+| 1 | fields | 2 | passed | 字段证据，不称执行过事件 |
+| 2 | initialization | 2 | passed / no_run | run_count=0，0计划/0完成，配置seed4242 |
+| 3 | run | 2 | passed / success | run_count=1，逐run及总数3/3，配置seed4242 |
+| 4 | run | 3 | passed / success | 新UUID，逐run及总数3/3，配置seed4343 |
+| 5 | run | 4 | cancelled / killed | exit62097；未知事件终值，未冒充完成 |
+| 6 | initialization | 5 | passed / no_run | 新UUID，run_count=0，0计划/0完成 |
+| 7 | run | 5 | passed / success | 新UUID，逐run及总数3/3，配置seed4343 |
+
+五个正常后端输出（两初始化、三事件运行）均有summary_write_status=completed/output_failure_status=none；本轮独立fresh output_evidence全为verified。5份metadata原SHA与记录相同，build commit/clean/source指纹匹配冻结。summary的main_config/actual_macro_file/actual_output_dir与本次实际launch请求路径严格一致。
+
+每轮4项、合计20项F1实际输入逐一检查：status=recorded、原字节SHA与size匹配，路径属于各自UUID记录的执行输入树。没有用计划文件SHA替代实际F1，也没有利用搬移适配授予身份。重复label k1-visible不充当运行身份。
+
+所有可得random_settings中 initial_engine_seed仍为unknown；4242→4343是配置/有效配置seed事实，不伪装为实际引擎初始seed。旧记录的passed是历史动作结果；当前state将旧revision记录标stale，两者语义区分保留。
+
+## 取消与迟到进程事实
+
+取消记录ID=14e9ab4da7174e168d1746fca2c6435a。原execution宏请求beamOn1000000，只能证明请求计划；实际活动进度由截图/日志观察，不能当最终完成计数。
+
+磁盘record.json最终含status=cancelled、exit_code=62097、result.state=killed，与第五条completed的完整持久化投影相等，actions中该ID仅一次。原底层run_status也为state=killed、exit62097、reason=User requested process termination，summaryFresh=false。日志句柄/进程收尾之后的事实没有只留在内存；本轮确认**最终磁盘含迟到事实**，不据单次最终快照声称观察了每个中间fsync/replace。
+
+强制结束没有最终run_summary.txt或run_metadata.json；result中run_count/planned_events/completed_events为None。没有缺摘要补造成功，也没有把9% telemetry或计划1000000当成已完成事件。此轮不授予完整F1/事件通过资格。随后新的初始化及3/3记录成功，支撑busy/按钮恢复。
+
+## 当前身份与快照边界
+
+identity.json：HEAD=11c92d361369cda4b2412451ff2841eff940f810、启动时git_status空、qt_platform=windows。后端实际SHA=d45fb1e18cd2a56cf1d020ae9a742841d5ad9236becaf43b13853fe018ec33ee，与第三冻结build identity一致；138份GUI原字节SHA逐项匹配，identity清单与冻结manifest GUI清单一致。
+
+current-state是活动host不断更新的快照；本轮读取时revision=5、qualification=checking/status=pending，旧记录stale，最新初始化/运行记录仍passed但层级被临时投影为pending。这是非阻塞重验期间的观察，不将它认作永久busy，也不把截图较早时的通过外观当此刻无条件通过。JSON保存所读快照timestamp与原SHA，避免混用不同时刻。
+
+## 明确未完成
+
+原生导出父目录选择仍需人工完成；根据主任务observations，工具焦点失败后未提交导出。本审查不操作/重试对话框、不用mock替代。尚未证明实际导出、搬移后load/apply、原生后续修改失效重跑链以及host正常close/退出。host仍活动，空host.log不构成正常退出收据。
+
+物理层仍未观测，不能把3/3或初始化通过当物理准确性验证。Windows179及CI结果由主任务/归档负责人另外验收，本部分审核不代签。
+
+完整7条记录/summary SHA、20项实际输入、取消底层收据、截图/identity/actions/current-state原SHA及逐项检查在 `out/collab/k1-11c92d3-visible-independent-partial.json`。本轮只写自己的partial报告，不修改正式产品或原证据。

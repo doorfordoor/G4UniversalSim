@@ -1,0 +1,7 @@
+# 第六Windows独立审核方法
+
+冻结4167c4421b13464dec54213ea7652ee321868c4e；182=36/56/61/29。只读等待build-identity/capabilities及windows最终完整稳定report，每60秒一次。不启动测试，不接触父进程/窗口。准备独立冻结身份收据及五道门禁：当前strict、F5 strict、第五strict、当前对F5 baseline、当前对第五baseline。
+
+F5原160/50898，SHA07cb528df9840b83b962514c8b2595031ef4e6a7158a55252cdee55f5900d832；第五原182/57010，SHA92f92f30f36dc557a90077d7a119d84b4b636d855e05e9aa073c2448db4d5721。两基准全部逐例及总量不下降，不以总数抵消单例下降；原SHA/marker/计数、冻结身份、分层顺序、实际exe/merge/GUI字节、原件前后不变均独立核对。
+
+只写out/collab/k1-sixth-windows-review-*。完整报告不冒称独立观察原进程退出码；第六CI/native/最终文档与required专项分别计证，不关闭K1或替被拒边界复审签字。

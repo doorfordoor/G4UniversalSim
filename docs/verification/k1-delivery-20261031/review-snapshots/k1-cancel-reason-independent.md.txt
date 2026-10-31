@@ -1,0 +1,18 @@
+# K1 取消原因码最小修复独立审查
+
+结论：**approved_narrow_fix_and_meaningful_regression；无新增阻断项，可进入下一冻结验收。** gpt-6.1-sol/medium，消耗未知。只读审查，不改产品/测试，不重跑父任务专项，不涉及资源范围。
+
+候选ExperimentWorkflow._work.delivered（559–565行）仅在已有cancelled标志为真时改用experiment.cancelled；未取消而_current失效仍为stale/experiment.inputs_changed。上下文身份守卫、取消优先级、成功accept门禁、记录结构、终态持久化及进程所有者未变。此修改关闭原P3的公开原因码缺陷，不证明取消实际打断了事件。
+
+新增exercise_delivery_reason（166–232行）通过真实EvidenceJob线程屏障，在worker进入后调用真实cancel或EditSession.replace，再放行queued delivery。取消分支检查revision与snapshot未变；编辑分支检查两者变化；两者均拒绝成功accept、核对一次completed与落盘一致、不造result，并验证后续动作和close清理。它调用私有服务接缝，是有意义的组件反例，不冒充真实后端取消。原exercise函数AST完全不变，原9模式保留。
+
+旧源码负例精确失败于reason断言：status已cancelled、snapshot未变、revision未变、回调一次、磁盘一致，但reason为inputs_changed；15入口。候选11模式全部passed，291入口；原日志/receipt/observed原SHA见JSON。exit1/exit0来自父任务实际进程结果，本审未重跑。
+
+候选原字节与manifest一致，转入后仅CRLF→LF，规范化后与实际源码/测试逐字节相等。最终LF原SHA：
+
+- gui/g4usim_gui/core/experiment_workflow.py: `9f8f800aee380f8b060b95fcc8d1c776ed580ddbec0bbd398d104bda58156403`
+- scripts/test_k1_terminal_publication.py: `5075c7b236117e1cace9f2d10e33cca6ee2b2ccd0cb95c5b7bf8f7d2de1762b4`
+
+AGENTS索引、docs/agent-history.md新条目及docs/可信实验工作流.md兼容段与实现相符；保留历史不回写、取消请求与实际完成事实分开，未扩大成功资格。三文件本次原SHA及diff SHA已绑定JSON。
+
+第四8213矩阵182/56976、原native取消记录及后端1000000/1000000仍按原版本保留。本签字仅覆盖上述窄修复与回归设计，不是第五矩阵或K1总体通过；STATUS/ASTRA状态汇总不纳入本次产品语义签字。

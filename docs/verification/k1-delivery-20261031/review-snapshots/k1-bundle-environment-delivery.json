@@ -1,0 +1,1800 @@
+{
+  "kind": "local_development_environment_history_fix",
+  "k1_stage_acceptance": false,
+  "independent_review_restarted": false,
+  "product_files_changed": [
+    "gui/g4usim_gui/core/experiment_bundle.py",
+    "scripts/test_k1_bundle.py"
+  ],
+  "component": {
+    "exit_code": 0,
+    "groups": 8,
+    "assertions": 167
+  },
+  "development_roundtrip": {
+    "exit_code": 0,
+    "assertions": 34,
+    "result": {
+      "status": "passed",
+      "kind": "real_backend_workflow_not_physical_validation",
+      "backend_sha256": "7d2a819dd9f67dba0f42a4cee94c9cb1dc4d0bf7201de02fe8eb8cc6ef629a91",
+      "run_ids": [
+        "3a5dbe92aeb84a8885a62d72bd64acdd",
+        "47af474c89774ecfa0b7279521e2eefb",
+        "f459d741c6af4560b3691a5254a32a28"
+      ],
+      "record_roots": [
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-bundle-environment-roundtrip-r1\\original-records",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-bundle-environment-roundtrip-r1\\干净 新目录\\records"
+      ],
+      "relocated_bundle": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-bundle-environment-roundtrip-r1\\干净 新目录\\实验配置包",
+      "reexported_bundle": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-bundle-environment-roundtrip-r1\\干净 新目录\\再次导出"
+    }
+  },
+  "compileall_exit_code": 0,
+  "environment_comparisons": [
+    {
+      "bundle": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/实验配置包",
+      "run_id": "3a5dbe92aeb84a8885a62d72bd64acdd",
+      "environment_sha256": "0868539bd723318993a28c4ee49a3ee9a11afda59fa5c5d9bcd4403aab5b5350",
+      "datasets": 12,
+      "history_stale": true,
+      "workflow_imported_historical_session": false,
+      "original_record": "out/collab/k1-bundle-environment-roundtrip-r1/original-records/3a5dbe92aeb84a8885a62d72bd64acdd/record.json",
+      "original_record_sha256": "8dd95f1a49f997a0b7f903aa8cf312e17d13009b2f946e95cd619425e58c3b7a"
+    },
+    {
+      "bundle": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/再次导出",
+      "run_id": "3a5dbe92aeb84a8885a62d72bd64acdd",
+      "environment_sha256": "0868539bd723318993a28c4ee49a3ee9a11afda59fa5c5d9bcd4403aab5b5350",
+      "datasets": 12,
+      "history_stale": true,
+      "workflow_imported_historical_session": true,
+      "original_record": "out/collab/k1-bundle-environment-roundtrip-r1/original-records/3a5dbe92aeb84a8885a62d72bd64acdd/record.json",
+      "original_record_sha256": "8dd95f1a49f997a0b7f903aa8cf312e17d13009b2f946e95cd619425e58c3b7a"
+    },
+    {
+      "bundle": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/再次导出",
+      "run_id": "47af474c89774ecfa0b7279521e2eefb",
+      "environment_sha256": "0868539bd723318993a28c4ee49a3ee9a11afda59fa5c5d9bcd4403aab5b5350",
+      "datasets": 12,
+      "history_stale": true,
+      "workflow_imported_historical_session": false,
+      "original_record": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/47af474c89774ecfa0b7279521e2eefb/record.json",
+      "original_record_sha256": "a90ca5f6e0629853beb69890b177a0aaddc2380b9b30802bcf0628362535c8e9"
+    },
+    {
+      "bundle": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/再次导出",
+      "run_id": "f459d741c6af4560b3691a5254a32a28",
+      "environment_sha256": "0868539bd723318993a28c4ee49a3ee9a11afda59fa5c5d9bcd4403aab5b5350",
+      "datasets": 12,
+      "history_stale": true,
+      "workflow_imported_historical_session": false,
+      "original_record": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/f459d741c6af4560b3691a5254a32a28/record.json",
+      "original_record_sha256": "93905a6c4de9c272678616e56963651f598a3a94fddf0073fde7365212d44741"
+    }
+  ],
+  "supplementary_check_failed_attempts_retained": 2,
+  "files": [
+    {
+      "path": "gui/g4usim_gui/core/experiment_bundle.py",
+      "bytes": 46036,
+      "sha256": "3166f7d59b970a3ffe54107964660bd766b3fe35e95f84d9af02d0de972461d4"
+    },
+    {
+      "path": "gui/g4usim_gui/core/experiment_identity.py",
+      "bytes": 6319,
+      "sha256": "0266d025e1213a08657256f51b4223919beed7aebdb954391339a9befc4f9411"
+    },
+    {
+      "path": "out/build-k1/Release/G4UniversalSim.exe",
+      "bytes": 2418176,
+      "sha256": "7d2a819dd9f67dba0f42a4cee94c9cb1dc4d0bf7201de02fe8eb8cc6ef629a91"
+    },
+    {
+      "path": "out/collab/k1-bundle-delivery.md",
+      "bytes": 13049,
+      "sha256": "acab34d71414e087329c55ab52910d57dd44729b7e04f86c041e04c29aafd57a"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-compileall.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/result.json",
+      "bytes": 384,
+      "sha256": "515514747591f69353354131db3ca938d42008726dac43adc8f4d1a2ed69b634"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_atomic_and_tamper/atomic-source/geometry.ini",
+      "bytes": 98,
+      "sha256": "db8821b23e1c0831b35ca8ca4e84d20037f36fe74b2e06c4981ed2207a08aa46"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_atomic_and_tamper/atomic-source/main.ini",
+      "bytes": 416,
+      "sha256": "cd56209959612325be52cc9dd5fc74130519c8d3b0c9e482760a0c3a17f0bd08"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_atomic_and_tamper/atomic-source/materials.ini",
+      "bytes": 38,
+      "sha256": "e0890dd3f187f52a61220bf0ee29da1ad7427117819e7a906d7dd134b6b08393"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_atomic_and_tamper/atomic-source/nested/events.mac",
+      "bytes": 30,
+      "sha256": "21188795beffe0dfbb3a1a3720e0f1f012d35e1604b0e1b8aea03223261eb074"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_atomic_and_tamper/atomic-source/run.mac",
+      "bytes": 35,
+      "sha256": "03e748bfe181fc0f397c326157189d27128d9fb7a612fd6f9c61895a4e5d79e4"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_atomic_and_tamper/atomic-target/sentinel",
+      "bytes": 5,
+      "sha256": "f660a7996deacfbc7560e4240054a8ad82eb02fe25a95064257e07084bcacb85"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_atomic_and_tamper/publish-failed/manifest.json",
+      "bytes": 2902,
+      "sha256": "6d02fab957592d19e2554f264b52d595477382123c46529cf92d796238bfcc9e"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_atomic_and_tamper/publish-failed/replay.py",
+      "bytes": 329,
+      "sha256": "d6bea3d772050305bca3b9bfa4d3d0bc85cdbd3f5fdc621795ee3ef193b452ff"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_atomic_and_tamper/publish-failed/resources/r0000-main.ini",
+      "bytes": 311,
+      "sha256": "c5e98269d34f76f0f39ad4293ea422e4a581e7a16733541d9956e25a1b103848"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_atomic_and_tamper/publish-failed/resources/r0001-run.mac",
+      "bytes": 34,
+      "sha256": "e20ab1d67de04cfcea45aba011058295a4ad10b7a47ea1c6799e4b59810c83d1"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_atomic_and_tamper/publish-failed/resources/r0002-events.mac",
+      "bytes": 30,
+      "sha256": "21188795beffe0dfbb3a1a3720e0f1f012d35e1604b0e1b8aea03223261eb074"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_atomic_and_tamper/publish-failed/resources/r0003-materials.ini",
+      "bytes": 38,
+      "sha256": "e0890dd3f187f52a61220bf0ee29da1ad7427117819e7a906d7dd134b6b08393"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_atomic_and_tamper/publish-failed/resources/r0004-geometry.ini",
+      "bytes": 98,
+      "sha256": "db8821b23e1c0831b35ca8ca4e84d20037f36fe74b2e06c4981ed2207a08aa46"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_atomic_and_tamper/publish-failed/validation_records.json",
+      "bytes": 71,
+      "sha256": "e7153946374c1e029196ca4351f9632e5818c56159662d01b4d101b506e50146"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_atomic_and_tamper/publish-failed/workspace.json",
+      "bytes": 5506,
+      "sha256": "2f75d5ca10311e836ac3ebafca84c381b3dc4c0580a28b07334f844a6a857aa9"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_gdml/gdml-source/gdml.ini",
+      "bytes": 24,
+      "sha256": "d85ee6b24f9becae9c471a6431c091595b7d9ed534be168902d25118d8a29d14"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_gdml/gdml-source/geometry.ini",
+      "bytes": 98,
+      "sha256": "db8821b23e1c0831b35ca8ca4e84d20037f36fe74b2e06c4981ed2207a08aa46"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_gdml/gdml-source/main.ini",
+      "bytes": 67,
+      "sha256": "396c366de9713bac5b609c6b5462068fca3d86b446b2c7feab737d8c5b7e81ea"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_gdml/gdml-source/materials.ini",
+      "bytes": 38,
+      "sha256": "e0890dd3f187f52a61220bf0ee29da1ad7427117819e7a906d7dd134b6b08393"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_gdml/gdml-source/nested/events.mac",
+      "bytes": 30,
+      "sha256": "21188795beffe0dfbb3a1a3720e0f1f012d35e1604b0e1b8aea03223261eb074"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_gdml/gdml-source/run.mac",
+      "bytes": 35,
+      "sha256": "03e748bfe181fc0f397c326157189d27128d9fb7a612fd6f9c61895a4e5d79e4"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_gdml/gdml-source/self.gdml",
+      "bytes": 82,
+      "sha256": "dd8c091969ebfe6883d3798c7264863dc8c903ab1a78ede6a92725878cb9237b"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_generated/generated-again/manifest.json",
+      "bytes": 3302,
+      "sha256": "782119c3043048f26232d6573ed64dab1c13a02e552020891b7feef1c4104464"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_generated/generated-again/replay.py",
+      "bytes": 329,
+      "sha256": "d6bea3d772050305bca3b9bfa4d3d0bc85cdbd3f5fdc621795ee3ef193b452ff"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_generated/generated-again/resources/r0000-r0000-materials.ini",
+      "bytes": 38,
+      "sha256": "e0890dd3f187f52a61220bf0ee29da1ad7427117819e7a906d7dd134b6b08393"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_generated/generated-again/resources/r0001-r0001-geometry.ini",
+      "bytes": 98,
+      "sha256": "db8821b23e1c0831b35ca8ca4e84d20037f36fe74b2e06c4981ed2207a08aa46"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_generated/generated-again/resources/r0002-main.ini",
+      "bytes": 928,
+      "sha256": "8cbfa2dbd60e4d5b71c1da499d20f22ae9e28c23fec42abcecf85c227bf69035"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_generated/generated-again/resources/r0003-material.ini",
+      "bytes": 38,
+      "sha256": "e0890dd3f187f52a61220bf0ee29da1ad7427117819e7a906d7dd134b6b08393"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_generated/generated-again/resources/r0004-geometry.ini",
+      "bytes": 98,
+      "sha256": "db8821b23e1c0831b35ca8ca4e84d20037f36fe74b2e06c4981ed2207a08aa46"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_generated/generated-again/resources/r0005-run.mac",
+      "bytes": 147,
+      "sha256": "94bb20a5221f8851fee38ca2ce990ec0bef841f8879c4b7327fc82c669dbba5a"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_generated/generated-again/validation_records.json",
+      "bytes": 71,
+      "sha256": "e7153946374c1e029196ca4351f9632e5818c56159662d01b4d101b506e50146"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_generated/generated-again/workspace.json",
+      "bytes": 5490,
+      "sha256": "d8609ae876c7f59a212460d6502afedd07d294dc955e7e6c4556213e9ad0b989"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_generated/generated-moved/manifest.json",
+      "bytes": 3290,
+      "sha256": "2cc95ad54106eee3cbd29f216081d268d3465c70ec62dc43bc36b238fc84d486"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_generated/generated-moved/replay.py",
+      "bytes": 329,
+      "sha256": "d6bea3d772050305bca3b9bfa4d3d0bc85cdbd3f5fdc621795ee3ef193b452ff"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_generated/generated-moved/resources/r0000-materials.ini",
+      "bytes": 38,
+      "sha256": "e0890dd3f187f52a61220bf0ee29da1ad7427117819e7a906d7dd134b6b08393"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_generated/generated-moved/resources/r0001-geometry.ini",
+      "bytes": 98,
+      "sha256": "db8821b23e1c0831b35ca8ca4e84d20037f36fe74b2e06c4981ed2207a08aa46"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_generated/generated-moved/resources/r0002-main.ini",
+      "bytes": 928,
+      "sha256": "8cbfa2dbd60e4d5b71c1da499d20f22ae9e28c23fec42abcecf85c227bf69035"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_generated/generated-moved/resources/r0003-material.ini",
+      "bytes": 38,
+      "sha256": "e0890dd3f187f52a61220bf0ee29da1ad7427117819e7a906d7dd134b6b08393"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_generated/generated-moved/resources/r0004-geometry.ini",
+      "bytes": 98,
+      "sha256": "db8821b23e1c0831b35ca8ca4e84d20037f36fe74b2e06c4981ed2207a08aa46"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_generated/generated-moved/resources/r0005-run.mac",
+      "bytes": 147,
+      "sha256": "94bb20a5221f8851fee38ca2ce990ec0bef841f8879c4b7327fc82c669dbba5a"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_generated/generated-moved/validation_records.json",
+      "bytes": 71,
+      "sha256": "e7153946374c1e029196ca4351f9632e5818c56159662d01b4d101b506e50146"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_generated/generated-moved/workspace.json",
+      "bytes": 5460,
+      "sha256": "7384eeeeb143489f64f1e15ec74b917914e09d8894f80b58e75c23c90f77f550"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_independent_review_regressions/bundle/manifest.json",
+      "bytes": 2903,
+      "sha256": "462c578eb8b0bc22465b6516f65d59b40ba514c3b2b8df59d5cec6e4bbf24dc7"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_independent_review_regressions/bundle/replay.py",
+      "bytes": 329,
+      "sha256": "d6bea3d772050305bca3b9bfa4d3d0bc85cdbd3f5fdc621795ee3ef193b452ff"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_independent_review_regressions/bundle/resources/r0000-main.ini",
+      "bytes": 311,
+      "sha256": "c5e98269d34f76f0f39ad4293ea422e4a581e7a16733541d9956e25a1b103848"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_independent_review_regressions/bundle/resources/r0001-run.mac",
+      "bytes": 34,
+      "sha256": "e20ab1d67de04cfcea45aba011058295a4ad10b7a47ea1c6799e4b59810c83d1"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_independent_review_regressions/bundle/resources/r0002-events.mac",
+      "bytes": 30,
+      "sha256": "21188795beffe0dfbb3a1a3720e0f1f012d35e1604b0e1b8aea03223261eb074"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_independent_review_regressions/bundle/resources/r0003-materials.ini",
+      "bytes": 38,
+      "sha256": "e0890dd3f187f52a61220bf0ee29da1ad7427117819e7a906d7dd134b6b08393"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_independent_review_regressions/bundle/resources/r0004-geometry.ini",
+      "bytes": 98,
+      "sha256": "db8821b23e1c0831b35ca8ca4e84d20037f36fe74b2e06c4981ed2207a08aa46"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_independent_review_regressions/bundle/validation_records.json",
+      "bytes": 149,
+      "sha256": "2f495cc73f94ff9eba642be637fe1639ad42bae64539d1e91706d4f66c35288b"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_independent_review_regressions/bundle/workspace.json",
+      "bytes": 5506,
+      "sha256": "2f75d5ca10311e836ac3ebafca84c381b3dc4c0580a28b07334f844a6a857aa9"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_independent_review_regressions/copies-bundle/manifest.json",
+      "bytes": 3280,
+      "sha256": "e2ec81112a6897c0b8dcfa7c47dd51556663625f978f5259555e793c272b7100"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_independent_review_regressions/copies-bundle/replay.py",
+      "bytes": 329,
+      "sha256": "d6bea3d772050305bca3b9bfa4d3d0bc85cdbd3f5fdc621795ee3ef193b452ff"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_independent_review_regressions/copies-bundle/resources/r0000-main.ini",
+      "bytes": 313,
+      "sha256": "30346cef3e624c0c5e33a1eaadb4d33a2800925eb47d6e72ea1c11c82b339e73"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_independent_review_regressions/copies-bundle/resources/r0001-run.mac",
+      "bytes": 34,
+      "sha256": "e20ab1d67de04cfcea45aba011058295a4ad10b7a47ea1c6799e4b59810c83d1"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_independent_review_regressions/copies-bundle/resources/r0002-events.mac",
+      "bytes": 30,
+      "sha256": "21188795beffe0dfbb3a1a3720e0f1f012d35e1604b0e1b8aea03223261eb074"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_independent_review_regressions/copies-bundle/resources/r0003-materials.ini",
+      "bytes": 38,
+      "sha256": "e0890dd3f187f52a61220bf0ee29da1ad7427117819e7a906d7dd134b6b08393"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_independent_review_regressions/copies-bundle/resources/r0004-geometry.ini",
+      "bytes": 195,
+      "sha256": "c3ddbaa21abbdac9593c5ce5a247a94c4535b6cbaa61ccd7be8ed7cd5a00f8c5"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_independent_review_regressions/copies-bundle/resources/r0005-copies.csv",
+      "bytes": 28,
+      "sha256": "3663ec727378e65f8d3f7519acf15caabdf5fc6d76cd24cae5f50bd84257641c"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_independent_review_regressions/copies-bundle/validation_records.json",
+      "bytes": 71,
+      "sha256": "e7153946374c1e029196ca4351f9632e5818c56159662d01b4d101b506e50146"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_independent_review_regressions/copies-bundle/workspace.json",
+      "bytes": 6389,
+      "sha256": "042e5d33268383fe8a430c0c5856430e52bd35b29388489f1b5c74687c38392e"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_independent_review_regressions/source/copies.csv",
+      "bytes": 28,
+      "sha256": "3663ec727378e65f8d3f7519acf15caabdf5fc6d76cd24cae5f50bd84257641c"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_independent_review_regressions/source/geometry.ini",
+      "bytes": 189,
+      "sha256": "35eda505d460690d093dc9ad6dbb316fce1e9b9acea75f8486cb01d28a4cb622"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_independent_review_regressions/source/main.ini",
+      "bytes": 424,
+      "sha256": "02f36aea9d3d858d84745ec107e11f970ccf480ba5a458b0b4553142f5e79f57"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_independent_review_regressions/source/materials.ini",
+      "bytes": 38,
+      "sha256": "e0890dd3f187f52a61220bf0ee29da1ad7427117819e7a906d7dd134b6b08393"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_independent_review_regressions/source/nested/events.mac",
+      "bytes": 30,
+      "sha256": "21188795beffe0dfbb3a1a3720e0f1f012d35e1604b0e1b8aea03223261eb074"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_independent_review_regressions/source/run.mac",
+      "bytes": 97,
+      "sha256": "0fda2613cf2f1a18d3d37706191937cc63bb84898a3c84eb6b26ea9ca5f48d68"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_independent_review_regressions/source/select.mac",
+      "bytes": 40,
+      "sha256": "f73cc4e1f46dd62ce4a10804ea7a3e2e7acc8486ccd1f5558e2b784b0d8dcfc1"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_move_and_history/干净目录/搬移后的包/manifest.json",
+      "bytes": 3286,
+      "sha256": "32d99481eb7142e3601b0e2bf36128d8817a2014c6c76211079fe8c2c7ac7d50"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_move_and_history/干净目录/搬移后的包/replay.py",
+      "bytes": 329,
+      "sha256": "d6bea3d772050305bca3b9bfa4d3d0bc85cdbd3f5fdc621795ee3ef193b452ff"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_move_and_history/干净目录/搬移后的包/resources/r0000-main.ini",
+      "bytes": 311,
+      "sha256": "c5e98269d34f76f0f39ad4293ea422e4a581e7a16733541d9956e25a1b103848"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_move_and_history/干净目录/搬移后的包/resources/r0001-run.mac",
+      "bytes": 34,
+      "sha256": "e20ab1d67de04cfcea45aba011058295a4ad10b7a47ea1c6799e4b59810c83d1"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_move_and_history/干净目录/搬移后的包/resources/r0002-events.mac",
+      "bytes": 30,
+      "sha256": "21188795beffe0dfbb3a1a3720e0f1f012d35e1604b0e1b8aea03223261eb074"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_move_and_history/干净目录/搬移后的包/resources/r0003-materials.ini",
+      "bytes": 38,
+      "sha256": "e0890dd3f187f52a61220bf0ee29da1ad7427117819e7a906d7dd134b6b08393"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_move_and_history/干净目录/搬移后的包/resources/r0004-geometry.ini",
+      "bytes": 98,
+      "sha256": "db8821b23e1c0831b35ca8ca4e84d20037f36fe74b2e06c4981ed2207a08aa46"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_move_and_history/干净目录/搬移后的包/resources/r0005-reference.csv",
+      "bytes": 23,
+      "sha256": "2417d41f2621500cd95ff945c258c7e5430f65a0123a4eda66eab96373b66c6b"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_move_and_history/干净目录/搬移后的包/validation_records.json",
+      "bytes": 457,
+      "sha256": "a0385f81575ab96a9b67866ed83172f49a5f95a9f69432402674051df6018a82"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_move_and_history/干净目录/搬移后的包/workspace.json",
+      "bytes": 3681,
+      "sha256": "ddba52eb56d04eb87baf09cdaf827e8c6dd5c83b3fc20d91e5a141784daae36c"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_refusals/refusal-source/geometry.ini",
+      "bytes": 98,
+      "sha256": "db8821b23e1c0831b35ca8ca4e84d20037f36fe74b2e06c4981ed2207a08aa46"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_refusals/refusal-source/main.ini",
+      "bytes": 408,
+      "sha256": "ce6241db371d865b9df98cde5617f76ff53b0fe7823a9e475999fb8f84ec8ad2"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_refusals/refusal-source/materials.ini",
+      "bytes": 38,
+      "sha256": "e0890dd3f187f52a61220bf0ee29da1ad7427117819e7a906d7dd134b6b08393"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_refusals/refusal-source/nested/events.mac",
+      "bytes": 30,
+      "sha256": "21188795beffe0dfbb3a1a3720e0f1f012d35e1604b0e1b8aea03223261eb074"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_refusals/refusal-source/reference.csv",
+      "bytes": 30,
+      "sha256": "07500270101fb9829ad08a561698e064122d08128679f7514a28d3c5f04bcad9"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_refusals/refusal-source/run.mac",
+      "bytes": 35,
+      "sha256": "03e748bfe181fc0f397c326157189d27128d9fb7a612fd6f9c61895a4e5d79e4"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_refusals/restricted-explicit/manifest.json",
+      "bytes": 2904,
+      "sha256": "540b18e6752f63242d7463e429304fad48d02368b8d45bd087fad7d32fcf7add"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_refusals/restricted-explicit/replay.py",
+      "bytes": 329,
+      "sha256": "d6bea3d772050305bca3b9bfa4d3d0bc85cdbd3f5fdc621795ee3ef193b452ff"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_refusals/restricted-explicit/resources/r0000-main.ini",
+      "bytes": 311,
+      "sha256": "c5e98269d34f76f0f39ad4293ea422e4a581e7a16733541d9956e25a1b103848"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_refusals/restricted-explicit/resources/r0001-run.mac",
+      "bytes": 34,
+      "sha256": "e20ab1d67de04cfcea45aba011058295a4ad10b7a47ea1c6799e4b59810c83d1"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_refusals/restricted-explicit/resources/r0002-events.mac",
+      "bytes": 30,
+      "sha256": "21188795beffe0dfbb3a1a3720e0f1f012d35e1604b0e1b8aea03223261eb074"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_refusals/restricted-explicit/resources/r0003-materials.ini",
+      "bytes": 38,
+      "sha256": "e0890dd3f187f52a61220bf0ee29da1ad7427117819e7a906d7dd134b6b08393"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_refusals/restricted-explicit/resources/r0004-geometry.ini",
+      "bytes": 98,
+      "sha256": "db8821b23e1c0831b35ca8ca4e84d20037f36fe74b2e06c4981ed2207a08aa46"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_refusals/restricted-explicit/validation_records.json",
+      "bytes": 71,
+      "sha256": "e7153946374c1e029196ca4351f9632e5818c56159662d01b4d101b506e50146"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_refusals/restricted-explicit/workspace.json",
+      "bytes": 5506,
+      "sha256": "2f75d5ca10311e836ac3ebafca84c381b3dc4c0580a28b07334f844a6a857aa9"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_resource_kinds_and_identity/external-niel.csv",
+      "bytes": 8,
+      "sha256": "36fff7d7404b6ad07f43467bfbe6a55aabd80e86f0b8df64756642fb9f49dcb5"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_resource_kinds_and_identity/kind-bundle/manifest.json",
+      "bytes": 5941,
+      "sha256": "5e7108b612f6c1cfbb6ae7df9762385974e878646f73a69165446b10d5da3d95"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_resource_kinds_and_identity/kind-bundle/replay.py",
+      "bytes": 329,
+      "sha256": "d6bea3d772050305bca3b9bfa4d3d0bc85cdbd3f5fdc621795ee3ef193b452ff"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_resource_kinds_and_identity/kind-bundle/resources/r0000-main.ini",
+      "bytes": 514,
+      "sha256": "e35bcaf9625d7e3c955b837a3510bef679fa61a4d7be0babb287351cd6415442"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_resource_kinds_and_identity/kind-bundle/resources/r0001-run.mac",
+      "bytes": 129,
+      "sha256": "80c4319a7e02cce2fc697fd07afe8e694aab5718f1e958409b9aca51af2d20ac"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_resource_kinds_and_identity/kind-bundle/resources/r0002-events.mac",
+      "bytes": 30,
+      "sha256": "21188795beffe0dfbb3a1a3720e0f1f012d35e1604b0e1b8aea03223261eb074"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_resource_kinds_and_identity/kind-bundle/resources/r0003-state.rndm",
+      "bytes": 43,
+      "sha256": "878d830ad75f5e75ae26506f98fa746a1198accac6f8550bcea4e8f7ba260320"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_resource_kinds_and_identity/kind-bundle/resources/r0004-spectrum.csv",
+      "bytes": 8,
+      "sha256": "dbfe12bf5a87773444b34cab537bef987d8fe2e1abf055862cf54ca3f57fbcee"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_resource_kinds_and_identity/kind-bundle/resources/r0005-materials.ini",
+      "bytes": 38,
+      "sha256": "e0890dd3f187f52a61220bf0ee29da1ad7427117819e7a906d7dd134b6b08393"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_resource_kinds_and_identity/kind-bundle/resources/r0006-geometry.ini",
+      "bytes": 199,
+      "sha256": "20b110a42dbae3332aa902ec0a2f3ae00b932e5311fa874ac1c35e5facf1a1a2"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_resource_kinds_and_identity/kind-bundle/resources/r0007-solid.stl",
+      "bytes": 25,
+      "sha256": "8cf82493505701b7b1792155292c3573363b2401e29516bd112205277240777a"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_resource_kinds_and_identity/kind-bundle/resources/r0008-copies.csv",
+      "bytes": 21,
+      "sha256": "a868ce6022e3f6434cd695d51bd686adeb443d939e644979eb9ccfee3d35ce42"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_resource_kinds_and_identity/kind-bundle/resources/r0009-phase-a.csv",
+      "bytes": 8,
+      "sha256": "81bf9fa83c6f7f151bd491a98cd7d933de3965289e3ebd77c6c425f7eaa16392"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_resource_kinds_and_identity/kind-bundle/resources/r0010-phase-b.csv",
+      "bytes": 8,
+      "sha256": "81bf9fa83c6f7f151bd491a98cd7d933de3965289e3ebd77c6c425f7eaa16392"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_resource_kinds_and_identity/kind-bundle/resources/r0011-external-niel.csv",
+      "bytes": 8,
+      "sha256": "36fff7d7404b6ad07f43467bfbe6a55aabd80e86f0b8df64756642fb9f49dcb5"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_resource_kinds_and_identity/kind-bundle/resources/r0012-field.csv",
+      "bytes": 42,
+      "sha256": "d081676b86310931537a71e30b8a51b8958f56031c92aa452e1692d54101d281"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_resource_kinds_and_identity/kind-bundle/validation_records.json",
+      "bytes": 71,
+      "sha256": "e7153946374c1e029196ca4351f9632e5818c56159662d01b4d101b506e50146"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_resource_kinds_and_identity/kind-bundle/workspace.json",
+      "bytes": 5376,
+      "sha256": "60ec61e473b9c704372693c620d5d96c4820fd12c12915576f16fc4fd8180c98"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_resource_kinds_and_identity/kinds/a/same.csv",
+      "bytes": 2,
+      "sha256": "87428fc522803d31065e7bce3cf03fe475096631e5e07bbd7a0fde60c4cf25c7"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_resource_kinds_and_identity/kinds/b/same.csv",
+      "bytes": 2,
+      "sha256": "0263829989b6fd954f72baaf2fc64bc2e2f01d692d4de72986ea808f6e99813f"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_resource_kinds_and_identity/kinds/copies.csv",
+      "bytes": 21,
+      "sha256": "a868ce6022e3f6434cd695d51bd686adeb443d939e644979eb9ccfee3d35ce42"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_resource_kinds_and_identity/kinds/field.csv",
+      "bytes": 42,
+      "sha256": "d081676b86310931537a71e30b8a51b8958f56031c92aa452e1692d54101d281"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_resource_kinds_and_identity/kinds/geometry.ini",
+      "bytes": 187,
+      "sha256": "1dc4e9fa0d5359a28c293ca1b2ff836a8e432743e272386612df20e6d315264f"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_resource_kinds_and_identity/kinds/main.ini",
+      "bytes": 775,
+      "sha256": "9a32f9528cfda915f3b9e1afc5c1341e185083c7e94e8b480f45cbb80ee677a2"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_resource_kinds_and_identity/kinds/materials.ini",
+      "bytes": 38,
+      "sha256": "e0890dd3f187f52a61220bf0ee29da1ad7427117819e7a906d7dd134b6b08393"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_resource_kinds_and_identity/kinds/nested/events.mac",
+      "bytes": 30,
+      "sha256": "21188795beffe0dfbb3a1a3720e0f1f012d35e1604b0e1b8aea03223261eb074"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_resource_kinds_and_identity/kinds/niel.csv",
+      "bytes": 8,
+      "sha256": "81bf9fa83c6f7f151bd491a98cd7d933de3965289e3ebd77c6c425f7eaa16392"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_resource_kinds_and_identity/kinds/phase-a.csv",
+      "bytes": 8,
+      "sha256": "81bf9fa83c6f7f151bd491a98cd7d933de3965289e3ebd77c6c425f7eaa16392"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_resource_kinds_and_identity/kinds/phase-b.csv",
+      "bytes": 8,
+      "sha256": "81bf9fa83c6f7f151bd491a98cd7d933de3965289e3ebd77c6c425f7eaa16392"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_resource_kinds_and_identity/kinds/run.mac",
+      "bytes": 247,
+      "sha256": "186031205dc636622b91e69e0dc0d3730850ac4461cd1c9381b762ee932a2978"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_resource_kinds_and_identity/kinds/solid.stl",
+      "bytes": 25,
+      "sha256": "8cf82493505701b7b1792155292c3573363b2401e29516bd112205277240777a"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_resource_kinds_and_identity/kinds/spectrum.csv",
+      "bytes": 8,
+      "sha256": "dbfe12bf5a87773444b34cab537bef987d8fe2e1abf055862cf54ca3f57fbcee"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_resource_kinds_and_identity/kinds/state.rndm",
+      "bytes": 43,
+      "sha256": "878d830ad75f5e75ae26506f98fa746a1198accac6f8550bcea4e8f7ba260320"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_safe_environment_history/projected/manifest.json",
+      "bytes": 2904,
+      "sha256": "586d201432d9214f7a582f3e8ccfc0781bd76e5c5d9a0e7670967687e90f3418"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_safe_environment_history/projected/replay.py",
+      "bytes": 329,
+      "sha256": "d6bea3d772050305bca3b9bfa4d3d0bc85cdbd3f5fdc621795ee3ef193b452ff"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_safe_environment_history/projected/resources/r0000-main.ini",
+      "bytes": 311,
+      "sha256": "c5e98269d34f76f0f39ad4293ea422e4a581e7a16733541d9956e25a1b103848"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_safe_environment_history/projected/resources/r0001-run.mac",
+      "bytes": 34,
+      "sha256": "e20ab1d67de04cfcea45aba011058295a4ad10b7a47ea1c6799e4b59810c83d1"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_safe_environment_history/projected/resources/r0002-events.mac",
+      "bytes": 30,
+      "sha256": "21188795beffe0dfbb3a1a3720e0f1f012d35e1604b0e1b8aea03223261eb074"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_safe_environment_history/projected/resources/r0003-materials.ini",
+      "bytes": 38,
+      "sha256": "e0890dd3f187f52a61220bf0ee29da1ad7427117819e7a906d7dd134b6b08393"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_safe_environment_history/projected/resources/r0004-geometry.ini",
+      "bytes": 98,
+      "sha256": "db8821b23e1c0831b35ca8ca4e84d20037f36fe74b2e06c4981ed2207a08aa46"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_safe_environment_history/projected/validation_records.json",
+      "bytes": 2587,
+      "sha256": "d00356f9f530c96dbe4e7e9b7a20be705aded007f0f7003782b2dac2f1428acb"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_safe_environment_history/projected/workspace.json",
+      "bytes": 5506,
+      "sha256": "2f75d5ca10311e836ac3ebafca84c381b3dc4c0580a28b07334f844a6a857aa9"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_safe_environment_history/relocated/manifest.json",
+      "bytes": 2904,
+      "sha256": "bdb7ce1cab6854d7b6330154a6f42cf0666094ad4ce0c4df08706ed837225183"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_safe_environment_history/relocated/replay.py",
+      "bytes": 329,
+      "sha256": "d6bea3d772050305bca3b9bfa4d3d0bc85cdbd3f5fdc621795ee3ef193b452ff"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_safe_environment_history/relocated/resources/r0000-main.ini",
+      "bytes": 311,
+      "sha256": "c5e98269d34f76f0f39ad4293ea422e4a581e7a16733541d9956e25a1b103848"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_safe_environment_history/relocated/resources/r0001-run.mac",
+      "bytes": 34,
+      "sha256": "e20ab1d67de04cfcea45aba011058295a4ad10b7a47ea1c6799e4b59810c83d1"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_safe_environment_history/relocated/resources/r0002-events.mac",
+      "bytes": 30,
+      "sha256": "21188795beffe0dfbb3a1a3720e0f1f012d35e1604b0e1b8aea03223261eb074"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_safe_environment_history/relocated/resources/r0003-materials.ini",
+      "bytes": 38,
+      "sha256": "e0890dd3f187f52a61220bf0ee29da1ad7427117819e7a906d7dd134b6b08393"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_safe_environment_history/relocated/resources/r0004-geometry.ini",
+      "bytes": 98,
+      "sha256": "db8821b23e1c0831b35ca8ca4e84d20037f36fe74b2e06c4981ed2207a08aa46"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_safe_environment_history/relocated/validation_records.json",
+      "bytes": 5456,
+      "sha256": "593ccb1cee8ef6977192fe47375dd5bffff65f2d676e7e4fd146f8772eaa791d"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_safe_environment_history/relocated/workspace.json",
+      "bytes": 5506,
+      "sha256": "2f75d5ca10311e836ac3ebafca84c381b3dc4c0580a28b07334f844a6a857aa9"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_safe_environment_history/source/geometry.ini",
+      "bytes": 98,
+      "sha256": "db8821b23e1c0831b35ca8ca4e84d20037f36fe74b2e06c4981ed2207a08aa46"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_safe_environment_history/source/main.ini",
+      "bytes": 416,
+      "sha256": "36551bef7d4f01146f91dba4c40d8c2cece3acb2a0c8ba7094f64f39165ca193"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_safe_environment_history/source/materials.ini",
+      "bytes": 38,
+      "sha256": "e0890dd3f187f52a61220bf0ee29da1ad7427117819e7a906d7dd134b6b08393"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_safe_environment_history/source/nested/events.mac",
+      "bytes": 30,
+      "sha256": "21188795beffe0dfbb3a1a3720e0f1f012d35e1604b0e1b8aea03223261eb074"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_safe_environment_history/source/run.mac",
+      "bytes": 35,
+      "sha256": "03e748bfe181fc0f397c326157189d27128d9fb7a612fd6f9c61895a4e5d79e4"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_safe_environment_history/unknown/manifest.json",
+      "bytes": 2903,
+      "sha256": "1602a8cf720b3e72db892b196c7cb62f151ded97cc4e7457932e94795e6d9c5f"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_safe_environment_history/unknown/replay.py",
+      "bytes": 329,
+      "sha256": "d6bea3d772050305bca3b9bfa4d3d0bc85cdbd3f5fdc621795ee3ef193b452ff"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_safe_environment_history/unknown/resources/r0000-main.ini",
+      "bytes": 311,
+      "sha256": "c5e98269d34f76f0f39ad4293ea422e4a581e7a16733541d9956e25a1b103848"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_safe_environment_history/unknown/resources/r0001-run.mac",
+      "bytes": 34,
+      "sha256": "e20ab1d67de04cfcea45aba011058295a4ad10b7a47ea1c6799e4b59810c83d1"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_safe_environment_history/unknown/resources/r0002-events.mac",
+      "bytes": 30,
+      "sha256": "21188795beffe0dfbb3a1a3720e0f1f012d35e1604b0e1b8aea03223261eb074"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_safe_environment_history/unknown/resources/r0003-materials.ini",
+      "bytes": 38,
+      "sha256": "e0890dd3f187f52a61220bf0ee29da1ad7427117819e7a906d7dd134b6b08393"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_safe_environment_history/unknown/resources/r0004-geometry.ini",
+      "bytes": 98,
+      "sha256": "db8821b23e1c0831b35ca8ca4e84d20037f36fe74b2e06c4981ed2207a08aa46"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_safe_environment_history/unknown/validation_records.json",
+      "bytes": 547,
+      "sha256": "287ce27f1da9dd4427fe9aea7f90bf875dfbbcfde9b7d4ce55ce0f5b8d8d0063"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1/test_safe_environment_history/unknown/workspace.json",
+      "bytes": 5506,
+      "sha256": "2f75d5ca10311e836ac3ebafca84c381b3dc4c0580a28b07334f844a6a857aa9"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-component-r1.log",
+      "bytes": 402,
+      "sha256": "726b5c0ba170190a85332fef20d16317e5518bc783b48acc1a2eb0c383d0b076"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-facts-check-r2.json",
+      "bytes": 370,
+      "sha256": "f8a160b00ef60d5b18c267af65776e1b6b007f125c994bbddfa48764b25a8e2c"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-facts-check-r3.json",
+      "bytes": 2587,
+      "sha256": "7487c0c381254aeaaca26b645d1c892084d0e39c7bcdaa44c375fd9aea203eb8"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-facts-check.json",
+      "bytes": 306,
+      "sha256": "be00b60354237d188a0ca031437e9db5fb8254a316991633287aadf9efe86a02"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-facts-check.py",
+      "bytes": 3284,
+      "sha256": "63243ef6abe4e7704ffe799f78d1fb3e916c0b6f8a37fdd99f82aef069826215"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/original-records/3a5dbe92aeb84a8885a62d72bd64acdd/20261031_100840_f5-transaction/config/geometry/geometry.ini",
+      "bytes": 398,
+      "sha256": "e6d77380889a38f16b6c2ad2f309bd33edb81060d29b30b3055b3f0b6e7e5a2e"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/original-records/3a5dbe92aeb84a8885a62d72bd64acdd/20261031_100840_f5-transaction/config/main.ini",
+      "bytes": 1515,
+      "sha256": "5a1d25f9372198b907e97dfb38ec5f30c734ce99563723432859b982cd94ae91"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/original-records/3a5dbe92aeb84a8885a62d72bd64acdd/20261031_100840_f5-transaction/config/materials/material.ini",
+      "bytes": 297,
+      "sha256": "d77923cdd8a0020c205b2287cfcbbe6e05b09d8e65359c33278a743c51361665"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/original-records/3a5dbe92aeb84a8885a62d72bd64acdd/20261031_100840_f5-transaction/logs/run_status.json",
+      "bytes": 2775,
+      "sha256": "4dff8c5412c8a21e76aa32a2e6c91e8d2e19347e923e80aa01f9779c9307a903"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/original-records/3a5dbe92aeb84a8885a62d72bd64acdd/20261031_100840_f5-transaction/logs/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/original-records/3a5dbe92aeb84a8885a62d72bd64acdd/20261031_100840_f5-transaction/logs/stdout.log",
+      "bytes": 42638,
+      "sha256": "739f6860802f9e7690787193724975ea5568de5888e0199ba40bd1a282d27852"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/original-records/3a5dbe92aeb84a8885a62d72bd64acdd/20261031_100840_f5-transaction/macros/run.mac",
+      "bytes": 147,
+      "sha256": "94bb20a5221f8851fee38ca2ce990ec0bef841f8879c4b7327fc82c669dbba5a"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/original-records/3a5dbe92aeb84a8885a62d72bd64acdd/20261031_100840_f5-transaction/output/edep_particle_summary_t0.csv",
+      "bytes": 107,
+      "sha256": "b16029c805f96a86fee93832e65adec01e9a0ef7b52b19e556c83f67054d74d4"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/original-records/3a5dbe92aeb84a8885a62d72bd64acdd/20261031_100840_f5-transaction/output/edep_volume_summary_t0.csv",
+      "bytes": 114,
+      "sha256": "6394b03a37b6c11dde6ba5eb12c5560ca73b0c3fd5f28c484d2747b749aae72a"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/original-records/3a5dbe92aeb84a8885a62d72bd64acdd/20261031_100840_f5-transaction/output/effective_config_configure.json",
+      "bytes": 92431,
+      "sha256": "b51051d491d7ca151a59cdd8b9622a048a2202df77fea1bf53f3d5af78ef073d"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/original-records/3a5dbe92aeb84a8885a62d72bd64acdd/20261031_100840_f5-transaction/output/effective_config_final_r0_t-1.json",
+      "bytes": 151027,
+      "sha256": "9437661ef82254eb41adc3c2fccad41eedd5111e1bf524ff916cacb28a518d19"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/original-records/3a5dbe92aeb84a8885a62d72bd64acdd/20261031_100840_f5-transaction/output/effective_config_final_r0_t0.json",
+      "bytes": 151556,
+      "sha256": "99f78406ec477154c4d82f53a09e3a3fd9484dbef170ef70e3c9f11029d6b6de"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/original-records/3a5dbe92aeb84a8885a62d72bd64acdd/20261031_100840_f5-transaction/output/effective_config_finalization.json",
+      "bytes": 154194,
+      "sha256": "75d50d151ad1ef8d4bd54c2bc77a029dd20aa5d0f970a0ad8ce572c331ca9090"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/original-records/3a5dbe92aeb84a8885a62d72bd64acdd/20261031_100840_f5-transaction/output/effective_config_run_0_t-1.json",
+      "bytes": 148232,
+      "sha256": "a904810fe9e9f2459782cc54c7f6e69de92c11d21c825512a021521b5300b8db"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/original-records/3a5dbe92aeb84a8885a62d72bd64acdd/20261031_100840_f5-transaction/output/effective_config_run_0_t0.json",
+      "bytes": 140725,
+      "sha256": "14cc47ae75f52e5091e3fc4ba0d4e63db1ceaa9d98cb6077987e7001ba6dbb56"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/original-records/3a5dbe92aeb84a8885a62d72bd64acdd/20261031_100840_f5-transaction/output/event_edep_t0.csv",
+      "bytes": 73,
+      "sha256": "4ec5f3ad4af5c0bb055ac478a533e44f423bb105aa418d87426ccd5537f27460"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/original-records/3a5dbe92aeb84a8885a62d72bd64acdd/20261031_100840_f5-transaction/output/hist_edep_raw_t0.csv",
+      "bytes": 4040,
+      "sha256": "2888ee1781c38974cafa5c2891f12b2b8c74578edf490d8843b4edf19b0666cc"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/original-records/3a5dbe92aeb84a8885a62d72bd64acdd/20261031_100840_f5-transaction/output/hist_edep_weighted_t0.csv",
+      "bytes": 4040,
+      "sha256": "2888ee1781c38974cafa5c2891f12b2b8c74578edf490d8843b4edf19b0666cc"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/original-records/3a5dbe92aeb84a8885a62d72bd64acdd/20261031_100840_f5-transaction/output/hits_t0.csv",
+      "bytes": 4844,
+      "sha256": "bad4596be1a6b7eeec683912b126a16f7319d881da4eafae33dfb8fe7c83af57"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/original-records/3a5dbe92aeb84a8885a62d72bd64acdd/20261031_100840_f5-transaction/output/run_metadata.json",
+      "bytes": 23395,
+      "sha256": "707c1c7b5e19c7ba2777e18a6c8ef305d7f7270aacab9730209327bda072dfde"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/original-records/3a5dbe92aeb84a8885a62d72bd64acdd/20261031_100840_f5-transaction/output/run_summary.txt",
+      "bytes": 19102,
+      "sha256": "9aed140be83caf67af608e600a6a2ab523523d5a7a9cbd32a2c28ff0ab4b01c2"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/original-records/3a5dbe92aeb84a8885a62d72bd64acdd/20261031_100840_f5-transaction/output/scorer_statistics.csv",
+      "bytes": 882,
+      "sha256": "257916a7eaf061048ad6c0b9f0090dfe397074f88ae6917ee16dd289e0750724"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/original-records/3a5dbe92aeb84a8885a62d72bd64acdd/20261031_100840_f5-transaction/output/trajectories_t0.json",
+      "bytes": 2219,
+      "sha256": "b9cda58975dc3b3b55997c66be4f51389858c5eeb011e0292610c1324a2c4221"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/original-records/3a5dbe92aeb84a8885a62d72bd64acdd/20261031_100840_f5-transaction/project_snapshot.json",
+      "bytes": 22004,
+      "sha256": "7c598b4865c24376e70254e86671092a3746ce9e80c48e52c94d415e8b57ca55"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/original-records/3a5dbe92aeb84a8885a62d72bd64acdd/20261031_100840_f5-transaction/validation_diagnostics.json",
+      "bytes": 5976,
+      "sha256": "670ed3e05c1a48b84872754ca57a692b10b40123b57a322c9a96b861de16a002"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/original-records/3a5dbe92aeb84a8885a62d72bd64acdd/20261031_100840_f5-transaction/validation_report.txt",
+      "bytes": 3123,
+      "sha256": "8d1a59d6feae16298b01bf0abeb5f7dd9076a6d701de2db339d8db47fcd99989"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/original-records/3a5dbe92aeb84a8885a62d72bd64acdd/execution-inputs/manifest.json",
+      "bytes": 3312,
+      "sha256": "b60fdfacc97246f594ab1edd824de41e63416b8cb31875df11c7e6c3bd271f0a"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/original-records/3a5dbe92aeb84a8885a62d72bd64acdd/execution-inputs/replay.py",
+      "bytes": 329,
+      "sha256": "d6bea3d772050305bca3b9bfa4d3d0bc85cdbd3f5fdc621795ee3ef193b452ff"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/original-records/3a5dbe92aeb84a8885a62d72bd64acdd/execution-inputs/resources/r0000-original-materials.ini",
+      "bytes": 249,
+      "sha256": "4bfb64cc63dad229525137f14e64412a94eee8790b449ee64e10a8906cb67da5"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/original-records/3a5dbe92aeb84a8885a62d72bd64acdd/execution-inputs/resources/r0001-original-geometry.ini",
+      "bytes": 264,
+      "sha256": "b6f500fb680f4aa13393e2545824321f15e6c63815bb396821ad4b7b1d930fc2"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/original-records/3a5dbe92aeb84a8885a62d72bd64acdd/execution-inputs/resources/r0002-main.ini",
+      "bytes": 947,
+      "sha256": "5fcc6480bf302f5e49a1e54025de14452a7310ac03234369862a9cd27f368916"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/original-records/3a5dbe92aeb84a8885a62d72bd64acdd/execution-inputs/resources/r0003-material.ini",
+      "bytes": 297,
+      "sha256": "d77923cdd8a0020c205b2287cfcbbe6e05b09d8e65359c33278a743c51361665"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/original-records/3a5dbe92aeb84a8885a62d72bd64acdd/execution-inputs/resources/r0004-geometry.ini",
+      "bytes": 398,
+      "sha256": "e6d77380889a38f16b6c2ad2f309bd33edb81060d29b30b3055b3f0b6e7e5a2e"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/original-records/3a5dbe92aeb84a8885a62d72bd64acdd/execution-inputs/resources/r0005-run.mac",
+      "bytes": 147,
+      "sha256": "94bb20a5221f8851fee38ca2ce990ec0bef841f8879c4b7327fc82c669dbba5a"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/original-records/3a5dbe92aeb84a8885a62d72bd64acdd/execution-inputs/validation_records.json",
+      "bytes": 71,
+      "sha256": "e7153946374c1e029196ca4351f9632e5818c56159662d01b4d101b506e50146"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/original-records/3a5dbe92aeb84a8885a62d72bd64acdd/execution-inputs/workspace.json",
+      "bytes": 7346,
+      "sha256": "ae24c60746472f4b3eda8b2ddaa0d34b38c094827db57fb24d0bca408ef57d27"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/original-records/3a5dbe92aeb84a8885a62d72bd64acdd/record.json",
+      "bytes": 32058,
+      "sha256": "8dd95f1a49f997a0b7f903aa8cf312e17d13009b2f946e95cd619425e58c3b7a"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/original-records/5fb8ffe0b2164f57b7475d2015caa584/record.json",
+      "bytes": 14552,
+      "sha256": "bad1bc739929363a1e2784ecb6bde0b3ff467f874d09e07289223939755418a8"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/original-records/a4b8364644064e3c9cb487e439424f41/record.json",
+      "bytes": 914,
+      "sha256": "bc291b7cf7dcc680be2eb82ccfd87b4404380cd22eeee42eb8526a06d7911b9f"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/result.json",
+      "bytes": 980,
+      "sha256": "94624ad51e1a8daf664371c666ca4a49a9f08f1a8d9cbdfd03aa7d3e0a431a4b"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/retained-original-inputs/original-geometry.ini",
+      "bytes": 264,
+      "sha256": "b6f500fb680f4aa13393e2545824321f15e6c63815bb396821ad4b7b1d930fc2"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/retained-original-inputs/original-materials.ini",
+      "bytes": 249,
+      "sha256": "4bfb64cc63dad229525137f14e64412a94eee8790b449ee64e10a8906cb67da5"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/0a9a054b846f471081c254c5a183e307/record.json",
+      "bytes": 674,
+      "sha256": "b5ea5cb3cfd98daad28edc041023879d42c1519640dfc863647f738753feb5a3"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/101a0e5f23ef4a75868e972b60a39fb5/record.json",
+      "bytes": 52483,
+      "sha256": "cd8fbc2e5a5ea34ded79eaee63ddc94749156b8013fde872829411e05e8268a0"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/24289c05f97a47da830be1561469a420/record.json",
+      "bytes": 7968,
+      "sha256": "5d92371816f56ed68352b4c1177815d546c330fdf5c83842f01940f506ecee30"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/45724534afef4849ba64bfbefa423ed1/record.json",
+      "bytes": 8587,
+      "sha256": "32319be8d210659dfe2475a05a1a0a2aa4dc0fceeff3fed7fe3beb4a35377fdb"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/47af474c89774ecfa0b7279521e2eefb/20261031_100849_f5-transaction/config/geometry/geometry.ini",
+      "bytes": 398,
+      "sha256": "e6d77380889a38f16b6c2ad2f309bd33edb81060d29b30b3055b3f0b6e7e5a2e"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/47af474c89774ecfa0b7279521e2eefb/20261031_100849_f5-transaction/config/main.ini",
+      "bytes": 1539,
+      "sha256": "2f40a2a8fa145843dbac5b919c3c0a6fd3f3ae4d087a7f37d644c86cc5de3f22"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/47af474c89774ecfa0b7279521e2eefb/20261031_100849_f5-transaction/config/materials/material.ini",
+      "bytes": 297,
+      "sha256": "d77923cdd8a0020c205b2287cfcbbe6e05b09d8e65359c33278a743c51361665"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/47af474c89774ecfa0b7279521e2eefb/20261031_100849_f5-transaction/logs/run_status.json",
+      "bytes": 2847,
+      "sha256": "376f1eb197372a257d813ad331d3d13a91566f3442633875224f34443d76a745"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/47af474c89774ecfa0b7279521e2eefb/20261031_100849_f5-transaction/logs/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/47af474c89774ecfa0b7279521e2eefb/20261031_100849_f5-transaction/logs/stdout.log",
+      "bytes": 42639,
+      "sha256": "074733400fc359894c38ec5cbbf7ba92e8cfa2d04e57d9fd90777cbc110d20cc"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/47af474c89774ecfa0b7279521e2eefb/20261031_100849_f5-transaction/macros/run.mac",
+      "bytes": 147,
+      "sha256": "94bb20a5221f8851fee38ca2ce990ec0bef841f8879c4b7327fc82c669dbba5a"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/47af474c89774ecfa0b7279521e2eefb/20261031_100849_f5-transaction/output/edep_particle_summary_t0.csv",
+      "bytes": 200,
+      "sha256": "49e73f4df4737d1e4cf5c16ae54c9c4228e193faee3a7526ba5042fd2ab6e48f"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/47af474c89774ecfa0b7279521e2eefb/20261031_100849_f5-transaction/output/edep_volume_summary_t0.csv",
+      "bytes": 116,
+      "sha256": "83d0c2e614ab529ad6dbc1d80438ccc8ff7ebc12608ba45a8dd7e3ee4ad1d618"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/47af474c89774ecfa0b7279521e2eefb/20261031_100849_f5-transaction/output/effective_config_configure.json",
+      "bytes": 93074,
+      "sha256": "f151027de4c2b2bcbb1eeeb696d149d37822042e8d838658c7d2088c68fbbb27"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/47af474c89774ecfa0b7279521e2eefb/20261031_100849_f5-transaction/output/effective_config_final_r0_t-1.json",
+      "bytes": 151742,
+      "sha256": "74d2918f42e0ec02f42827996fb0efa1f1f12c9f6f3f0b24aa70458cb09154b8"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/47af474c89774ecfa0b7279521e2eefb/20261031_100849_f5-transaction/output/effective_config_final_r0_t0.json",
+      "bytes": 152415,
+      "sha256": "3ec868e4aa66d3a1fd0c472eb20755c3a581c1b6699cb01cf54a06f2c8a7a73b"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/47af474c89774ecfa0b7279521e2eefb/20261031_100849_f5-transaction/output/effective_config_finalization.json",
+      "bytes": 154936,
+      "sha256": "a105d658803462271da48c6ae8ce840bc99e6d9737755f7ca19988c7b748d746"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/47af474c89774ecfa0b7279521e2eefb/20261031_100849_f5-transaction/output/effective_config_run_0_t-1.json",
+      "bytes": 148929,
+      "sha256": "dfd0c8ceb2d69b73e3d0d8747b9aa1f91157f175350b1629aa7b8d948d022f61"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/47af474c89774ecfa0b7279521e2eefb/20261031_100849_f5-transaction/output/effective_config_run_0_t0.json",
+      "bytes": 141422,
+      "sha256": "25453d62768d77f30b7448819393562006924430378811c9fa9de3f51ca8da47"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/47af474c89774ecfa0b7279521e2eefb/20261031_100849_f5-transaction/output/event_edep_t0.csv",
+      "bytes": 73,
+      "sha256": "8ca56f03196addb1c7417bc95d2e14da2fc9ce698c08d33a7b6fe1c3da10f5ed"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/47af474c89774ecfa0b7279521e2eefb/20261031_100849_f5-transaction/output/hist_edep_raw_t0.csv",
+      "bytes": 4040,
+      "sha256": "78cf76c62bf4019632b12fa71666960aee1be024ece8a13d51769b750bc49132"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/47af474c89774ecfa0b7279521e2eefb/20261031_100849_f5-transaction/output/hist_edep_weighted_t0.csv",
+      "bytes": 4040,
+      "sha256": "78cf76c62bf4019632b12fa71666960aee1be024ece8a13d51769b750bc49132"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/47af474c89774ecfa0b7279521e2eefb/20261031_100849_f5-transaction/output/hits_t0.csv",
+      "bytes": 6192,
+      "sha256": "63959efe1301e4589d7af2135ff12b89edbd1fd48074902929dd3ce24b7e166b"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/47af474c89774ecfa0b7279521e2eefb/20261031_100849_f5-transaction/output/run_metadata.json",
+      "bytes": 23720,
+      "sha256": "c2e01487a8f787620f67e7e4f2d1d545dddc9193ffb66797c14fda2bf99a52c8"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/47af474c89774ecfa0b7279521e2eefb/20261031_100849_f5-transaction/output/run_summary.txt",
+      "bytes": 19502,
+      "sha256": "68ffe1091e60e0e9af43b5e978891a8f5192122c749f6cd06d45f55757c806f9"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/47af474c89774ecfa0b7279521e2eefb/20261031_100849_f5-transaction/output/scorer_statistics.csv",
+      "bytes": 1447,
+      "sha256": "86f820be8c52814cdd4e61f8c1fdd50e2166b5e586493264841da028a1ce626b"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/47af474c89774ecfa0b7279521e2eefb/20261031_100849_f5-transaction/output/trajectories_t0.json",
+      "bytes": 3797,
+      "sha256": "5e7cfd853aba6e3520edc41c775daa81d686030a38cbedfb85b09cc607028ef3"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/47af474c89774ecfa0b7279521e2eefb/20261031_100849_f5-transaction/project_snapshot.json",
+      "bytes": 22496,
+      "sha256": "bb8d513177c86b95a5990a5661444e9130980b188cdace06819253f47d25c4bc"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/47af474c89774ecfa0b7279521e2eefb/20261031_100849_f5-transaction/validation_diagnostics.json",
+      "bytes": 5976,
+      "sha256": "a8055844e224302bf6d085f3cae3e98d9a9d0a97324269e929a74df4ac19d316"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/47af474c89774ecfa0b7279521e2eefb/20261031_100849_f5-transaction/validation_report.txt",
+      "bytes": 3245,
+      "sha256": "d9b0052451c58a87419793eef2bee7b0e7d69e784087c67b63caf93a989f38b6"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/47af474c89774ecfa0b7279521e2eefb/execution-inputs/manifest.json",
+      "bytes": 3324,
+      "sha256": "db899b65145b75af3e4c5474ed9964d2d90fdc7c88e8d5c810bf7ea24cd05082"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/47af474c89774ecfa0b7279521e2eefb/execution-inputs/replay.py",
+      "bytes": 329,
+      "sha256": "d6bea3d772050305bca3b9bfa4d3d0bc85cdbd3f5fdc621795ee3ef193b452ff"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/47af474c89774ecfa0b7279521e2eefb/execution-inputs/resources/r0000-r0000-original-materials.ini",
+      "bytes": 249,
+      "sha256": "4bfb64cc63dad229525137f14e64412a94eee8790b449ee64e10a8906cb67da5"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/47af474c89774ecfa0b7279521e2eefb/execution-inputs/resources/r0001-r0001-original-geometry.ini",
+      "bytes": 264,
+      "sha256": "b6f500fb680f4aa13393e2545824321f15e6c63815bb396821ad4b7b1d930fc2"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/47af474c89774ecfa0b7279521e2eefb/execution-inputs/resources/r0002-main.ini",
+      "bytes": 947,
+      "sha256": "998d47d470a0f6b44d1415a9f87681d4d9e4be3e46a581027998d29823272883"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/47af474c89774ecfa0b7279521e2eefb/execution-inputs/resources/r0003-material.ini",
+      "bytes": 297,
+      "sha256": "d77923cdd8a0020c205b2287cfcbbe6e05b09d8e65359c33278a743c51361665"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/47af474c89774ecfa0b7279521e2eefb/execution-inputs/resources/r0004-geometry.ini",
+      "bytes": 398,
+      "sha256": "e6d77380889a38f16b6c2ad2f309bd33edb81060d29b30b3055b3f0b6e7e5a2e"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/47af474c89774ecfa0b7279521e2eefb/execution-inputs/resources/r0005-run.mac",
+      "bytes": 147,
+      "sha256": "94bb20a5221f8851fee38ca2ce990ec0bef841f8879c4b7327fc82c669dbba5a"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/47af474c89774ecfa0b7279521e2eefb/execution-inputs/validation_records.json",
+      "bytes": 71,
+      "sha256": "e7153946374c1e029196ca4351f9632e5818c56159662d01b4d101b506e50146"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/47af474c89774ecfa0b7279521e2eefb/execution-inputs/workspace.json",
+      "bytes": 7388,
+      "sha256": "6e8dcd3858fda93fa0a7f303d8051207ee9d354dec72a832610fc7b403c46318"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/47af474c89774ecfa0b7279521e2eefb/record.json",
+      "bytes": 32470,
+      "sha256": "a90ca5f6e0629853beb69890b177a0aaddc2380b9b30802bcf0628362535c8e9"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/9cac9d090d484ef5aa67ea16272e2393/20261031_100846_f5-transaction/config/geometry/geometry.ini",
+      "bytes": 398,
+      "sha256": "e6d77380889a38f16b6c2ad2f309bd33edb81060d29b30b3055b3f0b6e7e5a2e"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/9cac9d090d484ef5aa67ea16272e2393/20261031_100846_f5-transaction/config/main.ini",
+      "bytes": 1539,
+      "sha256": "7f421009cfcd502937b4a9dee98c361f0408656fad0c12393d0d33e93143d0f6"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/9cac9d090d484ef5aa67ea16272e2393/20261031_100846_f5-transaction/config/materials/material.ini",
+      "bytes": 297,
+      "sha256": "d77923cdd8a0020c205b2287cfcbbe6e05b09d8e65359c33278a743c51361665"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/9cac9d090d484ef5aa67ea16272e2393/20261031_100846_f5-transaction/logs/run_status.json",
+      "bytes": 2821,
+      "sha256": "1edfb093490e723c1f639861341c3a2365ced26ffeafee20181437f726463a29"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/9cac9d090d484ef5aa67ea16272e2393/20261031_100846_f5-transaction/logs/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/9cac9d090d484ef5aa67ea16272e2393/20261031_100846_f5-transaction/logs/stdout.log",
+      "bytes": 42242,
+      "sha256": "2731f72317b4d6789f0654b1fb225da5a739be58a1bf0c4a7338d870f5123270"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/9cac9d090d484ef5aa67ea16272e2393/20261031_100846_f5-transaction/macros/run.mac",
+      "bytes": 147,
+      "sha256": "94bb20a5221f8851fee38ca2ce990ec0bef841f8879c4b7327fc82c669dbba5a"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/9cac9d090d484ef5aa67ea16272e2393/20261031_100846_f5-transaction/output/effective_config_configure.json",
+      "bytes": 92986,
+      "sha256": "4375089602fbe0a695e92ff71d176c82161ed98d40521faba8ba680ce54b4634"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/9cac9d090d484ef5aa67ea16272e2393/20261031_100846_f5-transaction/output/effective_config_finalization.json",
+      "bytes": 112718,
+      "sha256": "b9979508559f81f82e9fde6b9daf114855cf8388f53f1ac1804c6fe1540932ed"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/9cac9d090d484ef5aa67ea16272e2393/20261031_100846_f5-transaction/output/run_metadata.json",
+      "bytes": 17058,
+      "sha256": "6e361f9e3f5ca959b316672b49671129c970c09465ec6c2c7907baaa331c5e1c"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/9cac9d090d484ef5aa67ea16272e2393/20261031_100846_f5-transaction/output/run_summary.txt",
+      "bytes": 13137,
+      "sha256": "9c8996bbe28e8082ab817e8e4a16f60e222f011b81dc1697261cd99d4fce1770"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/9cac9d090d484ef5aa67ea16272e2393/20261031_100846_f5-transaction/project_snapshot.json",
+      "bytes": 22496,
+      "sha256": "c6f859ee6ed554b0dbf3f691422124138173bb997cb9bb5ff80d9179aa5a9ed4"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/9cac9d090d484ef5aa67ea16272e2393/20261031_100846_f5-transaction/validation_diagnostics.json",
+      "bytes": 5976,
+      "sha256": "a8055844e224302bf6d085f3cae3e98d9a9d0a97324269e929a74df4ac19d316"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/9cac9d090d484ef5aa67ea16272e2393/20261031_100846_f5-transaction/validation_report.txt",
+      "bytes": 3245,
+      "sha256": "716cb75b237a81fad58990702e7b40dcdfbf3f143dd7ecf85463f9605f67bf1b"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/9cac9d090d484ef5aa67ea16272e2393/execution-inputs/manifest.json",
+      "bytes": 3324,
+      "sha256": "dba5aa251eb7dcfc943e886aebc600237b57a8fdd58afb2ae133661fedd06fa7"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/9cac9d090d484ef5aa67ea16272e2393/execution-inputs/replay.py",
+      "bytes": 329,
+      "sha256": "d6bea3d772050305bca3b9bfa4d3d0bc85cdbd3f5fdc621795ee3ef193b452ff"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/9cac9d090d484ef5aa67ea16272e2393/execution-inputs/resources/r0000-r0000-original-materials.ini",
+      "bytes": 249,
+      "sha256": "4bfb64cc63dad229525137f14e64412a94eee8790b449ee64e10a8906cb67da5"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/9cac9d090d484ef5aa67ea16272e2393/execution-inputs/resources/r0001-r0001-original-geometry.ini",
+      "bytes": 264,
+      "sha256": "b6f500fb680f4aa13393e2545824321f15e6c63815bb396821ad4b7b1d930fc2"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/9cac9d090d484ef5aa67ea16272e2393/execution-inputs/resources/r0002-main.ini",
+      "bytes": 947,
+      "sha256": "998d47d470a0f6b44d1415a9f87681d4d9e4be3e46a581027998d29823272883"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/9cac9d090d484ef5aa67ea16272e2393/execution-inputs/resources/r0003-material.ini",
+      "bytes": 297,
+      "sha256": "d77923cdd8a0020c205b2287cfcbbe6e05b09d8e65359c33278a743c51361665"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/9cac9d090d484ef5aa67ea16272e2393/execution-inputs/resources/r0004-geometry.ini",
+      "bytes": 398,
+      "sha256": "e6d77380889a38f16b6c2ad2f309bd33edb81060d29b30b3055b3f0b6e7e5a2e"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/9cac9d090d484ef5aa67ea16272e2393/execution-inputs/resources/r0005-run.mac",
+      "bytes": 147,
+      "sha256": "94bb20a5221f8851fee38ca2ce990ec0bef841f8879c4b7327fc82c669dbba5a"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/9cac9d090d484ef5aa67ea16272e2393/execution-inputs/validation_records.json",
+      "bytes": 71,
+      "sha256": "e7153946374c1e029196ca4351f9632e5818c56159662d01b4d101b506e50146"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/9cac9d090d484ef5aa67ea16272e2393/execution-inputs/workspace.json",
+      "bytes": 7388,
+      "sha256": "6e8dcd3858fda93fa0a7f303d8051207ee9d354dec72a832610fc7b403c46318"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/9cac9d090d484ef5aa67ea16272e2393/initialize-prefix.mac",
+      "bytes": 324,
+      "sha256": "9445986e757e88aa99b5ac88f22311a2a4ae1571f0281bd7d2d68f2d46747cd7"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/9cac9d090d484ef5aa67ea16272e2393/initialized-geometry.json",
+      "bytes": 830,
+      "sha256": "1fda5bdd3494f697de34046a1e1175288f69b1ae4e7abea6c3140d83e52766f7"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/9cac9d090d484ef5aa67ea16272e2393/inspect.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/9cac9d090d484ef5aa67ea16272e2393/inspect.stdout.log",
+      "bytes": 9286,
+      "sha256": "f1b98fcbc3c5cba946ac6fa49c80801a72d058d10eb0e4f53a81608352ff456e"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/9cac9d090d484ef5aa67ea16272e2393/record.json",
+      "bytes": 47161,
+      "sha256": "027c960ff411e8508dd9a435d5de4a8a50295b2758814b5ad3d439892806c95e"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/a1c0032e3d9643a5ad3576d080496138/record.json",
+      "bytes": 7649,
+      "sha256": "771de2660ff94e8dcf265794f9b93941f662453d4f91d76c99af543bf16caaf9"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/c509fc89778a4cba800a59f979cb3920/record.json",
+      "bytes": 8526,
+      "sha256": "26b8eedae4434e3ea7757453c16942179b0d9e150e65564cf8413639aabb481c"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/f459d741c6af4560b3691a5254a32a28/20261031_100853_f5-transaction/config/geometry/geometry.ini",
+      "bytes": 398,
+      "sha256": "e6d77380889a38f16b6c2ad2f309bd33edb81060d29b30b3055b3f0b6e7e5a2e"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/f459d741c6af4560b3691a5254a32a28/20261031_100853_f5-transaction/config/main.ini",
+      "bytes": 1539,
+      "sha256": "559aafa0fe6106b6e956a8246986457705daee4adaa7136a37c67415481a3a05"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/f459d741c6af4560b3691a5254a32a28/20261031_100853_f5-transaction/config/materials/material.ini",
+      "bytes": 297,
+      "sha256": "d77923cdd8a0020c205b2287cfcbbe6e05b09d8e65359c33278a743c51361665"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/f459d741c6af4560b3691a5254a32a28/20261031_100853_f5-transaction/logs/run_status.json",
+      "bytes": 2847,
+      "sha256": "406a985d93ee500d45051a7a02b35309efb6e57f1315928c3aae2f1f6184c3b7"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/f459d741c6af4560b3691a5254a32a28/20261031_100853_f5-transaction/logs/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/f459d741c6af4560b3691a5254a32a28/20261031_100853_f5-transaction/logs/stdout.log",
+      "bytes": 42638,
+      "sha256": "01799587deabc7ae2ac16ec12a323f36c4f2e16bbb6c53a0a1588f8e7ecf65bb"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/f459d741c6af4560b3691a5254a32a28/20261031_100853_f5-transaction/macros/run.mac",
+      "bytes": 147,
+      "sha256": "94bb20a5221f8851fee38ca2ce990ec0bef841f8879c4b7327fc82c669dbba5a"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/f459d741c6af4560b3691a5254a32a28/20261031_100853_f5-transaction/output/edep_particle_summary_t0.csv",
+      "bytes": 198,
+      "sha256": "3800631c4886765094c576eaf36166cecedd0d17997cb1de081b0391eae799fc"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/f459d741c6af4560b3691a5254a32a28/20261031_100853_f5-transaction/output/edep_volume_summary_t0.csv",
+      "bytes": 116,
+      "sha256": "83d0c2e614ab529ad6dbc1d80438ccc8ff7ebc12608ba45a8dd7e3ee4ad1d618"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/f459d741c6af4560b3691a5254a32a28/20261031_100853_f5-transaction/output/effective_config_configure.json",
+      "bytes": 93074,
+      "sha256": "9f1fa2c3d5cc9a44a9d548fc98f8bb22891d89c9b8d1d86ac4679da8771d7dc3"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/f459d741c6af4560b3691a5254a32a28/20261031_100853_f5-transaction/output/effective_config_final_r0_t-1.json",
+      "bytes": 151742,
+      "sha256": "ff7529efa540fd740560841473a1f52c4c617808a743fb7e46f268be3b544715"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/f459d741c6af4560b3691a5254a32a28/20261031_100853_f5-transaction/output/effective_config_final_r0_t0.json",
+      "bytes": 152415,
+      "sha256": "69c7279030f5f319d49a24989c3232b18418b8a975de7e1ad9b71c73ba76b614"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/f459d741c6af4560b3691a5254a32a28/20261031_100853_f5-transaction/output/effective_config_finalization.json",
+      "bytes": 154936,
+      "sha256": "26deb1b75fe82d9ed594057a5d64dfa7e48d658b35a5580a0f43aedca9be6382"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/f459d741c6af4560b3691a5254a32a28/20261031_100853_f5-transaction/output/effective_config_run_0_t-1.json",
+      "bytes": 148929,
+      "sha256": "198b4e00d22bb7f0be91d384faeafa73caf9d8fd98b9917864e3b48147f9c580"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/f459d741c6af4560b3691a5254a32a28/20261031_100853_f5-transaction/output/effective_config_run_0_t0.json",
+      "bytes": 141422,
+      "sha256": "c7801837ce48d98f57c815d32d9cc6b61378c1fcf889b892177d6c6948b3eafa"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/f459d741c6af4560b3691a5254a32a28/20261031_100853_f5-transaction/output/event_edep_t0.csv",
+      "bytes": 73,
+      "sha256": "8ca56f03196addb1c7417bc95d2e14da2fc9ce698c08d33a7b6fe1c3da10f5ed"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/f459d741c6af4560b3691a5254a32a28/20261031_100853_f5-transaction/output/hist_edep_raw_t0.csv",
+      "bytes": 4040,
+      "sha256": "78cf76c62bf4019632b12fa71666960aee1be024ece8a13d51769b750bc49132"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/f459d741c6af4560b3691a5254a32a28/20261031_100853_f5-transaction/output/hist_edep_weighted_t0.csv",
+      "bytes": 4040,
+      "sha256": "78cf76c62bf4019632b12fa71666960aee1be024ece8a13d51769b750bc49132"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/f459d741c6af4560b3691a5254a32a28/20261031_100853_f5-transaction/output/hits_t0.csv",
+      "bytes": 5191,
+      "sha256": "12538e97053c403326059af39b323f3010581ec985b7dc904d259ce65da9555c"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/f459d741c6af4560b3691a5254a32a28/20261031_100853_f5-transaction/output/run_metadata.json",
+      "bytes": 23720,
+      "sha256": "77a480b0f562708f4b1c46661093f0237a1a501d90a40e2ef6614d2ad1d48231"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/f459d741c6af4560b3691a5254a32a28/20261031_100853_f5-transaction/output/run_summary.txt",
+      "bytes": 19502,
+      "sha256": "60d204f9957de70b1804e78b4caeac05c39c2e715a4059c33389643565311a7b"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/f459d741c6af4560b3691a5254a32a28/20261031_100853_f5-transaction/output/scorer_statistics.csv",
+      "bytes": 1449,
+      "sha256": "3b06618e1195bc9b4482348a1360a37401212dfd64ae55a65b0f9937a09615ef"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/f459d741c6af4560b3691a5254a32a28/20261031_100853_f5-transaction/output/trajectories_t0.json",
+      "bytes": 2916,
+      "sha256": "8e17d37640af02623d832a961ff608589b7cc8f3ef64985ac475ffcb694f2737"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/f459d741c6af4560b3691a5254a32a28/20261031_100853_f5-transaction/project_snapshot.json",
+      "bytes": 22496,
+      "sha256": "25f17fc17e8c9320c9fa496d5be945c154749368ef40e52be7ab7134efa723d2"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/f459d741c6af4560b3691a5254a32a28/20261031_100853_f5-transaction/validation_diagnostics.json",
+      "bytes": 5976,
+      "sha256": "a8055844e224302bf6d085f3cae3e98d9a9d0a97324269e929a74df4ac19d316"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/f459d741c6af4560b3691a5254a32a28/20261031_100853_f5-transaction/validation_report.txt",
+      "bytes": 3245,
+      "sha256": "732936c94ef96f239519dabf2d9ec3df3da9e155a60137bf0f779416d26dfff7"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/f459d741c6af4560b3691a5254a32a28/execution-inputs/manifest.json",
+      "bytes": 3324,
+      "sha256": "c1118d0e7a4550a3c412a959a72f3fc44f8099c170d0ab18a0d0869450ed79fc"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/f459d741c6af4560b3691a5254a32a28/execution-inputs/replay.py",
+      "bytes": 329,
+      "sha256": "d6bea3d772050305bca3b9bfa4d3d0bc85cdbd3f5fdc621795ee3ef193b452ff"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/f459d741c6af4560b3691a5254a32a28/execution-inputs/resources/r0000-r0000-original-materials.ini",
+      "bytes": 249,
+      "sha256": "4bfb64cc63dad229525137f14e64412a94eee8790b449ee64e10a8906cb67da5"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/f459d741c6af4560b3691a5254a32a28/execution-inputs/resources/r0001-r0001-original-geometry.ini",
+      "bytes": 264,
+      "sha256": "b6f500fb680f4aa13393e2545824321f15e6c63815bb396821ad4b7b1d930fc2"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/f459d741c6af4560b3691a5254a32a28/execution-inputs/resources/r0002-main.ini",
+      "bytes": 947,
+      "sha256": "8639632b9b4efd943b5c9c13284579ec2f1b043ad73af762f648febeef119abb"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/f459d741c6af4560b3691a5254a32a28/execution-inputs/resources/r0003-material.ini",
+      "bytes": 297,
+      "sha256": "d77923cdd8a0020c205b2287cfcbbe6e05b09d8e65359c33278a743c51361665"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/f459d741c6af4560b3691a5254a32a28/execution-inputs/resources/r0004-geometry.ini",
+      "bytes": 398,
+      "sha256": "e6d77380889a38f16b6c2ad2f309bd33edb81060d29b30b3055b3f0b6e7e5a2e"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/f459d741c6af4560b3691a5254a32a28/execution-inputs/resources/r0005-run.mac",
+      "bytes": 147,
+      "sha256": "94bb20a5221f8851fee38ca2ce990ec0bef841f8879c4b7327fc82c669dbba5a"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/f459d741c6af4560b3691a5254a32a28/execution-inputs/validation_records.json",
+      "bytes": 71,
+      "sha256": "e7153946374c1e029196ca4351f9632e5818c56159662d01b4d101b506e50146"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/f459d741c6af4560b3691a5254a32a28/execution-inputs/workspace.json",
+      "bytes": 7388,
+      "sha256": "8ce9fc314e276c287b09de7026db1371b98b44800703c79548033d384b8e5ae7"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/f459d741c6af4560b3691a5254a32a28/record.json",
+      "bytes": 32470,
+      "sha256": "93905a6c4de9c272678616e56963651f598a3a94fddf0073fde7365212d44741"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/records/fac13712187046af89c63ca56ae8ab83/record.json",
+      "bytes": 8526,
+      "sha256": "a9cbfe7a4e0c74b32be34029c55aa0bca6c40b332ce45ccd4aea45940fa04721"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/再次导出/manifest.json",
+      "bytes": 3327,
+      "sha256": "7db21b69e8dbc2c0a104ab5fc503bcec29bf4b34324c512d1d5de8331cc48319"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/再次导出/replay.py",
+      "bytes": 329,
+      "sha256": "d6bea3d772050305bca3b9bfa4d3d0bc85cdbd3f5fdc621795ee3ef193b452ff"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/再次导出/resources/r0000-r0000-original-materials.ini",
+      "bytes": 249,
+      "sha256": "4bfb64cc63dad229525137f14e64412a94eee8790b449ee64e10a8906cb67da5"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/再次导出/resources/r0001-r0001-original-geometry.ini",
+      "bytes": 264,
+      "sha256": "b6f500fb680f4aa13393e2545824321f15e6c63815bb396821ad4b7b1d930fc2"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/再次导出/resources/r0002-main.ini",
+      "bytes": 947,
+      "sha256": "8639632b9b4efd943b5c9c13284579ec2f1b043ad73af762f648febeef119abb"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/再次导出/resources/r0003-material.ini",
+      "bytes": 297,
+      "sha256": "d77923cdd8a0020c205b2287cfcbbe6e05b09d8e65359c33278a743c51361665"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/再次导出/resources/r0004-geometry.ini",
+      "bytes": 398,
+      "sha256": "e6d77380889a38f16b6c2ad2f309bd33edb81060d29b30b3055b3f0b6e7e5a2e"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/再次导出/resources/r0005-run.mac",
+      "bytes": 147,
+      "sha256": "94bb20a5221f8851fee38ca2ce990ec0bef841f8879c4b7327fc82c669dbba5a"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/再次导出/validation_records.json",
+      "bytes": 42298,
+      "sha256": "18479d223019d3bc80e3cd883f9087a8e737546946ec36dc5b9210ccadcac943"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/再次导出/workspace.json",
+      "bytes": 7388,
+      "sha256": "8ce9fc314e276c287b09de7026db1371b98b44800703c79548033d384b8e5ae7"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/实验配置包/manifest.json",
+      "bytes": 3314,
+      "sha256": "84577cff81b6f860b6676246f2bf49e6d4cca248e6166867a58108c644633ce7"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/实验配置包/replay.py",
+      "bytes": 329,
+      "sha256": "d6bea3d772050305bca3b9bfa4d3d0bc85cdbd3f5fdc621795ee3ef193b452ff"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/实验配置包/resources/r0000-original-materials.ini",
+      "bytes": 249,
+      "sha256": "4bfb64cc63dad229525137f14e64412a94eee8790b449ee64e10a8906cb67da5"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/实验配置包/resources/r0001-original-geometry.ini",
+      "bytes": 264,
+      "sha256": "b6f500fb680f4aa13393e2545824321f15e6c63815bb396821ad4b7b1d930fc2"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/实验配置包/resources/r0002-main.ini",
+      "bytes": 947,
+      "sha256": "5fcc6480bf302f5e49a1e54025de14452a7310ac03234369862a9cd27f368916"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/实验配置包/resources/r0003-material.ini",
+      "bytes": 297,
+      "sha256": "d77923cdd8a0020c205b2287cfcbbe6e05b09d8e65359c33278a743c51361665"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/实验配置包/resources/r0004-geometry.ini",
+      "bytes": 398,
+      "sha256": "e6d77380889a38f16b6c2ad2f309bd33edb81060d29b30b3055b3f0b6e7e5a2e"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/实验配置包/resources/r0005-run.mac",
+      "bytes": 147,
+      "sha256": "94bb20a5221f8851fee38ca2ce990ec0bef841f8879c4b7327fc82c669dbba5a"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/实验配置包/validation_records.json",
+      "bytes": 8685,
+      "sha256": "a3364cea11602540f17e90fefc03c962a3eb131dad93ff2b2645a1280c48564c"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1/干净 新目录/实验配置包/workspace.json",
+      "bytes": 7346,
+      "sha256": "ae24c60746472f4b3eda8b2ddaa0d34b38c094827db57fb24d0bca408ef57d27"
+    },
+    {
+      "path": "out/collab/k1-bundle-environment-roundtrip-r1.log",
+      "bytes": 956,
+      "sha256": "a80068500ee0cd0ac446c792f9e332d34b86bc2d8fda0e29760293c9beacbdff"
+    },
+    {
+      "path": "scripts/test_k1_bundle.py",
+      "bytes": 34626,
+      "sha256": "c90040f04fc7ba07d83b6496a827f9612108dff18082f069dae55af139c0a51a"
+    },
+    {
+      "path": "scripts/test_k1_roundtrip.py",
+      "bytes": 7081,
+      "sha256": "b4908215bca05b88d9372dde5a1ce758d2d4abcea853558a99371e9746881e5f"
+    }
+  ]
+}

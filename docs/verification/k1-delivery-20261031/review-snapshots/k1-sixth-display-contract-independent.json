@@ -1,0 +1,74 @@
+{
+  "schema": "k1_sixth_display_contract_independent_review_v1",
+  "recorded_utc": "2026-10-31T07:02:47.569349+00:00",
+  "status": "documentation_wording_changes_requested_no_product_blocker",
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "medium",
+  "consumption": "unknown",
+  "draft_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-sixth-display-contract.md",
+  "draft_sha256": "dcc86bd1a2ed810b183b2f1c86f7f8d125d688fd31ba92eaffb6d083670ff52a",
+  "v2_review_sha256": "db2bc38bd9f82b5946b7fc684d3e087a43423a162728219bd53d076d4cfd12e6",
+  "v2_review_status": "approved_within_six_file_UI_scope_pending_formal_integration",
+  "files": [
+    {
+      "path": "gui/g4usim_gui/window/run.py",
+      "candidate_sha256": "3af4daefa4c0818fba9879acffe14e15ece2c8b908d2b26b0526e9fa7e873d56",
+      "matches_v2_review": true
+    },
+    {
+      "path": "gui/g4usim_gui/window/experiment.py",
+      "candidate_sha256": "0ff241b88dfa03dc24743a9a10145db681e542006c00f4c8e55d53f3f9252d8f",
+      "matches_v2_review": true
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/experiment_panel.py",
+      "candidate_sha256": "01f91f3db0081536110e2acc9958ec76783af485dbbc1f378ec52231f94133f3",
+      "matches_v2_review": true
+    },
+    {
+      "path": "gui/g4usim_gui/core/i18n.py",
+      "candidate_sha256": "002de76b33480160415c3c4b2fb9e38455b2ce94b1aedacfcd83121387ecdf0a",
+      "matches_v2_review": true
+    },
+    {
+      "path": "gui/smoke_tests/smoke_k1_workflow.py",
+      "candidate_sha256": "8eac62b07e0c1fc9411037eafe2ea066165a954af4b0557cf013abbb9e1faffc",
+      "matches_v2_review": true
+    },
+    {
+      "path": "gui/smoke_tests/smoke_k1_panel.py",
+      "candidate_sha256": "658fcb292ca0b2ab60b8ef73bd3a4d285593c13824076850e4bd8cfbef8d38a0",
+      "matches_v2_review": true
+    }
+  ],
+  "findings": [
+    {
+      "id": "DOC-P3-ARGV-SCOPE",
+      "priority": "P3",
+      "scope": "root/GUI index, agent-history wording and human paragraph",
+      "fact": "Actual launch argv only wins when launch.program is nonempty str and launch.arguments is all-str list. Otherwise record.command is compatibility/planned fallback; generated execution_bundle.path is logical plan, not observed process startup. Completed adapter newly binds passed/non-stale Generate/Run; does not promise every terminal action.",
+      "source": "candidate window/experiment.py:223-233,306-323; window/run.py:36-53",
+      "requested_wording": "有有效launch收据时优先显示实际program/arguments及逻辑cwd；无有效launch时兼容显示record.command（计划/记录命令，不称实际启动事实），目录依次取launch.working_directory、execution_bundle.path、Unknown。本次完成回调范围为passed且非stale的Generate/Run（含无package external）；不要泛称所有已执行/已完成动作已回绑。"
+    },
+    {
+      "id": "DOC-P3-PENDING-SCOPE",
+      "priority": "P3",
+      "scope": "human paragraph final sentence",
+      "fact": "Producer gives pending per layer/action. Freshness checking maps an already-passed layer to pending; unobserved or other layers remain their own states. Unknown statuses fall back unobserved.",
+      "source": "core/experiment_workflow.py:426-440; candidate widgets/experiment_panel.py:35-38,225-226",
+      "requested_wording": "服务对某个动作或证据层报告pending时，该项显示“进行中”；freshness核验可使原passed层暂为pending，其他层仍保留自身事实，不能将四层一并改称进行中。"
+    }
+  ],
+  "author_attribution": "four planned repository docs parent-authored; not Franklin",
+  "no_source_or_draft_edits": true,
+  "no_tests_rerun": true,
+  "scope": "narrow display documentation consistency only, no resource review",
+  "otherwise_consistent": [
+    "logical cwd vs process launch cwd separation",
+    "no editor workspaceRoot/F5 or owner mutation for preview",
+    "external no-package branch explicitly included",
+    "v1 failure preserved, component vs real simulation distinction",
+    "unknown fallback and no cross-layer qualification",
+    "formal sixth/native still pending; fifth guards unchanged"
+  ]
+}

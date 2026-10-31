@@ -1,0 +1,144 @@
+Window: "G4UniversalSim Runner — K1 冻结工作流验收 *", App: python.exe.
+	0 窗口 (settable, string) G4UniversalSim Runner — K1 冻结工作流验收 * Secondary Actions: Raise ID: QApplication.MainWindow
+		1 标题栏 (settable, string) Value: G4UniversalSim Runner — K1 冻结工作流验收 *
+			2 菜单栏 系统 ID: MenuBar
+				3 菜单项 系统
+			4 按钮 最小化
+			5 按钮 最大化
+			6 按钮 关闭
+		7 组 (settable, string) ID: QApplication.MainWindow.appShell
+			8 组 (settable, string) ID: QApplication.MainWindow.appShell.sidebar
+				9 图像 ID: QApplication.MainWindow.appShell.sidebar.brandLogo
+				10 文本 G4UniversalSim ID: QApplication.MainWindow.appShell.sidebar.brandMark
+				11 文本 仿真工作台 ID: QApplication.MainWindow.appShell.sidebar.brandCaption
+				12 文本 工作流程 ID: QApplication.MainWindow.appShell.sidebar.sidebarSection
+				13 复选框 (settable, string) Start ID: QApplication.MainWindow.appShell.sidebar.QToolButton
+				14 复选框 (settable, string) Project ID: QApplication.MainWindow.appShell.sidebar.QToolButton
+				15 复选框 (settable, string) Configuration ID: QApplication.MainWindow.appShell.sidebar.QToolButton
+				16 复选框 (settable, string) Scenario ID: QApplication.MainWindow.appShell.sidebar.QToolButton
+				17 复选框 (settable, string) Effective Configuration ID: QApplication.MainWindow.appShell.sidebar.QToolButton
+				18 复选框 (settable, string) Run Console ID: QApplication.MainWindow.appShell.sidebar.QToolButton
+				19 复选框 (settable, string) Results ID: QApplication.MainWindow.appShell.sidebar.QToolButton
+				20 复选框 (settable, string) Run History ID: QApplication.MainWindow.appShell.sidebar.QToolButton
+				21 复选框 (settable, string) Parameter Scans ID: QApplication.MainWindow.appShell.sidebar.QToolButton
+				22 文本 G4UniversalSim 0.1.0 ID: QApplication.MainWindow.appShell.sidebar.sidebarFooter
+			23 组 (settable, string) ID: QApplication.MainWindow.appShell.contentHost
+				24 自定义 (settable, string) ID: QApplication.MainWindow.appShell.contentHost.pageHeader
+					25 文本 运行控制台 ID: QApplication.MainWindow.appShell.contentHost.pageHeader.pageTitle
+					26 文本 校验启动命令并监控后端执行。 ID: QApplication.MainWindow.appShell.contentHost.pageHeader.pageSubtitle
+					27 文本 项目：K1 冻结工作流验收 ID: QApplication.MainWindow.appShell.contentHost.pageHeader.QLabel
+					28 文本 ● 上次运行：未执行模拟 ID: QApplication.MainWindow.appShell.contentHost.pageHeader.QLabel
+					29 按钮 (settable, string) Theme ID: QApplication.MainWindow.appShell.contentHost.pageHeader.QToolButton
+					30 按钮 (settable, string) Language ID: QApplication.MainWindow.appShell.contentHost.pageHeader.QToolButton
+				31 窗格 (settable, string) ID: QApplication.MainWindow.appShell.contentHost.pageViewport
+					32 组 (settable, string) ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage
+						33 组 (settable, string) ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll
+							34 组 (settable, string) ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport
+								35 组 (settable, string) ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget
+									36 组 (settable, string) ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.ExperimentPanel
+										37 组 (settable, string) ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.ExperimentPanel.QScrollArea
+											38 组 (settable, string) ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.ExperimentPanel.QScrollArea.qt_scrollarea_viewport
+												39 组 (settable, string) ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.ExperimentPanel.QScrollArea.qt_scrollarea_viewport.QWidget
+													40 组 (settable, string) 可信实验 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.ExperimentPanel.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox
+														41 复选框 (settable, string) 快照详情 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.ExperimentPanel.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QToolButton
+														42 组 (settable, string) 可信实验 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.ExperimentPanel.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QWidget
+															43 文本 字段与依赖 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.ExperimentPanel.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QWidget.level_name_fields
+															44 文本 字段与依赖：陈旧 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.ExperimentPanel.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QWidget.level_value_fields
+															45 文本 后端初始化 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.ExperimentPanel.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QWidget.level_name_initialization
+															46 文本 后端初始化：通过 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.ExperimentPanel.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QWidget.level_value_initialization
+															47 文本 事件完成 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.ExperimentPanel.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QWidget.level_name_execution
+															48 文本 事件完成：进行中 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.ExperimentPanel.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QWidget.level_value_execution
+															49 文本 物理比较 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.ExperimentPanel.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QWidget.level_name_physics
+															50 文本 物理比较：陈旧 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.ExperimentPanel.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QWidget.level_value_physics
+													51 组 (settable, string) ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.ExperimentPanel.QScrollArea.qt_scrollarea_viewport.QWidget.QWidget
+														52 按钮 (disabled, settable, string) 检查运行输入 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.ExperimentPanel.QScrollArea.qt_scrollarea_viewport.QWidget.QWidget.action_inspect
+														53 按钮 (disabled, settable, string) 校验字段 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.ExperimentPanel.QScrollArea.qt_scrollarea_viewport.QWidget.QWidget.action_validate
+														54 按钮 (disabled, settable, string) 检查初始化 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.ExperimentPanel.QScrollArea.qt_scrollarea_viewport.QWidget.QWidget.action_initialize
+														55 按钮 (disabled, settable, string) 生成运行包 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.ExperimentPanel.QScrollArea.qt_scrollarea_viewport.QWidget.QWidget.action_generate
+														56 按钮 (disabled, settable, string) 运行 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.ExperimentPanel.QScrollArea.qt_scrollarea_viewport.QWidget.QWidget.action_run
+														57 按钮 (disabled, settable, string) 物理比较 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.ExperimentPanel.QScrollArea.qt_scrollarea_viewport.QWidget.QWidget.action_evaluate
+														58 按钮 (disabled, settable, string) 导出配置包 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.ExperimentPanel.QScrollArea.qt_scrollarea_viewport.QWidget.QWidget.action_export
+														59 按钮 (disabled, settable, string) 加载配置包 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.ExperimentPanel.QScrollArea.qt_scrollarea_viewport.QWidget.QWidget.action_import
+														60 按钮 (disabled, settable, string) 环境 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.ExperimentPanel.QScrollArea.qt_scrollarea_viewport.QWidget.QWidget.action_environment
+														61 按钮 (settable, string) 取消 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.ExperimentPanel.QScrollArea.qt_scrollarea_viewport.QWidget.QWidget.action_cancel
+													62 复选框 (settable, string) 验证历史 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.ExperimentPanel.QScrollArea.qt_scrollarea_viewport.QWidget.QToolButton
+									63 文本 路径改变后请先构建命令。校验错误通常需要返回项目页处理。 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.QLabel
+									64 文本 命令预览 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.QLabel
+									65 编辑 Value: 配置已修改，运行时将重新生成 package。 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.QPlainTextEdit
+										66 组 (settable, string) ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.QPlainTextEdit.qt_scrollarea_viewport
+									67 按钮 (settable, string) 构建命令 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.QPushButton
+									68 按钮 (settable, string) 检查运行输入 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.QPushButton
+									69 按钮 (settable, string) 运行 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.QPushButton
+									70 按钮 (disabled, settable, string) 停止 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.QPushButton
+									71 按钮 (disabled, settable, string) 强制结束 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.QPushButton
+									72 按钮 (settable, string) 清空日志 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.QPushButton
+									73 按钮 (settable, string) 保存日志 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.QPushButton
+									74 文本 上次运行：状态：未运行 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.QLabel
+									75 文本 上次运行：退出码：0 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.QLabel
+									76 文本 上次运行：耗时：00:00:01 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.QLabel
+									77 文本 上次运行：结果：未执行模拟 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.QLabel
+									78 进度栏 Value: 0 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.QProgressBar
+									79 文本 上次运行：等待后端进度；旧版后端可能不报告进度。 | 结果：未执行模拟 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.QLabel
+									101 组 (settable, string) ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel
+										102 表格 (settable, string) 校验诊断 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel.diagnosticTable
+											103 窗格 (selectable, settable, string) ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel.diagnosticTable
+											104 标头 (selectable, settable, string) 严重度 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel.diagnosticTable
+											105 标头 (selectable, settable, string) 代号 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel.diagnosticTable
+											106 标头 (selectable, settable, string) 位置 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel.diagnosticTable
+											107 标头 (selectable, settable, string) 消息 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel.diagnosticTable
+											108 项 (selectable, settable, string) 信息 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel.diagnosticTable
+											109 项 (selectable, settable, string) config.information.add_edited_geometry_summary_info.1 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel.diagnosticTable
+											110 项 (selectable, settable, string) 无可编辑位置 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel.diagnosticTable
+											111 项 (selectable, settable, string) Geometry Editor summary: mode=hierarchical, dirty=True ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel.diagnosticTable
+											112 项 (selectable, settable, string) 信息 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel.diagnosticTable
+											113 项 (selectable, settable, string) config.information.add_edited_geometry_summary_info.2 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel.diagnosticTable
+											114 项 (selectable, settable, string) 无可编辑位置 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel.diagnosticTable
+											115 项 (selectable, settable, string) Geometry Editor material refs: FirstTarget, G4_Galactic ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel.diagnosticTable
+											116 项 (selectable, settable, string) 信息 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel.diagnosticTable
+											117 项 (selectable, settable, string) config.information.add_edited_geometry_summary_info.3 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel.diagnosticTable
+											118 项 (selectable, settable, string) 无可编辑位置 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel.diagnosticTable
+											119 项 (selectable, settable, string) Geometry Editor sensitive volumes/layers: 1 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel.diagnosticTable
+											120 项 (selectable, settable, string) 信息 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel.diagnosticTable
+											121 项 (selectable, settable, string) config.information.add_edited_geometry_summary_info.4 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel.diagnosticTable
+											122 项 (selectable, settable, string) 无可编辑位置 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel.diagnosticTable
+											123 项 (selectable, settable, string) Geometry Editor bias volumes/layers: 0 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel.diagnosticTable
+											124 项 (selectable, settable, string) 信息 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel.diagnosticTable
+											125 项 (selectable, settable, string) config.information.add_edited_geometry_summary_info.5 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel.diagnosticTable
+											126 项 (selectable, settable, string) 无可编辑位置 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel.diagnosticTable
+											127 项 (selectable, settable, string) Geometry Editor hierarchical volumes: 2 enabled / 2 rows ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel.diagnosticTable
+											128 项 (selectable, settable, string) 信息 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel.diagnosticTable
+											129 项 (selectable, settable, string) config.information.add_editor_summary_info.1 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel.diagnosticTable
+											130 项 (selectable, settable, string) 无可编辑位置 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel.diagnosticTable
+											131 项 (selectable, settable, string) Source summary: preset=proton_beam, particle=geantino, energy=1 MeV ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel.diagnosticTable
+										132 按钮 (disabled, settable, string) 定位字段 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel.QPushButton
+										133 按钮 (disabled, settable, string) 查看来源 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel.QPushButton
+										134 按钮 (settable, string) 重新校验 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel.QPushButton
+										135 文本 信息: 选择一条诊断，再定位字段或查看来源。 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel.diagnosticStatus
+										136 编辑 Value: Geometry Editor summary: mode=hierarchical, dirty=True 无法定位：informational ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel.diagnosticRawMessage
+											137 组 (settable, string) ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.diagnosticPanel.diagnosticRawMessage.qt_scrollarea_viewport
+									80 组 (settable, string) ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.QTabWidget
+										81 窗格 (settable, string) ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.QTabWidget.qt_tabwidget_stackedwidget
+											82 编辑 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.QTabWidget.qt_tabwidget_stackedwidget.QPlainTextEdit
+												83 组 (settable, string) ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.QTabWidget.qt_tabwidget_stackedwidget.QPlainTextEdit.qt_scrollarea_viewport
+										84 选项卡 (settable, string) stdout ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.QTabWidget.qt_tabwidget_tabbar
+											85 选项卡项目 (selectable, settable, string) stdout ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.QTabWidget.qt_tabwidget_tabbar
+											86 选项卡项目 (selectable, settable, string) stderr ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.QTabWidget.qt_tabwidget_tabbar
+											87 选项卡项目 (selectable, settable, string) 合并日志 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.QTabWidget.qt_tabwidget_tabbar
+											88 选项卡项目 (selectable, settable, string) 运行前清单 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_viewport.QWidget.QTabWidget.qt_tabwidget_tabbar
+							89 组 (settable, string) ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_vcontainer
+								90 滚动条 (settable, float) Value: 0 ID: QApplication.MainWindow.appShell.contentHost.pageViewport.RunPage.runContentScroll.qt_scrollarea_vcontainer.QScrollBar
+		91 菜单栏 (settable, string) ID: QApplication.MainWindow.QMenuBar
+			92 菜单项 (settable, string) 文件 ID: QApplication.MainWindow.QMenuBar.QAction
+			93 菜单项 (settable, string) 编辑 ID: QApplication.MainWindow.QMenuBar.QAction
+			94 菜单项 (settable, string) 视图 ID: QApplication.MainWindow.QMenuBar.QAction
+		95 工具栏 (settable, string) 编辑历史 ID: QApplication.MainWindow.editHistoryToolbar
+			96 按钮 (disabled, settable, string) 撤销：编辑配置 ID: QApplication.MainWindow.editHistoryToolbar.QToolButton
+			97 按钮 (disabled, settable, string) 重做 ID: QApplication.MainWindow.editHistoryToolbar.QToolButton
+		98 状态栏 ID: QApplication.MainWindow.QStatusBar
+			99 缩略图 (settable, string) ID: QApplication.MainWindow.QStatusBar.QSizeGrip
+			100 文本 恢复副本已更新：2026-10-31T07:22:19+00:00 ID: QApplication.MainWindow.QStatusBar.QLabel
+
+Document text: ```
+Geometry Editor summary: mode=hierarchical, dirty=True
+无法定位：informational
+```

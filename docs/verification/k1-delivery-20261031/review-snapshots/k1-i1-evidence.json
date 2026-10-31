@@ -1,0 +1,98 @@
+{
+  "schema": "g4usim_i1_delivery_evidence_v1",
+  "created_utc": "2026-10-31T01:40:25.984509+00:00",
+  "head_observed_at_packaging": "ccb813a8540b83d5015daabebd5047929a16af2c",
+  "owned_files": [
+    {
+      "path": "gui/g4usim_gui/core/environment_discovery.py",
+      "sha256": "a6425149d422ab42310dfd5c67eb280bc2a4b28c6173c054cd4069d05d6a0f59",
+      "size_bytes": 16636
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/environment_dialog.py",
+      "sha256": "996424b559dac95bb8ee020e940a95e7ad5686a409130060d3c7ae33be7dccfb",
+      "size_bytes": 9964
+    },
+    {
+      "path": "scripts/test_i1_environment.py",
+      "sha256": "244085f00563a40a4eb7d529e82e73afefa11d4ef5f2c6bebd1f064984d69814",
+      "size_bytes": 12947
+    },
+    {
+      "path": "gui/smoke_tests/smoke_i1_environment.py",
+      "sha256": "6ef953ae9e80d594ac8dbd3a6cb55ac027661b2fde1f3069cfc823ab8f0d55e1",
+      "size_bytes": 7680
+    },
+    {
+      "path": "docs/环境发现与诊断.md",
+      "sha256": "c2677c7e9297e87a75120519ba722a29325b1f6960bb2a4b9c6e9427278884cb",
+      "size_bytes": 7177
+    }
+  ],
+  "checks": [
+    {
+      "path": "out/collab/k1-i1-core-final.log",
+      "exit_code": 0,
+      "sha256_raw_bytes": "3d98f9502e19f3c097be2777ff721476e65c03622aeec51f85c142558b0d13cb",
+      "assertions_executed": 84
+    },
+    {
+      "path": "out/collab/k1-i1-gui-themed-final.log",
+      "exit_code": 0,
+      "sha256_raw_bytes": "94431acd3c08b8799026f48056a2cb4e80fc1c81c068339a5ca0db39ed494abd",
+      "assertions_executed": 45
+    },
+    {
+      "path": "out/collab/k1-i1-compileall-final.log",
+      "exit_code": 0,
+      "sha256_raw_bytes": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "assertions_executed": null
+    },
+    {
+      "path": "out/collab/k1-i1-import-isolation.log",
+      "exit_code": 0,
+      "sha256_raw_bytes": "8a830fe6f025d0f38be5ad61aa10789130404c7f928caf7b25ef4353e707b601",
+      "assertions_executed": null
+    },
+    {
+      "path": "out/collab/k1-i1-host-real.log",
+      "exit_code": 0,
+      "sha256_raw_bytes": "3764b8e23df1e0d0aa87b3d87b84e019464e0522fdd67be9c16d7b1c30a8255f",
+      "assertions_executed": null
+    },
+    {
+      "path": "out/collab/k1-i1-file-check.log",
+      "exit_code": 0,
+      "sha256_raw_bytes": "9bb5bd16e4247f3c5489a44c25d6039c6e98a67ce62e28862db83cf489dfe132",
+      "assertions_executed": null
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "out/collab/k1-i1-core-final.json",
+      "sha256": "49c8a472b8d89a91bea73698c34609e7ee50bb4e3c339805c6b2a1b9998e534e",
+      "size_bytes": 16732
+    },
+    {
+      "path": "out/collab/k1-i1-host-real.json",
+      "sha256": "afab6289eef28b0873244d578a9b79a3d6fd9a4ff2cbdde0225e98b508e91d28",
+      "size_bytes": 22032
+    },
+    {
+      "path": "out/collab/k1-i1-dialog.png",
+      "sha256": "c269593ffd644daeefd23e141959d5e097bb325bbf4afff452ef340742eedc03",
+      "size_bytes": 7003
+    },
+    {
+      "path": "out/collab/k1-i1-dialog-uninitialized.png",
+      "sha256": "6ac79e5e6a957e494effb8f2b3159626571d498c61f6976e4f1abbc2f10bb825",
+      "size_bytes": 7098
+    }
+  ],
+  "assert_probe": "settrace_assert_lines_v3",
+  "assertions_executed_total": 129,
+  "scope": "independent I1 checks, not unified report-v2 or full K1 acceptance",
+  "native_visual_verified": false,
+  "offscreen_screenshot_inspected": true,
+  "visual_limitation": "offscreen glyphs are boxes, including Latin text; cannot verify text readability"
+}

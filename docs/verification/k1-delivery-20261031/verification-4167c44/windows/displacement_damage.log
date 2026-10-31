@@ -1,0 +1,21 @@
+  summary checker: 5 complete/sparse layouts accepted; 16 corruptions rejected
+muons: log-log table, hits recomputation
+  first-run evidence: C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\verification\k1-4167c44\windows\20261031-151437-d1ee30fc\displacement_damage-evidence\first-run (59855 raw bytes)
+  summary worker rows/events: {0: {'rows': 2, 'n_events': ['200']}, 1: {'rows': 0, 'n_events': []}}
+  mu- track length [mm]: 200.000102 (expected 200.000102, rel. tolerance 1e-09)
+  mu- DDD [MeV/g]: 0.00399926982 (expected 0.00399995077, rel. tolerance 0.001)
+  e- out-of-range track length 5.94279 mm (hits 5.94279 mm)
+  statistics ddd_mu-: 0.00399926982 (expected 0.00399926982, rel. tolerance 1e-09)
+  statistics ddd_total: 0.00399926982 (expected 0.00399926982, rel. tolerance 1e-09)
+  statistics sum_sq: 7.99707966e-08 (expected 7.99707966e-08, rel. tolerance 1e-09)
+  relative error 8.695e-06
+neutrons: zero-deposit steps, constant table
+  neutron DDD [MeV/g]: 0.04010239 (expected 0.04, rel. tolerance 0.005)
+ROOT-only output
+failures
+  7 invalid settings rejected
+particle names: case-insensitive resolution and unknown names
+  He3 track length [mm]: 2.00005206 (expected 2, rel. tolerance 0.02)
+  unknown name rejected before events, He3 resolved
+test_displacement_damage: OK
+G4USIM_ASSERTS=73

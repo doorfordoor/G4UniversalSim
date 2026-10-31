@@ -1,0 +1,80 @@
+# K1 最终适配与测试修复限定审查
+
+## 最终签字：label P2 已关闭
+
+本节为 Bohr 停止编辑后最终复核结论；下方开放 P2 文字保留为修复前历史。**已审限定范围无剩余已确认缺陷，可进入主任务的新冻结准备。** 这不是正式矩阵或阶段通过结论，也不代签正在进行的原生 export/import rehearsal。
+
+已读取 out/collab/k1-launch-label-fix/delivery.md/receipt.json 的停止交付。与原 helper SHA650d7fa0 的逐字 diff 仅新增匹配当前 main.cc 的取值选项集合及按值消费的扫描；真正的 cwd 重复/冲突/缺值/相对/等号拒绝保持。对应两个测试的所有原 Assert AST 节点保留。runner/workflow/environment SHA 与此前已审字节一致。
+
+独立实测两种原反例 label `--working-directory`、`--working-directory=label` × direct/restore 两路由，共4例，真实开发后端全部 exit0、公开 launch.working_directory=true；label 字节及 argv 顺序保持，仅 restore 路由前置 transport 参数，重复 prepare 幂等。direct cwd98 UTF-16单元；restore 真实 cwd280、启动祖先254。均仅能力查询，不冒称事件模拟。
+
+独立复跑 unit：exit0/151入口；真实 QProcess --executable 专项：exit0/105入口，使用自然 TemporaryDirectory 清理。包含旧程序 unsupported、缺 summary 仍 incomplete、日志句柄关闭、服务 close 和新增真实后端短/深 label 组合。无需重复全部455或全矩阵来关闭本次限定缺陷。
+
+独立证据：out/collab/k1-python-launch-independent/label-final/receipt.json、unit.log、qt-real.log。三个变更文件前后 SHA 与 Bohr 最终交付全部相同；EXE仍为 af6c9ae0b257589f73316b81add1c58e394e37c5efc2e12b3e140605797d2c98。最终源码：
+
+| 文件 | 最终 SHA-256 |
+| --- | --- |
+| gui/g4usim_gui/core/backend_launch.py | 9ae08264564111987a3627ec255706b9c419a2e58046732b35e49ea746d3e102 |
+| scripts/test_backend_launch.py | ddeacf31d31d2564c46e7dc3851b75eec36bf28a7d85e241759817e0faea24a9 |
+| gui/smoke_tests/smoke_backend_launch.py | 79c3eb31bbe5f47f3fea57abedd783685403f46668c31beb45599cf6929fdb33 |
+
+本轮独立签字接受上述最终字节，label P2 关闭；此前对 smoke 不降门禁、I1/bundle 普通兼容测试及 r3 实际输入证据的结论保持。未修改产品、测试或二进制，未操作主负责人的原生窗口，未重跑全量。正式新冻结与正式回归由主任务负责。
+
+---
+
+以下为修复前限定审查历史。
+
+2026-10-31；gpt-6.1-sol/medium（原 ledger），消耗未知。只读正式产品/测试；未运行全量，未触碰主负责人正在进行 export/import rehearsal 的原生窗口。
+
+**结论：本轮三个旧 smoke 及 I1/bundle 测试修复可接受，未发现删断言或放宽结果门禁；但上轮已复现的 helper label P2 仍未修复，当前不能给“无剩余缺陷、可冻结”的独立签字。** 新通过的455/455/148并未覆盖该反例。
+
+## 唯一开放项
+
+gui/g4usim_gui/core/backend_launch.py:98-110 把 `--run-name` 的值 `--working-directory` / `--working-directory=label` 当成实际选项。真实开发后端接受相同 CLI，helper 拒绝；普通短 cwd 也回归。详见 `out/collab/k1-python-launch-independent-review.md` 和 `out/collab/k1-python-launch-independent/label-counterexamples.json`。
+
+当前 helper SHA 仍为 650d7fa049914a11132fe9b52b331eb41683181de2cd4206ccf265ed7a29b479，与复现字节及新 writer-stopped 交付完全相同。因此不是基于过期草稿的疑点，亦不因新增正向专项而关闭。应按 CLI 消费选项值的规则修复，不限制、trim 或替换用户 label。修复后只需限定 diff 和两类路由反例复核；不要求重复全矩阵才作代码审查裁决。
+
+## 三个旧 smoke：门禁保留证据
+
+逐份对比当前文件与 HEAD 冻结原件，并用 AST 比较完整 Assert 节点，而非只比数量：
+
+| 文件 | 原/现 assert 节点 | 原断言变化 | 判断 |
+| --- | --- | --- | --- |
+| smoke_backend_geometry.py | 14 / 19 | 原14个完整节点均保留 | generate 后等待真实 workflow；finally 经 MainWindow.close 正常排空，新增关闭事实断言 |
+| smoke_trajectory_view.py | 35 / 35 | 原35个完整节点均保留 | 原 PyVista/模型/真实运行分支保留；完成信号后等待 workflow，再正常关闭 |
+| smoke_f5_recovery_process.py | 33 / 33 | 仅 `assert window.close()` 替换为有界等待后的 `assert closed` | 后续 recovery.closed、候选清空、raw draft/source conflict 与真实子进程退出判据保留 |
+
+backend_geometry 的 close_window 在窗口 accepted close 后仍要求 recovery closed、experiment 非 busy、service 不等待、窗口不可见；没有直接拆 service、删锁或吞清理异常。F5 的等待同样有超时失败，并在断言完成后 drain DeferredDelete。等待异步完成符合新生命周期，不能理解为允许失败也通过。
+
+trajectory 只删除了 Windows 上把显式 offscreen 强改为 windows 的两行；check_widget 原有 `not available or platformName == offscreen` 分支和其后全部 VTK 断言保持。check_backend 的原 `exits == [0]`、事件 [0,1,2]、3个 primary 初始能量断言仍保留；当 view 无 trajectories 时的文本 fallback 也早已存在。这次23入口是 offscreen 文本降级路径，**不能声称 PyVista 图形分支已实际通过**。尊重测试平台选择不等于删掉原生图形分支。
+
+当前正式三个文件与写者 candidate 副本原字节一致。validation-summary.json 的当前通过三项 script SHA/log SHA 均独立核实匹配，退出码0，探针 marker 分别24/23/12，三个通过日志没有 traceback。先前 trajectory 失败日志仍有 traceback，保持原件；没有把该失败行误认成当前通过日志，也不把短 TEMP 旧后端专项当新后端长路径验收。
+
+## I1 与 bundle 测试限定 diff
+
+- smoke_i1_environment.py:59 仅把硬编码 C:/中文工作区 的显示 fixture 改成 ROOT 下跨平台生成长路径。原布局、tooltip、详情、summary 去敏等断言未变；这是显示数据，不创建或运行该假 EXE。
+- test_i1_environment.py:283-287 刻意设置子进程 PYTHONIOENCODING=cp1252，但协议生产者通过 stdout.buffer 写 UTF-8 原字节；消费端继续严格 UTF-8，原进程/timeout/loader 测试保留。它修正测试生产者对宿主控制台代码页的错误依赖，没有放宽协议解码，也没有改变宿主/机器环境。
+- test_k1_bundle.py 两处仅将原 C 盘样本扩展为 A-Z 全26类字符串。原正斜杠/反斜杠、官方 URL 混入私有路径、伪 URL path、UNC、凭据和环境变量等负例仍保留；拒绝后 target 不存在的断言保持。所有这些是合成文本，未读写对应盘符。本轮仅审这段普通测试兼容 diff，不扩展为已拒绝的广泛 bundle 审查。
+
+主负责人报告的 I1 UI464、bundle529、cp1252协议142、actualroundtrip34/CLI160/caps21，本报告没有逐一独立重跑，按主任务证据归属保留，不冒称本审查独立执行通过。
+
+## 新真实专项交付的证据核对
+
+读取 out/collab/k1-python-launch-real-r1/delivery.md/receipt.json：normal 与 original-deep-evidence-root 的退出码0、455 marker、落盘日志原字节 SHA 均独立匹配；supplementary_receipt_check 的退出码0、148 marker、sha256 匹配。148是原运行收据复核，不是额外模拟或独立评审。
+
+receipt.after 的7项源码 SHA 与当前文件全部相符，4core 与原已审字节一致。EXE交付为 af6c9ae0b257589f73316b81add1c58e394e37c5efc2e12b3e140605797d2c98。此前 r3 的初始化 no_run、真实3/3、8项实际输入原字节 SHA、relative datafile 对照已在上轮报告独立核对，结论保持。
+
+## 本轮机器可复核收据与停止点
+
+`out/collab/k1-python-launch-independent/final-smoke-diff.json` 保存 AST 差异、当前源码 SHA、三项 script/log SHA 比对及最终7文件身份匹配结果。关键 SHA：
+
+| 文件 | SHA-256 |
+| --- | --- |
+| smoke_backend_geometry.py | 7dd55c3d4d6bf42f9fd7f9c1d6caed166e017c75c76fd20fdf661b1acf198603 |
+| smoke_trajectory_view.py | 2c697d1620f1875a6a1099f8525c3d5326be00b4459b4b75dbb767ac466c372d |
+| smoke_f5_recovery_process.py | 9d0814296d336ab32177cae7415bfc7941163e28e2bb71c93bc4d8506f1fdc01 |
+| smoke_i1_environment.py | 48ae5f2b7fba134b28c4b51efc63b70e0dd7b2dfb7676d70e1bdcc0ee7e1f870 |
+| test_i1_environment.py | 17641448f01d72614dcc7959567ad3b22142243db79c7b33dd090234bc3da107 |
+| test_k1_bundle.py | d5f872b2fe8a5b39d927866282c06057148bcf67bcdc4673aff1e4d6dbf5caa4 |
+
+未发现本轮测试修复引入新增产品缺陷或降门禁；开放 helper label P2，等待主负责人裁决/修复后再限定签字。正式新冻结、完整矩阵和原生 export/import rehearsal 由主任务继续负责，不能据本报告提前标阶段通过。

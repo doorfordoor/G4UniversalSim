@@ -1,0 +1,18 @@
+{"mode": "cancel_work_delivery", "status": "cancelled", "reason": "experiment.inputs_changed", "revision_before": 0, "revision_after": 0, "snapshot_changed": false, "completed_count": 1, "disk_matches_callback": true}
+{"scope": "component_terminal_lifecycle_only", "cases": 1, "simulation": "not_executed", "workflow": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\gui\\g4usim_gui\\core\\experiment_workflow.py", "report_root": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-cancel-reason-candidate\\old-negative", "results": [{"mode": "cancel_work_delivery", "status": "failed", "error": "{'mode': 'cancel_work_delivery', 'status': 'cancelled', 'reason': 'experiment.inputs_changed', 'revision_before': 0, 'revision_after': 0, 'snapshot_changed': False, 'completed_count': 1, 'disk_matches_callback': True}", "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-cancel-reason-candidate\\test_k1_terminal_publication.py\", line 259, in main\n    exercise_delivery_reason(module, report_root / mode, mode)\n  File \"C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-cancel-reason-candidate\\test_k1_terminal_publication.py\", line 220, in exercise_delivery_reason\n    assert saved['reason'] == expected_reason, observed\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: {'mode': 'cancel_work_delivery', 'status': 'cancelled', 'reason': 'experiment.inputs_changed', 'revision_before': 0, 'revision_after': 0, 'snapshot_changed': False, 'completed_count': 1, 'disk_matches_callback': True}\n"}]}
+G4USIM_ASSERTS=15
+Traceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 177, in <module>
+    raise SystemExit(main(sys.argv))
+                     ^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 153, in main
+    runpy.run_path(str(target), run_name="__main__")
+  File "<frozen runpy>", line 291, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\k1-cancel-reason-candidate\test_k1_terminal_publication.py", line 276, in <module>
+    main()
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\k1-cancel-reason-candidate\test_k1_terminal_publication.py", line 273, in main
+    assert all(row['status'] == 'passed' for row in results), 'terminal lifecycle case failed; see ' + str(report_root)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: terminal lifecycle case failed; see C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\k1-cancel-reason-candidate\old-negative

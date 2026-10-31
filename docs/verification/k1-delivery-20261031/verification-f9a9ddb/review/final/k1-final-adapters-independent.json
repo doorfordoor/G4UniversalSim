@@ -1,0 +1,1412 @@
+{
+  "schema": "k1_final_adapters_independent_v1",
+  "head": "8213ced419c8c6bca512bf8413b674c1265cf3bf",
+  "baseline": "e701c7f",
+  "reviewer_model": "gpt-6.1-sol",
+  "reasoning_effort": "medium",
+  "consumption": "unknown",
+  "completed_utc": "2026-10-31T06:25:40.472122+00:00",
+  "judgement": "approved_for_listed_ordinary_adapter_registry_and_test_diffs",
+  "actionable_findings": [],
+  "review_method": "Read actual final code and e701c7f..8213ced diff, follow EditSession/runner/inspect/close call chain, inspect existing strict CI receipts; read-only AST/register checks; not hash-only approval",
+  "files": [
+    {
+      "path": "gui/g4usim_gui/experiment_cli.py",
+      "raw_sha256": "20d7bb876ef91d80d31a4806640730dff011fd65ceb7204b9b323ec7920c74f6",
+      "commit_blob_sha256": "20d7bb876ef91d80d31a4806640730dff011fd65ceb7204b9b323ec7920c74f6",
+      "raw_equals_commit_blob": true,
+      "LF_normalized_matches": true,
+      "diff_sha256": "090058fb8a02718ed7c2c589cc099a154c411f7f37fcc0d8ce1781b040c5cd44",
+      "scope": "full new file K1 adapter logic",
+      "independent": true,
+      "author_conflict": false,
+      "judgement": "approved_within_scope_no_actionable_findings"
+    },
+    {
+      "path": "gui/g4usim_gui/main_window.py",
+      "raw_sha256": "3dbece37b6eef22363f6eb772836f8918dce95c762f94decd312c4381a74a7ce",
+      "commit_blob_sha256": "3dbece37b6eef22363f6eb772836f8918dce95c762f94decd312c4381a74a7ce",
+      "raw_equals_commit_blob": true,
+      "LF_normalized_matches": true,
+      "diff_sha256": "f997acf06eb4c12ef5b2ce588ac03f1df89a02b00d651ea077511df9d590e8e5",
+      "scope": "K1/I1 diff plus owning call-chain context; unchanged historical code not re-signed",
+      "independent": true,
+      "author_conflict": false,
+      "judgement": "approved_within_scope_no_actionable_findings"
+    },
+    {
+      "path": "gui/g4usim_gui/window/transactions.py",
+      "raw_sha256": "93e194afae749b52c3a8c9871211ecc8fe129256050e9e88ef1287f67b1b3210",
+      "commit_blob_sha256": "93e194afae749b52c3a8c9871211ecc8fe129256050e9e88ef1287f67b1b3210",
+      "raw_equals_commit_blob": true,
+      "LF_normalized_matches": true,
+      "diff_sha256": "f86f4d28342abc728b68e740e136e15c5021f0bba51d459c285b3a69a643e67e",
+      "scope": "K1/I1 diff plus owning call-chain context; unchanged historical code not re-signed",
+      "independent": true,
+      "author_conflict": false,
+      "judgement": "approved_within_scope_no_actionable_findings"
+    },
+    {
+      "path": "gui/g4usim_gui/window/experiment.py",
+      "raw_sha256": "bfe38e02552f831027d59480331e3805c16955b69cbccdb5a94c26963a005d46",
+      "commit_blob_sha256": "bfe38e02552f831027d59480331e3805c16955b69cbccdb5a94c26963a005d46",
+      "raw_equals_commit_blob": true,
+      "LF_normalized_matches": true,
+      "diff_sha256": "4a6e94158938f9530b97c8ca0f875473a4b94cff7ce0114f2a4332f4765f1266",
+      "scope": "full new file K1 adapter logic",
+      "independent": true,
+      "author_conflict": false,
+      "judgement": "approved_within_scope_no_actionable_findings"
+    },
+    {
+      "path": "scripts/run_m0_tests.py",
+      "raw_sha256": "8d4137897697ac73152cf9ec7e7264e27fb13aa0b2b9d79cc7a10f404cf03108",
+      "commit_blob_sha256": "8d4137897697ac73152cf9ec7e7264e27fb13aa0b2b9d79cc7a10f404cf03108",
+      "raw_equals_commit_blob": true,
+      "LF_normalized_matches": true,
+      "diff_sha256": "3364b5a69e80f2e852cd6e95f263dc7c31a9b62ca7ea977f7f314dc2c1acd3c1",
+      "scope": "K1/I1 diff plus owning call-chain context; unchanged historical code not re-signed",
+      "independent": true,
+      "author_conflict": false,
+      "judgement": "approved_within_scope_no_actionable_findings"
+    },
+    {
+      "path": ".github/workflows/linux-geant4.yml",
+      "raw_sha256": "d1c7132544f20964e5094e2bf32fc35bb99ff9902e0966c867e3a3e5d0dae052",
+      "commit_blob_sha256": "05c5d3eda53a666151b3640ebd3fc4b561b80aa888fcd929356f8a672ababc42",
+      "raw_equals_commit_blob": false,
+      "LF_normalized_matches": true,
+      "diff_sha256": "d94470f7a345644c7d5600b54f4f5619013c4f0bd5926aff0a6f2b3def82b69c",
+      "scope": "single changed Ubuntu apt dependency line only; no full workflow re-signing",
+      "independent": true,
+      "author_conflict": false,
+      "judgement": "approved_within_scope_no_actionable_findings"
+    },
+    {
+      "path": ".github/workflows/m0-static-gui.yml",
+      "raw_sha256": "ecc4edde064951c161b4b01e46d5ee6a568c854877c27acf90342ebe2e0fe391",
+      "commit_blob_sha256": "ecc4edde064951c161b4b01e46d5ee6a568c854877c27acf90342ebe2e0fe391",
+      "raw_equals_commit_blob": true,
+      "LF_normalized_matches": true,
+      "diff_sha256": "306fb6212683926a08313a99b25e740d06dc06e9defa5452e925d104944c22e7",
+      "scope": "single changed Ubuntu apt dependency line only; no full workflow re-signing",
+      "independent": true,
+      "author_conflict": false,
+      "judgement": "approved_within_scope_no_actionable_findings"
+    },
+    {
+      "path": "scripts/test_k1_roundtrip.py",
+      "raw_sha256": "67d54752a8633d1c2d472bc3af0b9080bc802db8478347ba33295b3400c938f2",
+      "commit_blob_sha256": "67d54752a8633d1c2d472bc3af0b9080bc802db8478347ba33295b3400c938f2",
+      "raw_equals_commit_blob": true,
+      "LF_normalized_matches": true,
+      "diff_sha256": "4925cf4d98642e3a1278b59e652b7ff163b2001f92ec9168f677abcd05decf50",
+      "scope": "full new file K1 adapter logic",
+      "independent": true,
+      "author_conflict": false,
+      "judgement": "approved_within_scope_no_actionable_findings"
+    },
+    {
+      "path": "gui/smoke_tests/smoke_f4_entrypoints.py",
+      "raw_sha256": "b975cc00c27379e9c1497d7d81134a4149275484ea5e6c444b2d4e0f499f7b6f",
+      "commit_blob_sha256": "b975cc00c27379e9c1497d7d81134a4149275484ea5e6c444b2d4e0f499f7b6f",
+      "raw_equals_commit_blob": true,
+      "LF_normalized_matches": true,
+      "diff_sha256": "d6bf00e73b91728f3ad9c0b3070bc63d75f41172a2b9ef1c2c90434858cd86dd",
+      "scope": "K1/I1 diff plus owning call-chain context; unchanged historical code not re-signed",
+      "independent": true,
+      "author_conflict": false,
+      "judgement": "approved_within_scope_no_actionable_findings"
+    },
+    {
+      "path": "gui/smoke_tests/smoke_f4_inspect_backend.py",
+      "raw_sha256": "c048cb9929a71677b00f2d80e995058970e41b2ff6b2875fdf104da2d5d456cf",
+      "commit_blob_sha256": "c048cb9929a71677b00f2d80e995058970e41b2ff6b2875fdf104da2d5d456cf",
+      "raw_equals_commit_blob": true,
+      "LF_normalized_matches": true,
+      "diff_sha256": "42cb47d49b06979d0ad5f2341bfab914196817e5ab6c5cf86827c16b1bd4665f",
+      "scope": "K1/I1 diff plus owning call-chain context; unchanged historical code not re-signed",
+      "independent": true,
+      "author_conflict": false,
+      "judgement": "approved_within_scope_no_actionable_findings"
+    },
+    {
+      "path": "gui/smoke_tests/smoke_new_simulation_wizard.py",
+      "raw_sha256": "304c81f998603e76a527bb4e69165f24cbe105874022b8c57f0b99818efb64d7",
+      "commit_blob_sha256": "304c81f998603e76a527bb4e69165f24cbe105874022b8c57f0b99818efb64d7",
+      "raw_equals_commit_blob": true,
+      "LF_normalized_matches": true,
+      "diff_sha256": "1e351b0f9139dc20b4531492a10d39221c3d33bd35f82207346290eb5b04678d",
+      "scope": "K1/I1 diff plus owning call-chain context; unchanged historical code not re-signed",
+      "independent": true,
+      "author_conflict": false,
+      "judgement": "approved_within_scope_no_actionable_findings"
+    },
+    {
+      "path": "gui/smoke_tests/smoke_project_snapshot_restore.py",
+      "raw_sha256": "8071589683f2db979e668b664a57b978c7663ab8c8e96d20e3b391cfd96db10b",
+      "commit_blob_sha256": "8071589683f2db979e668b664a57b978c7663ab8c8e96d20e3b391cfd96db10b",
+      "raw_equals_commit_blob": true,
+      "LF_normalized_matches": true,
+      "diff_sha256": "677e5bf6f28a57262a736e69c2e3bd9c6f7bcaf14ad8b32d71884faac55e3c17",
+      "scope": "K1/I1 diff plus owning call-chain context; unchanged historical code not re-signed",
+      "independent": true,
+      "author_conflict": false,
+      "judgement": "approved_within_scope_no_actionable_findings"
+    },
+    {
+      "path": "gui/smoke_tests/smoke_q1_public_paths.py",
+      "raw_sha256": "09882ba3c154a25ea5d836783abe27d2345ce21d9b3e3f1036ced516b1ddc9f0",
+      "commit_blob_sha256": "09882ba3c154a25ea5d836783abe27d2345ce21d9b3e3f1036ced516b1ddc9f0",
+      "raw_equals_commit_blob": true,
+      "LF_normalized_matches": true,
+      "diff_sha256": "1904b94326f771f2fd123dcc51bc5c3a7e8304527ebbb7672e7d711c6d6bf337",
+      "scope": "K1/I1 diff plus owning call-chain context; unchanged historical code not re-signed",
+      "independent": true,
+      "author_conflict": false,
+      "judgement": "approved_within_scope_no_actionable_findings"
+    },
+    {
+      "path": "gui/smoke_tests/smoke_run_input_modes.py",
+      "raw_sha256": "ec2eb725630067711fd910587f279eee673e87f295eb1a3e75559a2bbcaca95e",
+      "commit_blob_sha256": "ec2eb725630067711fd910587f279eee673e87f295eb1a3e75559a2bbcaca95e",
+      "raw_equals_commit_blob": true,
+      "LF_normalized_matches": true,
+      "diff_sha256": "5fa9dbf88bf872131548cca4e0411bf4a7e96b00349158721aba8474e63aaadd",
+      "scope": "K1/I1 diff plus owning call-chain context; unchanged historical code not re-signed",
+      "independent": true,
+      "author_conflict": false,
+      "judgement": "approved_within_scope_no_actionable_findings"
+    }
+  ],
+  "self_authored_files_excluded": [
+    "gui/smoke_tests/smoke_backend_geometry.py",
+    "gui/smoke_tests/smoke_trajectory_view.py",
+    "gui/smoke_tests/smoke_f5_recovery_process.py"
+  ],
+  "scope_boundary": "Ordinary transport/wiring/lifecycle/registry/test adaptation only. No resource-boundary re-review or stage closure.",
+  "old_smoke_assert_AST": [
+    {
+      "path": "gui/smoke_tests/smoke_f4_entrypoints.py",
+      "before_assert_nodes": 62,
+      "after_assert_nodes": 62,
+      "removed_assert_expressions": [],
+      "added_assert_expressions": []
+    },
+    {
+      "path": "gui/smoke_tests/smoke_f4_inspect_backend.py",
+      "before_assert_nodes": 40,
+      "after_assert_nodes": 44,
+      "removed_assert_expressions": [],
+      "added_assert_expressions": [
+        "not output.exists() and (not list(temp.rglob('run_summary.txt')))",
+        "{path: digest(path) for path in original_hashes} == original_hashes",
+        "not guarded_start.called and (not guard.runner.is_running())",
+        "guard.experiment.records()[-1]['status'] == 'failed'"
+      ]
+    },
+    {
+      "path": "gui/smoke_tests/smoke_new_simulation_wizard.py",
+      "before_assert_nodes": 37,
+      "after_assert_nodes": 37,
+      "removed_assert_expressions": [],
+      "added_assert_expressions": []
+    },
+    {
+      "path": "gui/smoke_tests/smoke_project_snapshot_restore.py",
+      "before_assert_nodes": 54,
+      "after_assert_nodes": 54,
+      "removed_assert_expressions": [],
+      "added_assert_expressions": []
+    },
+    {
+      "path": "gui/smoke_tests/smoke_q1_public_paths.py",
+      "before_assert_nodes": 28,
+      "after_assert_nodes": 28,
+      "removed_assert_expressions": [],
+      "added_assert_expressions": []
+    },
+    {
+      "path": "gui/smoke_tests/smoke_run_input_modes.py",
+      "before_assert_nodes": 94,
+      "after_assert_nodes": 99,
+      "removed_assert_expressions": [],
+      "added_assert_expressions": [
+        "execution_config.is_file() and execution_macro.is_file()",
+        "str(execution_config.resolve()) in prepared['expected_inputs']",
+        "str(execution_macro.resolve()) in prepared['expected_inputs']",
+        "builder.geometry_document.volumes[target_row].size == '2 cm, 1 cm, 1 mm'",
+        "window.experiment.records()[-1]['status'] == 'failed'"
+      ]
+    }
+  ],
+  "registry": {
+    "total": 182,
+    "profiles": {
+      "static": 36,
+      "gui": 56,
+      "integration": 29,
+      "backend": 61
+    },
+    "old_cases_unchanged": 160,
+    "added": [
+      {
+        "name": "backend_launch",
+        "script": "scripts/test_backend_launch.py",
+        "profile": "static",
+        "expression": "Case('backend_launch', 'scripts/test_backend_launch.py', 'static')"
+      },
+      {
+        "name": "gui_backend_launch",
+        "script": "gui/smoke_tests/smoke_backend_launch.py",
+        "profile": "gui",
+        "expression": "Case('gui_backend_launch', 'gui/smoke_tests/smoke_backend_launch.py', 'gui', ('qt',))"
+      },
+      {
+        "name": "backend_working_directory",
+        "script": "scripts/test_backend_working_directory.py",
+        "profile": "integration",
+        "expression": "Case('backend_working_directory', 'scripts/test_backend_working_directory.py', 'integration', ('qt', 'exe'))"
+      },
+      {
+        "name": "gui_k1_workflow",
+        "script": "scripts/test_k1_workflow.py",
+        "profile": "gui",
+        "expression": "Case('gui_k1_workflow', 'scripts/test_k1_workflow.py', 'gui', ('qt',), args=('--component',))"
+      },
+      {
+        "name": "gui_k1_terminal_publication",
+        "script": "scripts/test_k1_terminal_publication.py",
+        "profile": "gui",
+        "expression": "Case('gui_k1_terminal_publication', 'scripts/test_k1_terminal_publication.py', 'gui', ('qt',))"
+      },
+      {
+        "name": "gui_k1_history_scope",
+        "script": "gui/smoke_tests/smoke_k1_history_scope.py",
+        "profile": "gui",
+        "expression": "Case('gui_k1_history_scope', 'gui/smoke_tests/smoke_k1_history_scope.py', 'gui', ('qt',))"
+      },
+      {
+        "name": "k1_history_scope_backend",
+        "script": "gui/smoke_tests/smoke_k1_history_scope.py",
+        "profile": "integration",
+        "expression": "Case('k1_history_scope_backend', 'gui/smoke_tests/smoke_k1_history_scope.py', 'integration', ('qt', 'exe'), args=('--mode', 'backend'))"
+      },
+      {
+        "name": "k1_workflow_backend",
+        "script": "scripts/test_k1_workflow.py",
+        "profile": "integration",
+        "expression": "Case('k1_workflow_backend', 'scripts/test_k1_workflow.py', 'integration', ('qt', 'exe'))"
+      },
+      {
+        "name": "k1_roundtrip",
+        "script": "scripts/test_k1_roundtrip.py",
+        "profile": "integration",
+        "expression": "Case('k1_roundtrip', 'scripts/test_k1_roundtrip.py', 'integration', ('qt', 'exe'))"
+      },
+      {
+        "name": "k1_bundle",
+        "script": "scripts/test_k1_bundle.py",
+        "profile": "static",
+        "expression": "Case('k1_bundle', 'scripts/test_k1_bundle.py', 'static', args=('--component',))"
+      },
+      {
+        "name": "k1_staging_alias",
+        "script": "scripts/test_k1_staging_alias.py",
+        "profile": "static",
+        "expression": "Case('k1_staging_alias', 'scripts/test_k1_staging_alias.py', 'static')"
+      },
+      {
+        "name": "gui_k1_relocation",
+        "script": "gui/smoke_tests/smoke_k1_relocation.py",
+        "profile": "gui",
+        "expression": "Case('gui_k1_relocation', 'gui/smoke_tests/smoke_k1_relocation.py', 'gui', ('qt',))"
+      },
+      {
+        "name": "k1_relocation_backend",
+        "script": "gui/smoke_tests/smoke_k1_relocation.py",
+        "profile": "integration",
+        "expression": "Case('k1_relocation_backend', 'gui/smoke_tests/smoke_k1_relocation.py', 'integration', ('qt', 'exe'), args=('--mode', 'backend'))"
+      },
+      {
+        "name": "k1_bundle_backend",
+        "script": "scripts/test_k1_bundle.py",
+        "profile": "backend",
+        "expression": "Case('k1_bundle_backend', 'scripts/test_k1_bundle.py', 'backend', ('exe',))"
+      },
+      {
+        "name": "gui_k1_cli",
+        "script": "scripts/test_k1_cli.py",
+        "profile": "gui",
+        "expression": "Case('gui_k1_cli', 'scripts/test_k1_cli.py', 'gui', ('qt',))"
+      },
+      {
+        "name": "k1_cli_backend",
+        "script": "scripts/test_k1_cli.py",
+        "profile": "integration",
+        "expression": "Case('k1_cli_backend', 'scripts/test_k1_cli.py', 'integration', ('qt', 'exe'), args=('--backend',))"
+      },
+      {
+        "name": "i1_environment",
+        "script": "scripts/test_i1_environment.py",
+        "profile": "static",
+        "expression": "Case('i1_environment', 'scripts/test_i1_environment.py', 'static', args=('--component',))"
+      },
+      {
+        "name": "i1_environment_backend",
+        "script": "scripts/test_i1_environment.py",
+        "profile": "backend",
+        "expression": "Case('i1_environment_backend', 'scripts/test_i1_environment.py', 'backend', ('exe',))"
+      },
+      {
+        "name": "gui_i1_environment",
+        "script": "gui/smoke_tests/smoke_i1_environment.py",
+        "profile": "gui",
+        "expression": "Case('gui_i1_environment', 'gui/smoke_tests/smoke_i1_environment.py', 'gui', ('qt',), args=('--component',))"
+      },
+      {
+        "name": "gui_i1_environment_backend",
+        "script": "gui/smoke_tests/smoke_i1_environment.py",
+        "profile": "integration",
+        "expression": "Case('gui_i1_environment_backend', 'gui/smoke_tests/smoke_i1_environment.py', 'integration', ('qt', 'exe'))"
+      },
+      {
+        "name": "gui_k1_panel",
+        "script": "gui/smoke_tests/smoke_k1_panel.py",
+        "profile": "gui",
+        "expression": "Case('gui_k1_panel', 'gui/smoke_tests/smoke_k1_panel.py', 'gui', ('qt',))"
+      },
+      {
+        "name": "gui_k1_window",
+        "script": "gui/smoke_tests/smoke_k1_workflow.py",
+        "profile": "gui",
+        "expression": "Case('gui_k1_window', 'gui/smoke_tests/smoke_k1_workflow.py', 'gui', ('qt',))"
+      }
+    ],
+    "duplicates": 0
+  },
+  "checks": {
+    "AST_parse": "passed_without_import_or_bytecode",
+    "all_old_smoke_assert_expressions_retained": true,
+    "synthetic_dispatch_not_simulation_success": true,
+    "run_input_modes_real_generated_3_event_and_no_run_stale_and_preflight_refusal_preserved": true,
+    "tracked_diff_empty_before_after": true,
+    "new_tests_executed": false,
+    "new_matrices_started": false,
+    "native_windows_or_other_processes_operated": false
+  },
+  "existing_evidence": {
+    "CI_receipt": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\review-result.json",
+    "receipt_sha256": "8c33dd11d52e32a3d16cb4a1889688300d5d3bfa49c9b669aff5c154c2a56a91",
+    "runs": [
+      41173825552,
+      41173825555
+    ],
+    "all_reports": 12,
+    "all_cases": 548,
+    "all_assertions": 132900,
+    "all_strict_and_F5_passed": true,
+    "selected_case_rows": [
+      {
+        "artifact": "linux-evidence-11.3.2",
+        "profile": "backend",
+        "name": "k1_bundle_backend",
+        "script": "scripts/test_k1_bundle.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 557,
+        "log_sha256": "582dee5cd55d38d5b8ab29f83ccb74539c000a3b104cf722e32922bff16c1d75",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\linux-evidence-11.3.2\\linux-backend\\20261031-055251-626860b9\\report.json"
+      },
+      {
+        "artifact": "linux-evidence-11.3.2",
+        "profile": "backend",
+        "name": "i1_environment_backend",
+        "script": "scripts/test_i1_environment.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 145,
+        "log_sha256": "e31f6dc9a669b88ddf8a9047db1461c3e86e7bb8d5ea279cf71660294cefea7d",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\linux-evidence-11.3.2\\linux-backend\\20261031-055251-626860b9\\report.json"
+      },
+      {
+        "artifact": "linux-evidence-11.3.2",
+        "profile": "gui",
+        "name": "gui_backend_launch",
+        "script": "gui/smoke_tests/smoke_backend_launch.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 74,
+        "log_sha256": "d787b4d356d9e6b6d53819ba0c7e04df552022ccaa8f96e1af2fae715bbb14f0",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\linux-evidence-11.3.2\\linux-gui\\20261031-054907-7fcfead7\\report.json"
+      },
+      {
+        "artifact": "linux-evidence-11.3.2",
+        "profile": "gui",
+        "name": "gui_k1_workflow",
+        "script": "scripts/test_k1_workflow.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 230,
+        "log_sha256": "27b839a02a1de44cae5e774a576034fb84e4c32989c4b37f6729ceb2fea4b020",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\linux-evidence-11.3.2\\linux-gui\\20261031-054907-7fcfead7\\report.json"
+      },
+      {
+        "artifact": "linux-evidence-11.3.2",
+        "profile": "gui",
+        "name": "gui_k1_terminal_publication",
+        "script": "scripts/test_k1_terminal_publication.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 257,
+        "log_sha256": "46846152ff1048f05487fcfc805dd977254f5fde5794e48c036dcb957edb1b0b",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\linux-evidence-11.3.2\\linux-gui\\20261031-054907-7fcfead7\\report.json"
+      },
+      {
+        "artifact": "linux-evidence-11.3.2",
+        "profile": "gui",
+        "name": "gui_k1_history_scope",
+        "script": "gui/smoke_tests/smoke_k1_history_scope.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 78,
+        "log_sha256": "cf3f792c40e35b9d1e787627a6a03b1e6b05e775688c00eb2fb042c21fac1df6",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\linux-evidence-11.3.2\\linux-gui\\20261031-054907-7fcfead7\\report.json"
+      },
+      {
+        "artifact": "linux-evidence-11.3.2",
+        "profile": "gui",
+        "name": "gui_k1_relocation",
+        "script": "gui/smoke_tests/smoke_k1_relocation.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 138,
+        "log_sha256": "4793ec0a392f7bb451908d738fa894d296b9af46d9e069ec3653ca21a686a5a6",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\linux-evidence-11.3.2\\linux-gui\\20261031-054907-7fcfead7\\report.json"
+      },
+      {
+        "artifact": "linux-evidence-11.3.2",
+        "profile": "gui",
+        "name": "gui_k1_cli",
+        "script": "scripts/test_k1_cli.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 124,
+        "log_sha256": "dac5a505ad536cc4d21bb39685ea471d736f138ba3ea33f62f5ed3bac2f61838",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\linux-evidence-11.3.2\\linux-gui\\20261031-054907-7fcfead7\\report.json"
+      },
+      {
+        "artifact": "linux-evidence-11.3.2",
+        "profile": "gui",
+        "name": "gui_i1_environment",
+        "script": "gui/smoke_tests/smoke_i1_environment.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 462,
+        "log_sha256": "b7d763d80118b2b534b8beb33adf9d85c68c3b450be650e1137cb5d8ae139774",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\linux-evidence-11.3.2\\linux-gui\\20261031-054907-7fcfead7\\report.json"
+      },
+      {
+        "artifact": "linux-evidence-11.3.2",
+        "profile": "gui",
+        "name": "gui_k1_panel",
+        "script": "gui/smoke_tests/smoke_k1_panel.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 1598,
+        "log_sha256": "ff70c92bf5b273429829f417b5ebaa47b5204c9bde5e3f00f72d6cd87e516622",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\linux-evidence-11.3.2\\linux-gui\\20261031-054907-7fcfead7\\report.json"
+      },
+      {
+        "artifact": "linux-evidence-11.3.2",
+        "profile": "gui",
+        "name": "gui_k1_window",
+        "script": "gui/smoke_tests/smoke_k1_workflow.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 38,
+        "log_sha256": "6aa1643806d230607a526e5af26b5f6afaec9f3b47e4d3cac6fa679dc6275048",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\linux-evidence-11.3.2\\linux-gui\\20261031-054907-7fcfead7\\report.json"
+      },
+      {
+        "artifact": "linux-evidence-11.3.2",
+        "profile": "gui",
+        "name": "gui_f4_entrypoints",
+        "script": "gui/smoke_tests/smoke_f4_entrypoints.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 62,
+        "log_sha256": "64e5e07d3da0a4b1ab4b95181a4a4cc6c467bb7e146e2624973f784fa54f7ff5",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\linux-evidence-11.3.2\\linux-gui\\20261031-054907-7fcfead7\\report.json"
+      },
+      {
+        "artifact": "linux-evidence-11.3.2",
+        "profile": "gui",
+        "name": "gui_project_snapshot_restore",
+        "script": "gui/smoke_tests/smoke_project_snapshot_restore.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 61,
+        "log_sha256": "c1823444e5ca311b4eef8481300fb2f8dd06a95686606b1e52e48eff9c6be670",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\linux-evidence-11.3.2\\linux-gui\\20261031-054907-7fcfead7\\report.json"
+      },
+      {
+        "artifact": "linux-evidence-11.3.2",
+        "profile": "gui",
+        "name": "gui_new_simulation_wizard",
+        "script": "gui/smoke_tests/smoke_new_simulation_wizard.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 60,
+        "log_sha256": "7c4c3b62af2ec812ff0f820d89f3c4eeb2595dd0d06f4774725d2b1bbb30d26a",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\linux-evidence-11.3.2\\linux-gui\\20261031-054907-7fcfead7\\report.json"
+      },
+      {
+        "artifact": "linux-evidence-11.3.2",
+        "profile": "gui",
+        "name": "q1_public_paths",
+        "script": "gui/smoke_tests/smoke_q1_public_paths.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 32,
+        "log_sha256": "ad178c80366a2eb55965b286db3c24daf20ff3d2a69c6bcf4bada7b9d8d5c1c6",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\linux-evidence-11.3.2\\linux-gui\\20261031-054907-7fcfead7\\report.json"
+      },
+      {
+        "artifact": "linux-evidence-11.3.2",
+        "profile": "integration",
+        "name": "backend_working_directory",
+        "script": "scripts/test_backend_working_directory.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 77,
+        "log_sha256": "1ab35ea1f01b282bf82910756bf807fa038405c47e055fbfafdfad056fec9d43",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\linux-evidence-11.3.2\\linux-integration\\20261031-060743-44021b03\\report.json"
+      },
+      {
+        "artifact": "linux-evidence-11.3.2",
+        "profile": "integration",
+        "name": "k1_history_scope_backend",
+        "script": "gui/smoke_tests/smoke_k1_history_scope.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 150,
+        "log_sha256": "2a7d1f99de8b98cf5f8626054319d07b7390d31573c6e4bfbea5fce4f2f078fb",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\linux-evidence-11.3.2\\linux-integration\\20261031-060743-44021b03\\report.json"
+      },
+      {
+        "artifact": "linux-evidence-11.3.2",
+        "profile": "integration",
+        "name": "k1_workflow_backend",
+        "script": "scripts/test_k1_workflow.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 455,
+        "log_sha256": "7aa46dc9a29a5f765aefa5a485691e369b992b0b379eb6f3fe2428afd3628937",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\linux-evidence-11.3.2\\linux-integration\\20261031-060743-44021b03\\report.json"
+      },
+      {
+        "artifact": "linux-evidence-11.3.2",
+        "profile": "integration",
+        "name": "k1_roundtrip",
+        "script": "scripts/test_k1_roundtrip.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 34,
+        "log_sha256": "4fee38ba5f903b29fbc17f269bd8f3b9dbc65e102854fcdfe6ac73957b67edf8",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\linux-evidence-11.3.2\\linux-integration\\20261031-060743-44021b03\\report.json"
+      },
+      {
+        "artifact": "linux-evidence-11.3.2",
+        "profile": "integration",
+        "name": "k1_relocation_backend",
+        "script": "gui/smoke_tests/smoke_k1_relocation.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 163,
+        "log_sha256": "b916ac27c8b3e8866d773fa2bf74708041f0cb16c38cc512f0941ed1108792db",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\linux-evidence-11.3.2\\linux-integration\\20261031-060743-44021b03\\report.json"
+      },
+      {
+        "artifact": "linux-evidence-11.3.2",
+        "profile": "integration",
+        "name": "k1_cli_backend",
+        "script": "scripts/test_k1_cli.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 160,
+        "log_sha256": "19fbb8639f9dda09c82f4410b674822948225bdbc3926997ee872663cb9d92e0",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\linux-evidence-11.3.2\\linux-integration\\20261031-060743-44021b03\\report.json"
+      },
+      {
+        "artifact": "linux-evidence-11.3.2",
+        "profile": "integration",
+        "name": "gui_i1_environment_backend",
+        "script": "gui/smoke_tests/smoke_i1_environment.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 466,
+        "log_sha256": "3ef67f857ea71d1de4613a9bb31b110ed91fc9f2b67dbdc8ea133b0e986622ad",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\linux-evidence-11.3.2\\linux-integration\\20261031-060743-44021b03\\report.json"
+      },
+      {
+        "artifact": "linux-evidence-11.3.2",
+        "profile": "integration",
+        "name": "gui_f4_inspect_backend",
+        "script": "gui/smoke_tests/smoke_f4_inspect_backend.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 49,
+        "log_sha256": "f3ba64324f95562b77dcd472cf8f78480bf3aac61813241ea6c938ccf81aa831",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\linux-evidence-11.3.2\\linux-integration\\20261031-060743-44021b03\\report.json"
+      },
+      {
+        "artifact": "linux-evidence-11.3.2",
+        "profile": "integration",
+        "name": "gui_run_inputs",
+        "script": "gui/smoke_tests/smoke_run_input_modes.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 108,
+        "log_sha256": "bdb07e12bf86118af3e41bd59d2616a3dca0980ae8b09f3ab9d3dd7fe2ccecfc",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\linux-evidence-11.3.2\\linux-integration\\20261031-060743-44021b03\\report.json"
+      },
+      {
+        "artifact": "linux-evidence-11.3.2",
+        "profile": "static",
+        "name": "backend_launch",
+        "script": "scripts/test_backend_launch.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 151,
+        "log_sha256": "be4eaedac3b8ca5dbfc3d2be57d1f41e644ae2f56a2de5a05ca3c8796789c407",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\linux-evidence-11.3.2\\linux-static\\20261031-054742-38701b4f\\report.json"
+      },
+      {
+        "artifact": "linux-evidence-11.3.2",
+        "profile": "static",
+        "name": "k1_bundle",
+        "script": "scripts/test_k1_bundle.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 530,
+        "log_sha256": "a0e44d048d76020aee85440eb9de9a009874cb7b62c058d27fdbcbd561095e64",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\linux-evidence-11.3.2\\linux-static\\20261031-054742-38701b4f\\report.json"
+      },
+      {
+        "artifact": "linux-evidence-11.3.2",
+        "profile": "static",
+        "name": "k1_staging_alias",
+        "script": "scripts/test_k1_staging_alias.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 14,
+        "log_sha256": "bff4827cfdf32d51d241def2678c06d14013017997c37c1f07509b3421c834ee",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\linux-evidence-11.3.2\\linux-static\\20261031-054742-38701b4f\\report.json"
+      },
+      {
+        "artifact": "linux-evidence-11.3.2",
+        "profile": "static",
+        "name": "i1_environment",
+        "script": "scripts/test_i1_environment.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 142,
+        "log_sha256": "caa04d743318a537394af1091904eaab1ce2adb796c996a7db9b6cefd1f40763",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\linux-evidence-11.3.2\\linux-static\\20261031-054742-38701b4f\\report.json"
+      },
+      {
+        "artifact": "linux-evidence-11.4.3",
+        "profile": "backend",
+        "name": "k1_bundle_backend",
+        "script": "scripts/test_k1_bundle.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 557,
+        "log_sha256": "c1223f4c9e961d285a767da403a138c6be45b16685c157e57adc9cbb18e680b2",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\linux-evidence-11.4.3\\linux-backend\\20261031-055212-d1643239\\report.json"
+      },
+      {
+        "artifact": "linux-evidence-11.4.3",
+        "profile": "backend",
+        "name": "i1_environment_backend",
+        "script": "scripts/test_i1_environment.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 145,
+        "log_sha256": "e31f6dc9a669b88ddf8a9047db1461c3e86e7bb8d5ea279cf71660294cefea7d",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\linux-evidence-11.4.3\\linux-backend\\20261031-055212-d1643239\\report.json"
+      },
+      {
+        "artifact": "linux-evidence-11.4.3",
+        "profile": "gui",
+        "name": "gui_backend_launch",
+        "script": "gui/smoke_tests/smoke_backend_launch.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 74,
+        "log_sha256": "d787b4d356d9e6b6d53819ba0c7e04df552022ccaa8f96e1af2fae715bbb14f0",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\linux-evidence-11.4.3\\linux-gui\\20261031-054849-f6df127b\\report.json"
+      },
+      {
+        "artifact": "linux-evidence-11.4.3",
+        "profile": "gui",
+        "name": "gui_k1_workflow",
+        "script": "scripts/test_k1_workflow.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 230,
+        "log_sha256": "a56dad5b49e4db653deffa09d73dbb17498e77b2d9d82951e055fbbdb6b1ffb0",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\linux-evidence-11.4.3\\linux-gui\\20261031-054849-f6df127b\\report.json"
+      },
+      {
+        "artifact": "linux-evidence-11.4.3",
+        "profile": "gui",
+        "name": "gui_k1_terminal_publication",
+        "script": "scripts/test_k1_terminal_publication.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 257,
+        "log_sha256": "3ee249dd657fef31bdc66e2f1f7c9683be1207948c03b7a03d6d1ac417e78a9d",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\linux-evidence-11.4.3\\linux-gui\\20261031-054849-f6df127b\\report.json"
+      },
+      {
+        "artifact": "linux-evidence-11.4.3",
+        "profile": "gui",
+        "name": "gui_k1_history_scope",
+        "script": "gui/smoke_tests/smoke_k1_history_scope.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 78,
+        "log_sha256": "cf3f792c40e35b9d1e787627a6a03b1e6b05e775688c00eb2fb042c21fac1df6",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\linux-evidence-11.4.3\\linux-gui\\20261031-054849-f6df127b\\report.json"
+      },
+      {
+        "artifact": "linux-evidence-11.4.3",
+        "profile": "gui",
+        "name": "gui_k1_relocation",
+        "script": "gui/smoke_tests/smoke_k1_relocation.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 138,
+        "log_sha256": "4793ec0a392f7bb451908d738fa894d296b9af46d9e069ec3653ca21a686a5a6",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\linux-evidence-11.4.3\\linux-gui\\20261031-054849-f6df127b\\report.json"
+      },
+      {
+        "artifact": "linux-evidence-11.4.3",
+        "profile": "gui",
+        "name": "gui_k1_cli",
+        "script": "scripts/test_k1_cli.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 124,
+        "log_sha256": "dac5a505ad536cc4d21bb39685ea471d736f138ba3ea33f62f5ed3bac2f61838",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\linux-evidence-11.4.3\\linux-gui\\20261031-054849-f6df127b\\report.json"
+      },
+      {
+        "artifact": "linux-evidence-11.4.3",
+        "profile": "gui",
+        "name": "gui_i1_environment",
+        "script": "gui/smoke_tests/smoke_i1_environment.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 462,
+        "log_sha256": "b7d763d80118b2b534b8beb33adf9d85c68c3b450be650e1137cb5d8ae139774",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\linux-evidence-11.4.3\\linux-gui\\20261031-054849-f6df127b\\report.json"
+      },
+      {
+        "artifact": "linux-evidence-11.4.3",
+        "profile": "gui",
+        "name": "gui_k1_panel",
+        "script": "gui/smoke_tests/smoke_k1_panel.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 1598,
+        "log_sha256": "ff70c92bf5b273429829f417b5ebaa47b5204c9bde5e3f00f72d6cd87e516622",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\linux-evidence-11.4.3\\linux-gui\\20261031-054849-f6df127b\\report.json"
+      },
+      {
+        "artifact": "linux-evidence-11.4.3",
+        "profile": "gui",
+        "name": "gui_k1_window",
+        "script": "gui/smoke_tests/smoke_k1_workflow.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 38,
+        "log_sha256": "6aa1643806d230607a526e5af26b5f6afaec9f3b47e4d3cac6fa679dc6275048",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\linux-evidence-11.4.3\\linux-gui\\20261031-054849-f6df127b\\report.json"
+      },
+      {
+        "artifact": "linux-evidence-11.4.3",
+        "profile": "gui",
+        "name": "gui_f4_entrypoints",
+        "script": "gui/smoke_tests/smoke_f4_entrypoints.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 62,
+        "log_sha256": "64e5e07d3da0a4b1ab4b95181a4a4cc6c467bb7e146e2624973f784fa54f7ff5",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\linux-evidence-11.4.3\\linux-gui\\20261031-054849-f6df127b\\report.json"
+      },
+      {
+        "artifact": "linux-evidence-11.4.3",
+        "profile": "gui",
+        "name": "gui_project_snapshot_restore",
+        "script": "gui/smoke_tests/smoke_project_snapshot_restore.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 61,
+        "log_sha256": "c1823444e5ca311b4eef8481300fb2f8dd06a95686606b1e52e48eff9c6be670",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\linux-evidence-11.4.3\\linux-gui\\20261031-054849-f6df127b\\report.json"
+      },
+      {
+        "artifact": "linux-evidence-11.4.3",
+        "profile": "gui",
+        "name": "gui_new_simulation_wizard",
+        "script": "gui/smoke_tests/smoke_new_simulation_wizard.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 60,
+        "log_sha256": "7c4c3b62af2ec812ff0f820d89f3c4eeb2595dd0d06f4774725d2b1bbb30d26a",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\linux-evidence-11.4.3\\linux-gui\\20261031-054849-f6df127b\\report.json"
+      },
+      {
+        "artifact": "linux-evidence-11.4.3",
+        "profile": "gui",
+        "name": "q1_public_paths",
+        "script": "gui/smoke_tests/smoke_q1_public_paths.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 32,
+        "log_sha256": "ad178c80366a2eb55965b286db3c24daf20ff3d2a69c6bcf4bada7b9d8d5c1c6",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\linux-evidence-11.4.3\\linux-gui\\20261031-054849-f6df127b\\report.json"
+      },
+      {
+        "artifact": "linux-evidence-11.4.3",
+        "profile": "integration",
+        "name": "backend_working_directory",
+        "script": "scripts/test_backend_working_directory.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 77,
+        "log_sha256": "bca9d3c1c1d0b5b9650594bf9d4002ecfed146c322131f13dde23c25269b24a0",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\linux-evidence-11.4.3\\linux-integration\\20261031-060643-9c306473\\report.json"
+      },
+      {
+        "artifact": "linux-evidence-11.4.3",
+        "profile": "integration",
+        "name": "k1_history_scope_backend",
+        "script": "gui/smoke_tests/smoke_k1_history_scope.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 150,
+        "log_sha256": "99a005b786406d01956b1bf1971076df1e6ff9972b90b88751c7ac6b4c63bc6a",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\linux-evidence-11.4.3\\linux-integration\\20261031-060643-9c306473\\report.json"
+      },
+      {
+        "artifact": "linux-evidence-11.4.3",
+        "profile": "integration",
+        "name": "k1_workflow_backend",
+        "script": "scripts/test_k1_workflow.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 455,
+        "log_sha256": "36ca5b44edd01055bf411d9a0a57047b2845b12fe70fb620be6732a86d340385",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\linux-evidence-11.4.3\\linux-integration\\20261031-060643-9c306473\\report.json"
+      },
+      {
+        "artifact": "linux-evidence-11.4.3",
+        "profile": "integration",
+        "name": "k1_roundtrip",
+        "script": "scripts/test_k1_roundtrip.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 34,
+        "log_sha256": "833c67749320394f768b64eeefafced1ae5e2155d793f37e93f5e849bcb430d9",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\linux-evidence-11.4.3\\linux-integration\\20261031-060643-9c306473\\report.json"
+      },
+      {
+        "artifact": "linux-evidence-11.4.3",
+        "profile": "integration",
+        "name": "k1_relocation_backend",
+        "script": "gui/smoke_tests/smoke_k1_relocation.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 163,
+        "log_sha256": "b916ac27c8b3e8866d773fa2bf74708041f0cb16c38cc512f0941ed1108792db",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\linux-evidence-11.4.3\\linux-integration\\20261031-060643-9c306473\\report.json"
+      },
+      {
+        "artifact": "linux-evidence-11.4.3",
+        "profile": "integration",
+        "name": "k1_cli_backend",
+        "script": "scripts/test_k1_cli.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 160,
+        "log_sha256": "d42a6759689cfb8e44a83ef58681feb2d53f1a60fc3baece8f1e95bbc3dee235",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\linux-evidence-11.4.3\\linux-integration\\20261031-060643-9c306473\\report.json"
+      },
+      {
+        "artifact": "linux-evidence-11.4.3",
+        "profile": "integration",
+        "name": "gui_i1_environment_backend",
+        "script": "gui/smoke_tests/smoke_i1_environment.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 466,
+        "log_sha256": "3ef67f857ea71d1de4613a9bb31b110ed91fc9f2b67dbdc8ea133b0e986622ad",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\linux-evidence-11.4.3\\linux-integration\\20261031-060643-9c306473\\report.json"
+      },
+      {
+        "artifact": "linux-evidence-11.4.3",
+        "profile": "integration",
+        "name": "gui_f4_inspect_backend",
+        "script": "gui/smoke_tests/smoke_f4_inspect_backend.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 49,
+        "log_sha256": "f3ba64324f95562b77dcd472cf8f78480bf3aac61813241ea6c938ccf81aa831",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\linux-evidence-11.4.3\\linux-integration\\20261031-060643-9c306473\\report.json"
+      },
+      {
+        "artifact": "linux-evidence-11.4.3",
+        "profile": "integration",
+        "name": "gui_run_inputs",
+        "script": "gui/smoke_tests/smoke_run_input_modes.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 108,
+        "log_sha256": "bdb07e12bf86118af3e41bd59d2616a3dca0980ae8b09f3ab9d3dd7fe2ccecfc",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\linux-evidence-11.4.3\\linux-integration\\20261031-060643-9c306473\\report.json"
+      },
+      {
+        "artifact": "linux-evidence-11.4.3",
+        "profile": "static",
+        "name": "backend_launch",
+        "script": "scripts/test_backend_launch.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 151,
+        "log_sha256": "be4eaedac3b8ca5dbfc3d2be57d1f41e644ae2f56a2de5a05ca3c8796789c407",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\linux-evidence-11.4.3\\linux-static\\20261031-054728-713dee50\\report.json"
+      },
+      {
+        "artifact": "linux-evidence-11.4.3",
+        "profile": "static",
+        "name": "k1_bundle",
+        "script": "scripts/test_k1_bundle.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 530,
+        "log_sha256": "586241fa60bf4a7c945204e32915299faf332c4fe31ccc2194ff052730d64788",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\linux-evidence-11.4.3\\linux-static\\20261031-054728-713dee50\\report.json"
+      },
+      {
+        "artifact": "linux-evidence-11.4.3",
+        "profile": "static",
+        "name": "k1_staging_alias",
+        "script": "scripts/test_k1_staging_alias.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 14,
+        "log_sha256": "bff4827cfdf32d51d241def2678c06d14013017997c37c1f07509b3421c834ee",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\linux-evidence-11.4.3\\linux-static\\20261031-054728-713dee50\\report.json"
+      },
+      {
+        "artifact": "linux-evidence-11.4.3",
+        "profile": "static",
+        "name": "i1_environment",
+        "script": "scripts/test_i1_environment.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 142,
+        "log_sha256": "caa04d743318a537394af1091904eaab1ce2adb796c996a7db9b6cefd1f40763",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\linux-evidence-11.4.3\\linux-static\\20261031-054728-713dee50\\report.json"
+      },
+      {
+        "artifact": "m0-report-windows-latest",
+        "profile": "static",
+        "name": "backend_launch",
+        "script": "scripts/test_backend_launch.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 151,
+        "log_sha256": "54b558bb8e4a9516e828ae519936edf792efa282f62c61926ea8e4055a8a8ce3",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\m0-report-windows-latest\\20261031-054549-abbb7bf8\\report.json"
+      },
+      {
+        "artifact": "m0-report-windows-latest",
+        "profile": "static",
+        "name": "k1_bundle",
+        "script": "scripts/test_k1_bundle.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 529,
+        "log_sha256": "b46e71a1fd328672d16726b2f40e0bb71f70e0c36f07e6d71deb53ec418fe211",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\m0-report-windows-latest\\20261031-054549-abbb7bf8\\report.json"
+      },
+      {
+        "artifact": "m0-report-windows-latest",
+        "profile": "static",
+        "name": "k1_staging_alias",
+        "script": "scripts/test_k1_staging_alias.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 14,
+        "log_sha256": "c326f7cb98d533764b8a5c88323c5d2d1e2f80a84f1646eb58533c66c98fb972",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\m0-report-windows-latest\\20261031-054549-abbb7bf8\\report.json"
+      },
+      {
+        "artifact": "m0-report-windows-latest",
+        "profile": "static",
+        "name": "i1_environment",
+        "script": "scripts/test_i1_environment.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 142,
+        "log_sha256": "caa04d743318a537394af1091904eaab1ce2adb796c996a7db9b6cefd1f40763",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\m0-report-windows-latest\\20261031-054549-abbb7bf8\\report.json"
+      },
+      {
+        "artifact": "m0-report-windows-latest",
+        "profile": "gui",
+        "name": "gui_backend_launch",
+        "script": "gui/smoke_tests/smoke_backend_launch.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 74,
+        "log_sha256": "d787b4d356d9e6b6d53819ba0c7e04df552022ccaa8f96e1af2fae715bbb14f0",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\m0-report-windows-latest\\20261031-054817-bb682cfc\\report.json"
+      },
+      {
+        "artifact": "m0-report-windows-latest",
+        "profile": "gui",
+        "name": "gui_k1_workflow",
+        "script": "scripts/test_k1_workflow.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 230,
+        "log_sha256": "9bf154ddf83a3fe4e3404e4ae86358d3117877554721f669e24f544c78e65900",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\m0-report-windows-latest\\20261031-054817-bb682cfc\\report.json"
+      },
+      {
+        "artifact": "m0-report-windows-latest",
+        "profile": "gui",
+        "name": "gui_k1_terminal_publication",
+        "script": "scripts/test_k1_terminal_publication.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 257,
+        "log_sha256": "c099b07ece57f4227bbc3ff5afb0b63b35f6f07e644cbd6b6a6fd377b44ac16b",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\m0-report-windows-latest\\20261031-054817-bb682cfc\\report.json"
+      },
+      {
+        "artifact": "m0-report-windows-latest",
+        "profile": "gui",
+        "name": "gui_k1_history_scope",
+        "script": "gui/smoke_tests/smoke_k1_history_scope.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 78,
+        "log_sha256": "cf3f792c40e35b9d1e787627a6a03b1e6b05e775688c00eb2fb042c21fac1df6",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\m0-report-windows-latest\\20261031-054817-bb682cfc\\report.json"
+      },
+      {
+        "artifact": "m0-report-windows-latest",
+        "profile": "gui",
+        "name": "gui_k1_relocation",
+        "script": "gui/smoke_tests/smoke_k1_relocation.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 138,
+        "log_sha256": "4793ec0a392f7bb451908d738fa894d296b9af46d9e069ec3653ca21a686a5a6",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\m0-report-windows-latest\\20261031-054817-bb682cfc\\report.json"
+      },
+      {
+        "artifact": "m0-report-windows-latest",
+        "profile": "gui",
+        "name": "gui_k1_cli",
+        "script": "scripts/test_k1_cli.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 124,
+        "log_sha256": "dac5a505ad536cc4d21bb39685ea471d736f138ba3ea33f62f5ed3bac2f61838",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\m0-report-windows-latest\\20261031-054817-bb682cfc\\report.json"
+      },
+      {
+        "artifact": "m0-report-windows-latest",
+        "profile": "gui",
+        "name": "gui_i1_environment",
+        "script": "gui/smoke_tests/smoke_i1_environment.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 458,
+        "log_sha256": "32e76a423aec8978699915795aebdd7bffd9f016c255fef3762c1e6d60877a24",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\m0-report-windows-latest\\20261031-054817-bb682cfc\\report.json"
+      },
+      {
+        "artifact": "m0-report-windows-latest",
+        "profile": "gui",
+        "name": "gui_k1_panel",
+        "script": "gui/smoke_tests/smoke_k1_panel.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 1598,
+        "log_sha256": "52173ecb582ca3b64f513a007fc70a51847960ad7fbacf971cfa8e61d2439766",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\m0-report-windows-latest\\20261031-054817-bb682cfc\\report.json"
+      },
+      {
+        "artifact": "m0-report-windows-latest",
+        "profile": "gui",
+        "name": "gui_k1_window",
+        "script": "gui/smoke_tests/smoke_k1_workflow.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 38,
+        "log_sha256": "f1b5ffad1c0f42a8b4215cbf1ca0e2ae361e3206c4215d3afa855605eb1602ed",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\m0-report-windows-latest\\20261031-054817-bb682cfc\\report.json"
+      },
+      {
+        "artifact": "m0-report-windows-latest",
+        "profile": "gui",
+        "name": "gui_f4_entrypoints",
+        "script": "gui/smoke_tests/smoke_f4_entrypoints.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 62,
+        "log_sha256": "4ed31158675fbc0c4d21ae844ff8d22b0bb5c55a9c2d4497d59c7e309fba8c7f",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\m0-report-windows-latest\\20261031-054817-bb682cfc\\report.json"
+      },
+      {
+        "artifact": "m0-report-windows-latest",
+        "profile": "gui",
+        "name": "gui_project_snapshot_restore",
+        "script": "gui/smoke_tests/smoke_project_snapshot_restore.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 61,
+        "log_sha256": "61f91ac21885c0b75f59e09dfdf8d4338ef87151475d128a1e456453a552fe6c",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\m0-report-windows-latest\\20261031-054817-bb682cfc\\report.json"
+      },
+      {
+        "artifact": "m0-report-windows-latest",
+        "profile": "gui",
+        "name": "gui_new_simulation_wizard",
+        "script": "gui/smoke_tests/smoke_new_simulation_wizard.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 60,
+        "log_sha256": "373e68f6967414c765e60d54bfdd250292b8d8158938026c07144e4b103b76e9",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\m0-report-windows-latest\\20261031-054817-bb682cfc\\report.json"
+      },
+      {
+        "artifact": "m0-report-windows-latest",
+        "profile": "gui",
+        "name": "q1_public_paths",
+        "script": "gui/smoke_tests/smoke_q1_public_paths.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 32,
+        "log_sha256": "636b256e9a102277250fe9ddbee25ddb867e73c15e6792cc49d021ced9504070",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\m0-report-windows-latest\\20261031-054817-bb682cfc\\report.json"
+      },
+      {
+        "artifact": "m0-report-ubuntu-latest",
+        "profile": "static",
+        "name": "backend_launch",
+        "script": "scripts/test_backend_launch.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 151,
+        "log_sha256": "be4eaedac3b8ca5dbfc3d2be57d1f41e644ae2f56a2de5a05ca3c8796789c407",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\m0-report-ubuntu-latest\\20261031-054537-b1f7a5b7\\report.json"
+      },
+      {
+        "artifact": "m0-report-ubuntu-latest",
+        "profile": "static",
+        "name": "k1_bundle",
+        "script": "scripts/test_k1_bundle.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 530,
+        "log_sha256": "592f8b742ef26ab7cbd7f009f496f0fbdeb9bacee20f8427f6b2ebc582f19788",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\m0-report-ubuntu-latest\\20261031-054537-b1f7a5b7\\report.json"
+      },
+      {
+        "artifact": "m0-report-ubuntu-latest",
+        "profile": "static",
+        "name": "k1_staging_alias",
+        "script": "scripts/test_k1_staging_alias.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 14,
+        "log_sha256": "bff4827cfdf32d51d241def2678c06d14013017997c37c1f07509b3421c834ee",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\m0-report-ubuntu-latest\\20261031-054537-b1f7a5b7\\report.json"
+      },
+      {
+        "artifact": "m0-report-ubuntu-latest",
+        "profile": "static",
+        "name": "i1_environment",
+        "script": "scripts/test_i1_environment.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 142,
+        "log_sha256": "caa04d743318a537394af1091904eaab1ce2adb796c996a7db9b6cefd1f40763",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\m0-report-ubuntu-latest\\20261031-054537-b1f7a5b7\\report.json"
+      },
+      {
+        "artifact": "m0-report-ubuntu-latest",
+        "profile": "gui",
+        "name": "gui_backend_launch",
+        "script": "gui/smoke_tests/smoke_backend_launch.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 74,
+        "log_sha256": "d787b4d356d9e6b6d53819ba0c7e04df552022ccaa8f96e1af2fae715bbb14f0",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\m0-report-ubuntu-latest\\20261031-054708-e465ee05\\report.json"
+      },
+      {
+        "artifact": "m0-report-ubuntu-latest",
+        "profile": "gui",
+        "name": "gui_k1_workflow",
+        "script": "scripts/test_k1_workflow.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 230,
+        "log_sha256": "547df1a5367b315b79ff14810d4ae085bf12c8385300322c5fdb783d35c99cf2",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\m0-report-ubuntu-latest\\20261031-054708-e465ee05\\report.json"
+      },
+      {
+        "artifact": "m0-report-ubuntu-latest",
+        "profile": "gui",
+        "name": "gui_k1_terminal_publication",
+        "script": "scripts/test_k1_terminal_publication.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 257,
+        "log_sha256": "42c4324e694b9f15a576d85df46962593b409ac6dd05ba41dd7e6999d31d25f6",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\m0-report-ubuntu-latest\\20261031-054708-e465ee05\\report.json"
+      },
+      {
+        "artifact": "m0-report-ubuntu-latest",
+        "profile": "gui",
+        "name": "gui_k1_history_scope",
+        "script": "gui/smoke_tests/smoke_k1_history_scope.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 78,
+        "log_sha256": "cf3f792c40e35b9d1e787627a6a03b1e6b05e775688c00eb2fb042c21fac1df6",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\m0-report-ubuntu-latest\\20261031-054708-e465ee05\\report.json"
+      },
+      {
+        "artifact": "m0-report-ubuntu-latest",
+        "profile": "gui",
+        "name": "gui_k1_relocation",
+        "script": "gui/smoke_tests/smoke_k1_relocation.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 138,
+        "log_sha256": "4793ec0a392f7bb451908d738fa894d296b9af46d9e069ec3653ca21a686a5a6",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\m0-report-ubuntu-latest\\20261031-054708-e465ee05\\report.json"
+      },
+      {
+        "artifact": "m0-report-ubuntu-latest",
+        "profile": "gui",
+        "name": "gui_k1_cli",
+        "script": "scripts/test_k1_cli.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 124,
+        "log_sha256": "dac5a505ad536cc4d21bb39685ea471d736f138ba3ea33f62f5ed3bac2f61838",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\m0-report-ubuntu-latest\\20261031-054708-e465ee05\\report.json"
+      },
+      {
+        "artifact": "m0-report-ubuntu-latest",
+        "profile": "gui",
+        "name": "gui_i1_environment",
+        "script": "gui/smoke_tests/smoke_i1_environment.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 462,
+        "log_sha256": "b7d763d80118b2b534b8beb33adf9d85c68c3b450be650e1137cb5d8ae139774",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\m0-report-ubuntu-latest\\20261031-054708-e465ee05\\report.json"
+      },
+      {
+        "artifact": "m0-report-ubuntu-latest",
+        "profile": "gui",
+        "name": "gui_k1_panel",
+        "script": "gui/smoke_tests/smoke_k1_panel.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 1598,
+        "log_sha256": "ff70c92bf5b273429829f417b5ebaa47b5204c9bde5e3f00f72d6cd87e516622",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\m0-report-ubuntu-latest\\20261031-054708-e465ee05\\report.json"
+      },
+      {
+        "artifact": "m0-report-ubuntu-latest",
+        "profile": "gui",
+        "name": "gui_k1_window",
+        "script": "gui/smoke_tests/smoke_k1_workflow.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 38,
+        "log_sha256": "6aa1643806d230607a526e5af26b5f6afaec9f3b47e4d3cac6fa679dc6275048",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\m0-report-ubuntu-latest\\20261031-054708-e465ee05\\report.json"
+      },
+      {
+        "artifact": "m0-report-ubuntu-latest",
+        "profile": "gui",
+        "name": "gui_f4_entrypoints",
+        "script": "gui/smoke_tests/smoke_f4_entrypoints.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 62,
+        "log_sha256": "64e5e07d3da0a4b1ab4b95181a4a4cc6c467bb7e146e2624973f784fa54f7ff5",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\m0-report-ubuntu-latest\\20261031-054708-e465ee05\\report.json"
+      },
+      {
+        "artifact": "m0-report-ubuntu-latest",
+        "profile": "gui",
+        "name": "gui_project_snapshot_restore",
+        "script": "gui/smoke_tests/smoke_project_snapshot_restore.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 61,
+        "log_sha256": "c1823444e5ca311b4eef8481300fb2f8dd06a95686606b1e52e48eff9c6be670",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\m0-report-ubuntu-latest\\20261031-054708-e465ee05\\report.json"
+      },
+      {
+        "artifact": "m0-report-ubuntu-latest",
+        "profile": "gui",
+        "name": "gui_new_simulation_wizard",
+        "script": "gui/smoke_tests/smoke_new_simulation_wizard.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 60,
+        "log_sha256": "7c4c3b62af2ec812ff0f820d89f3c4eeb2595dd0d06f4774725d2b1bbb30d26a",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\m0-report-ubuntu-latest\\20261031-054708-e465ee05\\report.json"
+      },
+      {
+        "artifact": "m0-report-ubuntu-latest",
+        "profile": "gui",
+        "name": "q1_public_paths",
+        "script": "gui/smoke_tests/smoke_q1_public_paths.py",
+        "status": "pass",
+        "exit_code": 0,
+        "assertions_executed": 32,
+        "log_sha256": "ad178c80366a2eb55965b286db3c24daf20ff3d2a69c6bcf4bada7b9d8d5c1c6",
+        "report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\ci\\m0-report-ubuntu-latest\\20261031-054708-e465ee05\\report.json"
+      }
+    ],
+    "limitation": "Existing CI executions cited; no additional test execution claimed. Native and physical validation are separate."
+  },
+  "remaining_parent_scope": [
+    "widgets/experiment_panel.py and smoke_k1_panel.py final independent logic review",
+    "widgets/environment_dialog.py final UI implementation",
+    "early K1 RunPage/i18n/window/run.py/window/shell.py deltas outside already signed historical-display scope",
+    "human documents final independent signing",
+    "previously refused resource-boundary independent review remains untouched and unresolved"
+  ],
+  "resource_boundary_review_gap_remains": true,
+  "K1_stage_acceptance": "not_decided"
+}

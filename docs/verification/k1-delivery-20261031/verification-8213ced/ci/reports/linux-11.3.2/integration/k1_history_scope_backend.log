@@ -1,0 +1,21 @@
+seed counterexample: chip= ● Previous run (configuration changed): success
+seed counterexample: result= Previous run (configuration changed): Result: success
+seed counterexample: progress= Previous run (configuration changed): Run 0: 3/3 events | Progress end | 74.6 events/s | ETA 0.0 s | Result: success
+smoke_k1_history_scope: OK; real 3/3 twice, synthetic identity/status projections separated
+G4USIM_ASSERTS=150
+/home/runner/work/G4UniversalSim/G4UniversalSim/gui/g4usim_gui/output/plot_data.py:104: RuntimeWarning: Legacy/unverified directory: run_metadata.json is absent; file ownership and completeness are unverified.
+  for path in sorted(output_files(output, "scorer_statistics*.csv")):
+/home/runner/work/G4UniversalSim/G4UniversalSim/gui/g4usim_gui/output/plot_data.py:113: RuntimeWarning: Legacy/unverified directory: run_metadata.json is absent; file ownership and completeness are unverified.
+  for path in sorted(output_files(output, "scoring_mesh*.csv")):
+/home/runner/work/G4UniversalSim/G4UniversalSim/gui/g4usim_gui/output/plot_data.py:119: RuntimeWarning: Legacy/unverified directory: run_metadata.json is absent; file ownership and completeness are unverified.
+  for path in sorted(output_files(output, "g4usim*.root")):
+/home/runner/work/G4UniversalSim/G4UniversalSim/gui/g4usim_gui/output/plot_data.py:140: RuntimeWarning: Legacy/unverified directory: run_metadata.json is absent; file ownership and completeness are unverified.
+  runs = sorted({_run_of(p.stem) for p in output_files(output, f"{stem}_t*.csv")})
+/home/runner/work/G4UniversalSim/G4UniversalSim/gui/g4usim_gui/output/plot_data.py:104: RuntimeWarning: Legacy/unverified directory: run_metadata.json is absent; file ownership and completeness are unverified.
+  for path in sorted(output_files(output, "scorer_statistics*.csv")):
+/home/runner/work/G4UniversalSim/G4UniversalSim/gui/g4usim_gui/output/plot_data.py:113: RuntimeWarning: Legacy/unverified directory: run_metadata.json is absent; file ownership and completeness are unverified.
+  for path in sorted(output_files(output, "scoring_mesh*.csv")):
+/home/runner/work/G4UniversalSim/G4UniversalSim/gui/g4usim_gui/output/plot_data.py:119: RuntimeWarning: Legacy/unverified directory: run_metadata.json is absent; file ownership and completeness are unverified.
+  for path in sorted(output_files(output, "g4usim*.root")):
+/home/runner/work/G4UniversalSim/G4UniversalSim/gui/g4usim_gui/output/plot_data.py:140: RuntimeWarning: Legacy/unverified directory: run_metadata.json is absent; file ownership and completeness are unverified.
+  runs = sorted({_run_of(p.stem) for p in output_files(output, f"{stem}_t*.csv")})

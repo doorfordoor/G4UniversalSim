@@ -1,0 +1,43 @@
+{
+  "schema": "k1_actual_export_cli_replay_corrected_selection_v2",
+  "head": "4167c4421b13464dec54213ea7652ee321868c4e",
+  "original_receipt_sha256": "36905f99a431aaa0e76bcdcf91aa12acccad904f40f0a00d9d3a771cf6904a77",
+  "original_process_exit_code": 0,
+  "parent_postcheck_failure": "First helper incorrectly selected all action==run records including imported stale history; failed len==1 after original receipt was written. No rerun, no product failure inferred.",
+  "selection": "CLI returned record_id, then exact on-disk record and actual input/summary validation",
+  "record_id": "be4a8c5b6ac64c5195212073234f4d3f",
+  "record_file": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\replay-cli\\runs\\experiment-records\\be4a8c5b6ac64c5195212073234f4d3f\\record.json",
+  "record_sha256": "ae0f69d618534f7c3bc943cc8c1add6c3019d02fe40d45a0c166a2f2c429b439",
+  "result": {
+    "completed_events": 3,
+    "planned_events": 3,
+    "reason": "Events completed as planned.",
+    "run_count": 1,
+    "state": "success",
+    "summary_status": "completed"
+  },
+  "actual_inputs": [
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\replay-cli\\runs\\experiment-records\\be4a8c5b6ac64c5195212073234f4d3f\\execution-inputs\\resources\\r0000-r0006-main.ini",
+      "sha256": "2a5b6729ec113664f651dfafb16eef5d1363ca0d812dbf0fe46ed9006cdafa6d"
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\replay-cli\\runs\\experiment-records\\be4a8c5b6ac64c5195212073234f4d3f\\execution-inputs\\resources\\r0001-r0007-material.ini",
+      "sha256": "d77923cdd8a0020c205b2287cfcbbe6e05b09d8e65359c33278a743c51361665"
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\replay-cli\\runs\\experiment-records\\be4a8c5b6ac64c5195212073234f4d3f\\execution-inputs\\resources\\r0002-r0008-geometry.ini",
+      "sha256": "e6d77380889a38f16b6c2ad2f309bd33edb81060d29b30b3055b3f0b6e7e5a2e"
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\replay-cli\\runs\\experiment-records\\be4a8c5b6ac64c5195212073234f4d3f\\execution-inputs\\resources\\r0003-r0009-run.mac",
+      "sha256": "94bb20a5221f8851fee38ca2ce990ec0bef841f8879c4b7327fc82c669dbba5a"
+    }
+  ],
+  "summary_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\replay-cli\\runs\\experiment-records\\be4a8c5b6ac64c5195212073234f4d3f\\output\\run_summary.txt",
+  "summary_sha256": "40533d3db19e71437007f19f4615db0cd2ca94b3c17c91ce4dce854cf499e15e",
+  "imported_history_count": 27,
+  "stdout_log_sha256": "e1697af755d51078efc0d6c0eaa4b1035d05544980983000327df3d2a12117ec",
+  "entry_sha256": "d6bea3d772050305bca3b9bfa4d3d0bc85cdbd3f5fdc621795ee3ef193b452ff",
+  "scope": "actual replay of sixth GUI-exported package; execution only, not new physics comparison"
+}

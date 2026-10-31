@@ -1,0 +1,24 @@
+{
+  "schema": "k1_parent_independent_encoding_review_v1",
+  "timestamp": "2026-10-31T07:35:34.516351+00:00",
+  "reviewer": "parent, not candidate author",
+  "verdict": "approved_one_line_encoding_fix_pending_new_formal_freeze",
+  "scope": "diagnostic JSON serialization in one existing smoke; no product logic changes",
+  "candidate_sha256": "e653d5d67d50ba2956a5e6b16d378b74abf085075c8093800b85b2c1d71c6632",
+  "manifest_sha256": "4d404f1c3d204c3dcd0309ca9a5db41ceef074aeef51da808785e19d6b139b01",
+  "patch_sha256": "903d079875c6933f0321b2707bfd95a225a4ad3d20a5da04ef76b179ebef2fe8",
+  "original_failure": "CP1252 diagnostic print, before cwd assertion; original report untouched",
+  "observed_receipts": {
+    "baseline_exit": 1,
+    "baseline_assertions": 76,
+    "candidate_exit": 0,
+    "candidate_assertions": 178,
+    "diagnostic_lines": 10,
+    "all_assert_AST_sites_unchanged": 74
+  },
+  "review_method": "read surrounding test and direct subprocess harness; independently hash original CI and candidate evidence, exact byte delta, AST assertions and parse raw diagnostic logs; no tests rerun",
+  "findings": [],
+  "resource_boundary_review": false,
+  "phase_complete": false,
+  "usage": "unknown"
+}

@@ -1,0 +1,64 @@
+# K1 terminal测试默认参数与等待：独立窄diff复核
+
+判定：**通过本次 test-defaults-r1 测试窄diff，无必须返工项。** 本判定只涉及新增terminal回归测试的默认参数、证据目录、失败聚合与有界等待；六行产品候选字节未变，沿用此前产品独立审查结论。GUI测试登记与新集成专项由主线程负责，本审查不写正式文件、不跑全量、不操作窗口或宿主进程、不提交。
+
+实际模型 gpt-6.1-sol；reasoning_effort=medium；消耗未知。
+
+锁定新测试 SHA256：b4fc161221ba6e69cb2c483c2955bf7cec6deca4f18d6a5c739e6ed5168d9ae9。产品候选仍为8419770c31176e35d53d5744202bb92d1641cce72714fcbc3bf27c326b7da009；candidate.diff仍为e622e008f864a2006d867a3c477107f162a8e52ac150108898aac38f5616ca1e。
+
+## 1. 聚合失败没有降门禁
+
+独立解析旧测试备份test-before-defaults.py与新测试的AST，按完整Assert节点表达式及重复次数比较：原26个Assert节点全部保留，新27个；唯一新增是最终all(row.status == passed)断言。没有移除completed恰一次、busy释放、owner线程、真实持久化/回调相等、晚事实、后续动作及close/watch/job断言。
+
+每个exercise在正常返回时才追加passed；包括AssertionError在内的Exception被捕获为failed并保留完整traceback，逐例写case-results.json，继续剩余反例。最后保存总receipt并执行all-passed门禁；任一failed都使脚本退出非零。不是return0、xfail、skip或仅打印错误。默认modes固定9例，不存在空结果列表的all真而伪绿。写报告失败、中断/SystemExit等异常不被包装成成功；这些情况下也不能承诺一定凑齐9例，但不会变绿。
+
+写者在旧正式workflow时的裸默认与env默认原日志均实际完成9例、9 failed、exit1/101；证明“继续收集”没有吞掉失败。显式候选及重复/显式root三次是9 passed、exit0/257。五份日志原始字节SHA及其最终receipt SHA已逐一重算，与总receipt一致；没有把历史红例解释成当前正式源码的状态。
+
+## 2. 默认workflow没有偷偷选OUT候选
+
+--workflow默认值为ROOT/gui/g4usim_gui/core/experiment_workflow.py；ROOT由包含正式evidence_job.py的祖先定位。当前OUT只有候选workflow，不含evidence_job.py，所以不会因测试位于OUT而选该候选目录。代码没有“发现candidate.diff便自动回退候选”之类逻辑；显式--workflow仍可指定对照文件。
+
+应用前写者两份红例的最终receipt.workflow均明确为正式ROOT路径，非OUT候选路径。本次复核时主线程已授权并实际应用产品修复：当前正式workflow也为8419770c…，且存在其他已授权正式改动。本报告不重复写者当时的“git diff为空”作为当前事实，也未修改这些改动。
+
+本审查随后以**不带--workflow、不带--report-root**的原测试probe命令独立调用两次；报告workflow确为当前正式ROOT路径，两次均9例、exit0/257。这是当前已修复正式workflow的窄组件结果，与应用前旧正式workflow的exit1/101属于不同代码状态，不能互相回填。
+
+## 3. 证据目录与不覆盖
+
+未给--report-root时：优先G4USIM_TEST_EVIDENCE_DIR；变量缺失/为空则ROOT/out/collab/k1-terminal-publication；两者都加terminal-UUID子目录，并以mkdir(exist_ok=False)创建。重复环境基础路径不会复用同一测试根。显式路径expanduser/resolve后原样用作根，不加UUID且同样拒绝已经存在的目录。
+
+与统一runner的G4USIM_TEST_EVIDENCE_DIR注入相容：每例在runner指定基础根下产生一个自包含UUID子根，case-results.json、receipt.json与9个反例目录归属于本次调用，不覆盖上一轮。环境目录只影响写证据，不影响默认workflow选择。相对环境/显式路径按本次进程cwd解析；绝对路径仍保持绝对。
+
+独立执行结果：
+
+| 调用 | 结果 | 证据目录核对 |
+| --- | --- | --- |
+| 默认正式workflow，设置环境证据基础根 | exit0 / 257 / 9 passed | 生成terminal-f5cfbd05ac344c0d95d1044dd9078f00 |
+| 同样默认与同一环境根重复 | exit0 / 257 / 9 passed | 生成不同的terminal-cb9f6fe88ea848b0a1fb5c5f0b8cbdf1 |
+| 显式指向已存在且带sentinel的目录 | exit1，FileExistsError | sentinel字节未变，目录中没有新增文件 |
+
+该独立显式目录拒绝检查是真正的运行结果；写者另外成功显式root一轮的原receipt也已核对，其report_root确实等于所给路径。写者五轮evidence_root互不相同；旧测试、旧regression.diff与旧日志/receipt保留，不追改历史。
+
+独立证据：out/collab/k1-terminal-defaults-independent-evidence/20261031-122701/receipts.json；同目录保存default-formal.log、default-repeat.log、explicit-existing.log。前两次都未显式选择OUT workflow；没有新建/操纵任何QProcess或原生窗口，测试仅QtCore和受控QObject信号。
+
+## 4. 15秒主等待 / 30秒worker屏障
+
+主Qt wait_for默认从3秒到15秒，三个worker Event.wait从5秒到30秒；均继续以真实条件和明确超时失败作判据，不是超时后默认成功或固定sleep替代条件。较长worker屏障给主Qt线程执行有界检查/释放事件留下余量，降低CI排队抖动导致屏障自行超时的偶发失败，未放宽任何业务断言。
+
+异常路径finally先set release/verify_release，再等待当前job、执行隔离夹具收尾并等待closed，顺序没有改变。失败旧代码才使用的_active=None夹具清理仍发生在已记录断言失败之后；聚合层依旧记录failed，不能借此把产品卡死当通过。成功候选路径仍必须靠正常completed/busy/close断言通过。
+
+15/30秒是各阶段上限，不是整9例总预算，也不是对任意机器排队都能成功的承诺。主线程后续统一登记的外层case timeout仍应覆盖目标运行环境；本补丁未修改runner全局timeout或fail-on-skip门禁。旧verify已被替换而仍阻塞的通用worker追踪/排空边界，仍按此前产品复审报告保留；单纯调大等待不会新证明该边界，本次不扩大结论。
+
+## 最终范围
+
+本次仅新测试diff复查及OUT独立日志。产品不重写、不应用；正式源的变动由主线程负责，当前默认绿例不等于新冻结/全平台/原生取消已验收。后续GUI登记与集成专项交主线程。此前产品复审报告仍在out/collab/k1-cancel-ownership-independent.md，本报告补充新测试SHA与默认调用行为。
+
+## 核对的交付与独立证据SHA256
+
+- `out\collab\k1-c644bb1-cancel-candidate\scripts\test_k1_terminal_publication.py`：`b4fc161221ba6e69cb2c483c2955bf7cec6deca4f18d6a5c739e6ed5168d9ae9`
+- `out\collab\k1-c644bb1-cancel-candidate\test-defaults-r1\test-before-defaults.py`：`b14e9ad84704397425330da8674b53021d8eda18636bb761cb9f6297e2eb2653`
+- `out\collab\k1-c644bb1-cancel-candidate\test-defaults-r1\test-defaults.diff`：`fb24111a5da91a9bdb8a68ad04efa700d0fbf2a4e98cb69561b91881c4ed09c8`
+- `out\collab\k1-c644bb1-cancel-candidate\test-defaults-r1\delivery.md`：`09c37ac41956ac6e4d6b0074427f732bbfcf113f57ac20e868cd5af9839b1047`
+- `out\collab\k1-c644bb1-cancel-candidate\test-defaults-r1\receipt.json`：`b1d8d6f8e40f307ead1da096e36ffa68f52c0c28f2769ae2ecc9780e0629faa8`
+- `out\collab\k1-c644bb1-cancel-candidate\regression.diff`：`bdccb9e4cad8c381e015923f6e3391d8f3d2e4323e721f930ff00c62de3482d7`
+- `out\collab\k1-c644bb1-cancel-candidate\final-sha.json`：`4bb48f1e3da96a06f6478c5e5893ba6926874268c91176d8a8ed62c4f6d3534c`
+- `out\collab\k1-terminal-defaults-independent-evidence\20261031-122701\receipts.json`：`aa219e8bc1f157a5bef396e0b41692d14d37e57957bbc1d016e312b21b3b0c2d`

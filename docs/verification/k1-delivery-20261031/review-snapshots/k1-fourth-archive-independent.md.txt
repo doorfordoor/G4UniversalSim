@@ -1,0 +1,24 @@
+# 第四历史归档独立审核
+
+结论：**byte_evidence_verified_with_P3_derived_native_index_gap**。gpt-6.1-sol/medium，消耗未知。无测试重跑，不改旧归档，未进入资源链接边界专项。20项检查，失败项：[]。
+
+3176项selection（1247普通副本、1929 ZIP成员）均与源文件原字节/大小/SHA一致；final-files索引、生成索引及archive-verification哈希链匹配。四个官方ZIP逐字节保留，API声明大小/digest/提交/run ID与实际一致；全部成员逐项解压流SHA匹配，没有拿重打包ZIP冒充官方ZIP。新case ZIP成员与selection完整对应。全归档审核前后字节未变。
+
+| 官方ZIP | API声明=实际bytes | 原SHA | 成员数 |
+|---|---:|---|---:|
+|linux-evidence-11.3.2|26818749|f811ea092a95f426426838414105813ccc00f004ff187a364041dcc0ec2ce0dd|2110|
+|linux-evidence-11.4.3|26820257|40fd015b58f3a7f9f0771ddad6ff65d7b69d8d477111177a6f6e87212dc8c7a4|2111|
+|m0-report-windows-latest|450696|d63f0da117ba7da477aa096421a4809d9907371cf7b8551560000ef5e23e4e15|516|
+|m0-report-ubuntu-latest|400422|b439d23feb946481f3f4046be272b5004fce6c28cd4f04863579a4654ce7185f|517|
+
+13份归档报告全部按原字节独立复算逐例pass/exit0、非零v3 marker、日志SHA及断言总和，冻结head/source/tests一致；本机182/56976、原三道严格门禁收据及CI12profile原门禁/基线结果均保留。没有重跑测试或据复制路径伪造新门禁进程结果。
+
+**P3：native-record-facts.json为空（[]、3bytes），属于派生索引缺失，未发现原证据漏收。** 第四spec未给native_records，builder对第四仅遍历该可选列表，故产生空表。实际17项actions、17对应disk record、先前native独审原SHA、CLI成功record均完整可读且相符；15passed/1预期failed/1cancelled事实保留。不要覆盖旧档，建议独立补充索引并说明旧派生表不完整；本审JSON已提供核实后的17项索引及CLI身份，可作补充依据。
+
+I1第四16次执行范围收据与五类父审签字原SHA均存在；native实际17步与CLI证据仍按第四版本，未用第五修复回写旧P3。manifest继续phase_complete=false，旧取消原因P3、前端cwd P2/pending P3及required专项缺口均保留。
+
+identity/full-tracked-source-and-test-objects.json为16033条Git tree/object ID及大小/SHA身份清单，已与8213 Git树核对；它没有嵌入原始对象payload，不能单靠此JSON恢复完整源码。其scope提到raw Git object payloads应理解为对对象字节的哈希记录，建议补充说明避免误解，不要求向历史包加入EXE或重写旧档。
+
+完整3176项复制核对、四ZIP全部成员计数/结果、13份逐例报告、原SHA、17native+CLI、索引链与范围见同名JSON。此结论是历史归档证据完整性核对，非K1阶段通过。
+
+方法勘误：初次审核器将Windows路径分隔符直接与POSIX索引比较，并误要求总阶段标志k1_ci_verified=true，造成两项审核器误报；现已规范化路径并逐项核对12道真实profile门禁。原归档无相应字节缺陷，k1_ci_verified=false按原范围保留。16033条原Git对象大小/SHA也已逐项独立复算；审核器勘误另存同前缀auditor-correction.json。

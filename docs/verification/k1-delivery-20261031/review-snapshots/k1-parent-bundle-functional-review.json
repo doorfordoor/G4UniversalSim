@@ -1,0 +1,15 @@
+{
+  "kind": "independent ordinary bundle functionality review",
+  "reviewer": "main task; not bundle author",
+  "time": "2026-10-31T02:22:59.406151+00:00",
+  "files": {
+    "gui/g4usim_gui/core/experiment_bundle.py": "dae1bce3323a123b4014b854c012a2fb03dea65315ec3de9ce77f9270981a44c",
+    "scripts/test_k1_bundle.py": "972219a238188a9dde085e5ee05161d5494898ef16e62bdfd48ea69e0e63f05b"
+  },
+  "test_command": "python -B tools/test_assert_probe.py scripts/test_k1_bundle.py --component --evidence-root out/collab/k1-parent-bundle-functional-r1",
+  "exit_code": 0,
+  "assert_entries": 197,
+  "log": "out/collab/k1-parent-bundle-functional-r1.log",
+  "log_sha256": "2558787fe2090620be8880fe3dd4a1c088ab5f9928036fb4b003ea8bbc1431d6",
+  "boundary": "ordinary functional code inspection and existing component regression; not a retry or completion of upstream-refused review; no full-stage acceptance"
+}

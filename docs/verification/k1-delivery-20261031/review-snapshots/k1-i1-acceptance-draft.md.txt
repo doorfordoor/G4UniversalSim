@@ -1,0 +1,77 @@
+# I1 独立范围与验收证据草稿
+
+2026-10-31；gpt-6.1-sol/medium（原 ledger），消耗未知。仅复用已有源码独立审查及第三本地/归档CI原报告，不重跑测试、不写tracked文件或正式报告。
+
+**状态：draft，不能签I1最终完成。** 第三冻结I1四类用例证据自洽，核心实现不是占位；五个相关产品/测试文件在第三→第四冻结原字节不变。但最终验收必须绑定第四冻结8213ced419c8c6bca512bf8413b674c1265cf3bf的完整矩阵与本次主负责人assistant通过Sky的实际操作与观察，不能以第三绿例替代。第四矩阵仍pending；主负责人assistant通过Sky的第四GUI单候选实际操作与观察已补，范围见下方更新。
+
+## 已实现范围及直接来源
+
+| 范围 | 当前实际实现与源码依据 | 不代表什么 |
+| --- | --- | --- |
+| 候选发现/多环境 | environment_discovery.py:337-387：显式候选或G4USIM_EXE/PATH；:137-141共用子进程PATH解析，按规范程序路径+env覆盖+SDK身份去重，顺序/错误候选保留 | 不递归扫描磁盘/注册表，不激活shell，不自动安装 |
+| 实际probe | :48-97直接subprocess.run、超时/原退出码/编码/输出限制；:258-333真实能力及数据命令，二进制前后SHA；:176-197读取PE/ELF头 | 不初始化、不跑事件、不做物理验证；架构未知不由主机位数猜 |
+| 严格事实协议 | :119-134拒绝NaN/Infinity、指数溢出和重复JSON键；:144起校验数据字段与required_complete一致性；能力协议另经BackendCapabilities | 不是任意stdout/exit0即可ready |
+| 缺库/加载失败 | :87-95识别Windows C0000135/C000007B与明确shared-library错误；spawn/timeout/protocol/encoding/output_limit分开 | 不是完整DLL/SO依赖闭包枚举、签名或所有加载错误的根因诊断 |
+| GUI发现/诊断/选择 | environment_dialog.py:24-39的真实QRunnable，refresh的QueuedConnection/代次边界；:214-218选择资格，:322-327深拷贝发选择，:346起关闭丢迟到回调 | 不拥有模拟进程/事务或安装器；component/offscreen不等同于实际可见窗口观察 |
+| 运行前消费者 | window/experiment.py:305-322打开对话框、以workspace transaction选择exe；core/experiment_workflow.py:611-628重新probe并要求ready | “选中路径”不是运行资格，UI选择不直接启动模拟 |
+
+原独立审查 out/collab/k1-i1-independent.md 的指数溢出/PATH去重两项P2已经有修前失败、修后独立复核关闭；旧草稿源码SHA只保留历史。本次以第三/第四实际字节重新绑定，不沿用旧行号/旧通过冒充现实现。后续8dot3/symlink修复仅规范测试的预期路径身份，未放宽产品解析，见k1-c644bb1-windows-independent-candidate-review.md。
+
+## 硬依赖：已做到什么，未做到什么
+
+- 环境服务本身是无Qt/Geant4 SDK的纯Python导入；GUI对话框需要项目已有PySide6。无后端/无SDK/无编译器仍可显示诊断，不制造ready。可执行文件、真实两次查询、严格协议与required数据状态都实际被消费，**不是只注册状态枚举或写空接口**。
+- 已构建后端的加载依赖：实际启动触发OS loader，返回码/明确诊断被分类。专项中“缺库”有合成状态、Windows状态码注入、真实Python子进程打印loader错误三类受控反例；不能将这些说成已在所有平台真实卸载/损坏Geant4动态库后验证过。
+- Geant4 required数据：真实后端Geant4DataLocator.cc:142-153通过G4FindDataDir及is_directory发现每项，I1检查返回协议与完整性。**只证明目录存在/选择事实**。dataset_content_identity明确unknown；experiment_identity.py:103-110、:148-151中的selected_path_sha256是规范路径文本的身份，不是数据集原字节hash。
+- SDK/主机工具：environment_discovery.py:200-227确实检查CMake配置/header位置，:231-250确实查PATH/执行版本命令；但build_verified始终false，**编译/链接级硬依赖验证未实现为I1保证**。不是有cmake/cl/g++或Geant4Config就称能构建；已构建后端运行不应强行要求本机装SDK/编译器。
+- 可选Python组件：find_spec/metadata给candidate/version，import_tested=false；不能称实际导入、二进制ABI或PyVista图形初始化已过。
+- UI允许能力协议可读且binary stable的路径被选中，即使数据不完整；这是显式选择语义，后续运行还需独立环境ready门禁。不能把partial/protocol_error的数据状态包装为“依赖全齐”。
+- 候选env覆盖E只用于探测/候选去重；不承诺runner默认环境E0继承该激活。选择exe不是机器环境导出/自动激活，多候选ready不能直接当E0运行通过。旧独立报告的E/E0边界继续保留。
+- 每命令直接子进程timeout/有限返回输出已实现；没有验证全进程树统一终止或临时输出文件全程磁盘配额，不扩大关闭/资源保证。
+
+## 第三冻结已有证据（仅历史）
+
+冻结11c92d361369cda4b2412451ff2841eff940f810；source890635b6…8a930a、tests86f3a759…5cf07e。只读取canonical归档，排除collection/artifacts镜像重复计数：13份原报告中16条I1用例记录，全部pass/exit0；逐条日志原SHA与探针marker匹配，head/source/tests均对第三清单。
+
+| 平台/归档 | static i1_environment | gui gui_i1_environment | backend i1_environment_backend | integration gui_i1_environment_backend |
+| --- | ---: | ---: | ---: | ---: |
+| 第三本地Windows | 142 | 464 | 145 | 468 |
+| Linux Geant4 11.3.2 CI | 142 | 462 | 145 | 466 |
+| Linux Geant4 11.4.3 CI | 142 | 462 | 145 | 466 |
+| M0 Ubuntu CI | 142 | 462 | 本profile不运行 | 本profile不运行 |
+| M0 Windows CI | 142 | 458 | 本profile不运行 | 本profile不运行 |
+
+static/gui均显式--component，含合成协议与真实Python/Qt组件；统一runner注入exe不会偷跑后端。backend/integration额外真正调用后端能力/数据查询，日志明确real backend；这些也不是初始化/物理验收。
+
+CI来源为第三Linux run41169369850与M0 run41169369890已归档报告；不重新下载/修改，整体归档签字归指定审计者。**M0 Windows GUI整份报告仍有5个非I1失败，I1 pass不使整份报告变绿**；第三native搬移失败同样独立保留。不同平台的执行入口数原样记录，不统一改为本地数量或拼成额外物理验证总量。
+
+JSON逐条保存13份report SHA、16条log原SHA/marker/状态/计数/所属整报告失败项，并明确真实probe与合成组件。旧实窗10-environment已有直接观察只作历史背景，本草稿不把它算作第四主负责人assistant观察。
+
+## 当前源码身份与第四最终门禁
+
+| 文件 | 第三→第四及当前相同的SHA-256 |
+| --- | --- |
+| core/environment_discovery.py | 7ee71c78b51d00cc79a112f82f51b5e9d929dc224719fa95e8a6427baa686f91 |
+| widgets/environment_dialog.py | a5de75745c822e8c6184f82a2942a8716119465f103d476f5d559cd03a9e79cc |
+| core/backend_launch.py | 9ae08264564111987a3627ec255706b9c419a2e58046732b35e49ea746d3e102 |
+| scripts/test_i1_environment.py | 9b31654e94ebf5c3344c126ab1c668bb1df865f7e8f840940ab97d6920c74851 |
+| gui/smoke_tests/smoke_i1_environment.py | 48ae5f2b7fba134b28c4b51efc63b70e0dd7b2dfb7676d70e1bdcc0ee7e1f870 |
+
+最终仍需：第四8213ced的完整矩阵、上述四用例在对应profile的实际新记录/原SHA/严格门禁及第四head/source/tests/EXE身份；主负责人assistant本次实窗I1布局、候选诊断/选择与“不启动模拟”的亲验；SDK/可选模块/数据hash等未知不隐去。第四tests指纹c964e2115782fbafd5df839b279405d120cb32d7fb7acb919791ef244dabd08f，不能拿第三tests指纹对应的绿报告盖上去，即使五个I1文件没改。
+
+**未给最终完成结论；第四矩阵pending，第四单候选主负责人assistant实际观察已有独立图像/身份核对。** 本次只写k1-i1-acceptance-draft.md/json，消耗未知。
+
+## 第四实窗更新（不替代第四矩阵）
+
+已用image工具直接查看第四visible/02-environment.jpg并读取environment-visible.txt：中文可读、一个当前后端候选、x86_64/Geant4 11.3.2/MSVC19.51.36246.0、必需数据目录found；明确只发现、不初始化或验证模拟，背景四层仍未观测。identity的head8213ced、启动clean、Qt windows、module_overrides={}、后端实际SHA6e02ce58…be8ff8ed与第四冻结一致；138项GUI原SHA及清单也匹配。
+
+主负责人assistant已通过Sky实际操作并观察“使用当前环境”前后无workflow actions；本轮actions原快照的第一条fields动作创建于05:48:15，晚于环境图观察05:48:04，随后inspect/init/generate/run属于父任务另行操作，不能倒算I1自动初始化。完整图像/text/identity/actions SHA与范围在JSON。
+
+本host的file_dialog_variant明确AA_DontUseNativeDialogs/Qt widgets；I1对话框是在真实windows QPA上的可见界面、无module override，但这不证明默认Windows目录chooser。此次只覆盖一个正常真实候选；缺库、多候选、超时等仍来自自动受控证据，不外推为现场多环境亲验。第四矩阵尚未完成，draft仍不签最终验收。
+
+### 观察者归属勘误
+
+本文所有第四实窗操作/原始观察均由主负责人assistant通过Sky完成，用户本人没有参与桌面或真人验收，也无待人工请求。本独立审查者仅对明确列出的图片实际调用view_image并只读核对收据。此前本草稿“用户亲验”写法不准确，现已在未冻结草稿中纠正，不追改既有正式报告。
+
+第四最终host随后正常关闭，launcher actual_process_exit=0及host-exit event_loop_exit=0原收据已在k1-fourth-native-audit.json核对。此关闭不把本草稿提升为I1最终验收；第四矩阵仍待独立报告，实际桌面操作/观察者归属仍为主负责人assistant/Sky，无真人验收。
+
+第四补充：182/56976正式矩阵及第四CI I1证据现已核对，完整范围收据为k1-i1-acceptance-fourth.md/json；本文较早pending描述为草稿过程状态，以第四收据为准。该收据仍非K1总体关闭。

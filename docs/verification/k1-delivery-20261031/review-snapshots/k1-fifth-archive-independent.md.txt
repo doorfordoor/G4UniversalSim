@@ -1,0 +1,15 @@
+# 第五历史归档独立审核
+
+结论：**passed_ordinary_byte_archive_audit**；失败项[]，无新增发现。gpt-6.1-sol/medium，消耗未知。未改归档/原报告、未重跑产品测试或门禁，不涉资源链接边界。
+
+2886项selection（951普通副本、1935 ZIP成员）与原源文件大小/原SHA一致；两棵源树非EXE项均被选择，显式EXE排除保留。final-files与所有生成索引、manifest/verification链成立；官方四ZIP的API声明大小/digest/head/run ID、原ZIP复制和逐成员原SHA匹配。完整归档审核前后原字节不变。
+
+13份报告及全部raw日志按pass/exit0/非零v3 marker/原SHA/逐例求和重算，与第五冻结身份一致；本机182/57010、原五道Windows门禁、CI12profile strict及原基线结果保持。没有重跑测试或凭复制路径冒充新门禁退出码。
+
+native-record-facts.json为真实非空3项，逐项与actions、disk record原SHA相符，三UUID各一次终态：576…强制结束62097、无summary/metadata、不补造计数；4aec…公开reason=experiment.cancelled，服务stopped但后端实际百万/百万；5528…新run成功3/3。两个完整输出的8项实际输入及F1登记hashed产物均能从归档按原SHA/大小闭合引用；强制结束残留不冒充完整F1。
+
+第五I1范围16次执行和五类独审收据均按原SHA保留。Git tree及全部16033对象大小/原SHA逐项核对。第四完整实窗仍是历史映射，第五未重做I1界面，不冒称用户亲验。
+
+既有前端cwd P2/pending P3及未完成required专项仍在，phase_complete=false；本收据仅为普通历史字节归档通过，不是K1总体通过。完整复制/ZIP/报告逐例及native/F1引用清单见同名JSON。
+
+补充：审核结束后再次逐项重算2886个原源文件SHA/大小，全部与选择清单不变。

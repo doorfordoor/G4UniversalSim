@@ -1,0 +1,590 @@
+{
+  "schema": "k1_visible_independent_partial_v1",
+  "recorded_utc": "2026-10-31T04:54:40.853184+00:00",
+  "status": "completed_observations_verified_partial_only",
+  "scope": "visible01-10 records/summary; directly viewed images04/08/10; export_load_nativeclose_pending",
+  "checks": {
+    "identity_head_matches": true,
+    "identity_reported_clean": true,
+    "backend_sha_matches": true,
+    "native_windows_platform": true,
+    "all_identity_gui_sha_match": true,
+    "identity_gui_matches_manifest": true,
+    "seven_unique_completed_receipts": true,
+    "all_completion_projections_persisted": true,
+    "five_F1_results_verified": true,
+    "twenty_actual_inputs_raw_size_uuid_match": true,
+    "all_F1_request_build_metadata_match": true,
+    "two_initializations_no_run_zero": true,
+    "three_real_runs_3_of_3": true,
+    "cancel_late_facts_persisted_once": true,
+    "cancel_no_completed_or_F1_claim": true
+  },
+  "head": "11c92d361369cda4b2412451ff2841eff940f810",
+  "backend_sha256": "d45fb1e18cd2a56cf1d020ae9a742841d5ad9236becaf43b13853fe018ec33ee",
+  "source_files_checked": 138,
+  "identity_file_sha256": "84f4dcee61c3c3e92b2939fe4f47c953c581f7e243efbfbdf9d4270ceef5a660",
+  "observations_file_sha256": "36cadfe1f7edfc37d2f549f3cc1817e252c77bf235c51e27b84483066b73ccb8",
+  "actions_sha256_at_read": "ad52d0324cb71aad001286e215dffe4ce36d3093649e4fb2b297113ddaf67da3",
+  "current_state_snapshot": {
+    "sha256_at_read": "a19bf6261a7109f83512a8f15933775704819c637ee1733502202a8ae7f12144",
+    "timestamp": "2026-10-31T04:54:40.006688+00:00",
+    "qualification": "checking",
+    "status": "pending",
+    "revision": 5,
+    "levels": [
+      {
+        "level": "fields",
+        "status": "stale",
+        "detail": "experiment.fields_completed"
+      },
+      {
+        "level": "initialization",
+        "status": "pending",
+        "detail": "experiment.initialization_evidence_confirmed"
+      },
+      {
+        "level": "execution",
+        "status": "pending",
+        "detail": "experiment.run_evidence_confirmed"
+      },
+      {
+        "level": "physics",
+        "status": "unobserved",
+        "detail": ""
+      }
+    ]
+  },
+  "images_directly_viewed": {
+    "04-edited-history.jpg": "79631f4a2be58ab559d5a099b97b6ae4a76397df0090ed4317fc3fd7699ba98d",
+    "08-cancel-complete.jpg": "3bf2dfd022e2ae167403dbf8c99e3f3d8a56c59b6bfc40a8846311c3841bd659",
+    "10-environment.jpg": "677e493b4ac9c30b8db6a6156ff9f3936823ab1979796bf379123e48658b0946"
+  },
+  "action_records": [
+    {
+      "sequence": 1,
+      "record_id": "87049b14fb6b4b758a4c43e19803793c",
+      "run_id": "87049b14fb6b4b758a4c43e19803793c",
+      "action": "validate",
+      "level": "fields",
+      "status_at_completion": "passed",
+      "revision": 2,
+      "exit_code": null,
+      "result": null,
+      "completion_projection_equals_disk": true,
+      "record_file": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-11c92d3\\visible\\fixture-inputs\\packages\\experiment-records\\87049b14fb6b4b758a4c43e19803793c\\record.json",
+      "record_sha256": "01690642463c97ba96960b15b9921da7969320f34135f99b03ef518ba7f15f05",
+      "summary_exists": false,
+      "summary_sha256": null,
+      "summary_facts": null,
+      "input_observations": []
+    },
+    {
+      "sequence": 2,
+      "record_id": "869c5b87b82246b48697e854adcfe106",
+      "run_id": "869c5b87b82246b48697e854adcfe106",
+      "action": "validate",
+      "level": "initialization",
+      "status_at_completion": "passed",
+      "revision": 2,
+      "exit_code": 0,
+      "result": {
+        "state": "no_run",
+        "reason": "Process completed but no Geant4 run occurred.",
+        "summary_status": "completed",
+        "run_count": 0,
+        "planned_events": 0,
+        "completed_events": 0
+      },
+      "completion_projection_equals_disk": true,
+      "record_file": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-11c92d3\\visible\\fixture-inputs\\packages\\experiment-records\\869c5b87b82246b48697e854adcfe106\\record.json",
+      "record_sha256": "1a6fb45785fcd81ad4a85b0a80ede6de1ac60bc58fec4014e79b3f075e1b25dd",
+      "summary_exists": true,
+      "summary_sha256": "f626f1bbcea2c7e4d6bbb9eb522a8c2a9d168840761ff1945c96a9025e764fc1",
+      "summary_facts": {
+        "status": "completed",
+        "summary_write_status": "completed",
+        "output_failure_status": "none",
+        "run_count": "0",
+        "planned_event_count": "0",
+        "actual_completed_event_count": "0",
+        "run_0_planned_events": null,
+        "run_0_completed_events": null,
+        "configured_seed": "4242",
+        "initial_engine_seed": "unknown",
+        "actual_output_dir": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-11c92d3\\visible\\fixture-inputs\\packages\\experiment-records\\869c5b87b82246b48697e854adcfe106\\20261031_124120_k1-visible\\output",
+        "main_config": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-11c92d3\\visible\\fixture-inputs\\packages\\experiment-records\\869c5b87b82246b48697e854adcfe106\\execution-inputs\\resources\\r0002-main.ini",
+        "actual_macro_file": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-11c92d3\\visible\\fixture-inputs\\packages\\experiment-records\\869c5b87b82246b48697e854adcfe106\\initialize-prefix.mac",
+        "run_name": "k1-visible"
+      },
+      "input_observations": [
+        {
+          "kind": "main_ini",
+          "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-11c92d3\\visible\\fixture-inputs\\packages\\experiment-records\\869c5b87b82246b48697e854adcfe106\\execution-inputs\\resources\\r0002-main.ini",
+          "status": "recorded",
+          "sha256": "30623dabc6384b1e7e391e4b82d716df2952f175a7d8e20e3514f1ea409788eb",
+          "raw_sha_matches": true,
+          "size_matches": true,
+          "within_uuid_record": true
+        },
+        {
+          "kind": "material_ini",
+          "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-11c92d3\\visible\\fixture-inputs\\packages\\experiment-records\\869c5b87b82246b48697e854adcfe106\\execution-inputs\\resources\\r0003-material.ini",
+          "status": "recorded",
+          "sha256": "d77923cdd8a0020c205b2287cfcbbe6e05b09d8e65359c33278a743c51361665",
+          "raw_sha_matches": true,
+          "size_matches": true,
+          "within_uuid_record": true
+        },
+        {
+          "kind": "geometry_ini",
+          "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-11c92d3\\visible\\fixture-inputs\\packages\\experiment-records\\869c5b87b82246b48697e854adcfe106\\execution-inputs\\resources\\r0004-geometry.ini",
+          "status": "recorded",
+          "sha256": "e6d77380889a38f16b6c2ad2f309bd33edb81060d29b30b3055b3f0b6e7e5a2e",
+          "raw_sha_matches": true,
+          "size_matches": true,
+          "within_uuid_record": true
+        },
+        {
+          "kind": "macro",
+          "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-11c92d3\\visible\\fixture-inputs\\packages\\experiment-records\\869c5b87b82246b48697e854adcfe106\\initialize-prefix.mac",
+          "status": "recorded",
+          "sha256": "ce200b24d8bb0d9179a2ffc27f2d913533c86598a651bbb5e4ef6e699b74e360",
+          "raw_sha_matches": true,
+          "size_matches": true,
+          "within_uuid_record": true
+        }
+      ],
+      "fresh_F1_status": "verified",
+      "metadata_sha256_matches": true,
+      "build_matches_freeze": true,
+      "strict_request_path_matches": true
+    },
+    {
+      "sequence": 3,
+      "record_id": "2c0a274e12464a84885429c40c53293a",
+      "run_id": "2c0a274e12464a84885429c40c53293a",
+      "action": "run",
+      "level": "execution",
+      "status_at_completion": "passed",
+      "revision": 2,
+      "exit_code": 0,
+      "result": {
+        "state": "success",
+        "reason": "Events completed as planned.",
+        "summary_status": "completed",
+        "run_count": 1,
+        "planned_events": 3,
+        "completed_events": 3
+      },
+      "completion_projection_equals_disk": true,
+      "record_file": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-11c92d3\\visible\\fixture-inputs\\packages\\experiment-records\\2c0a274e12464a84885429c40c53293a\\record.json",
+      "record_sha256": "072a74066e81b11689fc9ec58e82d7f4a21e818b06526b0b0100cdb8a0292d0d",
+      "summary_exists": true,
+      "summary_sha256": "4157864289bd108872b30938c77b1b41c3997320d92f5a44bba66b42e1ec4e55",
+      "summary_facts": {
+        "status": "completed",
+        "summary_write_status": "completed",
+        "output_failure_status": "none",
+        "run_count": "1",
+        "planned_event_count": "3",
+        "actual_completed_event_count": "3",
+        "run_0_planned_events": "3",
+        "run_0_completed_events": "3",
+        "configured_seed": "4242",
+        "initial_engine_seed": "unknown",
+        "actual_output_dir": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-11c92d3\\visible\\fixture-inputs\\packages\\experiment-records\\2c0a274e12464a84885429c40c53293a\\20261031_124221_k1-visible\\output",
+        "main_config": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-11c92d3\\visible\\fixture-inputs\\packages\\experiment-records\\2c0a274e12464a84885429c40c53293a\\execution-inputs\\resources\\r0002-main.ini",
+        "actual_macro_file": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-11c92d3\\visible\\fixture-inputs\\packages\\experiment-records\\2c0a274e12464a84885429c40c53293a\\execution-inputs\\resources\\r0005-run.mac",
+        "run_name": "k1-visible"
+      },
+      "input_observations": [
+        {
+          "kind": "main_ini",
+          "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-11c92d3\\visible\\fixture-inputs\\packages\\experiment-records\\2c0a274e12464a84885429c40c53293a\\execution-inputs\\resources\\r0002-main.ini",
+          "status": "recorded",
+          "sha256": "30623dabc6384b1e7e391e4b82d716df2952f175a7d8e20e3514f1ea409788eb",
+          "raw_sha_matches": true,
+          "size_matches": true,
+          "within_uuid_record": true
+        },
+        {
+          "kind": "material_ini",
+          "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-11c92d3\\visible\\fixture-inputs\\packages\\experiment-records\\2c0a274e12464a84885429c40c53293a\\execution-inputs\\resources\\r0003-material.ini",
+          "status": "recorded",
+          "sha256": "d77923cdd8a0020c205b2287cfcbbe6e05b09d8e65359c33278a743c51361665",
+          "raw_sha_matches": true,
+          "size_matches": true,
+          "within_uuid_record": true
+        },
+        {
+          "kind": "geometry_ini",
+          "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-11c92d3\\visible\\fixture-inputs\\packages\\experiment-records\\2c0a274e12464a84885429c40c53293a\\execution-inputs\\resources\\r0004-geometry.ini",
+          "status": "recorded",
+          "sha256": "e6d77380889a38f16b6c2ad2f309bd33edb81060d29b30b3055b3f0b6e7e5a2e",
+          "raw_sha_matches": true,
+          "size_matches": true,
+          "within_uuid_record": true
+        },
+        {
+          "kind": "macro",
+          "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-11c92d3\\visible\\fixture-inputs\\packages\\experiment-records\\2c0a274e12464a84885429c40c53293a\\execution-inputs\\resources\\r0005-run.mac",
+          "status": "recorded",
+          "sha256": "94bb20a5221f8851fee38ca2ce990ec0bef841f8879c4b7327fc82c669dbba5a",
+          "raw_sha_matches": true,
+          "size_matches": true,
+          "within_uuid_record": true
+        }
+      ],
+      "fresh_F1_status": "verified",
+      "metadata_sha256_matches": true,
+      "build_matches_freeze": true,
+      "strict_request_path_matches": true
+    },
+    {
+      "sequence": 4,
+      "record_id": "0368c7d736c643e19cf9cc1ed8b4b13b",
+      "run_id": "0368c7d736c643e19cf9cc1ed8b4b13b",
+      "action": "run",
+      "level": "execution",
+      "status_at_completion": "passed",
+      "revision": 3,
+      "exit_code": 0,
+      "result": {
+        "state": "success",
+        "reason": "Events completed as planned.",
+        "summary_status": "completed",
+        "run_count": 1,
+        "planned_events": 3,
+        "completed_events": 3
+      },
+      "completion_projection_equals_disk": true,
+      "record_file": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-11c92d3\\visible\\fixture-inputs\\packages\\experiment-records\\0368c7d736c643e19cf9cc1ed8b4b13b\\record.json",
+      "record_sha256": "933b3dc44158062bde8f8301c5298478bad13fedc840aee34e9a84186da9f685",
+      "summary_exists": true,
+      "summary_sha256": "919ad1e9004c6173417209e756a2afb24a1304c6e7382d27e34d6984a786b4b0",
+      "summary_facts": {
+        "status": "completed",
+        "summary_write_status": "completed",
+        "output_failure_status": "none",
+        "run_count": "1",
+        "planned_event_count": "3",
+        "actual_completed_event_count": "3",
+        "run_0_planned_events": "3",
+        "run_0_completed_events": "3",
+        "configured_seed": "4343",
+        "initial_engine_seed": "unknown",
+        "actual_output_dir": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-11c92d3\\visible\\fixture-inputs\\packages\\experiment-records\\0368c7d736c643e19cf9cc1ed8b4b13b\\20261031_124313_k1-visible\\output",
+        "main_config": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-11c92d3\\visible\\fixture-inputs\\packages\\experiment-records\\0368c7d736c643e19cf9cc1ed8b4b13b\\execution-inputs\\resources\\r0002-main.ini",
+        "actual_macro_file": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-11c92d3\\visible\\fixture-inputs\\packages\\experiment-records\\0368c7d736c643e19cf9cc1ed8b4b13b\\execution-inputs\\resources\\r0005-run.mac",
+        "run_name": "k1-visible"
+      },
+      "input_observations": [
+        {
+          "kind": "main_ini",
+          "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-11c92d3\\visible\\fixture-inputs\\packages\\experiment-records\\0368c7d736c643e19cf9cc1ed8b4b13b\\execution-inputs\\resources\\r0002-main.ini",
+          "status": "recorded",
+          "sha256": "734601e15744a914f0364c61326c9031b7b31d26c49b68243620b76a12242c84",
+          "raw_sha_matches": true,
+          "size_matches": true,
+          "within_uuid_record": true
+        },
+        {
+          "kind": "material_ini",
+          "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-11c92d3\\visible\\fixture-inputs\\packages\\experiment-records\\0368c7d736c643e19cf9cc1ed8b4b13b\\execution-inputs\\resources\\r0003-material.ini",
+          "status": "recorded",
+          "sha256": "d77923cdd8a0020c205b2287cfcbbe6e05b09d8e65359c33278a743c51361665",
+          "raw_sha_matches": true,
+          "size_matches": true,
+          "within_uuid_record": true
+        },
+        {
+          "kind": "geometry_ini",
+          "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-11c92d3\\visible\\fixture-inputs\\packages\\experiment-records\\0368c7d736c643e19cf9cc1ed8b4b13b\\execution-inputs\\resources\\r0004-geometry.ini",
+          "status": "recorded",
+          "sha256": "e6d77380889a38f16b6c2ad2f309bd33edb81060d29b30b3055b3f0b6e7e5a2e",
+          "raw_sha_matches": true,
+          "size_matches": true,
+          "within_uuid_record": true
+        },
+        {
+          "kind": "macro",
+          "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-11c92d3\\visible\\fixture-inputs\\packages\\experiment-records\\0368c7d736c643e19cf9cc1ed8b4b13b\\execution-inputs\\resources\\r0005-run.mac",
+          "status": "recorded",
+          "sha256": "94bb20a5221f8851fee38ca2ce990ec0bef841f8879c4b7327fc82c669dbba5a",
+          "raw_sha_matches": true,
+          "size_matches": true,
+          "within_uuid_record": true
+        }
+      ],
+      "fresh_F1_status": "verified",
+      "metadata_sha256_matches": true,
+      "build_matches_freeze": true,
+      "strict_request_path_matches": true
+    },
+    {
+      "sequence": 5,
+      "record_id": "14e9ab4da7174e168d1746fca2c6435a",
+      "run_id": "14e9ab4da7174e168d1746fca2c6435a",
+      "action": "run",
+      "level": "execution",
+      "status_at_completion": "cancelled",
+      "revision": 4,
+      "exit_code": 62097,
+      "result": {
+        "state": "killed",
+        "reason": "User requested process termination.",
+        "summary_status": "",
+        "run_count": null,
+        "planned_events": null,
+        "completed_events": null
+      },
+      "completion_projection_equals_disk": true,
+      "record_file": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-11c92d3\\visible\\fixture-inputs\\packages\\experiment-records\\14e9ab4da7174e168d1746fca2c6435a\\record.json",
+      "record_sha256": "bf35c3923fcee89b9de9547734b0d8592969fd0383c5b857633d24c46d3d0439",
+      "summary_exists": false,
+      "summary_sha256": null,
+      "summary_facts": null,
+      "input_observations": [],
+      "low_level_run_status": [
+        {
+          "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-11c92d3\\visible\\fixture-inputs\\packages\\experiment-records\\14e9ab4da7174e168d1746fca2c6435a\\20261031_124404_k1-visible\\logs\\run_status.json",
+          "sha256": "d091da89a693604f0aabeeb1401edf9527237966508ee9206fd90e0570fb3f7c",
+          "selected": {
+            "state": "killed",
+            "exitCode": 62097,
+            "resultReason": "User requested process termination.",
+            "summaryFresh": false,
+            "summaryStatus": "",
+            "plannedEvents": null,
+            "completedEvents": null,
+            "startedAt": "2026-10-31T12:44:05",
+            "finishedAt": "2026-10-31T12:44:38"
+          }
+        }
+      ],
+      "final_metadata_exists": false,
+      "callback_occurrences": 1
+    },
+    {
+      "sequence": 6,
+      "record_id": "3f8cfd5b11d84504a30fedac16c121ad",
+      "run_id": "3f8cfd5b11d84504a30fedac16c121ad",
+      "action": "validate",
+      "level": "initialization",
+      "status_at_completion": "passed",
+      "revision": 5,
+      "exit_code": 0,
+      "result": {
+        "state": "no_run",
+        "reason": "Process completed but no Geant4 run occurred.",
+        "summary_status": "completed",
+        "run_count": 0,
+        "planned_events": 0,
+        "completed_events": 0
+      },
+      "completion_projection_equals_disk": true,
+      "record_file": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-11c92d3\\visible\\fixture-inputs\\packages\\experiment-records\\3f8cfd5b11d84504a30fedac16c121ad\\record.json",
+      "record_sha256": "d6c4f48e3522e578a77659cb245c837ff54698d63a4312f8cf5a9ac91dc104c7",
+      "summary_exists": true,
+      "summary_sha256": "547b6cd9cea375ffb4b8da029c9ee8c48176c1c33100f0ffec4a57c172b1bdc7",
+      "summary_facts": {
+        "status": "completed",
+        "summary_write_status": "completed",
+        "output_failure_status": "none",
+        "run_count": "0",
+        "planned_event_count": "0",
+        "actual_completed_event_count": "0",
+        "run_0_planned_events": null,
+        "run_0_completed_events": null,
+        "configured_seed": "4343",
+        "initial_engine_seed": "unknown",
+        "actual_output_dir": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-11c92d3\\visible\\fixture-inputs\\packages\\experiment-records\\3f8cfd5b11d84504a30fedac16c121ad\\20261031_124547_k1-visible\\output",
+        "main_config": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-11c92d3\\visible\\fixture-inputs\\packages\\experiment-records\\3f8cfd5b11d84504a30fedac16c121ad\\execution-inputs\\resources\\r0002-main.ini",
+        "actual_macro_file": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-11c92d3\\visible\\fixture-inputs\\packages\\experiment-records\\3f8cfd5b11d84504a30fedac16c121ad\\initialize-prefix.mac",
+        "run_name": "k1-visible"
+      },
+      "input_observations": [
+        {
+          "kind": "main_ini",
+          "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-11c92d3\\visible\\fixture-inputs\\packages\\experiment-records\\3f8cfd5b11d84504a30fedac16c121ad\\execution-inputs\\resources\\r0002-main.ini",
+          "status": "recorded",
+          "sha256": "734601e15744a914f0364c61326c9031b7b31d26c49b68243620b76a12242c84",
+          "raw_sha_matches": true,
+          "size_matches": true,
+          "within_uuid_record": true
+        },
+        {
+          "kind": "material_ini",
+          "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-11c92d3\\visible\\fixture-inputs\\packages\\experiment-records\\3f8cfd5b11d84504a30fedac16c121ad\\execution-inputs\\resources\\r0003-material.ini",
+          "status": "recorded",
+          "sha256": "d77923cdd8a0020c205b2287cfcbbe6e05b09d8e65359c33278a743c51361665",
+          "raw_sha_matches": true,
+          "size_matches": true,
+          "within_uuid_record": true
+        },
+        {
+          "kind": "geometry_ini",
+          "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-11c92d3\\visible\\fixture-inputs\\packages\\experiment-records\\3f8cfd5b11d84504a30fedac16c121ad\\execution-inputs\\resources\\r0004-geometry.ini",
+          "status": "recorded",
+          "sha256": "e6d77380889a38f16b6c2ad2f309bd33edb81060d29b30b3055b3f0b6e7e5a2e",
+          "raw_sha_matches": true,
+          "size_matches": true,
+          "within_uuid_record": true
+        },
+        {
+          "kind": "macro",
+          "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-11c92d3\\visible\\fixture-inputs\\packages\\experiment-records\\3f8cfd5b11d84504a30fedac16c121ad\\initialize-prefix.mac",
+          "status": "recorded",
+          "sha256": "7be85604d31ffa2e47cb9c5561771b9205e91cd4c6632127cb222bbc3ebd3a3b",
+          "raw_sha_matches": true,
+          "size_matches": true,
+          "within_uuid_record": true
+        }
+      ],
+      "fresh_F1_status": "verified",
+      "metadata_sha256_matches": true,
+      "build_matches_freeze": true,
+      "strict_request_path_matches": true
+    },
+    {
+      "sequence": 7,
+      "record_id": "a2cc1e6b07d342029ad0799569e21215",
+      "run_id": "a2cc1e6b07d342029ad0799569e21215",
+      "action": "run",
+      "level": "execution",
+      "status_at_completion": "passed",
+      "revision": 5,
+      "exit_code": 0,
+      "result": {
+        "state": "success",
+        "reason": "Events completed as planned.",
+        "summary_status": "completed",
+        "run_count": 1,
+        "planned_events": 3,
+        "completed_events": 3
+      },
+      "completion_projection_equals_disk": true,
+      "record_file": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-11c92d3\\visible\\fixture-inputs\\packages\\experiment-records\\a2cc1e6b07d342029ad0799569e21215\\record.json",
+      "record_sha256": "c82147350dca4184f373a2cf6cc044ff26869ba031a350aa441cb3c1c4748e87",
+      "summary_exists": true,
+      "summary_sha256": "fcb63e75f59129139bb4350111d86987b2fdb5e99c4e1c9273969452f28ef477",
+      "summary_facts": {
+        "status": "completed",
+        "summary_write_status": "completed",
+        "output_failure_status": "none",
+        "run_count": "1",
+        "planned_event_count": "3",
+        "actual_completed_event_count": "3",
+        "run_0_planned_events": "3",
+        "run_0_completed_events": "3",
+        "configured_seed": "4343",
+        "initial_engine_seed": "unknown",
+        "actual_output_dir": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-11c92d3\\visible\\fixture-inputs\\packages\\experiment-records\\a2cc1e6b07d342029ad0799569e21215\\20261031_124631_k1-visible\\output",
+        "main_config": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-11c92d3\\visible\\fixture-inputs\\packages\\experiment-records\\a2cc1e6b07d342029ad0799569e21215\\execution-inputs\\resources\\r0002-main.ini",
+        "actual_macro_file": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-11c92d3\\visible\\fixture-inputs\\packages\\experiment-records\\a2cc1e6b07d342029ad0799569e21215\\execution-inputs\\resources\\r0005-run.mac",
+        "run_name": "k1-visible"
+      },
+      "input_observations": [
+        {
+          "kind": "main_ini",
+          "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-11c92d3\\visible\\fixture-inputs\\packages\\experiment-records\\a2cc1e6b07d342029ad0799569e21215\\execution-inputs\\resources\\r0002-main.ini",
+          "status": "recorded",
+          "sha256": "734601e15744a914f0364c61326c9031b7b31d26c49b68243620b76a12242c84",
+          "raw_sha_matches": true,
+          "size_matches": true,
+          "within_uuid_record": true
+        },
+        {
+          "kind": "material_ini",
+          "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-11c92d3\\visible\\fixture-inputs\\packages\\experiment-records\\a2cc1e6b07d342029ad0799569e21215\\execution-inputs\\resources\\r0003-material.ini",
+          "status": "recorded",
+          "sha256": "d77923cdd8a0020c205b2287cfcbbe6e05b09d8e65359c33278a743c51361665",
+          "raw_sha_matches": true,
+          "size_matches": true,
+          "within_uuid_record": true
+        },
+        {
+          "kind": "geometry_ini",
+          "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-11c92d3\\visible\\fixture-inputs\\packages\\experiment-records\\a2cc1e6b07d342029ad0799569e21215\\execution-inputs\\resources\\r0004-geometry.ini",
+          "status": "recorded",
+          "sha256": "e6d77380889a38f16b6c2ad2f309bd33edb81060d29b30b3055b3f0b6e7e5a2e",
+          "raw_sha_matches": true,
+          "size_matches": true,
+          "within_uuid_record": true
+        },
+        {
+          "kind": "macro",
+          "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-11c92d3\\visible\\fixture-inputs\\packages\\experiment-records\\a2cc1e6b07d342029ad0799569e21215\\execution-inputs\\resources\\r0005-run.mac",
+          "status": "recorded",
+          "sha256": "94bb20a5221f8851fee38ca2ce990ec0bef841f8879c4b7327fc82c669dbba5a",
+          "raw_sha_matches": true,
+          "size_matches": true,
+          "within_uuid_record": true
+        }
+      ],
+      "fresh_F1_status": "verified",
+      "metadata_sha256_matches": true,
+      "build_matches_freeze": true,
+      "strict_request_path_matches": true
+    }
+  ],
+  "history_stale_at_snapshot": [
+    {
+      "record_id": "87049b14fb6b4b758a4c43e19803793c",
+      "status": "passed",
+      "stale": true,
+      "revision": 2
+    },
+    {
+      "record_id": "869c5b87b82246b48697e854adcfe106",
+      "status": "passed",
+      "stale": true,
+      "revision": 2
+    },
+    {
+      "record_id": "2c0a274e12464a84885429c40c53293a",
+      "status": "passed",
+      "stale": true,
+      "revision": 2
+    },
+    {
+      "record_id": "0368c7d736c643e19cf9cc1ed8b4b13b",
+      "status": "passed",
+      "stale": true,
+      "revision": 3
+    },
+    {
+      "record_id": "14e9ab4da7174e168d1746fca2c6435a",
+      "status": "cancelled",
+      "stale": true,
+      "revision": 4
+    },
+    {
+      "record_id": "3f8cfd5b11d84504a30fedac16c121ad",
+      "status": "passed",
+      "stale": false,
+      "revision": 5
+    },
+    {
+      "record_id": "a2cc1e6b07d342029ad0799569e21215",
+      "status": "passed",
+      "stale": false,
+      "revision": 5
+    }
+  ],
+  "open_acceptance": [
+    "native export directory selection and actual export",
+    "relocated bundle load/apply and native follow-up",
+    "normal native host close and exit receipt",
+    "Windows179 and CI acceptance owned by parent/Averroes"
+  ],
+  "limits": [
+    "Exactly once refers to captured completed actions log: seven unique record IDs each appears once, including cancellation; no claim about unrecorded future signals.",
+    "Final disk projection includes late process result; no intermediate atomic-replace sequence was visually observed.",
+    "Kill leaves no final summary or F1 metadata; progress9% is observed telemetry, not verified completed-event evidence.",
+    "current-state is a live snapshot observed during qualification=checking and is not treated as a permanent busy or passed result.",
+    "Record JSON historical stale=false at completion and current-state stale=true after edits are distinct semantics, not an identity mismatch.",
+    "No window/process/test actions, no original files modified."
+  ]
+}

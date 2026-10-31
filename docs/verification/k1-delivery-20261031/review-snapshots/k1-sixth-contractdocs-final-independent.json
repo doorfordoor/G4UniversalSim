@@ -1,0 +1,158 @@
+{
+  "schema": "k1_sixth_contractdocs_added_paragraphs_final_identity_v1",
+  "recorded_utc": "2026-10-31T07:50:45.629569+00:00",
+  "status": "approved_new_paragraph_semantics_and_exact_final_byte_binding",
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "medium",
+  "consumption": "unknown",
+  "author": "parent authored all4contractdocs; root index is parent compressed summary; other3narratives copied approved draft (heading adjustments only)",
+  "base_head": "f9a9ddbfcabe69067707a5a209caff005748f510",
+  "target_head": "4167c4421b13464dec54213ea7652ee321868c4e",
+  "scope": "Only new paragraphs in f9a9ddb..4167c44 and immediate context; full-file SHA binds identity only, does not approve legacy entire documents or resource boundary scope.",
+  "checks": {
+    "current_head_is_frozen4167": true,
+    "current_tracked_worktree_clean": true,
+    "draft_is_approved_e0829_bytes": true,
+    "all_four_only_additions_no_old_text_change": true,
+    "all_final_Git_worktree_LF_bytes_equal": true,
+    "GUI_narrative_exact_approved_draft": true,
+    "history_narrative_exact_draft_except_heading_level": true,
+    "human_narrative_exact_draft_except_new_heading": true,
+    "root_compressed_index_preserves_semantic_qualifiers": true
+  },
+  "files": [
+    {
+      "path": "AGENTS.md",
+      "base_Git_blob_oid": "ee10ed22bd736f52823161a69e00f5a5339be58b",
+      "base_Git_raw_sha256": "9d48adf7c79e26a95f778fe2ff77efb0309dd3be856a3785dd753430ff0341a5",
+      "target_Git_blob_oid": "26ca53eed35983332cef109ed5e54b282798e8ed",
+      "target_Git_raw_sha256": "c964a9f854cd84296f74b43c989312a7eae182069004779ab2c781d34d67a327",
+      "worktree_raw_sha256": "6848cbbf21fa79d703466871b25bd2626f4071693accdddc81066839310eec49",
+      "worktree_LF_normalized_sha256": "c964a9f854cd84296f74b43c989312a7eae182069004779ab2c781d34d67a327",
+      "raw_Git_equals_worktree": false,
+      "LF_normalized_Git_equals_worktree": true,
+      "target_Git_CRLF_count": 0,
+      "worktree_CRLF_count": 228,
+      "target_Git_loneLF_count": 228,
+      "worktree_loneLF_count": 0,
+      "only_insertion": true,
+      "reviewed_added_blocks": [
+        {
+          "operation": "insert",
+          "base_line_start": 6,
+          "base_line_end_exclusive": 6,
+          "target_line_start": 6,
+          "target_line_end_inclusive": 7,
+          "added_raw_git_text": "\n- 2026-10-31 K1 显示契约：成功且非陈旧的生成/运行命令投影覆盖 external 无 package；有效 launch 的实际 argv 优先，兼容计划命令不冒实际事实，目录未知不回填编辑 cwd。pending 按服务逐项显示，不联动其他层。全文见 `docs/agent-history.md`，回归 `smoke_k1_workflow.py`、`smoke_k1_panel.py`。\n",
+          "added_UTF8_LF_sha256": "2e61c3c2e29289946aebde8b34bb08272014588ab40a3faccf078f35cb21b984",
+          "removed_line_count": 0
+        }
+      ]
+    },
+    {
+      "path": "gui/AGENTS.md",
+      "base_Git_blob_oid": "b00c535dc815f93f949a1544cb81f6586aa9aa20",
+      "base_Git_raw_sha256": "c327b2b17c421f57237841c5707d665ec2e85dc7e3c362b061c75b5120314c80",
+      "target_Git_blob_oid": "0834431b756292701c588280be3def5d5133f302",
+      "target_Git_raw_sha256": "2b4b25d9db37ba43c64f584de8a583b773b06fdfa3c5afdcea914025d3dd344f",
+      "worktree_raw_sha256": "fdf49b297c6295b8b52d7b7a859bf3617114c44b02721080b554402c543cd779",
+      "worktree_LF_normalized_sha256": "2b4b25d9db37ba43c64f584de8a583b773b06fdfa3c5afdcea914025d3dd344f",
+      "raw_Git_equals_worktree": false,
+      "LF_normalized_Git_equals_worktree": true,
+      "target_Git_CRLF_count": 0,
+      "worktree_CRLF_count": 192,
+      "target_Git_loneLF_count": 192,
+      "worktree_loneLF_count": 0,
+      "only_insertion": true,
+      "reviewed_added_blocks": [
+        {
+          "operation": "insert",
+          "base_line_start": 2,
+          "base_line_end_exclusive": 2,
+          "target_line_start": 2,
+          "target_line_end_inclusive": 3,
+          "added_raw_git_text": "\nK1 成功且非陈旧的 Generate/Run 完成记录（含 external 无 package）回绑命令预览时，有效 launch 收据的实际 argv 优先；否则显示 record.command 兼容回退，不能把它称为实际启动。逻辑目录来自收据或计划隔离输入树，进程创建目录不同时单列，缺失为未知，不回填编辑项目目录。动作前预览保持原行为，不修改 F5 workspaceRoot。服务 producer 对某项报告 pending 时该项显示进行中，其他层保持各自事实；未知状态保守回退未观测。详见 agent-history 的“K1 命令预览目录与进行中状态”，回归 smoke_k1_workflow.py 与 smoke_k1_panel.py。\n",
+          "added_UTF8_LF_sha256": "9cb919f1d6a4c80b9b52bc30aebc2b82cd21e017246c1201edddf4396268950c",
+          "removed_line_count": 0
+        }
+      ]
+    },
+    {
+      "path": "docs/agent-history.md",
+      "base_Git_blob_oid": "e3e6eefdd2eb856c65aa8285a08361ae6721b479",
+      "base_Git_raw_sha256": "70c2b8edb940dc30636765f86576a197895c550657caa1ba3bbc30560e8d2c42",
+      "target_Git_blob_oid": "42e1c49fc13be8cf6d04d8f9f8471883101b779e",
+      "target_Git_raw_sha256": "58d90ff88efd6d0aa3f4e0da193041e3a6d50fb4de40bd670e991982d84cfd3c",
+      "worktree_raw_sha256": "ff3c0d875db3f3c4c055060109d7d3c95a75d16cd1068386318f1f3af18e936e",
+      "worktree_LF_normalized_sha256": "58d90ff88efd6d0aa3f4e0da193041e3a6d50fb4de40bd670e991982d84cfd3c",
+      "raw_Git_equals_worktree": false,
+      "LF_normalized_Git_equals_worktree": true,
+      "target_Git_CRLF_count": 0,
+      "worktree_CRLF_count": 609,
+      "target_Git_loneLF_count": 609,
+      "worktree_loneLF_count": 0,
+      "only_insertion": true,
+      "reviewed_added_blocks": [
+        {
+          "operation": "insert",
+          "base_line_start": 600,
+          "base_line_end_exclusive": 600,
+          "target_line_start": 600,
+          "target_line_end_inclusive": 609,
+          "added_raw_git_text": "\n## 2026-10-31 K1 命令预览目录与进行中状态\n\n第四冻结最终普通前端独审发现两项显示缺陷：完成记录的command来自隔离实验，但格式化器无条件附加编辑项目workspaceRoot；服务真实pending状态未列入面板STATUS_TEXT而被显示为未观测。第五仍保留这两个反例，不能以第五取消原因专项通过覆盖它们。旧cwd反例重放第四原生已完成record880d4e7eb8e0481da3cf0c2d380bafbc与保存项目；旧pending反例调用真实ExperimentWorkflow._state producer，均在目标断言失败。\n\nRunMixin._format_command_preview增加仅供显示的显式cwd参数，未传时原预览不变。成功且非陈旧的Generate/Run完成绑定，在launch的program与arguments合法时优先使用实际argv，否则保留record.command兼容显示，不能将其称为实际启动。逻辑目录取launch.working_directory或execution_bundle.path，缺失为Unknown；launch_working_directory不同则单列。尚无启动收据的Generate目录仅为计划输入树。不得回写编辑cwd或改变F5快照、动作记录、历史资格和进程所有权。ExperimentPanel补pending→In progress及集中中文进行中；未知状态保留Unobserved，四层不得由某层进行中/通过推断其他层事实。\n\n首次UI候选仅在有generated package的分支投影，独审复现external完成记录没有package时早返回，仍显示旧目录。命令投影必须独立于generated配置路径回绑，让无package但有command/execution_bundle/launch的真实external记录同样展示。此为同一预览契约的修正；保留第一候选及独审失败证据，并增加无package完成记录反例，不能只从generated记录复制夹具。\n\nsmoke_k1_workflow保留旧39个assert站点，新增前置预览完整相等、真实生成完成目录、direct/restore受控launch收据、argv与两类目录、未知事实、中英文和F5不变检查；受控显示收据不声称启动模拟。smoke_k1_panel保留旧67站点，使用真实producer分别给出新运行pending与后台freshness pending，固定断言In progress/进行中而非从消费者字典计算期望；保持payload、历史事实与未知回退。正式冻结矩阵和实际窗口观察另行计证。\n",
+          "added_UTF8_LF_sha256": "a5c9ee0edd5841b9f6c29635b46271671678870f4dd2b7a57a709aa3d100be92",
+          "removed_line_count": 0
+        }
+      ]
+    },
+    {
+      "path": "docs/可信实验工作流.md",
+      "base_Git_blob_oid": "c43c65c59662a91439ac0e5080db426214d10314",
+      "base_Git_raw_sha256": "1a28c4ef7cca8517990a0cd4c8e5e179e8a4aafcb07982346714329ce190ec87",
+      "target_Git_blob_oid": "f9fa3c2816bcfcc6c1e354455d46653b0b1972a3",
+      "target_Git_raw_sha256": "f7d79ae0022fa121680089b692de6532d07bdda942290d853cea87a8c7437da3",
+      "worktree_raw_sha256": "950f20006b9927651733ce21f24ee06f7daa5dfd3217cb4b486e755a9667b516",
+      "worktree_LF_normalized_sha256": "f7d79ae0022fa121680089b692de6532d07bdda942290d853cea87a8c7437da3",
+      "raw_Git_equals_worktree": false,
+      "LF_normalized_Git_equals_worktree": true,
+      "target_Git_CRLF_count": 0,
+      "worktree_CRLF_count": 140,
+      "target_Git_loneLF_count": 140,
+      "worktree_loneLF_count": 0,
+      "only_insertion": true,
+      "reviewed_added_blocks": [
+        {
+          "operation": "insert",
+          "base_line_start": 137,
+          "base_line_end_exclusive": 137,
+          "target_line_start": 137,
+          "target_line_end_inclusive": 140,
+          "added_raw_git_text": "\n## 命令预览与进行中状态\n\n生成或运行成功且记录未陈旧时，运行页更新命令预览。有有效启动收据时使用实际启动参数；否则只保留记录中的计划命令，不能据此确认启动。逻辑工作目录按收据或计划输入树显示，Windows深目录启动的进程创建目录不同时单独列出，缺失目录事实显示未知。编辑工作区不会因为显示运行记录而改变。服务对某一动作或层报告pending时，该项显示“进行中”；重新核验时原通过层可暂时进入这一状态，其他层保留各自事实。进行中不代表已经通过。\n",
+          "added_UTF8_LF_sha256": "3d10180a704b78b70e81d940aad6aed79ddd5dcd031b379b6b48392b60b7c567",
+          "removed_line_count": 0
+        }
+      ]
+    }
+  ],
+  "draft_sha256": "e0829cd81ef4f3f80bffe0617a0661fff0e1c0e0d42162644d9618ac048c3f39",
+  "approved_followup_sha256": "770081b6f5dbac130e421beb125a5b1e5bdcf656cdabcd776771bb7922a2c338",
+  "v2_source_review_sha256": "db2bc38bd9f82b5946b7fc684d3e087a43423a162728219bd53d076d4cfd12e6",
+  "implementation_context": [
+    "window/experiment.py223-233: completion adapter only successful non-stale Generate/Run",
+    "window/experiment.py276-323: no-package projection, valid launch argv priority, record.command fallback, receipt/tree/Unknown logical cwd",
+    "window/run.py36-53: optional display cwd and separate physical launch cwd; unchanged default editing preview",
+    "widgets/experiment_panel.py35-38,225-226 and core/experiment_workflow.py426-440: pending per producer item; unknown unobserved; no cross-layer qualification"
+  ],
+  "semantic_judgement": [
+    "Actual vs planned command facts distinguished; unknown logical directory does not borrow editor workspaceRoot.",
+    "External no-package completion explicitly covered; no promise all failed/cancelled terminal actions refresh preview.",
+    "No mutation of F5/history qualification/process ownership claimed.",
+    "Pending scoped per producer layer/action; other layers retain facts; in-progress not passed.",
+    "Synthetic/direct/restore display fixtures and real execution/formal/native evidence kept separate.",
+    "Adjacent legacy resource clauses unchanged and not approved or reopened by this limited review."
+  ],
+  "findings": [],
+  "no_doc_source_or_tests_edits_by_reviewer": true,
+  "no_tests_rerun": true,
+  "not_K1_acceptance": true
+}

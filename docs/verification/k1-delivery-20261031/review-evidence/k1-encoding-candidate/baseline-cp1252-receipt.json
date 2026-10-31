@@ -1,0 +1,27 @@
+{
+  "mode": "baseline",
+  "command": [
+    "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+    "-B",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\tools\\test_assert_probe.py",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-encoding-candidate\\baseline\\gui\\smoke_tests\\smoke_k1_workflow.py"
+  ],
+  "cwd": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim",
+  "exit_code": 1,
+  "seconds": 9.531000000002678,
+  "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-encoding-candidate\\baseline-cp1252.log",
+  "log_sha256": "207787196b04d08bbcddc476a4b6fb284d8fb01013fae5b8cfab2ff28feba735",
+  "assertions_executed": [
+    76
+  ],
+  "diagnostic_rows": 1,
+  "languages": [
+    "en"
+  ],
+  "encoding": "PYTHONIOENCODING=cp1252 (strict stdout default)",
+  "original_probe_sha256": "fd6515504cdec5ab86046e53e390cb366f49ee5facbf7acbe21314943ad8568c",
+  "mirrored_smoke_sha256": "8eac62b07e0c1fc9411037eafe2ea066165a954af4b0557cf013abbb9e1faffc",
+  "harness": "direct original assert probe/runpy execution; no import hooks or AST extraction",
+  "product_imports": "unchanged actual sixth checkout via PYTHONPATH; no product candidate overlay",
+  "no_real_backend_simulation": true
+}

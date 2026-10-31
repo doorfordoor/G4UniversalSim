@@ -1,0 +1,53 @@
+# K1 Windows 长路径最小方案独立建议
+
+审查日期：2026-10-31。只读产品/测试；本报告是方案审查，不是候选代码通过。模型按原 spawn ledger：gpt-6.1-sol/medium，消耗未知。当前 HEAD=e5ff80009975fc9d7d783eaa0865c7c894d1975b；读取时 git status --porcelain 为空。
+
+## 裁决
+
+建议采用「后端嵌入 longPathAware manifest + 后端早期 --working-directory + Python 共用启动 helper」作为最小产品方案。它替代我先前依赖 GetShortPathNameW 的建议，不依赖 8dot3、junction、盘符映射。短祖先仅是 CreateProcess 的启动目录；后端进入真实目录后才允许进行项目操作。保持原输入、输出、F4 定位、F1 路径身份，不能将祖先目录当作实际运行目录。
+
+当前没有候选实现可签字；下列约束若遗漏，会使方案失去语义等价性。首轮冻结正式回归的失败保持有效，不能由旧独立审查通过覆盖。
+
+## 已有事实及其限度
+
+- 主负责人提供并已读原件：out/collab/k1-longpath-experiment/original-r2-receipt.json 为 cwd_length=190、output_length=268、exit=1、无 summary；manifest-r2-receipt.json 为相同长度条件 exit=0、status=completed。两个 receipt 的 completed 数量字段均为 null，本报告不据此推断具体事件数；不同独立输出避免覆盖是主负责人实验说明。
+- 先前只读实验：实际存在 cwd 长260，subprocess 与 QProcess、Python 与后端、普通与 extended cwd 共8组合均不能启动；同目录8dot3短别名137时，两个启动器/两个子程序共4组合可启动退出0。这只证明启动边界，不证明初始化/模拟写出。新方案不再依赖这个别名。
+- Microsoft 明确说明长 current directory 会导致 CreateProcessW 失败，并说明 cwd 为进程级共享状态。因此子进程早期切换可规避首次创建的 cwd 限制，但不能声称切换后任意孙进程也能正常创建。[SetCurrentDirectory 官方说明](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-setcurrentdirectory)
+
+## 实现必须守住的八个边界
+
+1. **切换顺序必须早于现有数据发现和 Manager 构造。** 当前 main.cc:576 构造 SimulationManager（src/Core/SimulationManager.cc:215-217 调 BuildManagers），main.cc:582 调 ApplyGeant4DataFile，:583 才解析 CLI。仅在 Configure 前插入 chdir 太晚：例如 GEANT4_DATA_DIR 是相对目录，或 geant4-data.txt 内是相对目录，能力探测就可能读取祖先目录。src/Core/Geant4DataLocator.cc:128-129 对文件内容直接构造路径并检查。判据：纯参数解析 → 严格应用 cwd → 数据发现/所有动作；Manager 构造是否读取 cwd 应逐个核对，最稳妥是把构造也放在切换之后。Windows 相对 argv[0] 的非 Windows fallback 不应随切换错误重定位 executable；启动 helper 应预先固定绝对程序路径。
+
+2. **cwd 参数采用唯一、非空、绝对目录，失败立即退出。** Python 在父进程语义下先得到真实绝对 cwd；后端拒绝重复、缺值、普通文件、不存在目录。不要根据 argv 顺序提前解析 config/macro/output，也不要把 --working-directory 相对短祖先解释。失败必须在任何配置读取、摘要/日志输出之前，不能在祖先生成“失败 summary”污染另一项目。没有此参数的旧短路径调用保持原行为；不要对已有正常短 cwd 强制附加新 flag 而破坏旧后端兼容。
+
+3. **Unicode 路径必须完整穿过 Windows 参数和文件系统边界。** 当前 main.cc:575 是 main(int,char**)，:338 直接 std::string(argv[i])，本文件没有显式宽参数转换。新增目录若经本地码页再 u8path，中文已有环境可能恰好通过，emoji/非当前码页字符仍可能损坏。判据：实际带中文、空格和非 BMP 字符的 cwd，经 subprocess 和 QProcess 均切到同一真实目录；依据 Windows 宽参数或已核实的 UTF-8 启动契约，不靠字节强转。长路径阈值按 UTF-16 code units，预留尾部反斜杠和 NUL；不要只测 Python len()==260。
+
+4. **共用 helper 必须覆盖三条真实启动路径，并保持逻辑 cwd 与启动 cwd 分离。** environment_discovery.py:53-60 的 subprocess、experiment_workflow.py:749-752 的内部/独立 inspect QProcess、runner.py:123-129 的运行 QProcess 都需接入。helper 返回绝对程序、argv、短 launch_cwd、真实 logical_cwd；不得 os.chdir 修改 GUI/CLI 宿主全局 cwd。runner 自定义 command 也必须使用相同规则，不能仅在 build_command 添加。失败前置检查应在 runner.py:99-100 打开日志之前，或复用正常关闭路径，避免 helper 抛异常遗留文件句柄/永久 busy。公开状态中的 workingDirectory 保持真实目录，新增 launch_cwd 可作诊断，不能替换身份字段。
+
+5. **短祖先只能用于创建进程，不能重写任何项目相对路径。** 反例：祖先和真实目录各放不同 main.ini、同名 macro/相对数据资源，分别执行 inspect、初始化、run。必须只观察真实目录资源，F4 报原始文件/行号，F1 actual 输入仍严格绑定此次 UUID 输入树与输出目录。相对 GEANT4_DATA_DIR/G4*DATA、嵌套 macro、output/dump 路径同样在切换后解析。选择既存可访问短祖先，失败不偷偷改用另一工作区；不复制资源到祖先。只有选定了绝对后端程序后才改变 launch cwd，防止程序搜索命中祖先同名 exe。[CreateProcessW 程序和工作目录参数](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessw)
+
+6. **能力探测不能因新 flag 形成循环依赖或误分类。** 长 cwd 下旧 exe 对新 flag 的拒绝，应报告该后端不支持此启动方式；不能当作 Geant4 数据缺失，也不能无 flag 在祖先重试并声称原 cwd 环境已就绪。capabilities/data 两次调用均应先进入真实 cwd。若实现能力协商，可在短目录只查询明确不依赖真实 cwd 的协议支持，但这次探测不能代替实际 cwd 的环境证据。
+
+7. **manifest 解决文件 I/O 是一组已实测路径，不是全后端保证。** 主负责人的268输出实验支持采用 manifest；仍须用最终重新构建 EXE 核验嵌入资源。至少覆盖 final path 未超限而 .tmp 后缀超限、effective config exclusive 创建/发布/失败清理、F1 实际读取/metadata、summary 写出/重读。保持 exclusive 和原子终态，不删 effective snapshot 或去掉临时文件规则来绕过问题。extended 前缀如有需要应限定原生 I/O 边界，不污染公开路径身份。registry=1 是这台机器事实，不能据此宣称在 registry=0 也受支持。
+
+8. **切换只做一次，且明确孙进程覆盖边界。** 后端在建 Manager/启动 worker 之前切换，后续不切回祖先；不能在 GUI 线程或每个动作 worker 中动态 chdir。Geant4 外部工具/宏 shell 若在长 cwd 创建新进程仍有独立限制；本次不扩大 unknown geometry、外部 macro IO 或 portable export 的资格。未核实路径继续保留原覆盖限制，不因长路径启动成功而放宽。
+
+## 最小验收门槛（针对修复，不代替正式矩阵）
+
+- 真 cwd 处于边界前后（含尾分隔符、Unicode UTF-16 差异），最终 exe 的 subprocess capabilities/data、QProcess 独立 inspect、内部初始化/run 都达到真实 cwd；短祖先中放同名资源做负对照。
+- 缺失/文件/重复 cwd 参数只退出失败，不产生祖先 summary、不读祖先配置、不遗留 GUI busy/日志句柄；旧后端和普通短路径行为明确。
+- 真实长输出完成并通过 F1 实际 provenance；保留此次 UUID 路径严格比较和 run label 原值。最终 manifest/hash 与测试使用二进制一致。
+- 后台 read/close、取消和异常路径仍正常收尾；正式失败日志和首轮冻结不覆盖。上述方案检查通过之后才进行限定 diff 签字和新冻结，阶段验收由主任务负责。
+
+## 本轮读取的源码 SHA-256
+
+当前读取前后未见工作区修改；实现者随后可能落盘，以下仅标记本次静态基线：
+
+| 文件 | SHA-256 |
+| --- | --- |
+| main.cc | eb3bdc1ca6c747297ca9ac463e35901c3eda8c44039d3c59fbdc0a5c6e718b21 |
+| gui/g4usim_gui/core/runner.py | 167de35e2da2603965eff0b18f35175376ce3dce152a28f507d913fd3733f222 |
+| gui/g4usim_gui/core/environment_discovery.py | 98a2adaf4a266dd1a1b87616604eb56961c8e90ac82514a6403105c569a98a43 |
+| gui/g4usim_gui/core/experiment_workflow.py | bb3dd88986503b084db9c22754f9927dc05916ff53b617acf1d4b7364c921918 |
+
+下一步：只读复核实现的切换顺序、宽字符路径、共用 helper 三入口及失败关闭；本轮不写产品/测试，不承接被拒绝的广泛 bundle 审查。

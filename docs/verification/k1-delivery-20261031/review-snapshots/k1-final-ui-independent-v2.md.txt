@@ -1,0 +1,40 @@
+# K1 最终 UI v2 增量独立复审
+
+**判定：通过限定六文件候选复审，待正式集成/第六冻结验证。** 未发现新修复项；v1 的 UI-CWD-EXTERNAL-P2 已由本增量解决。原 v1 请求修改报告和其证据不改写。
+
+基线 `f9a9ddbfcabe69067707a5a209caff005748f510`。本审查者未实现六候选文件，未读取或依赖父线程 v2 审查结论。实际模型 gpt-6.1-sol / medium，消耗未知。
+
+## 实际逻辑复审
+
+相对 v1 仅 window/experiment.py 与 smoke_k1_workflow.py 改变。新增 `_project_experiment_command` 在无 package 分支早返回前执行；generated 路径绑定末尾也调用同一投影。成功 external Run 的真实 producer 形状（无 package，但有 execution_bundle/command/launch）现在会经过真实完成回调更新预览，不再被 package guard 漏掉。
+
+实际 launch program 为非空字符串且 arguments 为全字符串列表时，优先渲染该 argv，独立于 record.command 是否存在；launch 无效/缺失时才用 record.command 兼容显示。launch-only、planned argv 故意不同的对照都有测试。logical cwd 来源为 launch.working_directory → execution_bundle.path → 本地化 Unknown；physical launch cwd 与 logical 不同时独立显示，缺少事实不假借编辑 workspaceRoot。原前置 preview 的完整旧列表未变；human-readable 保留人类阅读意义，不承诺 shell quoting 或可直接执行。
+
+该投影只写显示，不回写 project/F5/raw drafts、记录资格或进程所有权。generated 的 config/macro/output 显示绑定保持原路径。另四文件与已审 v1 同 SHA：formatter/i18n/pending 面板及 panel smoke 沿原限定通过结论，未知状态仍 Unobserved，pending 不提升任何证据层。
+
+## 回归是否击中真实路径
+
+新增 regression 使用原 smoke 真实完成 Generate 的配置输入，以私有 snapshot 调用真实 `_prepare(..., run)` external 分支；仅 readiness 为 fixture，四项手动改动的 draft 镜像对齐，其他 F5 证据不清洗。先核 can_run、无 package、execution cwd 与命令，再以明确受控 passed/launch 记录调用真实 `_experiment_completed`。这验证显示接线，不假称 external 模拟运行成功。
+
+五形状 × 中英文共有10次完成观察：direct、restore、无效 launch 回退 record.command、launch-only、缺 cwd Unknown。逐项核实际 argv、逻辑/物理目录、无旧编辑命令，以及 project.workspaceRoot/pathSettings/控件/F5捕获快照和原记录不变。末尾确认仍为原 runner 且未运行。
+
+首轮 v1 negative 停在 can_run 的四草稿 fixture 不匹配，仅保留为初始失败，不作为目标红例。r2 同修正后的准备/回归 + 不可变 v1 产品，先通过准备与无 package 断言，再精确失败于 `completed external no-package preview omitted the recorded cwd`，exit1、68入口。v2 全 workflow 为 exit0/178；panel exit0/1629；真实已完成记录显示重放 exit0/3；真实 producer pending exit0/2。所有日志 SHA 与 probe marker 已独立对收据核验，未重跑这些充分专项。
+
+## 身份和原断言
+
+manifest SHA：`f2dcc728777bbc800f1b526430770827ea1640e6622812d20ca28f6b060a9178`。
+完整 patch SHA：`d2c21b5910b531ac205d42a9138bd27b98e4e9c8764978871f7cb766d9b75f33`。
+v1→v2 patch SHA：`b9c8baa09e30e6064f965439348abcd403855e34f78741ca29845395ea2124a1`。
+
+核验 v1 全39文件 SHA 不变，并且当前 v1 manifest 仍与我的历史请求修改 JSON 中 SHA 一致。完整原 assert AST（含消息）均保留：workflow 39→v1 57→v2 74，panel 67→v1/v2 74。下表绑定最终候选六文件；并非仅凭 hash 批准，代码与测试含义如上已实际阅读。
+
+| 文件 | v2 SHA-256 |
+|---|---|
+| gui/g4usim_gui/window/run.py | `3af4daefa4c0818fba9879acffe14e15ece2c8b908d2b26b0526e9fa7e873d56` |
+| gui/g4usim_gui/window/experiment.py | `0ff241b88dfa03dc24743a9a10145db681e542006c00f4c8e55d53f3f9252d8f` |
+| gui/g4usim_gui/widgets/experiment_panel.py | `01f91f3db0081536110e2acc9958ec76783af485dbbc1f378ec52231f94133f3` |
+| gui/g4usim_gui/core/i18n.py | `002de76b33480160415c3c4b2fb9e38455b2ce94b1aedacfcd83121387ecdf0a` |
+| gui/smoke_tests/smoke_k1_workflow.py | `8eac62b07e0c1fc9411037eafe2ea066165a954af4b0557cf013abbb9e1faffc` |
+| gui/smoke_tests/smoke_k1_panel.py | `658fcb292ca0b2ab60b8ef73bd3a4d285593c13824076850e4bd8cfbef8d38a0` |
+
+第五 CI 继续按原 f9a9ddb 冻结保存，与本候选通过结论分开。未改 tracked/候选/旧报告，未运行模拟、窗口或重复矩阵，未复审或重试资源边界 scope。此限定签字允许父线程考虑集成，不能关闭 K1 或替代第六正式矩阵/native 验收。

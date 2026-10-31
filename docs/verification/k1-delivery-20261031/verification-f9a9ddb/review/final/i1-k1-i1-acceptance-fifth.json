@@ -1,0 +1,456 @@
+{
+  "schema": "k1_i1_fifth_independent_scope_receipt_v1",
+  "recorded_utc": "2026-10-31T07:11:58.805636+00:00",
+  "status": "fifth_I1_defined_scope_evidence_verified_not_K1_acceptance",
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "medium",
+  "consumption": "unknown",
+  "head": "f9a9ddbfcabe69067707a5a209caff005748f510",
+  "source_fingerprint": "890635b6d521659e43cf735d07f862c6ebd5959e6c5ea68d023d55332a8a930a",
+  "tests_content_fingerprint": "e5dab8351801ad6164dc1e0601350330598e47a734f46903fafa822ec7c71af8",
+  "checks": {
+    "13_canonical_reports": true,
+    "16_I1_executions": true,
+    "all_reports_fifth_identity": true,
+    "selected_cases_pass_exit0": true,
+    "all_selected_raw_SHA_markers_match": true,
+    "whole_profiles_no_nonpass": true,
+    "I1_sources_unchanged_since_fourth": true
+  },
+  "reports": [
+    {
+      "group": "windows",
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\windows\\20261031-143155-9df8c6bd\\report.json",
+      "sha256": "92f92f30f36dc557a90077d7a119d84b4b636d855e05e9aa073c2448db4d5721",
+      "head": "f9a9ddbfcabe69067707a5a209caff005748f510",
+      "source_fingerprint": "890635b6d521659e43cf735d07f862c6ebd5959e6c5ea68d023d55332a8a930a",
+      "tests_content_fingerprint": "e5dab8351801ad6164dc1e0601350330598e47a734f46903fafa822ec7c71af8",
+      "profile": "all",
+      "overall_nonpassing": [],
+      "identity_matches_fifth": true
+    },
+    {
+      "group": "linux-evidence-11.3.2",
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\ci\\linux-evidence-11.3.2\\linux-backend\\20261031-063819-fb170393\\report.json",
+      "sha256": "535fb9eae672f2e5bdc027faa9d0556caf18e1f7bae2382e727f492f61bbb2d9",
+      "head": "f9a9ddbfcabe69067707a5a209caff005748f510",
+      "source_fingerprint": "890635b6d521659e43cf735d07f862c6ebd5959e6c5ea68d023d55332a8a930a",
+      "tests_content_fingerprint": "e5dab8351801ad6164dc1e0601350330598e47a734f46903fafa822ec7c71af8",
+      "profile": "backend",
+      "overall_nonpassing": [],
+      "identity_matches_fifth": true
+    },
+    {
+      "group": "linux-evidence-11.3.2",
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\ci\\linux-evidence-11.3.2\\linux-gui\\20261031-063440-457f24c8\\report.json",
+      "sha256": "ecf532e57b389739bf18e9436ddd792cd6c0c74c97537f5370f317b47b0b4564",
+      "head": "f9a9ddbfcabe69067707a5a209caff005748f510",
+      "source_fingerprint": "890635b6d521659e43cf735d07f862c6ebd5959e6c5ea68d023d55332a8a930a",
+      "tests_content_fingerprint": "e5dab8351801ad6164dc1e0601350330598e47a734f46903fafa822ec7c71af8",
+      "profile": "gui",
+      "overall_nonpassing": [],
+      "identity_matches_fifth": true
+    },
+    {
+      "group": "linux-evidence-11.3.2",
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\ci\\linux-evidence-11.3.2\\linux-integration\\20261031-065314-3a0467e0\\report.json",
+      "sha256": "bca880645b413ff1401b6794e30da593bd9b29937db474f3024f2f05a7b58332",
+      "head": "f9a9ddbfcabe69067707a5a209caff005748f510",
+      "source_fingerprint": "890635b6d521659e43cf735d07f862c6ebd5959e6c5ea68d023d55332a8a930a",
+      "tests_content_fingerprint": "e5dab8351801ad6164dc1e0601350330598e47a734f46903fafa822ec7c71af8",
+      "profile": "integration",
+      "overall_nonpassing": [],
+      "identity_matches_fifth": true
+    },
+    {
+      "group": "linux-evidence-11.3.2",
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\ci\\linux-evidence-11.3.2\\linux-static\\20261031-063316-5385185a\\report.json",
+      "sha256": "0db980edf7d4a827de974ba403a7cb488d6c7277bbd7fca654ef083d96511155",
+      "head": "f9a9ddbfcabe69067707a5a209caff005748f510",
+      "source_fingerprint": "890635b6d521659e43cf735d07f862c6ebd5959e6c5ea68d023d55332a8a930a",
+      "tests_content_fingerprint": "e5dab8351801ad6164dc1e0601350330598e47a734f46903fafa822ec7c71af8",
+      "profile": "static",
+      "overall_nonpassing": [],
+      "identity_matches_fifth": true
+    },
+    {
+      "group": "linux-evidence-11.4.3",
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\ci\\linux-evidence-11.4.3\\linux-backend\\20261031-063654-68ec1b8d\\report.json",
+      "sha256": "9adcef13770905ba458c44f254adf508b1bf6fcae1e51848833c1b85dc07728e",
+      "head": "f9a9ddbfcabe69067707a5a209caff005748f510",
+      "source_fingerprint": "890635b6d521659e43cf735d07f862c6ebd5959e6c5ea68d023d55332a8a930a",
+      "tests_content_fingerprint": "e5dab8351801ad6164dc1e0601350330598e47a734f46903fafa822ec7c71af8",
+      "profile": "backend",
+      "overall_nonpassing": [],
+      "identity_matches_fifth": true
+    },
+    {
+      "group": "linux-evidence-11.4.3",
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\ci\\linux-evidence-11.4.3\\linux-gui\\20261031-063406-3902dd8d\\report.json",
+      "sha256": "6571f57a0fbdff102661f215b2909fa58b3f4a3e19ce41aa384fbdeb9a02ae94",
+      "head": "f9a9ddbfcabe69067707a5a209caff005748f510",
+      "source_fingerprint": "890635b6d521659e43cf735d07f862c6ebd5959e6c5ea68d023d55332a8a930a",
+      "tests_content_fingerprint": "e5dab8351801ad6164dc1e0601350330598e47a734f46903fafa822ec7c71af8",
+      "profile": "gui",
+      "overall_nonpassing": [],
+      "identity_matches_fifth": true
+    },
+    {
+      "group": "linux-evidence-11.4.3",
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\ci\\linux-evidence-11.4.3\\linux-integration\\20261031-064834-00834c8b\\report.json",
+      "sha256": "3a1577bdc6cf3f5d1cebe0684af6f9f66215079a59fc9edc9d9ae871d843996a",
+      "head": "f9a9ddbfcabe69067707a5a209caff005748f510",
+      "source_fingerprint": "890635b6d521659e43cf735d07f862c6ebd5959e6c5ea68d023d55332a8a930a",
+      "tests_content_fingerprint": "e5dab8351801ad6164dc1e0601350330598e47a734f46903fafa822ec7c71af8",
+      "profile": "integration",
+      "overall_nonpassing": [],
+      "identity_matches_fifth": true
+    },
+    {
+      "group": "linux-evidence-11.4.3",
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\ci\\linux-evidence-11.4.3\\linux-static\\20261031-063300-3ae7c92a\\report.json",
+      "sha256": "b70fbaaa8e101e39abd9160cced0fa91ab8c7d07ec7cdfc93dddabe20f9d596d",
+      "head": "f9a9ddbfcabe69067707a5a209caff005748f510",
+      "source_fingerprint": "890635b6d521659e43cf735d07f862c6ebd5959e6c5ea68d023d55332a8a930a",
+      "tests_content_fingerprint": "e5dab8351801ad6164dc1e0601350330598e47a734f46903fafa822ec7c71af8",
+      "profile": "static",
+      "overall_nonpassing": [],
+      "identity_matches_fifth": true
+    },
+    {
+      "group": "m0-report-ubuntu-latest",
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\ci\\m0-report-ubuntu-latest\\20261031-063120-0e5149d1\\report.json",
+      "sha256": "2a381e366d30843c70dee1b7dc19c0086a05b1a74b60dc58cb5c0647f3b2071f",
+      "head": "f9a9ddbfcabe69067707a5a209caff005748f510",
+      "source_fingerprint": "890635b6d521659e43cf735d07f862c6ebd5959e6c5ea68d023d55332a8a930a",
+      "tests_content_fingerprint": "e5dab8351801ad6164dc1e0601350330598e47a734f46903fafa822ec7c71af8",
+      "profile": "static",
+      "overall_nonpassing": [],
+      "identity_matches_fifth": true
+    },
+    {
+      "group": "m0-report-ubuntu-latest",
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\ci\\m0-report-ubuntu-latest\\20261031-063230-301622bc\\report.json",
+      "sha256": "55456aa184e3a8ea6700dc5ed6f1dc1fd64245a9d2061f40a121489de8416610",
+      "head": "f9a9ddbfcabe69067707a5a209caff005748f510",
+      "source_fingerprint": "890635b6d521659e43cf735d07f862c6ebd5959e6c5ea68d023d55332a8a930a",
+      "tests_content_fingerprint": "e5dab8351801ad6164dc1e0601350330598e47a734f46903fafa822ec7c71af8",
+      "profile": "gui",
+      "overall_nonpassing": [],
+      "identity_matches_fifth": true
+    },
+    {
+      "group": "m0-report-windows-latest",
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\ci\\m0-report-windows-latest\\20261031-063143-140336fc\\report.json",
+      "sha256": "791ec3e26ecae1bab1a01630f41509a5e00356b7a9aad642e291838343858197",
+      "head": "f9a9ddbfcabe69067707a5a209caff005748f510",
+      "source_fingerprint": "890635b6d521659e43cf735d07f862c6ebd5959e6c5ea68d023d55332a8a930a",
+      "tests_content_fingerprint": "e5dab8351801ad6164dc1e0601350330598e47a734f46903fafa822ec7c71af8",
+      "profile": "static",
+      "overall_nonpassing": [],
+      "identity_matches_fifth": true
+    },
+    {
+      "group": "m0-report-windows-latest",
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\ci\\m0-report-windows-latest\\20261031-063412-f8004502\\report.json",
+      "sha256": "739001fe7b417dd8cb4f22bc84755b9770f00b842fa085cd0c923312343777d9",
+      "head": "f9a9ddbfcabe69067707a5a209caff005748f510",
+      "source_fingerprint": "890635b6d521659e43cf735d07f862c6ebd5959e6c5ea68d023d55332a8a930a",
+      "tests_content_fingerprint": "e5dab8351801ad6164dc1e0601350330598e47a734f46903fafa822ec7c71af8",
+      "profile": "gui",
+      "overall_nonpassing": [],
+      "identity_matches_fifth": true
+    }
+  ],
+  "cases": [
+    {
+      "group": "windows",
+      "case": "i1_environment",
+      "profile": "static",
+      "assertions_executed": 142,
+      "status": "pass",
+      "exit_code": 0,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\windows\\20261031-143155-9df8c6bd\\i1_environment.log",
+      "log_sha256": "caa04d743318a537394af1091904eaab1ce2adb796c996a7db9b6cefd1f40763",
+      "log_sha_matches": true,
+      "marker_matches": true,
+      "report_sha256": "92f92f30f36dc557a90077d7a119d84b4b636d855e05e9aa073c2448db4d5721"
+    },
+    {
+      "group": "windows",
+      "case": "i1_environment_backend",
+      "profile": "backend",
+      "assertions_executed": 145,
+      "status": "pass",
+      "exit_code": 0,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\windows\\20261031-143155-9df8c6bd\\i1_environment_backend.log",
+      "log_sha256": "e31f6dc9a669b88ddf8a9047db1461c3e86e7bb8d5ea279cf71660294cefea7d",
+      "log_sha_matches": true,
+      "marker_matches": true,
+      "report_sha256": "92f92f30f36dc557a90077d7a119d84b4b636d855e05e9aa073c2448db4d5721"
+    },
+    {
+      "group": "windows",
+      "case": "gui_i1_environment",
+      "profile": "gui",
+      "assertions_executed": 464,
+      "status": "pass",
+      "exit_code": 0,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\windows\\20261031-143155-9df8c6bd\\gui_i1_environment.log",
+      "log_sha256": "ef02e6c377165cd41df10e475c412b3c4471f90c71bf95bea5d00e1ac9e29d26",
+      "log_sha_matches": true,
+      "marker_matches": true,
+      "report_sha256": "92f92f30f36dc557a90077d7a119d84b4b636d855e05e9aa073c2448db4d5721"
+    },
+    {
+      "group": "windows",
+      "case": "gui_i1_environment_backend",
+      "profile": "integration",
+      "assertions_executed": 468,
+      "status": "pass",
+      "exit_code": 0,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\windows\\20261031-143155-9df8c6bd\\gui_i1_environment_backend.log",
+      "log_sha256": "fa7a49d2790723c0529a36596807ad51b13d51ca4685fd909420e1476c03e546",
+      "log_sha_matches": true,
+      "marker_matches": true,
+      "report_sha256": "92f92f30f36dc557a90077d7a119d84b4b636d855e05e9aa073c2448db4d5721"
+    },
+    {
+      "group": "linux-evidence-11.3.2",
+      "case": "i1_environment_backend",
+      "profile": "backend",
+      "assertions_executed": 145,
+      "status": "pass",
+      "exit_code": 0,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\ci\\linux-evidence-11.3.2\\linux-backend\\20261031-063819-fb170393\\i1_environment_backend.log",
+      "log_sha256": "e31f6dc9a669b88ddf8a9047db1461c3e86e7bb8d5ea279cf71660294cefea7d",
+      "log_sha_matches": true,
+      "marker_matches": true,
+      "report_sha256": "535fb9eae672f2e5bdc027faa9d0556caf18e1f7bae2382e727f492f61bbb2d9"
+    },
+    {
+      "group": "linux-evidence-11.3.2",
+      "case": "gui_i1_environment",
+      "profile": "gui",
+      "assertions_executed": 462,
+      "status": "pass",
+      "exit_code": 0,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\ci\\linux-evidence-11.3.2\\linux-gui\\20261031-063440-457f24c8\\gui_i1_environment.log",
+      "log_sha256": "b7d763d80118b2b534b8beb33adf9d85c68c3b450be650e1137cb5d8ae139774",
+      "log_sha_matches": true,
+      "marker_matches": true,
+      "report_sha256": "ecf532e57b389739bf18e9436ddd792cd6c0c74c97537f5370f317b47b0b4564"
+    },
+    {
+      "group": "linux-evidence-11.3.2",
+      "case": "gui_i1_environment_backend",
+      "profile": "integration",
+      "assertions_executed": 466,
+      "status": "pass",
+      "exit_code": 0,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\ci\\linux-evidence-11.3.2\\linux-integration\\20261031-065314-3a0467e0\\gui_i1_environment_backend.log",
+      "log_sha256": "3ef67f857ea71d1de4613a9bb31b110ed91fc9f2b67dbdc8ea133b0e986622ad",
+      "log_sha_matches": true,
+      "marker_matches": true,
+      "report_sha256": "bca880645b413ff1401b6794e30da593bd9b29937db474f3024f2f05a7b58332"
+    },
+    {
+      "group": "linux-evidence-11.3.2",
+      "case": "i1_environment",
+      "profile": "static",
+      "assertions_executed": 142,
+      "status": "pass",
+      "exit_code": 0,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\ci\\linux-evidence-11.3.2\\linux-static\\20261031-063316-5385185a\\i1_environment.log",
+      "log_sha256": "caa04d743318a537394af1091904eaab1ce2adb796c996a7db9b6cefd1f40763",
+      "log_sha_matches": true,
+      "marker_matches": true,
+      "report_sha256": "0db980edf7d4a827de974ba403a7cb488d6c7277bbd7fca654ef083d96511155"
+    },
+    {
+      "group": "linux-evidence-11.4.3",
+      "case": "i1_environment_backend",
+      "profile": "backend",
+      "assertions_executed": 145,
+      "status": "pass",
+      "exit_code": 0,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\ci\\linux-evidence-11.4.3\\linux-backend\\20261031-063654-68ec1b8d\\i1_environment_backend.log",
+      "log_sha256": "e31f6dc9a669b88ddf8a9047db1461c3e86e7bb8d5ea279cf71660294cefea7d",
+      "log_sha_matches": true,
+      "marker_matches": true,
+      "report_sha256": "9adcef13770905ba458c44f254adf508b1bf6fcae1e51848833c1b85dc07728e"
+    },
+    {
+      "group": "linux-evidence-11.4.3",
+      "case": "gui_i1_environment",
+      "profile": "gui",
+      "assertions_executed": 462,
+      "status": "pass",
+      "exit_code": 0,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\ci\\linux-evidence-11.4.3\\linux-gui\\20261031-063406-3902dd8d\\gui_i1_environment.log",
+      "log_sha256": "b7d763d80118b2b534b8beb33adf9d85c68c3b450be650e1137cb5d8ae139774",
+      "log_sha_matches": true,
+      "marker_matches": true,
+      "report_sha256": "6571f57a0fbdff102661f215b2909fa58b3f4a3e19ce41aa384fbdeb9a02ae94"
+    },
+    {
+      "group": "linux-evidence-11.4.3",
+      "case": "gui_i1_environment_backend",
+      "profile": "integration",
+      "assertions_executed": 466,
+      "status": "pass",
+      "exit_code": 0,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\ci\\linux-evidence-11.4.3\\linux-integration\\20261031-064834-00834c8b\\gui_i1_environment_backend.log",
+      "log_sha256": "3ef67f857ea71d1de4613a9bb31b110ed91fc9f2b67dbdc8ea133b0e986622ad",
+      "log_sha_matches": true,
+      "marker_matches": true,
+      "report_sha256": "3a1577bdc6cf3f5d1cebe0684af6f9f66215079a59fc9edc9d9ae871d843996a"
+    },
+    {
+      "group": "linux-evidence-11.4.3",
+      "case": "i1_environment",
+      "profile": "static",
+      "assertions_executed": 142,
+      "status": "pass",
+      "exit_code": 0,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\ci\\linux-evidence-11.4.3\\linux-static\\20261031-063300-3ae7c92a\\i1_environment.log",
+      "log_sha256": "caa04d743318a537394af1091904eaab1ce2adb796c996a7db9b6cefd1f40763",
+      "log_sha_matches": true,
+      "marker_matches": true,
+      "report_sha256": "b70fbaaa8e101e39abd9160cced0fa91ab8c7d07ec7cdfc93dddabe20f9d596d"
+    },
+    {
+      "group": "m0-report-ubuntu-latest",
+      "case": "i1_environment",
+      "profile": "static",
+      "assertions_executed": 142,
+      "status": "pass",
+      "exit_code": 0,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\ci\\m0-report-ubuntu-latest\\20261031-063120-0e5149d1\\i1_environment.log",
+      "log_sha256": "caa04d743318a537394af1091904eaab1ce2adb796c996a7db9b6cefd1f40763",
+      "log_sha_matches": true,
+      "marker_matches": true,
+      "report_sha256": "2a381e366d30843c70dee1b7dc19c0086a05b1a74b60dc58cb5c0647f3b2071f"
+    },
+    {
+      "group": "m0-report-ubuntu-latest",
+      "case": "gui_i1_environment",
+      "profile": "gui",
+      "assertions_executed": 462,
+      "status": "pass",
+      "exit_code": 0,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\ci\\m0-report-ubuntu-latest\\20261031-063230-301622bc\\gui_i1_environment.log",
+      "log_sha256": "b7d763d80118b2b534b8beb33adf9d85c68c3b450be650e1137cb5d8ae139774",
+      "log_sha_matches": true,
+      "marker_matches": true,
+      "report_sha256": "55456aa184e3a8ea6700dc5ed6f1dc1fd64245a9d2061f40a121489de8416610"
+    },
+    {
+      "group": "m0-report-windows-latest",
+      "case": "i1_environment",
+      "profile": "static",
+      "assertions_executed": 142,
+      "status": "pass",
+      "exit_code": 0,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\ci\\m0-report-windows-latest\\20261031-063143-140336fc\\i1_environment.log",
+      "log_sha256": "caa04d743318a537394af1091904eaab1ce2adb796c996a7db9b6cefd1f40763",
+      "log_sha_matches": true,
+      "marker_matches": true,
+      "report_sha256": "791ec3e26ecae1bab1a01630f41509a5e00356b7a9aad642e291838343858197"
+    },
+    {
+      "group": "m0-report-windows-latest",
+      "case": "gui_i1_environment",
+      "profile": "gui",
+      "assertions_executed": 458,
+      "status": "pass",
+      "exit_code": 0,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\ci\\m0-report-windows-latest\\20261031-063412-f8004502\\gui_i1_environment.log",
+      "log_sha256": "32e76a423aec8978699915795aebdd7bffd9f016c255fef3762c1e6d60877a24",
+      "log_sha_matches": true,
+      "marker_matches": true,
+      "report_sha256": "739001fe7b417dd8cb4f22bc84755b9770f00b842fa085cd0c923312343777d9"
+    }
+  ],
+  "sources": [
+    {
+      "path": "gui/g4usim_gui/core/environment_discovery.py",
+      "current_sha256": "7ee71c78b51d00cc79a112f82f51b5e9d929dc224719fa95e8a6427baa686f91",
+      "third_raw_sha256": "7ee71c78b51d00cc79a112f82f51b5e9d929dc224719fa95e8a6427baa686f91",
+      "fourth_raw_sha256": "7ee71c78b51d00cc79a112f82f51b5e9d929dc224719fa95e8a6427baa686f91",
+      "unchanged_third_to_fourth_and_current": true
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/environment_dialog.py",
+      "current_sha256": "a5de75745c822e8c6184f82a2942a8716119465f103d476f5d559cd03a9e79cc",
+      "third_raw_sha256": "a5de75745c822e8c6184f82a2942a8716119465f103d476f5d559cd03a9e79cc",
+      "fourth_raw_sha256": "a5de75745c822e8c6184f82a2942a8716119465f103d476f5d559cd03a9e79cc",
+      "unchanged_third_to_fourth_and_current": true
+    },
+    {
+      "path": "gui/g4usim_gui/core/backend_launch.py",
+      "current_sha256": "9ae08264564111987a3627ec255706b9c419a2e58046732b35e49ea746d3e102",
+      "third_raw_sha256": "9ae08264564111987a3627ec255706b9c419a2e58046732b35e49ea746d3e102",
+      "fourth_raw_sha256": "9ae08264564111987a3627ec255706b9c419a2e58046732b35e49ea746d3e102",
+      "unchanged_third_to_fourth_and_current": true
+    },
+    {
+      "path": "scripts/test_i1_environment.py",
+      "current_sha256": "9b31654e94ebf5c3344c126ab1c668bb1df865f7e8f840940ab97d6920c74851",
+      "third_raw_sha256": "9b31654e94ebf5c3344c126ab1c668bb1df865f7e8f840940ab97d6920c74851",
+      "fourth_raw_sha256": "9b31654e94ebf5c3344c126ab1c668bb1df865f7e8f840940ab97d6920c74851",
+      "unchanged_third_to_fourth_and_current": true
+    },
+    {
+      "path": "gui/smoke_tests/smoke_i1_environment.py",
+      "current_sha256": "48ae5f2b7fba134b28c4b51efc63b70e0dd7b2dfb7676d70e1bdcc0ee7e1f870",
+      "third_raw_sha256": "48ae5f2b7fba134b28c4b51efc63b70e0dd7b2dfb7676d70e1bdcc0ee7e1f870",
+      "fourth_raw_sha256": "48ae5f2b7fba134b28c4b51efc63b70e0dd7b2dfb7676d70e1bdcc0ee7e1f870",
+      "unchanged_third_to_fourth_and_current": true
+    }
+  ],
+  "implemented_scope": [
+    "ordered explicit/G4USIM_EXE/PATH candidate discovery and child-env aware path dedup",
+    "bounded real capabilities/data subprocess calls, strict finite/duplicate-key JSON, executable pre/post SHA and PE/ELF header facts",
+    "actual timeout/spawn/loader/encoding/protocol/output-limit diagnostics; synthetic error injection and real child processes distinguished",
+    "QRunnable/QThreadPool asynchronous dialog, queued generation-bound completion, stale close handling, copy-on-selection",
+    "existing GUI adapter selects executable via workspace transaction; workflow independently requires environment ready for later backend action"
+  ],
+  "limitations": {
+    "dataset_content_hash": "unknown; selected_path_sha256 is canonical path-text identity, not dataset bytes",
+    "SDK_compile_link": "not implemented/verified by I1; build_verified=false on SDK/tools facts",
+    "optional_python_import": "not verified; find_spec/metadata only, import_tested=false",
+    "dynamic_dependency_graph": "not enumerated/validated as a complete DLL/SO closure; loader failure classification is implemented",
+    "environment_activation": "candidate env overlay E applies to probes only; not a promise that default runner E0 inherits that activation",
+    "simulation_and_physics": "I1 never initializes or runs events; ready is protocol/presence only",
+    "workers_and_disk_bounds": "bounded direct-child command timeout/output read; no global process-tree kill or total temporary-file disk quota guarantee"
+  },
+  "native_observation_mapping": {
+    "fourth_receipt": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-i1-acceptance-fourth.json",
+    "fourth_receipt_sha256": "42f499ad1018633f3aae3a48d0ccf4cd586302c427edd3537a23745dfba87ffe",
+    "unchanged_I1_product_bytes": true,
+    "observation_generation": 4,
+    "fifth_I1_visual_rerun": false,
+    "actor": "lead assistant via Sky, not human user; independent direct view_image of saved fourth02 already recorded"
+  },
+  "windows_audit_sha256": "3562d4f3f5b581d28563ebefda813bf488b7043359ddc45d92e8b3580f3a3513",
+  "designated_CI_auditor": {
+    "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\ci\\review-result.json",
+    "sha256": "0a0c639f0849fc54c522021cd8278575e2afdff8c1be72e1ece1d60f70985335",
+    "automation_review_passed": true,
+    "runs": [
+      {
+        "id": 41176919519,
+        "head": "f9a9ddbfcabe69067707a5a209caff005748f510",
+        "conclusion": "success"
+      },
+      {
+        "id": 41176919481,
+        "head": "f9a9ddbfcabe69067707a5a209caff005748f510",
+        "conclusion": "success"
+      }
+    ]
+  },
+  "no_tests_rerun": true,
+  "overall_scope": "No dataset byte hash/activation/SDK build/dynamic library closure/physics validation claim; sixth display changes and required specialist reviews remain separate."
+}

@@ -1,0 +1,26 @@
+{
+  "status": "completed_original_windows_audit_failed_release_gate",
+  "head": "c644bb1acc67658d2ff61fae695340f02ac58503",
+  "windows_root": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-c644bb1\\windows",
+  "baseline_report": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\docs\\verification\\f5-final-20261031\\windows\\final-1\\report.json",
+  "baseline_sha256": "07cb528df9840b83b962514c8b2595031ef4e6a7158a55252cdee55f5900d832",
+  "baseline_cases": 160,
+  "baseline_assertions": 50898,
+  "next": "Parent/Bohr own assertion-drop causes and candidate integration. Final new-smoke modes review accepted; original report/baseline unchanged. No owned process sessions running.",
+  "recorded_utc": "2026-10-31T04:30:40.264541+00:00",
+  "windows_result": {
+    "cases": 176,
+    "pass": 175,
+    "fail": 1,
+    "skip": 0,
+    "assertions": 56116,
+    "strict_gate_exit": 1,
+    "baseline_assertions": 50898,
+    "old_case_count_regressions": 13
+  },
+  "outputs": [
+    "out/collab/k1-c644bb1-windows-independent-audit.json",
+    "out/collab/k1-c644bb1-windows-independent-audit.md",
+    "out/collab/k1-c644bb1-windows-independent-history-scope-review.md"
+  ]
+}

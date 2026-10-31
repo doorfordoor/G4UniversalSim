@@ -1,0 +1,76 @@
+{
+  "schema": "k1_sixth_ci_watch_v1",
+  "head": "4167c4421b13464dec54213ea7652ee321868c4e",
+  "previous_head": "f9a9ddbfcabe69067707a5a209caff005748f510",
+  "repo": "doorfordoor/G4UniversalSim",
+  "destination": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\ci",
+  "frozen": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\frozen-case-manifest.json",
+  "frozen_sha256": "29b55b9d64d8ec46042c18a33565f3f94274c3a6c0c2c7a72240d28626bf773e",
+  "profiles": {
+    "static": 36,
+    "gui": 56,
+    "backend": 61,
+    "integration": 29
+  },
+  "expected_reports": 12,
+  "expected_case_executions": 548,
+  "tests_content_fingerprint": "3e2c9df892cff63792bd34d2cbb770d757f964fbc9940fa1cf34dd35f2b7cf5e",
+  "source_fingerprint": "890635b6d521659e43cf735d07f862c6ebd5959e6c5ea68d023d55332a8a930a",
+  "source_files": [
+    {
+      "path": "gui/g4usim_gui/core/experiment_workflow.py",
+      "current_sha256": "9f8f800aee380f8b060b95fcc8d1c776ed580ddbec0bbd398d104bda58156403",
+      "unchanged_from_fifth": true
+    },
+    {
+      "path": "scripts/test_k1_terminal_publication.py",
+      "current_sha256": "5075c7b236117e1cace9f2d10e33cca6ee2b2ccd0cb95c5b7bf8f7d2de1762b4",
+      "unchanged_from_fifth": true
+    }
+  ],
+  "integrated_v2_files": [
+    {
+      "path": "gui/g4usim_gui/window/run.py",
+      "sha256": "3af4daefa4c0818fba9879acffe14e15ece2c8b908d2b26b0526e9fa7e873d56"
+    },
+    {
+      "path": "gui/g4usim_gui/window/experiment.py",
+      "sha256": "0ff241b88dfa03dc24743a9a10145db681e542006c00f4c8e55d53f3f9252d8f"
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/experiment_panel.py",
+      "sha256": "01f91f3db0081536110e2acc9958ec76783af485dbbc1f378ec52231f94133f3"
+    },
+    {
+      "path": "gui/g4usim_gui/core/i18n.py",
+      "sha256": "002de76b33480160415c3c4b2fb9e38455b2ce94b1aedacfcd83121387ecdf0a"
+    },
+    {
+      "path": "gui/smoke_tests/smoke_k1_workflow.py",
+      "sha256": "8eac62b07e0c1fc9411037eafe2ea066165a954af4b0557cf013abbb9e1faffc"
+    },
+    {
+      "path": "gui/smoke_tests/smoke_k1_panel.py",
+      "sha256": "658fcb292ca0b2ab60b8ef73bd3a4d285593c13824076850e4bd8cfbef8d38a0"
+    }
+  ],
+  "integration_receipt_sha256": "9d5115f29fda8aea25e2d9589b4d694cb6090a2e91bb4a9d69dae8953026a7a0",
+  "v2_review_sha256": "db2bc38bd9f82b5946b7fc684d3e087a43423a162728219bd53d076d4cfd12e6",
+  "all_changed_paths": [
+    "AGENTS.md",
+    "docs/agent-history.md",
+    "docs/可信实验工作流.md",
+    "gui/AGENTS.md",
+    "gui/g4usim_gui/core/i18n.py",
+    "gui/g4usim_gui/widgets/experiment_panel.py",
+    "gui/g4usim_gui/window/experiment.py",
+    "gui/g4usim_gui/window/run.py",
+    "gui/smoke_tests/smoke_k1_panel.py",
+    "gui/smoke_tests/smoke_k1_workflow.py"
+  ],
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "medium",
+  "consumption": "unknown",
+  "stage_acceptance": "not_decided_resource_boundary_rejection_independent_review_gap",
+  "no_dispatch_or_job_retry": true
+}

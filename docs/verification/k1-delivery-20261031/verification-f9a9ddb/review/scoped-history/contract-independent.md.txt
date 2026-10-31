@@ -1,0 +1,121 @@
+# K1 独立架构与反例审查：主代理裁决稿
+
+日期：2026-10-31。工作区：`C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim`。
+读取时 HEAD：`ccb813a8540b83d5015daabebd5047929a16af2c`，分支 `roadmap/K1-trusted-workflow`；契约记录的起始基线另为 `e701c7fa5b5b8899d8dd8b9f6a0b4b305614e5c9`，两者不混称。
+审查模型：按委派信息为 `gpt-6.1-sol/medium`，消耗未知。
+
+范围：读取 K1 实施契约、根/GUI AGENTS、F1/F4/F5 对应历史全文与现有 run/package 接口；只写本文件。不等待实现者，不修改或执行产品/测试，不审查正在写入的 K1 服务候选。以下是应拦截的验收反例及设计裁决建议，**不是已复现的 K1 缺陷或通过记录**。源码位置均为本次读取的现有实现位置，后续并行修改可能使行号移动。
+
+## 建议立即裁决的五件事
+
+1. 配置包区分原始资源字节身份、重定位后可执行输入身份、历史验证身份；重写路径不是原 hash 的延续。搬移可保留历史可读性，不能自动继承本机验证。
+2. 指定输入完成的判断必须连接“本次请求 → 实际启动命令与输入 → F1 读入序列 → 本次 execution_id → 逐 run 事实”；仅 run_result success 或 manifest 自洽均不够。
+3. 外部 macro 的未知命令/未知资源语法默认不能取得完整闭包与可信重放资格；原后端 preflight 可通过，不等于 K1 可分发。
+4. 当前验证资格至少绑定会话身份、单调编辑 revision、输入内容与执行/判据身份；Undo 回到相同内容仍须新验证，迟到回调不能恢复绿色。
+5. 包采用专门的可移植导出投影，不能直接把完整 F5 恢复快照或 package snapshot 当作可分发配置。保留草稿语义与禁止导出机器设置之间需要显式转换规则。
+
+## 12 个具体反例与验收判据
+
+### 1. 搬移 hash：路径改写成功，却沿用旧验证为当前有效（P1）
+
+**构造**：A 目录运行成功，主 INI 引用绝对 geometry/STL 路径。导出时改成包内相对路径，移到含中文/空格的 B 目录，并让 A 不可访问；再加载 B。变体：项目 v7 的 source_path/raw_source_text 中仍藏 A，或 exporter 在 B 重写 INI 后仍保存 A 时的 SHA。
+
+**必须判定**：只搬目录且成员字节未改，成员 SHA 不变；改写 INI/macro 后必须记录新的 SHA，并保留原字节 → 新字节的重定位映射。历史收据原样保留并标历史/待本机重验，不重算历史 SHA 来伪造其原来读过 B。重放只能读当前包根内经清单验证的成员；旧根可访问也不得回退读取。关闭 A 后仍能完成允许范围内的重放，是资源可移植性的必要负向对照。
+
+**可借用**：`gui/g4usim_gui/output/provenance.py:131`、`:148` 已从旧 manifest 锚点映射到当前结果根；`:158` 检查解析后仍在当前根。`gui/g4usim_gui/writers/main_ini_writer.py:93`、`:97`、`:101` 现写入 output/material/geometry 的包路径，不能假定其输出天然可搬移。**边界**：F1 输出重定位可借用原则，不直接代替 K1 输入映射协议。
+
+### 2. 实际资源 vs 计划文件：导出清单全对，但模拟读了另一版本（P1）
+
+**构造**：生成时表/谱/STL 为 H1；启动前换为同名、同长度、尽量同 mtime 的 H2；或先读 H1、第二次读 H2，结束前恢复 H1。另用 CRLF/BOM 差异证明逻辑文本 SHA 相同或不同不能代替原始字节 SHA。编辑快照不变，资源在磁盘已变。
+
+**必须判定**：生成/导出计划 SHA、实际读取 SHA、配置语义接受/内核应用分别保存。指定输入的运行验证不得在任一相关实际读取与预期不一致时通过；不能将多次读取按 path 压成最后一条，不能在结束后重读磁盘补历史。F1 的 unobserved 必须保留原因并限制对应结论；“所有计划文件都 hash 过”不证明完整实际依赖已观测。无关计划成员未被读取不直接算失败，要按资源角色和本验证阶段解释。
+
+**可借用**：`src/Config/InputProvenance.cc:115` 从一次二进制读取返回被解析的 bytes 并登记；`:86` 追加读取、`:94` 登记 unobserved。`gui/g4usim_gui/output/identity.py:59` 明确仅 project readers、bytes read 非语义接受，`:65` 校验连续序列。具体资源入口：`src/Geometry/StlReader.cc:76`、`src/Source/SourceManager.cc:177`、`src/Scoring/NielTable.cc:15`、`src/Scoring/PhaseSpace.cc:71`。`gui/g4usim_gui/core/diagnostics.py:79` 的 SHA 是 UTF-8 逻辑文本，不能充当这些原始字节收据。
+
+### 3. Inspect 返回零、甚至宏中写了 initialize，就显示“初始化已验证”（P1）
+
+**构造**：macro 包含 `/run/initialize`；`--inspect-run` Configure/preflight 成功，但真实初始化时缺 Geant4 数据、构造资源不合法或几何检查失败。再加一个只有 initialize、没有 beamOn 的正常零事件进程。
+
+**必须判定**：Inspect 只发布字段/配置与 preflight 层结果；宏文本含 initialize 不算执行证据。初始化/几何检查必须实际执行对应入口并保留阶段证据；未运行几何检查就不能写“几何通过”。只有初始化的零事件结果可以支持已证实的初始化层，不能升级为指定输入事件完成；无 run、dry-run 与 success 分开。生成的 validation_report/diagnostics 也只证明生成入口的校验。
+
+**可借用**：`main.cc:624`、`:629`、`:640`、`:644` 是 Inspect 的 Configure/preflight/计划输出路径；帮助说明 `main.cc:280` 明说无初始化/执行。`gui/g4usim_gui/core/run_result.py:83`、`:89`、`:91` 已区分 dry-run/no-run/正事件完成。`gui/g4usim_gui/writers/package_writer.py:104` 的报告不能升格为后端执行收据。
+
+### 4. 外部 macro 隐藏 I/O：递归 execute 收齐了，仍遗漏数据或副作用（P1）
+
+**构造**：顶层 macro 引用子目录 macro，子 macro 使用受支持的 RNG 恢复或原生读文件命令；再加入未建模的原生命令/自定义命令，其参数指向另一个文件或产生输出。只收集 `/control/execute` 的打包器仍可对所有已知成员给出完整 SHA。GDML 引用外部依赖/网络也是同类闭包反例。
+
+**必须判定**：递归 macro 文件、命令资源参数和其嵌套依赖是不同层次。仅对已知语法给出闭包；未知命令不能因“未发现路径”当成无 I/O。可信导出/重放须拒绝或走明确的资源/执行策略，受限导出必须说清无法证明的部分，不能仍显示完整可信。顶层按工作目录、嵌套 execute 按发出 macro 的目录解析；不要将这条规则未经核实套到其他命令的文件参数。已拒绝的动态 alias/loop/if 不能在 K1 旁路展开。含输出/外部副作用的命令也需独立处理，输入 hash 不提供执行隔离。
+
+**可借用**：`src/Core/MacroPreflight.cc:265` 只拒绝列明动态命令；`:301` 对其他非 execute 命令保留执行序列，**不是 I/O 白名单**；`:307`、`:310` 才是递归 execute 解析。`src/Geometry/GdmlInputCapture.cc:171`、`:204` 能表达部分网络流未观测，不能由此声称离线依赖闭合。
+
+### 5. 同事件计数、同名文件，却是另一次运行；取消后迟到成功（P1）
+
+**构造**：A/B 都完成 100 事件、runID=0，seed/几何不同。B 的目录被放入 A 完整且自洽的摘要和 metadata，或 A 的 finished 回调落到 B 当前记录。另构造逐轮 planned=(40,60)、completed=(30,70)，总数仍 100；取消与正常 finished 接近同时到达。
+
+**必须判定**：run_result 的正常退出/新摘要/逐轮完成是必要条件；还须核对本次请求、独立输出目录、本次实际 F1 execution_id、输入与执行身份。验证记录以 `(execution_id, run_id)` 等明确作用域关联数据，不能只比较总 N 或文件名。完整替换为另一份有效 F1 结果仍须由请求关联检测；单独 F1 自洽不是来源认证。取消/kill 请求已生效后不得发布 success，旧回调不得覆盖新请求；忙时拒绝不能先创建一个看似已启动的成功记录。
+
+**可借用**：`gui/g4usim_gui/core/run_result.py:27` 逐 run 核对，`:52` 终止请求优先。`gui/g4usim_gui/core/runner.py:85` 忙时拒绝，`:131`、`:141` 锁存终止，`:224` 仅用 mtime/size 判断摘要 fresh，**不能作为 K1 强身份**。`gui/g4usim_gui/output/identity.py:43`、`:76` 校验 execution 与 artifact 作用域；它证明记录内部一致，不独自证明来自当前 QProcess。
+
+### 6. 物理比较：数值接近，实际比较了不同量或不同归一化（P1）
+
+**构造**：参考为每事件 Gy，结果为总 Gy，刚好某个 N 使数值落容差；一个事件含多个初级粒子，却按事件数叫“每初级粒子”；对 LET 比值再除 N；把 raw 与 weighted 沉积混比，或拿 run0 的统计量比较 run1 的参考。
+
+**必须判定**：比较规格必须显式绑定量、单位/换算、总量或 per-event、raw/weighted、对象/体积、run、参考字节及出处、预先固定的判据。口径未知/矛盾时报告不可比较，不能默认为通过。判据变更产生新的评估记录，不能改历史容差直到过关。物理通过只限这个明确比较，不提升为普遍物理正确。
+
+**可借用**：`gui/g4usim_gui/output/plot_data.py:409` 限定 total/per_event，`:412` 拒绝 LET 再归一化，`:416` 使用对应 run 的已完成事件。`gui/g4usim_gui/output/dose_summary.py:39`、`:43` 分 raw/weighted。图可绘制并不表示已有通用物理比较服务；K1 应复用定义而非复用“画出了图”作为验收。
+
+### 7. 统计比较：稀疏 worker 的行数被当成完整 N，未知误差被填零（P1）
+
+**构造**：master 完成 N=100，某 worker 只有 3 个发生沉积的事件行，另一个只有表头；把去重可见 eventID=3 当 N，或者把只有一次事件/零总量的 sigma 填 0。两个 mesh cell 相加时直接平方合并误差，尽管未存跨 cell 协方差。
+
+**必须判定**：完整 N 取可靠 master/run metadata；稀疏 worker 去重计数只是下界，空表头 N 未知，不能强行要求每 worker N 等于 master N。估计方法、uncertainty_status 与统计单位必须进入评估证据。依赖 sigma 的判据在 N<2/零分母/未知协方差时不可评估，不能“零误差通过”。若独立固定确定性容差不使用 sigma，应按该独立判据评估，并保留误差不可用事实；不必笼统拒绝所有比较。
+
+**可借用**：`gui/g4usim_gui/output/plot_data.py:149`、`:158`、`:163` 明确保守不确定度状态；`:264`、`:298` 明确跨 cell 协方差未知；`:374` 从对应 run 取完整 N。`docs/agent-history.md:540` 保留 F5 稀疏 worker 下界与空表头反例，不重复错误的强等 N 假设。
+
+### 8. Undo 回到相同 hash，旧绿色或迟到 Inspect 自动复活（P1）
+
+**构造**：revision 7 的 A 验证通过；改为 B 得 revision 8；Undo 得 A/revision 9，指纹又与 revision 7 相同。此时 revision 7 的后台 Inspect/运行评估才返回。另一窗口/新会话也可能正好 revision=7。
+
+**必须判定**：历史通过保持可见，但不能恢复当前有效。当前资格至少绑定会话/工作流、revision、内容身份、请求代次及判据；Undo/Redo/reset 不回退 revision。开始后编辑即使回到同内容，也要将结果记为原请求历史，不发布到当前状态。新会话的整数 revision 不具跨会话唯一性；后端 EffectiveConfig revision 也不能替换编辑 revision。
+
+**可借用**：`gui/g4usim_gui/core/edit_transactions.py:193`/`:203`、`:207`/`:217`、`:221`/`:234` 已单调递增；`:110` 可作 expected_revision 冲突守卫。`gui/g4usim_gui/core/edit_snapshot.py:128` 是语义指纹，不能代替单调历史。F4 的快照失效原则见 `docs/agent-history.md:499`，K1 不应按相同内容反向重绑定旧诊断。
+
+### 9. Apply 的“验证副本”绕过 raw draft 或失败后污染共享历史（P1）
+
+**构造**：当前主界面 seed 原文为非法字符串，而类型化 RunSettings 仍缓存上次合法值；apply 只校验类型化 project 后生成运行包。另一变体：删除 source_errors/round_trip_blockers 缓存再提交，或验证候选后用户已修改当前 revision；投影失败后服务仍登记 applied。
+
+**必须判定**：读取并验证完整 WorkspaceSnapshot（含 raw draft、来源读取成败及完整编辑模型），副本中的 F4 producer 校验完成后，以 expected_revision 经原 EditSession 接受；拒绝不改当前 snapshot/revision/undo/redo，不生成可运行状态。来源 blocker 从捕获原文重建，不能信任可清空缓存。投影及回滚双失败进入既有冻结状态；不能另建服务历史或只改模型不投影 GUI。接受后才发布 apply 记录。
+
+**可借用**：`gui/g4usim_gui/core/edit_snapshot.py:32` 重建来源证据，`:58` 持久快照含 state。`gui/g4usim_gui/core/edit_sources.py:20`、`:47`、`:50`、`:68` 处理文本不一致/读取失败/重建 blocker。`gui/g4usim_gui/core/edit_transactions.py:142` 校验候选并在 `_apply` 成功后发布，`:116` 有投影回滚错误分类；`:176` 是副本事务入口。`gui/g4usim_gui/writers/package_writer.py:170` 仍要求显式 source-copy，K1 不得自动勾选绕过。
+
+### 10. 二进制/环境/随机状态：路径和版本文字相同，就沿用旧验证（P1）
+
+**构造**：保持 executable 路径和版本号不变，换成另一实际二进制；机器数据目录或数据集内容改变；相同 seed 却增加 RNG 恢复文件、换引擎/线程设置。导入者直接信任包内原机器能力探测与成功记录。
+
+**必须判定**：历史绑定实际二进制 SHA、可取得的 build/capabilities、实际命令覆盖、随机引擎/恢复输入、请求与实际线程及环境探测事实；未知字段明确 unknown，不编造全环境复现。`--check-geant4-data` 的存在性检查不是所有数据集字节身份。导入时重新选择和探测本机环境，历史不算本机验证；新证据与旧证据可比较，但相同 seed 不承诺逐位相同。对实际启动与检查间替换，至少核对可取得的运行身份并披露无法封闭的竞态，不宣称路径字符串是强绑定。
+
+**可借用**：`gui/g4usim_gui/core/runner.py:66` 给出真正 CLI 参数与优先入口，`:114` 保留 command/cwd；`gui/g4usim_gui/output/identity.py:51` 读取 build 身份，但当前 build 字段并不是实际二进制全文件 SHA。`include/Config/InputProvenance.hh:24` 明确读取不是语义接受，RNG 文件即使被读取也不能据此称已成功恢复。
+
+### 11. 导出“完整快照”同时泄漏机器设置，或清理快照后破坏来源语义（P1）
+
+**构造**：在隔离夹具的 QSettings、环境变量、executable/workspaceRoot/pathSettings、editingState.sources 与历史 command/log 字段分别放入不同的假凭据/私有路径哨兵；配置包通过复制完整项目/恢复载荷或递归复制工作目录把它们带出。反向变体：为去路径清空 raw_source_text/source_path，导致原本阻断的非法源被恢复为可运行。
+
+**必须判定**：专门定义可移植字段允许表和重定位规则；包不得含密钥、用户设置、完整环境变量、二进制或可执行的原机器选择。扫描所有递归成员（项目、编辑来源、验证历史、重放脚本和说明），不仅顶层 JSON。用人工假哨兵验收，不读真实密钥。历史环境只留必要的非敏感事实，路径按规则脱敏/相对化，并明确不改变原始历史的证明边界。若无法同时保留合法编辑/阻断语义与禁止内容，就拒绝导出或使用显式受限策略，不能静默删字段后冒称完整恢复。资源分发权 unknown 要保留，不等于授权许可。
+
+**可借用**：`gui/g4usim_gui/core/project.py:45` 至 `:55` 包含机器路径；`:70`、`:73` 直接 asdict；`gui/g4usim_gui/writers/package_writer.py:243` 至 `:250` 还展开 paths/runPackage，**这些不是公开分发投影**。`gui/g4usim_gui/core/edit_snapshot.py:24` transient 不进持久 codec，但 `:58` 的 state 仍必须审计。QSettings 使用点 `gui/g4usim_gui/app.py:20`、`gui/g4usim_gui/window/shell.py:312` 属本机设置，不应顺手打包。不得借本审查扩大成提供真实密钥扫描权限。
+
+### 12. Manifest 局部正确/发布一半：加载接受逃逸或导出覆盖已有目标（P1）
+
+**构造**：成员名为 `../outside`、绝对/盘符路径、Windows 大小写碰撞，或包内 junction/symlink 指向外部；未登记的额外 INI 被 replay 引用。加载仅核对“列出来的成员”却遗漏必需入口。导出检查目标不存在后，另一个写者先创建目标，随后 rename/replace 覆盖它；发布后临时清理失败又被当作失败并删除成功目录。
+
+**必须判定**：加载严格校验 schema/重复 key、成员唯一性、当前根约束、链接策略、成员 hash 与必需入口/所有允许引用的清单归属；未知附加文件即使允许存放也不得参与可信重放。manifest 与成员共同被恶意重写仍可自洽，SHA 不是签名，不能显示来源认证。导出须在暂存目录完成验证，以不覆盖语义发布；竞争创建目标亦保留原目标，失败不留下可加载的半包。发布是提交点，之后 cleanup 失败仅成功附 warning；加载失败不替换原工作区/历史、不启动 replay。应单独验证目录发布的 Windows/Linux 语义，不能照搬单文件机制就称完成。
+
+**可借用**：`gui/g4usim_gui/output/provenance.py:110` 严格 JSON，`:120` 禁新身份损坏后降级，`:155` 至 `:175` 约束路径/重复/缺失/必需成员；`gui/g4usim_gui/output/identity.py:108` 对当前文件 fresh hash。`gui/g4usim_gui/core/config_migration.py:65`、`:93`、`:103` 示范**单文件**独占发布与提交后清理语义，目录发布需另证。旧 `package_writer.py:82` 先分配包再写入，不应直接当作 K1 原子导出的既成实现。
+
+## 服务代码完成后的独立复核入口
+
+优先逐项追踪：`inspect/validate/run/evaluate` 记录状态是否与以上证据层一致；`apply` 是否使用同一 EditSession 且处理 raw draft/拒绝回滚；`experiment_identity` 是否区分会话/revision、计划/读取/接受/应用、原字节/重定位字节；`experiment_bundle` 的闭包/拒绝策略/加载原子性；GUI/CLI 是否能绕过其中任一拒绝。先审具体控制流和失败分支，再用上述成对夹具验收；不以类名、manifest 中有 hash、按钮已接通或自测返回零取代证据。
+
+本次仅完成静态契约与现接口独立审查；未运行这 12 个反例、未启动后端、未取得实窗或物理比较证据。产品与测试零修改；唯一交付/进度记录即本文件。
+
+交付检查：报告存在、UTF-8 可读，12 项编号完整；40 个显式 file:line 引用的文件存在且行号未越界（缩写的同文件行号不在该计数中）。这只是交付检查，不是反例运行结果。

@@ -1,0 +1,376 @@
+# K1 服务、身份与 GUI 适配独立代码审查
+
+2026-10-31；工作区 `C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim`。本审查不修改产品、测试、其他写者证据或历史归档；只写本报告。模型按委派信息为 `gpt-6.1-sol/medium`，消耗未知。
+
+**最终独立签字：冻结提交 `e5ff80009975fc9d7d783eaa0865c7c894d1975b` 已核对，工作区干净；已审范围无剩余确认代码缺陷，可冻结进入主任务后续验收。** 原四项、finish/watch、Unicode label/严格路径身份、source-copy窄兼容、close均已闭合；新增external Inspect、实际事实投影与5行版本文本兼容的限定diff也通过。详见文末最终签字。本报告不提前标记K1阶段通过；后续正式矩阵不是本代码签字的阻碍。下文旧失败和过程状态按原时间保留。
+
+## 审查对象与字节身份
+
+最后源码核对：
+
+| 文件 | SHA256 | 行数 |
+| --- | --- | --- |
+| `gui/g4usim_gui/core/experiment_workflow.py` | `36df31bcd599cdbaa3ab795eec69fdf41ff70cf0b2d6562e7b9f66b52a393b15` | 790 |
+| `gui/g4usim_gui/core/experiment_identity.py` | `20f321b1196d9be6388a159b75374b56f08bb15d2c4b953febd0e2e5ce76b9f9` | 103 |
+| `gui/g4usim_gui/window/experiment.py` | `09f5194dfc5a265d439a8954be4a08fe7dfa9fd2dc51e5bbc4084edbfd55a11a` | 277 |
+
+本表是审查定位收据，不要求并行写者停止；若字节继续变化，按新版本复核。下列 1–3 的成组独立反例最近一次执行时 workflow SHA 为 `473de1c6a66fa485cf214ae38abf14a1b926a00941aa3abd362b9da777df6ecf`；随后上表版本再次读取，相关判断分支仍在，行号见下。不是拿最初 668 行草稿作为当前结论。
+
+## 1. [P1] Apply 接受非法非 seed raw draft，随后可生成与显示草稿不同的配置
+
+位置：`gui/g4usim_gui/core/experiment_workflow.py:115`（`_field_report`）、`:126`（仅 seed 专门检查）及 `:452`（apply）。
+
+**实际复现**：复用既有 `test_f5_transactions_backend.initial_state()` 在临时目录创建完整合法 WorkspaceSnapshot，保持 `sourceEditor.energy = '1 MeV'`，只把 `state['drafts']['config.source_editor_energy']` 改为 `'invalid energy'`。调用真实 `_field_report()` 返回 `can_run=True, errors=[]`；进一步调用真实异步 `service.apply(candidate, expected_revision=0)`：
+
+```text
+apply=passed
+revision=1
+typed=1 MeV
+raw=invalid energy
+```
+
+此前一轮同一分支还执行 `service.generate()`，结果 `passed`，生成 INI 仍含 `1 MeV`。这不是 Geant4 物理通过，而是确定的服务接受/生成边界绕过。
+
+**原因与影响**：`_field_report` 验证类型化编辑模型，只额外处理 seed、detail 和 `.raw` spin 文本，没有完整处理普通 QLineEdit 草稿与类型化模型的冲突。F5 的设计恰好允许保存非法 raw draft；其存在不能表示该草稿已被接受。CLI 可提交严格 codec 合法但 raw/model 不一致的完整快照；桌面 adapter 又会通过 `apply_workspace()` 恢复原始文本。结果是界面/恢复内容显示非法输入，服务却用旧模型给出 fields/apply/generate 通过。
+
+**修复判据**：对受支持的完整草稿映射执行与 GUI 一致的接受/校验规则，不静默丢弃非法原文，也不能仅因为类型化模型仍合法就通过。至少以非 seed 源能量、物理 cut、几何表格原文等代表边界验证；合法格式差异不要一概按字符串不相等拒绝。apply 拒绝须保持 session revision/undo/redo/原快照，不能先投影后再补校验。GUI 与 CLI 应共用这一闭合规则。
+
+## 2. [P2] Candidate 的同步克隆失败发生在 _begin 之后，服务永久 busy
+
+位置：`gui/g4usim_gui/core/experiment_workflow.py:452-454`。
+
+**实际复现**：在完成前一个异步动作、服务 idle 的条件下取得合法 `session.current()`，再设置 `candidate.state['version'] = 999`，调用真实 `service.apply(candidate)`：
+
+```text
+exception=Unsupported editing state version at project.editingState.version
+busy=true
+active.phase=preparing
+```
+
+`apply(None)` 也复现相同生命周期问题，但以上主反例使用的是被调用方公开接收的 WorkspaceSnapshot，而非只靠错误参数类型。
+
+**原因与影响**：`_begin()` 已插入 pending 记录并占用 `_active`，紧接着 `clone_snapshot()` 同步抛错，尚未进入 `_work` 的失败最终化。后续所有动作被 busy 拒绝；cancel 只标 cancelled，没有在途 worker/process 能送回完成信号，因此也不能自然清除。
+
+**修复判据**：在发布动作之前完成可同步拒绝的候选接纳，或保证任何 begin 后的同步异常走且仅走一次受控终态清理。拒绝后服务可继续下一合法动作、原 session 不变、无永久 pending/busy。对不支持 state 版本、来源文本不一致和错误 candidate 类型分别验证。
+
+## 3. [P2] 事件样本以文本去重，数值相同的事件号可替代缺失事件并通过比较
+
+位置：`gui/g4usim_gui/core/experiment_workflow.py:706`（`_compare_csv`），`:770-775`（标识文本 tuple 去重与之后的 int 范围检查）。
+
+**实际复现**：使用真实当前 `_compare_csv()`、真实临时 CSV/严格参考 JSON，evidence 仅用内存对象提供已选 run N=2 和文件入口：
+
+```csv
+runID,eventID,raw_edep_MeV,weighted_edep_MeV
+0,0,1,100
+0,00,1,100
+```
+
+规格为合法的 energy_deposition / sensitive_total / raw / MeV / per_event / run=0 / mean_standard_error，参考值 1、零容差。结果：
+
+```text
+passed=true
+sample_count=2
+```
+
+这里只有数值 event 0，缺少 event 1。字符串 `'0'` 与 `'00'` 被看成两个标识；之后又都能通过 `int(eventID)` 的 `[0,N)` 范围检查，于是 count==N 不能证明完整 N 个不同事件。
+
+**修复判据**：在去重前统一严格解析 `(runID,eventID)` 的整数身份，或拒绝非规范十进制编码；最终验证恰为所选 run 的完整不同事件集合，重复/缺失均拒绝。保留多 worker 合并与逐 run metadata N，不能改成每 worker 都有 master N。反例属于比较消费者完整性验证，不宣称正常后端会输出带前导零的 eventID，也不把 F1 SHA 当来源签名。
+
+## 4. [P2] 相对数据路径的环境证据使用了错误工作目录
+
+位置：`gui/g4usim_gui/core/experiment_identity.py:101`；关联 `gui/g4usim_gui/core/environment_discovery.py:58`、`gui/g4usim_gui/core/experiment_workflow.py:325-331`、`:383` 与 `gui/g4usim_gui/core/runner.py:128`。
+
+I1 的 `_command()` 在 executable.parent 运行查询；runner 在执行输入树的 project.workspaceRoot 运行模拟。`safe_environment()` 却对数据报告中的相对 path 直接 `Path(...).resolve()`，以 Python 所在工作目录生成 `selected_path_sha256`，没有使用探测进程 cwd。`_environment(snapshot)` 同样不按实际 execution cwd 探测。
+
+**实际复现**：调用真实 I1 `_command()` 启动 Python 直接子进程打印 `os.path.abspath('relative-dataset')`；把允许的相对 dataset path 交给真实 `safe_environment()`：
+
+```text
+child_probe_succeeded=true
+recorded_matches_probe_child_root=false
+recorded_matches_owner_cwd=true
+```
+
+没有创建假数据集或运行 Geant4。目录解析与 hash 错配是真实子进程/真实编码路径的结果。若相同相对 GEANT4_DATA_DIR/G4…DATA 在探测目录和执行目录指向不同可用数据树，则 pre/post probe 仍可能一致，却不描述模拟实际选中的环境。当前代码不拒绝这些相对数据路径。
+
+**修复判据**：探测与运行共享明确的 cwd/必要环境上下文；对报告的相对 dataset path 按产生报告的 cwd 规范化后再去敏 hash，无法确认则 unknown 或明确拒绝该证据资格。保留 dataset 内容 hash 未观测的诚实边界。本项是**相同 env、不同 cwd**问题，区别于 I1 报告已保留的覆盖 E 与继承 E0 限制，不能把两者混称已解决。
+
+## 已撤回的旧稿问题与最新可借用点
+
+以下早期观察**不作为当前开放缺陷**：
+
+- 身份：新 `resource_identity()` 已把 portable snapshot 语义纳入 configuration_fingerprint；新 `safe_environment()` 读取 I1 的 identity/build/capabilities.data/data.report 层级，并明确数据集内容身份 unknown。当前配置与执行 fingerprint 分开，不能沿最初“忽略快照/层级取错”草稿继续报缺陷。
+- actual inputs：当前 `_prepare` 为执行构造资源包，收集 expected_inputs 的实际成员路径/hash/size；完成时以实际执行 cwd 解析相对 F1 路径并逐条匹配，不再使用“全局允许 SHA 集合”放行未知路径。required inputs 与闭包全部计划成员区分；未被该阶段读取的成员不伪称已读取。
+- 物理口径：独立新反例确认 weighted=true 配 raw 列已拒绝；deterministic/错误对象旧路径已收窄拒绝；参考 JSON 明确绑定量/单位/权重/对象/run/来源；选定 run 的 N=2 在整进程总 N=4 时可正常比较，已不再误用全进程总数。第 3 项是新代码剩余的整数身份问题，不重复旧发现。
+- 初始化：Inspect 仍只标 Configure/preflight。新初始化路径先取得真实 macro plan，再执行到首个 beamOn 前的显式 prefix、initialize、几何检查与 mesh，最终要求 no_run/零 run 的独立事实。external 准备新增 config 目录，使 runner 按既有规则把日志放到 parent/logs，早期日志错目录反例的触发条件已被消除。该修正为静态复核，尚未以真实 overlap 负例重跑签字。
+- GUI：最新 adapter 已注入 F5 apply_snapshot 投影，完成回调去重、生成/运行包绑定、后台加载及 revision 守卫、导入历史陈旧、延迟关闭等已接入；此前“未传 apply 投影”等预备观察不沿用。服务现在生成可执行闭包，也不能继续沿旧 package_writer 直接复制的假设报告 GUI 搬移失败。
+
+## 实际执行、未验证与交付边界
+
+- 两次执行 `python -B scripts/test_k1_workflow.py --executable ''` 均 exit 0，输出 synthetic_component passed、simulation not_fabricated、formal_acceptance not_claimed。第二次为上述大幅接口更新后的重新执行。该脚本没有覆盖本报告所有新增反例；通过不抵消独立发现。
+- 独立反例使用 Python -B、临时夹具、真实 WorkspaceSnapshot/EditSession/异步服务/比较函数；ComponentRunner 不产生模拟成功。临时 fixture/record 由 TemporaryDirectory 清理，未改源文件或测试。
+- 第 4 项仅启动 Python 查询子进程，不执行真实 Geant4。未做完整 Windows/Linux 矩阵、正式 v3 基线门禁、实际初始化/overlap 负例、真实物理比较或原生实窗。当前 GUI 适配在被审期间从未集成变成已集成，报告只基于实际读到的新源码，不冒称 MainWindow 实窗验收。
+- I1 两项 P2 已独立复核关闭，组件 v3 142/48 独立重跑 exit0；真实后端 145/52 只核对保存的原日志 SHA/marker/状态。其覆盖 E/E0 限制和本报告第 4 项继续交主负责人。
+
+下一步：实现者按最新字节修正 1–4；独立复核每项反例，再补真实 init/overlap、指定输入 run 及 GUI 同代验收。未参与这些实现，不替作者修改服务/身份/GUI/测试。
+
+## 后续 CLI/GUI 公开动作审查与主审疑点复核
+
+### 模型账本已核实
+
+实际读取 `out/collab/k1-model-ledger.json`：`independent review`，ID `01a18f97-f404-7fa0-89f3-b826cadd8055`，model=`gpt-6.1-sol`，effort=`medium`。本报告原署名与账本一致，消耗仍未知。不重启、替代或承接被上游拒绝的 Plato/资源包审查；本节只查 CLI/GUI 公开适配与已授权核心疑点。
+
+### 5. CLI 终态抢先于 25ms tick，丢失 timeout/SIGINT：已发现并通知，随后定向复核修正
+
+初次位置：`gui/g4usim_gui/experiment_cli.py:104-107` 的 `await_action.completed()`。最初仅把 record 加入 terminal 并退出事件循环；deadline/信号仅由 25ms timer 检查。
+
+真实 QCoreApplication、真实 QTimer/OS signal，无模拟进程的独立反例：
+
+```text
+timeout=.001，8ms 后 emit passed：实际约16ms，record=passed，interruption=null
+0ms raise SIGINT，8ms 后 emit passed：record=passed，interruption=null
+```
+
+这与 CLI 已声明的“本地超时仍失败、取消不被迟到成功覆盖”冲突，execute 可据此返回 0。已通过 agent send_input 通知 CLI 作者 `01a18f96-d294-7693-bc4b-b3f9f9fd1920`，并向主负责人 commentary 回告。
+
+随后新代码在终态接受边界检查既有 requested 与 deadline，使用 perf_counter 保留 Windows 亚 tick 精度。独立执行正式入口 `python -B scripts/test_k1_cli.py` exit0，包含新增晚到终态、SIGINT 与 CLI JSON/退出状态反例，输出明确 backend not requested。本次复核的 CLI SHA：`36434a249c4281ba99e72c880e3e3822b16276b993dae6a02a4a6b0ea6c77a78`。此项不再沿旧代码作为开放缺陷。
+
+曾探索 `test_k1_cli.py --component`，脚本不支持该参数，argparse exit1；随后改用其正式无参静态入口并通过。这个调用参数错误不计作产品缺陷或失败验收。
+
+### 6. GUI 合法数码/特殊值被 raw 检查拒绝：当前最后一次独立公开路径仍失败，已通知两作者
+
+第一轮运行 `python -B gui/smoke_tests/smoke_k1_workflow.py`，exit1；默认向导→设置 executable/runs root→公开生成动作，fields_rejected，errors=`['project.threads.raw']`。
+
+独立创建真实 MainWindow 复现同一公开配置流程：typed threads=2、captured threads=2，而 `drafts['project.threads.raw']` 与 spin 文本均为 `〢`，再处理一轮 Qt 事件后仍拒绝。另以裸 QSpinBox 独立核对：
+
+```text
+locale=zh_HK
+text=〢
+hasAcceptableInput=true
+valueFromText(text)=2
+value=2
+_draft_equivalent(text, 2, 'project.threads.raw')=false
+```
+
+这不是非法草稿，也不是未提交值。ASCII/字符串相等不足以判断 Qt 当前 locale 的合法显示。已通知 workflow 作者 `01a18f93-ee1e-71b2-8816-4904a12efe51` 及 CLI/GUI 作者。
+
+作者随即加入 QLocale 数字解析；独立重跑 smoke 已越过第一处，但再次 exit1（新脚本 line73）：
+
+```text
+experiment.fields_rejected
+['config.scoring_editor_trajectories.raw']
+```
+
+具体公开控件 `gui/g4usim_gui/widgets/config/run_config.py:102-104` 的 QSpinBox，最小值 0 且 `setSpecialValueText(ui_text('off'))`。其合法显示 off/关闭也不能仅按数字解析；应只接受该已知绑定在对应最小值的合法 special text，同时保持任意非法 raw 的拒绝，不能放开全部非数字输入。第二反例已分别通知两作者。**这次最后实际执行仍未通过；不因看到 locale 修正代码就宣称整条生成/应用/导入 GUI 路径通过。** 等修复回执及新一轮独立 smoke。
+
+### 主审疑点 A：终态落盘/内存不一致与重载 evaluate
+
+先读到的旧代码确实在 published 时仅改内存；随后实现者已加入补写终态。为避免把“第一次落盘的中间态”误报为“最终不一致”，对新源码 SHA `88d46cd838a6ff1bc8179e116dd02951593b6893bac9db77ebbbcb3b19f54124` 独立控制工作队列，真实执行 `_persist()`，在第一次写后、published 之前注入取消或 epoch 改变，并继续排空后续补写：
+
+| 反例 | 实际写次数 | 最终磁盘 | 最终内存 | busy | 新会话 evaluate gate |
+| --- | --- | --- | --- | --- | --- |
+| cancel | 2 | cancelled | cancelled | false | 拒绝，source cancelled |
+| epoch 变化 | 2 | stale | stale | false | 拒绝，source stale |
+
+使用真实记录原子写与真实服务终态逻辑，调度用内存 Deferred job 控制竞态，没有伪造模拟完成。首次旧写尚在时 busy 仍为 true，不能在补写尚未排空时称服务已完成。新代码在发 completed 前补写，当前反例没有复现最终不一致或完成后重启可 evaluate。
+
+曾在尚未排空补写时读取旧磁盘 passed，看到异会话 evaluate 被调度到下游重验；这只是**中间态实验**，不是最终发布事实，也不是实际物理比较通过，不升级为当前确定缺陷。
+
+未测试第一次写入与补写之间强制进程崩溃/突然断电；本节不提供崩溃窗口的持久取消保证。单文件原子替换与跨两次写的事务持久性仍须分开解释。
+
+### 主审疑点 B：外部文件变化、revision 不变时面板仍 passed
+
+旧版本曾独立复现：真实 external main.ini 的 energy 从 1 MeV 改为 2 MeV，revision=0 不变；fresh capture 的 fingerprint 已变，但 `state()` 仍 passed、旧记录 stale=false。
+
+在同一上述 SHA 的新代码，已有 QFileSystemWatcher/后台 refresh。重新使用真实临时 external INI、真实 validate/文件修改/公开 state 调用，独立结果：
+
+```text
+first status=pending
+first qualification=checking
+after background completion status=stale
+old record.stale=true
+revision=0
+```
+
+这是在实际代码上复现的修正结果，不能继续笼统称它“只看 revision”。同时模拟 GUI 的 changed→state 公开回读链，在无编辑的两秒观察内没有产生刷新反馈循环（identity reads=1，最终 as_observed，refresh_pending=false）。该检查仅覆盖当前链路，不承诺所有 watcher/大资源/系统文件替换情形都已验收。
+
+### 当前交接
+
+本节仅新增已明确复现的适配问题与受控疑点核实，未修改任何实现/测试，未审查被拒绝的资源包任务。CLI 超时/中断反例已通知并定向复核新修正；GUI special-value 反例最后一次仍失败，作者已获具体字段与触发路径。初审四项的整组修复结论仍待作者修复报告后正式独立复核，不用本节的局部新代码观察替代其回执。
+
+## r1 修复独立复核：原四项、finish/watch 与真实专项收尾
+
+本节取代上节关于原四项仍未复核、GUI special-value 尚失败的旧状态。工作区仍在开发，未冻结，不能把本节结论扩成整矩阵通过。
+
+### 原四项：独立定向复核通过
+
+本轮定向运行读取 workflow SHA `17e26c5a76a59b218053b5db4c8ca73972a520b91a5c63232846c0469fa66ddb`；独立脚本结束后再核 SHA 相同。
+
+| 原项 | 重跑原反例及有效对照 | 结果 |
+| --- | --- | --- |
+| 1 非 seed raw/model 冲突 | 合法1MeV模型 + `config.source_editor_energy='invalid energy'`，真实异步 apply；检查 failed、revision仍0、无undo | 通过：拒绝且历史未污染 |
+| 2 apply 同步拒绝卡 busy | 完整快照 state.version=999；随后再执行合法 validate | 通过：立即拒绝、busy=false、下一动作passed |
+| 3 数值事件重复 | 真CSV含 eventID `0`/`00`，N=2及合法参考JSON，调用真实 `_compare_csv` | 通过：`experiment.event_sample_identity_invalid` |
+| 4 相对数据 cwd | 真实 `safe_environment` 对相对path使用 probe working_directory；真实 `_environment` 向支持cwd的probe传入执行cwd；不支持cwd的相对报告反例 | 通过：hash指向正确根；未知上下文明确拒绝 |
+
+当前方案在 `_prepare` 环境查询、完成后重验和 evaluate 都明确传入相应 execution cwd；未知 dataset 内容仍保留 unknown，不声称做了数据集内容校验。
+
+另独立验证：zh_HK 合法数码被接受；轨迹 binding 最低值0的合法 `off` 被接受；`off` 对值1、任意 nonsense 对值0仍拒绝。真实 GUI v3 `python -B tools/test_assert_probe.py gui/smoke_tests/smoke_k1_workflow.py` 自然 exit0，`G4USIM_ASSERTS=32`。因此第6项的两类合法raw显示反例在本轮关闭，不再沿用修前失败。该GUI专项不证明原生视觉或物理结果。
+
+### finish/watch：最新字节上的独立反例通过
+
+继续以同一 `17e26c...` 源码，独立控制真实终态写入和 published 间调度：
+
+```text
+CANCEL_PERSIST_AND_RELOAD_GATE=PASS writes=2
+EPOCH_PERSIST_AND_RELOAD_GATE=PASS writes=2
+WATCH_WITHOUT_STATE_POLL_OR_REVISION_CHANGE=PASS
+SOURCE_UNCHANGED=True
+```
+
+取消/epoch两分支均在补写完成后磁盘与内存一致，busy=false；新会话 evaluate 拒绝 cancelled/stale source。watch用真实 QFileSystemWatcher：注册后改 external INI 的1MeV→2MeV，不再调用 state触发重验，只读 records 等结果；旧记录自动 stale且revision仍0。不同于只证明“下一次按钮动作会fresh校验”。不扩大到进程骤停/断电耐久性或所有文件系统事件。
+
+### 作者375入口证据的独立核验
+
+实际读取 `out/collab/k1-workflow-final-r1.log`、specialized-result及对应逐记录JSON：初始化/两类external初始化为passed且0事件；overlap记录为failed/`experiment.geometry_overlap_reported`；geantino特殊零沉积比较正例passed、错误参考负例failed，标明 `user_supplied_unverified` 来源边界。
+
+对其中5份成功执行记录独立调用 F1 `output_evidence(..., fresh=True)`，并逐条验证当前artifact字节、manifest_digest、execution_id、`actual_output_dir`精确等本次记录输出路径，以及每个真实输入的解析后路径/hash/size与 expected_inputs相同，全部通过：
+
+```text
+external init: 0a2ca5f1bd0c4aa98b060437ee548c0e、73a18bf1805b4240905201c5264eaea5
+run: 823127c9f645449da3865b6d42dad1a0、aaf5939e98bd4278b281739c13214d73
+initialization: e8dce551c456416c977a39cc442fdde2
+每份真实读取账本4条，fresh F1/output/input核验通过
+```
+
+检查失败记录时没有假定其必有成功执行字段；最初泛化脚本在 overlap失败记录遇缺失execution_id后已改为只检查成功记录。这是审查脚本假设修正，不算产品失败。
+
+### 本审查者独立真实专项：功能结果成立，最终收尾仍失败
+
+后端路径 `out/build-f5/Release/G4UniversalSim.exe`；实际SHA `9790aa71a4fa7e9c2ca7d98f617fd983e328db09591766832f37a4ee138386d0` 与作者收据相符。独立实时能力/数据探测为ready，随后独立执行：
+
+```text
+python -B tools/test_assert_probe.py scripts/test_k1_workflow.py --executable C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/build-f5/Release/G4UniversalSim.exe
+```
+
+第一次执行在外部刷新 synthetic 断言附近 exit1/173入口；该次运行中 core/test SHA 均变化，不能直接当成同一冻结版本的新缺陷。随后稳定字节下独立调用完整 synthetic通过，前后 test SHA=`1ebf15384f0e6a2e5e63f1ad64b70692a71e9bf135f670265bf955edfdd389ad`、core SHA=`17e26c...`不变；这不证明第一次失败必由混代导致，只保留两次事实。
+
+再次完整真实专项输出 synthetic_component、real_backend 均passed，`G4USIM_ASSERTS=395`，包含真实初始化、external prefix/配置-only初始化、三事件运行、overlap拒绝、geantino零沉积比较正负例。但随即 TemporaryDirectory cleanup报错：
+
+```text
+PermissionError: [WinError 32] 另一个程序正在使用此文件，进程无法访问。
+D:\Temp\k1-workflow-4_9mzsa6\synthetic\original-geometry.ini
+最终进程 exit_code=1
+```
+
+**不能把395入口、功能summary或打印的passed当作整条命令通过。** 已向主负责人及workflow作者通知。watch/refresh尚有读任务与清理竞态是待查方向，本审查尚未识别具体句柄持有者，不将方向写成已证实根因。没有通过换目录、杀其他进程、忽略cleanup或伪改退出状态来掩盖失败；未自行递归删除该遗留临时目录。
+
+本轮真实专项输出的运行标识：initialization=`8bcac08f1f9b4b1687a2657b9d8bfa1b`，runs=`adc61ca460064837ac2873908614b91f`/`024520f36eb44b4a981655c26f10c7cc`，overlap rejection=`15b3d3af2c804859813259e75806e9d2`，物理比较正/负=`3fdff9126d4e43a9aadda82f1e051547`/`a0cb3e0f24ea43f98c5519ede853966f`。这些不是阶段关闭收据；临时目录在失败清理前已部分清理，不承诺全部原产物仍存在。
+
+### 新 run_name 裁决：最终身份复核待实现字节
+
+按主负责人明确裁决，用户run_name必须原样保留（含Unicode）；UUID只承担 record_id/run_id及独占目录身份，不能静默替换label。请求绑定需独立验证每个F1实际输入路径属于本次UUID执行树、`actual_output_dir`精确等请求输出路径；output_evidence的搬移适配只提供离线读取便利，不能放宽本次请求归属。无新增后端接口。
+
+已通知核心作者：最终版本需验证相同Unicode label、相同事件数的两次真实运行独立UUID，以及把完整foreign F1结果搬入本次目录仍拒绝。当前本轮通过的旧源码仍曾用UUID覆写runName，**不能沿用该旧身份检查给新裁决签字**。等待该变更落盘后再作独立正反例，保留旧复制测试的run_name原断言；不修改测试来迁就UUID label。
+
+当前开放交接：真实专项cleanup exit1的收尾问题；新run_name/严格请求路径身份的最终独立复核；开发GUI旧同步假设的全量失败由适配者处理。用户所述独立roundtrip34入口不冒记成本审查者重跑。工作区未冻结，本报告不称整矩阵或整项K1通过。
+
+## 当前等待交付检查点：source-copy / close
+
+主负责人新增并确认窄兼容裁决：仅 generated + 用户显式 geometry source_copy_mode + collector对该源发生 Unknown resource grammar 拒绝时，允许旧writer的本地生成/运行；snapshot与声明源实际SHA入身份，expected输入至少明确main/material/geometry/macro；任何未计划/未观测F1输入不授运行资格，输出路径精确绑定继续执行。必须标记local有限coverage、递归闭包未验证、不可据此导出。export仍严格拒绝未知语法；缺文件等不触发fallback。
+
+已向作者建议把未知语法来源绑定到本次geometry源，避免其他资源错误借用fallback。随后已读到首版geometry错误来源约束及local coverage代码，也读到新增close/drain接口；按主负责人最新要求，等待Bohr/Huygens本轮交付后统一以最终字节检查，未对在写草稿签字。
+
+最终复核重点：Unicode run label保留且不当作UUID身份、foreign整套F1结果在搬移校验可读时仍被请求路径守卫拒绝、local未知geometry正向与export/缺失/额外读取反例、read worker与watcher关闭后自然清理、GUI/CLI仍共享同一controller。上一轮WinError32仍开放，直到独立正常收尾通过；已通过的原四项与GUI32不替代这些最终边界。无本审查者运行中的命令会话；不接手被拒绝的资源包任务，不改产品或测试。
+
+## 当前核心最终快照独立签字（455，新增 external Inspect diff另验）
+
+### 身份与运行原件
+
+独立证据根：`out/collab/k1-independent-final-cea429a2b5/`。`receipt.json`记录完整命令、exit0、运行前后四文件SHA相同，`runtime.log`为UTF-8/LF落盘日志。已独立核验log原字节SHA与receipt一致，marker为 `G4USIM_ASSERTS=455`。完整实际输入/输出/逐动作record保留在该根的 `suite/`，不借作者日志冒充独立执行。
+
+| 核心文件 | 本次前后相同SHA256 |
+| --- | --- |
+| core/experiment_workflow.py | fbcd964e8170679d223235f34f6a48bdbdb33f5a28c8ace84bccee971d367adf |
+| core/experiment_identity.py | b982093fdd9d19ce9a52a13f59094169c8bbf03e0acb1b4bf3c57a2e6a91442e |
+| scripts/test_k1_workflow.py | 79bb3f9d788ab71aafc60bc10ed000a594ece1915444126f63fec23f3ddb9602 |
+| core/environment_discovery.py | 98a2adaf4a266dd1a1b87616604eb56961c8e90ac82514a6403105c569a98a43 |
+
+core路径相对 `gui/g4usim_gui/`。额外逐一核验作者 `k1-workflow-evidence.json` 的16个成员存在且SHA相符；此核验不扩张为资源包代码审查。
+
+### 公开动作与边界结果
+
+- **真实功能专项**：本审查者独立运行最终脚本，455入口、进程自然exit0。包含真实初始化及overlap反例、同名Unicode首尾空白label的两次3/3运行、不同UUID/目录、external运行前置Inspect、local `vis.palette` source-copy 3/3，以及geantino零沉积的有限物理比较正反例。来源仍user_supplied_unverified，不称一般物理验证。
+- **自然清理**：另以无report-root的 `--component` 实际运行，230入口、exit0，TemporaryDirectory已正常退出后才输出summary；close停止watch/timer并排空后台read任务。结合455中的closed/watchers空/job无pending判据，关闭上一轮WinError32问题；原exit1记录与原因未追改。
+- **GUI/CLI**：独立v3 GUI真实Qt适配38入口、CLI静态协议/适配124入口，均exit0。依然使用同一个EditSession、runner及inspect/controller；没有新建运行所有者。不是原生视觉签字，也不代表开发全GUI矩阵已绿。
+- **原四项**：前文原反例均已独立重跑拒绝并保留有效对照，最终455同时覆盖修正；finish的取消/epoch补写一致、watch在revision不变且不靠state轮询时退休旧资格均保留通过结论。
+
+### foreign完整输出：已作超出作者单纯facts负例的独立验证
+
+从本审查者真实两次运行中选取相同Unicode label、相同事件数但不同UUID的A/B，复制A的完整输出树到独立 `foreign-complete-output/`（未覆盖A/B原产物）。独立F1 fresh校验该搬移树仍为 verified，随后将其完整原始facts交给B的真实 `_verify_request_binding`：以 `experiment.request_path_mismatch: actual_output_dir` 明确拒绝。
+
+这验证了 **F1搬移适配可读不等于本次请求归属成立**；没有使用label作为UUID。A/B的requested/observed label由真实455判据逐字保留，包括Unicode首尾空白。此反例是实际完整输出副本+真实请求守卫，不伪称又执行了一次foreign模拟。
+
+### source-copy窄兼容：正反两面均核对
+
+真实455中的local-run成功，记录 `coverage=local_source_copy_compatibility`、`recursive_closure=unverified_export_not_qualified`、manifest_sha256=None，expected恰为本次本地包main/macro/materials/geometry四个文件。未知 `vis.palette` 原文保持；严格export仍拒绝Unknown resource grammar，缺geometry文件的生成明确失败。
+
+独立追加调用当前identity边界：声明源receipt逐项等于当前实际文件SHA/size；未显式source_copy、external模式、材料文件未知语法三种反例均抛原严格错误，不能借用local fallback。其触发条件确实绑定到本次被复制geometry源的Unknown resource grammar。
+
+对当前真实local-run完成入口再注入两种受控读取账本反例：未计划的recorded读入被 `actual_read_identity_mismatch` 拒绝；unobserved读入被 `actual_input_unobserved` 拒绝。此处使用真实完成消费者与真实运行结果、**合成观察注入**；没有声称实际后端发生了额外I/O。正反结果原件见 `independent-boundary-result.json`。本地运行成功不授资源闭包、分发权或portable export资格。
+
+### 仍需限定diff复核，不能提前签字的新增要求
+
+主负责人在455稳定快照之后新增明确兼容修正：独立external `inspect()` 必须读取用户原始输入和原cwd，保留F4原文件/行号；run/initialization内部inspect继续隔离树。该新增要求不追改前述455的当时结论，需等新SHA后仅核相关diff与F4公开入口，不重复所有已通过反例。
+
+Huygens的geometry_table失败由主负责人独立确认是旧测试typed-only修改造成raw/typed差异，改为真实cell编辑并保留运行输出判据；本审查者不把它写为产品降门禁或已亲自验过的新测试。开发矩阵未冻结、其他旧同步假设失败仍按主任务状态处理。
+
+**当前签字范围**：上述稳定核心功能与已列边界，无新增开放核心缺陷；新增external Inspect原路径diff仍待定向复核。没有修改任何实现/测试，没有重试或承接被上游拒绝的资源包审查，没有以455专项替代Windows/Linux整矩阵、正式重建或原生实窗验收。
+
+## 冻结 e5ff800 的最终限定 diff 签字
+
+**结论：已审范围可冻结，无剩余确认代码缺陷。** 实际读取 Git HEAD=`e5ff80009975fc9d7d783eaa0865c7c894d1975b`，`git status --porcelain`为空。核心/身份/专项/bundle小修的当前原字节均与最后独立定向运行receipt的after SHA相同。机器可核验签字在 `out/collab/k1-independent-final-cea429a2b5/final-review-signoff.json`。
+
+### 追加 external Inspect：闭合
+
+从独立455基线归档字节做限定diff：新增original-declared-inspection身份与external inspect分支；validation仅把相对main/macro在私有候选中按原cwd解析；后台fresh核对按身份scope区分。run/initialization内部inspect仍保持隔离执行树。没有改写用户原输入，也没有把standalone Inspect升级为初始化或资源闭包证明。
+
+独立实际执行：
+
+- 原始external Inspect定向：53入口、exit0、前后SHA相同；验证中文原始路径、原cwd、嵌套macro真实文件/行2、原文错误完整保留、无事件/摘要/输出生成、原始输入hash不变，以及查询期间输入变化结果stale。
+- F4真实Qt/真实后端Inspect：49入口、exit0、前后SHA相同；`smoke_f4_inspect_backend: OK (real Inspect; no simulation execution)`。
+
+日志和运行前后receipt：`external-inspect*`、`final-inspect*`、`f4-inspect*`，均在本独立证据根。通过限定AST差异核对，455之后改动仅涉及 `_portable_record`、新增 `_original_inspection_identity`、external相对输入校验，以及scope相关refresh/prepare/prepared/inspect-finished；运行完成/F1请求归属、取消/close、比较估计器等既有主干未改变，沿用455及先前独立负例，不重复全套。
+
+### 实际历史事实投影：闭合
+
+使用主负责人指定的真实历史记录 `out/collab/k1-parent-roundtrip-close-r1/original-records/5ba5740affeb4a0cacdb4bc93f62d180/record.json`，本审查者独立执行新增export/load定向专项，最终32入口、exit0，前后源码SHA一致。没有重跑原run，也没有改写其记录。
+
+核验内容：`random_settings`、`build`、`input_coverage`、`input_exclusions`及已有requested/observed label在投影/导出/加载后保留；`initial_engine_seed='unknown'` 原样保留，没有以configured/effective/planned seed制造实际引擎seed。原私有来源文件字段仅标 `omitted_local_path` 并保存 **路径文本** SHA，明确不是文件字节身份；重复投影保持该标记和摘要，不把已去敏文字重新hash成假来源。加载历史仍stale。
+
+`portable-facts-final.log`、`portable-facts-final-receipt.json`、`portable-suite-final/`保存独立日志、前后SHA及导出/加载结果。此前31入口专项是上一版有效过程记录；本次32是最终增补后的独立结果，未追改旧日志。
+
+### 5行公开Geant4版本文本兼容：限定范围通过
+
+本节只审主任务明确授权的 `_reject_sensitive_text` 5行例外与 `test_build_version_text`，没有接手已被拒绝的广泛bundle审查。
+
+代码仅在key末段严格为 `geant4_version` 且 `re.fullmatch` 整串匹配闭合ASCII数字格式时返回；允许的字符串不能携带额外变量、凭据或路径；其他字段/格式继续执行原规则。没有全局忽略 `$` 或环境变量检测。
+
+独立调用指定测试，实际export/load的3种版本原字节不变且历史stale；其4个非法值/错误字段对照通过。再独立补6个反例：错误build字段、source字段、尾随换行、追加环境变量、非ASCII数字版本、追加凭据文本，均拒绝。bundle和测试运行前后SHA相同，见 `build-version-text-receipt.json`。主任务204入口的组件结果仅作其提供的收据，不冒记为本审查者执行。
+
+### 最终源码身份
+
+| 文件 | SHA256 |
+| --- | --- |
+| `gui/g4usim_gui/core/experiment_workflow.py` | `bb3dd88986503b084db9c22754f9927dc05916ff53b617acf1d4b7364c921918` |
+| `gui/g4usim_gui/core/experiment_identity.py` | `b982093fdd9d19ce9a52a13f59094169c8bbf03e0acb1b4bf3c57a2e6a91442e` |
+| `scripts/test_k1_workflow.py` | `8a7002c3931bffc4eb02a1c27b80047d2b2375143c5460d031c7372bc8e59d01` |
+| `gui/g4usim_gui/core/experiment_bundle.py`（仅上述小修） | `99426d0b368eed81399c2575f4c2a2d6119512e7021fdae566819a71cce80200` |
+| `gui/g4usim_gui/core/environment_discovery.py` | `98a2adaf4a266dd1a1b87616604eb56961c8e90ac82514a6403105c569a98a43` |
+
+### 明确剩余项与签字边界
+
+- 本独立审查范围内：**没有剩余确认代码缺陷或代码冻结阻断项**。原WinError32、非seed raw、失败busy、数值事件去重、数据cwd、CLI终态竞态、合法locale/special文本及主审终态/watch疑点均已闭合。
+- Huygens的typed-only geometry_table旧测试适配，按主负责人真实cell编辑且保留运行输出判据的裁决处理，不将其写成产品放宽；主任务随后提供的108入口结果不冒领为本审查者执行。
+- 冻结后的正式重构建、173例矩阵/真实CI及阶段判定由主任务接续；它们是后续验收，不是本代码审查拒绝冻结的理由。此处不提前标阶段通过；若出现新缺陷，按主负责人指令另提交重冻，保留本轮证据。
+
+全部审查保持独立；未修改产品/测试，未重试上游拒绝任务，实际模型/档位按已核账本为gpt-6.1-sol/medium，消耗未知。

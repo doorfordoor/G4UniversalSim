@@ -1,0 +1,174 @@
+{
+  "head": "2914b3962167325628ede699b1c14a9d224dec41",
+  "scope": "Official component regressions only; not native simulation or stage acceptance",
+  "source_files": [
+    {
+      "path": "gui/g4usim_gui/core/experiment_workflow.py",
+      "sha256": "9f8f800aee380f8b060b95fcc8d1c776ed580ddbec0bbd398d104bda58156403",
+      "unchanged_from_fifth": true
+    },
+    {
+      "path": "scripts/test_k1_terminal_publication.py",
+      "sha256": "5075c7b236117e1cace9f2d10e33cca6ee2b2ccd0cb95c5b7bf8f7d2de1762b4",
+      "unchanged_from_fifth": true
+    }
+  ],
+  "reports": [
+    {
+      "artifact": "linux-evidence-11.3.2",
+      "case": "gui_k1_terminal_publication",
+      "assertions": 291,
+      "case_log_sha256": "fb02b797fcdca78352583216775a708b6bec5641e3ae569bc7c7b3f64065046b",
+      "receipt": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-2914b39\\ci\\linux-evidence-11.3.2\\linux-gui\\20261031-093832-38b97555\\gui_k1_terminal_publication-evidence\\terminal-d1f5fbdeaff74e1a93508a2a9860b752\\receipt.json",
+      "receipt_sha256": "f67592e41fb7f9765b7707e621648f65d7c0700ae2ef335a5a04b86e2a3910ee",
+      "observations": [
+        {
+          "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-2914b39\\ci\\linux-evidence-11.3.2\\linux-gui\\20261031-093832-38b97555\\gui_k1_terminal_publication-evidence\\terminal-d1f5fbdeaff74e1a93508a2a9860b752\\cancel_work_delivery\\observed.json",
+          "sha256": "745f639312be64377602f8266837db1d6a01de296ad33b0abfef50e9644b9427",
+          "observed": {
+            "mode": "cancel_work_delivery",
+            "status": "cancelled",
+            "reason": "experiment.cancelled",
+            "revision_before": 0,
+            "revision_after": 0,
+            "snapshot_changed": false,
+            "completed_count": 1,
+            "disk_matches_callback": true
+          }
+        },
+        {
+          "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-2914b39\\ci\\linux-evidence-11.3.2\\linux-gui\\20261031-093832-38b97555\\gui_k1_terminal_publication-evidence\\terminal-d1f5fbdeaff74e1a93508a2a9860b752\\edit_work_delivery\\observed.json",
+          "sha256": "b0f3dd7ca7c93408ee59932d2f93f52280c77138cc186bbab89dafb9d0decc03",
+          "observed": {
+            "mode": "edit_work_delivery",
+            "status": "stale",
+            "reason": "experiment.inputs_changed",
+            "revision_before": 0,
+            "revision_after": 1,
+            "snapshot_changed": true,
+            "completed_count": 1,
+            "disk_matches_callback": true
+          }
+        }
+      ]
+    },
+    {
+      "artifact": "linux-evidence-11.4.3",
+      "case": "gui_k1_terminal_publication",
+      "assertions": 291,
+      "case_log_sha256": "cbf4ec133638c60e82691a4243d811277888a99bf75e80849f9e080164c88f55",
+      "receipt": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-2914b39\\ci\\linux-evidence-11.4.3\\linux-gui\\20261031-093710-16b5a53b\\gui_k1_terminal_publication-evidence\\terminal-ca8d083e6d7b4fef9586cbd6f422e0d9\\receipt.json",
+      "receipt_sha256": "8d8ef90ca0f387a314cc9461f1b253b8a6786ada3aed730c49b4a46c40ce1b56",
+      "observations": [
+        {
+          "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-2914b39\\ci\\linux-evidence-11.4.3\\linux-gui\\20261031-093710-16b5a53b\\gui_k1_terminal_publication-evidence\\terminal-ca8d083e6d7b4fef9586cbd6f422e0d9\\cancel_work_delivery\\observed.json",
+          "sha256": "745f639312be64377602f8266837db1d6a01de296ad33b0abfef50e9644b9427",
+          "observed": {
+            "mode": "cancel_work_delivery",
+            "status": "cancelled",
+            "reason": "experiment.cancelled",
+            "revision_before": 0,
+            "revision_after": 0,
+            "snapshot_changed": false,
+            "completed_count": 1,
+            "disk_matches_callback": true
+          }
+        },
+        {
+          "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-2914b39\\ci\\linux-evidence-11.4.3\\linux-gui\\20261031-093710-16b5a53b\\gui_k1_terminal_publication-evidence\\terminal-ca8d083e6d7b4fef9586cbd6f422e0d9\\edit_work_delivery\\observed.json",
+          "sha256": "b0f3dd7ca7c93408ee59932d2f93f52280c77138cc186bbab89dafb9d0decc03",
+          "observed": {
+            "mode": "edit_work_delivery",
+            "status": "stale",
+            "reason": "experiment.inputs_changed",
+            "revision_before": 0,
+            "revision_after": 1,
+            "snapshot_changed": true,
+            "completed_count": 1,
+            "disk_matches_callback": true
+          }
+        }
+      ]
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "case": "gui_k1_terminal_publication",
+      "assertions": 291,
+      "case_log_sha256": "4094e0eb9625ed56e2649922804b3870c49d50c056c0247b3e7a74181e1ad969",
+      "receipt": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-2914b39\\ci\\m0-report-windows-latest\\20261031-093859-7fa07dcf\\gui_k1_terminal_publication-evidence\\terminal-3ac7b9001ce4465eb00c9aee8c45c31c\\receipt.json",
+      "receipt_sha256": "148b676bc12b21e1b799595de1e369ed01cdbd93f1a86bdc39997d28b355fb0b",
+      "observations": [
+        {
+          "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-2914b39\\ci\\m0-report-windows-latest\\20261031-093859-7fa07dcf\\gui_k1_terminal_publication-evidence\\terminal-3ac7b9001ce4465eb00c9aee8c45c31c\\cancel_work_delivery\\observed.json",
+          "sha256": "b38f98f59c4252dee946991f6ac28c0b57221d30baab00aac9915979bee5c0e9",
+          "observed": {
+            "mode": "cancel_work_delivery",
+            "status": "cancelled",
+            "reason": "experiment.cancelled",
+            "revision_before": 0,
+            "revision_after": 0,
+            "snapshot_changed": false,
+            "completed_count": 1,
+            "disk_matches_callback": true
+          }
+        },
+        {
+          "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-2914b39\\ci\\m0-report-windows-latest\\20261031-093859-7fa07dcf\\gui_k1_terminal_publication-evidence\\terminal-3ac7b9001ce4465eb00c9aee8c45c31c\\edit_work_delivery\\observed.json",
+          "sha256": "277b3be6aa0f6182667b622bb5c7df39f50802032576f1c25ce5fee4f2e7dfa4",
+          "observed": {
+            "mode": "edit_work_delivery",
+            "status": "stale",
+            "reason": "experiment.inputs_changed",
+            "revision_before": 0,
+            "revision_after": 1,
+            "snapshot_changed": true,
+            "completed_count": 1,
+            "disk_matches_callback": true
+          }
+        }
+      ]
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "case": "gui_k1_terminal_publication",
+      "assertions": 291,
+      "case_log_sha256": "1bd3cd43c2f14ad742467d9c1cc8f2c0ee2efda306c62bdf90987710ff1c269f",
+      "receipt": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-2914b39\\ci\\m0-report-ubuntu-latest\\20261031-093643-03f02850\\gui_k1_terminal_publication-evidence\\terminal-c0a739534bbc4dcfa2f20bc8d4a6dfa8\\receipt.json",
+      "receipt_sha256": "42b48ef20770445ed55dfed1614682f3266396a661587590dd5d3ba09948abd4",
+      "observations": [
+        {
+          "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-2914b39\\ci\\m0-report-ubuntu-latest\\20261031-093643-03f02850\\gui_k1_terminal_publication-evidence\\terminal-c0a739534bbc4dcfa2f20bc8d4a6dfa8\\cancel_work_delivery\\observed.json",
+          "sha256": "745f639312be64377602f8266837db1d6a01de296ad33b0abfef50e9644b9427",
+          "observed": {
+            "mode": "cancel_work_delivery",
+            "status": "cancelled",
+            "reason": "experiment.cancelled",
+            "revision_before": 0,
+            "revision_after": 0,
+            "snapshot_changed": false,
+            "completed_count": 1,
+            "disk_matches_callback": true
+          }
+        },
+        {
+          "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-2914b39\\ci\\m0-report-ubuntu-latest\\20261031-093643-03f02850\\gui_k1_terminal_publication-evidence\\terminal-c0a739534bbc4dcfa2f20bc8d4a6dfa8\\edit_work_delivery\\observed.json",
+          "sha256": "b0f3dd7ca7c93408ee59932d2f93f52280c77138cc186bbab89dafb9d0decc03",
+          "observed": {
+            "mode": "edit_work_delivery",
+            "status": "stale",
+            "reason": "experiment.inputs_changed",
+            "revision_before": 0,
+            "revision_after": 1,
+            "snapshot_changed": true,
+            "completed_count": 1,
+            "disk_matches_callback": true
+          }
+        }
+      ]
+    }
+  ],
+  "controlled_mode_observations": 8,
+  "old_and_new_modes_per_report": 11,
+  "checks_passed": true,
+  "stage_acceptance": "not_decided"
+}

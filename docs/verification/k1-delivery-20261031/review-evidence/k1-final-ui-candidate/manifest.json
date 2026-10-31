@@ -1,0 +1,212 @@
+{
+  "base_head": "f9a9ddbfcabe69067707a5a209caff005748f510",
+  "usage": "unknown",
+  "scope": "four product UI candidates and two existing smoke regressions; no core/runner/resource implementation",
+  "files": [
+    {
+      "path": "gui/g4usim_gui/window/run.py",
+      "base_sha256": "67043150fdf3661ceda82be112c481ef252c8f7bb75ce6b47b5153ddd1442a29",
+      "role": "product",
+      "candidate_sha256": "3af4daefa4c0818fba9879acffe14e15ece2c8b908d2b26b0526e9fa7e873d56",
+      "candidate_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate\\files\\gui\\g4usim_gui\\window\\run.py"
+    },
+    {
+      "path": "gui/g4usim_gui/window/experiment.py",
+      "base_sha256": "bfe38e02552f831027d59480331e3805c16955b69cbccdb5a94c26963a005d46",
+      "role": "product",
+      "candidate_sha256": "2cb03d1ad4d83fb5ae0608ddb79e82976e1df0c742aabdd1819e0766de224258",
+      "candidate_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate\\files\\gui\\g4usim_gui\\window\\experiment.py"
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/experiment_panel.py",
+      "base_sha256": "741adb59951cbf8adc9428eca4703612efafa737396dc5025d350c8ad53bbfd1",
+      "role": "product",
+      "candidate_sha256": "01f91f3db0081536110e2acc9958ec76783af485dbbc1f378ec52231f94133f3",
+      "candidate_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate\\files\\gui\\g4usim_gui\\widgets\\experiment_panel.py"
+    },
+    {
+      "path": "gui/g4usim_gui/core/i18n.py",
+      "base_sha256": "5bbc3d1057741844cd76903bb4f36a83f85eff8bd4307fb946512c09b5efc60c",
+      "role": "product",
+      "candidate_sha256": "002de76b33480160415c3c4b2fb9e38455b2ce94b1aedacfcd83121387ecdf0a",
+      "candidate_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate\\files\\gui\\g4usim_gui\\core\\i18n.py"
+    },
+    {
+      "path": "gui/smoke_tests/smoke_k1_workflow.py",
+      "base_sha256": "fa387c6b551e06331cb3203d4d8f748ee3852939aefc573d5f2c527ae08c7524",
+      "role": "regression",
+      "candidate_sha256": "05ff02dae6a38375ecb5e39f3f79a33a80cef29318fa003f41aec4c94f3f5968",
+      "candidate_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate\\files\\gui\\smoke_tests\\smoke_k1_workflow.py"
+    },
+    {
+      "path": "gui/smoke_tests/smoke_k1_panel.py",
+      "base_sha256": "4e90b351f3d934cc07abf2f519d9dd1476117b0e3c28714c1b93426632673c7a",
+      "role": "regression",
+      "candidate_sha256": "658fcb292ca0b2ab60b8ef73bd3a4d285593c13824076850e4bd8cfbef8d38a0",
+      "candidate_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate\\files\\gui\\smoke_tests\\smoke_k1_panel.py"
+    }
+  ],
+  "assertions": [
+    {
+      "path": "gui/smoke_tests/smoke_k1_workflow.py",
+      "original_assert_sites": 39,
+      "candidate_assert_sites": 57,
+      "all_original_assert_nodes_retained": true
+    },
+    {
+      "path": "gui/smoke_tests/smoke_k1_panel.py",
+      "original_assert_sites": 67,
+      "candidate_assert_sites": 74,
+      "all_original_assert_nodes_retained": true
+    }
+  ],
+  "patch_sha256": "6e7c23632dd46b7123bfebde736e627e0f41a2a2a28af53ccc5796caef94c0a0",
+  "independent_review": "pending parent/Averroes; not self-signed",
+  "evidence": [
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate\\baseline-results.json",
+      "sha256": "400cb7cf657de4eeb060d8bcb1347c9a862db0aec34d74105e8c0fec5fbff845",
+      "bytes": 563
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate\\baseline-cwd.log",
+      "sha256": "3c0ccdf3c3f798fdabea03a08e2fa9199e2abc6755d975301d80fffe220b9c55",
+      "bytes": 3850
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate\\baseline-pending.log",
+      "sha256": "5f9ce48a22cd5a8272e35a16fdf76aa4ea98e371764eb141a3314d5d590c7de4",
+      "bytes": 1797
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate\\baseline-cwd-observation.json",
+      "sha256": "9ae0d02af5767957a3b338b085d8a5dba9d843e32c7db0ee1ad1e8be5886b2da",
+      "bytes": 2774
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate\\baseline-pending-observation.json",
+      "sha256": "029009a8bfe54e690034d1dc855fd3a508a752d4e8644b03f9a960b937db29f2",
+      "bytes": 1009
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate\\candidate-cwd.log",
+      "sha256": "397c815df417c76bc613e7a23eaa4426149a2190ed25897f186245cb58a3753c",
+      "bytes": 2859
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate\\candidate-cwd-observation.json",
+      "sha256": "bb56143e08838a10841dda47bfff2d92b1a5d43ed2ee47f1e842d68d99f8c79c",
+      "bytes": 2862
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate\\candidate-pending-observation.json",
+      "sha256": "7860689945fcb1a97e85207651b5166959e83ab8925647b6630edef0683c9f5f",
+      "bytes": 1011
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate\\candidate-results.json",
+      "sha256": "0c9b89dfef7c790db0f9db3d56dc387c38c0c5ddc58a723d1af5077fe483ac99",
+      "bytes": 1075
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate\\pending-reproducer.log",
+      "sha256": "41a0ba46e0b60ddcf0dba5cdc864ea78c2ca91c8549e677cc921d3971fb35ac7",
+      "bytes": 716
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate\\smoke_k1_panel.log",
+      "sha256": "9cde1de329b0e3ee0ec9b36b137223d7a4550680315a17ada2ef2314519bcc96",
+      "bytes": 209
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate\\smoke_k1_workflow.log",
+      "sha256": "c551e51e1a06974da42df5670d07b13666fb49ad0daa4fa0f0b46d5f6f9bc927",
+      "bytes": 1271
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate\\source-record-evidence.json",
+      "sha256": "7e0ac519a12971617c3f9f8d0b907539cd42bf792cc75f96c90e0d1783a657db",
+      "bytes": 1087
+    }
+  ],
+  "source_record_evidence": {
+    "source_state": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\visible\\current-state.json",
+    "source_state_sha256": "2ff2e702fefcca2ba8024e742f707cde441451b48e7b24f1b3e7c0e27196690e",
+    "source_project": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\visible\\relocated-clean\\relocated-project.json",
+    "source_project_sha256": "b1e23738933656862548f3806ff7881503aa2a8a35649ecb4bf2acb3003da0db",
+    "source_completed_record": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\visible\\relocated-clean\\runs\\experiment-records\\880d4e7eb8e0481da3cf0c2d380bafbc\\record.json",
+    "source_completed_record_sha256": "9104211885fe4ce035a90b6890299b72fa96283fddeb8157595b6167cb32d4c1",
+    "record_id": "880d4e7eb8e0481da3cf0c2d380bafbc",
+    "selected_actual_fields_match_persisted_record": true,
+    "source_native_head": "8213ced419c8c6bca512bf8413b674c1265cf3bf",
+    "new_simulation_executed_for_reproduction": false
+  },
+  "candidate_controlled_cwd_reproducer": {
+    "exit_code": 0,
+    "assertions_executed": 3,
+    "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate\\candidate-cwd.log",
+    "log_sha256": "397c815df417c76bc613e7a23eaa4426149a2190ed25897f186245cb58a3753c"
+  },
+  "test_results": [
+    {
+      "case": "pending-reproducer",
+      "exit_code": 0,
+      "assertions_executed": 2,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate\\pending-reproducer.log",
+      "log_sha256": "41a0ba46e0b60ddcf0dba5cdc864ea78c2ca91c8549e677cc921d3971fb35ac7",
+      "seconds": 0.7339999999967404
+    },
+    {
+      "case": "smoke_k1_panel",
+      "exit_code": 0,
+      "assertions_executed": 1629,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate\\smoke_k1_panel.log",
+      "log_sha256": "9cde1de329b0e3ee0ec9b36b137223d7a4550680315a17ada2ef2314519bcc96",
+      "seconds": 0.875
+    },
+    {
+      "case": "smoke_k1_workflow",
+      "exit_code": 0,
+      "assertions_executed": 80,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate\\smoke_k1_workflow.log",
+      "log_sha256": "c551e51e1a06974da42df5670d07b13666fb49ad0daa4fa0f0b46d5f6f9bc927",
+      "seconds": 11.453000000008615
+    }
+  ],
+  "baseline_results": [
+    {
+      "case": "cwd",
+      "exit_code": 1,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate\\baseline-cwd.log",
+      "log_sha256": "3c0ccdf3c3f798fdabea03a08e2fa9199e2abc6755d975301d80fffe220b9c55",
+      "assertions_executed": 2
+    },
+    {
+      "case": "pending",
+      "exit_code": 1,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate\\baseline-pending.log",
+      "log_sha256": "5f9ce48a22cd5a8272e35a16fdf76aa4ea98e371764eb141a3314d5d590c7de4",
+      "assertions_executed": 2
+    }
+  ],
+  "source_tree_head_verified_after_tests": "f9a9ddbfcabe69067707a5a209caff005748f510",
+  "source_tree_status_after_tests": "",
+  "fifth_formal_session": "not touched or polled",
+  "new_backend_events": "none; completed native record replayed for rendering only",
+  "historical_fourth_review": "out/collab/k1-final-frontend-independent.md/json unchanged; two findings remain historical until independently accepted/integrated",
+  "writer": "sole out-only writer; parent/Averroes review pending",
+  "historical_review_hashes": {
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-frontend-independent.md": "a2b08d368c74882a89fa275e53ab93d3067557927cd5fe1430bc6689994f3675",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-frontend-independent.json": "4c3e8aa491f234b36d6e88a2c4eb9d7c78f7733770a5bfe70b633f4e1fd92a8a"
+  },
+  "harness_files": [
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate\\run_candidate.py",
+      "sha256": "c0fd6a1576faa828407df84c9de02f2e9177ffcc5325181312921ca44127087b"
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate\\reproduce.py",
+      "sha256": "e94c99dee954a5d628c291e4788a026f5f5360e8390d51ed488749f396416d0c"
+    }
+  ]
+}

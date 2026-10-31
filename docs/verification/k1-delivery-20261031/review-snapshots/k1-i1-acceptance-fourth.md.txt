@@ -1,0 +1,21 @@
+# I1 第四冻结独立范围与证据收据
+
+结论：**8213ced的I1已定义范围证据核对成立，不代表K1总体关闭。** gpt-6.1-sol/medium，消耗未知。不重跑测试、不改源码/正式报告；完整逐例、原SHA与范围边界在同名JSON。
+
+第四本机完整矩阵182/56976已独立通过三道严格门禁及F5逐例/总量比较。另只读抽取第四CI指定归档的I1记录，不重复承担CI总体归档：13份规范报告、16次I1执行，全部同8213/source890635/tests c964e2；选中日志原字节SHA和v3计数均匹配，所在profile无fail/skip。
+
+| 环境 | static | GUI组件 | backend | GUI真实probe |
+|---|---:|---:|---:|---:|
+| Windows本机 |142|464|145|468|
+| Linux11.3.2 |142|462|145|466|
+| Linux11.4.3 |142|462|145|466|
+| M0 Ubuntu |142|462|不在profile|不在profile|
+| M0 Windows |142|458|不在profile|不在profile|
+
+原环境源码审查的实现判定保持：候选发现/子进程PATH解析与去重、有限JSON、capabilities与data真实子进程、超时/缺库/协议等诊断、二进制前后SHA、异步多候选界面及选择回传均为实际实现。两项原P2修复已保留旧失败证据。多候选/缺库自动反例与真实后端probe分别计证，不冒称现场卸载动态库。
+
+第四原生环境界面由主负责人assistant通过Sky实际操作和观察，用户本人未参与桌面，也无待人工请求。本独立审查实际view_image查看02-environment.jpg；一候选为冻结6e02后端，x86_64/Geant4 11.3.2/MSVC19.51及必需数据目录found。界面明确仅发现，选择前后无workflow action，随后fields/inspect/init由主负责人另行操作。正常退出收据已在native审计核对。此单候选视觉证据不外推多候选或缺库的实窗观察。
+
+硬依赖边界明确：数据目录存在/加载器诊断确实实现，不是空接口；数据内容hash仍unknown，路径文本SHA不是数据字节SHA。SDK/tools探测不等于编译链接成功，build_verified=false；可选Python包元数据不等于实际import，import_tested=false。无完整DLL/SO依赖闭包、安装激活或环境E→runner E0继承承诺；I1不自动初始化、运行事件或验证物理。环境ready不能替代工作流重新核验与执行证据。
+
+本收据仅绑定第四8213冻结及其实际CI（run ID见JSON），旧第三绿未代替第四；原因码修复后的第五冻结必须重新验收。既有required专项未关闭，本收据不替其签字。

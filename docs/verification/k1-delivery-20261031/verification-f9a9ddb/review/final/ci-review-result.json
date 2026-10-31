@@ -1,0 +1,515 @@
+{
+  "schema": "k1_fifth_ci_independent_review_v1",
+  "head": "f9a9ddbfcabe69067707a5a209caff005748f510",
+  "automation_review_passed": true,
+  "terminal": true,
+  "runs": [
+    {
+      "id": 41176919519,
+      "head": "f9a9ddbfcabe69067707a5a209caff005748f510",
+      "event": "push",
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/doorfordoor/G4UniversalSim/actions/runs/41176919519",
+      "api": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\ci\\linux-run.json",
+      "jobs_api": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\ci\\linux-jobs.json",
+      "artifacts_api": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\ci\\linux-artifacts.json",
+      "jobs": [
+        {
+          "id": 124466267952,
+          "name": "ubuntu-24.04 / Geant4 11.3.2",
+          "status": "completed",
+          "conclusion": "success",
+          "decoded_official_log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\ci\\job-124466267952.log"
+        },
+        {
+          "id": 124466268155,
+          "name": "ubuntu-24.04 / Geant4 11.4.3",
+          "status": "completed",
+          "conclusion": "success",
+          "decoded_official_log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\ci\\job-124466268155.log"
+        }
+      ]
+    },
+    {
+      "id": 41176919481,
+      "head": "f9a9ddbfcabe69067707a5a209caff005748f510",
+      "event": "push",
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/doorfordoor/G4UniversalSim/actions/runs/41176919481",
+      "api": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\ci\\m0-run.json",
+      "jobs_api": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\ci\\m0-jobs.json",
+      "artifacts_api": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\ci\\m0-artifacts.json",
+      "jobs": [
+        {
+          "id": 124466268014,
+          "name": "windows-latest / Python 3.11",
+          "status": "completed",
+          "conclusion": "success",
+          "decoded_official_log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\ci\\job-124466268014.log"
+        },
+        {
+          "id": 124466268145,
+          "name": "ubuntu-latest / Python 3.11",
+          "status": "completed",
+          "conclusion": "success",
+          "decoded_official_log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\ci\\job-124466268145.log"
+        }
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "name": "linux-evidence-11.4.3",
+      "id": 13034355370,
+      "run_id": 41176919519,
+      "bytes": 26825343,
+      "official_digest": "sha256:ed73068a998a85e7b53eb41918eb0c6985d2d843582382b8b60c0de947522ee5",
+      "archive": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\ci\\linux-evidence-11.4.3.zip",
+      "sealed_archive": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\ci\\collection\\archives\\linux-evidence-11.4.3.zip"
+    },
+    {
+      "name": "linux-evidence-11.3.2",
+      "id": 13034261266,
+      "run_id": 41176919519,
+      "bytes": 26824461,
+      "official_digest": "sha256:4cb370798878e9f97e7d5b393f2f4944f704096f8235b5f6486ffc6d036a18da",
+      "archive": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\ci\\linux-evidence-11.3.2.zip",
+      "sealed_archive": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\ci\\collection\\archives\\linux-evidence-11.3.2.zip"
+    },
+    {
+      "name": "m0-report-ubuntu-latest",
+      "id": 13033626775,
+      "run_id": 41176919481,
+      "bytes": 404736,
+      "official_digest": "sha256:30c6c0f5125d4b5a084fddd2b787c1c1550f16d5125be22a053f1c5e35e461e7",
+      "archive": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\ci\\m0-report-ubuntu-latest.zip",
+      "sealed_archive": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\ci\\collection\\archives\\m0-report-ubuntu-latest.zip"
+    },
+    {
+      "name": "m0-report-windows-latest",
+      "id": 13033463586,
+      "run_id": 41176919481,
+      "bytes": 455085,
+      "official_digest": "sha256:cc7c437d4aac32200d55cc3bebbda11af53a223474a451261bcdbd5162fdc813",
+      "archive": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\ci\\m0-report-windows-latest.zip",
+      "sealed_archive": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\ci\\collection\\archives\\m0-report-windows-latest.zip"
+    }
+  ],
+  "report_count": 12,
+  "unique_frozen_cases": 182,
+  "case_executions": 548,
+  "counts": {
+    "pass": 548
+  },
+  "assertions_executed_total": 133036,
+  "strict_gate_passed": 12,
+  "F5_same_platform_per_case_and_total_passed": 12,
+  "assertion_regressions": [],
+  "raw_log_errors": [],
+  "identity_errors": [],
+  "zip_members_verified": 5278,
+  "sealed_report_and_log_sha_checks": 560,
+  "profiles": [
+    {
+      "artifact": "linux-evidence-11.3.2",
+      "profile": "backend",
+      "cases": 61,
+      "assertions": 41118,
+      "counts": {
+        "pass": 61
+      },
+      "baseline_cases": 59,
+      "baseline_assertions": 40416,
+      "strict_gate": "passed",
+      "baseline_strict_gate": "passed",
+      "git_dirty": true,
+      "git_status_porcelain": "?? .g4env-11.3.2/\n?? .micromamba/\n?? bin/",
+      "report_sha256": "535fb9eae672f2e5bdc027faa9d0556caf18e1f7bae2382e727f492f61bbb2d9"
+    },
+    {
+      "artifact": "linux-evidence-11.3.2",
+      "profile": "gui",
+      "cases": 56,
+      "assertions": 6294,
+      "counts": {
+        "pass": 56
+      },
+      "baseline_cases": 47,
+      "baseline_assertions": 3249,
+      "strict_gate": "passed",
+      "baseline_strict_gate": "passed",
+      "git_dirty": true,
+      "git_status_porcelain": "?? .g4env-11.3.2/\n?? .micromamba/\n?? bin/",
+      "report_sha256": "ecf532e57b389739bf18e9436ddd792cd6c0c74c97537f5370f317b47b0b4564"
+    },
+    {
+      "artifact": "linux-evidence-11.3.2",
+      "profile": "integration",
+      "cases": 29,
+      "assertions": 6010,
+      "counts": {
+        "pass": 29
+      },
+      "baseline_cases": 22,
+      "baseline_assertions": 4486,
+      "strict_gate": "passed",
+      "baseline_strict_gate": "passed",
+      "git_dirty": true,
+      "git_status_porcelain": "?? .g4env-11.3.2/\n?? .micromamba/\n?? bin/",
+      "report_sha256": "bca880645b413ff1401b6794e30da593bd9b29937db474f3024f2f05a7b58332"
+    },
+    {
+      "artifact": "linux-evidence-11.3.2",
+      "profile": "static",
+      "cases": 36,
+      "assertions": 3552,
+      "counts": {
+        "pass": 36
+      },
+      "baseline_cases": 32,
+      "baseline_assertions": 2715,
+      "strict_gate": "passed",
+      "baseline_strict_gate": "passed",
+      "git_dirty": true,
+      "git_status_porcelain": "?? .g4env-11.3.2/\n?? .micromamba/\n?? bin/",
+      "report_sha256": "0db980edf7d4a827de974ba403a7cb488d6c7277bbd7fca654ef083d96511155"
+    },
+    {
+      "artifact": "linux-evidence-11.4.3",
+      "profile": "backend",
+      "cases": 61,
+      "assertions": 40526,
+      "counts": {
+        "pass": 61
+      },
+      "baseline_cases": 59,
+      "baseline_assertions": 39824,
+      "strict_gate": "passed",
+      "baseline_strict_gate": "passed",
+      "git_dirty": true,
+      "git_status_porcelain": "?? .g4env-11.4.3/\n?? .micromamba/\n?? bin/",
+      "report_sha256": "9adcef13770905ba458c44f254adf508b1bf6fcae1e51848833c1b85dc07728e"
+    },
+    {
+      "artifact": "linux-evidence-11.4.3",
+      "profile": "gui",
+      "cases": 56,
+      "assertions": 6294,
+      "counts": {
+        "pass": 56
+      },
+      "baseline_cases": 47,
+      "baseline_assertions": 3249,
+      "strict_gate": "passed",
+      "baseline_strict_gate": "passed",
+      "git_dirty": true,
+      "git_status_porcelain": "?? .g4env-11.4.3/\n?? .micromamba/\n?? bin/",
+      "report_sha256": "6571f57a0fbdff102661f215b2909fa58b3f4a3e19ce41aa384fbdeb9a02ae94"
+    },
+    {
+      "artifact": "linux-evidence-11.4.3",
+      "profile": "integration",
+      "cases": 29,
+      "assertions": 6010,
+      "counts": {
+        "pass": 29
+      },
+      "baseline_cases": 22,
+      "baseline_assertions": 4486,
+      "strict_gate": "passed",
+      "baseline_strict_gate": "passed",
+      "git_dirty": true,
+      "git_status_porcelain": "?? .g4env-11.4.3/\n?? .micromamba/\n?? bin/",
+      "report_sha256": "3a1577bdc6cf3f5d1cebe0684af6f9f66215079a59fc9edc9d9ae871d843996a"
+    },
+    {
+      "artifact": "linux-evidence-11.4.3",
+      "profile": "static",
+      "cases": 36,
+      "assertions": 3552,
+      "counts": {
+        "pass": 36
+      },
+      "baseline_cases": 32,
+      "baseline_assertions": 2715,
+      "strict_gate": "passed",
+      "baseline_strict_gate": "passed",
+      "git_dirty": true,
+      "git_status_porcelain": "?? .g4env-11.4.3/\n?? .micromamba/\n?? bin/",
+      "report_sha256": "b70fbaaa8e101e39abd9160cced0fa91ab8c7d07ec7cdfc93dddabe20f9d596d"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "static",
+      "cases": 36,
+      "assertions": 3542,
+      "counts": {
+        "pass": 36
+      },
+      "baseline_cases": 32,
+      "baseline_assertions": 2706,
+      "strict_gate": "passed",
+      "baseline_strict_gate": "passed",
+      "git_dirty": false,
+      "git_status_porcelain": "",
+      "report_sha256": "791ec3e26ecae1bab1a01630f41509a5e00356b7a9aad642e291838343858197"
+    },
+    {
+      "artifact": "m0-report-windows-latest",
+      "profile": "gui",
+      "cases": 56,
+      "assertions": 6292,
+      "counts": {
+        "pass": 56
+      },
+      "baseline_cases": 47,
+      "baseline_assertions": 3251,
+      "strict_gate": "passed",
+      "baseline_strict_gate": "passed",
+      "git_dirty": false,
+      "git_status_porcelain": "",
+      "report_sha256": "739001fe7b417dd8cb4f22bc84755b9770f00b842fa085cd0c923312343777d9"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "static",
+      "cases": 36,
+      "assertions": 3552,
+      "counts": {
+        "pass": 36
+      },
+      "baseline_cases": 32,
+      "baseline_assertions": 2715,
+      "strict_gate": "passed",
+      "baseline_strict_gate": "passed",
+      "git_dirty": false,
+      "git_status_porcelain": "",
+      "report_sha256": "2a381e366d30843c70dee1b7dc19c0086a05b1a74b60dc58cb5c0647f3b2071f"
+    },
+    {
+      "artifact": "m0-report-ubuntu-latest",
+      "profile": "gui",
+      "cases": 56,
+      "assertions": 6294,
+      "counts": {
+        "pass": 56
+      },
+      "baseline_cases": 47,
+      "baseline_assertions": 3249,
+      "strict_gate": "passed",
+      "baseline_strict_gate": "passed",
+      "git_dirty": false,
+      "git_status_porcelain": "",
+      "report_sha256": "55456aa184e3a8ea6700dc5ed6f1dc1fd64245a9d2061f40a121489de8416610"
+    }
+  ],
+  "tests_content_fingerprint": "e5dab8351801ad6164dc1e0601350330598e47a734f46903fafa822ec7c71af8",
+  "source_fingerprint": "890635b6d521659e43cf735d07f862c6ebd5959e6c5ea68d023d55332a8a930a",
+  "stage_acceptance": "not_decided_resource_boundary_rejection_independent_review_gap",
+  "CI_pass_does_not_close_stage": true,
+  "helper_k1_ci_verified": false,
+  "helper_flag_explanation": "Offline helper deliberately does not authenticate online CI or decide K1 stage; this independent automation result additionally verifies the connected official run/jobs/artifact API records.",
+  "no_allow_incomplete": true,
+  "no_reruns": true,
+  "no_source_or_existing_report_edits": true,
+  "no_native_UI_or_other_process_operations": true,
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "medium",
+  "consumption": "unknown",
+  "completed_utc": "2026-10-31T07:06:06.946590+00:00",
+  "accepted_unfixed_UI_issues": [
+    "P2 completed K1 command preview uses editing workspaceRoot instead of observed logical cwd",
+    "P3 pending producer status maps to unobserved"
+  ],
+  "sixth_freeze_required_after_fifth": true,
+  "P3_component_evidence": {
+    "head": "f9a9ddbfcabe69067707a5a209caff005748f510",
+    "scope": "Official component regressions only; not native simulation or stage acceptance",
+    "source_files": [
+      {
+        "path": "gui/g4usim_gui/core/experiment_workflow.py",
+        "fourth_blob_sha256": "8419770c31176e35d53d5744202bb92d1641cce72714fcbc3bf27c326b7da009",
+        "fifth_blob_sha256": "9f8f800aee380f8b060b95fcc8d1c776ed580ddbec0bbd398d104bda58156403"
+      },
+      {
+        "path": "scripts/test_k1_terminal_publication.py",
+        "fourth_blob_sha256": "b4fc161221ba6e69cb2c483c2955bf7cec6deca4f18d6a5c739e6ed5168d9ae9",
+        "fifth_blob_sha256": "5075c7b236117e1cace9f2d10e33cca6ee2b2ccd0cb95c5b7bf8f7d2de1762b4"
+      }
+    ],
+    "reports": [
+      {
+        "artifact": "linux-evidence-11.3.2",
+        "case": "gui_k1_terminal_publication",
+        "assertions": 291,
+        "case_log_sha256": "9f912581218a0648c106ea19d77ffc9b2d6650f0f4ddd7c0aa0fa818b3471a1e",
+        "receipt": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\ci\\linux-evidence-11.3.2\\linux-gui\\20261031-063440-457f24c8\\gui_k1_terminal_publication-evidence\\terminal-7540b12da96e476e9667abebbc95a6df\\receipt.json",
+        "receipt_sha256": "5f86072bf2f4e2bbed0b43dda5b6550b0031e5bfd80d45195b7d6def36e829e9",
+        "observations": [
+          {
+            "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\ci\\linux-evidence-11.3.2\\linux-gui\\20261031-063440-457f24c8\\gui_k1_terminal_publication-evidence\\terminal-7540b12da96e476e9667abebbc95a6df\\cancel_work_delivery\\observed.json",
+            "sha256": "745f639312be64377602f8266837db1d6a01de296ad33b0abfef50e9644b9427",
+            "observed": {
+              "mode": "cancel_work_delivery",
+              "status": "cancelled",
+              "reason": "experiment.cancelled",
+              "revision_before": 0,
+              "revision_after": 0,
+              "snapshot_changed": false,
+              "completed_count": 1,
+              "disk_matches_callback": true
+            }
+          },
+          {
+            "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\ci\\linux-evidence-11.3.2\\linux-gui\\20261031-063440-457f24c8\\gui_k1_terminal_publication-evidence\\terminal-7540b12da96e476e9667abebbc95a6df\\edit_work_delivery\\observed.json",
+            "sha256": "b0f3dd7ca7c93408ee59932d2f93f52280c77138cc186bbab89dafb9d0decc03",
+            "observed": {
+              "mode": "edit_work_delivery",
+              "status": "stale",
+              "reason": "experiment.inputs_changed",
+              "revision_before": 0,
+              "revision_after": 1,
+              "snapshot_changed": true,
+              "completed_count": 1,
+              "disk_matches_callback": true
+            }
+          }
+        ]
+      },
+      {
+        "artifact": "linux-evidence-11.4.3",
+        "case": "gui_k1_terminal_publication",
+        "assertions": 291,
+        "case_log_sha256": "dbf87ee4a2fdfb74c324aa02792595d56fa303fe28514d37269e7752e6f13b3b",
+        "receipt": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\ci\\linux-evidence-11.4.3\\linux-gui\\20261031-063406-3902dd8d\\gui_k1_terminal_publication-evidence\\terminal-80caccf242c14841a62c8394bb11c024\\receipt.json",
+        "receipt_sha256": "e3f038a8da7832d4e4432a5faf5f48154b5a40b6fce116a1b21e22be2ac422b0",
+        "observations": [
+          {
+            "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\ci\\linux-evidence-11.4.3\\linux-gui\\20261031-063406-3902dd8d\\gui_k1_terminal_publication-evidence\\terminal-80caccf242c14841a62c8394bb11c024\\cancel_work_delivery\\observed.json",
+            "sha256": "745f639312be64377602f8266837db1d6a01de296ad33b0abfef50e9644b9427",
+            "observed": {
+              "mode": "cancel_work_delivery",
+              "status": "cancelled",
+              "reason": "experiment.cancelled",
+              "revision_before": 0,
+              "revision_after": 0,
+              "snapshot_changed": false,
+              "completed_count": 1,
+              "disk_matches_callback": true
+            }
+          },
+          {
+            "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\ci\\linux-evidence-11.4.3\\linux-gui\\20261031-063406-3902dd8d\\gui_k1_terminal_publication-evidence\\terminal-80caccf242c14841a62c8394bb11c024\\edit_work_delivery\\observed.json",
+            "sha256": "b0f3dd7ca7c93408ee59932d2f93f52280c77138cc186bbab89dafb9d0decc03",
+            "observed": {
+              "mode": "edit_work_delivery",
+              "status": "stale",
+              "reason": "experiment.inputs_changed",
+              "revision_before": 0,
+              "revision_after": 1,
+              "snapshot_changed": true,
+              "completed_count": 1,
+              "disk_matches_callback": true
+            }
+          }
+        ]
+      },
+      {
+        "artifact": "m0-report-windows-latest",
+        "case": "gui_k1_terminal_publication",
+        "assertions": 291,
+        "case_log_sha256": "f86be1181eacd0776ffafec45c8fd0d6120d456c19aaacad9dfaa471f89fdfd3",
+        "receipt": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\ci\\m0-report-windows-latest\\20261031-063412-f8004502\\gui_k1_terminal_publication-evidence\\terminal-311508b7f05e453a9bed7fbcb96e00a7\\receipt.json",
+        "receipt_sha256": "ba1b5678c0414951ef2d05a602538664cfcc37d621a840930fc077d7af5a392e",
+        "observations": [
+          {
+            "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\ci\\m0-report-windows-latest\\20261031-063412-f8004502\\gui_k1_terminal_publication-evidence\\terminal-311508b7f05e453a9bed7fbcb96e00a7\\cancel_work_delivery\\observed.json",
+            "sha256": "b38f98f59c4252dee946991f6ac28c0b57221d30baab00aac9915979bee5c0e9",
+            "observed": {
+              "mode": "cancel_work_delivery",
+              "status": "cancelled",
+              "reason": "experiment.cancelled",
+              "revision_before": 0,
+              "revision_after": 0,
+              "snapshot_changed": false,
+              "completed_count": 1,
+              "disk_matches_callback": true
+            }
+          },
+          {
+            "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\ci\\m0-report-windows-latest\\20261031-063412-f8004502\\gui_k1_terminal_publication-evidence\\terminal-311508b7f05e453a9bed7fbcb96e00a7\\edit_work_delivery\\observed.json",
+            "sha256": "277b3be6aa0f6182667b622bb5c7df39f50802032576f1c25ce5fee4f2e7dfa4",
+            "observed": {
+              "mode": "edit_work_delivery",
+              "status": "stale",
+              "reason": "experiment.inputs_changed",
+              "revision_before": 0,
+              "revision_after": 1,
+              "snapshot_changed": true,
+              "completed_count": 1,
+              "disk_matches_callback": true
+            }
+          }
+        ]
+      },
+      {
+        "artifact": "m0-report-ubuntu-latest",
+        "case": "gui_k1_terminal_publication",
+        "assertions": 291,
+        "case_log_sha256": "838d0af2b1af6e0997e82ccbf4bbb4571a6f68354984d87cf2c2d2f6a2bda328",
+        "receipt": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\ci\\m0-report-ubuntu-latest\\20261031-063230-301622bc\\gui_k1_terminal_publication-evidence\\terminal-0fe519ae303d4004adeadc8cf0ea40eb\\receipt.json",
+        "receipt_sha256": "89af6afa8e0365ac63c72f134e9f184cbfb6457d3f1227ac52e920bcc87b5cb7",
+        "observations": [
+          {
+            "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\ci\\m0-report-ubuntu-latest\\20261031-063230-301622bc\\gui_k1_terminal_publication-evidence\\terminal-0fe519ae303d4004adeadc8cf0ea40eb\\cancel_work_delivery\\observed.json",
+            "sha256": "745f639312be64377602f8266837db1d6a01de296ad33b0abfef50e9644b9427",
+            "observed": {
+              "mode": "cancel_work_delivery",
+              "status": "cancelled",
+              "reason": "experiment.cancelled",
+              "revision_before": 0,
+              "revision_after": 0,
+              "snapshot_changed": false,
+              "completed_count": 1,
+              "disk_matches_callback": true
+            }
+          },
+          {
+            "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-f9a9ddb\\ci\\m0-report-ubuntu-latest\\20261031-063230-301622bc\\gui_k1_terminal_publication-evidence\\terminal-0fe519ae303d4004adeadc8cf0ea40eb\\edit_work_delivery\\observed.json",
+            "sha256": "b0f3dd7ca7c93408ee59932d2f93f52280c77138cc186bbab89dafb9d0decc03",
+            "observed": {
+              "mode": "edit_work_delivery",
+              "status": "stale",
+              "reason": "experiment.inputs_changed",
+              "revision_before": 0,
+              "revision_after": 1,
+              "snapshot_changed": true,
+              "completed_count": 1,
+              "disk_matches_callback": true
+            }
+          }
+        ]
+      }
+    ],
+    "controlled_mode_observations": 8,
+    "old_and_new_modes_per_report": 11,
+    "checks_passed": true,
+    "stage_acceptance": "not_decided"
+  },
+  "fifth_final_two_source_files": [
+    {
+      "path": "gui/g4usim_gui/core/experiment_workflow.py",
+      "fourth_blob_sha256": "8419770c31176e35d53d5744202bb92d1641cce72714fcbc3bf27c326b7da009",
+      "fifth_blob_sha256": "9f8f800aee380f8b060b95fcc8d1c776ed580ddbec0bbd398d104bda58156403"
+    },
+    {
+      "path": "scripts/test_k1_terminal_publication.py",
+      "fourth_blob_sha256": "b4fc161221ba6e69cb2c483c2955bf7cec6deca4f18d6a5c739e6ed5168d9ae9",
+      "fifth_blob_sha256": "5075c7b236117e1cace9f2d10e33cca6ee2b2ccd0cb95c5b7bf8f7d2de1762b4"
+    }
+  ]
+}

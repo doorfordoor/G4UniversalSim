@@ -1,0 +1,14 @@
+# 第六四份contractdocs新增段落最终字节绑定
+
+结论：**新增段落语义及4167最终字节绑定通过，无新增文案修复项。** gpt-6.1-sol/medium，消耗未知。作者均为父任务；根AGENTS是父压缩摘要，其余三处叙述对应已通过e0829草稿。只签f9a9ddb..4167c44新增段落和紧邻上下文，不签四文件旧全文；整文件SHA仅作身份绑定，不扩资源范围。
+
+新增段落均为纯插入，旧文本未变。成功/非陈旧Generate/Run、有效launch实际argv与计划兼容回退、logical/physical cwd、Unknown、external无package、F5/owner不变、pending逐项且不提升通过资格等语义均与v2实现相符。根索引压缩未丢必要限定；GUI段逐字、history正文仅标题级别、人类正文仅新增标题，与已签草稿一致。
+
+|文件及本次Git新增行|Git原SHA|工作区原SHA|字节区别|
+|---|---|---|---|
+|AGENTS.md:6-7|c964a9f854cd84296f74b43c989312a7eae182069004779ab2c781d34d67a327|6848cbbf21fa79d703466871b25bd2626f4071693accdddc81066839310eec49|仅CRLF/LF，规范化相同|
+|gui/AGENTS.md:2-3|2b4b25d9db37ba43c64f584de8a583b773b06fdfa3c5afdcea914025d3dd344f|fdf49b297c6295b8b52d7b7a859bf3617114c44b02721080b554402c543cd779|仅CRLF/LF，规范化相同|
+|docs/agent-history.md:600-609|58d90ff88efd6d0aa3f4e0da193041e3a6d50fb4de40bd670e991982d84cfd3c|ff3c0d875db3f3c4c055060109d7d3c95a75d16cd1068386318f1f3af18e936e|仅CRLF/LF，规范化相同|
+|docs/可信实验工作流.md:137-140|f7d79ae0022fa121680089b692de6532d07bdda942290d853cea87a8c7437da3|950f20006b9927651733ce21f24ee06f7daa5dfd3217cb4b486e755a9667b516|仅CRLF/LF，规范化相同|
+
+JSON包含前后Git blob OID/原SHA、工作区原SHA、LF规范化SHA、CRLF/LF计数及精确新增文本/行号。当前HEAD4167、工作区clean；未改任何tracked文档/产品/测试、未重测。正式矩阵/最终I1及其余required专项结论仍分别计证，非K1通过。

@@ -1,0 +1,8 @@
+{
+  "previous_failed_checks": [
+    "final_index_all_files_SHA_size_match",
+    "saved_CI_12profile_gates_preserved"
+  ],
+  "cause": "Reviewer used str(Windows relative Path) against POSIX index paths, and incorrectly required aggregate k1_ci_verified=true although archived checks_passed=true and all12profile gates pass with stage intentionally unaccepted. No archive byte mismatch was found.",
+  "correction": "Normalize reviewer path inventory to POSIX; evaluate actual12 gates independently from overall acceptance flag."
+}

@@ -1,0 +1,665 @@
+{
+  "action": "run",
+  "actual_inputs": [
+    {
+      "capture_method": "binary_buffer",
+      "kind": "main_ini",
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\visible\\relocated-clean\\runs\\experiment-records\\880d4e7eb8e0481da3cf0c2d380bafbc\\execution-inputs\\resources\\r0002-main.ini",
+      "reason": "",
+      "role": "configuration_parse",
+      "sequence": 1,
+      "sha256": "a26beccc2b851ea8be56292e3b28a6e831e3a2a5e11e36211b28c605a6b2af24",
+      "size_bytes": 949,
+      "status": "recorded"
+    },
+    {
+      "capture_method": "binary_buffer",
+      "kind": "material_ini",
+      "path": "resources/r0003-material.ini",
+      "reason": "",
+      "role": "material_parse",
+      "sequence": 2,
+      "sha256": "d77923cdd8a0020c205b2287cfcbbe6e05b09d8e65359c33278a743c51361665",
+      "size_bytes": 297,
+      "status": "recorded"
+    },
+    {
+      "capture_method": "binary_buffer",
+      "kind": "geometry_ini",
+      "path": "resources/r0004-geometry.ini",
+      "reason": "",
+      "role": "geometry_parse",
+      "sequence": 3,
+      "sha256": "e6d77380889a38f16b6c2ad2f309bd33edb81060d29b30b3055b3f0b6e7e5a2e",
+      "size_bytes": 398,
+      "status": "recorded"
+    },
+    {
+      "capture_method": "binary_buffer",
+      "kind": "macro",
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\visible\\relocated-clean\\runs\\experiment-records\\880d4e7eb8e0481da3cf0c2d380bafbc\\execution-inputs\\resources\\r0005-run.mac",
+      "reason": "",
+      "role": "recursive_preflight",
+      "sequence": 4,
+      "sha256": "94bb20a5221f8851fee38ca2ce990ec0bef841f8879c4b7327fc82c669dbba5a",
+      "size_bytes": 147,
+      "status": "recorded"
+    }
+  ],
+  "build": {
+    "compiler_id": "MSVC",
+    "compiler_version": "19.51.36246.0",
+    "configuration": "Release",
+    "geant4_version": "$Name: geant4-11-03-patch-02 [MT]$",
+    "git_commit": "8213ced419c8c6bca512bf8413b674c1265cf3bf",
+    "git_source_state": "clean",
+    "git_state_scope": "cpp_build_inputs",
+    "source_fingerprint": "890635b6d521659e43cf735d07f862c6ebd5959e6c5ea68d023d55332a8a930a"
+  },
+  "can_run": true,
+  "command": [
+    "C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/build-k1/Release/G4UniversalSim.exe",
+    "--config",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\visible\\relocated-clean\\runs\\experiment-records\\880d4e7eb8e0481da3cf0c2d380bafbc\\execution-inputs\\resources\\r0002-main.ini",
+    "--macro",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\visible\\relocated-clean\\runs\\experiment-records\\880d4e7eb8e0481da3cf0c2d380bafbc\\execution-inputs\\resources\\r0005-run.mac",
+    "--output",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\visible\\relocated-clean\\runs\\experiment-records\\880d4e7eb8e0481da3cf0c2d380bafbc\\20261031_140644_k1-visible\\output",
+    "--threads",
+    "1",
+    "--seed",
+    "4343",
+    "--run-name",
+    "k1-visible"
+  ],
+  "coverage": "closed_resource_tree",
+  "created_at": "2026-10-31T06:06:44.541451+00:00",
+  "diagnostics": {
+    "can_run": true,
+    "diagnostics": [
+      {
+        "code": "config.information.add_edited_geometry_summary_info.1",
+        "identity": "64799e9eb189ede0f80dc9d42fe4b42aee7ee1125bfa86a00f68d8e9bec1971d",
+        "identity_parameters": {},
+        "location": null,
+        "message": "Geometry Editor summary: mode=hierarchical, dirty=True",
+        "message_key": "",
+        "origin": "config.validation",
+        "params": {},
+        "raw_message": "Geometry Editor summary: mode=hierarchical, dirty=True",
+        "related_locations": [],
+        "severity": "info",
+        "source": null,
+        "unavailable_reason": "informational"
+      },
+      {
+        "code": "config.information.add_edited_geometry_summary_info.2",
+        "identity": "171f4bfa83f18b14b3a3e3fb32a198acb41794a251cf4d504c5449fccbb06d29",
+        "identity_parameters": {},
+        "location": null,
+        "message": "Geometry Editor material refs: FirstTarget, G4_Galactic",
+        "message_key": "",
+        "origin": "config.validation",
+        "params": {},
+        "raw_message": "Geometry Editor material refs: FirstTarget, G4_Galactic",
+        "related_locations": [],
+        "severity": "info",
+        "source": null,
+        "unavailable_reason": "informational"
+      },
+      {
+        "code": "config.information.add_edited_geometry_summary_info.3",
+        "identity": "baba83bbddcc8c915230b75beb7f6d53683b6419013d1017a15101bd3ab211b1",
+        "identity_parameters": {},
+        "location": null,
+        "message": "Geometry Editor sensitive volumes/layers: 1",
+        "message_key": "",
+        "origin": "config.validation",
+        "params": {},
+        "raw_message": "Geometry Editor sensitive volumes/layers: 1",
+        "related_locations": [],
+        "severity": "info",
+        "source": null,
+        "unavailable_reason": "informational"
+      },
+      {
+        "code": "config.information.add_edited_geometry_summary_info.4",
+        "identity": "933538ff70eb279e0509002e3566c99013e5b8d2471eb8308960b5a7b57f1a36",
+        "identity_parameters": {},
+        "location": null,
+        "message": "Geometry Editor bias volumes/layers: 0",
+        "message_key": "",
+        "origin": "config.validation",
+        "params": {},
+        "raw_message": "Geometry Editor bias volumes/layers: 0",
+        "related_locations": [],
+        "severity": "info",
+        "source": null,
+        "unavailable_reason": "informational"
+      },
+      {
+        "code": "config.information.add_edited_geometry_summary_info.5",
+        "identity": "bdc87997777c28033bed719ad88087d8a9f19060a864bdb774ef75a69b4dcc57",
+        "identity_parameters": {},
+        "location": null,
+        "message": "Geometry Editor hierarchical volumes: 2 enabled / 2 rows",
+        "message_key": "",
+        "origin": "config.validation",
+        "params": {},
+        "raw_message": "Geometry Editor hierarchical volumes: 2 enabled / 2 rows",
+        "related_locations": [],
+        "severity": "info",
+        "source": null,
+        "unavailable_reason": "informational"
+      },
+      {
+        "code": "config.information.add_editor_summary_info.1",
+        "identity": "076621de6d5f9d1ebd4e62868ccb49f737cba8ce77d8104cc0d1466438feb785",
+        "identity_parameters": {},
+        "location": null,
+        "message": "Source summary: preset=proton_beam, particle=geantino, energy=1 MeV",
+        "message_key": "",
+        "origin": "config.validation",
+        "params": {},
+        "raw_message": "Source summary: preset=proton_beam, particle=geantino, energy=1 MeV",
+        "related_locations": [],
+        "severity": "info",
+        "source": null,
+        "unavailable_reason": "informational"
+      },
+      {
+        "code": "config.information.add_editor_summary_info.2",
+        "identity": "bec34ce34da794f9ac60aee2015471e1923ef869b68f88d42f016a862efb53d6",
+        "identity_parameters": {},
+        "location": null,
+        "message": "Physics summary: mode=reference, reference=FTFP_BERT, default_cut=0.1 mm, biasing=False",
+        "message_key": "",
+        "origin": "config.validation",
+        "params": {},
+        "raw_message": "Physics summary: mode=reference, reference=FTFP_BERT, default_cut=0.1 mm, biasing=False",
+        "related_locations": [],
+        "severity": "info",
+        "source": null,
+        "unavailable_reason": "informational"
+      },
+      {
+        "code": "config.information.add_editor_summary_info.3",
+        "identity": "d91acc777a7b14b1d3460ae8828b7559d510acd72772d733b727a9e9477cda70",
+        "identity_parameters": {},
+        "location": null,
+        "message": "Scoring summary: enabled=True, hits=True, event_edep=True, edep=True, hist_bins=100",
+        "message_key": "",
+        "origin": "config.validation",
+        "params": {},
+        "raw_message": "Scoring summary: enabled=True, hits=True, event_edep=True, edep=True, hist_bins=100",
+        "related_locations": [],
+        "severity": "info",
+        "source": null,
+        "unavailable_reason": "informational"
+      },
+      {
+        "code": "config.information.validate_config_builder.1",
+        "identity": "05dbfe9a24bcea20f94ecc1f5a606036c9e5ccce854fa634adb55aad271f06f4",
+        "identity_parameters": {},
+        "location": null,
+        "message": "Validation passed.",
+        "message_key": "",
+        "origin": "config.validation",
+        "params": {},
+        "raw_message": "Validation passed.",
+        "related_locations": [],
+        "severity": "info",
+        "source": null,
+        "unavailable_reason": "informational"
+      }
+    ],
+    "errors": [],
+    "info": [
+      "Geometry Editor summary: mode=hierarchical, dirty=True",
+      "Geometry Editor material refs: FirstTarget, G4_Galactic",
+      "Geometry Editor sensitive volumes/layers: 1",
+      "Geometry Editor bias volumes/layers: 0",
+      "Geometry Editor hierarchical volumes: 2 enabled / 2 rows",
+      "Source summary: preset=proton_beam, particle=geantino, energy=1 MeV",
+      "Physics summary: mode=reference, reference=FTFP_BERT, default_cut=0.1 mm, biasing=False",
+      "Scoring summary: enabled=True, hits=True, event_edep=True, edep=True, hist_bins=100",
+      "Validation passed."
+    ],
+    "schema": "g4usim_diagnostics_v1",
+    "snapshot_id": "7978a39b974f5bcccfe29ac0f3caf6aed2d9d81d859794695cd44c670ca1d865",
+    "warnings": []
+  },
+  "execution_bundle": {
+    "coverage": "closed_resource_tree",
+    "manifest_sha256": "a44d1fd140a2779fe7f25118474a51749af3a6a9dfd367888e40eded018f7746",
+    "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\visible\\relocated-clean\\runs\\experiment-records\\880d4e7eb8e0481da3cf0c2d380bafbc\\execution-inputs"
+  },
+  "execution_id": "cd9e2ba7b2543928fbe380cf079583e6",
+  "exit_code": 0,
+  "expected_inputs": {
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\visible\\relocated-clean\\runs\\experiment-records\\880d4e7eb8e0481da3cf0c2d380bafbc\\execution-inputs\\resources\\r0000-r0000-original-materials.ini": {
+      "role": "materials",
+      "sha256": "4bfb64cc63dad229525137f14e64412a94eee8790b449ee64e10a8906cb67da5",
+      "size_bytes": 249
+    },
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\visible\\relocated-clean\\runs\\experiment-records\\880d4e7eb8e0481da3cf0c2d380bafbc\\execution-inputs\\resources\\r0001-r0001-original-geometry.ini": {
+      "role": "geometry",
+      "sha256": "b6f500fb680f4aa13393e2545824321f15e6c63815bb396821ad4b7b1d930fc2",
+      "size_bytes": 264
+    },
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\visible\\relocated-clean\\runs\\experiment-records\\880d4e7eb8e0481da3cf0c2d380bafbc\\execution-inputs\\resources\\r0002-main.ini": {
+      "role": "main",
+      "sha256": "a26beccc2b851ea8be56292e3b28a6e831e3a2a5e11e36211b28c605a6b2af24",
+      "size_bytes": 949
+    },
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\visible\\relocated-clean\\runs\\experiment-records\\880d4e7eb8e0481da3cf0c2d380bafbc\\execution-inputs\\resources\\r0003-material.ini": {
+      "role": "materials",
+      "sha256": "d77923cdd8a0020c205b2287cfcbbe6e05b09d8e65359c33278a743c51361665",
+      "size_bytes": 297
+    },
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\visible\\relocated-clean\\runs\\experiment-records\\880d4e7eb8e0481da3cf0c2d380bafbc\\execution-inputs\\resources\\r0004-geometry.ini": {
+      "role": "geometry",
+      "sha256": "e6d77380889a38f16b6c2ad2f309bd33edb81060d29b30b3055b3f0b6e7e5a2e",
+      "size_bytes": 398
+    },
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\visible\\relocated-clean\\runs\\experiment-records\\880d4e7eb8e0481da3cf0c2d380bafbc\\execution-inputs\\resources\\r0005-run.mac": {
+      "role": "macro",
+      "sha256": "94bb20a5221f8851fee38ca2ce990ec0bef841f8879c4b7327fc82c669dbba5a",
+      "size_bytes": 147
+    }
+  },
+  "finished_at": "2026-10-31T06:06:48.145264+00:00",
+  "identity": {
+    "backend": {
+      "sha256": "6e02ce583aff7f711d3a280e7e60a267226f468e6c98170523ce3ef0be8ff8ed",
+      "size_bytes": 2420736,
+      "status": "recorded"
+    },
+    "configuration_fingerprint": "5a2ed2b8a9f2adfa21ea518b37296b4ae73316754503fd276b60b6e1b854674c",
+    "coverage": "closed_resource_tree",
+    "environment": {
+      "architecture": {
+        "bits": 64,
+        "format": "PE",
+        "machine": "x86_64"
+      },
+      "binary": {
+        "sha256": "6e02ce583aff7f711d3a280e7e60a267226f468e6c98170523ce3ef0be8ff8ed",
+        "stable": true
+      },
+      "build": {
+        "compiler_id": "MSVC",
+        "compiler_version": "19.51.36246.0",
+        "geant4_version_number": 1132
+      },
+      "capabilities": {
+        "data": {
+          "configuration": "Release",
+          "geant4_version_number": 1132,
+          "git_commit": "8213ced419c8c6bca512bf8413b674c1265cf3bf",
+          "git_source_state": "clean",
+          "multithreaded": true,
+          "schema": "G4UniversalSimCapabilities",
+          "source_fingerprint": "890635b6d521659e43cf735d07f862c6ebd5959e6c5ea68d023d55332a8a930a",
+          "version": 1
+        },
+        "status": "available"
+      },
+      "coverage": "observed_selection_and_presence_not_dataset_bytes",
+      "data": {
+        "datasets": [
+          {
+            "env": "G4LEDATA",
+            "folder": "G4EMLOW8.6.1",
+            "found": true,
+            "required": true,
+            "selected_path_sha256": "b35349933329a837554648255c4d45b530f8572d4a14b927adc0ce3894edbec4"
+          },
+          {
+            "env": "G4LEVELGAMMADATA",
+            "folder": "PhotonEvaporation6.1",
+            "found": true,
+            "required": true,
+            "selected_path_sha256": "99a58131c7c7f067ec079675ed46fb35a9e6964dce140e6824e63fa0c6fb0935"
+          },
+          {
+            "env": "G4RADIOACTIVEDATA",
+            "folder": "RadioactiveDecay6.1.2",
+            "found": true,
+            "required": true,
+            "selected_path_sha256": "35e382c3c173f64bcceddca30b2e78b34d877b8840d19833fe01539fc22f4e14"
+          },
+          {
+            "env": "G4PARTICLEXSDATA",
+            "folder": "G4PARTICLEXS4.1",
+            "found": true,
+            "required": true,
+            "selected_path_sha256": "1fdac8c46599707b6489e95741c77fc49d772bc8f9aba3aea642c3c3be1c2e92"
+          },
+          {
+            "env": "G4ENSDFSTATEDATA",
+            "folder": "G4ENSDFSTATE3.0",
+            "found": true,
+            "required": true,
+            "selected_path_sha256": "e8057e3a01bf3a19720c92b2e047d60f0b653ea59777a040491b327841b00eab"
+          },
+          {
+            "env": "G4NEUTRONHPDATA",
+            "folder": "G4NDL4.7.1",
+            "found": true,
+            "required": false,
+            "selected_path_sha256": "a74ffaeb75f7a1564c481d8624100fb52b98b980b36c6c910352027049136415"
+          },
+          {
+            "env": "G4PIIDATA",
+            "folder": "G4PII1.3",
+            "found": true,
+            "required": false,
+            "selected_path_sha256": "eb05280dc338e7d8f3fdcf073227833e729ae51eca08e3c8625d43615c1cf753"
+          },
+          {
+            "env": "G4REALSURFACEDATA",
+            "folder": "RealSurface2.2",
+            "found": true,
+            "required": false,
+            "selected_path_sha256": "bde5d4bf7a54435592c52c76165a9daca059ecaa4a737a34b09e996b3ce86385"
+          },
+          {
+            "env": "G4SAIDXSDATA",
+            "folder": "G4SAIDDATA2.0",
+            "found": true,
+            "required": false,
+            "selected_path_sha256": "c53751713c5d3e60864eaa28f0a950ded5b257bf8b75833254448d4f7e41ef4f"
+          },
+          {
+            "env": "G4ABLADATA",
+            "folder": "G4ABLA3.3",
+            "found": true,
+            "required": false,
+            "selected_path_sha256": "ce49b9c652bf030d0c7ab1227cf20477aa99b7ef6cb448e3c76d9029acdb1de2"
+          },
+          {
+            "env": "G4INCLDATA",
+            "folder": "G4INCL1.2",
+            "found": true,
+            "required": false,
+            "selected_path_sha256": "df2976f9fba2ec8d971d1e6da6321eb62ac0062e1f9428095d6068ac963756d8"
+          },
+          {
+            "env": "G4CHANNELINGDATA",
+            "folder": "G4CHANNELING1.0",
+            "found": true,
+            "required": false,
+            "selected_path_sha256": "07ae82dfde3d65ea0603c304c13fa1403815780777590903c4c91336bb62b331"
+          }
+        ],
+        "required_complete": true,
+        "status": "available"
+      },
+      "dataset_content_identity": "unknown",
+      "schema": "g4usim_environment_v1",
+      "status": "ready"
+    },
+    "execution_fingerprint": "3f03d4c40cbda8c7ba0a8db9cfe4ba693890658a47d6b9c7c2f3e5f2dd8e8051",
+    "fingerprint": "d11a2058d2fb183f9c495eab5b7dddb1eed0f96238f25f2d4d8e3f6cf8d17cad",
+    "resource_fingerprint": "ce722c5aeee0e1601373a960674d3e81fa2deaeb34c15945e14274aa3c486d49",
+    "resources": [
+      {
+        "captured_text": false,
+        "distribution": "unknown",
+        "path": "resources/r0000-r0000-original-materials.ini",
+        "role": "materials",
+        "sha256": "4bfb64cc63dad229525137f14e64412a94eee8790b449ee64e10a8906cb67da5",
+        "source_sha256": "4bfb64cc63dad229525137f14e64412a94eee8790b449ee64e10a8906cb67da5"
+      },
+      {
+        "captured_text": false,
+        "distribution": "unknown",
+        "path": "resources/r0001-r0001-original-geometry.ini",
+        "role": "geometry",
+        "sha256": "b6f500fb680f4aa13393e2545824321f15e6c63815bb396821ad4b7b1d930fc2",
+        "source_sha256": "b6f500fb680f4aa13393e2545824321f15e6c63815bb396821ad4b7b1d930fc2"
+      }
+    ],
+    "revision": 8,
+    "schema": "g4usim_experiment_identity_v1",
+    "snapshot_fingerprint": "7978a39b974f5bcccfe29ac0f3caf6aed2d9d81d859794695cd44c670ca1d865"
+  },
+  "identity_after_prepare": {
+    "backend": {
+      "sha256": "6e02ce583aff7f711d3a280e7e60a267226f468e6c98170523ce3ef0be8ff8ed",
+      "size_bytes": 2420736,
+      "status": "recorded"
+    },
+    "configuration_fingerprint": "5a2ed2b8a9f2adfa21ea518b37296b4ae73316754503fd276b60b6e1b854674c",
+    "coverage": "closed_resource_tree",
+    "environment": {
+      "architecture": {
+        "bits": 64,
+        "format": "PE",
+        "machine": "x86_64"
+      },
+      "binary": {
+        "sha256": "6e02ce583aff7f711d3a280e7e60a267226f468e6c98170523ce3ef0be8ff8ed",
+        "stable": true
+      },
+      "build": {
+        "compiler_id": "MSVC",
+        "compiler_version": "19.51.36246.0",
+        "geant4_version_number": 1132
+      },
+      "capabilities": {
+        "data": {
+          "configuration": "Release",
+          "geant4_version_number": 1132,
+          "git_commit": "8213ced419c8c6bca512bf8413b674c1265cf3bf",
+          "git_source_state": "clean",
+          "multithreaded": true,
+          "schema": "G4UniversalSimCapabilities",
+          "source_fingerprint": "890635b6d521659e43cf735d07f862c6ebd5959e6c5ea68d023d55332a8a930a",
+          "version": 1
+        },
+        "status": "available"
+      },
+      "coverage": "observed_selection_and_presence_not_dataset_bytes",
+      "data": {
+        "datasets": [
+          {
+            "env": "G4LEDATA",
+            "folder": "G4EMLOW8.6.1",
+            "found": true,
+            "required": true,
+            "selected_path_sha256": "b35349933329a837554648255c4d45b530f8572d4a14b927adc0ce3894edbec4"
+          },
+          {
+            "env": "G4LEVELGAMMADATA",
+            "folder": "PhotonEvaporation6.1",
+            "found": true,
+            "required": true,
+            "selected_path_sha256": "99a58131c7c7f067ec079675ed46fb35a9e6964dce140e6824e63fa0c6fb0935"
+          },
+          {
+            "env": "G4RADIOACTIVEDATA",
+            "folder": "RadioactiveDecay6.1.2",
+            "found": true,
+            "required": true,
+            "selected_path_sha256": "35e382c3c173f64bcceddca30b2e78b34d877b8840d19833fe01539fc22f4e14"
+          },
+          {
+            "env": "G4PARTICLEXSDATA",
+            "folder": "G4PARTICLEXS4.1",
+            "found": true,
+            "required": true,
+            "selected_path_sha256": "1fdac8c46599707b6489e95741c77fc49d772bc8f9aba3aea642c3c3be1c2e92"
+          },
+          {
+            "env": "G4ENSDFSTATEDATA",
+            "folder": "G4ENSDFSTATE3.0",
+            "found": true,
+            "required": true,
+            "selected_path_sha256": "e8057e3a01bf3a19720c92b2e047d60f0b653ea59777a040491b327841b00eab"
+          },
+          {
+            "env": "G4NEUTRONHPDATA",
+            "folder": "G4NDL4.7.1",
+            "found": true,
+            "required": false,
+            "selected_path_sha256": "a74ffaeb75f7a1564c481d8624100fb52b98b980b36c6c910352027049136415"
+          },
+          {
+            "env": "G4PIIDATA",
+            "folder": "G4PII1.3",
+            "found": true,
+            "required": false,
+            "selected_path_sha256": "eb05280dc338e7d8f3fdcf073227833e729ae51eca08e3c8625d43615c1cf753"
+          },
+          {
+            "env": "G4REALSURFACEDATA",
+            "folder": "RealSurface2.2",
+            "found": true,
+            "required": false,
+            "selected_path_sha256": "bde5d4bf7a54435592c52c76165a9daca059ecaa4a737a34b09e996b3ce86385"
+          },
+          {
+            "env": "G4SAIDXSDATA",
+            "folder": "G4SAIDDATA2.0",
+            "found": true,
+            "required": false,
+            "selected_path_sha256": "c53751713c5d3e60864eaa28f0a950ded5b257bf8b75833254448d4f7e41ef4f"
+          },
+          {
+            "env": "G4ABLADATA",
+            "folder": "G4ABLA3.3",
+            "found": true,
+            "required": false,
+            "selected_path_sha256": "ce49b9c652bf030d0c7ab1227cf20477aa99b7ef6cb448e3c76d9029acdb1de2"
+          },
+          {
+            "env": "G4INCLDATA",
+            "folder": "G4INCL1.2",
+            "found": true,
+            "required": false,
+            "selected_path_sha256": "df2976f9fba2ec8d971d1e6da6321eb62ac0062e1f9428095d6068ac963756d8"
+          },
+          {
+            "env": "G4CHANNELINGDATA",
+            "folder": "G4CHANNELING1.0",
+            "found": true,
+            "required": false,
+            "selected_path_sha256": "07ae82dfde3d65ea0603c304c13fa1403815780777590903c4c91336bb62b331"
+          }
+        ],
+        "required_complete": true,
+        "status": "available"
+      },
+      "dataset_content_identity": "unknown",
+      "schema": "g4usim_environment_v1",
+      "status": "ready"
+    },
+    "execution_fingerprint": "3f03d4c40cbda8c7ba0a8db9cfe4ba693890658a47d6b9c7c2f3e5f2dd8e8051",
+    "fingerprint": "d11a2058d2fb183f9c495eab5b7dddb1eed0f96238f25f2d4d8e3f6cf8d17cad",
+    "resource_fingerprint": "ce722c5aeee0e1601373a960674d3e81fa2deaeb34c15945e14274aa3c486d49",
+    "resources": [
+      {
+        "captured_text": false,
+        "distribution": "unknown",
+        "path": "resources/r0000-r0000-original-materials.ini",
+        "role": "materials",
+        "sha256": "4bfb64cc63dad229525137f14e64412a94eee8790b449ee64e10a8906cb67da5",
+        "source_sha256": "4bfb64cc63dad229525137f14e64412a94eee8790b449ee64e10a8906cb67da5"
+      },
+      {
+        "captured_text": false,
+        "distribution": "unknown",
+        "path": "resources/r0001-r0001-original-geometry.ini",
+        "role": "geometry",
+        "sha256": "b6f500fb680f4aa13393e2545824321f15e6c63815bb396821ad4b7b1d930fc2",
+        "source_sha256": "b6f500fb680f4aa13393e2545824321f15e6c63815bb396821ad4b7b1d930fc2"
+      }
+    ],
+    "revision": 8,
+    "schema": "g4usim_experiment_identity_v1",
+    "snapshot_fingerprint": "7978a39b974f5bcccfe29ac0f3caf6aed2d9d81d859794695cd44c670ca1d865"
+  },
+  "input_coverage": "project_readers_observed",
+  "input_exclusions": [
+    "Geant4 internal datasets and external physics-table reads are not byte-captured",
+    "Native command input IO outside the project readers is not comprehensively observed; known references are marked unobserved"
+  ],
+  "launch": {
+    "arguments": [
+      "--config",
+      "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\visible\\relocated-clean\\runs\\experiment-records\\880d4e7eb8e0481da3cf0c2d380bafbc\\execution-inputs\\resources\\r0002-main.ini",
+      "--macro",
+      "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\visible\\relocated-clean\\runs\\experiment-records\\880d4e7eb8e0481da3cf0c2d380bafbc\\execution-inputs\\resources\\r0005-run.mac",
+      "--output",
+      "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\visible\\relocated-clean\\runs\\experiment-records\\880d4e7eb8e0481da3cf0c2d380bafbc\\20261031_140644_k1-visible\\output",
+      "--threads",
+      "1",
+      "--seed",
+      "4343",
+      "--run-name",
+      "k1-visible"
+    ],
+    "launch_cwd_utf16_units": 187,
+    "launch_route": "direct",
+    "launch_working_directory": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\visible\\relocated-clean\\runs\\experiment-records\\880d4e7eb8e0481da3cf0c2d380bafbc\\execution-inputs",
+    "logical_cwd_utf16_units": 187,
+    "program": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-k1\\Release\\G4UniversalSim.exe",
+    "working_directory": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\visible\\relocated-clean\\runs\\experiment-records\\880d4e7eb8e0481da3cf0c2d380bafbc\\execution-inputs"
+  },
+  "level": "execution",
+  "metadata_sha256": "bd7b7a1e3be91b92e40a85d381e066185ec8b03efda9eb0a2529ea4b546ee143",
+  "observed_run_name": "k1-visible",
+  "output_dir": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\visible\\relocated-clean\\runs\\experiment-records\\880d4e7eb8e0481da3cf0c2d380bafbc\\20261031_140644_k1-visible\\output",
+  "package": {
+    "config_dir": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\visible\\relocated-clean\\runs\\experiment-records\\880d4e7eb8e0481da3cf0c2d380bafbc\\20261031_140644_k1-visible\\config",
+    "geometry_ini_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\visible\\relocated-clean\\runs\\experiment-records\\880d4e7eb8e0481da3cf0c2d380bafbc\\20261031_140644_k1-visible\\config\\geometry\\geometry.ini",
+    "logs_dir": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\visible\\relocated-clean\\runs\\experiment-records\\880d4e7eb8e0481da3cf0c2d380bafbc\\20261031_140644_k1-visible\\logs",
+    "macro_dir": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\visible\\relocated-clean\\runs\\experiment-records\\880d4e7eb8e0481da3cf0c2d380bafbc\\20261031_140644_k1-visible\\macros",
+    "main_ini_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\visible\\relocated-clean\\runs\\experiment-records\\880d4e7eb8e0481da3cf0c2d380bafbc\\execution-inputs\\resources\\r0002-main.ini",
+    "materials_ini_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\visible\\relocated-clean\\runs\\experiment-records\\880d4e7eb8e0481da3cf0c2d380bafbc\\20261031_140644_k1-visible\\config\\materials\\material.ini",
+    "output_dir": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\visible\\relocated-clean\\runs\\experiment-records\\880d4e7eb8e0481da3cf0c2d380bafbc\\20261031_140644_k1-visible\\output",
+    "package_dir": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\visible\\relocated-clean\\runs\\experiment-records\\880d4e7eb8e0481da3cf0c2d380bafbc\\20261031_140644_k1-visible",
+    "project_snapshot_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\visible\\relocated-clean\\runs\\experiment-records\\880d4e7eb8e0481da3cf0c2d380bafbc\\20261031_140644_k1-visible\\project_snapshot.json",
+    "run_macro_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\visible\\relocated-clean\\runs\\experiment-records\\880d4e7eb8e0481da3cf0c2d380bafbc\\execution-inputs\\resources\\r0005-run.mac",
+    "validation_report_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\visible\\relocated-clean\\runs\\experiment-records\\880d4e7eb8e0481da3cf0c2d380bafbc\\20261031_140644_k1-visible\\validation_report.txt"
+  },
+  "package_report": "can_run = true\n\n[errors]\n<none>\n\n[warnings]\n<none>\n\n[info]\nGeometry Editor summary: mode=hierarchical, dirty=True\nGeometry Editor material refs: FirstTarget, G4_Galactic\nGeometry Editor sensitive volumes/layers: 1\nGeometry Editor bias volumes/layers: 0\nGeometry Editor hierarchical volumes: 2 enabled / 2 rows\nSource summary: preset=proton_beam, particle=geantino, energy=1 MeV\nPhysics summary: mode=reference, reference=FTFP_BERT, default_cut=0.1 mm, biasing=False\nScoring summary: enabled=True, hits=True, event_edep=True, edep=True, hist_bins=100\nValidation passed.\n[selected input files]\nmaterials = C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\visible\\relocated-clean\\geantino-history\\resources\\r0000-original-materials.ini\ngeometry = C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\visible\\relocated-clean\\geantino-history\\resources\\r0001-original-geometry.ini\n\n[copied files]\nmaterials_source_mode = generated by Materials Editor\ngeometry_source_mode = generated by Geometry Editor\nmaterials = C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\visible\\relocated-clean\\runs\\experiment-records\\880d4e7eb8e0481da3cf0c2d380bafbc\\20261031_140644_k1-visible\\config\\materials\\material.ini\ngeometry = C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\visible\\relocated-clean\\runs\\experiment-records\\880d4e7eb8e0481da3cf0c2d380bafbc\\20261031_140644_k1-visible\\config\\geometry\\geometry.ini\nmain_ini = C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\visible\\relocated-clean\\runs\\experiment-records\\880d4e7eb8e0481da3cf0c2d380bafbc\\20261031_140644_k1-visible\\config\\main.ini\nrun_macro = C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\visible\\relocated-clean\\runs\\experiment-records\\880d4e7eb8e0481da3cf0c2d380bafbc\\20261031_140644_k1-visible\\macros\\run.mac\noutput = C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\visible\\relocated-clean\\runs\\experiment-records\\880d4e7eb8e0481da3cf0c2d380bafbc\\20261031_140644_k1-visible\\output\n\n[materials summary]\npath = C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\visible\\relocated-clean\\runs\\experiment-records\\880d4e7eb8e0481da3cf0c2d380bafbc\\20261031_140644_k1-visible\\config\\materials\\material.ini\ncount = 2\n- FirstTarget kind=mass_fraction density=2.33 g/cm3 components=1 section=[material.FirstTarget]\n- SecondTarget kind=mass_fraction density=2.7 g/cm3 components=1 section=[material.SecondTarget]\n\n[geometry summary]\npath = C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\visible\\relocated-clean\\runs\\experiment-records\\880d4e7eb8e0481da3cf0c2d380bafbc\\20261031_140644_k1-visible\\config\\geometry\\geometry.ini\ntemplate_hint = hierarchical\nvolumes = 2\n- world parent=<none> shape=box material=G4_Galactic boolean_ops=0 \n- Target parent=world shape=box material=FirstTarget boolean_ops=0 sensitive\n\nSensitive volumes:\n- Target\n\nBias volumes:\n- <none>\n\nBoolean operations:\n- <none>",
+  "random_settings": {
+    "configured_seed": "4343",
+    "effective_configured_seed": "4343",
+    "effective_seed_origin_file": "not_applicable",
+    "effective_seed_origin_key": "not_applicable",
+    "effective_seed_origin_kind": "cli",
+    "effective_seed_origin_line": "0",
+    "effective_seed_origin_section": "not_applicable",
+    "initial_engine_seed": "unknown",
+    "initial_seed": "4343",
+    "macro_seed_modified": "false",
+    "planned_seed": "4343",
+    "seed": "4343"
+  },
+  "reason": "experiment.run_evidence_confirmed",
+  "record_dir": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\visible\\relocated-clean\\runs\\experiment-records\\880d4e7eb8e0481da3cf0c2d380bafbc",
+  "record_id": "880d4e7eb8e0481da3cf0c2d380bafbc",
+  "requested_run_name": "k1-visible",
+  "required_inputs": [
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\visible\\relocated-clean\\runs\\experiment-records\\880d4e7eb8e0481da3cf0c2d380bafbc\\execution-inputs\\resources\\r0002-main.ini",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\visible\\relocated-clean\\runs\\experiment-records\\880d4e7eb8e0481da3cf0c2d380bafbc\\execution-inputs\\resources\\r0005-run.mac"
+  ],
+  "result": {
+    "completed_events": 3,
+    "planned_events": 3,
+    "reason": "Events completed as planned.",
+    "run_count": 1,
+    "state": "success",
+    "summary_status": "completed"
+  },
+  "revision": 8,
+  "run_id": "880d4e7eb8e0481da3cf0c2d380bafbc",
+  "schema": "g4usim_experiment_record_v1",
+  "session_id": "b31637e644a04a6c8c389f21e81cad0d",
+  "stale": false,
+  "status": "passed"
+}

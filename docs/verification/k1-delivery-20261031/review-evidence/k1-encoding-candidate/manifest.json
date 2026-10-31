@@ -1,0 +1,190 @@
+{
+  "schema": "k1_single_smoke_cp1252_candidate_v1",
+  "recorded_utc": "2026-10-31T07:34:06.551989+00:00",
+  "base_head": "4167c4421b13464dec54213ea7652ee321868c4e",
+  "writer": "Tesla; sole candidate file author",
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "high",
+  "consumption": "unknown",
+  "scope": "one existing smoke diagnostic JSON ASCII compatibility; no product changes",
+  "files": [
+    {
+      "path": "gui/smoke_tests/smoke_k1_workflow.py",
+      "base_sha256": "8eac62b07e0c1fc9411037eafe2ea066165a954af4b0557cf013abbb9e1faffc",
+      "candidate_sha256": "e653d5d67d50ba2956a5e6b16d378b74abf085075c8093800b85b2c1d71c6632",
+      "candidate_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-encoding-candidate\\files\\gui\\smoke_tests\\smoke_k1_workflow.py"
+    }
+  ],
+  "patch_sha256": "903d079875c6933f0321b2707bfd95a225a4ad3d20a5da04ef76b179ebef2fe8",
+  "original_assert_probe_sha256": "fd6515504cdec5ab86046e53e390cb366f49ee5facbf7acbe21314943ad8568c",
+  "baseline": {
+    "mode": "baseline",
+    "command": [
+      "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+      "-B",
+      "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\tools\\test_assert_probe.py",
+      "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-encoding-candidate\\baseline\\gui\\smoke_tests\\smoke_k1_workflow.py"
+    ],
+    "cwd": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim",
+    "exit_code": 1,
+    "seconds": 9.531000000002678,
+    "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-encoding-candidate\\baseline-cp1252.log",
+    "log_sha256": "207787196b04d08bbcddc476a4b6fb284d8fb01013fae5b8cfab2ff28feba735",
+    "assertions_executed": [
+      76
+    ],
+    "diagnostic_rows": 1,
+    "languages": [
+      "en"
+    ],
+    "encoding": "PYTHONIOENCODING=cp1252 (strict stdout default)",
+    "original_probe_sha256": "fd6515504cdec5ab86046e53e390cb366f49ee5facbf7acbe21314943ad8568c",
+    "mirrored_smoke_sha256": "8eac62b07e0c1fc9411037eafe2ea066165a954af4b0557cf013abbb9e1faffc",
+    "harness": "direct original assert probe/runpy execution; no import hooks or AST extraction",
+    "product_imports": "unchanged actual sixth checkout via PYTHONPATH; no product candidate overlay",
+    "no_real_backend_simulation": true
+  },
+  "candidate": {
+    "mode": "candidate",
+    "command": [
+      "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+      "-B",
+      "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\tools\\test_assert_probe.py",
+      "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-encoding-candidate\\files\\gui\\smoke_tests\\smoke_k1_workflow.py"
+    ],
+    "cwd": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim",
+    "exit_code": 0,
+    "seconds": 14.202999999994063,
+    "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-encoding-candidate\\candidate-cp1252.log",
+    "log_sha256": "7793819574a50d9094f0194a98b401e2494fc8fe1cf602c3aa5e7183671bbef8",
+    "assertions_executed": [
+      178
+    ],
+    "diagnostic_rows": 10,
+    "languages": [
+      "en",
+      "zh_CN",
+      "en",
+      "zh_CN",
+      "en",
+      "zh_CN",
+      "en",
+      "zh_CN",
+      "en",
+      "zh_CN"
+    ],
+    "encoding": "PYTHONIOENCODING=cp1252 (strict stdout default)",
+    "original_probe_sha256": "fd6515504cdec5ab86046e53e390cb366f49ee5facbf7acbe21314943ad8568c",
+    "mirrored_smoke_sha256": "e653d5d67d50ba2956a5e6b16d378b74abf085075c8093800b85b2c1d71c6632",
+    "harness": "direct original assert probe/runpy execution; no import hooks or AST extraction",
+    "product_imports": "unchanged actual sixth checkout via PYTHONPATH; no product candidate overlay",
+    "no_real_backend_simulation": true
+  },
+  "checks": {
+    "base_sha256": "8eac62b07e0c1fc9411037eafe2ea066165a954af4b0557cf013abbb9e1faffc",
+    "candidate_sha256": "e653d5d67d50ba2956a5e6b16d378b74abf085075c8093800b85b2c1d71c6632",
+    "patch_sha256": "903d079875c6933f0321b2707bfd95a225a4ad3d20a5da04ef76b179ebef2fe8",
+    "assert_AST_sites": 74,
+    "all_assert_AST_exactly_unchanged": true,
+    "entire_AST_diff_only_ensure_ascii_boolean": true,
+    "exact_raw_diff_one_keyword_value": true,
+    "git_apply_check": "passed",
+    "negative_exit": 1,
+    "negative_assertions": 76,
+    "positive_exit": 0,
+    "positive_assertions": 178,
+    "all_ten_diagnostic_lines_ASCII": true,
+    "all_ten_original_fields_retained": true,
+    "diagnostic_JSON_recovers_Chinese_and_emoji": true,
+    "reached_post_print_assertions_and_whole_workflow": true,
+    "tracked_source_sha256_after": "8eac62b07e0c1fc9411037eafe2ea066165a954af4b0557cf013abbb9e1faffc",
+    "original_probe_sha256_after": "fd6515504cdec5ab86046e53e390cb366f49ee5facbf7acbe21314943ad8568c",
+    "usage": "unknown"
+  },
+  "evidence": [
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-encoding-candidate\\base.json",
+      "sha256": "b9c804b7e9a34290ec0cefdfe8c3683136ea7562b5b1fdd0a17bcf4f63a2f5ef",
+      "bytes": 789
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-encoding-candidate\\baseline\\gui\\smoke_tests\\smoke_k1_workflow.py",
+      "sha256": "8eac62b07e0c1fc9411037eafe2ea066165a954af4b0557cf013abbb9e1faffc",
+      "bytes": 18935
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-encoding-candidate\\baseline-cp1252-receipt.json",
+      "sha256": "7dbbf4b234477d4bdfa0fb826dfcf3cccd5ac742f7fb66ca577de7ecabcb14ee",
+      "bytes": 1333
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-encoding-candidate\\baseline-cp1252.log",
+      "sha256": "207787196b04d08bbcddc476a4b6fb284d8fb01013fae5b8cfab2ff28feba735",
+      "bytes": 5872
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-encoding-candidate\\candidate-cp1252-receipt.json",
+      "sha256": "264b07ee8d2dd66baf3deb1fa54010579755def2635002b4f8dcdebaf06c572d",
+      "bytes": 1440
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-encoding-candidate\\candidate-cp1252.log",
+      "sha256": "7793819574a50d9094f0194a98b401e2494fc8fe1cf602c3aa5e7183671bbef8",
+      "bytes": 35403
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-encoding-candidate\\candidate.patch",
+      "sha256": "903d079875c6933f0321b2707bfd95a225a4ad3d20a5da04ef76b179ebef2fe8",
+      "bytes": 823
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-encoding-candidate\\checks.json",
+      "sha256": "f786b27f1ac3860578d4f61bb08c9555c2b82a6bd0c30803c3965cc5e27c8e5c",
+      "bytes": 1010
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-encoding-candidate\\evidence\\original-ci-gui_k1_window.log",
+      "sha256": "ac9b6aa0d0015cd47461038f7eec54b5bdfd6b19e3c04eb5ebb883678e120346",
+      "bytes": 4641
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-encoding-candidate\\evidence\\original-ci-report.json",
+      "sha256": "3de0462014b40965a3ab671d432e81c0c79387dd678c65c7c8488082271d5ea9",
+      "bytes": 35794
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-encoding-candidate\\evidence\\original-encoding-failure-facts.json",
+      "sha256": "57f56db493b3b3308cac8ace46d7b047c9ee974cf1f5b99dde4d76ffae44a029",
+      "bytes": 1226
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-encoding-candidate\\files\\gui\\smoke_tests\\smoke_k1_workflow.py",
+      "sha256": "e653d5d67d50ba2956a5e6b16d378b74abf085075c8093800b85b2c1d71c6632",
+      "bytes": 18934
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-encoding-candidate\\PROGRESS.md",
+      "sha256": "05400a1454ed8bc1504ae7637e9fb5a30b7a11c5be285d5b7ccbc91bef0cc1d3",
+      "bytes": 732
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-encoding-candidate\\README.md",
+      "sha256": "7d8b553c5a5fe7d863592b83ae89a16fe3d6cb487bff0d12a7c476ca2e326585",
+      "bytes": 3485
+    },
+    {
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-encoding-candidate\\run_case.py",
+      "sha256": "79c8d4da6aee402ef0f5300eadb4feb59ead8ebd82102524eabe4f4940a79efa",
+      "bytes": 2611
+    }
+  ],
+  "independent_review": "pending parent+Averroes; author not independent signer",
+  "tracked_clean": true,
+  "source_file_changed": false,
+  "formal_running_source_changed": false,
+  "other_product_files_changed": false,
+  "old_evidence_changed": false,
+  "no_full_matrix": true,
+  "resource_scope": false,
+  "K1_acceptance": false
+}

@@ -1,0 +1,139 @@
+{
+  "head": "f9a9ddbfcabe69067707a5a209caff005748f510",
+  "scope": "local archive planning, not a remote policy check or push",
+  "bytes_before_final_metadata": 105030259,
+  "files_before_final_metadata": 965,
+  "largest_files": [
+    {
+      "path": "ci/ci_official_zips/00-linux-evidence-11.4.3.zip",
+      "bytes": 26825343
+    },
+    {
+      "path": "ci/ci_official_zips/01-linux-evidence-11.3.2.zip",
+      "bytes": 26824461
+    },
+    {
+      "path": "visible/fixture-inputs/packages/experiment-records/4aec0e6cd38a47e3a286be9e5693aaf2/20261031_143428_k1-visible/output/event_edep_t0.csv",
+      "bytes": 13888936
+    },
+    {
+      "path": "visible/fixture-inputs/packages/experiment-records/576efbdcf8434907bf0206d1de976f16/20261031_143319_k1-visible/output/event_edep_t0.csv",
+      "bytes": 12002262
+    },
+    {
+      "path": "identity/full-tracked-source-and-test-objects.json",
+      "bytes": 6008052
+    },
+    {
+      "path": "windows/case-originals.zip",
+      "bytes": 3394330
+    },
+    {
+      "path": "ci/ci_control_files/08-audit.json",
+      "bytes": 2078718
+    },
+    {
+      "path": "ci/ci_gates/00-audit.json",
+      "bytes": 2078718
+    },
+    {
+      "path": "official-archives.json",
+      "bytes": 2009671
+    },
+    {
+      "path": "selection.json",
+      "bytes": 1441884
+    },
+    {
+      "path": "review/final/windows-k1-fifth-windows-review-audit.json",
+      "bytes": 469608
+    },
+    {
+      "path": "ci/ci_official_zips/03-m0-report-windows-latest.zip",
+      "bytes": 455085
+    },
+    {
+      "path": "source-trees.json",
+      "bytes": 430692
+    },
+    {
+      "path": "ci/ci_official_zips/02-m0-report-ubuntu-latest.zip",
+      "bytes": 404736
+    },
+    {
+      "path": "ci/ci_control_files/10-independent-profiles.json",
+      "bytes": 221660
+    },
+    {
+      "path": "ci/ci_gates/01-independent-profiles.json",
+      "bytes": 221660
+    },
+    {
+      "path": "review/coverage-map.json",
+      "bytes": 198423
+    },
+    {
+      "path": "review/final/review_coverage-k1-review-coverage-map.json",
+      "bytes": 198423
+    },
+    {
+      "path": "visible/05-cancelled-natural-exit.jpg",
+      "bytes": 165431
+    },
+    {
+      "path": "visible/03-cancelled-forced-end.jpg",
+      "bytes": 164751
+    },
+    {
+      "path": "visible/fixture-inputs/packages/experiment-records/4aec0e6cd38a47e3a286be9e5693aaf2/20261031_143428_k1-visible/output/effective_config_finalization.json",
+      "bytes": 155704
+    },
+    {
+      "path": "visible/fixture-inputs/packages/experiment-records/5528e27cb3f94c70bf3e16a9de88d8b4/20261031_143619_k1-visible/output/effective_config_finalization.json",
+      "bytes": 155698
+    },
+    {
+      "path": "visible/02-running-repeat-disabled.jpg",
+      "bytes": 155602
+    },
+    {
+      "path": "visible/06-recovered-three-events.jpg",
+      "bytes": 155260
+    },
+    {
+      "path": "visible/fixture-inputs/packages/experiment-records/4aec0e6cd38a47e3a286be9e5693aaf2/20261031_143428_k1-visible/output/effective_config_final_r0_t-1.json",
+      "bytes": 152482
+    },
+    {
+      "path": "visible/fixture-inputs/packages/experiment-records/5528e27cb3f94c70bf3e16a9de88d8b4/20261031_143619_k1-visible/output/effective_config_final_r0_t-1.json",
+      "bytes": 152482
+    },
+    {
+      "path": "visible/04-running-before-cancel.jpg",
+      "bytes": 150433
+    },
+    {
+      "path": "visible/fixture-inputs/packages/experiment-records/4aec0e6cd38a47e3a286be9e5693aaf2/20261031_143428_k1-visible/output/effective_config_run_0_t-1.json",
+      "bytes": 149657
+    },
+    {
+      "path": "visible/fixture-inputs/packages/experiment-records/5528e27cb3f94c70bf3e16a9de88d8b4/20261031_143619_k1-visible/output/effective_config_run_0_t-1.json",
+      "bytes": 149657
+    },
+    {
+      "path": "visible/fixture-inputs/packages/experiment-records/576efbdcf8434907bf0206d1de976f16/20261031_143319_k1-visible/output/effective_config_run_0_t-1.json",
+      "bytes": 149657
+    }
+  ],
+  "planning_thresholds_bytes": {
+    "large_file_attention": 52428800,
+    "single_file_block_assumption": 104857600
+  },
+  "thresholds_are_local_assumptions_not_live_verified_hosting_policy": true,
+  "files_over_50MiB": [],
+  "files_over_100MiB": [],
+  "ordinary_push_under_100MiB_file_assumption": true,
+  "official_zip_policy": "original bytes unchanged, including their existing embedded EXE",
+  "if_large": "parent chooses external artifact storage or approved large-file mechanism; do not silently omit or split official ZIP",
+  "network_push_or_remote_probe_performed": false
+}

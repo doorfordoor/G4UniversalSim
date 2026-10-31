@@ -1,0 +1,96 @@
+{
+  "history_trust": "stale_requires_revalidation",
+  "integrity": "sha256_not_signature",
+  "members": [
+    {
+      "bytes": 961,
+      "captured_text": false,
+      "distribution": "unknown",
+      "path": "resources/r0000-r0006-main.ini",
+      "redistribution_override": false,
+      "role": "main",
+      "sha256": "2a5b6729ec113664f651dfafb16eef5d1363ca0d812dbf0fe46ed9006cdafa6d",
+      "source_sha256": "f3ad0752d025ce700b1c2abaa9b33aa185b0f5f55b1bd5db392b60235a0b5497"
+    },
+    {
+      "bytes": 297,
+      "captured_text": false,
+      "distribution": "unknown",
+      "path": "resources/r0001-r0007-material.ini",
+      "redistribution_override": false,
+      "role": "materials",
+      "sha256": "d77923cdd8a0020c205b2287cfcbbe6e05b09d8e65359c33278a743c51361665",
+      "source_sha256": "d77923cdd8a0020c205b2287cfcbbe6e05b09d8e65359c33278a743c51361665"
+    },
+    {
+      "bytes": 398,
+      "captured_text": false,
+      "distribution": "unknown",
+      "path": "resources/r0002-r0008-geometry.ini",
+      "redistribution_override": false,
+      "role": "geometry",
+      "sha256": "e6d77380889a38f16b6c2ad2f309bd33edb81060d29b30b3055b3f0b6e7e5a2e",
+      "source_sha256": "e6d77380889a38f16b6c2ad2f309bd33edb81060d29b30b3055b3f0b6e7e5a2e"
+    },
+    {
+      "bytes": 147,
+      "captured_text": false,
+      "distribution": "unknown",
+      "path": "resources/r0003-r0009-run.mac",
+      "redistribution_override": false,
+      "role": "macro",
+      "sha256": "94bb20a5221f8851fee38ca2ce990ec0bef841f8879c4b7327fc82c669dbba5a",
+      "source_sha256": "94bb20a5221f8851fee38ca2ce990ec0bef841f8879c4b7327fc82c669dbba5a"
+    },
+    {
+      "bytes": 249,
+      "captured_text": false,
+      "distribution": "unknown",
+      "path": "resources/r0004-r0000-r0000-r0000-original-materials.ini",
+      "redistribution_override": false,
+      "role": "materials",
+      "sha256": "4bfb64cc63dad229525137f14e64412a94eee8790b449ee64e10a8906cb67da5",
+      "source_sha256": "4bfb64cc63dad229525137f14e64412a94eee8790b449ee64e10a8906cb67da5"
+    },
+    {
+      "bytes": 264,
+      "captured_text": false,
+      "distribution": "unknown",
+      "path": "resources/r0005-r0001-r0001-r0001-original-geometry.ini",
+      "redistribution_override": false,
+      "role": "geometry",
+      "sha256": "b6f500fb680f4aa13393e2545824321f15e6c63815bb396821ad4b7b1d930fc2",
+      "source_sha256": "b6f500fb680f4aa13393e2545824321f15e6c63815bb396821ad4b7b1d930fc2"
+    },
+    {
+      "bytes": 11506,
+      "path": "workspace.json",
+      "role": "snapshot",
+      "sha256": "2facaf50bfbacae51a729c46e4453ae9c4842eab7a4d6ea9002a3d59884fa70e"
+    },
+    {
+      "bytes": 71,
+      "path": "validation_records.json",
+      "role": "validation_history",
+      "sha256": "e7153946374c1e029196ca4351f9632e5818c56159662d01b4d101b506e50146"
+    },
+    {
+      "bytes": 329,
+      "path": "replay.py",
+      "role": "replay_entry",
+      "sha256": "d6bea3d772050305bca3b9bfa4d3d0bc85cdbd3f5fdc621795ee3ef193b452ff"
+    }
+  ],
+  "outputs_included": false,
+  "replay_entry": "replay.py",
+  "replay_inputs": {
+    "config": "resources/r0000-r0006-main.ini",
+    "macro": "resources/r0003-r0009-run.mac",
+    "working_directory": "."
+  },
+  "replay_verified": false,
+  "schema": "g4usim_experiment_bundle",
+  "snapshot": "workspace.json",
+  "validation_history": "validation_records.json",
+  "version": 1
+}

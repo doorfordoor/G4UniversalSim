@@ -1,0 +1,65 @@
+# c644bb1 Windows 原全量独立证据审核
+
+2026-10-31；只读原始报告/日志/冻结清单，未重跑测试、未修改报告日志源码、未触碰主进程或窗口。模型按原 ledger：gpt-6.1-sol/medium。
+
+**结论：原报告身份及原字节证据自洽，但不能作为发布/阶段通过证据。176例为175 pass / 1 fail / 0 skip，56116个实际断言入口，无零断言；严格门禁exit1。另有13个F5旧用例执行断言数下降，不能由总量增加抵消。**
+
+## 严格门禁及唯一失败
+
+实际独立执行 scripts/check_report_evidence.py：
+
+- 对当前原报告：exit1，明确拒绝 gui_live_progress 未通过。
+- 对原F5 windows/final-1/report.json：exit0，160例/50898，v3探针、raw-byte LF v2摘要。
+- 当前报告加 --baseline 原F5：exit1，首先停在 gui_live_progress 未通过；不会继续到工具内部逐例比较。因此本报告另行完整计算160个共同用例差额，未用 --allow-incomplete 冒充严格通过。
+
+原 gui_live_progress：exit1，70入口；smoke_live_progress.py:210 原断言 `errors and page._progress_state == "failed"` 失败。后端启动 helper 对不存在文件提前抛 BackendLaunchError，runner 分支设置 failed result/发 error，但缺少原QProcess路径中的 failed进度通知。已另审两行候选及product-only原smoke通过反例，原因有独立候选证据支持；候选未应用时原失败结论保持。
+
+失败日志原SHA-256：7a862b47bff7db572c721621c8df21f6226111182ffc559197c53e7e7216a690。原完整栈保存在机器审核JSON的 failures 中。
+
+## F5 逐例与总量
+
+所有160个F5基线用例都在本轮，无缺失；新增16例。基线50898 → 本轮56116，总量+5218。新增16例贡献5244，原160例净变化为−26；不得只引用新增用例抬高后的总量。
+
+13个下降项：
+
+| 用例 | F5 | c644bb1 | 差额 |
+| --- | ---: | ---: | ---: |
+| effective_config_model | 18 | 17 | -1 |
+| effective_consumer_state | 3 | 2 | -1 |
+| effective_receipt_view | 14 | 13 | -1 |
+| f1_artifact_model | 97 | 96 | -1 |
+| f1_input_provenance | 37 | 36 | -1 |
+| geometry_diagnostic_identity | 4 | 3 | -1 |
+| gui_3d_view | 35 | 18 | -17 |
+| gui_live_progress | 71 | 70 | -1 |
+| gui_source_glyphs | 40 | 34 | -6 |
+| gui_trajectory_view | 35 | 23 | -12 |
+| input_provenance | 15 | 14 | -1 |
+| main_config_version_component | 4 | 3 | -1 |
+| output_auto_model | 4 | 3 | -1 |
+
+只有 gui_live_progress 是本轮报告里的失败用例，其余12例本轮状态为pass；这里列的是执行断言数相对基线的回落，不据计数就断言12项产品功能坏了。trajectory尊重offscreen等已知图形覆盖差异需单独保留，不能宣称图形覆盖已验；若其他回落来自探针/调用路径差异，也需给出证据与裁决，不能默默改旧基线或旧报告。两轮均声明同一v3 probe，原基线严格工具认可，故不能直接丢弃比较。
+
+所有176项本轮状态、退出码、执行计数、每项原SHA、marker核对，以及160项基线日志SHA、逐例差额和新增16项名称，都在同前缀 audit.json；不只保存回落摘要。
+
+## 原SHA与身份
+
+- 原当前报告：out/verification/k1-c644bb1/windows/20261031-114521-cab2c0bc/report.json
+  SHA-256=0453bc0871f388720645b55e044ca4c51319a3e2a12a4756f33f5210ddfb59a1。
+- 原F5基线：docs/verification/f5-final-20261031/windows/final-1/report.json
+  SHA-256=07cb528df9840b83b962514c8b2595031ef4e6a7158a55252cdee55f5900d832。
+- 本轮176份日志原字节SHA全部匹配；所有176个末尾assert marker与报告计数一致；计数独立求和56116；基线160份日志原字节SHA全部匹配。两份报告审核前后SHA不变。
+- git_head=c644bb1acc67658d2ff61fae695340f02ac58503，原报告git_dirty=false/status空；四profile名单与冻结manifest逐项、顺序相同（35/53/61/27）。
+- source_fingerprint=890635b6d521659e43cf735d07f862c6ebd5959e6c5ea68d023d55332a8a930a；tests_content_fingerprint=5d17d18658fd02514469f2353d307745e3389e2968b8ffb50909278b8bea8c74；均与原冻结清单/构建身份/能力响应对应。
+- clean冻结EXE SHA=ea6a8f9dffa76b1a132fac890d694437cc07170bfd3c0b08611a0f47fcf3b370，实际字节与build-identity一致；当前原报告声明 compiled-source provenance，且 tracked_source_gate=pass。
+- optional_pyvista_coverage=not_proven_by_this_runner，不能把这份报告称作完整PyVista原生图形验证。
+
+主负责人在原session自然结束后已授权集成候选，后续工作区可dirty。此审核依据保存的 c644bb1 manifest 与原报告运行时身份，不把授权后修改混入、追改或归因于原报告；后续新冻结须独立生成身份。
+
+## 审核输出
+
+- k1-c644bb1-windows-independent-audit.json：完整逐例/原SHA/身份/失败/基线差额。
+- k1-c644bb1-windows-independent-gates.json：三次工具命令、退出码、日志SHA和原诊断。
+- 同前缀 strict.log、baseline-strict.log、strict-with-baseline.log：严格工具原输出。
+
+现阶段审核结论为失败证据保全且身份可信，不能签绿色验收。历史范围措辞P2、取消/busy等新增原生/专项发现不因本轮唯一自动失败而自动关闭；各候选归各自限定审查与新冻结复验。

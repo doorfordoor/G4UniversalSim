@@ -1,0 +1,106 @@
+# K1 8213ced 既有审查覆盖图
+
+仅核现有证据、`e701c7f..8213ced` 实际diff和文件SHA：共 **61 文件**。审查时HEAD仍8213ced、tracked clean；只写本MD/JSON，未启动并行测试、未轮询Windows6187/CI、未修改产品/测试或旧报告。消耗未知，**不裁决K1完成**。
+
+## 范围和必须保留的缺口
+
+**Plato、Bohr两次上游拒绝造成的资源边界独立复审缺口仍未闭合。** 原因/时间/目标/原始错误分别保留在 [Plato事件](k1-bundle-review-upstream-incident.json)、[Bohr事件](k1-relocation-candidate/independent-review-incident.json)。Plato原报告仍为过程记录；Bohr后续late-reparse未取得终签。父普通功能审查即使匹配final5c，也不能替代上述缺口。本图不重做该审查，不执行被拒操作，不关闭P1/阶段。
+
+本整理者是Tesla三项CI3 smoke写者，仅引用父任务和其他审查者签字，不自审。此前parent-tests-review只签父两个test-only候选，不扩张到产品。作者按既有ownership/ledger列示，不从共享Git账号推断代理身份。
+
+“精确”只表示相应**限定scope**的最终原字节SHA一致，不是全模块审完。作者manifest、功能运行、冻结identity分开。大多数文件Git blob和工作区原字节一致；唯一例外linux-geant4.yml是Git LF/工作区CRLF，raw SHA不同但换行归一内容一致。完整两个SHA均在JSON，没有伪称原字节相同。
+
+## 逐模块
+
+| 模块/文件数 | 作者/责任链 | 既有独立review路径与版本链 | 最终字节关系 | 未覆盖/限制 |
+|---|---|---|---|---|
+| 契约/状态/文档 / 8 | 父任务 | [contract](k1-contract-independent.md) | 限定精确0；功能精确0；无最终绑定8 | 设计契约和来源manifest不是最终文档全文独立签字。 |
+| CI/统一登记 / 3 | 父任务 | [registration](k1-c644bb1-windows-independent-history-registration.json) | 限定精确0；功能精确0；无最终绑定3 | 存在部分登记窄审与冻结identity；final registry后续delta不由identity补签。 |
+| C++ cwd/manifest / 5 | 父任务 | [cpp](k1-cpp-launch-portability-independent.md) | 限定精确5；功能精确0；无最终绑定0 | 末尾五文件SHA限定签字，不替代正式跨平台矩阵。 |
+| Python launch/进度 / 5 | Bohr(workflow Sol high)、父任务 | [launch_applied](k1-python-launch-independent-review.md)；[label_final](k1-final-adapter-test-diff-independent.md)；[path_progress](k1-c644bb1-windows-independent-candidate-review.md)；[parent_tests](k1-parent-tests-review.json) | 限定精确5；功能精确0；无最终绑定0 | label P2最终增补、路径测试/progress签字及父test-only新diff分别记录。 |
+| workflow/identity/终态 / 4 | Bohr / 01a18f93-ee1e-71b2-8816-4904a12efe51 | [core_e5](k1-core-independent-review.md)；[launch_applied](k1-python-launch-independent-review.md)；[cancel](k1-cancel-ownership-independent.md)；[terminal_defaults](k1-terminal-test-defaults-independent.md) | 限定精确4；功能精确0；无最终绑定0 | 原核心签字+启动diff+Averroes终态/测试defaults串联。 |
+| bundle/搬移/别名 / 5 | 原bundle Sol high / 01a18f93-ec3e-7463-a68e-fd5ccd347033、Franklin、父任务 | [core_e5](k1-core-independent-review.md)；[parent_bundle](k1-parent-bundle-functional-review.json)；[parent_relocation](k1-parent-relocation-functional-review.json)；[label_final](k1-final-adapter-test-diff-independent.md) | 限定精确1；功能精确3；无最终绑定1 | 功能最终字节可匹配，但Plato/Bohr被拒资源边界复审缺口仍在。 |
+| I1发现/对话框 / 5 | I1 Sol high / 01a18f93-e780-7953-90fe-cd5b6fe40fc0、Sol medium UI续修、Bohr启动适配 | [i1_fix](k1-i1-independent.md)；[core_e5](k1-core-independent-review.md)；[launch_applied](k1-python-launch-independent-review.md)；[label_final](k1-final-adapter-test-diff-independent.md)；[path_progress](k1-c644bb1-windows-independent-candidate-review.md) | 限定精确3；功能精确0；无最终绑定2 | 协议/解析/启动有链；最终对话框源字节缺独立最终签字。 |
+| 面板/面板专项 / 4 | DeepSeek flash初稿、Sol medium / 01a18f95-cb86-76f1-8ed0-0ad1dba517a5、父任务 | 未找到最终SHA绑定 | 限定精确0；功能精确0；无最终绑定4 | 有作者交付/布局结果，未找到最终字节独立代码签字。 |
+| GUI接线/历史显示 / 14 | CLI-GUI Sol medium / 01a18f96-d294-7693-bc4b-b3f9f9fd1920、Franklin、父任务 | [history](k1-c644bb1-windows-independent-history-scope-review.md)；[registration](k1-c644bb1-windows-independent-history-registration.json) | 限定精确6；功能精确0；无最终绑定8 | 历史显示五产品有精确窄签字；其余适配manifest不自动成为独立复审。 |
+| CLI产品/测试fixture / 2 | CLI Sol medium、父任务 | [cli_prior](k1-core-independent-review.md)；[parent_tests](k1-parent-tests-review.json) | 限定精确1；功能精确0；无最终绑定1 | Tesla只独立审父test-only两文件，不扩张到产品全部字节。 |
+| 首轮三个旧smoke / 3 | Sol medium / 01a18ff8-0672-7a33-ba81-7ec0b0ee6b00、父任务 | [label_final](k1-final-adapter-test-diff-independent.md)；[registration](k1-c644bb1-windows-independent-history-registration.json) | 限定精确3；功能精确0；无最终绑定0 | 保留后续trajectory平台恢复的独立登记审查。 |
+| Tesla三项CI3 smoke / 3 | 原CLI适配写者、Tesla / 01a1905b-a3ae-7d73-8cd2-652b27fd569d、父任务 | [other_three](k1-win-ci-three-smokes-independent-review.md)；[parent_three](k1-parent-three-smoke-review.json) | 限定精确3；功能精确0；无最终绑定0 | 本图不自审，仅引用父/其他独立审查者。 |
+
+## 逐文件最后版本/未覆盖delta
+
+下表SHA均为最终工作区原字节；JSON另列最终提交blob。旧SHA若可对应区间内实际提交，JSON只记录到最终的行数/hunk位置，不新审逻辑；旧快照缺失则明确unknown。没有最终SHA签字不等于从未有人阅读，只是现存证据不足。
+
+| 文件 | final raw SHA前12位 | 最后记录的审查版本 → 最终 | 未覆盖delta / scope |
+|---|---|---|---|
+| `.github/workflows/linux-geant4.yml` | `d1c7132544f2` | 未找到 | 所查记录未找到绑定最终字节的独立限定代码/普通功能签字；不等于从未有人阅读。；Git LF/工作区CRLF raw不同 |
+| `.github/workflows/m0-static-gui.yml` | `ecc4edde0649` | 未找到 | 所查记录未找到绑定最终字节的独立限定代码/普通功能签字；不等于从未有人阅读。 |
+| `AGENTS.md` | `11890a5bf606` | contract / 无SHA / 不判定 | 所查记录未找到绑定最终字节的独立限定代码/普通功能签字；不等于从未有人阅读。 |
+| `CMakeLists.txt` | `0f95fd4fdca1` | cpp / 0f95fd4fdca1 / 匹配 | 无新增字节差异；仅限列出的审查scope |
+| `STATUS.md` | `53f7f32dc489` | contract / 无SHA / 不判定 | 所查记录未找到绑定最终字节的独立限定代码/普通功能签字；不等于从未有人阅读。 |
+| `cmake/WindowsRuntime.cmake` | `48ea39aca32b` | cpp / 48ea39aca32b / 匹配 | 无新增字节差异；仅限列出的审查scope |
+| `docs/ROADMAP.md` | `8b9699412f26` | contract / 无SHA / 不判定 | 所查记录未找到绑定最终字节的独立限定代码/普通功能签字；不等于从未有人阅读。 |
+| `docs/agent-history.md` | `6c3d1be4d91b` | contract / 无SHA / 不判定 | 所查记录未找到绑定最终字节的独立限定代码/普通功能签字；不等于从未有人阅读。 |
+| `docs/collab/inbox/20261031-k1-execution.md` | `b9fd310f6bcb` | contract / 无SHA / 不判定 | 所查记录未找到绑定最终字节的独立限定代码/普通功能签字；不等于从未有人阅读。 |
+| `docs/collab/outbox/20261031-deepseek-k1-panel.md` | `fcd26f137da1` | 未找到 | 所查记录未找到绑定最终字节的独立限定代码/普通功能签字；不等于从未有人阅读。 |
+| `docs/collab/outbox/20261031-k1-panel-delivery.md` | `ecc58ba86b35` | 未找到 | 所查记录未找到绑定最终字节的独立限定代码/普通功能签字；不等于从未有人阅读。 |
+| `docs/功能支持矩阵.md` | `8142231af8de` | contract / 无SHA / 不判定 | 所查记录未找到绑定最终字节的独立限定代码/普通功能签字；不等于从未有人阅读。 |
+| `docs/可信实验工作流.md` | `56a2a7472bf2` | contract / 无SHA / 不判定 | 所查记录未找到绑定最终字节的独立限定代码/普通功能签字；不等于从未有人阅读。 |
+| `docs/环境发现与诊断.md` | `0093a2334e5e` | i1_fix / f8ad9021441a / 不同 | 所查记录未找到绑定最终字节的独立限定代码/普通功能签字；不等于从未有人阅读。 |
+| `gui/AGENTS.md` | `c327b2b17c42` | contract / 无SHA / 不判定 | 所查记录未找到绑定最终字节的独立限定代码/普通功能签字；不等于从未有人阅读。 |
+| `gui/g4usim_gui/core/backend_launch.py` | `9ae082645641` | label_final / 9ae082645641 / 匹配 | 无新增字节差异；仅限列出的审查scope |
+| `gui/g4usim_gui/core/environment_discovery.py` | `7ee71c78b51d` | launch_applied / 7ee71c78b51d / 匹配 | 无新增字节差异；仅限列出的审查scope |
+| `gui/g4usim_gui/core/experiment_bundle.py` | `5c1dff0338e8` | parent_relocation / 5c1dff0338e8 / 匹配 | 最终5c普通功能匹配不补Plato/Bohr被拒资源边界复审/late-reparse独立终签缺口。 |
+| `gui/g4usim_gui/core/experiment_identity.py` | `b982093fdd9d` | core_e5 / b982093fdd9d / 匹配 | 无新增字节差异；仅限列出的审查scope |
+| `gui/g4usim_gui/core/experiment_workflow.py` | `8419770c3117` | cancel / 8419770c3117 / 匹配 | 无新增字节差异；仅限列出的审查scope |
+| `gui/g4usim_gui/core/i18n.py` | `5bbc3d105774` | history / 5bbc3d105774 / 匹配 | 最终SHA绑定的是历史显示窄diff；不据此补签早期整个适配器/面板词条/RunPage原有K1增量。 |
+| `gui/g4usim_gui/core/runner.py` | `456912e161a3` | path_progress / 456912e161a3 / 匹配 | 无新增字节差异；仅限列出的审查scope |
+| `gui/g4usim_gui/experiment_cli.py` | `20d7bb876ef9` | cli_prior / 36434a249c42 / 不同 | 所查记录未找到绑定最终字节的独立限定代码/普通功能签字；不等于从未有人阅读。；最终产品20d7相对独立产品修复36434的后续字节未找到最终产品签字；父test-only签字不扩张到产品。 |
+| `gui/g4usim_gui/main_window.py` | `3dbece37b6ee` | 未找到 | 所查记录未找到绑定最终字节的独立限定代码/普通功能签字；不等于从未有人阅读。；最终源码只有作者manifest/公开功能观察，未找到最终全文件代码签字。 |
+| `gui/g4usim_gui/widgets/environment_dialog.py` | `a5de75745c82` | i1_fix / 996424b559da / 不同 | 所查记录未找到绑定最终字节的独立限定代码/普通功能签字；不等于从未有人阅读。 |
+| `gui/g4usim_gui/widgets/experiment_panel.py` | `741adb59951c` | 未找到 | 所查记录未找到绑定最终字节的独立限定代码/普通功能签字；不等于从未有人阅读。 |
+| `gui/g4usim_gui/widgets/run_page.py` | `15f1825c9d0c` | history / 15f1825c9d0c / 匹配 | 最终SHA绑定的是历史显示窄diff；不据此补签早期整个适配器/面板词条/RunPage原有K1增量。 |
+| `gui/g4usim_gui/window/experiment.py` | `bfe38e02552f` | history / bfe38e02552f / 匹配 | 最终SHA绑定的是历史显示窄diff；不据此补签早期整个适配器/面板词条/RunPage原有K1增量。 |
+| `gui/g4usim_gui/window/run.py` | `67043150fdf3` | history / 67043150fdf3 / 匹配 | 最终SHA绑定的是历史显示窄diff；不据此补签早期整个适配器/面板词条/RunPage原有K1增量。 |
+| `gui/g4usim_gui/window/shell.py` | `21c8c3a32d99` | history / 21c8c3a32d99 / 匹配 | 最终SHA绑定的是历史显示窄diff；不据此补签早期整个适配器/面板词条/RunPage原有K1增量。 |
+| `gui/g4usim_gui/window/transactions.py` | `93e194afae74` | 未找到 | 所查记录未找到绑定最终字节的独立限定代码/普通功能签字；不等于从未有人阅读。；最终源码只有作者manifest/公开功能观察，未找到最终全文件代码签字。 |
+| `gui/smoke_tests/smoke_backend_geometry.py` | `7dd55c3d4d6b` | label_final / 7dd55c3d4d6b / 匹配 | 无新增字节差异；仅限列出的审查scope |
+| `gui/smoke_tests/smoke_backend_launch.py` | `a01a2a823c8a` | parent_tests / a01a2a823c8a / 匹配 | 无新增字节差异；仅限列出的审查scope |
+| `gui/smoke_tests/smoke_duplicate_history_cli.py` | `7a3464e13e3e` | parent_three / 7a3464e13e3e / 匹配 | 无新增字节差异；仅限列出的审查scope |
+| `gui/smoke_tests/smoke_f4_entrypoints.py` | `b975cc00c273` | 未找到 | 所查记录未找到绑定最终字节的独立限定代码/普通功能签字；不等于从未有人阅读。 |
+| `gui/smoke_tests/smoke_f4_inspect_backend.py` | `c048cb9929a7` | 未找到 | 所查记录未找到绑定最终字节的独立限定代码/普通功能签字；不等于从未有人阅读。 |
+| `gui/smoke_tests/smoke_f5_editor_history.py` | `e40326ab18ec` | parent_three / e40326ab18ec / 匹配 | 无新增字节差异；仅限列出的审查scope |
+| `gui/smoke_tests/smoke_f5_recovery_process.py` | `9d0814296d33` | label_final / 9d0814296d33 / 匹配 | 无新增字节差异；仅限列出的审查scope |
+| `gui/smoke_tests/smoke_i1_environment.py` | `48ae5f2b7fba` | label_final / 48ae5f2b7fba / 匹配 | 无新增字节差异；仅限列出的审查scope |
+| `gui/smoke_tests/smoke_k1_history_scope.py` | `01259679fd5e` | registration / 01259679fd5e / 匹配 | 无新增字节差异；仅限列出的审查scope |
+| `gui/smoke_tests/smoke_k1_panel.py` | `4e90b351f3d9` | 未找到 | 所查记录未找到绑定最终字节的独立限定代码/普通功能签字；不等于从未有人阅读。 |
+| `gui/smoke_tests/smoke_k1_relocation.py` | `4fddfec77f40` | parent_relocation / 4fddfec77f40 / 匹配 | 无新增字节差异；仅限列出的审查scope |
+| `gui/smoke_tests/smoke_k1_workflow.py` | `fa387c6b551e` | parent_three / fa387c6b551e / 匹配 | 无新增字节差异；仅限列出的审查scope |
+| `gui/smoke_tests/smoke_live_progress.py` | `dd7e7a7cb343` | path_progress / dd7e7a7cb343 / 匹配 | 无新增字节差异；仅限列出的审查scope |
+| `gui/smoke_tests/smoke_new_simulation_wizard.py` | `304c81f99860` | 未找到 | 所查记录未找到绑定最终字节的独立限定代码/普通功能签字；不等于从未有人阅读。 |
+| `gui/smoke_tests/smoke_project_snapshot_restore.py` | `8071589683f2` | 未找到 | 所查记录未找到绑定最终字节的独立限定代码/普通功能签字；不等于从未有人阅读。 |
+| `gui/smoke_tests/smoke_q1_public_paths.py` | `09882ba3c154` | 未找到 | 所查记录未找到绑定最终字节的独立限定代码/普通功能签字；不等于从未有人阅读。 |
+| `gui/smoke_tests/smoke_run_input_modes.py` | `ec2eb7256300` | 未找到 | 所查记录未找到绑定最终字节的独立限定代码/普通功能签字；不等于从未有人阅读。 |
+| `gui/smoke_tests/smoke_trajectory_view.py` | `11d2edc2ef76` | registration / 11d2edc2ef76 / 匹配 | 无新增字节差异；仅限列出的审查scope |
+| `include/Core/BackendCapabilities.hh` | `40e0f7c33f08` | cpp / 40e0f7c33f08 / 匹配 | 无新增字节差异；仅限列出的审查scope |
+| `main.cc` | `202a8e13c6ab` | cpp / 202a8e13c6ab / 匹配 | 无新增字节差异；仅限列出的审查scope |
+| `scripts/run_m0_tests.py` | `8d4137897697` | registration / ddfedc7ea237 / 不同 | 所查记录未找到绑定最终字节的独立限定代码/普通功能签字；不等于从未有人阅读。；曾审ddfedc与最终8d4137不同；第四冻结新增三个登记的独立语义签字未在所查记录中找到。 |
+| `scripts/test_backend_launch.py` | `ddeacf31d31d` | label_final / ddeacf31d31d / 匹配 | 无新增字节差异；仅限列出的审查scope |
+| `scripts/test_backend_working_directory.py` | `1a127cf4c7ad` | cpp / 1a127cf4c7ad / 匹配 | 无新增字节差异；仅限列出的审查scope |
+| `scripts/test_i1_environment.py` | `9b31654e94eb` | path_progress / 9b31654e94eb / 匹配 | 无新增字节差异；仅限列出的审查scope |
+| `scripts/test_k1_bundle.py` | `d5f872b2fe8a` | label_final / d5f872b2fe8a / 匹配 | 无新增字节差异；仅限列出的审查scope |
+| `scripts/test_k1_cli.py` | `9c777a8516b3` | parent_tests / 9c777a8516b3 / 匹配 | 无新增字节差异；仅限列出的审查scope |
+| `scripts/test_k1_roundtrip.py` | `67d54752a863` | 未找到 | 所查记录未找到绑定最终字节的独立限定代码/普通功能签字；不等于从未有人阅读。 |
+| `scripts/test_k1_staging_alias.py` | `0e33fc7c8990` | parent_relocation / 0e33fc7c8990 / 匹配 | 无新增字节差异；仅限列出的审查scope |
+| `scripts/test_k1_terminal_publication.py` | `b4fc161221ba` | terminal_defaults / b4fc161221ba / 匹配 | 无新增字节差异；仅限列出的审查scope |
+| `scripts/test_k1_workflow.py` | `e7c585aa9106` | launch_applied / e7c585aa9106 / 匹配 | 无新增字节差异；仅限列出的审查scope |
+
+## 最后签字的解释
+
+- 核心以core-independent文末e5ff800最终签字为基点，串启动限定diff和Averroes841977终态补丁；旧四项失败/待修前言保留历史，不沿用为最终状态。终态六行签字也不替代主干审查。
+- label P2明确最终增补/label-final receipt取代旧开放前言；history modes增补后还须接registration收据，最终012596/trajectory11d2ed由后者绑定。
+- C++五文件最终SHA与末尾表匹配。环境对话框a5de75、面板741adb/测试4e90b3只有最终作者/功能记录，未找到绑定该最终字节的独立代码终签。
+- CLI产品最终20d7bb和作者manifest一致；早期独立产品修复绑定36434a，之后最终产品签字未找到。父test-only只签smoke a01a2a与test9c777a。主窗口/事务的作者适配清单同样不冒充独立全文审查。
+- registry最终8d4137不同于曾审ddfedc，新增三个登记的独立语义签字未在这些记录中找到。冻结身份核对不替代其代码scope。
+
+完整作者ID来源、审查签字定位、每文件最终SHA、各已审SHA匹配提交和未覆盖版本delta，见 [JSON覆盖图](k1-review-coverage-map.json)。第四冻结矩阵状态仍由父任务另行判定。

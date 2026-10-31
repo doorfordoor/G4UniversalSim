@@ -1,0 +1,138 @@
+{
+  "schema": "k1_sixth_native_CLI_supplement_v1",
+  "recorded_utc": "2026-10-31T07:35:35.458111+00:00",
+  "status": "actual_export_replay_execution_verified",
+  "head": "4167c4421b13464dec54213ea7652ee321868c4e",
+  "record_id": "be4a8c5b6ac64c5195212073234f4d3f",
+  "record_sha256": "ae0f69d618534f7c3bc943cc8c1add6c3019d02fe40d45a0c166a2f2c429b439",
+  "result": {
+    "completed_events": 3,
+    "planned_events": 3,
+    "reason": "Events completed as planned.",
+    "run_count": 1,
+    "state": "success",
+    "summary_status": "completed"
+  },
+  "checks": {
+    "stdout_returned_exact_new_UUID": true,
+    "original_receipt_log_entry_and_record_SHA_match": true,
+    "returned_record_equals_actual_disk": true,
+    "new_run_success3of3_summary_exact": true,
+    "F1_fresh_verified_four_input_bytes": true,
+    "strict_actual_main_macro_output_binding": true,
+    "summary_raw_SHA_matches_r2": true,
+    "real_replay_entry_delegates_shared_CLI": true,
+    "backend_record_build_sixth_clean": true,
+    "parent_child_exit0_both_receipts": true,
+    "old_history_not_recounted_as_fresh_runs": true
+  },
+  "entry": {
+    "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\relocated-clean\\revalidated-sixth-4343\\replay.py",
+    "sha256": "d6bea3d772050305bca3b9bfa4d3d0bc85cdbd3f5fdc621795ee3ef193b452ff",
+    "shared_CLI": true
+  },
+  "actual_inputs": [
+    {
+      "capture_method": "binary_buffer",
+      "kind": "main_ini",
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\replay-cli\\runs\\experiment-records\\be4a8c5b6ac64c5195212073234f4d3f\\execution-inputs\\resources\\r0000-r0006-main.ini",
+      "reason": "",
+      "role": "configuration_parse",
+      "sequence": 1,
+      "sha256": "2a5b6729ec113664f651dfafb16eef5d1363ca0d812dbf0fe46ed9006cdafa6d",
+      "size_bytes": 961,
+      "status": "recorded",
+      "resolved_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\replay-cli\\runs\\experiment-records\\be4a8c5b6ac64c5195212073234f4d3f\\execution-inputs\\resources\\r0000-r0006-main.ini",
+      "actual_sha256": "2a5b6729ec113664f651dfafb16eef5d1363ca0d812dbf0fe46ed9006cdafa6d",
+      "actual_size_bytes": 961,
+      "matches": true
+    },
+    {
+      "capture_method": "binary_buffer",
+      "kind": "material_ini",
+      "path": "resources/r0001-r0007-material.ini",
+      "reason": "",
+      "role": "material_parse",
+      "sequence": 2,
+      "sha256": "d77923cdd8a0020c205b2287cfcbbe6e05b09d8e65359c33278a743c51361665",
+      "size_bytes": 297,
+      "status": "recorded",
+      "resolved_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\replay-cli\\runs\\experiment-records\\be4a8c5b6ac64c5195212073234f4d3f\\execution-inputs\\resources\\r0001-r0007-material.ini",
+      "actual_sha256": "d77923cdd8a0020c205b2287cfcbbe6e05b09d8e65359c33278a743c51361665",
+      "actual_size_bytes": 297,
+      "matches": true
+    },
+    {
+      "capture_method": "binary_buffer",
+      "kind": "geometry_ini",
+      "path": "resources/r0002-r0008-geometry.ini",
+      "reason": "",
+      "role": "geometry_parse",
+      "sequence": 3,
+      "sha256": "e6d77380889a38f16b6c2ad2f309bd33edb81060d29b30b3055b3f0b6e7e5a2e",
+      "size_bytes": 398,
+      "status": "recorded",
+      "resolved_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\replay-cli\\runs\\experiment-records\\be4a8c5b6ac64c5195212073234f4d3f\\execution-inputs\\resources\\r0002-r0008-geometry.ini",
+      "actual_sha256": "e6d77380889a38f16b6c2ad2f309bd33edb81060d29b30b3055b3f0b6e7e5a2e",
+      "actual_size_bytes": 398,
+      "matches": true
+    },
+    {
+      "capture_method": "binary_buffer",
+      "kind": "macro",
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\replay-cli\\runs\\experiment-records\\be4a8c5b6ac64c5195212073234f4d3f\\execution-inputs\\resources\\r0003-r0009-run.mac",
+      "reason": "",
+      "role": "recursive_preflight",
+      "sequence": 4,
+      "sha256": "94bb20a5221f8851fee38ca2ce990ec0bef841f8879c4b7327fc82c669dbba5a",
+      "size_bytes": 147,
+      "status": "recorded",
+      "resolved_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\replay-cli\\runs\\experiment-records\\be4a8c5b6ac64c5195212073234f4d3f\\execution-inputs\\resources\\r0003-r0009-run.mac",
+      "actual_sha256": "94bb20a5221f8851fee38ca2ce990ec0bef841f8879c4b7327fc82c669dbba5a",
+      "actual_size_bytes": 147,
+      "matches": true
+    }
+  ],
+  "metadata_sha256": "cf8ce02dbfbb9e643d09a7e04b7e397e85cc166ffcce19dca37cb5cdaaeccbe9",
+  "summary": {
+    "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\replay-cli\\runs\\experiment-records\\be4a8c5b6ac64c5195212073234f4d3f\\output\\run_summary.txt",
+    "sha256": "40533d3db19e71437007f19f4615db0cd2ca94b3c17c91ce4dce854cf499e15e",
+    "facts": {
+      "status": "completed",
+      "run_count": "1",
+      "planned_event_count": "3",
+      "actual_completed_event_count": "3",
+      "configured_seed": "4343",
+      "initial_engine_seed": "unknown",
+      "actual_output_dir": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\replay-cli\\runs\\experiment-records\\be4a8c5b6ac64c5195212073234f4d3f\\output"
+    },
+    "runs": [
+      {
+        "run_id": 0,
+        "planned_events": 3,
+        "completed_events": 3
+      }
+    ]
+  },
+  "F1_status": "verified",
+  "CLI_record_no_package": true,
+  "historical_records_other_than_returned": 28,
+  "stale_old_run_records": 5,
+  "original_postcheck_note_sha256": "0ef780382b06ad51c872dc043d44d46e976cd782ed497549dd1fcdd797c35ead",
+  "parent_first_helper_exit": "1 due aggregate history selection; not child failure; preserved note/receipt/log",
+  "artifact_raw_SHA256": {
+    "replay-cli.log": "e1697af755d51078efc0d6c0eaa4b1035d05544980983000327df3d2a12117ec",
+    "replay-cli-receipt.json": "36905f99a431aaa0e76bcdcf91aa12acccad904f40f0a00d9d3a771cf6904a77",
+    "replay-cli-receipt-r2.json": "a0d7cdade13a7599efa8c73721f0a07c8e789bf0f52673895a217187a72a06d7",
+    "replay-cli-postcheck-attempt1.md": "0ef780382b06ad51c872dc043d44d46e976cd782ed497549dd1fcdd797c35ead"
+  },
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "medium",
+  "consumption": "unknown",
+  "no_product_tests_or_replay_rerun": true,
+  "limits": [
+    "Execution-only; no new physics comparison or general validation.",
+    "Returned CLI record is no-package, but this CLI action does not demonstrate MainWindow external no-package completion callback; prior native coverage finding remains.",
+    "Process exit codes sourced from retained parent subprocess receipts, independently corroborated via exact record/F1/summary; not own process observation."
+  ]
+}

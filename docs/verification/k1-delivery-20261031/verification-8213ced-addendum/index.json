@@ -1,0 +1,874 @@
+{
+  "schema": "k1_fourth_archive_derived_index_addendum_v1",
+  "head": "8213ced419c8c6bca512bf8413b674c1265cf3bf",
+  "created_utc": "2026-10-31T07:00:54.991319+00:00",
+  "overall_state": "verification_complete_but_K1_unaccepted",
+  "phase_complete": false,
+  "operation": "index existing independently verified originals only; no new run, tests, gate, browser or specialist review",
+  "original_archive": {
+    "path": "out/collab/k1-delivery-staging/verification-8213ced",
+    "files": 1264,
+    "references": [
+      {
+        "path": "out/collab/k1-delivery-staging/verification-8213ced/archive-manifest.json",
+        "bytes": 7308,
+        "sha256_raw": "c6d292e8da7f0de58e2f36608b4701a349761cd20d87fe66af30542ad63cae3b",
+        "archive_relative_path": "archive-manifest.json",
+        "href": "../verification-8213ced/archive-manifest.json"
+      },
+      {
+        "path": "out/collab/k1-delivery-staging/verification-8213ced/final-files.json",
+        "bytes": 259027,
+        "sha256_raw": "091d17c2fa95b5478d71c385ca6b30b578d8c88967ad419dbc28e61b19bb6ce3",
+        "archive_relative_path": "final-files.json",
+        "href": "../verification-8213ced/final-files.json"
+      },
+      {
+        "path": "out/collab/k1-delivery-staging/verification-8213ced/archive-verification.json",
+        "bytes": 561,
+        "sha256_raw": "f0e8cc61a002cd30641d0282aa82130bdb1eff93a4c3be2cac16387231bbec79",
+        "archive_relative_path": "archive-verification.json",
+        "href": "../verification-8213ced/archive-verification.json"
+      },
+      {
+        "path": "out/collab/k1-delivery-staging/verification-8213ced/selection.json",
+        "bytes": 1563651,
+        "sha256_raw": "e43933c1b3f94691a68891161b7afed473230171272a18f19ba4ce01657799a9",
+        "archive_relative_path": "selection.json",
+        "href": "../verification-8213ced/selection.json"
+      },
+      {
+        "path": "out/collab/k1-delivery-staging/verification-8213ced/native-record-facts.json",
+        "bytes": 3,
+        "sha256_raw": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "archive_relative_path": "native-record-facts.json",
+        "href": "../verification-8213ced/native-record-facts.json"
+      },
+      {
+        "path": "out/collab/k1-delivery-staging/verification-8213ced/identity/full-tracked-source-and-test-objects.json",
+        "bytes": 6007992,
+        "sha256_raw": "2ed508ad5e469b51825409f3936d222fdadf3037c5a823fc957f386bab98c09c",
+        "archive_relative_path": "identity/full-tracked-source-and-test-objects.json",
+        "href": "../verification-8213ced/identity/full-tracked-source-and-test-objects.json"
+      },
+      {
+        "path": "out/collab/k1-delivery-staging/verification-8213ced/visible/identity.json",
+        "bytes": 16918,
+        "sha256_raw": "21999d90d4db654fdb43c8d365943594ffc88dd84731f02cb3b49a82b4e3b78f",
+        "archive_relative_path": "visible/identity.json",
+        "href": "../verification-8213ced/visible/identity.json"
+      },
+      {
+        "path": "out/collab/k1-delivery-staging/verification-8213ced/visible/actions.jsonl",
+        "bytes": 442453,
+        "sha256_raw": "b6357069eb88c546f9634e4a1779e2aa3d836ae52688ba91b63d5a96e439ed1e",
+        "archive_relative_path": "visible/actions.jsonl",
+        "href": "../verification-8213ced/visible/actions.jsonl"
+      },
+      {
+        "path": "out/collab/k1-delivery-staging/verification-8213ced/visible/host-exit.json",
+        "bytes": 77,
+        "sha256_raw": "d40be0a8c2f884bbd3edb2f972c87fc62b9545f9be583c76cde8f36ba2204bff",
+        "archive_relative_path": "visible/host-exit.json",
+        "href": "../verification-8213ced/visible/host-exit.json"
+      }
+    ],
+    "all_file_SHA_source": "audit-originals/k1-fourth-archive-independent.json:archive_before_after_SHA256",
+    "mapping_sha256_canonical_sorted_json": "879ebed2ef72888adde637e505c5aecbb98fa8db6f5615202df4de002dd246dc"
+  },
+  "original_empty_native_table": {
+    "value": [],
+    "bytes": 3,
+    "status": "incomplete_derived_index_not_missing_original_evidence",
+    "original_preserved": true
+  },
+  "independent_audit": {
+    "status": "byte_evidence_verified_with_P3_derived_native_index_gap",
+    "checks": 20,
+    "failed_checks": [],
+    "original_files": [
+      {
+        "path": "out/collab/k1-fourth-archive-independent.json",
+        "bytes": 2076148,
+        "sha256_raw": "fbda7883864f194101413258830d24d55c6cc082dfb633e1a64a19bda0b334b1"
+      },
+      {
+        "path": "out/collab/k1-fourth-archive-independent.md",
+        "bytes": 3278,
+        "sha256_raw": "dcf82519b2edb59c90e9f910d2605444966fcb1cb5bab429b5bbc4f225f630b1"
+      }
+    ],
+    "copied_to": [
+      "audit-originals/k1-fourth-archive-independent.json",
+      "audit-originals/k1-fourth-archive-independent.md"
+    ]
+  },
+  "native_records": [
+    {
+      "record_id": "b1b284471d584747bcfee628d092b524",
+      "run_id": "b1b284471d584747bcfee628d092b524",
+      "action": "validate",
+      "level": "fields",
+      "revision": 2,
+      "session_id": "b31637e644a04a6c8c389f21e81cad0d",
+      "created_at": "2026-10-31T05:48:15.854347+00:00",
+      "status": "passed",
+      "reason": "experiment.fields_completed",
+      "exit_code": null,
+      "output_dir": null,
+      "record": {
+        "path": "out/collab/k1-delivery-staging/verification-8213ced/visible/fixture-inputs/packages/experiment-records/b1b284471d584747bcfee628d092b524/record.json",
+        "bytes": 8681,
+        "sha256_raw": "bd2511a6167ef91822cef3d210564d4a722cd035b528fbaea801d7dd07237d2c",
+        "archive_relative_path": "visible/fixture-inputs/packages/experiment-records/b1b284471d584747bcfee628d092b524/record.json",
+        "href": "../verification-8213ced/visible/fixture-inputs/packages/experiment-records/b1b284471d584747bcfee628d092b524/record.json"
+      },
+      "actions_line_1based": 1,
+      "result_original": null,
+      "original_action_equals_record": true,
+      "prior_independent_audit_item": {
+        "record_id": "b1b284471d584747bcfee628d092b524",
+        "status": "passed",
+        "reason": "experiment.fields_completed",
+        "record_sha256": "bd2511a6167ef91822cef3d210564d4a722cd035b528fbaea801d7dd07237d2c",
+        "archive_matches_prior_native_audit": true,
+        "one_action": true,
+        "action_projection_equals_disk": true
+      }
+    },
+    {
+      "record_id": "bfda7dc670dc4dc8b60e60222c3a454a",
+      "run_id": "bfda7dc670dc4dc8b60e60222c3a454a",
+      "action": "inspect",
+      "level": "inspect",
+      "revision": 2,
+      "session_id": "b31637e644a04a6c8c389f21e81cad0d",
+      "created_at": "2026-10-31T05:48:57.094317+00:00",
+      "status": "passed",
+      "reason": "experiment.configure_preflight_only",
+      "exit_code": null,
+      "output_dir": null,
+      "record": {
+        "path": "out/collab/k1-delivery-staging/verification-8213ced/visible/fixture-inputs/packages/experiment-records/bfda7dc670dc4dc8b60e60222c3a454a/record.json",
+        "bytes": 44459,
+        "sha256_raw": "52060d07618088e38dc8e566ad0dc072831772e3ce18df1c8698dbe357ab37aa",
+        "archive_relative_path": "visible/fixture-inputs/packages/experiment-records/bfda7dc670dc4dc8b60e60222c3a454a/record.json",
+        "href": "../verification-8213ced/visible/fixture-inputs/packages/experiment-records/bfda7dc670dc4dc8b60e60222c3a454a/record.json"
+      },
+      "actions_line_1based": 2,
+      "result_original": null,
+      "original_action_equals_record": true,
+      "prior_independent_audit_item": {
+        "record_id": "bfda7dc670dc4dc8b60e60222c3a454a",
+        "status": "passed",
+        "reason": "experiment.configure_preflight_only",
+        "record_sha256": "52060d07618088e38dc8e566ad0dc072831772e3ce18df1c8698dbe357ab37aa",
+        "archive_matches_prior_native_audit": true,
+        "one_action": true,
+        "action_projection_equals_disk": true
+      }
+    },
+    {
+      "record_id": "6dc11c2346f743e3a98ac8d27e8ae834",
+      "run_id": "6dc11c2346f743e3a98ac8d27e8ae834",
+      "action": "validate",
+      "level": "initialization",
+      "revision": 2,
+      "session_id": "b31637e644a04a6c8c389f21e81cad0d",
+      "created_at": "2026-10-31T05:49:25.733868+00:00",
+      "status": "passed",
+      "reason": "experiment.initialization_evidence_confirmed",
+      "exit_code": 0,
+      "output_dir": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\visible\\fixture-inputs\\packages\\experiment-records\\6dc11c2346f743e3a98ac8d27e8ae834\\20261031_134926_k1-visible\\output",
+      "record": {
+        "path": "out/collab/k1-delivery-staging/verification-8213ced/visible/fixture-inputs/packages/experiment-records/6dc11c2346f743e3a98ac8d27e8ae834/record.json",
+        "bytes": 50963,
+        "sha256_raw": "ae812de15708b2e1e385e109c8c1f5e94a429d6df70498e5efb8ce0411e0630f",
+        "archive_relative_path": "visible/fixture-inputs/packages/experiment-records/6dc11c2346f743e3a98ac8d27e8ae834/record.json",
+        "href": "../verification-8213ced/visible/fixture-inputs/packages/experiment-records/6dc11c2346f743e3a98ac8d27e8ae834/record.json"
+      },
+      "actions_line_1based": 3,
+      "result_original": {
+        "completed_events": 0,
+        "planned_events": 0,
+        "reason": "Process completed but no Geant4 run occurred.",
+        "run_count": 0,
+        "state": "no_run",
+        "summary_status": "completed"
+      },
+      "original_action_equals_record": true,
+      "prior_independent_audit_item": {
+        "record_id": "6dc11c2346f743e3a98ac8d27e8ae834",
+        "status": "passed",
+        "reason": "experiment.initialization_evidence_confirmed",
+        "record_sha256": "ae812de15708b2e1e385e109c8c1f5e94a429d6df70498e5efb8ce0411e0630f",
+        "archive_matches_prior_native_audit": true,
+        "one_action": true,
+        "action_projection_equals_disk": true
+      }
+    },
+    {
+      "record_id": "f49767d48612439488a2eea5163699f3",
+      "run_id": "f49767d48612439488a2eea5163699f3",
+      "action": "generate",
+      "level": "generation",
+      "revision": 2,
+      "session_id": "b31637e644a04a6c8c389f21e81cad0d",
+      "created_at": "2026-10-31T05:50:14.283025+00:00",
+      "status": "passed",
+      "reason": "experiment.generate_completed",
+      "exit_code": null,
+      "output_dir": null,
+      "record": {
+        "path": "out/collab/k1-delivery-staging/verification-8213ced/visible/fixture-inputs/packages/experiment-records/f49767d48612439488a2eea5163699f3/record.json",
+        "bytes": 20764,
+        "sha256_raw": "168a03d06abd26bfd7cf8c35efee561ddcde4910bcb990c75ce0cecff79cd3bb",
+        "archive_relative_path": "visible/fixture-inputs/packages/experiment-records/f49767d48612439488a2eea5163699f3/record.json",
+        "href": "../verification-8213ced/visible/fixture-inputs/packages/experiment-records/f49767d48612439488a2eea5163699f3/record.json"
+      },
+      "actions_line_1based": 4,
+      "result_original": null,
+      "original_action_equals_record": true,
+      "prior_independent_audit_item": {
+        "record_id": "f49767d48612439488a2eea5163699f3",
+        "status": "passed",
+        "reason": "experiment.generate_completed",
+        "record_sha256": "168a03d06abd26bfd7cf8c35efee561ddcde4910bcb990c75ce0cecff79cd3bb",
+        "archive_matches_prior_native_audit": true,
+        "one_action": true,
+        "action_projection_equals_disk": true
+      }
+    },
+    {
+      "record_id": "44d35f860b5c4ee987d50bbba8987d46",
+      "run_id": "44d35f860b5c4ee987d50bbba8987d46",
+      "action": "run",
+      "level": "execution",
+      "revision": 2,
+      "session_id": "b31637e644a04a6c8c389f21e81cad0d",
+      "created_at": "2026-10-31T05:50:50.025373+00:00",
+      "status": "passed",
+      "reason": "experiment.run_evidence_confirmed",
+      "exit_code": 0,
+      "output_dir": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\visible\\fixture-inputs\\packages\\experiment-records\\44d35f860b5c4ee987d50bbba8987d46\\20261031_135050_k1-visible\\output",
+      "record": {
+        "path": "out/collab/k1-delivery-staging/verification-8213ced/visible/fixture-inputs/packages/experiment-records/44d35f860b5c4ee987d50bbba8987d46/record.json",
+        "bytes": 34465,
+        "sha256_raw": "ac3c229192145775b8f49603952416743bf1b8ce9cd5ff3a11ffc3410bf2fc3e",
+        "archive_relative_path": "visible/fixture-inputs/packages/experiment-records/44d35f860b5c4ee987d50bbba8987d46/record.json",
+        "href": "../verification-8213ced/visible/fixture-inputs/packages/experiment-records/44d35f860b5c4ee987d50bbba8987d46/record.json"
+      },
+      "actions_line_1based": 5,
+      "result_original": {
+        "completed_events": 3,
+        "planned_events": 3,
+        "reason": "Events completed as planned.",
+        "run_count": 1,
+        "state": "success",
+        "summary_status": "completed"
+      },
+      "original_action_equals_record": true,
+      "prior_independent_audit_item": {
+        "record_id": "44d35f860b5c4ee987d50bbba8987d46",
+        "status": "passed",
+        "reason": "experiment.run_evidence_confirmed",
+        "record_sha256": "ac3c229192145775b8f49603952416743bf1b8ce9cd5ff3a11ffc3410bf2fc3e",
+        "archive_matches_prior_native_audit": true,
+        "one_action": true,
+        "action_projection_equals_disk": true
+      }
+    },
+    {
+      "record_id": "7610507f36fe44589d49679477deaca2",
+      "run_id": "7610507f36fe44589d49679477deaca2",
+      "action": "evaluate",
+      "level": "physics",
+      "revision": 2,
+      "session_id": "b31637e644a04a6c8c389f21e81cad0d",
+      "created_at": "2026-10-31T05:54:26.625903+00:00",
+      "status": "passed",
+      "reason": "experiment.explicit_physical_comparison",
+      "exit_code": null,
+      "output_dir": null,
+      "record": {
+        "path": "out/collab/k1-delivery-staging/verification-8213ced/visible/fixture-inputs/packages/experiment-records/7610507f36fe44589d49679477deaca2/record.json",
+        "bytes": 9741,
+        "sha256_raw": "bc45c03b21968fb136e3a31beb68061cf9d0c37a32046f4fbb5b50317fd26c38",
+        "archive_relative_path": "visible/fixture-inputs/packages/experiment-records/7610507f36fe44589d49679477deaca2/record.json",
+        "href": "../verification-8213ced/visible/fixture-inputs/packages/experiment-records/7610507f36fe44589d49679477deaca2/record.json"
+      },
+      "actions_line_1based": 6,
+      "result_original": null,
+      "original_action_equals_record": true,
+      "prior_independent_audit_item": {
+        "record_id": "7610507f36fe44589d49679477deaca2",
+        "status": "passed",
+        "reason": "experiment.explicit_physical_comparison",
+        "record_sha256": "bc45c03b21968fb136e3a31beb68061cf9d0c37a32046f4fbb5b50317fd26c38",
+        "archive_matches_prior_native_audit": true,
+        "one_action": true,
+        "action_projection_equals_disk": true
+      }
+    },
+    {
+      "record_id": "8b4ba6bd53124f2ba92691b36c2a0a72",
+      "run_id": "8b4ba6bd53124f2ba92691b36c2a0a72",
+      "action": "export",
+      "level": "export",
+      "revision": 2,
+      "session_id": "b31637e644a04a6c8c389f21e81cad0d",
+      "created_at": "2026-10-31T05:55:17.097393+00:00",
+      "status": "passed",
+      "reason": "experiment.bundle_exported",
+      "exit_code": null,
+      "output_dir": null,
+      "record": {
+        "path": "out/collab/k1-delivery-staging/verification-8213ced/visible/fixture-inputs/packages/experiment-records/8b4ba6bd53124f2ba92691b36c2a0a72/record.json",
+        "bytes": 52166,
+        "sha256_raw": "8d62b7cba1734848fe6f08d51b8b3ba862ed382a99c2aee71db6377bf1bb982a",
+        "archive_relative_path": "visible/fixture-inputs/packages/experiment-records/8b4ba6bd53124f2ba92691b36c2a0a72/record.json",
+        "href": "../verification-8213ced/visible/fixture-inputs/packages/experiment-records/8b4ba6bd53124f2ba92691b36c2a0a72/record.json"
+      },
+      "actions_line_1based": 7,
+      "result_original": null,
+      "original_action_equals_record": true,
+      "prior_independent_audit_item": {
+        "record_id": "8b4ba6bd53124f2ba92691b36c2a0a72",
+        "status": "passed",
+        "reason": "experiment.bundle_exported",
+        "record_sha256": "8d62b7cba1734848fe6f08d51b8b3ba862ed382a99c2aee71db6377bf1bb982a",
+        "archive_matches_prior_native_audit": true,
+        "one_action": true,
+        "action_projection_equals_disk": true
+      }
+    },
+    {
+      "record_id": "9b625c57c29e4eadb771c6826f76e58f",
+      "run_id": "9b625c57c29e4eadb771c6826f76e58f",
+      "action": "import_history",
+      "level": "history",
+      "revision": 3,
+      "session_id": "b31637e644a04a6c8c389f21e81cad0d",
+      "created_at": "2026-10-31T05:56:44.010150+00:00",
+      "status": "passed",
+      "reason": "experiment.history_imported",
+      "exit_code": null,
+      "output_dir": null,
+      "record": {
+        "path": "out/collab/k1-delivery-staging/verification-8213ced/visible/relocated-clean/runs/experiment-records/9b625c57c29e4eadb771c6826f76e58f/record.json",
+        "bytes": 681,
+        "sha256_raw": "0f15f8725e02eb6714d508fe9eee7c9427a93fc6d79b2a40c475824b15323a16",
+        "archive_relative_path": "visible/relocated-clean/runs/experiment-records/9b625c57c29e4eadb771c6826f76e58f/record.json",
+        "href": "../verification-8213ced/visible/relocated-clean/runs/experiment-records/9b625c57c29e4eadb771c6826f76e58f/record.json"
+      },
+      "actions_line_1based": 8,
+      "result_original": null,
+      "original_action_equals_record": true,
+      "prior_independent_audit_item": {
+        "record_id": "9b625c57c29e4eadb771c6826f76e58f",
+        "status": "passed",
+        "reason": "experiment.history_imported",
+        "record_sha256": "0f15f8725e02eb6714d508fe9eee7c9427a93fc6d79b2a40c475824b15323a16",
+        "archive_matches_prior_native_audit": true,
+        "one_action": true,
+        "action_projection_equals_disk": true
+      }
+    },
+    {
+      "record_id": "cba26135d0c6416289affb200c0d25e0",
+      "run_id": "cba26135d0c6416289affb200c0d25e0",
+      "action": "validate",
+      "level": "initialization",
+      "revision": 5,
+      "session_id": "b31637e644a04a6c8c389f21e81cad0d",
+      "created_at": "2026-10-31T05:57:51.355562+00:00",
+      "status": "passed",
+      "reason": "experiment.initialization_evidence_confirmed",
+      "exit_code": 0,
+      "output_dir": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\visible\\relocated-clean\\runs\\experiment-records\\cba26135d0c6416289affb200c0d25e0\\20261031_135751_k1-visible\\output",
+      "record": {
+        "path": "out/collab/k1-delivery-staging/verification-8213ced/visible/relocated-clean/runs/experiment-records/cba26135d0c6416289affb200c0d25e0/record.json",
+        "bytes": 50869,
+        "sha256_raw": "19a480452e7d19127b37945ae1fba15845b08ff1498753a7dc50d0305bd19bd2",
+        "archive_relative_path": "visible/relocated-clean/runs/experiment-records/cba26135d0c6416289affb200c0d25e0/record.json",
+        "href": "../verification-8213ced/visible/relocated-clean/runs/experiment-records/cba26135d0c6416289affb200c0d25e0/record.json"
+      },
+      "actions_line_1based": 9,
+      "result_original": {
+        "completed_events": 0,
+        "planned_events": 0,
+        "reason": "Process completed but no Geant4 run occurred.",
+        "run_count": 0,
+        "state": "no_run",
+        "summary_status": "completed"
+      },
+      "original_action_equals_record": true,
+      "prior_independent_audit_item": {
+        "record_id": "cba26135d0c6416289affb200c0d25e0",
+        "status": "passed",
+        "reason": "experiment.initialization_evidence_confirmed",
+        "record_sha256": "19a480452e7d19127b37945ae1fba15845b08ff1498753a7dc50d0305bd19bd2",
+        "archive_matches_prior_native_audit": true,
+        "one_action": true,
+        "action_projection_equals_disk": true
+      }
+    },
+    {
+      "record_id": "6ace7e73733a45feb1be2f6b4d91138d",
+      "run_id": "6ace7e73733a45feb1be2f6b4d91138d",
+      "action": "run",
+      "level": "execution",
+      "revision": 5,
+      "session_id": "b31637e644a04a6c8c389f21e81cad0d",
+      "created_at": "2026-10-31T05:58:15.376250+00:00",
+      "status": "passed",
+      "reason": "experiment.run_evidence_confirmed",
+      "exit_code": 0,
+      "output_dir": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\visible\\relocated-clean\\runs\\experiment-records\\6ace7e73733a45feb1be2f6b4d91138d\\20261031_135815_k1-visible\\output",
+      "record": {
+        "path": "out/collab/k1-delivery-staging/verification-8213ced/visible/relocated-clean/runs/experiment-records/6ace7e73733a45feb1be2f6b4d91138d/record.json",
+        "bytes": 34446,
+        "sha256_raw": "2816cdc34774cf7160360fe530df6cfca6829f2d0904f80228fee681641a4c7d",
+        "archive_relative_path": "visible/relocated-clean/runs/experiment-records/6ace7e73733a45feb1be2f6b4d91138d/record.json",
+        "href": "../verification-8213ced/visible/relocated-clean/runs/experiment-records/6ace7e73733a45feb1be2f6b4d91138d/record.json"
+      },
+      "actions_line_1based": 10,
+      "result_original": {
+        "completed_events": 3,
+        "planned_events": 3,
+        "reason": "Events completed as planned.",
+        "run_count": 1,
+        "state": "success",
+        "summary_status": "completed"
+      },
+      "original_action_equals_record": true,
+      "prior_independent_audit_item": {
+        "record_id": "6ace7e73733a45feb1be2f6b4d91138d",
+        "status": "passed",
+        "reason": "experiment.run_evidence_confirmed",
+        "record_sha256": "2816cdc34774cf7160360fe530df6cfca6829f2d0904f80228fee681641a4c7d",
+        "archive_matches_prior_native_audit": true,
+        "one_action": true,
+        "action_projection_equals_disk": true
+      }
+    },
+    {
+      "record_id": "966b1ed87373425d97180a3d56cd07ba",
+      "run_id": "966b1ed87373425d97180a3d56cd07ba",
+      "action": "validate",
+      "level": "fields",
+      "revision": 5,
+      "session_id": "b31637e644a04a6c8c389f21e81cad0d",
+      "created_at": "2026-10-31T05:58:42.629490+00:00",
+      "status": "passed",
+      "reason": "experiment.fields_completed",
+      "exit_code": null,
+      "output_dir": null,
+      "record": {
+        "path": "out/collab/k1-delivery-staging/verification-8213ced/visible/relocated-clean/runs/experiment-records/966b1ed87373425d97180a3d56cd07ba/record.json",
+        "bytes": 8690,
+        "sha256_raw": "2ad64e79b59cf833d007682e719e76d7d89c6ed67d2a33f24485db3260e7cd60",
+        "archive_relative_path": "visible/relocated-clean/runs/experiment-records/966b1ed87373425d97180a3d56cd07ba/record.json",
+        "href": "../verification-8213ced/visible/relocated-clean/runs/experiment-records/966b1ed87373425d97180a3d56cd07ba/record.json"
+      },
+      "actions_line_1based": 11,
+      "result_original": null,
+      "original_action_equals_record": true,
+      "prior_independent_audit_item": {
+        "record_id": "966b1ed87373425d97180a3d56cd07ba",
+        "status": "passed",
+        "reason": "experiment.fields_completed",
+        "record_sha256": "2ad64e79b59cf833d007682e719e76d7d89c6ed67d2a33f24485db3260e7cd60",
+        "archive_matches_prior_native_audit": true,
+        "one_action": true,
+        "action_projection_equals_disk": true
+      }
+    },
+    {
+      "record_id": "a8047350241c487888387b22f79acd36",
+      "run_id": "a8047350241c487888387b22f79acd36",
+      "action": "evaluate",
+      "level": "physics",
+      "revision": 5,
+      "session_id": "b31637e644a04a6c8c389f21e81cad0d",
+      "created_at": "2026-10-31T05:59:25.980858+00:00",
+      "status": "passed",
+      "reason": "experiment.explicit_physical_comparison",
+      "exit_code": null,
+      "output_dir": null,
+      "record": {
+        "path": "out/collab/k1-delivery-staging/verification-8213ced/visible/relocated-clean/runs/experiment-records/a8047350241c487888387b22f79acd36/record.json",
+        "bytes": 9744,
+        "sha256_raw": "bcb7f9f40782d297be608162c6371da7eaa95b37219c0e80a96d8ded2bfa4bc2",
+        "archive_relative_path": "visible/relocated-clean/runs/experiment-records/a8047350241c487888387b22f79acd36/record.json",
+        "href": "../verification-8213ced/visible/relocated-clean/runs/experiment-records/a8047350241c487888387b22f79acd36/record.json"
+      },
+      "actions_line_1based": 12,
+      "result_original": null,
+      "original_action_equals_record": true,
+      "prior_independent_audit_item": {
+        "record_id": "a8047350241c487888387b22f79acd36",
+        "status": "passed",
+        "reason": "experiment.explicit_physical_comparison",
+        "record_sha256": "bcb7f9f40782d297be608162c6371da7eaa95b37219c0e80a96d8ded2bfa4bc2",
+        "archive_matches_prior_native_audit": true,
+        "one_action": true,
+        "action_projection_equals_disk": true
+      }
+    },
+    {
+      "record_id": "ccb4cec2e2594cf6a99d11586d002e3e",
+      "run_id": "ccb4cec2e2594cf6a99d11586d002e3e",
+      "action": "export",
+      "level": "export",
+      "revision": 5,
+      "session_id": "b31637e644a04a6c8c389f21e81cad0d",
+      "created_at": "2026-10-31T06:00:32.573186+00:00",
+      "status": "failed",
+      "reason": "Bundle destination already exists: C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\visible\\relocated-clean\\geantino-history",
+      "exit_code": null,
+      "output_dir": null,
+      "record": {
+        "path": "out/collab/k1-delivery-staging/verification-8213ced/visible/relocated-clean/runs/experiment-records/ccb4cec2e2594cf6a99d11586d002e3e/record.json",
+        "bytes": 962,
+        "sha256_raw": "7d07d87378632986179c7c453e87a8f8f8e346911dd79c56639c29bc4549c74e",
+        "archive_relative_path": "visible/relocated-clean/runs/experiment-records/ccb4cec2e2594cf6a99d11586d002e3e/record.json",
+        "href": "../verification-8213ced/visible/relocated-clean/runs/experiment-records/ccb4cec2e2594cf6a99d11586d002e3e/record.json"
+      },
+      "actions_line_1based": 13,
+      "result_original": null,
+      "original_action_equals_record": true,
+      "prior_independent_audit_item": {
+        "record_id": "ccb4cec2e2594cf6a99d11586d002e3e",
+        "status": "failed",
+        "reason": "Bundle destination already exists: C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\visible\\relocated-clean\\geantino-history",
+        "record_sha256": "7d07d87378632986179c7c453e87a8f8f8e346911dd79c56639c29bc4549c74e",
+        "archive_matches_prior_native_audit": true,
+        "one_action": true,
+        "action_projection_equals_disk": true
+      }
+    },
+    {
+      "record_id": "82d761a357b54c6ab869f7bd345959a8",
+      "run_id": "82d761a357b54c6ab869f7bd345959a8",
+      "action": "export",
+      "level": "export",
+      "revision": 5,
+      "session_id": "b31637e644a04a6c8c389f21e81cad0d",
+      "created_at": "2026-10-31T06:01:44.747936+00:00",
+      "status": "passed",
+      "reason": "experiment.bundle_exported",
+      "exit_code": null,
+      "output_dir": null,
+      "record": {
+        "path": "out/collab/k1-delivery-staging/verification-8213ced/visible/relocated-clean/runs/experiment-records/82d761a357b54c6ab869f7bd345959a8/record.json",
+        "bytes": 138401,
+        "sha256_raw": "bab87f06a5b0e93650187f227e5a68f3838ffbce18c68635edf83c092ee16ffd",
+        "archive_relative_path": "visible/relocated-clean/runs/experiment-records/82d761a357b54c6ab869f7bd345959a8/record.json",
+        "href": "../verification-8213ced/visible/relocated-clean/runs/experiment-records/82d761a357b54c6ab869f7bd345959a8/record.json"
+      },
+      "actions_line_1based": 14,
+      "result_original": null,
+      "original_action_equals_record": true,
+      "prior_independent_audit_item": {
+        "record_id": "82d761a357b54c6ab869f7bd345959a8",
+        "status": "passed",
+        "reason": "experiment.bundle_exported",
+        "record_sha256": "bab87f06a5b0e93650187f227e5a68f3838ffbce18c68635edf83c092ee16ffd",
+        "archive_matches_prior_native_audit": true,
+        "one_action": true,
+        "action_projection_equals_disk": true
+      }
+    },
+    {
+      "record_id": "60efd9f130b444ee84eb22aa04346bfd",
+      "run_id": "60efd9f130b444ee84eb22aa04346bfd",
+      "action": "run",
+      "level": "execution",
+      "revision": 6,
+      "session_id": "b31637e644a04a6c8c389f21e81cad0d",
+      "created_at": "2026-10-31T06:03:03.208968+00:00",
+      "status": "cancelled",
+      "reason": "experiment.inputs_changed",
+      "exit_code": 0,
+      "output_dir": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\visible\\relocated-clean\\runs\\experiment-records\\60efd9f130b444ee84eb22aa04346bfd\\20261031_140303_k1-visible\\output",
+      "record": {
+        "path": "out/collab/k1-delivery-staging/verification-8213ced/visible/relocated-clean/runs/experiment-records/60efd9f130b444ee84eb22aa04346bfd/record.json",
+        "bytes": 31297,
+        "sha256_raw": "6d23f3cfd8769202a71639be52f9524d41de4a4aabb1563ae097bf966e045be5",
+        "archive_relative_path": "visible/relocated-clean/runs/experiment-records/60efd9f130b444ee84eb22aa04346bfd/record.json",
+        "href": "../verification-8213ced/visible/relocated-clean/runs/experiment-records/60efd9f130b444ee84eb22aa04346bfd/record.json"
+      },
+      "actions_line_1based": 15,
+      "result_original": {
+        "completed_events": null,
+        "planned_events": null,
+        "reason": "User requested process termination.",
+        "run_count": null,
+        "state": "stopped",
+        "summary_status": ""
+      },
+      "original_action_equals_record": true,
+      "prior_independent_audit_item": {
+        "record_id": "60efd9f130b444ee84eb22aa04346bfd",
+        "status": "cancelled",
+        "reason": "experiment.inputs_changed",
+        "record_sha256": "6d23f3cfd8769202a71639be52f9524d41de4a4aabb1563ae097bf966e045be5",
+        "archive_matches_prior_native_audit": true,
+        "one_action": true,
+        "action_projection_equals_disk": true
+      }
+    },
+    {
+      "record_id": "7767c30f99f74c4c853364036642eeff",
+      "run_id": "7767c30f99f74c4c853364036642eeff",
+      "action": "run",
+      "level": "execution",
+      "revision": 7,
+      "session_id": "b31637e644a04a6c8c389f21e81cad0d",
+      "created_at": "2026-10-31T06:04:29.315904+00:00",
+      "status": "passed",
+      "reason": "experiment.run_evidence_confirmed",
+      "exit_code": 0,
+      "output_dir": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\visible\\relocated-clean\\runs\\experiment-records\\7767c30f99f74c4c853364036642eeff\\20261031_140429_k1-visible\\output",
+      "record": {
+        "path": "out/collab/k1-delivery-staging/verification-8213ced/visible/relocated-clean/runs/experiment-records/7767c30f99f74c4c853364036642eeff/record.json",
+        "bytes": 34446,
+        "sha256_raw": "f276080b0910e22c30670809d2cb38645e738d08a88ab047b2192f0fa064aed4",
+        "archive_relative_path": "visible/relocated-clean/runs/experiment-records/7767c30f99f74c4c853364036642eeff/record.json",
+        "href": "../verification-8213ced/visible/relocated-clean/runs/experiment-records/7767c30f99f74c4c853364036642eeff/record.json"
+      },
+      "actions_line_1based": 16,
+      "result_original": {
+        "completed_events": 3,
+        "planned_events": 3,
+        "reason": "Events completed as planned.",
+        "run_count": 1,
+        "state": "success",
+        "summary_status": "completed"
+      },
+      "original_action_equals_record": true,
+      "prior_independent_audit_item": {
+        "record_id": "7767c30f99f74c4c853364036642eeff",
+        "status": "passed",
+        "reason": "experiment.run_evidence_confirmed",
+        "record_sha256": "f276080b0910e22c30670809d2cb38645e738d08a88ab047b2192f0fa064aed4",
+        "archive_matches_prior_native_audit": true,
+        "one_action": true,
+        "action_projection_equals_disk": true
+      }
+    },
+    {
+      "record_id": "880d4e7eb8e0481da3cf0c2d380bafbc",
+      "run_id": "880d4e7eb8e0481da3cf0c2d380bafbc",
+      "action": "run",
+      "level": "execution",
+      "revision": 8,
+      "session_id": "b31637e644a04a6c8c389f21e81cad0d",
+      "created_at": "2026-10-31T06:06:44.541451+00:00",
+      "status": "passed",
+      "reason": "experiment.run_evidence_confirmed",
+      "exit_code": 0,
+      "output_dir": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\visible\\relocated-clean\\runs\\experiment-records\\880d4e7eb8e0481da3cf0c2d380bafbc\\20261031_140644_k1-visible\\output",
+      "record": {
+        "path": "out/collab/k1-delivery-staging/verification-8213ced/visible/relocated-clean/runs/experiment-records/880d4e7eb8e0481da3cf0c2d380bafbc/record.json",
+        "bytes": 34446,
+        "sha256_raw": "9104211885fe4ce035a90b6890299b72fa96283fddeb8157595b6167cb32d4c1",
+        "archive_relative_path": "visible/relocated-clean/runs/experiment-records/880d4e7eb8e0481da3cf0c2d380bafbc/record.json",
+        "href": "../verification-8213ced/visible/relocated-clean/runs/experiment-records/880d4e7eb8e0481da3cf0c2d380bafbc/record.json"
+      },
+      "actions_line_1based": 17,
+      "result_original": {
+        "completed_events": 3,
+        "planned_events": 3,
+        "reason": "Events completed as planned.",
+        "run_count": 1,
+        "state": "success",
+        "summary_status": "completed"
+      },
+      "original_action_equals_record": true,
+      "prior_independent_audit_item": {
+        "record_id": "880d4e7eb8e0481da3cf0c2d380bafbc",
+        "status": "passed",
+        "reason": "experiment.run_evidence_confirmed",
+        "record_sha256": "9104211885fe4ce035a90b6890299b72fa96283fddeb8157595b6167cb32d4c1",
+        "archive_matches_prior_native_audit": true,
+        "one_action": true,
+        "action_projection_equals_disk": true
+      }
+    }
+  ],
+  "native_status_counts": {
+    "passed": 15,
+    "failed": 1,
+    "cancelled": 1
+  },
+  "CLI_record": {
+    "record": {
+      "path": "out/collab/k1-delivery-staging/verification-8213ced/replay-cli/runs/experiment-records/76a62c88dd634f58bfbdbee50cf8681e/record.json",
+      "bytes": 39402,
+      "sha256_raw": "006c27bac6ff1f4279ecb71c272d476e5521f9bbf0631dfef4402aeb1e17362f",
+      "archive_relative_path": "replay-cli/runs/experiment-records/76a62c88dd634f58bfbdbee50cf8681e/record.json",
+      "href": "../verification-8213ced/replay-cli/runs/experiment-records/76a62c88dd634f58bfbdbee50cf8681e/record.json"
+    },
+    "receipt": {
+      "path": "out/collab/k1-delivery-staging/verification-8213ced/replay/replay-cli-receipt.json",
+      "bytes": 1532,
+      "sha256_raw": "149d3c1142919d0c85a6a250ad010bd205fe15269d890c54e03bb105502b21d7",
+      "archive_relative_path": "replay/replay-cli-receipt.json",
+      "href": "../verification-8213ced/replay/replay-cli-receipt.json"
+    },
+    "stdout_log": {
+      "path": "out/collab/k1-delivery-staging/verification-8213ced/replay/replay-cli.log",
+      "bytes": 30310,
+      "sha256_raw": "c09e40a204124fd06a839765278696c1b55c680a00b701d45b4f392e9ebd34a1",
+      "archive_relative_path": "replay/replay-cli.log",
+      "href": "../verification-8213ced/replay/replay-cli.log"
+    },
+    "record_id": "76a62c88dd634f58bfbdbee50cf8681e",
+    "run_id": "76a62c88dd634f58bfbdbee50cf8681e",
+    "revision": 0,
+    "status": "passed",
+    "reason": "experiment.run_evidence_confirmed",
+    "result_original": {
+      "completed_events": 3,
+      "planned_events": 3,
+      "reason": "Events completed as planned.",
+      "run_count": 1,
+      "state": "success",
+      "summary_status": "completed"
+    },
+    "actual_inputs_count_original_receipt": 4,
+    "process_exit_code_original_receipt": 0
+  },
+  "screenshots": [
+    {
+      "path": "out/collab/k1-delivery-staging/verification-8213ced/visible/01-initial.jpg",
+      "bytes": 114014,
+      "sha256_raw": "6b60132bcb28c7b1d2c650959fb92c72c492c36f77e546cf3ec414d956c0f658",
+      "archive_relative_path": "visible/01-initial.jpg",
+      "href": "../verification-8213ced/visible/01-initial.jpg"
+    },
+    {
+      "path": "out/collab/k1-delivery-staging/verification-8213ced/visible/02-environment.jpg",
+      "bytes": 128142,
+      "sha256_raw": "2c63c2ba681267c4d973211161888d3ce1587f0b100da9e664743b267a885bac",
+      "archive_relative_path": "visible/02-environment.jpg",
+      "href": "../verification-8213ced/visible/02-environment.jpg"
+    },
+    {
+      "path": "out/collab/k1-delivery-staging/verification-8213ced/visible/03-fields.jpg",
+      "bytes": 132273,
+      "sha256_raw": "3724a2b3ab937ac351e0107fe4917089c07cc45f4f46e5fe9be61fc13c6e6ead",
+      "archive_relative_path": "visible/03-fields.jpg",
+      "href": "../verification-8213ced/visible/03-fields.jpg"
+    },
+    {
+      "path": "out/collab/k1-delivery-staging/verification-8213ced/visible/04-initialized.jpg",
+      "bytes": 133757,
+      "sha256_raw": "869ff9971298d68c7e6a32fd61bf5b45a816158b9be9a9abae7440dc3079a8b2",
+      "archive_relative_path": "visible/04-initialized.jpg",
+      "href": "../verification-8213ced/visible/04-initialized.jpg"
+    },
+    {
+      "path": "out/collab/k1-delivery-staging/verification-8213ced/visible/05-run-complete.jpg",
+      "bytes": 154002,
+      "sha256_raw": "dc6001738fb0330680c8a86c6183bfe616903fc5c4359e2b9a07e6266ad84e37",
+      "archive_relative_path": "visible/05-run-complete.jpg",
+      "href": "../verification-8213ced/visible/05-run-complete.jpg"
+    },
+    {
+      "path": "out/collab/k1-delivery-staging/verification-8213ced/visible/06-physical-comparison.jpg",
+      "bytes": 153537,
+      "sha256_raw": "0dfc58df79877ff17eff6580c98558007397e623e18c46aa325924c554cbe568",
+      "archive_relative_path": "visible/06-physical-comparison.jpg",
+      "href": "../verification-8213ced/visible/06-physical-comparison.jpg"
+    },
+    {
+      "path": "out/collab/k1-delivery-staging/verification-8213ced/visible/07-relocated-stale.jpg",
+      "bytes": 145698,
+      "sha256_raw": "6af627e8d657a48d3bc3fd1cfe736afe6a5d33e4105a047442f1b69fddd1341b",
+      "archive_relative_path": "visible/07-relocated-stale.jpg",
+      "href": "../verification-8213ced/visible/07-relocated-stale.jpg"
+    },
+    {
+      "path": "out/collab/k1-delivery-staging/verification-8213ced/visible/08-edited-stale.jpg",
+      "bytes": 146332,
+      "sha256_raw": "552305f1034f22d26563d254051d8c1ab0e0b35b3f87f8f48d7cf83c3ae5098c",
+      "archive_relative_path": "visible/08-edited-stale.jpg",
+      "href": "../verification-8213ced/visible/08-edited-stale.jpg"
+    },
+    {
+      "path": "out/collab/k1-delivery-staging/verification-8213ced/visible/09-relocated-initialized.jpg",
+      "bytes": 137754,
+      "sha256_raw": "7fcc6631bc52ea60a0e75a48bf6b4ce6f21effb2be018b8dea12fd58adb319ac",
+      "archive_relative_path": "visible/09-relocated-initialized.jpg",
+      "href": "../verification-8213ced/visible/09-relocated-initialized.jpg"
+    },
+    {
+      "path": "out/collab/k1-delivery-staging/verification-8213ced/visible/10-relocated-run-complete.jpg",
+      "bytes": 155168,
+      "sha256_raw": "5b6c3097f4c4fe3f36bc77be43b24d59130b44211f3ebf462187fed9aaa8d266",
+      "archive_relative_path": "visible/10-relocated-run-complete.jpg",
+      "href": "../verification-8213ced/visible/10-relocated-run-complete.jpg"
+    },
+    {
+      "path": "out/collab/k1-delivery-staging/verification-8213ced/visible/11-relocated-revalidated.jpg",
+      "bytes": 154805,
+      "sha256_raw": "d337554a04b1a20afa43fd8ca13768ab4ca3bc919fde71334289251707650767",
+      "archive_relative_path": "visible/11-relocated-revalidated.jpg",
+      "href": "../verification-8213ced/visible/11-relocated-revalidated.jpg"
+    },
+    {
+      "path": "out/collab/k1-delivery-staging/verification-8213ced/visible/12-export-conflict.jpg",
+      "bytes": 143340,
+      "sha256_raw": "516663471180cf23c91ed9ceb8b72b890d39dd6d79b53d60db5a8e46d73ca10f",
+      "archive_relative_path": "visible/12-export-conflict.jpg",
+      "href": "../verification-8213ced/visible/12-export-conflict.jpg"
+    },
+    {
+      "path": "out/collab/k1-delivery-staging/verification-8213ced/visible/13-running-before-cancel.jpg",
+      "bytes": 140577,
+      "sha256_raw": "17a03f422f84ec98013523a2185b149e48ef0718add3e437c3cd654df947075d",
+      "archive_relative_path": "visible/13-running-before-cancel.jpg",
+      "href": "../verification-8213ced/visible/13-running-before-cancel.jpg"
+    },
+    {
+      "path": "out/collab/k1-delivery-staging/verification-8213ced/visible/14-cancelled.jpg",
+      "bytes": 168471,
+      "sha256_raw": "17f58994e507f1ff7e39b3876815ade6e284865bf5f9f5bb7617a29026d9f51e",
+      "archive_relative_path": "visible/14-cancelled.jpg",
+      "href": "../verification-8213ced/visible/14-cancelled.jpg"
+    },
+    {
+      "path": "out/collab/k1-delivery-staging/verification-8213ced/visible/15-recovered-run.jpg",
+      "bytes": 158848,
+      "sha256_raw": "91ff6edf2ed285f4f9a09d04c3c90371fc229f517fb86cd6ae8e33eadc915751",
+      "archive_relative_path": "visible/15-recovered-run.jpg",
+      "href": "../verification-8213ced/visible/15-recovered-run.jpg"
+    },
+    {
+      "path": "out/collab/k1-delivery-staging/verification-8213ced/visible/16-saved-reopened-stale.jpg",
+      "bytes": 155815,
+      "sha256_raw": "08b54dd987580cc7edd6ce2fa869047124a8919a99417280db91b37285b9771d",
+      "archive_relative_path": "visible/16-saved-reopened-stale.jpg",
+      "href": "../verification-8213ced/visible/16-saved-reopened-stale.jpg"
+    },
+    {
+      "path": "out/collab/k1-delivery-staging/verification-8213ced/visible/17-reopened-run-complete.jpg",
+      "bytes": 157094,
+      "sha256_raw": "36443f74190d6ece7a86a257354f85124344308df772e60ee21f86be63954e85",
+      "archive_relative_path": "visible/17-reopened-run-complete.jpg",
+      "href": "../verification-8213ced/visible/17-reopened-run-complete.jpg"
+    }
+  ],
+  "screenshots_scope": "17 preexisting images byte-identity indexed; no new visual review or invented one-image/one-record mapping",
+  "Git_inventory_clarification": {
+    "entries": 16033,
+    "scope": "Git tree/object IDs, sizes and raw-object hashes only; no embedded object payloads; identity evidence, not a standalone source backup",
+    "raw_source_payload_included": false
+  },
+  "resource_boundary_required_independent_review": "upstream_refused_incomplete_not_retried",
+  "independent_addendum_review": "pending_parent_review",
+  "originals_rewritten": false
+}

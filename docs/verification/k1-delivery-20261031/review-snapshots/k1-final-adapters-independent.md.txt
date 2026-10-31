@@ -1,0 +1,64 @@
+# K1 最终普通 CLI/GUI 适配及登记独立复审
+
+结论：在下列 14 文件限定范围内通过，未发现需修复的问题。绑定 HEAD `8213ced419c8c6bca512bf8413b674c1265cf3bf`；审查基线 `e701c7f`。实际阅读最终逻辑与 diff，并沿共用服务、F5、runner、退出和记录发布调用链核查，不以 SHA 一致代替代码审查。
+
+本审查者首轮写过 backend_geometry、trajectory_view、f5_recovery_process 三个 smoke；三者全部排除，不自审。当前四个产品适配器、登记与六个旧 smoke 无作者冲突。实际模型 gpt-6.1-sol / medium，消耗未知。
+
+## 代码结论及依据
+
+1. `experiment_cli.py:89–240`：唯一 workflow 终态入口，先连接 completed 再分派，兼容同步终态。终态回调和轮询同时核截止时刻及已收 SIGINT/SIGTERM；超时/取消保持 124/130，不因迟到 passed 洗绿。finally 仅回收本次 runner/inspect，workflow_lifetime 等待 close()/closed()，未排空显式 close_timeout；持久化资格仍归服务，CLI 不由进程退出码制造 pass。
+2. `experiment_cli.py:242–397`：严格 JSON/快照入口，无任意属性 patch。project 与 bundle 共用 EditSession/ExperimentWorkflow；显式 executable/runsRoot 只同步原本一致的 draft 镜像，不清洗非法草稿。bundle 执行类命令显式要求新 executable、选择重放输入并将导入历史保持 stale；evaluate --run-first 明确授权新运行，普通 evaluate 不伪造同会话资格。apply 仅服务通过后保存；stdout 为单 JSON、依赖诊断到 stderr，异常非零。这里只审普通 transport，资源闭包与链接边界不补签。
+3. `window/experiment.py:51–136`：注入 MainWindow 原 EditSession、runner、inspect 进程；断开旧 inspect 两个活动消费回调，没有第二事务/进程所有者。apply_snapshot 通过原 F5 projection/capacity/apply_workspace 回滚及故障冻结路径。changed/completed 仅投影服务状态，events→execution 是展示适配。
+4. `window/experiment.py:137–311`：当前结果绑定 record_id/run_id/revision，配置变化和后续运行显示历史/未核验；pending 或服务核验中不显示为当前通过。terminal 去重仅防重复显示；不写资格或改磁盘记录。已有 F4 report/typed diagnostics 优先保留，不从翻译文本猜定位。generated 路径是展示绑定；结合 transactions.capture_workspace 的 `_generated_edit_binding` 反映射，不写回 F5 权威快照。
+5. `window/transactions.py:496–707`：草稿变化立即 invalidate，真实 flush/merge 仍由 EditSession 持有；Undo/Redo/repair/save 的 busy 和 fault guard 沿用原路径。实验 busy/导入 loading 纳入编辑屏障，history_changed 刷新投影，不复活旧验证。环境选择经 workspace_transaction，只选择不启动模拟。
+6. `window/experiment.py:324–402`、`main_window.py:131–203`：异步导入在 owner 回调复核 revision，走 F5 reset/apply、历史失效及服务 import_history；close 先取消实际动作，completed 后续关，三秒仅请求 force。legacy 独立 runner 不误等不存在的服务 completed。恢复关闭只成功执行一次，服务 close() 未排空则忽略窗口关闭并等待 closed；之后才关闭其他 evidence jobs 和释放本窗口 watcher。未按进程名终止外部进程。
+
+## 登记和 workflow
+
+最终 182 唯一登记：static36 / gui56 / backend61 / integration29。相对 e701c7f 的 160 个原 Case（含 requirements/args/timeout）AST 全部不变；新增 22 条无重名。逐条检查组件模式 --component/默认 components 与真实模式 --backend/--mode backend 的区别，真实例依赖 exe/Qt 并接收 runner 注入 G4USIM_EXE。K1 roundtrip 独立 integration，第四新增 staging_alias/GUI relocation/backend relocation 分别登记，不用组件替代 transport。
+
+runner 原 fail-on-skip、assert probe marker、每 case 独立证据根、原始字节 digest 与 check_report_evidence 路径不改。两个 workflow 各仅 apt 依赖行增加 fonts-noto-cjk，补中文字体；profile、矩阵、门禁、上传与失败传播未减弱。Linux workflow raw CRLF 与 Git LF SHA 分开登记，归一后相同，不冒称原字节一致。
+
+## 测试逻辑复核
+
+`test_k1_roundtrip.py` 使用真实 runner/executable、移走原输入后再搬移到中文新根、import_history stale、非法 apply 原快照/revision 保持、3 MeV 后端实际 summary、初始化 no_run、三次独立运行 ID、后续 seed 编辑失效与再次导出检查。输出根尊重 G4USIM_TEST_EVIDENCE_DIR 并用 UUID 防覆盖；仅服务真实关闭后清临时目录，错误不被吞掉。这是运行/配置消费验证，不是物理精度或资源边界独审。
+
+六个旧 smoke 的每条原 assert 条件经 AST 多重集核验全部保留；人工再核判据上下文，未只按数量签字：
+
+| 文件 | 原 assert 节点 | 最终节点 | 逻辑说明 |
+|---|---:|---:|---|
+| smoke_f4_entrypoints.py | 62 | 62 | 等待真实生成后递归查 UUID 层级中的唯一 diagnostics；原 F4 内容/导航/无修改判据保持。 |
+| smoke_f4_inspect_backend.py | 40 | 44 | 原路径 Inspect 诊断与 run_after 拒绝分开：原真实 stderr/来源行/无执行判据保持，另加四项不启动、不写输出、不改源验证。 |
+| smoke_new_simulation_wizard.py | 37 | 37 | 生成完成后查唯一 shielding 包，原材料/能量/beamOn321 判据保持，临时根退出前关闭。 |
+| smoke_project_snapshot_restore.py | 54 | 54 | 等真实生成后保持当前材料字节、geometry、legacy snapshot 警告等判据；close+DeferredDelete 排空。 |
+| smoke_q1_public_paths.py | 28 | 28 | 仅补 close_window 清理；原 owned 子进程关闭、outsider 不被波及判据保持。 |
+| smoke_run_input_modes.py | 94 | 99 | 原惯性 runner fixture 仍合成且明确 RunResult incomplete，绝不冒充模拟成功；另保留真实无 source-copy 3/3、no-run/旧摘要与真实 preflight 拒绝。writer 路径判据与实际闭包 expected_inputs 分别核对；改 UI 单元格触发真实 F5，不再只改游离对象。 |
+
+AST 原条件保持不等于单独证明语义，故上述检查同时核 fixture/真实分支及断言操作数。inspect 的拒绝字符串判据仍在真实独立 Inspect 阶段，requested-run 分支另断言 failed 与未 launch，未吞掉首因。六项合计新增 9 条 assert 条件，无删除。
+
+## 最终 SHA 绑定
+
+| 文件 | 最终工作区 SHA-256 |
+|---|---|
+| gui/g4usim_gui/experiment_cli.py | `20d7bb876ef91d80d31a4806640730dff011fd65ceb7204b9b323ec7920c74f6` |
+| gui/g4usim_gui/main_window.py | `3dbece37b6eef22363f6eb772836f8918dce95c762f94decd312c4381a74a7ce` |
+| gui/g4usim_gui/window/transactions.py | `93e194afae749b52c3a8c9871211ecc8fe129256050e9e88ef1287f67b1b3210` |
+| gui/g4usim_gui/window/experiment.py | `bfe38e02552f831027d59480331e3805c16955b69cbccdb5a94c26963a005d46` |
+| scripts/run_m0_tests.py | `8d4137897697ac73152cf9ec7e7264e27fb13aa0b2b9d79cc7a10f404cf03108` |
+| .github/workflows/linux-geant4.yml | `d1c7132544f20964e5094e2bf32fc35bb99ff9902e0966c867e3a3e5d0dae052` |
+| .github/workflows/m0-static-gui.yml | `ecc4edde064951c161b4b01e46d5ee6a568c854877c27acf90342ebe2e0fe391` |
+| scripts/test_k1_roundtrip.py | `67d54752a8633d1c2d472bc3af0b9080bc802db8478347ba33295b3400c938f2` |
+| gui/smoke_tests/smoke_f4_entrypoints.py | `b975cc00c27379e9c1497d7d81134a4149275484ea5e6c444b2d4e0f499f7b6f` |
+| gui/smoke_tests/smoke_f4_inspect_backend.py | `c048cb9929a71677b00f2d80e995058970e41b2ff6b2875fdf104da2d5d456cf` |
+| gui/smoke_tests/smoke_new_simulation_wizard.py | `304c81f998603e76a527bb4e69165f24cbe105874022b8c57f0b99818efb64d7` |
+| gui/smoke_tests/smoke_project_snapshot_restore.py | `8071589683f2db979e668b664a57b978c7663ab8c8e96d20e3b391cfd96db10b` |
+| gui/smoke_tests/smoke_q1_public_paths.py | `09882ba3c154a25ea5d836783abe27d2345ce21d9b3e3f1036ced516b1ddc9f0` |
+| gui/smoke_tests/smoke_run_input_modes.py | `ec2eb725630067711fd910587f279eee673e87f295eb1a3e75559a2bbcaca95e` |
+
+JSON 同时保存 Git blob SHA、实际 diff SHA 与审查 scope。三个新增文件按完整新增逻辑审，已有大文件只签本轮增量及必要上下文，不将旧代码全部重新签字。
+
+## 验证与保留范围
+
+只读 AST/登记一致性检查通过；未启动测试、重复矩阵或窗口。复用已完成第四 CI：Linux41173825552 / M041173825555，12报告548/548、132900断言，strict与F5逐例/总量全通过。原始独立 CI 收据：[review-result.json](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/verification/k1-8213ced/ci/review-result.json)；本 JSON 绑定该收据SHA并列选定用例的原始日志SHA和执行断言数。未将旧作者 manifest 当新独审或声称本轮另跑专项。
+
+父任务仍需补范围：最终 panel 与 panel smoke、I1 对话框、早期 RunPage/i18n/window.run/window.shell 的历史显示窄签字以外增量及最终人类文档；本审不覆盖这些文件。Plato/Bohr 上游拒绝的资源边界独审缺口保持原状，此报告未重做该 scope，也不能据自动化绿色关闭 K1。

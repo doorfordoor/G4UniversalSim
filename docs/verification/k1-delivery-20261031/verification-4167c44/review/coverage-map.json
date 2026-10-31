@@ -1,0 +1,4650 @@
+{
+  "schema": "k1_existing_review_coverage_map_v1",
+  "timestamp": "2026-10-31T06:17:51.744874+00:00",
+  "base_commit": "e701c7fa5b5b8899d8dd8b9f6a0b4b305614e5c9",
+  "final_commit": "8213ced419c8c6bca512bf8413b674c1265cf3bf",
+  "actual_git_diff_file_count": 61,
+  "tracked_clean_before_after": true,
+  "scope": "existing reviews/manifests, actual Git diff membership and raw SHA/version metadata only",
+  "usage": "unknown",
+  "new_tests_started": false,
+  "formal_windows6187_or_CI_polled": false,
+  "product_or_test_source_modified": false,
+  "old_reports_modified": false,
+  "new_bundle_security_review_or_refused_operation_performed": false,
+  "K1_completion_decision": "not_made",
+  "self_review_boundary": "Tesla three-smoke implementation is mapped only to other-reviewer/parent signoff; parent-tests-review is earlier independent review of parent two test-only candidates",
+  "summary_not_stage_approval": {
+    "no_exact_final_binding_found": 27,
+    "limited_review_exact_bytes": 31,
+    "ordinary_functional_scope_only": 3
+  },
+  "CRLF_only_exceptions": [
+    ".github/workflows/linux-geant4.yml"
+  ],
+  "reviews": {
+    "contract": {
+      "path": "out/collab/k1-contract-independent.md",
+      "sha256": "62190ad45141bd7a18234027b135439319434b21da9119cff8232c5d98a679dc",
+      "reviewer": "独立审查Sol medium",
+      "scope": "静态契约12项，非实现验收",
+      "kind": "design_only",
+      "signoff_section_line": 119,
+      "line_count": 121
+    },
+    "i1_fix": {
+      "path": "out/collab/k1-i1-independent.md",
+      "sha256": "46f6bf4575a0534bb01bfe3558751f03ef686273aa0ff692a6089f67cad1553d",
+      "reviewer": "I1/核心独立审查者",
+      "scope": "文末两项P2修复后续审",
+      "kind": "independent_limited_code_review",
+      "signoff_section_line": 98,
+      "line_count": 130
+    },
+    "core_e5": {
+      "path": "out/collab/k1-core-independent-review.md",
+      "sha256": "07ee095a57f82f794fbef0735c6534371224af8a722b9f95dd1751248806d512",
+      "reviewer": "独立核心审查 / 01a18f97-f404-7fa0-89f3-b826cadd8055",
+      "scope": "文末e5ff800最终限定签字；bundle仅历史投影/5行版本文本小修",
+      "kind": "independent_limited_code_review",
+      "signoff_section_line": 329,
+      "line_count": 376
+    },
+    "cpp": {
+      "path": "out/collab/k1-cpp-launch-portability-independent.md",
+      "sha256": "cb1de74ab48ef38af7070b10daafa6605fa410ca7bb6718d76fa3f8b2384f004",
+      "reviewer": "首轮smoke写者（未写本次被审五文件）",
+      "scope": "末尾五文件SHA的可移植性限定签字",
+      "kind": "independent_limited_code_review",
+      "signoff_section_line": 56,
+      "line_count": 62
+    },
+    "launch_applied": {
+      "path": "out/collab/k1-python-launch-independent-review.md",
+      "sha256": "afc9c36270c0033e738f46e22fc0cfbcca5f774d46e5c8113d74aaecfe2da117",
+      "reviewer": "独立启动审查Sol medium",
+      "scope": "末尾七文件限定观察；helper P2由后续最终增补关闭",
+      "kind": "independent_limited_code_review",
+      "signoff_section_line": 50,
+      "line_count": 61
+    },
+    "label_final": {
+      "path": "out/collab/k1-final-adapter-test-diff-independent.md",
+      "sha256": "bccb7578d234cf2c0cae20a2a87d0088bda7ab9cf8b4165d93181451700a9e9c",
+      "reviewer": "独立启动/测试审查Sol medium",
+      "scope": "明确最终label P2签字及旧smoke/I1/bundle测试兼容窄diff，不含bundle广泛边界",
+      "kind": "independent_limited_code_review",
+      "signoff_section_line": 3,
+      "line_count": 80
+    },
+    "cancel": {
+      "path": "out/collab/k1-cancel-ownership-independent.md",
+      "sha256": "35baca6520e74fa6c32e781b506fa156b23e539debd588f110da283ebd9f522c",
+      "reviewer": "Averroes（非候选作者）",
+      "scope": "文末841977候选终态发布所有权与九例受控时序",
+      "kind": "independent_limited_code_review",
+      "signoff_section_line": 144,
+      "line_count": 151
+    },
+    "terminal_defaults": {
+      "path": "out/collab/k1-terminal-test-defaults-independent.md",
+      "sha256": "18b5f862e6c97cfac74cdcd542093838e97203ee0332bdab3bc6f6962bffa3d0",
+      "reviewer": "Averroes（非候选作者）",
+      "scope": "最终test-defaults-r1默认参数/聚合/有界等待窄diff",
+      "kind": "independent_limited_code_review",
+      "signoff_section_line": 7,
+      "line_count": 64
+    },
+    "path_progress": {
+      "path": "out/collab/k1-c644bb1-windows-independent-candidate-review.md",
+      "sha256": "528ca2ca6c676664960d3b84d65693e78c960309a53f98e0d4bc91a80a4b2726",
+      "reviewer": "独立审查Sol medium",
+      "scope": "末尾只签两候选：路径规范化测试与FailedToStart/progress",
+      "kind": "independent_limited_code_review",
+      "signoff_section_line": 38,
+      "line_count": 42
+    },
+    "history": {
+      "path": "out/collab/k1-c644bb1-windows-independent-history-scope-review.md",
+      "sha256": "2cf974c94e52396ce7c1abf4c4560ee0356cbb08f63fa63e7d22cd9734ebf92a",
+      "reviewer": "独立显示范围审查Sol medium",
+      "scope": "最终modes增补 + 五产品稳定字节；首轮149/最终150/组件78分开",
+      "kind": "independent_limited_code_review",
+      "signoff_section_line": 15,
+      "line_count": 79
+    },
+    "registration": {
+      "path": "out/collab/k1-c644bb1-windows-independent-history-registration.json",
+      "sha256": "f365830fa5600faf4aa7bec0b1a1a69bcd8617c35c4de62aeb9237a514929001",
+      "reviewer": "独立登记审查者",
+      "scope": "history默认根一行/trajectory原Windows分支/当时registry窄diff",
+      "kind": "independent_limited_code_review",
+      "signoff_section_line": null,
+      "line_count": 51
+    },
+    "cli_prior": {
+      "path": "out/collab/k1-core-independent-review.md",
+      "sha256": "07ee095a57f82f794fbef0735c6534371224af8a722b9f95dd1751248806d512",
+      "reviewer": "独立核心审查者",
+      "scope": "第5项CLI timeout/SIGINT产品修复绑定36434a；不把作者manifest当后续产品签字",
+      "kind": "independent_limited_code_review",
+      "signoff_section_line": 122,
+      "line_count": 376
+    },
+    "parent_tests": {
+      "path": "out/collab/k1-parent-tests-review.json",
+      "sha256": "9da4f5f9d3ecb2b56ac1502bc610358b8b9bf9ef39dc2f804bf87a994d831c52",
+      "reviewer": "Tesla（父两test-only候选的独立审查者）",
+      "scope": "仅cwd expected/两latepass fixture，不涉及bundle",
+      "kind": "independent_limited_code_review",
+      "signoff_section_line": null,
+      "line_count": 313
+    },
+    "other_three": {
+      "path": "out/collab/k1-win-ci-three-smokes-independent-review.md",
+      "sha256": "221e17a9584a8dfa54a45ff020ef90c4bbd31cefa0db7c723762532240c5ac23",
+      "reviewer": "首轮smoke写者，非Tesla这三文件作者",
+      "scope": "末尾锁定三smoke字节；当时组合只到两项，未冒称最终3/3",
+      "kind": "independent_limited_code_review",
+      "signoff_section_line": 35,
+      "line_count": 43
+    },
+    "parent_three": {
+      "path": "out/collab/k1-parent-three-smoke-review.json",
+      "sha256": "ec6c402f5e1b4200aee46e011874324d0697c8c684a96dfa3a15749b9a5bea96",
+      "reviewer": "父任务（独立于Tesla实现）",
+      "scope": "接受三测试diff并核完整最终38/241/254收据",
+      "kind": "independent_limited_code_review",
+      "signoff_section_line": null,
+      "line_count": 61
+    },
+    "parent_bundle": {
+      "path": "out/collab/k1-parent-bundle-functional-review.json",
+      "sha256": "bdd1bb220a140c7339fae4fafaad5eb442c771cb63bbb71cbc10bf8b050fa980",
+      "reviewer": "父任务（非原bundle作者）",
+      "scope": "普通功能代码/组件，明确不是被拒独审完成",
+      "kind": "ordinary_functional_review",
+      "signoff_section_line": null,
+      "line_count": 15
+    },
+    "parent_relocation": {
+      "path": "out/collab/k1-parent-relocation-functional-review.json",
+      "sha256": "861679c84d06fb9ad65fbdd492f61e4e053c7d3ecdcfd96f884c69666c2b969f",
+      "reviewer": "父任务（非Franklin实现）",
+      "scope": "仅raw-draft搬移/正常export路径身份及两新测试质量；非资源安全签字",
+      "kind": "ordinary_functional_review",
+      "signoff_section_line": null,
+      "line_count": 43
+    }
+  },
+  "modules": [
+    {
+      "id": "docs",
+      "label": "契约/状态/文档",
+      "authors": [
+        "父任务"
+      ],
+      "note": "设计契约和来源manifest不是最终文档全文独立签字。",
+      "files": [
+        "AGENTS.md",
+        "STATUS.md",
+        "docs/ROADMAP.md",
+        "docs/agent-history.md",
+        "docs/collab/inbox/20261031-k1-execution.md",
+        "docs/功能支持矩阵.md",
+        "docs/可信实验工作流.md",
+        "gui/AGENTS.md"
+      ],
+      "review_ids": [
+        "contract"
+      ],
+      "exact_limited_files": 0,
+      "functional_only_files": 0,
+      "no_exact_binding_files": 8
+    },
+    {
+      "id": "ci",
+      "label": "CI/统一登记",
+      "authors": [
+        "父任务"
+      ],
+      "note": "存在部分登记窄审与冻结identity；final registry后续delta不由identity补签。",
+      "files": [
+        ".github/workflows/linux-geant4.yml",
+        ".github/workflows/m0-static-gui.yml",
+        "scripts/run_m0_tests.py"
+      ],
+      "review_ids": [
+        "registration"
+      ],
+      "exact_limited_files": 0,
+      "functional_only_files": 0,
+      "no_exact_binding_files": 3
+    },
+    {
+      "id": "cpp",
+      "label": "C++ cwd/manifest",
+      "authors": [
+        "父任务"
+      ],
+      "note": "末尾五文件SHA限定签字，不替代正式跨平台矩阵。",
+      "files": [
+        "CMakeLists.txt",
+        "cmake/WindowsRuntime.cmake",
+        "include/Core/BackendCapabilities.hh",
+        "main.cc",
+        "scripts/test_backend_working_directory.py"
+      ],
+      "review_ids": [
+        "cpp"
+      ],
+      "exact_limited_files": 5,
+      "functional_only_files": 0,
+      "no_exact_binding_files": 0
+    },
+    {
+      "id": "launch",
+      "label": "Python launch/进度",
+      "authors": [
+        "Bohr(workflow Sol high)",
+        "父任务"
+      ],
+      "note": "label P2最终增补、路径测试/progress签字及父test-only新diff分别记录。",
+      "files": [
+        "gui/g4usim_gui/core/backend_launch.py",
+        "gui/g4usim_gui/core/runner.py",
+        "gui/smoke_tests/smoke_backend_launch.py",
+        "gui/smoke_tests/smoke_live_progress.py",
+        "scripts/test_backend_launch.py"
+      ],
+      "review_ids": [
+        "launch_applied",
+        "label_final",
+        "path_progress",
+        "parent_tests"
+      ],
+      "exact_limited_files": 5,
+      "functional_only_files": 0,
+      "no_exact_binding_files": 0
+    },
+    {
+      "id": "workflow",
+      "label": "workflow/identity/终态",
+      "authors": [
+        "Bohr / 01a18f93-ee1e-71b2-8816-4904a12efe51"
+      ],
+      "note": "原核心签字+启动diff+Averroes终态/测试defaults串联。",
+      "files": [
+        "gui/g4usim_gui/core/experiment_identity.py",
+        "gui/g4usim_gui/core/experiment_workflow.py",
+        "scripts/test_k1_terminal_publication.py",
+        "scripts/test_k1_workflow.py"
+      ],
+      "review_ids": [
+        "core_e5",
+        "launch_applied",
+        "cancel",
+        "terminal_defaults"
+      ],
+      "exact_limited_files": 4,
+      "functional_only_files": 0,
+      "no_exact_binding_files": 0
+    },
+    {
+      "id": "bundle",
+      "label": "bundle/搬移/别名",
+      "authors": [
+        "原bundle Sol high / 01a18f93-ec3e-7463-a68e-fd5ccd347033",
+        "Franklin",
+        "父任务"
+      ],
+      "note": "功能最终字节可匹配，但Plato/Bohr被拒资源边界复审缺口仍在。",
+      "files": [
+        "gui/g4usim_gui/core/experiment_bundle.py",
+        "gui/smoke_tests/smoke_k1_relocation.py",
+        "scripts/test_k1_bundle.py",
+        "scripts/test_k1_roundtrip.py",
+        "scripts/test_k1_staging_alias.py"
+      ],
+      "review_ids": [
+        "core_e5",
+        "parent_bundle",
+        "parent_relocation",
+        "label_final"
+      ],
+      "exact_limited_files": 1,
+      "functional_only_files": 3,
+      "no_exact_binding_files": 1
+    },
+    {
+      "id": "i1",
+      "label": "I1发现/对话框",
+      "authors": [
+        "I1 Sol high / 01a18f93-e780-7953-90fe-cd5b6fe40fc0",
+        "Sol medium UI续修",
+        "Bohr启动适配"
+      ],
+      "note": "协议/解析/启动有链；最终对话框源字节缺独立最终签字。",
+      "files": [
+        "docs/环境发现与诊断.md",
+        "gui/g4usim_gui/core/environment_discovery.py",
+        "gui/g4usim_gui/widgets/environment_dialog.py",
+        "gui/smoke_tests/smoke_i1_environment.py",
+        "scripts/test_i1_environment.py"
+      ],
+      "review_ids": [
+        "i1_fix",
+        "core_e5",
+        "launch_applied",
+        "label_final",
+        "path_progress"
+      ],
+      "exact_limited_files": 3,
+      "functional_only_files": 0,
+      "no_exact_binding_files": 2
+    },
+    {
+      "id": "panel",
+      "label": "面板/面板专项",
+      "authors": [
+        "DeepSeek flash初稿",
+        "Sol medium / 01a18f95-cb86-76f1-8ed0-0ad1dba517a5",
+        "父任务"
+      ],
+      "note": "有作者交付/布局结果，未找到最终字节独立代码签字。",
+      "files": [
+        "docs/collab/outbox/20261031-deepseek-k1-panel.md",
+        "docs/collab/outbox/20261031-k1-panel-delivery.md",
+        "gui/g4usim_gui/widgets/experiment_panel.py",
+        "gui/smoke_tests/smoke_k1_panel.py"
+      ],
+      "review_ids": [],
+      "exact_limited_files": 0,
+      "functional_only_files": 0,
+      "no_exact_binding_files": 4
+    },
+    {
+      "id": "gui",
+      "label": "GUI接线/历史显示",
+      "authors": [
+        "CLI-GUI Sol medium / 01a18f96-d294-7693-bc4b-b3f9f9fd1920",
+        "Franklin",
+        "父任务"
+      ],
+      "note": "历史显示五产品有精确窄签字；其余适配manifest不自动成为独立复审。",
+      "files": [
+        "gui/g4usim_gui/core/i18n.py",
+        "gui/g4usim_gui/main_window.py",
+        "gui/g4usim_gui/widgets/run_page.py",
+        "gui/g4usim_gui/window/experiment.py",
+        "gui/g4usim_gui/window/run.py",
+        "gui/g4usim_gui/window/shell.py",
+        "gui/g4usim_gui/window/transactions.py",
+        "gui/smoke_tests/smoke_f4_entrypoints.py",
+        "gui/smoke_tests/smoke_f4_inspect_backend.py",
+        "gui/smoke_tests/smoke_k1_history_scope.py",
+        "gui/smoke_tests/smoke_new_simulation_wizard.py",
+        "gui/smoke_tests/smoke_project_snapshot_restore.py",
+        "gui/smoke_tests/smoke_q1_public_paths.py",
+        "gui/smoke_tests/smoke_run_input_modes.py"
+      ],
+      "review_ids": [
+        "history",
+        "registration"
+      ],
+      "exact_limited_files": 6,
+      "functional_only_files": 0,
+      "no_exact_binding_files": 8
+    },
+    {
+      "id": "cli",
+      "label": "CLI产品/测试fixture",
+      "authors": [
+        "CLI Sol medium",
+        "父任务"
+      ],
+      "note": "Tesla只独立审父test-only两文件，不扩张到产品全部字节。",
+      "files": [
+        "gui/g4usim_gui/experiment_cli.py",
+        "scripts/test_k1_cli.py"
+      ],
+      "review_ids": [
+        "cli_prior",
+        "parent_tests"
+      ],
+      "exact_limited_files": 1,
+      "functional_only_files": 0,
+      "no_exact_binding_files": 1
+    },
+    {
+      "id": "legacy",
+      "label": "首轮三个旧smoke",
+      "authors": [
+        "Sol medium / 01a18ff8-0672-7a33-ba81-7ec0b0ee6b00",
+        "父任务"
+      ],
+      "note": "保留后续trajectory平台恢复的独立登记审查。",
+      "files": [
+        "gui/smoke_tests/smoke_backend_geometry.py",
+        "gui/smoke_tests/smoke_f5_recovery_process.py",
+        "gui/smoke_tests/smoke_trajectory_view.py"
+      ],
+      "review_ids": [
+        "label_final",
+        "registration"
+      ],
+      "exact_limited_files": 3,
+      "functional_only_files": 0,
+      "no_exact_binding_files": 0
+    },
+    {
+      "id": "tesla",
+      "label": "Tesla三项CI3 smoke",
+      "authors": [
+        "原CLI适配写者",
+        "Tesla / 01a1905b-a3ae-7d73-8cd2-652b27fd569d",
+        "父任务"
+      ],
+      "note": "本图不自审，仅引用父/其他独立审查者。",
+      "files": [
+        "gui/smoke_tests/smoke_duplicate_history_cli.py",
+        "gui/smoke_tests/smoke_f5_editor_history.py",
+        "gui/smoke_tests/smoke_k1_workflow.py"
+      ],
+      "review_ids": [
+        "other_three",
+        "parent_three"
+      ],
+      "exact_limited_files": 3,
+      "functional_only_files": 0,
+      "no_exact_binding_files": 0
+    }
+  ],
+  "files": [
+    {
+      "path": ".github/workflows/linux-geant4.yml",
+      "module": "ci",
+      "authors": [
+        "父任务"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 1,
+      "deletions": 1,
+      "change_type": "M",
+      "final_git_blob_oid": "520268093937a5b685db1b10ce9cbbcac8914b6d",
+      "final_git_sha256": "05c5d3eda53a666151b3640ebd3fc4b561b80aa888fcd929356f8a672ababc42",
+      "final_worktree_sha256": "d1c7132544f20964e5094e2bf32fc35bb99ff9902e0966c867e3a3e5d0dae052",
+      "worktree_raw_matches_commit": false,
+      "only_CRLF_difference": true,
+      "author_manifests": [
+        {
+          "path": "out/collab/k1-implementation-file-manifest.json",
+          "recorded_sha256": "d1c7132544f20964e5094e2bf32fc35bb99ff9902e0966c867e3a3e5d0dae052",
+          "matches_final_raw": true,
+          "independent_review": false
+        }
+      ],
+      "review_chain": [],
+      "last_reviewed_version_binding": null,
+      "exact_limited_review_ids": [],
+      "exact_functional_review_ids": [],
+      "status": "no_exact_final_binding_found",
+      "uncovered_delta_or_scope": [
+        "所查记录未找到绑定最终字节的独立限定代码/普通功能签字；不等于从未有人阅读。"
+      ],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": ".github/workflows/m0-static-gui.yml",
+      "module": "ci",
+      "authors": [
+        "父任务"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 1,
+      "deletions": 1,
+      "change_type": "M",
+      "final_git_blob_oid": "a275e1c78dd22585954c95911a9d595a2b0b4dc1",
+      "final_git_sha256": "ecc4edde064951c161b4b01e46d5ee6a568c854877c27acf90342ebe2e0fe391",
+      "final_worktree_sha256": "ecc4edde064951c161b4b01e46d5ee6a568c854877c27acf90342ebe2e0fe391",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [
+        {
+          "path": "out/collab/k1-implementation-file-manifest.json",
+          "recorded_sha256": "ecc4edde064951c161b4b01e46d5ee6a568c854877c27acf90342ebe2e0fe391",
+          "matches_final_raw": true,
+          "independent_review": false
+        }
+      ],
+      "review_chain": [],
+      "last_reviewed_version_binding": null,
+      "exact_limited_review_ids": [],
+      "exact_functional_review_ids": [],
+      "status": "no_exact_final_binding_found",
+      "uncovered_delta_or_scope": [
+        "所查记录未找到绑定最终字节的独立限定代码/普通功能签字；不等于从未有人阅读。"
+      ],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "AGENTS.md",
+      "module": "docs",
+      "authors": [
+        "父任务"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 6,
+      "deletions": 0,
+      "change_type": "M",
+      "final_git_blob_oid": "eaf72d4b6e04215aae00a4d9cba031a1890ee018",
+      "final_git_sha256": "11890a5bf60645e20163cd816374fd85587d5bfa9ccb3325d0e70b94150194a7",
+      "final_worktree_sha256": "11890a5bf60645e20163cd816374fd85587d5bfa9ccb3325d0e70b94150194a7",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [
+        {
+          "path": "out/collab/k1-implementation-file-manifest.json",
+          "recorded_sha256": "11619cd5f429cdb8dc8d9a677c298b873708476a31fb1ac3eb7aaeb33d2eeb7f",
+          "matches_final_raw": false,
+          "independent_review": false
+        }
+      ],
+      "review_chain": [
+        {
+          "review_id": "contract",
+          "reviewed_sha256": null,
+          "note": null,
+          "review_path": "out/collab/k1-contract-independent.md",
+          "reviewer": "独立审查Sol medium",
+          "kind": "design_only",
+          "scope": "静态契约12项，非实现验收",
+          "final_worktree_bytes_match": null,
+          "final_git_blob_bytes_match": null,
+          "matching_commits": []
+        }
+      ],
+      "last_reviewed_version_binding": {
+        "review_id": "contract",
+        "reviewed_sha256": null,
+        "note": null,
+        "review_path": "out/collab/k1-contract-independent.md",
+        "reviewer": "独立审查Sol medium",
+        "kind": "design_only",
+        "scope": "静态契约12项，非实现验收",
+        "final_worktree_bytes_match": null,
+        "final_git_blob_bytes_match": null,
+        "matching_commits": []
+      },
+      "exact_limited_review_ids": [],
+      "exact_functional_review_ids": [],
+      "status": "no_exact_final_binding_found",
+      "uncovered_delta_or_scope": [
+        "所查记录未找到绑定最终字节的独立限定代码/普通功能签字；不等于从未有人阅读。"
+      ],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "CMakeLists.txt",
+      "module": "cpp",
+      "authors": [
+        "父任务"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 2,
+      "deletions": 0,
+      "change_type": "M",
+      "final_git_blob_oid": "8c813ead2c80ec19e79c8e90a05477c70e4b6511",
+      "final_git_sha256": "0f95fd4fdca12a72b67a669b9abdb9bcc94c2fd1e69d211938d668d4ef02dde7",
+      "final_worktree_sha256": "0f95fd4fdca12a72b67a669b9abdb9bcc94c2fd1e69d211938d668d4ef02dde7",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [],
+      "review_chain": [
+        {
+          "review_id": "cpp",
+          "reviewed_sha256": "0f95fd4fdca12a72b67a669b9abdb9bcc94c2fd1e69d211938d668d4ef02dde7",
+          "note": null,
+          "review_path": "out/collab/k1-cpp-launch-portability-independent.md",
+          "reviewer": "首轮smoke写者（未写本次被审五文件）",
+          "kind": "independent_limited_code_review",
+          "scope": "末尾五文件SHA的可移植性限定签字",
+          "final_worktree_bytes_match": true,
+          "final_git_blob_bytes_match": true,
+          "matching_commits": [
+            "c644bb1acc67658d2ff61fae695340f02ac58503",
+            "11c92d361369cda4b2412451ff2841eff940f810",
+            "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+          ]
+        }
+      ],
+      "last_reviewed_version_binding": {
+        "review_id": "cpp",
+        "reviewed_sha256": "0f95fd4fdca12a72b67a669b9abdb9bcc94c2fd1e69d211938d668d4ef02dde7",
+        "note": null,
+        "review_path": "out/collab/k1-cpp-launch-portability-independent.md",
+        "reviewer": "首轮smoke写者（未写本次被审五文件）",
+        "kind": "independent_limited_code_review",
+        "scope": "末尾五文件SHA的可移植性限定签字",
+        "final_worktree_bytes_match": true,
+        "final_git_blob_bytes_match": true,
+        "matching_commits": [
+          "c644bb1acc67658d2ff61fae695340f02ac58503",
+          "11c92d361369cda4b2412451ff2841eff940f810",
+          "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+        ]
+      },
+      "exact_limited_review_ids": [
+        "cpp"
+      ],
+      "exact_functional_review_ids": [],
+      "status": "limited_review_exact_bytes",
+      "uncovered_delta_or_scope": [],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "STATUS.md",
+      "module": "docs",
+      "authors": [
+        "父任务"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 2,
+      "deletions": 0,
+      "change_type": "M",
+      "final_git_blob_oid": "a0e25638dc3b5f517b1c9042e15c28e5b29d6fba",
+      "final_git_sha256": "53f7f32dc48975025ef0069ddecc353780702a35c46cbefae14c8d064b514a2c",
+      "final_worktree_sha256": "53f7f32dc48975025ef0069ddecc353780702a35c46cbefae14c8d064b514a2c",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [
+        {
+          "path": "out/collab/k1-implementation-file-manifest.json",
+          "recorded_sha256": "b23334fd7cfac454bdf78df9fbae891eb921cc09867584a4dc3fbe4bb84b9d18",
+          "matches_final_raw": false,
+          "independent_review": false
+        }
+      ],
+      "review_chain": [
+        {
+          "review_id": "contract",
+          "reviewed_sha256": null,
+          "note": null,
+          "review_path": "out/collab/k1-contract-independent.md",
+          "reviewer": "独立审查Sol medium",
+          "kind": "design_only",
+          "scope": "静态契约12项，非实现验收",
+          "final_worktree_bytes_match": null,
+          "final_git_blob_bytes_match": null,
+          "matching_commits": []
+        }
+      ],
+      "last_reviewed_version_binding": {
+        "review_id": "contract",
+        "reviewed_sha256": null,
+        "note": null,
+        "review_path": "out/collab/k1-contract-independent.md",
+        "reviewer": "独立审查Sol medium",
+        "kind": "design_only",
+        "scope": "静态契约12项，非实现验收",
+        "final_worktree_bytes_match": null,
+        "final_git_blob_bytes_match": null,
+        "matching_commits": []
+      },
+      "exact_limited_review_ids": [],
+      "exact_functional_review_ids": [],
+      "status": "no_exact_final_binding_found",
+      "uncovered_delta_or_scope": [
+        "所查记录未找到绑定最终字节的独立限定代码/普通功能签字；不等于从未有人阅读。"
+      ],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "cmake/WindowsRuntime.cmake",
+      "module": "cpp",
+      "authors": [
+        "父任务"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 18,
+      "deletions": 0,
+      "change_type": "A",
+      "final_git_blob_oid": "f46c8528faa9016be8e62cf6bc8b155d23ada1fa",
+      "final_git_sha256": "48ea39aca32bfd60d1237e8ad05215499ee70735c1a5c86d50bbcc86411c4659",
+      "final_worktree_sha256": "48ea39aca32bfd60d1237e8ad05215499ee70735c1a5c86d50bbcc86411c4659",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [],
+      "review_chain": [
+        {
+          "review_id": "cpp",
+          "reviewed_sha256": "48ea39aca32bfd60d1237e8ad05215499ee70735c1a5c86d50bbcc86411c4659",
+          "note": null,
+          "review_path": "out/collab/k1-cpp-launch-portability-independent.md",
+          "reviewer": "首轮smoke写者（未写本次被审五文件）",
+          "kind": "independent_limited_code_review",
+          "scope": "末尾五文件SHA的可移植性限定签字",
+          "final_worktree_bytes_match": true,
+          "final_git_blob_bytes_match": true,
+          "matching_commits": [
+            "c644bb1acc67658d2ff61fae695340f02ac58503",
+            "11c92d361369cda4b2412451ff2841eff940f810",
+            "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+          ]
+        }
+      ],
+      "last_reviewed_version_binding": {
+        "review_id": "cpp",
+        "reviewed_sha256": "48ea39aca32bfd60d1237e8ad05215499ee70735c1a5c86d50bbcc86411c4659",
+        "note": null,
+        "review_path": "out/collab/k1-cpp-launch-portability-independent.md",
+        "reviewer": "首轮smoke写者（未写本次被审五文件）",
+        "kind": "independent_limited_code_review",
+        "scope": "末尾五文件SHA的可移植性限定签字",
+        "final_worktree_bytes_match": true,
+        "final_git_blob_bytes_match": true,
+        "matching_commits": [
+          "c644bb1acc67658d2ff61fae695340f02ac58503",
+          "11c92d361369cda4b2412451ff2841eff940f810",
+          "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+        ]
+      },
+      "exact_limited_review_ids": [
+        "cpp"
+      ],
+      "exact_functional_review_ids": [],
+      "status": "limited_review_exact_bytes",
+      "uncovered_delta_or_scope": [],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "docs/ROADMAP.md",
+      "module": "docs",
+      "authors": [
+        "父任务"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 1,
+      "deletions": 1,
+      "change_type": "M",
+      "final_git_blob_oid": "6c198136813fbd6ed589af3eeb165a0ac425aab2",
+      "final_git_sha256": "8b9699412f264d679f86049543cf6872f6f7223ec6d291cf95730f0bc490a866",
+      "final_worktree_sha256": "8b9699412f264d679f86049543cf6872f6f7223ec6d291cf95730f0bc490a866",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [
+        {
+          "path": "out/collab/k1-implementation-file-manifest.json",
+          "recorded_sha256": "8b9699412f264d679f86049543cf6872f6f7223ec6d291cf95730f0bc490a866",
+          "matches_final_raw": true,
+          "independent_review": false
+        }
+      ],
+      "review_chain": [
+        {
+          "review_id": "contract",
+          "reviewed_sha256": null,
+          "note": null,
+          "review_path": "out/collab/k1-contract-independent.md",
+          "reviewer": "独立审查Sol medium",
+          "kind": "design_only",
+          "scope": "静态契约12项，非实现验收",
+          "final_worktree_bytes_match": null,
+          "final_git_blob_bytes_match": null,
+          "matching_commits": []
+        }
+      ],
+      "last_reviewed_version_binding": {
+        "review_id": "contract",
+        "reviewed_sha256": null,
+        "note": null,
+        "review_path": "out/collab/k1-contract-independent.md",
+        "reviewer": "独立审查Sol medium",
+        "kind": "design_only",
+        "scope": "静态契约12项，非实现验收",
+        "final_worktree_bytes_match": null,
+        "final_git_blob_bytes_match": null,
+        "matching_commits": []
+      },
+      "exact_limited_review_ids": [],
+      "exact_functional_review_ids": [],
+      "status": "no_exact_final_binding_found",
+      "uncovered_delta_or_scope": [
+        "所查记录未找到绑定最终字节的独立限定代码/普通功能签字；不等于从未有人阅读。"
+      ],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "docs/agent-history.md",
+      "module": "docs",
+      "authors": [
+        "父任务"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 53,
+      "deletions": 0,
+      "change_type": "M",
+      "final_git_blob_oid": "d687bb3d689c2ea244c8d82e925897bd7a924dec",
+      "final_git_sha256": "6c3d1be4d91b05200772a5bd31d86fd8c5bbba16aed4f9835fc6a63e067ba2ce",
+      "final_worktree_sha256": "6c3d1be4d91b05200772a5bd31d86fd8c5bbba16aed4f9835fc6a63e067ba2ce",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [
+        {
+          "path": "out/collab/k1-implementation-file-manifest.json",
+          "recorded_sha256": "b22379386b6d3e97e4f45e4e86c156fc03894ed8e89011a4423c42183747beb5",
+          "matches_final_raw": false,
+          "independent_review": false
+        }
+      ],
+      "review_chain": [
+        {
+          "review_id": "contract",
+          "reviewed_sha256": null,
+          "note": null,
+          "review_path": "out/collab/k1-contract-independent.md",
+          "reviewer": "独立审查Sol medium",
+          "kind": "design_only",
+          "scope": "静态契约12项，非实现验收",
+          "final_worktree_bytes_match": null,
+          "final_git_blob_bytes_match": null,
+          "matching_commits": []
+        }
+      ],
+      "last_reviewed_version_binding": {
+        "review_id": "contract",
+        "reviewed_sha256": null,
+        "note": null,
+        "review_path": "out/collab/k1-contract-independent.md",
+        "reviewer": "独立审查Sol medium",
+        "kind": "design_only",
+        "scope": "静态契约12项，非实现验收",
+        "final_worktree_bytes_match": null,
+        "final_git_blob_bytes_match": null,
+        "matching_commits": []
+      },
+      "exact_limited_review_ids": [],
+      "exact_functional_review_ids": [],
+      "status": "no_exact_final_binding_found",
+      "uncovered_delta_or_scope": [
+        "所查记录未找到绑定最终字节的独立限定代码/普通功能签字；不等于从未有人阅读。"
+      ],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "docs/collab/inbox/20261031-k1-execution.md",
+      "module": "docs",
+      "authors": [
+        "父任务"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 34,
+      "deletions": 0,
+      "change_type": "A",
+      "final_git_blob_oid": "e1186f384ed3b081959e0a600d008a66ac533a90",
+      "final_git_sha256": "b9fd310f6bcbbfc6acb902dd375aa564f48c15a721ef5759e8e9337d3f1c1e7b",
+      "final_worktree_sha256": "b9fd310f6bcbbfc6acb902dd375aa564f48c15a721ef5759e8e9337d3f1c1e7b",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [
+        {
+          "path": "out/collab/k1-implementation-file-manifest.json",
+          "recorded_sha256": "b9fd310f6bcbbfc6acb902dd375aa564f48c15a721ef5759e8e9337d3f1c1e7b",
+          "matches_final_raw": true,
+          "independent_review": false
+        }
+      ],
+      "review_chain": [
+        {
+          "review_id": "contract",
+          "reviewed_sha256": null,
+          "note": null,
+          "review_path": "out/collab/k1-contract-independent.md",
+          "reviewer": "独立审查Sol medium",
+          "kind": "design_only",
+          "scope": "静态契约12项，非实现验收",
+          "final_worktree_bytes_match": null,
+          "final_git_blob_bytes_match": null,
+          "matching_commits": []
+        }
+      ],
+      "last_reviewed_version_binding": {
+        "review_id": "contract",
+        "reviewed_sha256": null,
+        "note": null,
+        "review_path": "out/collab/k1-contract-independent.md",
+        "reviewer": "独立审查Sol medium",
+        "kind": "design_only",
+        "scope": "静态契约12项，非实现验收",
+        "final_worktree_bytes_match": null,
+        "final_git_blob_bytes_match": null,
+        "matching_commits": []
+      },
+      "exact_limited_review_ids": [],
+      "exact_functional_review_ids": [],
+      "status": "no_exact_final_binding_found",
+      "uncovered_delta_or_scope": [
+        "所查记录未找到绑定最终字节的独立限定代码/普通功能签字；不等于从未有人阅读。"
+      ],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "docs/collab/outbox/20261031-deepseek-k1-panel.md",
+      "module": "panel",
+      "authors": [
+        "DeepSeek flash初稿",
+        "Sol medium / 01a18f95-cb86-76f1-8ed0-0ad1dba517a5",
+        "父任务"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 13,
+      "deletions": 0,
+      "change_type": "A",
+      "final_git_blob_oid": "c5107b4bd312e81e67b5dfbaef6ff5bc87b13912",
+      "final_git_sha256": "fcd26f137da11e8ca69391aed80e2a08e2d1528fa9b488b3b1aef271c84a8e86",
+      "final_worktree_sha256": "fcd26f137da11e8ca69391aed80e2a08e2d1528fa9b488b3b1aef271c84a8e86",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [
+        {
+          "path": "out/collab/k1-implementation-file-manifest.json",
+          "recorded_sha256": "69a2777e3b36bdec0c721fc5e18bb3480c26adc81b79533abdbaf71786fafd34",
+          "matches_final_raw": false,
+          "independent_review": false
+        }
+      ],
+      "review_chain": [],
+      "last_reviewed_version_binding": null,
+      "exact_limited_review_ids": [],
+      "exact_functional_review_ids": [],
+      "status": "no_exact_final_binding_found",
+      "uncovered_delta_or_scope": [
+        "所查记录未找到绑定最终字节的独立限定代码/普通功能签字；不等于从未有人阅读。"
+      ],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "docs/collab/outbox/20261031-k1-panel-delivery.md",
+      "module": "panel",
+      "authors": [
+        "DeepSeek flash初稿",
+        "Sol medium / 01a18f95-cb86-76f1-8ed0-0ad1dba517a5",
+        "父任务"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 123,
+      "deletions": 0,
+      "change_type": "A",
+      "final_git_blob_oid": "f46fe308313b8b5d5fcb98561b470b0fea62fcda",
+      "final_git_sha256": "ecc58ba86b3505d7ac83badae2817f914c4d249d0fc34a0bd4a25c214e089aba",
+      "final_worktree_sha256": "ecc58ba86b3505d7ac83badae2817f914c4d249d0fc34a0bd4a25c214e089aba",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [],
+      "review_chain": [],
+      "last_reviewed_version_binding": null,
+      "exact_limited_review_ids": [],
+      "exact_functional_review_ids": [],
+      "status": "no_exact_final_binding_found",
+      "uncovered_delta_or_scope": [
+        "所查记录未找到绑定最终字节的独立限定代码/普通功能签字；不等于从未有人阅读。"
+      ],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "docs/功能支持矩阵.md",
+      "module": "docs",
+      "authors": [
+        "父任务"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 2,
+      "deletions": 0,
+      "change_type": "M",
+      "final_git_blob_oid": "60b8246f604f458493e80ffbf6ad5de72ef5f5c9",
+      "final_git_sha256": "8142231af8dea8343c4b05b20036dc8bf5b1f808be6206593138dc9d6737d789",
+      "final_worktree_sha256": "8142231af8dea8343c4b05b20036dc8bf5b1f808be6206593138dc9d6737d789",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [
+        {
+          "path": "out/collab/k1-implementation-file-manifest.json",
+          "recorded_sha256": "8142231af8dea8343c4b05b20036dc8bf5b1f808be6206593138dc9d6737d789",
+          "matches_final_raw": true,
+          "independent_review": false
+        }
+      ],
+      "review_chain": [
+        {
+          "review_id": "contract",
+          "reviewed_sha256": null,
+          "note": null,
+          "review_path": "out/collab/k1-contract-independent.md",
+          "reviewer": "独立审查Sol medium",
+          "kind": "design_only",
+          "scope": "静态契约12项，非实现验收",
+          "final_worktree_bytes_match": null,
+          "final_git_blob_bytes_match": null,
+          "matching_commits": []
+        }
+      ],
+      "last_reviewed_version_binding": {
+        "review_id": "contract",
+        "reviewed_sha256": null,
+        "note": null,
+        "review_path": "out/collab/k1-contract-independent.md",
+        "reviewer": "独立审查Sol medium",
+        "kind": "design_only",
+        "scope": "静态契约12项，非实现验收",
+        "final_worktree_bytes_match": null,
+        "final_git_blob_bytes_match": null,
+        "matching_commits": []
+      },
+      "exact_limited_review_ids": [],
+      "exact_functional_review_ids": [],
+      "status": "no_exact_final_binding_found",
+      "uncovered_delta_or_scope": [
+        "所查记录未找到绑定最终字节的独立限定代码/普通功能签字；不等于从未有人阅读。"
+      ],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "docs/可信实验工作流.md",
+      "module": "docs",
+      "authors": [
+        "父任务"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 134,
+      "deletions": 0,
+      "change_type": "A",
+      "final_git_blob_oid": "507047e634fcae82cf6974b5e176ff8a192a745e",
+      "final_git_sha256": "56a2a7472bf224253fa6d3c77833ba5dd4f256efd8cfaf3e470a860e4d1a3ec4",
+      "final_worktree_sha256": "56a2a7472bf224253fa6d3c77833ba5dd4f256efd8cfaf3e470a860e4d1a3ec4",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [
+        {
+          "path": "out/collab/k1-implementation-file-manifest.json",
+          "recorded_sha256": "2fcdf83696221972370ba27d2d8ae6575b188ce38417f183ae4ad804f668f9f9",
+          "matches_final_raw": false,
+          "independent_review": false
+        },
+        {
+          "path": "out/collab/k1-adapters-final-manifest.json",
+          "recorded_sha256": "d87b1d0a16c4eaee9210913df8e12939aa176ffbbe812c4f6eb1823ea6c89ba1",
+          "matches_final_raw": false,
+          "independent_review": false
+        }
+      ],
+      "review_chain": [
+        {
+          "review_id": "contract",
+          "reviewed_sha256": null,
+          "note": null,
+          "review_path": "out/collab/k1-contract-independent.md",
+          "reviewer": "独立审查Sol medium",
+          "kind": "design_only",
+          "scope": "静态契约12项，非实现验收",
+          "final_worktree_bytes_match": null,
+          "final_git_blob_bytes_match": null,
+          "matching_commits": []
+        }
+      ],
+      "last_reviewed_version_binding": {
+        "review_id": "contract",
+        "reviewed_sha256": null,
+        "note": null,
+        "review_path": "out/collab/k1-contract-independent.md",
+        "reviewer": "独立审查Sol medium",
+        "kind": "design_only",
+        "scope": "静态契约12项，非实现验收",
+        "final_worktree_bytes_match": null,
+        "final_git_blob_bytes_match": null,
+        "matching_commits": []
+      },
+      "exact_limited_review_ids": [],
+      "exact_functional_review_ids": [],
+      "status": "no_exact_final_binding_found",
+      "uncovered_delta_or_scope": [
+        "所查记录未找到绑定最终字节的独立限定代码/普通功能签字；不等于从未有人阅读。"
+      ],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "docs/环境发现与诊断.md",
+      "module": "i1",
+      "authors": [
+        "I1 Sol high / 01a18f93-e780-7953-90fe-cd5b6fe40fc0",
+        "Sol medium UI续修",
+        "Bohr启动适配"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 75,
+      "deletions": 0,
+      "change_type": "A",
+      "final_git_blob_oid": "40ff5f109f6e84e58ae5d639706ad73d1de31510",
+      "final_git_sha256": "0093a2334e5e1a9cd9b873903b03173c6c0068ac4983f1f96fbe39f350345939",
+      "final_worktree_sha256": "0093a2334e5e1a9cd9b873903b03173c6c0068ac4983f1f96fbe39f350345939",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [
+        {
+          "path": "out/collab/k1-implementation-file-manifest.json",
+          "recorded_sha256": "15527a06512c9278d6f043fb999f3f4a2972f614ba4a691934072d46056b5389",
+          "matches_final_raw": false,
+          "independent_review": false
+        }
+      ],
+      "review_chain": [
+        {
+          "review_id": "i1_fix",
+          "reviewed_sha256": "f8ad9021441a6d9d55a12d333f1f054116cf14d0a7e9cac1123933f34788b986",
+          "note": null,
+          "review_path": "out/collab/k1-i1-independent.md",
+          "reviewer": "I1/核心独立审查者",
+          "kind": "independent_limited_code_review",
+          "scope": "文末两项P2修复后续审",
+          "final_worktree_bytes_match": false,
+          "final_git_blob_bytes_match": false,
+          "matching_commits": [
+            "1dc96b45b8d945fbe33877f99345dc0144808e70"
+          ],
+          "version_delta_from_this_review_to_final": {
+            "added": 5,
+            "removed": 0,
+            "hunks": [
+              "@@ -16,0 +17 @@\n",
+              "@@ -23,0 +25,4 @@\n"
+            ],
+            "scope": "version metadata only; no new logic/security review",
+            "coverage_warning": "这是该旧审查到最终的版本差异，不自动等于未覆盖；必须合看后续限定review链。"
+          }
+        }
+      ],
+      "last_reviewed_version_binding": {
+        "review_id": "i1_fix",
+        "reviewed_sha256": "f8ad9021441a6d9d55a12d333f1f054116cf14d0a7e9cac1123933f34788b986",
+        "note": null,
+        "review_path": "out/collab/k1-i1-independent.md",
+        "reviewer": "I1/核心独立审查者",
+        "kind": "independent_limited_code_review",
+        "scope": "文末两项P2修复后续审",
+        "final_worktree_bytes_match": false,
+        "final_git_blob_bytes_match": false,
+        "matching_commits": [
+          "1dc96b45b8d945fbe33877f99345dc0144808e70"
+        ],
+        "uncovered_version_delta_metadata": {
+          "added": 5,
+          "removed": 0,
+          "hunks": [
+            "@@ -16,0 +17 @@\n",
+            "@@ -23,0 +25,4 @@\n"
+          ],
+          "scope": "version metadata only; no new logic/security review"
+        }
+      },
+      "exact_limited_review_ids": [],
+      "exact_functional_review_ids": [],
+      "status": "no_exact_final_binding_found",
+      "uncovered_delta_or_scope": [
+        "所查记录未找到绑定最终字节的独立限定代码/普通功能签字；不等于从未有人阅读。"
+      ],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "gui/AGENTS.md",
+      "module": "docs",
+      "authors": [
+        "父任务"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 6,
+      "deletions": 0,
+      "change_type": "M",
+      "final_git_blob_oid": "b00c535dc815f93f949a1544cb81f6586aa9aa20",
+      "final_git_sha256": "c327b2b17c421f57237841c5707d665ec2e85dc7e3c362b061c75b5120314c80",
+      "final_worktree_sha256": "c327b2b17c421f57237841c5707d665ec2e85dc7e3c362b061c75b5120314c80",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [
+        {
+          "path": "out/collab/k1-implementation-file-manifest.json",
+          "recorded_sha256": "d93acf2d3945ae2ab81b8770a51e9e2d2631ab01690e8831cfd34e5d9f80c515",
+          "matches_final_raw": false,
+          "independent_review": false
+        }
+      ],
+      "review_chain": [
+        {
+          "review_id": "contract",
+          "reviewed_sha256": null,
+          "note": null,
+          "review_path": "out/collab/k1-contract-independent.md",
+          "reviewer": "独立审查Sol medium",
+          "kind": "design_only",
+          "scope": "静态契约12项，非实现验收",
+          "final_worktree_bytes_match": null,
+          "final_git_blob_bytes_match": null,
+          "matching_commits": []
+        }
+      ],
+      "last_reviewed_version_binding": {
+        "review_id": "contract",
+        "reviewed_sha256": null,
+        "note": null,
+        "review_path": "out/collab/k1-contract-independent.md",
+        "reviewer": "独立审查Sol medium",
+        "kind": "design_only",
+        "scope": "静态契约12项，非实现验收",
+        "final_worktree_bytes_match": null,
+        "final_git_blob_bytes_match": null,
+        "matching_commits": []
+      },
+      "exact_limited_review_ids": [],
+      "exact_functional_review_ids": [],
+      "status": "no_exact_final_binding_found",
+      "uncovered_delta_or_scope": [
+        "所查记录未找到绑定最终字节的独立限定代码/普通功能签字；不等于从未有人阅读。"
+      ],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "gui/g4usim_gui/core/backend_launch.py",
+      "module": "launch",
+      "authors": [
+        "Bohr(workflow Sol high)",
+        "父任务"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 143,
+      "deletions": 0,
+      "change_type": "A",
+      "final_git_blob_oid": "23b0198de97919e7387f0dd7bc75517c496c7b3a",
+      "final_git_sha256": "9ae08264564111987a3627ec255706b9c419a2e58046732b35e49ea746d3e102",
+      "final_worktree_sha256": "9ae08264564111987a3627ec255706b9c419a2e58046732b35e49ea746d3e102",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [],
+      "review_chain": [
+        {
+          "review_id": "launch_applied",
+          "reviewed_sha256": "650d7fa049914a11132fe9b52b331eb41683181de2cd4206ccf265ed7a29b479",
+          "note": null,
+          "review_path": "out/collab/k1-python-launch-independent-review.md",
+          "reviewer": "独立启动审查Sol medium",
+          "kind": "independent_limited_code_review",
+          "scope": "末尾七文件限定观察；helper P2由后续最终增补关闭",
+          "final_worktree_bytes_match": false,
+          "final_git_blob_bytes_match": false,
+          "matching_commits": [],
+          "version_delta_from_this_review_to_final": {
+            "unknown": "reviewed SHA is not a committed blob in this range; no snapshot guessed",
+            "coverage_warning": "这是该旧审查到最终的版本差异，不自动等于未覆盖；必须合看后续限定review链。"
+          }
+        },
+        {
+          "review_id": "label_final",
+          "reviewed_sha256": "9ae08264564111987a3627ec255706b9c419a2e58046732b35e49ea746d3e102",
+          "note": null,
+          "review_path": "out/collab/k1-final-adapter-test-diff-independent.md",
+          "reviewer": "独立启动/测试审查Sol medium",
+          "kind": "independent_limited_code_review",
+          "scope": "明确最终label P2签字及旧smoke/I1/bundle测试兼容窄diff，不含bundle广泛边界",
+          "final_worktree_bytes_match": true,
+          "final_git_blob_bytes_match": true,
+          "matching_commits": [
+            "c644bb1acc67658d2ff61fae695340f02ac58503",
+            "11c92d361369cda4b2412451ff2841eff940f810",
+            "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+          ]
+        }
+      ],
+      "last_reviewed_version_binding": {
+        "review_id": "label_final",
+        "reviewed_sha256": "9ae08264564111987a3627ec255706b9c419a2e58046732b35e49ea746d3e102",
+        "note": null,
+        "review_path": "out/collab/k1-final-adapter-test-diff-independent.md",
+        "reviewer": "独立启动/测试审查Sol medium",
+        "kind": "independent_limited_code_review",
+        "scope": "明确最终label P2签字及旧smoke/I1/bundle测试兼容窄diff，不含bundle广泛边界",
+        "final_worktree_bytes_match": true,
+        "final_git_blob_bytes_match": true,
+        "matching_commits": [
+          "c644bb1acc67658d2ff61fae695340f02ac58503",
+          "11c92d361369cda4b2412451ff2841eff940f810",
+          "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+        ]
+      },
+      "exact_limited_review_ids": [
+        "label_final"
+      ],
+      "exact_functional_review_ids": [],
+      "status": "limited_review_exact_bytes",
+      "uncovered_delta_or_scope": [],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "gui/g4usim_gui/core/environment_discovery.py",
+      "module": "i1",
+      "authors": [
+        "I1 Sol high / 01a18f93-e780-7953-90fe-cd5b6fe40fc0",
+        "Sol medium UI续修",
+        "Bohr启动适配"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 387,
+      "deletions": 0,
+      "change_type": "A",
+      "final_git_blob_oid": "076fa1e15acd053a1781f2d97259d5a2dfe9133b",
+      "final_git_sha256": "7ee71c78b51d00cc79a112f82f51b5e9d929dc224719fa95e8a6427baa686f91",
+      "final_worktree_sha256": "7ee71c78b51d00cc79a112f82f51b5e9d929dc224719fa95e8a6427baa686f91",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [
+        {
+          "path": "out/collab/k1-implementation-file-manifest.json",
+          "recorded_sha256": "98a2adaf4a266dd1a1b87616604eb56961c8e90ac82514a6403105c569a98a43",
+          "matches_final_raw": false,
+          "independent_review": false
+        }
+      ],
+      "review_chain": [
+        {
+          "review_id": "i1_fix",
+          "reviewed_sha256": "6e430c164d672ac68208157b3818400de225cbd7632173203fd79fae60c2da44",
+          "note": null,
+          "review_path": "out/collab/k1-i1-independent.md",
+          "reviewer": "I1/核心独立审查者",
+          "kind": "independent_limited_code_review",
+          "scope": "文末两项P2修复后续审",
+          "final_worktree_bytes_match": false,
+          "final_git_blob_bytes_match": false,
+          "matching_commits": [
+            "1dc96b45b8d945fbe33877f99345dc0144808e70"
+          ],
+          "version_delta_from_this_review_to_final": {
+            "added": 36,
+            "removed": 5,
+            "hunks": [
+              "@@ -23,0 +24 @@\n",
+              "@@ -48 +49 @@\n",
+              "@@ -52,0 +54,2 @@\n",
+              "@@ -58 +61 @@\n",
+              "@@ -96,0 +100,19 @@\n",
+              "@@ -236 +258 @@\n",
+              "@@ -265 +287,2 @@\n",
+              "@@ -276 +299,7 @@\n",
+              "@@ -291,0 +321,2 @@\n"
+            ],
+            "scope": "version metadata only; no new logic/security review",
+            "coverage_warning": "这是该旧审查到最终的版本差异，不自动等于未覆盖；必须合看后续限定review链。"
+          }
+        },
+        {
+          "review_id": "core_e5",
+          "reviewed_sha256": "98a2adaf4a266dd1a1b87616604eb56961c8e90ac82514a6403105c569a98a43",
+          "note": null,
+          "review_path": "out/collab/k1-core-independent-review.md",
+          "reviewer": "独立核心审查 / 01a18f97-f404-7fa0-89f3-b826cadd8055",
+          "kind": "independent_limited_code_review",
+          "scope": "文末e5ff800最终限定签字；bundle仅历史投影/5行版本文本小修",
+          "final_worktree_bytes_match": false,
+          "final_git_blob_bytes_match": false,
+          "matching_commits": [
+            "e5ff80009975fc9d7d783eaa0865c7c894d1975b"
+          ],
+          "version_delta_from_this_review_to_final": {
+            "added": 30,
+            "removed": 2,
+            "hunks": [
+              "@@ -23,0 +24 @@\n",
+              "@@ -98,0 +100,19 @@\n",
+              "@@ -267 +287 @@\n",
+              "@@ -279 +299,7 @@\n",
+              "@@ -294,0 +321,2 @@\n"
+            ],
+            "scope": "version metadata only; no new logic/security review",
+            "coverage_warning": "这是该旧审查到最终的版本差异，不自动等于未覆盖；必须合看后续限定review链。"
+          }
+        },
+        {
+          "review_id": "launch_applied",
+          "reviewed_sha256": "7ee71c78b51d00cc79a112f82f51b5e9d929dc224719fa95e8a6427baa686f91",
+          "note": null,
+          "review_path": "out/collab/k1-python-launch-independent-review.md",
+          "reviewer": "独立启动审查Sol medium",
+          "kind": "independent_limited_code_review",
+          "scope": "末尾七文件限定观察；helper P2由后续最终增补关闭",
+          "final_worktree_bytes_match": true,
+          "final_git_blob_bytes_match": true,
+          "matching_commits": [
+            "c644bb1acc67658d2ff61fae695340f02ac58503",
+            "11c92d361369cda4b2412451ff2841eff940f810",
+            "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+          ]
+        }
+      ],
+      "last_reviewed_version_binding": {
+        "review_id": "launch_applied",
+        "reviewed_sha256": "7ee71c78b51d00cc79a112f82f51b5e9d929dc224719fa95e8a6427baa686f91",
+        "note": null,
+        "review_path": "out/collab/k1-python-launch-independent-review.md",
+        "reviewer": "独立启动审查Sol medium",
+        "kind": "independent_limited_code_review",
+        "scope": "末尾七文件限定观察；helper P2由后续最终增补关闭",
+        "final_worktree_bytes_match": true,
+        "final_git_blob_bytes_match": true,
+        "matching_commits": [
+          "c644bb1acc67658d2ff61fae695340f02ac58503",
+          "11c92d361369cda4b2412451ff2841eff940f810",
+          "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+        ]
+      },
+      "exact_limited_review_ids": [
+        "launch_applied"
+      ],
+      "exact_functional_review_ids": [],
+      "status": "limited_review_exact_bytes",
+      "uncovered_delta_or_scope": [],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "gui/g4usim_gui/core/experiment_bundle.py",
+      "module": "bundle",
+      "authors": [
+        "原bundle Sol high / 01a18f93-ec3e-7463-a68e-fd5ccd347033",
+        "Franklin",
+        "父任务"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 886,
+      "deletions": 0,
+      "change_type": "A",
+      "final_git_blob_oid": "79219faa71002df7d698f9aa6856de7d103036e8",
+      "final_git_sha256": "5c1dff0338e80a673ba8f3427aeb7bfe1abe9d2b5315efca564310be8118385a",
+      "final_worktree_sha256": "5c1dff0338e80a673ba8f3427aeb7bfe1abe9d2b5315efca564310be8118385a",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [
+        {
+          "path": "out/collab/k1-implementation-file-manifest.json",
+          "recorded_sha256": "99426d0b368eed81399c2575f4c2a2d6119512e7021fdae566819a71cce80200",
+          "matches_final_raw": false,
+          "independent_review": false
+        }
+      ],
+      "review_chain": [
+        {
+          "review_id": "parent_bundle",
+          "reviewed_sha256": "dae1bce3323a123b4014b854c012a2fb03dea65315ec3de9ce77f9270981a44c",
+          "note": null,
+          "review_path": "out/collab/k1-parent-bundle-functional-review.json",
+          "reviewer": "父任务（非原bundle作者）",
+          "kind": "ordinary_functional_review",
+          "scope": "普通功能代码/组件，明确不是被拒独审完成",
+          "final_worktree_bytes_match": false,
+          "final_git_blob_bytes_match": false,
+          "matching_commits": [],
+          "version_delta_from_this_review_to_final": {
+            "unknown": "reviewed SHA is not a committed blob in this range; no snapshot guessed",
+            "coverage_warning": "这是该旧审查到最终的版本差异，不自动等于未覆盖；必须合看后续限定review链。"
+          }
+        },
+        {
+          "review_id": "core_e5",
+          "reviewed_sha256": "99426d0b368eed81399c2575f4c2a2d6119512e7021fdae566819a71cce80200",
+          "note": null,
+          "review_path": "out/collab/k1-core-independent-review.md",
+          "reviewer": "独立核心审查 / 01a18f97-f404-7fa0-89f3-b826cadd8055",
+          "kind": "independent_limited_code_review",
+          "scope": "文末e5ff800最终限定签字；bundle仅历史投影/5行版本文本小修",
+          "final_worktree_bytes_match": false,
+          "final_git_blob_bytes_match": false,
+          "matching_commits": [
+            "e5ff80009975fc9d7d783eaa0865c7c894d1975b",
+            "c644bb1acc67658d2ff61fae695340f02ac58503",
+            "11c92d361369cda4b2412451ff2841eff940f810"
+          ],
+          "version_delta_from_this_review_to_final": {
+            "added": 28,
+            "removed": 1,
+            "hunks": [
+              "@@ -382,0 +383,11 @@\n",
+              "@@ -447,0 +459,14 @@\n",
+              "@@ -718 +743,3 @@\n"
+            ],
+            "scope": "version metadata only; no new logic/security review",
+            "coverage_warning": "这是该旧审查到最终的版本差异，不自动等于未覆盖；必须合看后续限定review链。"
+          }
+        },
+        {
+          "review_id": "parent_relocation",
+          "reviewed_sha256": "5c1dff0338e80a673ba8f3427aeb7bfe1abe9d2b5315efca564310be8118385a",
+          "note": null,
+          "review_path": "out/collab/k1-parent-relocation-functional-review.json",
+          "reviewer": "父任务（非Franklin实现）",
+          "kind": "ordinary_functional_review",
+          "scope": "仅raw-draft搬移/正常export路径身份及两新测试质量；非资源安全签字",
+          "final_worktree_bytes_match": true,
+          "final_git_blob_bytes_match": true,
+          "matching_commits": [
+            "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+          ]
+        }
+      ],
+      "last_reviewed_version_binding": {
+        "review_id": "parent_relocation",
+        "reviewed_sha256": "5c1dff0338e80a673ba8f3427aeb7bfe1abe9d2b5315efca564310be8118385a",
+        "note": null,
+        "review_path": "out/collab/k1-parent-relocation-functional-review.json",
+        "reviewer": "父任务（非Franklin实现）",
+        "kind": "ordinary_functional_review",
+        "scope": "仅raw-draft搬移/正常export路径身份及两新测试质量；非资源安全签字",
+        "final_worktree_bytes_match": true,
+        "final_git_blob_bytes_match": true,
+        "matching_commits": [
+          "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+        ]
+      },
+      "exact_limited_review_ids": [],
+      "exact_functional_review_ids": [
+        "parent_relocation"
+      ],
+      "status": "ordinary_functional_scope_only",
+      "uncovered_delta_or_scope": [
+        "最终5c普通功能匹配不补Plato/Bohr被拒资源边界复审/late-reparse独立终签缺口。"
+      ],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "gui/g4usim_gui/core/experiment_identity.py",
+      "module": "workflow",
+      "authors": [
+        "Bohr / 01a18f93-ee1e-71b2-8816-4904a12efe51"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 153,
+      "deletions": 0,
+      "change_type": "A",
+      "final_git_blob_oid": "85e4329f103efaf967a113dbd5ac159a4ebd665e",
+      "final_git_sha256": "b982093fdd9d19ce9a52a13f59094169c8bbf03e0acb1b4bf3c57a2e6a91442e",
+      "final_worktree_sha256": "b982093fdd9d19ce9a52a13f59094169c8bbf03e0acb1b4bf3c57a2e6a91442e",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [
+        {
+          "path": "out/collab/k1-implementation-file-manifest.json",
+          "recorded_sha256": "b982093fdd9d19ce9a52a13f59094169c8bbf03e0acb1b4bf3c57a2e6a91442e",
+          "matches_final_raw": true,
+          "independent_review": false
+        }
+      ],
+      "review_chain": [
+        {
+          "review_id": "core_e5",
+          "reviewed_sha256": "b982093fdd9d19ce9a52a13f59094169c8bbf03e0acb1b4bf3c57a2e6a91442e",
+          "note": null,
+          "review_path": "out/collab/k1-core-independent-review.md",
+          "reviewer": "独立核心审查 / 01a18f97-f404-7fa0-89f3-b826cadd8055",
+          "kind": "independent_limited_code_review",
+          "scope": "文末e5ff800最终限定签字；bundle仅历史投影/5行版本文本小修",
+          "final_worktree_bytes_match": true,
+          "final_git_blob_bytes_match": true,
+          "matching_commits": [
+            "e5ff80009975fc9d7d783eaa0865c7c894d1975b",
+            "c644bb1acc67658d2ff61fae695340f02ac58503",
+            "11c92d361369cda4b2412451ff2841eff940f810",
+            "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+          ]
+        }
+      ],
+      "last_reviewed_version_binding": {
+        "review_id": "core_e5",
+        "reviewed_sha256": "b982093fdd9d19ce9a52a13f59094169c8bbf03e0acb1b4bf3c57a2e6a91442e",
+        "note": null,
+        "review_path": "out/collab/k1-core-independent-review.md",
+        "reviewer": "独立核心审查 / 01a18f97-f404-7fa0-89f3-b826cadd8055",
+        "kind": "independent_limited_code_review",
+        "scope": "文末e5ff800最终限定签字；bundle仅历史投影/5行版本文本小修",
+        "final_worktree_bytes_match": true,
+        "final_git_blob_bytes_match": true,
+        "matching_commits": [
+          "e5ff80009975fc9d7d783eaa0865c7c894d1975b",
+          "c644bb1acc67658d2ff61fae695340f02ac58503",
+          "11c92d361369cda4b2412451ff2841eff940f810",
+          "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+        ]
+      },
+      "exact_limited_review_ids": [
+        "core_e5"
+      ],
+      "exact_functional_review_ids": [],
+      "status": "limited_review_exact_bytes",
+      "uncovered_delta_or_scope": [],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "gui/g4usim_gui/core/experiment_workflow.py",
+      "module": "workflow",
+      "authors": [
+        "Bohr / 01a18f93-ee1e-71b2-8816-4904a12efe51"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 1220,
+      "deletions": 0,
+      "change_type": "A",
+      "final_git_blob_oid": "d73993b251b36a3eb7cec4a6ddae2c8b29c9d424",
+      "final_git_sha256": "8419770c31176e35d53d5744202bb92d1641cce72714fcbc3bf27c326b7da009",
+      "final_worktree_sha256": "8419770c31176e35d53d5744202bb92d1641cce72714fcbc3bf27c326b7da009",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [
+        {
+          "path": "out/collab/k1-implementation-file-manifest.json",
+          "recorded_sha256": "bb3dd88986503b084db9c22754f9927dc05916ff53b617acf1d4b7364c921918",
+          "matches_final_raw": false,
+          "independent_review": false
+        }
+      ],
+      "review_chain": [
+        {
+          "review_id": "core_e5",
+          "reviewed_sha256": "bb3dd88986503b084db9c22754f9927dc05916ff53b617acf1d4b7364c921918",
+          "note": null,
+          "review_path": "out/collab/k1-core-independent-review.md",
+          "reviewer": "独立核心审查 / 01a18f97-f404-7fa0-89f3-b826cadd8055",
+          "kind": "independent_limited_code_review",
+          "scope": "文末e5ff800最终限定签字；bundle仅历史投影/5行版本文本小修",
+          "final_worktree_bytes_match": false,
+          "final_git_blob_bytes_match": false,
+          "matching_commits": [
+            "e5ff80009975fc9d7d783eaa0865c7c894d1975b"
+          ],
+          "version_delta_from_this_review_to_final": {
+            "added": 29,
+            "removed": 4,
+            "hunks": [
+              "@@ -23,0 +24 @@\n",
+              "@@ -553,0 +555,3 @@\n",
+              "@@ -617,0 +622,3 @@\n",
+              "@@ -749,3 +756,7 @@\n",
+              "@@ -821,0 +833 @@\n",
+              "@@ -835 +847,5 @@\n",
+              "@@ -908,0 +925,3 @@\n",
+              "@@ -910,0 +930,3 @@\n",
+              "@@ -913,0 +936,3 @@\n"
+            ],
+            "scope": "version metadata only; no new logic/security review",
+            "coverage_warning": "这是该旧审查到最终的版本差异，不自动等于未覆盖；必须合看后续限定review链。"
+          }
+        },
+        {
+          "review_id": "launch_applied",
+          "reviewed_sha256": "ec8c123e13e4bcb5f90d33fe69ed1a6545215e456648e38deac58ad829288e3b",
+          "note": null,
+          "review_path": "out/collab/k1-python-launch-independent-review.md",
+          "reviewer": "独立启动审查Sol medium",
+          "kind": "independent_limited_code_review",
+          "scope": "末尾七文件限定观察；helper P2由后续最终增补关闭",
+          "final_worktree_bytes_match": false,
+          "final_git_blob_bytes_match": false,
+          "matching_commits": [
+            "c644bb1acc67658d2ff61fae695340f02ac58503"
+          ],
+          "version_delta_from_this_review_to_final": {
+            "added": 6,
+            "removed": 0,
+            "hunks": [
+              "@@ -554,0 +555,3 @@\n",
+              "@@ -926,0 +930,3 @@\n"
+            ],
+            "scope": "version metadata only; no new logic/security review",
+            "coverage_warning": "这是该旧审查到最终的版本差异，不自动等于未覆盖；必须合看后续限定review链。"
+          }
+        },
+        {
+          "review_id": "cancel",
+          "reviewed_sha256": "8419770c31176e35d53d5744202bb92d1641cce72714fcbc3bf27c326b7da009",
+          "note": null,
+          "review_path": "out/collab/k1-cancel-ownership-independent.md",
+          "reviewer": "Averroes（非候选作者）",
+          "kind": "independent_limited_code_review",
+          "scope": "文末841977候选终态发布所有权与九例受控时序",
+          "final_worktree_bytes_match": true,
+          "final_git_blob_bytes_match": true,
+          "matching_commits": [
+            "11c92d361369cda4b2412451ff2841eff940f810",
+            "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+          ]
+        }
+      ],
+      "last_reviewed_version_binding": {
+        "review_id": "cancel",
+        "reviewed_sha256": "8419770c31176e35d53d5744202bb92d1641cce72714fcbc3bf27c326b7da009",
+        "note": null,
+        "review_path": "out/collab/k1-cancel-ownership-independent.md",
+        "reviewer": "Averroes（非候选作者）",
+        "kind": "independent_limited_code_review",
+        "scope": "文末841977候选终态发布所有权与九例受控时序",
+        "final_worktree_bytes_match": true,
+        "final_git_blob_bytes_match": true,
+        "matching_commits": [
+          "11c92d361369cda4b2412451ff2841eff940f810",
+          "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+        ]
+      },
+      "exact_limited_review_ids": [
+        "cancel"
+      ],
+      "exact_functional_review_ids": [],
+      "status": "limited_review_exact_bytes",
+      "uncovered_delta_or_scope": [],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "gui/g4usim_gui/core/i18n.py",
+      "module": "gui",
+      "authors": [
+        "CLI-GUI Sol medium / 01a18f96-d294-7693-bc4b-b3f9f9fd1920",
+        "Franklin",
+        "父任务"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 84,
+      "deletions": 0,
+      "change_type": "M",
+      "final_git_blob_oid": "cc26f62febd97d77208108d419896c595f4f542c",
+      "final_git_sha256": "5bbc3d1057741844cd76903bb4f36a83f85eff8bd4307fb946512c09b5efc60c",
+      "final_worktree_sha256": "5bbc3d1057741844cd76903bb4f36a83f85eff8bd4307fb946512c09b5efc60c",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [
+        {
+          "path": "out/collab/k1-implementation-file-manifest.json",
+          "recorded_sha256": "210e36d5b87d3f067b0b4cabc36c069d2d2bf80aeca2ab4df0680ea83430f75f",
+          "matches_final_raw": false,
+          "independent_review": false
+        }
+      ],
+      "review_chain": [
+        {
+          "review_id": "history",
+          "reviewed_sha256": "5bbc3d1057741844cd76903bb4f36a83f85eff8bd4307fb946512c09b5efc60c",
+          "note": null,
+          "review_path": "out/collab/k1-c644bb1-windows-independent-history-scope-review.md",
+          "reviewer": "独立显示范围审查Sol medium",
+          "kind": "independent_limited_code_review",
+          "scope": "最终modes增补 + 五产品稳定字节；首轮149/最终150/组件78分开",
+          "final_worktree_bytes_match": true,
+          "final_git_blob_bytes_match": true,
+          "matching_commits": [
+            "11c92d361369cda4b2412451ff2841eff940f810",
+            "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+          ]
+        }
+      ],
+      "last_reviewed_version_binding": {
+        "review_id": "history",
+        "reviewed_sha256": "5bbc3d1057741844cd76903bb4f36a83f85eff8bd4307fb946512c09b5efc60c",
+        "note": null,
+        "review_path": "out/collab/k1-c644bb1-windows-independent-history-scope-review.md",
+        "reviewer": "独立显示范围审查Sol medium",
+        "kind": "independent_limited_code_review",
+        "scope": "最终modes增补 + 五产品稳定字节；首轮149/最终150/组件78分开",
+        "final_worktree_bytes_match": true,
+        "final_git_blob_bytes_match": true,
+        "matching_commits": [
+          "11c92d361369cda4b2412451ff2841eff940f810",
+          "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+        ]
+      },
+      "exact_limited_review_ids": [
+        "history"
+      ],
+      "exact_functional_review_ids": [],
+      "status": "limited_review_exact_bytes",
+      "uncovered_delta_or_scope": [
+        "最终SHA绑定的是历史显示窄diff；不据此补签早期整个适配器/面板词条/RunPage原有K1增量。"
+      ],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "gui/g4usim_gui/core/runner.py",
+      "module": "launch",
+      "authors": [
+        "Bohr(workflow Sol high)",
+        "父任务"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 28,
+      "deletions": 4,
+      "change_type": "M",
+      "final_git_blob_oid": "6237bd9ac399403392e55a1b35722d84e100f79d",
+      "final_git_sha256": "456912e161a3ee46ae879b9d9d76abb7e8d0691c393504d00ab714c5ce2770e9",
+      "final_worktree_sha256": "456912e161a3ee46ae879b9d9d76abb7e8d0691c393504d00ab714c5ce2770e9",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [],
+      "review_chain": [
+        {
+          "review_id": "launch_applied",
+          "reviewed_sha256": "497431704c75f4cf37c5e6136d0800f54804120b90f5bc9358b85e0222ff320c",
+          "note": null,
+          "review_path": "out/collab/k1-python-launch-independent-review.md",
+          "reviewer": "独立启动审查Sol medium",
+          "kind": "independent_limited_code_review",
+          "scope": "末尾七文件限定观察；helper P2由后续最终增补关闭",
+          "final_worktree_bytes_match": false,
+          "final_git_blob_bytes_match": false,
+          "matching_commits": [
+            "c644bb1acc67658d2ff61fae695340f02ac58503"
+          ],
+          "version_delta_from_this_review_to_final": {
+            "added": 2,
+            "removed": 0,
+            "hunks": [
+              "@@ -103,0 +104,2 @@\n"
+            ],
+            "scope": "version metadata only; no new logic/security review",
+            "coverage_warning": "这是该旧审查到最终的版本差异，不自动等于未覆盖；必须合看后续限定review链。"
+          }
+        },
+        {
+          "review_id": "path_progress",
+          "reviewed_sha256": "456912e161a3ee46ae879b9d9d76abb7e8d0691c393504d00ab714c5ce2770e9",
+          "note": null,
+          "review_path": "out/collab/k1-c644bb1-windows-independent-candidate-review.md",
+          "reviewer": "独立审查Sol medium",
+          "kind": "independent_limited_code_review",
+          "scope": "末尾只签两候选：路径规范化测试与FailedToStart/progress",
+          "final_worktree_bytes_match": true,
+          "final_git_blob_bytes_match": true,
+          "matching_commits": [
+            "11c92d361369cda4b2412451ff2841eff940f810",
+            "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+          ]
+        }
+      ],
+      "last_reviewed_version_binding": {
+        "review_id": "path_progress",
+        "reviewed_sha256": "456912e161a3ee46ae879b9d9d76abb7e8d0691c393504d00ab714c5ce2770e9",
+        "note": null,
+        "review_path": "out/collab/k1-c644bb1-windows-independent-candidate-review.md",
+        "reviewer": "独立审查Sol medium",
+        "kind": "independent_limited_code_review",
+        "scope": "末尾只签两候选：路径规范化测试与FailedToStart/progress",
+        "final_worktree_bytes_match": true,
+        "final_git_blob_bytes_match": true,
+        "matching_commits": [
+          "11c92d361369cda4b2412451ff2841eff940f810",
+          "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+        ]
+      },
+      "exact_limited_review_ids": [
+        "path_progress"
+      ],
+      "exact_functional_review_ids": [],
+      "status": "limited_review_exact_bytes",
+      "uncovered_delta_or_scope": [],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "gui/g4usim_gui/experiment_cli.py",
+      "module": "cli",
+      "authors": [
+        "CLI Sol medium",
+        "父任务"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 397,
+      "deletions": 0,
+      "change_type": "A",
+      "final_git_blob_oid": "5733092a603b1440b874cbc5becd65acede866f4",
+      "final_git_sha256": "20d7bb876ef91d80d31a4806640730dff011fd65ceb7204b9b323ec7920c74f6",
+      "final_worktree_sha256": "20d7bb876ef91d80d31a4806640730dff011fd65ceb7204b9b323ec7920c74f6",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [
+        {
+          "path": "out/collab/k1-implementation-file-manifest.json",
+          "recorded_sha256": "20d7bb876ef91d80d31a4806640730dff011fd65ceb7204b9b323ec7920c74f6",
+          "matches_final_raw": true,
+          "independent_review": false
+        },
+        {
+          "path": "out/collab/k1-adapters-final-manifest.json",
+          "recorded_sha256": "20d7bb876ef91d80d31a4806640730dff011fd65ceb7204b9b323ec7920c74f6",
+          "matches_final_raw": true,
+          "independent_review": false
+        }
+      ],
+      "review_chain": [
+        {
+          "review_id": "cli_prior",
+          "reviewed_sha256": "36434a249c4281ba99e72c880e3e3822b16276b993dae6a02a4a6b0ea6c77a78",
+          "note": null,
+          "review_path": "out/collab/k1-core-independent-review.md",
+          "reviewer": "独立核心审查者",
+          "kind": "independent_limited_code_review",
+          "scope": "第5项CLI timeout/SIGINT产品修复绑定36434a；不把作者manifest当后续产品签字",
+          "final_worktree_bytes_match": false,
+          "final_git_blob_bytes_match": false,
+          "matching_commits": [],
+          "version_delta_from_this_review_to_final": {
+            "unknown": "reviewed SHA is not a committed blob in this range; no snapshot guessed",
+            "coverage_warning": "这是该旧审查到最终的版本差异，不自动等于未覆盖；必须合看后续限定review链。"
+          }
+        }
+      ],
+      "last_reviewed_version_binding": {
+        "review_id": "cli_prior",
+        "reviewed_sha256": "36434a249c4281ba99e72c880e3e3822b16276b993dae6a02a4a6b0ea6c77a78",
+        "note": null,
+        "review_path": "out/collab/k1-core-independent-review.md",
+        "reviewer": "独立核心审查者",
+        "kind": "independent_limited_code_review",
+        "scope": "第5项CLI timeout/SIGINT产品修复绑定36434a；不把作者manifest当后续产品签字",
+        "final_worktree_bytes_match": false,
+        "final_git_blob_bytes_match": false,
+        "matching_commits": [],
+        "uncovered_version_delta_metadata": {
+          "unknown": "reviewed SHA is not a committed blob in this range; no snapshot guessed"
+        }
+      },
+      "exact_limited_review_ids": [],
+      "exact_functional_review_ids": [],
+      "status": "no_exact_final_binding_found",
+      "uncovered_delta_or_scope": [
+        "所查记录未找到绑定最终字节的独立限定代码/普通功能签字；不等于从未有人阅读。",
+        "最终产品20d7相对独立产品修复36434的后续字节未找到最终产品签字；父test-only签字不扩张到产品。"
+      ],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "gui/g4usim_gui/main_window.py",
+      "module": "gui",
+      "authors": [
+        "CLI-GUI Sol medium / 01a18f96-d294-7693-bc4b-b3f9f9fd1920",
+        "Franklin",
+        "父任务"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 22,
+      "deletions": 5,
+      "change_type": "M",
+      "final_git_blob_oid": "2c29b86bbf6b49df9b53b0c0f18a4b7514c082d5",
+      "final_git_sha256": "3dbece37b6eef22363f6eb772836f8918dce95c762f94decd312c4381a74a7ce",
+      "final_worktree_sha256": "3dbece37b6eef22363f6eb772836f8918dce95c762f94decd312c4381a74a7ce",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [
+        {
+          "path": "out/collab/k1-implementation-file-manifest.json",
+          "recorded_sha256": "3dbece37b6eef22363f6eb772836f8918dce95c762f94decd312c4381a74a7ce",
+          "matches_final_raw": true,
+          "independent_review": false
+        },
+        {
+          "path": "out/collab/k1-adapters-final-manifest.json",
+          "recorded_sha256": "3dbece37b6eef22363f6eb772836f8918dce95c762f94decd312c4381a74a7ce",
+          "matches_final_raw": true,
+          "independent_review": false
+        }
+      ],
+      "review_chain": [],
+      "last_reviewed_version_binding": null,
+      "exact_limited_review_ids": [],
+      "exact_functional_review_ids": [],
+      "status": "no_exact_final_binding_found",
+      "uncovered_delta_or_scope": [
+        "所查记录未找到绑定最终字节的独立限定代码/普通功能签字；不等于从未有人阅读。",
+        "最终源码只有作者manifest/公开功能观察，未找到最终全文件代码签字。"
+      ],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/environment_dialog.py",
+      "module": "i1",
+      "authors": [
+        "I1 Sol high / 01a18f93-e780-7953-90fe-cd5b6fe40fc0",
+        "Sol medium UI续修",
+        "Bohr启动适配"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 352,
+      "deletions": 0,
+      "change_type": "A",
+      "final_git_blob_oid": "822e7efb957e6a9ae5ae3aff332a2672a0b14ba1",
+      "final_git_sha256": "a5de75745c822e8c6184f82a2942a8716119465f103d476f5d559cd03a9e79cc",
+      "final_worktree_sha256": "a5de75745c822e8c6184f82a2942a8716119465f103d476f5d559cd03a9e79cc",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [
+        {
+          "path": "out/collab/k1-implementation-file-manifest.json",
+          "recorded_sha256": "a5de75745c822e8c6184f82a2942a8716119465f103d476f5d559cd03a9e79cc",
+          "matches_final_raw": true,
+          "independent_review": false
+        }
+      ],
+      "review_chain": [
+        {
+          "review_id": "i1_fix",
+          "reviewed_sha256": "996424b559dac95bb8ee020e940a95e7ad5686a409130060d3c7ae33be7dccfb",
+          "note": null,
+          "review_path": "out/collab/k1-i1-independent.md",
+          "reviewer": "I1/核心独立审查者",
+          "kind": "independent_limited_code_review",
+          "scope": "文末两项P2修复后续审",
+          "final_worktree_bytes_match": false,
+          "final_git_blob_bytes_match": false,
+          "matching_commits": [
+            "1dc96b45b8d945fbe33877f99345dc0144808e70"
+          ],
+          "version_delta_from_this_review_to_final": {
+            "added": 140,
+            "removed": 16,
+            "hunks": [
+              "@@ -7,0 +8 @@\n",
+              "@@ -9,2 +10,2 @@\n",
+              "@@ -83 +84,5 @@\n",
+              "@@ -85,0 +91,13 @@\n",
+              "@@ -88,0 +107,5 @@\n",
+              "@@ -94 +117 @@\n",
+              "@@ -104,3 +127,9 @@\n",
+              "@@ -128,0 +158 @@\n",
+              "@@ -148,9 +178,5 @@\n",
+              "@@ -195,0 +222,98 @@\n"
+            ],
+            "scope": "version metadata only; no new logic/security review",
+            "coverage_warning": "这是该旧审查到最终的版本差异，不自动等于未覆盖；必须合看后续限定review链。"
+          }
+        }
+      ],
+      "last_reviewed_version_binding": {
+        "review_id": "i1_fix",
+        "reviewed_sha256": "996424b559dac95bb8ee020e940a95e7ad5686a409130060d3c7ae33be7dccfb",
+        "note": null,
+        "review_path": "out/collab/k1-i1-independent.md",
+        "reviewer": "I1/核心独立审查者",
+        "kind": "independent_limited_code_review",
+        "scope": "文末两项P2修复后续审",
+        "final_worktree_bytes_match": false,
+        "final_git_blob_bytes_match": false,
+        "matching_commits": [
+          "1dc96b45b8d945fbe33877f99345dc0144808e70"
+        ],
+        "uncovered_version_delta_metadata": {
+          "added": 140,
+          "removed": 16,
+          "hunks": [
+            "@@ -7,0 +8 @@\n",
+            "@@ -9,2 +10,2 @@\n",
+            "@@ -83 +84,5 @@\n",
+            "@@ -85,0 +91,13 @@\n",
+            "@@ -88,0 +107,5 @@\n",
+            "@@ -94 +117 @@\n",
+            "@@ -104,3 +127,9 @@\n",
+            "@@ -128,0 +158 @@\n",
+            "@@ -148,9 +178,5 @@\n",
+            "@@ -195,0 +222,98 @@\n"
+          ],
+          "scope": "version metadata only; no new logic/security review"
+        }
+      },
+      "exact_limited_review_ids": [],
+      "exact_functional_review_ids": [],
+      "status": "no_exact_final_binding_found",
+      "uncovered_delta_or_scope": [
+        "所查记录未找到绑定最终字节的独立限定代码/普通功能签字；不等于从未有人阅读。"
+      ],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/experiment_panel.py",
+      "module": "panel",
+      "authors": [
+        "DeepSeek flash初稿",
+        "Sol medium / 01a18f95-cb86-76f1-8ed0-0ad1dba517a5",
+        "父任务"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 273,
+      "deletions": 0,
+      "change_type": "A",
+      "final_git_blob_oid": "59d7d75eaecb60aedf9387c7afb1d7d0e16c2036",
+      "final_git_sha256": "741adb59951cbf8adc9428eca4703612efafa737396dc5025d350c8ad53bbfd1",
+      "final_worktree_sha256": "741adb59951cbf8adc9428eca4703612efafa737396dc5025d350c8ad53bbfd1",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [
+        {
+          "path": "out/collab/k1-implementation-file-manifest.json",
+          "recorded_sha256": "741adb59951cbf8adc9428eca4703612efafa737396dc5025d350c8ad53bbfd1",
+          "matches_final_raw": true,
+          "independent_review": false
+        }
+      ],
+      "review_chain": [],
+      "last_reviewed_version_binding": null,
+      "exact_limited_review_ids": [],
+      "exact_functional_review_ids": [],
+      "status": "no_exact_final_binding_found",
+      "uncovered_delta_or_scope": [
+        "所查记录未找到绑定最终字节的独立限定代码/普通功能签字；不等于从未有人阅读。"
+      ],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/run_page.py",
+      "module": "gui",
+      "authors": [
+        "CLI-GUI Sol medium / 01a18f96-d294-7693-bc4b-b3f9f9fd1920",
+        "Franklin",
+        "父任务"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 89,
+      "deletions": 16,
+      "change_type": "M",
+      "final_git_blob_oid": "803ffb3c852f192011d7be3ee157991a490bd3ab",
+      "final_git_sha256": "15f1825c9d0c8564eb83b506405e62d3d6eed84139e7919504e10cee303c3078",
+      "final_worktree_sha256": "15f1825c9d0c8564eb83b506405e62d3d6eed84139e7919504e10cee303c3078",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [
+        {
+          "path": "out/collab/k1-implementation-file-manifest.json",
+          "recorded_sha256": "7b1366a8ce12ba0baf8071b205884d52af5e0c81e2dadeff97e60c0df8f3de22",
+          "matches_final_raw": false,
+          "independent_review": false
+        }
+      ],
+      "review_chain": [
+        {
+          "review_id": "history",
+          "reviewed_sha256": "15f1825c9d0c8564eb83b506405e62d3d6eed84139e7919504e10cee303c3078",
+          "note": null,
+          "review_path": "out/collab/k1-c644bb1-windows-independent-history-scope-review.md",
+          "reviewer": "独立显示范围审查Sol medium",
+          "kind": "independent_limited_code_review",
+          "scope": "最终modes增补 + 五产品稳定字节；首轮149/最终150/组件78分开",
+          "final_worktree_bytes_match": true,
+          "final_git_blob_bytes_match": true,
+          "matching_commits": [
+            "11c92d361369cda4b2412451ff2841eff940f810",
+            "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+          ]
+        }
+      ],
+      "last_reviewed_version_binding": {
+        "review_id": "history",
+        "reviewed_sha256": "15f1825c9d0c8564eb83b506405e62d3d6eed84139e7919504e10cee303c3078",
+        "note": null,
+        "review_path": "out/collab/k1-c644bb1-windows-independent-history-scope-review.md",
+        "reviewer": "独立显示范围审查Sol medium",
+        "kind": "independent_limited_code_review",
+        "scope": "最终modes增补 + 五产品稳定字节；首轮149/最终150/组件78分开",
+        "final_worktree_bytes_match": true,
+        "final_git_blob_bytes_match": true,
+        "matching_commits": [
+          "11c92d361369cda4b2412451ff2841eff940f810",
+          "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+        ]
+      },
+      "exact_limited_review_ids": [
+        "history"
+      ],
+      "exact_functional_review_ids": [],
+      "status": "limited_review_exact_bytes",
+      "uncovered_delta_or_scope": [
+        "最终SHA绑定的是历史显示窄diff；不据此补签早期整个适配器/面板词条/RunPage原有K1增量。"
+      ],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "gui/g4usim_gui/window/experiment.py",
+      "module": "gui",
+      "authors": [
+        "CLI-GUI Sol medium / 01a18f96-d294-7693-bc4b-b3f9f9fd1920",
+        "Franklin",
+        "父任务"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 402,
+      "deletions": 0,
+      "change_type": "A",
+      "final_git_blob_oid": "0da5964fe25c2b460080894539c804dc2efed14e",
+      "final_git_sha256": "bfe38e02552f831027d59480331e3805c16955b69cbccdb5a94c26963a005d46",
+      "final_worktree_sha256": "bfe38e02552f831027d59480331e3805c16955b69cbccdb5a94c26963a005d46",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [
+        {
+          "path": "out/collab/k1-implementation-file-manifest.json",
+          "recorded_sha256": "132efcbab2fd642698020c93a299fbb53cca243a380f15354d606c1fdd6430e1",
+          "matches_final_raw": false,
+          "independent_review": false
+        },
+        {
+          "path": "out/collab/k1-adapters-final-manifest.json",
+          "recorded_sha256": "132efcbab2fd642698020c93a299fbb53cca243a380f15354d606c1fdd6430e1",
+          "matches_final_raw": false,
+          "independent_review": false
+        }
+      ],
+      "review_chain": [
+        {
+          "review_id": "history",
+          "reviewed_sha256": "bfe38e02552f831027d59480331e3805c16955b69cbccdb5a94c26963a005d46",
+          "note": null,
+          "review_path": "out/collab/k1-c644bb1-windows-independent-history-scope-review.md",
+          "reviewer": "独立显示范围审查Sol medium",
+          "kind": "independent_limited_code_review",
+          "scope": "最终modes增补 + 五产品稳定字节；首轮149/最终150/组件78分开",
+          "final_worktree_bytes_match": true,
+          "final_git_blob_bytes_match": true,
+          "matching_commits": [
+            "11c92d361369cda4b2412451ff2841eff940f810",
+            "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+          ]
+        }
+      ],
+      "last_reviewed_version_binding": {
+        "review_id": "history",
+        "reviewed_sha256": "bfe38e02552f831027d59480331e3805c16955b69cbccdb5a94c26963a005d46",
+        "note": null,
+        "review_path": "out/collab/k1-c644bb1-windows-independent-history-scope-review.md",
+        "reviewer": "独立显示范围审查Sol medium",
+        "kind": "independent_limited_code_review",
+        "scope": "最终modes增补 + 五产品稳定字节；首轮149/最终150/组件78分开",
+        "final_worktree_bytes_match": true,
+        "final_git_blob_bytes_match": true,
+        "matching_commits": [
+          "11c92d361369cda4b2412451ff2841eff940f810",
+          "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+        ]
+      },
+      "exact_limited_review_ids": [
+        "history"
+      ],
+      "exact_functional_review_ids": [],
+      "status": "limited_review_exact_bytes",
+      "uncovered_delta_or_scope": [
+        "最终SHA绑定的是历史显示窄diff；不据此补签早期整个适配器/面板词条/RunPage原有K1增量。"
+      ],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "gui/g4usim_gui/window/run.py",
+      "module": "gui",
+      "authors": [
+        "CLI-GUI Sol medium / 01a18f96-d294-7693-bc4b-b3f9f9fd1920",
+        "Franklin",
+        "父任务"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 59,
+      "deletions": 3,
+      "change_type": "M",
+      "final_git_blob_oid": "0f3ad910a284f31e95f34297c1a54e568a7e48c4",
+      "final_git_sha256": "67043150fdf3661ceda82be112c481ef252c8f7bb75ce6b47b5153ddd1442a29",
+      "final_worktree_sha256": "67043150fdf3661ceda82be112c481ef252c8f7bb75ce6b47b5153ddd1442a29",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [
+        {
+          "path": "out/collab/k1-implementation-file-manifest.json",
+          "recorded_sha256": "22ee8f0efa6ae9e9474ab67983c4be0ad5c4ec910ccb1e99a79f6d161c1ab45f",
+          "matches_final_raw": false,
+          "independent_review": false
+        },
+        {
+          "path": "out/collab/k1-adapters-final-manifest.json",
+          "recorded_sha256": "22ee8f0efa6ae9e9474ab67983c4be0ad5c4ec910ccb1e99a79f6d161c1ab45f",
+          "matches_final_raw": false,
+          "independent_review": false
+        }
+      ],
+      "review_chain": [
+        {
+          "review_id": "history",
+          "reviewed_sha256": "67043150fdf3661ceda82be112c481ef252c8f7bb75ce6b47b5153ddd1442a29",
+          "note": null,
+          "review_path": "out/collab/k1-c644bb1-windows-independent-history-scope-review.md",
+          "reviewer": "独立显示范围审查Sol medium",
+          "kind": "independent_limited_code_review",
+          "scope": "最终modes增补 + 五产品稳定字节；首轮149/最终150/组件78分开",
+          "final_worktree_bytes_match": true,
+          "final_git_blob_bytes_match": true,
+          "matching_commits": [
+            "11c92d361369cda4b2412451ff2841eff940f810",
+            "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+          ]
+        }
+      ],
+      "last_reviewed_version_binding": {
+        "review_id": "history",
+        "reviewed_sha256": "67043150fdf3661ceda82be112c481ef252c8f7bb75ce6b47b5153ddd1442a29",
+        "note": null,
+        "review_path": "out/collab/k1-c644bb1-windows-independent-history-scope-review.md",
+        "reviewer": "独立显示范围审查Sol medium",
+        "kind": "independent_limited_code_review",
+        "scope": "最终modes增补 + 五产品稳定字节；首轮149/最终150/组件78分开",
+        "final_worktree_bytes_match": true,
+        "final_git_blob_bytes_match": true,
+        "matching_commits": [
+          "11c92d361369cda4b2412451ff2841eff940f810",
+          "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+        ]
+      },
+      "exact_limited_review_ids": [
+        "history"
+      ],
+      "exact_functional_review_ids": [],
+      "status": "limited_review_exact_bytes",
+      "uncovered_delta_or_scope": [
+        "最终SHA绑定的是历史显示窄diff；不据此补签早期整个适配器/面板词条/RunPage原有K1增量。"
+      ],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "gui/g4usim_gui/window/shell.py",
+      "module": "gui",
+      "authors": [
+        "CLI-GUI Sol medium / 01a18f96-d294-7693-bc4b-b3f9f9fd1920",
+        "Franklin",
+        "父任务"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 14,
+      "deletions": 1,
+      "change_type": "M",
+      "final_git_blob_oid": "2ec96904116ea910635cfad10e12653b9fd4b2c2",
+      "final_git_sha256": "21c8c3a32d99c56ada8e028b642c7f519abaccc64db61763397cdd5290bc603c",
+      "final_worktree_sha256": "21c8c3a32d99c56ada8e028b642c7f519abaccc64db61763397cdd5290bc603c",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [],
+      "review_chain": [
+        {
+          "review_id": "history",
+          "reviewed_sha256": "21c8c3a32d99c56ada8e028b642c7f519abaccc64db61763397cdd5290bc603c",
+          "note": null,
+          "review_path": "out/collab/k1-c644bb1-windows-independent-history-scope-review.md",
+          "reviewer": "独立显示范围审查Sol medium",
+          "kind": "independent_limited_code_review",
+          "scope": "最终modes增补 + 五产品稳定字节；首轮149/最终150/组件78分开",
+          "final_worktree_bytes_match": true,
+          "final_git_blob_bytes_match": true,
+          "matching_commits": [
+            "11c92d361369cda4b2412451ff2841eff940f810",
+            "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+          ]
+        }
+      ],
+      "last_reviewed_version_binding": {
+        "review_id": "history",
+        "reviewed_sha256": "21c8c3a32d99c56ada8e028b642c7f519abaccc64db61763397cdd5290bc603c",
+        "note": null,
+        "review_path": "out/collab/k1-c644bb1-windows-independent-history-scope-review.md",
+        "reviewer": "独立显示范围审查Sol medium",
+        "kind": "independent_limited_code_review",
+        "scope": "最终modes增补 + 五产品稳定字节；首轮149/最终150/组件78分开",
+        "final_worktree_bytes_match": true,
+        "final_git_blob_bytes_match": true,
+        "matching_commits": [
+          "11c92d361369cda4b2412451ff2841eff940f810",
+          "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+        ]
+      },
+      "exact_limited_review_ids": [
+        "history"
+      ],
+      "exact_functional_review_ids": [],
+      "status": "limited_review_exact_bytes",
+      "uncovered_delta_or_scope": [
+        "最终SHA绑定的是历史显示窄diff；不据此补签早期整个适配器/面板词条/RunPage原有K1增量。"
+      ],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "gui/g4usim_gui/window/transactions.py",
+      "module": "gui",
+      "authors": [
+        "CLI-GUI Sol medium / 01a18f96-d294-7693-bc4b-b3f9f9fd1920",
+        "Franklin",
+        "父任务"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 19,
+      "deletions": 4,
+      "change_type": "M",
+      "final_git_blob_oid": "da88d77f27f10dbc29505b304cbdf7fb49949992",
+      "final_git_sha256": "93e194afae749b52c3a8c9871211ecc8fe129256050e9e88ef1287f67b1b3210",
+      "final_worktree_sha256": "93e194afae749b52c3a8c9871211ecc8fe129256050e9e88ef1287f67b1b3210",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [
+        {
+          "path": "out/collab/k1-implementation-file-manifest.json",
+          "recorded_sha256": "93e194afae749b52c3a8c9871211ecc8fe129256050e9e88ef1287f67b1b3210",
+          "matches_final_raw": true,
+          "independent_review": false
+        },
+        {
+          "path": "out/collab/k1-adapters-final-manifest.json",
+          "recorded_sha256": "93e194afae749b52c3a8c9871211ecc8fe129256050e9e88ef1287f67b1b3210",
+          "matches_final_raw": true,
+          "independent_review": false
+        }
+      ],
+      "review_chain": [],
+      "last_reviewed_version_binding": null,
+      "exact_limited_review_ids": [],
+      "exact_functional_review_ids": [],
+      "status": "no_exact_final_binding_found",
+      "uncovered_delta_or_scope": [
+        "所查记录未找到绑定最终字节的独立限定代码/普通功能签字；不等于从未有人阅读。",
+        "最终源码只有作者manifest/公开功能观察，未找到最终全文件代码签字。"
+      ],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "gui/smoke_tests/smoke_backend_geometry.py",
+      "module": "legacy",
+      "authors": [
+        "Sol medium / 01a18ff8-0672-7a33-ba81-7ec0b0ee6b00",
+        "父任务"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 73,
+      "deletions": 42,
+      "change_type": "M",
+      "final_git_blob_oid": "69f1be985b2aef9a1ac47826bf96eed973efcdb0",
+      "final_git_sha256": "7dd55c3d4d6bf42f9fd7f9c1d6caed166e017c75c76fd20fdf661b1acf198603",
+      "final_worktree_sha256": "7dd55c3d4d6bf42f9fd7f9c1d6caed166e017c75c76fd20fdf661b1acf198603",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [],
+      "review_chain": [
+        {
+          "review_id": "label_final",
+          "reviewed_sha256": "7dd55c3d4d6bf42f9fd7f9c1d6caed166e017c75c76fd20fdf661b1acf198603",
+          "note": null,
+          "review_path": "out/collab/k1-final-adapter-test-diff-independent.md",
+          "reviewer": "独立启动/测试审查Sol medium",
+          "kind": "independent_limited_code_review",
+          "scope": "明确最终label P2签字及旧smoke/I1/bundle测试兼容窄diff，不含bundle广泛边界",
+          "final_worktree_bytes_match": true,
+          "final_git_blob_bytes_match": true,
+          "matching_commits": [
+            "c644bb1acc67658d2ff61fae695340f02ac58503",
+            "11c92d361369cda4b2412451ff2841eff940f810",
+            "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+          ]
+        }
+      ],
+      "last_reviewed_version_binding": {
+        "review_id": "label_final",
+        "reviewed_sha256": "7dd55c3d4d6bf42f9fd7f9c1d6caed166e017c75c76fd20fdf661b1acf198603",
+        "note": null,
+        "review_path": "out/collab/k1-final-adapter-test-diff-independent.md",
+        "reviewer": "独立启动/测试审查Sol medium",
+        "kind": "independent_limited_code_review",
+        "scope": "明确最终label P2签字及旧smoke/I1/bundle测试兼容窄diff，不含bundle广泛边界",
+        "final_worktree_bytes_match": true,
+        "final_git_blob_bytes_match": true,
+        "matching_commits": [
+          "c644bb1acc67658d2ff61fae695340f02ac58503",
+          "11c92d361369cda4b2412451ff2841eff940f810",
+          "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+        ]
+      },
+      "exact_limited_review_ids": [
+        "label_final"
+      ],
+      "exact_functional_review_ids": [],
+      "status": "limited_review_exact_bytes",
+      "uncovered_delta_or_scope": [],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "gui/smoke_tests/smoke_backend_launch.py",
+      "module": "launch",
+      "authors": [
+        "Bohr(workflow Sol high)",
+        "父任务"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 194,
+      "deletions": 0,
+      "change_type": "A",
+      "final_git_blob_oid": "79d30531459d4b57a88e4d53fc9f21082aa3796e",
+      "final_git_sha256": "a01a2a823c8a9c5c0dd40ac245bfed5b6e1091628c30886efcc5e8abf594e843",
+      "final_worktree_sha256": "a01a2a823c8a9c5c0dd40ac245bfed5b6e1091628c30886efcc5e8abf594e843",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [],
+      "review_chain": [
+        {
+          "review_id": "launch_applied",
+          "reviewed_sha256": "bd171f8bf174fa8052744bc1b57ab28f912f734b596eb1c4aea59019b931752e",
+          "note": null,
+          "review_path": "out/collab/k1-python-launch-independent-review.md",
+          "reviewer": "独立启动审查Sol medium",
+          "kind": "independent_limited_code_review",
+          "scope": "末尾七文件限定观察；helper P2由后续最终增补关闭",
+          "final_worktree_bytes_match": false,
+          "final_git_blob_bytes_match": false,
+          "matching_commits": [],
+          "version_delta_from_this_review_to_final": {
+            "unknown": "reviewed SHA is not a committed blob in this range; no snapshot guessed",
+            "coverage_warning": "这是该旧审查到最终的版本差异，不自动等于未覆盖；必须合看后续限定review链。"
+          }
+        },
+        {
+          "review_id": "label_final",
+          "reviewed_sha256": "79c3eb31bbe5f47f3fea57abedd783685403f46668c31beb45599cf6929fdb33",
+          "note": null,
+          "review_path": "out/collab/k1-final-adapter-test-diff-independent.md",
+          "reviewer": "独立启动/测试审查Sol medium",
+          "kind": "independent_limited_code_review",
+          "scope": "明确最终label P2签字及旧smoke/I1/bundle测试兼容窄diff，不含bundle广泛边界",
+          "final_worktree_bytes_match": false,
+          "final_git_blob_bytes_match": false,
+          "matching_commits": [
+            "c644bb1acc67658d2ff61fae695340f02ac58503"
+          ],
+          "version_delta_from_this_review_to_final": {
+            "added": 4,
+            "removed": 3,
+            "hunks": [
+              "@@ -74 +74 @@\n",
+              "@@ -79 +79 @@\n",
+              "@@ -80,0 +81 @@\n",
+              "@@ -88 +89 @@\n"
+            ],
+            "scope": "version metadata only; no new logic/security review",
+            "coverage_warning": "这是该旧审查到最终的版本差异，不自动等于未覆盖；必须合看后续限定review链。"
+          }
+        },
+        {
+          "review_id": "path_progress",
+          "reviewed_sha256": "a111d8a9cf3490cdee8db344da17a0ab1d0d50caa352c0efed976d4fc1ad7fd2",
+          "note": null,
+          "review_path": "out/collab/k1-c644bb1-windows-independent-candidate-review.md",
+          "reviewer": "独立审查Sol medium",
+          "kind": "independent_limited_code_review",
+          "scope": "末尾只签两候选：路径规范化测试与FailedToStart/progress",
+          "final_worktree_bytes_match": false,
+          "final_git_blob_bytes_match": false,
+          "matching_commits": [
+            "11c92d361369cda4b2412451ff2841eff940f810"
+          ],
+          "version_delta_from_this_review_to_final": {
+            "added": 1,
+            "removed": 1,
+            "hunks": [
+              "@@ -79 +79 @@\n"
+            ],
+            "scope": "version metadata only; no new logic/security review",
+            "coverage_warning": "这是该旧审查到最终的版本差异，不自动等于未覆盖；必须合看后续限定review链。"
+          }
+        },
+        {
+          "review_id": "parent_tests",
+          "reviewed_sha256": "a01a2a823c8a9c5c0dd40ac245bfed5b6e1091628c30886efcc5e8abf594e843",
+          "note": null,
+          "review_path": "out/collab/k1-parent-tests-review.json",
+          "reviewer": "Tesla（父两test-only候选的独立审查者）",
+          "kind": "independent_limited_code_review",
+          "scope": "仅cwd expected/两latepass fixture，不涉及bundle",
+          "final_worktree_bytes_match": true,
+          "final_git_blob_bytes_match": true,
+          "matching_commits": [
+            "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+          ]
+        }
+      ],
+      "last_reviewed_version_binding": {
+        "review_id": "parent_tests",
+        "reviewed_sha256": "a01a2a823c8a9c5c0dd40ac245bfed5b6e1091628c30886efcc5e8abf594e843",
+        "note": null,
+        "review_path": "out/collab/k1-parent-tests-review.json",
+        "reviewer": "Tesla（父两test-only候选的独立审查者）",
+        "kind": "independent_limited_code_review",
+        "scope": "仅cwd expected/两latepass fixture，不涉及bundle",
+        "final_worktree_bytes_match": true,
+        "final_git_blob_bytes_match": true,
+        "matching_commits": [
+          "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+        ]
+      },
+      "exact_limited_review_ids": [
+        "parent_tests"
+      ],
+      "exact_functional_review_ids": [],
+      "status": "limited_review_exact_bytes",
+      "uncovered_delta_or_scope": [],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "gui/smoke_tests/smoke_duplicate_history_cli.py",
+      "module": "tesla",
+      "authors": [
+        "原CLI适配写者",
+        "Tesla / 01a1905b-a3ae-7d73-8cd2-652b27fd569d",
+        "父任务"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 105,
+      "deletions": 90,
+      "change_type": "M",
+      "final_git_blob_oid": "648dc35d79081323c7e7f5e7787a793fb39ef540",
+      "final_git_sha256": "7a3464e13e3ee9c0febbb43b46f01ad6b47b7586c3cc4b1f828063871915e119",
+      "final_worktree_sha256": "7a3464e13e3ee9c0febbb43b46f01ad6b47b7586c3cc4b1f828063871915e119",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [
+        {
+          "path": "out/collab/k1-implementation-file-manifest.json",
+          "recorded_sha256": "e9bfe36ed66b8dc12385240ad9deb13f8a9861c9b11309187cb0149e09e8d65a",
+          "matches_final_raw": false,
+          "independent_review": false
+        }
+      ],
+      "review_chain": [
+        {
+          "review_id": "other_three",
+          "reviewed_sha256": "7a3464e13e3ee9c0febbb43b46f01ad6b47b7586c3cc4b1f828063871915e119",
+          "note": null,
+          "review_path": "out/collab/k1-win-ci-three-smokes-independent-review.md",
+          "reviewer": "首轮smoke写者，非Tesla这三文件作者",
+          "kind": "independent_limited_code_review",
+          "scope": "末尾锁定三smoke字节；当时组合只到两项，未冒称最终3/3",
+          "final_worktree_bytes_match": true,
+          "final_git_blob_bytes_match": true,
+          "matching_commits": [
+            "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+          ]
+        },
+        {
+          "review_id": "parent_three",
+          "reviewed_sha256": "7a3464e13e3ee9c0febbb43b46f01ad6b47b7586c3cc4b1f828063871915e119",
+          "note": null,
+          "review_path": "out/collab/k1-parent-three-smoke-review.json",
+          "reviewer": "父任务（独立于Tesla实现）",
+          "kind": "independent_limited_code_review",
+          "scope": "接受三测试diff并核完整最终38/241/254收据",
+          "final_worktree_bytes_match": true,
+          "final_git_blob_bytes_match": true,
+          "matching_commits": [
+            "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+          ]
+        }
+      ],
+      "last_reviewed_version_binding": {
+        "review_id": "parent_three",
+        "reviewed_sha256": "7a3464e13e3ee9c0febbb43b46f01ad6b47b7586c3cc4b1f828063871915e119",
+        "note": null,
+        "review_path": "out/collab/k1-parent-three-smoke-review.json",
+        "reviewer": "父任务（独立于Tesla实现）",
+        "kind": "independent_limited_code_review",
+        "scope": "接受三测试diff并核完整最终38/241/254收据",
+        "final_worktree_bytes_match": true,
+        "final_git_blob_bytes_match": true,
+        "matching_commits": [
+          "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+        ]
+      },
+      "exact_limited_review_ids": [
+        "other_three",
+        "parent_three"
+      ],
+      "exact_functional_review_ids": [],
+      "status": "limited_review_exact_bytes",
+      "uncovered_delta_or_scope": [],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "gui/smoke_tests/smoke_f4_entrypoints.py",
+      "module": "gui",
+      "authors": [
+        "CLI-GUI Sol medium / 01a18f96-d294-7693-bc4b-b3f9f9fd1920",
+        "Franklin",
+        "父任务"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 4,
+      "deletions": 1,
+      "change_type": "M",
+      "final_git_blob_oid": "1dcab6b02fa73c4364fe01221a5a1a4a26dd8a79",
+      "final_git_sha256": "b975cc00c27379e9c1497d7d81134a4149275484ea5e6c444b2d4e0f499f7b6f",
+      "final_worktree_sha256": "b975cc00c27379e9c1497d7d81134a4149275484ea5e6c444b2d4e0f499f7b6f",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [
+        {
+          "path": "out/collab/k1-implementation-file-manifest.json",
+          "recorded_sha256": "b975cc00c27379e9c1497d7d81134a4149275484ea5e6c444b2d4e0f499f7b6f",
+          "matches_final_raw": true,
+          "independent_review": false
+        },
+        {
+          "path": "out/collab/k1-adapters-final-manifest.json",
+          "recorded_sha256": "b975cc00c27379e9c1497d7d81134a4149275484ea5e6c444b2d4e0f499f7b6f",
+          "matches_final_raw": true,
+          "independent_review": false
+        }
+      ],
+      "review_chain": [],
+      "last_reviewed_version_binding": null,
+      "exact_limited_review_ids": [],
+      "exact_functional_review_ids": [],
+      "status": "no_exact_final_binding_found",
+      "uncovered_delta_or_scope": [
+        "所查记录未找到绑定最终字节的独立限定代码/普通功能签字；不等于从未有人阅读。"
+      ],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "gui/smoke_tests/smoke_f4_inspect_backend.py",
+      "module": "gui",
+      "authors": [
+        "CLI-GUI Sol medium / 01a18f96-d294-7693-bc4b-b3f9f9fd1920",
+        "Franklin",
+        "父任务"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 25,
+      "deletions": 4,
+      "change_type": "M",
+      "final_git_blob_oid": "75af76443d1c27fe32827743e332e03b0fc18c13",
+      "final_git_sha256": "c048cb9929a71677b00f2d80e995058970e41b2ff6b2875fdf104da2d5d456cf",
+      "final_worktree_sha256": "c048cb9929a71677b00f2d80e995058970e41b2ff6b2875fdf104da2d5d456cf",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [
+        {
+          "path": "out/collab/k1-implementation-file-manifest.json",
+          "recorded_sha256": "c048cb9929a71677b00f2d80e995058970e41b2ff6b2875fdf104da2d5d456cf",
+          "matches_final_raw": true,
+          "independent_review": false
+        },
+        {
+          "path": "out/collab/k1-adapters-final-manifest.json",
+          "recorded_sha256": "c048cb9929a71677b00f2d80e995058970e41b2ff6b2875fdf104da2d5d456cf",
+          "matches_final_raw": true,
+          "independent_review": false
+        }
+      ],
+      "review_chain": [],
+      "last_reviewed_version_binding": null,
+      "exact_limited_review_ids": [],
+      "exact_functional_review_ids": [],
+      "status": "no_exact_final_binding_found",
+      "uncovered_delta_or_scope": [
+        "所查记录未找到绑定最终字节的独立限定代码/普通功能签字；不等于从未有人阅读。"
+      ],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "gui/smoke_tests/smoke_f5_editor_history.py",
+      "module": "tesla",
+      "authors": [
+        "原CLI适配写者",
+        "Tesla / 01a1905b-a3ae-7d73-8cd2-652b27fd569d",
+        "父任务"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 10,
+      "deletions": 3,
+      "change_type": "M",
+      "final_git_blob_oid": "14f365bfb70245fb341337d990a347ad508d9b53",
+      "final_git_sha256": "e40326ab18ec83ca62c146d66c033c562c8582af144ef994b05e538e0a8f7ba7",
+      "final_worktree_sha256": "e40326ab18ec83ca62c146d66c033c562c8582af144ef994b05e538e0a8f7ba7",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [
+        {
+          "path": "out/collab/k1-implementation-file-manifest.json",
+          "recorded_sha256": "527f25d5996f232df9d4d6b8a973e3b5b1bd78f82dd9dbfeb3dc881220a00335",
+          "matches_final_raw": false,
+          "independent_review": false
+        },
+        {
+          "path": "out/collab/k1-adapters-final-manifest.json",
+          "recorded_sha256": "527f25d5996f232df9d4d6b8a973e3b5b1bd78f82dd9dbfeb3dc881220a00335",
+          "matches_final_raw": false,
+          "independent_review": false
+        }
+      ],
+      "review_chain": [
+        {
+          "review_id": "other_three",
+          "reviewed_sha256": "e40326ab18ec83ca62c146d66c033c562c8582af144ef994b05e538e0a8f7ba7",
+          "note": null,
+          "review_path": "out/collab/k1-win-ci-three-smokes-independent-review.md",
+          "reviewer": "首轮smoke写者，非Tesla这三文件作者",
+          "kind": "independent_limited_code_review",
+          "scope": "末尾锁定三smoke字节；当时组合只到两项，未冒称最终3/3",
+          "final_worktree_bytes_match": true,
+          "final_git_blob_bytes_match": true,
+          "matching_commits": [
+            "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+          ]
+        },
+        {
+          "review_id": "parent_three",
+          "reviewed_sha256": "e40326ab18ec83ca62c146d66c033c562c8582af144ef994b05e538e0a8f7ba7",
+          "note": null,
+          "review_path": "out/collab/k1-parent-three-smoke-review.json",
+          "reviewer": "父任务（独立于Tesla实现）",
+          "kind": "independent_limited_code_review",
+          "scope": "接受三测试diff并核完整最终38/241/254收据",
+          "final_worktree_bytes_match": true,
+          "final_git_blob_bytes_match": true,
+          "matching_commits": [
+            "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+          ]
+        }
+      ],
+      "last_reviewed_version_binding": {
+        "review_id": "parent_three",
+        "reviewed_sha256": "e40326ab18ec83ca62c146d66c033c562c8582af144ef994b05e538e0a8f7ba7",
+        "note": null,
+        "review_path": "out/collab/k1-parent-three-smoke-review.json",
+        "reviewer": "父任务（独立于Tesla实现）",
+        "kind": "independent_limited_code_review",
+        "scope": "接受三测试diff并核完整最终38/241/254收据",
+        "final_worktree_bytes_match": true,
+        "final_git_blob_bytes_match": true,
+        "matching_commits": [
+          "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+        ]
+      },
+      "exact_limited_review_ids": [
+        "other_three",
+        "parent_three"
+      ],
+      "exact_functional_review_ids": [],
+      "status": "limited_review_exact_bytes",
+      "uncovered_delta_or_scope": [],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "gui/smoke_tests/smoke_f5_recovery_process.py",
+      "module": "legacy",
+      "authors": [
+        "Sol medium / 01a18ff8-0672-7a33-ba81-7ec0b0ee6b00",
+        "父任务"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 17,
+      "deletions": 1,
+      "change_type": "M",
+      "final_git_blob_oid": "dd049d1f7378c0fddd7cc9da7093fab1fbccb04d",
+      "final_git_sha256": "9d0814296d336ab32177cae7415bfc7941163e28e2bb71c93bc4d8506f1fdc01",
+      "final_worktree_sha256": "9d0814296d336ab32177cae7415bfc7941163e28e2bb71c93bc4d8506f1fdc01",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [],
+      "review_chain": [
+        {
+          "review_id": "label_final",
+          "reviewed_sha256": "9d0814296d336ab32177cae7415bfc7941163e28e2bb71c93bc4d8506f1fdc01",
+          "note": null,
+          "review_path": "out/collab/k1-final-adapter-test-diff-independent.md",
+          "reviewer": "独立启动/测试审查Sol medium",
+          "kind": "independent_limited_code_review",
+          "scope": "明确最终label P2签字及旧smoke/I1/bundle测试兼容窄diff，不含bundle广泛边界",
+          "final_worktree_bytes_match": true,
+          "final_git_blob_bytes_match": true,
+          "matching_commits": [
+            "c644bb1acc67658d2ff61fae695340f02ac58503",
+            "11c92d361369cda4b2412451ff2841eff940f810",
+            "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+          ]
+        }
+      ],
+      "last_reviewed_version_binding": {
+        "review_id": "label_final",
+        "reviewed_sha256": "9d0814296d336ab32177cae7415bfc7941163e28e2bb71c93bc4d8506f1fdc01",
+        "note": null,
+        "review_path": "out/collab/k1-final-adapter-test-diff-independent.md",
+        "reviewer": "独立启动/测试审查Sol medium",
+        "kind": "independent_limited_code_review",
+        "scope": "明确最终label P2签字及旧smoke/I1/bundle测试兼容窄diff，不含bundle广泛边界",
+        "final_worktree_bytes_match": true,
+        "final_git_blob_bytes_match": true,
+        "matching_commits": [
+          "c644bb1acc67658d2ff61fae695340f02ac58503",
+          "11c92d361369cda4b2412451ff2841eff940f810",
+          "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+        ]
+      },
+      "exact_limited_review_ids": [
+        "label_final"
+      ],
+      "exact_functional_review_ids": [],
+      "status": "limited_review_exact_bytes",
+      "uncovered_delta_or_scope": [],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "gui/smoke_tests/smoke_i1_environment.py",
+      "module": "i1",
+      "authors": [
+        "I1 Sol high / 01a18f93-e780-7953-90fe-cd5b6fe40fc0",
+        "Sol medium UI续修",
+        "Bohr启动适配"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 337,
+      "deletions": 0,
+      "change_type": "A",
+      "final_git_blob_oid": "523ecf70dc9442f2d2b01975a64dc1f42950dc30",
+      "final_git_sha256": "48ae5f2b7fba134b28c4b51efc63b70e0dd7b2dfb7676d70e1bdcc0ee7e1f870",
+      "final_worktree_sha256": "48ae5f2b7fba134b28c4b51efc63b70e0dd7b2dfb7676d70e1bdcc0ee7e1f870",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [
+        {
+          "path": "out/collab/k1-implementation-file-manifest.json",
+          "recorded_sha256": "a93ef1e8a08e3c8672781daf34b89648de44744f24beaaae94e288e852f88751",
+          "matches_final_raw": false,
+          "independent_review": false
+        }
+      ],
+      "review_chain": [
+        {
+          "review_id": "i1_fix",
+          "reviewed_sha256": "b6d74f5c9aab5b8094a2d21cedef979e5fa72bb0f84b4378cd05644863be61b7",
+          "note": null,
+          "review_path": "out/collab/k1-i1-independent.md",
+          "reviewer": "I1/核心独立审查者",
+          "kind": "independent_limited_code_review",
+          "scope": "文末两项P2修复后续审",
+          "final_worktree_bytes_match": false,
+          "final_git_blob_bytes_match": false,
+          "matching_commits": [
+            "1dc96b45b8d945fbe33877f99345dc0144808e70"
+          ],
+          "version_delta_from_this_review_to_final": {
+            "added": 133,
+            "removed": 2,
+            "hunks": [
+              "@@ -15,2 +15,5 @@\n",
+              "@@ -40,0 +44,125 @@\n",
+              "@@ -44,0 +173 @@\n",
+              "@@ -180,0 +310,2 @@\n"
+            ],
+            "scope": "version metadata only; no new logic/security review",
+            "coverage_warning": "这是该旧审查到最终的版本差异，不自动等于未覆盖；必须合看后续限定review链。"
+          }
+        },
+        {
+          "review_id": "label_final",
+          "reviewed_sha256": "48ae5f2b7fba134b28c4b51efc63b70e0dd7b2dfb7676d70e1bdcc0ee7e1f870",
+          "note": null,
+          "review_path": "out/collab/k1-final-adapter-test-diff-independent.md",
+          "reviewer": "独立启动/测试审查Sol medium",
+          "kind": "independent_limited_code_review",
+          "scope": "明确最终label P2签字及旧smoke/I1/bundle测试兼容窄diff，不含bundle广泛边界",
+          "final_worktree_bytes_match": true,
+          "final_git_blob_bytes_match": true,
+          "matching_commits": [
+            "c644bb1acc67658d2ff61fae695340f02ac58503",
+            "11c92d361369cda4b2412451ff2841eff940f810",
+            "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+          ]
+        }
+      ],
+      "last_reviewed_version_binding": {
+        "review_id": "label_final",
+        "reviewed_sha256": "48ae5f2b7fba134b28c4b51efc63b70e0dd7b2dfb7676d70e1bdcc0ee7e1f870",
+        "note": null,
+        "review_path": "out/collab/k1-final-adapter-test-diff-independent.md",
+        "reviewer": "独立启动/测试审查Sol medium",
+        "kind": "independent_limited_code_review",
+        "scope": "明确最终label P2签字及旧smoke/I1/bundle测试兼容窄diff，不含bundle广泛边界",
+        "final_worktree_bytes_match": true,
+        "final_git_blob_bytes_match": true,
+        "matching_commits": [
+          "c644bb1acc67658d2ff61fae695340f02ac58503",
+          "11c92d361369cda4b2412451ff2841eff940f810",
+          "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+        ]
+      },
+      "exact_limited_review_ids": [
+        "label_final"
+      ],
+      "exact_functional_review_ids": [],
+      "status": "limited_review_exact_bytes",
+      "uncovered_delta_or_scope": [],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "gui/smoke_tests/smoke_k1_history_scope.py",
+      "module": "gui",
+      "authors": [
+        "CLI-GUI Sol medium / 01a18f96-d294-7693-bc4b-b3f9f9fd1920",
+        "Franklin",
+        "父任务"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 483,
+      "deletions": 0,
+      "change_type": "A",
+      "final_git_blob_oid": "e0a4c69943b39dfb199a5ac09d54e9d200ef449c",
+      "final_git_sha256": "01259679fd5ef23c8e49a0d096f634a59908bd91111e01104866acfc1a0e69fb",
+      "final_worktree_sha256": "01259679fd5ef23c8e49a0d096f634a59908bd91111e01104866acfc1a0e69fb",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [],
+      "review_chain": [
+        {
+          "review_id": "history",
+          "reviewed_sha256": "8910b0fc3cdb383463d06fa21ea5d1c637d8b8a42bd5fccbd6419c67fbadce88",
+          "note": null,
+          "review_path": "out/collab/k1-c644bb1-windows-independent-history-scope-review.md",
+          "reviewer": "独立显示范围审查Sol medium",
+          "kind": "independent_limited_code_review",
+          "scope": "最终modes增补 + 五产品稳定字节；首轮149/最终150/组件78分开",
+          "final_worktree_bytes_match": false,
+          "final_git_blob_bytes_match": false,
+          "matching_commits": [],
+          "version_delta_from_this_review_to_final": {
+            "unknown": "reviewed SHA is not a committed blob in this range; no snapshot guessed",
+            "coverage_warning": "这是该旧审查到最终的版本差异，不自动等于未覆盖；必须合看后续限定review链。"
+          }
+        },
+        {
+          "review_id": "registration",
+          "reviewed_sha256": "01259679fd5ef23c8e49a0d096f634a59908bd91111e01104866acfc1a0e69fb",
+          "note": null,
+          "review_path": "out/collab/k1-c644bb1-windows-independent-history-registration.json",
+          "reviewer": "独立登记审查者",
+          "kind": "independent_limited_code_review",
+          "scope": "history默认根一行/trajectory原Windows分支/当时registry窄diff",
+          "final_worktree_bytes_match": true,
+          "final_git_blob_bytes_match": true,
+          "matching_commits": [
+            "11c92d361369cda4b2412451ff2841eff940f810",
+            "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+          ]
+        }
+      ],
+      "last_reviewed_version_binding": {
+        "review_id": "registration",
+        "reviewed_sha256": "01259679fd5ef23c8e49a0d096f634a59908bd91111e01104866acfc1a0e69fb",
+        "note": null,
+        "review_path": "out/collab/k1-c644bb1-windows-independent-history-registration.json",
+        "reviewer": "独立登记审查者",
+        "kind": "independent_limited_code_review",
+        "scope": "history默认根一行/trajectory原Windows分支/当时registry窄diff",
+        "final_worktree_bytes_match": true,
+        "final_git_blob_bytes_match": true,
+        "matching_commits": [
+          "11c92d361369cda4b2412451ff2841eff940f810",
+          "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+        ]
+      },
+      "exact_limited_review_ids": [
+        "registration"
+      ],
+      "exact_functional_review_ids": [],
+      "status": "limited_review_exact_bytes",
+      "uncovered_delta_or_scope": [],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "gui/smoke_tests/smoke_k1_panel.py",
+      "module": "panel",
+      "authors": [
+        "DeepSeek flash初稿",
+        "Sol medium / 01a18f95-cb86-76f1-8ed0-0ad1dba517a5",
+        "父任务"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 190,
+      "deletions": 0,
+      "change_type": "A",
+      "final_git_blob_oid": "54fe783b424ce7a7458d3baad36397a7361bb500",
+      "final_git_sha256": "4e90b351f3d934cc07abf2f519d9dd1476117b0e3c28714c1b93426632673c7a",
+      "final_worktree_sha256": "4e90b351f3d934cc07abf2f519d9dd1476117b0e3c28714c1b93426632673c7a",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [
+        {
+          "path": "out/collab/k1-implementation-file-manifest.json",
+          "recorded_sha256": "4e90b351f3d934cc07abf2f519d9dd1476117b0e3c28714c1b93426632673c7a",
+          "matches_final_raw": true,
+          "independent_review": false
+        }
+      ],
+      "review_chain": [],
+      "last_reviewed_version_binding": null,
+      "exact_limited_review_ids": [],
+      "exact_functional_review_ids": [],
+      "status": "no_exact_final_binding_found",
+      "uncovered_delta_or_scope": [
+        "所查记录未找到绑定最终字节的独立限定代码/普通功能签字；不等于从未有人阅读。"
+      ],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "gui/smoke_tests/smoke_k1_relocation.py",
+      "module": "bundle",
+      "authors": [
+        "原bundle Sol high / 01a18f93-ec3e-7463-a68e-fd5ccd347033",
+        "Franklin",
+        "父任务"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 282,
+      "deletions": 0,
+      "change_type": "A",
+      "final_git_blob_oid": "a949ca161458c8f9e69c2d528eb8229d0cb48f7c",
+      "final_git_sha256": "4fddfec77f40d00e0f052b147386aaf3d3adddd305bc656fe57f480fdf0732ad",
+      "final_worktree_sha256": "4fddfec77f40d00e0f052b147386aaf3d3adddd305bc656fe57f480fdf0732ad",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [],
+      "review_chain": [
+        {
+          "review_id": "parent_relocation",
+          "reviewed_sha256": "4fddfec77f40d00e0f052b147386aaf3d3adddd305bc656fe57f480fdf0732ad",
+          "note": null,
+          "review_path": "out/collab/k1-parent-relocation-functional-review.json",
+          "reviewer": "父任务（非Franklin实现）",
+          "kind": "ordinary_functional_review",
+          "scope": "仅raw-draft搬移/正常export路径身份及两新测试质量；非资源安全签字",
+          "final_worktree_bytes_match": true,
+          "final_git_blob_bytes_match": true,
+          "matching_commits": [
+            "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+          ]
+        }
+      ],
+      "last_reviewed_version_binding": {
+        "review_id": "parent_relocation",
+        "reviewed_sha256": "4fddfec77f40d00e0f052b147386aaf3d3adddd305bc656fe57f480fdf0732ad",
+        "note": null,
+        "review_path": "out/collab/k1-parent-relocation-functional-review.json",
+        "reviewer": "父任务（非Franklin实现）",
+        "kind": "ordinary_functional_review",
+        "scope": "仅raw-draft搬移/正常export路径身份及两新测试质量；非资源安全签字",
+        "final_worktree_bytes_match": true,
+        "final_git_blob_bytes_match": true,
+        "matching_commits": [
+          "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+        ]
+      },
+      "exact_limited_review_ids": [],
+      "exact_functional_review_ids": [
+        "parent_relocation"
+      ],
+      "status": "ordinary_functional_scope_only",
+      "uncovered_delta_or_scope": [],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "gui/smoke_tests/smoke_k1_workflow.py",
+      "module": "tesla",
+      "authors": [
+        "原CLI适配写者",
+        "Tesla / 01a1905b-a3ae-7d73-8cd2-652b27fd569d",
+        "父任务"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 161,
+      "deletions": 0,
+      "change_type": "A",
+      "final_git_blob_oid": "c6676bbee94c772281b79c6de6c711866502e6d4",
+      "final_git_sha256": "fa387c6b551e06331cb3203d4d8f748ee3852939aefc573d5f2c527ae08c7524",
+      "final_worktree_sha256": "fa387c6b551e06331cb3203d4d8f748ee3852939aefc573d5f2c527ae08c7524",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [
+        {
+          "path": "out/collab/k1-implementation-file-manifest.json",
+          "recorded_sha256": "1197797a1e92356a66f3b03ee28cd48fd9cc6bd6c856337af058fef055907c83",
+          "matches_final_raw": false,
+          "independent_review": false
+        },
+        {
+          "path": "out/collab/k1-adapters-final-manifest.json",
+          "recorded_sha256": "1197797a1e92356a66f3b03ee28cd48fd9cc6bd6c856337af058fef055907c83",
+          "matches_final_raw": false,
+          "independent_review": false
+        }
+      ],
+      "review_chain": [
+        {
+          "review_id": "other_three",
+          "reviewed_sha256": "fa387c6b551e06331cb3203d4d8f748ee3852939aefc573d5f2c527ae08c7524",
+          "note": null,
+          "review_path": "out/collab/k1-win-ci-three-smokes-independent-review.md",
+          "reviewer": "首轮smoke写者，非Tesla这三文件作者",
+          "kind": "independent_limited_code_review",
+          "scope": "末尾锁定三smoke字节；当时组合只到两项，未冒称最终3/3",
+          "final_worktree_bytes_match": true,
+          "final_git_blob_bytes_match": true,
+          "matching_commits": [
+            "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+          ]
+        },
+        {
+          "review_id": "parent_three",
+          "reviewed_sha256": "fa387c6b551e06331cb3203d4d8f748ee3852939aefc573d5f2c527ae08c7524",
+          "note": null,
+          "review_path": "out/collab/k1-parent-three-smoke-review.json",
+          "reviewer": "父任务（独立于Tesla实现）",
+          "kind": "independent_limited_code_review",
+          "scope": "接受三测试diff并核完整最终38/241/254收据",
+          "final_worktree_bytes_match": true,
+          "final_git_blob_bytes_match": true,
+          "matching_commits": [
+            "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+          ]
+        }
+      ],
+      "last_reviewed_version_binding": {
+        "review_id": "parent_three",
+        "reviewed_sha256": "fa387c6b551e06331cb3203d4d8f748ee3852939aefc573d5f2c527ae08c7524",
+        "note": null,
+        "review_path": "out/collab/k1-parent-three-smoke-review.json",
+        "reviewer": "父任务（独立于Tesla实现）",
+        "kind": "independent_limited_code_review",
+        "scope": "接受三测试diff并核完整最终38/241/254收据",
+        "final_worktree_bytes_match": true,
+        "final_git_blob_bytes_match": true,
+        "matching_commits": [
+          "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+        ]
+      },
+      "exact_limited_review_ids": [
+        "other_three",
+        "parent_three"
+      ],
+      "exact_functional_review_ids": [],
+      "status": "limited_review_exact_bytes",
+      "uncovered_delta_or_scope": [],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "gui/smoke_tests/smoke_live_progress.py",
+      "module": "launch",
+      "authors": [
+        "Bohr(workflow Sol high)",
+        "父任务"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 22,
+      "deletions": 0,
+      "change_type": "M",
+      "final_git_blob_oid": "8f2cca80f5723288515c2da41af5166467b9c83b",
+      "final_git_sha256": "dd7e7a7cb3434cad366dd387e35afe700979bb6d74075b285b6a68f6309f3606",
+      "final_worktree_sha256": "dd7e7a7cb3434cad366dd387e35afe700979bb6d74075b285b6a68f6309f3606",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [],
+      "review_chain": [
+        {
+          "review_id": "path_progress",
+          "reviewed_sha256": "dd7e7a7cb3434cad366dd387e35afe700979bb6d74075b285b6a68f6309f3606",
+          "note": null,
+          "review_path": "out/collab/k1-c644bb1-windows-independent-candidate-review.md",
+          "reviewer": "独立审查Sol medium",
+          "kind": "independent_limited_code_review",
+          "scope": "末尾只签两候选：路径规范化测试与FailedToStart/progress",
+          "final_worktree_bytes_match": true,
+          "final_git_blob_bytes_match": true,
+          "matching_commits": [
+            "11c92d361369cda4b2412451ff2841eff940f810",
+            "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+          ]
+        }
+      ],
+      "last_reviewed_version_binding": {
+        "review_id": "path_progress",
+        "reviewed_sha256": "dd7e7a7cb3434cad366dd387e35afe700979bb6d74075b285b6a68f6309f3606",
+        "note": null,
+        "review_path": "out/collab/k1-c644bb1-windows-independent-candidate-review.md",
+        "reviewer": "独立审查Sol medium",
+        "kind": "independent_limited_code_review",
+        "scope": "末尾只签两候选：路径规范化测试与FailedToStart/progress",
+        "final_worktree_bytes_match": true,
+        "final_git_blob_bytes_match": true,
+        "matching_commits": [
+          "11c92d361369cda4b2412451ff2841eff940f810",
+          "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+        ]
+      },
+      "exact_limited_review_ids": [
+        "path_progress"
+      ],
+      "exact_functional_review_ids": [],
+      "status": "limited_review_exact_bytes",
+      "uncovered_delta_or_scope": [],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "gui/smoke_tests/smoke_new_simulation_wizard.py",
+      "module": "gui",
+      "authors": [
+        "CLI-GUI Sol medium / 01a18f96-d294-7693-bc4b-b3f9f9fd1920",
+        "Franklin",
+        "父任务"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 4,
+      "deletions": 1,
+      "change_type": "M",
+      "final_git_blob_oid": "ac69d25db0406bb2ca0aea89c0b761f5016890ac",
+      "final_git_sha256": "304c81f998603e76a527bb4e69165f24cbe105874022b8c57f0b99818efb64d7",
+      "final_worktree_sha256": "304c81f998603e76a527bb4e69165f24cbe105874022b8c57f0b99818efb64d7",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [
+        {
+          "path": "out/collab/k1-implementation-file-manifest.json",
+          "recorded_sha256": "304c81f998603e76a527bb4e69165f24cbe105874022b8c57f0b99818efb64d7",
+          "matches_final_raw": true,
+          "independent_review": false
+        },
+        {
+          "path": "out/collab/k1-adapters-final-manifest.json",
+          "recorded_sha256": "304c81f998603e76a527bb4e69165f24cbe105874022b8c57f0b99818efb64d7",
+          "matches_final_raw": true,
+          "independent_review": false
+        }
+      ],
+      "review_chain": [],
+      "last_reviewed_version_binding": null,
+      "exact_limited_review_ids": [],
+      "exact_functional_review_ids": [],
+      "status": "no_exact_final_binding_found",
+      "uncovered_delta_or_scope": [
+        "所查记录未找到绑定最终字节的独立限定代码/普通功能签字；不等于从未有人阅读。"
+      ],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "gui/smoke_tests/smoke_project_snapshot_restore.py",
+      "module": "gui",
+      "authors": [
+        "CLI-GUI Sol medium / 01a18f96-d294-7693-bc4b-b3f9f9fd1920",
+        "Franklin",
+        "父任务"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 6,
+      "deletions": 3,
+      "change_type": "M",
+      "final_git_blob_oid": "96e0c02f4547614ebeab7885ecc47eedf8b072de",
+      "final_git_sha256": "8071589683f2db979e668b664a57b978c7663ab8c8e96d20e3b391cfd96db10b",
+      "final_worktree_sha256": "8071589683f2db979e668b664a57b978c7663ab8c8e96d20e3b391cfd96db10b",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [
+        {
+          "path": "out/collab/k1-implementation-file-manifest.json",
+          "recorded_sha256": "8071589683f2db979e668b664a57b978c7663ab8c8e96d20e3b391cfd96db10b",
+          "matches_final_raw": true,
+          "independent_review": false
+        },
+        {
+          "path": "out/collab/k1-adapters-final-manifest.json",
+          "recorded_sha256": "8071589683f2db979e668b664a57b978c7663ab8c8e96d20e3b391cfd96db10b",
+          "matches_final_raw": true,
+          "independent_review": false
+        }
+      ],
+      "review_chain": [],
+      "last_reviewed_version_binding": null,
+      "exact_limited_review_ids": [],
+      "exact_functional_review_ids": [],
+      "status": "no_exact_final_binding_found",
+      "uncovered_delta_or_scope": [
+        "所查记录未找到绑定最终字节的独立限定代码/普通功能签字；不等于从未有人阅读。"
+      ],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "gui/smoke_tests/smoke_q1_public_paths.py",
+      "module": "gui",
+      "authors": [
+        "CLI-GUI Sol medium / 01a18f96-d294-7693-bc4b-b3f9f9fd1920",
+        "Franklin",
+        "父任务"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 2,
+      "deletions": 0,
+      "change_type": "M",
+      "final_git_blob_oid": "6ee7857e50bef403d06b6240ee59fb58e7c762e4",
+      "final_git_sha256": "09882ba3c154a25ea5d836783abe27d2345ce21d9b3e3f1036ced516b1ddc9f0",
+      "final_worktree_sha256": "09882ba3c154a25ea5d836783abe27d2345ce21d9b3e3f1036ced516b1ddc9f0",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [
+        {
+          "path": "out/collab/k1-implementation-file-manifest.json",
+          "recorded_sha256": "09882ba3c154a25ea5d836783abe27d2345ce21d9b3e3f1036ced516b1ddc9f0",
+          "matches_final_raw": true,
+          "independent_review": false
+        },
+        {
+          "path": "out/collab/k1-adapters-final-manifest.json",
+          "recorded_sha256": "09882ba3c154a25ea5d836783abe27d2345ce21d9b3e3f1036ced516b1ddc9f0",
+          "matches_final_raw": true,
+          "independent_review": false
+        }
+      ],
+      "review_chain": [],
+      "last_reviewed_version_binding": null,
+      "exact_limited_review_ids": [],
+      "exact_functional_review_ids": [],
+      "status": "no_exact_final_binding_found",
+      "uncovered_delta_or_scope": [
+        "所查记录未找到绑定最终字节的独立限定代码/普通功能签字；不等于从未有人阅读。"
+      ],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "gui/smoke_tests/smoke_run_input_modes.py",
+      "module": "gui",
+      "authors": [
+        "CLI-GUI Sol medium / 01a18f96-d294-7693-bc4b-b3f9f9fd1920",
+        "Franklin",
+        "父任务"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 56,
+      "deletions": 12,
+      "change_type": "M",
+      "final_git_blob_oid": "c1d3932bb73809bfe84259588d4741ec80db0663",
+      "final_git_sha256": "ec2eb725630067711fd910587f279eee673e87f295eb1a3e75559a2bbcaca95e",
+      "final_worktree_sha256": "ec2eb725630067711fd910587f279eee673e87f295eb1a3e75559a2bbcaca95e",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [
+        {
+          "path": "out/collab/k1-implementation-file-manifest.json",
+          "recorded_sha256": "ec2eb725630067711fd910587f279eee673e87f295eb1a3e75559a2bbcaca95e",
+          "matches_final_raw": true,
+          "independent_review": false
+        },
+        {
+          "path": "out/collab/k1-adapters-final-manifest.json",
+          "recorded_sha256": "ec2eb725630067711fd910587f279eee673e87f295eb1a3e75559a2bbcaca95e",
+          "matches_final_raw": true,
+          "independent_review": false
+        }
+      ],
+      "review_chain": [],
+      "last_reviewed_version_binding": null,
+      "exact_limited_review_ids": [],
+      "exact_functional_review_ids": [],
+      "status": "no_exact_final_binding_found",
+      "uncovered_delta_or_scope": [
+        "所查记录未找到绑定最终字节的独立限定代码/普通功能签字；不等于从未有人阅读。"
+      ],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "gui/smoke_tests/smoke_trajectory_view.py",
+      "module": "legacy",
+      "authors": [
+        "Sol medium / 01a18ff8-0672-7a33-ba81-7ec0b0ee6b00",
+        "父任务"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 36,
+      "deletions": 33,
+      "change_type": "M",
+      "final_git_blob_oid": "6869b4191604fb621fdc151a9d6aeb05c294c911",
+      "final_git_sha256": "11d2edc2ef768f9b26d4475f8578796c28c124eda6d4395e66d1c5dfde041734",
+      "final_worktree_sha256": "11d2edc2ef768f9b26d4475f8578796c28c124eda6d4395e66d1c5dfde041734",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [],
+      "review_chain": [
+        {
+          "review_id": "label_final",
+          "reviewed_sha256": "2c697d1620f1875a6a1099f8525c3d5326be00b4459b4b75dbb767ac466c372d",
+          "note": null,
+          "review_path": "out/collab/k1-final-adapter-test-diff-independent.md",
+          "reviewer": "独立启动/测试审查Sol medium",
+          "kind": "independent_limited_code_review",
+          "scope": "明确最终label P2签字及旧smoke/I1/bundle测试兼容窄diff，不含bundle广泛边界",
+          "final_worktree_bytes_match": false,
+          "final_git_blob_bytes_match": false,
+          "matching_commits": [
+            "c644bb1acc67658d2ff61fae695340f02ac58503"
+          ],
+          "version_delta_from_this_review_to_final": {
+            "added": 2,
+            "removed": 1,
+            "hunks": [
+              "@@ -32 +32,2 @@\n"
+            ],
+            "scope": "version metadata only; no new logic/security review",
+            "coverage_warning": "这是该旧审查到最终的版本差异，不自动等于未覆盖；必须合看后续限定review链。"
+          }
+        },
+        {
+          "review_id": "registration",
+          "reviewed_sha256": "11d2edc2ef768f9b26d4475f8578796c28c124eda6d4395e66d1c5dfde041734",
+          "note": null,
+          "review_path": "out/collab/k1-c644bb1-windows-independent-history-registration.json",
+          "reviewer": "独立登记审查者",
+          "kind": "independent_limited_code_review",
+          "scope": "history默认根一行/trajectory原Windows分支/当时registry窄diff",
+          "final_worktree_bytes_match": true,
+          "final_git_blob_bytes_match": true,
+          "matching_commits": [
+            "11c92d361369cda4b2412451ff2841eff940f810",
+            "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+          ]
+        }
+      ],
+      "last_reviewed_version_binding": {
+        "review_id": "registration",
+        "reviewed_sha256": "11d2edc2ef768f9b26d4475f8578796c28c124eda6d4395e66d1c5dfde041734",
+        "note": null,
+        "review_path": "out/collab/k1-c644bb1-windows-independent-history-registration.json",
+        "reviewer": "独立登记审查者",
+        "kind": "independent_limited_code_review",
+        "scope": "history默认根一行/trajectory原Windows分支/当时registry窄diff",
+        "final_worktree_bytes_match": true,
+        "final_git_blob_bytes_match": true,
+        "matching_commits": [
+          "11c92d361369cda4b2412451ff2841eff940f810",
+          "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+        ]
+      },
+      "exact_limited_review_ids": [
+        "registration"
+      ],
+      "exact_functional_review_ids": [],
+      "status": "limited_review_exact_bytes",
+      "uncovered_delta_or_scope": [],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "include/Core/BackendCapabilities.hh",
+      "module": "cpp",
+      "authors": [
+        "父任务"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 1,
+      "deletions": 0,
+      "change_type": "M",
+      "final_git_blob_oid": "4102fc895361a40ad0c783769fb6832084d2ccdc",
+      "final_git_sha256": "40e0f7c33f081ed63b0989c7d5a0151f939b747184012f41c4127f2dcf399c6c",
+      "final_worktree_sha256": "40e0f7c33f081ed63b0989c7d5a0151f939b747184012f41c4127f2dcf399c6c",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [],
+      "review_chain": [
+        {
+          "review_id": "cpp",
+          "reviewed_sha256": "40e0f7c33f081ed63b0989c7d5a0151f939b747184012f41c4127f2dcf399c6c",
+          "note": null,
+          "review_path": "out/collab/k1-cpp-launch-portability-independent.md",
+          "reviewer": "首轮smoke写者（未写本次被审五文件）",
+          "kind": "independent_limited_code_review",
+          "scope": "末尾五文件SHA的可移植性限定签字",
+          "final_worktree_bytes_match": true,
+          "final_git_blob_bytes_match": true,
+          "matching_commits": [
+            "c644bb1acc67658d2ff61fae695340f02ac58503",
+            "11c92d361369cda4b2412451ff2841eff940f810",
+            "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+          ]
+        }
+      ],
+      "last_reviewed_version_binding": {
+        "review_id": "cpp",
+        "reviewed_sha256": "40e0f7c33f081ed63b0989c7d5a0151f939b747184012f41c4127f2dcf399c6c",
+        "note": null,
+        "review_path": "out/collab/k1-cpp-launch-portability-independent.md",
+        "reviewer": "首轮smoke写者（未写本次被审五文件）",
+        "kind": "independent_limited_code_review",
+        "scope": "末尾五文件SHA的可移植性限定签字",
+        "final_worktree_bytes_match": true,
+        "final_git_blob_bytes_match": true,
+        "matching_commits": [
+          "c644bb1acc67658d2ff61fae695340f02ac58503",
+          "11c92d361369cda4b2412451ff2841eff940f810",
+          "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+        ]
+      },
+      "exact_limited_review_ids": [
+        "cpp"
+      ],
+      "exact_functional_review_ids": [],
+      "status": "limited_review_exact_bytes",
+      "uncovered_delta_or_scope": [],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "main.cc",
+      "module": "cpp",
+      "authors": [
+        "父任务"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 27,
+      "deletions": 2,
+      "change_type": "M",
+      "final_git_blob_oid": "068c499229f53059674a7e6b34eeb63548c54f0f",
+      "final_git_sha256": "202a8e13c6ab9aff756cfbfc0fa0a57b67d0f9a576ee48fdb9f0a7b161db5714",
+      "final_worktree_sha256": "202a8e13c6ab9aff756cfbfc0fa0a57b67d0f9a576ee48fdb9f0a7b161db5714",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [],
+      "review_chain": [
+        {
+          "review_id": "cpp",
+          "reviewed_sha256": "202a8e13c6ab9aff756cfbfc0fa0a57b67d0f9a576ee48fdb9f0a7b161db5714",
+          "note": null,
+          "review_path": "out/collab/k1-cpp-launch-portability-independent.md",
+          "reviewer": "首轮smoke写者（未写本次被审五文件）",
+          "kind": "independent_limited_code_review",
+          "scope": "末尾五文件SHA的可移植性限定签字",
+          "final_worktree_bytes_match": true,
+          "final_git_blob_bytes_match": true,
+          "matching_commits": [
+            "c644bb1acc67658d2ff61fae695340f02ac58503",
+            "11c92d361369cda4b2412451ff2841eff940f810",
+            "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+          ]
+        }
+      ],
+      "last_reviewed_version_binding": {
+        "review_id": "cpp",
+        "reviewed_sha256": "202a8e13c6ab9aff756cfbfc0fa0a57b67d0f9a576ee48fdb9f0a7b161db5714",
+        "note": null,
+        "review_path": "out/collab/k1-cpp-launch-portability-independent.md",
+        "reviewer": "首轮smoke写者（未写本次被审五文件）",
+        "kind": "independent_limited_code_review",
+        "scope": "末尾五文件SHA的可移植性限定签字",
+        "final_worktree_bytes_match": true,
+        "final_git_blob_bytes_match": true,
+        "matching_commits": [
+          "c644bb1acc67658d2ff61fae695340f02ac58503",
+          "11c92d361369cda4b2412451ff2841eff940f810",
+          "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+        ]
+      },
+      "exact_limited_review_ids": [
+        "cpp"
+      ],
+      "exact_functional_review_ids": [],
+      "status": "limited_review_exact_bytes",
+      "uncovered_delta_or_scope": [],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "scripts/run_m0_tests.py",
+      "module": "ci",
+      "authors": [
+        "父任务"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 22,
+      "deletions": 0,
+      "change_type": "M",
+      "final_git_blob_oid": "31cf4b3a644b42aa051509cbec0e53408a1e1e66",
+      "final_git_sha256": "8d4137897697ac73152cf9ec7e7264e27fb13aa0b2b9d79cc7a10f404cf03108",
+      "final_worktree_sha256": "8d4137897697ac73152cf9ec7e7264e27fb13aa0b2b9d79cc7a10f404cf03108",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [
+        {
+          "path": "out/collab/k1-implementation-file-manifest.json",
+          "recorded_sha256": "fba26fa7b4a9b1fd71b6abe6bfdce39b943b222a2e5be859b5f6067818067136",
+          "matches_final_raw": false,
+          "independent_review": false
+        }
+      ],
+      "review_chain": [
+        {
+          "review_id": "registration",
+          "reviewed_sha256": "ddfedc7ea237ee0f08fc66ce48b7132db1838a8513d2d4ead6149859961e7127",
+          "note": null,
+          "review_path": "out/collab/k1-c644bb1-windows-independent-history-registration.json",
+          "reviewer": "独立登记审查者",
+          "kind": "independent_limited_code_review",
+          "scope": "history默认根一行/trajectory原Windows分支/当时registry窄diff",
+          "final_worktree_bytes_match": false,
+          "final_git_blob_bytes_match": false,
+          "matching_commits": [
+            "11c92d361369cda4b2412451ff2841eff940f810"
+          ],
+          "version_delta_from_this_review_to_final": {
+            "added": 3,
+            "removed": 0,
+            "hunks": [
+              "@@ -65,0 +66,3 @@\n"
+            ],
+            "scope": "version metadata only; no new logic/security review",
+            "coverage_warning": "这是该旧审查到最终的版本差异，不自动等于未覆盖；必须合看后续限定review链。"
+          }
+        }
+      ],
+      "last_reviewed_version_binding": {
+        "review_id": "registration",
+        "reviewed_sha256": "ddfedc7ea237ee0f08fc66ce48b7132db1838a8513d2d4ead6149859961e7127",
+        "note": null,
+        "review_path": "out/collab/k1-c644bb1-windows-independent-history-registration.json",
+        "reviewer": "独立登记审查者",
+        "kind": "independent_limited_code_review",
+        "scope": "history默认根一行/trajectory原Windows分支/当时registry窄diff",
+        "final_worktree_bytes_match": false,
+        "final_git_blob_bytes_match": false,
+        "matching_commits": [
+          "11c92d361369cda4b2412451ff2841eff940f810"
+        ],
+        "uncovered_version_delta_metadata": {
+          "added": 3,
+          "removed": 0,
+          "hunks": [
+            "@@ -65,0 +66,3 @@\n"
+          ],
+          "scope": "version metadata only; no new logic/security review"
+        }
+      },
+      "exact_limited_review_ids": [],
+      "exact_functional_review_ids": [],
+      "status": "no_exact_final_binding_found",
+      "uncovered_delta_or_scope": [
+        "所查记录未找到绑定最终字节的独立限定代码/普通功能签字；不等于从未有人阅读。",
+        "曾审ddfedc与最终8d4137不同；第四冻结新增三个登记的独立语义签字未在所查记录中找到。"
+      ],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "scripts/test_backend_launch.py",
+      "module": "launch",
+      "authors": [
+        "Bohr(workflow Sol high)",
+        "父任务"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 146,
+      "deletions": 0,
+      "change_type": "A",
+      "final_git_blob_oid": "3909278ce303c355fe663d3e230081460db44fa2",
+      "final_git_sha256": "ddeacf31d31d2564c46e7dc3851b75eec36bf28a7d85e241759817e0faea24a9",
+      "final_worktree_sha256": "ddeacf31d31d2564c46e7dc3851b75eec36bf28a7d85e241759817e0faea24a9",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [],
+      "review_chain": [
+        {
+          "review_id": "launch_applied",
+          "reviewed_sha256": "b27998ee980f4b4561bf994d5f8ca3192025b6eeba2a5f3795c56bb3ae53eaec",
+          "note": null,
+          "review_path": "out/collab/k1-python-launch-independent-review.md",
+          "reviewer": "独立启动审查Sol medium",
+          "kind": "independent_limited_code_review",
+          "scope": "末尾七文件限定观察；helper P2由后续最终增补关闭",
+          "final_worktree_bytes_match": false,
+          "final_git_blob_bytes_match": false,
+          "matching_commits": [],
+          "version_delta_from_this_review_to_final": {
+            "unknown": "reviewed SHA is not a committed blob in this range; no snapshot guessed",
+            "coverage_warning": "这是该旧审查到最终的版本差异，不自动等于未覆盖；必须合看后续限定review链。"
+          }
+        },
+        {
+          "review_id": "label_final",
+          "reviewed_sha256": "ddeacf31d31d2564c46e7dc3851b75eec36bf28a7d85e241759817e0faea24a9",
+          "note": null,
+          "review_path": "out/collab/k1-final-adapter-test-diff-independent.md",
+          "reviewer": "独立启动/测试审查Sol medium",
+          "kind": "independent_limited_code_review",
+          "scope": "明确最终label P2签字及旧smoke/I1/bundle测试兼容窄diff，不含bundle广泛边界",
+          "final_worktree_bytes_match": true,
+          "final_git_blob_bytes_match": true,
+          "matching_commits": [
+            "c644bb1acc67658d2ff61fae695340f02ac58503",
+            "11c92d361369cda4b2412451ff2841eff940f810",
+            "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+          ]
+        }
+      ],
+      "last_reviewed_version_binding": {
+        "review_id": "label_final",
+        "reviewed_sha256": "ddeacf31d31d2564c46e7dc3851b75eec36bf28a7d85e241759817e0faea24a9",
+        "note": null,
+        "review_path": "out/collab/k1-final-adapter-test-diff-independent.md",
+        "reviewer": "独立启动/测试审查Sol medium",
+        "kind": "independent_limited_code_review",
+        "scope": "明确最终label P2签字及旧smoke/I1/bundle测试兼容窄diff，不含bundle广泛边界",
+        "final_worktree_bytes_match": true,
+        "final_git_blob_bytes_match": true,
+        "matching_commits": [
+          "c644bb1acc67658d2ff61fae695340f02ac58503",
+          "11c92d361369cda4b2412451ff2841eff940f810",
+          "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+        ]
+      },
+      "exact_limited_review_ids": [
+        "label_final"
+      ],
+      "exact_functional_review_ids": [],
+      "status": "limited_review_exact_bytes",
+      "uncovered_delta_or_scope": [],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "scripts/test_backend_working_directory.py",
+      "module": "cpp",
+      "authors": [
+        "父任务"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 195,
+      "deletions": 0,
+      "change_type": "A",
+      "final_git_blob_oid": "add907b911d161da930e3e627d53dda2e10508a8",
+      "final_git_sha256": "1a127cf4c7adf6154de1fe09498639d99a2e3dd8c71e5fe0461982445946bae5",
+      "final_worktree_sha256": "1a127cf4c7adf6154de1fe09498639d99a2e3dd8c71e5fe0461982445946bae5",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [],
+      "review_chain": [
+        {
+          "review_id": "cpp",
+          "reviewed_sha256": "1a127cf4c7adf6154de1fe09498639d99a2e3dd8c71e5fe0461982445946bae5",
+          "note": null,
+          "review_path": "out/collab/k1-cpp-launch-portability-independent.md",
+          "reviewer": "首轮smoke写者（未写本次被审五文件）",
+          "kind": "independent_limited_code_review",
+          "scope": "末尾五文件SHA的可移植性限定签字",
+          "final_worktree_bytes_match": true,
+          "final_git_blob_bytes_match": true,
+          "matching_commits": [
+            "c644bb1acc67658d2ff61fae695340f02ac58503",
+            "11c92d361369cda4b2412451ff2841eff940f810",
+            "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+          ]
+        }
+      ],
+      "last_reviewed_version_binding": {
+        "review_id": "cpp",
+        "reviewed_sha256": "1a127cf4c7adf6154de1fe09498639d99a2e3dd8c71e5fe0461982445946bae5",
+        "note": null,
+        "review_path": "out/collab/k1-cpp-launch-portability-independent.md",
+        "reviewer": "首轮smoke写者（未写本次被审五文件）",
+        "kind": "independent_limited_code_review",
+        "scope": "末尾五文件SHA的可移植性限定签字",
+        "final_worktree_bytes_match": true,
+        "final_git_blob_bytes_match": true,
+        "matching_commits": [
+          "c644bb1acc67658d2ff61fae695340f02ac58503",
+          "11c92d361369cda4b2412451ff2841eff940f810",
+          "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+        ]
+      },
+      "exact_limited_review_ids": [
+        "cpp"
+      ],
+      "exact_functional_review_ids": [],
+      "status": "limited_review_exact_bytes",
+      "uncovered_delta_or_scope": [],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "scripts/test_i1_environment.py",
+      "module": "i1",
+      "authors": [
+        "I1 Sol high / 01a18f93-e780-7953-90fe-cd5b6fe40fc0",
+        "Sol medium UI续修",
+        "Bohr启动适配"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 340,
+      "deletions": 0,
+      "change_type": "A",
+      "final_git_blob_oid": "09abbecc85251cfbb120cd0908ea5c9a11e18211",
+      "final_git_sha256": "9b31654e94ebf5c3344c126ab1c668bb1df865f7e8f840940ab97d6920c74851",
+      "final_worktree_sha256": "9b31654e94ebf5c3344c126ab1c668bb1df865f7e8f840940ab97d6920c74851",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [],
+      "review_chain": [
+        {
+          "review_id": "i1_fix",
+          "reviewed_sha256": "8f06ba8a5102380f01e7e894a79e801ad7e7b6249854b87cd9e7b5a75ecc63de",
+          "note": null,
+          "review_path": "out/collab/k1-i1-independent.md",
+          "reviewer": "I1/核心独立审查者",
+          "kind": "independent_limited_code_review",
+          "scope": "文末两项P2修复后续审",
+          "final_worktree_bytes_match": false,
+          "final_git_blob_bytes_match": false,
+          "matching_commits": [
+            "1dc96b45b8d945fbe33877f99345dc0144808e70",
+            "e5ff80009975fc9d7d783eaa0865c7c894d1975b"
+          ],
+          "version_delta_from_this_review_to_final": {
+            "added": 10,
+            "removed": 5,
+            "hunks": [
+              "@@ -84,0 +85,2 @@\n",
+              "@@ -109 +111 @@\n",
+              "@@ -112 +114 @@\n",
+              "@@ -115 +117 @@\n",
+              "@@ -121 +123 @@\n",
+              "@@ -283 +285,4 @@\n"
+            ],
+            "scope": "version metadata only; no new logic/security review",
+            "coverage_warning": "这是该旧审查到最终的版本差异，不自动等于未覆盖；必须合看后续限定review链。"
+          }
+        },
+        {
+          "review_id": "label_final",
+          "reviewed_sha256": "17641448f01d72614dcc7959567ad3b22142243db79c7b33dd090234bc3da107",
+          "note": null,
+          "review_path": "out/collab/k1-final-adapter-test-diff-independent.md",
+          "reviewer": "独立启动/测试审查Sol medium",
+          "kind": "independent_limited_code_review",
+          "scope": "明确最终label P2签字及旧smoke/I1/bundle测试兼容窄diff，不含bundle广泛边界",
+          "final_worktree_bytes_match": false,
+          "final_git_blob_bytes_match": false,
+          "matching_commits": [
+            "c644bb1acc67658d2ff61fae695340f02ac58503"
+          ],
+          "version_delta_from_this_review_to_final": {
+            "added": 6,
+            "removed": 4,
+            "hunks": [
+              "@@ -84,0 +85,2 @@\n",
+              "@@ -109 +111 @@\n",
+              "@@ -112 +114 @@\n",
+              "@@ -115 +117 @@\n",
+              "@@ -121 +123 @@\n"
+            ],
+            "scope": "version metadata only; no new logic/security review",
+            "coverage_warning": "这是该旧审查到最终的版本差异，不自动等于未覆盖；必须合看后续限定review链。"
+          }
+        },
+        {
+          "review_id": "path_progress",
+          "reviewed_sha256": "9b31654e94ebf5c3344c126ab1c668bb1df865f7e8f840940ab97d6920c74851",
+          "note": null,
+          "review_path": "out/collab/k1-c644bb1-windows-independent-candidate-review.md",
+          "reviewer": "独立审查Sol medium",
+          "kind": "independent_limited_code_review",
+          "scope": "末尾只签两候选：路径规范化测试与FailedToStart/progress",
+          "final_worktree_bytes_match": true,
+          "final_git_blob_bytes_match": true,
+          "matching_commits": [
+            "11c92d361369cda4b2412451ff2841eff940f810",
+            "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+          ]
+        }
+      ],
+      "last_reviewed_version_binding": {
+        "review_id": "path_progress",
+        "reviewed_sha256": "9b31654e94ebf5c3344c126ab1c668bb1df865f7e8f840940ab97d6920c74851",
+        "note": null,
+        "review_path": "out/collab/k1-c644bb1-windows-independent-candidate-review.md",
+        "reviewer": "独立审查Sol medium",
+        "kind": "independent_limited_code_review",
+        "scope": "末尾只签两候选：路径规范化测试与FailedToStart/progress",
+        "final_worktree_bytes_match": true,
+        "final_git_blob_bytes_match": true,
+        "matching_commits": [
+          "11c92d361369cda4b2412451ff2841eff940f810",
+          "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+        ]
+      },
+      "exact_limited_review_ids": [
+        "path_progress"
+      ],
+      "exact_functional_review_ids": [],
+      "status": "limited_review_exact_bytes",
+      "uncovered_delta_or_scope": [],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "scripts/test_k1_bundle.py",
+      "module": "bundle",
+      "authors": [
+        "原bundle Sol high / 01a18f93-ec3e-7463-a68e-fd5ccd347033",
+        "Franklin",
+        "父任务"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 695,
+      "deletions": 0,
+      "change_type": "A",
+      "final_git_blob_oid": "624d0d0d52ed76a30dd38c74a04fe8a3603034ac",
+      "final_git_sha256": "d5f872b2fe8a5b39d927866282c06057148bcf67bcdc4673aff1e4d6dbf5caa4",
+      "final_worktree_sha256": "d5f872b2fe8a5b39d927866282c06057148bcf67bcdc4673aff1e4d6dbf5caa4",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [
+        {
+          "path": "out/collab/k1-implementation-file-manifest.json",
+          "recorded_sha256": "8a44b0c44196b17a04cec3ad526b8586a04448a348ce3a77e580b02855cf85d5",
+          "matches_final_raw": false,
+          "independent_review": false
+        }
+      ],
+      "review_chain": [
+        {
+          "review_id": "parent_bundle",
+          "reviewed_sha256": "972219a238188a9dde085e5ee05161d5494898ef16e62bdfd48ea69e0e63f05b",
+          "note": null,
+          "review_path": "out/collab/k1-parent-bundle-functional-review.json",
+          "reviewer": "父任务（非原bundle作者）",
+          "kind": "ordinary_functional_review",
+          "scope": "普通功能代码/组件，明确不是被拒独审完成",
+          "final_worktree_bytes_match": false,
+          "final_git_blob_bytes_match": false,
+          "matching_commits": [],
+          "version_delta_from_this_review_to_final": {
+            "unknown": "reviewed SHA is not a committed blob in this range; no snapshot guessed",
+            "coverage_warning": "这是该旧审查到最终的版本差异，不自动等于未覆盖；必须合看后续限定review链。"
+          }
+        },
+        {
+          "review_id": "label_final",
+          "reviewed_sha256": "d5f872b2fe8a5b39d927866282c06057148bcf67bcdc4673aff1e4d6dbf5caa4",
+          "note": null,
+          "review_path": "out/collab/k1-final-adapter-test-diff-independent.md",
+          "reviewer": "独立启动/测试审查Sol medium",
+          "kind": "independent_limited_code_review",
+          "scope": "明确最终label P2签字及旧smoke/I1/bundle测试兼容窄diff，不含bundle广泛边界",
+          "final_worktree_bytes_match": true,
+          "final_git_blob_bytes_match": true,
+          "matching_commits": [
+            "c644bb1acc67658d2ff61fae695340f02ac58503",
+            "11c92d361369cda4b2412451ff2841eff940f810",
+            "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+          ]
+        }
+      ],
+      "last_reviewed_version_binding": {
+        "review_id": "label_final",
+        "reviewed_sha256": "d5f872b2fe8a5b39d927866282c06057148bcf67bcdc4673aff1e4d6dbf5caa4",
+        "note": null,
+        "review_path": "out/collab/k1-final-adapter-test-diff-independent.md",
+        "reviewer": "独立启动/测试审查Sol medium",
+        "kind": "independent_limited_code_review",
+        "scope": "明确最终label P2签字及旧smoke/I1/bundle测试兼容窄diff，不含bundle广泛边界",
+        "final_worktree_bytes_match": true,
+        "final_git_blob_bytes_match": true,
+        "matching_commits": [
+          "c644bb1acc67658d2ff61fae695340f02ac58503",
+          "11c92d361369cda4b2412451ff2841eff940f810",
+          "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+        ]
+      },
+      "exact_limited_review_ids": [
+        "label_final"
+      ],
+      "exact_functional_review_ids": [],
+      "status": "limited_review_exact_bytes",
+      "uncovered_delta_or_scope": [],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "scripts/test_k1_cli.py",
+      "module": "cli",
+      "authors": [
+        "CLI Sol medium",
+        "父任务"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 526,
+      "deletions": 0,
+      "change_type": "A",
+      "final_git_blob_oid": "f0814053df511d3fb4789b43999b93ccdf390066",
+      "final_git_sha256": "9c777a8516b38bf8b8c888a94f50639331509089de73470af7fef1b4c024db75",
+      "final_worktree_sha256": "9c777a8516b38bf8b8c888a94f50639331509089de73470af7fef1b4c024db75",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [
+        {
+          "path": "out/collab/k1-implementation-file-manifest.json",
+          "recorded_sha256": "5550062749a3d9a47530a345315b588fc053af3c3a60ef01431b686991c53021",
+          "matches_final_raw": false,
+          "independent_review": false
+        },
+        {
+          "path": "out/collab/k1-adapters-final-manifest.json",
+          "recorded_sha256": "5550062749a3d9a47530a345315b588fc053af3c3a60ef01431b686991c53021",
+          "matches_final_raw": false,
+          "independent_review": false
+        }
+      ],
+      "review_chain": [
+        {
+          "review_id": "parent_tests",
+          "reviewed_sha256": "9c777a8516b38bf8b8c888a94f50639331509089de73470af7fef1b4c024db75",
+          "note": null,
+          "review_path": "out/collab/k1-parent-tests-review.json",
+          "reviewer": "Tesla（父两test-only候选的独立审查者）",
+          "kind": "independent_limited_code_review",
+          "scope": "仅cwd expected/两latepass fixture，不涉及bundle",
+          "final_worktree_bytes_match": true,
+          "final_git_blob_bytes_match": true,
+          "matching_commits": [
+            "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+          ]
+        }
+      ],
+      "last_reviewed_version_binding": {
+        "review_id": "parent_tests",
+        "reviewed_sha256": "9c777a8516b38bf8b8c888a94f50639331509089de73470af7fef1b4c024db75",
+        "note": null,
+        "review_path": "out/collab/k1-parent-tests-review.json",
+        "reviewer": "Tesla（父两test-only候选的独立审查者）",
+        "kind": "independent_limited_code_review",
+        "scope": "仅cwd expected/两latepass fixture，不涉及bundle",
+        "final_worktree_bytes_match": true,
+        "final_git_blob_bytes_match": true,
+        "matching_commits": [
+          "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+        ]
+      },
+      "exact_limited_review_ids": [
+        "parent_tests"
+      ],
+      "exact_functional_review_ids": [],
+      "status": "limited_review_exact_bytes",
+      "uncovered_delta_or_scope": [],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "scripts/test_k1_roundtrip.py",
+      "module": "bundle",
+      "authors": [
+        "原bundle Sol high / 01a18f93-ec3e-7463-a68e-fd5ccd347033",
+        "Franklin",
+        "父任务"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 155,
+      "deletions": 0,
+      "change_type": "A",
+      "final_git_blob_oid": "46f18cd2c212050f87ec79fc0f8f655e974f8436",
+      "final_git_sha256": "67d54752a8633d1c2d472bc3af0b9080bc802db8478347ba33295b3400c938f2",
+      "final_worktree_sha256": "67d54752a8633d1c2d472bc3af0b9080bc802db8478347ba33295b3400c938f2",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [
+        {
+          "path": "out/collab/k1-implementation-file-manifest.json",
+          "recorded_sha256": "67d54752a8633d1c2d472bc3af0b9080bc802db8478347ba33295b3400c938f2",
+          "matches_final_raw": true,
+          "independent_review": false
+        }
+      ],
+      "review_chain": [],
+      "last_reviewed_version_binding": null,
+      "exact_limited_review_ids": [],
+      "exact_functional_review_ids": [],
+      "status": "no_exact_final_binding_found",
+      "uncovered_delta_or_scope": [
+        "所查记录未找到绑定最终字节的独立限定代码/普通功能签字；不等于从未有人阅读。"
+      ],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "scripts/test_k1_staging_alias.py",
+      "module": "bundle",
+      "authors": [
+        "原bundle Sol high / 01a18f93-ec3e-7463-a68e-fd5ccd347033",
+        "Franklin",
+        "父任务"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 146,
+      "deletions": 0,
+      "change_type": "A",
+      "final_git_blob_oid": "555b13bd1cb844728934805a0e2ed71427c263c5",
+      "final_git_sha256": "0e33fc7c8990cfe9d5aed535561420f7c34e38b225872ce33056a179f9672d8d",
+      "final_worktree_sha256": "0e33fc7c8990cfe9d5aed535561420f7c34e38b225872ce33056a179f9672d8d",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [],
+      "review_chain": [
+        {
+          "review_id": "parent_relocation",
+          "reviewed_sha256": "0e33fc7c8990cfe9d5aed535561420f7c34e38b225872ce33056a179f9672d8d",
+          "note": null,
+          "review_path": "out/collab/k1-parent-relocation-functional-review.json",
+          "reviewer": "父任务（非Franklin实现）",
+          "kind": "ordinary_functional_review",
+          "scope": "仅raw-draft搬移/正常export路径身份及两新测试质量；非资源安全签字",
+          "final_worktree_bytes_match": true,
+          "final_git_blob_bytes_match": true,
+          "matching_commits": [
+            "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+          ]
+        }
+      ],
+      "last_reviewed_version_binding": {
+        "review_id": "parent_relocation",
+        "reviewed_sha256": "0e33fc7c8990cfe9d5aed535561420f7c34e38b225872ce33056a179f9672d8d",
+        "note": null,
+        "review_path": "out/collab/k1-parent-relocation-functional-review.json",
+        "reviewer": "父任务（非Franklin实现）",
+        "kind": "ordinary_functional_review",
+        "scope": "仅raw-draft搬移/正常export路径身份及两新测试质量；非资源安全签字",
+        "final_worktree_bytes_match": true,
+        "final_git_blob_bytes_match": true,
+        "matching_commits": [
+          "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+        ]
+      },
+      "exact_limited_review_ids": [],
+      "exact_functional_review_ids": [
+        "parent_relocation"
+      ],
+      "status": "ordinary_functional_scope_only",
+      "uncovered_delta_or_scope": [],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "scripts/test_k1_terminal_publication.py",
+      "module": "workflow",
+      "authors": [
+        "Bohr / 01a18f93-ee1e-71b2-8816-4904a12efe51"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 203,
+      "deletions": 0,
+      "change_type": "A",
+      "final_git_blob_oid": "c091a358ee73f883f9fd815f37899f9d29598d6c",
+      "final_git_sha256": "b4fc161221ba6e69cb2c483c2955bf7cec6deca4f18d6a5c739e6ed5168d9ae9",
+      "final_worktree_sha256": "b4fc161221ba6e69cb2c483c2955bf7cec6deca4f18d6a5c739e6ed5168d9ae9",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [],
+      "review_chain": [
+        {
+          "review_id": "cancel",
+          "reviewed_sha256": "b14e9ad84704397425330da8674b53021d8eda18636bb761cb9f6297e2eb2653",
+          "note": null,
+          "review_path": "out/collab/k1-cancel-ownership-independent.md",
+          "reviewer": "Averroes（非候选作者）",
+          "kind": "independent_limited_code_review",
+          "scope": "文末841977候选终态发布所有权与九例受控时序",
+          "final_worktree_bytes_match": false,
+          "final_git_blob_bytes_match": false,
+          "matching_commits": [],
+          "version_delta_from_this_review_to_final": {
+            "unknown": "reviewed SHA is not a committed blob in this range; no snapshot guessed",
+            "coverage_warning": "这是该旧审查到最终的版本差异，不自动等于未覆盖；必须合看后续限定review链。"
+          }
+        },
+        {
+          "review_id": "terminal_defaults",
+          "reviewed_sha256": "b4fc161221ba6e69cb2c483c2955bf7cec6deca4f18d6a5c739e6ed5168d9ae9",
+          "note": null,
+          "review_path": "out/collab/k1-terminal-test-defaults-independent.md",
+          "reviewer": "Averroes（非候选作者）",
+          "kind": "independent_limited_code_review",
+          "scope": "最终test-defaults-r1默认参数/聚合/有界等待窄diff",
+          "final_worktree_bytes_match": true,
+          "final_git_blob_bytes_match": true,
+          "matching_commits": [
+            "11c92d361369cda4b2412451ff2841eff940f810",
+            "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+          ]
+        }
+      ],
+      "last_reviewed_version_binding": {
+        "review_id": "terminal_defaults",
+        "reviewed_sha256": "b4fc161221ba6e69cb2c483c2955bf7cec6deca4f18d6a5c739e6ed5168d9ae9",
+        "note": null,
+        "review_path": "out/collab/k1-terminal-test-defaults-independent.md",
+        "reviewer": "Averroes（非候选作者）",
+        "kind": "independent_limited_code_review",
+        "scope": "最终test-defaults-r1默认参数/聚合/有界等待窄diff",
+        "final_worktree_bytes_match": true,
+        "final_git_blob_bytes_match": true,
+        "matching_commits": [
+          "11c92d361369cda4b2412451ff2841eff940f810",
+          "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+        ]
+      },
+      "exact_limited_review_ids": [
+        "terminal_defaults"
+      ],
+      "exact_functional_review_ids": [],
+      "status": "limited_review_exact_bytes",
+      "uncovered_delta_or_scope": [],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    },
+    {
+      "path": "scripts/test_k1_workflow.py",
+      "module": "workflow",
+      "authors": [
+        "Bohr / 01a18f93-ee1e-71b2-8816-4904a12efe51"
+      ],
+      "attribution": "recorded ownership/ledger, not inferred from shared Git account",
+      "insertions": 754,
+      "deletions": 0,
+      "change_type": "A",
+      "final_git_blob_oid": "5902c6713db894470f5b24f3050118741142e537",
+      "final_git_sha256": "e7c585aa910699f92982edeadc25ed13ff552e407620814e21280a45ccf8b758",
+      "final_worktree_sha256": "e7c585aa910699f92982edeadc25ed13ff552e407620814e21280a45ccf8b758",
+      "worktree_raw_matches_commit": true,
+      "only_CRLF_difference": false,
+      "author_manifests": [
+        {
+          "path": "out/collab/k1-implementation-file-manifest.json",
+          "recorded_sha256": "8a7002c3931bffc4eb02a1c27b80047d2b2375143c5460d031c7372bc8e59d01",
+          "matches_final_raw": false,
+          "independent_review": false
+        }
+      ],
+      "review_chain": [
+        {
+          "review_id": "core_e5",
+          "reviewed_sha256": "8a7002c3931bffc4eb02a1c27b80047d2b2375143c5460d031c7372bc8e59d01",
+          "note": null,
+          "review_path": "out/collab/k1-core-independent-review.md",
+          "reviewer": "独立核心审查 / 01a18f97-f404-7fa0-89f3-b826cadd8055",
+          "kind": "independent_limited_code_review",
+          "scope": "文末e5ff800最终限定签字；bundle仅历史投影/5行版本文本小修",
+          "final_worktree_bytes_match": false,
+          "final_git_blob_bytes_match": false,
+          "matching_commits": [
+            "e5ff80009975fc9d7d783eaa0865c7c894d1975b"
+          ],
+          "version_delta_from_this_review_to_final": {
+            "added": 7,
+            "removed": 1,
+            "hunks": [
+              "@@ -604 +604,7 @@\n"
+            ],
+            "scope": "version metadata only; no new logic/security review",
+            "coverage_warning": "这是该旧审查到最终的版本差异，不自动等于未覆盖；必须合看后续限定review链。"
+          }
+        },
+        {
+          "review_id": "launch_applied",
+          "reviewed_sha256": "e7c585aa910699f92982edeadc25ed13ff552e407620814e21280a45ccf8b758",
+          "note": null,
+          "review_path": "out/collab/k1-python-launch-independent-review.md",
+          "reviewer": "独立启动审查Sol medium",
+          "kind": "independent_limited_code_review",
+          "scope": "末尾七文件限定观察；helper P2由后续最终增补关闭",
+          "final_worktree_bytes_match": true,
+          "final_git_blob_bytes_match": true,
+          "matching_commits": [
+            "c644bb1acc67658d2ff61fae695340f02ac58503",
+            "11c92d361369cda4b2412451ff2841eff940f810",
+            "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+          ]
+        }
+      ],
+      "last_reviewed_version_binding": {
+        "review_id": "launch_applied",
+        "reviewed_sha256": "e7c585aa910699f92982edeadc25ed13ff552e407620814e21280a45ccf8b758",
+        "note": null,
+        "review_path": "out/collab/k1-python-launch-independent-review.md",
+        "reviewer": "独立启动审查Sol medium",
+        "kind": "independent_limited_code_review",
+        "scope": "末尾七文件限定观察；helper P2由后续最终增补关闭",
+        "final_worktree_bytes_match": true,
+        "final_git_blob_bytes_match": true,
+        "matching_commits": [
+          "c644bb1acc67658d2ff61fae695340f02ac58503",
+          "11c92d361369cda4b2412451ff2841eff940f810",
+          "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+        ]
+      },
+      "exact_limited_review_ids": [
+        "launch_applied"
+      ],
+      "exact_functional_review_ids": [],
+      "status": "limited_review_exact_bytes",
+      "uncovered_delta_or_scope": [],
+      "whole_file_or_whole_range_review_completion": "not inferred from limited SHA match"
+    }
+  ],
+  "resource_boundary_review_gaps": [
+    {
+      "reviewer": "Plato",
+      "incident_path": "out/collab/k1-bundle-review-upstream-incident.json",
+      "incident_sha256": "655ac319622eda2f1374d321c8e3d0fa7eaed380f422932f7e3df9c5b587c03b",
+      "existing_incident": {
+        "operation": "multi_agent_v1 bundle independent review",
+        "agent_id": "01a18f9e-792f-7c73-837c-1028e5354842",
+        "observed_utc": "2026-10-31T01:51:18.169625+00:00",
+        "status": "upstream_refused",
+        "raw_error": "This content was flagged for possible cybersecurity risk. If this seems wrong, try rephrasing your request. If you’re doing authorized security work that requires more cyber permissive safeguards, apply for Daybreak access via https://platform.openai.com/settings/organization/status-and-access before retrying.",
+        "retry": "not_attempted",
+        "local_diagnostic": "Earlier independent report and probes remain on disk; no launcher failure was observed. This is not a local shell or test failure."
+      },
+      "remaining_gap": "原bundle广泛独审中断；进行中报告不是最终闭合签字",
+      "retried_by_this_task": false,
+      "replaced_or_closed_by_parent_functional_review": false
+    },
+    {
+      "reviewer": "Bohr",
+      "incident_path": "out/collab/k1-relocation-candidate/independent-review-incident.json",
+      "incident_sha256": "6583d7025b2914abecd295cbd4866e142a5a22a7b84f945fa159f2dd2d49c799",
+      "existing_incident": {
+        "observed_at_utc": "2026-10-31 05:30:27 UTC",
+        "tool": "multi_agent_v1__wait_agent",
+        "target": "01a18f93-ee1e-71b2-8816-4904a12efe51",
+        "returned_status": "errored",
+        "raw_error": "This content was flagged for possible cybersecurity risk. If this seems wrong, try rephrasing your request. If you’re doing authorized security work that requires more cyber permissive safeguards, apply for Daybreak access via https://platform.openai.com/settings/organization/status-and-access before retrying.",
+        "automatic_retry": false,
+        "source_candidate_sha256_preserved": "34db09d96260841411dc92306f4eab438d75792a4f74abacde3322c10b3d66c2",
+        "local_launcher_diagnostic": "No local launcher was used or reconfigured. The wait tool returned the existing review agent's upstream error; no replacement agent or rephrased review was dispatched.",
+        "signoff_obtained": false,
+        "partial_artifacts": "out/collab/k1-relocation-independent-validation"
+      },
+      "remaining_gap": "late-reparse独审未终签；34候选与5c最终不能混贴",
+      "retried_by_this_task": false,
+      "replaced_or_closed_by_parent_functional_review": false
+    }
+  ],
+  "evidence_catalog": [
+    {
+      "path": "out/collab/k1-model-ledger.json",
+      "sha256": "ee5e68004ddf2de9c93ba90f2f95dbfca95e01a527517d70aff49cc2f61f696c",
+      "bytes": 5582
+    },
+    {
+      "path": "out/collab/k1-independent-final-cea429a2b5/final-review-signoff.json",
+      "sha256": "8d0778864e1ab56a202afc7b1a743c87bfdd2f23693914c6241305f4ceab2f96",
+      "bytes": 1202
+    },
+    {
+      "path": "out/collab/k1-i1-review-fix/evidence.json",
+      "sha256": "f22f2daaf858df3f1cda292ad711fc5a738a974bc6c86a3150831246dab886ca",
+      "bytes": 4073
+    },
+    {
+      "path": "out/collab/k1-python-launch-applied/delivery.json",
+      "sha256": "4e95f84f3b6fe7be02e38326b13c80afadec9f1dbb35f9cccd01b8247f74557f",
+      "bytes": 2263
+    },
+    {
+      "path": "out/collab/k1-python-launch-independent/label-final/receipt.json",
+      "sha256": "3fb3e448a4cdf319bbca9202ef04a574070fa784d0e04c9bb8d21fbd7b459f95",
+      "bytes": 2889
+    },
+    {
+      "path": "out/collab/k1-python-launch-independent/final-smoke-diff.json",
+      "sha256": "36ca9539aa5ad7948e597c6bac37f7af44da65561b4ae3890170157195c25eb7",
+      "bytes": 1898
+    },
+    {
+      "path": "out/collab/k1-history-scope-candidate/manifest.json",
+      "sha256": "371f29585b5b36b0efdeb7607982696c002a90fb830a4a2515b53e7bfa077035",
+      "bytes": 2109
+    },
+    {
+      "path": "out/collab/k1-c644bb1-cancel-candidate/final-sha.json",
+      "sha256": "4bb48f1e3da96a06f6478c5e5893ba6926874268c91176d8a8ed62c4f6d3534c",
+      "bytes": 288
+    },
+    {
+      "path": "out/collab/k1-relocation-candidate/manifest.json",
+      "sha256": "cca8d3d9fdb188fa7901984b199b5761c925ba54629b79714301edabfd41b2a6",
+      "bytes": 1935
+    },
+    {
+      "path": "out/collab/k1-relocation-candidate/final-tests-receipt.json",
+      "sha256": "4726d221e20960793d7e8331f527ba75ea9d330dc6d2a6c98e36c555dbacec84",
+      "bytes": 4336
+    },
+    {
+      "path": "out/collab/k1-fourth-windows-review-freeze-receipt.json",
+      "sha256": "3059482376e6899c08d01caca5ab9fa46c8903a7c5fb51378b329f637b1986e7",
+      "bytes": 1988
+    },
+    {
+      "path": "out/collab/k1-11c92d3-independent-freeze-receipt.json",
+      "sha256": "c51ec8257612dcdb47ca5e4e6e0e231420797aed78b8421c736de2285d6c2bec",
+      "bytes": 10913
+    },
+    {
+      "path": "out/collab/k1-bundle-independent-review.md",
+      "sha256": "de027f6ae309810f798364795c83e7ce6eaa99c94c622847647d97c056c045e2",
+      "bytes": 2161
+    },
+    {
+      "path": "out/collab/k1-implementation-file-manifest.json",
+      "sha256": "eedf7c0873f4bf52fb646214ad79812ac054adb72b62fb86f52b2f85478df873",
+      "bytes": 4401
+    },
+    {
+      "path": "out/collab/k1-adapters-final-manifest.json",
+      "sha256": "5ea96442ebd33ab3661bb053745184046986d3fb7cd546ad21de21425941ac57",
+      "bytes": 3501
+    },
+    {
+      "path": "out/collab/k1-contract-independent.md",
+      "sha256": "62190ad45141bd7a18234027b135439319434b21da9119cff8232c5d98a679dc",
+      "bytes": 19290
+    },
+    {
+      "path": "out/collab/k1-i1-independent.md",
+      "sha256": "46f6bf4575a0534bb01bfe3558751f03ef686273aa0ff692a6089f67cad1553d",
+      "bytes": 12262
+    },
+    {
+      "path": "out/collab/k1-core-independent-review.md",
+      "sha256": "07ee095a57f82f794fbef0735c6534371224af8a722b9f95dd1751248806d512",
+      "bytes": 37390
+    },
+    {
+      "path": "out/collab/k1-cpp-launch-portability-independent.md",
+      "sha256": "cb1de74ab48ef38af7070b10daafa6605fa410ca7bb6718d76fa3f8b2384f004",
+      "bytes": 9317
+    },
+    {
+      "path": "out/collab/k1-python-launch-independent-review.md",
+      "sha256": "afc9c36270c0033e738f46e22fc0cfbcca5f774d46e5c8113d74aaecfe2da117",
+      "bytes": 7620
+    },
+    {
+      "path": "out/collab/k1-final-adapter-test-diff-independent.md",
+      "sha256": "bccb7578d234cf2c0cae20a2a87d0088bda7ab9cf8b4165d93181451700a9e9c",
+      "bytes": 8927
+    },
+    {
+      "path": "out/collab/k1-cancel-ownership-independent.md",
+      "sha256": "35baca6520e74fa6c32e781b506fa156b23e539debd588f110da283ebd9f522c",
+      "bytes": 18728
+    },
+    {
+      "path": "out/collab/k1-terminal-test-defaults-independent.md",
+      "sha256": "18b5f862e6c97cfac74cdcd542093838e97203ee0332bdab3bc6f6962bffa3d0",
+      "bytes": 7772
+    },
+    {
+      "path": "out/collab/k1-c644bb1-windows-independent-candidate-review.md",
+      "sha256": "528ca2ca6c676664960d3b84d65693e78c960309a53f98e0d4bc91a80a4b2726",
+      "bytes": 5101
+    },
+    {
+      "path": "out/collab/k1-c644bb1-windows-independent-history-scope-review.md",
+      "sha256": "2cf974c94e52396ce7c1abf4c4560ee0356cbb08f63fa63e7d22cd9734ebf92a",
+      "bytes": 10538
+    },
+    {
+      "path": "out/collab/k1-c644bb1-windows-independent-history-registration.json",
+      "sha256": "f365830fa5600faf4aa7bec0b1a1a69bcd8617c35c4de62aeb9237a514929001",
+      "bytes": 2100
+    },
+    {
+      "path": "out/collab/k1-parent-tests-review.json",
+      "sha256": "9da4f5f9d3ecb2b56ac1502bc610358b8b9bf9ef39dc2f804bf87a994d831c52",
+      "bytes": 16892
+    },
+    {
+      "path": "out/collab/k1-win-ci-three-smokes-independent-review.md",
+      "sha256": "221e17a9584a8dfa54a45ff020ef90c4bbd31cefa0db7c723762532240c5ac23",
+      "bytes": 6581
+    },
+    {
+      "path": "out/collab/k1-parent-three-smoke-review.json",
+      "sha256": "ec6c402f5e1b4200aee46e011874324d0697c8c684a96dfa3a15749b9a5bea96",
+      "bytes": 2893
+    },
+    {
+      "path": "out/collab/k1-parent-bundle-functional-review.json",
+      "sha256": "bdd1bb220a140c7339fae4fafaad5eb442c771cb63bbb71cbc10bf8b050fa980",
+      "bytes": 897
+    },
+    {
+      "path": "out/collab/k1-parent-relocation-functional-review.json",
+      "sha256": "861679c84d06fb9ad65fbdd492f61e4e053c7d3ecdcfd96f884c69666c2b969f",
+      "bytes": 2317
+    },
+    {
+      "path": "out/collab/k1-bundle-review-upstream-incident.json",
+      "sha256": "655ac319622eda2f1374d321c8e3d0fa7eaed380f422932f7e3df9c5b587c03b",
+      "bytes": 718
+    },
+    {
+      "path": "out/collab/k1-relocation-candidate/independent-review-incident.json",
+      "sha256": "6583d7025b2914abecd295cbd4866e142a5a22a7b84f945fa159f2dd2d49c799",
+      "bytes": 947
+    }
+  ],
+  "commit_chain": [
+    "e701c7fa5b5b8899d8dd8b9f6a0b4b305614e5c9",
+    "ccb813a8540b83d5015daabebd5047929a16af2c",
+    "1dc96b45b8d945fbe33877f99345dc0144808e70",
+    "e5ff80009975fc9d7d783eaa0865c7c894d1975b",
+    "c644bb1acc67658d2ff61fae695340f02ac58503",
+    "11c92d361369cda4b2412451ff2841eff940f810",
+    "8213ced419c8c6bca512bf8413b674c1265cf3bf"
+  ],
+  "limitations": [
+    "Exact final bytes do not expand declared review scope or imply whole-module/full-stage acceptance.",
+    "Author delivery manifests, functional tests and frozen identity are not independent code signoff.",
+    "Last signed appendix/explicit final update supersedes old review opening; partial/old conclusions remain historical.",
+    "This task did not inspect/run late-reparse or retry/rephrase/delegate a refused review.",
+    "No claim that unknown author/reviewer source versions or missing original byte snapshots have been reconstructed."
+  ],
+  "review_chain_order_basis": "Existing review timing and explicit final/addendum version sequence; not filesystem mtime or catalogue insertion order. Old ordinary bundle review precedes later test-compatible and relocation signoffs.",
+  "raw_commit_worktree_matches_count": 60,
+  "CRLF_normalized_matches_count": 61
+}

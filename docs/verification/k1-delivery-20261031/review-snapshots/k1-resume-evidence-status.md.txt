@@ -1,0 +1,24 @@
+# K1 接续证据状态
+
+当前第六 HEAD `4167c4421b13464dec54213ea7652ee321868c4e`，tracked clean。本次只核必要报告/日志/官方 ZIP 身份字节，复用既有严格审核，未重跑测试或操作 UI。
+
+- 本机 Windows：182/0/0，57181 断言；严格/F5/第五逐例审核通过，分别增 6283/171，无下降。报告 SHA `9fc70287f5fca5030bb4e3a54d13c9cbab878541ee9989fff1940b15669c335d`。独审自身未观察 runner 进程退出，不能据此新增自然 exit0 声明。
+- CI：Linux 41179691486 success；M0 41179691469 failure。4 官方 ZIP、5277 成员、12 报告、548 执行：547 pass/1 fail，133618 断言；11 strict/F5 报告通过，M0 Windows gui 被严格门禁拒绝。原 failure 是 `gui_k1_window` exit1/76，`smoke_k1_workflow.py:191` ensure_ascii=False 在 cp1252 打印中文失败，目标 cwd assert 尚未执行。全套证据完整且终态；第六必须归为 failed 历史。
+- 原实窗 9 动作/11 图，两次 3/3 都是 generated；保留勘误。补充 external UUID `5a69e6de81624882b9d3560c20611599` 明确无 package、四 F1、3/3、正常退出，独审关闭 external P2。补图只认 01/05；02/03/04 误标重复图、两次 postcheck 失败保留，不能声称 external pending 图已验。
+- CLI 补证 UUID `be4a8c5b6ac64c5195212073234f4d3f` child0/3/3，27 旧 history 均 stale；保留首 postcheck 失败及 r2。idle 中文 P3 留待改善；第四/第五原生观察保留原 SHA，不冒第六或第七重跑。
+
+## 第七冻结后可直接复用的路径
+
+官方连接器入口：`github_fetch_commit_workflow_runs` → `github_fetch_workflow_run_jobs` / `github_fetch_workflow_run_artifacts` / `github_fetch_workflow_job_logs` → `github_download_workflow_artifact`；原始 REST JSON 可由 `github_fetch` 读取。调用时再取当前精确 schema，不猜参数。全名见 JSON 的 official_tools。
+
+原始 API 快照归档/身份判定复用 `out/collab/k1-fifth-ci/observe.py --ci <新ci目录> --kind discovery|linux-run|linux-jobs|linux-artifacts|m0-run|m0-jobs|m0-artifacts`，stdin 只给官方原始 JSON。只接受新 freeze 普通 push、attempt1，不 dispatch、不 rerun。ZIP 下载复用 `out/collab/k1-ci/download-stdin.py`，元数据/原 SHA 保存后严格 collect。第六 `ci/run_pipeline.py` 是离线顺序模板；strict helper 为 `out/collab/k1-ci/ci_helper.py`，新目录执行 prepare→collect→audit，保留失败并执行 independent_profiles。禁止 allow-incomplete。
+
+注意：`out/collab/k1-fifth-ci/prepare.py` 硬编码第四到第五两文件差异，不能直接用于第七。第七须先由 root 提供确切 head/frozen/build，然后在专属新 out ci 目录建立真实 watch-config；不得覆写六代证据。
+
+## 最终仍待归档
+
+第六 failed 整代（最终 Windows/CI/原生补证/CLI/勘误）尚未出现在 delivery-staging；旧 sixth-failed-archive-preparation.json 的 final_inputs_ready=false 已落后于当前完成收据，只保留为历史准备，不以其 pending 状态覆盖新终态。已存在第四/addendum/第五归档。另待第七实际身份、正式矩阵、原生适用性映射、最终 I1/文稿 r8 更新与独审。
+
+root 确认最终归档目录名后，使用全新 out 目标执行父所有 `k1-assemble-delivery.py --final-freeze <完整SHA> --destination <新out目录> --archive verification-8213ced --archive verification-8213ced-addendum --archive verification-f9a9ddb --archive <第六failed目录> --archive <第七目录>`。历史大包仅复制 transport parts/manifest/restore helper 与小 e5 ZIP，不 stage 完整大 ZIP/reassembly 副本。随后核 copy manifest/相对链接；不得在已有目标重复执行。
+
+required 资源边界独审上游拒绝缺口仍在，不重试、不替代；K1 不能阶段关闭。等待 root 提供第七 freeze 后继续本分工。

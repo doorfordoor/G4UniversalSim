@@ -1,0 +1,79 @@
+# 历史范围候选：当前六文件独立复审
+
+## 最终增补签字：无后端 components 与显式 backend 模式
+
+### 正式集成后的额外窄核对
+
+已接受主负责人随后唯一入口变化：`--evidence-root` 默认取 G4USIM_TEST_EVIDENCE_DIR。与已签新smoke逐字比对仅此一行，显式CLI仍优先；components分支不使用该目录也不启动后端，backend仍要求非空目录/有效后端。统一runner按case注入唯一新目录路径，未预创建该目录，与测试exist_ok=False一致。两项正式登记准确：gui_k1_history_scope为gui/qt/默认组件；k1_history_scope_backend为integration/qt+exe/--mode backend。没有把GUI组件偷偷变成模拟，也没有漏掉后端依赖。
+
+另接受trajectory窄覆盖恢复：与c644bb1比只有原Windows offscreen→windows两行恢复，异步wait_workflow/finally close保持，全部35个Assert AST完全相同。此举恢复原图形分支运行条件，不用新断言抵消旧覆盖下降；实际走到哪些分支仍以主任务F5 venv新专项结果为准，不据静态恢复就宣称新增12入口已实测。
+
+完整SHA与窄核对布尔项在 `out/collab/k1-c644bb1-windows-independent-history-registration.json`。当前smoke SHA=01259679fd5ef23c8e49a0d096f634a59908bd91111e01104866acfc1a0e69fb，trajectory SHA=11d2edc2ef768f9b26d4475f8578796c28c124eda6d4395e66d1c5dfde041734。本次未重跑已过内容、未启动主任务五项专项、未改依赖或D盘源码；原c644bb1失败报告保持。
+
+以下为前一版8910b0fc候选模式签字历史，五产品签字仍有效。
+
+**新增模式限定审查通过，无新增已确认缺陷。** 新 smoke SHA-256=8910b0fc3cdb383463d06fa21ea5d1c637d8b8a42bd5fccbd6419c67fbadce88；新 candidate.diff SHA-256=0d66f464c2db71b947ef459d583e1ac294015bf8246daf150cd8443c92dd40c2。五产品候选逐项原字节与下方首轮已签值相同；下方原149/旧smoke SHA保留为历史，不能用来替换新模式证据。
+
+增补只在新smoke中拆分入口：默认 --mode components 不要求后端/证据目录，不因 runner 注入 G4USIM_EXE 自动升级为真实运行；--mode backend 明确要求后端与 --evidence-root，保留原真实两次3/3全部 Assert AST 节点。新增显式入口要求使实际 backend 从149变150，不是删减原断言。
+
+components 调用真实 RunPage、ExperimentMixin、ShellMixin；SimpleNamespace 只提供明确标注的 records/state/busy观察fixture，没有复制scope推导实现、实例化资格服务、调用模拟或写passed收据。pending→checking→current、stale、不同revision、身份错配、同rev较新记录、失败/取消、语言、F5显示保留哨兵、新Starting清旧100%及不唯一身份保守行为均由真实GUI接口判断。G4USimRunner.start 和 QProcess.start 都被断言式guard，最后要求二者未调用；显式Qt清理，未 show窗口。
+
+独立固定依赖复跑：默认模式注入不存在的 G4USIM_EXE，exit0/78；显式components移除该env，exit0/78。日志和实际SHA在 `out/collab/k1-c644bb1-windows-independent-history-scope/modes-review.json` 及同目录两个 components-*pinned.log。未重复新backend运行；原独立149真实运行和五产品不变证据仍有效。
+
+独立核对 modes-validation-receipt-pinned2.json 四项原日志SHA均匹配：两组件78/exit0；冻结baseline backend exit1/13，栈确实到seed变更后的require_history顶栏原断言（AssertionError: ● success），不是setup失败；候选backend exit0/150、两次真实3/3。第一版pinned漏场景资源导致2入口setup失败，两份原日志继续保留，**不作为有效负例或产品失败**。
+
+固定依赖/资源原字节与收据逐项核对：337个gui/scripts/tools文件及96个scenarios/config/schema资源均SHA匹配。再与c644bb1 Git tree逐文件核内容，除少量文档/文本仅CRLF差异外均为同提交内容，归一化CRLF后无内容差异。该固定副本解决主线程授权集成期间的依赖漂移；正式tree dirty不反向污染已固定的本轮证据。本审查没有覆盖或回滚主线程改动。
+
+建议GUI/M0登记：`Case('gui_k1_history_scope', 'gui/smoke_tests/smoke_k1_history_scope.py', 'gui', ('qt',))`，默认组件无需exe。真实backend保持显式backend/integration用途，不能只登记integration而漏掉GUI/M0基本scope投影，也不能把component fixture称为后端通过。本轮未改正式registry。
+
+已从当前model ledger取得Franklin ID并成功定向回告当前增补通过/可停止交主任务；send_input submission_id=01a19038-980a-7a50-a642-2ff8aca58111。早先本会话回告与本次定向通知分别记录，不把无回执的通知宣称成功。
+
+此签字仅接受最终候选的窄代码/新测试模式。正式c644bb1 Windows仍为失败原件（175/1/0，56116，且13旧例计数下降另交主任务追因）；历史显示P2待主任务应用、新冻结与真实可读观察后关闭。原生字体方框图不能作为可读视觉通过。
+
+---
+
+以下为首轮已签六文件与真实149验证历史。
+
+2026-10-31；gpt-6.1-sol/medium，消耗未知。只审 out/collab/k1-history-scope-candidate 当前 manifest；正式 c644bb1 保持不变。不复审已另交 Averroes 的取消/busy核心候选，不操作主任务窗口/Windows session。
+
+**当前候选限定审查通过，未发现必须修正的产品缺陷。可以继续补充主任务要求的无后端 component 模式，再更新 manifest/证据；新增模式尚未在本次签字范围。** 这是候选代码及范围投影的签字，不关闭正式 c644bb1 原生显示 P2，也不是正式可读视觉或全矩阵通过。
+
+## 身份与资格边界
+
+- window/run.py 在已有 runner 的 Starting 信号处绑定；window/experiment.py 从公共 records 中只接受唯一 pending run/initialization 的 record_id、run_id、整数revision，绑定元组来自服务记录，不解析 label、输出路径、事件数或 telemetry run index。缺失/不唯一时显示 unverified，不猜身份。
+- 显示范围来自同一 state.history/revision/qualification 与 busy：record缺失→unverified；stale/revision不符→changed；存在更新运行/初始化动作→historical；实际进程活动→running；pending/busy/checking→checking；之后才允许该记录 passed→current。runner finished 与 F1/后台持久化核验之间，不会直接用 RunResult.success 晋升当前通过。
+- shell 将 changed/historical/unverified/checking 统一去掉 success 颜色，结果与进度用相同范围文案；run_id等显示在 tooltip。旧结果快照不是重新读取的历史机器事实，也不用于 core资格。
+- run_page 保存显示用深拷贝，在原 F5 restore 清空 _result_state/_progress_data 后仍能展示“上次运行”、旧3/3/100%。没有修改 transactions.py、原恢复哨兵、RunResult、record/status、实际摘要、原始输入身份或持久化资格。新 runner Starting 清掉显示快照，避免把旧100%冒成本次新进度。
+- 原始 raw draft、Undo/Redo/恢复和外部字节变化通过原 service/history_changed 刷新传播；没有只监听seed控件。语言刷新会重画范围文案和header，不靠缓存翻译后的成功字符串。
+
+## 独立验证与证据范围
+
+本轮通过既有 candidate overlay 加载器，只在独立子进程中装入五个候选产品模块，实际运行当前新 smoke；正式文件不替换。后端为 clean c644bb1 EXE ea6a8f9dffa76b1a132fac890d694437cc07170bfd3c0b08611a0f47fcf3b370。
+
+**独立 integration exit0，149入口，两次真实3/3。** 覆盖 finished后的核验空档、seed编辑、raw draft、Undo/Redo/恢复、语言切换、同label不同UUID新运行、实际新动作准备失败/取消、外部源字节改变；原记录和摘要 SHA 保持。自己的日志/原字节SHA/命令/前后六文件SHA在：
+
+- out/collab/k1-c644bb1-windows-independent-history-scope/receipt.json
+- out/collab/k1-c644bb1-windows-independent-history-scope/integration.log
+
+同revision选旧记录、identity不匹配和若干status/qualification组合，测试通过复制公共 state 调用真实GUI投影接口。这些是明确标注的纯投影反例，**不是用户实际操作历史选择控件的端到端验收**。不把合成 passed记录称为模拟成功。
+
+交付 validation-receipt 的原始日志SHA均匹配：baseline seed反例 exit1/12；candidate exit0/149；run_result20、main_window46、k1_workflow38 exit0。旧 live_progress baseline/candidate 都在原210行 exit1/70，保持已知缺陷证据；该缺陷已有另份 runner 两行候选，本报告不把它归罪本候选，也不把预期失败算通过。
+
+F5旧测试回归237 marker保留；源码边界上没有改变其哨兵。候选compileall覆盖副本204个Python文件成功，但这不等于正式树已应用或Linux/原生视觉通过。字体方框截图不能作为可读视觉验收，本轮没有以截图生成成功替代实际可读性。
+
+## 当前字节签字与后续 component
+
+独立逐项核对：manifest的五产品+一新测试 base SHA 均与正式文件/不存在状态一致，candidate SHA均与out实际字节一致，diff SHA匹配；git apply --check exit0，未 apply；独立运行前后六文件SHA不变。
+
+| 当前候选 | SHA-256 |
+| --- | --- |
+| core/i18n.py | 5bbc3d1057741844cd76903bb4f36a83f85eff8bd4307fb946512c09b5efc60c |
+| widgets/run_page.py | 15f1825c9d0c8564eb83b506405e62d3d6eed84139e7919504e10cee303c3078 |
+| window/experiment.py | bfe38e02552f831027d59480331e3805c16955b69cbccdb5a94c26963a005d46 |
+| window/run.py | 67043150fdf3661ceda82be112c481ef252c8f7bb75ce6b47b5153ddd1442a29 |
+| window/shell.py | 21c8c3a32d99c56ada8e028b642c7f519abaccc64db61763397cdd5290bc603c |
+| smoke_k1_history_scope.py | 177942f3c69672a66a8e69b7dafebe0a15831fc6c3c716aca71a2bfa1748fb29 |
+
+后续最小 component 可使用真实 RunPage/窗口投影接口配合明确标注的观察状态，验证scope、颜色、文案、语言和未知身份保守行为；不运行后端、不创建通过收据，也不复制投影算法自行计算预期。保持现有真实integration独立入口与原149判据，按各profile登记准确依赖。收到新增component最终字节后只需审其限定diff/证据及manifest，不需重复实现或重跑全套。
+
+本候选现在无新增已确认缺陷；正式显示P2仍等待主任务应用/新冻结/真实可读观察。Windows原全量审核继续独立等待最终report。

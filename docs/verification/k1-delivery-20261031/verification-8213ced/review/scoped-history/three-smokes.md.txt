@@ -1,0 +1,43 @@
+# Tesla三项旧smoke候选：独立代码与证据窄复审
+
+**身份结论：可以独立代码复审；不是签署自己写过的设计。** 本会话首轮实际修改的是smoke_backend_geometry.py、smoke_trajectory_view.py、smoke_f5_recovery_process.py。Tesla这次三项为smoke_duplicate_history_cli.py、smoke_f5_editor_history.py、smoke_k1_workflow.py；三文件均非本审查者实现，文件集合不重叠。此前只读审查/引用共享helper不等于曾实现这些文件。
+
+写者按用户指定为Tesla / 01a1905b-a3ae-7d73-8cd2-652b27fd569d；本审查者模型沿用gpt-6.1-sol / medium，消耗未知。本文仅OUT。没有CI轮询、测试重跑、窗口/进程操作或正式源码写入；第四冻结CI须等主线程明确交接后再继续。
+
+## 判定
+
+**对下述锁定SHA的三文件测试窄diff，独立代码复审通过，未发现阻断项。** 不签Franklin的bundle产品设计，不把短名局部复现提升为原CI K1/F5精确同因，也不替代三项同overlay最终3/3收据或第四冻结验收。Franklin仍是bundle唯一产品写者，由既定其他审查者负责产品独立复审。
+
+## 逐文件核对
+
+- smoke_k1_workflow：只把两处失败诊断的report.errors改为安全getattr；status必须passed的条件不变，reason仍显示，文件/快照/Undo等原条件不变。39个assert条件AST全部相同。生成错误现在会暴露真实reason，而不是被None.errors二次AttributeError遮挡；没有吞错或补造report。
+- smoke_f5_editor_history：增加真实completed记录，读生成文件前要求末项passed、包目录非空且存在、configPath非空且为文件。原Path(empty).is_dir会把当前目录当有效包，候选关闭了这个漏洞。旧包目录存在断言被逻辑加强，不是简单删除；其余原assert条件保留，176→178站点。两个不同seed的原INI内容断言、非法草稿、保存/打开/Undo等场景仍在。generation_results跨小循环保留，不能单凭last passed证明请求归属，但本差异未把它当唯一判据，仍保留路径与各seed内容门禁；本次不扩张为完整请求身份测试。
+- smoke_duplicate_history_cli：只把QProcess cwd与project.workspaceRoot的词法字符串相等改为两侧Path.resolve后的目录身份相等，兼容同一目录8.3/长拼写。没有改workspaceRoot的来源或启动参数；其余原断言及非法配置/复制后解析失败/源字节保留场景未变，31站点不降。整个已创建窗口作用域用try/finally保护，沿现有close_window协议收尾，再deleteLater/DeferredDelete排空；不删锁、不忽略cleanup异常、不直接改私有控制器状态。
+
+除了上述一个cwd条件的语义修正、一个包目录条件的加强，以及K1失败消息安全格式化，未发现其他断言条件移除。较长patch主要来自try/finally缩进；已按去缩进差异和assert条件AST核对，不能仅凭站点总数就宣布保留。
+
+## 原始诊断证据及边界
+
+- 官方Windows三项首因仍分别是None.errors、空configPath读当前目录、cwd字符串断言；duplicate的WinError32及访问违例属后续错误/退出事实，不能只因清理改好就声称全部根因消失。
+- short-api-raw.json/各short-temp receipt保留真实GetShortPathNameW返回与UTF16LE字节，76单位短拼写和148单位canonical路径samefile=true，分隔符均单个；不是人为重复反斜杠输入或把实际根缩短。
+- path-diagnostics.json及k1-short-file-trace-r2.log证明本机writer曾成功写出277/314 UTF16单位路径文件，314单位中间writer树清理后却再次被当外部资源读取；lexical inside staging=false，而canonical=true。同canonical根长拼写control通过K1/38，因此本机同类失败不能只归为Python不能创建长路径。
+- 原CI K1/F5的中间临时收据和确切路径未归档；本机实验不能严格证明它们原CI也必定同因。此不确定性已在Tesla README保留，本审查认可该证据边界。Franklin产品修复不属于本报告签署范围。
+
+## 现有验证只读核对：没有重跑
+
+- 组合report本次读取快照已记录K1 exit0/38（原成功floor38）及F5 exit0/241（原floor237），候选源码SHA、原日志SHA及product unchanged字段均匹配。产品overlay记录bundle SHA为34db09d96260841411dc92306f4eab438d75792a4f74abacde3322c10b3d66c2。此快照只含两项，未出现最终all_passed，不能从目录名“三项”推断组合3/3完成；不轮询等待新结果。
+- duplicate独立r3原日志有正常结束smoke_duplicate_history_cli: ok及G4USIM_ASSERTS=254；这是原产品+duplicate候选的单项证据，与上述Franklin overlay组合分开。README明确其exit0/254；本审查不把日志marker单独当成完整进程退出证明，也不重复启动测试。
+- duplicate中断轮、faulthandler r2访问违例、原产品短名K1/F5的14/173失败均保持失败原件，未计作通过。
+- run_case以真实8.3别名TEMP保留相同canonical根；候选代码以候选文件名编译供原probe计数，同时保留正式__file__用于fixture根定位。观察到的产品overlay目录仅有bundle这个产品模块，其余为专属回归脚本；本报告没有执行这些模块。
+
+因此：代码可由父任务接收，现有38/241与单项254可作明确范围的证据；最终组合全部通过、产品修复及新冻结跨平台/原生验收须由各负责人收尾，不以本报告越权签署。
+
+## 锁定字节与交接路径
+
+- `gui/smoke_tests/smoke_duplicate_history_cli.py`：基线 `e9bfe36ed66b8dc12385240ad9deb13f8a9861c9b11309187cb0149e09e8d65a`；候选 `7a3464e13e3ee9c0febbb43b46f01ad6b47b7586c3cc4b1f828063871915e119`。
+- `gui/smoke_tests/smoke_f5_editor_history.py`：基线 `527f25d5996f232df9d4d6b8a973e3b5b1bd78f82dd9dbfeb3dc881220a00335`；候选 `e40326ab18ec83ca62c146d66c033c562c8582af144ef994b05e538e0a8f7ba7`。
+- `gui/smoke_tests/smoke_k1_workflow.py`：基线 `1197797a1e92356a66f3b03ee28cd48fd9cc6bd6c856337af058fef055907c83`；候选 `fa387c6b551e06331cb3203d4d8f748ee3852939aefc573d5f2c527ae08c7524`。
+
+- `out/collab/k1-win-ci-candidate/candidate.patch` SHA：`21c3ca2a62c0bc0249e5d35601e81e000a431f3e4783b427a09382e7242046f7`。
+- 核对来源：README.md、CHECKPOINT.md、sha256.json、assert-sites.json、path-diagnostics.json、short-api-raw.json、three-short-franklin-r2/report.json及对应日志。
+- 当前用户主任务保留第四冻结CI分工；本审查结束后不自行轮询、不重新运行已有充分检查，不写tracked文件。

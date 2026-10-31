@@ -1,0 +1,51 @@
+{
+  "schema": "k1_history_registration_trajectory_limited_review_v1",
+  "recorded_utc": "2026-10-31T04:33:05.906569+00:00",
+  "status": "accepted_limited_diff",
+  "source_sha256": {
+    "gui\\smoke_tests\\smoke_k1_history_scope.py": "01259679fd5ef23c8e49a0d096f634a59908bd91111e01104866acfc1a0e69fb",
+    "gui/smoke_tests/smoke_trajectory_view.py": "11d2edc2ef768f9b26d4475f8578796c28c124eda6d4395e66d1c5dfde041734",
+    "scripts/run_m0_tests.py": "ddfedc7ea237ee0f08fc66ce48b7132db1838a8513d2d4ead6149859961e7127"
+  },
+  "history_smoke_only_one_line_delta": true,
+  "evidence_root_default": "os.environ.get(G4USIM_TEST_EVIDENCE_DIR)",
+  "explicit_cli_overrides_environment": true,
+  "component_stays_default_no_backend": true,
+  "backend_still_requires_executable_and_evidence_root": true,
+  "runner_injects_unique_case_path_without_precreating_directory": true,
+  "reviewed_registrations": [
+    {
+      "name": "gui_k1_history_scope",
+      "script": "gui/smoke_tests/smoke_k1_history_scope.py",
+      "layer": "gui",
+      "requirements": [
+        "qt"
+      ],
+      "args": []
+    },
+    {
+      "name": "k1_history_scope_backend",
+      "script": "gui/smoke_tests/smoke_k1_history_scope.py",
+      "layer": "integration",
+      "requirements": [
+        "qt",
+        "exe"
+      ],
+      "args": [
+        "--mode",
+        "backend"
+      ]
+    }
+  ],
+  "registration_names_unique": true,
+  "trajectory_only_restores_original_windows_platform_branch": true,
+  "trajectory_assert_ast_unchanged_35": true,
+  "trajectory_async_await_close_unchanged": true,
+  "tests_executed_by_reviewer": false,
+  "parent_owns_five_case_session": true,
+  "notes": [
+    "Do not reinterpret c644bb1 original failure report or 13 count regressions; new interpreter/graphics coverage must have new run evidence.",
+    "Using existing F5 venv is a parent execution choice; no D drive source or dependencies changed by reviewer.",
+    "Terminal-publication Case and workflow implementation remain delegated; not reviewed by this narrow registration check."
+  ]
+}

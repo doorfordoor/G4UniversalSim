@@ -1,0 +1,773 @@
+{
+  "schema": "k1_sixth_export_actual_cli_replay_v1",
+  "head": "4167c4421b13464dec54213ea7652ee321868c4e",
+  "command": [
+    "D:\\Geant4\\G4UniversalSim\\gui\\.venv\\Scripts\\python.exe",
+    "-B",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\relocated-clean\\revalidated-sixth-4343\\replay.py",
+    "--executable",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-k1\\Release\\G4UniversalSim.exe",
+    "--runs-root",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\replay-cli\\runs",
+    "run"
+  ],
+  "process_exit_code": 0,
+  "entry_sha256": "d6bea3d772050305bca3b9bfa4d3d0bc85cdbd3f5fdc621795ee3ef193b452ff",
+  "stdout_log_sha256": "e1697af755d51078efc0d6c0eaa4b1035d05544980983000327df3d2a12117ec",
+  "scope": "actual replay of sixth GUI-exported package; execution only, not new physics comparison",
+  "records": [
+    {
+      "record_id": "042ada971505406a83c67d59be01ae56",
+      "action": "validate",
+      "status": "stale",
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\replay-cli\\runs\\experiment-records\\042ada971505406a83c67d59be01ae56\\record.json",
+      "sha256": "287fc945fda4889b113ac4ac599683fe9d5d96269ac68dcba513f6b8cd8317bf",
+      "result": null,
+      "actual_inputs": null
+    },
+    {
+      "record_id": "07520aad18984f8d8ab4bf3254ff8ca6",
+      "action": "validate",
+      "status": "stale",
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\replay-cli\\runs\\experiment-records\\07520aad18984f8d8ab4bf3254ff8ca6\\record.json",
+      "sha256": "0f119fe262e7ec37938ada034494ab1e509461882a7c501fdcd5657809fb6d31",
+      "result": {
+        "completed_events": 0,
+        "planned_events": 0,
+        "reason": "Process completed but no Geant4 run occurred.",
+        "run_count": 0,
+        "state": "no_run",
+        "summary_status": "completed"
+      },
+      "actual_inputs": [
+        {
+          "capture_method": "binary_buffer",
+          "kind": "main_ini",
+          "role": "configuration_parse",
+          "sequence": 1,
+          "sha256": "a26beccc2b851ea8be56292e3b28a6e831e3a2a5e11e36211b28c605a6b2af24",
+          "size_bytes": 949,
+          "status": "recorded"
+        },
+        {
+          "capture_method": "binary_buffer",
+          "kind": "material_ini",
+          "role": "material_parse",
+          "sequence": 2,
+          "sha256": "d77923cdd8a0020c205b2287cfcbbe6e05b09d8e65359c33278a743c51361665",
+          "size_bytes": 297,
+          "status": "recorded"
+        },
+        {
+          "capture_method": "binary_buffer",
+          "kind": "geometry_ini",
+          "role": "geometry_parse",
+          "sequence": 3,
+          "sha256": "e6d77380889a38f16b6c2ad2f309bd33edb81060d29b30b3055b3f0b6e7e5a2e",
+          "size_bytes": 398,
+          "status": "recorded"
+        },
+        {
+          "capture_method": "binary_buffer",
+          "kind": "macro",
+          "role": "recursive_preflight",
+          "sequence": 4,
+          "sha256": "8e74bea0ff8eaa9e6b1d757e31261050cddc9a0e1216820ad255eb32679fee38",
+          "size_bytes": 329,
+          "status": "recorded"
+        }
+      ]
+    },
+    {
+      "record_id": "10014bc314c745f1ab58a121c3359eea",
+      "action": "evaluate",
+      "status": "stale",
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\replay-cli\\runs\\experiment-records\\10014bc314c745f1ab58a121c3359eea\\record.json",
+      "sha256": "916cfd9c5e5d60dff2f07304a718a416666d863206bd6730d9bca9ed3cdfafe3",
+      "result": null,
+      "actual_inputs": null
+    },
+    {
+      "record_id": "247f859fb2de4f3f8b88249b8683ad14",
+      "action": "validate",
+      "status": "stale",
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\replay-cli\\runs\\experiment-records\\247f859fb2de4f3f8b88249b8683ad14\\record.json",
+      "sha256": "96efdf7342ec1ec970985409437e2fdb37704ba84f73c9b3cf11d159e16bd4e6",
+      "result": {
+        "completed_events": 0,
+        "planned_events": 0,
+        "reason": "Process completed but no Geant4 run occurred.",
+        "run_count": 0,
+        "state": "no_run",
+        "summary_status": "completed"
+      },
+      "actual_inputs": [
+        {
+          "capture_method": "binary_buffer",
+          "kind": "main_ini",
+          "role": "configuration_parse",
+          "sequence": 1,
+          "sha256": "d733fe3643fb191a41ec5251b9aa77afd79fbc537e743793c76d98754f5fa45f",
+          "size_bytes": 949,
+          "status": "recorded"
+        },
+        {
+          "capture_method": "binary_buffer",
+          "kind": "material_ini",
+          "role": "material_parse",
+          "sequence": 2,
+          "sha256": "d77923cdd8a0020c205b2287cfcbbe6e05b09d8e65359c33278a743c51361665",
+          "size_bytes": 297,
+          "status": "recorded"
+        },
+        {
+          "capture_method": "binary_buffer",
+          "kind": "geometry_ini",
+          "role": "geometry_parse",
+          "sequence": 3,
+          "sha256": "e6d77380889a38f16b6c2ad2f309bd33edb81060d29b30b3055b3f0b6e7e5a2e",
+          "size_bytes": 398,
+          "status": "recorded"
+        },
+        {
+          "capture_method": "binary_buffer",
+          "kind": "macro",
+          "role": "recursive_preflight",
+          "sequence": 4,
+          "sha256": "c8135cc1b57473fa722ac92f04fdaa3ab5d18d4762cb5b13d6de71956e3b58f1",
+          "size_bytes": 332,
+          "status": "recorded"
+        }
+      ]
+    },
+    {
+      "record_id": "24bfcbb461fe492daeecff321503fc79",
+      "action": "validate",
+      "status": "stale",
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\replay-cli\\runs\\experiment-records\\24bfcbb461fe492daeecff321503fc79\\record.json",
+      "sha256": "77390af9acd0745861c40fa89191a665085fa2d221ab0c528a42ba410a7112d9",
+      "result": {
+        "completed_events": 0,
+        "planned_events": 0,
+        "reason": "Process completed but no Geant4 run occurred.",
+        "run_count": 0,
+        "state": "no_run",
+        "summary_status": "completed"
+      },
+      "actual_inputs": [
+        {
+          "capture_method": "binary_buffer",
+          "kind": "main_ini",
+          "role": "configuration_parse",
+          "sequence": 1,
+          "sha256": "d733fe3643fb191a41ec5251b9aa77afd79fbc537e743793c76d98754f5fa45f",
+          "size_bytes": 949,
+          "status": "recorded"
+        },
+        {
+          "capture_method": "binary_buffer",
+          "kind": "material_ini",
+          "role": "material_parse",
+          "sequence": 2,
+          "sha256": "d77923cdd8a0020c205b2287cfcbbe6e05b09d8e65359c33278a743c51361665",
+          "size_bytes": 297,
+          "status": "recorded"
+        },
+        {
+          "capture_method": "binary_buffer",
+          "kind": "geometry_ini",
+          "role": "geometry_parse",
+          "sequence": 3,
+          "sha256": "e6d77380889a38f16b6c2ad2f309bd33edb81060d29b30b3055b3f0b6e7e5a2e",
+          "size_bytes": 398,
+          "status": "recorded"
+        },
+        {
+          "capture_method": "binary_buffer",
+          "kind": "macro",
+          "role": "recursive_preflight",
+          "sequence": 4,
+          "sha256": "733964fce6d7156c18bec376669e36b22e6e15182f3ab48e7c0c31a5398586e3",
+          "size_bytes": 332,
+          "status": "recorded"
+        }
+      ]
+    },
+    {
+      "record_id": "269f7bdf193240beab59cefa197ab05c",
+      "action": "generate",
+      "status": "stale",
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\replay-cli\\runs\\experiment-records\\269f7bdf193240beab59cefa197ab05c\\record.json",
+      "sha256": "2233d02929a5a49ebc0b156e5e8726834c78de0ccdea84b2d2bd6f76e114f246",
+      "result": null,
+      "actual_inputs": null
+    },
+    {
+      "record_id": "292b05f612264c04a24a8cf3c60832cc",
+      "action": "run",
+      "status": "stale",
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\replay-cli\\runs\\experiment-records\\292b05f612264c04a24a8cf3c60832cc\\record.json",
+      "sha256": "e59450b81c579c22afd9d0908b006c52577cbb2bb165bd63983099135e5ab1fc",
+      "result": {
+        "completed_events": 3,
+        "planned_events": 3,
+        "reason": "Events completed as planned.",
+        "run_count": 1,
+        "state": "success",
+        "summary_status": "completed"
+      },
+      "actual_inputs": [
+        {
+          "capture_method": "binary_buffer",
+          "kind": "main_ini",
+          "role": "configuration_parse",
+          "sequence": 1,
+          "sha256": "d733fe3643fb191a41ec5251b9aa77afd79fbc537e743793c76d98754f5fa45f",
+          "size_bytes": 949,
+          "status": "recorded"
+        },
+        {
+          "capture_method": "binary_buffer",
+          "kind": "material_ini",
+          "role": "material_parse",
+          "sequence": 2,
+          "sha256": "d77923cdd8a0020c205b2287cfcbbe6e05b09d8e65359c33278a743c51361665",
+          "size_bytes": 297,
+          "status": "recorded"
+        },
+        {
+          "capture_method": "binary_buffer",
+          "kind": "geometry_ini",
+          "role": "geometry_parse",
+          "sequence": 3,
+          "sha256": "e6d77380889a38f16b6c2ad2f309bd33edb81060d29b30b3055b3f0b6e7e5a2e",
+          "size_bytes": 398,
+          "status": "recorded"
+        },
+        {
+          "capture_method": "binary_buffer",
+          "kind": "macro",
+          "role": "recursive_preflight",
+          "sequence": 4,
+          "sha256": "94bb20a5221f8851fee38ca2ce990ec0bef841f8879c4b7327fc82c669dbba5a",
+          "size_bytes": 147,
+          "status": "recorded"
+        }
+      ]
+    },
+    {
+      "record_id": "3028a443ebe345c698d48cd6418ee0f9",
+      "action": "run",
+      "status": "stale",
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\replay-cli\\runs\\experiment-records\\3028a443ebe345c698d48cd6418ee0f9\\record.json",
+      "sha256": "cf662625536182c0c6cba33b9565a3419183bd86a5dec6dd4292e60713d7bd11",
+      "result": {
+        "completed_events": 3,
+        "planned_events": 3,
+        "reason": "Events completed as planned.",
+        "run_count": 1,
+        "state": "success",
+        "summary_status": "completed"
+      },
+      "actual_inputs": [
+        {
+          "capture_method": "binary_buffer",
+          "kind": "main_ini",
+          "role": "configuration_parse",
+          "sequence": 1,
+          "sha256": "d733fe3643fb191a41ec5251b9aa77afd79fbc537e743793c76d98754f5fa45f",
+          "size_bytes": 949,
+          "status": "recorded"
+        },
+        {
+          "capture_method": "binary_buffer",
+          "kind": "material_ini",
+          "role": "material_parse",
+          "sequence": 2,
+          "sha256": "d77923cdd8a0020c205b2287cfcbbe6e05b09d8e65359c33278a743c51361665",
+          "size_bytes": 297,
+          "status": "recorded"
+        },
+        {
+          "capture_method": "binary_buffer",
+          "kind": "geometry_ini",
+          "role": "geometry_parse",
+          "sequence": 3,
+          "sha256": "e6d77380889a38f16b6c2ad2f309bd33edb81060d29b30b3055b3f0b6e7e5a2e",
+          "size_bytes": 398,
+          "status": "recorded"
+        },
+        {
+          "capture_method": "binary_buffer",
+          "kind": "macro",
+          "role": "recursive_preflight",
+          "sequence": 4,
+          "sha256": "94bb20a5221f8851fee38ca2ce990ec0bef841f8879c4b7327fc82c669dbba5a",
+          "size_bytes": 147,
+          "status": "recorded"
+        }
+      ]
+    },
+    {
+      "record_id": "3b0e71fe2eab4177997955439187ca6b",
+      "action": "evaluate",
+      "status": "stale",
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\replay-cli\\runs\\experiment-records\\3b0e71fe2eab4177997955439187ca6b\\record.json",
+      "sha256": "0cbef1fc50b6f5e06f50c1d24867b3f535c48e700597e75832aebf061d38e33a",
+      "result": null,
+      "actual_inputs": null
+    },
+    {
+      "record_id": "3cb9985ea54a4ca7bdbe33ddc6aad5e0",
+      "action": "export",
+      "status": "stale",
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\replay-cli\\runs\\experiment-records\\3cb9985ea54a4ca7bdbe33ddc6aad5e0\\record.json",
+      "sha256": "d3ab7813a8d50650f3c8f6c550112ae45d68958aade8236275a1b4dda4431dd1",
+      "result": null,
+      "actual_inputs": null
+    },
+    {
+      "record_id": "49d5d8dcb3ab43efa5518fd8e0452f0b",
+      "action": "import_history",
+      "status": "stale",
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\replay-cli\\runs\\experiment-records\\49d5d8dcb3ab43efa5518fd8e0452f0b\\record.json",
+      "sha256": "20ca5b5f9e5392cb4650e80644a7bc2e693e883399c1d174d4e3564230becc68",
+      "result": null,
+      "actual_inputs": null
+    },
+    {
+      "record_id": "6f411696a26d484496b106f849b81f12",
+      "action": "validate",
+      "status": "stale",
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\replay-cli\\runs\\experiment-records\\6f411696a26d484496b106f849b81f12\\record.json",
+      "sha256": "0d4508430bdfa12046289f60242acbd908dbc68f483bed0a2ceab7ddf653331e",
+      "result": {
+        "completed_events": 0,
+        "planned_events": 0,
+        "reason": "Process completed but no Geant4 run occurred.",
+        "run_count": 0,
+        "state": "no_run",
+        "summary_status": "completed"
+      },
+      "actual_inputs": [
+        {
+          "capture_method": "binary_buffer",
+          "kind": "main_ini",
+          "role": "configuration_parse",
+          "sequence": 1,
+          "sha256": "a26beccc2b851ea8be56292e3b28a6e831e3a2a5e11e36211b28c605a6b2af24",
+          "size_bytes": 949,
+          "status": "recorded"
+        },
+        {
+          "capture_method": "binary_buffer",
+          "kind": "material_ini",
+          "role": "material_parse",
+          "sequence": 2,
+          "sha256": "d77923cdd8a0020c205b2287cfcbbe6e05b09d8e65359c33278a743c51361665",
+          "size_bytes": 297,
+          "status": "recorded"
+        },
+        {
+          "capture_method": "binary_buffer",
+          "kind": "geometry_ini",
+          "role": "geometry_parse",
+          "sequence": 3,
+          "sha256": "e6d77380889a38f16b6c2ad2f309bd33edb81060d29b30b3055b3f0b6e7e5a2e",
+          "size_bytes": 398,
+          "status": "recorded"
+        },
+        {
+          "capture_method": "binary_buffer",
+          "kind": "macro",
+          "role": "recursive_preflight",
+          "sequence": 4,
+          "sha256": "39502b888720698337076fab9b3baedbfee1b1bf83f1ce7fd0b007de17c164eb",
+          "size_bytes": 322,
+          "status": "recorded"
+        }
+      ]
+    },
+    {
+      "record_id": "7330259096574fdcac4183ba86425720",
+      "action": "inspect",
+      "status": "stale",
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\replay-cli\\runs\\experiment-records\\7330259096574fdcac4183ba86425720\\record.json",
+      "sha256": "5a8a3263910f1af62b69144d9f5557189dbf782bd3c560fed1e88f071c10c165",
+      "result": null,
+      "actual_inputs": null
+    },
+    {
+      "record_id": "7f46e2fad983499fab00dcf7e8116739",
+      "action": "validate",
+      "status": "stale",
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\replay-cli\\runs\\experiment-records\\7f46e2fad983499fab00dcf7e8116739\\record.json",
+      "sha256": "b761edd77b198ddc0c8cfd02f575fcc2482aebef1f487f58191f06d5f514a905",
+      "result": null,
+      "actual_inputs": null
+    },
+    {
+      "record_id": "8127022898434def8ff488aa38379d7e",
+      "action": "run",
+      "status": "stale",
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\replay-cli\\runs\\experiment-records\\8127022898434def8ff488aa38379d7e\\record.json",
+      "sha256": "6e3ba162977edce9768995c926a0e85b04037a1ac6765a8e469926b53aa3e031",
+      "result": {
+        "completed_events": 3,
+        "planned_events": 3,
+        "reason": "Events completed as planned.",
+        "run_count": 1,
+        "state": "success",
+        "summary_status": "completed"
+      },
+      "actual_inputs": [
+        {
+          "capture_method": "binary_buffer",
+          "kind": "main_ini",
+          "role": "configuration_parse",
+          "sequence": 1,
+          "sha256": "a26beccc2b851ea8be56292e3b28a6e831e3a2a5e11e36211b28c605a6b2af24",
+          "size_bytes": 949,
+          "status": "recorded"
+        },
+        {
+          "capture_method": "binary_buffer",
+          "kind": "material_ini",
+          "role": "material_parse",
+          "sequence": 2,
+          "sha256": "d77923cdd8a0020c205b2287cfcbbe6e05b09d8e65359c33278a743c51361665",
+          "size_bytes": 297,
+          "status": "recorded"
+        },
+        {
+          "capture_method": "binary_buffer",
+          "kind": "geometry_ini",
+          "role": "geometry_parse",
+          "sequence": 3,
+          "sha256": "e6d77380889a38f16b6c2ad2f309bd33edb81060d29b30b3055b3f0b6e7e5a2e",
+          "size_bytes": 398,
+          "status": "recorded"
+        },
+        {
+          "capture_method": "binary_buffer",
+          "kind": "macro",
+          "role": "recursive_preflight",
+          "sequence": 4,
+          "sha256": "94bb20a5221f8851fee38ca2ce990ec0bef841f8879c4b7327fc82c669dbba5a",
+          "size_bytes": 147,
+          "status": "recorded"
+        }
+      ]
+    },
+    {
+      "record_id": "823d979257b2471db217711e8f13cc76",
+      "action": "run",
+      "status": "stale",
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\replay-cli\\runs\\experiment-records\\823d979257b2471db217711e8f13cc76\\record.json",
+      "sha256": "084f9407eb111b503cd0eff40d5a395122aa99350ee88992d5123815a9986202",
+      "result": {
+        "completed_events": 3,
+        "planned_events": 3,
+        "reason": "Events completed as planned.",
+        "run_count": 1,
+        "state": "success",
+        "summary_status": "completed"
+      },
+      "actual_inputs": [
+        {
+          "capture_method": "binary_buffer",
+          "kind": "main_ini",
+          "role": "configuration_parse",
+          "sequence": 1,
+          "sha256": "d733fe3643fb191a41ec5251b9aa77afd79fbc537e743793c76d98754f5fa45f",
+          "size_bytes": 949,
+          "status": "recorded"
+        },
+        {
+          "capture_method": "binary_buffer",
+          "kind": "material_ini",
+          "role": "material_parse",
+          "sequence": 2,
+          "sha256": "d77923cdd8a0020c205b2287cfcbbe6e05b09d8e65359c33278a743c51361665",
+          "size_bytes": 297,
+          "status": "recorded"
+        },
+        {
+          "capture_method": "binary_buffer",
+          "kind": "geometry_ini",
+          "role": "geometry_parse",
+          "sequence": 3,
+          "sha256": "e6d77380889a38f16b6c2ad2f309bd33edb81060d29b30b3055b3f0b6e7e5a2e",
+          "size_bytes": 398,
+          "status": "recorded"
+        },
+        {
+          "capture_method": "binary_buffer",
+          "kind": "macro",
+          "role": "recursive_preflight",
+          "sequence": 4,
+          "sha256": "94bb20a5221f8851fee38ca2ce990ec0bef841f8879c4b7327fc82c669dbba5a",
+          "size_bytes": 147,
+          "status": "recorded"
+        }
+      ]
+    },
+    {
+      "record_id": "898604e7feae4b39abad1cede3d959ca",
+      "action": "validate",
+      "status": "stale",
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\replay-cli\\runs\\experiment-records\\898604e7feae4b39abad1cede3d959ca\\record.json",
+      "sha256": "eb949845596050ce3f558e54c5ac2d3b6d623c86cc6fcc1c71107abd400c2526",
+      "result": null,
+      "actual_inputs": null
+    },
+    {
+      "record_id": "941f909c2b304cf69c325f386841f7a4",
+      "action": "validate",
+      "status": "stale",
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\replay-cli\\runs\\experiment-records\\941f909c2b304cf69c325f386841f7a4\\record.json",
+      "sha256": "20460cf41a137c4f76042e6c867a3319b8fe99c2c786007278b1ac0e624fbaf1",
+      "result": null,
+      "actual_inputs": null
+    },
+    {
+      "record_id": "9c35ba4e0b4846afacb8cb177eed1bc0",
+      "action": "inspect",
+      "status": "stale",
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\replay-cli\\runs\\experiment-records\\9c35ba4e0b4846afacb8cb177eed1bc0\\record.json",
+      "sha256": "fdfa7cd7ac51c17747f35c4ebe2d580def986d79b2aa60dda766e280e28aeb61",
+      "result": null,
+      "actual_inputs": null
+    },
+    {
+      "record_id": "9fc472051f7d423b94f99a3c735d7853",
+      "action": "run",
+      "status": "stale",
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\replay-cli\\runs\\experiment-records\\9fc472051f7d423b94f99a3c735d7853\\record.json",
+      "sha256": "634b4c1febfac316fab59150653c99468ab0897fcef786cdf0cbae7aae5ab78d",
+      "result": {
+        "completed_events": 3,
+        "planned_events": 3,
+        "reason": "Events completed as planned.",
+        "run_count": 1,
+        "state": "success",
+        "summary_status": "completed"
+      },
+      "actual_inputs": [
+        {
+          "capture_method": "binary_buffer",
+          "kind": "main_ini",
+          "role": "configuration_parse",
+          "sequence": 1,
+          "sha256": "a26beccc2b851ea8be56292e3b28a6e831e3a2a5e11e36211b28c605a6b2af24",
+          "size_bytes": 949,
+          "status": "recorded"
+        },
+        {
+          "capture_method": "binary_buffer",
+          "kind": "material_ini",
+          "role": "material_parse",
+          "sequence": 2,
+          "sha256": "d77923cdd8a0020c205b2287cfcbbe6e05b09d8e65359c33278a743c51361665",
+          "size_bytes": 297,
+          "status": "recorded"
+        },
+        {
+          "capture_method": "binary_buffer",
+          "kind": "geometry_ini",
+          "role": "geometry_parse",
+          "sequence": 3,
+          "sha256": "e6d77380889a38f16b6c2ad2f309bd33edb81060d29b30b3055b3f0b6e7e5a2e",
+          "size_bytes": 398,
+          "status": "recorded"
+        },
+        {
+          "capture_method": "binary_buffer",
+          "kind": "macro",
+          "role": "recursive_preflight",
+          "sequence": 4,
+          "sha256": "94bb20a5221f8851fee38ca2ce990ec0bef841f8879c4b7327fc82c669dbba5a",
+          "size_bytes": 147,
+          "status": "recorded"
+        }
+      ]
+    },
+    {
+      "record_id": "abd0898e044349da9d6e51f927f8be9d",
+      "action": "evaluate",
+      "status": "stale",
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\replay-cli\\runs\\experiment-records\\abd0898e044349da9d6e51f927f8be9d\\record.json",
+      "sha256": "7c336c21fe22ebdd016a44e5b3f8347cbda87272b7e95fb08163501685a3bb59",
+      "result": null,
+      "actual_inputs": null
+    },
+    {
+      "record_id": "be4a8c5b6ac64c5195212073234f4d3f",
+      "action": "run",
+      "status": "passed",
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\replay-cli\\runs\\experiment-records\\be4a8c5b6ac64c5195212073234f4d3f\\record.json",
+      "sha256": "ae0f69d618534f7c3bc943cc8c1add6c3019d02fe40d45a0c166a2f2c429b439",
+      "result": {
+        "completed_events": 3,
+        "planned_events": 3,
+        "reason": "Events completed as planned.",
+        "run_count": 1,
+        "state": "success",
+        "summary_status": "completed"
+      },
+      "actual_inputs": [
+        {
+          "capture_method": "binary_buffer",
+          "kind": "main_ini",
+          "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\replay-cli\\runs\\experiment-records\\be4a8c5b6ac64c5195212073234f4d3f\\execution-inputs\\resources\\r0000-r0006-main.ini",
+          "reason": "",
+          "role": "configuration_parse",
+          "sequence": 1,
+          "sha256": "2a5b6729ec113664f651dfafb16eef5d1363ca0d812dbf0fe46ed9006cdafa6d",
+          "size_bytes": 961,
+          "status": "recorded"
+        },
+        {
+          "capture_method": "binary_buffer",
+          "kind": "material_ini",
+          "path": "resources/r0001-r0007-material.ini",
+          "reason": "",
+          "role": "material_parse",
+          "sequence": 2,
+          "sha256": "d77923cdd8a0020c205b2287cfcbbe6e05b09d8e65359c33278a743c51361665",
+          "size_bytes": 297,
+          "status": "recorded"
+        },
+        {
+          "capture_method": "binary_buffer",
+          "kind": "geometry_ini",
+          "path": "resources/r0002-r0008-geometry.ini",
+          "reason": "",
+          "role": "geometry_parse",
+          "sequence": 3,
+          "sha256": "e6d77380889a38f16b6c2ad2f309bd33edb81060d29b30b3055b3f0b6e7e5a2e",
+          "size_bytes": 398,
+          "status": "recorded"
+        },
+        {
+          "capture_method": "binary_buffer",
+          "kind": "macro",
+          "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\replay-cli\\runs\\experiment-records\\be4a8c5b6ac64c5195212073234f4d3f\\execution-inputs\\resources\\r0003-r0009-run.mac",
+          "reason": "",
+          "role": "recursive_preflight",
+          "sequence": 4,
+          "sha256": "94bb20a5221f8851fee38ca2ce990ec0bef841f8879c4b7327fc82c669dbba5a",
+          "size_bytes": 147,
+          "status": "recorded"
+        }
+      ]
+    },
+    {
+      "record_id": "cb746f0971ca4276bf8886e373f224e4",
+      "action": "validate",
+      "status": "stale",
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\replay-cli\\runs\\experiment-records\\cb746f0971ca4276bf8886e373f224e4\\record.json",
+      "sha256": "37872786a6908ce11eccc658510dbeb658de9703c2f4935fe6cd6b267e8a0db0",
+      "result": {
+        "completed_events": 0,
+        "planned_events": 0,
+        "reason": "Process completed but no Geant4 run occurred.",
+        "run_count": 0,
+        "state": "no_run",
+        "summary_status": "completed"
+      },
+      "actual_inputs": [
+        {
+          "capture_method": "binary_buffer",
+          "kind": "main_ini",
+          "role": "configuration_parse",
+          "sequence": 1,
+          "sha256": "d733fe3643fb191a41ec5251b9aa77afd79fbc537e743793c76d98754f5fa45f",
+          "size_bytes": 949,
+          "status": "recorded"
+        },
+        {
+          "capture_method": "binary_buffer",
+          "kind": "material_ini",
+          "role": "material_parse",
+          "sequence": 2,
+          "sha256": "d77923cdd8a0020c205b2287cfcbbe6e05b09d8e65359c33278a743c51361665",
+          "size_bytes": 297,
+          "status": "recorded"
+        },
+        {
+          "capture_method": "binary_buffer",
+          "kind": "geometry_ini",
+          "role": "geometry_parse",
+          "sequence": 3,
+          "sha256": "e6d77380889a38f16b6c2ad2f309bd33edb81060d29b30b3055b3f0b6e7e5a2e",
+          "size_bytes": 398,
+          "status": "recorded"
+        },
+        {
+          "capture_method": "binary_buffer",
+          "kind": "macro",
+          "role": "recursive_preflight",
+          "sequence": 4,
+          "sha256": "733964fce6d7156c18bec376669e36b22e6e15182f3ab48e7c0c31a5398586e3",
+          "size_bytes": 332,
+          "status": "recorded"
+        }
+      ]
+    },
+    {
+      "record_id": "d47a659e5b3c4a2c8ef5cc229a284f41",
+      "action": "evaluate",
+      "status": "stale",
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\replay-cli\\runs\\experiment-records\\d47a659e5b3c4a2c8ef5cc229a284f41\\record.json",
+      "sha256": "263acb1cbb2b0037af8a19fa81494e36353b3a39ff73c3b4dbc1b89ebfdd55e2",
+      "result": null,
+      "actual_inputs": null
+    },
+    {
+      "record_id": "d59f457d5a7a4538a7025452ce060d98",
+      "action": "export",
+      "status": "stale",
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\replay-cli\\runs\\experiment-records\\d59f457d5a7a4538a7025452ce060d98\\record.json",
+      "sha256": "ab145cc4350513193242dc707aa956603bb19c17687cef8e8efbe6146df383f6",
+      "result": null,
+      "actual_inputs": null
+    },
+    {
+      "record_id": "d617e64d3d034887b4cd4f21d817d040",
+      "action": "import_history",
+      "status": "stale",
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\replay-cli\\runs\\experiment-records\\d617e64d3d034887b4cd4f21d817d040\\record.json",
+      "sha256": "ddac20ffd78d48e73053a7d32c3d9cfb2c7bb16f719b97ea8f81c31ae3d49efc",
+      "result": null,
+      "actual_inputs": null
+    },
+    {
+      "record_id": "d81de63143ca4fc085ff8fe39ba29ed0",
+      "action": "validate",
+      "status": "stale",
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\replay-cli\\runs\\experiment-records\\d81de63143ca4fc085ff8fe39ba29ed0\\record.json",
+      "sha256": "ecb761359d8c55b22d1345e8f746ff92d028b66cb5e02870a986af246ea8fa01",
+      "result": null,
+      "actual_inputs": null
+    },
+    {
+      "record_id": "e77d0448f7874a269d14b3116757b739",
+      "action": "import_history",
+      "status": "passed",
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\replay-cli\\runs\\experiment-records\\e77d0448f7874a269d14b3116757b739\\record.json",
+      "sha256": "f462cd3e740a0e532ff2f8dc7d47ca939df3b44e23b706843cab319368a89c0b",
+      "result": null,
+      "actual_inputs": null
+    },
+    {
+      "record_id": "f86c6324de024a76a1cbfef3e25adaa4",
+      "action": "generate",
+      "status": "stale",
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\replay-cli\\runs\\experiment-records\\f86c6324de024a76a1cbfef3e25adaa4\\record.json",
+      "sha256": "98852f6a212f522a2bd8d88a499021b6a80d863eec5a27815932467744bfa8cc",
+      "result": null,
+      "actual_inputs": null
+    }
+  ]
+}

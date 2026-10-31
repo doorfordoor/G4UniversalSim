@@ -1,0 +1,61 @@
+# 第五冻结真实 CI 独立终态审核
+
+冻结提交：`f9a9ddbfcabe69067707a5a209caff005748f510`。Automation 审核通过；阶段验收保持未决定：两个已接受 UI 问题尚未修复，需要后续第六冻结；资源边界被拒独审缺口仍未闭合。
+
+完整 12 份报告、182 个唯一冻结用例、548 次执行：548 pass / 0 fail / 0 skip，实际断言合计 133036。
+
+## 官方运行与原始证据
+
+- [41176919519](https://github.com/doorfordoor/G4UniversalSim/actions/runs/41176919519)：push / attempt 1 / completed / success；两个 job 均 success。
+  API：`linux-run.json`；jobs：`linux-jobs.json`；artifact metadata：`linux-artifacts.json`。
+  - 124466267952 ubuntu-24.04 / Geant4 11.3.2：原始官方 decoded 日志 `job-124466267952.log`（connector 解码后按 LF 保存，非 HTTP 原始压缩字节）。
+  - 124466268155 ubuntu-24.04 / Geant4 11.4.3：原始官方 decoded 日志 `job-124466268155.log`（connector 解码后按 LF 保存，非 HTTP 原始压缩字节）。
+- [41176919481](https://github.com/doorfordoor/G4UniversalSim/actions/runs/41176919481)：push / attempt 1 / completed / success；两个 job 均 success。
+  API：`m0-run.json`；jobs：`m0-jobs.json`；artifact metadata：`m0-artifacts.json`。
+  - 124466268014 windows-latest / Python 3.11：原始官方 decoded 日志 `job-124466268014.log`（connector 解码后按 LF 保存，非 HTTP 原始压缩字节）。
+  - 124466268145 ubuntu-latest / Python 3.11：原始官方 decoded 日志 `job-124466268145.log`（connector 解码后按 LF 保存，非 HTTP 原始压缩字节）。
+
+| 官方 ZIP | artifact ID | 字节 | 官方 SHA-256 |
+|---|---:|---:|---|
+| [linux-evidence-11.4.3.zip](linux-evidence-11.4.3.zip) | 13034355370 | 26825343 | sha256:ed73068a998a85e7b53eb41918eb0c6985d2d843582382b8b60c0de947522ee5 |
+| [linux-evidence-11.3.2.zip](linux-evidence-11.3.2.zip) | 13034261266 | 26824461 | sha256:4cb370798878e9f97e7d5b393f2f4944f704096f8235b5f6486ffc6d036a18da |
+| [m0-report-ubuntu-latest.zip](m0-report-ubuntu-latest.zip) | 13033626775 | 404736 | sha256:30c6c0f5125d4b5a084fddd2b787c1c1550f16d5125be22a053f1c5e35e461e7 |
+| [m0-report-windows-latest.zip](m0-report-windows-latest.zip) | 13033463586 | 455085 | sha256:cc7c437d4aac32200d55cc3bebbda11af53a223474a451261bcdbd5162fdc813 |
+
+ZIP 均先核验官方 metadata 大小与 SHA 再安全展开；collect/audit 对全部文件成员核验（精确数量见机器收据）。4 个封存 ZIP 与下载原件一致；12 报告及 548 用例日志又独立核对直展开与封存副本 SHA。原始报告、case 日志和 ZIP 未改写。
+
+## 严格门禁与 F5
+
+`prepare / collect / audit` 实际退出码均为 0；详见 `pipeline-result.json`、三个同名 log 及原样 `audit.json`。独立复核为 `independent-profiles.json`，机器收据为 `review-result.json`。未使用 allow-incomplete、未重试 job。
+
+| 平台 artifact | profile | 用例 | 实际断言 | F5 断言 | strict / F5逐例及总量 |
+|---|---|---:|---:|---:|---|
+| linux-evidence-11.3.2 | backend | 61 | 41118 | 40416 | pass / pass |
+| linux-evidence-11.3.2 | gui | 56 | 6294 | 3249 | pass / pass |
+| linux-evidence-11.3.2 | integration | 29 | 6010 | 4486 | pass / pass |
+| linux-evidence-11.3.2 | static | 36 | 3552 | 2715 | pass / pass |
+| linux-evidence-11.4.3 | backend | 61 | 40526 | 39824 | pass / pass |
+| linux-evidence-11.4.3 | gui | 56 | 6294 | 3249 | pass / pass |
+| linux-evidence-11.4.3 | integration | 29 | 6010 | 4486 | pass / pass |
+| linux-evidence-11.4.3 | static | 36 | 3552 | 2715 | pass / pass |
+| m0-report-windows-latest | static | 36 | 3542 | 2706 | pass / pass |
+| m0-report-windows-latest | gui | 56 | 6292 | 3251 | pass / pass |
+| m0-report-ubuntu-latest | static | 36 | 3552 | 2715 | pass / pass |
+| m0-report-ubuntu-latest | gui | 56 | 6294 | 3249 | pass / pass |
+
+P3 两份最终源文件 SHA 与最小 diff 见 watch-config.json / p3-final-two-files.diff。四 GUI 平台每份 terminal case 全 11 模式通过，含仅取消和实际编辑的八份 observed.json；reason/status/revision/snapshot 与磁盘/回调一致性逐项复核见 p3-evidence.json。仅组件证据，不替代 native 复验。
+
+F5 只比较同 artifact/平台/profile，backend 与 integration 另核 Geant4 版本一致；每个原有用例及 profile 总断言均无下降。原日志退出码、assert marker、非零断言、字节 SHA、状态、断言合计、零断言声明与冻结清单顺序均通过。12 报告 head/source/tests 指纹与本轮 frozen manifest 一致。
+
+tests fp：`e5dab8351801ad6164dc1e0601350330598e47a734f46903fafa822ec7c71af8`。
+source fp：`890635b6d521659e43cf735d07f862c6ebd5959e6c5ea68d023d55332a8a930a`。
+
+Linux Geant4 报告如实记录 git_dirty=true：仅列出的 `.g4env-11.x.x/`、`.micromamba/`、`bin/` 未跟踪目录；tracked source gate=pass。M0 两平台报告 git_dirty=false。未将指纹匹配表述为所有 checkout 完全 clean。
+
+## 判定边界
+
+本收据仅确认本轮真实自动化及证据门禁完整通过。已接受 UI P2（completed command preview cwd）及 UI P3（pending 映射 unobserved）仍在本轮冻结中，候选待独审、第五结束后须第六冻结。不能关闭 K1：资源边界被拒的独立审查缺口仍由主线程处理；此处不声称 native UI 或科学/物理验收通过。第三冻结的失败与旧 native 记录仍保持在第三证据中，不混入本轮 pass 计数。
+
+`audit.json` 的 k1_ci_verified=false 是离线 helper 预设边界，保持原样；联网 run/jobs/API 证据与完整审计共同支持本报告 automation_review_passed=true，绝不替代阶段验收。
+
+实际模型记录：gpt-6.1-sol，reasoning_effort=medium，消耗未知。本轮未改第四历史 CI 归档；未操作原生窗口、其他运行进程、源码或现有报告。

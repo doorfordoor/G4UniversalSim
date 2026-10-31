@@ -1,0 +1,228 @@
+{
+  "schema": "k1_sixth_native_external_independent_followup_v1",
+  "recorded_utc": "2026-10-31T07:47:39.928027+00:00",
+  "status": "NATIVE_EXTERNAL_COVERAGE_P2_resolved_by_actual_supplement",
+  "head": "4167c4421b13464dec54213ea7652ee321868c4e",
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "medium",
+  "consumption": "unknown",
+  "closed_finding": "NATIVE-EXTERNAL-COVERAGE-P2",
+  "prior_review_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-sixth-native-audit.json",
+  "prior_review_sha256": "c4e124f9a7c9cf7e3a2582936544edea9f5c3cd69a278a4158fd448e12f62a5a",
+  "prior_report_not_rewritten": true,
+  "checks": {
+    "receipt_record_project_original_SHA_match": true,
+    "actual_saved_project_explicit_external": true,
+    "record_truly_no_generated_package_or_snapshot": true,
+    "exact_new_UUID_one_terminal_record_equals_callback": true,
+    "success3of3_summary_and_F1_verified": true,
+    "four_F1_actual_input_bytes_match": true,
+    "strict_main_macro_output_request_paths": true,
+    "summary_SHA_matches_supplement": true,
+    "05_actual_complete_UI_text_argv_cwd_matches_exact": true,
+    "all_image_SHA_match_receipt_and_duplicates_retained": true,
+    "other_three_layers_unobserved": true,
+    "identity_same4167_clean_windows_nooverride": true,
+    "GUI_all_original_SHA_match_freeze": true,
+    "actual_backend_SHA_matches_pin": true,
+    "host_source_log_exit_receipts_match": true
+  },
+  "record_id": "5a69e6de81624882b9d3560c20611599",
+  "record_sha256": "585c2e1eac132fd358b523d819ac9cddc949e254b9df9227b9b0c80afc5539c0",
+  "result": {
+    "completed_events": 3,
+    "planned_events": 3,
+    "reason": "Events completed as planned.",
+    "run_count": 1,
+    "state": "success",
+    "summary_status": "completed"
+  },
+  "saved_project": {
+    "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible-external\\fixture-inputs\\experiment.json",
+    "sha256": "afaffba876a1a45c963f4600fd691c1268d03e7e228b842d9af68dd596d346e2",
+    "runInputMode": "external",
+    "configPath": "C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/verification/k1-4167c44/visible/relocated-clean/revalidated-sixth-4343/resources/r0006-main.ini",
+    "macroPath": "C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/verification/k1-4167c44/visible/relocated-clean/revalidated-sixth-4343/resources/r0009-run.mac",
+    "workspaceRoot": "C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/verification/k1-4167c44/visible/relocated-clean/revalidated-sixth-4343"
+  },
+  "actual_inputs": [
+    {
+      "capture_method": "binary_buffer",
+      "kind": "main_ini",
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible-external\\fixture-inputs\\packages\\experiment-records\\5a69e6de81624882b9d3560c20611599\\execution-inputs\\resources\\r0000-r0006-main.ini",
+      "reason": "",
+      "role": "configuration_parse",
+      "sequence": 1,
+      "sha256": "2a5b6729ec113664f651dfafb16eef5d1363ca0d812dbf0fe46ed9006cdafa6d",
+      "size_bytes": 961,
+      "status": "recorded",
+      "resolved_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible-external\\fixture-inputs\\packages\\experiment-records\\5a69e6de81624882b9d3560c20611599\\execution-inputs\\resources\\r0000-r0006-main.ini",
+      "actual_sha256": "2a5b6729ec113664f651dfafb16eef5d1363ca0d812dbf0fe46ed9006cdafa6d",
+      "actual_size_bytes": 961,
+      "matches": true
+    },
+    {
+      "capture_method": "binary_buffer",
+      "kind": "material_ini",
+      "path": "resources/r0001-r0007-material.ini",
+      "reason": "",
+      "role": "material_parse",
+      "sequence": 2,
+      "sha256": "d77923cdd8a0020c205b2287cfcbbe6e05b09d8e65359c33278a743c51361665",
+      "size_bytes": 297,
+      "status": "recorded",
+      "resolved_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible-external\\fixture-inputs\\packages\\experiment-records\\5a69e6de81624882b9d3560c20611599\\execution-inputs\\resources\\r0001-r0007-material.ini",
+      "actual_sha256": "d77923cdd8a0020c205b2287cfcbbe6e05b09d8e65359c33278a743c51361665",
+      "actual_size_bytes": 297,
+      "matches": true
+    },
+    {
+      "capture_method": "binary_buffer",
+      "kind": "geometry_ini",
+      "path": "resources/r0002-r0008-geometry.ini",
+      "reason": "",
+      "role": "geometry_parse",
+      "sequence": 3,
+      "sha256": "e6d77380889a38f16b6c2ad2f309bd33edb81060d29b30b3055b3f0b6e7e5a2e",
+      "size_bytes": 398,
+      "status": "recorded",
+      "resolved_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible-external\\fixture-inputs\\packages\\experiment-records\\5a69e6de81624882b9d3560c20611599\\execution-inputs\\resources\\r0002-r0008-geometry.ini",
+      "actual_sha256": "e6d77380889a38f16b6c2ad2f309bd33edb81060d29b30b3055b3f0b6e7e5a2e",
+      "actual_size_bytes": 398,
+      "matches": true
+    },
+    {
+      "capture_method": "binary_buffer",
+      "kind": "macro",
+      "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible-external\\fixture-inputs\\packages\\experiment-records\\5a69e6de81624882b9d3560c20611599\\execution-inputs\\resources\\r0003-r0009-run.mac",
+      "reason": "",
+      "role": "recursive_preflight",
+      "sequence": 4,
+      "sha256": "94bb20a5221f8851fee38ca2ce990ec0bef841f8879c4b7327fc82c669dbba5a",
+      "size_bytes": 147,
+      "status": "recorded",
+      "resolved_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible-external\\fixture-inputs\\packages\\experiment-records\\5a69e6de81624882b9d3560c20611599\\execution-inputs\\resources\\r0003-r0009-run.mac",
+      "actual_sha256": "94bb20a5221f8851fee38ca2ce990ec0bef841f8879c4b7327fc82c669dbba5a",
+      "actual_size_bytes": 147,
+      "matches": true
+    }
+  ],
+  "summary": {
+    "path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible-external\\fixture-inputs\\packages\\experiment-records\\5a69e6de81624882b9d3560c20611599\\output\\run_summary.txt",
+    "sha256": "4c7b3ea60a89629dcf121b33d7ce4cebbefff1c8d7c4c887d5703d9889f9b738",
+    "facts": {
+      "status": "completed",
+      "run_count": "1",
+      "planned_event_count": "3",
+      "actual_completed_event_count": "3",
+      "configured_seed": "4242",
+      "initial_engine_seed": "unknown",
+      "actual_output_dir": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible-external\\fixture-inputs\\packages\\experiment-records\\5a69e6de81624882b9d3560c20611599\\output"
+    },
+    "runs": [
+      {
+        "run_id": 0,
+        "planned_events": 3,
+        "completed_events": 3
+      }
+    ]
+  },
+  "metadata_sha256": "df24762dabeb80abfc3af6e260e4132ae05d66479eb2de8741afcba2ac28cea0",
+  "F1_status": "verified",
+  "launch": {
+    "arguments": [
+      "--config",
+      "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible-external\\fixture-inputs\\packages\\experiment-records\\5a69e6de81624882b9d3560c20611599\\execution-inputs\\resources\\r0000-r0006-main.ini",
+      "--macro",
+      "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible-external\\fixture-inputs\\packages\\experiment-records\\5a69e6de81624882b9d3560c20611599\\execution-inputs\\resources\\r0003-r0009-run.mac",
+      "--output",
+      "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible-external\\fixture-inputs\\packages\\experiment-records\\5a69e6de81624882b9d3560c20611599\\output",
+      "--threads",
+      "1",
+      "--seed",
+      "4242",
+      "--run-name",
+      "k1-visible"
+    ],
+    "launch_cwd_utf16_units": 199,
+    "launch_route": "direct",
+    "launch_working_directory": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible-external\\fixture-inputs\\packages\\experiment-records\\5a69e6de81624882b9d3560c20611599\\execution-inputs",
+    "logical_cwd_utf16_units": 199,
+    "program": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-k1\\Release\\G4UniversalSim.exe",
+    "working_directory": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible-external\\fixture-inputs\\packages\\experiment-records\\5a69e6de81624882b9d3560c20611599\\execution-inputs"
+  },
+  "preview": {
+    "text": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible-external\\05-completed-actual.txt",
+    "sha256": "64165bc387f3daecf674f5df1906dc4b21f63e79f1645440e17a923ee33452aa",
+    "argv_logical_cwd_exact": true
+  },
+  "image_raw_SHA256": {
+    "01-explicit-external-mode.jpg": "5fe7262dcce47b4ae5d9b1c8fa94227db3351fca25b18b1e5ff55d0691ed54a7",
+    "02-external-paths-valid.jpg": "5fe7262dcce47b4ae5d9b1c8fa94227db3351fca25b18b1e5ff55d0691ed54a7",
+    "03-external-run-pending.jpg": "5fe7262dcce47b4ae5d9b1c8fa94227db3351fca25b18b1e5ff55d0691ed54a7",
+    "04-external-no-package-complete.jpg": "5fe7262dcce47b4ae5d9b1c8fa94227db3351fca25b18b1e5ff55d0691ed54a7",
+    "05-completed-actual.jpg": "92c120e5ee52b56feb36e4faf80c01f3711f29fb4ad53337652c617012c01985"
+  },
+  "text_raw_SHA256": {
+    "01-explicit-external-mode.txt": "8bffd54bdc715be4810d798420b0afe18edf06abdf5f3698068e1c3da9ce139c",
+    "02-external-paths-valid.txt": "8bffd54bdc715be4810d798420b0afe18edf06abdf5f3698068e1c3da9ce139c",
+    "03-external-run-pending.txt": "8bffd54bdc715be4810d798420b0afe18edf06abdf5f3698068e1c3da9ce139c",
+    "04-external-no-package-complete.txt": "8bffd54bdc715be4810d798420b0afe18edf06abdf5f3698068e1c3da9ce139c",
+    "05-completed-actual.txt": "64165bc387f3daecf674f5df1906dc4b21f63e79f1645440e17a923ee33452aa"
+  },
+  "independent_view_image": [
+    "01-explicit-external-mode.jpg",
+    "04-external-no-package-complete.jpg (invalid duplicated label, not completion proof)",
+    "05-completed-actual.jpg"
+  ],
+  "accepted_visual_evidence": [
+    "01-explicit-external-mode.jpg (external selection before paths entered)",
+    "05-completed-actual.jpg (new external completion)"
+  ],
+  "excluded_visual_claims": [
+    "02 path-valid",
+    "03 external-pending",
+    "04 completed; all3 are identical early01 and not separate observations"
+  ],
+  "QA_failures_retained": [
+    "First postcheck FileNotFoundError assumed generated project_snapshot; no receipt then.",
+    "Second postcheck StopIteration from stale labelled capture; no receipt then.",
+    "Save closure cached early snapshot for01..04; false labels retained and correction appended."
+  ],
+  "native_coverage_correction_sha256": "f1091e489126da532fc8db229b1b2fdca3c05b4e8f3d9b8c293aafaa05f65e8b",
+  "top_level_artifact_SHA256": {
+    "01-explicit-external-mode.jpg": "5fe7262dcce47b4ae5d9b1c8fa94227db3351fca25b18b1e5ff55d0691ed54a7",
+    "01-explicit-external-mode.txt": "8bffd54bdc715be4810d798420b0afe18edf06abdf5f3698068e1c3da9ce139c",
+    "02-external-paths-valid.jpg": "5fe7262dcce47b4ae5d9b1c8fa94227db3351fca25b18b1e5ff55d0691ed54a7",
+    "02-external-paths-valid.txt": "8bffd54bdc715be4810d798420b0afe18edf06abdf5f3698068e1c3da9ce139c",
+    "03-external-run-pending.jpg": "5fe7262dcce47b4ae5d9b1c8fa94227db3351fca25b18b1e5ff55d0691ed54a7",
+    "03-external-run-pending.txt": "8bffd54bdc715be4810d798420b0afe18edf06abdf5f3698068e1c3da9ce139c",
+    "04-external-no-package-complete.jpg": "5fe7262dcce47b4ae5d9b1c8fa94227db3351fca25b18b1e5ff55d0691ed54a7",
+    "04-external-no-package-complete.txt": "8bffd54bdc715be4810d798420b0afe18edf06abdf5f3698068e1c3da9ce139c",
+    "05-completed-actual.jpg": "92c120e5ee52b56feb36e4faf80c01f3711f29fb4ad53337652c617012c01985",
+    "05-completed-actual.txt": "64165bc387f3daecf674f5df1906dc4b21f63e79f1645440e17a923ee33452aa",
+    "actions.jsonl": "35864885c06df1dd4ac8f89ccb978f018de8b2792021618474c593658c2d1cf6",
+    "current-state.json": "a1b11be68e0ae9f3df64bcfe3bca796027b2460f7c13f477645f1f8ee613e415",
+    "host-exit.json": "31b9655c5c93362096aed7b55f17407ce7757229a08ece491be5a2ff97c6d0a4",
+    "host.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "identity.json": "6df9a53660d282577fe9fe8fbc5c19ae24b97a56167e694c5422b3fe55ef7acd",
+    "launcher.json": "d159d6d9ef5b32ae11434d794acb9007e1a5ff45489f40d3498b138561574fa2",
+    "supplement-receipt.json": "c9e3ad6c22639aea5115fa21627d0043016b7211bae81495a14e523378b4cef0"
+  },
+  "normal_exit": {
+    "launcher_exit": 0,
+    "event_loop_exit": 0,
+    "completed_utc": "2026-10-31T07:42:33.352916+00:00"
+  },
+  "operator": "lead assistant via actual Sky UI, not human user; independent reviewer viewed saved images only",
+  "remaining_findings": [
+    "UI-PROCESS-IDLE-P3 retained as known low-risk wording ambiguity; process NotRunning differs from result success"
+  ],
+  "limits": [
+    "No external-pending screenshot acceptance from invalid03. Existing sixth original pending evidence remains separate.",
+    "Execution only, other3layers unobserved, no new physics comparison.",
+    "No tests/replay/desktop operations by reviewer; no resource boundary review.",
+    "Old generated9actions and fifth cancellation remain their own identities; no rewriting.",
+    "Formal sixthWindows/CI/I1 and required specialist reviews remain separate; not K1 acceptance."
+  ]
+}

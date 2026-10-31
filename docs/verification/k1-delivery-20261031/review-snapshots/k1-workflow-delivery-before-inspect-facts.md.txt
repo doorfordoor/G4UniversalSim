@@ -1,0 +1,77 @@
+# K1 统一服务交付与真实证据
+
+## 当前状态
+
+核心、身份、专项和追加授权的 I1 cwd 扩展已交付并冻结；最终正常退出专项为handoff-final：exit0、455个v3入口。本人从此停止修改这四个文件，交主任务整套回归和最终独立复核。下列历史通过/失败按各自版本保留，不混称最终版本。
+
+指定任务模型 gpt-6.1-sol/high；工具未提供独立费用/token收据，消耗未知。开始 HEAD ccb813a8540b83d5015daabebd5047929a16af2c。本人没有提交、重置或改动其他写者文件；共享仓库 HEAD 的其他变化由主任务管理。
+
+## 变更文件
+
+- gui/g4usim_gui/core/experiment_workflow.py：F4 producer、F5 EditSession、package_writer/bundle、同一个 G4USimRunner 与可注入旧 inspect QProcess 的异步服务。
+- gui/g4usim_gui/core/experiment_identity.py：唯一资源闭包、portable 内容身份、原始/重定位/历史 SHA 分离；按实际 I1 嵌套结构保存环境事实。
+- scripts/test_k1_workflow.py：组件反例、真实后端初始化/事件/有限物理比较，--component屏蔽G4USIM_EXE，默认保留G4USIM_TEST_EVIDENCE_DIR证据。
+- gui/g4usim_gui/core/environment_discovery.py：用户追加授权；仅增加可选cwd、两次查询共用该cwd、查询收据记录working_directory。未改其原测试。
+
+完整当前字节SHA在k1-workflow-source-checkpoint.json；最终冻结会更新独立证据清单。
+
+## 接口及实现边界
+
+精确API见k1-workflow-api.md。所有业务动作异步pending，completed仅一次；changed/recordChanged/stateChanged均兼容。fields、initialization、execution、physics分别计证。主线程只处理EditSession/revision/投影/现有runner与QProcess，文件验证、SHA、生成与导出用EvidenceJob和私有快照；不新建编辑历史或运行控制器。
+
+apply在副本F4诊断验证后走F5 replace，包含普通raw drafts、detail、spin和几何/布尔表格；支持单位等价格式、QLocale zh_HK苏州码/ar_EG/en_US和仅轨迹0的off/关闭特殊值。无效候选在_begin前拒绝，不留下永久busy。
+
+记录独立UUID/目录，原始终态保留；revision/Undo/reset和观察到的内容变化永久使旧资格历史。state廉价返回内存并安排后台fresh检查；文件/目录监听和5秒后台检查不在主线程hash。环境只承诺as-observed选择/存在性，不承诺完整数据集内容同一。
+
+run_name按最新裁决保留用户语义：generated同步RunSettings.run_name，external保留权威flat值；requested_run_name原样记录，JSON观察值保留Unicode首尾空白，空请求不猜默认。UUID用独占输入与输出路径关联：每个F1实际输入序列/路径/SHA/size都核对本次计划，summary actual_output_dir/main_config/actual_macro_file精确对应本次请求；label不是身份。foreign自洽输出不能靠搬移F1路径适配取得本轮资格。
+
+external Run先复用同一_inspect进行Configure/preflight，再fresh守卫后同一runner.start。初始化用后端展开命令构造首个beamOn前前缀，保留原macro/prefix身份，强制initialize/geometry test/exportMesh；要求真实no_run、完成macro、实际mesh及未报告overlap，绝不由inspect0或no_run单独通过。
+
+生成通常复用writer再通过bundle唯一闭包重定位，解决source-copy已知STL等相对子资源问题。新增窄local_source_copy_compatibility仅用于generated+显式geometry.source_copy_mode，且Unknown resource grammar来源必须是本次geometry路径；材料/macro未知不能搭便车。记录完整snapshot和明确声明材料/几何源raw字节，coverage明确不是递归闭包/可分发资格；本地expected为实际UUID包main/materials/geometry/macro，任何F1额外或未观测输入仍拒绝。export始终严格，不使用该兼容分支。
+
+终态写盘期间取消/epoch变化会再次原子写入一致终态才completed，不留下可被新进程接受的passed收据。close()/closed()停止timer/watch并异步等待实际读任务完成，再释放句柄；不隐式取消进程。专项所有owner都排空，临时目录清理成功后才打印最终summary。
+
+物理首版只比较完整event_edep CSV的敏感体总沉积能均值（raw/weighted、MeV、per_event、选定run、master完整N、整数事件去重、多worker合并）。实际读取严格reference JSON并绑定值/量/单位/口径/对象/run/来源/conditions及raw SHA，保存本次实际参考bytes；不接受外来pass/observed/sigma或任意列。N<2的sigma未知，不填0；独立固定容差可在不使用sigma时评估。参考始终user_supplied_unverified_source。
+
+真实正例为geantino非相互作用测试粒子的有限零沉积特例，conditions限定该夹具；source包含用户提供的Geant4原始出处：https://geant4.web.cern.ch/documentation/pipelines/master/bfad_html/ForApplicationDevelopers/TrackingAndPhysics/particle.html 。三个样本SE=0只描述该特例，不是一般辐射物理或Q2验证。
+
+## 已完成、不可混代的专项
+
+- final-r3：`python -B tools/test_assert_probe.py scripts/test_k1_workflow.py --executable out/build-f5/Release/G4UniversalSim.exe --report-root out/collab/k1-workflow-final-r3`，实际exit0，395入口。日志k1-workflow-final-r3.log；目录specialized-result.json及synthetic/真实 后端/records。含真实初始化、3/3事件、external嵌套/config-only初始化、真实overlap拒绝、geantino比较正反。该版仍使用旧UUID label，不能冒充最新label契约验收。
+- component-final：--component且G4USIM_EXE=Z:/missing/backend.exe，实际exit0，187入口；k1-workflow-component-final.log。合成runner不制造模拟成功。
+- I1 cwd原测试：component实际exit0/142，旧实际后端exit0/145；k1-workflow-i1-cwd-component.log、k1-workflow-i1-cwd-backend.log及对应JSON。
+- 真实Qt适配：`python -B tools/test_assert_probe.py gui/smoke_tests/smoke_k1_workflow.py`，实际exit0/32；k1-workflow-gui-adapter-r2.log。非实窗验收、不冒充后端物理。
+- close组件临时目录：无--report-root的--component，实际exit0/191，k1-workflow-close-component-r1.log；最终summary在清理后输出。
+- compileall gui及本专项、限定文件git diff --check已通过；冻结后再作交付检查。
+
+## 原失败证据与剩余工作
+
+保留r3实际F1相对path锚定错误、r5外部夹具cwd错误、final-r2夹具恢复顺序错误；未追改原日志。独立真实375/395功能摘要但WinError32清理exit1已收到，不能按功能文字算通过；新增close排空专门修正。label-final-r1实际exit1/391，官方reference https URL被bundle盘符正则误判，已交资源写者独占修正；不删除出处、不绕过隐私。source-copy legacy语法兼容由主任务明确裁决后实现。
+
+完整Windows/Linux矩阵、重新构建正式后端、原生实窗和最终独立签字仍由主任务负责；本交付不宣称K1整阶段关闭。正式构建不能用旧开发后端替代。已用旧后端SHA为9790aa71a4fa7e9c2ca7d98f617fd983e328db09591766832f37a4ee138386d0。
+
+默认records_root在构造时绑定；重开同根自动历史stale加载，GUI/CLI应传稳定项目根，运行根变更由适配层明确调整。显式历史evaluate可fresh再核对本机身份/F1/实际路径产生新评估，旧run仍历史；当前会话undo后的旧run不能复活。
+
+Dalton姓名直接send_input未发送成功：工具需要UUID，实际返回invalid agent id Dalton；未把通知失败写成已通知。请主任务转交稳定清单/本报告；完成最后专项后明确冻结停止修改。
+
+
+## 最终交付（停止改动）
+
+- 最终命令：`python -B tools/test_assert_probe.py scripts/test_k1_workflow.py --executable out/build-f5/Release/G4UniversalSim.exe --report-root out/collab/k1-workflow-handoff-final`。
+- 实际进程退出码0，`G4USIM_ASSERTS=455`；原日志 `out/collab/k1-workflow-handoff-final.log`。最终结果 `out/collab/k1-workflow-handoff-final/specialized-result.json`，两个kind分别为synthetic_component和real_backend。每个动作record.json、实际输入、日志及输出均在其独立记录目录保留。
+- 组件本地兼容专项 `out/collab/k1-workflow-local-component-r1.log` 实际exit0/230，包含显式vis.palette source-copy字段/生成、导出拒绝和缺失文件拒绝。没有把组件runner当后端成功。
+- 最新真实包含原四项反例修复、终态持久竞态、外部资源/后端变动失效、QLocale/specialValueText、完整事件整数去重/多worker/单样本未知sigma、字段/初始化/事件/有限物理分层、同一Unicode首尾空白label的两次3/3运行、不同UUID/输出根、foreign路径事实拒绝、external嵌套macro/config-only初始化、真实overlap拒绝、geantino零沉积比较正例及错误参考/单位/权重/无依据数值反例，以及显式legacy source-copy本地3/3事件。reference source含官方URL，仍标user_supplied_unverified_source。
+- actual_inputs逐条（含同路径重复）按本次UUID执行树路径/SHA/size核对。未计划/未观测F1输入有明确拒绝分支；完整foreign输出整套替换和该分支的独立对抗复核仍交Dalton，不把仅路径事实负例说成整套替换验收。
+- close/drain组件无report-root的TemporaryDirectory路径实际exit0/191（k1-workflow-close-component-r1.log）；最终脚本在所有服务closed、watchers空、EvidenceJob无pending并完成TemporaryDirectory退出后才输出summary。前WinError32由独立审查提供的失败仍保留其原报告，不以旧功能395文字算退出0。主负责人另报roundtrip含close真实exit0/34（k1-parent-roundtrip-close-r1.log）；仅作为主任务提供的独立收据引用，本人未重跑或冒领。
+- 资源作者已修官方URL误判，最终455实际执行了含该原始URL的历史导出；未由核心修改bundle源码。
+
+冻结文件SHA256：
+
+- `gui/g4usim_gui/core/experiment_workflow.py`：`fbcd964e8170679d223235f34f6a48bdbdb33f5a28c8ace84bccee971d367adf`
+- `gui/g4usim_gui/core/experiment_identity.py`：`b982093fdd9d19ce9a52a13f59094169c8bbf03e0acb1b4bf3c57a2e6a91442e`
+- `scripts/test_k1_workflow.py`：`79bb3f9d788ab71aafc60bc10ed000a594ece1915444126f63fec23f3ddb9602`
+- `gui/g4usim_gui/core/environment_discovery.py`：`98a2adaf4a266dd1a1b87616604eb56961c8e90ac82514a6403105c569a98a43`
+
+证据总清单：out/collab/k1-workflow-evidence.json。API：out/collab/k1-workflow-api.md。没有提交、重置或重写他人文件。最新4文件中I1只为追加授权的cwd扩展，差异可单独检查。
+
+下一步仅由主任务：Dalton按本冻结字节复核边界；正常重建后端后跑完整矩阵/原生实窗及发布门禁。本次使用旧开发后端，不能覆盖正式构建、Linux或整阶段验收；K1整项关闭不在本交付中宣称。

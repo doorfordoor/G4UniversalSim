@@ -1,0 +1,127 @@
+# K1 最终审查覆盖追加快照：第五冻结 / 第六v2待独审
+
+实际HEAD `f9a9ddbfcabe69067707a5a209caff005748f510`，tracked干净；范围 `e701c7f..f9a9ddb` 共62文件。第四历史图原件与SHA保留，本文件只整理既有签字与版本关系，不作新代码审查或阶段裁决。消耗未知。
+
+新增签字依照报告末尾实际scope读取：Averroes最终14文件适配/登记/测试，Tesla八文件普通前端，Dalton第五取消原因2文件及3项窄文档delta。早期适配器报告“剩余前端范围”已由后续八文件审查接续；该前端报告留下F1/P2与F2/P3，不能改记为全绿。
+
+当前f9字节仍有完成cwd错投与pending回退；新v2已交父/Averroes待独审、未集成。本图不独审自己的六候选，也不把178/1629等作者自测当独立签字。v1原REQUEST_CHANGES保持历史；后续第六冻结须另追加快照，不能覆写本份。
+
+## 仅剩必要普通范围
+
+1. Averroes审v2六文件（重点external无package完成投影及新增回归），父任务接收后冻结；随后由父按正式流程绑定最终验证身份。
+2. Franklin等最终数据完成文档，父任务与Dalton审最终文档/状态/契约。第五取消的三项窄文档审查已存在，不代替最终文档。
+
+无需仅因旧图缺SHA而重开已签的14文件适配器、八文件普通前端或第五reason逻辑审查。历史inbox/outbox是任务/作者来源，未找到SHA签字不自动产生新的全文代码审查要求。正式矩阵/native验证由父任务另管，本图未轮询或启动。
+
+## 保留的资源专项缺口（不承接）
+
+Plato原bundle广审与Bohr后续资源边界审查均被上游拒绝，缺口未关闭；父普通功能/测试审查不能替代。未重试、改名、换代理或运行late-reparse。事件原件：[out/collab/k1-bundle-review-upstream-incident.json](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-bundle-review-upstream-incident.json)、[out/collab/k1-relocation-candidate/independent-review-incident.json](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-relocation-candidate/independent-review-incident.json)。
+
+## 新签字与版本绑定
+
+| 审查 | 原报告及身份 | 本第五字节匹配 | scope |
+|---|---|---:|---|
+| Averroes / final_adapters | [out/collab/k1-final-adapters-independent.json](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-final-adapters-independent.json) / `8213ced419c8c6bca512bf8413b674c1265cf3bf` | 14 | Ordinary transport/wiring/lifecycle/registry/test adaptation only. No resource-boundary re-review or stage closure.；approved_for_listed_ordinary_adapter_registry_and_test_diffs |
+| Tesla / final_frontend | [out/collab/k1-final-frontend-independent.json](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-final-frontend-independent.json) / `8213ced419c8c6bca512bf8413b674c1265cf3bf` | 8 | eight final ordinary frontend implementations/tests; full K1 diff and necessary context；two remaining presentation findings (P2 and P3); no unconditional clean frontend signoff |
+| Dalton / fifth_cancel | [out/collab/k1-cancel-reason-independent.json](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-cancel-reason-independent.json) / `final LF SHA per file, transferred into f9a9ddb` | 5 | P3 public reason correction only; no resource review；approved_narrow_fix_and_meaningful_regression |
+
+## 模块索引
+
+| 模块 | 作者来源 | 文件数 | 新签字 |
+|---|---|---:|---|
+| 契约/状态/文档 | 父任务 | 9 | fifth_cancel |
+| CI/统一登记 | 父任务 | 3 | final_adapters |
+| C++ cwd/manifest | 父任务 | 5 | 沿用第四限定链 |
+| Python launch/进度 | Bohr(workflow Sol high) / 父任务 | 5 | 沿用第四限定链 |
+| workflow/identity/终态 | Bohr / 01a18f93-ee1e-71b2-8816-4904a12efe51 | 4 | fifth_cancel |
+| bundle/搬移/别名 | 原bundle Sol high / 01a18f93-ec3e-7463-a68e-fd5ccd347033 / Franklin / 父任务 | 5 | final_adapters |
+| I1发现/对话框 | I1 Sol high / 01a18f93-e780-7953-90fe-cd5b6fe40fc0 / Sol medium UI续修 / Bohr启动适配 | 5 | final_frontend |
+| 面板/面板专项 | DeepSeek flash初稿 / Sol medium / 01a18f95-cb86-76f1-8ed0-0ad1dba517a5 / 父任务 | 4 | final_frontend |
+| GUI接线/历史显示 | CLI-GUI Sol medium / 01a18f96-d294-7693-bc4b-b3f9f9fd1920 / Franklin / 父任务 | 14 | final_adapters, final_frontend |
+| CLI产品/测试fixture | CLI Sol medium / 父任务 | 2 | final_adapters |
+| 首轮三个旧smoke | Sol medium / 01a18ff8-0672-7a33-ba81-7ec0b0ee6b00 / 父任务 | 3 | 沿用第四限定链 |
+| Tesla三项CI3 smoke | 原CLI适配写者 / Tesla / 01a1905b-a3ae-7d73-8cd2-652b27fd569d / 父任务 | 3 | 沿用第四限定链 |
+
+## 逐文件最终字节、最后签字与未覆盖项
+
+SHA列为第五工作区原字节SHA前12位，JSON保留完整Git/工作区SHA、继承审查链、作者与版本delta。`linux-geant4.yml`仅CRLF工作区与LF blob不同，归一化一致。有限签字不扩张成整文件/模块验收。
+
+| 文件 | 作者 / 第五delta作者 | 第五SHA | 最后版本签字 | 未覆盖项或范围 |
+|---|---|---|---|---|
+| `.github/workflows/linux-geant4.yml` | 父任务 | `d1c7132544f2` | [final_adapters](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-final-adapters-independent.json) / `d1c7132544f2` 匹配 | 无新增未覆盖delta（仅既有scope） |
+| `.github/workflows/m0-static-gui.yml` | 父任务 | `ecc4edde0649` | [final_adapters](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-final-adapters-independent.json) / `ecc4edde0649` 匹配 | 无新增未覆盖delta（仅既有scope） |
+| `AGENTS.md` | 父任务；第五delta父任务 | `9d48adf7c79e` | [fifth_cancel](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-cancel-reason-independent.json) / `9d48adf7c79e` 匹配 | 最终文档数据/第六显示契约定稿后，父任务+Dalton审Franklin交付；已有窄契约签字不代替最终文档审查。 |
+| `CMakeLists.txt` | 父任务 | `0f95fd4fdca1` | [cpp](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-cpp-launch-portability-independent.md) / `0f95fd4fdca1` 匹配 | 无新增未覆盖delta（仅既有scope） |
+| `STATUS.md` | 父任务；第五delta父任务 | `132847de00dc` | 未找到最终字节签字 | 最终文档数据/第六显示契约定稿后，父任务+Dalton审Franklin交付；已有窄契约签字不代替最终文档审查。 |
+| `cmake/WindowsRuntime.cmake` | 父任务 | `48ea39aca32b` | [cpp](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-cpp-launch-portability-independent.md) / `48ea39aca32b` 匹配 | 无新增未覆盖delta（仅既有scope） |
+| `docs/ROADMAP.md` | 父任务 | `8b9699412f26` | 未找到最终字节签字 | 最终文档数据/第六显示契约定稿后，父任务+Dalton审Franklin交付；已有窄契约签字不代替最终文档审查。 |
+| `docs/agent-history.md` | 父任务；第五delta父任务 | `70c2b8edb940` | [fifth_cancel](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-cancel-reason-independent.json) / `70c2b8edb940` 匹配 | 最终文档数据/第六显示契约定稿后，父任务+Dalton审Franklin交付；已有窄契约签字不代替最终文档审查。 |
+| `docs/collab/ASTRA-BRIEF.md` | 父任务；第五delta父任务 | `2030a6f4d387` | 未找到最终字节签字 | 最终文档数据/第六显示契约定稿后，父任务+Dalton审Franklin交付；已有窄契约签字不代替最终文档审查。 |
+| `docs/collab/inbox/20261031-k1-execution.md` | 父任务 | `b9fd310f6bcb` | 未找到最终字节签字 | 历史任务/作者交付记录，仅作来源；不由缺SHA推导新一轮全文代码审查要求。 |
+| `docs/collab/outbox/20261031-deepseek-k1-panel.md` | DeepSeek flash初稿 / Sol medium / 01a18f95-cb86-76f1-8ed0-0ad1dba517a5 / 父任务 | `fcd26f137da1` | 未找到最终字节签字 | 历史任务/作者交付记录，仅作来源；不由缺SHA推导新一轮全文代码审查要求。 |
+| `docs/collab/outbox/20261031-k1-panel-delivery.md` | DeepSeek flash初稿 / Sol medium / 01a18f95-cb86-76f1-8ed0-0ad1dba517a5 / 父任务 | `ecc58ba86b35` | 未找到最终字节签字 | 历史任务/作者交付记录，仅作来源；不由缺SHA推导新一轮全文代码审查要求。 |
+| `docs/功能支持矩阵.md` | 父任务 | `8142231af8de` | 未找到最终字节签字 | 最终文档数据/第六显示契约定稿后，父任务+Dalton审Franklin交付；已有窄契约签字不代替最终文档审查。 |
+| `docs/可信实验工作流.md` | 父任务；第五delta父任务 | `1a28c4ef7cca` | [fifth_cancel](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-cancel-reason-independent.json) / `1a28c4ef7cca` 匹配 | 最终文档数据/第六显示契约定稿后，父任务+Dalton审Franklin交付；已有窄契约签字不代替最终文档审查。 |
+| `docs/环境发现与诊断.md` | I1 Sol high / 01a18f93-e780-7953-90fe-cd5b6fe40fc0 / Sol medium UI续修 / Bohr启动适配 | `0093a2334e5e` | [i1_fix](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-i1-independent.md) / `f8ad9021441a`旧版本不同 | 最终文档数据/第六显示契约定稿后，父任务+Dalton审Franklin交付；已有窄契约签字不代替最终文档审查。 |
+| `gui/AGENTS.md` | 父任务 | `c327b2b17c42` | 未找到最终字节签字 | 最终文档数据/第六显示契约定稿后，父任务+Dalton审Franklin交付；已有窄契约签字不代替最终文档审查。 |
+| `gui/g4usim_gui/core/backend_launch.py` | Bohr(workflow Sol high) / 父任务 | `9ae082645641` | [label_final](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-final-adapter-test-diff-independent.md) / `9ae082645641` 匹配 | 无新增未覆盖delta（仅既有scope） |
+| `gui/g4usim_gui/core/environment_discovery.py` | I1 Sol high / 01a18f93-e780-7953-90fe-cd5b6fe40fc0 / Sol medium UI续修 / Bohr启动适配 | `7ee71c78b51d` | [launch_applied](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-python-launch-independent-review.md) / `7ee71c78b51d` 匹配 | 无新增未覆盖delta（仅既有scope） |
+| `gui/g4usim_gui/core/experiment_bundle.py` | 原bundle Sol high / 01a18f93-ec3e-7463-a68e-fd5ccd347033 / Franklin / 父任务 | `5c1dff0338e8` | [parent_relocation](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-parent-relocation-functional-review.json) / `5c1dff0338e8` 匹配 | 最终5c普通功能匹配不补Plato/Bohr被拒资源边界复审/late-reparse独立终签缺口。；Plato/Bohr资源边界专项独审缺口独立保留；普通功能/测试签字不能替代，本任务不承接或重试。 |
+| `gui/g4usim_gui/core/experiment_identity.py` | Bohr / 01a18f93-ee1e-71b2-8816-4904a12efe51 | `b982093fdd9d` | [core_e5](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-core-independent-review.md) / `b982093fdd9d` 匹配 | 无新增未覆盖delta（仅既有scope） |
+| `gui/g4usim_gui/core/experiment_workflow.py` | Bohr / 01a18f93-ee1e-71b2-8816-4904a12efe51；第五delta父任务 | `9f8f800aee38` | [fifth_cancel](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-cancel-reason-independent.json) / `9f8f800aee38` 匹配 | F1相关完成绑定链；第六v2修复待独审，不由原适配器窄签字关闭该后续发现。 |
+| `gui/g4usim_gui/core/i18n.py` | CLI-GUI Sol medium / 01a18f96-d294-7693-bc4b-b3f9f9fd1920 / Franklin / 父任务 | `5bbc3d105774` | [final_frontend](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-final-frontend-independent.json) / `5bbc3d105774` 匹配 | 无新增未覆盖delta（仅既有scope） |
+| `gui/g4usim_gui/core/runner.py` | Bohr(workflow Sol high) / 父任务 | `456912e161a3` | [path_progress](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-c644bb1-windows-independent-candidate-review.md) / `456912e161a3` 匹配 | 无新增未覆盖delta（仅既有scope） |
+| `gui/g4usim_gui/experiment_cli.py` | CLI Sol medium / 父任务 | `20d7bb876ef9` | [final_adapters](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-final-adapters-independent.json) / `20d7bb876ef9` 匹配 | 无新增未覆盖delta（仅既有scope） |
+| `gui/g4usim_gui/main_window.py` | CLI-GUI Sol medium / 01a18f96-d294-7693-bc4b-b3f9f9fd1920 / Franklin / 父任务 | `3dbece37b6ee` | [final_adapters](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-final-adapters-independent.json) / `3dbece37b6ee` 匹配 | 无新增未覆盖delta（仅既有scope） |
+| `gui/g4usim_gui/widgets/environment_dialog.py` | I1 Sol high / 01a18f93-e780-7953-90fe-cd5b6fe40fc0 / Sol medium UI续修 / Bohr启动适配 | `a5de75745c82` | [final_frontend](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-final-frontend-independent.json) / `a5de75745c82` 匹配 | 无新增未覆盖delta（仅既有scope） |
+| `gui/g4usim_gui/widgets/experiment_panel.py` | DeepSeek flash初稿 / Sol medium / 01a18f95-cb86-76f1-8ed0-0ad1dba517a5 / 父任务 | `741adb59951c` | [final_frontend](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-final-frontend-independent.json) / `741adb59951c` 匹配 | 本冻结字节仍有F1/F2显示发现；第六v2候选待独审/冻结，作者测试不关闭发现。 |
+| `gui/g4usim_gui/widgets/run_page.py` | CLI-GUI Sol medium / 01a18f96-d294-7693-bc4b-b3f9f9fd1920 / Franklin / 父任务 | `15f1825c9d0c` | [final_frontend](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-final-frontend-independent.json) / `15f1825c9d0c` 匹配 | 无新增未覆盖delta（仅既有scope） |
+| `gui/g4usim_gui/window/experiment.py` | CLI-GUI Sol medium / 01a18f96-d294-7693-bc4b-b3f9f9fd1920 / Franklin / 父任务 | `bfe38e02552f` | [final_adapters](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-final-adapters-independent.json) / `bfe38e02552f` 匹配 | F1相关完成绑定链；第六v2修复待独审，不由原适配器窄签字关闭该后续发现。 |
+| `gui/g4usim_gui/window/run.py` | CLI-GUI Sol medium / 01a18f96-d294-7693-bc4b-b3f9f9fd1920 / Franklin / 父任务 | `67043150fdf3` | [final_frontend](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-final-frontend-independent.json) / `67043150fdf3` 匹配 | 本冻结字节仍有F1/F2显示发现；第六v2候选待独审/冻结，作者测试不关闭发现。 |
+| `gui/g4usim_gui/window/shell.py` | CLI-GUI Sol medium / 01a18f96-d294-7693-bc4b-b3f9f9fd1920 / Franklin / 父任务 | `21c8c3a32d99` | [final_frontend](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-final-frontend-independent.json) / `21c8c3a32d99` 匹配 | 无新增未覆盖delta（仅既有scope） |
+| `gui/g4usim_gui/window/transactions.py` | CLI-GUI Sol medium / 01a18f96-d294-7693-bc4b-b3f9f9fd1920 / Franklin / 父任务 | `93e194afae74` | [final_adapters](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-final-adapters-independent.json) / `93e194afae74` 匹配 | 无新增未覆盖delta（仅既有scope） |
+| `gui/smoke_tests/smoke_backend_geometry.py` | Sol medium / 01a18ff8-0672-7a33-ba81-7ec0b0ee6b00 / 父任务 | `7dd55c3d4d6b` | [label_final](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-final-adapter-test-diff-independent.md) / `7dd55c3d4d6b` 匹配 | 无新增未覆盖delta（仅既有scope） |
+| `gui/smoke_tests/smoke_backend_launch.py` | Bohr(workflow Sol high) / 父任务 | `a01a2a823c8a` | [parent_tests](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-parent-tests-review.json) / `a01a2a823c8a` 匹配 | 无新增未覆盖delta（仅既有scope） |
+| `gui/smoke_tests/smoke_duplicate_history_cli.py` | 原CLI适配写者 / Tesla / 01a1905b-a3ae-7d73-8cd2-652b27fd569d / 父任务 | `7a3464e13e3e` | [parent_three](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-parent-three-smoke-review.json) / `7a3464e13e3e` 匹配 | 无新增未覆盖delta（仅既有scope） |
+| `gui/smoke_tests/smoke_f4_entrypoints.py` | CLI-GUI Sol medium / 01a18f96-d294-7693-bc4b-b3f9f9fd1920 / Franklin / 父任务 | `b975cc00c273` | [final_adapters](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-final-adapters-independent.json) / `b975cc00c273` 匹配 | 无新增未覆盖delta（仅既有scope） |
+| `gui/smoke_tests/smoke_f4_inspect_backend.py` | CLI-GUI Sol medium / 01a18f96-d294-7693-bc4b-b3f9f9fd1920 / Franklin / 父任务 | `c048cb9929a7` | [final_adapters](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-final-adapters-independent.json) / `c048cb9929a7` 匹配 | 无新增未覆盖delta（仅既有scope） |
+| `gui/smoke_tests/smoke_f5_editor_history.py` | 原CLI适配写者 / Tesla / 01a1905b-a3ae-7d73-8cd2-652b27fd569d / 父任务 | `e40326ab18ec` | [parent_three](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-parent-three-smoke-review.json) / `e40326ab18ec` 匹配 | 无新增未覆盖delta（仅既有scope） |
+| `gui/smoke_tests/smoke_f5_recovery_process.py` | Sol medium / 01a18ff8-0672-7a33-ba81-7ec0b0ee6b00 / 父任务 | `9d0814296d33` | [label_final](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-final-adapter-test-diff-independent.md) / `9d0814296d33` 匹配 | 无新增未覆盖delta（仅既有scope） |
+| `gui/smoke_tests/smoke_i1_environment.py` | I1 Sol high / 01a18f93-e780-7953-90fe-cd5b6fe40fc0 / Sol medium UI续修 / Bohr启动适配 | `48ae5f2b7fba` | [final_frontend](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-final-frontend-independent.json) / `48ae5f2b7fba` 匹配 | 无新增未覆盖delta（仅既有scope） |
+| `gui/smoke_tests/smoke_k1_history_scope.py` | CLI-GUI Sol medium / 01a18f96-d294-7693-bc4b-b3f9f9fd1920 / Franklin / 父任务 | `01259679fd5e` | [registration](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-c644bb1-windows-independent-history-registration.json) / `01259679fd5e` 匹配 | 无新增未覆盖delta（仅既有scope） |
+| `gui/smoke_tests/smoke_k1_panel.py` | DeepSeek flash初稿 / Sol medium / 01a18f95-cb86-76f1-8ed0-0ad1dba517a5 / 父任务 | `4e90b351f3d9` | [final_frontend](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-final-frontend-independent.json) / `4e90b351f3d9` 匹配 | F1相关完成绑定链；第六v2修复待独审，不由原适配器窄签字关闭该后续发现。 |
+| `gui/smoke_tests/smoke_k1_relocation.py` | 原bundle Sol high / 01a18f93-ec3e-7463-a68e-fd5ccd347033 / Franklin / 父任务 | `4fddfec77f40` | [parent_relocation](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-parent-relocation-functional-review.json) / `4fddfec77f40` 匹配 | Plato/Bohr资源边界专项独审缺口独立保留；普通功能/测试签字不能替代，本任务不承接或重试。 |
+| `gui/smoke_tests/smoke_k1_workflow.py` | 原CLI适配写者 / Tesla / 01a1905b-a3ae-7d73-8cd2-652b27fd569d / 父任务 | `fa387c6b551e` | [parent_three](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-parent-three-smoke-review.json) / `fa387c6b551e` 匹配 | 无新增未覆盖delta（仅既有scope） |
+| `gui/smoke_tests/smoke_live_progress.py` | Bohr(workflow Sol high) / 父任务 | `dd7e7a7cb343` | [path_progress](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-c644bb1-windows-independent-candidate-review.md) / `dd7e7a7cb343` 匹配 | 无新增未覆盖delta（仅既有scope） |
+| `gui/smoke_tests/smoke_new_simulation_wizard.py` | CLI-GUI Sol medium / 01a18f96-d294-7693-bc4b-b3f9f9fd1920 / Franklin / 父任务 | `304c81f99860` | [final_adapters](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-final-adapters-independent.json) / `304c81f99860` 匹配 | 无新增未覆盖delta（仅既有scope） |
+| `gui/smoke_tests/smoke_project_snapshot_restore.py` | CLI-GUI Sol medium / 01a18f96-d294-7693-bc4b-b3f9f9fd1920 / Franklin / 父任务 | `8071589683f2` | [final_adapters](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-final-adapters-independent.json) / `8071589683f2` 匹配 | 无新增未覆盖delta（仅既有scope） |
+| `gui/smoke_tests/smoke_q1_public_paths.py` | CLI-GUI Sol medium / 01a18f96-d294-7693-bc4b-b3f9f9fd1920 / Franklin / 父任务 | `09882ba3c154` | [final_adapters](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-final-adapters-independent.json) / `09882ba3c154` 匹配 | 无新增未覆盖delta（仅既有scope） |
+| `gui/smoke_tests/smoke_run_input_modes.py` | CLI-GUI Sol medium / 01a18f96-d294-7693-bc4b-b3f9f9fd1920 / Franklin / 父任务 | `ec2eb7256300` | [final_adapters](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-final-adapters-independent.json) / `ec2eb7256300` 匹配 | 无新增未覆盖delta（仅既有scope） |
+| `gui/smoke_tests/smoke_trajectory_view.py` | Sol medium / 01a18ff8-0672-7a33-ba81-7ec0b0ee6b00 / 父任务 | `11d2edc2ef76` | [registration](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-c644bb1-windows-independent-history-registration.json) / `11d2edc2ef76` 匹配 | 无新增未覆盖delta（仅既有scope） |
+| `include/Core/BackendCapabilities.hh` | 父任务 | `40e0f7c33f08` | [cpp](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-cpp-launch-portability-independent.md) / `40e0f7c33f08` 匹配 | 无新增未覆盖delta（仅既有scope） |
+| `main.cc` | 父任务 | `202a8e13c6ab` | [cpp](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-cpp-launch-portability-independent.md) / `202a8e13c6ab` 匹配 | 无新增未覆盖delta（仅既有scope） |
+| `scripts/run_m0_tests.py` | 父任务 | `8d4137897697` | [final_adapters](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-final-adapters-independent.json) / `8d4137897697` 匹配 | 无新增未覆盖delta（仅既有scope） |
+| `scripts/test_backend_launch.py` | Bohr(workflow Sol high) / 父任务 | `ddeacf31d31d` | [label_final](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-final-adapter-test-diff-independent.md) / `ddeacf31d31d` 匹配 | 无新增未覆盖delta（仅既有scope） |
+| `scripts/test_backend_working_directory.py` | 父任务 | `1a127cf4c7ad` | [cpp](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-cpp-launch-portability-independent.md) / `1a127cf4c7ad` 匹配 | 无新增未覆盖delta（仅既有scope） |
+| `scripts/test_i1_environment.py` | I1 Sol high / 01a18f93-e780-7953-90fe-cd5b6fe40fc0 / Sol medium UI续修 / Bohr启动适配 | `9b31654e94eb` | [path_progress](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-c644bb1-windows-independent-candidate-review.md) / `9b31654e94eb` 匹配 | 无新增未覆盖delta（仅既有scope） |
+| `scripts/test_k1_bundle.py` | 原bundle Sol high / 01a18f93-ec3e-7463-a68e-fd5ccd347033 / Franklin / 父任务 | `d5f872b2fe8a` | [label_final](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-final-adapter-test-diff-independent.md) / `d5f872b2fe8a` 匹配 | 无新增未覆盖delta（仅既有scope） |
+| `scripts/test_k1_cli.py` | CLI Sol medium / 父任务 | `9c777a8516b3` | [parent_tests](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-parent-tests-review.json) / `9c777a8516b3` 匹配 | 无新增未覆盖delta（仅既有scope） |
+| `scripts/test_k1_roundtrip.py` | 原bundle Sol high / 01a18f93-ec3e-7463-a68e-fd5ccd347033 / Franklin / 父任务 | `67d54752a863` | [final_adapters](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-final-adapters-independent.json) / `67d54752a863` 匹配 | 无新增未覆盖delta（仅既有scope） |
+| `scripts/test_k1_staging_alias.py` | 原bundle Sol high / 01a18f93-ec3e-7463-a68e-fd5ccd347033 / Franklin / 父任务 | `0e33fc7c8990` | [parent_relocation](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-parent-relocation-functional-review.json) / `0e33fc7c8990` 匹配 | Plato/Bohr资源边界专项独审缺口独立保留；普通功能/测试签字不能替代，本任务不承接或重试。 |
+| `scripts/test_k1_terminal_publication.py` | Bohr / 01a18f93-ee1e-71b2-8816-4904a12efe51；第五delta父任务 | `5075c7b23611` | [fifth_cancel](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-cancel-reason-independent.json) / `5075c7b23611` 匹配 | 无新增未覆盖delta（仅既有scope） |
+| `scripts/test_k1_workflow.py` | Bohr / 01a18f93-ee1e-71b2-8816-4904a12efe51 | `e7c585aa9106` | [launch_applied](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-python-launch-independent-review.md) / `e7c585aa9106` 匹配 | 无新增未覆盖delta（仅既有scope） |
+
+## 第六v2候选层：不能自签
+
+[交付说明](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-final-ui-candidate-v2/README.md)；[manifest](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-final-ui-candidate-v2/manifest.json)，manifest SHA `f2dcc728777bbc800f1b526430770827ea1640e6622812d20ca28f6b060a9178`。六文件均由Tesla写候选；Averroes独审待收据，未替换第五字节。
+
+| 文件 | v2完整SHA | v1→v2 | 独审 |
+|---|---|---|---|
+| `gui/g4usim_gui/window/run.py` | `3af4daefa4c0818fba9879acffe14e15ece2c8b908d2b26b0526e9fa7e873d56` | 相同 | 待Averroes；作者不自审 |
+| `gui/g4usim_gui/window/experiment.py` | `0ff241b88dfa03dc24743a9a10145db681e542006c00f4c8e55d53f3f9252d8f` | 改变 | 待Averroes；作者不自审 |
+| `gui/g4usim_gui/widgets/experiment_panel.py` | `01f91f3db0081536110e2acc9958ec76783af485dbbc1f378ec52231f94133f3` | 相同 | 待Averroes；作者不自审 |
+| `gui/g4usim_gui/core/i18n.py` | `002de76b33480160415c3c4b2fb9e38455b2ce94b1aedacfcd83121387ecdf0a` | 相同 | 待Averroes；作者不自审 |
+| `gui/smoke_tests/smoke_k1_workflow.py` | `8eac62b07e0c1fc9411037eafe2ea066165a954af4b0557cf013abbb9e1faffc` | 改变 | 待Averroes；作者不自审 |
+| `gui/smoke_tests/smoke_k1_panel.py` | `658fcb292ca0b2ab60b8ef73bd3a4d285593c13824076850e4bd8cfbef8d38a0` | 相同 | 待Averroes；作者不自审 |
+
+全部旧map、报告、manifest、产品和测试未修改。没有新测试/矩阵/实窗动作。完整机器可读证据：[f9a9ddb-v2-awaiting-independent-r2.json](C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/collab/k1-final-review-coverage/f9a9ddb-v2-awaiting-independent-r2.json)。

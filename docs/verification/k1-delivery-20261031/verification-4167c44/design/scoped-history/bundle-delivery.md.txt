@@ -1,0 +1,79 @@
+# K1 资源包交付（实现与专项完成，整阶段验收独立）
+
+工作区：effective-config/G4UniversalSim。基线 ccb813a8540b83d5015daabebd5047929a16af2c；起始 git status 无改动。只拥有 core/experiment_bundle.py 和 scripts/test_k1_bundle.py，不提交。
+
+已读根/gui AGENTS、20261031-k1-execution、F5/E6 历史全文、配置撤销与恢复及配置兼容与迁移。实现完成，仅写授权的两个产品/测试文件；共享工作区其余写者的改动均保留。
+
+接口维持 export_bundle(snapshot, destination, *, validation_records=(), resource_policy=None)、load_bundle(path, *, executable='')、inspect_bundle(path)。目录包，manifest SHA256；统一 CLI 重放约定 python -m g4usim_gui.experiment_cli --bundle PATH --executable EXE run。
+
+给主代理的跨文件集成提示：现 package_writer._copy_or_generate_inputs 把 source-copy 几何原字节复制进新目录，不处理 STL/GDML/copies 相对依赖。资源包提供可移植闭包及 `replay_inputs`，供统一CLI/工作流按包根启动；从加载后的 generated/source-copy 快照再次直接调用旧writer仍需处理这条边界。本写者未改writer/CLI。已看到主代理CLI按replay_inputs构造external执行投影，但本专项没有执行统一CLI，不据此声称重放已验。
+
+## 当前专项证据
+
+2026-10-31：`python -B tools/test_assert_probe.py scripts/test_k1_bundle.py --evidence-root out/collab/k1-bundle-tests-r4 --executable D:/Geant4/G4UniversalSim/build_vs2026/Release/G4UniversalSim.exe` 已退出0；6组专项 + 搬移后直接后端运行通过，105个 v3 assert 入口。原始落盘日志 `out/collab/k1-bundle-tests-r4.log`，结果 `out/collab/k1-bundle-tests-r4/result.json`。本次后端只是已存在程序，非本任务重新构建；直接运行不冒充统一 CLI 重放/F1完整验收。
+
+r1失败（夹具mode与实际层级几何不符）、r2失败（XML closing tag被隐私规则误判为绝对路径）的残留专项目录保留，工具错误在本次对话中，未补造为原始落盘日志。r3 6组102入口通过的目录及日志保留；r4随后增加加载侧角色/闭包/隐私复核。r4旧后端没有F1读入序列，实际输入资格为unknown，不作为最终F1验证。r5换F5后端后因测试把相对F1路径按父Python进程cwd解析而失败，原 `k1-bundle-tests-r5.log` 保留；r6纠正为实际backend cwd后133入口通过。
+
+## 共用闭包 API（已通知 Bohr）
+
+`collect_bundle_resources(snapshot, *, validation_records=(), resource_policy=None) -> dict` 已公开，identity直接复用。返回 portable `snapshot`、`validation_records`、`resources`（`path`逻辑相对名、`role`、`sha256`重定位字节SHA、`source_sha256`来源字节SHA、`captured_text`区分F5逻辑文本重编码/当前原始文件、`distribution`）。无本机绝对路径；不运行writer/backend。
+
+参考文件明确语法：`reference_file`/`reference_path`，或 `reference: {path/file, sha256}`；只接受CSV/TSV/TXT/JSON数据文件，收集实际文件，绑定实际raw SHA，提供的历史SHA不匹配立即拒绝。原历史hash不重写为“新执行已读取”；加载全部历史stale。分发unknown只登记，不授许可；restricted须该文件策略明确allow_redistribution=true。
+
+已读 `out/collab/k1-contract-independent.md` 全部12条。包不拥有初始化/真实读取/F1序列/UUID/物理评估资格。原始/重定位/历史身份分开，结束前复核源仅是导出一致性，不被当作模拟历史读取证据。
+
+边界：GDML只接受无模块、无schema引用、无DTD/entity/XInclude的自包含文档；其他依赖语法明确拒绝。宏为有限命令白名单；未分类命令/路径/动态语法拒绝。读取硬链接、符号链接/junction/reparse point拒绝。目录原子独占发布当前Windows实现及负向race已测；Linux renameat2分支待Linux真实执行。
+
+## 独立反例修复（后续里程碑）
+
+收到用户转达的Plato r1/r2实际反例，已只读其 `out/collab/k1-bundle-independent-probe.py`，未修改原脚本/原报告。新增正式 `test_independent_review_regressions`：workspace/history核验后改变、宏整行与inline注释凭据哨兵、额外backend.exe、完整parsed parameterised/copies_file共享容器、源blocker诊断及跨nested execute的template状态。
+
+修复：每个清单成员只读一次、立即SHA校验，后续JSON构造/历史/闭包均消费同一批已核验bytes；load不再inspect之后重读workspace。清单仅允许3个固定入口及实际resources闭包；额外backend.exe拒绝。原始文本在剥宏注释前检查凭据/动态env，敏感字段和有意义草稿明确拒绝、不静默涂改。F5的preview/volumes共享容器按id只遍历一次，合法 `[section]/key` 诊断不误判为本机绝对路径，保留blockers。模板状态跨nested execute传播。
+
+`python -B tools/test_assert_probe.py scripts/test_k1_bundle.py --component --evidence-root out/collab/k1-bundle-review-fixes-r1` 退出0，7组140个v3入口；日志 `out/collab/k1-bundle-review-fixes-r1.log`。
+
+用户告知：Plato独立复审被上游自动风险检查以 possible cybersecurity risk 中止，事件 `out/collab/k1-bundle-review-upstream-incident.json`。不重试该review，不把未完成复审记通过。后续本写者专项仅是实现自测，不替代独立复审。
+
+## 最终可复核证据
+
+- 修后真实模式：`python -B tools/test_assert_probe.py scripts/test_k1_bundle.py --evidence-root out/collab/k1-bundle-review-fixes-backend --executable out/build-f5/Release/G4UniversalSim.exe`，进程退出0，7组+直接后端搬移专项，167个v3 assert入口。结果 `out/collab/k1-bundle-review-fixes-backend/result.json`；原始测试日志 `out/collab/k1-bundle-review-fixes-backend.log`；后端原始日志 `out/collab/k1-bundle-review-fixes-backend/backend/backend.log`。该后端为既有F5 Release，SHA256 `9790aa71a4fa7e9c2ca7d98f617fd983e328db09591766832f37a4ee138386d0`，非本任务重新构建。源fixture目录先删除，再以包内路径执行，实际3/3事件。显式CLI `--run-name a88b59453afd4d58a821e2fb0e6130be` 与摘要核对；通过现F1 output_evidence严格校验，并逐条保留输入sequence、核对每次实际读取SHA256/size（包括相同路径多次读取），结果为 `f1_sequence_matches_planned_bundle_bytes`。没有把结束重读当成历史读入收据。
+- 组件模式：`--component` 显式不跑后端，即使 `G4USIM_EXE` 指向不存在路径；`G4USIM_TEST_EVIDENCE_DIR` 已真实验证生成保留目录。相关日志 `out/collab/k1-bundle-component-env.log`、`k1-bundle-final-component.log`、`k1-bundle-final-component-v2.log`；修后完整组件140入口见上条。脚本保留默认/`--executable`真实模式，缺后端时明确要求用`--component`，不会把缺失后端默认为通过。
+- 编译：`python -m compileall -q gui` 退出0，日志 `out/collab/k1-bundle-final-compileall.log`。相关回归：F5 sources 84入口、E6 project snapshot 78入口、project IO smoke 6入口，全部退出0；日志分别 `out/collab/k1-bundle-f5-sources.log`、`k1-bundle-e6-snapshot.log`、`k1-bundle-project-io.log`。
+- 最终源码SHA在 `out/collab/k1-bundle-source-identity.json`。本批详细日志与源码/结果原始字节摘要另列 `out/collab/k1-bundle-evidence.json`；这是专项收据，不冒充统一runner的完整v2证据门禁或整阶段验收报告。
+
+## 交付文件与剩余边界
+
+产品/测试变更仅 `gui/g4usim_gui/core/experiment_bundle.py`、`scripts/test_k1_bundle.py`，新增未提交。额外交付为本报告及上述独立 `out/collab/k1-bundle-*` 证据，无提交、无重置、未修改任何独立审查原件。
+
+当前包为schema g4usim_experiment_bundle/version1的目录：严格F5 workspace codec、3固定入口、引用闭包resources、所有成员SHA256、原始来源SHA及捕获文本标记、强制验证历史、统一CLI委托replay.py。generated复用create_run_package，保留其现有字段校验和选定可执行路径存在性要求；external只收已知消费者语法。包没有后端二进制/完整环境/运行产物目录，未知路径或资源语法不降级。源级阻断不因脱敏而清除；凭据明确拒绝；本机路径重定位或清除，历史环境仅允许必要非敏感事实。
+
+尚未验证：本写者未执行统一CLI重放、Linux renameat2实际分支、完整Windows/Linux矩阵、Qt实窗和物理基准；Plato修后独立复审未完成。manifest hash不是签名或分发许可，历史记录加载全部stale；环境/会话/revision仍须统一工作流重新验证。单资源128MiB/总512MiB/4096成员上限，超限明确拒绝。GDML外部模块/schema/DTD/entity/XInclude和未列宏语法明确拒绝。source-copy高级资源再次直接走旧writer的依赖问题已报告主代理，本文件不隐式改项目执行模式。
+
+## 2026-10-31 安全环境事实保留修复（开发构建专项）
+
+用户重新授权独占两个产品/测试文件。本次是明确的普通产品缺陷修复，未重启此前中止的独立审查；未修改CI辅助交付、其他写者源码或旧测试报告，未提交。
+
+根因：原 `_privacy(environment=True)` 在所有嵌套层重复使用同一 `_ENV_FACTS`，删除了 `safe_environment` 已去敏的 binary/build、capabilities.data 构建映射、data.datasets、coverage 及 dataset_content_identity。已只读核对当前 `experiment_identity.safe_environment` 的实际返回结构，用逐层闭合投影替换平面白名单。保留 binary/architecture/build、capabilities.status/data（含 git_commit/git_source_state/compiler_id/compiler_version/configuration）、data.status/required_complete/datasets，以及选择/存在性覆盖边界。dataset 的 env 仅接受环境变量名称字符串，不接受字典或赋值表达式；selected_path_sha256 仅接受 SHA256 或 unknown 对应的 null。没有开放任意环境字典、实际路径或完整env；允许字段中的私有路径/凭据仍拒绝。未重新解析资源或改变 safe_environment 的事实计算。
+
+正式新增 `test_safe_environment_history` 调用真实 safe_environment 函数，覆盖完整返回事实的普通 export/load/搬移 roundtrip、原record不变、execution fingerprint与revision保留、缺失可选数据集、unknown事实、嵌套未知字段删除，以及env字典/赋值、私有路径和凭据拒绝。加载历史stale及replay_verified=false均保留。原7组组件、隐私/缺文件/原子发布/篡改/一致性反例原断言未删。
+
+本次结果：
+
+- `python -B tools/test_assert_probe.py scripts/test_k1_bundle.py --component --evidence-root out/collab/k1-bundle-environment-component-r1`：退出0，8组、167个v3 assert入口（原140入口保留）；日志 `out/collab/k1-bundle-environment-component-r1.log`，结果在同名目录 `result.json`。
+- `python -B tools/test_assert_probe.py scripts/test_k1_roundtrip.py --executable out/build-k1/Release/G4UniversalSim.exe --evidence-root out/collab/k1-bundle-environment-roundtrip-r1`：退出0，34个v3入口。原输入路径搬走后，在干净中文目录加载→编辑→真实运行→旧资格失效→再次运行/导出；三次实际运行各3个完成事件。开发构建二进制SHA256为 `7d2a819dd9f67dba0f42a4cee94c9cb1dc4d0bf7201de02fe8eb8cc6ef629a91`，沿用已存在的K1开发构建，非本次重新构建或冻结验收。日志 `out/collab/k1-bundle-environment-roundtrip-r1.log`，完整记录/摘要/输入及输出保存在同名证据目录。
+- `python -m compileall -q gui`：退出0；日志 `out/collab/k1-bundle-environment-compileall.log`。
+- 补充只读核对脚本 `out/collab/k1-bundle-environment-facts-check.py`：以真正运行原record（record_id==run_id）对照两次导出/加载的历史，4次比较覆盖3个run，各12个dataset；environment完整相等、execution_fingerprint与revision保留，加载wrapper全部stale。结果 `out/collab/k1-bundle-environment-facts-check-r3.json`，退出0。导入历史会由既有workflow分配新record_id并将session_id设为historical，核对明确区分该行为。最初两次辅助核对因同run_id的导入副本覆盖原记录映射而断言失败，原输出 `k1-bundle-environment-facts-check.json` 和 `...-r2.json` 保留；未改产品以适配该脚本错误。
+
+数据集内容身份仍为unknown，选择路径hash/存在事实不等于数据集内容hash，不提升物理资格。此为本机组件与真实开发构建工作流专项；不冒充K1正式CI、统一CLI专项、独立复审、Qt实窗或整阶段验收通过。详细源码、依赖读取版本、日志及证据文件SHA见 `out/collab/k1-bundle-environment-delivery.json`。
+
+本次产品变更仅 `gui/g4usim_gui/core/experiment_bundle.py` 与 `scripts/test_k1_bundle.py`；报告补充为本文件，新增证据均在 `out/collab/k1-bundle-environment-*`。
+
+## 2026-10-31 官方出处URL误判修复
+
+只读核对 `out/collab/k1-workflow-label-final-r1.log`，原失败为导出引用出处时 `Private path cannot be bundled: reference`。Windows盘符检测在URL排除之前匹配了 `https://` 中的 `s:/`。现仍先执行既有凭据文本检查，仅在路径检测副本中识别完整HTTP(S) URL后将其遮蔽，再检查Windows盘符/UNC和POSIX路径；返回的原文本保持URL原样。URL候选须有有效host/port、无userinfo、反斜杠、非法转义或scheme之外的盘符路径，无法确定的候选不排除，继续执行原路径拒绝。未改资源收集、参考hash、历史stale或其他环境投影行为。
+
+新增正式 `test_reference_source_urls`：reference.source含Geant4官方HTTPS出处及本地参考CSV，普通export/load保持URL与参考SHA；另覆盖HTTP查询/fragment出处。12个拒绝对照保留真正盘符、反斜杠、UNC/POSIX路径、URL尾随私有路径、伪URL、凭据和token，失败均不发布目标。原有组件断言未删。
+
+`python -B tools/test_assert_probe.py scripts/test_k1_bundle.py --component --evidence-root out/collab/k1-bundle-reference-url-component-r1` 退出0：9组、197个v3 assert入口；日志 `out/collab/k1-bundle-reference-url-component-r1.log`，结果 `out/collab/k1-bundle-reference-url-component-r1/result.json`。`python -m compileall -q gui` 退出0，日志 `out/collab/k1-bundle-reference-url-compileall.log`。摘要清单见 `out/collab/k1-bundle-reference-url-delivery.json`。
+
+本轮只修改同两个授权产品/测试文件，并追加本报告及独立证据；未重跑核心真实workflow、未提交、未重试被中止的独立review。本次为普通数据误判修复的组件自测，不代表K1正式CI/独立审查/整阶段通过。

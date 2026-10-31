@@ -1,0 +1,203 @@
+{
+  "schema": "k1_resume_evidence_status_v1",
+  "recorded_utc": "2026-10-31T09:34:54.709245+00:00",
+  "head_observed": "2914b3962167325628ede699b1c14a9d224dec41",
+  "tracked_status_observed": "",
+  "sixth_outcome": "failed_history_due_to_official_m0_windows_cp1252",
+  "windows": {
+    "cases": 182,
+    "counts": {
+      "pass": 182,
+      "fail": 0,
+      "skip": 0
+    },
+    "assertions": 57181,
+    "strict_audit": "passed_strict_report_and_baseline_audit",
+    "report": {
+      "path": "out/verification/k1-4167c44/windows/20261031-151437-d1ee30fc/report.json",
+      "bytes": 105460,
+      "sha256": "9fc70287f5fca5030bb4e3a54d13c9cbab878541ee9989fff1940b15669c335d"
+    },
+    "F5_delta": 6283,
+    "fifth_delta": 171,
+    "runner_exit_observed_by_auditor": false
+  },
+  "ci": {
+    "evidence_complete": true,
+    "terminal": true,
+    "automation_review_passed": false,
+    "report_count": 12,
+    "case_executions": 548,
+    "counts": {
+      "pass": 547,
+      "fail": 1
+    },
+    "assertions_executed_total": 133618,
+    "strict_gate_passed": 11,
+    "F5_gate_passed": 11,
+    "zip_members_verified": 5277,
+    "sealed_reports_verified": 12,
+    "sealed_case_logs_verified": 548,
+    "raw_identity_errors": [],
+    "raw_log_integrity_errors": []
+  },
+  "ci_runs": [
+    {
+      "label": "linux",
+      "id": 41179691486,
+      "conclusion": "success"
+    },
+    {
+      "label": "m0",
+      "id": 41179691469,
+      "conclusion": "failure"
+    }
+  ],
+  "known_failure": {
+    "head": "4167c4421b13464dec54213ea7652ee321868c4e",
+    "run_id": 41179691469,
+    "job_id": 124474368833,
+    "profile": "gui",
+    "case": "gui_k1_window",
+    "status": "fail",
+    "exit_code": 1,
+    "assertions_executed": 76,
+    "original_report": "out\\verification\\k1-4167c44\\ci\\m0-report-windows-latest\\20261031-071655-573fefc8\\report.json",
+    "original_report_sha256": "3de0462014b40965a3ab671d432e81c0c79387dd678c65c7c8488082271d5ea9",
+    "original_log": "out\\verification\\k1-4167c44\\ci\\m0-report-windows-latest\\20261031-071655-573fefc8\\gui_k1_window.log",
+    "original_log_sha256": "ac9b6aa0d0015cd47461038f7eec54b5bdfd6b19e3c04eb5ebb883678e120346",
+    "first_cause": "UnicodeEncodeError cp1252 while printing ensure_ascii=False JSON at smoke_k1_workflow.py:191, before the observed display assertion",
+    "interpretation": "Diagnostic stdout portability failure; no observed cwd assertion failure at this stopping point. UI behavior beyond stopping point is not proven by this Windows case.",
+    "v2_review_gap": "Prior independent review did not cover stdout encoding under Windows hosted cp1252; old review receipts are unchanged.",
+    "no_rerun": true,
+    "no_source_edit": true,
+    "stage_acceptance": "not_decided"
+  },
+  "official_zip_identity_checked_now": [
+    {
+      "path": "out/verification/k1-4167c44/ci/linux-evidence-11.4.3.zip",
+      "bytes": 26825893,
+      "sha256": "712ee235cbae895275526d842824c6ac223b98ddfadd42329df8320cfb123d81"
+    },
+    {
+      "path": "out/verification/k1-4167c44/ci/linux-evidence-11.3.2.zip",
+      "bytes": 26827155,
+      "sha256": "ed021e9c8225b05ffb54f0bc1c0285389cc48e72a9db9c2b96be601048340158"
+    },
+    {
+      "path": "out/verification/k1-4167c44/ci/m0-report-windows-latest.zip",
+      "bytes": 456731,
+      "sha256": "3c962963ead2fca339853320c7452b5183ccd890a76756248e01e60af35488a9"
+    },
+    {
+      "path": "out/verification/k1-4167c44/ci/m0-report-ubuntu-latest.zip",
+      "bytes": 405618,
+      "sha256": "9b9238dd256f77b5bedcb525c083a936ad96b5c8349571318281fdf7b4ac18bd"
+    }
+  ],
+  "native": {
+    "original_visible": "9 actions; 11 distinct saved screenshots; both 3/3 runs are generated; correction retained",
+    "external_supplement": "5a69e6de81624882b9d3560c20611599; explicit external, no package, 3/3, four F1 inputs; external P2 resolved by independent followup",
+    "external_visual_boundary": "5 saved images; only 01 and 05 valid distinct scenes; 02/03/04 mislabeled duplicates retained; external pending not visually proven",
+    "CLI_supplement": "be4a8c5b6ac64c5195212073234f4d3f; child exit0, 3/3, 27 old imported histories stale; original postcheck failure plus r2 retained",
+    "remaining_P3": "UI process NotRunning Chinese wording ambiguity; does not change run success or qualification",
+    "historical_native_mapping": "Fourth full flow and fifth cancellation observations remain their original commit identities; do not claim rerun in sixth/seventh"
+  },
+  "pending_archive": [
+    "Sixth failed generation archive not yet in delivery-staging; use completed Windows and CI receipts rather than stale pending preparation JSON",
+    "Seventh exact commit/frozen manifest/new build identity/new formal Windows+official CI receipts not supplied yet",
+    "Seventh native applicability mapping must explicitly distinguish inherited observations from new runs",
+    "Final document candidate r8 still pending new freeze and navigation refresh",
+    "Final out delivery tree not assembled; choose a fresh destination after final identity and archive readiness",
+    "Final I1 wrapper must bind real final identities and current environment facts only",
+    "Independent resource-boundary review remains incomplete after upstream refusal; do not retry or substitute ordinary reviews"
+  ],
+  "reusable_paths": {
+    "official_observation": "out/collab/k1-fifth-ci/observe.py",
+    "strict_helper": "out/collab/k1-ci/ci_helper.py",
+    "zip_download": "out/collab/k1-ci/download-stdin.py",
+    "pipeline_template": "out/verification/k1-4167c44/ci/run_pipeline.py",
+    "independent_profiles_template": "out/verification/k1-4167c44/ci/independent_profiles.py",
+    "previous_prepare_not_generic": "out/collab/k1-fifth-ci/prepare.py requires exact fourth-to-fifth source diff and must not run unchanged for seventh",
+    "delivery_assembler": "out/collab/k1-assemble-delivery.py",
+    "document_candidate": "out/collab/k1-final-docs-candidate"
+  },
+  "official_tools": [
+    "mcp__codex_apps__github_fetch_commit_workflow_runs",
+    "mcp__codex_apps__github_fetch_workflow_run_jobs",
+    "mcp__codex_apps__github_fetch_workflow_run_artifacts",
+    "mcp__codex_apps__github_fetch_workflow_job_logs",
+    "mcp__codex_apps__github_download_workflow_artifact",
+    "mcp__codex_apps__github_fetch"
+  ],
+  "inputs_pinned_now": [
+    {
+      "path": "out/collab/k1-sixth-windows-review-audit.json",
+      "bytes": 469414,
+      "sha256": "2cf5cfa6525d34f65e67c72427ea6d971b61b41c421c0897616c8258ce9d2eca"
+    },
+    {
+      "path": "out/verification/k1-4167c44/ci/review-result.json",
+      "bytes": 20097,
+      "sha256": "5d299d4df4eb1c69e450151fecbef8370734f8c986b9c555dee8b329840ddd51"
+    },
+    {
+      "path": "out/verification/k1-4167c44/ci/pipeline-result.json",
+      "bytes": 4310,
+      "sha256": "8185ac64b4e3bf3bdc07d6c13c2832418d8db4a26c353edaea5541d8ccf8163a"
+    },
+    {
+      "path": "out/verification/k1-4167c44/ci/encoding-failure-facts.json",
+      "bytes": 1226,
+      "sha256": "57f56db493b3b3308cac8ace46d7b047c9ee974cf1f5b99dde4d76ffae44a029"
+    },
+    {
+      "path": "out/verification/k1-4167c44/ci/archive-member-verification.json",
+      "bytes": 1810356,
+      "sha256": "1fdee17a07014807078a528dfe82c452e93f718db84e0c181c0dd1b5d34e29c9"
+    },
+    {
+      "path": "out/collab/k1-sixth-native-audit.json",
+      "bytes": 123664,
+      "sha256": "c4e124f9a7c9cf7e3a2582936544edea9f5c3cd69a278a4158fd448e12f62a5a"
+    },
+    {
+      "path": "out/collab/k1-sixth-native-external-followup.json",
+      "bytes": 13976,
+      "sha256": "4c7ba2eaf965fce7c150655533414f79bfe622886d87fac8e33c7483f1682bc0"
+    },
+    {
+      "path": "out/collab/k1-sixth-native-cli-supplement.json",
+      "bytes": 7192,
+      "sha256": "7aa9419643481c4a641815913e66e217d455f873c2c4648a12e370296b804d35"
+    },
+    {
+      "path": "out/verification/k1-4167c44/visible/targeted-receipt.json",
+      "bytes": 16025,
+      "sha256": "4950b64fe292a173d64203b69dfb572ce23ebbe78fefda2b73cdd154f7fd993d"
+    },
+    {
+      "path": "out/verification/k1-4167c44/visible-external/supplement-receipt.json",
+      "bytes": 6532,
+      "sha256": "c9e3ad6c22639aea5115fa21627d0043016b7211bae81495a14e523378b4cef0"
+    },
+    {
+      "path": "out/verification/k1-4167c44/replay-cli-receipt-r2.json",
+      "bytes": 3141,
+      "sha256": "a0d7cdade13a7599efa8c73721f0a07c8e789bf0f52673895a217187a72a06d7"
+    },
+    {
+      "path": "out/collab/k1-final-docs-candidate/manifest.json",
+      "bytes": 39349,
+      "sha256": "f08beeca5fc68bfd067d24603ef7a4bda16ba51152f5e841e52581581f211772"
+    },
+    {
+      "path": "out/collab/k1-assemble-delivery.py",
+      "bytes": 3356,
+      "sha256": "5b3a691d865c12656d6e9e8086e45d7f0f366e1fc5b153c40c5ce10762dc4121"
+    }
+  ],
+  "no_tests_rerun": true,
+  "no_tracked_write": true,
+  "phase_complete": false
+}

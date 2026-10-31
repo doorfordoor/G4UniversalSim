@@ -1,0 +1,126 @@
+{
+  "path": {
+    "files": [
+      {
+        "path": "gui/smoke_tests/smoke_backend_launch.py",
+        "current_sha_matches_before": true,
+        "candidate_sha_matches_receipt": true,
+        "current_sha256": "79c3eb31bbe5f47f3fea57abedd783685403f46668c31beb45599cf6929fdb33",
+        "candidate_sha256": "a111d8a9cf3490cdee8db344da17a0ab1d0d50caa352c0efed976d4fc1ad7fd2",
+        "old_assert_nodes": 48,
+        "new_assert_nodes": 49,
+        "replaced_or_removed_assert_count": 2
+      },
+      {
+        "path": "scripts/test_i1_environment.py",
+        "current_sha_matches_before": true,
+        "candidate_sha_matches_receipt": true,
+        "current_sha256": "17641448f01d72614dcc7959567ad3b22142243db79c7b33dd090234bc3da107",
+        "candidate_sha256": "9b31654e94ebf5c3344c126ab1c668bb1df865f7e8f840940ab97d6920c74851",
+        "old_assert_nodes": 72,
+        "new_assert_nodes": 72,
+        "replaced_or_removed_assert_count": 3
+      }
+    ],
+    "apply_check_exit": 0,
+    "apply_check_diagnostic": "",
+    "diff_sha256": "af5a1f495d2488fc9abc8b804c745475f9b1505c5ab8abf7ec532146cf991267",
+    "log_hash_checks": [
+      {
+        "log": "original-gui-alias-counted-r2.log",
+        "recorded_exit_code": 1,
+        "recorded_assertions": 10,
+        "sha_match": true
+      },
+      {
+        "log": "candidate-gui-alias-counted-r2.log",
+        "recorded_exit_code": 0,
+        "recorded_assertions": 74,
+        "sha_match": true
+      },
+      {
+        "log": "original-i1-alias-counted-r3.log",
+        "recorded_exit_code": 1,
+        "recorded_assertions": 121,
+        "sha_match": true
+      },
+      {
+        "log": "candidate-i1-alias-counted-r3.log",
+        "recorded_exit_code": 0,
+        "recorded_assertions": 142,
+        "sha_match": true
+      },
+      {
+        "log": "candidate-gui-normal-counted-r2.log",
+        "recorded_exit_code": 0,
+        "recorded_assertions": 74,
+        "sha_match": true
+      },
+      {
+        "log": "candidate-i1-full-counted-r2.log",
+        "recorded_exit_code": 0,
+        "recorded_assertions": 142,
+        "sha_match": true
+      },
+      {
+        "log": "linux-helper.log",
+        "recorded_exit_code": 0,
+        "recorded_assertions": 8,
+        "sha_match": true
+      },
+      {
+        "log": "linux-i1.log",
+        "recorded_exit_code": 0,
+        "recorded_assertions": 142,
+        "sha_match": true
+      }
+    ]
+  },
+  "progress": {
+    "files": [
+      {
+        "path": "gui/g4usim_gui/core/runner.py",
+        "current_sha_matches_before": true,
+        "candidate_sha_matches_receipt": true,
+        "current_sha256": "497431704c75f4cf37c5e6136d0800f54804120b90f5bc9358b85e0222ff320c",
+        "candidate_sha256": "456912e161a3ee46ae879b9d9d76abb7e8d0691c393504d00ab714c5ce2770e9",
+        "old_assert_nodes": 1,
+        "new_assert_nodes": 1,
+        "replaced_or_removed_assert_count": 0
+      },
+      {
+        "path": "gui/smoke_tests/smoke_live_progress.py",
+        "current_sha_matches_before": true,
+        "candidate_sha_matches_receipt": true,
+        "current_sha256": "0c98c58de0e822fccca5748a8065497f7bbf59eb19caa74de0efe3e3b30a6bd4",
+        "candidate_sha256": "dd7e7a7cb3434cad366dd387e35afe700979bb6d74075b285b6a68f6309f3606",
+        "old_assert_nodes": 66,
+        "new_assert_nodes": 74,
+        "replaced_or_removed_assert_count": 0
+      }
+    ],
+    "apply_check_exit": 0,
+    "apply_check_diagnostic": "",
+    "diff_sha256": "207d782e8520bc691a806d7589e234467db598b48f91fb37b5cb720419181344",
+    "log_hash_checks": [
+      {
+        "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-live-progress-candidate\\validation\\20261031-115626-376939-baseline\\smoke_live_progress.log",
+        "recorded_exit_code": 1,
+        "recorded_assertions": 70,
+        "sha_match": true
+      },
+      {
+        "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-live-progress-candidate\\validation\\20261031-115635-277167-candidate\\smoke_live_progress.log",
+        "recorded_exit_code": 0,
+        "recorded_assertions": 79,
+        "sha_match": true
+      },
+      {
+        "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-live-progress-candidate\\validation\\20261031-115635-284175-product-only\\smoke_live_progress.log",
+        "recorded_exit_code": 0,
+        "recorded_assertions": 71,
+        "sha_match": true
+      }
+    ]
+  }
+}

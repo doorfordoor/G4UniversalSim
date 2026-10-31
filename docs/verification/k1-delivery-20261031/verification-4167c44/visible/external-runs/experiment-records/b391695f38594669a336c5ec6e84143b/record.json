@@ -1,0 +1,244 @@
+{
+  "action": "evaluate",
+  "comparisons": [
+    {
+      "estimator": "complete_per_event_mean",
+      "observed": 0.0,
+      "passed": true,
+      "reference_conditions": {
+        "biasing": false,
+        "direction": "+Z",
+        "energy": "1 MeV",
+        "particle": "geantino",
+        "scope": "noninteracting scoring special case; not general radiation validation",
+        "source_mm": [
+          0,
+          0,
+          -20
+        ],
+        "target": "8 mm FirstTarget silicon box, sensitive",
+        "world": "100 mm G4_Galactic box"
+      },
+      "reference_identity": {
+        "sha256": "1f2f51f8aa7b4adacd6ccffb2b316a6bbb8d15ab15c1845a3e4ee2afa1060470",
+        "size_bytes": 811
+      },
+      "reference_source_verification": "user_supplied_unverified_source",
+      "sample_count": 3,
+      "specification": {
+        "absolute_tolerance": 1e-12,
+        "artifact": "event_edep_t0.csv",
+        "column": "raw_edep_MeV",
+        "normalization": "per_event",
+        "object": "sensitive_total",
+        "quantity": "energy_deposition",
+        "reference": 0,
+        "reference_file": "resources/r0002-1f2f51f8aa7b4adacd6ccffb2b316a6bbb8d15ab15c1845a3e4ee2afa1060470.json",
+        "reference_sha256": "1f2f51f8aa7b4adacd6ccffb2b316a6bbb8d15ab15c1845a3e4ee2afa1060470",
+        "reference_unit": "MeV",
+        "relative_tolerance": 0,
+        "run": 0,
+        "sigma_multiplier": 3,
+        "source": "Geantino noninteracting test particle: analytic zero deposition special case; https://geant4.web.cern.ch/documentation/pipelines/master/bfad_html/ForApplicationDevelopers/TrackingAndPhysics/particle.html",
+        "statistical_method": "mean_standard_error",
+        "unit": "MeV",
+        "weighted": false
+      },
+      "standard_error": 0.0,
+      "threshold": 1e-12,
+      "uncertainty_status": "available"
+    }
+  ],
+  "created_at": "2026-10-31T05:54:26.625903+00:00",
+  "evaluated_run_id": "44d35f860b5c4ee987d50bbba8987d46",
+  "evaluation_scope": "explicit_reference_only_not_general_physics_validation",
+  "finished_at": "2026-10-31T05:54:27.391426+00:00",
+  "history_trust": "historical_requires_local_revalidation",
+  "identity": {
+    "backend": {
+      "sha256": "6e02ce583aff7f711d3a280e7e60a267226f468e6c98170523ce3ef0be8ff8ed",
+      "size_bytes": 2420736,
+      "status": "recorded"
+    },
+    "configuration_fingerprint": "c3074596566458deb808f6c097bbcacaf517d04d4321836b4f323210262f0ddf",
+    "coverage": "closed_resource_tree",
+    "environment": {
+      "architecture": {
+        "bits": 64,
+        "format": "PE",
+        "machine": "x86_64"
+      },
+      "binary": {
+        "sha256": "6e02ce583aff7f711d3a280e7e60a267226f468e6c98170523ce3ef0be8ff8ed",
+        "stable": true
+      },
+      "build": {
+        "compiler_id": "MSVC",
+        "compiler_version": "19.51.36246.0",
+        "geant4_version_number": 1132
+      },
+      "capabilities": {
+        "data": {
+          "configuration": "Release",
+          "geant4_version_number": 1132,
+          "git_commit": "8213ced419c8c6bca512bf8413b674c1265cf3bf",
+          "git_source_state": "clean",
+          "multithreaded": true,
+          "schema": "G4UniversalSimCapabilities",
+          "source_fingerprint": "890635b6d521659e43cf735d07f862c6ebd5959e6c5ea68d023d55332a8a930a",
+          "version": 1
+        },
+        "status": "available"
+      },
+      "coverage": "observed_selection_and_presence_not_dataset_bytes",
+      "data": {
+        "datasets": [
+          {
+            "env": "G4LEDATA",
+            "folder": "G4EMLOW8.6.1",
+            "found": true,
+            "required": true,
+            "selected_path_sha256": "b35349933329a837554648255c4d45b530f8572d4a14b927adc0ce3894edbec4"
+          },
+          {
+            "env": "G4LEVELGAMMADATA",
+            "folder": "PhotonEvaporation6.1",
+            "found": true,
+            "required": true,
+            "selected_path_sha256": "99a58131c7c7f067ec079675ed46fb35a9e6964dce140e6824e63fa0c6fb0935"
+          },
+          {
+            "env": "G4RADIOACTIVEDATA",
+            "folder": "RadioactiveDecay6.1.2",
+            "found": true,
+            "required": true,
+            "selected_path_sha256": "35e382c3c173f64bcceddca30b2e78b34d877b8840d19833fe01539fc22f4e14"
+          },
+          {
+            "env": "G4PARTICLEXSDATA",
+            "folder": "G4PARTICLEXS4.1",
+            "found": true,
+            "required": true,
+            "selected_path_sha256": "1fdac8c46599707b6489e95741c77fc49d772bc8f9aba3aea642c3c3be1c2e92"
+          },
+          {
+            "env": "G4ENSDFSTATEDATA",
+            "folder": "G4ENSDFSTATE3.0",
+            "found": true,
+            "required": true,
+            "selected_path_sha256": "e8057e3a01bf3a19720c92b2e047d60f0b653ea59777a040491b327841b00eab"
+          },
+          {
+            "env": "G4NEUTRONHPDATA",
+            "folder": "G4NDL4.7.1",
+            "found": true,
+            "required": false,
+            "selected_path_sha256": "a74ffaeb75f7a1564c481d8624100fb52b98b980b36c6c910352027049136415"
+          },
+          {
+            "env": "G4PIIDATA",
+            "folder": "G4PII1.3",
+            "found": true,
+            "required": false,
+            "selected_path_sha256": "eb05280dc338e7d8f3fdcf073227833e729ae51eca08e3c8625d43615c1cf753"
+          },
+          {
+            "env": "G4REALSURFACEDATA",
+            "folder": "RealSurface2.2",
+            "found": true,
+            "required": false,
+            "selected_path_sha256": "bde5d4bf7a54435592c52c76165a9daca059ecaa4a737a34b09e996b3ce86385"
+          },
+          {
+            "env": "G4SAIDXSDATA",
+            "folder": "G4SAIDDATA2.0",
+            "found": true,
+            "required": false,
+            "selected_path_sha256": "c53751713c5d3e60864eaa28f0a950ded5b257bf8b75833254448d4f7e41ef4f"
+          },
+          {
+            "env": "G4ABLADATA",
+            "folder": "G4ABLA3.3",
+            "found": true,
+            "required": false,
+            "selected_path_sha256": "ce49b9c652bf030d0c7ab1227cf20477aa99b7ef6cb448e3c76d9029acdb1de2"
+          },
+          {
+            "env": "G4INCLDATA",
+            "folder": "G4INCL1.2",
+            "found": true,
+            "required": false,
+            "selected_path_sha256": "df2976f9fba2ec8d971d1e6da6321eb62ac0062e1f9428095d6068ac963756d8"
+          },
+          {
+            "env": "G4CHANNELINGDATA",
+            "folder": "G4CHANNELING1.0",
+            "found": true,
+            "required": false,
+            "selected_path_sha256": "07ae82dfde3d65ea0603c304c13fa1403815780777590903c4c91336bb62b331"
+          }
+        ],
+        "required_complete": true,
+        "status": "available"
+      },
+      "dataset_content_identity": "unknown",
+      "schema": "g4usim_environment_v1",
+      "status": "ready"
+    },
+    "execution_fingerprint": "13a9f7d98ca70e215239c6ce5a1fa6e9520fe4cb00ea19fac39c2ec228401c7b",
+    "fingerprint": "f7702fa734ab8b2bfde82b4b86d9530a31a986c8aa15c20f54fde0203fb12fb8",
+    "resource_fingerprint": "1cfe90f00c2efa10ee220ad691f45c5e4b8de4973810db24cbccf123d472df0f",
+    "resources": [
+      {
+        "captured_text": false,
+        "distribution": "unknown",
+        "path": "resources/r0000-original-materials.ini",
+        "role": "materials",
+        "sha256": "4bfb64cc63dad229525137f14e64412a94eee8790b449ee64e10a8906cb67da5",
+        "source_sha256": "4bfb64cc63dad229525137f14e64412a94eee8790b449ee64e10a8906cb67da5"
+      },
+      {
+        "captured_text": false,
+        "distribution": "unknown",
+        "path": "resources/r0001-original-geometry.ini",
+        "role": "geometry",
+        "sha256": "b6f500fb680f4aa13393e2545824321f15e6c63815bb396821ad4b7b1d930fc2",
+        "source_sha256": "b6f500fb680f4aa13393e2545824321f15e6c63815bb396821ad4b7b1d930fc2"
+      }
+    ],
+    "revision": 2,
+    "schema": "g4usim_experiment_identity_v1"
+  },
+  "level": "physics",
+  "reason": "experiment.explicit_physical_comparison",
+  "record_dir": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\external-runs\\experiment-records\\b391695f38594669a336c5ec6e84143b",
+  "record_id": "b391695f38594669a336c5ec6e84143b",
+  "reference_records": [
+    {
+      "absolute_tolerance": 1e-12,
+      "artifact": "event_edep_t0.csv",
+      "column": "raw_edep_MeV",
+      "normalization": "per_event",
+      "object": "sensitive_total",
+      "quantity": "energy_deposition",
+      "reference": 0,
+      "reference_file": "resources/r0002-1f2f51f8aa7b4adacd6ccffb2b316a6bbb8d15ab15c1845a3e4ee2afa1060470.json",
+      "reference_sha256": "1f2f51f8aa7b4adacd6ccffb2b316a6bbb8d15ab15c1845a3e4ee2afa1060470",
+      "reference_unit": "MeV",
+      "relative_tolerance": 0,
+      "run": 0,
+      "sigma_multiplier": 3,
+      "source": "Geantino noninteracting test particle: analytic zero deposition special case; https://geant4.web.cern.ch/documentation/pipelines/master/bfad_html/ForApplicationDevelopers/TrackingAndPhysics/particle.html",
+      "statistical_method": "mean_standard_error",
+      "unit": "MeV",
+      "weighted": false
+    }
+  ],
+  "revision": 2,
+  "run_id": "7610507f36fe44589d49679477deaca2",
+  "schema": "g4usim_experiment_record_v1",
+  "session_id": "historical",
+  "stale": true,
+  "stale_reason": "imported_history_requires_revalidation",
+  "status": "stale"
+}

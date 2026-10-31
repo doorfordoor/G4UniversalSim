@@ -1,0 +1,79 @@
+# K1 路径候选独立限定 diff 审查
+
+2026-10-31；模型按原 ledger 为 gpt-6.1-sol/medium，消耗未知。只读冻结产品与测试，仅写本报告。审查对象是 out/collab/k1-path-candidate 的完整候选，不是已应用代码。结论：**C++/CMake 的静态方案可进入编译和真实回归，未发现必须推翻方案的产品缺陷；现有专项有两处验收覆盖缺口，应补齐后再签字。尚不能签运行通过或重新冻结。**
+
+## 基线与检查
+
+最新实际应用/r3后续裁决见 `out/collab/k1-python-launch-independent-review.md`：本报告两项测试覆盖缺口均已核实补齐；新增 Python helper 参数扫描 label 回归 P2 另行保留，不由旧候选静态结论关闭。
+
+### 补充复核：更新测试 a8175572
+
+原测试两项 P2 中，**真实能力位覆盖已静态补齐；前置数据发现覆盖暂不关闭**。更新 test_backend_working_directory.py SHA-256 为 a81755724024074710b30222649f315db793cb58aa8c5c86735434b97b5a8eb4；AST 与内存 compile 通过。尚未实际编译/执行候选后端。
+
+- :95 对真实 environment.capabilities.data.launch.working_directory 使用 `is True`，能拒绝缺失、1、字符串等错误形式，原能力位覆盖项静态关闭，运行通过待最终 EXE。
+- :103-129 复制 EXE 后校验原字节 SHA、独立同目录 geant4-data.txt 写 relative-data、深目录按实际版本 dataset.folder 建空目录，并用 report 的 base/found/path/note 做短 cwd 对照。这一思路有效，空目录只用于目录发现，后面的真实 transport 继续使用原 executable/环境，未把发现当作物理运行。
+- **[P2，已复现环境合并语义] :109-112 用 `os.environ.copy()` 再 `pop` 不能清除 probe 子进程继承。** 现有 environment_discovery.py:37-44 `_environment` 先复制宿主环境，只有传入映射中的 value 为 None 才删除。`probe_environment` 的 env 是覆盖项，不是完整替换。因此宿主 GEANT4_DATA_DIR/G4*DATA 会重新出现，ApplyGeant4DataFile 可被跳过；测试可能错误失败，也未建立所称隔离条件。独立只读进程用 GEANT4_DATA_DIR 哨兵验证：pop 后 `_environment(candidate_env)` 仍继承哨兵；`_environment({key: None})` 正确移除。未启动模拟、未改变机器环境，进程内哨兵在 finally 恢复。应对 GEANT4_DATA_DIR 及此次 report 列出的 dataset.env 显式设置 None（或将覆盖映射中的全部 G4*DATA 明确删除）；保留 PATH 以加载复制 EXE 的依赖。不要直接清理宿主 os.environ。
+
+修正后再用最终构建验证报告 base/各 dataset 路径/note 正反对照；本轮不修改测试，原始报告及旧 SHA 保留为历史。
+
+当前 HEAD 为 e5ff80009975fc9d7d783eaa0865c7c894d1975b，检查前后 git status --porcelain 均为空。source-before.json 中 main.cc、CMakeLists.txt、include/Core/BackendCapabilities.hh 三项原源码 SHA 与实际逐项一致；原源码无 cmake/WindowsRuntime.cmake。本轮未执行候选后端，未修改冻结 EXE，也未运行依赖尚未交付 Python helper 的集成专项。
+
+实际完成：完整四文件 unified diff、测试完整源码审查、Python AST 解析与内存 compile 成功（30 处静态 assert 语法节点，不是已执行断言数）、CMake 中 manifest XML 提取并解析成功，两个 WindowsSettings 命名空间及值正确。候选哈希在审查开始与末次读取一致。
+
+## 可接受的实现点
+
+1. **前置 cwd 顺序正确。** 候选 main.cc:583 解析参数，:585-595 校验并应用目录，之后才在 :602 构造 SimulationManager，:608 进行 Geant4DataLocator::ApplyGeant4DataFile。纠正了冻结源码数据发现早于 CLI 的顺序。所有 capability/data/inspect/run 分支共享这个前置入口，未新增第二个模拟进程所有者。
+
+2. **不创建目标目录、不回退祖先。** :586 使用既有 NativeArgumentToUtf8 后 u8path；:587 拒绝非绝对目录；:590 is_directory；:594 current_path 检查错误。空值由 RequireNonEmptyValue 拒绝，重复由 :358 拒绝。异常在 Manager 构造前输出 stderr、非零退出；没有调用原收尾写摘要。实际切换失败不会在启动祖先写模拟失败产物。未提供该参数时保留原 cwd。
+
+3. **相对项目参数未被提前绝对化到短祖先。** ParseCommandLine 只存 config/macro/output 字符串，后续操作才解析；符合原始 external inspect 和 isolated run 各自的 cwd 契约。:593 在切换前保存 executable 定位基准，Windows 数据定位正常路径仍用 GetModuleFileNameW。Python helper 必须传入已解析的绝对 exe，这一层候选尚未提供。
+
+4. **UTF-8 manifest 路线在目标现代 Windows 上成立。** WindowsRuntime.cmake:9-11 的 longPathAware=true 与 activeCodePage=UTF-8 组合，加上 NativeArgumentToUtf8（候选 main.cc:483-489，Windows filesystem::path(value).u8string）与后续 u8path，静态上没有重复把 UTF-8 当字节宽化的新增转换。activeCodePage 的强制 UTF-8 支持起于 Windows 10 1903；更旧系统不能凭这份 manifest 宣称支持非当前码页路径。[微软 UTF-8 进程代码页说明](https://learn.microsoft.com/en-us/windows/apps/design/globalizing/use-utf8-code-page)
+
+5. **manifest 接入与源码身份覆盖合理。** 候选 CMakeLists.txt:74-75 引入模块并只配置主后端目标；模块以 WIN32 AND MSVC 限定，不改变 Linux 行为。原 CMakeLists.txt:43 的 cmake/*.cmake 递归 glob、:45-58 的原字节 fingerprint/build identity 将覆盖新增模块及其中的 manifest 原文。生成文件只在 build tree。target_sources 接入最终是否由当前生成器正确合并嵌入，仍须从最终 EXE 提取 RT_MANIFEST 实证，不能由 XML 可解析替代。
+
+6. **能力字段是公开结构化声明。** BackendCapabilities.hh:16 新增顶层 launch.working_directory=true，原 schema/version 保持；未把 label 或 cwd 作为 UUID，也未改 F1 请求路径核验、source-copy/export 门禁。
+
+## 两处测试覆盖缺口
+
+### [P2] probe 的 cwd 断言只是请求回显，不能守住“数据发现前切换”
+
+位置：候选 test_backend_working_directory.py:92-95；关联冻结 environment_discovery.py:53-54、:60。
+
+probe[working_directory] 在 Python 发起子进程前直接写入请求 cwd。它即使在后端先从短祖先解析了相对 GEANT4_DATA_DIR、然后才 chdir，也会是正确值。CLI inspect 的 :58 能证明写 plan 时已经切换，不能证明更早的数据发现顺序。当前专项依赖机器已配置数据，因此这种错误顺序可同时通过这些断言；本候选实际源码顺序是对的，但回归尚不能保护该点。
+
+具体负对照：在真实深 cwd 放置可指向现有数据根的相对资源路径，在短 launch cwd 同名位置放缺失/错误数据；通过 probe_environment 的 env 参数传相对 GEANT4_DATA_DIR（清理会抢占优先级的 G4*DATA），核对后端 data.report discovery 的实际 dataset 路径/required_complete，并对调路径做失败对照。无需复制数据集或改系统设置。能力只读返回和 data 两条命令都必须经 helper，后端数据事实由 report 验，不只看 probe 请求字段。
+
+### [P2] 新能力位尚无真实协议断言
+
+位置：候选 BackendCapabilities.hh:16 与 test_backend_working_directory.py:92-95。
+
+专项仅要求环境 ready；删除 launch.working_directory 字段，仍可通过当前断言。这会遗漏 Python 兼容协商所依赖的公开协议。应从真实 capabilities.data 校验 launch.working_directory **is True**，不能用 truthy 的 1 或字符串替代；Python helper 的旧后端/不支持 flag 错误分类由其交付测试覆盖，不能把该错误归成 Geant4 数据缺失。
+
+以上两项是具体证据覆盖缺口，不是声称候选后端已经复现错误行为。
+
+## 测试有效性与执行边界
+
+- :38-42 以 UTF-16 单元构造 >=280 的真实目录，含空格、中文与非 BMP 字符；:47-50 短祖先放同名 config/macro 坏输入，CLI 的正向成功能有效排除读取祖先同名项目文件。
+- :55-59 要求真实只读 inspect 成功、后端 plan.cwd 等于深目录且无模拟输出；:60-69 随后真实运行，要求 completed、3/3、summary_write completed、无 output failure、有 effective config/metadata、无残留 tmp。没有用 exit0 单独冒充运行成功。
+- :76-89 覆盖缺值、空值、相对、缺目录、普通文件、重复；要求非零、明确参数错误、stdout 空且无新增 summary。不会把测试自身 stdout/stderr 日志写入误称后端产物。
+- :102-130 实际调用现有 ExperimentWorkflow inspect/initialization/run，包含 no_run 与3事件区分、非空 actual_inputs、请求目录归属及 close drain。没有 stub 替代 QProcess。但本轮未提供 Python helper，冻结实现上这部分预计不能通过，不将其当候选 C++ 缺陷。
+- 文件目前在 out/collab/k1-path-candidate，:13 的 ROOT=parents[1] 及 :21-22 的兄弟测试导入假定最终位于 scripts/。**不能直接在候选目录运行并把导入失败当后端失败。** 主任务应在其授权的候选应用/构建阶段按目标 scripts 路径执行，或使用明确记录的等价加载 harness；本审查不移动产品/测试。
+- GUI probe 对短祖先选择、真实逻辑 cwd 与 launch cwd 分离、旧后端兼容、runner/helper 抛异常后的文件句柄与 busy 清理，仍需对 Python 实际交付做限定 diff，不能由本 C++ 候选签掉。
+
+## 编译与运行后签字的必要证据
+
+最终 EXE 中实际嵌入两个 manifest 设置、真实 capabilities 新字段、candidate/source/build fingerprint 一致；以上专项真实 CLI + 三类启动路径通过；新能力位/相对数据发现负对照补齐；保留首轮冻结失败和新 EXE/hash/日志。切到长 cwd 后孙进程创建仍有独立限制，此修复不扩展外部 macro 隐藏 IO、资源闭包或 portable export 资格。
+
+## 本轮候选 SHA-256
+
+| 文件 | SHA-256 |
+| --- | --- |
+| main.cc | 202a8e13c6ab9aff756cfbfc0fa0a57b67d0f9a576ee48fdb9f0a7b161db5714 |
+| CMakeLists.txt | 0f95fd4fdca12a72b67a669b9abdb9bcc94c2fd1e69d211938d668d4ef02dde7 |
+| include/Core/BackendCapabilities.hh | 40e0f7c33f081ed63b0989c7d5a0151f939b747184012f41c4127f2dcf399c6c |
+| cmake/WindowsRuntime.cmake | 48ea39aca32bfd60d1237e8ad05215499ee70735c1a5c86d50bbcc86411c4659 |
+| test_backend_working_directory.py | 75c4728098db82741d9f48fc97eb8f2ad37a42ea244f0b622a0ef397b1d5cd37 |
+| source-before.json | 957e534ddca6140cc4aaad2f1b2bd6a635b89c6cad7d0d425cb044813b8a0be8 |
+
+进度：本轮静态限定 diff 完成；未改源码/测试/二进制；下一步复核候选更新及真实编译/启动证据，不提前标记阶段通过。

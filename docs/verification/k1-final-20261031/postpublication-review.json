@@ -1,0 +1,85 @@
+{
+  "schema": "k1_seventh_postpublication_addendum_review_v1",
+  "recorded_utc": "2026-10-31T10:29:48.716068+00:00",
+  "status": "passed",
+  "checks": {
+    "eight_files_exist_and_staged_equal": true,
+    "independent_md_original_bytes": true,
+    "independent_json_original_bytes": true,
+    "chief_original_bytes": true,
+    "publication_counts": true,
+    "publication_manifest": true,
+    "stage_claims_bounded": true,
+    "source_test_FP_pinned": true,
+    "phase_codex_limits": true,
+    "README_original_plus_addendum": true,
+    "final_readme_and_chief_actual_tracked_links": true
+  },
+  "files": [
+    {
+      "path": "docs/verification/k1-final-20261031/README.md",
+      "bytes": 6586,
+      "sha256": "b6cac2e7519f9db72aecd78f4aee0d8f7e07bb77794efe5b35f2ea0b59466674",
+      "index_sha256": "b6cac2e7519f9db72aecd78f4aee0d8f7e07bb77794efe5b35f2ea0b59466674",
+      "index_equals_worktree": true
+    },
+    {
+      "path": "docs/verification/k1-final-20261031/independent-review.md.txt",
+      "bytes": 2303,
+      "sha256": "eda99eecec89236d654135cd4da7498b1222c7766717e1fcbe88790d4ab382f4",
+      "index_sha256": "eda99eecec89236d654135cd4da7498b1222c7766717e1fcbe88790d4ab382f4",
+      "index_equals_worktree": true
+    },
+    {
+      "path": "docs/verification/k1-final-20261031/independent-review.json",
+      "bytes": 3075,
+      "sha256": "0aa36a312ce1e2a313abb210f73aea0d47d089f38c76b687f46be8e1eb5fe164",
+      "index_sha256": "0aa36a312ce1e2a313abb210f73aea0d47d089f38c76b687f46be8e1eb5fe164",
+      "index_equals_worktree": true
+    },
+    {
+      "path": "docs/verification/k1-final-20261031/publication.json",
+      "bytes": 2379,
+      "sha256": "c67bcd5542f1c0cb40d317a4ca48b9cae3a2c82b89b37d20f589fcf78088c050",
+      "index_sha256": "c67bcd5542f1c0cb40d317a4ca48b9cae3a2c82b89b37d20f589fcf78088c050",
+      "index_equals_worktree": true
+    },
+    {
+      "path": "docs/verification/k1-final-20261031/staged-verification.json",
+      "bytes": 610,
+      "sha256": "79ad57ff840712531bf5039845e0855244d8199a29c1f7e27a00518290e0362e",
+      "index_sha256": "79ad57ff840712531bf5039845e0855244d8199a29c1f7e27a00518290e0362e",
+      "index_equals_worktree": true
+    },
+    {
+      "path": "docs/verification/k1-final-20261031/doc-links.log",
+      "bytes": 73,
+      "sha256": "054fbbaf09710607717012c732812a087e71e9b9ca3c56c7c866f743f1556f5c",
+      "index_sha256": "054fbbaf09710607717012c732812a087e71e9b9ca3c56c7c866f743f1556f5c",
+      "index_equals_worktree": true
+    },
+    {
+      "path": "docs/verification/k1-final-20261031/source-test-identity.json",
+      "bytes": 486,
+      "sha256": "4357ac889eb09906c31067cad6c147317c606860f732885305b97e4a59e14a8f",
+      "index_sha256": "4357ac889eb09906c31067cad6c147317c606860f732885305b97e4a59e14a8f",
+      "index_equals_worktree": true
+    },
+    {
+      "path": "docs/collab/reviews/20261031-k1-seventh-review.md",
+      "bytes": 4602,
+      "sha256": "9cbd6b1a81f3d2198534052f9d0ab57b37c70cc7b7ce0a9ea8cb49f5ae03fcf4",
+      "index_sha256": "9cbd6b1a81f3d2198534052f9d0ab57b37c70cc7b7ce0a9ea8cb49f5ae03fcf4",
+      "index_equals_worktree": true
+    }
+  ],
+  "final_actual_tracked_links_checked": 16,
+  "link_errors": [],
+  "doc_links_log_exact": "doc_links: 636 relative links in 216 files, 0 broken\nG4USIM_ASSERTS=11\n",
+  "limits": [
+    "No full payload rehash or product tests rerun.",
+    "Parent full index-byte and205tracked-link claims are attributed to staged-verification receipt; only8selected targets/index bytes and current finalREADME/chief links checked here.",
+    "Index staging is not final commit/push; no future success claimed.",
+    "P1 adjudication remains incomplete; no K1 closure or codex merge."
+  ]
+}

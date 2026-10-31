@@ -1,0 +1,99 @@
+{
+  "schema": "k1_restore_regression_v2",
+  "helper_sha256": "b689b5665002b8cb04611cb1a55c542bf8c9aaf30115d6985d87f4d13a58a515",
+  "results": [
+    {
+      "mode": "ordinary",
+      "case": "valid",
+      "exit_code": 0,
+      "expected": true
+    },
+    {
+      "mode": "ordinary",
+      "case": "part-hash",
+      "exit_code": 1,
+      "expected": true
+    },
+    {
+      "mode": "ordinary",
+      "case": "whole-hash",
+      "exit_code": 1,
+      "expected": true
+    },
+    {
+      "mode": "ordinary",
+      "case": "schema",
+      "exit_code": 1,
+      "expected": true
+    },
+    {
+      "mode": "ordinary",
+      "case": "existing",
+      "exit_code": 1,
+      "expected": true
+    },
+    {
+      "mode": "optimized",
+      "case": "valid",
+      "exit_code": 0,
+      "expected": true
+    },
+    {
+      "mode": "optimized",
+      "case": "part-hash",
+      "exit_code": 1,
+      "expected": true
+    },
+    {
+      "mode": "optimized",
+      "case": "whole-hash",
+      "exit_code": 1,
+      "expected": true
+    },
+    {
+      "mode": "optimized",
+      "case": "schema",
+      "exit_code": 1,
+      "expected": true
+    },
+    {
+      "mode": "optimized",
+      "case": "existing",
+      "exit_code": 1,
+      "expected": true
+    },
+    {
+      "mode": "env-optimized",
+      "case": "valid",
+      "exit_code": 0,
+      "expected": true
+    },
+    {
+      "mode": "env-optimized",
+      "case": "part-hash",
+      "exit_code": 1,
+      "expected": true
+    },
+    {
+      "mode": "env-optimized",
+      "case": "whole-hash",
+      "exit_code": 1,
+      "expected": true
+    },
+    {
+      "mode": "env-optimized",
+      "case": "schema",
+      "exit_code": 1,
+      "expected": true
+    },
+    {
+      "mode": "env-optimized",
+      "case": "existing",
+      "exit_code": 1,
+      "expected": true
+    }
+  ],
+  "cases": 15,
+  "all_expected": true,
+  "whole_mismatch_output": "retained, explicitly unverified; existence is not success"
+}

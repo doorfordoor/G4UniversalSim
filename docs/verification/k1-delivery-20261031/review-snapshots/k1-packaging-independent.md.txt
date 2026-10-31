@@ -1,0 +1,11 @@
+# 失败历史包与分片独立审核
+
+结论：**现有封装/分片字节核对成立；restore helper有一项P2需修。** gpt-6.1-sol/medium，消耗未知。只读普通字节包装范围，不触及资源链接边界，不重跑helper/测试，不改原档。
+
+三个失败树共1082文件与wrapper全部成员/原SHA/大小一致，源树审核前后不变。嵌套官方ZIP以原字节成员保留，未重打包其内部内容。两个大wrapper分别162848279、172601805bytes；11个最多33554432bytes的part逐项SHA/大小一致，按transport顺序流式拼接所得全SHA与wrapper一致。original-packaging.json副本一致；父任务两次既有恢复输出及日志SHA也与原wrapper一致。
+
+**RESTORE-OPTIMIZE-P2：restore_evidence.py用assert实现所有输入/身份门禁。** 在`python -O`或继承`PYTHONOPTIMIZE=1`时，这些语句全部消失；静态编译正常/优化模式分别含6/0个断言守卫。错误part或whole hash的manifest仍可走到成功JSON；xb仅保留不覆盖现有文件的保护。此为独立源码/字节码判定，未冒称实际运行负例。
+
+建议用显式if/raise实现schema、名称、各part及最终全SHA/大小校验，或在任何写入前明确拒绝优化模式；保留xb。现有包装字节通过与工具错误路径修复分别计证，不能用已成功的普通模式roundtrip关闭此项。失败写出后可能残留未核准文件也须保持“存在不等于成功”的交付说明。
+
+完整1082成员原SHA、11分片、两个恢复输出、原始日志及helper SHA在同名JSON。三代原失败、官方原ZIP及旧归档不改写，未作发布或K1阶段通过判断。

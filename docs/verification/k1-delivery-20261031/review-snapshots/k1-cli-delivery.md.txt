@@ -1,0 +1,56 @@
+# K1 CLI 交付记录
+
+后续最终适配交付已完成并停止写入，最新结果、15文件内容SHA与handoff见 `out/collab/k1-adapters-delivery.md` / `k1-adapters-final-manifest.json`。CLI static124、完整保留证据真实backend160入口退出0；下述缺核心失败保留为最初开发阶段历史，不代表当前状态。
+
+工作区：`C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim`。起始提交 `ccb813a8540b83d5015daabebd5047929a16af2c`；起始已存在 STATUS/ROADMAP 修改，后续其他写者的 GUI、i18n、资源与核心文件均未修改。不提交、不改统一测试登记。
+
+## 当前结果
+
+已准备完成 CLI thin adapter、专属测试与中文使用文档。按主负责人最后冻结 API 接线；核心 `experiment_workflow.py` 在本次真实联调时尚未落盘，因此不能宣称统一服务或真实 Geant4 联调通过。没有留占位 raise 或替代业务实现；依赖缺失返回明确非零 JSON。
+
+独占产物：
+
+- `gui/g4usim_gui/experiment_cli.py`
+- `scripts/test_k1_cli.py`
+- `docs/可信实验工作流.md`
+
+已读根/gui AGENTS、`docs/collab/inbox/20261031-k1-execution.md`、F4/F5 历史相关条目、配置撤销与恢复，以及实际 project/edit_snapshot/edit_transactions/runner/run_result/package_model、后落盘的 experiment_bundle。
+
+## 实现边界
+
+1. 参数入口：project/bundle 二选一；运行环境覆盖 executable/runs root；`--records` 对应服务 `records_root` 目录。inspect/validate(fields|initialization)/apply/generate/run/evaluate/export 全部路由到同一服务，不调用 shell、不直接启动后端、不复制业务校验或成功判定。
+2. apply：只接受严格完整 `g4usim_edit_snapshot_v1`，无任意路径 setter；`snapshot_from_dict()` 重建后经 `workflow.apply(..., expected_revision=session.revision)`，核心接受后才 `save_project(project_for_snapshot(session.current()), --save-project)`。无直接编辑 session 的产品旁路。测试 double 内的 session.replace 仅模拟服务接受。
+3. 事件循环：QCoreApplication + QEventLoop/QTimer，先订阅 completed 再派发；兼容同步 terminal 返回与 pending 后异步 completed。SIGINT/SIGTERM 标记由 Qt tick 消费；超时/取消调用核心 cancel，升级 force 并清理注入的 runner/inspect QProcess，有界等待。服务 cancel 抛错仍继续清理，不按进程名停止其他任务。迟到 passed 不能覆盖 timeout。
+4. 输出：正常动作与错误为单行 `g4usim_experiment_cli_v1` JSON；依赖与动作打印移到 stderr。仅服务 passed + 所需保存成功可退出0；failed/stale/unobserved/取消/超时及缺终态非零。ValidationReport 走自身 to_dict，其余未知对象拒绝。--help 为标准帮助文本。
+5. 历史：CLI 不读取历史来恢复信任；records_root 交核心。bundle.load_bundle 的历史保持 transient 中 stale 记录，不注入新的可信结果。
+6. bundle：严格使用已核验 load_bundle 与其 replay_inputs；run/inspect/initialization 时把运行入口选为 external、当前包根作工作目录、选定新后端，使相对依赖不经旧 writer 再复制。此处仅选择已有受支持入口，不自行解析 macro/INI。generate/apply 仍针对完整编辑 snapshot，不将闭包重放伪称生成支持。
+7. evaluate：JSON 比较数组及显式 run ID 原样交核心，未接收外来 pass。跨 CLI 进程的 run ID 恢复、持久记录与 fresh 身份检查需核心联调确认。
+
+本次与前版 API 的差异已收敛：使用构造器 session/runner/inspect_process/records_root；不传前版构造 apply_snapshot，不用 history/recordChanged/stateChanged；apply_snapshot 可选投影回调由核心自身处理；多数动作不再传 expected_revision。
+
+## 已验证
+
+- `python tools/test_assert_probe.py scripts/test_k1_cli.py`：退出0，`G4USIM_ASSERTS=101`。最新原始执行日志 `out/collab/k1-cli-static-final.log`（UTF-8/LF）；早期92入口日志保留 `k1-cli-static.log`。
+- `python -m compileall -q gui`：退出0。
+- 自有路径 `git diff --check`：退出0；新增文件另以 UTF-8/非BOM/LF 检查。
+- Python 3.11，PySide6 6.11.1。静态测试须由主负责人在统一登记声明 QtCore/gui requirements 依赖，不能因缺 Qt skip 当 pass。
+
+101 个入口的范围包括：参数拒绝、完整快照严格输入、七动作路由、终态与 JSON、report 编码、Qt 完成/同步返回/信号取消/超时/强停升级、真实 runner 的 Python 子进程退出0无摘要拒绝与超时终止、资源模块真实导出/搬移/输入重定位/陈旧历史/篡改拒绝。这些不代表真实模拟或物理比较验证。
+
+## 已尝试但未通过的真实后端联调
+
+命令：`python scripts/test_k1_cli.py --backend out/build-k1/Release/G4UniversalSim.exe`。
+
+退出1，失败在第一步 Inspect。子 CLI 返回退出2与如下实际 JSON 错误：
+
+```text
+ModuleNotFoundError: No module named 'g4usim_gui.core.experiment_workflow'
+```
+
+日志：`out/collab/k1-cli-backend.log`。没有启动模拟，没有把该失败记 skip/pass。存在后端文件不代表本专项已经使用其验证成功。
+
+可选后端专项现已实现真实 inspect → fields → initialization → 三事件 run → export → 搬移包 run → 篡改拒绝 → 退出0无事件拒绝。显式 `--backend` 无值读取 `G4USIM_EXE`，缺路径直接失败。
+
+## 下一步
+
+核心落盘后读实际签名与记录，运行上述可选专项；若需修复 CLI 仅改本写者产物，核心语义问题交主负责人。重点确认 initialization 对外部 macro 的处理、独立 UUID 输出目录、取消记录持久、跨进程 evaluate 的显式历史选择/重验。主负责人完成测试登记与整项矩阵；本次不宣称K1完成。当前无运行中的命令会话。

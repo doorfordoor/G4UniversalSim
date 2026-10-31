@@ -1,0 +1,25 @@
+C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\output\plot_data.py:104: RuntimeWarning: Legacy/unverified directory: run_metadata.json is absent; file ownership and completeness are unverified.
+  for path in sorted(output_files(output, "scorer_statistics*.csv")):
+C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\output\plot_data.py:113: RuntimeWarning: Legacy/unverified directory: run_metadata.json is absent; file ownership and completeness are unverified.
+  for path in sorted(output_files(output, "scoring_mesh*.csv")):
+C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\output\plot_data.py:119: RuntimeWarning: Legacy/unverified directory: run_metadata.json is absent; file ownership and completeness are unverified.
+  for path in sorted(output_files(output, "g4usim*.root")):
+C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\gui\g4usim_gui\output\plot_data.py:140: RuntimeWarning: Legacy/unverified directory: run_metadata.json is absent; file ownership and completeness are unverified.
+  runs = sorted({_run_of(p.stem) for p in output_files(output, f"{stem}_t*.csv")})
+G4USIM_ASSERTS=62
+Traceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\k1-final-ui-candidate-v2\run_candidate.py", line 62, in <module>
+    raise SystemExit(test_assert_probe.main(['probe', str(target), *target_args]))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 153, in main
+    runpy.run_path(str(target), run_name="__main__")
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\k1-final-ui-candidate-v2\run_candidate.py", line 58, in run_path
+    exec(compile(target.read_bytes(), str(target), 'exec'), namespace)
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\k1-final-ui-candidate-v2\files\gui\smoke_tests\smoke_k1_workflow.py", line 331, in <module>
+    main()
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\k1-final-ui-candidate-v2\files\gui\smoke_tests\smoke_k1_workflow.py", line 263, in main
+    check_external_completed_preview(window, results[-1], root)
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\k1-final-ui-candidate-v2\files\gui\smoke_tests\smoke_k1_workflow.py", line 141, in check_external_completed_preview
+    assert prepared['can_run'], prepared['report'].errors
+           ~~~~~~~~^^^^^^^^^^^
+AssertionError: ['project.run_input_mode', 'project.workspace_root', 'project.config_path', 'project.macro_path']

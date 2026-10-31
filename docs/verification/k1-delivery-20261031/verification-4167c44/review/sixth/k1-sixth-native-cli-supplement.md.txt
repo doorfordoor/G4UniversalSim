@@ -1,0 +1,7 @@
+# 第六导出包实际CLI执行补证
+
+结论：实际replay.py→sharedCLI→新run be4a8c5b6ac64c5195212073234f4d3f执行证据成立。原stdout returned UUID精确绑定disk record，3/3摘要、F1 fresh verified、四输入SHA/大小及本次main/macro/output路径匹配；build4167 clean。原receipt/log/entry/record及r2引用原SHA均一致。
+
+child exit0来自原父subprocess收据；首轮父helper exit1是将导入旧run历史一起计len==1的postcheck错误。旧历史run均stale，不能作为新执行计数；未重复运行，原失败/日志/收据保留，r2仅更正选择。本审逐项核真实记录与字节，未信任父allpass断言或重跑。
+
+此CLI record本身无package，证明CLI外部执行链；不经过MainWindow完成回调，故不关闭此前NATIVE-EXTERNAL-COVERAGE-P2的实窗覆盖项。科学范围仅execution，未新增物理比较。完整SHA/输入/摘要及计数在同名JSON。

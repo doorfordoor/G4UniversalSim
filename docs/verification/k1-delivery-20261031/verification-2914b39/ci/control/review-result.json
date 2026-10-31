@@ -1,0 +1,109 @@
+{
+  "schema": "k1_seventh_ci_independent_review_v1",
+  "head": "2914b3962167325628ede699b1c14a9d224dec41",
+  "terminal": true,
+  "evidence_complete": true,
+  "automation_review_passed": true,
+  "runs": [
+    {
+      "label": "linux",
+      "id": 41189260366,
+      "url": "https://github.com/doorfordoor/G4UniversalSim/actions/runs/41189260366",
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 124502461038,
+          "name": "ubuntu-24.04 / Geant4 11.4.3",
+          "conclusion": "success"
+        },
+        {
+          "id": 124502461137,
+          "name": "ubuntu-24.04 / Geant4 11.3.2",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "label": "m0",
+      "id": 41189260331,
+      "url": "https://github.com/doorfordoor/G4UniversalSim/actions/runs/41189260331",
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 124502460896,
+          "name": "windows-latest / Python 3.11",
+          "conclusion": "success"
+        },
+        {
+          "id": 124502461095,
+          "name": "ubuntu-latest / Python 3.11",
+          "conclusion": "success"
+        }
+      ]
+    }
+  ],
+  "archives": [
+    {
+      "name": "linux-evidence-11.3.2",
+      "id": 13038588537,
+      "run_id": 41189260366,
+      "bytes": 26825533,
+      "official_digest": "sha256:d1077c83b500cb40ae8a49bcd948f8ac01e8d1ba72f6655636370b0ba7f9b223",
+      "path": "linux-evidence-11.3.2.zip"
+    },
+    {
+      "name": "linux-evidence-11.4.3",
+      "id": 13037928843,
+      "run_id": 41189260366,
+      "bytes": 26823674,
+      "official_digest": "sha256:8fba76d2c81440989fca2de849cf174081a97e63a2be2a9f7969d9c6ba532e5d",
+      "path": "linux-evidence-11.4.3.zip"
+    },
+    {
+      "name": "m0-report-windows-latest",
+      "id": 13038347202,
+      "run_id": 41189260331,
+      "bytes": 456142,
+      "official_digest": "sha256:28cc25c20f102331b356a31311ab482aed42bd5772669420f56b098502b0d165",
+      "path": "m0-report-windows-latest.zip"
+    },
+    {
+      "name": "m0-report-ubuntu-latest",
+      "id": 13037743296,
+      "run_id": 41189260331,
+      "bytes": 405667,
+      "official_digest": "sha256:21f4d223b023489a2ee516e85b22348695cca2e5f3f22b389d0a1d2f24307778",
+      "path": "m0-report-ubuntu-latest.zip"
+    }
+  ],
+  "report_count": 12,
+  "unique_frozen_cases": 182,
+  "case_executions": 548,
+  "counts": {
+    "pass": 548
+  },
+  "assertions_executed_total": 133720,
+  "strict_gate_passed": 12,
+  "F5_same_platform_per_case_and_total_passed": 12,
+  "assertion_regressions": [],
+  "raw_log_errors": [],
+  "identity_errors": [],
+  "zip_members_verified": 5277,
+  "sealed_report_and_log_sha_checks": 560,
+  "source_fingerprint": "890635b6d521659e43cf735d07f862c6ebd5959e6c5ea68d023d55332a8a930a",
+  "tests_content_fingerprint": "210da0c83b5c52c1fbf5999c8b2d11bd48eccb428727ab65df414ce1410f5e46",
+  "integrated_UI_v2_formal_evidence": "v2-formal-evidence.json",
+  "external_completion_observations": 40,
+  "terminal_component_evidence": "p3-evidence.json",
+  "terminal_controlled_observations": 8,
+  "no_allow_incomplete": true,
+  "no_reruns": true,
+  "no_tracked_source_test_edits": true,
+  "stage_acceptance": "not_decided_resource_boundary_rejection_independent_review_gap",
+  "phase_complete": false,
+  "CI_pass_does_not_close_stage": true,
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "medium",
+  "consumption": "unknown",
+  "completed_utc": "2026-10-31T10:09:12.660560+00:00"
+}

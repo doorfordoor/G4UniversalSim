@@ -1,0 +1,81 @@
+# K1 Windows 深 cwd：Python 接入建议（等待冻结全量自然结束）
+
+2026-10-31。当前只读产品/测试，本文件仅为建议，不是实现或验收通过；未触碰全量 session33236。已读 Dalton 的 out/collab/k1-windows-long-path-independent.md，采纳其八个边界。读取基线 e5ff80009975fc9d7d783eaa0865c7c894d1975b，读取时工作区 clean。
+
+## 裁决和已有证据
+
+采用后端早期 --working-directory + Windows longPathAware/UTF8 manifest + Python 共用启动 helper，作为不依赖8dot3/junction/subst的产品路由。短祖先只用于首次CreateProcess；子进程在Manager构造、数据发现、配置及任何CLI模式前恢复真实目录，此后不切回。新路由不解决任意孙进程从长cwd启动的问题，也不扩大K1资源闭包/未知IO资格。
+
+原probe JSON out/collab/k1-deep-cwd-probe.json：实际cwd为260 UTF16单元且存在；capabilities/data均spawn_error，WinError267、errno20、exit_code=null，顶层status=unavailable，二进制SHA稳定。只读对照同一环境在UUID父目录243时capabilities/data均exit0，data.required_complete=true；显式\\?\同目录264仍267。用户独立8组合已证明manifest-aware Python及unaware backend、subprocess/QProcess、normal/extended cwd均初次启动失败，短8dot3 alias137四组合通过。alias不是本方案前提。
+
+本人另作只读验证：aware Python从243字符祖先启动后，子进程内os.chdir原260目录，exit0且os.getcwd完全一致。这只支持“短启动后进入真cwd”的API机制，不替代新后端真实验证。主任务manifest-r2 receipt为短cwd190/长output268 exit0 completed；不能据此推定具体事件数或所有Windows/registry=0均已支持。
+
+## 与C++约定
+
+主线程负责：--working-directory唯一、非空、绝对路径、存在且目录；纯parse后在Manager构造和ApplyGeant4DataFile之前current_path(u8path)。早期失败直接非零退出且不写另一目录summary。capabilities.launch.working_directory=true；Windows嵌入longPathAware和activeCodePage UTF8，来源指纹通过既有cmake规则覆盖。
+
+没有新参数的短路径行为不变。新flag不改变config/macro/output原参数文本、不改变run_name、不影响UUID归属。相对环境变量和所有项目相对路径只在恢复后的真实cwd下解释。
+
+## 共用 helper 接口建议
+
+新增 core/backend_launch.py，纯数据/标准库，不创建进程，不拥有runner，不os.chdir宿主、不复制输入、不创建链接或盘符映射。
+
+```python
+@dataclass(frozen=True)
+class BackendLaunch:
+    program: str              # 固定绝对后端程序
+    arguments: tuple[str, ...] # 实际启动参数
+    logical_cwd: str          # 请求/身份绑定的真实绝对cwd
+    launch_cwd: str           # 初次CreateProcess的实际cwd
+    route: str                # direct / restore_working_directory
+
+def prepare_backend_launch(command, cwd) -> BackendLaunch: ...
+```
+
+名称可按主任务接口裁决调整；语义固定：
+
+1. 在父进程原语义下先固定绝对program和logical_cwd，确认cwd存在且目录。不能切换启动目录后重新搜索相对program/PATH命中另一exe。
+2. Windows长度按UTF16 code units计算，预留尾分隔符及NUL；边界采用保守且有对照测试的阈值，不用Python字符数或当前文件名长度替代。
+3. 非Windows/普通短cwd返回direct，参数及目录行为不变，不强迫旧backend接受新flag。
+4. 深Windows cwd逐级找同一真实路径的既存可访问短祖先。返回短launch_cwd，并在实际argv追加唯一 --working-directory <真实绝对logical_cwd>。不改项目相对参数、不放资源到祖先，不靠8dot3。
+5. 已有同值绝对参数可幂等处理；缺值/重复/与logical_cwd冲突应明确拒绝，不能按argv顺序偷偷选择一个。找不到可用祖先或无法建立绝对program时也明确拒绝。
+6. 一旦由helper生成launch_cwd，最终调用边界不能再次把它替换成logical_cwd；两者分字段保留。Path.resolve用于身份/原目标规范化，不用于覆盖helper的最终启动选择。
+
+## 三处接入及记录
+
+- environment_discovery：只有probe_environment中的两个后端命令使用helper。_command还服务cl/cmake等通用工具，不得向它们追加后端flag；可增加显式backend启动角色或由probe提前生成BackendLaunch。record.working_directory继续表示logical；另存launch_working_directory/launch_route及实际argv。safe_environment以logical解释相对dataset路径并记录选择hash，不以祖先cwd认证数据就绪。
+- experiment_workflow：独立Inspect、run_inspect、initialization_inspect都在现有同一个QProcess最终setProgram/setArguments/setWorkingDirectory边界应用helper。独立Inspect仍保留原始input/file/line/cwd语义，内部模式仍保留UUID执行树。业务record的请求命令/路径语义不换为祖先；新增实际launch信息作诊断。_verify_request_binding和F1 actual输入仍按logical_cwd规范化。
+- runner：start(project, command)的默认及custom command均用helper；不能只在build_command增加flag。准备/验证必须在stdout/stderr日志打开、发布running状态之前，失败走现有error通道并保持可再次启动，不遗留句柄或busy。QProcess继续由同一runner拥有；scan/scenario经该runner自然复用，不另建控制器。
+
+Run status既有workingDirectory保留真实目录，实际argv如实记录，启动祖先另列；不能把launch_cwd当来源或新output根。cwd参数被后端接受后，summary/plan/F1必须反映原真实目录，不改写路径来凑通过。required_inputs应始终与canonical expected键匹配，不能因增加运输参数而弱化校验。
+
+## 旧后端和错误分类
+
+不作“无flag在祖先重试并假ready”。深cwd旧backend对新flag的拒绝应明确 unsupported_working_directory/unsupported_launch_route，并保留退出码与原stderr；不得误称数据集缺失。新backend capabilities返回launch.working_directory=true后可确认支持；这不是另一次初始化/物理验证。无需为bootstrap在错误cwd取得一次数据ready：capabilities与data均通过恢复真cwd的同一路由执行。
+
+对无法识别的非零错误保留真实backend诊断，不把任意失败都猜成“旧版本”。主任务若要求能力协商，短目录协议查询只能用于支持检测，不能替代真cwd的环境证据。
+
+## 预计文件归属（实施授权后才写）
+
+Python写者独占产品：
+- 新增 gui/g4usim_gui/core/backend_launch.py。
+- gui/g4usim_gui/core/runner.py。
+- gui/g4usim_gui/core/experiment_workflow.py。
+- gui/g4usim_gui/core/environment_discovery.py。
+
+Python写者独占相关测试：
+- 新增 scripts/test_backend_launch.py（纯helper、UTF16、祖先、参数/旧版分支）。
+- 新增 gui/smoke_tests/smoke_backend_launch.py（同一runner/QProcess/probe边界、失败无日志泄漏）。
+- scripts/test_i1_environment.py（仅适配后端命令角色、保留通用工具与既有断言）。
+- scripts/test_k1_workflow.py（仅三入口launch/路径身份/原始Inspect兼容必要断言，保留455基线）。
+
+主线程独占：main.cc/CMake/manifest/cmake/WindowsRuntime.cmake、新后端CLI及深路径真实回归、测试登记与文档/阶段裁决。Python写者不改identity、F1 parser、bundle、GUI/CLI适配者文件或原始正式报告；若出现跨文件缺口先交主任务分派。
+
+## 专项与交付次序
+
+- pure unit：非Windows/短Windows零变化；UTF16边界/非BMP；找既存祖先；缺失/文件cwd；绝对program；唯一/冲突/幂等参数；旧backend深cwd错误不可变成ready；generic SDK命令不带新flag。
+- Qt组件：custom/default runner与独立/internal Inspect三入口；helper拒绝时没有日志句柄/永久busy；stop/close仍走原owner。
+- 主线程真实：最终manifest/hash下的capabilities/data、原文件中文嵌套Inspect、初始化、真实事件、长.tmp原子发布/F1；在祖先放同名配置/资源作反对照。短路径旧测试和未知资源拒绝边界保持，不缩短测试根、不删除effective输出、不放宽platform_paths。
+- 当前冻结全量先自然结束，期间只读源码/只写out建议。之后主任务明确开始实施，按上述文件一写者；主线程完成CLI/manifest再做联合真实回归，独立审查后新冻结。
+
+方案已准备；本文件不是产品改动或已验实现。

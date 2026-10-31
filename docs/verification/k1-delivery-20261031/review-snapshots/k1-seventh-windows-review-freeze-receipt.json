@@ -1,0 +1,48 @@
+{
+  "schema": "k1_seventh_independent_freeze_identity_v1",
+  "recorded_utc": "2026-10-31T09:36:14.486890+00:00",
+  "status": "passed_freeze_identity_only",
+  "head": "2914b3962167325628ede699b1c14a9d224dec41",
+  "source_fingerprint": "890635b6d521659e43cf735d07f862c6ebd5959e6c5ea68d023d55332a8a930a",
+  "tests_content_fingerprint": "210da0c83b5c52c1fbf5999c8b2d11bd48eccb428727ab65df414ce1410f5e46",
+  "checks": {
+    "head_matches_seventh": true,
+    "current_worktree_clean": true,
+    "build_clean": true,
+    "source_fingerprint_matches": true,
+    "tests_fingerprint_matches": true,
+    "counts_182_36_56_61_29": true,
+    "gui_raw_sha_matches": true,
+    "actual_backend_sha_matches": true,
+    "actual_merge_sha_matches": true,
+    "working_directory_capability_true": true
+  },
+  "gui_mismatches": [],
+  "build_identity": {
+    "head": "2914b3962167325628ede699b1c14a9d224dec41",
+    "source_state": "clean",
+    "source_fingerprint": "890635b6d521659e43cf735d07f862c6ebd5959e6c5ea68d023d55332a8a930a",
+    "backend": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\build-k1\\Release\\G4UniversalSim.exe",
+    "backend_sha256": "b97cd7439383c22c91011f057cd2f4a436344a1e87659d66a5d817c357673ca0",
+    "merge_sha256": "a1a52b422238d1937ee56787b168d1d8dfc651a682ba2e85a7d448bb40ba993a",
+    "python": "D:\\Geant4\\G4UniversalSim\\gui\\.venv\\Scripts\\python.exe",
+    "packages": {
+      "PySide6": "6.11.1",
+      "pyvista": "0.48.4",
+      "pyvistaqt": "0.11.4",
+      "vtk": "9.6.2",
+      "numpy": "2.4.6",
+      "uproot": "5.7.7"
+    },
+    "compiler_discovery": "CXX unset; PATH prepended with D:/msys64/ucrt64/bin",
+    "ci": {
+      "status": "pending official run identification"
+    }
+  },
+  "formal_files_sha256": {
+    "frozen-case-manifest.json": "25a0fd48cc81441b993fe9eb5c71ade928ab755d0c863de3bac60e9f134cd163",
+    "build-identity.json": "be06908085700cc93f4e4ab10358e10e7209886b18388e8952bd1c9a0f5849cb",
+    "capabilities.json": "47224c6592c0a28f1e16fdf2e2f399df916f8709b908faa9f9105f1292349d23"
+  },
+  "no_tests_or_original_process_operations": true
+}

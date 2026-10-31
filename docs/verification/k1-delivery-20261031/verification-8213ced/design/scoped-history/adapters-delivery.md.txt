@@ -1,0 +1,138 @@
+# K1 GUI/CLI 适配交付（已停止写入）
+
+最终适配内容SHA：`67e8185c3c874ed76e55c1a92a0f5d2cc1eb261fd98087cc9da1f901c902e937`。最后两个真实来源专项退出0：run_input_modes为108入口，F4 Inspect backend为49入口。15文件源清单与逐文件SHA见 `out/collab/k1-adapters-final-manifest.json`。本写者已完成必要适配并停止写入，未提交；源码冻结和正式矩阵交回主负责人。下文保留所有开发失败和修正过程，最终结果见末尾handoff。
+
+工作区 effective-config/G4UniversalSim；基线 ccb813a。用户追加授权独占 window/experiment.py、window/run.py、main_window.py、window/transactions.py、新 smoke_k1_workflow.py；后追加 smoke_run_input_modes.py/smoke_f5_editor_history.py/smoke_f4_entrypoints.py/smoke_f4_inspect_backend.py 的必要异步适配。CLI/test/doc 保持原独占。不动 RunPage/panel/i18n/core/统一登记，不提交。
+
+已读实际 core/experiment_workflow.py 与 out/collab/k1-workflow-api.md（所有 action async；changed/completed；import_history）。
+
+当前修改：
+- 注入原 runner 与原 inspect QProcess，只服务消费 inspect；HandlerHost 原独立 callback 保留。
+- generate pending 不绑定成终态；_generate_current_package 返回 None 等待 completed；prepared package 可展示，但不标运行成功；服务 terminal 记录防重复显示。
+- apply_snapshot 走既有 F5 projection/capacity/apply_workspace 及冻结失败，不绕过事务。
+- bundle 后台 EvidenceJob 核验，显式选当前 exe/runs root，完整 snapshot reset+F5投影，import_history 异步持久且 stale。
+- raw edit invalidate 无hash，busy 覆盖服务与bundle加载；events→execution 仅适配面板字段。
+- close 取消活跃服务并先延迟窗口销毁，服务终态后继续关闭；3秒force，等待不阻塞主线程做hash。
+- 生成/运行等动作时记录根随所选 runsRoot 绑定，初始测试窗口根隔离。
+
+已取得证据：
+1. smoke_f4_inspect_protocol 原46入口通过，原 HandlerHost 判据未改。
+2. 初始F4 entrypoints即时生成查文件失败；F5 editor history即时读configPath失败。已补等真实服务终态，不删原断言；路径按新UUID嵌套目录查找。
+3. 新smoke及F4 r1发现core raw spin误拒绝。诊断：Qt zh_HK线程2的raw与textFromValue均为U+3022「〢」，locale.toInt得到(2,true)；core str(accepted)!=raw误报project.threads.raw。已通过commentary通知主负责人；未清草稿/改产品locale绕过。日志 out/collab/k1-adapters-smoke_k1_workflow-r1.log、k1-adapters-smoke_f4_entrypoints-r1.log。
+4. core当前external run直接runner.start尚未先Inspect，旧测试要求预检失败不得启动runner；已通知。需core保持统一入口，不在适配器另建controller。
+
+上述旧会话均已取得终态。F4 Inspect 开发轮曾因已知raw错误弹出未拦截测试模态框，已核实并只终止自有该测试子进程51584；未停止他人任务。其空日志/退出1不算通过，现测试显式拦截warning再核验原断言。
+
+## 后续进展（非冻结开发证据）
+
+- 核心修正locale与off特殊值后，默认locale的新K1 smoke 32、F4 entrypoints 62、F5 editor history 237均通过；日志 `k1-<smoke名>-locale-fix-r2.log`。原失败与C-locale诊断轮保留，不能追改为通过。
+- 原HandlerHost F4协议46入口、F4 navigation224、F5 recovery UI62通过。
+- CLI真实backend Inspect/fields/初始化/3事件/搬移重放/零事件及篡改拒绝通过；新evaluate --run-first的同seed算术回归及外来passed拒绝通过（开发139入口日志 `k1-cli-backend-evaluate-r1.log`）。这些早期真实运行使用临时目录，不能作为最终保留证据；已改保留目录后另跑。
+- CLI终态边界竞态已修：completed与同步terminal同时检查既有SIGINT及截止时刻，perf_counter避免Windows3.11 monotonic的15ms粒度；晚到passed/先SIGINT后passed/两种同步terminal共四类+CLI退出码124/130两类反例通过。独立审查者已通知复核关闭旧问题。`k1-cli-terminal-boundary.log`为当轮117入口；新增bundle镜像回归后static122入口。
+- CLI重放仅同步明确改变的合法模式/config/macro与exe/runsRoot镜像，已有不一致draft不清洗；apply bundle仍generated。当前比较schema已按实际严格接口更新文档。跨会话run ID保持stale拒绝，--run-first显式授权同进程新运行后比较。
+- 用户新授三个旧smoke的异步等待已接；q1_public_paths无需删断言，修的是产品close把独立runner的aggregate busy误认为服务pending动作，从而等待不存在completed的错误。保留真实child停止与outsider不受影响判据。
+- `smoke_duplicate_history_cli.py` 已明确交回主负责人独占，未修改：run_name用户语义与服务UUID覆盖需裁决，不能改等待掩盖。其余六项由本写者继续闭合。
+
+GUI诊断显示修复：不再用experiment.fields_rejected通用记录覆盖已有F4 report；真实report或严格diagnostics重建保留producer身份/typed位置/原始消息。未提供位置的producer不凭文本猜目标；Config typed诊断可从Run列表转交已有F4导航。终态、面板详情与warning正文显示友好reason，原始JSON仍保留审计。warning标题复用已有已译键Experiment action failed。新smoke新增5条断言检验diagnostic保留、无通用覆盖及重复terminal防重。
+
+## 交主负责人登记的i18n键
+
+以下键已经由adapter调用，但本写者不改i18n；请主负责人写入统一词典：
+
+| 英文键 | 中文值 |
+| --- | --- |
+| Review the field diagnostics before continuing. | 请先查看并修正字段诊断，再继续操作。 |
+| Experiment records could not be saved. This action is not accepted as verified. | 无法保存实验记录，本次操作不能作为已验证结果。 |
+| Required backend or data is unavailable. Open Environment to choose a working installation. | 后端或必需数据不可用，请在“环境”中选择可用安装。 |
+| Configuration or resources changed. Validate the current inputs again. | 配置或资源已变化，请重新验证当前输入。 |
+| The experiment action was cancelled. | 实验操作已取消。 |
+| Experiment action is in progress. | 正在执行实验操作。 |
+| Experiment action completed. This qualifies only the indicated evidence level. | 实验操作已完成，此结果仅适用于标示的证据层级。 |
+| Experiment action failed. Review the diagnostics and action record. | 实验操作失败，请查看诊断与操作记录。 |
+
+另请检查导入弹窗既有英文键 Select executable / Select runs root 是否已有统一中文。
+
+真实CLI专项新增 --evidence-root，优先级显式路径 > G4USIM_TEST_EVIDENCE_DIR > out/verification/k1-cli。每轮UUID目录保留test-receipt，每次调用独立invocations/NN-action中保存原始stdout/stderr、result.json、exit-receipt（argv/cwd/时间/returncode/SHA）；输入副本/原导出包/服务record/真实摘要及runner日志均保留，失败不删，不存在backend退出失败。此为新交付规则，旧临时目录开发轮不冒充已保留。
+
+## 交付收束前的最新定位
+
+2026-10-31：源码仍未冻结，按用户要求只闭合现有兼容与close，不扩展功能。主负责人52项开发GUI轮45pass/7fail保留为非冻结历史；其完整日志/报告不追改。
+
+geometry_table已完成原夹具真实capture逐列对照，`out/collab/k1-geometry-table-diff.json`：HEAD旧typed-only修改仅row=1/column=6/target存在raw=`1 cm, 1 cm, 1 mm`与typed=`2 cm, 1 cm, 1 mm`差异，字段错误geometry_table；当前通过真实单元格修改后differences=[]、field_errors=[]。两次均拦截start、未执行模拟。旧测试其余原断言保留，额外断言模型收到单元格修改；不需核心修正raw规则。
+
+最新handoff-final运行已实际完成generated QProcess 3/3事件，然后在external独立Inspect的原中文子文件路径断言失败：显示的是隔离执行树resources/r0001-mac。这是下一项真实兼容问题，不再沿用geometry_table失败。日志 `k1-smoke_run_input_modes-handoff-final.log`，退出1、102入口，不称整脚本通过。
+
+主负责人已裁决并恢复Bohr独占core：仅external独立inspect保留原始config/macro/cwd及前后fresh身份，run/init内部inspect继续隔离树。适配器不映射或伪装任何plan路径。旧核心freeze/SHA不作为此修正验收，等待新API/SHA后重跑两个external来源用例。
+
+F4真实Inspect专项原40条assert全部保留；来源/行号/原始stderr与无执行事实改由独立Inspect获取，额外单独窗口请求run_after并断言拒绝、runner不启动、零摘要、原字节不变，明确保持原来的run拒绝意图，未降为仅匹配beamOn。其前轮实际退出1（3入口）原因是Known output命令/AIHL/output/setDir被资源grammar先拒；日志 `k1-smoke_f4_inspect_backend-drain-r9.log`。
+
+source-copy原vis.palette正向及逐字节copy断言已按用户裁决恢复并保留；未改成预期失败。新核心窄local_source_copy_compatibility已使该静态部分通过，generated真实3/3亦已通过。文档明确本地兼容不等于递归闭包/可分发，export仍strict。后续全矩阵由主负责人统一跑。
+
+close接口已全面接入：CLI的workflow_lifetime在正常/失败/异常退出后以QEventLoop等待close/closed；GUI正常关窗先取消活动动作、恢复保护完成后等待service.close排空，再close_evidence_jobs和销毁；不提前cancel drain的EvidenceJob。旧smoke新增close_window正常等待，不吞WinError32；保存的原断言数量均未减少。新smoke验证真实服务导出worker延迟时关窗及时返回、取消终态、排空后才隐藏，38入口退出0（`k1-smoke_k1_workflow-drain-r9.log`）。
+
+最近CLI完整保留证据轮退出0/160入口，含跨CLI显式旧run ID重新核验、--run-first、外来passed拒绝与全部close排空：`out/verification/k1-cli-adapters-final-development/k1-cli-20261031T021921Z-120b8a84a8`，汇总日志 `out/collab/k1-cli-close-backend-final-development.log`。旧154轮的10次调用stdout/stderr SHA及result.json已逐项复核；缺失后端负例实际退出1，失败receipt保留于k1-cli-adapters-negative下，不skip。当前独立static为124入口退出0；文档已删除“跨会话一律失败”的过时叙述，保持旧历史不自动复活规则。
+
+主负责人已补齐8个reason与两个选择弹窗i18n键；本写者未改i18n。
+
+## 适配内容身份与停止写入边界
+
+15文件适配内容最终聚合SHA：`67e8185c3c874ed76e55c1a92a0f5d2cc1eb261fd98087cc9da1f901c902e937`。此前 `bf613b4a...` 是最后兼容测试调整前的候选，不用于最终冻结。
+清单：`out/collab/k1-adapters-final-manifest.json`，算法为按path排序后的 `path + TAB + sha256(raw_bytes) + LF` 之SHA256；各文件原始字节SHA/大小已列，均UTF-8/无BOM/LF。登记时当前HEAD为 `1dc96b45b8d945fbe33877f99345dc0144808e70`；此聚合是内容身份，不冒称git提交。本写者未执行git提交/暂存，HEAD变化来自共享主任务。
+
+清单内文件：
+
+1. gui/g4usim_gui/experiment_cli.py
+2. scripts/test_k1_cli.py
+3. docs/可信实验工作流.md
+4. gui/g4usim_gui/window/experiment.py
+5. gui/g4usim_gui/window/run.py
+6. gui/g4usim_gui/main_window.py
+7. gui/g4usim_gui/window/transactions.py
+8. gui/smoke_tests/smoke_k1_workflow.py
+9. gui/smoke_tests/smoke_run_input_modes.py
+10. gui/smoke_tests/smoke_f5_editor_history.py
+11. gui/smoke_tests/smoke_f4_entrypoints.py
+12. gui/smoke_tests/smoke_f4_inspect_backend.py
+13. gui/smoke_tests/smoke_project_snapshot_restore.py
+14. gui/smoke_tests/smoke_new_simulation_wizard.py
+15. gui/smoke_tests/smoke_q1_public_paths.py
+
+另有本报告、早期k1-cli-delivery报告、源清单、geometry差异JSON和开发测试日志/保留证据目录。不包含核心/identity/bundle、RunPage/panel/i18n/登记或主负责人独占duplicate测试。
+
+最终适配源码停止写入。新core独立external Inspect候选的最后两个来源回归均已取得退出0。后续如需更改清单内源码，由主负责人重新分配并重算聚合SHA，不能静默沿用本SHA。
+
+## 逐项实际验证结果（开发轮，不是正式矩阵）
+
+| 专项 | 实际退出码 / v3入口 | 日志或证据 |
+| --- | --- | --- |
+| CLI static（含晚到成功/SIGINT/同步terminal/close异步与超时） | 0 / 124 | 本聊天实际工具收据；完整后端轮同时执行static部分 |
+| CLI真实backend，含原输入/初始化/3事件/显式跨会话重验/run-first/外来passed拒绝/搬移/篡改/零事件/close | 0 / 160 | k1-cli-close-backend-final-development.log；完整原始输出在out/verification/k1-cli-adapters-final-development/k1-cli-20261031T021921Z-120b8a84a8 |
+| CLI显式缺失backend负例 | 1（预期失败，非skip） | k1-cli-missing-backend.log；k1-cli-adapters-negative/k1-cli-20261031T021114Z-bee665a19e/test-receipt.json |
+| 新K1窗口真实服务/Qt、F4报告保留、source snapshot导入、历史stale、导出取消/关窗排空 | 0 / 38 | k1-smoke_k1_workflow-drain-r9.log |
+| F4 entrypoints | 0 / 62 | k1-smoke_f4_entrypoints-locale-fix-r2.log |
+| F5 editor history | 0 / 237 | k1-smoke_f5_editor_history-latest-r10.log |
+| 项目快照恢复 | 0 / 61 | k1-smoke_project_snapshot_restore-latest-r10.log |
+| 新模拟向导 | 0 / 60 | k1-smoke_new_simulation_wizard-async-r3.log |
+| Q1 public paths（全部owned child停止、outsider仍运行） | 0 / 32 | k1-smoke_q1_public_paths-drain-r9.log |
+| F4独立HandlerHost原协议 | 0 / 46 | 本聊天实际工具收据，原回调未改写 |
+| F4 navigation | 0 / 224 | k1-smoke_f4_navigation-default-r1.log |
+| F5 recovery UI | 0 / 62 | k1-smoke_f5_recovery_ui-default-r1.log |
+| Run input modes，原source-copy正向、generated真实3/3、原中文嵌套来源、拒绝运行守卫 | 0 / 108 | k1-smoke_run_input_modes-original-inspect-final.log；此前退出1/102保留在handoff-final开发日志 |
+| F4 backend Inspect旧来源回归，独立inspect+独立run拒绝守卫 | 0 / 49 | k1-smoke_f4_inspect_backend-original-inspect-final.log；此前退出1/3日志保留 |
+| duplicate history CLI | 主负责人报告0 / 254，非本写者执行 | out/collab/k1-duplicate-cli-development-1.log；该文件不归本写者写入 |
+| compileall gui、限定文件git diff --check | 0 / 不适用 | 本聊天实际工具收据 |
+
+原断言语法数量已检查未减少：run_input_modes 94→99（增加执行闭包身份/真实表格同步/拒绝运行终态）；F5 history176→176；F4 entrypoints62→62；F4 Inspect backend40→44；snapshot restore54→54；wizard37→37。该语法数量检查不是v3动态入口数，也不是正式基线门禁。
+
+原先临时目录的真实开发运行不冒充保留证据；最新160轮已按每次调用保存原始stdout/stderr/JSON/退出收据及完整服务输入/输出树。展示出的Legacy/unverified警告来自生成尚未运行包的结果预览，不赋予模拟/物理通过资格。科学物理、全量Windows/Linux与原生正式矩阵仍由主任务验收。
+
+## 最终handoff与边界
+
+- 适配源码停止写入；当前无本写者运行中的命令会话。15文件清单内内容SHA已核验，compileall gui和限定路径diff --check最终均退出0。本写者未暂存/提交，不接手主负责人独占duplicate测试、核心或资源包实现。
+- 最后两项真实来源回归：`python tools/test_assert_probe.py gui/smoke_tests/smoke_run_input_modes.py`（设置实际G4USIM_EXE）退出0/108；同法F4 backend Inspect退出0/49。原中文子文件名/行号、完整原始诊断、无模拟执行、请求run拒绝及不启动runner都保留，未改成弱beamOn匹配。
+- 独立external Inspect现在读原config/macro/cwd，显示后端真实原路径；run/init内部Inspect仍显示隔离树真实路径。适配器不替换任何plan路径，也不增第二controller。Inspect只授Configure/preflight资格，`recursive_closure=unobserved`，不能据此宣称闭包完整、可分发、已初始化或已完成事件。
+- geometry_table失败真实对照见 `k1-geometry-table-diff.json`，唯一差异为target row1 col6；合法单元格修改后零差异。已完成真实generated3/3回归，无需降低核心raw一致性守卫。
+- 保留source-copy原正向契约：窄本地兼容仍需F1严格证据与独立路径，不授递归闭包/分发资格；export严格，其他资源错误不fallback。用户Unicode run label原义不变，不以label/UUID冒充文件身份。
+- close/closed按正常Qt事件循环排空；活动进程先cancel，不提前close_evidence_jobs破坏drain回调。GUI延迟关窗和旧测试清理均遵守该协议，退出0须包含清理完成；不吞临时锁/WinError32。
+- CLI static124和真实保留证据160轮结果已列；遵照主负责人指示不再重复整套CLI。后续核心仅补历史random/build字段由其独占处理，正式矩阵统一覆盖最新字节。此报告不宣称K1正式矩阵/科学物理或最终独立审查已经完成。
+- 本清单登记时观察到的核心SHA为 `79c3d707421a5939ed4748e48cffdca8dbb2c8732e2644ffe63519ffd1225830`，只是来源测试所用候选观察，不替代Bohr后续正式核心交付SHA/API或主负责人的提交身份映射。

@@ -1,0 +1,20 @@
+{
+  "head": "4167c4421b13464dec54213ea7652ee321868c4e",
+  "run_id": 41179691469,
+  "job_id": 124474368833,
+  "profile": "gui",
+  "case": "gui_k1_window",
+  "status": "fail",
+  "exit_code": 1,
+  "assertions_executed": 76,
+  "original_report": "out\\verification\\k1-4167c44\\ci\\m0-report-windows-latest\\20261031-071655-573fefc8\\report.json",
+  "original_report_sha256": "3de0462014b40965a3ab671d432e81c0c79387dd678c65c7c8488082271d5ea9",
+  "original_log": "out\\verification\\k1-4167c44\\ci\\m0-report-windows-latest\\20261031-071655-573fefc8\\gui_k1_window.log",
+  "original_log_sha256": "ac9b6aa0d0015cd47461038f7eec54b5bdfd6b19e3c04eb5ebb883678e120346",
+  "first_cause": "UnicodeEncodeError cp1252 while printing ensure_ascii=False JSON at smoke_k1_workflow.py:191, before the observed display assertion",
+  "interpretation": "Diagnostic stdout portability failure; no observed cwd assertion failure at this stopping point. UI behavior beyond stopping point is not proven by this Windows case.",
+  "v2_review_gap": "Prior independent review did not cover stdout encoding under Windows hosted cp1252; old review receipts are unchanged.",
+  "no_rerun": true,
+  "no_source_edit": true,
+  "stage_acceptance": "not_decided"
+}

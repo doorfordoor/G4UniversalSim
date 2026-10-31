@@ -1,0 +1,61 @@
+{
+  "reviewer": "parent GPT-6, independent of Tesla implementation",
+  "timestamp": "2026-10-31T05:35:06.172830+00:00",
+  "scope": "three test-only smoke changes; no product security or full acceptance claim",
+  "decision": "accept test changes for integration after formal session ends",
+  "findings": [],
+  "reviewed_behavior": [
+    "cwd comparison resolves both paths while preserving all existing projection assertions",
+    "finally uses existing public close_window drain and DeferredDelete; no ignored cleanup failure",
+    "F5 checks completed generate success and actual output before reading",
+    "K1 diagnostic formatting no longer masks original failed record; pass assertion unchanged"
+  ],
+  "candidate_manifest": {
+    "base_commit": "11c92d361369cda4b2412451ff2841eff940f810",
+    "files": [
+      {
+        "file": "gui/smoke_tests/smoke_duplicate_history_cli.py",
+        "base_sha256": "e9bfe36ed66b8dc12385240ad9deb13f8a9861c9b11309187cb0149e09e8d65a",
+        "candidate_sha256": "7a3464e13e3ee9c0febbb43b46f01ad6b47b7586c3cc4b1f828063871915e119"
+      },
+      {
+        "file": "gui/smoke_tests/smoke_f5_editor_history.py",
+        "base_sha256": "527f25d5996f232df9d4d6b8a973e3b5b1bd78f82dd9dbfeb3dc881220a00335",
+        "candidate_sha256": "e40326ab18ec83ca62c146d66c033c562c8582af144ef994b05e538e0a8f7ba7"
+      },
+      {
+        "file": "gui/smoke_tests/smoke_k1_workflow.py",
+        "base_sha256": "1197797a1e92356a66f3b03ee28cd48fd9cc6bd6c856337af058fef055907c83",
+        "candidate_sha256": "fa387c6b551e06331cb3203d4d8f748ee3852939aefc573d5f2c527ae08c7524"
+      }
+    ],
+    "patch_sha256": "21c3ca2a62c0bc0249e5d35601e81e000a431f3e4783b427a09382e7242046f7"
+  },
+  "verified_cases": [
+    {
+      "name": "smoke_k1_workflow.py",
+      "exit_code": 0,
+      "assertions_executed": 38,
+      "source_sha256": "fa387c6b551e06331cb3203d4d8f748ee3852939aefc573d5f2c527ae08c7524",
+      "log_sha256": "6686cff31a5331e706019896db8110e77aa046222e10131d2db403c50d374179"
+    },
+    {
+      "name": "smoke_f5_editor_history.py",
+      "exit_code": 0,
+      "assertions_executed": 241,
+      "source_sha256": "e40326ab18ec83ca62c146d66c033c562c8582af144ef994b05e538e0a8f7ba7",
+      "log_sha256": "8f9402c58e8bed4cb22f40f966fec00bdc128dff80772f847e7a9b8919981f54"
+    },
+    {
+      "name": "smoke_duplicate_history_cli.py",
+      "exit_code": 0,
+      "assertions_executed": 254,
+      "source_sha256": "7a3464e13e3ee9c0febbb43b46f01ad6b47b7586c3cc4b1f828063871915e119",
+      "log_sha256": "5cc7f68cf2b2bc38b6db3593d00ae5d390f996342b26a7c358cb5292a5ef05a5"
+    }
+  ],
+  "limits": [
+    "side-line tests used product overlay34db09d9; subsequent product5c1dff requires final integrated matrix",
+    "source/assertion totals and log raw bytes checked, no claims of native GUI or physical validation"
+  ]
+}

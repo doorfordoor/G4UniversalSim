@@ -1,0 +1,20 @@
+# 父任务两个 test-only 候选独立审查
+
+结论：接受这两个测试修正，未发现需修改的问题。只审测试质量，不涉及 experiment_bundle、资源安全或阶段完整验收。复用 Bohr 已有实验，未重跑测试、未修改源码；消耗未知。
+
+基线 `11c92d361369cda4b2412451ff2841eff940f810`，审查时 tracked clean。候选实际直接位于 `k1-fourth-test-candidates/gui/` 与 `scripts/`，没有 `files/` 子目录；已按 candidate.json 的 path 读取，两个原件/候选原始字节 SHA 全部匹配。
+
+| 文件 | 候选 SHA256 | 原→新 assert 站点 |
+|---|---|---:|
+| smoke_backend_launch.py | `a01a2a823c8a9c5c0dd40ac245bfed5b6e1091628c30886efcc5e8abf594e843` | 49→49 |
+| test_k1_cli.py | `9c777a8516b38bf8b8c888a94f50639331509089de73470af7fef1b4c024db75` | 69→69 |
+
+cwd 改动只有第79行实际启动目录的期望值：用独立的 `short.resolve()` 与 launchWorkingDirectory 比较，符合启动规划器本来就 resolve cwd 的行为。请求的 workingDirectory、requestedCommand、最终 command 的精确断言保持；没有修改产品路径语义。真实 junction 反例在原第79行失败，候选 exercise 返回成功。helper 的 G4USIM_ASSERTS=1 仅统计外层 helper，不能冒充 exercise 全部断言数；初次没有取得 8.3 的 fixture 失败也不算 CI 精确复现。
+
+CLI 只将两个 late-terminal 用例改为 Service(deliver_cancel=False)，没有删除或修改任何原 Assert AST。它关闭的是 fixture 在 cancel() 内额外排队的假 cancelled 终态，仍记录取消请求。两个用例保留 passed 记录、timeout/cancelled 原因和 cancels == [False]；原确认取消、强制取消、同步 late terminal、signal 与进程生命周期用例不变，产品 await_action 与退出语义不变。
+
+已核对完整 synthetic CLI 日志124入口。8个受控用例脚本的 selected_case AST 与相应基线/候选源提取结果逐项匹配，唯一实验变量为8/40ms终态延迟；日志 marker、记录退出码与事件收据一致。本组基线8ms两项通过，40ms两项均被假 cancelled 终态抢先而失败；候选四项均通过，各保留2次断言及一次非强制取消请求。不把这组数据扩张为任意机器/调度的必然表现。
+
+独立 causal 实验额外把唯一 passed 终态安排在 cancel() 被调用之后，timeout/cancelled 两项均保持原中断原因和一次取消，日志8入口。它补足8ms fixture本身不保证“取消请求先于终态”的顺序边界，支持本次是消除双假终态竞争，而非掩盖产品取消错误。
+
+所有现存证据的当前字节 SHA、受控逐项核对、源码差异及限制在同名 JSON。现存日志不内嵌源码SHA，本审查通过清单与AST提取一致性建立当前证据关联，没有冒称重跑或新增正式矩阵结果。第四轮正式CI仍由父任务负责。

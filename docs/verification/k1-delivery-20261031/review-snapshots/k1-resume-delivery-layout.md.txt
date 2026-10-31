@@ -1,0 +1,11 @@
+# 最终证据路径映射
+
+人类总报告：`docs/verification/k1-final-20261031/README.md`（文案 agent）。Payload：`docs/verification/k1-delivery-20261031/`（本 agent 准备 out 树，root 应用）。STATUS/ROADMAP/支持矩阵/ASTRA/环境/可信工作流由文案 agent 维护，本 agent 不写。
+
+Payload 平铺各代：`verification-8213ced/`、`verification-8213ced-addendum/`、`verification-f9a9ddb/`、`verification-4167c44/`、`verification-2914b39/`。第六是 failed 历史；第七待收正式本机及 CI、原生适用性映射。历史运输：`history/transport/{failed-c644bb1,failed-11c92d3}/`、`history/transport/restore_evidence.py`、小 `history/failed-e5ff800-original-tree.zip`；禁止完整大 ZIP/reassembly 副本。
+
+总报告链接 payload 示例：`../k1-delivery-20261031/verification-2914b39/README.md`；payload README 链总报告 `../k1-final-20261031/README.md`。各代历史 README 保留原字节/原路径，由外层 README 解释；不得重写旧报告绝对路径。最终 delivery-copy-manifest.json 的 source→delivery 映射为定位依据。
+
+第六归档已完成：3122 source entries、97083728 原始字节核对，archive manifest SHA `7dce58d7afb9a52e38dfc476b0cfc3c67cfd7c9b7958e46a94a268b98e95aa12`。内含 `native-coverage-correction.md`、external followup、CLI 补证和重复误标图原件。archive overall_state=pending 表示未验收，不代表 CI 仍运行；frozen_verification_outcome=failed。
+
+第七官方 CI Linux 41189260366、M0 41189260331；原始收集目录 `out/verification/k1-2914b39/ci`。第七本机/原生归 root，齐后本 agent 组装专属新 out 树；required 资源边界缺口仍在，K1 phase_complete=false。

@@ -1,0 +1,18 @@
+duplicate/1: touchable identity contract checked
+separator_collision/1: touchable identity contract checked
+G4USIM_RECORD_COVERAGE={"case": "unique_names", "mass_records_checked": 2, "physical_paths": ["/World_LV_PV#0/Unique0#0", "/World_LV_PV#0/Unique1#0"], "records_by_file": {"dose_volume_summary_t0.csv": 2}, "threads": 1}
+unique_names/1: touchable identity contract checked
+G4USIM_RECORD_COVERAGE={"case": "different_copies", "mass_records_checked": 2, "physical_paths": ["/World_LV_PV#0/SamePV#0", "/World_LV_PV#0/SamePV#1"], "records_by_file": {"dose_volume_summary_t0.csv": 2}, "threads": 1}
+different_copies/1: touchable identity contract checked
+G4USIM_RECORD_COVERAGE={"case": "different_parents", "mass_records_checked": 2, "physical_paths": ["/World_LV_PV#0/Parent0#0/SamePV#0", "/World_LV_PV#0/Parent1#0/SamePV#0"], "records_by_file": {"dose_volume_summary_t0.csv": 2}, "threads": 1}
+different_parents/1: touchable identity contract checked
+duplicate/2: touchable identity contract checked
+separator_collision/2: touchable identity contract checked
+G4USIM_RECORD_COVERAGE={"case": "unique_names", "mass_records_checked": 2, "physical_paths": ["/World_LV_PV#0/Unique0#0", "/World_LV_PV#0/Unique1#0"], "records_by_file": {"dose_volume_summary_t0.csv": 2, "dose_volume_summary_t1.csv": 0}, "threads": 2}
+unique_names/2: touchable identity contract checked
+G4USIM_RECORD_COVERAGE={"case": "different_copies", "mass_records_checked": 2, "physical_paths": ["/World_LV_PV#0/SamePV#0", "/World_LV_PV#0/SamePV#1"], "records_by_file": {"dose_volume_summary_t0.csv": 0, "dose_volume_summary_t1.csv": 2}, "threads": 2}
+different_copies/2: touchable identity contract checked
+G4USIM_RECORD_COVERAGE={"case": "different_parents", "mass_records_checked": 2, "physical_paths": ["/World_LV_PV#0/Parent0#0/SamePV#0", "/World_LV_PV#0/Parent1#0/SamePV#0"], "records_by_file": {"dose_volume_summary_t0.csv": 2, "dose_volume_summary_t1.csv": 0}, "threads": 2}
+different_parents/2: touchable identity contract checked
+GDML touchable identity: PASS
+G4USIM_ASSERTS=65

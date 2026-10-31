@@ -1,0 +1,42 @@
+# c644bb1 两份候选限定 diff 签字
+
+2026-10-31；gpt-6.1-sol/medium，消耗未知。只读正式文件与 out 候选；未应用、修改产品/测试或运行全套，未干预原 Windows session/窗口。取消/busy workflow 候选由 Averroes 独立复审，本报告不重复或代签。
+
+**结论：两份候选的限定代码/测试门禁审查通过，可在原全量自然结束并保存失败证据后按主任务授权应用。未发现这两份候选新增缺陷或降低验收门禁。当前冻结 c644bb1 的失败结论不因此变绿；应用后的正式复验和新冻结仍需另行记录。**
+
+## 1. 路径测试 candidate.diff：接受
+
+来源 out/collab/k1-c644bb1-path-candidate，diff SHA-256 af5a1f495d2488fc9abc8b804c745475f9b1505c5ab8abf7ec532146cf991267。只改两个测试，没有改产品路径解析或输入身份。
+
+- smoke_backend_launch.py 的两处修改只将预期 argv[0] 改为 Path(...).resolve()。这与 backend_launch._program 在启动前固定真实绝对程序路径的既有契约相符，能处理 Windows 同文件8.3别名和 Linux python3 符号链接。argv[1:] 仍逐字比较；requestedCommand 仍等于原命令，另加 status.command 等于实际计划。没有用 basename、仅 exists、任意可执行文件或同事件数替代身份。
+- test_i1_environment.py 把独立 fixture 的 expected_path/expected_local 规范化；PATH/本地候选顺序、缺失与存在状态、alias去重、不同激活环境及实际 observed 程序路径仍严格核对。不是把所有路径都接受，也不改变相对资源路径解析根。
+- 独立 AST 核对：Qt48→49节点，仅两项程序规范化比较被替换；I1仍72节点，三处直接 str(path) 比较换为规范期望变量，其余原断言完整保留。列表严格相等仍守住顺序和数量。
+- 已逐项重算交付日志原字节 SHA：原 Qt alias exit1/10 → 候选 exit0/74；原 I1 alias exit1/121 → 候选 exit0/142；正常Qt74、I1完整142、WSL helper8、WSL I1完整142均匹配交付。8.3注入 driver 实际使用 GetShortPathNameW 并核 samefile，没有伪造另一个程序。WSL helper实证与 Linux Qt真实重跑分开；本地 WSL无PySide6，不能把helper8当LinuxQt通过。
+
+官方原件缺 actual/expected 文本时，8.3同一行/计数复现只能证明该机制足以解释失败，不声称确认官方TEMP确切拼法。候选实际修正与产品已有规范化契约一致，所以可接受。
+
+最终候选 SHA：
+
+- gui/smoke_tests/smoke_backend_launch.py：a111d8a9cf3490cdee8db344da17a0ab1d0d50caa352c0efed976d4fc1ad7fd2
+- scripts/test_i1_environment.py：9b31654e94ebf5c3344c126ab1c668bb1df865f7e8f840940ab97d6920c74851
+
+## 2. FailedToStart/progress fix.diff：接受
+
+来源 out/collab/k1-live-progress-candidate，diff SHA-256 207d782e8520bc691a806d7589e234467db598b48f91fb37b5cb720419181344。
+
+runner.start 的 BackendLaunchError 分支新增两行，在 errorOccurred 前冻结进度并发送 progressStateChanged('failed')，恢复原 QProcess._on_error 的显示通知顺序。只影响实际启动计划已失败的情况；没有把正在运行时拒绝第二次 start 改成活动进程失败，不伪造 finished，不重写上次运行收据。
+
+smoke_live_progress 的原66个完整 Assert AST 节点全部保留，新增8个，当前候选74节点。missing.exe 现在真实走 helper 提前拒绝，继续要求 errors 和 failed 进度，并新增 failed result、无 launch、未运行、冻结、没有 finished、旧 run_status 原字节不变等断言。随后以存在的非法程序文件让 helper 的 regular-file 检查通过，真正进入 QProcess，明确要求 OS错误为 QProcess.FailedToStart，再检查失败进度/日志句柄关闭。没有用 mock错误、延长等待或删除原断言冒充 OS失败覆盖。
+
+逐项重算三份交付日志 SHA：原产品/原smoke exit1/70；仅候选产品+原smoke exit0/71；候选产品+增强smoke exit0/79。product-only 的原smoke通过是重要负对照，说明产品两行修复本身恢复原门禁，增强测试没有为了通过而改变原判据。观察到 failed 信号在 error 前；本轮没有重复运行这些专项，属于独立源码/原始日志门禁核对。
+
+最终候选 SHA：
+
+- gui/g4usim_gui/core/runner.py：456912e161a3ee46ae879b9d9d76abb7e8d0691c393504d00ab714c5ce2770e9
+- gui/smoke_tests/smoke_live_progress.py：dd7e7a7cb3434cad366dd387e35afe700979bb6d74075b285b6a68f6309f3606
+
+## 身份与停止点
+
+四个当前正式文件 SHA 全部等于各候选 before SHA，四个 out候选 SHA 全部等于交付收据。两个 diff 分别 git apply --check exit0，未 apply；内存语法 compile 通过。机器核对明细与日志 SHA 结果在同前缀 `.json` 报告。
+
+本次仅签这两个候选的窄修复方案与门禁；历史成功状态措辞 P2 见 `out/collab/k1-c644bb1-history-status-independent.md`，不由 progress failed 修复自动关闭。取消/busy 候选交 Averroes；正式 Windows 继续等原 session 最终报告，再执行严格证据门禁与原F5逐例/总量比较。

@@ -1,0 +1,52 @@
+{
+  "action": "validate",
+  "created_at": "2026-10-31T07:23:03.585815+00:00",
+  "finished_at": "2026-10-31T07:23:03.871446+00:00",
+  "history_trust": "historical_requires_local_revalidation",
+  "identity": {
+    "backend": {
+      "sha256": "2baf8dc7e64005f9d56e4edf8ef8203868db2b273f2b4b0fc69fcac8f4301b83",
+      "size_bytes": 2420736,
+      "status": "recorded"
+    },
+    "configuration_fingerprint": "ca166d0a471d3e35fe14b4901ee7a59d8f07a661e1363b9bd8eacf8408bf86ab",
+    "coverage": "closed_resource_tree",
+    "environment": {
+      "status": "not_probed"
+    },
+    "execution_fingerprint": "7d6364b5c813d8f0322db81ccbbc5def23a92a3c3a6fb2a1e694151f15364f44",
+    "fingerprint": "92bc2a5929be2c6374bdecb5bcd835cc6da2bd9e06b04ef56a6ef95683394c58",
+    "resource_fingerprint": "be0e0291f0d97ad88691f937c022ddbd8526ad09a6e2c87fb2c29401031306bd",
+    "resources": [
+      {
+        "captured_text": false,
+        "distribution": "unknown",
+        "path": "resources/r0000-r0000-r0000-original-materials.ini",
+        "role": "materials",
+        "sha256": "4bfb64cc63dad229525137f14e64412a94eee8790b449ee64e10a8906cb67da5",
+        "source_sha256": "4bfb64cc63dad229525137f14e64412a94eee8790b449ee64e10a8906cb67da5"
+      },
+      {
+        "captured_text": false,
+        "distribution": "unknown",
+        "path": "resources/r0001-r0001-r0001-original-geometry.ini",
+        "role": "geometry",
+        "sha256": "b6f500fb680f4aa13393e2545824321f15e6c63815bb396821ad4b7b1d930fc2",
+        "source_sha256": "b6f500fb680f4aa13393e2545824321f15e6c63815bb396821ad4b7b1d930fc2"
+      }
+    ],
+    "revision": 4,
+    "schema": "g4usim_experiment_identity_v1"
+  },
+  "level": "fields",
+  "reason": "experiment.fields_completed",
+  "record_dir": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\replay-cli\\runs\\experiment-records\\042ada971505406a83c67d59be01ae56",
+  "record_id": "042ada971505406a83c67d59be01ae56",
+  "revision": 4,
+  "run_id": "61ea35b6ac11468b988995ff52443403",
+  "schema": "g4usim_experiment_record_v1",
+  "session_id": "historical",
+  "stale": true,
+  "stale_reason": "imported_history_requires_revalidation",
+  "status": "stale"
+}

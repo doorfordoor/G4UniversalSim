@@ -1,0 +1,20 @@
+[
+  {
+    "artifact": "event_edep_t0.csv",
+    "column": "raw_edep_MeV",
+    "quantity": "energy_deposition",
+    "unit": "MeV",
+    "reference": 0,
+    "reference_unit": "MeV",
+    "absolute_tolerance": 1e-12,
+    "relative_tolerance": 0,
+    "source": "Geantino noninteracting test particle: analytic zero deposition special case; https://geant4.web.cern.ch/documentation/pipelines/master/bfad_html/ForApplicationDevelopers/TrackingAndPhysics/particle.html",
+    "statistical_method": "mean_standard_error",
+    "sigma_multiplier": 3,
+    "weighted": false,
+    "normalization": "per_event",
+    "run": 0,
+    "object": "sensitive_total",
+    "reference_file": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-4167c44\\visible\\criteria\\zero-reference.json"
+  }
+]

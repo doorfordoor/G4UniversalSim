@@ -1,0 +1,61 @@
+# K1 Python 启动入口与 r3 真实专项独立复核
+
+最终更新：Bohr 停止后，helper9ae08264 的 label P2 已独立复核关闭，direct/restore 四例真实后端全过，独立 unit151/Qt-real105 exit0；最终签字与完整 SHA 见 `out/collab/k1-final-adapter-test-diff-independent.md` 顶部。以下开放问题保留为修复前历史。
+
+2026-10-31；gpt-6.1-sol/medium（原 ledger），消耗未知。范围仅 backend_launch/environment_discovery/runner/experiment_workflow 启动限定 diff、对应组件和真实深目录专项。未修改产品/测试/二进制，未跑全量，未承接被拒绝的广泛 bundle 审查。
+
+**结论：r3 深路径实际运行及此前两项专项覆盖缺口已核实；当前 Python 交付另有一个已复现 P2，需修复后才能给最终限定 diff 签字。** 核心不是长路径方案本身错误，而是 helper 参数扫描新增了用户 label 兼容回归。
+
+## 剩余发现：[P2] 把选项值误识别为 --working-directory
+
+位置：gui/g4usim_gui/core/backend_launch.py:98-110（尤其 :98、:100）。
+
+helper 遍历全部 arguments 查找 flag/flag= 前缀，没有按后端 CLI 语法跳过 --run-name 等选项的值。runner.py:81-82、experiment_workflow.py:109-115 都原样发送用户 run_name，因此这是公开动作路径可到达的回归，短 cwd 同样受影响。
+
+独立反例，实际使用 SHA af6c9ae0b257589f73316b81add1c58e394e37c5efc2e12b3e140605797d2c98 的开发后端，以现有短工作区为 cwd；仅做能力查询，不运行模拟：
+
+| argv 中的用户值 | 真实后端 | 同一命令 prepare_backend_launch |
+| --- | --- | --- |
+| --run-name 后接 `--working-directory` | exit0，launch.working_directory=true | 拒绝：backend_launch.relative_working_directory |
+| --run-name 后接 `--working-directory=label` | exit0，launch.working_directory=true | 拒绝：backend_launch.invalid_working_directory_option |
+
+后端 RequireValue 把紧随 --run-name 的 token 消费为 label；helper 却把它当选项或非法选项形式。应按实际 CLI 的选项和值消费规则识别真正的 cwd 参数，仍拒绝真正的重复/冲突 cwd；不能通过限制 label、trim、改 UUID 或改用户字符串解决。修复需要同时守住短 cwd/direct 和长 cwd/restore 的幂等与唯一选项检查。原有 unicode label 契约不因新 transport 选项缩窄。
+
+证据：out/collab/k1-python-launch-independent/label-counterexamples.json，包含两例结果、EXE 前后 SHA 相同、12项当前源码 SHA。此次尝试向原 Huygens agent ID 发通知，工具返回 agent not found，未成功送达；主负责人已通过本轮 commentary 收到反例，请据本报告转交当前写者。
+
+## 其余限定入口检查
+
+- helper 在宿主中只产生计划，未 os.chdir，未创建资源目录、8dot3/junction/盘符；UTF-16 计数保留尾分隔符/NUL，选择既存短祖先。绝对 program 在选择祖先前固定；项目 config/macro/output 参数不重写。逻辑 cwd 和 launch cwd 分开记录。
+- environment_discovery._backend_command 仅接管后端 capabilities/data，原 _command 继续用于通用 SDK 工具；长路径能力声明严格要求 launch.working_directory is True。新 flag 被旧程序拒绝后归 unsupported_working_directory，不在祖先无 flag 重跑来伪造 ready。这个分支不授予缺失数据/实际模拟资格。
+- workflow 的独立 inspect 和 run/init 内部 inspect 仍使用已有 _inspect QProcess，helper 只替换启动传输。inspect 完成后仍先核当前 snapshot/environment identity，随后才消费 plan；没有依据 launch cwd 重新规划/复制原始源文件。原始 external inspect 和隔离运行的区别保持。
+- runner.start 默认与 custom command 都在 ensure_directory/open stdout/stderr 前验证 helper。拒绝时 last_result=failed、发 error、不打开日志；workflow._run_error 在非运行状态完成失败收尾。实际 QProcess Finished/FailedToStart 的原关闭路径仍在，unsupported 结果保持 failed，没有 summary 仍 incomplete。
+- _run_finished 仍经 output_evidence、严格请求绑定及实际输入校验，transport 审计字段没有替换 UUID、actual_output_dir 或 F1 实际字节路径。raw draft/snapshot 捕获和资源 closure/export 判定未在本限定 diff 中改动；不会因为启动成功提高 unknown source-copy/外部 macro 的覆盖等级。
+
+## 独立执行与原始 r3 证据核对
+
+本轮独立复跑（使用 TemporaryDirectory 自然清理，没有保留运行树来回避 close）：
+
+- tools/test_assert_probe.py scripts/test_backend_launch.py：exit0，49入口；out/collab/k1-python-launch-independent/unit.log。
+- tools/test_assert_probe.py gui/smoke_tests/smoke_backend_launch.py：exit0，58入口；out/collab/k1-python-launch-independent/qt.log。包含真实 subprocess/QProcess 的旧程序拒绝、helper 前置错误不建日志、同 runner 再用、inspect/init/run 失败后 busy 清空及 service close。这些是组件，不冒称 Geant4 模拟通过。
+- 两项命令与原字节 log SHA 在同目录 components.json；上述组件没有覆盖本次新 label 反例，所以组件全绿不能关闭该 P2。
+
+主任务 r3 未在本轮重复跑；独立读取 out/collab/k1-working-directory-r3.log 与 out/verification/k1-path-development-r3 原件：
+
+- log 的执行断言 marker 为77；result.json 的实际后端 SHA 与当前 EXE 相同，cwd=296 UTF-16单元，output=337，run_id=6e5cba7cff11499f868819c19302a311、events=3。
+- initialization 持久化记录：status=passed、result.state=no_run、0 planned/0 completed、run_count=0；run 记录：status=passed、result.state=success、3 planned/3 completed、run_count=1。没有混淆初始化和事件运行。
+- 两记录各4项 actual_inputs，本轮按各自 execution_bundle.path 解释合法相对路径，并逐一重读原字节 SHA：8项均匹配。未把合法相对路径改按宿主 cwd 解释，也未借搬移 hash 授予身份。
+- relative-discovery.json 正例 base=relative-data，12项 dataset 均 found；负例 base=null、note 明确 missing relative-data。负例仍可找到编译默认数据，因此 required_complete=true 并不违反对照；应看实际 base/path/note，不能要求目录发现整体 unavailable。测试的 env 已用 None 显式删除原 Geant4 覆盖；空目录只用于 discovery，transport 仍走真实原环境。
+- out/collab/k1-path-embedded.manifest 含实际 longPathAware=true 与 activeCodePage=UTF-8；本轮应用后的四个 native 文件原字节与先前已审候选一致。没有修改冻结历史二进制，r1/r2失败及其测试修正继续保留。
+
+## 交付 SHA 与停止点
+
+已读取 out/collab/k1-python-launch-applied/delivery.json 的 writer-stopped 状态；其中7项文件 SHA 与当前字节逐项一致：四个 Python 产品入口、unit、Qt smoke、test_k1_workflow。关键当前值：
+
+| 文件 | SHA-256 |
+| --- | --- |
+| backend_launch.py | 650d7fa049914a11132fe9b52b331eb41683181de2cd4206ccf265ed7a29b479 |
+| runner.py | 497431704c75f4cf37c5e6136d0800f54804120b90f5bc9358b85e0222ff320c |
+| experiment_workflow.py | ec8c123e13e4bcb5f90d33fe69ed1a6545215e456648e38deac58ad829288e3b |
+| environment_discovery.py | 7ee71c78b51d00cc79a112f82f51b5e9d929dc224719fa95e8a6427baa686f91 |
+
+本轮停止在明确开放 P2，其他本限定范围未发现新增已确认缺陷。下一步仅需复核参数消费修复及其反例，再核最终交付 SHA；不要求重跑全量才能作代码审查裁决，也不提前标记正式阶段通过。

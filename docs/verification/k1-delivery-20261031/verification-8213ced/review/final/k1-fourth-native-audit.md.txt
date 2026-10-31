@@ -1,0 +1,81 @@
+# 第四冻结 native 与导出包 CLI 普通证据独立审核
+
+2026-10-31；gpt-6.1-sol/medium，消耗未知。**全部桌面操作及17项原始观察由主负责人assistant通过Sky完成，用户本人未参与桌面/真人验收，也无待人工请求。** 本独立审查只读证据；实际view_image查看02、07、10、14、16、17，不冒称亲自操作窗口或查看了其余所有图片。其余图片均记录原SHA，观察文字归属主负责人assistant。
+
+**结论：普通运行/历史退役/搬移资源内容/导出拒绝/保存重开/实际CLI replay证据核对成立；有一项P3公开取消reason语义问题，见下节。** 不重跑、不修改正式源码/原记录，不进入late-reparse或此前被拒的广泛资源包专项。required专项复审仍未完成，本报告不关闭K1；Windows182另有独占只读审核器。
+
+## 1. 冻结与正常退出
+
+- identity.head=8213ced419c8c6bca512bf8413b674c1265cf3bf，启动git_status为空、module_overrides={}；GUI全部原字节与冻结manifest吻合。
+- 后端实际SHA=6e02ce583aff7f711d3a280e7e60a267226f468e6c98170523ce3ef0be8ff8ed；所有取得资格的后端记录build=8213ced/clean，执行输入与输出仍严格绑定各自UUID。
+- launcher.json的actual_process_exit=0，完成时间06:08:16.109315Z；host-exit.json的event_loop_exit=0，06:08:15.447684Z；host.log原SHA匹配launcher收据，host脚本SHA匹配identity。父任务80430的工具退出另由主负责人通知，不当作PID。
+- launcher的host_pid实为其源码Popen.pid=58552；host自报identity.pid=59808。两字段不同，**不假称PID相等，也未独立核OS父子链**；分别保留两层收据、源码及GUI/后端字节身份，不把不同层PID强比为产品缺陷。
+- windows QPA是真实可见窗口；file_dialog_variant明确为Qt widgets/AA_DontUseNativeDialogs。因此本次证明Qt可见目录选择链，不代签默认Windows shell chooser；不存在仍待用户人工操作的请求。
+
+## 2. 全17条完成记录与运行事实
+
+actions.jsonl共17条：15 passed、1预期export failed、1cancelled，17个UUID各仅一条terminal。每条completed去掉协议明确不持久化的report/私有字段后，与相应磁盘record.json完整相等。完整UUID、原SHA及字段逐项见JSON。
+
+| 动作/关键ID | 核对结果 |
+| --- | --- |
+| 初始fields、inspect、generate | 各层事实独立；inspect是configure/preflight，不当作初始化或事件 |
+| init 6dc11c… / 搬移后init cba261… | 两次no_run、0计划/完成、run_count=0 |
+| 初始run 44d35f… | 真实3/3，配置seed4242 |
+| 搬移并编辑后run 6ace7e… | 新UUID、3/3，配置seed4343 |
+| 取消后恢复run 7767c3… | 新UUID、3/3，不复活其他旧层资格 |
+| 保存重开后run 880d4e… | 新UUID、3/3，资源仍在relocated-clean |
+
+上述正常两初始化+四运行：6套F1均fresh verified，metadata SHA与记录匹配；24项actual inputs为recorded，原字节SHA/size匹配、位于各自UUID执行树。summary main_config/actual_macro_file/actual_output_dir严格等于该轮launch请求，未借搬移hash认证另一轮。同label不是身份。
+
+## 3. 实际导出、11文件复制与原资源不可用
+
+首次导出8b4ba6…passed。原export仅保留为exported/geantino-history.preserved-unavailable，原original-materials.ini、original-geometry.ini也保留改名为.preserved-unavailable，旧路径均不存在；保留原材料/几何的原字节SHA与导出源成员相同，没有删毁原件。
+
+relocation-byte-receipt.json的11个文件，在保留原export与relocated-clean/geantino-history之间逐个原SHA相同；复制目录最终仍正好11文件。此核对证明复制内容身份，不拿bundle重写后的成员SHA伪装原始读取证据；新轮资格另由实际F1给出。
+
+import_history 9b625c…后四层陈旧（图07），UI编辑4242→4343后仍陈旧。原来源不可用时cba261…初始化及6ace7e…运行均成功，新的actual输入都在relocated-clean范围。后续fields966b1e…及比较a80473…分别重新验证，不从旧history继承。
+
+对已有目标的export ccb4ce…failed，reason明确destination already exists；该目标11文件仍全部等于搬移前SHA，不能记成覆盖成功。新目标revalidated-4343的export82d761…passed，manifest/member大小与hash一致。原包与新包validation记录history_trust均为historical_requires_local_revalidation；历史status保留不等于当前资格。
+
+SaveAs的relocated-project.json确为seed4343、workspaceRoot指向relocated-clean/geantino-history。实际CtrlO后图16四层stale；新run880d4e…才再次3/3。最终state revision8、execution passed，其余字段/init/physics stale，未自动恢复旧验证。
+
+## 4. 限定比较不是一般物理验证
+
+761050…评估44d35f…，a80473…评估6ace7e…；evaluation_scope均explicit_reference_only_not_general_physics_validation。独立读取各自event_edep_t0.csv：整数eventID唯一、3个完整事件、raw_edep_MeV全0且有限，样本均值/标准误均0、sample_count3，与记录一致；参考文件SHA一致。
+
+量纲MeV、per_event、weighted=false、run0、sensitive_total；参考0、绝对容差1e-12、相对容差0、3sigma阈值记录一致。reference_source_verification仍user_supplied_unverified_source，条件为geantino零沉积特例；不能扩成辐射物理基准、外部参考来源已验证或一般误差模型正确。
+
+## 5. 取消：必须分开两层事实与公开reason问题
+
+60efd9…在本次workflow/action记录中为cancelled，exit0，RunResult=stopped，planned/completed/run_count=None。图14明确“已取消/用户停止”、历史未验证范围，未把退出0或85%进度当成功；terminal恰一次，最终磁盘与completed投影一致。随后恢复3事件运行成功。
+
+**另一个真实事实是该后端原summary已完成1000000/1000000、status=completed，原F1也可fresh验证。** 因此这一轮证明“取消请求被保留为动作终态”，不证明在事件尚未完成时已强制中断/kill百万任务。RunResult未知计数是该记录未采用完成计数，不等于后端原摘要也未知。两层同时保留，不把该workflow记录升级passed，也不隐去后端确实完成的原件。
+
+原因由实际源码解释：
+
+- experiment_workflow.py:1002-1013，cancel设置context.cancelled=True。
+- :549-551，_current要求not cancelled，故取消本身就令其false，无需发生资源变更。
+- :561-562，delivered在not_current分支按cancelled/stale区分status，但统一写reason=experiment.inputs_changed。
+- run_result.py:52-53，requested_state stopped/killed优先返回，不解析完成计数；exit0不覆盖用户停止结果。
+
+### [P3] reason不是纯内部标签，公开诊断语义应窄修
+
+默认GUI的experiment_reason（window/experiment.py:14-32）按cancelled显示“操作已取消”，所以当前主界面没有把此次取消误显示成资源已改，资格也没有误授。
+
+但reason被持久化并出现在公开记录中，experiment_cli.py:378-381还直接将record.reason作为error.message。因此不能将它归为完全内部、不可见的标签：**取消写作inputs_changed会误导技术记录/CLI消费者，应改为取消专属原因；真实stale才保留输入变化原因。** 这是P3诊断精度问题，不是成功状态/资源身份漏洞。严重度依据实际影响判断，与矩阵正在运行无关；本审查不改源码、不重跑。
+
+该reason本身不能证明实际资源字节改变；本次也没有据它认定发生外部输入变更。现有取消status/result/最终落盘正确，这一事实与reason精度问题分别记录。
+
+## 6. 实际导出包 CLI replay 交叉证据
+
+revalidated-4343/replay.py原SHA与导出entry一致，其内容委托`python -m g4usim_gui.experiment_cli`，没有另建后端编排。实际replay-cli.log为一行JSON，本轮已parse，未整行输出冒充检查。
+
+父任务receipt process_exit=0；CLI envelope ok=true，新record76a62c88dd634f58bfbdbee50cf8681e为passed/success、3/3、build8213ced clean。stdout record持久化投影与磁盘相等，record/log/entry原SHA全部匹配；新UUID不属于17个native UUID，独立输出目录。F1 fresh verified、严格请求路径匹配，4项actual inputs recorded且原SHA/size/UUID归属匹配。
+
+这是普通GUI导出→实际CLI shared-controller replay证据，不能用它代替缺失专项。旧包历史仍带历史信任标记，当前native控制器中旧记录为stale；未把原始导出历史status重写成新的本地资格。
+
+## 范围与交接
+
+普通证据检查成立；P3取消公开reason仍在本报告保留，交主任务裁决。父任务required专项复审未完成，K1不关闭。Windows182最终门禁由已有独占审核器继续等待；CI归指定审计者，不在此复制其归档审计。
+
+完整原SHA、17记录、28项已取得资格的native/CLI输入、11文件复制、两个比较、最终状态及host收据在k1-fourth-native-audit.json。未追改任何正式报告/日志或source，也未做桌面操作。

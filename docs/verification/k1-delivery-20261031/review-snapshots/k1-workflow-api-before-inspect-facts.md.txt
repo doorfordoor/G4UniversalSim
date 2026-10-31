@@ -1,0 +1,49 @@
+# K1 workflow API（当前实现）
+
+模块：`gui/g4usim_gui/core/experiment_workflow.py`。
+
+```python
+ExperimentWorkflow(session, runner, *, inspect_process=None, parent=None,
+                   records_root=None, package_factory=None,
+                   apply_snapshot=None, environment_probe=None)
+inspect(*, expected_revision=None, prepared_package=None)
+validate(level='fields', *, expected_revision=None, prepared_package=None)
+apply(candidate, *, label='Apply configuration', expected_revision=None, apply_snapshot=None)
+generate(*, expected_revision=None, prepared_package=None)
+run(*, expected_revision=None, prepared_package=None)
+evaluate(run_id=None, comparisons=None, *, expected_revision=None)
+export(destination, resource_policy=None, *, expected_revision=None)
+import_history(records)
+cancel(force=False)
+invalidate(reason='inputs_changed')
+refresh()
+close()  # bool；False时等待closed()，不要直接销毁owner
+state(); records(); history()  # records/history同义
+```
+
+`changed()`、`recordChanged(dict)`、`stateChanged(dict)`、`completed(dict)`、`closed()`。业务动作全部异步、立即返回 `status='pending'`；每动作终态 `completed` 一次。字段报告对象只在内部返回dict的report；持久JSON不含report/Qt对象。Qt owner thread调用，worker只接私有快照。state只发起异步fresh检查、返回内存状态，不在主线程hash；检查中qualification=checking，层级资格pending。changed回调中的state读取不递归启动检查。
+
+`busy`、`run_project`（本次隔离进程项目）、`records_root` 可读。忙重入抛WorkflowBusyError；过期revision抛WorkflowStaleError。关闭后动作拒绝。close停止timer/watch，异步排空EvidenceJob再释放；不隐式终止活动模拟，调用方先按原流程cancel，然后等closed。
+
+父GUI先disconnect旧inspect finished/error消费者，注入同一个`_macro_inspection`。external run为run_inspect→fresh验证→同一runner；初始化为initialization_inspect→后端标准展开前缀→同一runner。inspect成功只标Configure/preflight，绝不是初始化/模拟。generated保留现writer校验后直接同一runner启动。
+
+record至少含schema/action/record_id/run_id/revision/session_id/level/status/reason/record_dir。层级为fields、initialization、execution、physics（另有inspect/generation/export/history动作）。用户run_name保持原义：generated取RunSettings.run_name，external保持flat值，requested_run_name原字节保存，JSON观察标签不strip Unicode；空请求不猜默认。UUID是请求身份与独占目录；完成核对actual_output_dir、main_config、actual_macro_file及F1每个实际读入路径/SHA/size，不以label当身份。
+
+每动作UUID独立目录。generate记录含package路径dict；每次运行重新生成隔离执行树，复用package_writer + bundle唯一资源闭包。prepared_package接受RunPackage/dict，与快照重建结果核对材料/几何/macro及main；不复用旧输出。package_factory只注入writer，不拥有进程或编辑状态。
+
+默认记录根在构造时选定 `<runsRoot或pathSettings.runs_root或workspace/runs>/experiment-records`。GUI/CLI可显式给稳定项目根；重开同根自动异步加载记录、全部stale。运行根后续变更时由适配层明确调整records_root；不猜测项目文件位置。import_history接bundle wrapper或普通records，异步写盘，全部stale；不复活当前资格。显式跨进程evaluate可fresh复核本机配置/资源/二进制/环境、F1与请求路径后产生新评估；原run仍历史。当前会话Undo/编辑后的旧run不能这样复活。
+
+物理首版仅完整event_edep CSV的敏感体总沉积能均值：quantity=energy_deposition、object=sensitive_total、unit/reference_unit=MeV、normalization=per_event、statistical_method=mean_standard_error。weighted=false用raw_edep_MeV，true用weighted_edep_MeV。artifact为登记basename或其列表；按整数(runID,eventID)去重，选定run的master N，允许多worker合并；缺事件/重复事件拒绝。N<2时sigma未知；sigma_multiplier>0拒绝，独立固定容差可评估并保留未知sigma。阈值=absolute_tolerance+relative_tolerance*abs(reference)+sigma_multiplier*SEM；非有限或溢出拒绝。
+
+每个comparison必含：artifact、column、quantity、unit、reference、reference_unit、absolute_tolerance、relative_tolerance、source、statistical_method、sigma_multiplier、weighted、normalization、run、object、reference_file；可选reference_sha256。外来pass/observed/sigma和未知字段拒绝。
+
+reference_file实际读取严格JSON：schema=g4usim_physical_reference_v1，value有限数值，与comparison.reference一致；quantity/unit/weighted/normalization/object/run/source逐项一致；source_kind=user_supplied或analytic，conditions非空。实际读取raw SHA绑定，参考原bytes独立保存在评估目录后导出，不用结束时复读重写历史。服务始终标user_supplied_unverified_source，不认证引用真实性。deterministic_value及任意列比较未开放。
+
+I1：probe_environment(executable, *, timeout=5.0, cwd=None, env=None, sdk_roots=())。默认兼容；工作流传实际执行cwd给capabilities/data两个查询。safe_environment按实际嵌套协议保存build/binary/capabilities及dataset选择路径hash，数据集内容SHA仍unknown；不导出raw env或私有路径。
+
+状态：核心专项开发验收与正式整项矩阵分开；最新交付/失败历史/真实证据入口见k1-workflow-delivery.md。
+
+
+最终兼容补充：generated且显式geometry.source_copy_mode时，只有该几何源路径产生的Unknown resource grammar可选择local_source_copy_compatibility；scope绑定完整snapshot和明确材料/几何原文件raw SHA，非递归闭包资格。materials/macro未知错误、缺文件/链接等不得触发；export始终严格。正常已知STL等仍走闭包。记录coverage及recursive_closure=unverified_export_not_qualified；实际F1额外/未观测输入不得授资格。
+
+最终收尾：调用close()并在False时等closed()，然后才能销毁owner或删除输入目录。close不隐式终止活动进程；先走已有cancel。API正常退出专项见k1-workflow-handoff-final.log（455 v3入口）。

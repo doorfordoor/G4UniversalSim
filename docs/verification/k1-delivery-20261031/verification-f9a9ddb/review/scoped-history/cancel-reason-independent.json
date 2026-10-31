@@ -1,0 +1,173 @@
+{
+  "schema": "k1_cancel_reason_independent_review_v1",
+  "recorded_utc": "2026-10-31T06:30:15.046829+00:00",
+  "status": "approved_narrow_fix_and_meaningful_regression",
+  "base_head": "8213ced419c8c6bca512bf8413b674c1265cf3bf",
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "medium",
+  "consumption": "unknown",
+  "checks": {
+    "all_file_identities_match": true,
+    "existing_exercise_AST_unchanged": true,
+    "old_negative_precise_reason_failure": true,
+    "candidate_11_modes_pass": true,
+    "cancel_unchanged_snapshot_public_reason_correct": true,
+    "edit_stale_reason_preserved": true,
+    "both_single_callback_disk_match": true,
+    "all_markers_match": true
+  },
+  "files": [
+    {
+      "path": "gui/g4usim_gui/core/experiment_workflow.py",
+      "base_sha256": "8419770c31176e35d53d5744202bb92d1641cce72714fcbc3bf27c326b7da009",
+      "base_matches_manifest": true,
+      "candidate_sha256": "2c3bfcc5bbddc1032e1c5c977aeb19749990ed8e30f2f1dbb9819566850b5cd0",
+      "candidate_matches_manifest": true,
+      "final_lf_sha256": "9f8f800aee380f8b060b95fcc8d1c776ed580ddbec0bbd398d104bda58156403",
+      "final_matches_lf_receipt": true,
+      "candidate_normalized_equals_final": true,
+      "final_contains_no_CR": true
+    },
+    {
+      "path": "scripts/test_k1_terminal_publication.py",
+      "base_sha256": "b4fc161221ba6e69cb2c483c2955bf7cec6deca4f18d6a5c739e6ed5168d9ae9",
+      "base_matches_manifest": true,
+      "candidate_sha256": "0c95a09d9b44735cc797f3dab7214133154ab263675af07874f505e42ad2554b",
+      "candidate_matches_manifest": true,
+      "final_lf_sha256": "5075c7b236117e1cace9f2d10e33cca6ee2b2ccd0cb95c5b7bf8f7d2de1762b4",
+      "final_matches_lf_receipt": true,
+      "candidate_normalized_equals_final": true,
+      "final_contains_no_CR": true
+    }
+  ],
+  "evidence": [
+    {
+      "kind": "old-negative",
+      "log_sha256": "cb305a85a2ca1223ee141ea14cb2bd466ae4517be572168cc46293f9b018cef5",
+      "receipt_sha256": "5f33daf1237434f2152ab231e02917205eb82d56a725cb11789c484d3e9aab6e",
+      "case_results_sha256": "9f9696a1397bd4713e8c7eaeb02c8abeb713dd6492eb692c300a77a1c89f7882",
+      "assertions": 15,
+      "marker_matches": true,
+      "cases": [
+        {
+          "mode": "cancel_work_delivery",
+          "status": "failed",
+          "error": "{'mode': 'cancel_work_delivery', 'status': 'cancelled', 'reason': 'experiment.inputs_changed', 'revision_before': 0, 'revision_after': 0, 'snapshot_changed': False, 'completed_count': 1, 'disk_matches_callback': True}",
+          "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-cancel-reason-candidate\\test_k1_terminal_publication.py\", line 259, in main\n    exercise_delivery_reason(module, report_root / mode, mode)\n  File \"C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-cancel-reason-candidate\\test_k1_terminal_publication.py\", line 220, in exercise_delivery_reason\n    assert saved['reason'] == expected_reason, observed\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: {'mode': 'cancel_work_delivery', 'status': 'cancelled', 'reason': 'experiment.inputs_changed', 'revision_before': 0, 'revision_after': 0, 'snapshot_changed': False, 'completed_count': 1, 'disk_matches_callback': True}\n"
+        }
+      ],
+      "exit_code_reported_by_parent": 1,
+      "exit_code_source": "parent process completion report; not independently rerun"
+    },
+    {
+      "kind": "candidate",
+      "log_sha256": "b60700d7233693239423f65e67635438e1a329ee273b637079f00960820d0dfb",
+      "receipt_sha256": "4ce853742767698a21acaaf04b5cb643a1e6723b8a66c2a7d909b4d0dd76f23b",
+      "case_results_sha256": "a1fbabd63114125fa23be06e663522559a3073ad887853fb5e58b83b84e2e147",
+      "assertions": 291,
+      "marker_matches": true,
+      "cases": [
+        {
+          "mode": "cancel_error_finished",
+          "status": "passed"
+        },
+        {
+          "mode": "error_finished",
+          "status": "passed"
+        },
+        {
+          "mode": "init_cancel_error_finished",
+          "status": "passed"
+        },
+        {
+          "mode": "init_error_finished",
+          "status": "passed"
+        },
+        {
+          "mode": "late_cancel",
+          "status": "passed"
+        },
+        {
+          "mode": "late_edit",
+          "status": "passed"
+        },
+        {
+          "mode": "persistence_failure",
+          "status": "passed"
+        },
+        {
+          "mode": "late_work",
+          "status": "passed"
+        },
+        {
+          "mode": "finished_before_error",
+          "status": "passed"
+        },
+        {
+          "mode": "cancel_work_delivery",
+          "status": "passed"
+        },
+        {
+          "mode": "edit_work_delivery",
+          "status": "passed"
+        }
+      ],
+      "exit_code_reported_by_parent": 0,
+      "exit_code_source": "parent process completion report; not independently rerun"
+    }
+  ],
+  "observed": {
+    "cancel_work_delivery": {
+      "mode": "cancel_work_delivery",
+      "status": "cancelled",
+      "reason": "experiment.cancelled",
+      "revision_before": 0,
+      "revision_after": 0,
+      "snapshot_changed": false,
+      "completed_count": 1,
+      "disk_matches_callback": true,
+      "sha256": "b38f98f59c4252dee946991f6ac28c0b57221d30baab00aac9915979bee5c0e9"
+    },
+    "edit_work_delivery": {
+      "mode": "edit_work_delivery",
+      "status": "stale",
+      "reason": "experiment.inputs_changed",
+      "revision_before": 0,
+      "revision_after": 1,
+      "snapshot_changed": true,
+      "completed_count": 1,
+      "disk_matches_callback": true,
+      "sha256": "277b3be6aa0f6182667b622bb5c7df39f50802032576f1c25ce5fee4f2e7dfa4"
+    }
+  },
+  "documentation": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "9d48adf7c79e26a95f778fe2ff77efb0309dd3be856a3785dd753430ff0341a5",
+      "diff_sha256": "3e703a42da8f1fc18d5e324b6f40de5a7aa5fdba8e4ff4539613013d3ed9bf76",
+      "review": "consistent: cancellation precedence and reason separation; no historical rewriting or claim of interrupted events"
+    },
+    {
+      "path": "docs/agent-history.md",
+      "sha256": "70c2b8edb940dc30636765f86576a197895c550657caa1ba3bbc30560e8d2c42",
+      "diff_sha256": "17f7449c91b988c881b276c8617724978ff00e9528c442f3daf4dedc01ada3ce",
+      "review": "consistent: cancellation precedence and reason separation; no historical rewriting or claim of interrupted events"
+    },
+    {
+      "path": "docs/可信实验工作流.md",
+      "sha256": "1a28c4ef7cca8517990a0cd4c8e5e179e8a4aafcb07982346714329ce190ec87",
+      "diff_sha256": "d72f8385691e30ab4bc19e91bb9664c03ff25f9d7103104b6ea95a043412ce64",
+      "review": "consistent: cancellation precedence and reason separation; no historical rewriting or claim of interrupted events"
+    }
+  ],
+  "findings": [],
+  "no_tests_rerun": true,
+  "product_edits_by_reviewer": false,
+  "scope": "P3 public reason correction only; no resource review",
+  "limits": [
+    "Private service seam with real EvidenceJob/Qt owner queue and real EditSession; no backend simulation is performed.",
+    "Parent-reported exit1/exit0 supported by retained result/log content; reviewer did not own or rerun those processes.",
+    "Fourth original reason defect and million/million backend fact remain unchanged.",
+    "Fifth strict matrix and remaining required specialist reviews remain separate."
+  ]
+}

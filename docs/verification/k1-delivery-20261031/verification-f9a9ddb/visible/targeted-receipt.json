@@ -1,0 +1,89 @@
+{
+  "head": "f9a9ddbfcabe69067707a5a209caff005748f510",
+  "native_scope": "targeted cancellation, force end and recovery on fifth freeze",
+  "operator": "parent assistant via @oai/sky, not user",
+  "fourth_gui_changed_files": [
+    "gui/g4usim_gui/core/experiment_workflow.py"
+  ],
+  "fourth_observations": "retained historical full flow; not claimed rerun on fifth",
+  "images": {
+    "01-initial-unobserved.jpg": "6b60132bcb28c7b1d2c650959fb92c72c492c36f77e546cf3ec414d956c0f658",
+    "02-running-repeat-disabled.jpg": "ad88f87f7e827fa275031020d155f26ca9eb47eec2183ec736caf335a258b429",
+    "03-cancelled-forced-end.jpg": "17f07ccc5f1d4bbd0347829f3e65923785acc38a9f86b9676623cc4ef66e3880",
+    "04-running-before-cancel.jpg": "3e5e92cca6790c7a2c010981325ca964b0bfaac50d5c5dc535d691a5f4d2fa8e",
+    "05-cancelled-natural-exit.jpg": "42e1e880545d90056819a11a57250912591bd1dfed3c348cb204fcebb10e6810",
+    "06-recovered-three-events.jpg": "a5d492d9d1ee3d95e10a326c1e43fa7f9b3854f4549915929cbb179b12bf225b"
+  },
+  "records": [
+    {
+      "record_id": "576efbdcf8434907bf0206d1de976f16",
+      "status": "cancelled",
+      "reason": "QProcess error: Crashed",
+      "result": {
+        "state": "killed",
+        "reason": "User requested process termination.",
+        "summary_status": "",
+        "run_count": null,
+        "planned_events": null,
+        "completed_events": null
+      },
+      "exit_code": 62097,
+      "record_sha256": "a222ec5f19f61b40af4eea91ecb12318250de71d5badae8d0347b822ec4cb6da",
+      "summaries": []
+    },
+    {
+      "record_id": "4aec0e6cd38a47e3a286be9e5693aaf2",
+      "status": "cancelled",
+      "reason": "experiment.cancelled",
+      "result": {
+        "state": "stopped",
+        "reason": "User requested process termination.",
+        "summary_status": "",
+        "run_count": null,
+        "planned_events": null,
+        "completed_events": null
+      },
+      "exit_code": 0,
+      "record_sha256": "4d4d3797af9745b6c3eef9d88a7706fbf15395c4d9bae249da3022359b344848",
+      "summaries": [
+        {
+          "path": "out\\verification\\k1-f9a9ddb\\visible\\fixture-inputs\\packages\\experiment-records\\4aec0e6cd38a47e3a286be9e5693aaf2\\20261031_143428_k1-visible\\output\\run_summary.txt",
+          "fields": {
+            "run_count": "1",
+            "status": "completed"
+          },
+          "sha256": "7420b60c6d8ac831fc9bf44dafd73d011ac33b76d927597b7ae44312168ea224"
+        }
+      ]
+    },
+    {
+      "record_id": "5528e27cb3f94c70bf3e16a9de88d8b4",
+      "status": "passed",
+      "reason": "experiment.run_evidence_confirmed",
+      "result": {
+        "state": "success",
+        "reason": "Events completed as planned.",
+        "summary_status": "completed",
+        "run_count": 1,
+        "planned_events": 3,
+        "completed_events": 3
+      },
+      "exit_code": 0,
+      "record_sha256": "703706034117f2ebd94e1b0cb4233cfbde793283031b7d1c2eec0cfd4f021888",
+      "summaries": [
+        {
+          "path": "out\\verification\\k1-f9a9ddb\\visible\\fixture-inputs\\packages\\experiment-records\\5528e27cb3f94c70bf3e16a9de88d8b4\\20261031_143619_k1-visible\\output\\run_summary.txt",
+          "fields": {
+            "run_count": "1",
+            "status": "completed"
+          },
+          "sha256": "24d4b9e425c4317c6b7fc8626c2d65c1f7d1bbd3088f01fba599ccb28bd7a67d"
+        }
+      ]
+    }
+  ],
+  "actual_process_exit": 0,
+  "independent_review": "pending",
+  "stage_accepted": false,
+  "known_frontend_findings": "completed preview cwd, pending label; sixth candidate in preparation"
+}

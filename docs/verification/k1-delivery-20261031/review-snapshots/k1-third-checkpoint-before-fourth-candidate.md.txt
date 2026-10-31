@@ -1,0 +1,30 @@
+# K1第三冻结接续点（2026-10-31 12:44）
+
+目标：完整K1/I1交付，仍未验收/未集成。唯一写者检出C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim，roadmap/K1-trusted-workflow。D:/Geant4/G4UniversalSim只读边界；其gui/.venv是F5既有解释器，允许只读复用，未安装/改D盘代码。codex/q1-final与remote codex仍e701c7f。
+
+新正式冻结11c92d361369cda4b2412451ff2841eff940f810已普通推送，tree clean；19文件912+/25-。四项修复：规范化路径测试、runner早期拒绝进度failed、workflow6行终态任务独占/补写迟到事实、GUI历史范围投影。新增terminal和history两脚本，后者组件/后端分登记。恢复trajectory原Win原生分支，不削减图形覆盖。AGENTS/历史/GUI约束/人类文档/STATUS同步，STATUS仍明确第二轮失败。
+
+冻结out/verification/k1-11c92d3/frozen-case-manifest.json：179=35static/55gui/61backend/28integration。source890635b6…930a，tests86f3a759…07e。构建session5968已exit0，configure/build日志out/collab/k1-11c92d3-*.log。build-identity.json/capabilities.json：实际head11c92d3、clean，exe d45fb1e18cd2a56cf1d020ae9a742841d5ad9236becaf43b13853fe018ec33ee，merge a1a52b42…。不得构建或改源码到正式全量自然结束。
+
+当前Windows全量session46966，out/verification/k1-11c92d3/windows-run.log，179例正在跑。使用D盘既有venv（PySide6 6.11.1/pyvista0.48.4/pyvistaqt0.11.4/vtk9.6.2/numpy2.4.6/uproot5.7.7），CXX unset、PATH前置D:/msys64/ucrt64/bin，G4USIM_EXPECT_GDML=1及真实数据根。第二轮误用base311缺pyvista，显式CXX又少9个发现断言，不能以总数掩盖；第三预检已恢复图形35/35/40、static35/3537，strict通过。前三核心5例782通过，history组件78/后端150两次3/3通过。
+
+真实CI Linux41169369850（jobs124443787168=11.4.3/124443787379=11.3.2），M041169369890（124443787236 Ubuntu/124443787428 Windows）。functions store k1thirdruns/raw、k1thirdjobs+run保存API；尚未通过。后续收4官方ZIP及API/jobs，验SHA/成员/12profile和F5同平台逐例/总量。helper out/collab/k1-ci/ci_helper.py自测不等验收。
+
+新原生host session71575，launcher redirector PID33560，真实identity PID55752，window42537470，标题K1正式验收11c92d3；visible/identity.json绑定真实head/clean/QtWindows6.11.1/新exe。Sky在mcp__node_repl__js持久变量sky/k1NewWindow/k1NewState/k1FinalRoot/k1SaveObserved。窗口已拖到origin47,138无覆盖，01-initial.jpg已直接观察并保存。字段通过后点击初始化，正等待终态；尚未run/export/import/cancel。一次UI操作后立即refresh，元素不可跨状态复用。只用Sky（已读computer-use/guidance/api/confirmations）；不用cua/直连UIA。旧两个host已精确核对命令后强制清理，实际退出4294967295，非正常close；此前人工目录选择请求已告知用户可忽略。新单一窗口需再试目录对话框。
+
+独立审：Dalton已签history五产品+组件增补+登记一行default及trajectory恢复，正在核第三冻结映射；Averroes已签terminal6行及默认测试257，Bohr只读核9项-1的CXX根因（任务仍运行）。新文件签SHA在k1-c644bb1-windows-independent-history-registration.json、k1-terminal-test-defaults-independent.md。模型Sol实际high/medium见ledger，无虚构Terra/Luna/Astra/用量。DeepSeek已实参与deepseek-flash交付panel，原API收据/关键修复见out/collab与tracked outbox；不要重复调用或泄密。
+
+失败原件：e5ff800 Windows173/165pass8fail、CI静态失败；c644bb1 Windows176/175pass1fail56116且13项F5下降、CI路径/进度失败、原生取消卡住与历史措辞。严格拒绝原件不改。out/collab/k1-delivery-staging/failed-e5ff800和failed-c644bb1已逐字节归档含原ZIP/报告logs/截图/案例ZIP，c644345文件1512案例。两旧exe另存各frozen-binary。资源包广审曾上游拒绝的事件k1-bundle-review-upstream-incident.json未重试；主负责人普通functional review不冒称该拒绝范围已完成。
+
+下一步：完成新原生init/run→edit stale→run→取消/强制kill可恢复→导出/干净搬移加载修改重跑/失效重验→正常close；CI/Windows最终严格审计（F5 Windows160/50898逐例不下降），必要反例未通过就保持K1未完成。全过后归档正式证据及独审/模型/DeepSeek、状态矩阵/最终报告/交接，再正常codex快进/推送；不动D盘独立改动。当前没有用户问题待答。
+
+## 12:51 实窗与当前阻塞更新
+
+原生01–10已完成且直接看图：fields/init、两次3/3及seed4242→4343历史显示修复；第三长run UUID14e9ab4da7174e168d1746fca2c6435a实际1e6事件，Cancel后仍运行，再既有强制结束；第五completed已收到，exit62097/result.killed/output_dir正确落盘且busy清除。再改events3、初始化通过、第三次3/3 UUIDa2cc1e6b07d342029ad0799569e21215，I1实际发现当前后端/架构/数据/编译器。Dalton独立核已完成部分，不签缺失项。
+
+当前停在新host的原生导出目录弹窗“选择导出包的父目录”。Windows Sky对Qt弹窗element索引847报cached unavailable，但改用第二张截图screenshot-1局部坐标成功关闭环境对话框；native文件夹弹窗仍不能聚焦：screenshot-1点文件夹输入后focused_element仍SearchEditBox，Alt+d也没变化，未输入/提交。11-export-dialog-manual-needed.jpg保存。已异步请用户手动选C:/Users/123/.codex/worktrees/effective-config/G4UniversalSim/out/verification/k1-11c92d3/exported（目录已建）并确认；新请求仍pending。不得猜HWND/用UIA或mock替代实窗。不要再操作该弹窗直到回复或可靠新事实；自动验收继续。
+
+Averroes已接手第三CI原件下载/核验，独占out/verification/k1-11c92d3/ci以及out/collab/k1-third-ci-review-*；主线程不要并发写此目录。M0 Ubuntu已实际success，其他job当时还在跑。Windows46966约65/179未见fail仍运行，勿改tracked。Bohr九项-1根因已完成：27次成对测试与编译器路径/SHA证明显式CXX跳过一次发现assert；CXX unset恢复九项196，原187。报告out/collab/k1-f5-minus-one-investigation。第三构建/窄审SHA的独立冻结收据out/collab/k1-11c92d3-independent-freeze-receipt.json通过。
+
+## 13:04 第三冻结原生搬移反例失败
+补充host74889、window528532、visible-qt-dialog，实际QtWidgets文件选择器（QApplication.AA_DontUseNativeDialogs true，Qt平台windows），产品源码未改，非mock。实际导出88bd50db6b8c414aa69921d258150cc5至exported/k1-qt-clean-export；10文件SHA匹配复制relocated-clean/k1-qt-clean-export；GUI加载本机冻结backend+fresh relocated-clean/runs，import_history d69e3114ed35441394e6fe628ba5e1c7 rev3。下一点击initialize rev4失败4e2780f165e04906b0264efcc0b01cb7，fields_rejected：resources/r0000-original-materials.ini与r0001-original-geometry.ini不存在（真实包内存在）。03-relocated-initialization-rejected.jpg已直接观察保存。说明GUI collect丢路径基准，必须修，11c92d3不能最终通过。Franklin只在out/collab/k1-relocation-candidate写候选，不改tracked；正式Windows46966继续自然结束，Dalton已领独立最终Windows审，Averroes继续CI归档审。原生Windows默认picker仍待用户手动，不操作原42537470。Qt补充host暂在失败QMessageBox，需保存/正常close或明确关闭边界。后续修复需第四freeze再正式验收，不追改本轮证据。

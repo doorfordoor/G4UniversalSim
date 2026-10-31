@@ -1,0 +1,14 @@
+{"producer_payload": {"revision": 7, "qualification": "checking", "environment_observation": "as_observed_dataset_bytes_unknown", "fingerprint": "unknown", "run_id": "r", "status": "pending", "levels": [{"level": "fields", "status": "pending", "detail": ""}, {"level": "initialization", "status": "unobserved", "detail": ""}, {"level": "execution", "status": "unobserved", "detail": ""}, {"level": "physics", "status": "unobserved", "detail": ""}], "history": [{"record_id": "recorded-check", "run_id": "r", "revision": 7, "level": "fields", "status": "passed", "stale": false}]}, "rendered_fields": "Unobserved", "rendered_summary": "Revision: 7 | Hash: unknown | Run: r | Status: Unobserved"}
+G4USIM_ASSERTS=2
+Traceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\k1-final-ui-candidate\run_candidate.py", line 61, in <module>
+    raise SystemExit(test_assert_probe.main(['probe', str(target), *target_args]))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 153, in main
+    runpy.run_path(str(target), run_name="__main__")
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\k1-final-ui-candidate\run_candidate.py", line 57, in run_path
+    exec(compile(target.read_bytes(), str(target), 'exec'), namespace)
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\out\collab\k1-final-ui-candidate\reproduce.py", line 67, in <module>
+    assert shown == 'In progress', 'real producer pending incorrectly falls back to Unobserved'
+           ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: real producer pending incorrectly falls back to Unobserved

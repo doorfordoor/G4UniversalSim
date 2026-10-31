@@ -1,0 +1,344 @@
+--- a/gui/g4usim_gui/window/run.py
++++ b/gui/g4usim_gui/window/run.py
+@@ -33,17 +33,23 @@
+         command = self.runner.build_command(self.project)
+         self.run_page.set_command(self._format_command_preview(command))
+ 
+-    def _format_command_preview(self, command: list[str]) -> list[str]:
++    def _format_command_preview(self, command: list[str], *, working_directory: str | None = None,
++                                launch_working_directory: str | None = None) -> list[str]:
+         if not command:
+             return []
+-        working_directory = self.project.workspaceRoot or "<not set>"
++        directory_label = "working directory:" if working_directory is None else ui_text("Logical working directory:")
++        if working_directory is None:
++            working_directory = self.project.workspaceRoot or "<not set>"
+         lines = [
+             "program:",
+             f"  {command[0]}",
+             "arguments:",
+         ]
+         lines.extend(f"  {arg}" for arg in command[1:])
+-        lines.extend(["working directory:", f"  {working_directory}", "", "human-readable:", "  " + " ".join(command)])
++        lines.extend([directory_label, f"  {working_directory}"])
++        if launch_working_directory and launch_working_directory != working_directory:
++            lines.extend([ui_text("Process launch directory:"), f"  {launch_working_directory}"])
++        lines.extend(["", "human-readable:", "  " + " ".join(command)])
+         return lines
+ 
+     def _macro_inspection_inputs(self) -> tuple[object, ...]:
+--- a/gui/g4usim_gui/window/experiment.py
++++ b/gui/g4usim_gui/window/experiment.py
+@@ -276,6 +276,9 @@
+     def _bind_experiment_package(self, record):
+         package = record.get('package')
+         if not isinstance(package, dict):
++            # External preparation has no generated package, but completion
++            # still carries the command and execution/launch directory facts.
++            self._project_experiment_command(record)
+             return
+         original = self._edit_session.current().project
+         for field, key in (('configPath', 'main_ini_path'), ('macroPath', 'run_macro_path'), ('outputDir', 'output_dir')):
+@@ -298,9 +301,26 @@
+         self.run_history_page.set_runs_root(self.project.runsRoot)
+         self.run_history_page.refresh()
+         # This display binding must never publish generated paths into F5.
++        self._project_experiment_command(record)
++
++    def _project_experiment_command(self, record):
++        """Display observed command facts independently of generated paths."""
++        launch = record.get('launch')
++        launch = launch if isinstance(launch, dict) else {}
+         command = record.get('command')
++        # A launch receipt may exist even when the older planned argv does not.
++        if (isinstance(launch.get('program'), str) and launch['program']
++                and isinstance(launch.get('arguments'), list)
++                and all(isinstance(argument, str) for argument in launch['arguments'])):
++            command = [launch['program'], *launch['arguments']]
+         if command:
+-            self.run_page.set_command(self._format_command_preview(command))
++            execution = record.get('execution_bundle')
++            execution = execution if isinstance(execution, dict) else {}
++            working_directory = (launch.get('working_directory') or execution.get('path')
++                                 or ui_text('Unknown'))
++            self.run_page.set_command(self._format_command_preview(
++                command, working_directory=working_directory,
++                launch_working_directory=launch.get('launch_working_directory')))
+ 
+     def _open_environment(self):
+         from g4usim_gui.widgets.environment_dialog import EnvironmentDialog
+--- a/gui/g4usim_gui/widgets/experiment_panel.py
++++ b/gui/g4usim_gui/widgets/experiment_panel.py
+@@ -19,7 +19,7 @@
+ )
+ LEVEL_TOKENS = ("fields", "initialization", "execution", "physics")
+ VALID_LEVEL_STATUS_TOKENS = (
+-    "unverified", "passed", "failed", "stale", "unobserved", "cancelled",
++    "unverified", "passed", "failed", "stale", "unobserved", "cancelled", "pending",
+ )
+ # These are source messages for the existing central i18n dictionary, not translations.
+ ACTION_TEXT = {
+@@ -34,6 +34,7 @@
+ }
+ STATUS_TEXT = {
+     "unverified": "Unverified", "passed": "Passed", "failed": "Failed",
++    "pending": "In progress",
+     "stale": "Stale", "unobserved": "Unobserved", "cancelled": "Cancelled",
+ }
+ EXPORT_NOTE = "Export includes configuration, resources and evidence; excludes C++ projects, secrets and machine settings."
+--- a/gui/g4usim_gui/core/i18n.py
++++ b/gui/g4usim_gui/core/i18n.py
+@@ -20,6 +20,9 @@
+ 
+ 
+ ZH_CN: dict[str, str] = {
++    "Logical working directory:": "逻辑工作目录：",
++    "Process launch directory:": "进程启动目录：",
++    "In progress": "进行中",
+     'Previous run (configuration changed): {detail}': '上次运行（配置已变更）：{detail}',
+     'Previous run: {detail}': '上次运行：{detail}',
+     'Previous run (current inputs unverified): {detail}': '上次运行（当前输入未验证）：{detail}',
+--- a/gui/smoke_tests/smoke_k1_workflow.py
++++ b/gui/smoke_tests/smoke_k1_workflow.py
+@@ -38,6 +38,178 @@
+     assert window.experiment.close(), 'closed service was not drained'
+     window.close()
+     app.processEvents()
++
++
++def check_execution_command_preview(window, record, root):
++    """Actual completed Generate + planner receipts; no simulation is launched."""
++    from copy import deepcopy
++    from g4usim_gui.core import backend_launch as launch
++    from g4usim_gui.core.edit_snapshot import snapshot_fingerprint
++    from g4usim_gui.core.i18n import current_language, set_application_language
++    from PySide6.QtWidgets import QApplication
++
++    editor_cwd = window.project.workspaceRoot
++    editor_path_cwd = window.project.pathSettings.workspace_root
++    editor_text = window.project_page.workspace_root.text()
++    before = snapshot_fingerprint(window.capture_workspace())
++    command = [sys.executable, '--config', 'relative-input.ini']
++    # Keep the complete old pre-dispatch preview contract, not just a substring.
++    assert window._format_command_preview(command) == [
++        'program:', '  ' + command[0], 'arguments:', '  --config', '  relative-input.ini',
++        'working directory:', '  ' + (editor_cwd or '<not set>'), '',
++        'human-readable:', '  ' + ' '.join(command)]
++    assert window._format_command_preview([]) == []
++    # This is the real service's completed Generate record, before fixture receipt rendering.
++    assert record['action'] == 'generate' and record['status'] == 'passed'
++    execution_cwd = record['execution_bundle']['path']
++    assert Path(execution_cwd).resolve() != Path(editor_cwd).resolve()
++    assert '\n  ' + execution_cwd + '\n' in window.run_page.command_preview.toPlainText()
++    original_record = deepcopy(record)
++    short = root / 'preview-observed-cwd'
++    short.mkdir()
++    deep = root / 'preview-logical-cwd'
++    deep.mkdir()
++    while launch.utf16_units(str(deep.resolve())) <= 270:
++        deep /= 'logical-中文😀-segment'
++        deep.mkdir()
++    app = QApplication.instance()
++    previous_language = current_language()
++    try:
++        for directory in (short, deep):
++            # Windows route planning is exercised on both hosts; Python is never started.
++            with patch.object(launch, 'WINDOWS', True):
++                receipt = launch.prepare_backend_launch([sys.executable, '-c', "print('preview only')"], directory)
++            assert receipt.requires_working_directory == (directory == deep)
++            observed = deepcopy(record)
++            observed['launch'] = receipt.to_dict()
++            untouched_observation = deepcopy(observed)
++            for language, logical_label, physical_label in (
++                    ('en', 'Logical working directory:', 'Process launch directory:'),
++                    ('zh_CN', '逻辑工作目录：', '进程启动目录：')):
++                set_application_language(app, language)
++                window._bind_experiment_package(observed)
++                text = window.run_page.command_preview.toPlainText()
++                assert logical_label + '\n  ' + str(directory.resolve()) + '\n' in text
++                if directory == deep:
++                    assert physical_label + '\n  ' + receipt.launch_cwd + '\n' in text
++                else:
++                    assert physical_label not in text
++                assert 'human-readable:\n  ' + ' '.join(receipt.command) in text
++                assert observed == untouched_observation
++                assert window.project.workspaceRoot == editor_cwd
++                assert window.project.pathSettings.workspace_root == editor_path_cwd
++                assert window.project_page.workspace_root.text() == editor_text
++                assert snapshot_fingerprint(window.capture_workspace()) == before
++        # A legacy/incomplete display record cannot fabricate an observed editor cwd.
++        missing = deepcopy(record)
++        missing.pop('launch', None)
++        missing.pop('execution_bundle', None)
++        set_application_language(app, 'en')
++        window._bind_experiment_package(missing)
++        assert 'Logical working directory:\n  Unknown\n' in window.run_page.command_preview.toPlainText()
++        assert record == original_record
++        assert snapshot_fingerprint(window.capture_workspace()) == before
++    finally:
++        set_application_language(app, previous_language)
++        window._bind_experiment_package(record)
++
++
++def check_external_completed_preview(window, generated, root):
++    """Real external preparation, controlled completion display; no backend run."""
++    from copy import deepcopy
++    import json
++    from g4usim_gui.core import backend_launch as launch
++    from g4usim_gui.core.edit_snapshot import WorkspaceSnapshot, snapshot_fingerprint
++    from g4usim_gui.core.i18n import current_language, set_application_language
++    from PySide6.QtWidgets import QApplication
++
++    editor_cwd = window.project.workspaceRoot
++    editor_path_cwd = window.project.pathSettings.workspace_root
++    editor_text = window.project_page.workspace_root.text()
++    before = snapshot_fingerprint(window.capture_workspace())
++    snapshot = window._edit_session.current()
++    project = snapshot.project
++    project.runInputMode = 'external'
++    project.configPath = generated['package']['main_ini_path']
++    project.macroPath = generated['package']['run_macro_path']
++    project.workspaceRoot = generated['execution_bundle']['path']
++    # Align these four fixture edits with F5's captured raw text; preserve all
++    # other drafts/source evidence. Only the environment probe is a ready fixture.
++    snapshot.state['drafts'].update({
++        'project.run_input_mode': 'external', 'project.workspace_root': project.workspaceRoot,
++        'project.config_path': project.configPath, 'project.macro_path': project.macroPath})
++    request = dict(record_id='external-preview-preparation', revision=window._edit_session.revision,
++                   record_dir=str(root / 'external-preview-preparation'))
++    with patch.object(window.experiment, '_probe', lambda executable, *, cwd: {'status': 'ready'}):
++        prepared = window.experiment._prepare(WorkspaceSnapshot(project, snapshot.state), request, 'run')
++    assert prepared['can_run'], prepared['report'].errors
++    assert 'package' not in prepared
++    assert prepared['execution_bundle']['path'] != editor_cwd
++    assert prepared['command'] and '--config' in prepared['command']
++    public = {key: deepcopy(value) for key, value in prepared.items() if not key.startswith('_')}
++    # This status drives the display only, never a service success/physics assertion.
++    public.update(action='run', status='passed', reason='display_fixture_only')
++    direct = Path(prepared['execution_bundle']['path'])
++    deep = root / 'external-preview-deep'
++    deep.mkdir()
++    while launch.utf16_units(str(deep.resolve())) <= 270:
++        deep /= 'external-logical-中文😀-segment'
++        deep.mkdir()
++    app = QApplication.instance()
++    previous_language = current_language()
++    try:
++        variants = []
++        for directory in (direct, deep):
++            with patch.object(launch, 'WINDOWS', True):
++                receipt = launch.prepare_backend_launch(prepared['command'], directory)
++            assert receipt.requires_working_directory == (directory == deep)
++            observed = deepcopy(public)
++            observed['launch'] = receipt.to_dict()
++            # Ensure planned argv differs, so a stale planned preview cannot pass.
++            observed['command'] = ['planned-command-must-not-be-shown', '--planned']
++            variants.append((observed, receipt.command, str(directory.resolve()), receipt.launch_cwd))
++        fallback = deepcopy(public)
++        fallback['launch'] = dict(program='', arguments=['invalid-observed-argv'])
++        variants.append((fallback, prepared['command'], str(direct), None))
++        launch_only = deepcopy(variants[0][0])
++        launch_only.pop('command')
++        variants.append((launch_only, variants[0][1], variants[0][2], variants[0][3]))
++        missing = deepcopy(public)
++        missing.pop('execution_bundle')
++        missing.pop('launch', None)
++        variants.append((missing, prepared['command'], None, None))
++        for index, (observed, command, logical, physical) in enumerate(variants):
++            for language, logical_label, physical_label, unknown in (
++                    ('en', 'Logical working directory:', 'Process launch directory:', 'Unknown'),
++                    ('zh_CN', '逻辑工作目录：', '进程启动目录：', '未知')):
++                set_application_language(app, language)
++                observed['record_id'] = f'external-completed-display-{index}-{language}'
++                untouched = deepcopy(observed)
++                window.run_page.set_command(window._format_command_preview(['editor-planned-command']))
++                window._experiment_completed(observed)
++                text = window.run_page.command_preview.toPlainText()
++                print('external_completed_preview=' + json.dumps(dict(
++                    variant=index, language=language, package_present='package' in observed,
++                    producer='ExperimentWorkflow._prepare external run; environment fixture only',
++                    logical=logical, physical=physical, command=command, displayed=text), ensure_ascii=False))
++                assert logical_label + '\n  ' + (logical or unknown) + '\n' in text, \
++                    'completed external no-package preview omitted the recorded cwd'
++                if physical and physical != logical:
++                    assert physical_label + '\n  ' + physical + '\n' in text
++                else:
++                    assert physical_label not in text
++                assert 'human-readable:\n  ' + ' '.join(command) in text
++                assert 'editor-planned-command' not in text
++                assert observed == untouched
++                assert window.project.workspaceRoot == editor_cwd
++                assert window.project.pathSettings.workspace_root == editor_path_cwd
++                assert window.project_page.workspace_root.text() == editor_text
++                assert snapshot_fingerprint(window.capture_workspace()) == before
++        assert window.experiment.runner is window.runner
++        assert not window.runner.is_running()
++    finally:
++        set_application_language(app, previous_language)
++        window._bind_experiment_package(generated)
+ 
+ 
+ def main():
+@@ -91,6 +263,8 @@
+             assert snapshot_fingerprint(window.capture_workspace()) == before
+             assert not window._generated_package_stale
+             assert window.project_page.isEnabled()
++            check_execution_command_preview(window, results[-1], root)
++            check_external_completed_preview(window, results[-1], root)
+             count = len(results)
+             window._experiment_completed(results[-1])
+             assert len(results) == count
+--- a/gui/smoke_tests/smoke_k1_panel.py
++++ b/gui/smoke_tests/smoke_k1_panel.py
+@@ -16,6 +16,42 @@
+     ACTION_TEXT, ACTION_TOKENS, EXPORT_NOTE, LEVEL_TEXT, LEVEL_TOKENS,
+     STATUS_TEXT, ExperimentPanel,
+ )
++
++
++def check_producer_pending(panel, app):
++    """Use the real producer projection; this fixture owns no run or eligibility."""
++    from copy import deepcopy
++    from types import SimpleNamespace
++    from g4usim_gui.core.experiment_workflow import ExperimentWorkflow
++
++    previous_language = current_language()
++    try:
++        for level, status, freshness, busy in (
++                ('fields', 'passed', 'checking', False),
++                ('execution', 'pending', 'as_observed', True)):
++            records = [dict(record_id='pending-view-fixture', run_id='view-run', revision=7,
++                            level=level, status=status, stale=False)]
++            observation = SimpleNamespace(session=SimpleNamespace(revision=7),
++                busy=busy, _freshness=freshness, records=lambda: deepcopy(records))
++            payload = ExperimentWorkflow._state(observation)
++            assert payload['status'] == 'pending'
++            assert next(row for row in payload['levels'] if row['level'] == level)['status'] == 'pending'
++            original = deepcopy(payload)
++            for language, expected in (('en', 'In progress'), ('zh_CN', '进行中')):
++                set_application_language(app, language)
++                panel.set_state(payload)
++                panel.retranslate_ui()
++                assert panel._level_labels[level].text() == expected
++                assert expected in panel._summary_label.text()
++                assert panel._history_table.item(0, 1).text() == (
++                    ('Passed' if language == 'en' else '通过') if status == 'passed' else expected)
++                assert panel._level_labels['physics'].text() == (
++                    'Unobserved' if language == 'en' else '未观测')
++                assert payload == original
++    finally:
++        set_application_language(app, previous_language)
++        panel.set_state({})
++        panel.retranslate_ui()
+ 
+ 
+ def main() -> int:
+@@ -37,6 +73,8 @@
+         for level in LEVEL_TOKENS:
+             assert panel._level_names[level].text() == ui_text(LEVEL_TEXT[level])
+             assert panel._level_labels[level].text() == ui_text("Unverified")
++
++        check_producer_pending(panel, app)
+ 
+         spy = QSignalSpy(panel.action_requested)
+         for token in ACTION_TOKENS:

@@ -1,0 +1,29 @@
+{
+  "schema": "k1_actual_export_cli_replay_receipt_v1",
+  "head": "8213ced419c8c6bca512bf8413b674c1265cf3bf",
+  "process_exit_code": 0,
+  "command": "exported replay.py --executable current-frozen-backend --runs-root independent-output run",
+  "exported_entry": "visible/relocated-clean/revalidated-4343/replay.py",
+  "entry_sha256": "d6bea3d772050305bca3b9bfa4d3d0bc85cdbd3f5fdc621795ee3ef193b452ff",
+  "record_id": "76a62c88dd634f58bfbdbee50cf8681e",
+  "record_file": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-8213ced\\replay-cli\\runs\\experiment-records\\76a62c88dd634f58bfbdbee50cf8681e\\record.json",
+  "record_sha256": "006c27bac6ff1f4279ecb71c272d476e5521f9bbf0631dfef4402aeb1e17362f",
+  "stdout_log_sha256": "c09e40a204124fd06a839765278696c1b55c680a00b701d45b4f392e9ebd34a1",
+  "status": "passed",
+  "result": {
+    "completed_events": 3,
+    "planned_events": 3,
+    "reason": "Events completed as planned.",
+    "run_count": 1,
+    "state": "success",
+    "summary_status": "completed"
+  },
+  "actual_inputs_count": 4,
+  "actual_input_sha256": [
+    "94ded1656925fc3d0f41cedab18e3e8e5f7ffa2afebcb945e66d90134a3f7a30",
+    "d77923cdd8a0020c205b2287cfcbbe6e05b09d8e65359c33278a743c51361665",
+    "e6d77380889a38f16b6c2ad2f309bd33edb81060d29b30b3055b3f0b6e7e5a2e",
+    "94bb20a5221f8851fee38ca2ce990ec0bef841f8879c4b7327fc82c669dbba5a"
+  ],
+  "scope": "actual CLI replay of package previously exported via native GUI; not physical validation"
+}

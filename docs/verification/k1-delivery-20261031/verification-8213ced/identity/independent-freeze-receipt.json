@@ -1,0 +1,45 @@
+{
+  "schema": "k1_fourth_independent_freeze_identity_v1",
+  "recorded_utc": "2026-10-31T05:50:14.855111+00:00",
+  "status": "passed_freeze_identity_only",
+  "head": "8213ced419c8c6bca512bf8413b674c1265cf3bf",
+  "source_fingerprint": "890635b6d521659e43cf735d07f862c6ebd5959e6c5ea68d023d55332a8a930a",
+  "tests_content_fingerprint": "c964e2115782fbafd5df839b279405d120cb32d7fb7acb919791ef244dabd08f",
+  "case_counts": {
+    "static": 36,
+    "gui": 56,
+    "backend": 61,
+    "integration": 29
+  },
+  "checks": {
+    "head_matches_fourth": true,
+    "current_worktree_clean": true,
+    "build_clean": true,
+    "source_fingerprint_matches": true,
+    "tests_fingerprint_matches": true,
+    "profile_names_and_order_match": true,
+    "counts_182_36_56_61_29": true,
+    "gui_original_sha_match": true,
+    "actual_backend_sha_matches": true,
+    "actual_merge_sha_matches": true,
+    "working_directory_capability_true": true
+  },
+  "gui_files_checked": 138,
+  "gui_mismatches": [],
+  "build_identity": {
+    "backend_sha256": "6e02ce583aff7f711d3a280e7e60a267226f468e6c98170523ce3ef0be8ff8ed",
+    "merge_sha256": "a1a52b422238d1937ee56787b168d1d8dfc651a682ba2e85a7d448bb40ba993a",
+    "build_head": "8213ced419c8c6bca512bf8413b674c1265cf3bf",
+    "source_state": "clean",
+    "python_recorded": "D:\\Geant4\\G4UniversalSim\\gui\\.venv\\Scripts\\python.exe",
+    "compiler_discovery_recorded": "CXX unset; PATH prepended with D:/msys64/ucrt64/bin"
+  },
+  "formal_files_sha256": {
+    "frozen-case-manifest.json": "1c335cac77f7f9d6147c938497bc3492e63b0346252dc7f1f1baf598d0f27074",
+    "build-identity.json": "9bc6606451012677dd954786c56daad94c476e8744d7d7752da9df160a60d814",
+    "capabilities.json": "9f0c6bcd2de1f819ee60b6a843b61c2107e8607f84c209888adf125172058323"
+  },
+  "parent_original_windows_session": 6187,
+  "no_tests_or_process_window_operations": true,
+  "scope": "read_only_identity; formal Windows/CI/native acceptance pending"
+}

@@ -1,0 +1,139 @@
+{
+  "head": "4167c4421b13464dec54213ea7652ee321868c4e",
+  "scope": "local archive planning, not a remote policy check or push",
+  "bytes_before_final_metadata": 83777941,
+  "files_before_final_metadata": 1200,
+  "largest_files": [
+    {
+      "path": "ci/ci_official_zips/01-linux-evidence-11.3.2.zip",
+      "bytes": 26827155
+    },
+    {
+      "path": "ci/ci_official_zips/00-linux-evidence-11.4.3.zip",
+      "bytes": 26825893
+    },
+    {
+      "path": "identity/full-tracked-source-and-test-objects.json",
+      "bytes": 6008054
+    },
+    {
+      "path": "windows/case-originals.zip",
+      "bytes": 3393612
+    },
+    {
+      "path": "official-archives.json",
+      "bytes": 2009362
+    },
+    {
+      "path": "ci/ci_control_files/18-archive-member-verification.json",
+      "bytes": 1810356
+    },
+    {
+      "path": "selection.json",
+      "bytes": 1528788
+    },
+    {
+      "path": "visible/current-state.json",
+      "bytes": 597626
+    },
+    {
+      "path": "review/final/windows-k1-sixth-windows-review-audit.json",
+      "bytes": 469414
+    },
+    {
+      "path": "review/sixth/k1-sixth-windows-review-audit.json",
+      "bytes": 469414
+    },
+    {
+      "path": "ci/ci_official_zips/02-m0-report-windows-latest.zip",
+      "bytes": 456731
+    },
+    {
+      "path": "source-trees.json",
+      "bytes": 455742
+    },
+    {
+      "path": "ci/ci_official_zips/03-m0-report-ubuntu-latest.zip",
+      "bytes": 405618
+    },
+    {
+      "path": "visible/actions.jsonl",
+      "bytes": 298673
+    },
+    {
+      "path": "ci/ci_control_files/09-independent-profiles.json",
+      "bytes": 222175
+    },
+    {
+      "path": "ci/ci_gates/01-independent-profiles.json",
+      "bytes": 222175
+    },
+    {
+      "path": "visible/external-runs/experiment-records/3e6d0c7c91d943dda67d8cf6c2ee6b95/record.json",
+      "bytes": 201133
+    },
+    {
+      "path": "review/coverage-map.json",
+      "bytes": 198423
+    },
+    {
+      "path": "review/final/review_coverage-k1-review-coverage-map.json",
+      "bytes": 198423
+    },
+    {
+      "path": "visible/relocated-clean/revalidated-sixth-4343/validation_records.json",
+      "bytes": 174139
+    },
+    {
+      "path": "visible/11-project-saved.jpg",
+      "bytes": 161976
+    },
+    {
+      "path": "visible-external/05-completed-actual.jpg",
+      "bytes": 159252
+    },
+    {
+      "path": "visible-external/fixture-inputs/packages/experiment-records/5a69e6de81624882b9d3560c20611599/output/effective_config_finalization.json",
+      "bytes": 156896
+    },
+    {
+      "path": "visible/fixture-inputs/packages/experiment-records/957da62967d84033b90ddc942f43c991/20261031_151946_k1-visible/output/effective_config_finalization.json",
+      "bytes": 155698
+    },
+    {
+      "path": "visible/09-external-comparison-pass.jpg",
+      "bytes": 154885
+    },
+    {
+      "path": "visible/10-reexport-complete.jpg",
+      "bytes": 154846
+    },
+    {
+      "path": "visible/external-runs/experiment-records/4580680808784da59c690e8491568acb/20261031_152238_k1-visible/output/effective_config_finalization.json",
+      "bytes": 154792
+    },
+    {
+      "path": "replay-cli/runs/experiment-records/be4a8c5b6ac64c5195212073234f4d3f/output/effective_config_finalization.json",
+      "bytes": 154760
+    },
+    {
+      "path": "visible/08-external-run-complete.jpg",
+      "bytes": 154719
+    },
+    {
+      "path": "visible/05-generated-run-complete.jpg",
+      "bytes": 153995
+    }
+  ],
+  "planning_thresholds_bytes": {
+    "large_file_attention": 52428800,
+    "single_file_block_assumption": 104857600
+  },
+  "thresholds_are_local_assumptions_not_live_verified_hosting_policy": true,
+  "files_over_50MiB": [],
+  "files_over_100MiB": [],
+  "ordinary_push_under_100MiB_file_assumption": true,
+  "official_zip_policy": "original bytes unchanged, including their existing embedded EXE",
+  "if_large": "parent chooses external artifact storage or approved large-file mechanism; do not silently omit or split official ZIP",
+  "network_push_or_remote_probe_performed": false
+}

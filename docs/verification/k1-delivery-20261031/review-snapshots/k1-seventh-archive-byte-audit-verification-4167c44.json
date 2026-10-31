@@ -1,0 +1,37 @@
+{
+  "schema": "k1_seventh_delivery_byte_only_independent_audit_v1",
+  "recorded_utc": "2026-10-31T10:14:50.525441+00:00",
+  "archive": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-delivery-staging\\verification-4167c44",
+  "status": "failed",
+  "checks": {
+    "selection_count": true,
+    "source_bytes_count": false,
+    "archive_manifest_digest": true,
+    "final_index_digest": true,
+    "phase_still_incomplete": true,
+    "all_bytes_match": false,
+    "sixth_native_original_334_files_unchanged": true
+  },
+  "source_entries": 3122,
+  "source_bytes": 97084175,
+  "indexed_files": 1202,
+  "generated_files": 13,
+  "issues": [
+    {
+      "kind": "source-copy",
+      "row": {
+        "source": "out/collab/k1-sixth-checkpoint.md",
+        "destination": "review/sixth/k1-sixth-checkpoint.md",
+        "storage": "file",
+        "sha256_raw": "ee7d1a3ac65ce05efe6fb7e7609ee8be5b0abcca337768b2d594b5b4d954e088",
+        "bytes": 12789
+      }
+    }
+  ],
+  "frozen_verification_outcome": "failed",
+  "phase_complete": false,
+  "report_facts_count": 13,
+  "manifest_sha256": "7dce58d7afb9a52e38dfc476b0cfc3c67cfd7c9b7958e46a94a268b98e95aa12",
+  "scope": "source vs copied file/member raw bytes, index and counts only; no product tests, UI or resource-boundary review",
+  "native_original_files_unchanged": 334
+}

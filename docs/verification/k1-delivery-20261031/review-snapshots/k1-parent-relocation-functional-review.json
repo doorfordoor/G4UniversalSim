@@ -1,0 +1,43 @@
+{
+  "reviewer": "parent, independent of Franklin implementation",
+  "timestamp": "2026-10-31T05:42:55.460607+00:00",
+  "product_sha256": "5c1dff0338e80a673ba8f3427aeb7bfe1abe9d2b5315efca564310be8118385a",
+  "scope": "functional raw-draft relocation and normal export path identity only",
+  "decision": "accept functional candidate for frozen testing; not final project signoff",
+  "code_review": [
+    "Only four actual path bindings change on loading; unmatched, absent, whitespace-only and invalid drafts stay intact",
+    "original mapping captured before typed paths relocate; whitespace sliced and retained; same existing codec and F5 ownership",
+    "canonical staging comparison retains existing link guard before resolving; no new process/transaction/cleanup control"
+  ],
+  "evidence": [
+    "revision3-validation-receipt.json: candidate backend161 and real8.3 alias13",
+    "candidate native pinned34 raw-draft same bytes: actual export/copy11files/import/initialization/run3/3 after originals unavailable/save/normal exit0",
+    "new portable staging test reviewed completely; controlled filesystem spelling clearly distinguished from real8.3 and static link refusal",
+    "new MainWindow relocation test reviewed: genuine actions/F5history/save/reopen, mocked dialogs only, original sources hidden, invalid drafts remain failed"
+  ],
+  "limits": [
+    "Native development host pinned34; final5c frozen native acceptance remains required",
+    "Upstream-refused late-reparse independent review was not repeated; no security signoff or P1 closure claimed",
+    "Full frozen matrix remains pending"
+  ],
+  "final_new_test_manifest": [
+    {
+      "target": "gui/smoke_tests/smoke_k1_relocation.py",
+      "candidate_sha256": "4fddfec77f40d00e0f052b147386aaf3d3adddd305bc656fe57f480fdf0732ad",
+      "base_sha256": null,
+      "role": "new_test_final"
+    },
+    {
+      "target": "scripts/test_k1_staging_alias.py",
+      "candidate_sha256": "0e33fc7c8990cfe9d5aed535561420f7c34e38b225872ce33056a179f9672d8d",
+      "base_sha256": null,
+      "role": "new_test_final"
+    }
+  ],
+  "final_test_log_hashes_verified": true,
+  "new_test_registration": {
+    "k1_staging_alias": "static",
+    "gui_k1_relocation": "gui",
+    "k1_relocation_backend": "integration"
+  }
+}

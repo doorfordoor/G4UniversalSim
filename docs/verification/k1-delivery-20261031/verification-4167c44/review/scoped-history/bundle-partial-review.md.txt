@@ -1,0 +1,18 @@
+# K1 bundle 独立复审（进行中）
+
+范围：只读产品/正式测试；仅写 out/collab/k1-bundle-independent*；不提交。HEAD ccb813a8540b83d5015daabebd5047929a16af2c。作者并行收尾，最终以逐轮源码 SHA 为审查对象，不能以 HEAD 代表未跟踪实现。
+
+已读根/gui AGENTS、K1 execution、bundle delivery、F5/E6 对应历史条目；已核对 identity 的 collect_bundle_resources 调用。
+
+独立脚本：out/collab/k1-bundle-independent-probe.py；第一轮结果：out/collab/k1-bundle-independent-r1/result.json。r1 产品 bundle/identity/writer SHA 起止相同，正式 test_k1_bundle.py 起止不同，故不作为冻结验收。
+
+已实际复现，待最终定位整理：
+- load_bundle 在完整性检查后重新读 workspace.json，接受未更新 manifest 的 seed 改动；fresh inspect 明确 hash/size mismatch。
+- inspect_bundle 在逐成员哈希后重新读 validation_records.json，接受未更新 manifest 的 failed→pass 改动；历史仍 stale，并未复现冒充当前验证。
+- macro 注释中的合成 token= 哨兵进入导出资源。
+- manifest 增加 resources/ 以外 backend.exe（仅 MZ+假字节，不执行）及其 SHA 后 inspect 接受，未做角色/资源闭包拒绝。
+- 标准 parser→GeometryDocument→snapshot 带 copies_file 时，snapshot 两个几何投影共用 preview_properties 字典，递归重定位第二次将 resources/rNNNN-copies.csv 当作源相对路径而 FileNotFoundError；identity 与 generated export 都受影响。r1 记录为 PROBE_ERROR，后续独立用例将作为实际缺陷单独断言。
+
+正向/防护对照：嵌套两层宏含绝对+相对路径，搬到中文根、原根改名后真实后端完成；历史 stale；未登记文件拒绝；Windows 发布前竞争目标与 sentinel 保留；缺失材料拒绝。
+
+下一步：修正独立夹具 hierarchical world 缺 shape 的错误（非产品问题）；隔离上述双遍历缺陷后验证 generated 再 package；追加 GDML/链接/路径及当前源码稳定复验，最终给 P1/P2 file:line 与实测/静态边界。正式矩阵未开始，本审查不宣称阶段验收。

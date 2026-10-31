@@ -1,0 +1,13 @@
+# 第六实窗覆盖勘误与追加观察
+
+原visible/observations.md与targeted-receipt.json把4580680808784da59c690e8491568acb称为external是父任务的归属错误。Dalton独审通过原record的package及project_snapshot发现该运行仍为generated。目录名称external-runs并非运行模式证据。原报告、9动作、11图、原SHA保留，不追改；两次真实3/3、搬移/陈旧/重新验证/导出事实成立，原文件中的external/no-package表述以本勘误为准。
+
+另开同一冻结、同一后端、无module override的visible-external原生宿主。父通过Sky实际在项目页展开运行来源、选择“使用外部文件”，填入第六GUI导出包的实际main/macro、包根工作目录、独立输出目录，CtrlS保存。01与02图直接观察模式和路径；保存JSON明确runInputMode=external。进入运行台点击运行，03事件层进行中，其余未观测；04真实完成3/3，本次预览对应5a69e6de81624882b9d3560c20611599的实际argv及cwd。
+
+原record无package键，独立project_snapshot与保存项目绑定external；四项F1实际输入、完整当轮摘要及输出均保留。只有事件层通过，其他三层未观测，没有追加物理验证。两次实际cwd相同，direct启动；未宣称新覆盖short-ancestor。正常Alt+F4，父session74497自然exit0，launcher完成07:42:33.352916UTC。
+
+visible-external/supplement-receipt.json逐SHA绑定一条新record、四图及原身份。补证由父编制，独立followup另存；不自动关闭K1。中文“状态：未运行”是当前进程NotRunning的既有措辞，与事件结果不同；P3文案歧义保留为后续界面改进，不用它代替运行证据。
+
+追加事实修正：上文‘独立project_snapshot’用于新external记录的措辞不成立。external不生成project_snapshot.json；父第一次补证脚本因此FileNotFoundError，在receipt写出前停止，无重新运行。模式依据是实际UI选择、CtrlS保存的fixture-inputs/experiment.json中external，以及原record无package的实际分支；最终supplement-receipt.json明确generated_project_snapshot_exists=false，不以不存在文件作为证据。
+
+截图归档补充勘误：visible-external 的保存函数闭包捕获了早先状态，01..04原图及txt实际均是最初‘使用外部文件’但路径尚未填写的画面。02/03/04文件名描述错误，不能作为路径完成/pending/completed的截图证据，全部原件保留。父第二次收据生成因此StopIteration，仍未写收据。真正完成画面已在工具返回中直接观察，且仍保留在node当前状态；随后直接引用当前状态保存为05-completed-actual.jpg/txt（不重新截图、不重跑、不改原件）。最终supplement-receipt.json已实际生成并区分两张有效不同画面与三张错误标签重复图；完成依据以05及原record/输入/summary为准。原visible的11图各自不同且未受此保存闭包问题影响。

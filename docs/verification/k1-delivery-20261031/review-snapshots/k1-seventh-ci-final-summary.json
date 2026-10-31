@@ -1,0 +1,78 @@
+{
+  "schema": "k1_seventh_ci_final_handoff_v1",
+  "head": "2914b3962167325628ede699b1c14a9d224dec41",
+  "runs": [
+    {
+      "label": "linux",
+      "id": 41189260366,
+      "url": "https://github.com/doorfordoor/G4UniversalSim/actions/runs/41189260366",
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 124502461038,
+          "name": "ubuntu-24.04 / Geant4 11.4.3",
+          "conclusion": "success"
+        },
+        {
+          "id": 124502461137,
+          "name": "ubuntu-24.04 / Geant4 11.3.2",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "label": "m0",
+      "id": 41189260331,
+      "url": "https://github.com/doorfordoor/G4UniversalSim/actions/runs/41189260331",
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 124502460896,
+          "name": "windows-latest / Python 3.11",
+          "conclusion": "success"
+        },
+        {
+          "id": 124502461095,
+          "name": "ubuntu-latest / Python 3.11",
+          "conclusion": "success"
+        }
+      ]
+    }
+  ],
+  "report_count": 12,
+  "case_executions": 548,
+  "counts": {
+    "pass": 548,
+    "fail": 0,
+    "skip": 0
+  },
+  "assertions": 133720,
+  "official_zips": 4,
+  "zip_members": 5277,
+  "sealed_report_log_identity_checks": 560,
+  "strict_F5_profiles_passed": 12,
+  "CI_review": "out/verification/k1-2914b39/ci/REVIEW.md",
+  "CI_receipt": "out/verification/k1-2914b39/ci/review-result.json",
+  "CI_final_byte_manifest": "out/verification/k1-2914b39/ci/evidence-manifest-r2.json",
+  "CI_final_byte_manifest_sha256": "697c4a0870620acca1b9106929ea983ae8ef50ad95c0cbcf0964a25e9e4083fb",
+  "manifest_correction": "Only auxiliary finalize-driver.log had been pinned before its last stdout flush; original manifest preserved, r2 pins completed files. No official ZIP/report/case log change.",
+  "M0_windows_case": {
+    "name": "gui_k1_window",
+    "status": "pass",
+    "exit_code": 0,
+    "assertions": 178
+  },
+  "sixth_archive": "out/collab/k1-delivery-staging/verification-4167c44",
+  "sixth_archive_source_entries": 3122,
+  "sixth_archive_outcome": "failed",
+  "needed_root_files": [
+    "out/collab/k1-seventh-windows-review-audit.json",
+    "out/collab/k1-seventh-windows-review-gates.json"
+  ],
+  "seventh_archive_builder": "out/collab/k1-resume-archive-seventh.py",
+  "native_mapping": "out/collab/k1-seventh-native-identity-mapping.json",
+  "I1_mapping": "out/collab/k1-resume-i1-seventh-mapping.json",
+  "source_and_test_writes": false,
+  "tests_rerun": false,
+  "phase_complete": false
+}

@@ -1,0 +1,422 @@
+{
+  "schema": "k1_final_ui_independent_v2",
+  "base_head": "f9a9ddbfcabe69067707a5a209caff005748f510",
+  "judgement": "approved_within_six_file_UI_scope_pending_formal_integration",
+  "findings": [],
+  "closed_v1_finding": "UI-CWD-EXTERNAL-P2",
+  "independent_from_parent_review": true,
+  "parent_review_read_or_relied_on": false,
+  "author_conflict": false,
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "medium",
+  "consumption": "unknown",
+  "completed_utc": "2026-10-31T06:58:28.188195+00:00",
+  "manifest_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\manifest.json",
+  "manifest_sha256": "f2dcc728777bbc800f1b526430770827ea1640e6622812d20ca28f6b060a9178",
+  "patch_sha256": "d2c21b5910b531ac205d42a9138bd27b98e4e9c8764978871f7cb766d9b75f33",
+  "v1_to_v2_patch_sha256": "b9c8baa09e30e6064f965439348abcd403855e34f78741ca29845395ea2124a1",
+  "files": [
+    {
+      "path": "gui/g4usim_gui/window/run.py",
+      "role": "product",
+      "base_sha256": "67043150fdf3661ceda82be112c481ef252c8f7bb75ce6b47b5153ddd1442a29",
+      "v1_sha256": "3af4daefa4c0818fba9879acffe14e15ece2c8b908d2b26b0526e9fa7e873d56",
+      "candidate_sha256": "3af4daefa4c0818fba9879acffe14e15ece2c8b908d2b26b0526e9fa7e873d56",
+      "changed_since_v1": false,
+      "candidate_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\files\\gui\\g4usim_gui\\window\\run.py"
+    },
+    {
+      "path": "gui/g4usim_gui/window/experiment.py",
+      "role": "product",
+      "base_sha256": "bfe38e02552f831027d59480331e3805c16955b69cbccdb5a94c26963a005d46",
+      "v1_sha256": "2cb03d1ad4d83fb5ae0608ddb79e82976e1df0c742aabdd1819e0766de224258",
+      "candidate_sha256": "0ff241b88dfa03dc24743a9a10145db681e542006c00f4c8e55d53f3f9252d8f",
+      "changed_since_v1": true,
+      "candidate_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\files\\gui\\g4usim_gui\\window\\experiment.py"
+    },
+    {
+      "path": "gui/g4usim_gui/widgets/experiment_panel.py",
+      "role": "product",
+      "base_sha256": "741adb59951cbf8adc9428eca4703612efafa737396dc5025d350c8ad53bbfd1",
+      "v1_sha256": "01f91f3db0081536110e2acc9958ec76783af485dbbc1f378ec52231f94133f3",
+      "candidate_sha256": "01f91f3db0081536110e2acc9958ec76783af485dbbc1f378ec52231f94133f3",
+      "changed_since_v1": false,
+      "candidate_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\files\\gui\\g4usim_gui\\widgets\\experiment_panel.py"
+    },
+    {
+      "path": "gui/g4usim_gui/core/i18n.py",
+      "role": "product",
+      "base_sha256": "5bbc3d1057741844cd76903bb4f36a83f85eff8bd4307fb946512c09b5efc60c",
+      "v1_sha256": "002de76b33480160415c3c4b2fb9e38455b2ce94b1aedacfcd83121387ecdf0a",
+      "candidate_sha256": "002de76b33480160415c3c4b2fb9e38455b2ce94b1aedacfcd83121387ecdf0a",
+      "changed_since_v1": false,
+      "candidate_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\files\\gui\\g4usim_gui\\core\\i18n.py"
+    },
+    {
+      "path": "gui/smoke_tests/smoke_k1_workflow.py",
+      "role": "regression",
+      "base_sha256": "fa387c6b551e06331cb3203d4d8f748ee3852939aefc573d5f2c527ae08c7524",
+      "v1_sha256": "05ff02dae6a38375ecb5e39f3f79a33a80cef29318fa003f41aec4c94f3f5968",
+      "candidate_sha256": "8eac62b07e0c1fc9411037eafe2ea066165a954af4b0557cf013abbb9e1faffc",
+      "changed_since_v1": true,
+      "candidate_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\files\\gui\\smoke_tests\\smoke_k1_workflow.py"
+    },
+    {
+      "path": "gui/smoke_tests/smoke_k1_panel.py",
+      "role": "regression",
+      "base_sha256": "4e90b351f3d934cc07abf2f519d9dd1476117b0e3c28714c1b93426632673c7a",
+      "v1_sha256": "658fcb292ca0b2ab60b8ef73bd3a4d285593c13824076850e4bd8cfbef8d38a0",
+      "candidate_sha256": "658fcb292ca0b2ab60b8ef73bd3a4d285593c13824076850e4bd8cfbef8d38a0",
+      "changed_since_v1": false,
+      "candidate_path": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\files\\gui\\smoke_tests\\smoke_k1_panel.py"
+    }
+  ],
+  "changed_since_v1": [
+    "gui/g4usim_gui/window/experiment.py",
+    "gui/smoke_tests/smoke_k1_workflow.py"
+  ],
+  "v1_39_files_unchanged": true,
+  "historical_v1_review_unchanged": {
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-independent.json": "b3be1fe86b0478a5fd1e7fb49dc01b887358d9bae769bc3104901696267ef1d6",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-independent.md": "7dbd8e1d667f0ca723250547e1f622d3838fde75a4c4d0e2f0f991522e3db185"
+  },
+  "assert_AST": [
+    {
+      "path": "gui/smoke_tests/smoke_k1_workflow.py",
+      "baseline": 39,
+      "v1": 57,
+      "v2": 74,
+      "complete_AST_with_messages_retained": true
+    },
+    {
+      "path": "gui/smoke_tests/smoke_k1_panel.py",
+      "baseline": 67,
+      "v1": 74,
+      "v2": 74,
+      "complete_AST_with_messages_retained": true
+    }
+  ],
+  "author_raw_receipts_verified": [
+    {
+      "receipt": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\candidate-results.json",
+      "case": "smoke_k1_workflow",
+      "exit_code": 0,
+      "assert_markers": [
+        178
+      ],
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\smoke_k1_workflow.log",
+      "log_sha256": "dbcdd185e395972b1b5b630aa544bbf0075edc110adf85a0cbf154a12908222a"
+    },
+    {
+      "receipt": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\candidate-results.json",
+      "case": "smoke_k1_panel",
+      "exit_code": 0,
+      "assert_markers": [
+        1629
+      ],
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\smoke_k1_panel.log",
+      "log_sha256": "9cde1de329b0e3ee0ec9b36b137223d7a4550680315a17ada2ef2314519bcc96"
+    },
+    {
+      "receipt": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\candidate-results.json",
+      "case": "actual-completed-cwd",
+      "exit_code": 0,
+      "assert_markers": [
+        3
+      ],
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\actual-completed-cwd.log",
+      "log_sha256": "397c815df417c76bc613e7a23eaa4426149a2190ed25897f186245cb58a3753c"
+    },
+    {
+      "receipt": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\candidate-results.json",
+      "case": "producer-pending",
+      "exit_code": 0,
+      "assert_markers": [
+        2
+      ],
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\producer-pending.log",
+      "log_sha256": "41a0ba46e0b60ddcf0dba5cdc864ea78c2ca91c8549e677cc921d3971fb35ac7"
+    },
+    {
+      "receipt": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\v1-negative-external-r2.json",
+      "case": "v2 external regression against immutable v1 products",
+      "exit_code": 1,
+      "assert_markers": [
+        68
+      ],
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\v1-negative-external-r2.log",
+      "log_sha256": "4a9f4354427b474a741e7f00caaa35859bad0bbdde8271d78c7cfff80addfc8e"
+    },
+    {
+      "receipt": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\v1-negative-external.json",
+      "case": "v2 external regression against immutable v1 products",
+      "exit_code": 1,
+      "assert_markers": [
+        62
+      ],
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\v1-negative-external.log",
+      "log_sha256": "2c51081d3b28a9e13df5a8f3f60dc847da0ff819f6c0f5be5717c59078013a08"
+    }
+  ],
+  "external_completion_observations": [
+    {
+      "variant": 0,
+      "language": "en",
+      "package_present": false,
+      "producer": "ExperimentWorkflow._prepare external run; environment fixture only",
+      "logical": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs",
+      "physical": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "--config",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0000-r0002-main.ini",
+        "--macro",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0003-r0005-run.mac",
+        "--output",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\output",
+        "--threads",
+        "2",
+        "--seed",
+        "12345",
+        "--run-name",
+        "single_target"
+      ],
+      "displayed": "program:\n  C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe\narguments:\n  --config\n  C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0000-r0002-main.ini\n  --macro\n  C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0003-r0005-run.mac\n  --output\n  C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\output\n  --threads\n  2\n  --seed\n  12345\n  --run-name\n  single_target\nLogical working directory:\n  C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\n\nhuman-readable:\n  C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe --config C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0000-r0002-main.ini --macro C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0003-r0005-run.mac --output C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\output --threads 2 --seed 12345 --run-name single_target"
+    },
+    {
+      "variant": 0,
+      "language": "zh_CN",
+      "package_present": false,
+      "producer": "ExperimentWorkflow._prepare external run; environment fixture only",
+      "logical": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs",
+      "physical": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "--config",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0000-r0002-main.ini",
+        "--macro",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0003-r0005-run.mac",
+        "--output",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\output",
+        "--threads",
+        "2",
+        "--seed",
+        "12345",
+        "--run-name",
+        "single_target"
+      ],
+      "displayed": "program:\n  C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe\narguments:\n  --config\n  C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0000-r0002-main.ini\n  --macro\n  C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0003-r0005-run.mac\n  --output\n  C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\output\n  --threads\n  2\n  --seed\n  12345\n  --run-name\n  single_target\n逻辑工作目录：\n  C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\n\nhuman-readable:\n  C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe --config C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0000-r0002-main.ini --macro C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0003-r0005-run.mac --output C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\output --threads 2 --seed 12345 --run-name single_target"
+    },
+    {
+      "variant": 1,
+      "language": "en",
+      "package_present": false,
+      "producer": "ExperimentWorkflow._prepare external run; environment fixture only",
+      "logical": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-deep\\external-logical-中文😀-segment\\external-logical-中文😀-segment\\external-logical-中文😀-segment\\external-logical-中文😀-segment\\external-logical-中文😀-segment",
+      "physical": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-deep\\external-logical-中文😀-segment\\external-logical-中文😀-segment\\external-logical-中文😀-segment",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "--working-directory",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-deep\\external-logical-中文😀-segment\\external-logical-中文😀-segment\\external-logical-中文😀-segment\\external-logical-中文😀-segment\\external-logical-中文😀-segment",
+        "--config",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0000-r0002-main.ini",
+        "--macro",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0003-r0005-run.mac",
+        "--output",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\output",
+        "--threads",
+        "2",
+        "--seed",
+        "12345",
+        "--run-name",
+        "single_target"
+      ],
+      "displayed": "program:\n  C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe\narguments:\n  --working-directory\n  C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-deep\\external-logical-中文😀-segment\\external-logical-中文😀-segment\\external-logical-中文😀-segment\\external-logical-中文😀-segment\\external-logical-中文😀-segment\n  --config\n  C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0000-r0002-main.ini\n  --macro\n  C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0003-r0005-run.mac\n  --output\n  C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\output\n  --threads\n  2\n  --seed\n  12345\n  --run-name\n  single_target\nLogical working directory:\n  C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-deep\\external-logical-中文😀-segment\\external-logical-中文😀-segment\\external-logical-中文😀-segment\\external-logical-中文😀-segment\\external-logical-中文😀-segment\nProcess launch directory:\n  C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-deep\\external-logical-中文😀-segment\\external-logical-中文😀-segment\\external-logical-中文😀-segment\n\nhuman-readable:\n  C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe --working-directory C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-deep\\external-logical-中文😀-segment\\external-logical-中文😀-segment\\external-logical-中文😀-segment\\external-logical-中文😀-segment\\external-logical-中文😀-segment --config C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0000-r0002-main.ini --macro C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0003-r0005-run.mac --output C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\output --threads 2 --seed 12345 --run-name single_target"
+    },
+    {
+      "variant": 1,
+      "language": "zh_CN",
+      "package_present": false,
+      "producer": "ExperimentWorkflow._prepare external run; environment fixture only",
+      "logical": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-deep\\external-logical-中文😀-segment\\external-logical-中文😀-segment\\external-logical-中文😀-segment\\external-logical-中文😀-segment\\external-logical-中文😀-segment",
+      "physical": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-deep\\external-logical-中文😀-segment\\external-logical-中文😀-segment\\external-logical-中文😀-segment",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "--working-directory",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-deep\\external-logical-中文😀-segment\\external-logical-中文😀-segment\\external-logical-中文😀-segment\\external-logical-中文😀-segment\\external-logical-中文😀-segment",
+        "--config",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0000-r0002-main.ini",
+        "--macro",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0003-r0005-run.mac",
+        "--output",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\output",
+        "--threads",
+        "2",
+        "--seed",
+        "12345",
+        "--run-name",
+        "single_target"
+      ],
+      "displayed": "program:\n  C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe\narguments:\n  --working-directory\n  C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-deep\\external-logical-中文😀-segment\\external-logical-中文😀-segment\\external-logical-中文😀-segment\\external-logical-中文😀-segment\\external-logical-中文😀-segment\n  --config\n  C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0000-r0002-main.ini\n  --macro\n  C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0003-r0005-run.mac\n  --output\n  C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\output\n  --threads\n  2\n  --seed\n  12345\n  --run-name\n  single_target\n逻辑工作目录：\n  C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-deep\\external-logical-中文😀-segment\\external-logical-中文😀-segment\\external-logical-中文😀-segment\\external-logical-中文😀-segment\\external-logical-中文😀-segment\n进程启动目录：\n  C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-deep\\external-logical-中文😀-segment\\external-logical-中文😀-segment\\external-logical-中文😀-segment\n\nhuman-readable:\n  C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe --working-directory C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-deep\\external-logical-中文😀-segment\\external-logical-中文😀-segment\\external-logical-中文😀-segment\\external-logical-中文😀-segment\\external-logical-中文😀-segment --config C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0000-r0002-main.ini --macro C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0003-r0005-run.mac --output C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\output --threads 2 --seed 12345 --run-name single_target"
+    },
+    {
+      "variant": 2,
+      "language": "en",
+      "package_present": false,
+      "producer": "ExperimentWorkflow._prepare external run; environment fixture only",
+      "logical": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs",
+      "physical": null,
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "--config",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0000-r0002-main.ini",
+        "--macro",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0003-r0005-run.mac",
+        "--output",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\output",
+        "--threads",
+        "2",
+        "--seed",
+        "12345",
+        "--run-name",
+        "single_target"
+      ],
+      "displayed": "program:\n  C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe\narguments:\n  --config\n  C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0000-r0002-main.ini\n  --macro\n  C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0003-r0005-run.mac\n  --output\n  C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\output\n  --threads\n  2\n  --seed\n  12345\n  --run-name\n  single_target\nLogical working directory:\n  C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\n\nhuman-readable:\n  C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe --config C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0000-r0002-main.ini --macro C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0003-r0005-run.mac --output C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\output --threads 2 --seed 12345 --run-name single_target"
+    },
+    {
+      "variant": 2,
+      "language": "zh_CN",
+      "package_present": false,
+      "producer": "ExperimentWorkflow._prepare external run; environment fixture only",
+      "logical": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs",
+      "physical": null,
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "--config",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0000-r0002-main.ini",
+        "--macro",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0003-r0005-run.mac",
+        "--output",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\output",
+        "--threads",
+        "2",
+        "--seed",
+        "12345",
+        "--run-name",
+        "single_target"
+      ],
+      "displayed": "program:\n  C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe\narguments:\n  --config\n  C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0000-r0002-main.ini\n  --macro\n  C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0003-r0005-run.mac\n  --output\n  C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\output\n  --threads\n  2\n  --seed\n  12345\n  --run-name\n  single_target\n逻辑工作目录：\n  C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\n\nhuman-readable:\n  C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe --config C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0000-r0002-main.ini --macro C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0003-r0005-run.mac --output C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\output --threads 2 --seed 12345 --run-name single_target"
+    },
+    {
+      "variant": 3,
+      "language": "en",
+      "package_present": false,
+      "producer": "ExperimentWorkflow._prepare external run; environment fixture only",
+      "logical": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs",
+      "physical": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "--config",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0000-r0002-main.ini",
+        "--macro",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0003-r0005-run.mac",
+        "--output",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\output",
+        "--threads",
+        "2",
+        "--seed",
+        "12345",
+        "--run-name",
+        "single_target"
+      ],
+      "displayed": "program:\n  C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe\narguments:\n  --config\n  C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0000-r0002-main.ini\n  --macro\n  C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0003-r0005-run.mac\n  --output\n  C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\output\n  --threads\n  2\n  --seed\n  12345\n  --run-name\n  single_target\nLogical working directory:\n  C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\n\nhuman-readable:\n  C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe --config C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0000-r0002-main.ini --macro C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0003-r0005-run.mac --output C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\output --threads 2 --seed 12345 --run-name single_target"
+    },
+    {
+      "variant": 3,
+      "language": "zh_CN",
+      "package_present": false,
+      "producer": "ExperimentWorkflow._prepare external run; environment fixture only",
+      "logical": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs",
+      "physical": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "--config",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0000-r0002-main.ini",
+        "--macro",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0003-r0005-run.mac",
+        "--output",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\output",
+        "--threads",
+        "2",
+        "--seed",
+        "12345",
+        "--run-name",
+        "single_target"
+      ],
+      "displayed": "program:\n  C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe\narguments:\n  --config\n  C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0000-r0002-main.ini\n  --macro\n  C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0003-r0005-run.mac\n  --output\n  C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\output\n  --threads\n  2\n  --seed\n  12345\n  --run-name\n  single_target\n逻辑工作目录：\n  C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\n\nhuman-readable:\n  C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe --config C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0000-r0002-main.ini --macro C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0003-r0005-run.mac --output C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\output --threads 2 --seed 12345 --run-name single_target"
+    },
+    {
+      "variant": 4,
+      "language": "en",
+      "package_present": false,
+      "producer": "ExperimentWorkflow._prepare external run; environment fixture only",
+      "logical": null,
+      "physical": null,
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "--config",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0000-r0002-main.ini",
+        "--macro",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0003-r0005-run.mac",
+        "--output",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\output",
+        "--threads",
+        "2",
+        "--seed",
+        "12345",
+        "--run-name",
+        "single_target"
+      ],
+      "displayed": "program:\n  C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe\narguments:\n  --config\n  C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0000-r0002-main.ini\n  --macro\n  C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0003-r0005-run.mac\n  --output\n  C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\output\n  --threads\n  2\n  --seed\n  12345\n  --run-name\n  single_target\nLogical working directory:\n  Unknown\n\nhuman-readable:\n  C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe --config C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0000-r0002-main.ini --macro C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0003-r0005-run.mac --output C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\output --threads 2 --seed 12345 --run-name single_target"
+    },
+    {
+      "variant": 4,
+      "language": "zh_CN",
+      "package_present": false,
+      "producer": "ExperimentWorkflow._prepare external run; environment fixture only",
+      "logical": null,
+      "physical": null,
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "--config",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0000-r0002-main.ini",
+        "--macro",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0003-r0005-run.mac",
+        "--output",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\output",
+        "--threads",
+        "2",
+        "--seed",
+        "12345",
+        "--run-name",
+        "single_target"
+      ],
+      "displayed": "program:\n  C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe\narguments:\n  --config\n  C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0000-r0002-main.ini\n  --macro\n  C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0003-r0005-run.mac\n  --output\n  C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\output\n  --threads\n  2\n  --seed\n  12345\n  --run-name\n  single_target\n逻辑工作目录：\n  未知\n\nhuman-readable:\n  C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe --config C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0000-r0002-main.ini --macro C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\execution-inputs\\resources\\r0003-r0005-run.mac --output C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-final-ui-candidate-v2\\tmp\\k1-gui-7knlcjmy\\external-preview-preparation\\output --threads 2 --seed 12345 --run-name single_target"
+    }
+  ],
+  "code_review": [
+    "Command projection now occurs before external no-package return and after generated path binding; no second process or transaction owner.",
+    "Valid actual launch program/string arguments take priority independent of record.command existence; invalid/missing launch uses compatible record.command display, not an observed-process claim.",
+    "Logical cwd uses launch.working_directory then execution_bundle.path then localized Unknown; physical launch cwd shown separately only when different. No editor fallback for completed records.",
+    "Original pre-dispatch formatter list and human-readable legacy behavior preserved, not a shell quoting guarantee.",
+    "External regression calls real _prepare external branch on a private F5 snapshot with four fixture drafts aligned, patches readiness only, never launches backend; real completed callback drives all five record variants in two languages.",
+    "Immutable v1 plus same corrected fixture fails exact cwd assert after preparation, marker68. First mismatched draft fixture fails can_run and is explicitly not counted as target negative.",
+    "Existing generated direct/restore/unknown checks, original AST39/67 and v1 AST57/74 retained; v2 workflow74 assert nodes, v3 entry178; pending producer checks remain unchanged and valid."
+  ],
+  "new_tests_or_matrices_executed": false,
+  "native_UI_or_backend_operated": false,
+  "source_or_candidate_files_modified": false,
+  "resource_boundary_review": false,
+  "stage_acceptance": "not_decided",
+  "sixth_frozen_matrix_and_native_acceptance": "pending_parent"
+}

@@ -1,0 +1,53 @@
+{
+  "recorded_utc": "2026-10-31T04:24:44.086048+00:00",
+  "original_reports_sha256_before": {
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-c644bb1\\windows\\20261031-114521-cab2c0bc\\report.json": "0453bc0871f388720645b55e044ca4c51319a3e2a12a4756f33f5210ddfb59a1",
+    "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\docs\\verification\\f5-final-20261031\\windows\\final-1\\report.json": "07cb528df9840b83b962514c8b2595031ef4e6a7158a55252cdee55f5900d832"
+  },
+  "gates": [
+    {
+      "name": "strict",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "scripts/check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-c644bb1\\windows\\20261031-114521-cab2c0bc\\report.json"
+      ],
+      "exit_code": 1,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-c644bb1-windows-independent-strict.log",
+      "log_sha256": "9ac5a6073905fa84b2b1f7fb1939a8edb636dd0506092940f403b6b97ac87607",
+      "diagnostic": "report evidence: FAIL C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-c644bb1\\windows\\20261031-114521-cab2c0bc\\report.json\r\n  report is not release evidence: 1 case(s) did not pass (['gui_live_progress']); pass --allow-incomplete only for triage"
+    },
+    {
+      "name": "baseline-strict",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "scripts/check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\docs\\verification\\f5-final-20261031\\windows\\final-1\\report.json"
+      ],
+      "exit_code": 0,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-c644bb1-windows-independent-baseline-strict.log",
+      "log_sha256": "55c2d766143c58c0d709c771598e620005d54c4aeff067d644d8364d61c68cd6",
+      "diagnostic": "report evidence: OK C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\docs\\verification\\f5-final-20261031\\windows\\final-1\\report.json\r\n  version 2, profile all, 160 cases, 50898 assertions executed, probe settrace_assert_lines_v3, digest sha256_raw_bytes_lf_v2\r\n  source db253b7b1ed5..., tests 5328e3515e88..."
+    },
+    {
+      "name": "strict-with-baseline",
+      "command": [
+        "C:\\Users\\123\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-B",
+        "scripts/check_report_evidence.py",
+        "--report",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-c644bb1\\windows\\20261031-114521-cab2c0bc\\report.json",
+        "--baseline",
+        "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\docs\\verification\\f5-final-20261031\\windows\\final-1\\report.json"
+      ],
+      "exit_code": 1,
+      "log": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\collab\\k1-c644bb1-windows-independent-strict-with-baseline.log",
+      "log_sha256": "9ac5a6073905fa84b2b1f7fb1939a8edb636dd0506092940f403b6b97ac87607",
+      "diagnostic": "report evidence: FAIL C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\k1-c644bb1\\windows\\20261031-114521-cab2c0bc\\report.json\r\n  report is not release evidence: 1 case(s) did not pass (['gui_live_progress']); pass --allow-incomplete only for triage"
+    }
+  ]
+}

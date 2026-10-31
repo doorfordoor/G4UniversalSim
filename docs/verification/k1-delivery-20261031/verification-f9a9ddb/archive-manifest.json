@@ -1,0 +1,203 @@
+{
+  "schema": "k1_historical_verification_archive_v1",
+  "head": "f9a9ddbfcabe69067707a5a209caff005748f510",
+  "overall_state": "verification_complete_but_K1_unaccepted",
+  "phase_complete": false,
+  "created_utc": "2026-10-31T07:16:53.993103+00:00",
+  "resource_boundary_independent_review": "upstream_refused_incomplete_not_retried",
+  "evidence_generation": 5,
+  "archive_kind": "historical_generation_not_automatic_K1_acceptance",
+  "next_candidate_receipts_are_not_fourth_verification": [],
+  "known_findings": [
+    {
+      "severity": "P2",
+      "scope": "fourth frontend review",
+      "fact": "completed command preview can show editor cwd",
+      "next": "sixth freeze pending"
+    },
+    {
+      "severity": "P3",
+      "scope": "fourth frontend review",
+      "fact": "producer pending shown as unobserved",
+      "next": "sixth freeze pending"
+    }
+  ],
+  "release_spec_sha256": "feb52051fc16d3adf5887ec45d565f634639ba88e81a7f2906377da0bbcac717",
+  "original_backend_sha256": "79914f0887cc5026152e893205e760f84561be2e0d28015d5901cfb75de672a7",
+  "archive_builder_sha256": "2ab514364f2b642b6df3bfa70154dbb04ec4200804444d81da099524af480ea6",
+  "backend_binary_copied": false,
+  "all_scientific_data_selected": "all selected visible/replay/case non-EXE files, including cancelled-run CSV",
+  "standalone_executables_excluded": [
+    {
+      "source": "out/verification/k1-f9a9ddb/windows/20261031-143155-9df8c6bd/backend_working_directory-evidence/deep-e16442005edf4ed3a5c7d22c955b6259/locator-copy/G4UniversalSim.exe",
+      "bytes": 2420736,
+      "sha256": "79914f0887cc5026152e893205e760f84561be2e0d28015d5901cfb75de672a7",
+      "reason": "no new ZIP EXE member; source retained"
+    },
+    {
+      "source": "out/verification/k1-f9a9ddb/windows/20261031-143155-9df8c6bd/gui_k1_workflow-evidence/k1-workflow-c7482856d79f4e98b9df5f1178effa7e/synthetic/G4UniversalSim-component.exe",
+      "bytes": 274712,
+      "sha256": "21bb438c0d4a6f1f164b9a646f6ee000340185e5871180aec06db8d3f07c0082",
+      "reason": "no new ZIP EXE member; source retained"
+    },
+    {
+      "source": "out/verification/k1-f9a9ddb/windows/20261031-143155-9df8c6bd/k1_workflow_backend-evidence/k1-workflow-b43757647a9947868da4cc84129f25aa/synthetic/G4UniversalSim-component.exe",
+      "bytes": 274712,
+      "sha256": "21bb438c0d4a6f1f164b9a646f6ee000340185e5871180aec06db8d3f07c0082",
+      "reason": "no new ZIP EXE member; source retained"
+    }
+  ],
+  "selection_records": 2886,
+  "parent_audit_attestations": {
+    "windows": {
+      "path": "out/collab/k1-fifth-windows-review-audit.json",
+      "sha256": "3562d4f3f5b581d28563ebefda813bf488b7043359ddc45d92e8b3580f3a3513",
+      "bytes": 469608,
+      "complete": true,
+      "outcome": "passed"
+    },
+    "ci": {
+      "path": "out/verification/k1-f9a9ddb/ci/review-result.json",
+      "sha256": "0a0c639f0849fc54c522021cd8278575e2afdff8c1be72e1ece1d60f70985335",
+      "bytes": 22822,
+      "complete": true,
+      "outcome": "passed"
+    },
+    "native": {
+      "path": "out/collab/k1-fifth-native-audit.json",
+      "sha256": "ed9fd8de0071c712dfbd24d05b3cc73fbb7824473ddc252ec25996a2e34b3ef3",
+      "bytes": 31249,
+      "complete": true,
+      "outcome": "passed"
+    },
+    "i1": {
+      "path": "out/collab/k1-i1-acceptance-fifth.json",
+      "sha256": "67088e9b6da7843623032b510b644dcc9377309416e61a85005c591a02e68091",
+      "bytes": 25183,
+      "complete": true,
+      "outcome": "passed"
+    },
+    "review_coverage": {
+      "path": "out/collab/k1-review-coverage-map.json",
+      "sha256": "1299a0fd148e0d8f5473c6153451188fc8b4e7077a8fa230279f16150814bc71",
+      "bytes": 198423,
+      "complete": true,
+      "outcome": "gap_retained"
+    }
+  },
+  "prior_archives_not_modified": [
+    {
+      "source": "out/collab/k1-delivery-staging/failed-e5ff800/archive-manifest.json",
+      "sha256": "cb71a1ede23da5ee5ed43a7be3658d8c343e3a1cd50af150c1608c7600b4b357",
+      "operation": "reference_only_not_modified"
+    },
+    {
+      "source": "out/collab/k1-delivery-staging/failed-c644bb1/archive-manifest.json",
+      "sha256": "5d1ac9f84f5d2cffd72e28ea4e7efd74feb37d1a8d343c05541c5369a385ec0d",
+      "operation": "reference_only_not_modified"
+    },
+    {
+      "source": "out/collab/k1-delivery-staging/failed-11c92d3/archive-manifest.json",
+      "sha256": "0395177b9652780e414750ed0803297e59f6920df3cf6288de93db871e8134a8",
+      "operation": "reference_only_not_modified"
+    },
+    {
+      "source": "out/collab/k1-delivery-staging/verification-8213ced/archive-manifest.json",
+      "sha256": "c6d292e8da7f0de58e2f36608b4701a349761cd20d87fe66af30542ad63cae3b",
+      "operation": "reference_only_not_modified",
+      "scope": "fourth history and separately parent-approved derived-index supplement"
+    },
+    {
+      "source": "out/collab/k1-delivery-staging/verification-8213ced/archive-verification.json",
+      "sha256": "f0e8cc61a002cd30641d0282aa82130bdb1eff93a4c3be2cac16387231bbec79",
+      "operation": "reference_only_not_modified",
+      "scope": "fourth history and separately parent-approved derived-index supplement"
+    },
+    {
+      "source": "out/collab/k1-delivery-staging/verification-8213ced-addendum/index.json",
+      "sha256": "b4f5f1e74659e88d30b6fbdebfea83026241de5ba8f128b76c45f91c26a0e5d4",
+      "operation": "reference_only_not_modified",
+      "scope": "fourth history and separately parent-approved derived-index supplement"
+    },
+    {
+      "source": "out/collab/k1-delivery-staging/verification-8213ced-addendum/addendum-receipt.json",
+      "sha256": "3b83c4c0b8eff1e4adfdd6c249a2d112f5c89c889274843c6d4d95a92c96c87d",
+      "operation": "reference_only_not_modified",
+      "scope": "fourth history and separately parent-approved derived-index supplement"
+    }
+  ],
+  "generated_files": [
+    {
+      "destination": "archive-started.json",
+      "bytes": 233,
+      "sha256": "61f417c660292fcb30f7f8b3fe71af4d6e7b6be0dd025cf79837ec09c80e982b"
+    },
+    {
+      "destination": "release-spec-original.json",
+      "bytes": 19959,
+      "sha256": "feb52051fc16d3adf5887ec45d565f634639ba88e81a7f2906377da0bbcac717"
+    },
+    {
+      "destination": "windows/case-originals.zip",
+      "bytes": 3394330,
+      "sha256": "39204673646430856cb189a57be72174af0497fd869c727a754c61a449277b16",
+      "uncompressed_members_verified": 1935
+    },
+    {
+      "destination": "replay/historical-reference.json",
+      "bytes": 273,
+      "sha256": "7d00be0c87ca481cb32c9a0d3768c91baf4bb243a0fb8b958663db3fdebbc81c"
+    },
+    {
+      "destination": "identity/full-tracked-source-and-test-objects.json",
+      "bytes": 6008052,
+      "sha256": "4ddc157214bc19ab862546a803dc454026b5e2c92610fbefa9cb1d00d855670d"
+    },
+    {
+      "destination": "selection.json",
+      "bytes": 1441884,
+      "sha256": "26e718d9aef45aa0a2ea80057e26f30b8ecacd3d980f5f1c644601c3a79949cf"
+    },
+    {
+      "destination": "source-trees.json",
+      "bytes": 430692,
+      "sha256": "d745266761c034b366320a35bc39af1332047e5a0d27ca7ba7fc7781cf2bfd4d"
+    },
+    {
+      "destination": "excluded-executable-inventory.json",
+      "bytes": 1066,
+      "sha256": "d046f78bb920f8c39b3771433ee381f57bb70e876a64a917c6c13682a01b7d48"
+    },
+    {
+      "destination": "official-archives.json",
+      "bytes": 2009671,
+      "sha256": "50561725f3716c790b17b0b821fd4a4ec79266a596bc74933e1dc095c16dcfab"
+    },
+    {
+      "destination": "report-original-facts.json",
+      "bytes": 24143,
+      "sha256": "3c1462c010405614e90b5fe1ee3f37afabbc252c4fbd8b899efe67e1b1309eb3"
+    },
+    {
+      "destination": "history-references.json",
+      "bytes": 1947,
+      "sha256": "b40914d1b899a1f4689114b2eb1baa27c83167acda51e354457ab8fe3c99a079"
+    },
+    {
+      "destination": "next-generation-references.json",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "destination": "native-record-facts.json",
+      "bytes": 2319,
+      "sha256": "4d3344df18862302100e49377f26d2e3cf935dd73a4dc797cd2f3d6b3699b379"
+    },
+    {
+      "destination": "README.md",
+      "bytes": 1191,
+      "sha256": "ed7d6882c7d252e2fe28e824191be3b8bff6b038922c536cb1dfe53536c4a7cc"
+    }
+  ],
+  "tool_does_not_decide_phase_acceptance": true
+}

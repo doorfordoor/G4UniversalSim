@@ -1,0 +1,20 @@
+# Third Windows 独立审核方法
+
+目标冻结11c92d361369cda4b2412451ff2841eff940f810；正式root为out/verification/k1-11c92d3/windows。只读报告/日志/源码/既有冻结收据，不启动或重复测试，不检查/控制原session46966，不操作窗口。
+
+审核器：同前缀auditor.py，以现有F5 Windows venv的Python加-B运行。--watch模式每60秒查看最终report.json；只有一个完整JSON报告且两次读取字节稳定才开始。JSON尚未写完/暂不可读时继续等待；多个报告不猜最新，明确报错交主任务裁决。完整报告表示case循环已结束，**不据报告存在擅自宣称观察到原session进程退出码**。
+
+正式报告出现后自动执行：
+
+1. 原报告严格check_report_evidence；F5原windows/final-1/report.json严格门禁；原报告加F5 --baseline严格门禁。保存三份工具原输出、命令、退出码和SHA，不用allow-incomplete或legacy旗标放宽。
+2. 179项名称、顺序及35/55/61/28分层与冻结manifest一致；全部pass/exit0，无fail/skip、零断言。逐项实际计数独立求和，末尾marker、报告声明计数、零断言列表一致。
+3. 当前全部179与F5全部160日志逐项重算原字节SHA；当前日志必须自包含于报告目录。两份报告审核前后原字节不变，F5原报告SHA固定为07cb528d…5900d832。
+4. F5每例都存在、逐例执行断言数不下降、总量不下降；完整列出新增/缺失/下降、所有日志原SHA和失败栈。总量增加不能抵消任何旧用例回落。
+5. 报告head/clean/source/tests指纹与11c92d3 manifest/build/capabilities/独立冻结收据一致；实际EXE/merge原SHA匹配。当前工作区head/clean、源码/测试指纹、全部GUI原字节也核对。若主任务随后授权改变工作区，分别列出live-tree漂移，不重写原运行身份或假称全匹配。
+6. 不以PyVista包存在或runner声明冒充实测图形分支；不把本次Windows报告审核当默认Windows chooser、Qt补充UI或物理准确性通过。
+
+只写out/collab/k1-third-windows-review-*：watch.json记录等待状态；gates.json及strict*.log保留门禁；audit.json包含全量逐例/基线/SHA/身份；audit.md给简短结果。异常另存error.json，保留所有原件。未观察最终报告时不写通过收据。
+
+环境依据build-identity：D:/Geant4/G4UniversalSim/gui/.venv/Scripts/python.exe，PySide6/PyVista/VTK版本原记录，CXX unset、PATH含D:/msys64/ucrt64/bin。审核器使用同一解释器，但不编译或运行任何测试；所知原测试进程环境的来源仍是主任务/构建身份记录，不伪称读取了原进程环境。
+
+当前阶段：脚本已准备并进行语法/冻结清单预检；随后启动只读等待器，最终结论以audit.json为准。原c644bb1失败与13下降报告保持不变。

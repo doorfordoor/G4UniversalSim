@@ -1,0 +1,100 @@
+{
+  "schema": "g4usim_k1_adapters_source_manifest_v1",
+  "git_head": "1dc96b45b8d945fbe33877f99345dc0144808e70",
+  "algorithm": "sha256_of_sorted_path_tab_sha256_lf",
+  "aggregate_sha256": "67e8185c3c874ed76e55c1a92a0f5d2cc1eb261fd98087cc9da1f901c902e937",
+  "files": [
+    {
+      "path": "docs/可信实验工作流.md",
+      "sha256": "d87b1d0a16c4eaee9210913df8e12939aa176ffbbe812c4f6eb1823ea6c89ba1",
+      "bytes": 9652
+    },
+    {
+      "path": "gui/g4usim_gui/experiment_cli.py",
+      "sha256": "20d7bb876ef91d80d31a4806640730dff011fd65ceb7204b9b323ec7920c74f6",
+      "bytes": 17731
+    },
+    {
+      "path": "gui/g4usim_gui/main_window.py",
+      "sha256": "3dbece37b6eef22363f6eb772836f8918dce95c762f94decd312c4381a74a7ce",
+      "bytes": 10850
+    },
+    {
+      "path": "gui/g4usim_gui/window/experiment.py",
+      "sha256": "132efcbab2fd642698020c93a299fbb53cca243a380f15354d606c1fdd6430e1",
+      "bytes": 17589
+    },
+    {
+      "path": "gui/g4usim_gui/window/run.py",
+      "sha256": "22ee8f0efa6ae9e9474ab67983c4be0ad5c4ec910ccb1e99a79f6d161c1ab45f",
+      "bytes": 18981
+    },
+    {
+      "path": "gui/g4usim_gui/window/transactions.py",
+      "sha256": "93e194afae749b52c3a8c9871211ecc8fe129256050e9e88ef1287f67b1b3210",
+      "bytes": 40324
+    },
+    {
+      "path": "gui/smoke_tests/smoke_f4_entrypoints.py",
+      "sha256": "b975cc00c27379e9c1497d7d81134a4149275484ea5e6c444b2d4e0f499f7b6f",
+      "bytes": 11569
+    },
+    {
+      "path": "gui/smoke_tests/smoke_f4_inspect_backend.py",
+      "sha256": "c048cb9929a71677b00f2d80e995058970e41b2ff6b2875fdf104da2d5d456cf",
+      "bytes": 10224
+    },
+    {
+      "path": "gui/smoke_tests/smoke_f5_editor_history.py",
+      "sha256": "527f25d5996f232df9d4d6b8a973e3b5b1bd78f82dd9dbfeb3dc881220a00335",
+      "bytes": 32838
+    },
+    {
+      "path": "gui/smoke_tests/smoke_k1_workflow.py",
+      "sha256": "1197797a1e92356a66f3b03ee28cd48fd9cc6bd6c856337af058fef055907c83",
+      "bytes": 8548
+    },
+    {
+      "path": "gui/smoke_tests/smoke_new_simulation_wizard.py",
+      "sha256": "304c81f998603e76a527bb4e69165f24cbe105874022b8c57f0b99818efb64d7",
+      "bytes": 7857
+    },
+    {
+      "path": "gui/smoke_tests/smoke_project_snapshot_restore.py",
+      "sha256": "8071589683f2db979e668b664a57b978c7663ab8c8e96d20e3b391cfd96db10b",
+      "bytes": 12532
+    },
+    {
+      "path": "gui/smoke_tests/smoke_q1_public_paths.py",
+      "sha256": "09882ba3c154a25ea5d836783abe27d2345ce21d9b3e3f1036ced516b1ddc9f0",
+      "bytes": 9678
+    },
+    {
+      "path": "gui/smoke_tests/smoke_run_input_modes.py",
+      "sha256": "ec2eb725630067711fd910587f279eee673e87f295eb1a3e75559a2bbcaca95e",
+      "bytes": 24620
+    },
+    {
+      "path": "scripts/test_k1_cli.py",
+      "sha256": "5550062749a3d9a47530a345315b588fc053af3c3a60ef01431b686991c53021",
+      "bytes": 25687
+    }
+  ],
+  "scope": "15 adapter/test/document files; not a git commit; excludes core and parent-owned duplicate test",
+  "final_adapter_source": true,
+  "core_observed_sha256": "79c3d707421a5939ed4748e48cffdca8dbb2c8732e2644ffe63519ffd1225830",
+  "final_source_tests": [
+    {
+      "test": "smoke_run_input_modes",
+      "exit_code": 0,
+      "assertions_executed": 108,
+      "log": "out/collab/k1-smoke_run_input_modes-original-inspect-final.log"
+    },
+    {
+      "test": "smoke_f4_inspect_backend",
+      "exit_code": 0,
+      "assertions_executed": 49,
+      "log": "out/collab/k1-smoke_f4_inspect_backend-original-inspect-final.log"
+    }
+  ]
+}

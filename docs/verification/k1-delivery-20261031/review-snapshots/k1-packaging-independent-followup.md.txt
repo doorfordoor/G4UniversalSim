@@ -1,0 +1,9 @@
+# Restore helper 独立复核补充
+
+结论：**RESTORE-OPTIMIZE-P2已解决，无剩余修复项。** 原P2报告不回写。gpt-6.1-sol/medium，消耗未知；只读核对，未重跑helper或测试、不改产品冻结。
+
+新helper原SHA为`b689b5665002b8cb04611cb1a55c542bf8c9aaf30115d6985d87f4d13a58a515`，与父专项report一致。六处校验已全部改为显式if/raise，正常及优化编译均保留六个raise；xb独占创建保持。
+
+15例实际子进程证据逐项核对：ordinary/-O/PYTHONOPTIMIZE=1各五例，valid准确输出预期字节与成功JSON；part-hash/schema精确失败且无输出文件；existing拒绝并保留原字节；whole-hash精确失败、无成功JSON，残留文件明确unverified。逐例stdout/stderr/manifest/output原SHA已存JSON，检查了具体失败位置，未仅信all_expected。
+
+测试明确区分三种子进程优化模式并清理普通模式继承变量，覆盖原P2；valid使用小型传输payload，仅证明字节重组，不冒充ZIP解压或新正式矩阵。失败残留的“存在不等于成功”边界保持；原包装1082成员/11分片核对结论与本次工具修复分开计证。无资源边界范围扩展，不作K1通过判断。
