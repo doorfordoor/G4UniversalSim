@@ -14,15 +14,17 @@ import json
 import os
 import sys
 import tempfile
+import time
 from pathlib import Path
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from PySide6.QtCore import QProcess  # noqa: E402
+from PySide6.QtCore import QCoreApplication, QEvent, QProcess  # noqa: E402
 from PySide6.QtWidgets import QApplication  # noqa: E402
 
 from gui_test_window import MainWindow  # noqa: E402
+from smoke_k1_workflow import wait_workflow  # noqa: E402
 from g4usim_gui.preview3d.backend_mesh import load_backend_mesh  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -92,6 +94,30 @@ def check_loader(temp: Path) -> None:
     print("loader: valid file read; wrong schema, count and face index rejected")
 
 
+def close_window(app: QApplication, window: MainWindow, timeout: float = 45) -> None:
+    """Wait for MainWindow to accept close; it owns service/recovery shutdown."""
+    deadline = time.monotonic() + timeout
+    accepted = window.close()
+    while not accepted and time.monotonic() < deadline:
+        app.processEvents()
+        # Let pending completion/closed callbacks run before requesting close again.
+        if (not window.experiment.busy
+                and not getattr(window, "_experiment_loading", False)
+                and not window._experiment_service_waiting):
+            accepted = window.close()
+        if not accepted:
+            time.sleep(.005)
+    assert accepted, "MainWindow close did not finish within bound"
+    assert window._experiment_recovery_closed, "MainWindow did not finish recovery close"
+    assert not window.experiment.busy, "experiment still busy after accepted close"
+    assert not window._experiment_service_waiting, "experiment close still waiting"
+    assert not window.isVisible(), "MainWindow remained visible after accepted close"
+    app.processEvents()
+    window.deleteLater()
+    QCoreApplication.sendPostedEvents(None, QEvent.DeferredDelete)
+    app.processEvents()
+
+
 def check_window(app: QApplication, temp: Path, executable: str) -> None:
     (temp / "tet.stl").write_text(STL, encoding="utf-8")
     geometry = temp / "geometry.ini"
@@ -110,30 +136,32 @@ def check_window(app: QApplication, temp: Path, executable: str) -> None:
         "position = 0,0,-400 mm\ndirection = +z\n", encoding="utf-8")
 
     window = MainWindow()
-    page = window.project_page
-    page.executable.setText(executable)
-    page.workspace_root.setText(str(temp))
-    page.output_dir.setText(str(temp / "output"))
-    page.run_input_mode.setCurrentIndex(page.run_input_mode.findData("external"))
-    page.config_path.setText("")
-    window.export_backend_geometry()
-    builder = window.config_builder_page
-    assert "main INI" in builder.preview3d_messages.toPlainText(), builder.preview3d_messages.toPlainText()
-    print("missing main INI: reported without starting the backend")
+    try:
+        page = window.project_page
+        page.executable.setText(executable)
+        page.workspace_root.setText(str(temp))
+        page.output_dir.setText(str(temp / "output"))
+        page.run_input_mode.setCurrentIndex(page.run_input_mode.findData("external"))
+        page.config_path.setText("")
+        window.export_backend_geometry()
+        builder = window.config_builder_page
+        assert "main INI" in builder.preview3d_messages.toPlainText(), builder.preview3d_messages.toPlainText()
+        print("missing main INI: reported without starting the backend")
 
-    page.config_path.setText(str(config))
-    window.export_backend_geometry()
-    assert window._geometry_export.state() != QProcess.NotRunning, "export did not start"
-    assert not builder.preview3d_backend_button.isEnabled()
-    assert window._geometry_export.waitForFinished(300000), "backend export timed out"
-    app.processEvents()
-    status = builder.preview3d_status.text()
-    messages = builder.preview3d_messages.toPlainText()
-    assert "13 volume copies" in status, (status, messages[-2000:])
-    assert "G4TessellatedSolid" in messages and "/Slice_PV#9" in messages, messages[-2000:]
-    assert builder.preview3d_backend_button.isEnabled()
-    print(f"MainWindow: {status}")
-    window.close()
+        page.config_path.setText(str(config))
+        window.export_backend_geometry()
+        assert window._geometry_export.state() != QProcess.NotRunning, "export did not start"
+        assert not builder.preview3d_backend_button.isEnabled()
+        assert window._geometry_export.waitForFinished(300000), "backend export timed out"
+        app.processEvents()
+        status = builder.preview3d_status.text()
+        messages = builder.preview3d_messages.toPlainText()
+        assert "13 volume copies" in status, (status, messages[-2000:])
+        assert "G4TessellatedSolid" in messages and "/Slice_PV#9" in messages, messages[-2000:]
+        assert builder.preview3d_backend_button.isEnabled()
+        print(f"MainWindow: {status}")
+    finally:
+        close_window(app, window)
 
 
 def check_demo_project(app: QApplication, temp: Path, executable: str) -> None:
@@ -147,23 +175,26 @@ def check_demo_project(app: QApplication, temp: Path, executable: str) -> None:
     QMessageBox.warning = staticmethod(lambda *args, **kwargs: QMessageBox.Ok)
     QMessageBox.information = staticmethod(lambda *args, **kwargs: QMessageBox.Ok)
     window = MainWindow()
-    page = window.project_page
-    page.executable.setText(executable)
-    page.runs_root.setText(str(temp / "runs"))
-    page.output_dir.setText(str(temp / "runs" / "demo" / "output"))
-    builder = window.config_builder_page
-    assert builder.materials_config.text().replace("\\", "/").endswith("test/materials/test_materials.ini")
-    assert not builder.geometry_document.errors, builder.geometry_document.errors
-    assert not builder.material_document.errors, builder.material_document.errors
-    window.generate_package(run_after_generate=False)
-    assert window.project.configPath and Path(window.project.configPath).is_file(), "demo package not generated"
-    window.export_backend_geometry()
-    assert window._geometry_export.waitForFinished(300000), "backend export timed out"
-    app.processEvents()
-    status = builder.preview3d_status.text()
-    assert "volume copies" in status, (status, builder.preview3d_messages.toPlainText()[-2000:])
-    print(f"demo project: package generated, {status}")
-    window.close()
+    try:
+        page = window.project_page
+        page.executable.setText(executable)
+        page.runs_root.setText(str(temp / "runs"))
+        page.output_dir.setText(str(temp / "runs" / "demo" / "output"))
+        builder = window.config_builder_page
+        assert builder.materials_config.text().replace("\\", "/").endswith("test/materials/test_materials.ini")
+        assert not builder.geometry_document.errors, builder.geometry_document.errors
+        assert not builder.material_document.errors, builder.material_document.errors
+        window.generate_package(run_after_generate=False)
+        wait_workflow(app, window)
+        assert window.project.configPath and Path(window.project.configPath).is_file(), "demo package not generated"
+        window.export_backend_geometry()
+        assert window._geometry_export.waitForFinished(300000), "backend export timed out"
+        app.processEvents()
+        status = builder.preview3d_status.text()
+        assert "volume copies" in status, (status, builder.preview3d_messages.toPlainText()[-2000:])
+        print(f"demo project: package generated, {status}")
+    finally:
+        close_window(app, window)
 
 
 def main() -> int:

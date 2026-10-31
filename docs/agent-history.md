@@ -558,3 +558,14 @@ GUI只适配动作/状态/定位，不建立第二套事务或进程。异步改
 K1兼容补充：用户run_name原义保留，不能以UUID覆盖；请求归属由独占目录、actual_output_dir/main_config/actual_macro_file与F1实际路径/SHA/size共同核验。仅generated且显式geometry.source_copy_mode、未知语法错误确实来自该geometry时，允许旧writer的本地副本运行；完整snapshot与声明源字节入身份，标local_source_copy_compatibility、递归闭包未观测，任何额外/未观测F1输入拒绝资格。缺失等错误不走fallback，export始终严格。owner关闭前取消活动进程，再等待服务close()/closed()排空读取；不能预先取消EvidenceJob回调使其伪装已排空。
 
 K1独立external Inspect保留原始输入/cwd与来源行号，不以导出语法预先拦截后端诊断；其身份仅观测声明主配置/macro字节，递归闭包与环境未观测，不能取得初始化/事件/物理或导出资格。真正run/initialization的内部Inspect仍针对隔离执行树。导出历史须保留实际build/random_settings/input coverage/exclusions，unknown不能填造；来源路径可显式去敏但不得丢掉随机事实。Geant4公开版本的完整数字`$Name: geant4-…$`格式是字面版本，不是环境变量引用，仅该字段严格格式可保留。
+
+
+## 2026-10-31 K1 首轮验收反例：Windows 深目录与异步退出
+
+冻结e5ff800的完整Windows173项165pass/8fail/0skip、54851入口不是验收通过；云端41161341378/41161341423在static停止，原报告/四官方ZIP/二进制与实窗失败保持原字节，入口out/verification/k1-e5ff800。真实存在260 UTF16单元cwd经subprocess/QProcess无法创建进程；独立副本manifest实验在短cwd/268字符输出下1/1事件完成，原无manifest失败。不能通过缩短测试根、取消快照或改写旧报告处理该反例。
+
+新增后端--working-directory为唯一、非空、绝对、存在目录，纯解析后且早于SimulationManager构造/Geant4DataLocator/配置/任何检查模式一次性切换；失败直接非零退出，不在启动祖先写摘要。capabilities.launch.working_directory必须是真布尔true。cmake/WindowsRuntime.cmake生成并嵌入MSVC后端longPathAware与activeCodePage=UTF-8，模块受现有cmake源码指纹约束。现代Windows与长路径系统策略是明确前提，不修改机器策略，不声称任意孙进程或第三方库全部支持。
+
+core/backend_launch.py只给启动计划，environment_discovery的后端查询、ExperimentWorkflow原QProcess检查和G4USimRunner最终启动边界共用，不能新建控制器或改变宿主cwd。按UTF16单元保留尾分隔符/NUL余量，固定绝对程序后选真实路径短祖先；logical cwd与launch cwd分别记录。所有配置/嵌套macro/相对数据路径必须在真实目录解释；F4定位、F1输入/UUID输出严格比较不变。普通短目录不加新flag，旧后端拒绝长目录时明确unsupported，不在祖先去掉flag重试冒充ready。通用SDK工具不带后端flag。
+
+回归须使用最终EXE，核验嵌入manifest、真实capability位、含中文/空格/非BMP的深cwd、短祖先同名错误输入、缺值/重复/相对/不存在/文件cwd、真实初始化与3/3事件、effective配置排他临时发布和F1证据；相对geant4-data.txt的目录发现正反对照不能仅检查Python请求cwd回显。空数据目录仅验证目录发现，不用于transport。新增入口为test_backend_launch、smoke_backend_launch、test_backend_working_directory；正式冻结仍待复审与矩阵。旧GUI同步生成/立即close的测试需等待真实异步完成并排空，不忽略清理异常、不手动删除恢复锁，保持原断言与失败场景。

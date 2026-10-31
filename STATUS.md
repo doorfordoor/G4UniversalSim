@@ -4,7 +4,7 @@
 
 ## 一句话定位
 
-2026-10-31 K1 集成验收准备中，尚未冻结/完成。基线e701c7f，范围ccb813a，I1提交1dc96b4，分支roadmap/K1-trusted-workflow；[实施契约](docs/collab/inbox/20261031-k1-execution.md)。独立Sol已真实重跑核心455入口exit0，复核Unicode label/严格请求归属、完整foreign输出拒绝、source-copy窄兼容及close排空。主负责人独立bundle组件197和最新真实搬移回放34入口均exit0。旧GUI真实来源兼容修正后F4 Inspect49、run_input_modes108（3/3事件）通过；新增独立原输入Inspect53入口，仅Configure/preflight，递归闭包未观测。主负责人复现导出漏掉实际random_settings/build/input coverage，证据out/collab/k1-export-observed-facts-omission.json，核心写者正补投影与回归；其余作者已停写或待最后交付。模型、失败、独立审查及源码SHA在out/collab/k1-*；bundle原审查上游拒绝原件保留、未重试，普通功能复查另列。本负责人当前无运行中构建/验收进程。下一步：最后diff复核、提交/冻结、新构建、Windows/Linux严格矩阵与原生窗口；D盘检出和F5原件不动。
+2026-10-31 K1 首轮冻结验收未通过，修复进行中。冻结e5ff800已普通推送roadmap/K1-trusted-workflow；Windows173项165pass/8fail/0skip，54851个v3入口，源码全程clean，原报告在out/verification/k1-e5ff800/windows/20261031-104457-02050896/report.json。Linux真实run41161341378（Geant4两版本构建成功）、M0 run41161341423均因static门禁失败中止后续profile；四官方ZIP/大小/SHA及原报告在同根ci。原生字段通过但初始化在长路径EffectiveConfig临时文件写出失败，visible保留截图、动作与真实退出收据，不能算实窗通过。长路径修复为Windows manifest + 后端早期--working-directory + 共用Python启动计划；不新增进程控制器、不改相对资源语义。另修复测试硬编码盘符样例、UTF8子进程fixture、仓库文档断链、旧GUI生成/关闭同步假设。原GDML预期未显式传入新构建目录也是本轮失败原因，下一轮按实际构建设置。独立限定diff已读，新增深目录/相对数据发现反例正在真实专项。当前开发后端已重建，源码仍未重新冻结；首轮二进制SHA400a0ffb...原件另存frozen-binary。当前分工和接口见[实施契约](docs/collab/inbox/20261031-k1-execution.md)，所有详细证据/模型收据在out/collab/k1-*。下一步：修复专项与独立复审、新冻结、Windows/Linux严格矩阵、完整原生窗口、整阶段文档和正常集成；D盘检出和F5原件不动。
 
 配置驱动、可复现、可验证的 Geant4 桌面工作台（C++17 后端 + PySide6 前端 + 场景包/基准/测试平台）。
 当前是"有真实物理验证的 Beta"，不是 1.0：核心链路可用，大量高级能力仍是实验性，产品完成度低于工程纪律。

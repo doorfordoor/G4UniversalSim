@@ -21,6 +21,7 @@ from uuid import uuid4
 
 from PySide6.QtCore import QFileSystemWatcher, QLocale, QObject, QProcess, QThread, QTimer, Signal
 
+from g4usim_gui.core.backend_launch import prepare_backend_launch, unsupported_working_directory
 from g4usim_gui.core.config_migration import load_json_strict
 from g4usim_gui.core.edit_snapshot import WorkspaceSnapshot, clone_snapshot, snapshot_fingerprint
 from g4usim_gui.core.evidence_job import EvidenceJob
@@ -615,6 +616,9 @@ class ExperimentWorkflow(QObject):
         facts = probe(snapshot.project.executable or snapshot.project.pathSettings.executable,
                       **({"cwd": cwd} if supports_cwd and cwd is not None else {}))
         if not isinstance(facts, dict) or facts.get("status") != "ready":
+            if isinstance(facts, dict) and facts.get("status") == "unsupported_working_directory":
+                raise WorkflowEvidenceError("experiment.unsupported_working_directory",
+                    {"environment": safe_environment(facts, cwd=cwd)})
             raise ValueError("experiment.environment_not_ready")
         report = (facts.get("data", {}).get("report") or {})
         if not supports_cwd and any(row.get("path") and not Path(row["path"]).is_absolute() for row in report.get("datasets", [])):
@@ -746,9 +750,13 @@ class ExperimentWorkflow(QObject):
         external_run = action == "run" and project.runInputMode == "external"
         self._active["phase"] = "initialization_inspect" if action == "initialization" else "run_inspect" if external_run else action
         if action in {"inspect", "initialization"} or external_run:
-            self._inspect.setProgram(project.executable)
-            self._inspect.setArguments(["--inspect-run", *result["command"][1:]])
-            self._inspect.setWorkingDirectory(project.workspaceRoot or str(Path.cwd()))
+            launch = prepare_backend_launch([project.executable, "--inspect-run", *result["command"][1:]],
+                                            project.workspaceRoot or str(Path.cwd()))
+            self._active["inspection_launch"] = launch
+            record["inspection_launch"] = launch.to_dict()
+            self._inspect.setProgram(launch.program)
+            self._inspect.setArguments(list(launch.arguments))
+            self._inspect.setWorkingDirectory(launch.launch_cwd)
             self._inspect.start()
         else:
             errors = self.runner.validate_project(project, ready_to_run=True)
@@ -819,6 +827,7 @@ class ExperimentWorkflow(QObject):
         stderr = bytes(self._inspect.readAllStandardError())
         record = self._active["record"]
         snapshot = self._active["snapshot"]
+        launch = self._active.get("inspection_launch")
         def verify():
             root = Path(record["record_dir"])
             (root / "inspect.stdout.log").write_bytes(stdout)
@@ -832,7 +841,11 @@ class ExperimentWorkflow(QObject):
             if current != record["identity"]:
                 raise WorkflowStaleError("experiment.inputs_changed_during_inspection")
             if code != 0 or exit_status != QProcess.NormalExit:
-                raise ValueError("experiment.inspect_failed: " + stderr.decode("utf-8", "replace"))
+                diagnostic = stderr.decode("utf-8", "replace")
+                if launch is not None and launch.requires_working_directory and unsupported_working_directory(diagnostic):
+                    raise WorkflowEvidenceError("experiment.unsupported_working_directory",
+                        {"backend_stderr": diagnostic, "inspection_launch": launch.to_dict()})
+                raise ValueError("experiment.inspect_failed: " + diagnostic)
             plan = load_json_strict(stdout)
             if (not isinstance(plan, dict) or plan.get("schema") != "G4UniversalSimRunPlan"
                     or plan.get("version") != 1 or plan.get("configuration_phase") != "before_macro"):
@@ -906,11 +919,17 @@ class ExperimentWorkflow(QObject):
         record = copy.deepcopy(context["record"])
         snapshot = context["snapshot"]
         phase = context["phase"]
+        last_launch = getattr(self.runner, "last_launch", None)
+        if last_launch is not None:
+            context["record"]["launch"] = last_launch.to_dict()
         context["record"].update(exit_code=code, output_dir=project.outputDir,
                                  result=asdict(result) if isinstance(result, RunResult) else None)
         def verify():
             if not isinstance(result, RunResult):
                 raise ValueError("experiment.runner_result_unavailable")
+            if result.reason == "backend_launch.unsupported_working_directory":
+                raise WorkflowEvidenceError("experiment.unsupported_working_directory",
+                    {"result": asdict(result)})
             evidence = output_evidence(project.outputDir, fresh=True)
             if evidence.status != "verified":
                 raise WorkflowEvidenceError("experiment.f1_provenance_unavailable", {"provenance_status": evidence.status}, unobserved=True)

@@ -211,16 +211,20 @@ def test_reference_source_urls(root):
     assert history[1]["record"]["reference"] == records[1]["reference"]
     assert all(row["stale"] for row in history)
     assert official in (root / "bundle" / "validation_records.json").read_text(encoding="utf-8")
-    for index, value in enumerate((
-        "C:/private/reference.csv", r"C:\private\reference.csv",
-        official + " C:/private/reference.csv", official + r" C:\private\reference.csv",
+    # Generate synthetic drive classes as data; none is a host filesystem input.
+    windows_samples = [f"{letter}:/private/reference.csv" for letter in "ABCDEFGHIJKLMNOPQRSTUVWXYZ"]
+    values = [value for path in windows_samples for value in (
+        path, path.replace("/", "\\"), official + " " + path,
+        official + " " + path.replace("/", "\\"), "https://geant4.web.cern.ch/" + path,
+    )]
+    values.extend((
         official + " /private/reference.csv", official + r" \\private\share\reference.csv",
-        "https://geant4.web.cern.ch/C:/private/reference.csv",
         r"https://geant4.web.cern.ch/\private\reference.csv",
         "https:///private/reference.csv", "https://:invalid/private/reference.csv",
         official + "?token=private-test-sentinel",
         "https://fixture-user:fixture-pass@geant4.web.cern.ch/reference",
-    )):
+    ))
+    for index, value in enumerate(values):
         target = root / f"refused-{index}"
         refused(lambda: bundle.export_bundle(snapshot, target, validation_records=[{"reference": {"source": value}}]))
         assert not target.exists()
@@ -380,7 +384,8 @@ def test_refusals(root):
         write(main, bad)
         refused(lambda: bundle.collect_bundle_resources(snapshot))
     write(main, original)
-    for private in ("C:/Users/private/hidden.csv", "/home/private/hidden.csv", "%PRIVATE_ENV%",
+    for private in (*(f"{letter}:/Users/private/hidden.csv" for letter in "ABCDEFGHIJKLMNOPQRSTUVWXYZ"),
+                    "/home/private/hidden.csv", "%PRIVATE_ENV%",
                     "$env:PRIVATE", "api_key=credential-material", "token=synthetic-private",
                     "https://fixture-user:fixture-pass@example.invalid/data"):
         candidate = copy.deepcopy(snapshot)

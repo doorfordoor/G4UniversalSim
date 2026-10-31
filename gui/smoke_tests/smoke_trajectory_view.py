@@ -29,8 +29,7 @@ from pathlib import Path
 
 GUI = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(GUI))
-if sys.platform == "win32" and os.environ.get("QT_QPA_PLATFORM") == "offscreen":
-    os.environ["QT_QPA_PLATFORM"] = "windows"      # VTK needs a real OpenGL context
+# Respect the selected Qt platform; check_widget skips VTK without a real display.
 ROOT = GUI.parent
 EXE = Path(os.environ.get("G4USIM_EXE", ROOT / "build_vs2026/Release/G4UniversalSim.exe"))
 
@@ -220,41 +219,44 @@ def check_backend(temp: Path) -> None:
     QMessageBox.warning = staticmethod(lambda *args, **kwargs: QMessageBox.Ok)
     QMessageBox.information = staticmethod(lambda *args, **kwargs: QMessageBox.Ok)
     from gui_test_window import MainWindow   # noqa: PLC0415
+    from smoke_backend_geometry import close_window   # noqa: PLC0415
+    from smoke_k1_workflow import wait_workflow   # noqa: PLC0415
     window = MainWindow()
-    window.show()
-    window.project_page.executable.setText(str(EXE))
-    window.project_page.runs_root.setText(str(temp / "runs"))
-    page = window.config_builder_page
-    page.preview3d_auto_backend.setChecked(False)
-    page.beam_on.setValue(5)
-    page.threads.setValue(2)
-    page.scoring_editor_trajectories.setValue(3)
-    app.processEvents()
-    assert page.scoring_editor.trajectory_events == 3
-    exits: list[int] = []
-    window.runner.finished.connect(exits.append)
-    window.generate_package(run_after_generate=True)
-    end = time.monotonic() + 600
-    while not exits and time.monotonic() < end:
+    try:
+        window.show()
+        window.project_page.executable.setText(str(EXE))
+        window.project_page.runs_root.setText(str(temp / "runs"))
+        page = window.config_builder_page
+        page.preview3d_auto_backend.setChecked(False)
+        page.beam_on.setValue(5)
+        page.threads.setValue(2)
+        page.scoring_editor_trajectories.setValue(3)
         app.processEvents()
-        time.sleep(0.05)
-    assert exits == [0], exits
-    app.processEvents()
-    view = page.preview3d_widget
-    if hasattr(view, "trajectories"):            # the PyVista view (the text fallback has no overlay)
-        assert view.trajectories is not None, "the finished run's tracks were not loaded"
-        events = view.trajectories.events
-        assert [e.event for e in events] == [0, 1, 2], [e.event for e in events]
-        energy = float(page.source_editor.energy.split()[0])
-        primaries = [t for e in events for t in e.tracks if t.primary]
-        assert len(primaries) == 3 and all(abs(t.initial_energy - energy) < 1e-6 for t in primaries), primaries
-        print(f"backend: Generate and Run wrote and showed tracks of 3 events "
-              f"({sum(len(e.tracks) for e in events)} tracks)")
-    else:
-        print("backend: run finished; the 3D view is the text fallback (no PyVista)")
-    window.close()
-    window.deleteLater()
-    app.processEvents()
+        assert page.scoring_editor.trajectory_events == 3
+        exits: list[int] = []
+        window.runner.finished.connect(exits.append)
+        window.generate_package(run_after_generate=True)
+        end = time.monotonic() + 600
+        while not exits and time.monotonic() < end:
+            app.processEvents()
+            time.sleep(0.05)
+        assert exits == [0], exits
+        wait_workflow(app, window)
+        app.processEvents()
+        view = page.preview3d_widget
+        if hasattr(view, "trajectories"):            # the PyVista view (the text fallback has no overlay)
+            assert view.trajectories is not None, "the finished run's tracks were not loaded"
+            events = view.trajectories.events
+            assert [e.event for e in events] == [0, 1, 2], [e.event for e in events]
+            energy = float(page.source_editor.energy.split()[0])
+            primaries = [t for e in events for t in e.tracks if t.primary]
+            assert len(primaries) == 3 and all(abs(t.initial_energy - energy) < 1e-6 for t in primaries), primaries
+            print(f"backend: Generate and Run wrote and showed tracks of 3 events "
+                  f"({sum(len(e.tracks) for e in events)} tracks)")
+        else:
+            print("backend: run finished; the 3D view is the text fallback (no PyVista)")
+    finally:
+        close_window(app, window)
     QSettings().clear()
 
 

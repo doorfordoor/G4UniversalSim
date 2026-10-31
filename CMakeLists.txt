@@ -71,6 +71,8 @@ set_source_files_properties(main.cc PROPERTIES
 
 # Executable
 add_executable(G4UniversalSim main.cc ${SOURCES})
+include(${PROJECT_SOURCE_DIR}/cmake/WindowsRuntime.cmake)
+g4usim_configure_windows_runtime(G4UniversalSim)
 # GDML import/export (roadmap A5) needs a Geant4 built with GDML (XercesC).
 if(Geant4_gdml_FOUND)
   target_compile_definitions(G4UniversalSim PRIVATE G4USIM_HAVE_GDML=1)

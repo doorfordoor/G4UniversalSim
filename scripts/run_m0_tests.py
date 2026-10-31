@@ -53,6 +53,9 @@ class Case:
 
 
 CASES = (
+    Case("backend_launch", "scripts/test_backend_launch.py", "static"),
+    Case("gui_backend_launch", "gui/smoke_tests/smoke_backend_launch.py", "gui", ("qt",)),
+    Case("backend_working_directory", "scripts/test_backend_working_directory.py", "integration", ("qt", "exe")),
     Case("gui_k1_workflow", "scripts/test_k1_workflow.py", "gui", ("qt",), args=("--component",)),
     Case("k1_workflow_backend", "scripts/test_k1_workflow.py", "integration", ("qt", "exe")),
     Case("k1_roundtrip", "scripts/test_k1_roundtrip.py", "integration", ("qt", "exe")),

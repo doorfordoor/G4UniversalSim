@@ -7,6 +7,7 @@ from pathlib import Path
 
 from PySide6.QtCore import QObject, QProcess, Signal
 
+from g4usim_gui.core.backend_launch import BackendLaunchError, prepare_backend_launch, unsupported_working_directory
 from g4usim_gui.core.run_progress import ProgressParser
 from g4usim_gui.core.log_parser import parse_log_line
 from g4usim_gui.core.paths import ensure_directory
@@ -39,6 +40,8 @@ class G4USimRunner(QObject):
         self._summary_path: Path | None = None
         self._summary_before: tuple[int, int] | None = None
         self.last_result: RunResult | None = None
+        self.last_launch = None
+        self._stderr_diagnostic_tail = ""
         self._progress = ProgressParser()
         self._stdout_decoder = codecs.getincrementaldecoder("utf-8")("replace")
         self._stderr_decoder = codecs.getincrementaldecoder("utf-8")("replace")
@@ -92,6 +95,16 @@ class G4USimRunner(QObject):
             self.errorOccurred.emit("\n".join(errors))
             return
 
+        requested_command = list(command) if command is not None else self.build_command(project)
+        try:
+            launch = prepare_backend_launch(requested_command, project.workspaceRoot or None)
+        except BackendLaunchError as error:
+            self.last_launch = None
+            self.last_result = RunResult("failed", str(error))
+            self.errorOccurred.emit(str(error))
+            return
+        self.last_launch = launch
+        self._stderr_diagnostic_tail = ""
         self._output_dir = ensure_directory(project.outputDir)
         logs_dir = self._resolve_logs_dir(self._output_dir)
         self._logs_dir = logs_dir
@@ -99,7 +112,7 @@ class G4USimRunner(QObject):
         self._stdout_file = (logs_dir / "stdout.log").open("w", encoding="utf-8", newline="\n")
         self._stderr_file = (logs_dir / "stderr.log").open("w", encoding="utf-8", newline="\n")
 
-        command = list(command) if command is not None else self.build_command(project)
+        command = launch.command
         self._run_status_path = logs_dir / "run_status.json"
         self._summary_path = self._output_dir / "run_summary.txt"
         self._summary_before = summary_fingerprint(self._summary_path)
@@ -117,15 +130,18 @@ class G4USimRunner(QObject):
             "command": command,
             "program": command[0],
             "arguments": command[1:],
-            "workingDirectory": project.workspaceRoot,
+            "workingDirectory": project.workspaceRoot or launch.logical_cwd,
+            "logicalWorkingDirectory": launch.logical_cwd,
+            "launchWorkingDirectory": launch.launch_cwd,
+            "launchRoute": launch.route,
+            "requestedCommand": requested_command,
         }
         self._write_run_status()
         program = command[0]
         arguments = command[1:]
         self._process.setProgram(program)
         self._process.setArguments(arguments)
-        if project.workspaceRoot:
-            self._process.setWorkingDirectory(project.workspaceRoot)
+        self._process.setWorkingDirectory(launch.launch_cwd)
         self._process.start()
 
     def terminate(self) -> None:
@@ -172,6 +188,7 @@ class G4USimRunner(QObject):
                 self._stdout_file.flush()
             self.stdoutReceived.emit(text)
         else:
+            self._stderr_diagnostic_tail = (self._stderr_diagnostic_tail + text)[-8192:]
             if self._stderr_file:
                 self._stderr_file.write(text)
                 self._stderr_file.flush()
@@ -230,6 +247,11 @@ class G4USimRunner(QObject):
             requested_state=self._requested_state,
             summary_fresh=fresh,
         )
+        if (exit_code != 0 and self.last_launch is not None
+                and self.last_launch.requires_working_directory
+                and unsupported_working_directory(self._stderr_diagnostic_tail)):
+            self.last_result = RunResult("failed", "backend_launch.unsupported_working_directory")
+            self._status_data["launchStatus"] = "unsupported_working_directory"
         self._progress_frozen = True
         self.progressStateChanged.emit(self.last_result.state)
         self._status_data["state"] = self.last_result.state

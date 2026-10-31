@@ -21,6 +21,7 @@ from collections.abc import Iterable, Mapping
 from pathlib import Path
 
 from .backend_capabilities import BackendCapabilities
+from .backend_launch import BackendLaunchError, prepare_backend_launch, unsupported_working_directory
 
 SCHEMA = "g4usim_environment_v1"
 DISCOVERY_SCHEMA = "g4usim_environment_discovery_v1"
@@ -93,6 +94,25 @@ def _command(argv, *, timeout, env, cwd=None):
             ("error while loading shared libraries", "library not loaded", "cannot open shared object file")):
         record["status"] = "missing_library"
     record["elapsed_seconds"] = round(time.monotonic() - start, 4)
+    return record, text
+
+
+def _backend_command(argv, *, timeout, env, cwd=None):
+    logical = cwd if cwd is not None else Path(argv[0]).parent
+    try:
+        launch = prepare_backend_launch(argv, logical)
+    except BackendLaunchError as error:
+        status = "unsupported_working_directory" if error.code == "backend_launch.unsupported_cwd" else "launch_error"
+        return {"argv": list(map(str, argv)), "status": status,
+                "exit_code": None, "working_directory": str(logical),
+                "error": str(error), "launch_error_code": error.code, "stderr": ""}, ""
+    options = {"cwd": launch.launch_cwd} if cwd is not None or launch.requires_working_directory else {}
+    record, text = _command(launch.command, timeout=timeout, env=env, **options)
+    record.update(launch.to_dict())
+    record["argv"] = launch.command
+    if (launch.requires_working_directory and record.get("exit_code") not in (None, 0)
+            and unsupported_working_directory(record.get("stderr", ""))):
+        record["status"] = "unsupported_working_directory"
     return record, text
 
 
@@ -264,7 +284,7 @@ def probe_environment(executable: str | Path, *, timeout: float = 5.0, cwd: str 
         initial_hash = _sha256(path)
         result["identity"]["sha256"] = initial_hash
         for field, flag in (("capabilities", "--capabilities"), ("data", "--check-geant4-data")):
-            command, text = _command([str(path), flag], timeout=timeout, env=child_env,
+            command, text = _backend_command([str(path), flag], timeout=timeout, env=child_env,
                                      **({"cwd": cwd} if cwd is not None else {}))
             target = result[field]
             target["probe"] = command
@@ -276,7 +296,13 @@ def probe_environment(executable: str | Path, *, timeout: float = 5.0, cwd: str 
                     if field == "capabilities":
                         data = _json(text)
                         checked = BackendCapabilities.from_json(json.dumps(data, allow_nan=False))
-                        target.update(status="available", data=checked.data)
+                        advertised_launch = checked.data.get("launch")
+                        if (command.get("launch_route") == "restore_working_directory" and
+                                (not isinstance(advertised_launch, dict) or advertised_launch.get("working_directory") is not True)):
+                            target.update(status="unsupported_working_directory",
+                                          error="Backend did not advertise launch.working_directory")
+                        else:
+                            target.update(status="available", data=checked.data)
                         for key in result["build"]:
                             result["build"][key] = checked.data.get(key)
                     else:
@@ -292,6 +318,8 @@ def probe_environment(executable: str | Path, *, timeout: float = 5.0, cwd: str 
         result["identity"]["stable"] = _sha256(path) == initial_hash
         if not result["identity"]["stable"]:
             result["status"] = "changed_during_probe"
+        elif any(result[field]["status"] == "unsupported_working_directory" for field in ("capabilities", "data")):
+            result["status"] = "unsupported_working_directory"
         elif result["capabilities"]["status"] != "available":
             result["status"] = "unavailable"
         elif result["data"]["status"] == "available":

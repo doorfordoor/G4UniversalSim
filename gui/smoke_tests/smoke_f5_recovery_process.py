@@ -14,6 +14,7 @@ import subprocess
 import sys
 import tempfile
 import threading
+import time
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 ROOT = Path(__file__).resolve().parents[2]
@@ -21,6 +22,7 @@ sys.path.insert(0, str(ROOT / "gui"))
 
 
 def child(mode, work):
+    from PySide6.QtCore import QCoreApplication, QEvent
     from PySide6.QtTest import QTest
     from PySide6.QtWidgets import QApplication, QMessageBox
     from g4usim_gui.core.diagnostics import collect_diagnostics
@@ -88,10 +90,24 @@ def child(mode, work):
         assert "config.source.materials.changed" in codes, codes
         assert not Path(expected["recovery_path"]).exists(), "Predecessor not retired after successor publication"
         window._choose_unsaved_action = lambda: QMessageBox.Discard
-        assert window.close()
+        # K1 may ignore the first close while its service is still draining.
+        deadline = time.monotonic() + 30
+        closed = window.close()
+        while not closed and time.monotonic() < deadline:
+            app.processEvents()
+            if (not window.experiment.busy
+                    and not getattr(window, "_experiment_loading", False)
+                    and not window._experiment_service_waiting):
+                closed = window.close()
+            if not closed:
+                time.sleep(.005)
+        assert closed, "Restored MainWindow did not accept close within bound"
         app.processEvents()
         assert window._recovery._closed
         assert not window._recovery.store.discover()
+        window.deleteLater()
+        QCoreApplication.sendPostedEvents(None, QEvent.DeferredDelete)
+        app.processEvents()
         print(json.dumps({"restored": True, "pid": os.getpid(), "seed": expected["seed"],
                           "source_conflict": True, "normal_close": True}), flush=True)
 

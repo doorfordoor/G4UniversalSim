@@ -226,6 +226,7 @@ struct MacroFailureInfo {
 };
 
 struct CommandLineOptions {
+  std::string workingDirectory;
   std::string configFile;
   std::string macroFile;
   std::string outputDir;
@@ -255,6 +256,7 @@ void PrintUsage(const char* program) {
       << "  " << program
       << " --macro macros/run_simple.mac --threads 4 --seed 12345\n\n"
       << "Options:\n"
+      << "  --working-directory <absolute-dir>  Enter this directory before reading inputs.\n"
       << "  --config, -c <file>  Load main ini configuration through "
          "SimulationManager.\n"
       << "  --macro, -m <file>   Execute a Geant4 macro after initialization "
@@ -352,6 +354,9 @@ CommandLineOptions ParseCommandLine(int argc, char** argv) {
       options.dumpEffectiveConfig = RequireNonEmptyValue(i, argc, argv, arg);
       if (options.dumpEffectiveConfig != "-" && options.dumpEffectiveConfig.front() == '-')
         throw std::runtime_error("--dump-effective-config requires <path|->");
+    } else if (arg == "--working-directory") {
+      if (!options.workingDirectory.empty()) throw std::runtime_error("Duplicate --working-directory");
+      options.workingDirectory = RequireNonEmptyValue(i, argc, argv, arg);
     } else if (arg == "--config" || arg == "-c") {
       options.configFile = RequireNonEmptyValue(i, argc, argv, arg);
     } else if (arg == "--macro" || arg == "-m") {
@@ -573,14 +578,34 @@ std::unique_ptr<G4RunManager> CreateRunManager(const SimulationManager& sim) {
 }  // namespace
 
 int main(int argc, char** argv) {
+  CommandLineOptions options;
+  std::string invokedProgram = argc > 0 ? argv[0] : "";
+  try {
+    options = ParseCommandLine(argc, argv);
+    if (!options.workingDirectory.empty()) {
+      const auto directory = std::filesystem::u8path(NativeArgumentToUtf8(options.workingDirectory));
+      if (!directory.is_absolute())
+        throw std::runtime_error("--working-directory requires an absolute directory");
+      std::error_code error;
+      if (!std::filesystem::is_directory(directory, error))
+        throw std::runtime_error("--working-directory is not an accessible directory: " + directory.u8string());
+      // Preserve the executable locator's original base on non-Windows hosts.
+      if (!invokedProgram.empty()) invokedProgram = std::filesystem::absolute(invokedProgram).string();
+      std::filesystem::current_path(directory, error);
+      if (error) throw std::runtime_error("Cannot apply --working-directory: " + error.message());
+    }
+  } catch (const std::exception& error) {
+    // No Manager, data lookup, input reads or output writes before cwd succeeds.
+    std::cerr << "G4UniversalSim fatal error: " << error.what() << std::endl;
+    return EXIT_FAILURE;
+  }
   SimulationManager sim;
   std::optional<MacroFailureInfo> macroFailure;
   std::string macroStatus = "not_run";
   bool finalizationStarted = false;
   try {
     // An installed package points at an existing Geant4 data folder (roadmap D).
-    const std::string dataNote = Geant4DataLocator::ApplyGeant4DataFile(argc > 0 ? argv[0] : nullptr);
-    const CommandLineOptions options = ParseCommandLine(argc, argv);
+    const std::string dataNote = Geant4DataLocator::ApplyGeant4DataFile(invokedProgram.c_str());
     if (options.checkGeant4Data) {
       return Geant4DataLocator::WriteReport(std::cout, dataNote) ? EXIT_SUCCESS : EXIT_FAILURE;
     }

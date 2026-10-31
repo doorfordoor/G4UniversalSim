@@ -601,7 +601,13 @@ def original_inspection_backend(folder, executable):
     assert observed["recursive_closure"] == "unobserved"
     assert observed["qualifies"] == "configure_preflight_only"
     assert observed["initialization"] == observed["simulation"] == "unobserved"
-    assert Path(service._inspect.workingDirectory()) == folder
+    transport = observed["inspection_launch"]
+    assert Path(transport["working_directory"]) == folder
+    assert service._inspect.workingDirectory() == transport["launch_working_directory"]
+    if transport["launch_route"] == "direct":
+        assert Path(service._inspect.workingDirectory()) == folder
+    else:
+        assert transport["arguments"][transport["arguments"].index("--working-directory") + 1] == str(folder)
     assert observed["command"][observed["command"].index("--config") + 1] == main.name
     assert observed["command"][observed["command"].index("--macro") + 1] == top.name
     command = observed["plan"]["macro_plan"]["commands"][0]

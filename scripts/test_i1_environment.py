@@ -280,7 +280,10 @@ def contract_tests():
 
     # Actual child processes exercise capture, killing/reaping, loader diagnostics and spaces.
     env = os.environ.copy()
-    record, text = discovery._command([sys.executable, "-c", "print('中文 path')"], timeout=5, env=env)
+    # A UTF-8 protocol producer must not depend on the host's console code page.
+    env["PYTHONIOENCODING"] = "cp1252"
+    record, text = discovery._command([sys.executable, "-c",
+        "import sys; sys.stdout.buffer.write('中文 path'.encode('utf-8'))"], timeout=5, env=env)
     assert record["status"] == "completed" and "path" in text
     start = time.monotonic()
     record, _ = discovery._command([sys.executable, "-c", "import time; time.sleep(20)"], timeout=0.1, env=env)

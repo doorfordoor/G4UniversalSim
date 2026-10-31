@@ -56,7 +56,7 @@ def ensure_test_fonts(app):
 def check_summary_layout(app):
     previous_language = current_language()
     dialog = module.EnvironmentDialog(candidates=[], auto_discover=False)
-    long_path = "C:/中文工作区/" + "very-long-directory-name/" * 10 + "G4UniversalSim.exe"
+    long_path = (ROOT / "中文工作区" / Path(*(["very-long-directory-name"] * 10)) / "G4UniversalSim.exe").as_posix()
     facts = fixture()
     facts["environments"][0]["executable"] = long_path
     facts["environments"][0]["data"] = {
