@@ -124,14 +124,17 @@ def event_loop_tests():
     record, reason = cli.await_action(service, runner, process,
         lambda: {"status": "passed", "test": "synchronous"}, timeout=1, stop_timeout=.05)
     assert record == {"status": "passed", "test": "synchronous"} and reason is None
-    service = Service()
+    # These cases exercise a late operation terminal, not the synthetic
+    # cancel acknowledgement. Both can be queued at once on a coarse timer;
+    # keep cancellation observable without racing a second fake terminal.
+    service = Service(deliver_cancel=False)
     began = time.monotonic()
     record, reason = cli.await_action(service, runner, process,
         lambda: QTimer.singleShot(8, lambda: service.completed.emit({'status': 'passed'})),
         timeout=.001, stop_timeout=.05)
     assert record == {'status': 'passed'} and reason == 'timeout', (record, reason, service.cancels, time.monotonic() - began)
     assert service.cancels == [False]
-    service = Service()
+    service = Service(deliver_cancel=False)
     def signal_before_terminal():
         QTimer.singleShot(0, lambda: signal.raise_signal(signal.SIGINT))
         QTimer.singleShot(8, lambda: service.completed.emit({'status': 'passed'}))

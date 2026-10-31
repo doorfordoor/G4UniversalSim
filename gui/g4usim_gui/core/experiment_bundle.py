@@ -380,6 +380,17 @@ def _snapshot_paths(data, closure: _Closure, *, loading=False):
         target = closure.add(_resolve(value, base), role, mode=mode)
         return str(closure.root / target) if loading else target
 
+    # F5 projects raw path drafts after typed model fields. Keep their
+    # association across relocation, without accepting a different/invalid draft.
+    def path_bindings():
+        return {
+            "project.config_path": p["configPath"],
+            "project.macro_path": p["macroPath"],
+            "config.materials_config": p["pathSettings"]["materials_config"],
+            "config.geometry_config": (p["geometrySettings"]["config_path"]
+                                       or p["pathSettings"]["geometry_config"]),
+        }
+    original_paths = path_bindings() if loading else {}
     mode = p["geometrySettings"]["template"]
     for key, role in (("configPath", "main"), ("macroPath", "macro")):
         # generated config/macro are stale run artefacts, not its editable input.
@@ -445,6 +456,20 @@ def _snapshot_paths(data, closure: _Closure, *, loading=False):
         # Remaining raw drafts pass the same logical-path/privacy sanitizer as
         # captured sources and historical evidence after closure is complete.
     if loading:
+        relocated_paths = path_bindings()
+        for binding, original in original_paths.items():
+            raw = state["drafts"].get(binding)
+            if not original or not isinstance(raw, str) or not raw.strip():
+                continue
+            try:
+                same_resource = _resolve(raw.strip(), base) == _resolve(original, base)
+            except (OSError, ValueError):
+                same_resource = False
+            if same_resource:
+                # Preserve lexical whitespace; only the verified resource anchor
+                # moves. Other raw drafts retain their original rejection semantics.
+                start, end = len(raw) - len(raw.lstrip()), len(raw.rstrip())
+                state["drafts"][binding] = raw[:start] + relocated_paths[binding] + raw[end:]
         p["workspaceRoot"] = paths["workspace_root"] = str(closure.root)
         p["runsRoot"] = paths["runs_root"] = str(closure.root.parent / (closure.root.name + "-runs"))
     return data
@@ -715,7 +740,9 @@ def export_bundle(snapshot: WorkspaceSnapshot, destination: Path, *, validation_
         result = inspect_bundle(staging)
         for path, sha in closure.source_receipts.items():
             # Writer intermediates were deliberately discarded above.
-            if path.is_relative_to(staging):
+            # Check lexical components before resolving the 8.3/long spellings;
+            # an external receipt replaced by a link must still be rejected.
+            if _no_links(path).resolve().is_relative_to(_no_links(staging).resolve()):
                 continue
             if digest(_read(path)) != sha:
                 raise ValueError(f"Resource changed before publication: {path}")

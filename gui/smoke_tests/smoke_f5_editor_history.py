@@ -394,6 +394,8 @@ def main():
     with tempfile.TemporaryDirectory(prefix='g4usim-f5-seed-') as temp, owned_window(app, Path(temp) / 'recovery') as w:
         root = Path(temp)
         page = w.config_builder_page
+        generation_results = []
+        w.experiment.completed.connect(generation_results.append)
         with (patch.object(QMessageBox, 'warning', return_value=QMessageBox.Ok),
               patch.object(QMessageBox, 'information', return_value=QMessageBox.Ok)):
             assert w.apply_simulation_wizard(default_spec('single_target'), run_after=False)
@@ -436,7 +438,9 @@ def main():
                 page.generatePackageRequested.emit(False)
                 wait_workflow(app, w)
                 drain(app)
-                assert Path(w._generated_package_dir).is_dir()
+                assert generation_results and generation_results[-1]['status'] == 'passed', [(r.get('status'), r.get('reason')) for r in generation_results[-1:]]
+                assert w._generated_package_dir and Path(w._generated_package_dir).is_dir(), [(r.get('status'), r.get('reason')) for r in generation_results[-1:]]
+                assert w.project.configPath and Path(w.project.configPath).is_file(), [(r.get('status'), r.get('reason')) for r in generation_results[-1:]]
                 main_ini = Path(w.project.configPath).read_text(encoding='utf-8')
                 assert ('seed = 42' in main_ini) if raw else ('seed =' not in main_ini)
                 assert page.seed.text() == raw

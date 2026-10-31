@@ -583,3 +583,11 @@ backend_launch在创建QProcess前拒绝请求时，runner仍须冻结progress�
 窗口只在既有runner实际Starting信号时，以服务公共记录中唯一pending运行/初始化的record_id/run_id/revision绑定显示。缺失/歧义保守显示未验证历史，标签、路径、telemetry run索引和事件数不是身份。显示范围以公共state/history/revision/qualification/busy投影；F1及终态持久化尚未完成不得提前显示当前通过。修改/Undo/Redo/恢复/外部字节变化后，顶栏、结果和进度明确标为历史，并保留原日志、结果和计数。
 
 RunPage保留的显示快照不进入EditSession、不修改RunResult/历史记录/验证资格；不恢复F5内部Not run yet与空进度哨兵。新进程实际启动才替换显示绑定，语言刷新重画范围文字。smoke_k1_history_scope默认components不启动后端；integration显式--mode backend，证据目录由统一runner注入或显式给出。合成公共state只证明投影规则，真实3/3只证明所用输入完成，均不替代原生可读性或物理准确性验收。
+
+## 2026-10-31 K1 配置包搬移与临时目录别名
+
+第三冻结11c92d3的真实Qt导出包搬移后，模型路径已重定位，但F5路径草稿仍为相对路径，回投覆盖控件后，下一动作collect把模型写回相对路径，存在的材料/几何被误报缺失。`experiment_bundle._snapshot_paths`加载时同步四个与原规范资源相同的路径草稿，保留首尾空白；不同、空白、非法草稿继续保留并阻断动作。不能清空全部raw drafts、另建事务、依赖旧项目文件目录，或以load_bundle单独成功代替真实MainWindow导入/收集/运行。
+
+Windows writer收据使用canonical长路径，staging可由8.3短别名创建；清理writer中间文件后，字面包含判断错误地将其当成外部资源重读。归属比较须先沿用`_no_links`检查，再对两侧resolve；原外部资源SHA复核和拒绝边界不变。单纯resolve候选引入的边界回归已有独立部分证据，补回检查后的专项独审仍因上游自动安全审查拒绝而未完成，不能称该专项已关闭。普通别名/搬移功能测试、独立安全边界复审及最终矩阵分别计证。
+
+第三Windows本机179/179及Linux双179通过，不覆盖M0 Windows五项失败和上述实窗反例。原报告、日志、失败候选和独审中断收据保持；后续冻结重新验收。旧异步smoke须先确认真实生成成功和文件存在，再读文件；finally通过已有close_window排空，不忽略清理失败。CLI的两个late-pass夹具不得同时排队竞争的假cancelled终态；仍断言取消请求、中断原因和迟到passed记录，产品取消语义不变。

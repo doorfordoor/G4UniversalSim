@@ -76,7 +76,7 @@ def exercise(root, executable=""):
         assert runner._stdout_file is runner._stderr_file is None
         status = json.loads((short / "output/logs/run_status.json").read_bytes())
         assert status["workingDirectory"] == str(short)
-        assert status["launchWorkingDirectory"] == str(short)
+        assert status["launchWorkingDirectory"] == str(short.resolve())
         assert status["requestedCommand"] == command
         assert status["command"] == runner.last_launch.command
         for number, label in enumerate(("--working-directory", "--working-directory=label", "\u3000--working-directory\u00a0")):

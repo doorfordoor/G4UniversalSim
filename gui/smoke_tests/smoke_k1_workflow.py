@@ -85,7 +85,7 @@ def main():
             assert window._generate_current_package() is None
             assert window.experiment.busy and not window.project_page.isEnabled()
             wait_workflow(app, window)
-            assert results[-1]['status'] == 'passed', (results[-1]['reason'], results[-1].get('report').errors)
+            assert results[-1]['status'] == 'passed', (results[-1]['reason'], getattr(results[-1].get('report'), 'errors', None))
             assert Path(window._generated_package_dir).is_dir()
             assert Path(window.project.configPath).is_file()
             assert snapshot_fingerprint(window.capture_workspace()) == before
@@ -105,7 +105,7 @@ def main():
             candidate.state['drafts']['project.project_name'] = 'K1 applied'
             window.experiment.apply(candidate, expected_revision=window._edit_session.revision)
             wait_workflow(app, window)
-            assert results[-1]['status'] == 'passed', (results[-1]['reason'], results[-1].get('report').errors)
+            assert results[-1]['status'] == 'passed', (results[-1]['reason'], getattr(results[-1].get('report'), 'errors', None))
             assert window.project_page.project_name.text() == 'K1 applied'
             assert window.capture_workspace().project.projectName == 'K1 applied'
             assert window._edit_session.can_undo
