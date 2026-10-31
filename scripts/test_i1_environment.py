@@ -82,6 +82,8 @@ def candidate_resolution_regression():
         name = "G4UniversalSim.exe"
         path_exe, local_exe = prefix / name, work / name
         path_exe.write_bytes(b"PATH backend fixture")
+        expected_path = str(path_exe.resolve())
+        expected_local = str(local_exe.resolve())
         isolated = {"PATH": str(prefix), "G4USIM_EXE": None, "Geant4_DIR": None,
                     "Geant4_ROOT": None, "GEANT4_ROOT": None, "CMAKE_PREFIX_PATH": None}
         observed = []
@@ -106,19 +108,19 @@ def candidate_resolution_regression():
                     for candidates in ([name, local_exe], [local_exe, name]):
                         rows = discovery.discover_environments(candidates, env=isolated)["environments"]
                         assert len(rows) == 2, (local_exists, candidates, rows)
-                        expected = [str(path_exe if item == name else local_exe) for item in candidates]
+                        expected = [expected_path if item == name else expected_local for item in candidates]
                         assert [row["executable"] for row in rows] == expected
                         for row in rows:
-                            assert row["status"] == ("not_found" if row["executable"] == str(local_exe) and not local_exists else "ready")
+                            assert row["status"] == ("not_found" if row["executable"] == expected_local and not local_exists else "ready")
                 aliases = discovery.discover_environments([name, prefix / "." / name], env=isolated)["environments"]
                 assert len(aliases) == 1
-                assert aliases[0]["executable"] == str(path_exe)
+                assert aliases[0]["executable"] == expected_path
                 distinct_env = discovery.discover_environments([
                     {"executable": name, "env": {"I1_ENV": "first"}},
                     {"executable": path_exe, "env": {"I1_ENV": "second"}},
                 ], env=isolated)["environments"]
                 assert len(distinct_env) == 2
-                assert observed[-4:] == [(str(path_exe), "first")] * 2 + [(str(path_exe), "second")] * 2
+                assert observed[-4:] == [(expected_path, "first")] * 2 + [(expected_path, "second")] * 2
                 invalid = discovery.discover_environments([None, name], env=isolated)["environments"]
                 assert len(invalid) == 2
                 assert invalid[0]["status"] == "error" and invalid[1]["status"] == "ready"

@@ -5,6 +5,7 @@
 ## 0. 条目索引与历史全文
 
 - 2026-10-31 K1 实施中：统一动作服务复用 F4/F5/runner，四层验证独立；输入变化及 Undo 后历史不得恢复当前资格。资源包重写路径后的哈希与原始读取证据分别保存；I1 只给环境事实。范围与验收见 `docs/collab/inbox/20261031-k1-execution.md`，不得以专项通过提前关闭 K1。
+- 2026-10-31 K1 终态发布：finishing 上下文独占 EvidenceJob，迟到 finished 先保留退出事实再停止重复验证；成功落盘后一次 completed，存储失败显式 failed。启动前拒绝仍发 failed 进度、不造 finished。全文见 `docs/agent-history.md`，回归 `scripts/test_k1_terminal_publication.py`、`gui/smoke_tests/smoke_live_progress.py`；组件回归不代替真实取消复验。
 - 2026-10-31 K1 深目录启动：`--working-directory` 必须在 Manager/数据发现前生效，失败不读写启动祖先；Windows manifest 和共用 `backend_launch` 只改变创建进程入口，不能改 F1/F4 路径身份或增加进程所有者。旧后端明确拒绝，不在错误目录重试。完整契约及首轮失败见 `docs/agent-history.md`；真实深目录回归 `scripts/test_backend_working_directory.py`。
 
 - 2026-10-31 F5：已完成；冻结5c1eec5、原生5d身份映射及失败历史见[最终证据](docs/verification/f5-final-20261031/README.md)。完整契约仍在docs/agent-history.md及配置撤销与恢复；稀疏worker去重N仅为master完整N的下界，空表头N未知。后续分派按[模型规则](docs/collab/MODEL-POLICY.md)，不让常规子任务继承最高推理档。下方旧状态按原日期理解。

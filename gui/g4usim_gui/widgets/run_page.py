@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from copy import deepcopy
+
 from PySide6.QtCore import QElapsedTimer, QTimer, Signal
 from PySide6.QtWidgets import (
     QFrame,
@@ -20,6 +22,17 @@ from g4usim_gui.widgets.experiment_panel import ExperimentPanel
 from g4usim_gui.widgets.ui_helpers import toolbar_grid
 
 
+def scoped_run_text(detail: str, scope: str) -> str:
+    keys = {
+        'changed': 'Previous run (configuration changed): {detail}',
+        'historical': 'Previous run: {detail}',
+        'unverified': 'Previous run (current inputs unverified): {detail}',
+        'checking': 'Run (verification in progress): {detail}',
+    }
+    key = keys.get(scope)
+    return ui_format(key, detail=detail) if key else detail
+
+
 class RunPage(QWidget):
     buildCommandRequested = Signal()
     inspectMacroRequested = Signal()
@@ -33,6 +46,9 @@ class RunPage(QWidget):
         self._timer = QTimer(self)
         self._timer.timeout.connect(self._update_elapsed)
         self._elapsed = QElapsedTimer()
+        self._run_display_scope = ''
+        self._run_display_identity = None
+        self._retained_run_view = None
         self._current_state = "Not running"
         self._exit_code: int | None = None
         self._result_state = ""
@@ -154,8 +170,10 @@ class RunPage(QWidget):
         self._render_progress()
 
     def _render_progress(self) -> None:
-        data = self._progress_data
-        active = self._progress_state in {"starting", "active"}
+        view = self._run_display_view()
+        data = view['progress']
+        progress_state = view['progress_state']
+        active = progress_state in {"starting", "active"}
         planned = data.get("planned_events") if data else None
         completed = data.get("completed_events") if data else None
         if planned and completed is not None:
@@ -182,12 +200,14 @@ class RunPage(QWidget):
             )
         else:
             text = ui_text("Waiting for backend progress; older backends may not report it.")
-        if not active and self._progress_state != "idle":
+        if not active and progress_state != "idle":
             # A finished run is not "frozen" progress: show the terminal state instead.
             # The bar keeps the last observed counts (that is what "see final result"
             # refers to) and the final outcome is also stated by ``set_result``.
-            text += " | " + ui_format("Result: {state}", state=ui_text(self._progress_state))
-        self.progress_label.setText(text)
+            text += " | " + ui_format("Result: {state}", state=ui_text(progress_state))
+        self.progress_label.setText(scoped_run_text(text, self._run_display_scope))
+        if self._run_display_scope in ('changed', 'historical', 'unverified', 'checking'):
+            self.progress_bar.setFormat(scoped_run_text(self.progress_bar.format(), self._run_display_scope))
 
     def set_command(self, command: list[str]) -> None:
         self.command_preview.setPlainText("\n".join(command))
@@ -211,7 +231,7 @@ class RunPage(QWidget):
 
     def set_state(self, state: str) -> None:
         self._current_state = state
-        self.state_label.setText(ui_format("State: {state}", state=ui_text(state)))
+        self._render_run_status()
         running = state in {"Starting", "Running"}
         self.run_button.setEnabled(not running)
         self.stop_button.setEnabled(running)
@@ -232,17 +252,13 @@ class RunPage(QWidget):
 
     def set_result(self, state: str) -> None:
         self._result_state = state
-        self.result_label.setText(ui_format("Result: {state}", state=ui_text(state)) if state else "")
+        self._render_run_status()
 
     def refresh_language(self) -> None:
         self.experiment_panel.retranslate_ui()
         self.diagnostics_panel.refresh_language()
         self._render_progress()
-        self.state_label.setText(ui_format("State: {state}", state=ui_text(self._current_state)))
-        code = "-" if self._exit_code is None else self._exit_code
-        self.exit_label.setText(ui_format("Exit code: {code}", code=code))
-        if self._result_state:
-            self.set_result(self._result_state)
+        self._render_run_status()
         self._update_elapsed()
 
     def clear_logs(self) -> None:
@@ -281,11 +297,64 @@ class RunPage(QWidget):
         self._merged_pending = ""
         self._merged_pending_stream = ""
 
+    def begin_run_display(self) -> None:
+        # Only the runner's real startup replaces the selected display.
+        self._retained_run_view = None
+        self._run_display_scope = 'running'
+        self._result_state = ''
+        self._exit_code = None
+        self._render_run_status()
+
+    def retain_run_display(self) -> None:
+        """Retain observed UI data across F5 view reset, never restore eligibility."""
+        self._retained_run_view = {
+            'state': self._current_state, 'result': self._result_state,
+            'progress': deepcopy(self._progress_data), 'progress_state': self._progress_state,
+            'code': self._exit_code,
+            'seconds': self._elapsed.elapsed() // 1000 if self._elapsed.isValid() else 0,
+        }
+
+    def _run_display_view(self):
+        if self._retained_run_view is not None and self._run_display_scope in (
+                'changed', 'historical', 'unverified', 'checking', 'current'):
+            return self._retained_run_view
+        return {'state': self._current_state, 'result': self._result_state,
+                'progress': self._progress_data, 'progress_state': self._progress_state,
+                'code': self._exit_code,
+                'seconds': self._elapsed.elapsed() // 1000 if self._elapsed.isValid() else 0}
+
+    def set_run_display_scope(self, scope, identity=None) -> None:
+        self._run_display_scope = scope
+        self._run_display_identity = identity
+        tooltip = self.run_display_identity_text()
+        for widget in (self.result_label, self.state_label, self.progress_label, self.progress_bar):
+            widget.setToolTip(tooltip)
+        self._render_run_status()
+        self._render_progress()
+
+    def run_display_identity_text(self) -> str:
+        if self._run_display_identity is None:
+            return ui_text('Run identity unavailable; this display does not verify current inputs.')
+        record, run, revision = self._run_display_identity
+        return ui_format('Displayed record: {record}; run: {run}; edit revision: {revision}',
+                         record=record, run=run, revision=revision)
+
+    def _render_run_status(self) -> None:
+        view = self._run_display_view()
+        scope = self._run_display_scope
+        self.state_label.setText(scoped_run_text(
+            ui_format('State: {state}', state=ui_text(view['state'])), scope))
+        result = ui_format('Result: {state}', state=ui_text(view['result'])) if view['result'] else ''
+        self.result_label.setText(scoped_run_text(result, scope) if result else '')
+        code = '-' if view['code'] is None else view['code']
+        self.exit_label.setText(scoped_run_text(ui_format('Exit code: {code}', code=code), scope))
+        self._update_elapsed()
+
     def _update_elapsed(self) -> None:
-        seconds = self._elapsed.elapsed() // 1000 if self._elapsed.isValid() else 0
+        seconds = self._run_display_view()['seconds']
         hours = seconds // 3600
         minutes = (seconds % 3600) // 60
         secs = seconds % 60
-        self.elapsed_label.setText(
-            ui_format("Elapsed: {elapsed}", elapsed=f"{hours:02d}:{minutes:02d}:{secs:02d}")
-        )
+        self.elapsed_label.setText(scoped_run_text(
+            ui_format('Elapsed: {elapsed}', elapsed=f'{hours:02d}:{minutes:02d}:{secs:02d}'),
+            self._run_display_scope))

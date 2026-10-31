@@ -29,7 +29,8 @@ from pathlib import Path
 
 GUI = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(GUI))
-# Respect the selected Qt platform; check_widget skips VTK without a real display.
+if sys.platform == "win32" and os.environ.get("QT_QPA_PLATFORM") == "offscreen":
+    os.environ["QT_QPA_PLATFORM"] = "windows"      # VTK needs a real OpenGL context
 ROOT = GUI.parent
 EXE = Path(os.environ.get("G4USIM_EXE", ROOT / "build_vs2026/Release/G4UniversalSim.exe"))
 

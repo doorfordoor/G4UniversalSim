@@ -329,6 +329,8 @@ class RunMixin:
         self.run_page.append_status_message("Process is still running; Kill is available.")
 
     def _on_state_changed(self, state: str) -> None:
+        if state == 'Starting' and hasattr(self, 'experiment'):
+            self._bind_started_run_display()
         self.run_page.set_state(state)
         running = state in {"Starting", "Running"}
         self._set_run_chip(state, "running" if running else "")
@@ -341,6 +343,7 @@ class RunMixin:
         state = result.state if result else "incomplete"
         reason = result.reason if result else "Run result is unavailable."
         self.run_page.set_result(state)
+        self.run_page.retain_run_display()
         self.run_page.append_status_message(ui_format("Run result: {state}. {reason}", state=ui_text(state), reason=ui_text(reason)))
         self.project_page.set_inputs_enabled(True)
         self._update_editor_busy()
@@ -350,6 +353,8 @@ class RunMixin:
         self.run_history_page.refresh()
         self.load_tracks(output_dir, quiet=True)   # a run with trajectories shows them (G6)
         self._set_run_chip(state, {"success": "success", "failed": "failed"}.get(state, ""))
+        if hasattr(self, 'experiment'):
+            self._refresh_experiment()
         self.statusBar().showMessage(ui_format("Run result: {state}. {reason}", state=ui_text(state), reason=ui_text(reason)), 8000)
 
     def _on_runner_error(self, message: str) -> None:

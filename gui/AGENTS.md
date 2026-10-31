@@ -2,6 +2,8 @@
 
 2026-10-31 K1 实施中：主实验入口组合现有 EditSession、G4USimRunner、F4 diagnostics 与 package writer，不能另建事务/进程所有者。验证四层分别显示，初始化和真实事件必须有各自证据；环境选择不触发模拟，导入包不自动继承历史通过。DeepSeek 面板交付及修复须分开署实，离屏/实窗/真实模拟分别验收。完整契约见 `../docs/collab/inbox/20261031-k1-execution.md`；当前不宣称阶段完成。
 
+K1 结果显示绑定实际启动记录的 record_id/run_id/revision；不得凭标签、路径、事件数推断归属。runner 结束后服务尚未核验完成时显示“核验中”，配置变更后顶栏、结果与进度明确标为历史，保留旧日志/计数。显示快照不恢复 F5 内部哨兵或核心验证资格；语言切换、Undo/Redo/恢复和外部资源变化沿同一 state 投影。回归 `smoke_tests/smoke_k1_history_scope.py` 默认组件模式，真实后端模式独立登记；原生可读性仍须实际观察。
+
 2026-10-31 F5：已完成；冻结5c1eec5、原生5d身份映射及失败历史见[最终证据](../docs/verification/f5-final-20261031/README.md)。完整契约仍在docs/agent-history.md及配置撤销与恢复；稀疏worker去重N仅为master完整N的下界，空表头N未知。后续分派按[模型规则](../docs/collab/MODEL-POLICY.md)，不让常规子任务继承最高推理档。下方旧状态按原日期理解。
 
 2026-10-30 F5候选：Project/Configuration共用完整事务，raw非法草稿必须保留并正常阻断Generate；不能由get_project同步清空。普通项目v7恢复完整编辑内容，历史包仍从当前包材料/几何重建。Undo/恢复使包与F4诊断身份失效，不恢复旧运行成功；自动保存独立于普通保存。投影及回滚双失败需冻结保存/生成/运行并保留最后可证实快照。测试必须显式隔离recovery/history，产品不得按offscreen旁路交互。详见 `../docs/配置撤销与恢复.md` 和agent-history；下方F4“F5未启动”仅是旧关闭时记录。

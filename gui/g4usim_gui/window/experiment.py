@@ -52,6 +52,10 @@ class ExperimentMixin:
         from g4usim_gui.core.experiment_workflow import ExperimentWorkflow
         from g4usim_gui.window import run as run_module
         from g4usim_gui.core.evidence_job import EvidenceJob
+        # Display-only association with the process observed by this window.
+        # Records/qualification and process ownership remain in the service.
+        self._displayed_run_binding = None
+        self._run_display_observed = False
         self._experiment_seen_terminal = set()
         self._experiment_loading = False
         self._experiment_close_pending = False
@@ -106,9 +110,56 @@ class ExperimentMixin:
                 level['detail'] = experiment_reason(dict(status=level.get('status'), reason=level['detail']))
         for entry in state.get('history', []):
             entry['reason'] = experiment_reason(entry)
+        self._project_experiment_run_display(state)
         panel.set_state(state)
         panel.set_busy(service.busy or self._experiment_loading or
                        bool(getattr(self, '_workspace_fault', '')))
+
+    def _bind_started_run_display(self):
+        """Bind at the existing runner's actual Starting signal, not preparation.
+
+        A single pending process action is guaranteed by the shared service;
+        ambiguity or a legacy runner has no trustworthy current association.
+        No label, event count, output path or telemetry run index is an ID.
+        """
+        records = self.experiment.records()
+        candidates = [r for r in records if r.get('status') == 'pending'
+                      and not r.get('stale') and (r.get('action') == 'run' or
+                          r.get('action') == 'validate' and r.get('level') == 'initialization')]
+        self._displayed_run_binding = None
+        if len(candidates) == 1:
+            record = candidates[0]
+            if record.get('record_id') and record.get('run_id') and type(record.get('revision')) is int:
+                self._displayed_run_binding = (record['record_id'], record['run_id'], record['revision'])
+        self._run_display_observed = True
+        self.run_page.begin_run_display()
+
+    def _project_experiment_run_display(self, state):
+        """Project existing authority onto the particular result being shown."""
+        if not self._run_display_observed:
+            return
+        binding = self._displayed_run_binding
+        records = state.get('history', [])
+        record = next((r for r in records if binding is not None and
+                       (r.get('record_id'), r.get('run_id'), r.get('revision')) == binding), None)
+        if record is None:
+            scope = 'unverified'
+        elif (record.get('stale') or record.get('status') == 'stale'
+              or record.get('revision') != state.get('revision')):
+            scope = 'changed'
+        elif any(r.get('action') == 'run' or r.get('level') == 'initialization'
+                 for r in records[records.index(record) + 1:]):
+            scope = 'historical'
+        elif self.runner.is_running():
+            scope = 'running'
+        elif record.get('status') == 'pending' or self.experiment.busy or state.get('qualification') == 'checking':
+            scope = 'checking'
+        elif record.get('status') == 'passed':
+            scope = 'current'
+        else:
+            scope = 'unverified'
+        self.run_page.set_run_display_scope(scope, binding)
+        self._render_run_chip()
 
     def _experiment_action(self, action):
         if action == 'cancel':

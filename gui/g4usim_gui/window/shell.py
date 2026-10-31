@@ -342,7 +342,20 @@ class ShellMixin:
     def _set_run_chip(self, state: str, role: str) -> None:
         """Header status chip: a dot and the state in words; colour only repeats what the text says."""
         self._run_chip = (state, role)
-        self.run_context.setText(f"\u25CF {ui_text(state)}")
+        self._render_run_chip()
+
+    def _render_run_chip(self):
+        from g4usim_gui.widgets.run_page import scoped_run_text
+        state, role = self._run_chip
+        page = getattr(self, 'run_page', None)
+        scope = getattr(page, '_run_display_scope', '')
+        retained = getattr(page, '_retained_run_view', None)
+        if retained and scope not in ('', 'running'):
+            state = retained['result'] or state
+        if scope in ('changed', 'historical', 'unverified', 'checking'):
+            role = ''  # Historical facts and pending checks are neutral.
+        self.run_context.setText(f"\u25CF {scoped_run_text(ui_text(state), scope)}")
+        self.run_context.setToolTip(page.run_display_identity_text() if page is not None else '')
         self.run_context.setProperty("statusRole", role)
         self.run_context.style().unpolish(self.run_context)
         self.run_context.style().polish(self.run_context)

@@ -101,6 +101,8 @@ class G4USimRunner(QObject):
         except BackendLaunchError as error:
             self.last_launch = None
             self.last_result = RunResult("failed", str(error))
+            self._progress_frozen = True
+            self.progressStateChanged.emit("failed")
             self.errorOccurred.emit(str(error))
             return
         self.last_launch = launch

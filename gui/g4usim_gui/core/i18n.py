@@ -20,6 +20,13 @@ LanguageCode = Literal["en", "zh_CN"]
 
 
 ZH_CN: dict[str, str] = {
+    'Previous run (configuration changed): {detail}': '上次运行（配置已变更）：{detail}',
+    'Previous run: {detail}': '上次运行：{detail}',
+    'Previous run (current inputs unverified): {detail}': '上次运行（当前输入未验证）：{detail}',
+    'Run (verification in progress): {detail}': '本次运行（核验中）：{detail}',
+    'Run identity unavailable; this display does not verify current inputs.': '运行身份未知；此显示不证明当前输入已验证。',
+    'Displayed record: {record}; run: {run}; edit revision: {revision}': '显示记录：{record}；运行：{run}；编辑版本：{revision}',
+
     "Review the field diagnostics before continuing.": "请先查看并修正字段诊断，再继续操作。",
     "Experiment records could not be saved. This action is not accepted as verified.": "无法保存实验记录，本次操作不能作为已验证结果。",
     "Required backend or data is unavailable. Open Environment to choose a working installation.": "后端或必需数据不可用，请在“环境”中选择可用安装。",

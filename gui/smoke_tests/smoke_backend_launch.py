@@ -71,13 +71,14 @@ def exercise(root, executable=""):
         wait_for(lambda: bool(completions))
         assert completions[-1] == 0
         assert runner.last_launch.route == "direct"
-        assert runner.last_launch.command == command
+        assert runner.last_launch.command == [str(Path(command[0]).resolve()), *command[1:]]
         assert runner.last_result.state == "incomplete", "No summary must remain unverified"
         assert runner._stdout_file is runner._stderr_file is None
         status = json.loads((short / "output/logs/run_status.json").read_bytes())
         assert status["workingDirectory"] == str(short)
         assert status["launchWorkingDirectory"] == str(short)
         assert status["requestedCommand"] == command
+        assert status["command"] == runner.last_launch.command
         for number, label in enumerate(("--working-directory", "--working-directory=label", "\u3000--working-directory\u00a0")):
             project.outputDir = str(short / ("label-" + str(number)))
             echo = [sys.executable, "-c", "import sys,json; print(json.dumps(sys.argv[1:]))", "--run-name", label]
@@ -85,7 +86,7 @@ def exercise(root, executable=""):
             runner.start(project, echo)
             wait_for(lambda: len(completions) > previous)
             assert completions[-1] == 0
-            assert runner.last_launch.command == echo
+            assert runner.last_launch.command == [str(Path(echo[0]).resolve()), *echo[1:]]
             assert json.loads((Path(project.outputDir) / "logs/stdout.log").read_text(encoding="utf-8")) == ["--run-name", label]
             assert runner.last_result.state == "incomplete"
         if executable:

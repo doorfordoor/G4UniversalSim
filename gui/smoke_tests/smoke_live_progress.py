@@ -8,6 +8,7 @@ from pathlib import Path
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from PySide6.QtWidgets import QApplication
+from PySide6.QtCore import QProcess
 from g4usim_gui.core.run_progress import PREFIX, ProgressParser
 from g4usim_gui.core.project import G4USimProject
 from g4usim_gui.core.runner import G4USimRunner
@@ -203,10 +204,31 @@ def main():
         assert page.progress_bar.value() == 200
         errors = []
         runner.errorOccurred.connect(errors.append)
+        previous_status = (root / "output/logs/run_status.json").read_bytes()
+        previous_finished = list(done)
         runner.start(project, [str(root / "missing.exe")])
         deadline = time.monotonic() + 5
         while not errors and time.monotonic() < deadline:
             app.processEvents(); time.sleep(.005)
+        assert errors and page._progress_state == "failed"
+        assert runner._stdout_file is None and runner._stderr_file is None
+        assert runner.last_result.state == "failed"
+        assert runner.last_launch is None and not runner.is_running()
+        assert runner._progress_frozen
+        assert done == previous_finished, "Refused launch fabricated a process completion"
+        assert (root / "output/logs/run_status.json").read_bytes() == previous_status
+        # The missing path now fails before QProcess. Keep the original OS-level
+        # FailedToStart coverage with an existing file that is not an executable.
+        invalid_program = root / "invalid.exe"
+        invalid_program.write_bytes(b"not an executable\n")
+        process_errors = []
+        runner._process.errorOccurred.connect(process_errors.append)
+        errors.clear()
+        runner.start(project, [str(invalid_program)])
+        deadline = time.monotonic() + 5
+        while not errors and time.monotonic() < deadline:
+            app.processEvents(); time.sleep(.005)
+        assert process_errors == [QProcess.FailedToStart], process_errors
         assert errors and page._progress_state == "failed"
         assert runner._stdout_file is None and runner._stderr_file is None
         runner.deleteLater()

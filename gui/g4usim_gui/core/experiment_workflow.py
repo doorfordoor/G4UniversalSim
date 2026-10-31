@@ -552,6 +552,9 @@ class ExperimentWorkflow(QObject):
 
     def _work(self, work, done):
         context = self._active
+        # Terminal persistence owns this job until its completed receipt.
+        if context is None or context.get("finishing"):
+            return
         def delivered(result, error):
             if self._active is not context:
                 return
@@ -924,6 +927,9 @@ class ExperimentWorkflow(QObject):
             context["record"]["launch"] = last_launch.to_dict()
         context["record"].update(exit_code=code, output_dir=project.outputDir,
                                  result=asdict(result) if isinstance(result, RunResult) else None)
+        # Preserve late process facts without replacing terminal publication.
+        if context.get("finishing"):
+            return
         def verify():
             if not isinstance(result, RunResult):
                 raise ValueError("experiment.runner_result_unavailable")

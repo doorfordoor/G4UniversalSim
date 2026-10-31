@@ -4,7 +4,7 @@
 
 ## 一句话定位
 
-2026-10-31 K1 首轮冻结验收未通过，修复进行中。冻结e5ff800已普通推送roadmap/K1-trusted-workflow；Windows173项165pass/8fail/0skip，54851个v3入口，源码全程clean，原报告在out/verification/k1-e5ff800/windows/20261031-104457-02050896/report.json。Linux真实run41161341378（Geant4两版本构建成功）、M0 run41161341423均因static门禁失败中止后续profile；四官方ZIP/大小/SHA及原报告在同根ci。原生字段通过但初始化在长路径EffectiveConfig临时文件写出失败，visible保留截图、动作与真实退出收据，不能算实窗通过。长路径修复为Windows manifest + 后端早期--working-directory + 共用Python启动计划；不新增进程控制器、不改相对资源语义。另修复测试硬编码盘符样例、UTF8子进程fixture、仓库文档断链、旧GUI生成/关闭同步假设。原GDML预期未显式传入新构建目录也是本轮失败原因，下一轮按实际构建设置。独立限定diff已读，新增深目录/相对数据发现反例正在真实专项。当前开发后端已重建，源码仍未重新冻结；首轮二进制SHA400a0ffb...原件另存frozen-binary。当前分工和接口见[实施契约](docs/collab/inbox/20261031-k1-execution.md)，所有详细证据/模型收据在out/collab/k1-*。下一步：修复专项与独立复审、新冻结、Windows/Linux严格矩阵、完整原生窗口、整阶段文档和正常集成；D盘检出和F5原件不动。
+2026-10-31 K1 第二轮冻结验收未通过，修复集成中。c644bb1 已普通推送 roadmap/K1-trusted-workflow；Windows 全量176项175pass/1fail/0skip、56116个v3入口，唯一失败gui_live_progress，严格门禁拒绝该报告。Linux run41165700204、M0 run41165700164均失败：Linux三个实例的启动路径测试及早期失败进度回归，M0 Windows的规范化TEMP路径比较；Linux后端/integration尚未执行。本轮实窗完成两次真实3/3与seed改变后失效，但取消→强制结束暴露终态发布竞态，另发现旧成功显示缺少历史主语，不能算整项通过。原证据在out/verification/k1-c644bb1；首轮e5ff800原件和失败归档完整保留。已独立复审的路径测试、启动失败状态和取消所有权修复正在合入；历史显示由独立写者/审查者处理。下一步新冻结、严格Windows/Linux矩阵、实窗导出/搬移/修改/重跑及取消恢复复验，完成前K1保持未验收、codex仍F5基线。范围见[实施契约](docs/collab/inbox/20261031-k1-execution.md)，不修改D盘独立检出。
 
 配置驱动、可复现、可验证的 Geant4 桌面工作台（C++17 后端 + PySide6 前端 + 场景包/基准/测试平台）。
 当前是"有真实物理验证的 Beta"，不是 1.0：核心链路可用，大量高级能力仍是实验性，产品完成度低于工程纪律。

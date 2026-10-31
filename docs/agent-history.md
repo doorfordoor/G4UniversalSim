@@ -569,3 +569,17 @@ K1独立external Inspect保留原始输入/cwd与来源行号，不以导出语�
 core/backend_launch.py只给启动计划，environment_discovery的后端查询、ExperimentWorkflow原QProcess检查和G4USimRunner最终启动边界共用，不能新建控制器或改变宿主cwd。按UTF16单元保留尾分隔符/NUL余量，固定绝对程序后选真实路径短祖先；logical cwd与launch cwd分别记录。所有配置/嵌套macro/相对数据路径必须在真实目录解释；F4定位、F1输入/UUID输出严格比较不变。普通短目录不加新flag，旧后端拒绝长目录时明确unsupported，不在祖先去掉flag重试冒充ready。通用SDK工具不带后端flag。
 
 回归须使用最终EXE，核验嵌入manifest、真实capability位、含中文/空格/非BMP的深cwd、短祖先同名错误输入、缺值/重复/相对/不存在/文件cwd、真实初始化与3/3事件、effective配置排他临时发布和F1证据；相对geant4-data.txt的目录发现正反对照不能仅检查Python请求cwd回显。空数据目录仅验证目录发现，不用于transport。新增入口为test_backend_launch、smoke_backend_launch、test_backend_working_directory；正式冻结仍待复审与矩阵。旧GUI同步生成/立即close的测试需等待真实异步完成并排空，不忽略清理异常、不手动删除恢复锁，保持原断言与失败场景。
+
+## 2026-10-31 K1 终态发布所有权与启动失败进度
+
+第二冻结c644bb1的Windows原生取消→强制结束反例：runner已killed，工作流记录cancelled但busy永久不清。_run_error先进入_finish，随后_run_finished向同一EvidenceJob提交verify取消了终态发布回调。修复必须让finishing上下文独占终态任务；普通_work不得抢占。_run_finished先保留已观测exit_code/output_dir/RunResult/launch，再停止重复验证；published发现记录变化时补写到盘，成功后只发一次completed并释放busy。不得为防重复而丢掉晚到实际退出事实，不增加第二个进程或事务控制器。存储失败必须显式failed，不保证失败存储中的磁盘与回调相等。
+
+回归scripts/test_k1_terminal_publication.py使用Qt owner线程、真实EvidenceJob和持久化、受控信号时序；覆盖error/finished顺序、取消、重复信号、迟到编辑/取消、落盘失败、终态期间多余工作与后续动作可用。它不代表真实Geant4取消；必须另做原生取消/强制结束/恢复操作及正常关闭。失败host强制清理只能记清理，不能计作关闭通过。
+
+backend_launch在创建QProcess前拒绝请求时，runner仍须冻结progress并发failed状态，不能制造finished信号或覆盖旧run_status。规范化可执行文件/临时目录后的路径比较应使用独立规范化的期望，保留原requestedCommand与实际command区别；Linux符号链接和Windows8.3别名不是不同文件。现有启动/进度断言不得删减。
+
+## 2026-10-31 K1 历史显示范围
+
+窗口只在既有runner实际Starting信号时，以服务公共记录中唯一pending运行/初始化的record_id/run_id/revision绑定显示。缺失/歧义保守显示未验证历史，标签、路径、telemetry run索引和事件数不是身份。显示范围以公共state/history/revision/qualification/busy投影；F1及终态持久化尚未完成不得提前显示当前通过。修改/Undo/Redo/恢复/外部字节变化后，顶栏、结果和进度明确标为历史，并保留原日志、结果和计数。
+
+RunPage保留的显示快照不进入EditSession、不修改RunResult/历史记录/验证资格；不恢复F5内部Not run yet与空进度哨兵。新进程实际启动才替换显示绑定，语言刷新重画范围文字。smoke_k1_history_scope默认components不启动后端；integration显式--mode backend，证据目录由统一runner注入或显式给出。合成公共state只证明投影规则，真实3/3只证明所用输入完成，均不替代原生可读性或物理准确性验收。
