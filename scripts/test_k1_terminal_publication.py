@@ -18,7 +18,7 @@ ROOT = next(parent for parent in Path(__file__).resolve().parents
             if (parent / 'gui/g4usim_gui/core/evidence_job.py').is_file())
 sys.path.insert(0, str(ROOT / 'gui'))
 from PySide6.QtCore import QCoreApplication, QThread
-from g4usim_gui.core.edit_snapshot import WorkspaceSnapshot
+from g4usim_gui.core.edit_snapshot import WorkspaceSnapshot, snapshot_fingerprint
 from g4usim_gui.core.edit_transactions import EditSession
 from g4usim_gui.core.project import G4USimProject
 from g4usim_gui.core.run_result import RunResult
@@ -162,6 +162,75 @@ def exercise(module, root, mode):
         assert not service._watcher.files() and not service._watcher.directories()
         assert all(not job.pending for job in (service._job, service._history_job, service._refresh_job))
 
+def exercise_delivery_reason(module, root, mode):
+    """Observe public terminal reasons after real queued work and an owner action."""
+    root.mkdir(parents=True)
+    project = G4USimProject(executable=sys.executable, workspaceRoot=str(root),
+                           outputDir=str(root / 'output'), runsRoot=str(root / 'runs'))
+    session = EditSession(WorkspaceSnapshot(project))
+    service = module.ExperimentWorkflow(session, G4USimRunner(), records_root=root / 'records')
+    wait_for(lambda: not service._history_job.pending)
+    received, accepted = [], []
+    service.completed.connect(received.append)
+    entered, release = threading.Event(), threading.Event()
+    before = snapshot_fingerprint(session.current())
+    revision = session.revision
+
+    def work():
+        entered.set()
+        if not release.wait(30):
+            raise TimeoutError('component delivery barrier')
+        return 'completed component work'
+
+    def accept(result):
+        accepted.append(result)
+        service._finish('passed', 'component_delivery_only')
+
+    try:
+        service._begin('validate', 'fields')
+        record_path = Path(service._active['record']['record_dir']) / 'record.json'
+        service._work(work, accept)
+        wait_for(entered.is_set)
+        assert service.busy and not received
+        if mode == 'cancel_work_delivery':
+            service.cancel()
+            assert session.revision == revision
+            assert snapshot_fingerprint(session.current()) == before
+            expected_status, expected_reason = 'cancelled', 'experiment.cancelled'
+        else:
+            candidate = session.current()
+            candidate.project.projectName = 'Changed while work was in flight'
+            session.replace('component actual workspace edit', candidate)
+            assert session.revision > revision
+            assert snapshot_fingerprint(session.current()) != before
+            expected_status, expected_reason = 'stale', 'experiment.inputs_changed'
+        release.set()
+        wait_for(lambda: len(received) == 1)
+        assert not accepted, 'Neither cancelled nor stale work may publish a passing result'
+        assert not service.busy and service._active is None
+        saved = json.loads(record_path.read_bytes())
+        observed = {'mode': mode, 'status': received[0]['status'], 'reason': received[0]['reason'],
+                    'revision_before': revision, 'revision_after': session.revision,
+                    'snapshot_changed': before != snapshot_fingerprint(session.current()),
+                    'completed_count': len(received), 'disk_matches_callback': saved == received[0]}
+        (root / 'observed.json').write_text(json.dumps(observed, indent=2) + '\n', encoding='utf-8')
+        print(json.dumps(observed), flush=True)
+        assert saved == received[0]
+        assert saved['status'] == expected_status
+        assert saved['reason'] == expected_reason, observed
+        assert 'result' not in saved, 'Component work has no observed simulation result'
+        service._begin('validate', 'fields')
+        service._finish('failed', 'component_next_action_only')
+        wait_for(lambda: len(received) == 2)
+        assert not service.busy
+    finally:
+        release.set()
+        wait_for(lambda: not service._job.pending)
+        service.close()
+        wait_for(lambda: service._closed)
+        assert all(not job.pending for job in (service._job, service._history_job, service._refresh_job))
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--workflow', default=str(ROOT / 'gui/g4usim_gui/core/experiment_workflow.py'))
@@ -181,11 +250,15 @@ def main():
     spec.loader.exec_module(module)
     app = QCoreApplication.instance() or QCoreApplication([])
     modes = [args.only] if args.only else ['cancel_error_finished', 'error_finished', 'init_cancel_error_finished',
-        'init_error_finished', 'late_cancel', 'late_edit', 'persistence_failure', 'late_work', 'finished_before_error']
+        'init_error_finished', 'late_cancel', 'late_edit', 'persistence_failure', 'late_work', 'finished_before_error',
+        'cancel_work_delivery', 'edit_work_delivery']
     results = []
     for mode in modes:
         try:
-            exercise(module, report_root / mode, mode)
+            if mode in ('cancel_work_delivery', 'edit_work_delivery'):
+                exercise_delivery_reason(module, report_root / mode, mode)
+            else:
+                exercise(module, report_root / mode, mode)
         except Exception as error:
             results.append({'mode': mode, 'status': 'failed', 'error': str(error),
                             'traceback': traceback.format_exc()})

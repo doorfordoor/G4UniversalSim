@@ -559,7 +559,9 @@ class ExperimentWorkflow(QObject):
             if self._active is not context:
                 return
             if not self._current():
-                return self._finish("cancelled" if context["cancelled"] else "stale", "experiment.inputs_changed")
+                if context["cancelled"]:
+                    return self._finish("cancelled", "experiment.cancelled")
+                return self._finish("stale", "experiment.inputs_changed")
             if error is not None:
                 if isinstance(error, WorkflowEvidenceError):
                     context["record"].update(error.facts)
