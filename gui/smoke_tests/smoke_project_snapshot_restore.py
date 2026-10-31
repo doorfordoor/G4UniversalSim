@@ -12,7 +12,8 @@ from unittest.mock import patch
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "gui"))
-from PySide6.QtCore import QTimer
+from PySide6.QtCore import QCoreApplication, QEvent, QTimer
+from smoke_k1_workflow import wait_workflow, close_window
 from PySide6.QtWidgets import QApplication, QWidget
 from g4usim_gui.core.i18n import set_application_language
 from g4usim_gui.core.project import G4USimProject, load_project
@@ -179,6 +180,7 @@ def main():
             assert second.config_builder_page.source_editor.energy == "7 MeV"
             assert second.config_builder_page.material_document.rows[0].density == "2.8 g/cm3"
             second.generate_package(run_after_generate=False)
+            wait_workflow(app, second)
             assert second._generated_package_dir
             new_root = Path(second._generated_package_dir)
             assert (new_root / "config/materials/material.ini").read_bytes() == originals[Path(package.materials_ini_path)]
@@ -193,10 +195,11 @@ def main():
             legacy_notes = second.config_builder_page.validation_text.toPlainText()
             assert "旧式项目快照" in legacy_notes and "尚未核验" in legacy_notes
             assert "运行包内当前的材料" not in legacy_notes
-            second.close()
+            close_window(app, second)
             second.deleteLater()
-        window.close()
+        close_window(app, window)
         window.deleteLater()
+        QCoreApplication.sendPostedEvents(None, QEvent.DeferredDelete)
         app.processEvents()
     print("smoke_project_snapshot_restore: ok")
 

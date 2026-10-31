@@ -11,7 +11,9 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from PySide6.QtWidgets import QApplication, QMessageBox
-from PySide6.QtCore import QProcess
+from PySide6.QtCore import QProcess, QTimer
+from smoke_k1_workflow import wait_workflow, close_window
+from g4usim_gui.core.run_result import RunResult
 
 import g4usim_gui.window.run as main_window_module   # _generate_current_package lives here (E5)
 from g4usim_gui.core.project import G4USimProject, project_from_dict
@@ -156,25 +158,43 @@ def test_generated_external_and_source_copy(app: QApplication, temp_root: Path) 
 
     main_window_module.create_run_package = counted_create
     started_commands: list[list[str]] = []
-    window.runner.start = lambda _project, command=None: started_commands.append(list(command or []))
+    # This original writer/dispatch test deliberately uses an inert runner and
+    # a synthetic readiness probe. Real backend tests below keep both real.
+    window.experiment._probe = lambda _executable: {'status': 'ready'}
+    def synthetic_start(_project, command=None):
+        started_commands.append(list(command or []))
+        window.runner.last_result = RunResult('incomplete', 'Synthetic dispatch only; no backend evidence')
+        QTimer.singleShot(0, lambda: window.runner.finished.emit(0))
+    window.runner.start = synthetic_start
     try:
         assert window.project.runInputMode == "generated"
         assert window._generated_package_stale
         assert "regenerated" in window.run_page.command_preview.toPlainText().lower()
 
         window.start_run()
+        wait_workflow(app, window)
         assert len(create_calls) == 1, warnings
         assert len(started_commands) == 1
         command = started_commands[-1]
         config_arg = Path(command[command.index("--config") + 1])
         macro_arg = Path(command[command.index("--macro") + 1])
+        execution_config, execution_macro = config_arg, macro_arg
+        # The writer's canonical package contract remains intact. K1 executes
+        # its verified resource closure, which has separate relocated paths.
+        config_arg = Path(create_calls[0]) / 'config/main.ini'
+        macro_arg = Path(create_calls[0]) / 'macros/run.mac'
         assert config_arg.name == "main.ini" and config_arg.parent.name == "config"
         assert macro_arg.name == "run.mac" and macro_arg.parent.name == "macros"
         assert config_arg.is_file() and macro_arg.is_file()
+        prepared = window.experiment.records()[-1]
+        assert execution_config.is_file() and execution_macro.is_file()
+        assert str(execution_config.resolve()) in prepared['expected_inputs']
+        assert str(execution_macro.resolve()) in prepared['expected_inputs']
         assert not window._generated_package_stale
         original_is_running = window.runner.is_running
         window.runner.is_running = lambda: True
         window.start_run()
+        wait_workflow(app, window, predicate=lambda: not window.experiment._active)
         assert len(create_calls) == 1 and len(started_commands) == 1
         window.runner.is_running = original_is_running
         macro_text = macro_arg.read_text(encoding="utf-8")
@@ -185,23 +205,29 @@ def test_generated_external_and_source_copy(app: QApplication, temp_root: Path) 
         alternate_materials = temp_root / "alternate_materials.ini"
         alternate_materials.write_bytes((ROOT / "config" / "materials" / "material.ini").read_bytes())
         window.config_builder_page.materials_config.setText(str(alternate_materials))
+        window.config_builder_page.reload_materials()
         assert window._generated_package_stale
         assert "regenerated" in window.run_page.command_preview.toPlainText().lower()
         window.start_run()
-        assert len(create_calls) == 2
+        wait_workflow(app, window)
+        assert len(create_calls) == 2, (warnings, window.experiment.records()[-1].get('reason'))
         assert create_calls[0] != create_calls[1]
 
         alternate_geometry = temp_root / "alternate_geometry.ini"
         alternate_geometry.write_bytes((ROOT / "config" / "geometry" / "simple_box.ini").read_bytes())
         window.config_builder_page.geometry_config.setText(str(alternate_geometry))
+        window.config_builder_page.reload_geometry()
+        window.config_builder_page.geometry_source_copy.setChecked(True)
         assert window._generated_package_stale
         window.start_run()
-        assert len(create_calls) == 3
+        wait_workflow(app, window)
+        assert len(create_calls) == 3, (warnings, window.experiment.records()[-1].get('reason'))
 
         window.project_page.project_name.setText("renamed-project")
         assert window._generated_package_stale
         assert len(create_calls) == 3  # Editing must never write a new package.
         window.start_run()
+        wait_workflow(app, window)
         assert len(create_calls) == 4
         assert not window._generated_package_stale
         window.project_page.workspace_root.setText(str(temp_root))
@@ -260,20 +286,23 @@ def test_generated_external_and_source_copy(app: QApplication, temp_root: Path) 
         assert not geometry.source_copy_mode
         before_count = len(create_calls)
         window.start_run()
+        wait_workflow(app, window)
         assert len(create_calls) == before_count
         assert any("round-trip" in item.lower() for item in warnings)
 
         source_bytes = Path(builder.geometry_config.text()).read_bytes()
         builder.geometry_source_copy.setChecked(True)
         window.start_run()
-        assert len(create_calls) == before_count + 1
+        wait_workflow(app, window)
+        assert len(create_calls) == before_count + 1, (warnings, window.experiment.records()[-1].get('reason'),
+            getattr(window.experiment.records()[-1].get('report'), 'errors', []))
         generated_geometry = Path(create_calls[-1]) / "config" / "geometry" / "geometry.ini"
         assert generated_geometry.read_bytes() == source_bytes
     finally:
         main_window_module.create_run_package = original_create
         QMessageBox.warning = original_warning
         QMessageBox.information = original_information
-        window.close()
+        close_window(app, window)
         app.processEvents()
 
 
@@ -310,7 +339,9 @@ def test_real_generated_run(app: QApplication, temp_root: Path, executable: Path
         assert not builder.geometry_document.source_copy_mode
         # Make an actual editor change so this covers generated geometry as well.
         target = next(volume for volume in builder.geometry_document.volumes if volume.name == "target")
-        target.size = "2 cm, 1 cm, 1 mm"
+        target_row = builder.geometry_document.volumes.index(target)
+        builder.geometry_table.item(target_row, 6).setText("2 cm, 1 cm, 1 mm")
+        assert builder.geometry_document.volumes[target_row].size == "2 cm, 1 cm, 1 mm"
         builder.geometry_document.is_dirty = True
         builder.beam_on.setValue(3)
         window.start_run()
@@ -319,6 +350,7 @@ def test_real_generated_run(app: QApplication, temp_root: Path, executable: Path
         while not exits and not errors and time.monotonic() < deadline:
             app.processEvents()
             time.sleep(0.01)
+        wait_workflow(app, window)
         assert not warnings, warnings
         assert not errors, errors
         assert exits == [0], exits
@@ -345,7 +377,7 @@ def test_real_generated_run(app: QApplication, temp_root: Path, executable: Path
             window.runner._process.waitForFinished(5000)
         QMessageBox.warning = original_warning
         QMessageBox.information = original_information
-        window.close()
+        close_window(app, window)
         app.processEvents()
 
 
@@ -415,6 +447,7 @@ def test_external_macro_inspection(app: QApplication, temp_root: Path, executabl
         page.run_input_mode.setCurrentIndex(page.run_input_mode.findData("external"))
         page.macro_path.setText(str(macro))
         window.inspect_external_macro()
+        wait_workflow(app, window)
         deadline = time.monotonic() + 30
         while window._macro_inspection.state() != QProcess.NotRunning and time.monotonic() < deadline:
             app.processEvents()
@@ -430,8 +463,13 @@ def test_external_macro_inspection(app: QApplication, temp_root: Path, executabl
         page.config_path.setText(str(config))
         page.macro_path.clear()
         launched: list[list[str]] = []
-        window.runner.start = lambda _project, command=None: launched.append(list(command or []))
+        def synthetic_start(_project, command=None):
+            launched.append(list(command or []))
+            window.runner.last_result = RunResult('incomplete', 'Synthetic dispatch after real Inspect')
+            QTimer.singleShot(0, lambda: window.runner.finished.emit(0))
+        window.runner.start = synthetic_start
         window.start_run()
+        wait_workflow(app, window)
         deadline = time.monotonic() + 30
         while window._macro_inspection.state() != QProcess.NotRunning and time.monotonic() < deadline:
             app.processEvents()
@@ -444,20 +482,26 @@ def test_external_macro_inspection(app: QApplication, temp_root: Path, executabl
         conflicting = temp_root / "conflicting.mac"
         conflicting.write_text("/AIHL/output/setDir old-output\n", encoding="utf-8")
         page.macro_path.setText(str(conflicting))
+        # Independent Inspect preserves the backend's original-path diagnostic;
+        # the requested run below separately proves that refusal cannot launch.
+        window.inspect_external_macro()
+        wait_workflow(app, window)
+        failure = window.run_page.macro_plan_view.toPlainText()
+        assert "conflicts with an explicit CLI lock" in failure, failure
         window.start_run()
+        wait_workflow(app, window)
         deadline = time.monotonic() + 30
         while window._macro_inspection.state() != QProcess.NotRunning and time.monotonic() < deadline:
             app.processEvents()
             time.sleep(0.01)
         app.processEvents()
-        failure = window.run_page.macro_plan_view.toPlainText()
-        assert "conflicts with an explicit CLI lock" in failure, failure
+        assert window.experiment.records()[-1]['status'] == 'failed'
         assert len(launched) == 1  # Failed preflight must not launch the simulation.
     finally:
         if window._macro_inspection.state() != QProcess.NotRunning:
             window._macro_inspection.kill()
             window._macro_inspection.waitForFinished(5000)
-        window.close()
+        close_window(app, window)
         app.processEvents()
 
 

@@ -30,6 +30,7 @@ from g4usim_gui.models.source_model import SourceSettings
 from g4usim_gui.writers.package_writer import create_run_package
 from g4usim_gui.window import project as project_window
 from smoke_project_import_projection import snapshot
+from smoke_k1_workflow import wait_workflow
 
 
 def package_fixture(root, seed=43):
@@ -75,6 +76,8 @@ def main():
         runs.mkdir()
         run_history_store.STATE_PATH = work / "state.json"
         window = MainWindow()
+        # This regression inspects dispatch, not backend readiness or physics.
+        window.experiment._probe = lambda _executable: {'status': 'ready'}
         boxes = []
         def record(_parent, title, message, *_a, **_k):
             boxes.append((str(title), str(message)))
@@ -105,16 +108,25 @@ def main():
                         if not run_after:
                             assert not inspection
                             window.start_run()
+                        wait_workflow(app, window, predicate=lambda: bool(inspection) or not window.experiment.busy)
                         assert len(inspection) == 1
                         assert inspection[0][0] == "--inspect-run"
                         plan = {"schema": "G4UniversalSimRunPlan", "version": 1,
+                                "configuration_phase": "before_macro",
                                 "macro_plan": {"commands": [{"file": window.project.macroPath, "line": 1,
                                                               "category": "beam_on", "text": "/run/beamOn 2"}]},
                                 "initial_configuration": [], "macro_execution_planned": True}
                         with patch.object(window._macro_inspection, "readAllStandardOutput", return_value=json.dumps(plan).encode()), \
                              patch.object(window._macro_inspection, "readAllStandardError", return_value=b""):
-                            window._on_macro_inspection_finished(0, QProcess.NormalExit)
+                            window.experiment._inspect_finished(0, QProcess.NormalExit)
+                            wait_workflow(app, window, predicate=lambda: bool(starts) or not window.experiment.busy)
                         assert len(starts) == 1
+                        # The intercepted runner never started a real process.
+                        # Finish the service through its cancellation/error path,
+                        # so the next copy does not race a pending fake run.
+                        window.experiment.cancel()
+                        window.runner.errorOccurred.emit('Synthetic dispatch test did not launch the backend')
+                        wait_workflow(app, window)
                     project, command = starts[0]
                     expected_threads, expected_seed, expected_name = ((3, "83", "actual_main_run") if edited is True else
                         (2, None if seed is None else str(seed),

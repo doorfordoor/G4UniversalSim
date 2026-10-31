@@ -52,7 +52,25 @@ class RunMixin:
                 self.project.workspaceRoot, self.project.configPath, self.project.macroPath,
                 self.project.outputDir, self.project.threads, self.project.seed, self.project.runName)
 
+    def _format_inspected_plan(self, plan):
+        lines = [ui_text('Configuration before macro execution; runtime results remain unknown.'),
+                 ui_text('Initial configuration and sources:')]
+        for item in plan['initial_configuration']:
+            location = f" {item.get('file', '')}:{item.get('line', '')}" if item['source'] == 'main_ini' else ''
+            lines.append(f"{item['name']} = {item['value']} [{item['source']}]{location}")
+        commands = plan['macro_plan']['commands']
+        lines.extend(['', ui_format('Expanded commands: {count}', count=len(commands)),
+                      ui_text('Macro commands may change configuration after initialization.')])
+        for item in commands:
+            lines.append(f"{item['file']}:{item['line']} [{item['category']}] {item['text']}")
+        if plan['macro_execution_planned'] and not any(item['category'] == 'beam_on' for item in commands):
+            lines.extend(['', ui_text('No beamOn command was found; no macro events are planned.')])
+        return '\n'.join(lines)
+
     def inspect_external_macro(self, *, run_after: bool = False) -> None:
+        if hasattr(self, 'experiment'):
+            self._experiment_action('run' if run_after else 'inspect')
+            return
         if not self.can_mutate_workspace('inspect'):
             return
         self.flush_pending_edit()
@@ -140,6 +158,9 @@ class RunMixin:
             self._present_raw_run_diagnostic('backend.inspect_start', self._macro_inspection.errorString())
 
     def start_run(self) -> None:
+        if hasattr(self, 'experiment'):
+            self._experiment_action('run')
+            return
         if not self.can_mutate_workspace('run'):
             return
         if self.runner.is_running() or self._macro_inspection.state() != QProcess.NotRunning:
@@ -156,6 +177,9 @@ class RunMixin:
         self.inspect_external_macro(run_after=True)
 
     def _start_current_project(self) -> None:
+        if hasattr(self, 'experiment'):
+            self._experiment_action('run')
+            return
         if not self.can_mutate_workspace('run'):
             return
         validation = self.runner.validation_report(self.project, ready_to_run=True)
@@ -175,6 +199,9 @@ class RunMixin:
         self.runner.start(self.project, command)
 
     def validate_generated_config(self) -> None:
+        if hasattr(self, 'experiment'):
+            self._experiment_action('validate')
+            return
         if not self.can_mutate_workspace('validate'):
             return
         self._update_project_from_page_without_preview()
@@ -192,6 +219,9 @@ class RunMixin:
             QMessageBox.warning(self, "Validation failed", "\n".join(report.errors))
 
     def generate_package(self, run_after_generate: bool) -> None:
+        if hasattr(self, 'experiment'):
+            self._experiment_action('run' if run_after_generate else 'generate')
+            return
         if not self.can_mutate_workspace('generate'):
             return
         self._finish_history_merge()
@@ -202,9 +232,20 @@ class RunMixin:
         if run_after_generate:
             self._start_current_project()
 
-    def _generate_current_package(self) -> bool:
+    def _generate_current_package(self) -> bool | None:
         if not self.can_mutate_workspace('generate'):
             return False
+        if hasattr(self, 'experiment'):
+            self._finish_history_merge()
+            try:
+                record = self.experiment.generate()
+                # Completion binds the package. None means asynchronous pending;
+                # callers must wait for completed, never treat dispatch as success.
+                return None if record.get('status') == 'pending' else record.get('status') == 'passed'
+            except Exception as error:
+                self.config_builder_page.set_validation_text(str(error))
+                QMessageBox.warning(self, ui_text('Generate package failed'), str(error))
+                return False
         original_paths = self.capture_workspace().project
         try:
             pre_report = self.config_builder_page.validate_current(self.project)
@@ -269,9 +310,18 @@ class RunMixin:
         return True
 
     def stop_run(self) -> None:
+        if hasattr(self, 'experiment'):
+            self.experiment.cancel()
+            return
         self.runner.terminate()
         self.run_page.append_status_message("Terminate requested. Use Kill if the process does not exit.")
         QTimer.singleShot(3000, self._offer_kill_if_running)
+
+    def kill_run(self) -> None:
+        if hasattr(self, 'experiment'):
+            self.experiment.cancel(force=True)
+            return
+        self.runner.kill()
 
     def _offer_kill_if_running(self) -> None:
         if not self.runner.is_running():
@@ -294,10 +344,11 @@ class RunMixin:
         self.run_page.append_status_message(ui_format("Run result: {state}. {reason}", state=ui_text(state), reason=ui_text(reason)))
         self.project_page.set_inputs_enabled(True)
         self._update_editor_busy()
-        self.output_page.set_output_dir(self.project.outputDir)
+        output_dir = str(self.runner._output_dir or self.project.outputDir)
+        self.output_page.set_output_dir(output_dir)
         self.output_page.refresh()
         self.run_history_page.refresh()
-        self.load_tracks(self.project.outputDir, quiet=True)   # a run with trajectories shows them (G6)
+        self.load_tracks(output_dir, quiet=True)   # a run with trajectories shows them (G6)
         self._set_run_chip(state, {"success": "success", "failed": "failed"}.get(state, ""))
         self.statusBar().showMessage(ui_format("Run result: {state}. {reason}", state=ui_text(state), reason=ui_text(reason)), 8000)
 

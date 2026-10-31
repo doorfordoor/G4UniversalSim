@@ -17,6 +17,7 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from PySide6.QtCore import QSettings
+from smoke_k1_workflow import wait_workflow, close_window
 from PySide6.QtWidgets import QApplication, QMessageBox
 
 from g4usim_gui.core import wizard as wz
@@ -138,14 +139,16 @@ def main() -> None:
         report = page.validate_current(window.project)
         assert report.can_run, report.to_text()
         window.generate_package(run_after_generate=False)
+        wait_workflow(app, window)
         assert not any(box.startswith("warning") for box in boxes), boxes
-        packages = list(Path(temp).glob("*shielding*"))
+        packages = list(Path(temp).rglob("*shielding*"))
         assert len(packages) == 1, list(Path(temp).iterdir())
         geometry_text = (packages[0] / "config" / "geometry" / "geometry.ini").read_text(encoding="utf-8")
         assert "[volume.Shield]" in geometry_text and "material = G4_Pb" in geometry_text
         main_text = (packages[0] / "config" / "main.ini").read_text(encoding="utf-8")
         assert "particle = e-" in main_text and "energy = 5 MeV" in main_text, main_text
         assert "/run/beamOn 321" in (packages[0] / "macros" / "run.mac").read_text(encoding="utf-8")
+        close_window(app, window)
     window.close()
     print("smoke_new_simulation_wizard: OK")
 

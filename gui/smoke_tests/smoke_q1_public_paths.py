@@ -19,6 +19,7 @@ from g4usim_gui.history import run_history_store
 from g4usim_gui.preview3d.backend_geometry_controller import BackendGeometryController
 from g4usim_gui.preview3d.backend_inputs import GeometryInputs
 from gui_test_window import MainWindow
+from smoke_k1_workflow import close_window
 
 
 def main():
@@ -167,6 +168,7 @@ def main():
             assert outsider.waitForFinished(5000)
             window.runner.kill()
             window.runner._process.waitForFinished(5000)
+            close_window(app, window)
             window.deleteLater()
             app.processEvents()
     destination = ROOT / "out/verification/q1-public-paths-regression.json"

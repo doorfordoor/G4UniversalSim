@@ -12,8 +12,11 @@ from unittest.mock import patch
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "gui"))
-from PySide6.QtCore import QCoreApplication, QEvent, QThreadPool, QTimer
-from PySide6.QtWidgets import QApplication, QDialog
+from PySide6.QtCore import QCoreApplication, QEvent, QThreadPool, QTimer, Qt
+from PySide6.QtWidgets import QApplication, QDialog, QPlainTextEdit
+from PySide6.QtGui import QFontDatabase, QFontMetrics, QTextOption
+from PySide6.QtTest import QTest
+from g4usim_gui.core.i18n import ZH_CN, current_language, set_application_language
 from g4usim_gui.core.theme import apply_theme
 from g4usim_gui.core import environment_discovery as discovery
 from g4usim_gui.core.backend_capabilities import CAPABILITY_GROUPS
@@ -38,10 +41,136 @@ def fixture(status="data_incomplete"):
                  "capabilities": {"status": "not_probed"}}]}
 
 
+def ensure_test_fonts(app):
+    # Qt's Windows offscreen plugin can expose an empty font database. Load the
+    # installed fonts used by the real theme; tofu boxes are not layout evidence.
+    metrics = QFontMetrics(app.font())
+    if os.name == "nt" and (not metrics.inFont("A") or not metrics.inFont("中")):
+        font_root = Path(os.environ["WINDIR"]) / "Fonts"
+        for name in ("segoeui.ttf", "msyh.ttc"):
+            assert QFontDatabase.addApplicationFont(str(font_root / name)) >= 0
+    assert QFontMetrics(app.font()).inFont("A")
+    assert QFontMetrics(app.font()).inFont("中")
+
+
+def check_summary_layout(app):
+    previous_language = current_language()
+    dialog = module.EnvironmentDialog(candidates=[], auto_discover=False)
+    long_path = "C:/中文工作区/" + "very-long-directory-name/" * 10 + "G4UniversalSim.exe"
+    facts = fixture()
+    facts["environments"][0]["executable"] = long_path
+    facts["environments"][0]["data"] = {
+        "status": "incomplete", "required_complete": False,
+        "report": {"datasets": [
+            {"env": "G4LEDATA", "folder": "G4EMLOW8.6.1", "required": True, "found": False},
+            {"env": "G4OPTIONAL", "folder": "optional-not-required", "required": False, "found": False},
+        ]},
+    }
+    original_facts = json.loads(json.dumps(facts))
+    try:
+        dialog._completed(dialog._generation, facts)
+        dialog.show()
+        app.processEvents()
+        assert dialog.summary.isVisible()
+        assert QFontMetrics(dialog.summary.font()).inFont("中")
+        assert dialog.summary.isReadOnly()
+        assert isinstance(dialog.details, QPlainTextEdit)
+        assert not dialog.details.isVisible()
+        assert not dialog.details_toggle.isChecked()
+        assert dialog.summary.lineWrapMode() == QPlainTextEdit.WidgetWidth
+        assert dialog.summary.wordWrapMode() == QTextOption.WrapAtWordBoundaryOrAnywhere
+        assert dialog.table.item(0, 3).text() == "11.3.2"
+        assert not dialog.summary.toPlainText().lstrip().startswith("{")
+        assert json.loads(dialog.details.toPlainText())["environment"]["build"]["geant4_version_number"] == 1132
+        for language in ("zh_CN", "en", "zh_CN"):
+            set_application_language(app, language)
+            dialog.retranslate_ui()
+            text = dialog.summary.toPlainText()
+            assert long_path in text
+            assert "11.3.2" in text
+            assert module.ui_text(module.STATUS_TEXT["data_incomplete"]) in text
+            assert module.ui_text("Required data is missing") in text
+            assert "G4EMLOW8.6.1" in text
+            assert "optional-not-required" not in text
+            assert module.ui_text("Selection only chooses a backend path; it does not start or validate a simulation.") in text
+            if language == "zh_CN":
+                # These are real centralized translations, never a test dictionary.
+                for source in ("Backend executable", "Discovery status", module.STATUS_TEXT["data_incomplete"]):
+                    assert source in ZH_CN
+                    assert module.ui_text(source) != source
+                    assert any("\u4e00" <= ch <= "\u9fff" for ch in module.ui_text(source))
+                assert "后端程序" in text
+                assert "缺少必需数据" in text
+            for width in (960, 480, 640, 480):
+                dialog.resize(width, 640)
+                app.processEvents()
+                assert dialog.width() == width
+                for button in dialog._buttons:
+                    assert button.width() >= button.sizeHint().width()
+                    assert button.isVisible()
+                assert dialog.summary.isVisible() and not dialog.details.isVisible()
+                assert dialog.table.columnWidth(0) > dialog.table.columnWidth(4)
+                assert dialog.table.columnWidth(1) > dialog.table.columnWidth(4)
+                status_width = dialog.table.fontMetrics().horizontalAdvance(dialog.table.item(0, 1).text())
+                assert dialog.table.columnWidth(1) >= status_width + 16
+                for column in range(5):
+                    assert dialog.table.item(0, column).toolTip() == dialog.table.item(0, column).text()
+                assert dialog.table.item(0, 0).toolTip() == long_path
+                assert dialog.summary.horizontalScrollBar().maximum() == 0
+                block = dialog.summary.document().firstBlock()
+                assert block.layout().lineCount() > 1  # Whole path wraps, not elides.
+                for index in range(block.layout().lineCount()):
+                    assert block.layout().lineAt(index).naturalTextWidth() <= dialog.summary.viewport().width()
+                if width == 480:
+                    assert dialog.table.horizontalScrollBar().maximum() > 0
+                    dialog.table.horizontalScrollBar().setValue(dialog.table.horizontalScrollBar().maximum())
+                    assert dialog.table.visualItemRect(dialog.table.item(0, 4)).intersects(dialog.table.viewport().rect())
+                dialog.table.horizontalScrollBar().setValue(0)
+                dialog.summary.setFocus()
+                QTest.keyClick(dialog.summary, Qt.Key_A, Qt.ControlModifier)
+                assert dialog.summary.textCursor().selectedText().replace("\u2029", "\n") == text
+        assert dialog.current_environment()["data"]["required_complete"] is False
+        dialog.details_toggle.click()
+        app.processEvents()
+        assert dialog.details.isVisible()
+        assert json.loads(dialog.details.toPlainText())["environment"]["executable"] == long_path
+        dialog.details_toggle.click()
+        assert not dialog.details.isVisible()
+        assert facts == original_facts  # Rendering never repairs or reclassifies facts.
+        dialog.table.selectRow(1)
+        assert long_path not in dialog.summary.toPlainText()
+        assert module.ui_text("Unknown") in dialog.summary.toPlainText()
+        assert module.ui_text("Data availability is unknown") in dialog.summary.toPlainText()
+        assert not dialog.select_button.isEnabled()
+        dialog.table.selectRow(0)
+        assert dialog.select_button.isEnabled()  # Missing data still permits path selection.
+        for status in ("partial", "ready", "future-status"):
+            observation = fixture(status)
+            dialog._completed(dialog._generation, observation)
+            assert module.ui_text("Data availability is unknown") in dialog.summary.toPlainText()
+            assert dialog.current_environment()["status"] == status
+            assert dialog.select_button.isEnabled()
+        complete = fixture("ready")
+        complete["environments"][0]["data"] = {"required_complete": True, "report": {"datasets": []}}
+        dialog._completed(dialog._generation, complete)
+        assert module.ui_text("Required data directories found") in dialog.summary.toPlainText()
+        assert dialog.current_environment()["data"]["required_complete"] is True
+        dialog._completed(dialog._generation, {"environments": [], "host": {}, "sdk": []})
+        assert long_path not in dialog.summary.toPlainText()
+        assert not dialog.select_button.isEnabled()
+        assert '"host"' in dialog.details.toPlainText()
+        assert module.ui_text("Select a backend to view its summary.") in dialog.summary.toPlainText()
+    finally:
+        dialog.close()
+        dialog.deleteLater()
+        set_application_language(app, previous_language)
+
+
 def main():
     app = QApplication.instance() or QApplication([])
     app.setStyle("Fusion")
     apply_theme(app, "light")
+    ensure_test_fonts(app)
     app.setQuitOnLastWindowClosed(False)
     app.setProperty("languageCode", "en")
     main_thread = threading.get_ident()
@@ -177,6 +306,8 @@ def main():
     assert partial_dialog.select_button.isEnabled()
     partial_dialog.choose_selected()
     assert partial_dialog.selected_environment()["status"] == "partial"
+
+    check_summary_layout(app)
 
     executable = None if '--component' in sys.argv else os.environ.get("G4USIM_EXE")
     if executable:

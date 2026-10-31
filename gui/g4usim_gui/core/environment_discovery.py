@@ -45,17 +45,19 @@ def _environment(env):
     return result
 
 
-def _command(argv, *, timeout, env):
+def _command(argv, *, timeout, env, cwd=None):
     """Bound execution and returned output; temp streams avoid inherited pipe hangs."""
     start = time.monotonic()
     record = {"argv": list(map(str, argv)), "status": "unknown", "exit_code": None,
               "elapsed_seconds": 0.0, "stderr": ""}
+    working_directory = str(Path(cwd).resolve()) if cwd is not None else str(Path(argv[0]).parent.resolve())
+    record["working_directory"] = working_directory
     text = ""
     try:
         with tempfile.TemporaryFile() as stdout, tempfile.TemporaryFile() as stderr:
             try:
                 completed = subprocess.run(
-                    record["argv"], cwd=str(Path(argv[0]).parent), env=env,
+                    record["argv"], cwd=working_directory, env=env,
                     stdin=subprocess.DEVNULL, stdout=stdout, stderr=stderr,
                     timeout=timeout, shell=False,
                     creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
@@ -233,7 +235,7 @@ def _host_facts(env, timeout):
             "python_bits": struct.calcsize("P") * 8, "tools": tools, "optional_components": optional}
 
 
-def probe_environment(executable: str | Path, *, timeout: float = 5.0,
+def probe_environment(executable: str | Path, *, timeout: float = 5.0, cwd: str | Path | None = None,
                       env: Mapping[str, str | None] | None = None,
                       sdk_roots: Iterable[str | Path] = ()) -> dict:
     """Return JSON facts; timeout is per command, env overrides apply only to children.
@@ -262,7 +264,8 @@ def probe_environment(executable: str | Path, *, timeout: float = 5.0,
         initial_hash = _sha256(path)
         result["identity"]["sha256"] = initial_hash
         for field, flag in (("capabilities", "--capabilities"), ("data", "--check-geant4-data")):
-            command, text = _command([str(path), flag], timeout=timeout, env=child_env)
+            command, text = _command([str(path), flag], timeout=timeout, env=child_env,
+                                     **({"cwd": cwd} if cwd is not None else {}))
             target = result[field]
             target["probe"] = command
             target["status"] = command["status"]

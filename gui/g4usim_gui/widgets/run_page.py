@@ -16,6 +16,7 @@ from PySide6.QtWidgets import (
 
 from g4usim_gui.core.i18n import ui_format, ui_text
 from g4usim_gui.widgets.diagnostic_panel import DiagnosticPanel
+from g4usim_gui.widgets.experiment_panel import ExperimentPanel
 from g4usim_gui.widgets.ui_helpers import toolbar_grid
 
 
@@ -115,6 +116,8 @@ class RunPage(QWidget):
 
         content = QWidget()
         layout = QVBoxLayout(content)
+        self.experiment_panel = ExperimentPanel(self)
+        layout.addWidget(self.experiment_panel)
         hint = QLabel("Build the command first when paths change. Validation errors usually point back to the Project page.")
         hint.setWordWrap(True)
         layout.addWidget(hint)
@@ -232,6 +235,7 @@ class RunPage(QWidget):
         self.result_label.setText(ui_format("Result: {state}", state=ui_text(state)) if state else "")
 
     def refresh_language(self) -> None:
+        self.experiment_panel.retranslate_ui()
         self.diagnostics_panel.refresh_language()
         self._render_progress()
         self.state_label.setText(ui_format("State: {state}", state=ui_text(self._current_state)))

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from PySide6.QtCore import QProcess, QTimer
+from PySide6.QtCore import QFileSystemWatcher, QProcess, QTimer
 from PySide6.QtWidgets import QApplication, QMainWindow
 
 from pathlib import Path
@@ -24,9 +24,10 @@ from g4usim_gui.window.content import ContentMixin
 from g4usim_gui.window.diagnostics import DiagnosticsMixin
 from g4usim_gui.window.transactions import TransactionsMixin
 from g4usim_gui.window.recovery import RecoveryMixin
+from g4usim_gui.window.experiment import ExperimentMixin
 
 
-class MainWindow(ShellMixin, ProjectMixin, RunMixin, ContentMixin, DiagnosticsMixin, TransactionsMixin, RecoveryMixin, QMainWindow):
+class MainWindow(ShellMixin, ProjectMixin, RunMixin, ContentMixin, DiagnosticsMixin, TransactionsMixin, RecoveryMixin, ExperimentMixin, QMainWindow):
     """The main window: pages, runner and controllers; its behaviour is split by area in g4usim_gui/window/."""
 
     def __init__(self, *, recovery_root=None, offer_recovery: bool = True) -> None:
@@ -73,6 +74,7 @@ class MainWindow(ShellMixin, ProjectMixin, RunMixin, ContentMixin, DiagnosticsMi
         self._setup_edit_history()
         self._recovery_root = recovery_root
         self._offer_recovery = offer_recovery
+        self._setup_experiment()
         setup_recovery = getattr(self, '_setup_recovery', None)
         if setup_recovery is not None:
             setup_recovery()
@@ -103,7 +105,7 @@ class MainWindow(ShellMixin, ProjectMixin, RunMixin, ContentMixin, DiagnosticsMi
         self.run_page.inspectMacroRequested.connect(self.inspect_external_macro)
         self.run_page.runRequested.connect(self.start_run)
         self.run_page.stopRequested.connect(self.stop_run)
-        self.run_page.killRequested.connect(self.runner.kill)
+        self.run_page.killRequested.connect(self.kill_run)
         self.run_page.saveLogsRequested.connect(self.runner.save_logs)
 
         self.runner.progressReceived.connect(self.run_page.set_progress)
@@ -127,10 +129,13 @@ class MainWindow(ShellMixin, ProjectMixin, RunMixin, ContentMixin, DiagnosticsMi
         self._on_runner_error(message)
 
     def closeEvent(self, event) -> None:  # noqa: N802 - Qt override.
-        if not self._confirm_unsaved_edits():
+        if not self._experiment_close_pending and not self._confirm_unsaved_edits():
             event.ignore()
             return
         self._closing = True
+        if self._defer_experiment_close():
+            event.ignore()
+            return
         # Stop producers before waiting: completion signals must not launch queued jobs.
         for timer in self.findChildren(QTimer):
             timer.stop()
@@ -164,16 +169,28 @@ class MainWindow(ShellMixin, ProjectMixin, RunMixin, ContentMixin, DiagnosticsMi
             self.history_changed()
             return
         finish_recovery = getattr(self, '_recovery_before_close', None)
-        if finish_recovery is not None:
+        if finish_recovery is not None and not self._experiment_recovery_closed:
             if not finish_recovery(discard=self._history_discard_on_close):
                 self._closing = False
                 event.ignore()
                 self.history_changed()
                 return
+            self._experiment_recovery_closed = True
+        if not self.experiment.close():
+            self._experiment_service_waiting = True
+            self._experiment_close_pending = True
+            event.ignore()
+            return
         # QWidget ancestor close hides embedded pages without invoking each
         # page.closeEvent. Close their jobs only after the ignore branch above.
         from g4usim_gui.core.evidence_job import close_evidence_jobs
         close_evidence_jobs(self)
+        # Windows directory/file watches retain handles even after the window
+        # is hidden. Release only our watchers after close has been accepted.
+        for watcher in self.findChildren(QFileSystemWatcher):
+            watched = watcher.files() + watcher.directories()
+            if watched:
+                watcher.removePaths(watched)
         from g4usim_gui.widgets.diagnostic_navigation import WidgetHighlighter
         for highlighter in self.findChildren(WidgetHighlighter):
             highlighter.clear()

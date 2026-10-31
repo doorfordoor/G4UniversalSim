@@ -53,6 +53,19 @@ class Case:
 
 
 CASES = (
+    Case("gui_k1_workflow", "scripts/test_k1_workflow.py", "gui", ("qt",), args=("--component",)),
+    Case("k1_workflow_backend", "scripts/test_k1_workflow.py", "integration", ("qt", "exe")),
+    Case("k1_roundtrip", "scripts/test_k1_roundtrip.py", "integration", ("qt", "exe")),
+    Case("k1_bundle", "scripts/test_k1_bundle.py", "static", args=("--component",)),
+    Case("k1_bundle_backend", "scripts/test_k1_bundle.py", "backend", ("exe",)),
+    Case("gui_k1_cli", "scripts/test_k1_cli.py", "gui", ("qt",)),
+    Case("k1_cli_backend", "scripts/test_k1_cli.py", "integration", ("qt", "exe"), args=("--backend",)),
+    Case("i1_environment", "scripts/test_i1_environment.py", "static", args=("--component",)),
+    Case("i1_environment_backend", "scripts/test_i1_environment.py", "backend", ("exe",)),
+    Case("gui_i1_environment", "gui/smoke_tests/smoke_i1_environment.py", "gui", ("qt",), args=("--component",)),
+    Case("gui_i1_environment_backend", "gui/smoke_tests/smoke_i1_environment.py", "integration", ("qt", "exe")),
+    Case("gui_k1_panel", "gui/smoke_tests/smoke_k1_panel.py", "gui", ("qt",)),
+    Case("gui_k1_window", "gui/smoke_tests/smoke_k1_workflow.py", "gui", ("qt",)),
     Case("f5_source_snapshots", "scripts/test_f5_source_snapshots.py", "static"),
     Case("f5_project_receipts", "scripts/test_f5_project_receipts.py", "static"),
     Case("f5_transactions", "scripts/test_f5_transactions.py", "static"),

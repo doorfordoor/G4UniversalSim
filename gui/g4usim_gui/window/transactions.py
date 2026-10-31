@@ -498,6 +498,10 @@ class TransactionsMixin:
             return
         if self.project_page._building or self.config_builder_page._building:
             return
+        service = getattr(self, 'experiment', None)
+        if service is not None:
+            service.invalidate('editor_draft_changed')
+            self._refresh_experiment()
         self._history_timer.start(0)
         self._history_merge_timer.start()
 
@@ -575,13 +579,18 @@ class TransactionsMixin:
         if getattr(self, '_workspace_fault', ''):
             self.statusBar().showMessage(ui_text('Editor recovery required. Use Edit > Restore last verified editor state before saving or running.'))
             return False
-        busy = self.runner.is_running() or self._macro_inspection.state() != QProcess.NotRunning
+        busy = (self.runner.is_running() or self._macro_inspection.state() != QProcess.NotRunning
+                or bool(getattr(getattr(self, 'experiment', None), 'busy', False))
+                or bool(getattr(self, '_experiment_loading', False)))
         if busy:
             self.statusBar().showMessage(ui_text('Editing is unavailable while a run or input inspection is active.'), 5000)
         return not busy and not getattr(self, '_closing', False)
 
     def _update_editor_busy(self, *_args):
-        busy = bool(getattr(self, '_workspace_fault', '')) or self.runner.is_running() or self._macro_inspection.state() != QProcess.NotRunning
+        busy = (bool(getattr(self, '_workspace_fault', '')) or self.runner.is_running()
+                or self._macro_inspection.state() != QProcess.NotRunning
+                or bool(getattr(getattr(self, 'experiment', None), 'busy', False))
+                or bool(getattr(self, '_experiment_loading', False)))
         self.project_page.setEnabled(not busy)
         self.config_builder_page.setEnabled(not busy)
         self.history_changed()
@@ -611,7 +620,8 @@ class TransactionsMixin:
         snapshot = self._workspace_fault_snapshot
         if snapshot is None:
             return True
-        if self.runner.is_running() or self._macro_inspection.state() != QProcess.NotRunning:
+        if (self.runner.is_running() or self._macro_inspection.state() != QProcess.NotRunning
+                or bool(getattr(getattr(self, 'experiment', None), 'busy', False))):
             return False
         try:
             self.apply_workspace(snapshot, reason='fault-repair')
@@ -665,7 +675,9 @@ class TransactionsMixin:
             return
         session = self._edit_session
         fault = bool(self._workspace_fault)
-        busy = fault or self.runner.is_running() or self._macro_inspection.state() != QProcess.NotRunning
+        busy = (fault or self.runner.is_running() or self._macro_inspection.state() != QProcess.NotRunning
+                or bool(getattr(getattr(self, 'experiment', None), 'busy', False))
+                or bool(getattr(self, '_experiment_loading', False)))
         self.repair_editor_action.setVisible(fault)
         self.repair_editor_action.setEnabled(fault)
         self.undo_action.setEnabled(session.can_undo and not busy)
@@ -678,6 +690,9 @@ class TransactionsMixin:
         callback = getattr(self, '_recovery_history_changed', None)
         if callback is not None and not fault:
             callback()
+        refresh = getattr(self, '_refresh_experiment', None)
+        if refresh is not None:
+            refresh()
 
     def _reset_edit_history(self, *, saved=True):
         if not hasattr(self, '_edit_session'):

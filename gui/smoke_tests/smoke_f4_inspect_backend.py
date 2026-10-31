@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from dataclasses import asdict
+import copy
 import hashlib
 import json
 import os
@@ -16,11 +17,12 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'gui'))
 
 from PySide6.QtCore import QCoreApplication, QEvent, QProcess, QSettings
-from PySide6.QtWidgets import QApplication, QWidget
+from PySide6.QtWidgets import QApplication, QWidget, QMessageBox
 from g4usim_gui.core.i18n import set_application_language
 from g4usim_gui.core.project import G4USimProject
 from gui_test_window import MainWindow
 from g4usim_gui.widgets.diagnostic_navigation import configuration_snapshot
+from smoke_k1_workflow import wait_workflow, close_window
 
 
 def digest(path: Path) -> str:
@@ -78,9 +80,13 @@ def check_backend(app, temp: Path, executable: Path) -> None:
         before_inspect = asdict(window.project)
         with patch.object(process, 'readAllStandardError', side_effect=capture_stderr), \
                 patch.object(process, 'readAllStandardOutput', side_effect=capture_stdout), \
+                patch.object(QMessageBox, 'warning', return_value=QMessageBox.Ok), \
                 patch.object(window.runner, 'start') as start_run:
-            window.inspect_external_macro(run_after=True)
-            assert Path(process.program()) == executable
+            # Read-only Inspect retains original file/line evidence. A separate
+            # requested-run guard below checks that refusal never starts runner.
+            window.inspect_external_macro()
+            wait_workflow(app, window)
+            assert Path(process.program()) == executable, window.experiment.records()[-1].get('reason')
             assert '--inspect-run' in process.arguments()
             wait_for_inspection(app, process, completions, 1)
             assert completions[0][0] != 0 and completions[0][1] == QProcess.NormalExit
@@ -120,6 +126,20 @@ def check_backend(app, temp: Path, executable: Path) -> None:
                 assert current[0].raw_message == raw and current[0].location is None
                 assert asdict(window.project) == before_inspect
 
+            guard = MainWindow()
+            try:
+                guard._set_project(copy.deepcopy(project))
+                with patch.object(guard.runner, 'start') as guarded_start:
+                    guard.inspect_external_macro(run_after=True)
+                    wait_workflow(app, guard)
+                    assert not guarded_start.called and not guard.runner.is_running()
+                    assert guard.experiment.records()[-1]['status'] == 'failed'
+                    assert not output.exists() and not list(temp.rglob('run_summary.txt'))
+                    assert {path: digest(path) for path in original_hashes} == original_hashes
+            finally:
+                close_window(app, guard)
+                guard.deleteLater()
+
             # A changed input invalidates the old report; a new real Inspect
             # result must replace it. This is still preflight, never beamOn.
             safe = temp / 'safe.mac'
@@ -132,6 +152,7 @@ def check_backend(app, temp: Path, executable: Path) -> None:
             stderr_reads.clear()
             stdout_reads.clear()
             window.inspect_external_macro()
+            wait_workflow(app, window)
             wait_for_inspection(app, process, completions, 2)
             assert completions[1] == (0, QProcess.NormalExit)
             plan = json.loads(b''.join(stdout_reads).decode('utf-8'))
@@ -149,7 +170,7 @@ def check_backend(app, temp: Path, executable: Path) -> None:
         if process.state() != QProcess.NotRunning:
             process.kill()
             process.waitForFinished(5000)
-        window.close()
+        close_window(app, window)
         window.deleteLater()
         QCoreApplication.sendPostedEvents(None, QEvent.DeferredDelete)
         app.processEvents()

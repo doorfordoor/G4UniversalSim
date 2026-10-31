@@ -538,3 +538,23 @@ F5统一主Project/Configuration、材料/组分、几何/层/布尔、Source/Ph
 2026-10-31 F5：**已完成**。冻结验收5c1eec5；Windows160/160、50898个v3入口，Linux11.3.2/11.4.3各160、M0两平台各79，原F4逐例与总量门禁通过。原生22份观察/28截图/真实退出0保持5d身份，经明确映射关联新冻结；不新增物理验证结论。[最终证据](verification/f5-final-20261031/README.md)。下方带日期的旧状态保留其历史范围。
 
 保留前述F5候选契约。新冻结仅改DDD测试/runner证据与实施提案，产品不变；5d的DDD44<46原失败门禁、r2强等N假设撤回及原生失败尝试均保存。新DDD按固定不变量检查全部行，保留原物理判据/容差；可见worker去重N<=master N，空表头N未知，不能由稀疏行推导完整N。runner新增独立证据目录和原样Git状态，不放宽v3原始日志/基线门禁。后续模型分工遵循[项目规则](collab/MODEL-POLICY.md)。
+
+## 2026-10-31 K1 候选：共享实验服务、分级证据与配置包
+
+当前为实施契约，尚未宣布整阶段验收。服务文档见[可信实验工作流](可信实验工作流.md)，范围见[K1实施契约](collab/inbox/20261031-k1-execution.md)。
+
+`core/experiment_workflow.py` 是 GUI/CLI 共用动作入口；`EditSession`/`WorkspaceSnapshot` 继续唯一持有配置与撤销历史，已有 `G4USimRunner` 继续唯一控制模拟进程。文件操作在 EvidenceJob 私有快照上执行，Qt对象与事务发布留在所有者线程。apply先校验候选与未接受原文，拒绝不得改变revision/undo/redo；任何begin后异常都须可终结，忙时不能重复启动。
+
+字段/依赖、初始化/几何、事件完成、物理比较四层独立。inspect只表示Configure/preflight；初始化执行规范化macro的首个beamOn前缀及真实几何检查/mesh收据，不能用文本存在或退出零代替。每次运行使用独立UUID和目录，核对实际摘要、逐轮事件、F1读取序列/字节、执行身份和后端构建；环境仅描述实际目录选择与存在，数据内容哈希未观测。环境查询须使用实际执行cwd，不能按父Python目录解析相对数据路径。
+
+记录绑定配置/资源内容、后端、环境、随机设置、事件及判据。字段修改、Undo、输入文件变化与环境重新观测不一致使旧资格陈旧；历史保留。加载历史不能自动恢复当前资格。显式历史evaluate须重新核对身份/输出，写新比较记录，不改写旧结论。取消和迟到回调不得把失败/陈旧提升为passed；终态信号与落盘状态一致。观察到的资格不是对文件以后不变的保证。
+
+物理比较当前限完整逐事件敏感体总沉积能，明确raw/weighted、MeV、per_event、所选run、参考文件/来源/条件及均值标准误；事件身份按整数去重并核对所选run完整样本。单样本误差未知，不能填零。拒绝外来pass/observed/sigma及不匹配定义。合成CSV、真实模拟、geantino零沉积特例与Q2独立物理验证必须分别表述。
+
+`core/experiment_bundle.py` 独占有限资源语法与重定位；项目v7/F5快照不另建模型。原始来源SHA、捕获原文身份、改写后成员SHA与历史运行身份分别保留。清单成员核验后的JSON构造使用同一批已核验字节。原子发布到新目录，已有目标不覆盖；缺失资源/未知依赖语法/不支持GDML外部依赖明确拒绝，分发未知不等于获许可。包包含配置、引用资源、历史与统一CLI重放入口，不含二进制、完整环境或机器私有设置。历史去敏不得丢失已安全投影的环境/构建事实，也不得重新赋予可信资格。
+
+GUI只适配动作/状态/定位，不建立第二套事务或进程。异步改造后的旧生成入口测试须等待真实终态后检查实际文件，不能删原断言或忽略清理失败。I1只读探测与选择独立验收；环境摘要以易读状态为主，原始协议折叠保留。K2工程导出、L1自然语言provider、J1整体工作区和I2安装均不属于本次完成声明。
+
+K1兼容补充：用户run_name原义保留，不能以UUID覆盖；请求归属由独占目录、actual_output_dir/main_config/actual_macro_file与F1实际路径/SHA/size共同核验。仅generated且显式geometry.source_copy_mode、未知语法错误确实来自该geometry时，允许旧writer的本地副本运行；完整snapshot与声明源字节入身份，标local_source_copy_compatibility、递归闭包未观测，任何额外/未观测F1输入拒绝资格。缺失等错误不走fallback，export始终严格。owner关闭前取消活动进程，再等待服务close()/closed()排空读取；不能预先取消EvidenceJob回调使其伪装已排空。
+
+K1独立external Inspect保留原始输入/cwd与来源行号，不以导出语法预先拦截后端诊断；其身份仅观测声明主配置/macro字节，递归闭包与环境未观测，不能取得初始化/事件/物理或导出资格。真正run/initialization的内部Inspect仍针对隔离执行树。导出历史须保留实际build/random_settings/input coverage/exclusions，unknown不能填造；来源路径可显式去敏但不得丢掉随机事实。Geant4公开版本的完整数字`$Name: geant4-…$`格式是字面版本，不是环境变量引用，仅该字段严格格式可保留。

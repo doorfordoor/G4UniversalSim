@@ -24,6 +24,7 @@ from g4usim_gui.core.wizard import default_spec
 from g4usim_gui.main_window import MainWindow
 from g4usim_gui.history import run_history_store
 from g4usim_gui.writers.geometry_ini_writer import generate_geometry_ini_text
+from smoke_k1_workflow import wait_workflow, close_window
 
 
 def drain(app):
@@ -49,7 +50,7 @@ def owned_window(app, root):
             yield window
         finally:
             window._choose_unsaved_action = lambda: QMessageBox.Discard
-            window.close()
+            close_window(app, window)
             drain(app)
 
 
@@ -422,16 +423,18 @@ def main():
                 with patch.object(w, '_start_current_project', side_effect=lambda: starts.append(True)):
                     for run_after in (False, True):
                         page.generatePackageRequested.emit(run_after)
+                        wait_workflow(app, w)
                         drain(app)
                         assert page.seed.text() == w.project_page.seed.text() == '  not-an-integer  '
                         assert not w._generated_package_dir and not starts
                         assert not page.validate_current(w.project).can_run
                         assert w._edit_session.revision == history
-                        assert not list((root / 'packages').glob('*/config/main.ini'))
+                        assert not list((root / 'packages').rglob('main.ini'))
             for raw in ('42', ''):
                 page.seed.setText(raw)
                 w._finish_history_merge()
                 page.generatePackageRequested.emit(False)
+                wait_workflow(app, w)
                 drain(app)
                 assert Path(w._generated_package_dir).is_dir()
                 main_ini = Path(w.project.configPath).read_text(encoding='utf-8')

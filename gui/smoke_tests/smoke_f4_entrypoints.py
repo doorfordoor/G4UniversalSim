@@ -26,6 +26,7 @@ from g4usim_gui.validators.config_validator import validate_config_builder
 from g4usim_gui.widgets.new_simulation_wizard import NewSimulationWizard
 from g4usim_gui.widgets.scenario_page import ScenarioPage
 from g4usim_gui.widgets.scan_page import ScanPage
+from smoke_k1_workflow import wait_workflow, close_window
 from smoke_scans import make_base
 
 
@@ -181,8 +182,9 @@ def main():
         w.project_page.set_project(w.project)
         assert w.apply_simulation_wizard(wz.default_spec('shielding'), run_after=False)
         w.generate_package(run_after_generate=False)
+        wait_workflow(app, w)
         assert not boxes, boxes
-        files = list((root / 'packages').glob('*/validation_diagnostics.json'))
+        files = list((root / 'packages').rglob('validation_diagnostics.json'))
         assert len(files) == 1
         bundle = diagnostics_from_json(files[0].read_bytes())
         assert bundle.can_run and not bundle.errors
@@ -202,6 +204,7 @@ def main():
         assert w.page_stack.currentWidget() is w.project_page and asdict(w.project) == before
         w.project_page.executable.setText(sys.executable)
         assert not w._navigate_config_project_diagnostic(d)
+        close_window(app, w)
         for widget in (sp, wizard, s, w):
             widget.close(); widget.deleteLater()
         QCoreApplication.sendPostedEvents(None, QEvent.DeferredDelete)
