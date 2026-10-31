@@ -191,7 +191,7 @@ def check_external_completed_preview(window, generated, root):
                 print('external_completed_preview=' + json.dumps(dict(
                     variant=index, language=language, package_present='package' in observed,
                     producer='ExperimentWorkflow._prepare external run; environment fixture only',
-                    logical=logical, physical=physical, command=command, displayed=text), ensure_ascii=False))
+                    logical=logical, physical=physical, command=command, displayed=text), ensure_ascii=True))
                 assert logical_label + '\n  ' + (logical or unknown) + '\n' in text, \
                     'completed external no-package preview omitted the recorded cwd'
                 if physical and physical != logical:
