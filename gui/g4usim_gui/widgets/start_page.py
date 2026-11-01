@@ -8,6 +8,7 @@ from PySide6.QtCore import QSize, Qt, Signal
 from PySide6.QtGui import QPixmap
 from PySide6.QtWidgets import (
     QFrame,
+    QBoxLayout,
     QGridLayout,
     QHBoxLayout,
     QLabel,
@@ -19,7 +20,8 @@ from PySide6.QtWidgets import (
 )
 
 from g4usim_gui.core import examples, icons
-from g4usim_gui.core.i18n import ui_text
+from g4usim_gui.core.i18n import ui_text, ui_format
+from g4usim_gui.core.accessibility import name_control
 from g4usim_gui.core.theme import current_colors, on_accent
 
 THUMB = QSize(320, 200)
@@ -81,17 +83,22 @@ class ExampleCard(QFrame):
 
 
 class StartPage(QWidget):
+    blankSimulationRequested = Signal()
     newSimulationRequested = Signal()
     openProjectRequested = Signal()
     recentProjectRequested = Signal(str)
     exampleRequested = Signal(str)
+    environmentRequested = Signal()
+    importBundleRequested = Signal()
 
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         scroll = QScrollArea()
+        self.start_scroll = scroll
         scroll.setWidgetResizable(True)
         scroll.setFrameShape(QFrame.NoFrame)
         content = QWidget()
+        self.start_content = content
         content.setObjectName("pageViewport")
         scroll.setWidget(content)
         outer = QVBoxLayout(self)
@@ -113,24 +120,35 @@ class StartPage(QWidget):
         text.setSpacing(6)
         title = QLabel("Welcome to G4UniversalSim")
         title.setProperty("uiRole", "heroTitle")
+        title.setWordWrap(True)
         subtitle = QLabel("Set up a Geant4 simulation step by step, run it and look at the results, "
                           "or start from one of the examples below.")
         subtitle.setProperty("uiRole", "hint")
         subtitle.setWordWrap(True)
-        actions = QHBoxLayout()
-        actions.setSpacing(10)
-        self.new_button = QPushButton("New simulation...")
-        self.new_button.setProperty("buttonRole", "primary")
+        self.start_actions_layout = QGridLayout()
+        self.start_actions_layout.setSpacing(10)
+        self.blank_button = QPushButton("New blank simulation")
+        self.blank_button.clicked.connect(self.blankSimulationRequested)
+        self.blank_button.setProperty("buttonRole", "primary")
+        self.new_button = QPushButton("Create from template...")
         self.open_button = QPushButton("Open project...")
-        for button in (self.new_button, self.open_button):
+        self.import_button = QPushButton(ui_text("Import configuration bundle..."))
+        self.environment_button = QPushButton(ui_text("Environment setup..."))
+        self.import_button.clicked.connect(self.importBundleRequested)
+        self.environment_button.clicked.connect(self.environmentRequested)
+        self.start_actions = (self.blank_button, self.new_button, self.open_button, self.import_button, self.environment_button)
+        for button in self.start_actions:
             button.setIconSize(QSize(16, 16))
             button.setMinimumHeight(34)
-            actions.addWidget(button)
-        actions.addStretch(1)
+        self._action_columns = 0
         text.addWidget(title)
         text.addWidget(subtitle)
         text.addSpacing(6)
-        text.addLayout(actions)
+        text.addLayout(self.start_actions_layout)
+        self.keyboard_hint = QLabel(ui_text("Keyboard: Ctrl+Alt+1–9 pages; F6 next region; Shift+F6 previous region; Ctrl+Alt+E environment setup."))
+        self.keyboard_hint.setWordWrap(True)
+        self.keyboard_hint.setProperty("uiRole", "hint")
+        text.addWidget(self.keyboard_hint)
         hero_layout.addLayout(text, 1)
 
         recent_box = QFrame()
@@ -147,7 +165,9 @@ class StartPage(QWidget):
         recent_layout.addStretch(1)
         recent_box.setMinimumWidth(300)
 
-        top = QHBoxLayout()
+        top = QBoxLayout(QBoxLayout.LeftToRight)
+        self.start_top_layout = top
+        self.start_hero = hero
         top.setSpacing(18)
         top.addWidget(hero, 3)
         top.addWidget(recent_box, 2)
@@ -177,6 +197,8 @@ class StartPage(QWidget):
         self.open_button.clicked.connect(self.openProjectRequested)
         self.set_recent_projects([])
         self.refresh_theme()
+        self._adapt_start_layout()
+        self._refresh_start_accessibility()
 
     def set_recent_projects(self, paths: list[str]) -> None:
         self._recent = list(paths)
@@ -195,12 +217,53 @@ class StartPage(QWidget):
             button = QPushButton(Path(path).stem)
             button.setProperty("buttonRole", "link")
             button.setToolTip(path)
+            button.setAccessibleName(ui_format("Open recent project {name}", name=Path(path).stem))
+            button.setAccessibleDescription(path)
             button.setCursor(Qt.PointingHandCursor)
             button.clicked.connect(lambda _checked=False, p=path: self.recentProjectRequested.emit(p))
             self.recent_list.addWidget(button)
 
     def refresh_language(self) -> None:
         self.set_recent_projects(self._recent)
+        self.import_button.setText(ui_text("Import configuration bundle..."))
+        self.environment_button.setText(ui_text("Environment setup..."))
+        self.keyboard_hint.setText(ui_text("Keyboard: Ctrl+Alt+1–9 pages; F6 next region; Shift+F6 previous region; Ctrl+Alt+E environment setup."))
+        self._refresh_start_accessibility()
+        self._adapt_start_layout()
+
+    def _refresh_start_accessibility(self):
+        for button, key in zip(self.start_actions, (
+                "New blank simulation", "Create from template...", "Open project...",
+                "Import configuration bundle...", "Environment setup...")):
+            name_control(button, key)
+        self.environment_button.setAccessibleDescription(ui_text(
+            "Discover and choose an environment. Installation is available in that dialog; opening it does not run or install anything."))
+        for card in self.cards:
+            card.setAccessibleName(ui_text(card.example.title))
+            card.open_button.setAccessibleName(ui_format("Open example {name}", name=ui_text(card.example.title)))
+
+    def adapt_to_width(self, width: int):
+        # The containing dock host can be wider than the actual desktop viewport.
+        # Use the shell's budget to break the minimum-size/column-count cycle.
+        self._available_width = max(260, width)
+        self.start_content.setMaximumWidth(self._available_width)
+        self._adapt_start_layout()
+
+    def _adapt_start_layout(self):
+        budget = min(self.width(), getattr(self, '_available_width', self.width()))
+        self.start_top_layout.setDirection(QBoxLayout.TopToBottom if budget < 1100 else QBoxLayout.LeftToRight)
+        available = max(1, min(self.start_hero.width() - 130, budget - 180))
+        button_width = max(button.sizeHint().width() for button in self.start_actions)
+        columns = max(1, min(3, (available + 10) // (button_width + 10)))
+        if columns != self._action_columns:
+            while self.start_actions_layout.count():
+                self.start_actions_layout.takeAt(0)
+            for index, button in enumerate(self.start_actions):
+                self.start_actions_layout.addWidget(button, index // columns, index % columns)
+            for column in range(3):
+                self.start_actions_layout.setColumnStretch(column, 1 if column < columns else 0)
+            self._action_columns = columns
+        self._reflow_gallery(budget)
 
     def refresh_theme(self) -> None:
         colors = current_colors()
@@ -210,7 +273,10 @@ class StartPage(QWidget):
 
     def resizeEvent(self, event) -> None:  # noqa: N802 - Qt override
         super().resizeEvent(event)
-        columns = max(1, min(3, (self.width() - 56) // 340))
+        self._adapt_start_layout()
+
+    def _reflow_gallery(self, budget):
+        columns = max(1, min(3, (min(self.start_scroll.viewport().width(), budget) - 56) // 340))
         if columns != self._columns:
             self._columns = columns
             for card in self.cards:

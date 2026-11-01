@@ -32,6 +32,8 @@ from g4usim_gui.editors.source_physics_scoring_model import (
 from g4usim_gui.models.package_model import RunPackage
 from g4usim_gui.writers.main_ini_writer import build_main_ini_text
 from g4usim_gui.widgets.ui_helpers import create_hint_label
+from g4usim_gui.widgets.config.j2_run_editors import J2RunEditors
+from g4usim_gui.core.i18n import ui_format
 
 
 class RunConfigEditor(QWidget):
@@ -79,7 +81,7 @@ class RunConfigEditor(QWidget):
         self.physics_editor_reference.setEditable(True)
         self.physics_editor_reference.addItems(REFERENCE_LIST_CANDIDATES)
         self.physics_editor_default_cut = QLineEdit("1 mm")
-        self.physics_editor_biasing = QCheckBox(ui_text("Biasing hook (external input only)"))
+        self.physics_editor_biasing = QCheckBox(ui_text("Enable process biasing physics (requires enabled rules)"))
         self.physics_editor_messages = QPlainTextEdit()
         self.physics_editor_messages.setReadOnly(True)
         self.scoring_status_label = QLabel("Scoring: OK")
@@ -143,6 +145,8 @@ class RunConfigEditor(QWidget):
         tabs.addTab(self._source_editor_tab(), "Source")
         tabs.addTab(self._physics_editor_tab(), "Physics")
         tabs.addTab(self._scoring_editor_tab(), "Scoring")
+        self.j2_run_editors = J2RunEditors()
+        tabs.addTab(self.j2_run_editors, ui_text("Advanced experimental editors"))
         layout.addWidget(tabs, 1)
 
     def _source_editor_tab(self) -> QWidget:
@@ -183,7 +187,7 @@ class RunConfigEditor(QWidget):
         angular_form.addRow("Preview ray count", self.source_editor_preview_rays)
         angular_form.addRow("Preview random seed", self.source_editor_preview_seed)
         layout.addWidget(angular)
-        layout.addWidget(create_hint_label("This editor generates point, plane circle, and XY-plane rectangle (halfx/halfy) sources with fixed or isotropic emission. Square, annulus, cone, cosine, and focused modes are preview-only here and blocked from package generation; the backend supports them (and spectra, volume, beam, multi-source, ion and phase-space sources) in a hand-written main INI."))
+        layout.addWidget(create_hint_label(ui_text("Legacy source form and preview cover point, plane circle and rectangle with fixed or isotropic emission. Use the advanced structured editor for named GPS sources, spectra, surface or volume sampling, ions and other angular distributions.")))
         layout.addWidget(QLabel("Validation messages"))
         self.source_editor_messages.setMinimumHeight(110)
         layout.addWidget(self.source_editor_messages)
@@ -255,6 +259,7 @@ class RunConfigMixin:
 
     def _connect_sps_editor_signals(self) -> None:
         """Source, Physics and Scoring editor fields."""
+        self.j2_run_editors.changed.connect(self._update_j2_run_editors)
         for widget in [
             self.source_editor_particle,
             self.source_editor_energy,
@@ -332,6 +337,7 @@ class RunConfigMixin:
 
     def _populate_sps_editors(self) -> None:
         self._building = True
+        self.j2_run_editors.set_models(self.source_editor, self.physics_editor)
         self._set_combo_text(self.source_editor_preset, self.source_editor.preset)
         self.source_editor_particle.setText(self.source_editor.particle)
         self.source_editor_energy.setText(self.source_editor.energy)
@@ -378,6 +384,13 @@ class RunConfigMixin:
         self._building = False
         self._sync_sps_summary_widgets()
         self._validate_sps_editors()
+
+    def _update_j2_run_editors(self) -> None:
+        if self._building:
+            return
+        self.j2_run_editors.collect_into(self.source_editor, self.physics_editor)
+        self._validate_sps_editors()
+        self._emit_changed()
 
     def _update_sps_from_widgets(self) -> None:
         if self._building:
@@ -501,6 +514,22 @@ class RunConfigMixin:
         self.hist_min.setText(self.scoring_editor.hist_min)
         self.hist_max.setText(self.scoring_editor.hist_max)
         self._building = False
+        self._sync_advanced_summary_state()
+
+    def _sync_advanced_summary_state(self) -> None:
+        advanced = bool(self.source_editor.gps_sources or self.source_editor.phase_space_file)
+        hint = (ui_text("Legacy source shortcuts are inactive while named GPS sources or phase-space replay are selected.")
+                if advanced else "")
+        for control in (self.source_preset,self.source_particle,self.source_energy,self.source_position,self.source_direction,
+                        self.source_editor_preset,self.source_editor_particle,self.source_editor_energy,
+                        self.source_editor_position_type,self.source_editor_shape,self.source_editor_position,
+                        self.source_editor_direction):
+            control.setEnabled(not advanced)
+            if not hasattr(control,"_j2_original_tooltip"): control._j2_original_tooltip=control.toolTip()
+            control.setToolTip(hint if advanced else control._j2_original_tooltip)
+        self.run_config_tabs.widget(0).setEnabled(not advanced)
+        self.physics_reference.setEnabled(self.physics_editor.mode == "reference")
+        self.physics_editor_reference.setEnabled(self.physics_editor.mode == "reference")
 
     def _validate_sps_editors(self) -> None:
         validate_source_model(self.source_editor)
@@ -509,6 +538,22 @@ class RunConfigMixin:
         self.source_status_label.setText("Source: " + self._status_text(self.source_editor.errors, self.source_editor.warnings))
         self.physics_status_label.setText("Physics: " + self._status_text(self.physics_editor.errors, self.physics_editor.warnings))
         self.scoring_status_label.setText("Scoring: " + self._status_text(self.scoring_editor.errors, self.scoring_editor.warnings))
+        self._sync_advanced_summary_state()
+        if self.source_editor.gps_sources:
+            self.source_status_label.setText(ui_format(
+                "Named GPS sources: {count} | {mode} | {status}",count=len(self.source_editor.gps_sources),
+                mode=ui_text("simultaneous emission" if self.source_editor.multiple_vertex else "selection by intensity"),
+                status=self._status_text(self.source_editor.errors,self.source_editor.warnings)))
+        elif self.source_editor.phase_space_file:
+            self.source_status_label.setText(ui_format("Phase-space replay | {status}",
+                status=self._status_text(self.source_editor.errors,self.source_editor.warnings)))
+        if self.physics_editor.mode == "manual":
+            self.physics_status_label.setText(ui_format("Manual physics: {count} constructors | {status}",
+                count=len(self.physics_editor.manual_modules),status=self._status_text(self.physics_editor.errors,self.physics_editor.warnings)))
+        elif self.physics_editor.extra_modules or self.physics_editor.replace_modules:
+            self.physics_status_label.setText(ui_format("Reference physics: {reference} | add={added}, replace={replaced} | {status}",
+                reference=self.physics_editor.reference_list,added=len(self.physics_editor.extra_modules),replaced=len(self.physics_editor.replace_modules),
+                status=self._status_text(self.physics_editor.errors,self.physics_editor.warnings)))
         self.source_editor_messages.setPlainText(self._prefixed_messages("SOURCE", self.source_editor.errors, self.source_editor.warnings))
         self.physics_editor_messages.setPlainText(self._prefixed_messages("PHYSICS", self.physics_editor.errors, self.physics_editor.warnings))
         self.scoring_editor_messages.setPlainText(self._prefixed_messages("SCORING", self.scoring_editor.errors, self.scoring_editor.warnings))

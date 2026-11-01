@@ -48,7 +48,7 @@ public:
         std::string preset;
         std::vector<std::pair<double, double>> spectrum;  // histogram: (upper edge, weight), first = (lower edge, 0); points: (E, density)
 
-        // Position. type/shape use GPS names: Point, Plane, Volume, Beam;
+        // Position. type/shape use GPS names: Point, Plane, Surface, Volume, Beam;
         // Circle, Annulus, Ellipse, Square, Rectangle, Sphere, Cylinder, Para.
         bool hasPosition = false;
         std::string positionType;
@@ -179,6 +179,7 @@ private:
     std::vector<SourceSpec> sources_{1};
     std::size_t current_ = 0;
     bool loadingNamedSources_ = false;
+    bool multipleVertex_ = false;  // false: intensity selection; true: all sources per event
     std::vector<std::string> phaseSpaceFiles_;
     std::shared_ptr<const std::vector<std::vector<PhaseSpaceParticle>>> phaseSpace_;
     std::size_t phaseSpaceParticleCount_ = 0;

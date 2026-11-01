@@ -1,5 +1,7 @@
 #include "Physics/ProcessDump.hh"
 
+#include <typeinfo>
+
 #include "G4GammaGeneralProcess.hh"
 #include "G4HadronicInteraction.hh"
 #include "G4HadronicParameters.hh"
@@ -134,6 +136,14 @@ int WriteJson(const std::string& path, const std::vector<std::string>& requested
             const G4VPhysicsConstructor* physics = modular->GetPhysics(index);
             if (!physics) break;
             out << (index ? ", " : "") << "\"" << Escape(physics->GetPhysicsName()) << "\"";
+        }
+    }
+    out << "], \"constructor_details\": [";
+    if (modular) {
+        for (G4int index = 0; const auto* physics = modular->GetPhysics(index); ++index) {
+            out << (index ? ", " : "") << "{\"name\":\"" << Escape(physics->GetPhysicsName())
+                << "\",\"physics_type\":" << physics->GetPhysicsType()
+                << ",\"cpp_type\":\"" << Escape(typeid(*physics).name()) << "\"}";
         }
     }
     // A negative threshold means "not set": Geant4 then uses its built-in default (1 year).

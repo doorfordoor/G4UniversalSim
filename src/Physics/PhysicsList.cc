@@ -110,7 +110,7 @@ void PhysicsList::ConfigureEMPhysics()
     const auto option = manager_ ? manager_->GetEMOption()
                                  : std::string("G4EmStandardPhysics_option4");
     auto physics = PhysicsFactory::CreatePhysicsConstructor(option);
-    RegisterPhysics(physics.release());
+    PhysicsFactory::RegisterChecked(this, std::move(physics));
 }
 
 void PhysicsList::ConfigureExtraPhysicsModules()
@@ -129,12 +129,12 @@ void PhysicsList::ConfigureExtraPhysicsModules()
         if (PhysicsFactory::NormalizeOptionName(module) == "MicroElecPhysics") {
             microElecRegistered = true;
         }
-        RegisterPhysics(physics.release());
+        PhysicsFactory::RegisterChecked(this, std::move(physics));
     }
 
     if (manager_ && manager_->IsMicroElecEnabled() && !microElecRegistered) {
         auto physics = PhysicsFactory::CreateMicroElecPhysics(*manager_);
-        RegisterPhysics(physics.release());
+        PhysicsFactory::RegisterChecked(this, std::move(physics));
     }
 }
 

@@ -43,6 +43,8 @@ public:
     G4VPhysicalVolume* BuildVolume(const VolumeNode& node, G4LogicalVolume* motherLogical);
 
     G4VSolid* CreateSolid(const VolumeNode& node);
+    // SolidRegistry owns the capability/factory dispatch; these public factory
+    // methods retain their existing input semantics and Geant4 object accounting.
     G4VSolid* CreatePrimitiveSolid(const VolumeNode& node);
     G4VSolid* CreatePrimitiveSolidFromOperand(
         const std::string& ownerVolumeName,

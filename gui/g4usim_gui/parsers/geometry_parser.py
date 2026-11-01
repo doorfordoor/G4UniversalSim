@@ -2,23 +2,21 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
+from g4usim_gui.core.solid_registry_data import SOLIDS, solid_spec, property_keys
 from g4usim_gui.core.diagnostics import collect_diagnostics, emit_diagnostic, source_location, SourceLocation
 
 from g4usim_gui.parsers.ini_light_parser import IniLightDocument, IniSection, parse_ini_light, parse_ini_light_text
 
 
 FORBIDDEN_BOOLEAN_KEYS = {"material", "sensitive", "bias", "region", "parent", "placement", "copyno"}
-SHAPE_PROPERTY_KEYS = {
-    "dx1", "dx2", "dx3", "dx4", "dy1", "dy2", "dz",
-    "theta", "phi", "alpha1", "alpha2",
+SHAPE_PROPERTY_KEYS = {field["name"] for entry in SOLIDS.values() for field in entry["properties"]}
+TRD_PROPERTY_KEYS = property_keys("trd")
+PLACEMENT_PROPERTY_KEYS = {
+    "placement", "replica_axis", "replica_count", "replica_width", "replica_offset",
+    "copies_file", "copies", "copy_step",
 }
-TRD_PROPERTY_KEYS = ("dx1", "dx2", "dy1", "dy2", "dz")
-# backend keys the editor cannot write (A5 solids, replica/parameterised placement): kept read-only so
-# the 3D sketch can draw the solid or say why it does not (roadmap G4)
-PREVIEW_PROPERTY_KEYS = {
-    "z_planes", "r_inner", "r_outer", "file", "file_unit", "placement",
-    "replica_axis", "replica_count", "replica_width", "replica_offset", "copies_file", "copies", "copy_step",
-}
+# Keep the old preview projection for existing G4 sketch consumers and snapshots.
+PREVIEW_PROPERTY_KEYS = PLACEMENT_PROPERTY_KEYS
 VISUAL_KEYS = {"vis.color", "vis.alpha", "vis.visible", "vis.wireframe"}
 PRODUCTION_CUT_KEYS = {"cut.gamma", "cut.e-", "cut.e+", "cut.proton"}
 
@@ -37,6 +35,7 @@ class BooleanOperationEntry:
     section: str = ""
     line_no: int = 0
     forbidden_keys: list[str] = field(default_factory=list)
+    shape_properties: dict[str, str] = field(default_factory=dict)
 
 
 @dataclass
@@ -267,6 +266,7 @@ def _parse_boolean(section: IniSection) -> BooleanOperationEntry:
         section=section.name,
         line_no=section.line_no,
         forbidden_keys=forbidden,
+        shape_properties={key: value for key, value in values.items() if key in SHAPE_PROPERTY_KEYS},
     )
 
 
@@ -363,13 +363,13 @@ def _detect_round_trip_blockers(sections: list[IniSection], summary: GeometrySum
                                      or key in PRODUCTION_CUT_KEYS or key.startswith("metadata."))
             elif mode in {"hierarchical", "hierarchical_boolean", "boolean_hierarchical", "boolean"}:
                 if _is_boolean_section(section.name):
-                    representable = key in boolean_keys
+                    representable = key in boolean_keys or key in property_keys(next((value for name, value in section.values.items() if name.lower() == "shape"), ""))
                 elif section_lower == "world" or section_lower.startswith("volume."):
                     representable = (key in hierarchical_volume or key.startswith("metadata.")
                                      or key in VISUAL_KEYS or key in PRODUCTION_CUT_KEYS
-                                     or (key in TRD_PROPERTY_KEYS and
-                                         next((value for name, value in section.values.items()
-                                               if name.lower() == "shape"), "").strip().lower() == "trd"))
+                                     or key in PLACEMENT_PROPERTY_KEYS
+                                     or key in property_keys(next((value for name, value in section.values.items()
+                                                                  if name.lower() == "shape"), "")))
 
             if representable:
                 if key.startswith("metadata.") and not key[len("metadata.") :].strip():

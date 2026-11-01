@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from g4usim_gui.core.i18n import ui_text
 
 from g4usim_gui.editors.geometry_editor_model import GeometryDocument
 from g4usim_gui.editors.source_physics_scoring_model import SourceEditableModel
@@ -230,7 +231,17 @@ def _build_hierarchical(scene: PreviewScene, geometry: GeometryDocument) -> None
             continue
         shape = op.tool_shape.strip().lower() or "box"
         size, params_mm, params_deg = _volume_parameters_for_preview(
-            op.tool_size, op.tool_parameters, shape, ignored, f"boolean:{op.name or op.target_volume}")
+            op.tool_size, op.tool_parameters, shape, ignored, f"boolean:{op.name or op.target_volume}",
+            shape_properties=op.shape_properties)
+        # The renderer deliberately hides Boolean tool overlays and never
+        # computes CSG. Validate the actual named solid parameters nevertheless;
+        # unsupported tools must carry a concrete reason, not a guessed box.
+        tool_reason = ui_text("Boolean tool overlay is not drawn; inspect the Boolean result in backend geometry.")
+        try:
+            solid_mesh(shape,size=op.tool_size,parameters=op.tool_parameters,
+                       properties=op.shape_properties,base_dir=base_dir)
+        except (SketchError,ValueError,ZeroDivisionError) as error:
+            tool_reason = str(error)
         scene.volumes.append(
             PreviewVolume(
                 name=f"{op.target_volume}.{op.index}.{op.operation}",
@@ -244,7 +255,7 @@ def _build_hierarchical(scene: PreviewScene, geometry: GeometryDocument) -> None
                 sensitive=False,
                 bias=False,
                 role="boolean_tool",
-                not_drawn="boolean tool",
+                not_drawn=tool_reason,
             )
         )
 

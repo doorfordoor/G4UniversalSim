@@ -1,5 +1,10 @@
 from __future__ import annotations
 
+from g4usim_gui.core.run_editor_model import (
+    GPSDefinition, RegionDefinition, FieldDefinition, BiasRuleDefinition,
+    validate_gps, validate_physics_extensions,
+)
+
 import math
 import re
 from dataclasses import asdict, dataclass, field
@@ -35,6 +40,10 @@ SOURCE_PRESETS = [
 
 @dataclass
 class SourceEditableModel:
+    gps_sources: list[GPSDefinition] = field(default_factory=list)
+    multiple_vertex: bool = False
+    phase_space_file: str = ""
+    phase_space_recycle: bool = False
     preset: str = "proton_beam"
     particle: str = "proton"
     energy: str = "10 MeV"
@@ -92,6 +101,10 @@ class SourceEditableModel:
 
 @dataclass
 class PhysicsEditableModel:
+    replace_modules: list[str] = field(default_factory=list)
+    regions: list[RegionDefinition] = field(default_factory=list)
+    fields: list[FieldDefinition] = field(default_factory=list)
+    bias_rules: list[BiasRuleDefinition] = field(default_factory=list)
     mode: str = "reference"
     reference_list: str = "FTFP_BERT_EMZ"
     default_cut: str = "1 mm"
@@ -178,6 +191,8 @@ class ScoringEditableModel:
 
 def _record_model(model, editor: str, code: str, severity: str, message: str, field: str) -> None:
     value = getattr(model, field, None)
+    if isinstance(value, list):
+        value = [asdict(item) if hasattr(item, '__dataclass_fields__') else item for item in value]
     if isinstance(value, float) and not math.isfinite(value):
         value = {"invalid_float": repr(value)}
     related = ()
@@ -190,10 +205,70 @@ def _record_model(model, editor: str, code: str, severity: str, message: str, fi
                     identity_parameters={"value": value}, related_locations=related)
 
 
+def _record_structured(model, editor, path, reason):
+    """Producer machine paths supply locations; display prose is never parsed."""
+    import re
+    from g4usim_gui.core.run_editor_model import problem
+    suffix = path.removeprefix(editor + '.')
+    match = re.fullmatch(r'(gps_sources|regions|fields|bias_rules)\[(\d+)\](?:\.(\w+))?', suffix)
+    collection, row, entity, field = '', None, '', suffix
+    value = None
+    if match:
+        collection, row, field = match.group(1), int(match.group(2)), match.group(3)
+        current = getattr(model, collection)[row]
+        field = field or {'gps_sources': 'name', 'regions': 'name', 'fields': 'magnetic', 'bias_rules': 'process'}[collection]
+        entity = getattr(current, 'editor_id', '') or getattr(current, 'name', '')
+        value = getattr(current, field, None)
+    elif suffix.startswith('cuts.'):
+        collection, field = 'cuts', suffix.removeprefix('cuts.')
+        value = model.particle_cuts.get(field)
+    else:
+        value = getattr(model, field, None)
+        if isinstance(value, list):
+            value = [asdict(item) if hasattr(item, '__dataclass_fields__') else item for item in value]
+    emit_diagnostic(model, f'{editor}.structured.invalid', 'error', problem(path, reason),
+                    origin=f'{editor}.editor', editor=editor, field=field,
+                    collection=collection, row=row, entity=entity,
+                    identity_parameters={'reason': reason, 'value': value})
+
+
 def validate_source_model(model: SourceEditableModel) -> SourceEditableModel:
     reset_diagnostics(model)
     model.errors = []
     model.warnings = []
+    if model.phase_space_file:
+        from g4usim_gui.core.run_editor_model import problem
+        if model.gps_sources or model.multiple_vertex:
+            _record_model(model, 'source', 'phase_space.conflict', 'error',
+                          problem('source.phase_space_file', 'Phase-space replay conflicts with named GPS sources'), 'phase_space_file')
+        if any(c in model.phase_space_file for c in '\r\n\x00;#[]') or not all(p.strip() for p in model.phase_space_file.split(',')):
+            _record_model(model, 'source', 'phase_space.path', 'error',
+                          problem('source.phase_space_file', 'Single-line nonempty file paths are required'), 'phase_space_file')
+        return model
+    if model.phase_space_recycle:
+        from g4usim_gui.core.run_editor_model import problem
+        _record_model(model, 'source', 'phase_space.required', 'error',
+                      problem('source.phase_space_recycle', 'Phase-space recycling requires a replay file'), 'phase_space_recycle')
+    if model.gps_sources:
+        names = set()
+        identities = set()
+        for index, source in enumerate(model.gps_sources):
+            issues = []
+            validate_gps(source, f"source.gps_sources[{index}]", issues=issues)
+            for path, reason in issues:
+                _record_structured(model, 'source', path, reason)
+            if source.name.lower() in names:
+                _record_structured(model, 'source', f'source.gps_sources[{index}].name',
+                                   'A unique name without dots is required')
+            names.add(source.name.lower())
+            if source.editor_id in identities:
+                _record_structured(model, 'source', f'source.gps_sources[{index}].name', 'Duplicate editor identity')
+            identities.add(source.editor_id)
+        return model
+    if model.multiple_vertex:
+        from g4usim_gui.core.run_editor_model import problem
+        _record_model(model, 'source', 'gps.multiple_requires_named', 'error',
+                      problem('source.multiple_vertex', 'Simultaneous emission requires named sources'), 'multiple_vertex')
     _sync_source_legacy_fields(model)
     if not model.enabled:
         _record_model(model, 'source', 'disabled', 'warning', "Source is disabled in the editor, but G4UniversalSim still requires a primary source.", 'enabled')
@@ -291,9 +366,11 @@ def validate_physics_model(model: PhysicsEditableModel) -> PhysicsEditableModel:
     reset_diagnostics(model)
     model.errors = []
     model.warnings = []
-    if model.mode != "reference":
-        _record_model(model, 'physics', 'mode.unsupported', 'error', "manual physics mode is not generated by this GUI MVP", 'mode')
-    if not model.reference_list.strip():
+    issues = []
+    validate_physics_extensions(model, issues=issues)
+    for path, reason in issues:
+        _record_structured(model, 'physics', path, reason)
+    if model.mode == "reference" and not model.reference_list.strip():
         _record_model(model, 'physics', 'reference.required', 'error', "reference list is required", 'reference_list')
     elif model.reference_list not in REFERENCE_LIST_CANDIDATES:
         _record_model(model, 'physics', 'reference.unknown', 'warning', "reference list is not in the GUI quick list; Geant4 validates it at initialization", 'reference_list')
@@ -303,12 +380,6 @@ def validate_physics_model(model: PhysicsEditableModel) -> PhysicsEditableModel:
         _record_model(model, 'physics', 'cut.invalid', 'error', check_value("physics", "default_cut", model.default_cut), 'default_cut')
     elif not _looks_like_value_with_unit(model.default_cut):
         _record_model(model, 'physics', 'cut.unit_hint', 'warning', "default cut should include a value and unit, for example '1 mm'", 'default_cut')
-    if model.enable_biasing_physics:
-        _record_model(model, 'physics', 'biasing.not_editable', 'error', "Biasing rules cannot be edited or generated here. Disable the hook for generated packages, or use external config/macro with explicit process-level rules.", 'enable_biasing_physics')
-    if model.extra_modules:
-        _record_model(model, 'physics', 'extra_modules.not_editable', 'warning', "extra modules are preserved in the model but not edited by this MVP", 'extra_modules')
-    if model.manual_modules:
-        _record_model(model, 'physics', 'manual_modules.not_generated', 'warning', "manual modules are preserved in the model but not generated by this MVP", 'manual_modules')
     return model
 
 

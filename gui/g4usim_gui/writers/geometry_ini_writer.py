@@ -10,7 +10,8 @@ from g4usim_gui.editors.geometry_editor_model import (
     geometry_material_refs,
     validate_geometry_document,
 )
-from g4usim_gui.parsers.geometry_parser import TRD_PROPERTY_KEYS
+from g4usim_gui.core.solid_registry_data import canonical_solid, property_keys
+from g4usim_gui.parsers.geometry_parser import PLACEMENT_PROPERTY_KEYS
 
 
 def generate_geometry_ini_text(document: GeometryDocument) -> str:
@@ -159,16 +160,23 @@ def _generate_hierarchical(document: GeometryDocument) -> str:
         if volume.name.strip().lower() != "world":
             lines.append(f"parent = {volume.parent.strip() or 'world'}")
         lines.append(f"shape = {volume.shape.strip() or 'box'}")
-        shape = volume.shape.strip().lower()
+        shape = canonical_solid(volume.shape)
         if shape == "box":
             lines.append(f"size = {volume.size.strip() or '1 mm,1 mm,1 mm'}")
         elif volume.size.strip():
             lines.append(f"size = {volume.size.strip()}")
         if volume.parameters.strip():
             lines.append(f"parameters = {volume.parameters.strip()}")
-        if shape == "trd":
-            for key in TRD_PROPERTY_KEYS:
-                lines.append(f"{key} = {volume.shape_properties[key].strip()}")
+        for key in property_keys(shape):
+            value = volume.shape_properties.get(key, volume.preview_properties.get(key, ""))
+            if value.strip():
+                value = _resource_value(document, value) if key == "file" else value.strip()
+                lines.append(f"{key} = {value}")
+        for key in sorted(PLACEMENT_PROPERTY_KEYS):
+            value = volume.preview_properties.get(key, "")
+            if value.strip():
+                value = _resource_value(document, value) if key == "copies_file" else value.strip()
+                lines.append(f"{key} = {value}")
         lines.append(f"material = {volume.material.strip() or 'G4_AIR'}")
         if volume.position.strip():
             lines.append(f"position = {volume.position.strip()}")
@@ -200,13 +208,17 @@ def _generate_hierarchical(document: GeometryDocument) -> str:
             lines.append(f"[volume.{target}.boolean.{new_index}]")
             lines.append(f"operation = {op.operation.strip().lower() or 'subtraction'}")
             lines.append(f"shape = {op.tool_shape.strip().lower() or 'box'}")
-            shape = op.tool_shape.strip().lower()
+            shape = canonical_solid(op.tool_shape)
             if shape == "box":
                 lines.append(f"size = {op.tool_size.strip() or '1 mm,1 mm,1 mm'}")
             elif op.tool_size.strip():
                 lines.append(f"size = {op.tool_size.strip()}")
             if op.tool_parameters.strip():
                 lines.append(f"parameters = {op.tool_parameters.strip()}")
+            for key in property_keys(shape):
+                value = op.shape_properties.get(key, "")
+                if value.strip():
+                    lines.append(f"{key} = {value.strip()}")
             if op.position.strip():
                 lines.append(f"position = {op.position.strip()}")
             if op.rotation.strip():
@@ -233,3 +245,12 @@ def _metadata_lines(metadata: str) -> list[str]:
             )
         lines.append(f"{key} = {value.strip()}")
     return lines
+
+
+def _resource_value(document: GeometryDocument, value: str) -> str:
+    path = Path(value.strip()).expanduser()
+    if not path.is_absolute() and document.source_path:
+        path = Path(document.source_path).expanduser().resolve().parent / path
+    if not path.is_absolute():
+        raise ValueError("File resources in an in-memory geometry require an absolute path.")
+    return str(path.resolve())

@@ -4,6 +4,7 @@ import math
 import random
 
 from g4usim_gui.editors.source_physics_scoring_model import SourceEditableModel
+from g4usim_gui.core.i18n import ui_text
 from g4usim_gui.preview3d.geometry_primitives import add_vec3, scale_vec3
 from g4usim_gui.preview3d.scene_model import PreviewSource, SourceGlyph, Vec3
 from g4usim_gui.preview3d.units import (
@@ -16,6 +17,14 @@ from g4usim_gui.preview3d.units import (
 
 
 def build_preview_source(source: SourceEditableModel, warnings: list[str], errors: list[str]) -> PreviewSource:
+    if source.gps_sources or source.phase_space_file:
+        key = ("Named GPS source preview is unavailable; legacy source glyphs and rays are hidden."
+               if source.gps_sources else
+               "Phase-space replay preview is unavailable; legacy source glyphs and rays are hidden.")
+        warnings.append(ui_text(key))
+        return PreviewSource(generated=False,mode="unavailable",
+                             position_mode="named" if source.gps_sources else "phase_space",
+                             source_shape="unavailable",description=(key,{}))
     position = parse_vec3_to_mm(source.position)
     if position is None:
         warnings.append(f"Source position could not be parsed for preview: {source.position!r}")

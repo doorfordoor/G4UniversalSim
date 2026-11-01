@@ -262,7 +262,7 @@ def test_move_and_history(root):
     shutil.move(root / "bundle", moved)
     shutil.rmtree(source)
     loaded = bundle.load_bundle(moved)
-    assert loaded.project.version == 7
+    assert loaded.project.version == 8
     assert loaded.project.executable == ""
     assert loaded.project.pathSettings.executable == ""
     assert loaded.project.outputDir == ""

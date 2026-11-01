@@ -147,7 +147,8 @@ def main():
             assert page.details_tabs.currentIndex() == 0
             details = page.validation_text.toPlainText()
             assert "当前的材料、几何" in details and "重新校验" in details and "历史运行成功" in details
-            assert "未输出" in details and "主配置/宏文件" in details
+            assert "源、物理、场和偏置" in details and "未输出" in details
+            assert "宏的实际行为" in details and "不会继承" in details
             assert "资源内容哈希" in details and "历史运行使用的字节" in details
             assert str(Path(package.package_dir)) in details
             assert details in window.run_page.merged_view.toPlainText().replace("[gui] ", "")
@@ -159,7 +160,7 @@ def main():
             assert [(c.name, c.value) for c in row.components] == [("Si", "0.25"), ("O", "0.75")]
             assert [v.name for v in page.geometry_document.volumes] == ["world", "Target"]
             assert page.geometry_document.volumes[1].size.replace(" ", "") == "3mm,4mm,5mm"
-            assert page.source_editor.energy == "7 MeV"
+            assert page.source_editor.energy == "99 MeV"
             assert page.physics_editor.reference_list == "FTFP_BERT"
             assert page.scoring_editor.hist_bins == 42
             assert window.project.threads == window.project.runSettings.threads == 2
@@ -177,7 +178,7 @@ def main():
             for timer in second.findChildren(QTimer):
                 timer.stop()
             assert second._load_project_path(str(saved))
-            assert second.config_builder_page.source_editor.energy == "7 MeV"
+            assert second.config_builder_page.source_editor.energy == "99 MeV"
             assert second.config_builder_page.material_document.rows[0].density == "2.8 g/cm3"
             second.generate_package(run_after_generate=False)
             wait_workflow(app, second)
@@ -186,7 +187,7 @@ def main():
             assert (new_root / "config/materials/material.ini").read_bytes() == originals[Path(package.materials_ini_path)]
             assert (new_root / "config/geometry/geometry.ini").read_bytes() == originals[Path(package.geometry_ini_path)]
             regenerated_main = (new_root / "config/main.ini").read_text(encoding="utf-8")
-            assert "7 MeV" in regenerated_main and "99 MeV" not in regenerated_main
+            assert "99 MeV" in regenerated_main and "7 MeV" not in regenerated_main
             assert "beamOn 23" in (new_root / "macros/run.mac").read_text(encoding="utf-8")
             assert all(p.read_bytes() == raw for p, raw in originals.items())
             boxes.clear()

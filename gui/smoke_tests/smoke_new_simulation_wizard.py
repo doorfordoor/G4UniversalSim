@@ -82,7 +82,9 @@ def main() -> None:
     original = project
     wz.apply_to_project(project, wz.build(wz.default_spec("silicon_detector")))
     assert project is original and project.runInputMode == "generated" and project.configPath == ""
-    assert project.geometryEditor.volumes[1].name == "Pad" and project.geometrySettings.config_path == "geometry.ini"
+    assert project.geometryEditor.volumes[1].name == "Pad" and not project.geometrySettings.config_path
+    assert not project.pathSettings.geometry_config and not project.pathSettings.materials_config
+    assert project.materialEditor is not None and project.materialEditor.is_dirty
     assert project.runSettings.beam_on == 1000 and project.sourceEditor.energy == "100 MeV"
 
     print("dialog")

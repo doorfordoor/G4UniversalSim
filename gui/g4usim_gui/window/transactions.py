@@ -204,7 +204,7 @@ class TransactionsMixin:
         self.config_builder_page.settingsChanged.connect(self._queue_history_change)
         # Raw drafts can change without a valid model update (notably seed and
         # programmatic line edits); captures still use the same transaction API.
-        for widget in self._editable_controls().values():
+        for widget in {**self._editable_controls(), **self._extended_interaction_controls()}.values():
             if isinstance(widget, (QLineEdit, QPlainTextEdit)):
                 widget.textChanged.connect(self._queue_history_change)
             elif isinstance(widget, QAbstractSpinBox):
@@ -220,12 +220,36 @@ class TransactionsMixin:
         return {**{f'project.{name}': getattr(self.project_page, name) for name in PROJECT_CONTROLS},
                 **{f'config.{name}': getattr(self.config_builder_page, name) for name in CONFIG_CONTROLS}}
 
+    def _extended_interaction_controls(self):
+        page = self.config_builder_page
+        controls = page.j2_run_editors.interaction_controls()
+        for name in ('volume_details', 'boolean_details', 'layer_backend_details'):
+            controls.update({f'j2.{name}.{key}': widget for key, widget in getattr(page, name).fields.items()})
+        return controls
+
+    def _collect_extended_drafts(self):
+        from dataclasses import asdict
+        page = self.config_builder_page
+        page.j2_run_editors.collect_into(page.source_editor, page.physics_editor)
+        for name, rows, index, boolean in (
+                ('volume_details', page.geometry_document.volumes, page.geometry_table.currentRow(), False),
+                ('boolean_details', page.geometry_document.boolean_ops, page.boolean_table.currentRow(), True),
+                ('layer_backend_details', page.geometry_document.layered_device.layers, page._selected_layer_row, None)):
+            details = getattr(page, name)
+            if 0 <= index < len(rows) and details._row is rows[index]:
+                before = asdict(rows[index])
+                details.apply_row(rows[index])
+                if asdict(rows[index]) != before:
+                    page.geometry_document.is_dirty = True
+                    if boolean is not None:
+                        page._sync_details_table(index, boolean=boolean)
+
     def _is_project_editor(self, widget):
         return any(page is widget or page.isAncestorOf(widget) for page in
                    (self.project_page, self.config_builder_page)) if hasattr(widget, 'isWidgetType') and widget.isWidgetType() else False
 
     def _editor_key(self, widget):
-        for name, control in self._editable_controls().items():
+        for name, control in {**self._editable_controls(), **self._extended_interaction_controls()}.items():
             if control is widget or control.isAncestorOf(widget):
                 return name
         page = self.config_builder_page
@@ -257,6 +281,7 @@ class TransactionsMixin:
         page = self.config_builder_page
         project = copy.deepcopy(self.project)
         self.project_page.apply_to_project(project)
+        self._collect_extended_drafts()
         page.update_project(project)
         project.pathSettings.executable = project.executable
         project.pathSettings.workspace_root = project.workspaceRoot
@@ -270,6 +295,7 @@ class TransactionsMixin:
         project.geometryEditor = copy.deepcopy(page.geometry_document)
         state = empty_editing_state()
         state['drafts'] = self._capture_drafts()
+        state['selections'].update(page.j2_run_editors.selection_state())
         if project.runInputMode == 'generated' and binding is not None:
             for name, control in (('configPath', 'config_path'), ('macroPath', 'macro_path'), ('outputDir', 'output_dir')):
                 original, generated = binding[name]
@@ -342,6 +368,18 @@ class TransactionsMixin:
             if key not in shape or len(rows) != shape[key][0] or any(len(row) != shape[key][1] for row in rows):
                 raise ValueError(f'Invalid editor table shape: {key}')
         allowed_selections = {'materials_table', 'layer_table', 'geometry_table', 'boolean_table'}
+        advanced = self.config_builder_page.j2_run_editors
+        allowed_selections.update(advanced.selection_state())
+        for key, index in snapshot.state['selections'].items():
+            if key.startswith('j2.'):
+                if key == 'j2.tabs':
+                    if not 0 <= index < advanced.tabs.count():
+                        raise ValueError('Invalid J2 tab selection')
+                elif key in allowed_selections:
+                    collection = key.split('.')[1]
+                    owner = snapshot.project.sourceEditor if collection == 'gps_sources' else snapshot.project.physicsEditor
+                    if not -1 <= index < len(getattr(owner, collection)):
+                        raise ValueError('Invalid J2 row selection')
         for name, (rows, columns) in shape.items():
             row_key, col_key = f'pending_{name}_row', f'pending_{name}_column'
             allowed_selections.update((row_key, col_key))
@@ -411,6 +449,9 @@ class TransactionsMixin:
                 table = getattr(page, name, None)
                 if table is not None and 0 <= row < table.rowCount():
                     table.selectRow(row)
+            page.j2_run_editors.restore_selection({key: value for key, value in snapshot.state['selections'].items() if key.startswith('j2.')})
+            page._select_geometry_details()
+            page._select_boolean_details()
             for name in ('geometry_table', 'boolean_table'):
                 row = snapshot.state['selections'].get(f'pending_{name}_row')
                 if row is None:
@@ -498,6 +539,11 @@ class TransactionsMixin:
             return
         if self.project_page._building or self.config_builder_page._building:
             return
+        widget = self.sender()
+        while widget is not None and widget is not self:
+            if getattr(widget, '_projecting', False) or getattr(widget, '_loading', False):
+                return
+            widget = widget.parent()
         service = getattr(self, 'experiment', None)
         if service is not None:
             service.invalidate('editor_draft_changed')

@@ -377,6 +377,8 @@ def _snapshot_paths(data, closure: _Closure, *, loading=False):
     def resource(value, role, mode="hierarchical"):
         if not value:
             return ""
+        if role == 'phase_space' and ',' in value:
+            return ','.join(resource(part.strip(), role, mode) for part in value.split(','))
         target = closure.add(_resolve(value, base), role, mode=mode)
         return str(closure.root / target) if loading else target
 
@@ -399,6 +401,13 @@ def _snapshot_paths(data, closure: _Closure, *, loading=False):
     for owner, key, role in ((paths, "materials_config", "materials"), (paths, "geometry_config", "geometry"),
                               (p["geometrySettings"], "config_path", "geometry")):
         owner[key] = resource(owner[key], role, mode)
+    from g4usim_gui.core.run_editor_resources import resource_fields
+    for owner, key, role in resource_fields(p['sourceEditor'], p['physicsEditor']):
+        if owner.get(key):
+            try:
+                owner[key] = resource(owner[key], role)
+            except FileNotFoundError as exc:
+                raise ValueError(f'Complete editable export requires every retained resource, including inactive drafts: {key} = {owner[key]}') from exc
     for kind, doc in (("materials", p["materialEditor"]), ("geometry", p["geometryEditor"])):
         if doc is None:
             continue
@@ -712,7 +721,8 @@ def export_bundle(snapshot: WorkspaceSnapshot, destination: Path, *, validation_
                 geometry_document=writer.geometryEditor, source_model=writer.sourceEditor,
                 physics_model=writer.physicsEditor, scoring_model=writer.scoringEditor)
             # Copied geometry's relative children retain the ORIGINAL file base.
-            geom_base = _resolve(p.geometrySettings.config_path or p.pathSettings.geometry_config, cwd).parent
+            geometry_anchor = p.geometrySettings.config_path or p.pathSettings.geometry_config
+            geom_base = _resolve(geometry_anchor, cwd).parent if geometry_anchor else cwd
             original_geom = Path(package.geometry_ini_path)
             closure.source_bases[original_geom] = geom_base
             main = closure.add(Path(package.main_ini_path), "main")

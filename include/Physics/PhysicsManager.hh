@@ -42,6 +42,10 @@ public:
     bool HasExtraModule(const std::string& option) const;
     std::vector<std::string> GetExtraModules() const;
 
+    // Explicit type-matched replacements, reference mode only. Applied to the
+    // real modular list before Geant4 registration/initialization.
+    const std::vector<std::string>& GetReplacementModules() const;
+
     void SetReferenceEMOption(const std::string& emOption);
     std::string BuildReferenceNameWithEM(const std::string& baseReference,
                                          const std::string& emOption) const;
@@ -114,6 +118,10 @@ public:
     void ObserveEffectiveConfigPhysics(const G4VModularPhysicsList& list, const std::string& stage) const;
 
 private:
+    // Reject conflicting selectors before changing cached values or provenance.
+    // Empty option denotes a reference/mode change; otherwise match the
+    // supported constructor category (type-zero extensions are independent).
+    void RequireNoReplacementConflict(const char* selector, const std::string& option = "") const;
     void LoadFromConfigImpl(const ConfigManager& config);
     std::vector<effective_config::Field> ProjectEffectiveConfigFields() const;
     std::shared_ptr<effective_config::ConsumerState> effective_ = std::make_shared<effective_config::ConsumerState>();
@@ -127,6 +135,7 @@ private:
     std::string baseReferenceListName_;
     std::string requestedEMOption_;
     std::vector<std::string> extraModules_;
+    std::vector<std::string> replacementModules_;
     double defaultCut_ = 1.0; // initialized to 1 mm in .cc constructor
     std::map<std::string, double> particleCuts_;
     std::map<std::string, std::map<std::string, double>> regionCuts_;

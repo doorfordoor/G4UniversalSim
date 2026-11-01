@@ -361,6 +361,60 @@ PhysicsFactory::CreateReferencePhysicsList(const std::string& referenceName)
     return std::unique_ptr<G4VModularPhysicsList>(list);
 }
 
+void PhysicsFactory::RegisterChecked(G4VModularPhysicsList* list,
+                                     std::unique_ptr<G4VPhysicsConstructor> physics)
+{
+    if (!list || !physics) throw std::runtime_error("RegisterChecked: null list or constructor");
+    for (G4int i = 0; const auto* existing = list->GetPhysics(i); ++i) {
+        if ((physics->GetPhysicsType() > 0 && existing->GetPhysicsType() == physics->GetPhysicsType()) ||
+            existing->GetPhysicsName() == physics->GetPhysicsName()) {
+            throw std::runtime_error("Physics constructor conflict: '" + physics->GetPhysicsName() +
+                "' collides with registered '" + existing->GetPhysicsName() + "' (physics type " +
+                std::to_string(physics->GetPhysicsType()) +
+                "); use [physics]/replace_modules in reference mode or select one module in manual mode");
+        }
+    }
+    const auto* candidate = physics.get();
+    list->RegisterPhysics(physics.release());
+    bool registered = false;
+    for (G4int i = 0; const auto* actual = list->GetPhysics(i); ++i) registered |= actual == candidate;
+    if (!registered) throw std::runtime_error("Physics constructor was not registered");
+}
+
+void PhysicsFactory::ReplaceModules(G4VModularPhysicsList* list,
+                                    const std::vector<std::string>& options)
+{
+    if (!list) throw std::runtime_error("ReplaceModules: null list");
+    std::vector<int> replacedTypes;
+    for (const auto& option : options) {
+        const auto canonical = NormalizeOptionName(option);
+        if (Classify(canonical) == PhysicsCategory::Biasing || canonical == "MicroElecPhysics")
+            throw std::runtime_error("replace_modules does not support biasing or MicroElec constructors");
+        auto physics = CreatePhysicsConstructor(canonical);
+        const int type = physics->GetPhysicsType();
+        if (type <= 0 || std::find(replacedTypes.begin(), replacedTypes.end(), type) != replacedTypes.end())
+            throw std::runtime_error("replace_modules requires unique nonzero physics types; duplicate/unsupported: " + option);
+        const G4VPhysicsConstructor* previous = nullptr;
+        int matches = 0;
+        for (G4int i = 0; const auto* actual = list->GetPhysics(i); ++i) {
+            if (actual->GetPhysicsType() == type) { previous = actual; ++matches; }
+            else if (actual->GetPhysicsName() == physics->GetPhysicsName())
+                throw std::runtime_error("replace_modules constructor name collides with a different physics type");
+        }
+        if (matches != 1) throw std::runtime_error("replace_modules needs exactly one existing constructor of physics type " +
+            std::to_string(type) + ": " + option + "; use extra_modules to add an absent type");
+        const auto previousName = previous->GetPhysicsName();
+        const auto replacementName = physics->GetPhysicsName();
+        auto* candidate = physics.get();
+        list->ReplacePhysics(physics.release());
+        if (list->GetPhysicsWithType(type) != candidate)
+            throw std::runtime_error("replace_modules did not replace the actual constructor: " + option);
+        replacedTypes.push_back(type);
+        std::cout << "[PhysicsFactory] replaced type " << type << ": " << previousName
+                  << " -> " << replacementName << '\n';
+    }
+}
+
 void PhysicsFactory::RegisterExtraModule(G4VModularPhysicsList* list,
                                          const std::string& option)
 {
@@ -380,7 +434,7 @@ void PhysicsFactory::RegisterExtraModule(G4VModularPhysicsList* list,
     }
 
     auto physics = CreatePhysicsConstructor(canonical);
-    list->RegisterPhysics(physics.release());
+    RegisterChecked(list, std::move(physics));
 }
 
 void PhysicsFactory::RegisterExtraModules(G4VModularPhysicsList* list,
@@ -478,6 +532,10 @@ bool PhysicsFactory::HasRadioactiveDecay(const G4VModularPhysicsList* list)
 void PhysicsFactory::ApplyRegionAndDecaySettings(G4VModularPhysicsList* list, const PhysicsManager& manager)
 {
     if (!list) throw std::runtime_error("PhysicsFactory::ApplyRegionAndDecaySettings failed: physics list is null");
+    if (!manager.GetReplacementModules().empty()) {
+        if (!manager.HasReferenceList()) throw std::runtime_error("replace_modules requires reference mode");
+        ReplaceModules(list, manager.GetReplacementModules());
+    }
     if (manager.IsRadioactiveDecayEnabled() && !HasRadioactiveDecay(list)) {
         list->RegisterPhysics(new G4RadioactiveDecayPhysics(0));
     }

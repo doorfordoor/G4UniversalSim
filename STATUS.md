@@ -1,6 +1,18 @@
 # G4UniversalSim 状态（唯一入口页）
 
-更新：2026-11-01。本页只做导航与快照；**阶段状态以 [docs/ROADMAP.md](docs/ROADMAP.md) 为准，支持等级以 [docs/功能支持矩阵.md](docs/功能支持矩阵.md) 为准**，两者冲突时先改事实再改文档。
+更新：2026-11-02。本页只做导航与快照；**阶段状态以 [docs/ROADMAP.md](docs/ROADMAP.md) 为准，支持等级以 [docs/功能支持矩阵.md](docs/功能支持矩阵.md) 为准**，两者冲突时先改事实再改文档。
+
+## 2026-11-02 J2/F8 当前实施
+
+候选尚未验收。工作区 effective-config、分支 roadmap/J2-F8-editing、基线 fc606739；D 盘旧检出保持不动。完整实施与模型分工见 [开工契约](docs/collab/inbox/20261101-j2-f8-execution.md)，DeepSeek 已实际参与前端设计。当前未提交；实际子代理为 6.1 Sol high/medium，工具未提供 Terra/Luna。
+
+当前 C++ 双版构建均 exit 0，源码指纹 `9e40e889d49a44250cbe95077bc81d03fe36cb7fd6726df2ce2db9cb34334f0a`，路径及 EXE SHA 见 `out/collab/j2-shape-schema-build-identities.json`。E7 既有实体与 trd/trap 严格 v2 属性消费已补齐；物理 P1、材料 M01/M02、三项高级几何 P2、无源 Reload 与 phase-space 列表问题均有各自身份的独立关闭证据，旧失败保留。CURRENT 导入原五项及路径顺序已独立关闭，后续资源核验变更另审。
+
+永久 E2E 在前一源码身份 88c32e8c 的 11.3.2/11.4.3 均 exit 0、各 674 个 v3 入口，Qt/K1→保存重载→离线搬移→统一 CLI 链路和真实双源/双敏感体通过；汇总 `out/collab/j2-e2e-integration/dual-version-final-receipt.json`。脚本 SHA `5b112036e184afac3e97bd9c5257142b197a36c83c119f822318ec972f9b082f` 冻结，已按 exe/qt、600 秒接入 integration，无 stale fallback；最终源码由正式矩阵再验。114 使用已核验 I2 data 根，清除子进程继承的旧 G4*DATA 后启动。
+
+F8 helper 8f597259 / smoke 7087edc6 的自然焦点、九页/F6、foreign 边界及向导已独立关闭；新 workspace_layout SHA cd5f7e0c 的当前页尺寸修复仅增加一个产品文件，作者原 F4 layout 默认/125% 各265、F8 125%/150% 各280均退出0，未改旧可见性判据。Ptolemy 正进行最终最小独审。原日志裁切与首轮中央页过窄失败保留；旧 native125 为诊断身份、已正常退出，最终实窗尚待。
+
+资源 parameterized 别名、CURRENT资源闭包与legacy重复声明问题已独立关闭；双版 strict v2 trd/trap 及 Boolean 实体/mesh/路径各30项通过；schema center缺省原点文案也已独立关闭，CURRENT恢复提示62入口通过。独审索引正整理。当前提交候选并重配置双版以记录准确HEAD，然后执行206用例适用矩阵、历史逐例门禁、真实CI和最终原生窗口；全部通过后方可归档并集成，不宣称完整阶段已通过。
 
 ## 一句话定位
 

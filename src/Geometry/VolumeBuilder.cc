@@ -2,6 +2,7 @@
 #include "Geometry/VolumeBuilder.hh"
 
 #include "Geometry/GeometryRegistry.hh"
+#include "Geometry/SolidRegistry.hh"
 #include "Geometry/GeometryUtils.hh"
 #include "Geometry/StlReader.hh"
 #include "Geometry/VolumeNode.hh"
@@ -89,15 +90,6 @@ private:
     std::vector<Copy> copies_;
     std::vector<std::unique_ptr<G4RotationMatrix>> rotations_;
 };
-
-// Several Geant4 solids cache GetCubicVolume() lazily in a member; the first
-// concurrent calls from worker threads (dose mass, fluence volume) can read a
-// partial sum. Fill the cache once on the master while building.
-G4VSolid* PrecomputeVolume(G4VSolid* solid)
-{
-    if (solid) (void)solid->GetCubicVolume();
-    return solid;
-}
 
 bool Close(double a, double b)
 {
@@ -372,28 +364,7 @@ G4VSolid* VolumeBuilder::CreatePrimitiveSolid(const VolumeNode& node)
         throw std::runtime_error("GDML geometry is read by GeometryManager (template = gdml), not built per volume: '" + node.name + "'");
     }
 
-    switch (node.shape) {
-        case VolumeShape::Box: return CreateBoxSolid(node);
-        case VolumeShape::Tubs: return CreateTubsSolid(node);
-        case VolumeShape::Sphere: return CreateSphereSolid(node);
-        case VolumeShape::Orb: return CreateOrbSolid(node);
-        case VolumeShape::Cone: return CreateConeSolid(node);
-        case VolumeShape::Trd: return CreateTrdSolid(node);
-        case VolumeShape::Trap: return CreateTrapSolid(node);
-        case VolumeShape::Ellipsoid: return PrecomputeVolume(CreateEllipsoidSolid(node));
-        case VolumeShape::EllipticalTube: return PrecomputeVolume(CreateEllipticalTubeSolid(node));
-        case VolumeShape::Torus: return PrecomputeVolume(CreateTorusSolid(node));
-        case VolumeShape::Para: return PrecomputeVolume(CreateParaSolid(node));
-        case VolumeShape::Hype: return PrecomputeVolume(CreateHypeSolid(node));
-        case VolumeShape::Polycone: return PrecomputeVolume(CreatePolyconeSolid(node, false));
-        case VolumeShape::Polyhedra: return PrecomputeVolume(CreatePolyconeSolid(node, true));
-        case VolumeShape::Tessellated: return PrecomputeVolume(CreateTessellatedSolid(node));
-        default:
-            throw std::runtime_error(
-                "Unsupported shape for volume '" + node.name + "': shapeName='" + node.shapeName
-                + "', parsed='" + GeometryUtils::ShapeToString(node.shape) + "'"
-            );
-    }
+    return SolidRegistry::Create(*this, node);
 }
 
 G4VSolid* VolumeBuilder::CreatePrimitiveSolidFromOperand(
@@ -410,39 +381,7 @@ G4VSolid* VolumeBuilder::CreatePrimitiveSolidFromOperand(
     for (const auto& item : operand.properties) toolNode.SetProperty(item.first, item.second);
 
     try {
-        switch (toolNode.shape) {
-            case VolumeShape::Box:
-                if (toolNode.size.x <= 0.0 || toolNode.size.y <= 0.0 || toolNode.size.z <= 0.0) {
-                    throw std::runtime_error("box requires positive size x,y,z");
-                }
-                return CreateBoxSolid(toolNode);
-            case VolumeShape::Tubs:
-                if (toolNode.parameters.size() < 5) {
-                    throw std::runtime_error("tubs requires 5 parameters: rMin,rMax,halfZ,startPhi,deltaPhi");
-                }
-                return CreateTubsSolid(toolNode);
-            case VolumeShape::Sphere:
-                if (toolNode.parameters.size() < 6) {
-                    throw std::runtime_error("sphere requires 6 parameters: rMin,rMax,startPhi,deltaPhi,startTheta,deltaTheta");
-                }
-                return CreateSphereSolid(toolNode);
-            case VolumeShape::Orb:
-                if (toolNode.parameters.empty() && toolNode.size.x <= 0.0) {
-                    throw std::runtime_error("orb requires parameters=radius or positive size.x shorthand");
-                }
-                return CreateOrbSolid(toolNode);
-            case VolumeShape::Cone:
-                if (toolNode.parameters.size() < 7) {
-                    throw std::runtime_error("cone requires 7 parameters: rMin1,rMax1,rMin2,rMax2,halfZ,startPhi,deltaPhi");
-                }
-                return CreateConeSolid(toolNode);
-            case VolumeShape::Trd:
-                return CreateTrdSolid(toolNode);
-            case VolumeShape::Trap:
-                return CreateTrapSolid(toolNode);
-            default:
-                throw std::runtime_error("unsupported or missing boolean tool shape");
-        }
+        return SolidRegistry::Create(*this, toolNode, SolidRegistry::Context::BooleanTool);
     } catch (const std::exception& e) {
         throw std::runtime_error(BooleanToolContext(ownerVolumeName, booleanIndex, operand) + e.what());
     }

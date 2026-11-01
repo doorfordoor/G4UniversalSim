@@ -59,7 +59,7 @@ def check_backend_rules(root: Path) -> None:
         MaterialRow(name="B", mode="volume_fraction", density="auto", components_text="A:1")])
     assert any("Circular material dependency: A -> B -> A" in e for e in validate_material_document(loop).errors)
 
-    # geometry: lower-case reference to a capitalised material; a backend-only shape is an editor limit
+    # J2 advanced shape fields still undergo validation with case-insensitive material references.
     geometry = GeometryDocument(mode="hierarchical", volumes=[
         HierarchicalVolumeRow(name="world", shape="box", size="1 m, 1 m, 1 m", material="G4_AIR"),
         HierarchicalVolumeRow(name="Pad", parent="world", shape="box", size="1 cm, 1 cm, 1 cm", material="silicon",
@@ -68,7 +68,11 @@ def check_backend_rules(root: Path) -> None:
     assert not geometry.errors, geometry.errors
     geometry.volumes[1].shape = "torus"
     validate_geometry_document(geometry, material_names={"Silicon"})
-    assert any("supported by the backend but not by the Geometry Editor" in e for e in geometry.errors), geometry.errors
+    assert geometry.errors, 'Torus without required parameters must be rejected'
+    geometry.volumes[1].size = ''
+    geometry.volumes[1].parameters = '0 mm, 1 mm, 3 mm, 0 deg, 360 deg'
+    validate_geometry_document(geometry, material_names={"Silicon"})
+    assert not geometry.errors, geometry.errors
     geometry.source_copy_mode = True
     validate_geometry_document(geometry, material_names={"Silicon"})
     assert not any("not by the Geometry Editor" in e for e in geometry.errors), geometry.errors

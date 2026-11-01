@@ -10,7 +10,7 @@ import hashlib
 import json
 import weakref
 
-from PySide6.QtCore import QByteArray, QObject, QSettings, Signal, Qt
+from PySide6.QtCore import QByteArray, QObject, QSettings, Signal, QSize, Qt
 from PySide6.QtWidgets import (
     QApplication, QDockWidget, QFrame, QLabel, QMainWindow, QPushButton, QScrollArea, QStackedWidget,
     QTabWidget, QVBoxLayout, QWidget,
@@ -54,6 +54,31 @@ class WorkspacePageStack(QStackedWidget):
         self._first_navigation_docks = {}
         self._preview_activation_index = None
 
+    def _current_size_hint(self, *, minimum: bool) -> QSize:
+        # QStackedLayout otherwise takes the maximum of *all* pages. Inside the
+        # scrollable workspace that gives an inactive history/scans page control
+        # over the host's size, pushing a visible bottom log dock out of view.
+        # Use the actual central anchor here, not widget()'s logical dock page.
+        page = super().currentWidget()
+        if page is None:
+            return QSize(0, 0)
+        hint = page.minimumSizeHint() if minimum else page.sizeHint()
+        hint = hint.expandedTo(page.minimumSize()).expandedTo(QSize(0, 0))
+        # A page's scroll-frame minimum (often 66px) is not a readable editor
+        # width when peer docks remain open. Preserve the active page's preferred
+        # horizontal extent only; its tall contents must still scroll vertically
+        # rather than taking space away from the simultaneously visible logs.
+        if minimum:
+            hint.setWidth(max(hint.width(), page.sizeHint().width()))
+        margins = self.contentsMargins()
+        return hint + QSize(margins.left() + margins.right(), margins.top() + margins.bottom())
+
+    def minimumSizeHint(self) -> QSize:  # noqa: N802
+        return self._current_size_hint(minimum=True)
+
+    def sizeHint(self) -> QSize:  # noqa: N802
+        return self._current_size_hint(minimum=False)
+
     def attach_dock_page(self, page, dock):
         index = super().indexOf(page)
         self._dock_pages[index] = (page, dock)
@@ -81,6 +106,7 @@ class WorkspacePageStack(QStackedWidget):
 
     def setCurrentIndex(self, index):
         super().setCurrentIndex(index)
+        self.updateGeometry()
         if self._dock_pages:
             self.reveal_current()
 
@@ -103,6 +129,7 @@ class WorkspacePageStack(QStackedWidget):
         # A saved hidden active dock must remain hidden. Restoring navigation
         # updates its header/anchor without overriding Qt's saved visibility.
         super().setCurrentIndex(index)
+        self.updateGeometry()
         self._central_extent(index in self._dock_pages)
 
     def _central_extent(self, dock_page):

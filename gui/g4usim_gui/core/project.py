@@ -30,7 +30,7 @@ from g4usim_gui.editors.source_physics_scoring_model import (
 
 
 SCHEMA_NAME = "G4UniversalSimProject"
-SCHEMA_VERSION = 7
+SCHEMA_VERSION = 8
 RUN_INPUT_MODES = {"generated", "external"}
 
 
@@ -141,6 +141,11 @@ def project_from_dict(data: dict[str, Any]) -> G4USimProject:
             row_data["components"] = [MaterialComponent(**component) for component in row_data.get("components", [])]
             rows.append(MaterialRow(**row_data))
         filtered["materialEditor"] = MaterialDocument(rows=rows, **material_data)
+    # J2 nested editor documents live inside the existing F5 owners. Rebuild
+    # typed rows without validating/normalizing unfinished or invalid drafts.
+    from g4usim_gui.core.run_editor_model import hydrate_extensions
+    hydrate_extensions(filtered.get("sourceEditor", SourceEditableModel()),
+                       filtered.get("physicsEditor", PhysicsEditableModel()))
     has_source_editor = "sourceEditor" in data
     has_physics_editor = "physicsEditor" in data
     has_scoring_editor = "scoringEditor" in data

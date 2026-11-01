@@ -55,7 +55,7 @@ def transport_tests():
         path = Path(directory) / "快照.json"
         path.write_bytes(snapshot_to_json(WorkspaceSnapshot(G4USimProject())))
         candidate = cli.read_candidate(path)
-        assert candidate.project.version == 7
+        assert candidate.project.version == 8
         for raw in (b'{"x":1,"x":2}', b'{"x":NaN}', b'{"x":1e999}', b'{}'):
             path.write_bytes(raw)
             rejected = False

@@ -49,7 +49,7 @@ def main() -> int:
     preview = Preview3DPanel()
     assert preview.preview3d_auto_backend.isChecked() and preview.preview3d_widget is not None
     run = RunConfigEditor()
-    assert tab_texts(run.run_config_tabs) == ["Source", "Physics", "Scoring"]
+    assert tab_texts(run.run_config_tabs) == ["Source", "Physics", "Scoring", "Advanced experimental editors"]
     setup = SetupPanel(lambda: None, lambda: None)
     assert [section.toggle.text() for section in setup.setup_sections] == ["Run", "Input files", "Source", "Physics",
                                                                            "Scoring"]

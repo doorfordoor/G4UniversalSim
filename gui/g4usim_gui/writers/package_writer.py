@@ -63,6 +63,11 @@ def create_run_package(
     physics_model: PhysicsEditableModel | None = None,
     scoring_model: ScoringEditableModel | None = None,
 ) -> tuple[RunPackage, str]:
+    if material_document is None and not paths.materials_config:
+        candidate = project.materialEditor
+        if (candidate is not None and candidate.is_dirty and
+                not candidate.source_path and not candidate.raw_source_text):
+            material_document = candidate
     report = validate_config_builder(
         paths=paths,
         run=run,
@@ -81,6 +86,11 @@ def create_run_package(
 
     package = _allocate_package(paths.runs_root, run.run_name or project.projectName)
     materials_source_mode, geometry_source_mode = _copy_or_generate_inputs(package, paths, geometry, material_document, geometry_document)
+    from g4usim_gui.core.run_editor_resources import materialize_geometry_file
+    geometry_origin = geometry.config_path or paths.geometry_config
+    materialize_geometry_file(Path(package.geometry_ini_path),
+        source_base=Path(geometry_origin).expanduser().resolve().parent if geometry_origin else Path.cwd(),
+        destination=Path(package.config_dir) / 'geometry-resources')
     materials_summary = parse_materials(package.materials_ini_path)
     geometry_summary = parse_geometry(package.geometry_ini_path, geometry.template)
     summary_text = (
@@ -88,6 +98,12 @@ def create_run_package(
         + "\n"
         + build_config_summary_text(materials_summary=materials_summary, geometry_summary=geometry_summary)
     )
+    from g4usim_gui.core.run_editor_resources import materialize_run_resources
+    source_model, physics_model = materialize_run_resources(
+        source_model or SourceEditableModel.from_settings(source),
+        physics_model or PhysicsEditableModel.from_settings(physics),
+        workspace=Path(paths.workspace_root or project.workspaceRoot or Path.cwd()),
+        destination=Path(package.config_dir) / 'resources')
     write_main_ini(
         package.main_ini_path,
         package=package,

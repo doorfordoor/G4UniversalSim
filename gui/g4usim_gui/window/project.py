@@ -23,6 +23,37 @@ from g4usim_gui.models.package_model import PathSettings
 class ProjectMixin:
     """Projects: the default project, open/save/recent, keeping pages and the project in step, history packages. Mixed into MainWindow."""
 
+    def new_blank_project(self) -> bool:
+        """Replace the workspace with an untitled document, retaining environment only."""
+        if not self.can_mutate_workspace('new'):
+            return False
+        from g4usim_gui.core.wizard import blank_result, apply_to_project
+        candidate = G4USimProject(
+            executable=self.project.executable, workspaceRoot=self.project.workspaceRoot,
+            runsRoot=self.project.runsRoot,
+            outputDir=str(Path(self.project.runsRoot) / 'new_simulation' / 'output'))
+        candidate.pathSettings = PathSettings(
+            executable=candidate.executable, workspace_root=candidate.workspaceRoot,
+            runs_root=candidate.runsRoot)
+        apply_to_project(candidate, blank_result())
+        self._check_project_projection(candidate)
+        if not self._confirm_unsaved_edits():
+            return False
+        try:
+            self._set_project(candidate)
+        except Exception as exc:
+            QMessageBox.warning(self, ui_text('New blank simulation'), str(exc))
+            return False
+        self.project_file = None
+        self._history_discard_on_close = False
+        self._recovery_project_replaced(origin_path='', origin_sha256=None)
+        index = self.page_stack.indexOf(self.config_builder_page)
+        self.page_stack.setCurrentIndex(index)
+        self._nav_buttons[index].setChecked(True)
+        self.statusBar().showMessage(ui_text(
+            'Blank simulation created. Add materials and volumes; input files are generated when needed.'), 8000)
+        return True
+
     def _default_project(self) -> G4USimProject:
         root = install_layout.application_root()
         runs_root = install_layout.default_runs_root()
@@ -289,8 +320,8 @@ class ProjectMixin:
     def _show_snapshot_restore_notes(self, restored) -> None:
         if restored.package_root:
             scope = ui_text(
-                "Restored the package's current materials and geometry, together with the editing parameters recorded in the snapshot. "
-                "Validate them again and generate a new run package. Hand-edited main/macro files, unsaved drafts and historical run success were not restored."
+                "Restored CURRENT package materials, geometry, source, physics, fields and bias rules, plus snapshot run/scoring settings. "
+                "Validate and generate a new package. Macro behavior, unsaved drafts and historical run success are not inherited."
             )
             context = ui_format("Package: {path}", path=restored.package_root)
             status = "Package inputs restored; review the details and generate a new package."

@@ -8,6 +8,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from g4usim_gui.core.project import G4USimProject, project_from_dict, project_to_dict
+from g4usim_gui.core.diagnostics import collect_diagnostics
 from g4usim_gui.editors.geometry_editor_model import (
     BooleanOperationRow,
     LayerRow,
@@ -158,15 +159,20 @@ def test_hierarchical_visual_and_cut_roundtrip() -> None:
         assert "dx1 = 9 cm" in generate_geometry_ini_text(complex_document)
         stand.shape_properties["dx1"] = "-1 cm"
         validate_geometry_document(complex_document, material_names={"G4_AIR", "G4_Al", "G4_Pb", "G4_WATER", "silicon", "iron", "water"})
-        assert any("trd dx1 must be a positive length" in item for item in complex_document.errors)
+        assert any(item.location and item.location.field == 'dx1' and item.severity == 'error'
+                   for item in collect_diagnostics(complex_document))
         stand.shape_properties["dx1"] = "8 cm"
         stand.shape = "box"
         validate_geometry_document(complex_document, material_names={"G4_AIR", "G4_Al", "G4_Pb", "G4_WATER", "silicon", "iron", "water"})
-        assert any("selected shape is not trd" in item for item in complex_document.errors)
+        assert any(item.location and item.location.field == 'dx1' and item.severity == 'error'
+                   for item in collect_diagnostics(complex_document))
         stand.shape = "trd"
         complex_document.boolean_ops.append(BooleanOperationRow(target_volume="main_chamber", operation="subtraction", tool_shape="trd"))
         validate_geometry_document(complex_document, material_names={"G4_AIR", "G4_Al", "G4_Pb", "G4_WATER", "silicon", "iron", "water"})
-        assert any("Unsupported boolean tool shape 'trd'" in item for item in complex_document.errors)
+        assert complex_document.boolean_ops[-1].errors, 'Incomplete trd tool must be rejected'
+        complex_document.boolean_ops[-1].shape_properties = dict(dx1='1 mm', dx2='2 mm', dy1='1 mm', dy2='2 mm', dz='1 mm')
+        validate_geometry_document(complex_document, material_names={"G4_AIR", "G4_Al", "G4_Pb", "G4_WATER", "silicon", "iron", "water"})
+        assert not complex_document.boolean_ops[-1].errors, complex_document.boolean_ops[-1].errors
     source = (ROOT / "scripts" / "fixtures" / "hierarchical_gui_roundtrip.ini").read_text(encoding="utf-8")
     with tempfile.TemporaryDirectory() as tmp:
         first = Path(tmp) / "source.ini"

@@ -71,9 +71,24 @@ int PhysicsManager::GetVerboseLevel() const
     return verboseLevel_;
 }
 
+void PhysicsManager::RequireNoReplacementConflict(const char* selector, const std::string& option) const
+{
+    // Radioactive decay, optical, generic biasing and MicroElec have type zero
+    // or a separately managed lifecycle; none can be a replacement target.
+    if (!option.empty() && (option == "G4RadioactiveDecayPhysics" || option == "G4OpticalPhysics" ||
+                            option == "G4GenericBiasingPhysics" || option == "MicroElecPhysics")) return;
+    for (const auto& replacement : replacementModules_) {
+        if (option.empty() || PhysicsFactory::Classify(option) == PhysicsFactory::Classify(replacement)) {
+            throw std::runtime_error(std::string(selector) +
+                " conflicts with configured [physics]/replace_modules = " + replacement +
+                "; keep the replacement plan or select a new configuration in a fresh process");
+        }
+    }
+}
+
 void PhysicsManager::SetEMOption(const std::string& option)
 {
-    requestedEMOption_ = StringUtils::Trim(option);
+    RequireNoReplacementConflict("SetEMOption", "G4EmStandardPhysics");
     if (HasReferenceList()) {
         SetReferenceEMOption(option);
         return;
@@ -83,6 +98,8 @@ void PhysicsManager::SetEMOption(const std::string& option)
     if (PhysicsFactory::Classify(canonical) != PhysicsCategory::EM) {
         throw std::runtime_error("PhysicsManager::SetEMOption failed: option is not EM physics: '" + option + "'");
     }
+    // Commit only after all validation; rejected commands leave Manager intact.
+    requestedEMOption_ = StringUtils::Trim(option);
     emOption_ = canonical;
 }
 
@@ -97,11 +114,11 @@ void PhysicsManager::SetReferenceList(const std::string& referenceName)
     if (name.empty()) {
         throw std::runtime_error("PhysicsManager::SetReferenceList failed: referenceName is empty");
     }
-    referenceListName_ = name;
-    baseReferenceListName_ = PhysicsFactory::StripEMSuffix(name);
-    if (!requestedEMOption_.empty()) {
-        referenceListName_ = BuildReferenceNameWithEM(baseReferenceListName_, requestedEMOption_);
-    }
+    RequireNoReplacementConflict("SetReferenceList");
+    const auto base = PhysicsFactory::StripEMSuffix(name);
+    const auto reference = requestedEMOption_.empty() ? name : BuildReferenceNameWithEM(base, requestedEMOption_);
+    referenceListName_ = reference;
+    baseReferenceListName_ = base;
 }
 
 const std::string& PhysicsManager::GetReferenceList() const
@@ -116,6 +133,7 @@ bool PhysicsManager::HasReferenceList() const
 
 void PhysicsManager::ClearReferenceList()
 {
+    RequireNoReplacementConflict("ClearReferenceList");
     referenceListName_.clear();
     baseReferenceListName_.clear();
     requestedEMOption_.clear();
@@ -127,10 +145,10 @@ void PhysicsManager::SetBaseReferenceList(const std::string& baseName)
     if (base.empty()) {
         throw std::runtime_error("PhysicsManager::SetBaseReferenceList failed: baseName is empty");
     }
+    RequireNoReplacementConflict("SetBaseReferenceList");
+    const auto reference = requestedEMOption_.empty() ? base : BuildReferenceNameWithEM(base, requestedEMOption_);
     baseReferenceListName_ = base;
-    referenceListName_ = requestedEMOption_.empty()
-        ? baseReferenceListName_
-        : BuildReferenceNameWithEM(baseReferenceListName_, requestedEMOption_);
+    referenceListName_ = reference;
 }
 
 const std::string& PhysicsManager::GetBaseReferenceList() const
@@ -140,6 +158,7 @@ const std::string& PhysicsManager::GetBaseReferenceList() const
 
 void PhysicsManager::SetRequestedEMOption(const std::string& option)
 {
+    RequireNoReplacementConflict("SetRequestedEMOption", "G4EmStandardPhysics");
     requestedEMOption_ = StringUtils::Trim(option);
 }
 
@@ -161,6 +180,7 @@ bool PhysicsManager::IsManualMode() const
 void PhysicsManager::AddExtraModule(const std::string& option)
 {
     const auto canonical = PhysicsFactory::NormalizeOptionName(option);
+    RequireNoReplacementConflict("AddExtraModule", canonical);
     if (PhysicsFactory::Classify(canonical) == PhysicsCategory::EM) {
         throw std::runtime_error("PhysicsManager::AddExtraModule failed: use SetEMOption/reference suffix for EM option '" +
                                  option + "'");
@@ -197,16 +217,24 @@ std::vector<std::string> PhysicsManager::GetExtraModules() const
     return extraModules_;
 }
 
+const std::vector<std::string>& PhysicsManager::GetReplacementModules() const
+{
+    return replacementModules_;
+}
+
 void PhysicsManager::SetReferenceEMOption(const std::string& emOption)
 {
-    requestedEMOption_ = StringUtils::Trim(emOption);
+    RequireNoReplacementConflict("SetReferenceEMOption", "G4EmStandardPhysics");
+    const auto requested = StringUtils::Trim(emOption);
     if (!HasReferenceList() && baseReferenceListName_.empty()) {
         throw std::runtime_error("PhysicsManager::SetReferenceEMOption failed: no reference list/base reference list is set");
     }
     const auto base = !baseReferenceListName_.empty()
         ? baseReferenceListName_
         : PhysicsFactory::StripEMSuffix(referenceListName_);
-    referenceListName_ = BuildReferenceNameWithEM(base, requestedEMOption_);
+    const auto reference = BuildReferenceNameWithEM(base, requested);
+    requestedEMOption_ = requested;
+    referenceListName_ = reference;
 }
 
 std::string PhysicsManager::BuildReferenceNameWithEM(const std::string& baseReference,
@@ -511,6 +539,25 @@ void PhysicsManager::LoadFromConfigImpl(const ConfigManager& config)
         if (!option.empty()) AddPhysicsModule(option);
     }
 
+    // Legacy single EM aliases in modules remain supported, but conflicting
+    // explicit selectors may not silently overwrite one another.
+    if (!hasReference) {
+        std::string selected;
+        const auto acceptEM = [&](const std::string& option) {
+            const auto canonical = PhysicsFactory::NormalizeOptionName(option);
+            if (PhysicsFactory::Classify(canonical) != PhysicsCategory::EM) return;
+            if (!selected.empty() && selected != canonical)
+                throw std::runtime_error("[physics] conflicting manual EM selectors: " + selected + " and " + canonical);
+            selected = canonical;
+        };
+        const auto em = StringUtils::Trim(config.GetString("physics", "em", ""));
+        if (!em.empty()) acceptEM(em);
+        else if (config.HasKey("physics", "list")) acceptEM(config.GetString("physics", "list"));
+        for (const char* key : {"modules", "extra_modules"})
+            if (config.HasKey("physics", key)) for (const auto& module : config.GetVector("physics", key))
+                if (!StringUtils::Trim(module).empty()) acceptEM(module);
+    }
+
     bool referenceExtraCleared = false;
     if (config.HasSection("physics") && config.HasKey("physics", "modules")) {
         if (hasReference) {
@@ -540,6 +587,27 @@ void PhysicsManager::LoadFromConfigImpl(const ConfigManager& config)
                 if (!StringUtils::Trim(module).empty()) AddPhysicsModule(module);
             }
         }
+    }
+
+    replacementModules_.clear();
+    if (config.HasKey("physics", "replace_modules")) {
+        if (!hasReference) throw std::runtime_error("[physics]/replace_modules requires reference mode");
+        std::vector<int> types;
+        for (const auto& module : config.GetVector("physics", "replace_modules")) {
+            const auto canonical = PhysicsFactory::NormalizeOptionName(module);
+            if (PhysicsFactory::Classify(canonical) == PhysicsCategory::Biasing || canonical == "MicroElecPhysics")
+                throw std::runtime_error("replace_modules does not support biasing or MicroElec constructors");
+            auto constructor = PhysicsFactory::CreatePhysicsConstructor(canonical);
+            const int type = constructor->GetPhysicsType();
+            if (type <= 0 || std::find(types.begin(), types.end(), type) != types.end())
+                throw std::runtime_error("replace_modules requires unique nonzero physics types: " + module);
+            if (PhysicsFactory::Classify(canonical) == PhysicsCategory::EM &&
+                !StringUtils::Trim(config.GetString("physics", "em", "")).empty())
+                throw std::runtime_error("[physics]/em conflicts with EM replace_modules; select one EM mechanism");
+            types.push_back(type);
+            replacementModules_.push_back(canonical);
+        }
+        if (replacementModules_.empty()) throw std::runtime_error("[physics]/replace_modules must not be empty");
     }
 
     if (config.HasSection("physics") && config.HasKey("physics", "default_cut")) {
@@ -635,6 +703,8 @@ void PhysicsManager::LoadFromConfigImpl(const ConfigManager& config)
 
 void PhysicsManager::Validate() const
 {
+    if (!HasReferenceList() && !replacementModules_.empty())
+        throw std::runtime_error("replace_modules requires reference mode (including after macro configuration)");
     if (HasReferenceList()) {
         if (StringUtils::Trim(referenceListName_).empty()) {
             throw std::runtime_error("PhysicsManager::Validate failed: referenceListName is empty in reference mode");
@@ -735,6 +805,7 @@ std::vector<effective_config::Field> PhysicsManager::ProjectEffectiveConfigField
   add("base_reference",baseReferenceListName_,"","physics",{"reference"});
   if(!requestedEMOption_.empty())add("requested_em",requestedEMOption_,"","physics",{"em"});
   add("extra_modules",List(extraModules_),"","physics",{"modules","extra_modules"});
+  add("replace_modules",List(replacementModules_),"","physics",{"replace_modules"});
  }else{
   add("em",emOption_,"","physics",acceptedEM?std::initializer_list<const char*>{"em"}:hasEMKey?std::initializer_list<const char*>{}:std::initializer_list<const char*>{"list"});
   ignoredEM(result.back());

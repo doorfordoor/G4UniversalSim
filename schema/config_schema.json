@@ -303,7 +303,8 @@
             "isotropic 与 angular 互斥，isotropic=true 与 direction 冲突；angular=fixed/cos/beam1d/beam2d 要求方向，focused 要求 focus 且拒绝 direction；全空间 isotropic 不接受方向，带角锥时需要方向。",
             "0<=min_theta<max_theta；cos 最大90deg，isotropic 最大180deg。beam1d 要求正 angular_sigma；beam2d 要求正 angular_sigma_x/y。",
             "particle=ion 才允许 ion；Z/A 为整数且1<=Z<=A<=300，激发能>=0，必须显式指定 energy 或 energy_type；离子定义在 prepare_run 解析。",
-            "phase_space_file 与其他采样字段互斥，仅允许 verbose/recycle；recycle 不能单独存在。文件内容在配置阶段加载，粒子定义与事件数量要求在运行开始阶段检查。"
+            "phase_space_file 与其他采样字段互斥，仅允许 verbose/recycle；recycle 不能单独存在。文件内容在配置阶段加载，粒子定义与事件数量要求在运行开始阶段检查。",
+            "J2：surface/sphere 的 center 缺省为原点，radius 必须为正；拒绝 position、halfx/y/z、inner_radius、beam_sigma*。"
           ],
           "keys": {
             "preset": {
@@ -323,7 +324,7 @@
               ],
               "gui": {
                 "editable": "generated_subset",
-                "note": "仅 point/circle/rectangle × fixed/isotropic；高级形状与离子不因此开放"
+                "note": "旧单源表单保留受支持子集；J2命名源表单按实际分布条件生成，预览不代表高级源。"
               }
             },
             "particle": {
@@ -336,7 +337,7 @@
               "min_length": 1,
               "gui": {
                 "editable": "generated_subset",
-                "note": "仅 point/circle/rectangle × fixed/isotropic；高级形状与离子不因此开放"
+                "note": "旧单源表单保留受支持子集；J2命名源表单按实际分布条件生成，预览不代表高级源。"
               }
             },
             "energy": {
@@ -349,7 +350,7 @@
               "min": 0,
               "gui": {
                 "editable": "generated_subset",
-                "note": "仅 point/circle/rectangle × fixed/isotropic；高级形状与离子不因此开放"
+                "note": "旧单源表单保留受支持子集；J2命名源表单按实际分布条件生成，预览不代表高级源。"
               }
             },
             "verbose": {
@@ -371,7 +372,7 @@
               "description_zh": "与 angular 互斥；true 与显式 direction 冲突",
               "gui": {
                 "editable": "generated_subset",
-                "note": "仅 point/circle/rectangle × fixed/isotropic；高级形状与离子不因此开放"
+                "note": "旧单源表单保留受支持子集；J2命名源表单按实际分布条件生成，预览不代表高级源。"
               }
             },
             "position_type": {
@@ -385,11 +386,12 @@
                 "point",
                 "plane",
                 "volume",
-                "beam"
+                "beam",
+                "surface"
               ],
               "gui": {
                 "editable": "generated_subset",
-                "note": "仅 point/circle/rectangle × fixed/isotropic；高级形状与离子不因此开放"
+                "note": "旧单源表单保留受支持子集；J2命名源表单按实际分布条件生成，预览不代表高级源。"
               }
             },
             "position": {
@@ -402,7 +404,7 @@
               "syntax": "x,y,z 或 x y z unit 或 x unit y unit z unit",
               "gui": {
                 "editable": "generated_subset",
-                "note": "仅 point/circle/rectangle × fixed/isotropic；高级形状与离子不因此开放"
+                "note": "旧单源表单保留受支持子集；J2命名源表单按实际分布条件生成，预览不代表高级源。"
               }
             },
             "center": {
@@ -415,7 +417,7 @@
               "syntax": "三长度分量（mm）",
               "gui": {
                 "editable": "generated_subset",
-                "note": "仅 point/circle/rectangle × fixed/isotropic；高级形状与离子不因此开放"
+                "note": "旧单源表单保留受支持子集；J2命名源表单按实际分布条件生成，预览不代表高级源。"
               }
             },
             "z": {
@@ -436,7 +438,7 @@
               "syntax": "+x/-x/+y/-y/+z/-z 或三个无量纲分量",
               "gui": {
                 "editable": "generated_subset",
-                "note": "仅 point/circle/rectangle × fixed/isotropic；高级形状与离子不因此开放"
+                "note": "旧单源表单保留受支持子集；J2命名源表单按实际分布条件生成，预览不代表高级源。"
               }
             },
             "shape": {
@@ -444,11 +446,11 @@
               "default": null,
               "support": "supported",
               "since": "E2 inventory",
-              "description": "取值依 position_type；plane: circle/rectangle/annulus/ellipse/square，volume: sphere/cylinder/box/ellipsoid，beam: circle/ellipse",
-              "description_zh": "取值依 position_type；plane: circle/rectangle/annulus/ellipse/square，volume: sphere/cylinder/box/ellipsoid，beam: circle/ellipse",
+              "description": "取值依 position_type；surface 仅 sphere（球面），volume/sphere 为球内；其他既有平面和束斑形状不变",
+              "description_zh": "取值依 position_type；surface 仅 sphere（球面），volume/sphere 为球内；其他既有平面和束斑形状不变",
               "gui": {
                 "editable": "generated_subset",
-                "note": "仅 point/circle/rectangle × fixed/isotropic；高级形状与离子不因此开放"
+                "note": "旧单源表单保留受支持子集；J2命名源表单按实际分布条件生成，预览不代表高级源。"
               }
             },
             "ion": {
@@ -610,7 +612,11 @@
               "description": "重放文件列表；除 verbose/recycle 外不允许其他源字段；历史按事件索引重放",
               "description_zh": "重放文件列表；除 verbose/recycle 外不允许其他源字段；历史按事件索引重放",
               "path_base": "main_ini_directory",
-              "syntax": "逗号分隔 g4usim 相空间 CSV 路径"
+              "syntax": "逗号分隔 g4usim 相空间 CSV 路径",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；相空间与命名GPS互斥，同发仅命名源。"
+              }
             },
             "phase_space_recycle": {
               "type": "bool",
@@ -618,7 +624,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "只在 phase_space_file 存在时可用",
-              "description_zh": "只在 phase_space_file 存在时可用"
+              "description_zh": "只在 phase_space_file 存在时可用",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；相空间与命名GPS互斥，同发仅命名源。"
+              }
             },
             "radius": {
               "type": "length",
@@ -630,7 +640,7 @@
               "exclusive_min": 0,
               "gui": {
                 "editable": "generated_subset",
-                "note": "仅 point/circle/rectangle × fixed/isotropic；高级形状与离子不因此开放"
+                "note": "旧单源表单保留受支持子集；J2命名源表单按实际分布条件生成，预览不代表高级源。"
               }
             },
             "halfx": {
@@ -643,7 +653,7 @@
               "exclusive_min": 0,
               "gui": {
                 "editable": "generated_subset",
-                "note": "仅 point/circle/rectangle × fixed/isotropic；高级形状与离子不因此开放"
+                "note": "旧单源表单保留受支持子集；J2命名源表单按实际分布条件生成，预览不代表高级源。"
               }
             },
             "halfy": {
@@ -656,7 +666,7 @@
               "exclusive_min": 0,
               "gui": {
                 "editable": "generated_subset",
-                "note": "仅 point/circle/rectangle × fixed/isotropic；高级形状与离子不因此开放"
+                "note": "旧单源表单保留受支持子集；J2命名源表单按实际分布条件生成，预览不代表高级源。"
               }
             },
             "inner_radius": {
@@ -730,6 +740,21 @@
               "description": "beam1d 用 sigma；beam2d 用 sigma_x/y；必须正",
               "description_zh": "beam1d 用 sigma；beam2d 用 sigma_x/y；必须正",
               "exclusive_min": 0
+            },
+            "multiple_vertex": {
+              "type": "bool",
+              "default": "false",
+              "support": "experimental",
+              "since": "J2",
+              "description": "命名多源模式：false按intensity抽选一源，true每事件各源一顶点；intensity不表示粒子数",
+              "description_zh": "命名多源模式：false按intensity抽选一源，true每事件各源一顶点；intensity不表示粒子数",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；相空间与命名GPS互斥，同发仅命名源。"
+              },
+              "tests": [
+                "scripts/test_j2_sources_physics.py"
+              ]
             }
           },
           "gui": {
@@ -758,7 +783,8 @@
             "0<=min_theta<max_theta；cos 最大90deg，isotropic 最大180deg。beam1d 要求正 angular_sigma；beam2d 要求正 angular_sigma_x/y。",
             "particle=ion 才允许 ion；Z/A 为整数且1<=Z<=A<=300，激发能>=0，必须显式指定 energy 或 energy_type；离子定义在 prepare_run 解析。",
             "phase_space_file 与其他采样字段互斥，仅允许 verbose/recycle；recycle 不能单独存在。文件内容在配置阶段加载，粒子定义与事件数量要求在运行开始阶段检查。",
-            "多源与 [source] 除 verbose 外全部字段互斥；每个源必须指定粒子/预设、能量、位置和方向/角分布。多源禁止单字段 Messenger 修改。"
+            "多源与 [source] 除 verbose 外全部字段互斥；每个源必须指定粒子/预设、能量、位置和方向/角分布。多源禁止单字段 Messenger 修改。",
+            "J2：surface/sphere 的 center 缺省为原点，radius 必须为正；拒绝 position、halfx/y/z、inner_radius、beam_sigma*。"
           ],
           "keys": {
             "preset": {
@@ -784,7 +810,11 @@
               "since": "E2 inventory",
               "description": "粒子名称区分大小写；ion 需要 ion 参数；粒子存在性由 Geant4 确认",
               "description_zh": "粒子名称区分大小写；ion 需要 ion 参数；粒子存在性由 Geant4 确认",
-              "min_length": 1
+              "min_length": 1,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2命名源；仅当前分布所需字段写出，真实后端仍验证。"
+              }
             },
             "energy": {
               "type": "energy",
@@ -793,7 +823,11 @@
               "since": "E2 inventory",
               "description": "单能或高斯均值；通常 >0，静止离子可为0",
               "description_zh": "单能或高斯均值；通常 >0，静止离子可为0",
-              "min": 0
+              "min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2命名源；仅当前分布所需字段写出，真实后端仍验证。"
+              }
             },
             "isotropic": {
               "type": "bool",
@@ -814,8 +848,13 @@
                 "point",
                 "plane",
                 "volume",
-                "beam"
-              ]
+                "beam",
+                "surface"
+              ],
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2命名源；仅当前分布所需字段写出，真实后端仍验证。"
+              }
             },
             "position": {
               "type": "structured",
@@ -824,7 +863,11 @@
               "since": "E2 inventory",
               "description": "点源三长度分量；不与 plane/volume/beam 混用",
               "description_zh": "点源三长度分量；不与 plane/volume/beam 混用",
-              "syntax": "x,y,z 或 x y z unit 或 x unit y unit z unit"
+              "syntax": "x,y,z 或 x y z unit 或 x unit y unit z unit",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2命名源；仅当前分布所需字段写出，真实后端仍验证。"
+              }
             },
             "center": {
               "type": "structured",
@@ -833,7 +876,11 @@
               "since": "E2 inventory",
               "description": "plane 默认 (0,0,-1 mm)，volume/beam 默认原点",
               "description_zh": "plane 默认 (0,0,-1 mm)，volume/beam 默认原点",
-              "syntax": "三长度分量（mm）"
+              "syntax": "三长度分量（mm）",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2命名源；仅当前分布所需字段写出，真实后端仍验证。"
+              }
             },
             "z": {
               "type": "structured",
@@ -851,15 +898,23 @@
               "since": "E2 inventory",
               "description": "非零有限向量，归一化；固定方向传入 GPS planar",
               "description_zh": "非零有限向量，归一化；固定方向传入 GPS planar",
-              "syntax": "+x/-x/+y/-y/+z/-z 或三个无量纲分量"
+              "syntax": "+x/-x/+y/-y/+z/-z 或三个无量纲分量",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2命名源；仅当前分布所需字段写出，真实后端仍验证。"
+              }
             },
             "shape": {
               "type": "structured",
               "default": null,
               "support": "experimental",
               "since": "E2 inventory",
-              "description": "取值依 position_type；plane: circle/rectangle/annulus/ellipse/square，volume: sphere/cylinder/box/ellipsoid，beam: circle/ellipse",
-              "description_zh": "取值依 position_type；plane: circle/rectangle/annulus/ellipse/square，volume: sphere/cylinder/box/ellipsoid，beam: circle/ellipse"
+              "description": "取值依 position_type；surface 仅 sphere（球面），volume/sphere 为球内；其他既有平面和束斑形状不变",
+              "description_zh": "取值依 position_type；surface 仅 sphere（球面），volume/sphere 为球内；其他既有平面和束斑形状不变",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2命名源；仅当前分布所需字段写出，真实后端仍验证。"
+              }
             },
             "ion": {
               "type": "structured",
@@ -868,7 +923,11 @@
               "since": "E2 inventory",
               "description": "仅 particle=ion；1<=Z<=A<=300；charge 默认Z，激发能默认0且>=0",
               "description_zh": "仅 particle=ion；1<=Z<=A<=300；charge 默认Z，激发能默认0且>=0",
-              "syntax": "Z A [charge [excitation]]"
+              "syntax": "Z A [charge [excitation]]",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2命名源；仅当前分布所需字段写出，真实后端仍验证。"
+              }
             },
             "energy_type": {
               "type": "enum",
@@ -885,7 +944,11 @@
                 "exp",
                 "histogram",
                 "points"
-              ]
+              ],
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2命名源；仅当前分布所需字段写出，真实后端仍验证。"
+              }
             },
             "energy_sigma": {
               "type": "energy",
@@ -894,7 +957,11 @@
               "since": "E2 inventory",
               "description": "仅 gauss，正标准差",
               "description_zh": "仅 gauss，正标准差",
-              "exclusive_min": 0
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2命名源；仅当前分布所需字段写出，真实后端仍验证。"
+              }
             },
             "energy_min": {
               "type": "energy",
@@ -903,7 +970,11 @@
               "since": "E2 inventory",
               "description": "uniform/power/exp 下限；power 必须正，下限小于上限",
               "description_zh": "uniform/power/exp 下限；power 必须正，下限小于上限",
-              "min": 0
+              "min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2命名源；仅当前分布所需字段写出，真实后端仍验证。"
+              }
             },
             "energy_max": {
               "type": "energy",
@@ -912,7 +983,11 @@
               "since": "E2 inventory",
               "description": "uniform/power/exp 上限，大于下限",
               "description_zh": "uniform/power/exp 上限，大于下限",
-              "exclusive_min": 0
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2命名源；仅当前分布所需字段写出，真实后端仍验证。"
+              }
             },
             "alpha": {
               "type": "number",
@@ -920,7 +995,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "power 必需，有限指数",
-              "description_zh": "power 必需，有限指数"
+              "description_zh": "power 必需，有限指数",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2命名源；仅当前分布所需字段写出，真实后端仍验证。"
+              }
             },
             "ezero": {
               "type": "energy",
@@ -929,7 +1008,11 @@
               "since": "E2 inventory",
               "description": "exp 必需，正能量尺度",
               "description_zh": "exp 必需，正能量尺度",
-              "exclusive_min": 0
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2命名源；仅当前分布所需字段写出，真实后端仍验证。"
+              }
             },
             "spectrum_file": {
               "type": "structured",
@@ -939,7 +1022,11 @@
               "description": "histogram/points 能谱文件；读取内容校验，不能只检查存在",
               "description_zh": "histogram/points 能谱文件；读取内容校验，不能只检查存在",
               "path_base": "main_ini_directory",
-              "syntax": "histogram: e_low_MeV,e_high_MeV,weight；points: energy_MeV,density；均支持 keV"
+              "syntax": "histogram: e_low_MeV,e_high_MeV,weight；points: energy_MeV,density；均支持 keV",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2命名源；仅当前分布所需字段写出，真实后端仍验证。"
+              }
             },
             "rot1": {
               "type": "structured",
@@ -948,7 +1035,11 @@
               "since": "E2 inventory",
               "description": "必须与 rot2 成对，非零、非平行；仅 plane/volume/beam",
               "description_zh": "必须与 rot2 成对，非零、非平行；仅 plane/volume/beam",
-              "syntax": "三个无量纲分量"
+              "syntax": "三个无量纲分量",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2命名源；仅当前分布所需字段写出，真实后端仍验证。"
+              }
             },
             "rot2": {
               "type": "structured",
@@ -957,7 +1048,11 @@
               "since": "E2 inventory",
               "description": "必须与 rot1 成对，非零、非平行；仅 plane/volume/beam",
               "description_zh": "必须与 rot1 成对，非零、非平行；仅 plane/volume/beam",
-              "syntax": "三个无量纲分量"
+              "syntax": "三个无量纲分量",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2命名源；仅当前分布所需字段写出，真实后端仍验证。"
+              }
             },
             "confine": {
               "type": "string",
@@ -967,7 +1062,11 @@
               "description": "仅 volume；非空体积名，实际体积存在性在 PrepareForRun 确认",
               "description_zh": "仅 volume；非空体积名，实际体积存在性在 PrepareForRun 确认",
               "min_length": 1,
-              "validation": "configure; prepare_run"
+              "validation": "configure; prepare_run",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2命名源；仅当前分布所需字段写出，真实后端仍验证。"
+              }
             },
             "angular": {
               "type": "enum",
@@ -983,7 +1082,11 @@
                 "beam1d",
                 "beam2d",
                 "focused"
-              ]
+              ],
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2命名源；仅当前分布所需字段写出，真实后端仍验证。"
+              }
             },
             "min_theta": {
               "type": "angle",
@@ -992,7 +1095,11 @@
               "since": "E2 inventory",
               "description": "isotropic/cos 角锥下限；需要 direction，0<=min<max",
               "description_zh": "isotropic/cos 角锥下限；需要 direction，0<=min<max",
-              "min": 0
+              "min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2命名源；仅当前分布所需字段写出，真实后端仍验证。"
+              }
             },
             "max_theta": {
               "type": "angle",
@@ -1001,7 +1108,11 @@
               "since": "E2 inventory",
               "description": "上限：isotropic 默认180deg，cos 默认90deg；不可超对应默认上限",
               "description_zh": "上限：isotropic 默认180deg，cos 默认90deg；不可超对应默认上限",
-              "exclusive_min": 0
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2命名源；仅当前分布所需字段写出，真实后端仍验证。"
+              }
             },
             "focus": {
               "type": "structured",
@@ -1010,7 +1121,11 @@
               "since": "E2 inventory",
               "description": "focused 必需的三长度焦点；与 direction 互斥",
               "description_zh": "focused 必需的三长度焦点；与 direction 互斥",
-              "syntax": "三长度分量（mm）"
+              "syntax": "三长度分量（mm）",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2命名源；仅当前分布所需字段写出，真实后端仍验证。"
+              }
             },
             "radius": {
               "type": "length",
@@ -1019,7 +1134,11 @@
               "since": "E2 inventory",
               "description": "正长度；仅在匹配的位置类型和形状中消费（不适用的组合报错）",
               "description_zh": "plane/circle 默认1mm；annulus/volume 必需；annulus 要求 inner_radius < radius",
-              "exclusive_min": 0
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2命名源；仅当前分布所需字段写出，真实后端仍验证。"
+              }
             },
             "halfx": {
               "type": "length",
@@ -1028,7 +1147,11 @@
               "since": "E2 inventory",
               "description": "正长度；仅在匹配的位置类型和形状中消费（不适用的组合报错）",
               "description_zh": "正长度；仅在匹配的位置类型和形状中消费（不适用的组合报错）",
-              "exclusive_min": 0
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2命名源；仅当前分布所需字段写出，真实后端仍验证。"
+              }
             },
             "halfy": {
               "type": "length",
@@ -1037,7 +1160,11 @@
               "since": "E2 inventory",
               "description": "正长度；仅在匹配的位置类型和形状中消费（不适用的组合报错）",
               "description_zh": "正长度；仅在匹配的位置类型和形状中消费（不适用的组合报错）",
-              "exclusive_min": 0
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2命名源；仅当前分布所需字段写出，真实后端仍验证。"
+              }
             },
             "inner_radius": {
               "type": "length",
@@ -1046,7 +1173,11 @@
               "since": "E2 inventory",
               "description": "正长度；仅在匹配的位置类型和形状中消费（不适用的组合报错）",
               "description_zh": "正长度；仅在匹配的位置类型和形状中消费（不适用的组合报错）",
-              "exclusive_min": 0
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2命名源；仅当前分布所需字段写出，真实后端仍验证。"
+              }
             },
             "halfz": {
               "type": "length",
@@ -1055,7 +1186,11 @@
               "since": "E2 inventory",
               "description": "正长度；仅在匹配的位置类型和形状中消费（不适用的组合报错）",
               "description_zh": "正长度；仅在匹配的位置类型和形状中消费（不适用的组合报错）",
-              "exclusive_min": 0
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2命名源；仅当前分布所需字段写出，真实后端仍验证。"
+              }
             },
             "beam_sigma": {
               "type": "length",
@@ -1064,7 +1199,11 @@
               "since": "E2 inventory",
               "description": "正长度；仅在匹配的位置类型和形状中消费（不适用的组合报错）",
               "description_zh": "正长度；仅在匹配的位置类型和形状中消费（不适用的组合报错）",
-              "exclusive_min": 0
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2命名源；仅当前分布所需字段写出，真实后端仍验证。"
+              }
             },
             "beam_sigma_x": {
               "type": "length",
@@ -1073,7 +1212,11 @@
               "since": "E2 inventory",
               "description": "正长度；仅在匹配的位置类型和形状中消费（不适用的组合报错）",
               "description_zh": "正长度；仅在匹配的位置类型和形状中消费（不适用的组合报错）",
-              "exclusive_min": 0
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2命名源；仅当前分布所需字段写出，真实后端仍验证。"
+              }
             },
             "beam_sigma_y": {
               "type": "length",
@@ -1082,7 +1225,11 @@
               "since": "E2 inventory",
               "description": "正长度；仅在匹配的位置类型和形状中消费（不适用的组合报错）",
               "description_zh": "正长度；仅在匹配的位置类型和形状中消费（不适用的组合报错）",
-              "exclusive_min": 0
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2命名源；仅当前分布所需字段写出，真实后端仍验证。"
+              }
             },
             "angular_sigma": {
               "type": "angle",
@@ -1091,7 +1238,11 @@
               "since": "E2 inventory",
               "description": "beam1d 用 sigma；beam2d 用 sigma_x/y；必须正",
               "description_zh": "beam1d 用 sigma；beam2d 用 sigma_x/y；必须正",
-              "exclusive_min": 0
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2命名源；仅当前分布所需字段写出，真实后端仍验证。"
+              }
             },
             "angular_sigma_x": {
               "type": "angle",
@@ -1100,7 +1251,11 @@
               "since": "E2 inventory",
               "description": "beam1d 用 sigma；beam2d 用 sigma_x/y；必须正",
               "description_zh": "beam1d 用 sigma；beam2d 用 sigma_x/y；必须正",
-              "exclusive_min": 0
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2命名源；仅当前分布所需字段写出，真实后端仍验证。"
+              }
             },
             "angular_sigma_y": {
               "type": "angle",
@@ -1109,7 +1264,11 @@
               "since": "E2 inventory",
               "description": "beam1d 用 sigma；beam2d 用 sigma_x/y；必须正",
               "description_zh": "beam1d 用 sigma；beam2d 用 sigma_x/y；必须正",
-              "exclusive_min": 0
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2命名源；仅当前分布所需字段写出，真实后端仍验证。"
+              }
             },
             "intensity": {
               "type": "number",
@@ -1118,7 +1277,11 @@
               "since": "E2 inventory",
               "description": "多源相对权重，有限正数",
               "description_zh": "多源相对权重，有限正数",
-              "exclusive_min": 0
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2命名源；仅当前分布所需字段写出，真实后端仍验证。"
+              }
             }
           },
           "gui": {
@@ -1180,7 +1343,8 @@
           "validation": "configure; initialize",
           "rules": [
             "reference/em/list/modules/extra_modules 的优先关系由顺序解析决定；list 不列为 em 的字段别名。",
-            "物理列表、模块和粒子的最终支持受 Geant4 编译与初始化影响；inspect-run 不证明实际过程注册。"
+            "物理列表、模块和粒子的最终支持受 Geant4 编译与初始化影响；inspect-run 不证明实际过程注册。",
+            "J2：extra_modules只附加，已有同类或同名构造器拒绝；replace_modules显式替换且要求唯一已有目标。"
           ],
           "keys": {
             "reference": {
@@ -1224,7 +1388,7 @@
               "description": "逗号分隔模块；手动模式清空后添加；参考模式作为兼容 extra_modules",
               "description_zh": "逗号分隔模块；手动模式清空后添加；参考模式作为兼容 extra_modules",
               "gui": {
-                "editable": "external_only"
+                "editable": "generated_subset"
               }
             },
             "extra_modules": {
@@ -1235,7 +1399,7 @@
               "description": "逗号分隔非 EM 扩展；参考模式不能添加 EM；手动模式兼容添加",
               "description_zh": "逗号分隔非 EM 扩展；参考模式不能添加 EM；手动模式兼容添加",
               "gui": {
-                "editable": "external_only"
+                "editable": "generated_subset"
               }
             },
             "default_cut": {
@@ -1258,7 +1422,7 @@
               "description": "注册偏置物理 hook；不等同已配置偏置规则",
               "description_zh": "注册偏置物理 hook；不等同已配置偏置规则",
               "gui": {
-                "editable": "fixed_or_blocked"
+                "editable": "generated_subset"
               }
             },
             "verbose": {
@@ -1273,6 +1437,20 @@
               "gui": {
                 "editable": "fixed_or_blocked"
               }
+            },
+            "replace_modules": {
+              "type": "structured",
+              "default": null,
+              "support": "experimental",
+              "since": "J2",
+              "description": "仅reference模式；按非零physics type唯一替换已有构造器，缺目标/同类重复/与显式EM冲突拒绝",
+              "description_zh": "仅reference模式；按非零physics type唯一替换已有构造器，缺目标/同类重复/与显式EM冲突拒绝",
+              "gui": {
+                "editable": "generated_subset"
+              },
+              "tests": [
+                "scripts/test_j2_sources_physics.py"
+              ]
             }
           },
           "gui": {
@@ -1351,7 +1529,10 @@
               "since": "E2 inventory",
               "description": "正长度产生阈值",
               "description_zh": "正长度产生阈值",
-              "exclusive_min": 0
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset"
+              }
             },
             "e-": {
               "type": "length",
@@ -1360,7 +1541,10 @@
               "since": "E2 inventory",
               "description": "正长度产生阈值",
               "description_zh": "正长度产生阈值",
-              "exclusive_min": 0
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset"
+              }
             },
             "e+": {
               "type": "length",
@@ -1369,7 +1553,10 @@
               "since": "E2 inventory",
               "description": "正长度产生阈值",
               "description_zh": "正长度产生阈值",
-              "exclusive_min": 0
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset"
+              }
             },
             "proton": {
               "type": "length",
@@ -1378,7 +1565,10 @@
               "since": "E2 inventory",
               "description": "正长度产生阈值",
               "description_zh": "正长度产生阈值",
-              "exclusive_min": 0
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset"
+              }
             },
             "alpha": {
               "type": "length",
@@ -1427,7 +1617,11 @@
               "since": "E2 inventory",
               "description": "正产生阈值/步长/总径迹长度",
               "description_zh": "正产生阈值/步长/总径迹长度",
-              "exclusive_min": 0
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2结构化编辑；受上下文约束，不代表物理验收。"
+              }
             },
             "e-": {
               "type": "length",
@@ -1436,7 +1630,11 @@
               "since": "E2 inventory",
               "description": "正产生阈值/步长/总径迹长度",
               "description_zh": "正产生阈值/步长/总径迹长度",
-              "exclusive_min": 0
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2结构化编辑；受上下文约束，不代表物理验收。"
+              }
             },
             "e+": {
               "type": "length",
@@ -1445,7 +1643,11 @@
               "since": "E2 inventory",
               "description": "正产生阈值/步长/总径迹长度",
               "description_zh": "正产生阈值/步长/总径迹长度",
-              "exclusive_min": 0
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2结构化编辑；受上下文约束，不代表物理验收。"
+              }
             },
             "proton": {
               "type": "length",
@@ -1454,7 +1656,11 @@
               "since": "E2 inventory",
               "description": "正产生阈值/步长/总径迹长度",
               "description_zh": "正产生阈值/步长/总径迹长度",
-              "exclusive_min": 0
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2结构化编辑；受上下文约束，不代表物理验收。"
+              }
             },
             "max_step": {
               "type": "length",
@@ -1463,7 +1669,11 @@
               "since": "E2 inventory",
               "description": "带电粒子的正最大步长；默认不为 gamma/neutron 等中性粒子注册 StepLimiter",
               "description_zh": "带电粒子的正最大步长；默认不为 gamma/neutron 等中性粒子注册 StepLimiter",
-              "exclusive_min": 0
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2结构化编辑；受上下文约束，不代表物理验收。"
+              }
             },
             "max_track_length": {
               "type": "length",
@@ -1472,7 +1682,11 @@
               "since": "E2 inventory",
               "description": "正产生阈值/步长/总径迹长度",
               "description_zh": "正产生阈值/步长/总径迹长度",
-              "exclusive_min": 0
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2结构化编辑；受上下文约束，不代表物理验收。"
+              }
             },
             "max_time": {
               "type": "time",
@@ -1481,7 +1695,11 @@
               "since": "E2 inventory",
               "description": "正总飞行时间上限",
               "description_zh": "正总飞行时间上限",
-              "exclusive_min": 0
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2结构化编辑；受上下文约束，不代表物理验收。"
+              }
             },
             "min_kinetic_energy": {
               "type": "energy",
@@ -1490,7 +1708,11 @@
               "since": "E2 inventory",
               "description": "正动能阈值，在步开始判断",
               "description_zh": "正动能阈值，在步开始判断",
-              "exclusive_min": 0
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2结构化编辑；受上下文约束，不代表物理验收。"
+              }
             },
             "volumes": {
               "type": "structured",
@@ -1498,7 +1720,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "逗号分隔、非空体积名列表；INI 配置阶段校验",
-              "description_zh": "逗号分隔、非空体积名列表；INI 配置阶段校验"
+              "description_zh": "逗号分隔、非空体积名列表；INI 配置阶段校验",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2结构化编辑；受上下文约束，不代表物理验收。"
+              }
             }
           },
           "gui": {
@@ -2160,7 +2386,11 @@
               "since": "E6 inventory",
               "description": "Uniform magnetic vector; comma-separated finite components with case-sensitive field units, the last unit supplies missing component units.",
               "description_zh": "均匀磁场：逗号分隔三分量，有限数；单位区分大小写，末分量单位补齐前两分量单位。",
-              "syntax": "Bx, By, Bz T；支持 T/tesla/mT/uT/G/gauss/kG"
+              "syntax": "Bx, By, Bz T；支持 T/tesla/mT/uT/G/gauss/kG",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2结构化编辑；受上下文约束，不代表物理验收。"
+              }
             },
             "electric": {
               "type": "structured",
@@ -2169,7 +2399,11 @@
               "since": "E6 inventory",
               "description": "Uniform electric vector; case-sensitive units. May coexist with a magnetic field.",
               "description_zh": "均匀电场三分量；单位区分大小写，可与磁场并存。",
-              "syntax": "Ex, Ey, Ez V/m；支持 V/m/kV/m/MV/m/V/cm/kV/cm/MV/cm/V/mm/kV/mm"
+              "syntax": "Ex, Ey, Ez V/m；支持 V/m/kV/m/MV/m/V/cm/kV/cm/MV/cm/V/mm/kV/mm",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2结构化编辑；受上下文约束，不代表物理验收。"
+              }
             },
             "magnetic_map": {
               "type": "existing_file",
@@ -2181,7 +2415,11 @@
               "path_base": "main_ini",
               "rules": [
                 "Nonempty existing field-map input; validated by FieldConfig::LoadMap, not only file existence"
-              ]
+              ],
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2结构化编辑；受上下文约束，不代表物理验收。"
+              }
             },
             "electric_map": {
               "type": "existing_file",
@@ -2193,7 +2431,11 @@
               "path_base": "main_ini",
               "rules": [
                 "Nonempty existing field-map input; validated by FieldConfig::LoadMap, not only file existence"
-              ]
+              ],
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2结构化编辑；受上下文约束，不代表物理验收。"
+              }
             },
             "min_step": {
               "type": "length",
@@ -2202,7 +2444,11 @@
               "since": "E6 inventory",
               "description": "min_step integration control in mm by default; strictly positive.",
               "description_zh": "min_step 积分精度参数；缺省单位 mm，必须为正长度。",
-              "exclusive_min": 0
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2结构化编辑；受上下文约束，不代表物理验收。"
+              }
             },
             "delta_chord": {
               "type": "length",
@@ -2211,7 +2457,11 @@
               "since": "E6 inventory",
               "description": "delta_chord integration control in mm by default; strictly positive.",
               "description_zh": "delta_chord 积分精度参数；缺省单位 mm，必须为正长度。",
-              "exclusive_min": 0
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2结构化编辑；受上下文约束，不代表物理验收。"
+              }
             },
             "delta_one_step": {
               "type": "length",
@@ -2220,7 +2470,11 @@
               "since": "E6 inventory",
               "description": "delta_one_step integration control in mm by default; strictly positive.",
               "description_zh": "delta_one_step 积分精度参数；缺省单位 mm，必须为正长度。",
-              "exclusive_min": 0
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2结构化编辑；受上下文约束，不代表物理验收。"
+              }
             },
             "delta_intersection": {
               "type": "length",
@@ -2229,7 +2483,11 @@
               "since": "E6 inventory",
               "description": "delta_intersection integration control in mm by default; strictly positive.",
               "description_zh": "delta_intersection 积分精度参数；缺省单位 mm，必须为正长度。",
-              "exclusive_min": 0
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2结构化编辑；受上下文约束，不代表物理验收。"
+              }
             }
           },
           "independent": false,
@@ -2262,7 +2520,11 @@
               "since": "E6 inventory",
               "description": "Uniform magnetic vector; comma-separated finite components with case-sensitive field units, the last unit supplies missing component units.",
               "description_zh": "均匀磁场：逗号分隔三分量，有限数；单位区分大小写，末分量单位补齐前两分量单位。",
-              "syntax": "Bx, By, Bz T；支持 T/tesla/mT/uT/G/gauss/kG"
+              "syntax": "Bx, By, Bz T；支持 T/tesla/mT/uT/G/gauss/kG",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2结构化编辑；受上下文约束，不代表物理验收。"
+              }
             },
             "electric": {
               "type": "structured",
@@ -2271,7 +2533,11 @@
               "since": "E6 inventory",
               "description": "Uniform electric vector; case-sensitive units. May coexist with a magnetic field.",
               "description_zh": "均匀电场三分量；单位区分大小写，可与磁场并存。",
-              "syntax": "Ex, Ey, Ez V/m；支持 V/m/kV/m/MV/m/V/cm/kV/cm/MV/cm/V/mm/kV/mm"
+              "syntax": "Ex, Ey, Ez V/m；支持 V/m/kV/m/MV/m/V/cm/kV/cm/MV/cm/V/mm/kV/mm",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2结构化编辑；受上下文约束，不代表物理验收。"
+              }
             },
             "magnetic_map": {
               "type": "existing_file",
@@ -2283,7 +2549,11 @@
               "path_base": "main_ini",
               "rules": [
                 "Nonempty existing field-map input; validated by FieldConfig::LoadMap, not only file existence"
-              ]
+              ],
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2结构化编辑；受上下文约束，不代表物理验收。"
+              }
             },
             "electric_map": {
               "type": "existing_file",
@@ -2295,7 +2565,11 @@
               "path_base": "main_ini",
               "rules": [
                 "Nonempty existing field-map input; validated by FieldConfig::LoadMap, not only file existence"
-              ]
+              ],
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2结构化编辑；受上下文约束，不代表物理验收。"
+              }
             },
             "volumes": {
               "type": "structured",
@@ -2304,7 +2578,11 @@
               "since": "E6 inventory",
               "description": "Nonempty comma-separated logical-volume names for local field binding; original name identity is retained.",
               "description_zh": "非空局部逻辑体名称列表，逗号分隔；保留真实名称身份。",
-              "syntax": "logicalVolumeA, logicalVolumeB"
+              "syntax": "logicalVolumeA, logicalVolumeB",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2结构化编辑；受上下文约束，不代表物理验收。"
+              }
             },
             "min_step": {
               "type": "length",
@@ -2313,7 +2591,11 @@
               "since": "E6 inventory",
               "description": "min_step integration control in mm by default; strictly positive.",
               "description_zh": "min_step 积分精度参数；缺省单位 mm，必须为正长度。",
-              "exclusive_min": 0
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2结构化编辑；受上下文约束，不代表物理验收。"
+              }
             },
             "delta_chord": {
               "type": "length",
@@ -2322,7 +2604,11 @@
               "since": "E6 inventory",
               "description": "delta_chord integration control in mm by default; strictly positive.",
               "description_zh": "delta_chord 积分精度参数；缺省单位 mm，必须为正长度。",
-              "exclusive_min": 0
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2结构化编辑；受上下文约束，不代表物理验收。"
+              }
             },
             "delta_one_step": {
               "type": "length",
@@ -2331,7 +2617,11 @@
               "since": "E6 inventory",
               "description": "delta_one_step integration control in mm by default; strictly positive.",
               "description_zh": "delta_one_step 积分精度参数；缺省单位 mm，必须为正长度。",
-              "exclusive_min": 0
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2结构化编辑；受上下文约束，不代表物理验收。"
+              }
             },
             "delta_intersection": {
               "type": "length",
@@ -2340,7 +2630,11 @@
               "since": "E6 inventory",
               "description": "delta_intersection integration control in mm by default; strictly positive.",
               "description_zh": "delta_intersection 积分精度参数；缺省单位 mm，必须为正长度。",
-              "exclusive_min": 0
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2结构化编辑；受上下文约束，不代表物理验收。"
+              }
             }
           },
           "independent": false,
@@ -2375,7 +2669,11 @@
               "support": "experimental",
               "since": "E6 inventory",
               "description": "Legacy biasing gate. Missing mode keeps the existing early-return behavior; explicit module policies are handled separately.",
-              "description_zh": "旧偏置开关；缺失模块模式时保留原短路语义，显式模块策略独立处理。"
+              "description_zh": "旧偏置开关；缺失模块模式时保留原短路语义，显式模块策略独立处理。",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2结构化编辑；受上下文约束，不代表物理验收。"
+              }
             }
           },
           "independent": false,
@@ -2500,7 +2798,11 @@
               "since": "E6 inventory",
               "description": "Overrides the particle section component; otherwise uses that original component. Empty is invalid when this rule is parsed.",
               "description_zh": "覆盖 section 的粒子分量；缺省取原分量，实际解析规则时拒绝空值。",
-              "min_length": 1
+              "min_length": 1,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2结构化编辑；受上下文约束，不代表物理验收。"
+              }
             },
             "process": {
               "type": "string",
@@ -2509,7 +2811,11 @@
               "since": "E6 inventory",
               "description": "Overrides the process section component; otherwise preserves originalSection case, e.g. hIoni.",
               "description_zh": "覆盖 section 的过程分量；缺省从 originalSection 保留大小写，例如 hIoni。",
-              "min_length": 1
+              "min_length": 1,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2结构化编辑；受上下文约束，不代表物理验收。"
+              }
             },
             "name": {
               "type": "string",
@@ -2517,7 +2823,11 @@
               "support": "experimental",
               "since": "E6 inventory",
               "description": "Rule label; absent or empty becomes xs_<trimmed particle>_<trimmed process>; not the stable process identity.",
-              "description_zh": "规则标签；缺失或空值生成 xs_<去空白粒子>_<去空白过程>，不是稳定过程身份。"
+              "description_zh": "规则标签；缺失或空值生成 xs_<去空白粒子>_<去空白过程>，不是稳定过程身份。",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2结构化编辑；受上下文约束，不代表物理验收。"
+              }
             },
             "enabled": {
               "type": "bool",
@@ -2525,7 +2835,11 @@
               "support": "experimental",
               "since": "E6 inventory",
               "description": "Whether this process rule is active; existing validation and merge behavior are retained.",
-              "description_zh": "该过程规则是否启用；保留原校验与合并行为。"
+              "description_zh": "该过程规则是否启用；保留原校验与合并行为。",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2结构化编辑；受上下文约束，不代表物理验收。"
+              }
             },
             "factor": {
               "type": "number",
@@ -2534,7 +2848,11 @@
               "since": "E6 inventory",
               "description": "Finite cross-section factor, strictly positive; derived factor*XS overflow/underflow is a separate runtime failure.",
               "description_zh": "有限截面倍率，必须大于零；派生 factor*XS 溢出/下溢另在运行期失败。",
-              "exclusive_min": 0
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2结构化编辑；受上下文约束，不代表物理验收。"
+              }
             },
             "only_primary": {
               "type": "bool",
@@ -2542,7 +2860,11 @@
               "support": "experimental",
               "since": "E6 inventory",
               "description": "Limit biasing to primary tracks unless apply_to_secondaries=true normalizes this to false.",
-              "description_zh": "只作用于初级 track；apply_to_secondaries=true 时规范化为 false。"
+              "description_zh": "只作用于初级 track；apply_to_secondaries=true 时规范化为 false。",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2结构化编辑；受上下文约束，不代表物理验收。"
+              }
             },
             "apply_to_secondaries": {
               "type": "bool",
@@ -2550,7 +2872,11 @@
               "support": "experimental",
               "since": "E6 inventory",
               "description": "When true, clears only_primary even if both inputs are true.",
-              "description_zh": "为 true 时清除 only_primary，即使两项输入都为 true。"
+              "description_zh": "为 true 时清除 only_primary，即使两项输入都为 true。",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2结构化编辑；受上下文约束，不代表物理验收。"
+              }
             },
             "min_weight": {
               "type": "number",
@@ -2559,7 +2885,11 @@
               "since": "E6 inventory",
               "description": "Finite nonnegative roulette weight threshold.",
               "description_zh": "有限非负俄罗斯轮盘权重阈值。",
-              "min": 0
+              "min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2结构化编辑；受上下文约束，不代表物理验收。"
+              }
             },
             "max_interactions": {
               "type": "int",
@@ -2569,7 +2899,11 @@
               "description": "Maximum biased interactions; -1 means unlimited, otherwise nonnegative.",
               "description_zh": "最大偏置相互作用次数；-1 表示不限，否则非负。",
               "min": -1,
-              "max": 2147483647
+              "max": 2147483647,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2结构化编辑；受上下文约束，不代表物理验收。"
+              }
             },
             "volumes": {
               "type": "structured",
@@ -2578,7 +2912,11 @@
               "since": "E6 inventory",
               "description": "Comma-separated logical-volume targets; empty behavior is retained by BiasingConfig and geometry binding.",
               "description_zh": "逗号分隔逻辑体目标；空列表保持 BiasingConfig 与几何绑定原语义。",
-              "syntax": "logicalVolumeA, logicalVolumeB"
+              "syntax": "logicalVolumeA, logicalVolumeB",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2结构化编辑；受上下文约束，不代表物理验收。"
+              }
             }
           },
           "independent": false,
@@ -2906,7 +3244,7 @@
             "polycone parameters=(startPhi,deltaPhi)，polyhedra 追加整数 numSide>=3；z_planes/r_inner/r_outer 长度相同且>=2，z非递减，每层0<=r_inner<=r_outer。",
             "tessellated 需要 file，可选 file_unit，拒绝 parameters；STL 配置阶段检查封闭、定向一致和流形。",
             "replica 与 parameterised 要求母体只有此子体；replica 需 axis/count/width；parameterised 二选一 copies_file 或 copies+copy_step。普通 placement 不接受这些专有键。",
-            "布尔工具只接受 name/operation/shape/size/parameters/position/rotation；拒绝 A5 新实体作工具，volume-only 字段保留专用错误。"
+            "布尔工具接受 name/operation/shape/size/parameters/position/rotation，以及 trd/trap 对应的命名形状参数；拒绝 A5 新实体作工具，volume-only 字段保留专用错误。"
           ],
           "keys": {
             "version": {
@@ -2919,7 +3257,11 @@
               "allowed": [
                 "1",
                 "2"
-              ]
+              ],
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             }
           },
           "gui": {
@@ -2947,7 +3289,7 @@
             "polycone parameters=(startPhi,deltaPhi)，polyhedra 追加整数 numSide>=3；z_planes/r_inner/r_outer 长度相同且>=2，z非递减，每层0<=r_inner<=r_outer。",
             "tessellated 需要 file，可选 file_unit，拒绝 parameters；STL 配置阶段检查封闭、定向一致和流形。",
             "replica 与 parameterised 要求母体只有此子体；replica 需 axis/count/width；parameterised 二选一 copies_file 或 copies+copy_step。普通 placement 不接受这些专有键。",
-            "布尔工具只接受 name/operation/shape/size/parameters/position/rotation；拒绝 A5 新实体作工具，volume-only 字段保留专用错误。"
+            "布尔工具接受 name/operation/shape/size/parameters/position/rotation，以及 trd/trap 对应的命名形状参数；拒绝 A5 新实体作工具，volume-only 字段保留专用错误。"
           ],
           "keys": {
             "name": {
@@ -2956,7 +3298,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "体积名称",
-              "description_zh": "体积名称"
+              "description_zh": "体积名称",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "parent": {
               "type": "structured",
@@ -2964,7 +3310,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "父体积名称",
-              "description_zh": "父体积名称"
+              "description_zh": "父体积名称",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "shape": {
               "type": "structured",
@@ -2972,7 +3322,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "实体类型，参数依实体确定",
-              "description_zh": "实体类型，参数依实体确定"
+              "description_zh": "实体类型，参数依实体确定",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "size": {
               "type": "structured",
@@ -2981,7 +3335,11 @@
               "since": "E2 inventory",
               "description": "实体长度/角度参数（与 parameters 兼容）",
               "description_zh": "box 的三个正全长，不是半宽；非 box 不接受 size",
-              "syntax": "三个正全长（mm）"
+              "syntax": "三个正全长（mm）",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "parameters": {
               "type": "structured",
@@ -2989,7 +3347,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "实体参数列表",
-              "description_zh": "非 box 实体参数，长度/角度按顺序；无单位为 mm/rad。不是 size 的等价别名。"
+              "description_zh": "非 box 实体参数，长度/角度按顺序；无单位为 mm/rad。不是 size 的等价别名。",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "material": {
               "type": "structured",
@@ -2997,7 +3359,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "材料引用",
-              "description_zh": "材料引用"
+              "description_zh": "材料引用",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "position": {
               "type": "structured",
@@ -3006,7 +3372,11 @@
               "since": "E2 inventory",
               "description": "三长度平移分量",
               "description_zh": "三长度平移分量",
-              "syntax": "三个长度分量；无单位为 mm"
+              "syntax": "三个长度分量；无单位为 mm",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "rotation": {
               "type": "structured",
@@ -3015,7 +3385,11 @@
               "since": "E2 inventory",
               "description": "三角度分量，Geant4 frame rotation",
               "description_zh": "三角度分量，Geant4 frame rotation",
-              "syntax": "三个角度分量；无单位为 rad；frame rotation"
+              "syntax": "三个角度分量；无单位为 rad；frame rotation",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "sensitive": {
               "type": "bool",
@@ -3023,7 +3397,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "敏感体布尔值",
-              "description_zh": "敏感体布尔值"
+              "description_zh": "敏感体布尔值",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "bias": {
               "type": "bool",
@@ -3031,7 +3409,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "偏置体布尔值",
-              "description_zh": "偏置体布尔值"
+              "description_zh": "偏置体布尔值",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "region": {
               "type": "structured",
@@ -3039,7 +3421,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "区域名，保留大小写",
-              "description_zh": "区域名，保留大小写"
+              "description_zh": "区域名，保留大小写",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "placement": {
               "type": "structured",
@@ -3047,7 +3433,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "normal/replica/parameterised；assembly 仍拒绝",
-              "description_zh": "normal/replica/parameterised；assembly 仍拒绝"
+              "description_zh": "normal/replica/parameterised；assembly 仍拒绝",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "copyno": {
               "type": "int",
@@ -3057,7 +3447,11 @@
               "description": "副本整数编号",
               "description_zh": "副本整数编号",
               "min": -2147483648,
-              "max": 2147483647
+              "max": 2147483647,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "vis.color": {
               "type": "structured",
@@ -3065,7 +3459,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "RGB 颜色",
-              "description_zh": "RGB 颜色"
+              "description_zh": "RGB 颜色",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "vis.alpha": {
               "type": "structured",
@@ -3073,7 +3471,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "透明度",
-              "description_zh": "透明度"
+              "description_zh": "透明度",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "vis.visible": {
               "type": "bool",
@@ -3081,7 +3483,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "可见布尔值",
-              "description_zh": "可见布尔值"
+              "description_zh": "可见布尔值",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "vis.wireframe": {
               "type": "bool",
@@ -3089,7 +3495,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "线框布尔值",
-              "description_zh": "线框布尔值"
+              "description_zh": "线框布尔值",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "cut.<particle>": {
               "type": "length",
@@ -3098,7 +3508,11 @@
               "since": "E2 inventory",
               "description": "产生阈值，粒子白名单由 ValidateCutFields 检查",
               "description_zh": "gamma/e-/e+/proton 正长度；同节必须非空 region",
-              "exclusive_min": 0
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "metadata.<name>": {
               "type": "structured",
@@ -3106,7 +3520,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "只保存的元数据，名称必须非空",
-              "description_zh": "只保存的元数据，名称必须非空"
+              "description_zh": "只保存的元数据，名称必须非空",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "dx1": {
               "type": "length",
@@ -3115,8 +3533,11 @@
               "since": "E2 inventory",
               "description": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
               "description_zh": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
-              "recognition": "parser_only",
-              "exclusive_min": 0
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "dx2": {
               "type": "length",
@@ -3125,8 +3546,11 @@
               "since": "E2 inventory",
               "description": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
               "description_zh": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
-              "recognition": "parser_only",
-              "exclusive_min": 0
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "dx3": {
               "type": "length",
@@ -3135,8 +3559,11 @@
               "since": "E2 inventory",
               "description": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
               "description_zh": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
-              "recognition": "parser_only",
-              "exclusive_min": 0
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "dx4": {
               "type": "length",
@@ -3145,8 +3572,11 @@
               "since": "E2 inventory",
               "description": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
               "description_zh": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
-              "recognition": "parser_only",
-              "exclusive_min": 0
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "dy1": {
               "type": "length",
@@ -3155,8 +3585,11 @@
               "since": "E2 inventory",
               "description": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
               "description_zh": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
-              "recognition": "parser_only",
-              "exclusive_min": 0
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "dy2": {
               "type": "length",
@@ -3165,8 +3598,11 @@
               "since": "E2 inventory",
               "description": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
               "description_zh": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
-              "recognition": "parser_only",
-              "exclusive_min": 0
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "dz": {
               "type": "length",
@@ -3175,8 +3611,11 @@
               "since": "E2 inventory",
               "description": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
               "description_zh": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
-              "recognition": "parser_only",
-              "exclusive_min": 0
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "theta": {
               "type": "angle",
@@ -3185,7 +3624,10 @@
               "since": "E2 inventory",
               "description": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
               "description_zh": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
-              "recognition": "parser_only"
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "phi": {
               "type": "angle",
@@ -3194,7 +3636,10 @@
               "since": "E2 inventory",
               "description": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
               "description_zh": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
-              "recognition": "parser_only"
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "alpha1": {
               "type": "angle",
@@ -3203,7 +3648,10 @@
               "since": "E2 inventory",
               "description": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
               "description_zh": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
-              "recognition": "parser_only"
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "alpha2": {
               "type": "angle",
@@ -3212,7 +3660,10 @@
               "since": "E2 inventory",
               "description": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
               "description_zh": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
-              "recognition": "parser_only"
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "z_planes": {
               "type": "structured",
@@ -3220,7 +3671,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
-              "description_zh": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验"
+              "description_zh": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "r_inner": {
               "type": "structured",
@@ -3228,7 +3683,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
-              "description_zh": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验"
+              "description_zh": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "r_outer": {
               "type": "structured",
@@ -3236,7 +3695,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
-              "description_zh": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验"
+              "description_zh": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "file": {
               "type": "structured",
@@ -3245,7 +3708,11 @@
               "since": "E2 inventory",
               "description": "STL 文件，相对几何 INI；必须封闭、定向一致、流形",
               "description_zh": "STL 文件，相对几何 INI；必须封闭、定向一致、流形",
-              "path_base": "geometry_ini_directory"
+              "path_base": "geometry_ini_directory",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "file_unit": {
               "type": "enum",
@@ -3261,7 +3728,11 @@
                 "cm",
                 "m"
               ],
-              "case_sensitive": true
+              "case_sensitive": true,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "replica_axis": {
               "type": "enum",
@@ -3275,7 +3746,11 @@
                 "y",
                 "z",
                 "phi"
-              ]
+              ],
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "replica_count": {
               "type": "int",
@@ -3285,7 +3760,11 @@
               "description": "放置参数；副本数/切片/母体限制与 copies 文件内容由 ValidatePlacement 校验",
               "description_zh": "放置参数；副本数/切片/母体限制与 copies 文件内容由 ValidatePlacement 校验",
               "min": 1,
-              "max": 1000000
+              "max": 1000000,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "replica_width": {
               "type": "structured",
@@ -3293,7 +3772,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "放置参数；副本数/切片/母体限制与 copies 文件内容由 ValidatePlacement 校验",
-              "description_zh": "正切片宽度，phi 用角度，其余用长度；count×width 必须填满母体"
+              "description_zh": "正切片宽度，phi 用角度，其余用长度；count×width 必须填满母体",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "replica_offset": {
               "type": "structured",
@@ -3301,7 +3784,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "放置参数；副本数/切片/母体限制与 copies 文件内容由 ValidatePlacement 校验",
-              "description_zh": "缺省0；笛卡尔轴必须0，phi offset 按母体角范围校验"
+              "description_zh": "缺省0；笛卡尔轴必须0，phi offset 按母体角范围校验",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "copies_file": {
               "type": "structured",
@@ -3310,7 +3797,11 @@
               "since": "E2 inventory",
               "description": "副本位置/材料文件，相对几何 INI",
               "description_zh": "相对几何文件的 CSV；x_mm,y_mm,z_mm[,rot_x_deg,rot_y_deg,rot_z_deg][,material]；与 position/rotation 冲突",
-              "path_base": "geometry_ini_directory"
+              "path_base": "geometry_ini_directory",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "copies": {
               "type": "int",
@@ -3320,7 +3811,11 @@
               "description": "放置参数；副本数/切片/母体限制与 copies 文件内容由 ValidatePlacement 校验",
               "description_zh": "放置参数；副本数/切片/母体限制与 copies 文件内容由 ValidatePlacement 校验",
               "min": 1,
-              "max": 1000000
+              "max": 1000000,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "copy_step": {
               "type": "structured",
@@ -3328,7 +3823,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "放置参数；副本数/切片/母体限制与 copies 文件内容由 ValidatePlacement 校验",
-              "description_zh": "三个长度分量；与 copies 成对，不能同时给 copies_file"
+              "description_zh": "三个长度分量；与 copies 成对，不能同时给 copies_file",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             }
           },
           "gui": {
@@ -3356,7 +3855,7 @@
             "polycone parameters=(startPhi,deltaPhi)，polyhedra 追加整数 numSide>=3；z_planes/r_inner/r_outer 长度相同且>=2，z非递减，每层0<=r_inner<=r_outer。",
             "tessellated 需要 file，可选 file_unit，拒绝 parameters；STL 配置阶段检查封闭、定向一致和流形。",
             "replica 与 parameterised 要求母体只有此子体；replica 需 axis/count/width；parameterised 二选一 copies_file 或 copies+copy_step。普通 placement 不接受这些专有键。",
-            "布尔工具只接受 name/operation/shape/size/parameters/position/rotation；拒绝 A5 新实体作工具，volume-only 字段保留专用错误。"
+            "布尔工具接受 name/operation/shape/size/parameters/position/rotation，以及 trd/trap 对应的命名形状参数；拒绝 A5 新实体作工具，volume-only 字段保留专用错误。"
           ],
           "keys": {
             "name": {
@@ -3365,7 +3864,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "体积名称",
-              "description_zh": "体积名称"
+              "description_zh": "体积名称",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "parent": {
               "type": "structured",
@@ -3373,7 +3876,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "父体积名称",
-              "description_zh": "父体积名称"
+              "description_zh": "父体积名称",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "shape": {
               "type": "structured",
@@ -3381,7 +3888,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "实体类型，参数依实体确定",
-              "description_zh": "实体类型，参数依实体确定"
+              "description_zh": "实体类型，参数依实体确定",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "size": {
               "type": "structured",
@@ -3390,7 +3901,11 @@
               "since": "E2 inventory",
               "description": "实体长度/角度参数（与 parameters 兼容）",
               "description_zh": "box 的三个正全长，不是半宽；非 box 不接受 size",
-              "syntax": "三个正全长（mm）"
+              "syntax": "三个正全长（mm）",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "parameters": {
               "type": "structured",
@@ -3398,7 +3913,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "实体参数列表",
-              "description_zh": "非 box 实体参数，长度/角度按顺序；无单位为 mm/rad。不是 size 的等价别名。"
+              "description_zh": "非 box 实体参数，长度/角度按顺序；无单位为 mm/rad。不是 size 的等价别名。",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "material": {
               "type": "structured",
@@ -3406,7 +3925,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "材料引用",
-              "description_zh": "材料引用"
+              "description_zh": "材料引用",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "position": {
               "type": "structured",
@@ -3415,7 +3938,11 @@
               "since": "E2 inventory",
               "description": "三长度平移分量",
               "description_zh": "三长度平移分量",
-              "syntax": "三个长度分量；无单位为 mm"
+              "syntax": "三个长度分量；无单位为 mm",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "rotation": {
               "type": "structured",
@@ -3424,7 +3951,11 @@
               "since": "E2 inventory",
               "description": "三角度分量，Geant4 frame rotation",
               "description_zh": "三角度分量，Geant4 frame rotation",
-              "syntax": "三个角度分量；无单位为 rad；frame rotation"
+              "syntax": "三个角度分量；无单位为 rad；frame rotation",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "sensitive": {
               "type": "bool",
@@ -3432,7 +3963,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "敏感体布尔值",
-              "description_zh": "敏感体布尔值"
+              "description_zh": "敏感体布尔值",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "bias": {
               "type": "bool",
@@ -3440,7 +3975,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "偏置体布尔值",
-              "description_zh": "偏置体布尔值"
+              "description_zh": "偏置体布尔值",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "region": {
               "type": "structured",
@@ -3448,7 +3987,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "区域名，保留大小写",
-              "description_zh": "区域名，保留大小写"
+              "description_zh": "区域名，保留大小写",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "placement": {
               "type": "structured",
@@ -3456,7 +3999,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "normal/replica/parameterised；assembly 仍拒绝",
-              "description_zh": "normal/replica/parameterised；assembly 仍拒绝"
+              "description_zh": "normal/replica/parameterised；assembly 仍拒绝",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "copyno": {
               "type": "int",
@@ -3466,7 +4013,11 @@
               "description": "副本整数编号",
               "description_zh": "副本整数编号",
               "min": -2147483648,
-              "max": 2147483647
+              "max": 2147483647,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "vis.color": {
               "type": "structured",
@@ -3474,7 +4025,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "RGB 颜色",
-              "description_zh": "RGB 颜色"
+              "description_zh": "RGB 颜色",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "vis.alpha": {
               "type": "structured",
@@ -3482,7 +4037,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "透明度",
-              "description_zh": "透明度"
+              "description_zh": "透明度",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "vis.visible": {
               "type": "bool",
@@ -3490,7 +4049,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "可见布尔值",
-              "description_zh": "可见布尔值"
+              "description_zh": "可见布尔值",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "vis.wireframe": {
               "type": "bool",
@@ -3498,7 +4061,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "线框布尔值",
-              "description_zh": "线框布尔值"
+              "description_zh": "线框布尔值",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "cut.<particle>": {
               "type": "length",
@@ -3507,7 +4074,11 @@
               "since": "E2 inventory",
               "description": "产生阈值，粒子白名单由 ValidateCutFields 检查",
               "description_zh": "gamma/e-/e+/proton 正长度；同节必须非空 region",
-              "exclusive_min": 0
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "metadata.<name>": {
               "type": "structured",
@@ -3515,7 +4086,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "只保存的元数据，名称必须非空",
-              "description_zh": "只保存的元数据，名称必须非空"
+              "description_zh": "只保存的元数据，名称必须非空",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "dx1": {
               "type": "length",
@@ -3524,8 +4099,11 @@
               "since": "E2 inventory",
               "description": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
               "description_zh": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
-              "recognition": "parser_only",
-              "exclusive_min": 0
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "dx2": {
               "type": "length",
@@ -3534,8 +4112,11 @@
               "since": "E2 inventory",
               "description": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
               "description_zh": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
-              "recognition": "parser_only",
-              "exclusive_min": 0
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "dx3": {
               "type": "length",
@@ -3544,8 +4125,11 @@
               "since": "E2 inventory",
               "description": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
               "description_zh": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
-              "recognition": "parser_only",
-              "exclusive_min": 0
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "dx4": {
               "type": "length",
@@ -3554,8 +4138,11 @@
               "since": "E2 inventory",
               "description": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
               "description_zh": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
-              "recognition": "parser_only",
-              "exclusive_min": 0
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "dy1": {
               "type": "length",
@@ -3564,8 +4151,11 @@
               "since": "E2 inventory",
               "description": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
               "description_zh": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
-              "recognition": "parser_only",
-              "exclusive_min": 0
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "dy2": {
               "type": "length",
@@ -3574,8 +4164,11 @@
               "since": "E2 inventory",
               "description": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
               "description_zh": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
-              "recognition": "parser_only",
-              "exclusive_min": 0
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "dz": {
               "type": "length",
@@ -3584,8 +4177,11 @@
               "since": "E2 inventory",
               "description": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
               "description_zh": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
-              "recognition": "parser_only",
-              "exclusive_min": 0
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "theta": {
               "type": "angle",
@@ -3594,7 +4190,10 @@
               "since": "E2 inventory",
               "description": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
               "description_zh": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
-              "recognition": "parser_only"
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "phi": {
               "type": "angle",
@@ -3603,7 +4202,10 @@
               "since": "E2 inventory",
               "description": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
               "description_zh": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
-              "recognition": "parser_only"
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "alpha1": {
               "type": "angle",
@@ -3612,7 +4214,10 @@
               "since": "E2 inventory",
               "description": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
               "description_zh": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
-              "recognition": "parser_only"
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "alpha2": {
               "type": "angle",
@@ -3621,7 +4226,10 @@
               "since": "E2 inventory",
               "description": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
               "description_zh": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
-              "recognition": "parser_only"
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "z_planes": {
               "type": "structured",
@@ -3629,7 +4237,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
-              "description_zh": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验"
+              "description_zh": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "r_inner": {
               "type": "structured",
@@ -3637,7 +4249,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
-              "description_zh": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验"
+              "description_zh": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "r_outer": {
               "type": "structured",
@@ -3645,7 +4261,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
-              "description_zh": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验"
+              "description_zh": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "file": {
               "type": "structured",
@@ -3654,7 +4274,11 @@
               "since": "E2 inventory",
               "description": "STL 文件，相对几何 INI；必须封闭、定向一致、流形",
               "description_zh": "STL 文件，相对几何 INI；必须封闭、定向一致、流形",
-              "path_base": "geometry_ini_directory"
+              "path_base": "geometry_ini_directory",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "file_unit": {
               "type": "enum",
@@ -3670,7 +4294,11 @@
                 "cm",
                 "m"
               ],
-              "case_sensitive": true
+              "case_sensitive": true,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "replica_axis": {
               "type": "enum",
@@ -3684,7 +4312,11 @@
                 "y",
                 "z",
                 "phi"
-              ]
+              ],
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "replica_count": {
               "type": "int",
@@ -3694,7 +4326,11 @@
               "description": "放置参数；副本数/切片/母体限制与 copies 文件内容由 ValidatePlacement 校验",
               "description_zh": "放置参数；副本数/切片/母体限制与 copies 文件内容由 ValidatePlacement 校验",
               "min": 1,
-              "max": 1000000
+              "max": 1000000,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "replica_width": {
               "type": "structured",
@@ -3702,7 +4338,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "放置参数；副本数/切片/母体限制与 copies 文件内容由 ValidatePlacement 校验",
-              "description_zh": "正切片宽度，phi 用角度，其余用长度；count×width 必须填满母体"
+              "description_zh": "正切片宽度，phi 用角度，其余用长度；count×width 必须填满母体",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "replica_offset": {
               "type": "structured",
@@ -3710,7 +4350,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "放置参数；副本数/切片/母体限制与 copies 文件内容由 ValidatePlacement 校验",
-              "description_zh": "缺省0；笛卡尔轴必须0，phi offset 按母体角范围校验"
+              "description_zh": "缺省0；笛卡尔轴必须0，phi offset 按母体角范围校验",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "copies_file": {
               "type": "structured",
@@ -3719,7 +4363,11 @@
               "since": "E2 inventory",
               "description": "副本位置/材料文件，相对几何 INI",
               "description_zh": "相对几何文件的 CSV；x_mm,y_mm,z_mm[,rot_x_deg,rot_y_deg,rot_z_deg][,material]；与 position/rotation 冲突",
-              "path_base": "geometry_ini_directory"
+              "path_base": "geometry_ini_directory",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "copies": {
               "type": "int",
@@ -3729,7 +4377,11 @@
               "description": "放置参数；副本数/切片/母体限制与 copies 文件内容由 ValidatePlacement 校验",
               "description_zh": "放置参数；副本数/切片/母体限制与 copies 文件内容由 ValidatePlacement 校验",
               "min": 1,
-              "max": 1000000
+              "max": 1000000,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "copy_step": {
               "type": "structured",
@@ -3737,7 +4389,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "放置参数；副本数/切片/母体限制与 copies 文件内容由 ValidatePlacement 校验",
-              "description_zh": "三个长度分量；与 copies 成对，不能同时给 copies_file"
+              "description_zh": "三个长度分量；与 copies 成对，不能同时给 copies_file",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             }
           },
           "gui": {
@@ -3765,7 +4421,7 @@
             "polycone parameters=(startPhi,deltaPhi)，polyhedra 追加整数 numSide>=3；z_planes/r_inner/r_outer 长度相同且>=2，z非递减，每层0<=r_inner<=r_outer。",
             "tessellated 需要 file，可选 file_unit，拒绝 parameters；STL 配置阶段检查封闭、定向一致和流形。",
             "replica 与 parameterised 要求母体只有此子体；replica 需 axis/count/width；parameterised 二选一 copies_file 或 copies+copy_step。普通 placement 不接受这些专有键。",
-            "布尔工具只接受 name/operation/shape/size/parameters/position/rotation；拒绝 A5 新实体作工具，volume-only 字段保留专用错误。"
+            "布尔工具接受 name/operation/shape/size/parameters/position/rotation，以及 trd/trap 对应的命名形状参数；拒绝 A5 新实体作工具，volume-only 字段保留专用错误。"
           ],
           "keys": {
             "name": {
@@ -3774,7 +4430,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "体积名称",
-              "description_zh": "体积名称"
+              "description_zh": "体积名称",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "operation": {
               "type": "structured",
@@ -3782,7 +4442,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "operation：模板专有参数，按对应模板解析",
-              "description_zh": "operation：模板专有参数，按对应模板解析"
+              "description_zh": "operation：模板专有参数，按对应模板解析",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "shape": {
               "type": "structured",
@@ -3790,7 +4454,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "实体类型，参数依实体确定",
-              "description_zh": "实体类型，参数依实体确定"
+              "description_zh": "实体类型，参数依实体确定",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "size": {
               "type": "structured",
@@ -3799,7 +4467,11 @@
               "since": "E2 inventory",
               "description": "实体长度/角度参数（与 parameters 兼容）",
               "description_zh": "box 的三个正全长，不是半宽；非 box 不接受 size",
-              "syntax": "三个正全长（mm）"
+              "syntax": "三个正全长（mm）",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "parameters": {
               "type": "structured",
@@ -3807,7 +4479,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "实体参数列表",
-              "description_zh": "非 box 实体参数，长度/角度按顺序；无单位为 mm/rad。不是 size 的等价别名。"
+              "description_zh": "非 box 实体参数，长度/角度按顺序；无单位为 mm/rad。不是 size 的等价别名。",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "position": {
               "type": "structured",
@@ -3816,7 +4492,11 @@
               "since": "E2 inventory",
               "description": "三长度平移分量",
               "description_zh": "三长度平移分量",
-              "syntax": "三个长度分量；无单位为 mm"
+              "syntax": "三个长度分量；无单位为 mm",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "rotation": {
               "type": "structured",
@@ -3825,7 +4505,150 @@
               "since": "E2 inventory",
               "description": "三角度分量，Geant4 frame rotation",
               "description_zh": "三角度分量，Geant4 frame rotation",
-              "syntax": "三个角度分量；无单位为 rad；frame rotation"
+              "syntax": "三个角度分量；无单位为 rad；frame rotation",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
+            },
+            "dx1": {
+              "type": "length",
+              "default": null,
+              "support": "experimental",
+              "since": "E2 inventory",
+              "description": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
+              "description_zh": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
+            },
+            "dx2": {
+              "type": "length",
+              "default": null,
+              "support": "experimental",
+              "since": "E2 inventory",
+              "description": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
+              "description_zh": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
+            },
+            "dx3": {
+              "type": "length",
+              "default": null,
+              "support": "experimental",
+              "since": "E2 inventory",
+              "description": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
+              "description_zh": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
+            },
+            "dx4": {
+              "type": "length",
+              "default": null,
+              "support": "experimental",
+              "since": "E2 inventory",
+              "description": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
+              "description_zh": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
+            },
+            "dy1": {
+              "type": "length",
+              "default": null,
+              "support": "experimental",
+              "since": "E2 inventory",
+              "description": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
+              "description_zh": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
+            },
+            "dy2": {
+              "type": "length",
+              "default": null,
+              "support": "experimental",
+              "since": "E2 inventory",
+              "description": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
+              "description_zh": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
+            },
+            "dz": {
+              "type": "length",
+              "default": null,
+              "support": "experimental",
+              "since": "E2 inventory",
+              "description": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
+              "description_zh": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
+            },
+            "theta": {
+              "type": "angle",
+              "default": null,
+              "support": "experimental",
+              "since": "E2 inventory",
+              "description": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
+              "description_zh": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
+            },
+            "phi": {
+              "type": "angle",
+              "default": null,
+              "support": "experimental",
+              "since": "E2 inventory",
+              "description": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
+              "description_zh": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
+            },
+            "alpha1": {
+              "type": "angle",
+              "default": null,
+              "support": "experimental",
+              "since": "E2 inventory",
+              "description": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
+              "description_zh": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
+            },
+            "alpha2": {
+              "type": "angle",
+              "default": null,
+              "support": "experimental",
+              "since": "E2 inventory",
+              "description": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
+              "description_zh": "shape-specific 参数；形状的必需字段、数量、正值/角度范围由 ValidateShapeProperties 校验",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             }
           },
           "gui": {
@@ -4206,7 +5029,11 @@
               "since": "E2 inventory",
               "description": "实体长度/角度参数（与 parameters 兼容）",
               "description_zh": "box 的三个正全长，不是半宽；非 box 不接受 size",
-              "syntax": "三个正全长（mm）"
+              "syntax": "三个正全长（mm）",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "material": {
               "type": "structured",
@@ -4214,7 +5041,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "材料引用",
-              "description_zh": "材料引用"
+              "description_zh": "材料引用",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "shape": {
               "type": "structured",
@@ -4255,7 +5086,11 @@
               "description": "count：模板专有参数，按对应模板解析",
               "description_zh": "必需正整数，必须等于 names 中的层数",
               "min": 1,
-              "max": 2147483647
+              "max": 2147483647,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "names": {
               "type": "structured",
@@ -4263,7 +5098,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "names：模板专有参数，按对应模板解析",
-              "description_zh": "names：模板专有参数，按对应模板解析"
+              "description_zh": "names：模板专有参数，按对应模板解析",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "auto_stack": {
               "type": "bool",
@@ -4271,7 +5110,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "auto_stack：模板专有参数，按对应模板解析",
-              "description_zh": "auto_stack：模板专有参数，按对应模板解析"
+              "description_zh": "auto_stack：模板专有参数，按对应模板解析",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "axis": {
               "type": "structured",
@@ -4279,7 +5122,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "axis：模板专有参数，按对应模板解析",
-              "description_zh": "axis：模板专有参数，按对应模板解析"
+              "description_zh": "axis：模板专有参数，按对应模板解析",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "gap": {
               "type": "length",
@@ -4287,7 +5134,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "gap：模板专有参数，按对应模板解析",
-              "description_zh": "gap：模板专有参数，按对应模板解析"
+              "description_zh": "gap：模板专有参数，按对应模板解析",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "z_start": {
               "type": "length",
@@ -4295,7 +5146,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "z_start：模板专有参数，按对应模板解析",
-              "description_zh": "z_start：模板专有参数，按对应模板解析"
+              "description_zh": "z_start：模板专有参数，按对应模板解析",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             }
           },
           "gui": {
@@ -4327,7 +5182,11 @@
               "since": "E2 inventory",
               "description": "thickness：模板专有参数，按对应模板解析",
               "description_zh": "thickness：模板专有参数，按对应模板解析",
-              "exclusive_min": 0
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "xy": {
               "type": "structured",
@@ -4335,7 +5194,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "xy：模板专有参数，按对应模板解析",
-              "description_zh": "xy：模板专有参数，按对应模板解析"
+              "description_zh": "xy：模板专有参数，按对应模板解析",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "material": {
               "type": "structured",
@@ -4343,7 +5206,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "材料引用",
-              "description_zh": "材料引用"
+              "description_zh": "材料引用",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "position": {
               "type": "structured",
@@ -4352,7 +5219,11 @@
               "since": "E2 inventory",
               "description": "三长度平移分量",
               "description_zh": "三长度平移分量",
-              "syntax": "三个长度分量；无单位为 mm"
+              "syntax": "三个长度分量；无单位为 mm",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "rotation": {
               "type": "structured",
@@ -4361,7 +5232,11 @@
               "since": "E2 inventory",
               "description": "三角度分量，Geant4 frame rotation",
               "description_zh": "三角度分量，Geant4 frame rotation",
-              "syntax": "三个角度分量；无单位为 rad；frame rotation"
+              "syntax": "三个角度分量；无单位为 rad；frame rotation",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "sensitive": {
               "type": "bool",
@@ -4369,7 +5244,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "敏感体布尔值",
-              "description_zh": "敏感体布尔值"
+              "description_zh": "敏感体布尔值",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "bias": {
               "type": "bool",
@@ -4377,7 +5256,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "偏置体布尔值",
-              "description_zh": "偏置体布尔值"
+              "description_zh": "偏置体布尔值",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "region": {
               "type": "structured",
@@ -4385,7 +5268,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "区域名，保留大小写",
-              "description_zh": "区域名，保留大小写"
+              "description_zh": "区域名，保留大小写",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "copyno": {
               "type": "int",
@@ -4395,7 +5282,11 @@
               "description": "副本整数编号",
               "description_zh": "副本整数编号",
               "min": -2147483648,
-              "max": 2147483647
+              "max": 2147483647,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "cut.<particle>": {
               "type": "length",
@@ -4404,7 +5295,11 @@
               "since": "E2 inventory",
               "description": "产生阈值，粒子白名单由 ValidateCutFields 检查",
               "description_zh": "gamma/e-/e+/proton 正长度；同节必须非空 region",
-              "exclusive_min": 0
+              "exclusive_min": 0,
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "vis.color": {
               "type": "structured",
@@ -4412,7 +5307,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "RGB 颜色",
-              "description_zh": "RGB 颜色"
+              "description_zh": "RGB 颜色",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "vis.alpha": {
               "type": "structured",
@@ -4420,7 +5319,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "透明度",
-              "description_zh": "透明度"
+              "description_zh": "透明度",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "vis.visible": {
               "type": "bool",
@@ -4428,7 +5331,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "可见布尔值",
-              "description_zh": "可见布尔值"
+              "description_zh": "可见布尔值",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "vis.wireframe": {
               "type": "bool",
@@ -4436,7 +5343,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "线框布尔值",
-              "description_zh": "线框布尔值"
+              "description_zh": "线框布尔值",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             },
             "metadata.<name>": {
               "type": "structured",
@@ -4444,7 +5355,11 @@
               "support": "experimental",
               "since": "E2 inventory",
               "description": "只保存的元数据，名称必须非空",
-              "description_zh": "只保存的元数据，名称必须非空"
+              "description_zh": "只保存的元数据，名称必须非空",
+              "gui": {
+                "editable": "generated_subset",
+                "note": "J2；world/placement/shape/region等上下文限制仍有效，assembly不开放。"
+              }
             }
           },
           "gui": {

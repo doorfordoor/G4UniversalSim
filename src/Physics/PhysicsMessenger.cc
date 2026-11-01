@@ -9,6 +9,7 @@
 #include "Utils/UnitParser.hh"
 
 #include "G4Exception.hh"
+#include "G4UIcommand.hh"
 #include "G4UIcmdWithABool.hh"
 #include "G4UIcmdWithAString.hh"
 #include "G4UIcmdWithAnInteger.hh"
@@ -28,14 +29,6 @@ PhysicsManager* RequireManager(PhysicsManager* manager, const std::string& comma
         throw std::runtime_error("PhysicsMessenger command '" + command + "' failed: PhysicsManager is null");
     }
     return manager;
-}
-
-void ReportFailure(const std::string& command, const std::string& raw, const std::exception& error)
-{
-    const auto message = "Physics command " + command + " failed for input '" + raw + "': " + error.what()
-        + ". Supported examples: /AIHL/physics/setDefaultCut 1 mm; /AIHL/physics/setCut proton 1 um; /AIHL/physics/setRegionCut SV e- 100 nm.";
-    G4Exception("PhysicsMessenger::SetNewValue", "AIHL_PHYSICS_001",
-                FatalException, message.c_str());
 }
 
 std::pair<std::string, double> ParseParticleCutArgs(const std::string& raw)
@@ -282,6 +275,19 @@ void PhysicsMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
                    << G4endl;
         }
     } catch (const std::exception& error) {
-        ReportFailure(command ? command->GetCommandPath() : "<unknown>", raw, error);
+        lastInteractiveCommandFailure_ = "Physics command " +
+            std::string(command ? command->GetCommandPath() : "<unknown>") +
+            " failed for input '" + raw + "': " + error.what();
+        ++interactiveCommandFailureCount_;
+        // Geant4 returns this failure through ApplyCommand, so batch execution
+        // stops before recording successful origins or applying later commands.
+        // A warning alone would return zero and silently keep running.
+        if (command) {
+            G4ExceptionDescription description;
+            description << lastInteractiveCommandFailure_;
+            command->CommandFailed(description);
+        }
+        G4Exception("PhysicsMessenger::SetNewValue", "AIHL_PHYSICS_001",
+                    JustWarning, lastInteractiveCommandFailure_.c_str());
     }
 }

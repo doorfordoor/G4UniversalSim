@@ -104,12 +104,37 @@ def snapshot_from_dict(data: Any) -> WorkspaceSnapshot:
         raise ValueError("Snapshot project contains duplicate editing state")
     if set(data["project"]) != set(G4USimProject.__dataclass_fields__):
         raise ValueError("Incomplete or unknown workspace project fields")
-    if type(data["project"]["version"]) is not int or data["project"]["version"] != SCHEMA_VERSION:
+    if type(data["project"]["version"]) is not int or data["project"]["version"] not in (7, SCHEMA_VERSION):
         raise ValueError("Unsupported workspace project version")
-    require_complete_dataclass(normalize_project_data(data["project"]), G4USimProject, "snapshot.project")
+    payload = copy.deepcopy(data['project'])
+    if payload['version'] == 7:
+        # Enumerated v7 -> v8 additions only. Missing pre-existing fields still
+        # fail the closed complete-snapshot check; modern partial data cannot
+        # borrow ordinary project-loader defaults.
+        additions = {
+            'sourceEditor': {'gps_sources': [], 'multiple_vertex': False,
+                             'phase_space_file': '', 'phase_space_recycle': False},
+            'physicsEditor': {'replace_modules': [], 'regions': [], 'fields': [], 'bias_rules': []},
+        }
+        for key, values in additions.items():
+            owner = payload.get(key)
+            if isinstance(owner, dict):
+                for field, default in values.items():
+                    owner.setdefault(field, copy.deepcopy(default))
+        geometry = payload.get('geometryEditor')
+        if isinstance(geometry, dict):
+            preview = geometry.get('preview')
+            for rows in (geometry.get('boolean_ops', []), preview.get('boolean_ops', []) if isinstance(preview, dict) else []):
+                if not isinstance(rows, list):
+                    continue
+                for row in rows:
+                    if isinstance(row, dict):
+                        row.setdefault('shape_properties', {})
+        payload['version'] = SCHEMA_VERSION
+    require_complete_dataclass(normalize_project_data(payload), G4USimProject, "snapshot.project")
     # The source context belongs to the same envelope; supply it while rebuilding
     # source constraints so the ordinary-project fallback cannot guess a template.
-    project_data = dict(data["project"], editingState=data["state"])
+    project_data = dict(payload, editingState=data["state"])
     project = project_from_dict(project_data)
     return WorkspaceSnapshot(project, data["state"])
 

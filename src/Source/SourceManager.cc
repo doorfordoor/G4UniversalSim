@@ -463,6 +463,7 @@ void SourceManager::ResetGPS()
     phaseSpace_.reset();
     phaseSpaceParticleCount_ = 0;
     phaseSpaceRecycle_ = false;
+    multipleVertex_ = false;
     phaseSpaceDefinitions_.clear();
     sources_.assign(1, SourceSpec{});
     current_ = 0;
@@ -485,13 +486,19 @@ void SourceManager::LoadFromConfigImpl(const ConfigManager& config)
         if (section.rfind("source.", 0) == 0) named.push_back(section);
     }
     const bool hasLegacy = config.HasSection("source");
+    multipleVertex_ = false;
+    if (config.HasKey("source", "multiple_vertex")) {
+        if (named.empty()) throw std::runtime_error(
+            "SourceManager [source]/multiple_vertex requires [source.<name>] sections");
+        multipleVertex_ = config.GetBool("source", "multiple_vertex", false);
+    }
     if (!named.empty()) {
         if (hasLegacy) {
             for (const std::string& key : config.GetKeys("source")) {
-                if (Lower(key) != "verbose") {
+                if (Lower(key) != "verbose" && Lower(key) != "multiple_vertex") {
                     throw std::runtime_error(
                         "SourceManager [source]/" + key + " cannot be combined with [source.<name>] sections; "
-                        "move it into a named source (only [source]/verbose is global).");
+                        "move it into a named source (only [source]/verbose and multiple_vertex are global).");
                 }
             }
             if (config.HasKey("source", "verbose")) SetVerboseLevel(config.GetInt("source", "verbose", verboseLevel_));
@@ -506,7 +513,7 @@ void SourceManager::LoadFromConfigImpl(const ConfigManager& config)
                                              "] must be [source.<name>] with a non-empty name without dots");
                 }
                 for (const std::string& key : config.GetKeys(section)) {
-                    if (!SourceKeys().count(Lower(key)) || Lower(key) == "verbose") {
+                    if (!SourceKeys().count(Lower(key)) || Lower(key) == "verbose" || Lower(key) == "multiple_vertex") {
                         throw std::runtime_error("SourceManager unknown key [" + section + "]/" + key);
                     }
                 }
@@ -522,6 +529,11 @@ void SourceManager::LoadFromConfigImpl(const ConfigManager& config)
             throw;
         }
         loadingNamedSources_ = false;
+        double totalIntensity = 0.0;
+        for (const auto& source : sources_) totalIntensity += source.intensity;
+        if (!std::isfinite(totalIntensity) || totalIntensity <= 0.0) {
+            throw std::runtime_error("SourceManager named source intensity sum must be finite and positive");
+        }
         current_ = 0;
         MarkGPSConfigDirty();
         configured_ = true;
@@ -744,13 +756,13 @@ void SourceManager::LoadSection(const ConfigManager& config, const std::string& 
                 throw std::runtime_error("SourceManager unsupported [" + section + "]/shape='" + shape +
                     "'; supported plane shapes: circle, rectangle, annulus, ellipse or square.");
             }
-        } else if (type == "volume" || type == "beam") {
+        } else if (type == "volume" || type == "surface" || type == "beam") {
             // Parsed by LoadAdvancedSection below, after the direction.
         } else {
             throw std::runtime_error(
                 "SourceManager unsupported [" + section + "]/position_type='" + type +
                 "'; supported values: point (requires position), plane (circle/rectangle/annulus/ellipse/square), "
-                "volume (sphere/cylinder/box/ellipsoid) or beam (Gaussian spot).");
+                "surface (sphere), volume (sphere/cylinder/box/ellipsoid) or beam (Gaussian spot).");
         }
     } else if (config.HasKey(section, "center") || config.HasKey(section, "radius") ||
                config.HasKey(section, "shape") || config.HasKey(section, "halfx") ||
@@ -910,13 +922,21 @@ void SourceManager::LoadAdvancedSection(const ConfigManager& config, const std::
 
     // --- volume / beam positions --------------------------------------------
     const std::string positionType = has("position_type") ? Lower(config.GetString(section, "position_type")) : "";
-    if (positionType == "volume" || positionType == "beam") {
+    if (positionType == "volume" || positionType == "surface" || positionType == "beam") {
         spec.advanced = true;
         reject({"position"}, "is not used by position_type = " + positionType + "; use center");
         std::vector<double> params{0.0, 0.0, 0.0};
         if (has("center")) params = ReadVector3WithUnit(config, section, "center");
         const std::string shape = Lower(config.GetString(section, "shape", positionType == "beam" ? "circle" : ""));
-        if (positionType == "volume") {
+        if (positionType == "surface") {
+            reject({"halfx", "halfy", "halfz", "inner_radius", "beam_sigma", "beam_sigma_x", "beam_sigma_y"},
+                   "is not used by Surface Sphere (use radius)");
+            if (shape != "sphere") throw std::runtime_error(
+                "SourceManager [" + section + "] position_type = surface requires shape = sphere");
+            spec.radius = PositiveLength(config, section, "radius");
+            spec.positionShape = "Sphere";
+            spec.positionType = "Surface";
+        } else if (positionType == "volume") {
             reject({"beam_sigma", "beam_sigma_x", "beam_sigma_y"}, "is only used by position_type = beam");
             if (shape == "sphere") {
                 reject({"halfx", "halfy", "halfz", "inner_radius"}, "is not used by a sphere (use radius)");
@@ -966,7 +986,7 @@ void SourceManager::LoadAdvancedSection(const ConfigManager& config, const std::
         if (!has("rot1") || !has("rot2")) {
             throw std::runtime_error("SourceManager [" + section + "] rot1 and rot2 must be given together");
         }
-        if (spec.positionType != "Plane" && spec.positionType != "Volume" && spec.positionType != "Beam") {
+        if (spec.positionType != "Plane" && spec.positionType != "Surface" && spec.positionType != "Volume" && spec.positionType != "Beam") {
             throw std::runtime_error("SourceManager [" + section + "] rot1/rot2 require a plane, volume or beam position");
         }
         spec.rot1 = UnitVector(ReadVector3Double(config, section, "rot1"), "[" + section + "]/rot1");
@@ -1288,9 +1308,11 @@ void SourceManager::ApplyCurrentConfigurationToGPS() const
     if (!gps_ || !gpsConfigDirty_) return;
     deferredSources_.clear();
     configuredGPSSources_.clear();
-    if (sources_.size() > 1) {
-        // One GPS source per [source.<name>]; GPS picks one per event with
-        // probability intensity / sum(intensity).
+    gps_->SetMultipleVertex(multipleVertex_);
+    gps_->SetFlatSampling(false);
+    if (!sources_.front().name.empty()) {
+        // GPS selection: probability intensity/sum(intensity). Multiple-vertex
+        // mode emits every source once; intensities do not multiply vertices.
         gps_->ClearAll();
         for (std::size_t index = 0; index < sources_.size(); ++index) {
             const auto& spec = sources_[index];
@@ -1423,6 +1445,8 @@ void SourceManager::ApplyPosition(const SourceSpec& spec, G4SingleParticleSource
             pos->SetHalfX(spec.halfX);
             pos->SetHalfY(spec.halfY);
         }
+    } else if (spec.positionType == "Surface") {
+        pos->SetRadius(spec.radius);  // GPS Surface/Sphere, never Volume/Sphere
     } else if (spec.positionType == "Volume") {
         pos->SetRadius(spec.radius);
         pos->SetHalfX(spec.halfX);
@@ -1529,7 +1553,8 @@ std::vector<effective_config::Field> SourceManager::ProjectEffectiveConfigFields
     const auto addGlobal=[&](const char* key,Value value,std::initializer_list<const char*> keys){
         result.push_back(effective_->Make(FieldPath("source",key),std::move(value),"","source",keys));
     };
-    addGlobal("mode",phaseSpace_?"phase_space":(sources_.size()>1?"named":"single"),{});
+    addGlobal("mode",phaseSpace_?"phase_space":(!sources_.front().name.empty()?"named":"single"),{});
+    if (!sources_.front().name.empty()) addGlobal("multiple_vertex",multipleVertex_,{"multiple_vertex"});
     addGlobal("verbose",verboseLevel_,{"verbose"});
     if(phaseSpace_) {
         addGlobal("phase_space_files",List(phaseSpaceFiles_),{"phase_space_file"});
@@ -1598,7 +1623,7 @@ std::vector<effective_config::Field> SourceManager::ProjectEffectiveConfigFields
             if(spec.positionParams.size()>=3)add("center",Numbers({spec.positionParams[0],spec.positionParams[1],spec.positionParams[2]},CLHEP::mm),"mm",{"position","center"},true);
             const auto& shape=spec.positionShape;
             if(spec.positionType=="Plane" && shape=="Circle" && spec.positionParams.size()>3)add("radius",spec.positionParams[3]/CLHEP::mm,"mm",{"radius"},true);
-            if(shape=="Annulus" || (spec.positionType=="Volume" && (shape=="Sphere" || shape=="Cylinder")))add("radius",spec.radius/CLHEP::mm,"mm",{"radius"});
+            if(shape=="Annulus" || ((spec.positionType=="Volume" || spec.positionType=="Surface") && (shape=="Sphere" || shape=="Cylinder")))add("radius",spec.radius/CLHEP::mm,"mm",{"radius"});
             if(shape=="Annulus")add("inner_radius",spec.innerRadius/CLHEP::mm,"mm",{"inner_radius"});
             if(spec.positionType=="Plane" && shape=="Rectangle" && spec.positionParams.size()>4) {
                 add("halfx",spec.positionParams[3]/CLHEP::mm,"mm",{"halfx"});add("halfy",spec.positionParams[4]/CLHEP::mm,"mm",{"halfy"});
@@ -1730,7 +1755,9 @@ void SourceManager::ObserveEffectiveRunSource(const std::string& stage) const
         effective_->Record(std::move(receipt));
         return;
     }
-    effective_->Record(effective_config::Receipt("/source/mode",count>1?"named":"single",stage,"Actual identity-mapped GPS source inventory"));
+    effective_->Record(effective_config::Receipt("/source/mode",!sources_.front().name.empty()?"named":"single",stage,"Actual identity-mapped GPS source inventory"));
+    if (!sources_.front().name.empty()) effective_->Record(effective_config::Receipt(
+        "/source/multiple_vertex",actual->GetMultipleVertex(),stage,"Actual GPS multiple-vertex mode readback"));
     for(int i=0;i<count;++i) {
         const auto* source=actual->GetCurrentSource(i);
         const auto index=configuredGPSSources_.at(source);

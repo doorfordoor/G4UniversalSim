@@ -53,6 +53,10 @@ class Case:
 
 
 CASES = (
+    Case("solid_registry", "scripts/test_solid_registry.py", "static", ("cxx",)),
+    Case("solid_registry_backend", "scripts/test_solid_registry.py", "backend", ("cxx", "exe"), args=("--backend",)),
+    Case("j2_source_physics", "scripts/test_j2_sources_physics.py", "backend", ("exe",)),
+    Case("j2_resources", "scripts/test_j2_resource_bundle.py", "static"),
     Case("platform_install_layout", "scripts/test_platform_install_layout.py", "static"),
     Case("frozen_startup", "scripts/test_frozen_startup.py", "static"),
     Case("install_plan", "scripts/test_install_plan.py", "static"),
@@ -165,6 +169,15 @@ CASES = (
     Case("gui_dose_results", "gui/smoke_tests/smoke_dose_results.py", "gui", ("qt",)),
     Case("gui_plots", "gui/smoke_tests/smoke_plots.py", "gui", ("qt",)),
     Case("gui_new_simulation_wizard", "gui/smoke_tests/smoke_new_simulation_wizard.py", "gui", ("qt",)),
+    Case("gui_j2_blank", "gui/smoke_tests/smoke_j2_blank.py", "gui", ("qt",)),
+    Case("gui_j2_geometry", "gui/smoke_tests/smoke_j2_geometry.py", "gui", ("qt",)),
+    Case("gui_j2_materials", "gui/smoke_tests/smoke_j2_materials.py", "gui", ("qt",)),
+    Case("j2_materials_backend", "gui/smoke_tests/smoke_j2_materials.py", "integration", ("qt", "exe"), args=("--backend",)),
+    Case("gui_j2_run_editors", "gui/smoke_tests/smoke_j2_run_editors.py", "gui", ("qt",)),
+    Case("gui_j2_workspace", "gui/smoke_tests/smoke_j2_workspace.py", "gui", ("qt",)),
+    Case("gui_j2_current_import", "gui/smoke_tests/smoke_j2_current_import_preview.py", "gui", ("qt",)),
+    Case("gui_j2_end_to_end", "gui/smoke_tests/smoke_j2_end_to_end.py", "integration", ("exe", "qt"), timeout=600),
+    Case("gui_f8_accessibility", "gui/smoke_tests/smoke_f8_accessibility.py", "gui", ("qt",)),
     Case("scenario_page", "gui/smoke_tests/smoke_scenario_page.py", "gui", ("qt",)),
     Case("gui_scans", "gui/smoke_tests/smoke_scans.py", "gui", ("qt",)),
     Case("gui_start_page", "gui/smoke_tests/smoke_start_page.py", "gui", ("qt",)),

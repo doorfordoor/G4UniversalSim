@@ -960,7 +960,11 @@ BooleanSolidOperation GeometryConfig::ParseBooleanSection(
         if (IsForbiddenBooleanKey(item.first)) {
             continue;
         }
-        if (!IsKnownBooleanKey(item.first)) op.tool.properties[item.first] = item.second;
+        // Schema membership describes accepted input, not whether this parser
+        // already consumed it. Named trd/trap dimensions live in properties.
+        if (IsShapeProperty(item.first) || !IsKnownBooleanKey(item.first)) {
+            op.tool.properties[item.first] = item.second;
+        }
     }
 
     ValidateShapeContract(

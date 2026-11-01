@@ -168,7 +168,11 @@ def validate_config_builder(
         if not parent.exists():
             report.add('config.path.runs.parent_missing', 'error', f"Runs root parent does not exist: {paths.runs_root}", editor='setup', field='runs_root')
 
-    if not paths.materials_config:
+    memory_materials = bool(material_document is not None and material_document.is_dirty
+                            and not material_document.source_path and not material_document.raw_source_text)
+    if not paths.materials_config and memory_materials:
+        pass  # A new editor document is written to the independent run package.
+    elif not paths.materials_config:
         report.add('config.path.materials.required', 'error', "Materials config is required.", editor='setup', field='materials_config')
     elif not Path(paths.materials_config).expanduser().is_file():
         report.add('config.path.materials.missing', 'error', f"Materials config does not exist: {paths.materials_config}", editor='setup', field='materials_config')
@@ -203,7 +207,11 @@ def validate_config_builder(
     if not geometry.template:
         report.add('config.geometry.template.required', 'error', "Geometry template is required.", editor='setup', field='geometry_template')
 
-    if not geometry.config_path:
+    memory_geometry = bool(use_edited_geometry and not geometry_document.source_path
+                           and not geometry_document.raw_source_text)
+    if not geometry.config_path and memory_geometry:
+        pass
+    elif not geometry.config_path:
         report.add('config.path.geometry.required', 'error', "Geometry config is required.", editor='setup', field='geometry_config')
     elif not Path(geometry.config_path).expanduser().is_file():
         report.add('config.path.geometry.missing', 'error', f"Geometry config does not exist: {geometry.config_path}", editor='setup', field='geometry_config')

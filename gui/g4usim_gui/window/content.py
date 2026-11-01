@@ -50,7 +50,7 @@ class ContentMixin:
         if not self.can_mutate_workspace('wizard'):
             return
         wizard = NewSimulationWizard(self)
-        hint = QLabel(ui_text('Wizard drafts are temporary. Finish applies one undoable change to the project; Cancel discards the draft.'))
+        hint = QLabel(ui_text('Template creation replaces the current materials, geometry, sources, physics, scoring and run settings in one undoable change. Advanced settings are not imported into this wizard. Cancel keeps the current project unchanged.'))
         hint.setWordWrap(True)
         wizard.scenario_page.layout().insertWidget(0, hint)
         if wizard.exec() != NewSimulationWizard.Accepted:
@@ -73,7 +73,6 @@ class ContentMixin:
         with self.workspace_transaction('Apply simulation wizard'):
             self._update_project_from_page_without_preview()
             simulation_wizard.apply_to_project(self.project, result)
-            self.project.materialEditor = None
             self.project.editingState = None
             previous = self._history_restoring
             self._history_restoring = True

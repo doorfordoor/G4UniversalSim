@@ -6,6 +6,10 @@ from g4usim_gui.window.transactions import edit_operation
 import copy
 from pathlib import Path
 
+from PySide6.QtCore import Signal
+from g4usim_gui.core.solid_registry_data import SOLIDS, solid_spec, property_keys, canonical_solid
+from g4usim_gui.parsers.geometry_parser import PLACEMENT_PROPERTY_KEYS
+
 from PySide6.QtWidgets import (
     QCheckBox,
     QComboBox,
@@ -15,6 +19,7 @@ from PySide6.QtWidgets import (
     QLabel,
     QLineEdit,
     QPlainTextEdit,
+    QScrollArea,
     QPushButton,
     QTabWidget,
     QTableWidget,
@@ -24,6 +29,7 @@ from PySide6.QtWidgets import (
 )
 
 from g4usim_gui.core.i18n import ui_format, ui_text
+from g4usim_gui.core.diagnostics import collect_diagnostics
 from g4usim_gui.editors.geometry_editor_model import (
     GeometryDocument,
     HierarchicalVolumeRow,
@@ -38,11 +44,197 @@ from g4usim_gui.writers.geometry_ini_writer import generate_geometry_ini_text
 from g4usim_gui.widgets.ui_helpers import create_hint_label, set_table_minimum_rows, toolbar_grid
 
 
+class GeometryDetailsWidget(QWidget):
+    """Raw text fields for one selected geometry entity; no document/transaction owner."""
+    changed = Signal()
+
+    def __init__(self, kind: str, parent=None):
+        super().__init__(parent)
+        self.kind = kind
+        self.fields = {}
+        self._loading = False
+        self._labels = {}
+        self._row = None
+        self.tabs = QTabWidget()
+        self.tabs.setMinimumHeight(260)
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(0, 0, 0, 0)
+        heading = {'volume': 'Selected volume details', 'boolean': 'Boolean tool details',
+                   'layer': 'Backend layer details'}[kind]
+        self.heading = QLabel(ui_text(heading))
+        self.heading.setProperty('i18nSource_labelText', heading)
+        layout.addWidget(self.heading)
+        layout.addWidget(self.tabs)
+        self.hint = QLabel()
+        self.hint.setWordWrap(True)
+        layout.addWidget(self.hint)
+        groups = {}
+        def group(title):
+            if title not in groups:
+                panel = QWidget()
+                form = QFormLayout(panel)
+                groups[title] = form
+                scroll = QScrollArea()
+                scroll.setWidgetResizable(True)
+                scroll.setWidget(panel)
+                self.tabs.addTab(scroll, ui_text(title))
+                self.tabs._i18n_tab_sources = list(groups)
+            return groups[title]
+        def field(key, title, hint='', choices=None):
+            edit = QComboBox() if choices is not None else QPlainTextEdit() if key == 'metadata' else QLineEdit()
+            if choices is not None:
+                edit.setEditable(True)
+                edit.addItems(choices)
+            edit.setObjectName('j2_' + kind + '_' + key)
+            edit.setAccessibleName(key)
+            edit.setToolTip(hint or key)
+            label = QLabel(key[5:] if key.startswith("prop.") else "copyNo" if key == "copy_no" else key)
+            label.setBuddy(edit)
+            self.fields[key] = edit
+            self._labels[key] = label
+            group(title).addRow(label, edit)
+            if isinstance(edit, QComboBox):
+                edit.currentTextChanged.connect(self._changed)
+            elif isinstance(edit, QPlainTextEdit):
+                edit.setMaximumHeight(80)
+                edit.textChanged.connect(self._changed)
+            else:
+                edit.textEdited.connect(self._changed)
+        if kind != 'layer':
+            names = [name for name, entry in SOLIDS.items() if kind != 'boolean' or entry['boolean_tool']]
+            field('shape', 'Shape parameters', choices=names)
+            field('size', 'Shape parameters', 'x, y, z (full lengths; mm)')
+            field('parameters', 'Shape parameters')
+            if kind == 'volume':
+                field('copy_no', 'Geometry fields', 'copyNo (signed 32-bit integer)')
+            else:
+                field('name', 'Geometry fields')
+            seen = set()
+            for name in names:
+                for spec in SOLIDS[name]['properties']:
+                    if spec['name'] in seen:
+                        continue
+                    seen.add(spec['name'])
+                    field('prop.' + spec['name'], 'Geometry fields', spec['name'] + ' (' + spec['dimension'] + ')')
+                    unit = {'length':'mm','angle':'rad / deg','length_list':'mm, ...'}.get(spec['dimension'])
+                    if unit: self._labels['prop.' + spec['name']].setText(spec['name'] + ' (' + unit + ')')
+            if kind == 'volume':
+                for key in ('placement', 'replica_axis', 'replica_count', 'replica_width', 'replica_offset',
+                            'copies_file', 'copies', 'copy_step'):
+                    choices = ['normal', 'replica', 'parameterised'] if key == 'placement' else None
+                    field(key, 'Placement', key, choices=choices)
+        if kind != 'boolean':
+            for key in ('vis.color', 'vis.alpha', 'vis.visible', 'vis.wireframe'):
+                field(key, 'Backend visual settings (saved to simulation configuration)',
+                      'Saved to simulation configuration; separate from local 3D appearance.')
+                self.fields[key].setProperty('i18nSource_toolTip', 'Saved to simulation configuration; separate from local 3D appearance.')
+            for key in ('cut.gamma', 'cut.e-', 'cut.e+', 'cut.proton'):
+                field(key, 'Production cuts', 'Positive length in mm; requires a region in this volume.')
+                self.fields[key].setProperty('i18nSource_toolTip', 'Positive length in mm; requires a region in this volume.')
+            field('metadata', 'Metadata', 'metadata.<name> = value')
+        self.setEnabled(False)
+
+    @staticmethod
+    def _text(widget):
+        return (widget.currentText() if isinstance(widget, QComboBox) else
+                widget.toPlainText() if isinstance(widget, QPlainTextEdit) else widget.text())
+
+    def _changed(self, *_):
+        if self._loading:
+            return
+        self._refresh_fields()
+        self.changed.emit()
+
+    def _refresh_fields(self):
+        if self.kind == 'layer':
+            return
+        shape = self._text(self.fields['shape'])
+        spec = solid_spec(shape)
+        allowed = set(property_keys(shape))
+        for key, edit in self.fields.items():
+            if key.startswith('prop.'):
+                visible = key[5:] in allowed or bool(self._text(edit).strip())
+                edit.setVisible(visible)
+                self._labels[key].setVisible(visible)
+        params = ', '.join(f"{f['name']} ({f['dimension']})" for f in (spec or {}).get('parameters', []))
+        if spec and spec['uses_size']:
+            params = 'size: x, y, z (full lengths; mm)'
+        self.hint.setText(params + ('\nparameter_counts: ' + str(spec['parameter_counts']) if spec and spec['parameter_counts'] else '') + ('\n' + ui_text('Experimental solid; backend validation is required.')
+                                   if spec and spec['experimental'] else ''))
+        self.fields['parameters'].setToolTip(params + '\nlength: mm; angle: rad (bare values), deg/rad explicit')
+
+    def set_row(self, row):
+        self._loading = True
+        self._row = row
+        self.setEnabled(row is not None)
+        values = {}
+        if row is not None:
+            if self.kind != 'layer':
+                boolean = self.kind == 'boolean'
+                values.update(shape=row.tool_shape if boolean else row.shape,
+                              size=row.tool_size if boolean else row.size,
+                              parameters=row.tool_parameters if boolean else row.parameters)
+                values.update({'prop.' + k: v for k, v in row.shape_properties.items()})
+                if boolean:
+                    values['name'] = row.name
+                else:
+                    values['copy_no'] = row.copy_no
+                    values.update({k: v for k, v in row.preview_properties.items() if k in PLACEMENT_PROPERTY_KEYS})
+            if self.kind != 'boolean':
+                values.update(row.visual)
+                values.update(row.production_cuts)
+                values['metadata'] = row.metadata
+        for key, edit in self.fields.items():
+            text = values.get(key, '')
+            if isinstance(edit, QComboBox):
+                edit.setCurrentText(text)
+            elif isinstance(edit, QPlainTextEdit):
+                edit.setPlainText(text)
+            else:
+                edit.setText(text)
+        self._refresh_fields()
+        self._loading = False
+
+    def apply_row(self, row):
+        values = {key: self._text(widget) for key, widget in self.fields.items()}
+        if self.kind != 'layer':
+            if self.kind == 'boolean':
+                row.tool_shape, row.tool_size, row.tool_parameters = values['shape'], values['size'], values['parameters']
+                row.name = values['name']
+            else:
+                row.shape, row.size, row.parameters = values['shape'], values['size'], values['parameters']
+                row.copy_no = values['copy_no']
+                for key in PLACEMENT_PROPERTY_KEYS:
+                    if values[key] != "":
+                        row.preview_properties[key] = values[key]
+                    else:
+                        row.preview_properties.pop(key, None)
+            # Preserve unknown fields from restored drafts so validation can block.
+            for key in self.fields:
+                if key.startswith('prop.'):
+                    name = key[5:]
+                    if values[key] != "":
+                        row.shape_properties[name] = values[key]
+                        if self.kind == 'volume': row.preview_properties.pop(name, None)
+                    else:
+                        row.shape_properties.pop(name, None)
+                        if self.kind == 'volume': row.preview_properties.pop(name, None)
+        if self.kind != 'boolean':
+            for key in self.fields:
+                target = row.visual if key.startswith('vis.') else row.production_cuts if key.startswith('cut.') else None
+                if target is not None:
+                    if values[key] != "": target[key] = values[key]
+                    else: target.pop(key, None)
+            row.metadata = values['metadata']
+
 class GeometryEditor(QWidget):
     """Geometry tab: mode, source copy and the editors for each geometry template."""
 
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
+        self.volume_details = GeometryDetailsWidget('volume')
+        self.boolean_details = GeometryDetailsWidget('boolean')
+        self.layer_backend_details = GeometryDetailsWidget('layer')
         self.geometry_table = QTableWidget(0, 17)
         self.geometry_table.setHorizontalHeaderLabels(["enabled", "name", "parent", "shape", "material", "position", "size/parameters", "rotation", "sensitive", "bias", "region", "dx1", "dx2", "dy1", "dy2", "dz", "status"])
         set_table_minimum_rows(self.geometry_table, 8)
@@ -188,6 +380,7 @@ class GeometryEditor(QWidget):
         detail_form.addRow("Rotation", self.layer_rotation)
         layout.addWidget(detail)
         layout.addWidget(QLabel("Layer validation"))
+        layout.addWidget(self.layer_backend_details)
         layout.addWidget(self.layer_status, 1)
         return tab
 
@@ -207,6 +400,7 @@ class GeometryEditor(QWidget):
         layout.addLayout(toolbar)
         layout.addWidget(self.geometry_count_label)
         layout.addWidget(self.geometry_table, 1)
+        layout.addWidget(self.volume_details)
         return tab
 
     def _boolean_editor_tab(self) -> QWidget:
@@ -224,6 +418,7 @@ class GeometryEditor(QWidget):
         layout.addLayout(toolbar)
         layout.addWidget(self.boolean_count_label)
         layout.addWidget(self.boolean_table, 1)
+        layout.addWidget(self.boolean_details)
         return tab
 
     def _geometry_preview_tab(self) -> QWidget:
@@ -284,6 +479,11 @@ class GeometryMixin:
         self.delete_layer_button.clicked.connect(self._delete_layer)
         self.move_layer_up_button.clicked.connect(lambda: self._move_layer(-1))
         self.move_layer_down_button.clicked.connect(lambda: self._move_layer(1))
+        self.geometry_table.itemSelectionChanged.connect(self._select_geometry_details)
+        self.boolean_table.itemSelectionChanged.connect(self._select_boolean_details)
+        self.volume_details.changed.connect(self._on_volume_details_changed)
+        self.boolean_details.changed.connect(self._on_boolean_details_changed)
+        self.layer_backend_details.changed.connect(self._on_layer_backend_details_changed)
         self.geometry_table.itemChanged.connect(self._on_hierarchical_table_changed)
         self.boolean_table.itemChanged.connect(self._on_boolean_table_changed)
         self.add_volume_button.clicked.connect(self._add_hierarchical_volume)
@@ -304,21 +504,33 @@ class GeometryMixin:
     def reload_geometry(self) -> None:
         path = self.geometry_config.text().strip()
         template = self._geometry_template_token()
-        self.geometry_summary = parse_geometry(path, template) if path else None
-        if self.geometry_summary is not None:
-            self.geometry_summary._f5_source_anchor = str(Path(path).expanduser().resolve())
+        # No source is a legitimate in-memory document. Do not project defaults,
+        # clear tables, flush pending editors or manufacture an empty read receipt.
+        if not path:
+            message = ("This geometry document is in memory; Reload/Revert needs a source file. Your edits are retained."
+                       if not self.geometry_document.source_path else
+                       "The imported geometry still requires its source path. Your edits are retained.")
+            self.geometry_messages.setPlainText(ui_text(message))
+            return
+        candidate = parse_geometry(path, template)
+        if not getattr(candidate, "_f4_read_success", False):
+            # Failed reads are current errors, never successful empty geometry.
+            # Keep the model and pending widgets so an IO error cannot erase edits.
+            self.geometry_summary = candidate
+            self.geometry_document.source_errors = list(dict.fromkeys(
+                [*self.geometry_document.source_errors, *candidate.errors]))
+            self.geometry_document._f4_source_diagnostics = collect_diagnostics(candidate)
+            self.geometry_document._f4_source_snapshot = getattr(candidate, "_f4_source_snapshot", None)
+            self.geometry_messages.setPlainText(self._messages_text(candidate.errors, candidate.warnings))
+            self._validate_geometry_editor()
+            self._update_generated_geometry_preview()
+            return
+        self.geometry_summary = candidate
+        self.geometry_summary._f5_source_anchor = str(Path(path).expanduser().resolve())
         self.geometry_table.setRowCount(0)
         self.boolean_table.setRowCount(0)
         self.geometry_messages.clear()
         self.geometry_raw.clear()
-        if not self.geometry_summary:
-            self.geometry_document = GeometryDocument()
-            set_geometry_mode(self.geometry_document, template)
-            self._populate_geometry_editor()
-            self.geometry_count_label.setText("Volumes: 0 entries | Preview only")
-            self.boolean_count_label.setText("Boolean ops: 0 entries | Preview only")
-            self._update_workspace_summary()
-            return
         self.geometry_document = geometry_document_from_summary(self.geometry_summary, template)
         self.geometry_document.source_path = self.geometry_summary._f5_source_anchor
         self.geometry_document.is_dirty = False
@@ -413,6 +625,8 @@ class GeometryMixin:
         self._update_generated_geometry_preview()
 
     def _populate_hierarchical_tables(self) -> None:
+        volume_index = self.geometry_table.currentRow()
+        boolean_index = self.boolean_table.currentRow()
         self._building = True
         self.geometry_table.setRowCount(0)
         for volume in self.geometry_document.volumes:
@@ -465,6 +679,12 @@ class GeometryMixin:
         self.boolean_table.resizeColumnsToContents()
         self._building = False
         self._update_hierarchical_count_labels()
+        if self.geometry_table.rowCount():
+            self.geometry_table.selectRow(min(max(volume_index, 0), self.geometry_table.rowCount()-1))
+        if self.boolean_table.rowCount():
+            self.boolean_table.selectRow(min(max(boolean_index, 0), self.boolean_table.rowCount()-1))
+        self._select_geometry_details()
+        self._select_boolean_details()
 
     def _update_geometry_from_widgets(self) -> None:
         if self._building:
@@ -510,9 +730,8 @@ class GeometryMixin:
         volume.shape = values[3] or "box"
         volume.material = values[4]
         volume.position = values[5]
-        if volume.shape.strip().lower() == "box":
+        if canonical_solid(volume.shape) == "box":
             volume.size = values[6]
-            volume.parameters = ""
         else:
             volume.parameters = values[6]
         volume.rotation = values[7]
@@ -524,6 +743,7 @@ class GeometryMixin:
                 volume.shape_properties[field] = value
             else:
                 volume.shape_properties.pop(field, None)
+        self._select_geometry_details()
         self._mark_geometry_dirty()
 
 
@@ -663,8 +883,68 @@ class GeometryMixin:
                 self.geometry_table.selectRow(row)
                 break
         self.geometry_table.blockSignals(False)
+        self._select_geometry_details()
 
     def _on_geometry_row_selected(self) -> None:
         rows = {index.row() for index in self.geometry_table.selectedIndexes()}
         item = self.geometry_table.item(min(rows), 1) if rows else None
         self.preview3d_widget.select_volume(item.text().strip() if item is not None else "")
+
+    def _select_geometry_details(self) -> None:
+        if self._building: return
+        index = self.geometry_table.currentRow()
+        rows = self.geometry_document.volumes
+        self.volume_details.set_row(rows[index] if 0 <= index < len(rows) else None)
+
+    def _select_boolean_details(self) -> None:
+        if self._building: return
+        index = self.boolean_table.currentRow()
+        rows = self.geometry_document.boolean_ops
+        self.boolean_details.set_row(rows[index] if 0 <= index < len(rows) else None)
+
+    @edit_operation('Edit volume details')
+    def _on_volume_details_changed(self) -> None:
+        if self._building: return
+        index = self.geometry_table.currentRow()
+        if not 0 <= index < len(self.geometry_document.volumes): return
+        self.volume_details.apply_row(self.geometry_document.volumes[index])
+        self._mark_geometry_dirty()
+        self._sync_details_table(index, boolean=False)
+
+    @edit_operation('Edit boolean tool details')
+    def _on_boolean_details_changed(self) -> None:
+        if self._building: return
+        index = self.boolean_table.currentRow()
+        if not 0 <= index < len(self.geometry_document.boolean_ops): return
+        self.boolean_details.apply_row(self.geometry_document.boolean_ops[index])
+        self._mark_geometry_dirty()
+        self._sync_details_table(index, boolean=True)
+
+    @edit_operation('Edit layer backend details')
+    def _on_layer_backend_details_changed(self) -> None:
+        if self._building: return
+        index = self._selected_layer_row
+        rows = self.geometry_document.layered_device.layers
+        if not 0 <= index < len(rows): return
+        self.layer_backend_details.apply_row(rows[index])
+        self._mark_geometry_dirty()
+
+    def _sync_details_table(self, index: int, *, boolean: bool) -> None:
+        previous = self._building
+        self._building = True
+        try:
+            if boolean:
+                row = self.geometry_document.boolean_ops[index]
+                table = self.boolean_table
+                fields = {4: row.tool_shape, 5: row.tool_size, 6: row.tool_parameters}
+            else:
+                row = self.geometry_document.volumes[index]
+                table = self.geometry_table
+                fields = {3: row.shape, 6: row.size if canonical_solid(row.shape) == 'box' else row.parameters}
+                fields.update({col: row.shape_properties.get(key, '')
+                               for col, key in enumerate(('dx1','dx2','dy1','dy2','dz'), 11)})
+            for col, value in fields.items():
+                item = table.item(index, col)
+                if item is not None: item.setText(value)
+        finally:
+            self._building = previous

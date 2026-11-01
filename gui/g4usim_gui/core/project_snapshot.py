@@ -1,7 +1,7 @@
 """Explicit adapter for the known generated run-package snapshot envelope.
 
-Restore current package material/geometry inputs and recorded editor parameters.
-This is neither a main.ini importer nor evidence of a historical/new run.
+Restore current package materials/geometry and CURRENT main.ini run editors.
+Macro execution and historical/new runtime success are never inferred.
 """
 from __future__ import annotations
 
@@ -19,6 +19,7 @@ from g4usim_gui.models.run_model import RunSettings
 from g4usim_gui.parsers.geometry_parser import parse_geometry
 from g4usim_gui.parsers.ini_light_parser import parse_ini_light
 from g4usim_gui.parsers.materials_parser import parse_materials
+from g4usim_gui.core.run_editor_import import parse_run_editor_ini, RunEditorImportError, ImportIssue
 
 
 @dataclass(frozen=True)
@@ -227,10 +228,23 @@ def _read_inside(path: Path, root: Path, role: str, *, text=True) -> SnapshotInp
 def _geometry_resources(summary, path: Path, root: Path):
     references = []
     for volume in summary.volumes:
-        if volume.shape.strip().lower() in {"tessellated", "stl"} and "file" in volume.preview_properties:
-            references.append((f"geometry.{volume.name}.file", volume.preview_properties["file"]))
-        if volume.preview_properties.get("placement", "").strip().lower() == "parameterised" and "copies_file" in volume.preview_properties:
-            references.append((f"geometry.{volume.name}.copies_file", volume.preview_properties["copies_file"]))
+        def property_value(key):
+            current = getattr(volume, "shape_properties", {})
+            legacy = getattr(volume, "preview_properties", {})
+            if key in current and key in legacy and current[key] != legacy[key]:
+                raise ValueError(f"Conflicting geometry resource properties: geometry.{volume.name}.{key} (shape_properties / preview_properties)")
+            return current[key] if key in current else legacy.get(key)
+        if volume.shape.strip().lower() in {"tessellated", "stl"}:
+            value = property_value("file")
+            if value is None:
+                raise ValueError(f"Missing geometry resource declaration: geometry.{volume.name}.file")
+            references.append((f"geometry.{volume.name}.file", value))
+        if (property_value("placement") or "").strip().lower() in {"parameterised", "parameterized"}:
+            value = property_value("copies_file")
+            # The backend also supports inline copies + copy_step, which has
+            # no external table. Only an explicit file creates a read receipt.
+            if value is not None:
+                references.append((f"geometry.{volume.name}.copies_file", value))
     if summary.template_hint.strip().lower() == "gdml":
         for section in parse_ini_light(path).sections:
             if section.name.lower() == "gdml":
@@ -288,6 +302,51 @@ def load_snapshot(path: str | Path) -> ProjectSnapshotLoad:
     actual = _package_paths(data["runPackage"], root, notes)
     inputs = [_read_inside(actual[key], root, key) for key in
               ("materials_ini_path", "geometry_ini_path", "main_ini_path", "run_macro_path")]
+    main_text=actual["main_ini_path"].read_bytes().decode("utf-8")
+    imported=parse_run_editor_ini(main_text,source_path=actual["main_ini_path"],previous_source=project.sourceEditor)
+    current_main=parse_ini_light(actual["main_ini_path"])
+    # The fixed package paths above are the accepted material/geometry owners.
+    # Refuse a CURRENT main that points somewhere else rather than importing
+    # unrelated standard files while silently ignoring its declared targets.
+    current_sections={}
+    current_lines={}
+    for section in current_main.sections:
+        name=section.name.lower()
+        values=current_sections.setdefault(name,{})
+        for key,value in sorted(section.values.items(),key=lambda item:section.key_lines[item[0]]):
+            values[key.lower()]=value
+            current_lines[(name,key.lower())]=(section.name,section.key_lines[key])
+    for name in ("materials","geometry"):
+        if name in current_sections:
+            key="file" if name=="materials" else "config"
+            values=current_sections[name]
+            if key in values:
+                declared=Path(values[key])
+                if not declared.is_absolute(): declared=actual["main_ini_path"].parent/declared
+                expected=actual["materials_ini_path" if name=="materials" else "geometry_ini_path"]
+                if not _same_path(declared.resolve(),expected.resolve()):
+                    section_name,line=current_lines[(name,key)]
+                    raise RunEditorImportError(actual["main_ini_path"],main_text,[ImportIssue(section_name,key,values[key],line,"CURRENT package resource path contradicts its standard layout")])
+            if name=="geometry" and "template" in values: project.geometrySettings.template=values["template"]
+    project.sourceEditor,project.physicsEditor=imported.source,imported.physics
+    project.sourceSettings,project.physicsSettings=imported.source.to_settings(),imported.physics.to_settings()
+    notes.extend(imported.notes)
+    resources=[]
+    if project.sourceEditor.phase_space_file:
+        resources.append((project.sourceEditor,"phase_space_file","phase_space",True))
+    for row in project.sourceEditor.gps_sources:
+        if row.energy_type in {"histogram","points"}: resources.append((row,"spectrum_file","spectrum",False))
+    for row in project.physicsEditor.fields:
+        for key in ("magnetic_map","electric_map"):
+            if getattr(row,key): resources.append((row,key,"field_map",False))
+    for owner,key,role,multiple in resources:
+        targets=[]
+        for item in getattr(owner,key).split(",") if multiple else [getattr(owner,key)]:
+            target=Path(item.strip())
+            if not target.is_absolute(): target=actual["main_ini_path"].parent/target
+            inputs.append(_read_inside(target,root,role,text=False))
+            targets.append(str(target.resolve()))
+        setattr(owner,key,",".join(targets))
     material_summary = parse_materials(actual["materials_ini_path"])
     if material_summary.errors:
         raise ValueError("Current package materials cannot be restored: " + "; ".join(material_summary.errors))
@@ -317,9 +376,9 @@ def load_snapshot(path: str | Path) -> ProjectSnapshotLoad:
     project.macroPath = ""
     project.outputDir = ""
     notes.extend((
-        "Restored current package material/geometry files and snapshot-recorded run/source/physics/scoring editor parameters; validate and generate a new package before running.",
+        "Restored CURRENT package materials, geometry and main.ini source/physics/field/bias editors; run/scoring parameters remain snapshot-recorded. Validate and generate a new package before running.",
         "Unwritten disabled rows/editor drafts are not restored; materialDocument contains component counts, not a full recipe.",
-        "Current main.ini/macro edits, final runtime EffectiveConfig and historical success are not restored or verified.",
+        "Macro edits, final runtime EffectiveConfig and historical success are not restored or verified. CURRENT main.ini import is configuration evidence only.",
         "This snapshot format has no original resource hashes; current input hashes do not prove equality with historical run bytes.",
     ))
     for item in inputs:

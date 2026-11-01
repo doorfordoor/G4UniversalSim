@@ -249,6 +249,19 @@ def configuration_snapshot(page: Any, generation: int) -> str:
                  or name in {"layered_auto_stack", "geometry_source_copy"})
     models = {name: _semantic(getattr(page, name)) for name in
               ("material_document", "geometry_document", "source_editor", "physics_editor", "scoring_editor")}
+    import copy
+    source, physics = copy.deepcopy(page.source_editor), copy.deepcopy(page.physics_editor)
+    page.j2_run_editors.collect_into(source, physics)
+    models['source_editor'], models['physics_editor'] = _semantic(source), _semantic(physics)
+    geometry = copy.deepcopy(page.geometry_document)
+    for name, originals, rows, index in (
+            ('volume_details', page.geometry_document.volumes, geometry.volumes, page.geometry_table.currentRow()),
+            ('boolean_details', page.geometry_document.boolean_ops, geometry.boolean_ops, page.boolean_table.currentRow()),
+            ('layer_backend_details', page.geometry_document.layered_device.layers, geometry.layered_device.layers, page._selected_layer_row)):
+        details = getattr(page, name)
+        if 0 <= index < len(rows) and details._row is originals[index]:
+            details.apply_row(rows[index])
+    models['geometry_document'] = _semantic(geometry)
     raw = {name: _widget_value(getattr(page, name)) for name in sorted(names)}
     tables = {}
     for name, columns in (("geometry_table", 16), ("boolean_table", 9)):
@@ -278,6 +291,7 @@ class _Resolved:
     row: int | None = None
     column: int = 0
     detail: str = ""
+    structured_editor: Any = None
 
 
 class ConfigDiagnosticNavigator(QObject):
@@ -292,6 +306,29 @@ class ConfigDiagnosticNavigator(QObject):
     def resolve(self, location: EditorLocation) -> _Resolved | NavigationResult:
         page = self.page
         editor, field, collection = location.editor, location.field, location.collection
+        advanced = page.j2_run_editors
+        if editor in {'source', 'physics'}:
+            if collection in advanced.row_editors:
+                rows_editor = advanced.row_editors[collection]
+                rows = rows_editor.rows
+                row = location.row
+                if row is None or row < 0 or row >= len(rows):
+                    return NavigationResult('target_missing', ui_text('The diagnostic target no longer exists. Validate again.'))
+                current = rows[row]
+                identity = getattr(current, 'editor_id', '') or getattr(current, 'name', '')
+                if location.entity and identity != location.entity:
+                    return NavigationResult('target_missing', ui_text('The diagnostic target has changed. Validate again.'))
+                if field in rows_editor.controls:
+                    return _Resolved(rows_editor.controls[field], row=row, structured_editor=rows_editor)
+            elif collection == 'cuts' and field in advanced.cuts:
+                return _Resolved(advanced.cuts[field])
+            elif not collection and location.row is None:
+                if editor == 'source' and field in {'multiple_vertex', 'phase_space_file', 'phase_space_recycle'}:
+                    return _Resolved(getattr(advanced, field))
+                if editor == 'physics' and field in advanced.modules:
+                    return _Resolved(advanced.modules[field].choice)
+                if editor == 'physics' and field == 'bias_rules':
+                    return _Resolved(advanced.row_editors[field].list)
         if editor in _STATIC_FIELDS:
             attribute = _STATIC_FIELDS[editor].get(field)
             if attribute is not None and location.row is None:
@@ -316,6 +353,7 @@ class ConfigDiagnosticNavigator(QObject):
         attributes = {}
         columns = {}
         detail = ""
+        backend_control = None
         if editor == "materials" and collection == "rows":
             rows, table, attributes, detail = page.material_document.rows, page.materials_table, _MATERIAL_FIELDS, "material"
         elif editor in {"geometry", "layers"} and collection == "layers":
@@ -326,7 +364,12 @@ class ConfigDiagnosticNavigator(QObject):
             rows, table, columns = page.geometry_document.volumes, page.geometry_table, _VOLUME_COLUMNS
         elif editor in {"geometry", "booleans"} and collection == "boolean_ops":
             rows, table, columns = page.geometry_document.boolean_ops, page.boolean_table, _BOOLEAN_COLUMNS
-        if rows is None or field not in attributes and field not in columns:
+        backend_names = {'volumes': 'volume_details', 'boolean_ops': 'boolean_details', 'layers': 'layer_backend_details'}
+        if collection in backend_names and field not in attributes and field not in columns:
+            detail = backend_names[collection]
+            fields = getattr(page, detail).fields
+            backend_control = fields.get(field) or fields.get('prop.' + field)
+        if rows is None or field not in attributes and field not in columns and backend_control is None:
             return NavigationResult("not_editable", ui_text("No editable control is registered for this diagnostic."))
         if editor != "materials" and page.geometry_document.source_copy_mode:
             return NavigationResult("not_editable", ui_text("This editor is unavailable in the current mode."))
@@ -345,7 +388,11 @@ class ConfigDiagnosticNavigator(QObject):
             if location.entity != identity:
                 return NavigationResult("target_missing", ui_text("The diagnostic target has changed. Validate again."))
         if attributes:
+            if backend_control is not None:
+                return _Resolved(backend_control, table, row, 0, detail)
             return _Resolved(getattr(page, attributes[field]), table, row, 0, detail)
+        if backend_control is not None:
+            return _Resolved(backend_control, table, row, 0, detail)
         column = columns[field]
         if table.item(row, column) is None:
             return NavigationResult("target_missing", ui_text("The diagnostic target no longer exists. Validate again."))
@@ -359,6 +406,21 @@ class ConfigDiagnosticNavigator(QObject):
         target = self.resolve(diagnostic.location)
         if isinstance(target, NavigationResult):
             return target
+        if target.structured_editor is not None:
+            available = can_reveal_widget(target.structured_editor.list)
+            if not available.ok:
+                return available
+            target.structured_editor.list.setCurrentRow(target.row)
+        if target.detail in {'volume_details', 'boolean_details', 'layer_backend_details'}:
+            available = can_reveal_widget(target.table)
+            if not available.ok:
+                return available
+            page = self.page
+            target.table.selectRow(target.row)
+            rows = (page.geometry_document.volumes if target.detail == 'volume_details' else
+                    page.geometry_document.boolean_ops if target.detail == 'boolean_details' else
+                    page.geometry_document.layered_device.layers)
+            getattr(page, target.detail).set_row(rows[target.row])
         reachable = can_reveal_widget(target.widget)
         if not reachable.ok:
             return reachable

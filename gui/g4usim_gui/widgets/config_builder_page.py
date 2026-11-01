@@ -269,13 +269,25 @@ class ConfigBuilderPage(SetupMixin, MaterialsMixin, GeometryMixin, LayersMixin, 
         self._populate_sps_editors()
         if not reload_sources:
             return
+        # A new in-memory identity must replace the old source view before the
+        # no-source Reload guard preserves its current document.
+        saved_materials = getattr(project, 'materialEditor', None)
+        saved_geometry = getattr(project, 'geometryEditor', None)
+        if (isinstance(saved_materials, MaterialDocument) and saved_materials.is_dirty
+                and not paths.materials_config and not saved_materials.source_path and not saved_materials.raw_source_text):
+            self.material_document = saved_materials
+            self.materials_summary = None
+            self.materials_raw.clear()
+        if (isinstance(saved_geometry, GeometryDocument) and saved_geometry.is_dirty
+                and not self.geometry_config.text().strip() and not saved_geometry.source_path and not saved_geometry.raw_source_text):
+            self.geometry_document = saved_geometry
+            self.geometry_summary = None
+            self.geometry_raw.clear()
         self.reload_materials()
         self.reload_geometry()
-        saved_materials = getattr(project, 'materialEditor', None)
         if isinstance(saved_materials, MaterialDocument):
             self.material_document = saved_materials
             self._populate_material_editor()
-        saved_geometry = getattr(project, "geometryEditor", None)
         if isinstance(saved_geometry, GeometryDocument) and (
             saved_geometry.is_dirty or saved_geometry.source_copy_mode
         ):
@@ -363,6 +375,11 @@ class ConfigBuilderPage(SetupMixin, MaterialsMixin, GeometryMixin, LayersMixin, 
             table.setItemDelegate(LiveDraftDelegate(table, self._diagnostic_draft_changed))
 
     def _diagnostic_draft_changed(self, *_args) -> None:
+        current = self.sender()
+        while current is not None and current is not self:
+            if getattr(current, '_projecting', False) or getattr(current, '_loading', False):
+                return
+            current = current.parent()
         if not self._building:
             self.invalidate_diagnostics()
 

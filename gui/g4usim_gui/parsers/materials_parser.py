@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 from g4usim_gui.core.config_schema_data import SCHEMA
+from g4usim_gui.core.nist_elements import NIST_MATERIALS
+from g4usim_gui.core.i18n import ui_format, ui_text
 
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -94,14 +96,20 @@ def _materials_from_document(document: IniLightDocument) -> MaterialsSummary:
         section_lower = section.name.lower()
         if section_lower == "nist" or section_lower.startswith(("element.", "isotope.")):
             if section_lower == "nist":
-                summary.nist_materials.extend(_split_components(values.get("materials", "")))
+                requests = [token.strip() for token in values.get("materials", "").split(",") if token.strip()]
+                summary.nist_materials.extend(requests)
+                for token in requests:
+                    if token not in NIST_MATERIALS:
+                        _schema_diagnostic(summary, "unknown_nist", section.key_lines.get("materials", section.line_no),
+                                           section.name, "materials", token, ui_format(
+                                               "Unknown NIST material in the Geant4 catalog: {name}", name=token))
             summary.preserved_sections.append(raw_sections.get(section_lower, f"[{section.name}]"))
             continue
         # [material.<name>] defines <name>; a legacy alias section [<name>] has material = G4_...
         default_name = section.name[len("material."):] if section_lower.startswith("material.") else section.name
         name = values.get("name", default_name)
         material_alias = values.get("material", "")
-        mode = values.get("mode", values.get("type", "")).lower()
+        mode = values.get("mode", "mass_fraction").lower()
         density = values.get("density", "")
         components_text = values.get("components", values.get("component", ""))
         # "name:value" entries as written (the editor needs the counts/fractions, not only the names)
@@ -110,14 +118,14 @@ def _materials_from_document(document: IniLightDocument) -> MaterialsSummary:
         if material_alias.startswith("G4_"):
             kind = "nist"
             components = [material_alias]
-        elif mode in {"volume_fraction", "volume-fraction"}:
+        elif mode in {"volume_fraction", "volume"}:
             kind = "volume_fraction"
-        elif mode in {"mass_fraction", "mass-fraction", "mixture"}:
+        elif mode in {"mass_fraction", "mass"}:
             kind = "mass_fraction"
-        elif mode in {"atom_count", "atom-count", "material"}:
+        elif mode in {"atom_count", "atom"}:
             kind = "atom_count" if components else "custom"
         elif components:
-            kind = "custom"
+            kind = mode
         else:
             kind = "unknown"
 
@@ -173,6 +181,8 @@ def _validate_material_schema(summary: MaterialsSummary) -> None:
             section_seen = True
             current_section = line[1 : line.index("]")].strip()
             section_lower = current_section.lower()
+            if section_lower in section_lines:
+                _schema_diagnostic(summary, "duplicate_section", line_no, current_section, "<section>", "", ui_text("duplicate section cannot be safely edited"))
             section_lines[section_lower] = line_no
             section_keys.setdefault(section_lower, set())
             if section_lower == "global":
@@ -195,7 +205,9 @@ def _validate_material_schema(summary: MaterialsSummary) -> None:
         value = _strip_inline_comment(value.strip())
         key_lower = key.lower()
         section_lower = current_section.lower()
-        section_keys.setdefault(section_lower, set()).add(key_lower)
+        if key_lower in section_keys.setdefault(section_lower, set()):
+            _schema_diagnostic(summary, "duplicate_key", line_no, current_section, key, value, ui_text("duplicate key cannot be safely edited"))
+        section_keys[section_lower].add(key_lower)
         if not section_seen:
             _schema_diagnostic(summary, "implicit_global", line_no, "global", key, value, "global section must not contain fields")
             continue

@@ -46,6 +46,12 @@ public:
     static std::unique_ptr<G4VModularPhysicsList>
     CreateReferencePhysicsList(const std::string& referenceName);
 
+    // Reject same physics type/name before Geant4 can silently ignore it.
+    static void RegisterChecked(G4VModularPhysicsList* list,
+                                std::unique_ptr<G4VPhysicsConstructor> physics);
+    static void ReplaceModules(G4VModularPhysicsList* list,
+                               const std::vector<std::string>& options);
+
     static void RegisterExtraModule(G4VModularPhysicsList* list,
                                     const std::string& option);
     static void RegisterExtraModules(G4VModularPhysicsList* list,

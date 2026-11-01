@@ -140,7 +140,7 @@ def persistence_contract():
         path = Path(temp) / "project.json"
         save_project(project_for_snapshot(original), path)
         loaded = load_project(path)
-        assert loaded.version == SCHEMA_VERSION == 7
+        assert loaded.version == SCHEMA_VERSION == 8
         assert asdict(loaded.materialEditor) == asdict(original.project.materialEditor)
         assert asdict(loaded.geometryEditor) == asdict(original.project.geometryEditor)
         assert loaded.editingState == original.state
@@ -149,9 +149,12 @@ def persistence_contract():
             rejected(lambda: save_project(changed(original, "changed").project, path), "injected replace")
         assert path.read_bytes() == before
         assert not list(path.parent.glob(".project.json.*.tmp"))
-    for version in range(1, SCHEMA_VERSION):
+    for version in range(1, 7):
         legacy = project_from_dict({"version": version, "seed": "42", "runSettings": {"seed": None}})
         assert legacy.runSettings.seed == 42 and legacy.materialEditor is None and legacy.editingState is None
+    for version in (7, SCHEMA_VERSION):
+        modern = project_from_dict({"version": version, "seed": "raw draft", "runSettings": {"seed": None}})
+        assert modern.seed == 'raw draft' and modern.runSettings.seed is None
     empty = G4USimProject()
     empty.materialEditor = type(original.project.materialEditor)()
     assert project_from_dict(project_to_dict(empty)).materialEditor is not None
@@ -207,6 +210,63 @@ def history_contract():
     assert history.current().project.sourceEditor.energy == "1 GeV" and not history.can_redo
     history.undo()
     assert history.current().project.sourceEditor.energy == saved.project.sourceEditor.energy
+
+
+def version_seven_snapshot_contract():
+    """Only the explicit v8 additions may be absent from a complete v7 copy."""
+    from g4usim_gui.core.workspace_recovery import RecoveryStore
+    original = fixture()
+    data = snapshot_to_dict(original)
+    data['project']['version'] = 7
+    added = {
+        'sourceEditor': ('gps_sources', 'multiple_vertex', 'phase_space_file', 'phase_space_recycle'),
+        'physicsEditor': ('replace_modules', 'regions', 'fields', 'bias_rules'),
+    }
+    for owner, fields in added.items():
+        for field in fields:
+            data['project'][owner].pop(field)
+    for rows in (data['project']['geometryEditor']['boolean_ops'],
+                 data['project']['geometryEditor']['preview']['boolean_ops']):
+        for row in rows:
+            row.pop('shape_properties')
+    untouched = copy.deepcopy(data)
+    loaded = snapshot_from_dict(data)
+    assert data == untouched, 'Migration must not modify bytes covered by a recovery digest'
+    assert loaded.project.version == 8
+    assert not loaded.project.sourceEditor.gps_sources and not loaded.project.sourceEditor.multiple_vertex
+    assert loaded.state == original.state
+    assert loaded.project.geometryEditor.raw_source_text == GEOMETRY
+    assert snapshot_fingerprint(loaded) == snapshot_fingerprint(original)
+    for owner, field in (('sourceEditor', 'energy'), ('physicsEditor', 'reference_list')):
+        invalid = copy.deepcopy(data)
+        invalid['project'][owner].pop(field)
+        rejected(lambda: snapshot_from_dict(invalid), 'Incomplete')
+    for owner, fields in added.items():
+        for field in fields:
+            invalid = snapshot_to_dict(original)
+            invalid['project'][owner].pop(field)
+            rejected(lambda: snapshot_from_dict(invalid), 'Incomplete')
+    invalid = copy.deepcopy(data)
+    invalid['project']['geometryEditor']['preview'] = []
+    rejected(lambda: snapshot_from_dict(invalid))
+    with tempfile.TemporaryDirectory(prefix='j2-v7-recovery-') as temp:
+        store = RecoveryStore(temp)
+        session = store.open_session()
+        payload = dict(copy.deepcopy(data['project']), editingState=copy.deepcopy(data['state']))
+        receipt = session.publish(payload, 2)
+        bytes_before = session.path.read_bytes()
+        session.close()
+        candidates = store.discover()
+        assert len(candidates) == 1 and not candidates[0].error
+        assert candidates[0].raw_sha256 == receipt.raw_sha256
+        with store.claim(candidates[0]) as claim:
+            recovered = claim.read().payload
+            assert recovered == payload
+            project_part = dict(recovered, editingState=None)
+            migrated = snapshot_from_dict(dict(data, project=project_part, state=recovered['editingState']))
+            assert migrated.project.version == 8 and migrated.state == original.state
+            assert candidates[0].path.read_bytes() == bytes_before
+            claim.retain()
 
 
 def grouping_and_capacity():
@@ -460,7 +520,7 @@ def source_constraint_contract():
     with tempfile.TemporaryDirectory(prefix='f5-source-constraints-') as temp:
         folder = Path(temp)
         material_path, geometry_path = folder / 'materials.ini', folder / 'geometry.ini'
-        material_text, geometry_text = MATERIALS + 'unknown_parameter = 7\n', GEOMETRY + 'placement = replica\n'
+        material_text, geometry_text = MATERIALS + 'unknown_parameter = 7\n', GEOMETRY + 'placement_future = replica\n'
         material_path.write_text(material_text, encoding='utf-8')
         geometry_path.write_text(geometry_text, encoding='utf-8')
         executable = folder / 'validation-only-backend'
@@ -569,7 +629,7 @@ def source_constraint_contract():
                                         material_document=copy_snapshot.project.materialEditor,
                                         geometry_document=copy_snapshot.project.geometryEditor)
         assert Path(package.geometry_ini_path).read_bytes() == geometry_path.read_bytes()
-        assert b'placement = replica' in Path(package.geometry_ini_path).read_bytes()
+        assert b'placement_future = replica' in Path(package.geometry_ini_path).read_bytes()
         assert material_path.read_text(encoding='utf-8') == MATERIALS
 
         # Failed capture does not become a successful empty parse, even if its
@@ -585,6 +645,7 @@ def source_constraint_contract():
 
 def main():
     persistence_contract()
+    version_seven_snapshot_contract()
     history_contract()
     grouping_and_capacity()
     projection_failure()

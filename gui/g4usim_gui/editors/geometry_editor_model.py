@@ -3,6 +3,7 @@ from __future__ import annotations
 import re
 import math
 from contextvars import ContextVar
+from pathlib import Path
 from dataclasses import asdict, dataclass, field
 from types import SimpleNamespace
 
@@ -16,17 +17,17 @@ from g4usim_gui.core.project_migration import normalize_geometry_data, validate_
 from g4usim_gui.parsers.materials_parser import NIST_QUICK_LIST, material_reference_status
 from g4usim_gui.parsers.geometry_parser import GeometrySummary
 from g4usim_gui.parsers.geometry_parser import PRODUCTION_CUT_KEYS, TRD_PROPERTY_KEYS, VISUAL_KEYS
-from g4usim_gui.preview3d.units import parse_length_to_mm
+from g4usim_gui.preview3d.units import parse_length_to_mm, parse_angle_deg
+from g4usim_gui.core.config_schema import quantity
+from g4usim_gui.core.solid_registry_data import SOLIDS, ALIASES, canonical_solid, solid_spec, property_keys
+from g4usim_gui.parsers.geometry_parser import PLACEMENT_PROPERTY_KEYS
 
 
 EDITABLE_GEOMETRY_MODES = {"simple_box", "layered_device", "hierarchical", "hierarchical_boolean", "boolean_hierarchical", "boolean"}
 HIERARCHICAL_GEOMETRY_MODES = {"hierarchical", "hierarchical_boolean", "boolean_hierarchical", "boolean"}
-SUPPORTED_HIERARCHICAL_SHAPES = {"box", "tubs", "sphere", "orb", "cone", "trd"}
-SUPPORTED_BOOLEAN_TOOL_SHAPES = {"box", "tubs", "sphere", "orb", "cone"}
-# every name the backend's ParseShape accepts (GeometryUtils.cc), aliases included
-BACKEND_SHAPES = {"box", "cube", "tubs", "tube", "cylinder", "sphere", "orb", "cone", "cons", "trd", "trapezoid",
-                  "trap", "ellipsoid", "eltube", "elliptical_tube", "torus", "para", "parallelepiped", "hype",
-                  "polycone", "polyhedra", "tessellated", "stl"}
+SUPPORTED_HIERARCHICAL_SHAPES = set(ALIASES)
+SUPPORTED_BOOLEAN_TOOL_SHAPES = {alias for alias, name in ALIASES.items() if SOLIDS[name]["boolean_tool"]}
+BACKEND_SHAPES = set(ALIASES)
 SUPPORTED_VISUAL_COLORS = {
     "white", "black", "red", "green", "blue", "yellow", "cyan", "aqua",
     "magenta", "gray", "grey", "darkgray", "lime", "brown",
@@ -53,7 +54,7 @@ class HierarchicalVolumeRow:
     copy_no: str = ""
     metadata: str = ""
     shape_properties: dict[str, str] = field(default_factory=dict)
-    preview_properties: dict[str, str] = field(default_factory=dict)   # read-only, for the 3D sketch
+    preview_properties: dict[str, str] = field(default_factory=dict)   # known placement and legacy sketch projection
     visual: dict[str, str] = field(default_factory=dict)
     production_cuts: dict[str, str] = field(default_factory=dict)
     notes: str = ""
@@ -73,6 +74,7 @@ class BooleanOperationRow:
     position: str = ""
     rotation: str = ""
     name: str = ""
+    shape_properties: dict[str, str] = field(default_factory=dict)
     notes: str = ""
     errors: list[str] = field(default_factory=list)
     warnings: list[str] = field(default_factory=list)
@@ -200,6 +202,7 @@ def geometry_document_from_summary(summary: GeometrySummary | None, template_nam
                 position=op.position,
                 rotation=op.rotation,
                 name=op.name,
+                shape_properties=dict(op.shape_properties),
             )
         )
 
@@ -429,16 +432,12 @@ def _issue(owner, code: str, severity: str, message: str, field: str, *, target=
     target = owner if target is None else target
     document = _ACTIVE_DOCUMENT.get()
     editor, collection, index = document._f4_target_context.get(id(target), ("geometry", "", None))
-    if editor == "layers" and field == "metadata":
-        reason = "unsupported_editor"
-    if collection == "volumes" and (field in {"copy_no", "metadata"} or field.startswith(("vis.", "cut."))):
-        reason = "unsupported_editor"
     entity = (f"{target.target_volume}[{target.index}]" if isinstance(target, BooleanOperationRow)
               else getattr(target, "name", ""))
     if location is None and not reason:
         location = EditorLocation(editor, field, collection, index, entity)
     value = getattr(target, field, None)
-    for attribute in ("visual", "production_cuts", "shape_properties"):
+    for attribute in ("visual", "production_cuts", "shape_properties", "preview_properties"):
         if field in getattr(target, attribute, {}):
             value = getattr(target, attribute)[field]
     if not isinstance(value, (str, int, float, bool, type(None))):
@@ -509,8 +508,8 @@ def _validate_layered(document: GeometryDocument, known_materials: set[str]) -> 
                 _issue(layer, 'geometry.layer.cut_unknown', 'error', f"Unsupported production cut field '{field}'.", field, reason='unsupported_editor')
             elif not layer.region.strip():
                 _issue(layer, 'geometry.layer.cut_region', 'error', f"{field} requires a non-empty region in the same layer.", 'region', facts={'cut_field': field})
-            elif (parsed := parse_length_to_mm(value)) is None or parsed <= 0:
-                _issue(layer, 'geometry.layer.cut_positive', 'error', f"{field} must be a positive length.", field, reason='unsupported_editor')
+            elif (parsed := parse_length_to_mm(value)) is None or not math.isfinite(parsed) or parsed <= 0:
+                _issue(layer, 'geometry.layer.cut_positive', 'error', f"{field} must be a positive length.", field)
         for field, value in layer.visual.items():
             if field not in VISUAL_KEYS:
                 _issue(layer, 'geometry.layer.visual_unknown', 'error', f"Unsupported visual field '{field}'.", field, reason='unsupported_editor')
@@ -518,13 +517,13 @@ def _validate_layered(document: GeometryDocument, known_materials: set[str]) -> 
                 try:
                     alpha = float(value.strip())
                     if not math.isfinite(alpha) or not 0 <= alpha <= 1:
-                        _issue(layer, 'geometry.layer.alpha_range', 'error', "vis.alpha must be between 0 and 1.", 'vis.alpha', reason='unsupported_editor')
+                        _issue(layer, 'geometry.layer.alpha_range', 'error', "vis.alpha must be between 0 and 1.", 'vis.alpha')
                 except ValueError:
-                    _issue(layer, 'geometry.layer.alpha_numeric', 'error', "vis.alpha must be numeric.", 'vis.alpha', reason='unsupported_editor')
+                    _issue(layer, 'geometry.layer.alpha_numeric', 'error', "vis.alpha must be numeric.", 'vis.alpha')
             elif field in {"vis.visible", "vis.wireframe"} and value.strip().lower() not in {"true", "false", "1", "0", "yes", "no", "on", "off"}:
-                _issue(layer, 'geometry.layer.visual_bool', 'error', f"{field} must be a boolean value.", field, reason='unsupported_editor')
+                _issue(layer, 'geometry.layer.visual_bool', 'error', f"{field} must be a boolean value.", field)
             elif field == "vis.color" and value.strip().lower() not in SUPPORTED_VISUAL_COLORS:
-                _issue(layer, 'geometry.layer.color', 'error', "vis.color must be a color supported by the backend.", 'vis.color', reason='unsupported_editor')
+                _issue(layer, 'geometry.layer.color', 'error', "vis.color must be a color supported by the backend.", 'vis.color')
         _validate_metadata_text(layer.metadata, layer)
         document.errors.extend(f"[layer.{layer.name}]: {message}" for message in layer.errors)
 
@@ -571,41 +570,8 @@ def _validate_hierarchical(document: GeometryDocument, known_materials: set[str]
                 _issue(row, 'geometry.parent.self', 'error', "Volume parent cannot point to itself.", 'parent')
             elif parent.lower() not in by_key:
                 _issue(row, 'geometry.parent.missing', 'error', f"Parent volume does not exist: {parent}", 'parent')
-        if shape in BACKEND_SHAPES and shape not in SUPPORTED_HIERARCHICAL_SHAPES:
-            # valid for Geant4, but the editor cannot check or write it: an editor limit, not an input error
-            message = ui_format("Shape '{shape}' is supported by the backend but not by the Geometry Editor; "
-                                "use original source copy mode.", shape=row.shape)
-            _issue(row, "geometry.shape.editor_limit", "warning" if document.source_copy_mode else "error",
-                   message, "shape")
-        elif shape not in SUPPORTED_HIERARCHICAL_SHAPES:
-            _issue(row, 'geometry.shape.unsupported', 'error', ui_format("Unsupported shape '{shape}'. Supported in the editor: box, tubs, sphere, orb, cone, trd.", shape=row.shape), 'shape')
-        elif shape not in STABLE_GUI_SHAPES:
-            _issue(row, 'geometry.shape.approximate', 'warning', f"Shape '{row.shape}' is backend-supported but preview/editor validation is approximate.", 'shape')
-        if shape == "box":
-            _require_vec3(row.size, f"[volume.{name}]/size", document, target=row, field='size')
-            if row.parameters.strip():
-                _issue(row, 'geometry.box.parameters', 'error', "box does not accept parameters.", 'parameters')
-        elif shape in {"tubs", "sphere", "orb", "cone"}:
-            expected = {"tubs": 5, "sphere": 6, "orb": 1, "cone": 7}[shape]
-            actual = _parameter_count(row.parameters)
-            if actual != expected:
-                _issue(row, 'geometry.shape.parameters', 'error', f"{shape} requires exactly {expected} parameters; got {actual}.", 'parameters')
-            if row.size.strip():
-                _issue(row, 'geometry.shape.size', 'error', f"{shape} does not accept size shorthand.", 'size')
-        elif shape == "trd":
-            if row.size.strip() or row.parameters.strip():
-                _issue(row, 'geometry.trd.parameters', 'error', ui_text("trd uses dx1, dx2, dy1, dy2, dz instead of size/parameters."), 'parameters')
-            for field in TRD_PROPERTY_KEYS:
-                value = row.shape_properties.get(field, "")
-                parsed = parse_length_to_mm(value)
-                if parsed is None or not math.isfinite(parsed) or parsed <= 0:
-                    _issue(row, 'geometry.trd.length', 'error', ui_format("trd {field} must be a positive length.", field=field), field)
-            for field in row.shape_properties:
-                if field not in TRD_PROPERTY_KEYS:
-                    _issue(row, 'geometry.trd.unknown_field', 'error', ui_format("Unsupported trd shape field '{field}'.", field=field), field, reason='unsupported_editor')
-        backend_only = shape in BACKEND_SHAPES and shape not in SUPPORTED_HIERARCHICAL_SHAPES
-        if shape != "trd" and row.shape_properties and not backend_only:   # backend-only: the limit above says it
-            _issue(row, 'geometry.shape_properties.conflict', 'error', ui_text("Shape-specific fields are present but the selected shape is not trd."), 'shape')
+        _validate_solid(row, document)
+        _validate_placement(row, document, by_key)
         _require_material(row.material, f"[volume.{name}]/material", known_materials, document, target=row, field='material')
         if row.position.strip():
             _require_vec3(row.position, f"[volume.{name}]/position", document, target=row, field='position')
@@ -618,7 +584,7 @@ def _validate_hierarchical(document: GeometryDocument, known_materials: set[str]
                 _issue(row, 'geometry.cut.unknown', 'error', ui_format("Unsupported production cut field '{field}'.", field=field), field, reason='unsupported_editor')
             elif not row.region.strip():
                 _issue(row, 'geometry.cut.region', 'error', ui_format("{field} requires a non-empty region in the same volume.", field=field), 'region', facts={'cut_field': field})
-            elif (parsed := parse_length_to_mm(value)) is None or parsed <= 0:
+            elif (parsed := parse_length_to_mm(value)) is None or not math.isfinite(parsed) or parsed <= 0:
                 _issue(row, 'geometry.cut.positive', 'error', ui_format("{field} must be a positive length.", field=field), field)
         for field, value in row.visual.items():
             if field not in VISUAL_KEYS:
@@ -652,6 +618,267 @@ def _validate_hierarchical(document: GeometryDocument, known_materials: set[str]
         for message in row.warnings:
             document.warnings.append(f"[BOOLEAN][WARN] {row.target_volume or '<missing>'}[{row.index}]: {message}")
 
+
+_GEOMETRY_SPACE = " \t\r\n\v\f"
+
+
+def _geometry_tokens(text: str, *, parameter_list: bool = False) -> list[str]:
+    """GeometryUtils::SplitVectorText, plus ParseParameterList's 2-token case.
+
+    Preserve each backend token as text: notably 6/10 whitespace tokens are
+    paired regardless of their numeric/unit appearance. Commas skip only truly
+    empty cells, as StringUtils::Split(..., skipEmpty=true) does. No trailing-unit
+    propagation and no regex extraction of concatenated quantities.
+    """
+    if ',' in text:
+        return [part for part in text.split(',') if part != '']
+    stripped = text.strip(_GEOMETRY_SPACE)
+    tokens = re.split(r'[ \t\r\n\v\f]+', stripped) if stripped else []
+    if parameter_list and len(tokens) == 2:
+        return [text]
+    if len(tokens) in {6, 10}:
+        return [tokens[index] + ' ' + tokens[index + 1] for index in range(0, len(tokens), 2)]
+    return tokens
+
+
+def _solid_tokens(text: str) -> list[str]:
+    return _geometry_tokens(text, parameter_list=True)
+
+
+def _geometry_length_vector(text: str) -> tuple[float, float, float] | None:
+    """Backend-facing ParseVec3/ParseLength semantics; sketch units are separate."""
+    parts = _geometry_tokens(text)
+    if len(parts) != 3:
+        return None
+    numbers = [quantity(part, 'length') for part in parts]
+    if any(number is None for number in numbers):
+        return None
+    return tuple(numbers)
+
+
+def _solid_scalar(text: str, dimension: str) -> float:
+    if dimension == 'integer':
+        number = float(text.strip())
+        if not math.isfinite(number) or number != math.floor(number):
+            raise ValueError('integer required')
+        return number
+    if dimension == 'angle':
+        # Bare backend angles use rad, whereas the sketch helper defaults to deg.
+        number = (float(text.strip()) if re.fullmatch(r'[+\-\d.eE]+', text.strip())
+                  else math.radians(parse_angle_deg(text)))
+    else:
+        number = parse_length_to_mm(text)
+    if number is None or not math.isfinite(number):
+        raise ValueError('finite ' + dimension + ' required')
+    return number
+
+
+def _geometry_resource_path(document: GeometryDocument, text: str) -> Path:
+    path = Path(text.strip()).expanduser()
+    if not path.is_absolute():
+        if not document.source_path:
+            raise ValueError('In-memory geometry requires absolute resource paths.')
+        path = Path(document.source_path).expanduser().resolve().parent / path
+    return path.resolve()
+
+
+def _check_geometry_resource(row, document: GeometryDocument, key: str, value: str) -> None:
+    try:
+        path = _geometry_resource_path(document, value)
+        if not path.is_file():
+            raise ValueError('file is missing')
+        if key == 'copies_file':
+            import csv
+            with path.open(encoding='utf-8-sig', newline='') as stream:
+                records = list(csv.reader(line for line in stream if line.strip() and not line.lstrip().startswith(('#',';'))))
+            header = [c.strip().lower() for c in records[0]] if records else []
+            base = ['x_mm','y_mm','z_mm']
+            variants = [base, base+['material'], base+['rot_x_deg','rot_y_deg','rot_z_deg'],
+                        base+['rot_x_deg','rot_y_deg','rot_z_deg','material']]
+            if header not in variants or len(records) < 2:
+                raise ValueError('copies_file header or copy rows are invalid')
+            for cells in records[1:]:
+                if len(cells) != len(header): raise ValueError('copies_file column count differs')
+                count = len(header)-1 if header[-1]=='material' else len(header)
+                if not all(math.isfinite(float(cell.strip())) for cell in cells[:count]):
+                    raise ValueError('copies_file numeric values must be finite')
+    except (OSError, ValueError, OverflowError) as exc:
+        _issue(row, 'geometry.resource.' + key, 'error', ui_format(
+            'Invalid geometry resource {field}: {detail}', field=key, detail=str(exc)), key)
+
+
+def _validate_solid(row, document: GeometryDocument, *, boolean: bool = False) -> None:
+    shape = canonical_solid(row.tool_shape if boolean else row.shape)
+    spec = solid_spec(shape)
+    shape_field = 'tool_shape' if boolean else 'shape'
+    size_field = 'tool_size' if boolean else 'size'
+    parameter_field = 'tool_parameters' if boolean else 'parameters'
+    def error(field, message):
+        _issue(row, 'geometry.solid.' + field, 'error', message, field)
+    if spec is None or (boolean and not spec['boolean_tool']):
+        error(shape_field, ui_format("Unsupported boolean tool shape '{shape}'." if boolean else
+                                    "Unsupported shape '{shape}'.", shape=shape))
+        return
+    size = row.tool_size if boolean else row.size
+    parameters = row.tool_parameters if boolean else row.parameters
+    tokens = _solid_tokens(parameters)
+    if spec['uses_size']:
+        vector = _geometry_length_vector(size)
+        if vector is None or not all(math.isfinite(v) and v > 0 for v in vector):
+            error(size_field, ui_text('Box size must contain three positive finite lengths.'))
+    elif size.strip():
+        error(size_field, ui_format('{shape} does not accept size shorthand.', shape=shape))
+    if spec['parameter_counts']:
+        if len(tokens) not in spec['parameter_counts']:
+            error(parameter_field, ui_format('{shape} parameter count must be one of {counts}.',
+                                            shape=shape, counts=str(spec['parameter_counts'])))
+    elif parameters.strip():
+        error(parameter_field, ui_format('{shape} does not accept parameters.', shape=shape))
+    numbers = []
+    if len(tokens) in spec['parameter_counts']:
+        for token, field in zip(tokens, spec['parameters']):
+            try:
+                numbers.append(_solid_scalar(token, field['dimension']))
+            except (ValueError, TypeError, OverflowError):
+                error(parameter_field, ui_format('Invalid {dimension} value for {field}: {value}',
+                                                dimension=field['dimension'], field=field['name'], value=token))
+                break
+    properties = row.shape_properties
+    allowed = set(property_keys(shape))
+    for field in properties:
+        if field not in allowed:
+            error(field, ui_format("Unsupported shape field '{field}'.", field=field))
+    for field in spec['properties']:
+        value = properties.get(field['name'], '')
+        if not value.strip():
+            if field['required']:
+                error(field['name'], ui_format('Required geometry field: {field}', field=field['name']))
+            continue
+        try:
+            if field['dimension'] in {'length', 'angle'}:
+                n = _solid_scalar(value, field['dimension'])
+                if field['dimension'] == 'length' and n <= 0:
+                    raise ValueError('positive length required')
+            elif field['dimension'] == 'path':
+                _check_geometry_resource(row, document, field['name'], value)
+            elif field['dimension'] == 'length_unit':
+                if _solid_scalar('1 ' + value, 'length') <= 0:
+                    raise ValueError('positive length unit required')
+            elif field['dimension'] == 'length_list':
+                if not _solid_tokens(value):
+                    raise ValueError('list required')
+                for token in _solid_tokens(value):
+                    _solid_scalar(token, 'length')
+        except (TypeError, ValueError, OverflowError):
+            error(field['name'], ui_format('Invalid {dimension} value for {field}: {value}',
+                                         dimension=field['dimension'], field=field['name'], value=value))
+    if len(numbers) == len(tokens) and numbers:
+        p = numbers
+        valid = True
+        if shape == 'tubs': valid = 0 <= p[0] < p[1] and p[2] > 0 and p[4] > 0
+        elif shape == 'sphere': valid = 0 <= p[0] < p[1] and p[3] > 0 and p[5] > 0
+        elif shape == 'orb': valid = p[0] > 0
+        elif shape == 'cone': valid = 0 <= p[0] < p[1] and 0 <= p[2] < p[3] and p[4] > 0 and p[6] > 0
+        elif shape == 'ellipsoid': valid = all(n > 0 for n in p[:3]) and (len(p) == 3 or p[3] < p[4])
+        elif shape in {'eltube', 'para'}: valid = all(n > 0 for n in p[:3])
+        elif shape == 'torus': valid = 0 <= p[0] < p[1] <= p[2] and p[4] > 0
+        elif shape == 'hype': valid = 0 <= p[0] < p[1] and p[4] > 0
+        elif shape in {'polycone', 'polyhedra'}:
+            valid = p[1] > 0 and (shape != 'polyhedra' or p[2] >= 3)
+            try:
+                z, ri, ro = [[_solid_scalar(t, 'length') for t in _solid_tokens(properties.get(k, ''))]
+                             for k in ('z_planes', 'r_inner', 'r_outer')]
+                valid = valid and len(z) >= 2 and len(ri) == len(ro) == len(z)
+                valid = valid and all(a <= b for a, b in zip(z, z[1:])) and all(0 <= a <= b for a, b in zip(ri, ro))
+            except (TypeError, ValueError, OverflowError):
+                valid = False
+        if not valid:
+            error(parameter_field, ui_format('Invalid dimensions or parameter relationships for {shape}.', shape=shape))
+    if spec['experimental']:
+        _issue(row, 'geometry.solid.experimental', 'warning', ui_format(
+            '{shape} is experimental; sketch preview does not validate backend geometry.', shape=shape), shape_field)
+
+
+def _validate_placement(row, document: GeometryDocument, volumes: dict) -> None:
+    p = row.preview_properties
+    mode = p.get('placement', 'normal').strip().lower()
+    def error(field, message):
+        _issue(row, 'geometry.placement.' + field, 'error', message, field)
+    if mode not in {'normal', 'replica', 'parameterised', 'parameterized'}:
+        error('placement', ui_text('Only normal, replica and parameterised placements are supported.'))
+        return
+    for key in p:
+        if key not in PLACEMENT_PROPERTY_KEYS and key not in property_keys(row.shape):
+            error(key, ui_format("Unsupported geometry property '{field}'.", field=key))
+        if (key.startswith('replica_') and mode != 'replica') or (key in {'copies_file', 'copies', 'copy_step'} and mode not in {'parameterised', 'parameterized'}):
+            error(key, ui_format('Field {field} conflicts with placement {mode}.', field=key, mode=mode))
+    if mode == 'normal':
+        return
+    if row.name.strip().lower() == 'world':
+        error('placement', ui_text('The world must use normal placement.'))
+    siblings = [v for v in volumes.values() if v.parent.strip().lower() == row.parent.strip().lower() and v.name.strip().lower() != 'world']
+    if len(siblings) != 1:
+        error('placement', ui_text('Replica or parameterised placement must be the only daughter of its mother.'))
+    if mode == 'replica':
+        if row.position.strip() or row.rotation.strip() or row.copy_no.strip():
+            error('placement', ui_text('Replica placement forbids position, rotation and copyNo.'))
+        axis = p.get('replica_axis', '').strip().lower()
+        if axis not in {'x', 'y', 'z', 'phi'}:
+            error('replica_axis', ui_text('Replica axis must be x, y, z or phi.'))
+        parent = volumes.get(row.parent.strip().lower())
+        expected_shape = 'tubs' if axis == 'phi' else 'box'
+        if not parent or canonical_solid(parent.shape) != expected_shape or canonical_solid(row.shape) != expected_shape:
+            error('replica_axis', ui_text('Replica shape and mother must match the selected axis.'))
+        count = p.get('replica_count', '')
+        if not _is_int32(count) or int(count) <= 0:
+            error('replica_count', ui_text('Replica count must be a positive 32-bit integer.'))
+        try:
+            width = _solid_scalar(p.get('replica_width', ''), 'angle' if axis == 'phi' else 'length')
+            if width <= 0:
+                raise ValueError('positive width required')
+            offset = None
+            if p.get('replica_offset', '').strip():
+                offset = _solid_scalar(p['replica_offset'], 'angle' if axis == 'phi' else 'length')
+                if axis != 'phi' and offset != 0:
+                    raise ValueError('cartesian offset must be zero')
+            if parent and _is_int32(count) and int(count) > 0:
+                close = lambda a,b: abs(a-b) <= 1e-9 * max(1.0, abs(a), abs(b))
+                if axis == 'phi' and canonical_solid(parent.shape) == canonical_solid(row.shape) == 'tubs':
+                    def tubs(v):
+                        return [_solid_scalar(t,f['dimension']) for t,f in zip(_solid_tokens(v.parameters), SOLIDS['tubs']['parameters'])]
+                    mother, child = tubs(parent), tubs(row)
+                    if len(mother)==len(child)==5:
+                        if not (close(int(count)*width,mother[4]) and close(child[4],width)
+                                and close(child[3],-width/2) and all(close(a,b) for a,b in zip(mother[:3],child[:3]))
+                                and (offset is None or close(offset,mother[3]))):
+                            error('replica_width', ui_text('Replica dimensions, total width or phi centering do not match the mother.'))
+                elif axis in {'x','y','z'}:
+                    mother, child = _geometry_length_vector(parent.size), _geometry_length_vector(row.size)
+                    if mother and child:
+                        index = {'x':0,'y':1,'z':2}[axis]
+                        if not (close(int(count)*width,mother[index]) and all(
+                                close(child[i],width if i==index else mother[i]) for i in range(3))):
+                            error('replica_width', ui_text('Replica dimensions, total width or phi centering do not match the mother.'))
+        except (TypeError, ValueError, OverflowError):
+            error('replica_width', ui_text('Replica width/offset has invalid units or range.'))
+    else:
+        table = bool(p.get('copies_file', '').strip())
+        linear = bool(p.get('copies', '').strip() or p.get('copy_step', '').strip())
+        if table == linear:
+            error('placement', ui_text('Parameterised placement requires either copies_file or copies + copy_step.'))
+        if table:
+            # CSV owns every copy transform; keep conflicting drafts untouched.
+            for field in ('position', 'rotation'):
+                if getattr(row, field):
+                    error(field, ui_text("copies_file defines every copy's position and rotation; remove position and rotation."))
+            _check_geometry_resource(row, document, 'copies_file', p['copies_file'])
+        if linear:
+            count = p.get('copies', '')
+            if not _is_int32(count) or int(count) <= 0:
+                error('copies', ui_text('Copy count must be a positive 32-bit integer.'))
+            vector = _geometry_length_vector(p.get('copy_step', ''))
+            if vector is None or not all(math.isfinite(n) for n in vector):
+                error('copy_step', ui_text('copy_step must contain three finite lengths.'))
 
 def _validate_tree_cycles(enabled: list[HierarchicalVolumeRow], document: GeometryDocument) -> None:
     parents: dict[str, str] = {}
@@ -688,23 +915,7 @@ def _validate_boolean_operations(document: GeometryDocument, volumes_by_key: dic
         operation = row.operation.strip().lower()
         if operation not in BOOLEAN_OPERATIONS:
             _issue(row, 'geometry.boolean.operation', 'error', "Operation must be subtraction, union, or intersection.", 'operation')
-        shape = row.tool_shape.strip().lower()
-        if shape not in SUPPORTED_BOOLEAN_TOOL_SHAPES:
-            _issue(row, 'geometry.boolean.shape', 'error', f"Unsupported boolean tool shape '{row.tool_shape}'.", 'tool_shape')
-        elif shape not in STABLE_GUI_SHAPES:
-            _issue(row, 'geometry.boolean.approximate_shape', 'warning', f"Tool shape '{row.tool_shape}' is backend-supported but preview is approximate.", 'tool_shape')
-        if shape == "box":
-            if len(_split_csv_or_space(row.tool_size)) < 3:
-                _issue(row, 'geometry.boolean.size', 'error', "box boolean tool requires size with three length components.", 'tool_size')
-            if row.tool_parameters.strip():
-                _issue(row, 'geometry.boolean.box_parameters', 'error', "box boolean tool does not accept parameters.", 'tool_parameters')
-        elif shape in {"tubs", "sphere", "orb", "cone"}:
-            expected = {"tubs": 5, "sphere": 6, "orb": 1, "cone": 7}[shape]
-            actual = _parameter_count(row.tool_parameters)
-            if actual != expected:
-                _issue(row, 'geometry.boolean.parameters', 'error', f"{shape} boolean tool requires exactly {expected} parameters; got {actual}.", 'tool_parameters')
-            if row.tool_size.strip():
-                _issue(row, 'geometry.boolean.size_shorthand', 'error', f"{shape} boolean tool does not accept size shorthand.", 'tool_size')
+        _validate_solid(row, document, boolean=True)
         if row.position.strip() and len(_split_csv_or_space(row.position)) < 3:
             _issue(row, 'geometry.boolean.position', 'error', "Tool position must have three components.", 'position')
         if row.rotation.strip() and len(_split_csv_or_space(row.rotation)) < 3:
@@ -907,7 +1118,13 @@ def _volume_from_dict(data: dict) -> HierarchicalVolumeRow:
     mapped = dict(data)
     if "copyNo" in mapped and "copy_no" not in mapped:
         mapped["copy_no"] = mapped["copyNo"]
-    return HierarchicalVolumeRow(**{k: v for k, v in mapped.items() if k in HierarchicalVolumeRow.__dataclass_fields__})
+    row = HierarchicalVolumeRow(**{k: v for k, v in mapped.items() if k in HierarchicalVolumeRow.__dataclass_fields__})
+    for key in property_keys(row.shape):
+        if key in row.preview_properties:
+            if key in row.shape_properties and row.shape_properties[key] != row.preview_properties[key]:
+                raise ValueError("Conflicting geometry property projections: " + key)
+            row.shape_properties[key] = row.preview_properties.pop(key)
+    return row
 
 
 def _boolean_from_dict(data: dict) -> BooleanOperationRow:

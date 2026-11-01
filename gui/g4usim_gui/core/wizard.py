@@ -26,6 +26,7 @@ from dataclasses import dataclass, field, replace
 from g4usim_gui.core.config_schema import check_value
 from g4usim_gui.core.project import G4USimProject
 from g4usim_gui.editors.geometry_editor_model import GeometryDocument, HierarchicalVolumeRow
+from g4usim_gui.editors.material_editor_model import MaterialDocument
 from g4usim_gui.editors.source_physics_scoring_model import (
     PhysicsEditableModel,
     ScoringEditableModel,
@@ -224,8 +225,13 @@ def apply_to_project(project: G4USimProject, result: WizardResult) -> None:
     project.seed = "" if result.run.seed is None else str(result.run.seed)
     project.runSettings = result.run
     project.geometrySettings.template = "hierarchical"
-    if not project.geometrySettings.config_path:   # source fallback the validator requires
-        project.geometrySettings.config_path = project.pathSettings.geometry_config
+    # These rows are new documents, independent of the previous input files.
+    # Empty paths are intentional; the package writer materializes both inputs.
+    project.geometrySettings.config_path = ""
+    project.pathSettings.geometry_config = ""
+    project.pathSettings.materials_config = ""
+    project.materialEditor = MaterialDocument(is_dirty=True)
+    project.editingState = None
     project.geometryEditor = result.geometry
     project.sourceEditor = result.source
     project.physicsEditor = result.physics
@@ -233,6 +239,20 @@ def apply_to_project(project: G4USimProject, result: WizardResult) -> None:
     project.sourceSettings = result.source.to_settings()
     project.physicsSettings = result.physics.to_settings()
     project.scoringSettings = result.scoring.to_settings()
+
+
+def blank_result(name: str = "new_simulation") -> WizardResult:
+    """An editable world and empty materials, without example/source files."""
+    if not name.strip():
+        raise ValueError("A simulation name is required.")
+    geometry = GeometryDocument(mode="hierarchical", is_dirty=True, volumes=[
+        HierarchicalVolumeRow(name="world", shape="box", size="1 m, 1 m, 1 m",
+                              material="G4_Galactic")])
+    source = SourceEditableModel(particle="gamma", energy="1 MeV", position="0,0,0 mm")
+    physics = PhysicsEditableModel()
+    scoring = ScoringEditableModel(hits=False, edep=False, event_edep=True)
+    run = RunSettings(run_name=name.strip(), threads=1, beam_on=100, check_overlaps=True)
+    return WizardResult(geometry, source, physics, scoring, run)
 
 
 def summary(spec: WizardSpec) -> list[tuple[str, dict]]:

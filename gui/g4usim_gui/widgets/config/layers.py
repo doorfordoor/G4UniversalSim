@@ -50,6 +50,7 @@ class LayersMixin:
         self._selected_layer_row = row
         layers = self.geometry_document.layered_device.layers
         if row < 0 or row >= len(layers):
+            self.layer_backend_details.set_row(None)
             self.layer_enabled.setChecked(False)
             self.layer_name.clear()
             self.layer_thickness.clear()
@@ -62,6 +63,7 @@ class LayersMixin:
             self._building = False
             return
         layer = layers[row]
+        self.layer_backend_details.set_row(layer)
         self.layer_enabled.setChecked(layer.enabled)
         self.layer_name.setText(layer.name)
         self._set_combo_text(self.layer_material, layer.material)

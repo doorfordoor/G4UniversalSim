@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from g4usim_gui.window.transactions import edit_operation
+import copy
 
 from PySide6.QtWidgets import QTableWidgetItem
 
@@ -32,6 +33,7 @@ class BooleansMixin:
         op.tool_parameters = values[6]
         op.position = values[7]
         op.rotation = values[8]
+        self._select_boolean_details()
         self._mark_geometry_dirty()
 
     @edit_operation('Add boolean operation')
@@ -61,7 +63,7 @@ class BooleansMixin:
         if row < 0 or row >= len(self.geometry_document.boolean_ops):
             return
         source = self.geometry_document.boolean_ops[row]
-        duplicate = BooleanOperationRow(**{k: v for k, v in source.__dict__.items() if k in BooleanOperationRow.__dataclass_fields__})
+        duplicate = copy.deepcopy(source)
         duplicate.index = source.index + 1
         duplicate.name = f"{source.name}_copy" if source.name else ""
         duplicate.errors = []

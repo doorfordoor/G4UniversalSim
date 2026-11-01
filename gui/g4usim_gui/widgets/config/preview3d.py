@@ -186,8 +186,9 @@ class Preview3DMixin:
 
         with_source: draw the Source editor's source over it (the run's source in generated mode)."""
         source = None
+        source_messages = []
         if with_source:
-            source = build_preview_source(self.source_editor, [], [])
+            source = build_preview_source(self.source_editor, source_messages, source_messages)
         if hasattr(self.preview3d_widget, "set_show_source"):
             self.preview3d_widget.set_show_source(self.preview3d_show_source.isChecked())
         self.preview3d_widget.render_backend_mesh(mesh, source)
@@ -199,6 +200,7 @@ class Preview3DMixin:
             ui_text("This is the geometry built by the Geant4 backend, not the editor approximation."),
             ui_format("Source: {path}", path=mesh.source_file),
             ui_format("Solids: {solids}", solids=", ".join(solids)),
+            *source_messages,
             *(f"{volume.path}  {volume.solid}  {volume.material}  {volume.cubic_volume_mm3:.6g} mm3"
               for volume in mesh.volumes[:200]),
         ]))

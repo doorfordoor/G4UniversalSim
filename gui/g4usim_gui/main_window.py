@@ -34,7 +34,7 @@ class MainWindow(ShellMixin, ProjectMixin, RunMixin, ContentMixin, DiagnosticsMi
         super().__init__()
         self.setWindowTitle("G4UniversalSim Runner")
         self.resize(1500, 950)
-        self.setMinimumSize(1200, 760)
+        self.setMinimumSize(760, 480)
 
         self.project = self._default_project()
         self.project_file: Path | None = None
@@ -79,13 +79,37 @@ class MainWindow(ShellMixin, ProjectMixin, RunMixin, ContentMixin, DiagnosticsMi
         if setup_recovery is not None:
             setup_recovery()
         self.workspace_layout.restore()
+        self._setup_accessibility()
         self.config_builder_page._preview_activation_ready = True
         if self.workspace_layout.last_restore == "default":
             self.statusBar().showMessage(ui_text("Ready"), 5000)
 
+    def resizeEvent(self, event) -> None:  # noqa: N802
+        super().resizeEvent(event)
+        if hasattr(self, 'content_scroll'):
+            self.start_page.adapt_to_width(self.content_scroll.viewport().width())
+
+    def open_new_simulation_wizard(self) -> None:
+        # Keep ContentMixin's sole spec/apply/transaction path. Repeated shortcuts
+        # while its nested event loop is active must not open another wizard.
+        if getattr(self, '_f8_wizard_open', False):
+            dialog = QApplication.activeModalWidget()
+            if dialog is not None and dialog.parentWidget() is self:
+                dialog.raise_()
+                dialog.activateWindow()
+            return
+        self._f8_wizard_open = True
+        try:
+            ContentMixin.open_new_simulation_wizard(self)
+        finally:
+            self._f8_wizard_open = False
+
     def _connect_signals(self) -> None:
         self.start_page.newSimulationRequested.connect(self.open_new_simulation_wizard)
+        self.start_page.blankSimulationRequested.connect(self.new_blank_project)
         self.start_page.openProjectRequested.connect(self.open_project)
+        self.start_page.environmentRequested.connect(self.show_environment_settings)
+        self.start_page.importBundleRequested.connect(lambda: self._experiment_action("import"))
         self.start_page.recentProjectRequested.connect(self._open_recent_project)
         self.start_page.exampleRequested.connect(self.open_example)
         self.project_page.projectChanged.connect(self._update_project_from_page)
@@ -203,4 +227,6 @@ class MainWindow(ShellMixin, ProjectMixin, RunMixin, ContentMixin, DiagnosticsMi
         save_state(state)
         self.workspace_layout.save()
         QApplication.instance().removeEventFilter(self._history_filter)
+        if hasattr(self, "accessibility_controller"):
+            self.accessibility_controller.close()
         super().closeEvent(event)

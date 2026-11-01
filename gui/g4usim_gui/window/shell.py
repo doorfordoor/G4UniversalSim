@@ -3,11 +3,13 @@
 from __future__ import annotations
 
 from PySide6.QtCore import QSettings, QSize, Qt
-from PySide6.QtGui import QActionGroup
+from PySide6.QtGui import QAction, QActionGroup
 from PySide6.QtWidgets import (
     QApplication,
     QButtonGroup,
     QFrame,
+    QScrollArea,
+    QSizePolicy,
     QHBoxLayout,
     QLabel,
     QToolButton,
@@ -150,7 +152,7 @@ class ShellMixin:
 
         page_header = QFrame()
         page_header.setObjectName("pageHeader")
-        page_header.setFixedHeight(66)
+        page_header.setMinimumHeight(66)
         header_layout = QHBoxLayout(page_header)
         header_layout.setContentsMargins(24, 10, 16, 10)
         header_layout.setSpacing(8)
@@ -159,14 +161,20 @@ class ShellMixin:
         heading_layout.setSpacing(1)
         self.page_title = QLabel(page_specs[0][1])
         self.page_title.setObjectName("pageTitle")
+        self.page_title.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Preferred)
         self.page_subtitle = QLabel(page_specs[0][2])
         self.page_subtitle.setObjectName("pageSubtitle")
+        self.page_subtitle.setWordWrap(True)
+        self.page_subtitle.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Preferred)
         heading_layout.addWidget(self.page_title)
         heading_layout.addWidget(self.page_subtitle)
         header_layout.addLayout(heading_layout, 1)
 
         self.project_context = QLabel(self.tr("Project: demo"))
         self.project_context.setProperty("uiRole", "contextChip")
+        self.project_context.setMaximumWidth(210)
+        self.project_context.setWordWrap(True)
+        self.project_context.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         self.run_context = QLabel(self.tr("Idle"))
         self.run_context.setProperty("uiRole", "statusChip")
         header_layout.addWidget(self.project_context, 0, Qt.AlignVCenter)
@@ -200,10 +208,28 @@ class ShellMixin:
             self.page_stack.addWidget(page)
 
         content_layout.addWidget(page_header)
-        content_layout.addWidget(self.page_stack, 1)
+        workspace_viewport = QWidget(content)
+        viewport_layout = QVBoxLayout(workspace_viewport)
+        viewport_layout.setContentsMargins(0, 0, 0, 0)
+        viewport_layout.addWidget(self.page_stack)
+        self.content_scroll = QScrollArea(content)
+        self.content_scroll.setObjectName('workspaceContentScroll')
+        self.content_scroll.setFrameShape(QFrame.NoFrame)
+        self.content_scroll.setWidgetResizable(True)
+        self.content_scroll.setWidget(workspace_viewport)
+        content_layout.addWidget(self.content_scroll, 1)
         shell_layout.addWidget(sidebar)
         shell_layout.addWidget(content, 1)
-        self.setCentralWidget(shell)
+        # Retain the same shell/docks/pages. A viewport provides a last-resort
+        # scroll path when their real minimum sizes exceed a small desktop.
+        self.shell_scroll = QScrollArea(self)
+        self.shell_scroll.setObjectName('workspaceShellScroll')
+        self.shell_scroll.setFrameShape(QFrame.NoFrame)
+        self.shell_scroll.setWidgetResizable(True)
+        self.shell_scroll.setWidget(shell)
+        self.setCentralWidget(self.shell_scroll)
+        self.sidebar = sidebar
+        self.page_header = page_header
 
         # Keep the historical attribute available to internal navigation helpers.
         self.tabs = self.page_stack
@@ -241,6 +267,9 @@ class ShellMixin:
 
     def _create_menu(self) -> None:
         file_menu = self.menuBar().addMenu("File")
+        blank_action = file_menu.addAction("New blank simulation")
+        blank_action.setShortcut("Ctrl+Shift+N")
+        blank_action.triggered.connect(self.new_blank_project)
         wizard_action = file_menu.addAction("New Simulation...")
         wizard_action.setShortcut("Ctrl+N")
         wizard_action.triggered.connect(self.open_new_simulation_wizard)
@@ -318,6 +347,103 @@ class ShellMixin:
             self._language_action_group.addAction(action)
             self._language_actions[code] = action
         self.language_button.setMenu(language_menu)
+        self._create_accessibility_actions()
+
+    def _create_accessibility_actions(self) -> None:
+        menu = self.menuBar().addMenu(ui_text("Navigate"))
+        menu.setProperty('i18nSource_menuTitle', 'Navigate')
+        self.navigation_menu = menu
+        self.page_navigation_actions = []
+        for index, (_page, title, _subtitle, _icon) in enumerate(self._page_specs):
+            action = QAction(ui_text(title), self)
+            action.setShortcut(f'Ctrl+Alt+{index + 1}')
+            action.triggered.connect(lambda _checked=False, i=index: self.focus_page(i))
+            menu.addAction(action)
+            self.page_navigation_actions.append(action)
+        menu.addSeparator()
+        self.focus_next_action = menu.addAction(ui_text("Focus next workspace region"))
+        self.focus_next_action.setProperty('i18nSource_actionText', 'Focus next workspace region')
+        self.focus_next_action.setShortcut('F6')
+        self.focus_next_action.triggered.connect(lambda: self.focus_workspace_region())
+        self.focus_previous_action = menu.addAction(ui_text("Focus previous workspace region"))
+        self.focus_previous_action.setProperty('i18nSource_actionText', 'Focus previous workspace region')
+        self.focus_previous_action.setShortcut('Shift+F6')
+        self.focus_previous_action.triggered.connect(lambda: self.focus_workspace_region(backward=True))
+        self.environment_action = menu.addAction(ui_text("Environment setup..."))
+        self.environment_action.setProperty('i18nSource_actionText', 'Environment setup...')
+        self.environment_action.setShortcut('Ctrl+Alt+E')
+        self.environment_action.triggered.connect(self.show_environment_settings)
+        self.installation_action = menu.addAction(ui_text("Open environment installer..."))
+        self.installation_action.setProperty('i18nSource_actionText', 'Open environment installer...')
+        self.installation_action.setShortcut('Ctrl+Alt+I')
+        self.installation_action.triggered.connect(self.show_environment_installer)
+        self.import_bundle_action = menu.addAction(ui_text("Import configuration bundle..."))
+        self.import_bundle_action.setProperty('i18nSource_actionText', 'Import configuration bundle...')
+        self.import_bundle_action.setShortcut('Ctrl+Alt+O')
+        self.import_bundle_action.triggered.connect(lambda: self._experiment_action('import'))
+
+    def _setup_accessibility(self) -> None:
+        from g4usim_gui.core.accessibility import AccessibilityController, name_control
+        self.accessibility_controller = AccessibilityController(self)
+        page = self.config_builder_page
+        for widget, source in ((page.materials_table, 'Materials table'), (page.geometry_table, 'Geometry volumes table'),
+                               (page.layer_table, 'Geometry layers table'), (page.boolean_table, 'Boolean operations table')):
+            name_control(widget, source)
+        self._refresh_accessibility()
+
+    def _refresh_accessibility(self) -> None:
+        controller = getattr(self, 'accessibility_controller', None)
+        if controller is not None:
+            controller.refresh()
+        for index, button in enumerate(self._nav_buttons):
+            title = self._page_specs[index][1]
+            button.setAccessibleName(ui_text(title))
+            button.setAccessibleDescription(ui_format('Open {page}. Shortcut: Ctrl+Alt+{number}.', page=ui_text(title), number=index + 1))
+        for action, (_page, title, _subtitle, _icon) in zip(getattr(self, 'page_navigation_actions', ()), self._page_specs):
+            action.setText(ui_text(title))
+        self.theme_button.setAccessibleName(ui_text('Theme'))
+        self.language_button.setAccessibleName(ui_text('Language'))
+
+    def focus_page(self, index: int) -> None:
+        from g4usim_gui.core.accessibility import focus_first
+        if 0 <= index < len(self._page_specs):
+            self.page_stack.setCurrentIndex(index)
+            focus_first(self._page_specs[index][0])
+
+    def focus_workspace_region(self, *, backward=False) -> None:
+        from g4usim_gui.core.accessibility import focus_first, ensure_focus_visible
+        regions = [self.sidebar, self.page_stack.currentWidget()]
+        for dock in self.workspace_layout.docks.values():
+            if dock.isVisible() and dock.widget() not in regions:
+                regions.append(dock.widget())
+        regions.append(self.page_header)
+        focused = QApplication.focusWidget()
+        current = next((i for i, root in enumerate(regions) if root is focused or root.isAncestorOf(focused)), -1) if focused else -1
+        direction = -1 if backward else 1
+        for offset in range(1, len(regions) + 1):
+            index = (current + direction * offset) % len(regions)
+            if index == 0:
+                button = self._nav_buttons[self.page_stack.currentIndex()]
+                button.setFocus(Qt.ShortcutFocusReason)
+                ensure_focus_visible(button)
+                return
+            if focus_first(regions[index]) is not None:
+                return
+
+    def show_environment_settings(self) -> None:
+        existing = getattr(self, '_environment_dialog', None)
+        if existing is not None and existing.isVisible():
+            existing.raise_()
+            existing.activateWindow()
+            return
+        self._experiment_action('environment')
+
+    def show_environment_installer(self) -> None:
+        # I1's own button creates/reuses I2 and connects publication to reprobe.
+        self.show_environment_settings()
+        dialog = getattr(self, '_environment_dialog', None)
+        if dialog is not None and dialog.isVisible() and dialog.install_button.isEnabled():
+            dialog.install_button.click()
 
     def _set_palette(self, palette: str) -> None:
         if palette not in ("B", "K"):
@@ -372,6 +498,7 @@ class ShellMixin:
         environment_dialog = getattr(self, "_environment_dialog", None)
         if environment_dialog is not None:
             environment_dialog.retranslate_ui()
+        self._refresh_accessibility()
 
     def _set_run_chip(self, state: str, role: str) -> None:
         """Header status chip: a dot and the state in words; colour only repeats what the text says."""

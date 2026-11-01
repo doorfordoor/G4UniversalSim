@@ -21,9 +21,12 @@ from PySide6.QtWidgets import (
 )
 
 from g4usim_gui.core.i18n import ui_format, ui_text
+from g4usim_gui.core.nist_elements import CATALOG_GEANT4_VERSION, custom_elements, search_elements
+from g4usim_gui.widgets.qt_data import combo_data
 from g4usim_gui.editors.geometry_editor_model import geometry_material_refs
 from g4usim_gui.editors.material_editor_model import (
     MaterialDocument,
+    component_source,
     add_default_row,
     delete_row,
     duplicate_row,
@@ -63,6 +66,15 @@ class MaterialsEditor(QWidget):
         self.material_enabled = QCheckBox("Enabled")
         self.material_components = QPlainTextEdit()
         self.material_components.setPlaceholderText("One component per line, e.g.\nG4_Si:0.7\nG4_O:0.3")
+        self.element_search = QLineEdit()
+        self.element_search.setPlaceholderText(ui_text("Search element symbol, G4_ alias, atomic number or custom name"))
+        self.element_choices = QComboBox()
+        self.insert_element_button = QPushButton(ui_text("Insert element component"))
+        self.element_catalog_label = QLabel(ui_format(
+            "Element catalog: Geant4 {version}; custom definitions take priority. Backend validates again.", version=CATALOG_GEANT4_VERSION))
+        self.element_catalog_label.setWordWrap(True)
+        self.element_source_label = QLabel()
+        self.element_source_label.setWordWrap(True)
         self.material_notes = QPlainTextEdit()
         self.material_notes.setReadOnly(True)
         layout = QVBoxLayout(self)
@@ -100,6 +112,11 @@ class MaterialsEditor(QWidget):
         detail_layout.addWidget(self.material_components, 2, 1, 1, 3)
         detail_layout.addWidget(QLabel("Status"), 3, 0)
         detail_layout.addWidget(self.material_notes, 3, 1, 1, 3)
+        detail_layout.addWidget(self.element_search, 4, 0, 1, 2)
+        detail_layout.addWidget(self.element_choices, 4, 2)
+        detail_layout.addWidget(self.insert_element_button, 4, 3)
+        detail_layout.addWidget(self.element_source_label, 5, 0, 1, 4)
+        detail_layout.addWidget(self.element_catalog_label, 6, 0, 1, 4)
         self.material_components.setMinimumHeight(90)
         self.material_notes.setMinimumHeight(70)
         layout.addWidget(detail, 1)
@@ -128,10 +145,18 @@ class MaterialsMixin:
         self.material_density.textEdited.connect(self._update_selected_material_from_detail)
         self.material_components.textChanged.connect(self._update_selected_material_from_detail)
         self.material_enabled.stateChanged.connect(self._update_selected_material_from_detail)
+        self.element_search.textChanged.connect(self._refresh_element_choices)
+        self.element_choices.currentIndexChanged.connect(self._show_element_source)
+        self.insert_element_button.clicked.connect(self._insert_element_component)
 
     def reload_materials(self) -> None:
         path = self.materials_config.text().strip()
-        self.materials_summary = parse_materials(path) if path else None
+        if not path:
+            # Reload/Revert has no source to read; preserve even invalid in-memory drafts.
+            self.materials_messages.setPlainText(ui_text(
+                "This material document is in memory; Reload/Revert needs a source file. Your edits are retained."))
+            return
+        self.materials_summary = parse_materials(path)
         if self.materials_summary is not None:
             self.materials_summary._f5_source_anchor = str(Path(path).expanduser().resolve())
         self.materials_messages.clear()
@@ -158,6 +183,11 @@ class MaterialsMixin:
         return self.geometry_summary.material_refs if self.geometry_summary else None
 
     def _populate_material_editor(self) -> None:
+        if not self.material_document.source_path and not self.material_document.raw_source_text:
+            # Project projection can install a new independent document after Reload.
+            # Old source presentation belongs to the prior document, not this one.
+            self.materials_summary = None
+            self.materials_raw.clear()
         refs = self._geometry_refs()
         validate_material_document(
             self.material_document,
@@ -195,6 +225,9 @@ class MaterialsMixin:
         self._select_material_row(min(self._selected_material_row, len(self.material_document.rows) - 1))
 
     def _update_material_count_label(self) -> None:
+        self._refresh_element_choices()
+        if 0 <= self._selected_material_row < len(self.material_document.rows):
+            self._show_material_notes(self.material_document.rows[self._selected_material_row])
         self.materials_count_label.setText(
             ui_format(
                 "Materials: {count} rows, {enabled} enabled | {errors} errors, {warnings} warnings | {state}",
@@ -215,6 +248,7 @@ class MaterialsMixin:
             self.material_components.clear()
             self.material_notes.setPlainText("Select a material row to edit.")
             self.material_enabled.setChecked(False)
+            self._refresh_element_choices()
             self._building = False
             return
         item = self.material_document.rows[row]
@@ -223,7 +257,16 @@ class MaterialsMixin:
         self.material_density.setText(item.density)
         self.material_enabled.setChecked(item.enabled)
         self.material_components.setPlainText(item.components_text)
+        self._show_material_notes(item)
+        self._refresh_element_choices()
+        restore_detail_raw(self, "material", item)
+        self._building = False
+
+    def _show_material_notes(self, item) -> None:
         notes = []
+        for component in item.components:
+            source = component_source(component.name, item.mode, self.material_document)
+            notes.append(self._component_source_text(component.name, source))
         if item.notes:
             notes.append(item.notes)
         notes.extend(f"[ERROR] {text}" for text in item.errors)
@@ -231,8 +274,6 @@ class MaterialsMixin:
         if not notes:
             notes.append("[INFO] OK")
         self.material_notes.setPlainText("\n".join(notes))
-        restore_detail_raw(self, "material", item)
-        self._building = False
 
     def _on_material_selection_changed(self) -> None:
         self._select_material_row(self.materials_table.currentRow())
@@ -297,6 +338,59 @@ class MaterialsMixin:
     def _validate_materials_editor(self) -> None:
         validate_material_document(self.material_document, geometry_material_refs=self._geometry_refs())
         self._populate_material_editor()
+
+    def _component_source_text(self, name, source) -> str:
+        labels = {
+            "custom_element": "Custom element [{section}] (retained source definition)",
+            "nist_element": "NIST element {name} (automatic; no declaration required)",
+            "custom_material": "Defined material {name} (material density)",
+            "nist_material": "NIST material {name} (material density)",
+            "missing": "Unresolved component {name}",
+        }
+        return name + ": " + ui_format(labels[source.kind], name=source.name, section=source.section)
+
+    def _refresh_element_choices(self, *_args) -> None:
+        selected = combo_data(self.element_choices)
+        self.element_choices.blockSignals(True)
+        self.element_choices.clear()
+        choices = search_elements(self.element_search.text(), elements=custom_elements(self.material_document.preserved_sections))
+        for source in choices:
+            self.element_choices.addItem(source.name, source.name)
+        index = self.element_choices.findData(selected) if selected is not None else -1
+        self.element_choices.setCurrentIndex(index if index >= 0 else (0 if choices else -1))
+        self.element_choices.blockSignals(False)
+        self._show_element_source()
+
+    def _show_element_source(self, *_args) -> None:
+        row = self._selected_material_row
+        valid = 0 <= row < len(self.material_document.rows)
+        mode = self.material_document.rows[row].mode if valid else ""
+        allowed = mode in {"mass_fraction", "atom_count"}
+        token = combo_data(self.element_choices)
+        self.insert_element_button.setEnabled(allowed and bool(token))
+        self.insert_element_button.setText(ui_text("Insert element component"))
+        self.element_search.setPlaceholderText(ui_text("Search element symbol, G4_ alias, atomic number or custom name"))
+        self.element_catalog_label.setText(ui_format(
+            "Element catalog: Geant4 {version}; custom definitions take priority. Backend validates again.", version=CATALOG_GEANT4_VERSION))
+        if not allowed:
+            text = ui_text("Select mass_fraction or atom_count to insert elements; volume_fraction requires materials with density.")
+        elif token:
+            source = component_source(token, mode, self.material_document)
+            text = self._component_source_text(token, source)
+        else:
+            text = ui_text("No matching element in the catalog or custom definitions.")
+        self.element_source_label.setText(text)
+
+    @edit_operation('Insert element component')
+    def _insert_element_component(self) -> None:
+        row = self._selected_material_row
+        token = combo_data(self.element_choices)
+        if not token or not (0 <= row < len(self.material_document.rows)):
+            return
+        if self.material_document.rows[row].mode not in {"mass_fraction", "atom_count"}:
+            return
+        text = self.material_components.toPlainText().rstrip()
+        self.material_components.setPlainText((text + "\n" if text else "") + token + ":1")
 
     def _component_preview(self, text: str) -> str:
         normalized = "; ".join(line.strip() for line in text.replace(",", "\n").splitlines() if line.strip())

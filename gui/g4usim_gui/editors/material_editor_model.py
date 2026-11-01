@@ -2,6 +2,11 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
+import math
+import re
+
+from g4usim_gui.core.i18n import ui_format
+from g4usim_gui.core.nist_elements import ComponentSource, NIST_MATERIALS, custom_elements, resolve_component
 
 from g4usim_gui.core.diagnostics import (
     EditorLocation, collect_diagnostics, emit_diagnostic, extend_diagnostics, reset_diagnostics, source_location,
@@ -104,13 +109,13 @@ def _mode_from_kind(kind: str) -> str:
         return "nist"
     if kind in {"mass_fraction", "volume_fraction", "atom_count"}:
         return kind
-    return "mass_fraction"
+    return kind
 
 
 def parse_components_text(text: str, mode: str) -> list[MaterialComponent]:
     kind = "count" if mode == "atom_count" else "fraction" if mode in {"mass_fraction", "volume_fraction"} else "unknown"
     components: list[MaterialComponent] = []
-    normalized = text.replace(",", "\n")
+    normalized = text.replace(",", "\n").replace(";", "\n")
     for raw_line in normalized.splitlines():
         line = raw_line.strip()
         if not line:
@@ -216,6 +221,9 @@ def validate_material_document(document: MaterialDocument, *, geometry_material_
             key = row.name.lower()
             names[key] = names.get(key, 0) + 1
             enabled_names.add(row.name)
+        if any(c in row.name for c in "[]\r\n=;#"):
+            _issue(row, 'materials.name.invalid', 'error', ui_format(
+                "Material name contains INI delimiters: {name}", name=row.name), 'name')
         if row.mode not in MATERIAL_MODES:
             _issue(row, 'materials.mode.unsupported', 'error', f"unsupported mode '{row.mode}'", 'mode')
         _validate_density(row)
@@ -252,7 +260,8 @@ def validate_material_document(document: MaterialDocument, *, geometry_material_
 def _dependency_cycles(document: MaterialDocument) -> list[str]:
     """Materials built from each other in a loop, which the backend refuses (MaterialManager::BuildMaterial)."""
     rows = {row.name.lower(): row for row in document.rows if row.enabled and row.name and row.mode != "nist"}
-    uses = {key: [c.name.lower() for c in row.components if c.name.lower() in rows] for key, row in rows.items()}
+    uses = {key: [c.name.lower() for c in row.components if c.name.lower() in rows
+                  and (row.mode == "volume_fraction" or c.name.lower() not in custom_elements(document.preserved_sections))] for key, row in rows.items()}
     errors: list[str] = []
     state: dict[str, str] = {}
 
@@ -300,39 +309,83 @@ def _issue(owner, code: str, severity: str, message: str, field: str, *,
                     unavailable_reason=reason, append=False)
 
 
+# CLHEP SystemOfUnits.h used by Geant4 11.3/11.4: mm, ns, MeV, eplus.
+# Preserve MaterialCommandParser::ParseDensity's value * mass / volume order;
+# collapsing mass/volume first would hide overflow of its multiplication.
+_CLHEP_JOULE = 1.e-6 / 1.602176634e-19
+_CLHEP_KG = _CLHEP_JOULE * 1.e9 * 1.e9 / (1.e3 * 1.e3)
+_CLHEP_G = 1.e-3 * _CLHEP_KG
+_CLHEP_MG = 1.e-3 * _CLHEP_G
+_DENSITY_UNITS = {
+    'g/cm3': (_CLHEP_G, 1000.), 'g/cm^3': (_CLHEP_G, 1000.),
+    'kg/m3': (_CLHEP_KG, 1.e9), 'kg/m^3': (_CLHEP_KG, 1.e9),
+    'mg/cm3': (_CLHEP_MG, 1000.), 'mg/cm^3': (_CLHEP_MG, 1000.),
+}
+_DENSITY_NUMBER = re.compile(
+    r'[+-]?(?:0[xX](?:[0-9a-fA-F]+(?:\.[0-9a-fA-F]*)?|\.[0-9a-fA-F]+)(?:[pP][+-]?[0-9]+)?'
+    r'|(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)(?:[eE][+-]?[0-9]+)?)')
+
+
+def density_internal_value(text: str) -> float | None:
+    """Mirror material unit grammar and reject nonfinite/zero conversions.
+
+    The generic Utils/UnitParser is not the material entry point. Materials use
+    MaterialCommandParser::ParseNumberUnit: case-insensitive unit, optional *,
+    strtod numeric prefix, then ParseDensity's exact two arithmetic operations.
+    """
+    token = text.strip()
+    match = _DENSITY_NUMBER.match(token)
+    if match is None:
+        return None
+    unit = token[match.end():].strip()
+    if unit.startswith('*'):
+        unit = unit[1:].strip()
+    factors = _DENSITY_UNITS.get(unit.lower())
+    if factors is None:
+        return None
+    try:
+        number = match.group()
+        value = float.fromhex(number) if '0x' in number.lower() else float(number)
+    except (ValueError, OverflowError):
+        return None
+    # A positive numeric literal that underflows to zero must not pass.
+    # Do not reject all subnormals: the actual Windows parser accepts them.
+    if not math.isfinite(value) or value <= 0:
+        return None
+    product = value * factors[0]
+    result = product / factors[1]
+    if not math.isfinite(product) or not math.isfinite(result) or result <= 0:
+        return None
+    return result
+
+
 def _validate_density(row: MaterialRow) -> None:
     if row.mode == "nist":
         if row.density:
             _issue(row, 'materials.density.ignored', 'warning', "density is ignored for nist rows", 'density')
         return
     if row.mode == "volume_fraction" and row.density.lower() in {"", "auto"}:
-        return   # the backend computes it from the components (no density means auto, as in MaterialIniReader)
+        return
     if not row.density:
         _issue(row, 'materials.density.required', 'error', "density is required", 'density')
         return
-    first = row.density.split()[0]
-    try:
-        value = float(first)
-    except ValueError:
-        _issue(row, 'materials.density.numeric', 'error', "density should start with a positive number or be auto for volume_fraction", 'density')
-        return
-    if value <= 0.0:
-        _issue(row, 'materials.density.positive', 'error', "density must be > 0", 'density')
+    if density_internal_value(row.density) is None:
+        _issue(row, 'materials.density.invalid', 'error', ui_format(
+            "Density must be finite and positive with a supported unit (g/cm3, kg/m3, mg/cm3): {value}", value=row.density), 'density')
 
 
 def _validate_components(row: MaterialRow, document: MaterialDocument) -> None:
     if row.mode == "nist":
         if row.components:
             _issue(row, 'materials.components.ignored', 'warning', "components are ignored for nist rows", 'components_text')
-        if not (row.name.startswith("G4_") or row.name in NIST_QUICK_LIST):
-            target = row.nist_name.strip() or row.name
-            if not target.startswith("G4_") and target not in NIST_QUICK_LIST:
-                # The alias's retained NIST target has no dedicated editor control.
-                source = (source_location(document.source_path, document.raw_source_text)
-                          if row.nist_name.strip() and document.source_path else None)
-                _issue(row, 'materials.nist.unlisted', 'warning', "nist target is not in the quick NIST list",
-                       'nist_name' if row.nist_name.strip() else 'name',
-                       reason='unsupported_editor' if row.nist_name.strip() else '', source=source)
+        target = row.nist_name.strip() or row.name
+        if target not in NIST_MATERIALS:
+            editable_target = target == row.name and row.name.startswith('G4_')
+            _issue(row, 'materials.nist.unknown', 'error', ui_format(
+                "Unknown NIST material in the Geant4 catalog: {name}", name=target),
+                'name' if editable_target else 'nist_name',
+                reason='' if editable_target else 'unsupported_editor',
+                source=source_location(document.source_path, document.raw_source_text) if not editable_target and document.source_path else None)
         return
     if not row.components:
         _issue(row, 'materials.components.required', 'error', "at least one component is required", 'components_text')
@@ -345,33 +398,46 @@ def _validate_components(row: MaterialRow, document: MaterialDocument) -> None:
             _issue(row, 'materials.component.value_required', 'error', f"component line {index}: value is required", 'components_text', facts={'component': index})
             continue
         try:
-            value = float(component.value)
+            if not re.fullmatch(r'[+-]?(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)(?:[eE][+-]?[0-9]+)?%?', component.value):
+                raise ValueError(component.value)
+            value = float(component.value[:-1]) / 100 if row.mode != "atom_count" and component.value.endswith("%") else float(component.value)
         except ValueError:
             _issue(row, 'materials.component.numeric', 'error', f"component line {index}: value must be numeric", 'components_text', facts={'component': index})
+            continue
+        if not math.isfinite(value):
+            _issue(row, 'materials.component.finite', 'error', ui_format(
+                "Component {name} requires a finite value.", name=component.name), 'components_text')
             continue
         if value <= 0.0:
             _issue(row, 'materials.component.positive', 'error', f"component line {index}: value must be > 0", 'components_text', facts={'component': index})
         values.append(value)
-        if row.mode == "atom_count" and abs(value - round(value)) > 1.0e-9:
+        if row.mode == "atom_count" and (value != math.floor(value) or value > 2147483647):
             _issue(row, 'materials.component.integer', 'error', f"component line {index}: atom_count value must be an integer", 'components_text', facts={'component': index})
-        if row.mode == "volume_fraction":
-            _validate_volume_component(row, component, document)
+        source = component_source(component.name, row.mode, document)
+        if source.kind == "missing" or (row.mode == "volume_fraction" and source.kind.endswith("element")):
+            _issue(row, 'materials.component.unresolved', 'error', ui_format(
+                "Component {name} cannot resolve in {mode}; atom_count needs elements and volume_fraction needs materials with density.",
+                name=component.name, mode=row.mode), 'components_text', facts={'component_name': component.name})
     if row.mode in {"mass_fraction", "volume_fraction"} and values:
         total = sum(values)
-        if abs(total - 1.0) > FRACTION_TOLERANCE:
+        if not math.isfinite(total) or abs(total - 1.0) > FRACTION_TOLERANCE:
             _issue(row, 'materials.components.total', 'error', f"{row.mode} components must sum to 1.0; got {total:g}", 'components_text')
 
 
-def _validate_volume_component(row: MaterialRow, component: MaterialComponent, document: MaterialDocument) -> None:
-    defined = {item.name for item in document.rows if item.enabled and item.name and item.name != row.name}
-    if component.name in defined:
-        return
-    if component.name in NIST_QUICK_LIST:
-        return
-    if component.name.startswith("G4_"):
-        _issue(row, 'materials.component.unlisted', 'warning', f"component '{component.name}' is a G4_ name outside the quick list; verify it is a material", 'components_text', facts={'component_name': component.name})
-        return
-    _issue(row, 'materials.component.undefined', 'error', f"volume_fraction component '{component.name}' is not defined as a material", 'components_text', facts={'component_name': component.name})
+def component_source(name: str, mode: str, document: MaterialDocument) -> ComponentSource:
+    return resolve_component(name, mode, elements=custom_elements(document.preserved_sections),
+                             materials={r.name for r in document.rows if r.enabled},
+                             nist_requests=preserved_nist_materials(document))
+
+
+def preserved_nist_materials(document: MaterialDocument) -> set[str]:
+    from g4usim_gui.parsers.ini_light_parser import parse_ini_light_text
+    result = set()
+    parsed = parse_ini_light_text("\n".join(document.preserved_sections), source_path=document.source_path)
+    for section in parsed.sections:
+        if section.name.lower() == "nist":
+            result.update(n.strip() for n in section.values.get("materials", "").split(",") if n.strip())
+    return result
 
 
 def generate_materials_ini_text(document: MaterialDocument) -> str:
