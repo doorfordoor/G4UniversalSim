@@ -13,7 +13,9 @@ WINDOWS_LAYOUT_FIXTURE = "build_vs2026/Release/G4UniversalSim.exe"  # platform-p
 
 def main():
     with tempfile.TemporaryDirectory(prefix="g4-install-layout-") as directory:
-        root = Path(directory)
+        # Windows TEMP may use an 8.3 alias; workspace discovery returns
+        # canonical paths, so compare against the canonical fixture root.
+        root = Path(directory).resolve()
         native_name = "G4UniversalSim.exe" if sys.platform == "win32" else "G4UniversalSim"
         other_name = "G4UniversalSim" if sys.platform == "win32" else "G4UniversalSim.exe"
         binary = root / "bin" / native_name
