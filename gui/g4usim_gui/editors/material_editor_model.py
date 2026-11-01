@@ -359,6 +359,21 @@ def density_internal_value(text: str) -> float | None:
     return result
 
 
+def _density_failure_code(text: str) -> str:
+    """Keep established F4 categories without weakening density acceptance."""
+    match = _DENSITY_NUMBER.match(text.strip())
+    if match is None:
+        return 'materials.density.numeric'
+    try:
+        number = match.group()
+        value = float.fromhex(number) if '0x' in number.lower() else float(number)
+    except (ValueError, OverflowError):
+        return 'materials.density.invalid'
+    if math.isfinite(value) and value <= 0:
+        return 'materials.density.positive'
+    return 'materials.density.invalid'
+
+
 def _validate_density(row: MaterialRow) -> None:
     if row.mode == "nist":
         if row.density:
@@ -370,8 +385,15 @@ def _validate_density(row: MaterialRow) -> None:
         _issue(row, 'materials.density.required', 'error', "density is required", 'density')
         return
     if density_internal_value(row.density) is None:
-        _issue(row, 'materials.density.invalid', 'error', ui_format(
-            "Density must be finite and positive with a supported unit (g/cm3, kg/m3, mg/cm3): {value}", value=row.density), 'density')
+        code = _density_failure_code(row.density)
+        if code == 'materials.density.numeric':
+            message = "density should start with a positive number or be auto for volume_fraction"
+        elif code == 'materials.density.positive':
+            message = "density must be > 0"
+        else:
+            message = ui_format(
+                "Density must be finite and positive with a supported unit (g/cm3, kg/m3, mg/cm3): {value}", value=row.density)
+        _issue(row, code, 'error', message, 'density')
 
 
 def _validate_components(row: MaterialRow, document: MaterialDocument) -> None:
@@ -380,7 +402,7 @@ def _validate_components(row: MaterialRow, document: MaterialDocument) -> None:
             _issue(row, 'materials.components.ignored', 'warning', "components are ignored for nist rows", 'components_text')
         target = row.nist_name.strip() or row.name
         if target not in NIST_MATERIALS:
-            editable_target = target == row.name and row.name.startswith('G4_')
+            editable_target = not row.nist_name.strip() or (target == row.name and row.name.startswith('G4_'))
             _issue(row, 'materials.nist.unknown', 'error', ui_format(
                 "Unknown NIST material in the Geant4 catalog: {name}", name=target),
                 'name' if editable_target else 'nist_name',

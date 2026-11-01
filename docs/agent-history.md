@@ -665,3 +665,15 @@ Windows原生26图、4次host自然退出0/close_drained=true；布局拖动/缩
 本次独审发现密度单位/换算溢出、几何参数分隔/placement互斥/单位语义、跨INI→macro EM替换冲突及来源恢复边界；各自保留首错并在最终验收前复核。测试入口包括test_solid_registry、test_j2_sources_physics、test_j2_resource_bundle、smoke_j2_blank/materials/geometry/run_editors/workspace及F8专项；完整矩阵和实窗证据另记，不在本条提前宣布关闭。
 
 F8 工作区滚动容器不得让隐藏堆栈页的尺寸决定当前布局：WorkspacePageStack 按实际中央页/占位页提供尺寸建议，仅为当前页保留可读横向宽度，纵向仍允许内容滚动，使日志 dock 保持正常分配。导航和恢复须刷新几何建议；不得通过隐藏同伴 dock、重建控件或放宽 F4 字段/日志可见性断言消除裁切。回归 smoke_f4_layout、smoke_workspace_layout 与 F8 自然导航/焦点专项；旧日志中心裁切及第一候选中央页过窄失败保留。
+
+## 2026-11-02 J2/F8 首轮验收修复
+
+首轮候选56b689f实际完成Windows六份正式报告：300次执行、286通过/14失败，全部有v3断言且总数179468；严格门禁失败。GUI报告git_dirty=true的73条旧长路径删除表象保持原件，子进程必须继承core.longpaths=true并自己确认clean。真实M0/Linux CI失败，后续Linuxprofile未运行；安装及冻结桌面成功不能代替功能矩阵。首轮原生150%发现保留dock后切项目，FocusIn发生在中央页临时零尺寸时，布局完成后字段仍完全不可见；原证据保留。
+
+core/accessibility.py在同步显露之外增加由controller所有的单次计时器，等待布局后补一次既有最小平移；弱引用、Qt对象有效性、当前焦点、owned、可见/启用和关闭守卫缺一不可。新FocusIn取消旧任务，foreign窗口不得滚主窗；祖先布局变化可去抖但不能无限重入或强制滚动归零。smoke_f8_accessibility保留原280入口，新增自然retained-dock路径、全viewport label/field、真实已排队Project→Start覆盖及删除/foreign/业务快照边界；修订后的作者125/150各416，独审单独核验stale段真实排队，不用同页无FocusIn假覆盖。
+
+core/experiment_workflow._field_report的captured editor来源循环仅服务generated模式；external依原实际主配置/宏身份与后端Inspect工作，不清空休眠文档、不跳过真实外部输入核验。切回generated仍拒绝路径/读取状态/内容变化；完整editable bundle继续要求全部保留资源，包括休眠谱，并尊重restricted资源裁决。原smoke_f4_inspect_backend必须通过真实双版后端，永久test_k1_workflow增加模式/来源反例，旧断言不改。
+
+诊断分类由machine path产生，不从显示文案猜测。材料numeric/positive旧分类保留，新的invalid只用于新增单位/有限性/换算约束；density_internal_value接受逻辑不变。未知physics.mode沿旧unsupported，合法manual转用实际依赖校验。完整NIST目录的未知名称为error，直接名称能定位实际字段，显式别名目标不能伪装成别名名称控件。STL/replica从旧不可编辑告警迁移到experimental；box/trd登记器统一产生的code迁移、旧v1 JSON身份不重写及新记录身份差异见[结构化诊断与定位](结构化诊断与定位.md)。
+
+测试fixture必须携带wizard生成的dirty内存材料文档，不回填旧路径；scans保留全部原断言、PSTAR判据与事件数。已开放STL/parameterised应验证资源与往返，并保留真正未知字段/放置拒绝，STL单位键为file_unit。Windows GUI/integration使用完整PyVista环境，内部SKIP不能当完整3D通过；同版本同profile同v3基线逐例/总数门禁不放宽。正式launcher绑定本轮报告head/profile/源码/测试/merge指纹、EXE/merge路径和构建身份，并检查merge/helper/输入首尾SHA；114数据绑定已核验SDK版本与12项目录，不以required_complete冒充版本证明。这些是第二候选约束，尚不宣称阶段验收完成。

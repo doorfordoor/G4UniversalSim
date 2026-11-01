@@ -6,6 +6,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from g4usim_gui.core.project import G4USimProject, load_project, save_project
+from g4usim_gui.core.diagnostics import collect_diagnostics
+from g4usim_gui.core.run_editor_model import BiasRuleDefinition
 from g4usim_gui.editors.source_physics_scoring_model import SourceEditableModel, PhysicsEditableModel, validate_source_model, validate_physics_model
 from g4usim_gui.models.package_model import GeometrySettings, RunPackage
 from g4usim_gui.models.physics_model import PhysicsSettings
@@ -157,10 +159,21 @@ def test_validation_errors() -> None:
     assert any("theta_min" in item for item in bad_angle.errors)
 
 
-def test_generated_biasing_hook_is_blocked() -> None:
-    physics = PhysicsEditableModel(enable_biasing_physics=True)
+def test_generated_biasing_hook_requires_active_rule() -> None:
+    # Retained disabled rules do not satisfy the J2 active_rules requirement.
+    for rules in ([], [BiasRuleDefinition(enabled=False, volumes="Detector")]):
+        physics = PhysicsEditableModel(enable_biasing_physics=True, bias_rules=rules)
+        validate_physics_model(physics)
+        assert any("Biasing requires an enabled process rule" in item for item in physics.errors), physics.errors
+        records = collect_diagnostics(physics)
+        assert any(record.code == "physics.structured.invalid" and record.severity == "error"
+                   and record.location is not None and record.location.editor == "physics"
+                   and record.location.field == "bias_rules" for record in records), records
+
+    physics = PhysicsEditableModel(enable_biasing_physics=True,
+                                   bias_rules=[BiasRuleDefinition(volumes="Detector")])
     validate_physics_model(physics)
-    assert any("Biasing rules cannot be edited" in item for item in physics.errors), physics.errors
+    assert not physics.errors, physics.errors  # editor validation, not backend biasing verification
 
 
 def test_project_save_load(tmp_path: Path | None = None) -> None:
@@ -185,6 +198,6 @@ if __name__ == "__main__":
     test_source_nonfinite_is_blocked()
     test_rectangle_source_and_preview_only_modes()
     test_validation_errors()
-    test_generated_biasing_hook_is_blocked()
+    test_generated_biasing_hook_requires_active_rule()
     test_project_save_load()
     print("smoke_source_editor_v2: OK")

@@ -1,0 +1,19 @@
+{
+  "started_utc": "2026-11-01T15:47:10.538780+00:00",
+  "endpoint": "https://api.deepseek.com/chat/completions",
+  "body": {
+    "model": "deepseek-flash",
+    "messages": [
+      {
+        "role": "user",
+        "content": "你是已获用户授权参与的 G4UniversalSim DeepSeek 前端设计协作者。请用中文给主负责人一份能在现有 PySide6 桌面应用落地的信息架构与交互设计（2500～3500中文字，可表格，不输出完整实现代码）。本轮仅设计咨询，禁止自称实现完成、运行通过或阶段验收。请列明确待主负责人裁决事项。\n范围与优先序：J2无源创建/文档身份→NIST材料和多体积→命名多源与球面源→物理组合替换/高级编辑；F8跨页桌面体验验收。实体相关能力先有E7 SolidRegistry/统一能力元数据，其余不能因此停工；不扩大H2过滤能谱、H7微观径迹、Q2科研验证。\n提供给你的只是必要结构摘述，不是全仓库或会话。基线fc606739，branch roadmap/J2-F8-editing。已读当前关键源码：\n- gui/g4usim_gui/main_window.py: QMainWindow由Shell/Project/Run/Content/Diagnostics/Transactions/Recovery/Experiment mixin组成；1500x950、最小1200x760；Start/Project/ConfigBuilder/Run/Output/RunHistory/Scenario/EffectiveConfig/Scan九页，J1原生dock布局已交付。布局主题语言只存本机，非仿真输入。\n- window/project.py默认demo仍引用现有材料和几何文件；window/content.py open_new_simulation_wizard / apply_simulation_wizard使用候选预检及workspace_transaction。F5 EditSession/事务撤销恢复、F4结构化诊断、K1 ExperimentWorkflow/runner继续唯一拥有各自状态，禁止另造进程/事务/运行状态控制器。\n- core/wizard.py WizardSpec现有5模板(single_target/depth_dose/shielding/silicon_detector/gamma_spectrometer)，向导QWizard场景→几何→源→运行；仅NIST材料、box/tubs、point/rectangle、reference physics，其他完整编辑由编辑器承担。必须保留5模板，不可用向导简化来缩减J2范围。\n- widgets/config/materials.py有材料表(enabled/name/mode/density/components/status)、NIST快捷列表、细节表单、复制/删除/恢复来源；不能把当前NIST快捷材料列表冒充完整元素查询。\n- core/edit_sources.py保留捕获的来源文本和来源错误；source_path和raw_source_text皆空的独立文档不继承旧来源。未知字段/源错误/往返阻断不得被validate或切换页清除，外部源变动须重新加载，不自动开启source-copy。\n- editors/source_physics_scoring_model.py当前SourceEditableModel为单源编辑；PhysicsEditableModel有reference/manual、extra_modules/manual_modules/particle_cuts，字段存在不等于替换语义已实现。必须由主负责人查实际后端确认。\n请逐项设计：\n1. 空白创建/从模板创建/导入并列入口。空白指无需用户已有INI/macro/材料几何文件，可从world和空材料文档开始；“无源”是无来源文件，不是禁用粒子源。新建、取消、再次进入向导、Undo/Redo、异常恢复与旧项目隔离，项目/内存文档稳定身份与来源徽标；保存/重载/生成/K1离线导出保持身份。非法草稿允许继续编辑，不能假通过校验。请给状态迁移、确认时机、破坏性替换的差异摘要，避免自动运行。\n2. NIST元素搜索(符号/名称/原子序数)、自建元素优先、NIST来源可解释、拼写错误拒绝并给候选，自定义同位素组成保留；元素与材料分开。体积分数只用有密度材料，不能将元素当材料；缓存/版本未知不能声称后端已确认。\n3. 命名多源列表+详情：唯一身份、intensity、位置/角度/能谱、启用/复制/删除/顺序，区分按强度选源和每事件多源同发。Surface Sphere明确球面采样与球内体采样不同，不得仅改标签；源间切换保留非法草稿；多敏感体编辑/逐体积结果入口不能让普通多体积冒充独立SD响应，单探测器谱不可直接套多体积。\n4. reference + constructor附加/替换、受支持manual：显示基础list、有效模块槽、操作前后差异、同类冲突诊断；只注册不算替换，旧模块消失/新constructor和process存在需后端证据；region步长限制真实机制另验证。如何在未运行时呈现“拟应用”与运行后的“观测到”，不把二者混同。\n5. 高级实体/后端vis往返、field、bias：由能力元数据决定可编辑/只读保留/实验性/不可用；高级实体依赖E7，assembly等未实现字段不能生成；vis持久输入与J1本机外观覆盖分层，避免切换布局导致输入变化；field/bias表单的依赖、单位、生命周期、验证、预览、证据，绝不允许空hook生成包，偏置挂接不等于物理验证。未知字段保留且阻断无损写出，不能通过隐藏控件丢字段。\n6. F8：键盘全流程与助记键/焦点恢复/错误跳转，QTableView+model/delegate与短表QFormLayout/滚动区的合理取舍；100/125/150/200%DPI、小有效屏幕、浮动dock恢复、中文/英文、浅深系统主题；不要只依赖颜色，不把固定像素当可访问性。向导返回不覆写已编辑字段，Esc取消不提交，重入不丢草稿；环境设置入口由I1/I2拥有，来回保持编辑和焦点；运行中依既有mutate guard，不新增owner。实际实窗证据与自动回归分开，所有DPI支持结论待验证。\n请输出：A.页面/区域与组件映射表；B.三条完整用户路径(空白、模板重入、导入含未知字段)；C.上述领域的具体交互与自然中文提示；D.按可实现依赖排序的取舍及待主负责人裁决(至少6项)；E.建议验证清单(只作设计建议，我方会另独立列正式验收清单)。不能把生成文本、退出0、进度100%、注册或UI预览当作物理正确证据。字段/初始化/执行/物理四层状态独立，支持范围以实际后端为准。使用core/i18n.py集中翻译与稳定token，现有theme/palette，业务状态不靠显示文字持久化。"
+      }
+    ],
+    "thinking": {
+      "type": "disabled"
+    },
+    "max_tokens": 7000
+  },
+  "prompt_sha256": "1e78a46a2f243959f1075fb5341dab0d8de57766c8b858b811e8400b3521bef2",
+  "scope": "J2/F8 design consultation only"
+}

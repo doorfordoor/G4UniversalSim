@@ -342,8 +342,7 @@ def _validate_geometry_text(path: Path, report: ValidationReport) -> None:
     text = path.read_text(encoding="utf-8", errors="replace")
     lower = text.lower()
     if re.search(r"(?im)^\s*shape\s*=\s*(tessellated|stl)\s*(?:#.*)?$", text):
-        report.add('geometry.shape.not_editable', 'warning', "Geometry uses shape = tessellated (STL, backend-supported); the GUI geometry "
-                               "editors cannot edit it.", origin='config.source', source=_source_field_location(path, text, key='shape', allowed_values=('tessellated', 'stl')), unavailable_reason='source_only')
+        report.add('geometry.shape.experimental', 'warning', ui_text('STL geometry is editable in the GUI and remains experimental; validate the resource and Geant4 initialization before running.'), origin='config.source', source=_source_field_location(path, text, key='shape', allowed_values=('tessellated', 'stl')), unavailable_reason='source_only')
     if re.search(r"(?im)^\s*\[gdml\]\s*(?:#.*)?$", text):
         message = capability_message("geometry.gdml.external")
         if message not in report.warnings:
@@ -354,11 +353,9 @@ def _validate_geometry_text(path: Path, report: ValidationReport) -> None:
     )))
     for placement in unsupported_placements:
         report.add('geometry.placement.unsupported', 'error', capability_message("geometry.placement.unsupported", placement=placement), origin='config.source', source=_source_field_location(path, text, key='placement', value=placement), unavailable_reason='source_only')
-    # Roadmap A5: the backend builds replica/parameterised placement from a
-    # hand-written geometry INI; the GUI editors cannot edit them.
+    # J2 exposes A5 placement editing; experimental runtime boundaries remain.
     if re.search(r"(?im)^\s*placement\s*=\s*(replica|parameteri[sz]ed)\s*(?:#.*)?$", text):
-        report.add('geometry.placement.not_editable', 'warning', "Geometry uses placement=replica/parameterised (backend-supported); "
-                               "the GUI geometry editors cannot edit these volumes.", origin='config.source', source=_source_field_location(path, text, key='placement', allowed_values=('replica', 'parameterised', 'parameterized')), unavailable_reason='source_only')
+        report.add('geometry.placement.experimental', 'warning', ui_text('Replica and parameterised placement are editable in the GUI and remain experimental; validate placement constraints and Geant4 initialization before running.'), origin='config.source', source=_source_field_location(path, text, key='placement', allowed_values=('replica', 'parameterised', 'parameterized')), unavailable_reason='source_only')
     if "let" in lower or "dose" in lower or "fluence" in lower:
         report.add('geometry.scoring.not_edited', 'warning', "Geometry config mentions LET/Dose/Fluence; those are not edited by this GUI MVP.", origin='config.source', source=source_location(str(path), text, key='', section='', value=''), unavailable_reason='source_only')
     if "[volume." in lower and ".boolean." in lower:

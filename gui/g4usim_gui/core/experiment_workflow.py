@@ -295,6 +295,11 @@ def _field_report(snapshot):
         report = validate_project_report(candidate)
     from g4usim_gui.core.config_schema import check_value
     for kind, source in snapshot.state["sources"].items():
+        # Captured editor sources belong to generated input selection. External
+        # Inspect observes the actual main/macro through its original-input
+        # identity and backend preflight; dormant editor history is not an input.
+        if project.runInputMode != "generated":
+            continue
         document = project.materialEditor if kind == "materials" else project.geometryEditor
         if document is None or not document.source_path:
             continue

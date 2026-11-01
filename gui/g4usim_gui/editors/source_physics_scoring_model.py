@@ -226,7 +226,8 @@ def _record_structured(model, editor, path, reason):
         value = getattr(model, field, None)
         if isinstance(value, list):
             value = [asdict(item) if hasattr(item, '__dataclass_fields__') else item for item in value]
-    emit_diagnostic(model, f'{editor}.structured.invalid', 'error', problem(path, reason),
+    code = 'physics.mode.unsupported' if editor == 'physics' and path == 'physics.mode' else f'{editor}.structured.invalid'
+    emit_diagnostic(model, code, 'error', problem(path, reason),
                     origin=f'{editor}.editor', editor=editor, field=field,
                     collection=collection, row=row, entity=entity,
                     identity_parameters={'reason': reason, 'value': value})

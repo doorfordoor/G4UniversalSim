@@ -8,6 +8,7 @@ import tempfile
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'gui'))
 from g4usim_gui.core.config_schema import check_diagnostic, check_value
+from g4usim_gui.core.run_editor_model import BiasRuleDefinition
 from g4usim_gui.core.diagnostics import collect_diagnostics, diagnostics_from_dict
 from g4usim_gui.editors.source_physics_scoring_model import (
     SourceEditableModel, PhysicsEditableModel, ScoringEditableModel,
@@ -66,15 +67,16 @@ def model_cases():
         ({'confine_volume':'Target'}, {'confine.not_generated':'confine_volume'}),
     ]
     physics = [
-        ({'mode':'manual'}, {'mode.unsupported':'mode'}),
+        ({'mode':'future'}, {'mode.unsupported':'mode'}),
+        ({'mode':'manual'}, {'structured.invalid':'manual_modules'}),
         ({'reference_list':''}, {'reference.required':'reference_list'}),
         ({'reference_list':'custom'}, {'reference.unknown':'reference_list'}),
         ({'default_cut':''}, {'cut.required':'default_cut'}),
         ({'default_cut':'bad'}, {'cut.invalid':'default_cut'}),
         ({'default_cut':'1'}, {'cut.unit_hint':'default_cut'}),
-        ({'enable_biasing_physics':True}, {'biasing.not_editable':'enable_biasing_physics'}),
-        ({'extra_modules':['em']}, {'extra_modules.not_editable':'extra_modules'}),
-        ({'manual_modules':['em']}, {'manual_modules.not_generated':'manual_modules'}),
+        ({'enable_biasing_physics':True}, {'structured.invalid':'bias_rules'}),
+        ({'extra_modules':['G4EmStandardPhysics']}, {'structured.invalid':'extra_modules'}),
+        ({'manual_modules':['G4EmStandardPhysics']}, {'structured.invalid':'manual_modules'}),
     ]
     scoring = [
         ({'hits':False,'event_edep':False,'edep':False},
@@ -116,6 +118,28 @@ def model_cases():
             assert [d.identity for d in collect_diagnostics(copied)]==[d.identity for d in records]
             assert set(snapshot(model))=={f.name for f in fields(model)}
             assert '_f4_diagnostics' not in asdict(model)
+
+    # J2 supports manual constructors, reference extensions/replacements and
+    # process rules. These are editor-validation positives, not physics proof.
+    legacy_codes = {'physics.biasing.not_editable', 'physics.extra_modules.not_editable',
+                    'physics.manual_modules.not_generated', 'physics.mode.unsupported'}
+    for values in (
+        {'mode':'manual', 'manual_modules':['G4EmStandardPhysics']},
+        {'extra_modules':['G4OpticalPhysics']},
+        {'replace_modules':['G4EmStandardPhysics_option4']},
+        {'enable_biasing_physics':True, 'bias_rules':[BiasRuleDefinition(volumes='Target')]},
+    ):
+        model = PhysicsEditableModel(**values)
+        validate_physics_model(model)
+        records = collect_diagnostics(model)
+        assert not model.errors, (values, model.errors)
+        assert not legacy_codes.intersection(d.code for d in records)
+        assert physics_model_to_snapshot(model)['mode'] == model.mode
+    unknown = PhysicsEditableModel(mode='future')
+    validate_physics_model(unknown)
+    errors = [d for d in collect_diagnostics(unknown) if d.severity == 'error']
+    assert [d.code for d in errors] == ['physics.mode.unsupported']
+    assert errors[0].location.field == 'mode' and errors[0].location.collection == ''
 
     # Dynamic field rules must preserve each distinct same-code occurrence.
     model=SourceEditableModel(theta_min='bad',theta_max='bad',phi_min='bad',phi_max='bad',
@@ -206,11 +230,16 @@ def source_cases(work):
     path.write_text(text,encoding='utf-8')
     report=ValidationReport();_validate_geometry_text(path,report)
     by_code={d.code:d for d in report.diagnostics}
-    for code,line in (('geometry.shape.not_editable',4),('geometry.placement.not_editable',5),
+    for code,line in (('geometry.shape.experimental',4),('geometry.placement.experimental',5),
                       ('geometry.placement.unsupported',7),('geometry.boolean.ignored_field',9)):
         assert by_code[code].source.line==line,(code,by_code[code].source)
         assert by_code[code].source.text_snapshot==text
         assert by_code[code].location is None and by_code[code].unavailable_reason=='source_only'
+    for code in ('geometry.shape.experimental', 'geometry.placement.experimental'):
+        assert by_code[code].severity == 'warning'
+        assert 'cannot edit' not in by_code[code].message
+    assert by_code['geometry.placement.unsupported'].severity == 'error' and not report.can_run
+    assert 'geometry.shape.not_editable' not in by_code and 'geometry.placement.not_editable' not in by_code
     path.write_text('[material.A]\ntemperature=300 K\npressure=1 atm\n',encoding='utf-8')
     report=ValidationReport();_validate_material_text(path,report)
     assert {d.source.key:d.source.line for d in report.diagnostics}=={'pressure':3,'temperature':2}

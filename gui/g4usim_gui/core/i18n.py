@@ -1659,6 +1659,12 @@ ZH_CN.update({
 })
 
 
+ZH_CN.update({
+    'STL geometry is editable in the GUI and remains experimental; validate the resource and Geant4 initialization before running.': 'GUI 可编辑 STL 几何，其运行能力仍属实验性；运行前须校验资源并完成 Geant4 初始化检查。',
+    'Replica and parameterised placement are editable in the GUI and remain experimental; validate placement constraints and Geant4 initialization before running.': 'GUI 可编辑 replica 和 parameterised 放置，其运行能力仍属实验性；运行前须校验放置约束并完成 Geant4 初始化检查。',
+})
+
+
 def default_language() -> LanguageCode:
     return "zh_CN" if QLocale.system().language() == QLocale.Chinese else "en"
 

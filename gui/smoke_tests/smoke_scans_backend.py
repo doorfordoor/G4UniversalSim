@@ -11,6 +11,7 @@ checks that each point's own seed reaches the backend.
 
 from __future__ import annotations
 
+from copy import deepcopy
 import math
 import os
 import sys
@@ -49,7 +50,7 @@ def provider(runs: Path):
     wz.apply_to_project(project, result)
     base = scan.ScanBase(project=project, paths=paths, run=result.run, geometry_settings=project.geometrySettings,
                          geometry=result.geometry, source=result.source, physics=result.physics,
-                         scoring=result.scoring)
+                         scoring=result.scoring, materials=deepcopy(project.materialEditor))
     return lambda: (base, str(runs), str(EXE), str(ROOT))
 
 

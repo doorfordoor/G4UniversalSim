@@ -11,6 +11,7 @@ executable that fails every point (the scan must finish, not hang).
 from __future__ import annotations
 
 import csv
+from copy import deepcopy
 import json
 import os
 import sys
@@ -42,7 +43,7 @@ def make_base(runs_root: Path, scenario: str = "shielding") -> scan.ScanBase:
     wz.apply_to_project(project, result)
     return scan.ScanBase(project=project, paths=paths, run=result.run, geometry_settings=project.geometrySettings,
                          geometry=result.geometry, source=result.source, physics=result.physics,
-                         scoring=result.scoring)
+                         scoring=result.scoring, materials=deepcopy(project.materialEditor))
 
 
 def expect_error(function, text: str) -> None:

@@ -20,7 +20,8 @@ sys.path.insert(0, str(ROOT / "gui"))
 from g4usim_gui.core import experiment_bundle as bundle
 from g4usim_gui.core.edit_snapshot import WorkspaceSnapshot, snapshot_to_json
 from g4usim_gui.core.project import G4USimProject, project_from_dict
-from g4usim_gui.editors.geometry_editor_model import geometry_document_from_summary
+from g4usim_gui.editors.geometry_editor_model import geometry_document_from_summary, validate_geometry_document
+from g4usim_gui.writers.geometry_ini_writer import generate_geometry_ini_text
 from g4usim_gui.editors.material_editor_model import material_document_from_summary
 from g4usim_gui.models.package_model import PathSettings, GeometrySettings
 from g4usim_gui.parsers.geometry_parser import parse_geometry
@@ -566,7 +567,8 @@ def test_independent_review_regressions(root):
     for record in ({"access_token": "K1_FAKE_SECRET_ONLY_47812"}, {"parameters": {"apiKey": "FAKE"}}):
         refused(lambda: bundle.export_bundle(snapshot, root / "secret-refused", validation_records=[record]), "credential")
     # project_to_dict intentionally shares preview/volumes containers. Traversal
-    # must relocate copies_file exactly once and retain source-copy blockers.
+    # must relocate copies_file exactly once. J2 supports editing these volumes;
+    # unknown-field blockers are exercised separately below.
     geometry = Path(snapshot.project.pathSettings.geometry_config)
     hierarchical = """[world]
 shape = box
@@ -584,23 +586,104 @@ copies_file = copies.csv
     copies = write(geometry.parent / "copies.csv", "x_mm,y_mm,z_mm\n0,0,0\n0,0,10\n")
     snapshot.project.geometrySettings.template = "hierarchical"
     snapshot.project.geometryEditor = geometry_document_from_summary(parse_geometry(geometry, "hierarchical"), "hierarchical")
-    snapshot.project.geometryEditor.source_copy_mode = True
+    document = snapshot.project.geometryEditor
+    validate_geometry_document(document, material_names={"G4_Galactic", "G4_Si"})
+    assert not document.round_trip_blockers and not document.errors
+    det = next(row for row in document.volumes if row.name == "det")
+    assert det.preview_properties == {"placement": "parameterised", "copies_file": "copies.csv"}
+    generated = generate_geometry_ini_text(document)
+    assert "placement = parameterised" in generated
+    assert f"copies_file = {copies.resolve()}" in generated
+    # Explicit source-copy remains a separate user choice, not a fabricated blocker.
+    document.source_copy_mode = True
     main = Path(snapshot.project.configPath)
     write(main, main.read_text(encoding="utf-8").replace("template = simple_box", "template = hierarchical"))
     collected = bundle.collect_bundle_resources(snapshot)
     assert any(row["role"] == "copies" for row in collected["resources"])
-    assert collected["snapshot"]["project"]["geometryEditor"]["round_trip_blockers"]
-    assert all(str(geometry) not in msg for msg in collected["snapshot"]["project"]["geometryEditor"]["round_trip_blockers"])
+    portable = collected["snapshot"]["project"]["geometryEditor"]
+    assert not portable["round_trip_blockers"] and portable["source_copy_mode"] is True
+    receipts = [row for row in collected["resources"] if row["role"] == "copies"]
+    assert len(receipts) == 1 and receipts[0]["source_sha256"] == bundle.digest(copies.read_bytes())
+    portable_det = next(row for row in portable["volumes"] if row["name"] == "det")
+    assert portable_det["preview_properties"]["copies_file"] == receipts[0]["path"]
     exported = bundle.export_bundle(snapshot, root / "copies-bundle")
     restored = bundle.load_bundle(root / "copies-bundle")
     assert restored.project.geometryEditor.source_copy_mode is True
-    assert restored.project.geometryEditor.round_trip_blockers
+    assert not restored.project.geometryEditor.round_trip_blockers
     assert sum(row.get("role") == "copies" for row in exported["manifest"]["members"]) == 1
     assert copies.is_file()
+    copies_before = copies.read_bytes()
+    # Relocate the bundle and take its original source tree offline. New input paths
+    # must resolve inside the moved bundle; the old workspace must fail closed.
+    moved = root / "copies-moved"
+    (root / "copies-bundle").rename(moved)
+    original_source = Path(snapshot.project.workspaceRoot)
+    parked_source = root / "source-offline"
+    original_source.rename(parked_source)
+    try:
+        refused(lambda: bundle.collect_bundle_resources(snapshot))
+        refused(lambda: bundle.export_bundle(snapshot, root / "missing-source-refused"))
+        assert not (root / "missing-source-refused").exists()
+        relocated = bundle.load_bundle(moved)
+        moved_doc = relocated.project.geometryEditor
+        moved_det = next(row for row in moved_doc.volumes if row.name == "det")
+        table = Path(moved_det.preview_properties["copies_file"])
+        assert table.resolve().is_relative_to(moved.resolve())
+        assert table.read_bytes() == copies_before
+        moved_doc.source_copy_mode = False
+        emitted = generate_geometry_ini_text(moved_doc)
+        assert f"copies_file = {table.resolve()}" in emitted
+        assert str(original_source) not in emitted
+        table.unlink()
+        try:
+            refused(lambda: bundle.load_bundle(moved))
+        finally:
+            table.write_bytes(copies_before)
+        assert bundle.inspect_bundle(moved)["replay_verified"] is False
+    finally:
+        parked_source.rename(original_source)
+    assert copies.read_bytes() == copies_before
     # Template changes in a nested macro affect later parent loadConfig commands.
     write(geometry.parent / "select.mac", "/AIHL/geometry/setTemplate hierarchical\n")
     write(macro, "/control/execute select.mac\n/AIHL/geometry/loadConfig geometry.ini\n/run/initialize\n/run/beamOn 1\n")
     assert bundle.collect_bundle_resources(snapshot)["resources"]
+
+
+def test_unknown_geometry_blocker_controls(root):
+    """An unknown field stays blocked; source-copy is not a K1 grammar bypass."""
+    snapshot = fixture(root / "source")
+    geometry = Path(snapshot.project.pathSettings.geometry_config)
+    text = GEOMETRY + "placement_future = replica\n"
+    write(geometry, text)
+    document = geometry_document_from_summary(parse_geometry(geometry, "simple_box"), "simple_box")
+    snapshot.project.geometryEditor = document
+    before = geometry.read_bytes()
+    blockers = list(document.round_trip_blockers)
+    assert blockers and any("placement_future" in item for item in blockers)
+    assert document.raw_source_text == text
+    for source_copy in (False, True):
+        document.source_copy_mode = source_copy
+        if source_copy:
+            refused(lambda: generate_geometry_ini_text(document), "original source copy mode")
+        else:
+            refused(lambda: generate_geometry_ini_text(document), "round-trip is blocked")
+        refused(lambda: bundle.collect_bundle_resources(snapshot), "Unknown resource grammar")
+        destination = root / ("unknown-copy-refused" if source_copy else "unknown-editor-refused")
+        refused(lambda: bundle.export_bundle(snapshot, destination), "Unknown resource grammar")
+        assert not destination.exists() and geometry.read_bytes() == before
+        assert document.round_trip_blockers == blockers and document.raw_source_text == text
+    # A captured blocker must not turn a vanished source into an empty geometry.
+    parked = geometry.with_suffix(".offline")
+    geometry.rename(parked)
+    try:
+        refused(lambda: bundle.collect_bundle_resources(snapshot))
+        refused(lambda: bundle.export_bundle(snapshot, root / "unknown-missing-refused"))
+        assert not (root / "unknown-missing-refused").exists()
+        assert document.source_path == str(geometry)
+        assert document.raw_source_text == text and document.round_trip_blockers == blockers
+    finally:
+        parked.rename(geometry)
+    assert geometry.read_bytes() == before
 
 
 def backend_check(root, executable):
@@ -672,7 +755,8 @@ def main():
     cases = []
     try:
         for case in (test_safe_environment_history, test_build_version_text, test_reference_source_urls, test_move_and_history, test_resource_kinds_and_identity, test_generated,
-                     test_refusals, test_atomic_and_tamper, test_gdml, test_independent_review_regressions):
+                     test_refusals, test_atomic_and_tamper, test_gdml, test_independent_review_regressions,
+                     test_unknown_geometry_blocker_controls):
             folder = root / case.__name__
             folder.mkdir()
             case(folder)

@@ -17,7 +17,7 @@ from g4usim_gui.core.project_migration import plan_project_migration
 from g4usim_gui.editors.geometry_editor_model import (geometry_document_from_summary, validate_geometry_document,
                                                      geometry_document_from_dict, geometry_document_to_snapshot)
 from g4usim_gui.parsers.geometry_parser import parse_geometry
-from g4usim_gui.writers.geometry_ini_writer import generate_geometry_ini_text
+from g4usim_gui.writers.geometry_ini_writer import generate_geometry_ini_text, write_geometry_ini
 from g4usim_gui.editors.source_physics_scoring_model import SourceEditableModel
 
 
@@ -135,7 +135,13 @@ def geometry_contract(work):
         rejected(lambda mapping=mapping: plan_geometry_migration(source, "hierarchical", metadata_mapping=mapping))
     resource = work / "mesh.stl"
     resource.write_text("test placeholder; backend checks actual STL", encoding="utf-8")
-    source.write_text(HIERARCHICAL.replace("shape = box\nsize = 1 cm, 1 cm, 1 cm", "shape = tessellated\nfile = mesh.stl"), encoding="utf-8")
+    mesh_text = HIERARCHICAL.replace("shape = box\nsize = 1 cm, 1 cm, 1 cm",
+                                    "shape = tessellated\nfile = mesh.stl\nfile_unit = cm")
+    mesh_text += ("position = 2 mm,3 mm,4 mm\nrotation = 0 deg,0 deg,30 deg\n"
+                  "sensitive = true\ncopyNo = 7\nvis.alpha = 0.4\nmetadata.Note = mesh-token\n")
+    source.write_text(mesh_text, encoding="utf-8")
+    mesh_before = source.read_bytes()
+    original_doc = geometry_document_from_summary(parse_geometry(source, "hierarchical"), "hierarchical")
     plan = plan_geometry_migration(source, "hierarchical")
     assert str(resource.resolve()).encode() in plan.payload
     assert any("Backend Inspect inputs" in item for item in plan.validation)
@@ -143,7 +149,51 @@ def geometry_contract(work):
     target.parent.mkdir()
     publish_migration(plan, target)
     doc = geometry_document_from_summary(parse_geometry(target, "hierarchical"), "hierarchical")
-    assert doc.round_trip_blockers  # migration cannot confer J2 editing support
+    validate_geometry_document(doc)
+    assert not doc.round_trip_blockers and not doc.errors
+    assert doc.source_path == str(target) and doc.schema_version == 2
+    original_row = next(row for row in original_doc.volumes if row.name == "Target")
+    migrated_row = next(row for row in doc.volumes if row.name == "Target")
+    retained = ("name", "parent", "shape", "size", "parameters", "material", "position", "rotation",
+                "sensitive", "bias", "region", "copy_no", "metadata", "visual", "production_cuts",
+                "preview_properties")
+    for field in retained:
+        assert getattr(migrated_row, field) == getattr(original_row, field), field
+    expected_properties = {**original_row.shape_properties, "file": str(resource.resolve())}
+    assert migrated_row.shape_properties == expected_properties
+    assert migrated_row.shape == "tessellated" and migrated_row.shape_properties["file_unit"] == "cm"
+    migrated_bytes = target.read_bytes()
+    assert source.read_bytes() == mesh_before
+    written = work / "writer-output" / "mesh.ini"
+    write_geometry_ini(str(written), doc)
+    generated = generate_geometry_ini_text(doc)
+    assert written.read_text(encoding="utf-8") == generated
+    assert f"file = {resource.resolve()}" in generated and "version = 2" in generated
+    round_trip = geometry_document_from_summary(parse_geometry(written, "hierarchical"), "hierarchical")
+    validate_geometry_document(round_trip)
+    assert not round_trip.errors and not round_trip.round_trip_blockers
+    written_row = next(row for row in round_trip.volumes if row.name == "Target")
+    for field in retained:
+        assert getattr(written_row, field) == getattr(migrated_row, field), field
+    assert written_row.shape_properties == expected_properties
+    assert source.read_bytes() == mesh_before and target.read_bytes() == migrated_bytes
+    # A genuine unknown field still blocks editing and strict migration.
+    unknown = work / "unknown-mesh.ini"
+    unknown_text = mesh_text + "placement_future = replica\n"
+    unknown.write_text(unknown_text, encoding="utf-8")
+    blocked = geometry_document_from_summary(parse_geometry(unknown, "hierarchical"), "hierarchical")
+    assert blocked.round_trip_blockers and any("placement_future" in item for item in blocked.round_trip_blockers)
+    rejected(lambda: generate_geometry_ini_text(blocked), "round-trip is blocked")
+    rejected(lambda: plan_geometry_migration(unknown, "hierarchical"), "explicit legacy metadata")
+    assert unknown.read_text(encoding="utf-8") == unknown_text
+    # Valid STL editing support does not bypass migration source identity checks.
+    stale_target = work / "stale-mesh.ini"
+    source.write_bytes(mesh_before + b"# changed after planning\n")
+    try:
+        rejected(lambda: publish_migration(plan, stale_target), "source changed")
+        assert not stale_target.exists() and target.read_bytes() == migrated_bytes
+    finally:
+        source.write_bytes(mesh_before)
     source.write_text("version = 1\n" + HIERARCHICAL, encoding="utf-8")
     assert plan_geometry_migration(source, "hierarchical").payload.replace(b"\r\n", b"\n").startswith(b"[global]\nversion = 2")
     for separator in ("\r", "\x85", "\u2028", "\u2029", "\u00a0"):
