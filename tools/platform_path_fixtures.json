@@ -1,0 +1,29 @@
+{
+  "schema": "g4usim_platform_path_fixtures_v1",
+  "fixtures": [
+    {
+      "file": "scripts/test_ci_fetch_geant4_data.py",
+      "constant": "SDK_METADATA_ROOT_FIXTURE",
+      "value": "D:/verified-sdk",
+      "reason": "SDK metadata only; never opened"
+    },
+    {
+      "file": "scripts/test_ci_fetch_geant4_data.py",
+      "constant": "SDK_TRAVERSAL_ROOT_FIXTURE",
+      "value": "D:/../sdk",
+      "reason": "SDK traversal metadata; never opened"
+    },
+    {
+      "file": "scripts/test_install_plan.py",
+      "constant": "ABSOLUTE_ARCHIVE_MEMBER_FIXTURE",
+      "value": "C:/escape",
+      "reason": "Rejected archive member; never opened"
+    },
+    {
+      "file": "scripts/test_platform_install_layout.py",
+      "constant": "WINDOWS_LAYOUT_FIXTURE",
+      "value": "build_vs2026/Release/G4UniversalSim.exe",
+      "reason": "Temporary layout placeholder; never executed"
+    }
+  ]
+}

@@ -635,3 +635,5 @@ J1 使用原编辑器、3D、结果和日志控件组成原生 Dock；没有第�
 I2 新增 Windows 11.4 实际矩阵暴露两类既有测试前提（不是将旧失败改成通过）。test_run_summary 的两组8事件/2worker检验不能假定每个worker一定有hits文件；新observer逐次核对全部事件、worker归属、真实primary粒子/能量/位置及跨run状态，仅观测覆盖不足才有界独立重试，语义错误立即失败，最多6次仍未实际见到同次每轮双worker则失败。所有attempt原始输出与源/EXE身份保存；新增静态反例 test_run_summary_mt_observation，原16/24事件、容差和两个worker实际参与要求保留。
 
 官方 Windows 11.4.3 SDK 的真实能力是 GDML OFF。geometry_a5、fields_a7、gdml_bias_identity、gdml_touchable_identity 据实际 --capabilities 选择：ON 保留全部原几何、身份、共享场和容差检查；OFF 执行真实输入/导出拒绝、禁止模拟产物，并明确记录尚未进入run或摘要未产生。OFF 不是跳过后冒绿，更不是 GDML 验证；与 Windows 11.3/Linux 的 ON 证据及断言量分开，不拿较少的拒绝分支冒充功能覆盖。
+
+首轮候选 ba81615 的真实 Actions 失败保留：Windows checkout 因历史验收长路径失败，三个 Windows job 必须在检出前启用 runner 内 Git longpaths；Linux static 发现仅本机存在的审查链接，现归档原字节及 SHA 后修链接。平台路径门禁只豁免明确登记的 fixture 顶层常量单字符串声明，文件/名称/原值/用途注释均须精确匹配；声明外运行路径和注释仍检查，不增加整文件免检。回归 test_platform_path_fixture_policy。Linux frozen desktop 自检通过不代替随后失败的 xcb renderer；实际冻结日志列出的五个缺库须补齐并保留 ldd 诊断。Linux SDK 的首轮失败是不存在的 /usr/bin/cmake，commands 为空，不能称编译失败；工作流须使用实际工具路径，交付入口先登记工具身份，最终 SDK 两种编译探测再分别核验该身份。旧 CI、原 GUI 57/59 和 static 42/43 报告不改写。J1 下原 3D scroll 保留在 dock、页签变为激活入口；config_editors 的结构断言按此适配，原实例、尺寸和按钮判据保留，失败时也先完成正常关闭才销毁。上述修订不关闭阶段。

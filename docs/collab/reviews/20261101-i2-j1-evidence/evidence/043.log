@@ -1,0 +1,22 @@
+G4USIM_ASSERTS=1
+Traceback (most recent call last):
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 177, in <module>
+    raise SystemExit(main(sys.argv))
+                     ^^^^^^^^^^^^^^
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\tools\test_assert_probe.py", line 153, in main
+    runpy.run_path(str(target), run_name="__main__")
+  File "<frozen runpy>", line 291, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\scripts\test_gdml_bias_identity.py", line 86, in <module>
+    main()
+  File "C:\Users\123\.codex\worktrees\effective-config\G4UniversalSim\scripts\test_gdml_bias_identity.py", line 69, in main
+    facts = dict(line.split(" = ", 1) for line in (output / "run_summary.txt").read_text(encoding="utf-8").splitlines() if " = " in line)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\123\AppData\Local\Programs\Python\Python311\Lib\pathlib.py", line 1058, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\123\AppData\Local\Programs\Python\Python311\Lib\pathlib.py", line 1044, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'D:\\Temp\\g4usim-gdml-bias-7t2efta3\\out1\\run_summary.txt'

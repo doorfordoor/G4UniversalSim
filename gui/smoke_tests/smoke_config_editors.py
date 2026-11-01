@@ -2,8 +2,8 @@
 
 - every editor widget (setup column, Materials, Geometry, 3D Preview, Run Config,
   Messages and files) builds on its own with its controls and tabs;
-- the page is composed of exactly those widgets as its tabs, adopts their controls as
-  attributes without clashes, and mixes in each editor's logic;
+- the page composes exactly those widgets, with the same 3D instance in the J1
+  dock and a tab activation entry; adopted controls do not clash;
 - the main window's behaviour comes from the window/ modules;
 - regression: the Geometry tab's "Add Volume" and the Materials tab's
   "Add volume_fraction" are separate buttons with one handler each (one shared
@@ -19,8 +19,8 @@ from pathlib import Path
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from PySide6.QtCore import SIGNAL, QSettings   # noqa: E402
-from PySide6.QtWidgets import QApplication, QPlainTextEdit, QTabWidget   # noqa: E402
+from PySide6.QtCore import SIGNAL, QSettings, QCoreApplication, QEvent   # noqa: E402
+from PySide6.QtWidgets import QApplication, QPlainTextEdit, QTabWidget, QScrollArea   # noqa: E402
 
 from g4usim_gui.widgets.config.details import DetailsPanel   # noqa: E402
 from g4usim_gui.widgets.config.geometry import GeometryEditor   # noqa: E402
@@ -62,13 +62,38 @@ def main() -> int:
     from g4usim_gui.window.project import ProjectMixin   # noqa: PLC0415
     from g4usim_gui.window.run import RunMixin   # noqa: PLC0415
     from g4usim_gui.window.shell import ShellMixin   # noqa: PLC0415
-    window = MainWindow()
     assert all(issubclass(MainWindow, mixin) for mixin in (ShellMixin, ProjectMixin, RunMixin, ContentMixin))
+    window = MainWindow()
+    try:
+        window.show()
+        check_composed_editors(app, window)
+    finally:
+        # Assertions must also drain the existing owner before Qt and recovery
+        # directories are destroyed; a failed check is not a forced-close path.
+        from g4usim_gui.app import _close_self_test_window
+        assert _close_self_test_window(window, app, timeout=45), 'window close did not drain'
+        for widget in (materials, geometry, preview, run, setup, details):
+            widget.close()
+            widget.deleteLater()
+        QCoreApplication.sendPostedEvents(None, QEvent.DeferredDelete)
+        app.processEvents()
+        QSettings().clear()
+    print("smoke_config_editors: OK")
+    return 0
+
+
+def check_composed_editors(app, window):
     page = window.config_builder_page
     tabs = page.workspace_tabs
     assert tab_texts(tabs) == ["Materials", "Geometry", "Boolean Ops", "3D Preview", "Run Config", "Messages and files"]
-    shown = [tabs.widget(i) for i in range(tabs.count())]
-    shown = [w.widget() for w in shown]           # every tab is a scroll area (it scrolls instead of overlapping)
+    preview_index = page.preview3d_tab_index()
+    preview_scroll = window.workspace_layout.docks['preview'].widget()
+    assert isinstance(preview_scroll, QScrollArea)
+    assert preview_scroll.widget() is page.preview3d_panel
+    assert not isinstance(tabs.widget(preview_index), QScrollArea), '3D tab is an activation entry'
+    containers = [preview_scroll if i == preview_index else tabs.widget(i) for i in range(tabs.count())]
+    assert all(isinstance(container, QScrollArea) for container in containers)
+    shown = [container.widget() for container in containers]
     assert shown == [page.materials_editor, page.geometry_editor, page.boolean_tab, page.preview3d_panel,
                      page.run_config_editor, page.details_tabs], shown
     assert page.materials_table is page.materials_editor.materials_table
@@ -86,7 +111,7 @@ def main() -> int:
         content = shown[index]
         assert content.height() >= content.minimumSizeHint().height() - 1, (tabs.tabText(index), content.height())
         assert content.width() >= content.minimumSizeHint().width() - 1, (tabs.tabText(index), content.width())
-    print("layout: at 1280 x 800 every tab's content has its minimum size (scrolling where needed)")
+    print("layout: at 1280 x 800 every editor and 3D dock has its minimum size (scrolling where needed)")
     assert page.preview3d_messages.window() is window
     print("page: composed of the editor widgets, controls adopted")
 
@@ -103,13 +128,6 @@ def main() -> int:
     assert len(page.geometry_document.volumes) == volumes + 1
     print("Add Volume adds a volume only; Add volume_fraction adds a material only")
 
-    window.close()
-    for widget in (materials, geometry, preview, run, setup, details, window):
-        widget.deleteLater()
-    app.processEvents()
-    QSettings().clear()
-    print("smoke_config_editors: OK")
-    return 0
 
 
 if __name__ == "__main__":

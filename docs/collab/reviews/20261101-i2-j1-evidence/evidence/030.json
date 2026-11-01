@@ -1,0 +1,292 @@
+[
+  {
+    "path": "VCRUNTIME140.dll",
+    "size": 119192,
+    "sha256": "4d292623516f65c80482081e62d5dadb759dc16e851de5db24c3cbb57b87db83",
+    "dependencies": [
+      "api-ms-win-crt-runtime-l1-1-0.dll",
+      "api-ms-win-crt-heap-l1-1-0.dll",
+      "api-ms-win-crt-string-l1-1-0.dll",
+      "api-ms-win-crt-stdio-l1-1-0.dll",
+      "api-ms-win-crt-convert-l1-1-0.dll",
+      "KERNEL32.dll"
+    ],
+    "version": "14.38.33126.1"
+  },
+  {
+    "path": "VCRUNTIME140_1.dll",
+    "size": 49528,
+    "sha256": "a113f192195f245f17389e6ecbed8005990bcb2476ddad33f7c4c6c86327afe5",
+    "dependencies": [
+      "api-ms-win-crt-runtime-l1-1-0.dll",
+      "api-ms-win-crt-heap-l1-1-0.dll",
+      "api-ms-win-crt-string-l1-1-0.dll",
+      "VCRUNTIME140.dll",
+      "KERNEL32.dll"
+    ],
+    "version": "14.38.33126.1"
+  },
+  {
+    "path": "numpy.libs/msvcp140-a4c2229bdc2a2a630acdc095b4d86008.dll",
+    "size": 575056,
+    "sha256": "a4c2229bdc2a2a630acdc095b4d86008e5c3e3bc7773174354f3da4f5beb9cde",
+    "dependencies": [
+      "VCRUNTIME140.dll",
+      "VCRUNTIME140_1.dll",
+      "api-ms-win-crt-heap-l1-1-0.dll",
+      "api-ms-win-crt-runtime-l1-1-0.dll",
+      "api-ms-win-crt-string-l1-1-0.dll",
+      "api-ms-win-crt-locale-l1-1-0.dll",
+      "api-ms-win-crt-stdio-l1-1-0.dll",
+      "api-ms-win-crt-filesystem-l1-1-0.dll",
+      "api-ms-win-crt-time-l1-1-0.dll",
+      "api-ms-win-crt-environment-l1-1-0.dll",
+      "api-ms-win-crt-math-l1-1-0.dll",
+      "api-ms-win-crt-convert-l1-1-0.dll",
+      "api-ms-win-crt-utility-l1-1-0.dll",
+      "KERNEL32.dll"
+    ],
+    "version": "14.40.33810.0"
+  },
+  {
+    "path": "PySide6/MSVCP140.dll",
+    "size": 549176,
+    "sha256": "708dd7bbc7bd23bce9e93f7837a70c2dd7ad55cff43801e92c0f7fcd7dda47cd",
+    "dependencies": [
+      "VCRUNTIME140.dll",
+      "VCRUNTIME140_1.dll",
+      "api-ms-win-crt-heap-l1-1-0.dll",
+      "api-ms-win-crt-runtime-l1-1-0.dll",
+      "api-ms-win-crt-string-l1-1-0.dll",
+      "api-ms-win-crt-locale-l1-1-0.dll",
+      "api-ms-win-crt-stdio-l1-1-0.dll",
+      "api-ms-win-crt-filesystem-l1-1-0.dll",
+      "api-ms-win-crt-time-l1-1-0.dll",
+      "api-ms-win-crt-environment-l1-1-0.dll",
+      "api-ms-win-crt-math-l1-1-0.dll",
+      "api-ms-win-crt-convert-l1-1-0.dll",
+      "api-ms-win-crt-utility-l1-1-0.dll",
+      "KERNEL32.dll"
+    ],
+    "version": "14.44.35211.0"
+  },
+  {
+    "path": "PySide6/MSVCP140_1.dll",
+    "size": 27448,
+    "sha256": "b2113956aa3fcb9decfe65be1ee7829f8e3ae0899633ae89fe04888ada201594",
+    "dependencies": [
+      "MSVCP140.dll",
+      "VCRUNTIME140.dll",
+      "api-ms-win-crt-heap-l1-1-0.dll",
+      "api-ms-win-crt-runtime-l1-1-0.dll",
+      "KERNEL32.dll"
+    ],
+    "version": "14.44.35211.0"
+  },
+  {
+    "path": "PySide6/MSVCP140_2.dll",
+    "size": 271672,
+    "sha256": "1b806b427ffb573deff8478cf6fe336465fe2c67e0919bb95f452b6f31d25736",
+    "dependencies": [
+      "MSVCP140.dll",
+      "VCRUNTIME140.dll",
+      "VCRUNTIME140_1.dll",
+      "api-ms-win-crt-runtime-l1-1-0.dll",
+      "api-ms-win-crt-math-l1-1-0.dll",
+      "api-ms-win-crt-heap-l1-1-0.dll",
+      "api-ms-win-crt-string-l1-1-0.dll",
+      "api-ms-win-crt-stdio-l1-1-0.dll",
+      "api-ms-win-crt-locale-l1-1-0.dll",
+      "KERNEL32.dll"
+    ],
+    "version": "14.44.35211.0"
+  },
+  {
+    "path": "PySide6/pyside6.abi3.dll",
+    "size": 248632,
+    "sha256": "d4072be872b31f3748de5e6c28cb2976dafbf063d3ccfa38e5dabda29babcdaf",
+    "dependencies": [
+      "shiboken6.abi3.dll",
+      "python3.dll",
+      "Qt6Core.dll",
+      "MSVCP140.dll",
+      "VCRUNTIME140.dll",
+      "VCRUNTIME140_1.dll",
+      "api-ms-win-crt-runtime-l1-1-0.dll",
+      "api-ms-win-crt-string-l1-1-0.dll",
+      "api-ms-win-crt-heap-l1-1-0.dll",
+      "api-ms-win-crt-stdio-l1-1-0.dll",
+      "KERNEL32.dll"
+    ],
+    "version": ""
+  },
+  {
+    "path": "PySide6/Qt6Core.dll",
+    "size": 10480440,
+    "sha256": "65fe6224b6c47a15b058738031d31dce9928c4d7a58e1b8db6434f6f5cddd702",
+    "dependencies": [
+      "api-ms-win-core-synch-l1-2-0.dll",
+      "MPR.dll",
+      "USERENV.dll",
+      "ADVAPI32.dll",
+      "AUTHZ.dll",
+      "KERNEL32.dll",
+      "NETAPI32.dll",
+      "ntdll.dll",
+      "ole32.dll",
+      "SHELL32.dll",
+      "USER32.dll",
+      "VERSION.dll",
+      "WINMM.dll",
+      "WS2_32.dll",
+      "icuuc.dll",
+      "MSVCP140.dll",
+      "MSVCP140_1.dll",
+      "VCRUNTIME140.dll",
+      "VCRUNTIME140_1.dll",
+      "api-ms-win-crt-runtime-l1-1-0.dll",
+      "api-ms-win-crt-heap-l1-1-0.dll",
+      "api-ms-win-crt-stdio-l1-1-0.dll",
+      "api-ms-win-crt-environment-l1-1-0.dll",
+      "api-ms-win-crt-string-l1-1-0.dll",
+      "api-ms-win-crt-math-l1-1-0.dll",
+      "api-ms-win-crt-utility-l1-1-0.dll",
+      "api-ms-win-crt-time-l1-1-0.dll",
+      "api-ms-win-crt-filesystem-l1-1-0.dll",
+      "OLEAUT32.dll"
+    ],
+    "version": "6.11.1.0"
+  },
+  {
+    "path": "PySide6/QtCore.pyd",
+    "size": 3330360,
+    "sha256": "be52341a5df1f76ecca2fb1e94eb429dfa46f0b659ed6536f25119b565b21ea8",
+    "dependencies": [
+      "pyside6.abi3.dll",
+      "shiboken6.abi3.dll",
+      "python3.dll",
+      "Qt6Core.dll"
+    ],
+    "version": ""
+  },
+  {
+    "path": "PySide6/VCRUNTIME140.dll",
+    "size": 116024,
+    "sha256": "c6e841078cd352299a58925991e2552f7251b046253ba895b3ad50cd5cd32ec6",
+    "dependencies": [
+      "api-ms-win-crt-runtime-l1-1-0.dll",
+      "api-ms-win-crt-string-l1-1-0.dll",
+      "api-ms-win-crt-heap-l1-1-0.dll",
+      "api-ms-win-crt-stdio-l1-1-0.dll",
+      "api-ms-win-crt-convert-l1-1-0.dll",
+      "KERNEL32.dll"
+    ],
+    "version": "14.44.35211.0"
+  },
+  {
+    "path": "PySide6/VCRUNTIME140_1.dll",
+    "size": 41272,
+    "sha256": "b322e382ea249b50009f14a9a71ad16729eb6e4b58a8d3b3be6ac66ea6342a22",
+    "dependencies": [
+      "api-ms-win-crt-runtime-l1-1-0.dll",
+      "api-ms-win-crt-string-l1-1-0.dll",
+      "api-ms-win-crt-heap-l1-1-0.dll",
+      "VCRUNTIME140.dll",
+      "KERNEL32.dll"
+    ],
+    "version": "14.44.35211.0"
+  },
+  {
+    "path": "shiboken6/MSVCP140.dll",
+    "size": 549176,
+    "sha256": "005f2324c7ff79bbe9a44992b0708abb4c871bd24bcc7a34aca5eab4439c1f4a",
+    "dependencies": [
+      "VCRUNTIME140.dll",
+      "VCRUNTIME140_1.dll",
+      "api-ms-win-crt-heap-l1-1-0.dll",
+      "api-ms-win-crt-runtime-l1-1-0.dll",
+      "api-ms-win-crt-string-l1-1-0.dll",
+      "api-ms-win-crt-locale-l1-1-0.dll",
+      "api-ms-win-crt-stdio-l1-1-0.dll",
+      "api-ms-win-crt-filesystem-l1-1-0.dll",
+      "api-ms-win-crt-time-l1-1-0.dll",
+      "api-ms-win-crt-environment-l1-1-0.dll",
+      "api-ms-win-crt-math-l1-1-0.dll",
+      "api-ms-win-crt-convert-l1-1-0.dll",
+      "api-ms-win-crt-utility-l1-1-0.dll",
+      "KERNEL32.dll"
+    ],
+    "version": "14.44.35211.0"
+  },
+  {
+    "path": "shiboken6/shiboken6.abi3.dll",
+    "size": 384824,
+    "sha256": "47f4f9b44c95037565dd14f4be04f350f20c53c05483b750e0be867c39a7441e",
+    "dependencies": [
+      "python3.dll",
+      "KERNEL32.dll",
+      "MSVCP140.dll",
+      "VCRUNTIME140.dll",
+      "VCRUNTIME140_1.dll",
+      "api-ms-win-crt-runtime-l1-1-0.dll",
+      "api-ms-win-crt-stdio-l1-1-0.dll",
+      "api-ms-win-crt-string-l1-1-0.dll",
+      "api-ms-win-crt-heap-l1-1-0.dll",
+      "api-ms-win-crt-convert-l1-1-0.dll",
+      "api-ms-win-crt-math-l1-1-0.dll",
+      "api-ms-win-crt-filesystem-l1-1-0.dll",
+      "api-ms-win-crt-environment-l1-1-0.dll"
+    ],
+    "version": ""
+  },
+  {
+    "path": "shiboken6/VCRUNTIME140.dll",
+    "size": 116024,
+    "sha256": "8d9c679c825c5fff298d66c41af30f35c289fc101868dfc9635547bada0daba6",
+    "dependencies": [
+      "api-ms-win-crt-runtime-l1-1-0.dll",
+      "api-ms-win-crt-string-l1-1-0.dll",
+      "api-ms-win-crt-heap-l1-1-0.dll",
+      "api-ms-win-crt-stdio-l1-1-0.dll",
+      "api-ms-win-crt-convert-l1-1-0.dll",
+      "KERNEL32.dll"
+    ],
+    "version": "14.44.35211.0"
+  },
+  {
+    "path": "shiboken6/VCRUNTIME140_1.dll",
+    "size": 41272,
+    "sha256": "e4d7ea5f4f4ff6d0c208e693853617cdef0ad71cfe5dd5c3ae16c8a6b64c18ea",
+    "dependencies": [
+      "api-ms-win-crt-runtime-l1-1-0.dll",
+      "api-ms-win-crt-string-l1-1-0.dll",
+      "api-ms-win-crt-heap-l1-1-0.dll",
+      "VCRUNTIME140.dll",
+      "KERNEL32.dll"
+    ],
+    "version": "14.44.35211.0"
+  },
+  {
+    "path": "vtk.libs/msvcp140-ba05f997e25eac0cb10acfddf6513d26.dll",
+    "size": 579960,
+    "sha256": "ba05f997e25eac0cb10acfddf6513d2682bc7a88fffe110dfb322012c0a3744d",
+    "dependencies": [
+      "VCRUNTIME140.dll",
+      "VCRUNTIME140_1.dll",
+      "api-ms-win-crt-heap-l1-1-0.dll",
+      "api-ms-win-crt-runtime-l1-1-0.dll",
+      "api-ms-win-crt-string-l1-1-0.dll",
+      "api-ms-win-crt-locale-l1-1-0.dll",
+      "api-ms-win-crt-stdio-l1-1-0.dll",
+      "api-ms-win-crt-filesystem-l1-1-0.dll",
+      "api-ms-win-crt-time-l1-1-0.dll",
+      "api-ms-win-crt-environment-l1-1-0.dll",
+      "api-ms-win-crt-math-l1-1-0.dll",
+      "api-ms-win-crt-convert-l1-1-0.dll",
+      "api-ms-win-crt-utility-l1-1-0.dll",
+      "KERNEL32.dll",
+      "ole32.dll"
+    ],
+    "version": "14.35.32217.1"
+  }
+]

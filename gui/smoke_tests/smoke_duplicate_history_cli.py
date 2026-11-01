@@ -110,7 +110,11 @@ def main():
                                 assert not inspection
                                 window.start_run()
                             wait_workflow(app, window, predicate=lambda: bool(inspection) or not window.experiment.busy)
-                            assert len(inspection) == 1
+                            assert len(inspection) == 1, {
+                                'seed': seed, 'edited': edited, 'run_after': run_after,
+                                'inspection': inspection, 'dialogs': boxes,
+                                'state': window.experiment.state(),
+                            }
                             assert inspection[0][0] == "--inspect-run"
                             plan = {"schema": "G4UniversalSimRunPlan", "version": 1,
                                     "configuration_phase": "before_macro",

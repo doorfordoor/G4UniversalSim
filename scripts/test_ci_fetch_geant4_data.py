@@ -17,6 +17,9 @@ from unittest.mock import patch
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "packaging"))
 import ci_fetch_geant4_data as fetcher
 
+SDK_METADATA_ROOT_FIXTURE = "D:/verified-sdk"  # platform-path-fixture: SDK metadata only; never opened
+SDK_TRAVERSAL_ROOT_FIXTURE = "D:/../sdk"  # platform-path-fixture: SDK traversal metadata; never opened
+
 
 class Response(io.BytesIO):
     def __init__(self, payload, url):
@@ -55,7 +58,7 @@ def archive(entries):
 def config_text(payload):
     digest = hashlib.md5(payload, usedforsecurity=False).hexdigest()
     return ('set(Geant4_DATASET_DESCRIPTIONS "G4TEST|G4TESTDATA|'
-            'D:/verified-sdk/share/Geant4/data/G4TEST1.0|G4TEST.1.0.tar.gz|' + digest + '")\n')
+            + SDK_METADATA_ROOT_FIXTURE + '/share/Geant4/data/G4TEST1.0|G4TEST.1.0.tar.gz|' + digest + '")\n')
 
 
 def main():
@@ -69,8 +72,8 @@ def main():
                 text.replace("G4TEST1.0|", "G4TEST2.0|"), text + text,
                 text.replace(parsed[0]["upstream_md5"], "invalid-md5"),
                 text.replace("G4TEST.1.0.tar.gz", "G4TEST.1.tar.gz"),
-                text.replace("D:/verified-sdk", "D:/../sdk"),
-                text.replace("D:/verified-sdk", "${SDK}"),
+                text.replace(SDK_METADATA_ROOT_FIXTURE, SDK_TRAVERSAL_ROOT_FIXTURE),
+                text.replace(SDK_METADATA_ROOT_FIXTURE, "${SDK}"),
                 text.replace('")', ';' + text.split('"')[1] + '")')):
         try:
             fetcher.parse_config(bad)

@@ -22,7 +22,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "gui"))
-from g4usim_gui.core.environment_install import _absolute, _file_hash, _no_links, load_catalog  # noqa: E402
+from g4usim_gui.core.environment_install import _absolute, _file_hash, _host_tool, _no_links, load_catalog  # noqa: E402
 from build_install_catalog import portable_sources  # noqa: E402
 from build_package import geant4_version  # noqa: E402
 
@@ -32,6 +32,17 @@ IGNORED = {"__pycache__", ".pytest_cache"}
 OMITTED_SOURCE_PATHS = {"gui/.venv", "gui/venv", "gui/node_modules", "docs/verification", "docs/collab", "test/output"}
 REQUIRED_PRODUCT_PATHS = ("gui/main.py", "gui/g4usim_gui/app.py", "gui/g4usim_gui/output/__init__.py",
                           "gui/g4usim_gui/output/provenance.py")
+
+
+def describe_host_tools(cmake, compiler=None):
+    """Resolve explicit executable selections before expensive delivery work."""
+    result = {}
+    for role, requested in (("cmake", cmake), ("compiler", compiler)):
+        if requested is not None:
+            resolved = _host_tool(requested)
+            result[role] = {"requested": str(requested), "resolved": str(resolved),
+                            "sha256": _file_hash(resolved), "scope": "Selected executable file identity; execution checked by SDK probes"}
+    return result
 
 
 def excluded_source_path(path):
@@ -281,6 +292,11 @@ def main(argv=None):
     checkpoint()
     try:
         source = work / "source"
+        report["host_tools"] = describe_host_tools(args.cmake, args.compiler)
+        args.cmake = report["host_tools"]["cmake"]["resolved"]
+        if args.compiler is not None:
+            args.compiler = report["host_tools"]["compiler"]["resolved"]
+        checkpoint()
         # This is a lower-bound preflight while archive/frozen sizes are not yet
         # known. The complete measured runtime/SDK peak is checked before flows.
         data_discovery = load_catalog(discovery_path)
@@ -424,6 +440,9 @@ def main(argv=None):
                 assert sdk_consumer["status"] == sdk_app["status"] == "verified"
                 assert [command["stage"] for command in sdk_consumer["commands"]] == ["configure", "build", "run"]
                 assert [command["stage"] for command in sdk_app["commands"]] == ["configure", "build", "run"]
+                for role, identity in report["host_tools"].items():
+                    assert sdk_consumer["host_tools"][role]["sha256"] == identity["sha256"]
+                    assert sdk_app["host_tools"][role]["sha256"] == identity["sha256"]
                 assert all(command["exit_code"] == 0 for command in sdk_consumer["commands"] + sdk_app["commands"])
         report.update(status="verified", release_directory=str(release), offline_archive=str(archive) if args.outer_zip else None,
                       offline_archive_sha256=_file_hash(archive) if args.outer_zip else None, catalog=str(release / "install/catalog.json"))

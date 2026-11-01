@@ -8,6 +8,8 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "gui"))
 from g4usim_gui.core import install_layout
 
+WINDOWS_LAYOUT_FIXTURE = "build_vs2026/Release/G4UniversalSim.exe"  # platform-path-fixture: Temporary layout placeholder; never executed
+
 
 def main():
     with tempfile.TemporaryDirectory(prefix="g4-install-layout-") as directory:
@@ -33,7 +35,7 @@ def main():
         repo = root / "repository"
         (repo / "config").mkdir(parents=True)
         (repo / "CMakeLists.txt").write_text("# fixture\n", encoding="utf-8")
-        for relative in ("build_linux/G4UniversalSim", "build_vs2026/Release/G4UniversalSim.exe",
+        for relative in ("build_linux/G4UniversalSim", WINDOWS_LAYOUT_FIXTURE,
                          "out/custom/build/Release/G4UniversalSim.exe"):
             source_binary = repo / relative
             source_binary.parent.mkdir(parents=True, exist_ok=True)

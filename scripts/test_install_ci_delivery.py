@@ -67,6 +67,17 @@ def main():
         old = next(record for record in archived if record["source"] == str(changed))
         assert (work / old["path"]).read_bytes() == files[changed]
         assert len(json.loads((work / "evidence/index.json").read_text())) == len(newer)
+        actual_host = Path(getattr(sys, "_base_executable", sys.executable))
+        tools = ci_delivery.describe_host_tools(actual_host)
+        assert Path(tools["cmake"]["resolved"]) == actual_host.resolve()
+        assert tools["cmake"]["sha256"] == ci_delivery._file_hash(actual_host.resolve())
+        missing_tool = root / "absent-cmake"
+        try:
+            ci_delivery.describe_host_tools(missing_tool)
+        except OSError:
+            assert not missing_tool.exists()
+        else:
+            assert False, "Missing selected host tool passed delivery preflight"
     print("I2 CI snapshot closure and evidence archival passed")
 
 

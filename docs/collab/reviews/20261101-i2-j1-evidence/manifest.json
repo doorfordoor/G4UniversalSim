@@ -1,0 +1,960 @@
+{
+  "schema": "g4usim_candidate_review_archive_v1",
+  "collected_utc": "2026-11-01T12:39:30.603692+00:00",
+  "scope": "Historical candidate review and selected small pass/failure evidence; not final stage acceptance",
+  "source_context": "Original out/collab local paths; raw originals unchanged inside ZIP, readable text normalized explicitly",
+  "raw_zip_sha256": "1bed3ebc59d84b890b311d5dcdd5577b93c6893d3324241b3d39e4c2670d5adb",
+  "records": [
+    {
+      "source": "out/collab/j1-preview-p2-final-independent-review.md",
+      "raw_sha256": "96312ac00b28b2c0960674e86b28bfe01fdd1d571d545d425202b3587a9d5e6c",
+      "raw_bytes": 2564,
+      "raw_zip_entry": "out/collab/j1-preview-p2-final-independent-review.md",
+      "readable": "reports/01-j1-preview-p2-final-independent-review.md",
+      "readable_sha256": "cb1fdc6156901973a39714a23db26efac0f3d388f7a0dbc9ccf8aa1de7dcd298",
+      "readable_bytes": 2563,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/j1-layout-independent-review.md",
+      "raw_sha256": "fd91bf5c1e404c8298c81ad313e360451dd99ce816b668252f1978dbc647d0e5",
+      "raw_bytes": 4626,
+      "raw_zip_entry": "out/collab/j1-layout-independent-review.md",
+      "readable": "reports/02-j1-layout-independent-review.md",
+      "readable_sha256": "8b298ac5513487e49d74caaefe56f149557e46a059ed050f92b756e91d2b1681",
+      "readable_bytes": 4625,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/i2-install-ui-fix-review.md",
+      "raw_sha256": "aaede3ba18d1cd89b57c884a6c2e05e9c9b3d19361a3585de3c86ff28a93691a",
+      "raw_bytes": 2526,
+      "raw_zip_entry": "out/collab/i2-install-ui-fix-review.md",
+      "readable": "reports/03-i2-install-ui-fix-review.md",
+      "readable_sha256": "2f15d74df3d8acd06d100e8a2ef46a4a719ea6b2b0b041116575d0d4367e01e6",
+      "readable_bytes": 2525,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/i2-install-ui-final-review.md",
+      "raw_sha256": "57944b8ac8207ee64d761db704f32641abf249628de8919f60ff187cffb34291",
+      "raw_bytes": 2221,
+      "raw_zip_entry": "out/collab/i2-install-ui-final-review.md",
+      "readable": "reports/04-i2-install-ui-final-review.md",
+      "readable_sha256": "6aeb39b5a9fcdac80a51cdef8a532a28dfcd0625c0264fb4cb43446d9b44346d",
+      "readable_bytes": 2220,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/i2-freeze-identity-independent-review.md",
+      "raw_sha256": "0a6ae9ade7fdaee67e784d6ab304f59cf526f89aa8ee4a6baa1e7ee40ab59ddd",
+      "raw_bytes": 4752,
+      "raw_zip_entry": "out/collab/i2-freeze-identity-independent-review.md",
+      "readable": "reports/05-i2-freeze-identity-independent-review.md",
+      "readable_sha256": "f19d70a9aa4fb49dbf895fc9134aa4fefe03848b45a10a7ce136625a14b0945c",
+      "readable_bytes": 4750,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/j1-recovery-order-review.md",
+      "raw_sha256": "ed777d6e2dc670e258bcd81554b73f19d4c9fbc347fd516c26f94c15f9291fa0",
+      "raw_bytes": 9378,
+      "raw_zip_entry": "out/collab/j1-recovery-order-review.md",
+      "readable": "reports/06-j1-recovery-order-review.md",
+      "readable_sha256": "4cca7d3655979005ca026df90a57a61d60ec1bba068ecd97e2ccd503f39d8c98",
+      "readable_bytes": 9339,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/windows-freeze-fix-review.md",
+      "raw_sha256": "479fa5167f14014e2a0270fe080e582aedff2db94e76766579e60ea589452691",
+      "raw_bytes": 3217,
+      "raw_zip_entry": "out/collab/windows-freeze-fix-review.md",
+      "readable": "reports/07-windows-freeze-fix-review.md",
+      "readable_sha256": "71fb3f3661efa081794e875e6de7cedf04cb261e05696531efb6972b2dba4a24",
+      "readable_bytes": 3216,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/run-summary-mt-review.md",
+      "raw_sha256": "21bec6f01e62c0dbfb45939ba10b7f02f36588a8848a3b044878288e5dfdfc7c",
+      "raw_bytes": 3184,
+      "raw_zip_entry": "out/collab/run-summary-mt-review.md",
+      "readable": "reports/08-run-summary-mt-review.md",
+      "readable_sha256": "7d052096b936b5c1c07da0d2debcc27f4f3f32cdbf21e922bfd9fe35b3367470",
+      "readable_bytes": 3182,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/gdml-off-test-implementation.md",
+      "raw_sha256": "890bd3e1e6df0e00ba552a4cd30395dc9ee9f2281ad9353908d50bafdc51e597",
+      "raw_bytes": 3778,
+      "raw_zip_entry": "out/collab/gdml-off-test-implementation.md",
+      "readable": "reports/09-gdml-off-test-implementation.md",
+      "readable_sha256": "db4d63b7150d244f4e3c2de7a3022d7c417b614a9ca38db04b601d011b8f3b87",
+      "readable_bytes": 3776,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/i2-ci-delivery-independent-review.md",
+      "raw_sha256": "6e6a7f3293547ef57906e5dfe2ac8423ca4d87a4a697b05bc80786d31ae26d98",
+      "raw_bytes": 8443,
+      "raw_zip_entry": "out/collab/i2-ci-delivery-independent-review.md",
+      "readable": "reports/10-i2-ci-delivery-independent-review.md",
+      "readable_sha256": "69b15c080b811e0481bf63c7b3c1cf85501457fd5dc1b5b38395ca6770bbd0b7",
+      "readable_bytes": 8401,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/j1-preview-p2-independent-fixed.log",
+      "raw_sha256": "f2192f916cba25a48545cbc01a3acb3499f2bc01ca604ae532b4c1a6fd50b4a0",
+      "raw_bytes": 177,
+      "raw_zip_entry": "out/collab/j1-preview-p2-independent-fixed.log",
+      "readable": "evidence/011.log",
+      "readable_sha256": "325955ccb7bde8065d9bcc1f4a62050a62a3ec0c6901529f95cf639080d15e4e",
+      "readable_bytes": 176,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/j1-preview-p2-independent-readonly.log",
+      "raw_sha256": "45e95718f705d3fcc7cf267c8dc4595b61e58a0cb813726fcc10738db69a45b5",
+      "raw_bytes": 73,
+      "raw_zip_entry": "out/collab/j1-preview-p2-independent-readonly.log",
+      "readable": "evidence/012.log",
+      "readable_sha256": "182de09c771ce78fede6f2d2a1dd6ae64ecba82573d8a09f10c29d8450673112",
+      "readable_bytes": 72,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/j1-layout-review-first-preview.json",
+      "raw_sha256": "bea1855ab3b0ffcab6045b6847176bedd0c23337d563f602eabc9963a7a7af45",
+      "raw_bytes": 225,
+      "raw_zip_entry": "out/collab/j1-layout-review-first-preview.json",
+      "readable": "evidence/013.json",
+      "readable_sha256": "374ef116d38a501dfba25dd3a7993fb3cb1612a71e8ec3b5f27dba3067411c16",
+      "readable_bytes": 214,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/j1-layout-first-preview-fixed.json",
+      "raw_sha256": "e181bea67f3e54ef7f7a592ca658973251bab6965a4d54c12c9fc05cc2f8fe1d",
+      "raw_bytes": 224,
+      "raw_zip_entry": "out/collab/j1-layout-first-preview-fixed.json",
+      "readable": "evidence/014.json",
+      "readable_sha256": "da32734d0ff08bb1f26e1469aa52b45f92a3efa35baf95dab1774191e3fb4cc0",
+      "readable_bytes": 213,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/j1-layout-review-workspace.log",
+      "raw_sha256": "0f08f096b8899037b44e71ca28625a08eacedea4934c3e394756df050e064e5b",
+      "raw_bytes": 339,
+      "raw_zip_entry": "out/collab/j1-layout-review-workspace.log",
+      "readable": "evidence/015.log",
+      "readable_sha256": "323e461c4b5aa559ba31c3082a9009220f0681a0af5967cd807c12fb09a4fbb3",
+      "readable_bytes": 336,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/j1-layout-review-f4.log",
+      "raw_sha256": "8efc5d2fdea99cf87d571576cd829c007e1ff23e2c08415572dce6e2f2729ef8",
+      "raw_bytes": 98,
+      "raw_zip_entry": "out/collab/j1-layout-review-f4.log",
+      "readable": "evidence/016.log",
+      "readable_sha256": "dfe8ad9988affdb861de45926dc5b0f182142f01b890082c74cf979e51b184df",
+      "readable_bytes": 97,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/i2-install-ui-review-evidence.json",
+      "raw_sha256": "956bf58d490eb5b9aac4902007c1ae09838a882cf959b88fb394db073bd86e2b",
+      "raw_bytes": 181,
+      "raw_zip_entry": "out/collab/i2-install-ui-review-evidence.json",
+      "readable": "evidence/017.json",
+      "readable_sha256": "95ce80f56f5a0404695aade60979197c0f2e22b30c69ef77441abe60543ab7b0",
+      "readable_bytes": 174,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/i2-install-ui-fix-review-evidence.json",
+      "raw_sha256": "b033d51562d7c530a45c9245f5af232b1e1a43d9453f3f1d75f4ef97f48ae620",
+      "raw_bytes": 302,
+      "raw_zip_entry": "out/collab/i2-install-ui-fix-review-evidence.json",
+      "readable": "evidence/018.json",
+      "readable_sha256": "21110f84d24238850b7df003732268839616ad0e4d2a8b2b06cafef534f1a4c8",
+      "readable_bytes": 285,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/i2-install-ui-final-review-evidence.json",
+      "raw_sha256": "32babba503e67eefc2422de1f61280cb6eef0f7ed23d2f677a06639622f3f201",
+      "raw_bytes": 292,
+      "raw_zip_entry": "out/collab/i2-install-ui-final-review-evidence.json",
+      "readable": "evidence/019.json",
+      "readable_sha256": "606e7cdde405fe7b391b60427d7b63824ebc91243646649d6db3081b7a08d296",
+      "readable_bytes": 279,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/i2-freeze-identity-path-review-evidence.json",
+      "raw_sha256": "57d558ce2aa7bef0ebadc4403f5df1b56de22a0119e0a518a89a563c08d9f9ce",
+      "raw_bytes": 299,
+      "raw_zip_entry": "out/collab/i2-freeze-identity-path-review-evidence.json",
+      "readable": "evidence/020.json",
+      "readable_sha256": "8aed519b9bee96ca9d397530661f253cbca0bbe522bb32c0477f626a49af64b3",
+      "readable_bytes": 289,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/i2-freeze-identity-path-review-fixed-evidence.json",
+      "raw_sha256": "38bd8cb8aa93ccc07d62e4dc3c9b765f007c2018dbd1f50d35982c35ca1e1406",
+      "raw_bytes": 299,
+      "raw_zip_entry": "out/collab/i2-freeze-identity-path-review-fixed-evidence.json",
+      "readable": "evidence/021.json",
+      "readable_sha256": "131cb8eca7cd6cba6ab857b548dbb3f866c749eb47b1064f5c536a17abd72c78",
+      "readable_bytes": 289,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/i2-freeze-identity-independent-test.log",
+      "raw_sha256": "255285d48a167f6435e0762e58cc3bf2c95e3d4c88264dfd67a10b0e9ce7403f",
+      "raw_bytes": 96,
+      "raw_zip_entry": "out/collab/i2-freeze-identity-independent-test.log",
+      "readable": "evidence/022.log",
+      "readable_sha256": "5cfdd612249aaaff01ce27ed926038313cab8b1a763ed10a3ac5adbefab8827d",
+      "readable_bytes": 94,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/i2-freeze-cleanup-alias-regression.log",
+      "raw_sha256": "0590b664d6c761549aa518c87b3d88a304fd108f6cb6b04a6d643325af73fabe",
+      "raw_bytes": 96,
+      "raw_zip_entry": "out/collab/i2-freeze-cleanup-alias-regression.log",
+      "readable": "evidence/023.log",
+      "readable_sha256": "54466222cb7269eee61bdcad8eaad88ddcc278cc65b063e351d57a40ca21d4e8",
+      "readable_bytes": 94,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/i2-freeze-cleanup-alias-posix.log",
+      "raw_sha256": "a18bc3d499fc80eb90ab95a6c6c2141bf3951950056c0823d5dfd4f243245dbd",
+      "raw_bytes": 96,
+      "raw_zip_entry": "out/collab/i2-freeze-cleanup-alias-posix.log",
+      "readable": "evidence/024.log",
+      "readable_sha256": "968d0c11ae9f515f06243bc04a6ab0e5d8e684f2eb3a61eee7f6f1e6a0c21fc4",
+      "readable_bytes": 94,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/j1-default-entry-deferred-close-wait.log",
+      "raw_sha256": "141f2480457cc940ad75bba66069eb2377032aacfbd0b3d8cc30c4e72a40dece",
+      "raw_bytes": 297,
+      "raw_zip_entry": "out/collab/j1-default-entry-deferred-close-wait.log",
+      "readable": "evidence/025.log",
+      "readable_sha256": "032b99ac8d92dc1f673a426ffa94da6215c6739bb463fa4cc36669fe279362f2",
+      "readable_bytes": 292,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/j1-review-current-default-none.log",
+      "raw_sha256": "89f28ebda5637db9c12d1c3cba4d4e6cb7924451b284676f6419d93707cf3910",
+      "raw_bytes": 156,
+      "raw_zip_entry": "out/collab/j1-review-current-default-none.log",
+      "readable": "evidence/026.log",
+      "readable_sha256": "2b84c1a2d7a32225c47c566d81ebacea9d49fd60f1d616ebe9a1adff9e45a0e6",
+      "readable_bytes": 155,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/j1-review-current-override.log",
+      "raw_sha256": "dfda3dfb1644b6a2e41b749256082ac8d34ad4a8d550fe27814cf9fc352e0e4c",
+      "raw_bytes": 155,
+      "raw_zip_entry": "out/collab/j1-review-current-override.log",
+      "readable": "evidence/027.log",
+      "readable_sha256": "299a459f5ff30d64e622427e4429b2ec9a01ff8587564a60a52ff0e1dba05bf9",
+      "readable_bytes": 154,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/j1-review-current-selftest.json",
+      "raw_sha256": "f8c76bec479b27f7fec44a3e306e086eee4e89df91bfbdae9a10e4b5079f5953",
+      "raw_bytes": 450,
+      "raw_zip_entry": "out/collab/j1-review-current-selftest.json",
+      "readable": "evidence/028.json",
+      "readable_sha256": "f8c76bec479b27f7fec44a3e306e086eee4e89df91bfbdae9a10e4b5079f5953",
+      "readable_bytes": 450,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/i2-qt-icu-root-cause.json",
+      "raw_sha256": "6a4a221241d78795a37f6391733403ce7ca57d64d2242813410d18854cc81851",
+      "raw_bytes": 963,
+      "raw_zip_entry": "out/collab/i2-qt-icu-root-cause.json",
+      "readable": "evidence/029.json",
+      "readable_sha256": "89ea4b29f2b764957481ba3eef595b1dc1020812bfa1394eba534f20669e9e47",
+      "readable_bytes": 931,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/i2-qt-dll-inventory.json",
+      "raw_sha256": "34e1ac715ab586a93804b959ff006b13bf8b2c53930ea79d420c8449b5b5daaa",
+      "raw_bytes": 9267,
+      "raw_zip_entry": "out/collab/i2-qt-dll-inventory.json",
+      "readable": "evidence/030.json",
+      "readable_sha256": "72aa4910cdcafa31f244221c2663c0696a9e698ef005c66d07ec1e3dd5fd9b5d",
+      "readable_bytes": 8976,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/windows-freeze-fix-review-evidence.json",
+      "raw_sha256": "b66a3f2b3fcbf8da6603a4e1ad01f07b9e073f20b5267ccb81d8ca03809ecf93",
+      "raw_bytes": 314,
+      "raw_zip_entry": "out/collab/windows-freeze-fix-review-evidence.json",
+      "readable": "evidence/031.json",
+      "readable_sha256": "a0457eebe5ab42f9a990afb186bba222e710b76ac5af82f3112ffdcf75180840",
+      "readable_bytes": 302,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/j1-appearance-20261101/original-venv-p2/renderer-test.log",
+      "raw_sha256": "ded025298b1ac92550c830f152a28f49acd907f821d96e3b6a001818754b9c1e",
+      "raw_bytes": 159,
+      "raw_zip_entry": "out/collab/j1-appearance-20261101/original-venv-p2/renderer-test.log",
+      "readable": "evidence/032.log",
+      "readable_sha256": "12a07191c5b51ab1f32a4c8184cf6cf8526c3734649a76f8771c5570c8c98e52",
+      "readable_bytes": 157,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/run-summary-mt-review/original-run-summary-failure.log",
+      "raw_sha256": "95de6e1a5acb926b521ec42eaa40bb311f851852e26b9559784720ae073085c2",
+      "raw_bytes": 1172,
+      "raw_zip_entry": "out/collab/run-summary-mt-review/original-run-summary-failure.log",
+      "readable": "evidence/033.log",
+      "readable_sha256": "95de6e1a5acb926b521ec42eaa40bb311f851852e26b9559784720ae073085c2",
+      "readable_bytes": 1172,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/run-summary-mt-review/original-failure-identity.json",
+      "raw_sha256": "8ea20ffc2c630d20e9a481d0ca6ace4a7309cac79a706c2ebe925c42b21db1aa",
+      "raw_bytes": 293,
+      "raw_zip_entry": "out/collab/run-summary-mt-review/original-failure-identity.json",
+      "readable": "evidence/034.json",
+      "readable_sha256": "682647956e4896473b96d4de8376c0b4890d436d692f4bdab5494285857d4913",
+      "readable_bytes": 289,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/run-summary-mt-review/baseline/evidence.json",
+      "raw_sha256": "2ece09f6724437460b3da300c95ecf97157b248da1902df9ad691ec726b3edb3",
+      "raw_bytes": 4520,
+      "raw_zip_entry": "out/collab/run-summary-mt-review/baseline/evidence.json",
+      "readable": "evidence/035.json",
+      "readable_sha256": "149335f3f6cb877d7516ae120750c11544dd4db4410463f9bbde8cc5437db584",
+      "readable_bytes": 4334,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/run-summary-mt-review/baseline/validated-observations.json",
+      "raw_sha256": "dc03c40b97d16e04bbab5b33c5541ec8f43ab4fc8d1eb99652b2a87038ac2bd2",
+      "raw_bytes": 23372,
+      "raw_zip_entry": "out/collab/run-summary-mt-review/baseline/validated-observations.json",
+      "readable": "evidence/036.json",
+      "readable_sha256": "24857f74ae2577bbb92a58734f14ff71240ec85eef6306fc01f299d57e8ca44d",
+      "readable_bytes": 22283,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/run-summary-mt-review/current-helper/identity.json",
+      "raw_sha256": "8453ebb92dc05e825cf247e5e85888b809f0c7378c85c9aa847efae892d7d18f",
+      "raw_bytes": 298,
+      "raw_zip_entry": "out/collab/run-summary-mt-review/current-helper/identity.json",
+      "readable": "evidence/037.json",
+      "readable_sha256": "82c30202429f4e99cb10702aa048e44cefea9aa9dd70aa5eb3cf95746dc72a7e",
+      "readable_bytes": 293,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/run-summary-mt-review/windows114-candidate.log",
+      "raw_sha256": "dfd2605bc54794c232b8650a50951f903bd6814d0b68f5a89fd035718dcaaedb",
+      "raw_bytes": 815,
+      "raw_zip_entry": "out/collab/run-summary-mt-review/windows114-candidate.log",
+      "readable": "evidence/038.log",
+      "readable_sha256": "def30d083486aef5dc9c6c6ef2c5b6c8a9079c108b0da797cf5aa209ea70ab21",
+      "readable_bytes": 811,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/run-summary-mt-review/current-helper.log",
+      "raw_sha256": "0288c00e016eb87771f586eae00591d7b6486af11818145053113c38f680d597",
+      "raw_bytes": 737,
+      "raw_zip_entry": "out/collab/run-summary-mt-review/current-helper.log",
+      "readable": "evidence/039.log",
+      "readable_sha256": "8eca12d648ba06be64b32026931e2dd71f35a94817b84faf1fc489642a857f8e",
+      "readable_bytes": 734,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/run-summary-mt-review/observation-negative-tests.log",
+      "raw_sha256": "a42cee27e53027f520b00b992deb545976ab78188346f8b5460005d78b45b807",
+      "raw_bytes": 1260,
+      "raw_zip_entry": "out/collab/run-summary-mt-review/observation-negative-tests.log",
+      "readable": "evidence/040.log",
+      "readable_sha256": "b55555cfa50beaea9c6f35508baaa4d950e52f8c94ea567374cd0af2d36f9abf",
+      "readable_bytes": 1253,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/gdml-off-candidate/original-failure-identities.json",
+      "raw_sha256": "d5f3b64ed56f94043902b4f27e8a0ffe518fbb4557e3ec1a9ca874e0cce76483",
+      "raw_bytes": 892,
+      "raw_zip_entry": "out/collab/gdml-off-candidate/original-failure-identities.json",
+      "readable": "evidence/041.json",
+      "readable_sha256": "2c896c23bb8088cfaebe3f1ecfd90ef1e77f80b72e42c29e5a24d38bef58df40",
+      "readable_bytes": 876,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/gdml-off-candidate/original-failure-fields_a7.log",
+      "raw_sha256": "fcdc231c6585c0e5513d52a27148e9d41ccd8ce184af87a1d98468f0a281880a",
+      "raw_bytes": 6487,
+      "raw_zip_entry": "out/collab/gdml-off-candidate/original-failure-fields_a7.log",
+      "readable": "evidence/042.log",
+      "readable_sha256": "fcdc231c6585c0e5513d52a27148e9d41ccd8ce184af87a1d98468f0a281880a",
+      "readable_bytes": 6487,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/gdml-off-candidate/original-failure-gdml_bias_identity.log",
+      "raw_sha256": "62863db1ebf82cbdda9e4d30ac70e0c025e836512b191fd66ae0df3aa286201d",
+      "raw_bytes": 1658,
+      "raw_zip_entry": "out/collab/gdml-off-candidate/original-failure-gdml_bias_identity.log",
+      "readable": "evidence/043.log",
+      "readable_sha256": "62863db1ebf82cbdda9e4d30ac70e0c025e836512b191fd66ae0df3aa286201d",
+      "readable_bytes": 1658,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/gdml-off-candidate/original-failure-gdml_touchable_identity.log",
+      "raw_sha256": "6cf296e82b0d57051ce971446985603f5677b88404c51cd708c559bb3f6206a8",
+      "raw_bytes": 1345,
+      "raw_zip_entry": "out/collab/gdml-off-candidate/original-failure-gdml_touchable_identity.log",
+      "readable": "evidence/044.log",
+      "readable_sha256": "6cf296e82b0d57051ce971446985603f5677b88404c51cd708c559bb3f6206a8",
+      "readable_bytes": 1345,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/gdml-off-candidate/bias.log",
+      "raw_sha256": "f2fd795a96ba7a0167c0c0facc56cba04b5a1f555b17499eab3c9467ba9732fa",
+      "raw_bytes": 5065,
+      "raw_zip_entry": "out/collab/gdml-off-candidate/bias.log",
+      "readable": "evidence/045.log",
+      "readable_sha256": "e32e0bcb3d8ec30f0d0d4ea660cdf2c28d652784436f7cf80aed3c872177cd52",
+      "readable_bytes": 5038,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/gdml-off-candidate/touchable.log",
+      "raw_sha256": "869fc4aa8dacc1a796e22b4d1d19c48a8da33cb3a2d2ba15edf752715c82e2f5",
+      "raw_bytes": 2505,
+      "raw_zip_entry": "out/collab/gdml-off-candidate/touchable.log",
+      "readable": "evidence/046.log",
+      "readable_sha256": "0ae1a232f62efe53e27fc5e96511801f821e7c0fab604485cd3d7a5de1466a6c",
+      "readable_bytes": 2492,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/gdml-off-candidate/fields-off.log",
+      "raw_sha256": "1da64326a7d336ab42fd2a63dcc5267db0bb03df5f17e929f97f396c8ffe0574",
+      "raw_bytes": 641,
+      "raw_zip_entry": "out/collab/gdml-off-candidate/fields-off.log",
+      "readable": "evidence/047.log",
+      "readable_sha256": "cbdd33784f205d346918d385d8056dce0a46fd43610a7a44a2eed5720be7669a",
+      "readable_bytes": 637,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/gdml-off-candidate/fields-a7-full-off.log",
+      "raw_sha256": "bf81e78284b446c34b59bb06c699217d8cfb79233a3c2834cdc3a9cbdf624400",
+      "raw_bytes": 7710,
+      "raw_zip_entry": "out/collab/gdml-off-candidate/fields-a7-full-off.log",
+      "readable": "evidence/048.log",
+      "readable_sha256": "3333ec2902be3858be2358c72a67098d67ddf00415c35ea9346e450c2508c0a4",
+      "readable_bytes": 7610,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/gdml-off-candidate/helper-negative-evidence.json",
+      "raw_sha256": "fa047e191d1e4a1e6d38534abe2e32badff5b9c93bb40a3ea7ab8ba9daad484f",
+      "raw_bytes": 141,
+      "raw_zip_entry": "out/collab/gdml-off-candidate/helper-negative-evidence.json",
+      "readable": "evidence/049.json",
+      "readable_sha256": "9faa4695fac9682b958d66a9e4bc6105c421615fb3147d39617c3a402a40ea7f",
+      "readable_bytes": 133,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/i2-ci-review/source-snapshot-evidence.json",
+      "raw_sha256": "9b42fb6b7970832517ee406b5fb24217ffcd2fb429c3f6c8f128d2df2b42e3d6",
+      "raw_bytes": 227,
+      "raw_zip_entry": "out/collab/i2-ci-review/source-snapshot-evidence.json",
+      "readable": "evidence/050.json",
+      "readable_sha256": "bc7ed3a808c38d0726e90165dc13a7d3a11a167d1c72ca5e6cf66487c26f13bd",
+      "readable_bytes": 218,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/i2-ci-review/tar-scope-evidence.json",
+      "raw_sha256": "232f61d6355d21e310a092f53d66adfa5207265476f5f772650d83c00cbbb142",
+      "raw_bytes": 209,
+      "raw_zip_entry": "out/collab/i2-ci-review/tar-scope-evidence.json",
+      "readable": "evidence/051.json",
+      "readable_sha256": "b238b44bba724c3d812ac3402fe462fe2c58173c40dca220911030d9ef7a48f5",
+      "readable_bytes": 197,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/i2-ci-review/ci-fixes-small-review-evidence.json",
+      "raw_sha256": "fcfa00dac4a85b5cb743435e73f0c5371a59211ff15b493eec8aa50b51905d57",
+      "raw_bytes": 501,
+      "raw_zip_entry": "out/collab/i2-ci-review/ci-fixes-small-review-evidence.json",
+      "readable": "evidence/052.json",
+      "readable_sha256": "2fea8111ab5b233b91e733069bb3683a8df5339eac158170b2508d9ae9e07805",
+      "readable_bytes": 485,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/i2-ci-review/ci-fixes-small-review.log",
+      "raw_sha256": "2b063f06425708870d5137310a7306729996a60d3920b222469ffba37899c552",
+      "raw_bytes": 429,
+      "raw_zip_entry": "out/collab/i2-ci-review/ci-fixes-small-review.log",
+      "readable": "evidence/053.log",
+      "readable_sha256": "d8bd61d860fba9ea601433b7750922f474bd04deb5adfb4f281b1f818914bae3",
+      "readable_bytes": 428,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/i2-ci-review/review_ci_fixes.py",
+      "raw_sha256": "293f7c77b91577842d65588eb28994cd4c9460a154b326f0bbbc9ed7df57d826",
+      "raw_bytes": 3386,
+      "raw_zip_entry": "out/collab/i2-ci-review/review_ci_fixes.py",
+      "readable": "evidence/054.py",
+      "readable_sha256": "f7fd02ce3297419dee4f766ee15e92508c3786c52ec658a3c5a0e32e58160afe",
+      "readable_bytes": 3352,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/i2-ci-review/reviewed-files-after-fixes.json",
+      "raw_sha256": "f95fd5c3cad1e04705fad15fc346be1e0ce3352f762bfa1cddb4288c35da74d7",
+      "raw_bytes": 436,
+      "raw_zip_entry": "out/collab/i2-ci-review/reviewed-files-after-fixes.json",
+      "readable": "evidence/055.json",
+      "readable_sha256": "f49eaabc084877393b87f00ad3ab266717e34caf2c11547dc669659a7c9c3198",
+      "readable_bytes": 431,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/run-summary-mt-review/baseline/native-2/hits_t0.csv",
+      "raw_sha256": "6a80e84228e97e05384249a2d44f3f9d4da568cc050e7e9bab05882a8f063832",
+      "raw_bytes": 297198,
+      "raw_zip_entry": "out/collab/run-summary-mt-review/baseline/native-2/hits_t0.csv",
+      "readable": "evidence/056.csv",
+      "readable_sha256": "ea5ca999f8ec43fb6d81049f75fb3d30cf89ebf79ea54e4db052533ade369ccf",
+      "readable_bytes": 295851,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/run-summary-mt-review/baseline/native-2/hits_t0_r1.csv",
+      "raw_sha256": "4f4c3ef46564762888e81aa18bf0d925095276625bc4e5831b85fdeefce8451e",
+      "raw_bytes": 449085,
+      "raw_zip_entry": "out/collab/run-summary-mt-review/baseline/native-2/hits_t0_r1.csv",
+      "readable": "evidence/057.csv",
+      "readable_sha256": "329e49e1384e750295669d862413e93fcaca8e81de2270a2fb0ef5ebc9672c33",
+      "readable_bytes": 447051,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/run-summary-mt-review/baseline/native-2/hits_t0_r2.csv",
+      "raw_sha256": "2c0a776b3c7da3cee0b9d384c71f66c753261af4f1e533a660dd2c692a4885d0",
+      "raw_bytes": 168557,
+      "raw_zip_entry": "out/collab/run-summary-mt-review/baseline/native-2/hits_t0_r2.csv",
+      "readable": "evidence/058.csv",
+      "readable_sha256": "6d826585b1eab837c1b31683e48121b666cfe1f8d06158eb6f17d20f7f388541",
+      "readable_bytes": 167846,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/run-summary-mt-review/baseline/native-2/hits_t1_r1.csv",
+      "raw_sha256": "9cca5be856c0f5e4216401a18669ba8391b902db1cb101497efa0cacbc69947b",
+      "raw_bytes": 140979,
+      "raw_zip_entry": "out/collab/run-summary-mt-review/baseline/native-2/hits_t1_r1.csv",
+      "readable": "evidence/059.csv",
+      "readable_sha256": "f08a34ab298632ac752bbed71c05f69765878e2ac90e6464c164114662279dfd",
+      "readable_bytes": 140338,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/run-summary-mt-review/baseline/native-2/hits_t1_r2.csv",
+      "raw_sha256": "bab52c8816cf78bee386ce7d3ddece882de9bc60862af922ac852449b0b2edba",
+      "raw_bytes": 503217,
+      "raw_zip_entry": "out/collab/run-summary-mt-review/baseline/native-2/hits_t1_r2.csv",
+      "readable": "evidence/060.csv",
+      "readable_sha256": "d6e051bf7f7b51404cd24566972bf4326222c7ed5ee0e81c23500619641a943a",
+      "readable_bytes": 501094,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/run-summary-mt-review/baseline/native-2/event_edep_t0.csv",
+      "raw_sha256": "711b992bb51642cd4122d572b8d7a035cf1dd49aa774afed01cb28e1fb52ba56",
+      "raw_bytes": 118,
+      "raw_zip_entry": "out/collab/run-summary-mt-review/baseline/native-2/event_edep_t0.csv",
+      "readable": "evidence/061.csv",
+      "readable_sha256": "d896d9e2a50e11d887336f830430d2177a9a0dcc48be35638d5df0c73fccca25",
+      "readable_bytes": 109,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/run-summary-mt-review/baseline/native-2/event_edep_t0_r1.csv",
+      "raw_sha256": "874195ddcc7db14350a666e3b702a1728b559ca75d209f3c354937a8969eb03e",
+      "raw_bytes": 124,
+      "raw_zip_entry": "out/collab/run-summary-mt-review/baseline/native-2/event_edep_t0_r1.csv",
+      "readable": "evidence/062.csv",
+      "readable_sha256": "396bcb80ca363469ed2bc974a9372f1f6ec7108a94e5cf933e40df1657c901b5",
+      "readable_bytes": 117,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/run-summary-mt-review/baseline/native-2/event_edep_t0_r2.csv",
+      "raw_sha256": "644eda1c59d2b0c6476ee6c105f2cf1cb379706ec33dbb5b7caf4e9b34415b2d",
+      "raw_bytes": 64,
+      "raw_zip_entry": "out/collab/run-summary-mt-review/baseline/native-2/event_edep_t0_r2.csv",
+      "readable": "evidence/063.csv",
+      "readable_sha256": "7399a6db3da263cc9f8eaf7677b9fdb7cae4dbf947a5dcdb72b3d6781848ea1d",
+      "readable_bytes": 61,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/run-summary-mt-review/baseline/native-2/event_edep_t1_r1.csv",
+      "raw_sha256": "f1ad4f824257ca09b7992d527c2c7fbdafc10cfbe03ebcb04cf9b2529b684e62",
+      "raw_bytes": 88,
+      "raw_zip_entry": "out/collab/run-summary-mt-review/baseline/native-2/event_edep_t1_r1.csv",
+      "readable": "evidence/064.csv",
+      "readable_sha256": "4e9be34d08603dd5add1a8d99b68a8c62b25c12e3e73021bd840cb5e70ed96ca",
+      "readable_bytes": 85,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/run-summary-mt-review/baseline/native-2/event_edep_t1_r2.csv",
+      "raw_sha256": "2ad81de55e5bed3d035f1da63154b5bddced3b7584d779356aede10dd0df7e83",
+      "raw_bytes": 100,
+      "raw_zip_entry": "out/collab/run-summary-mt-review/baseline/native-2/event_edep_t1_r2.csv",
+      "readable": "evidence/065.csv",
+      "readable_sha256": "61803cdf2a53899acade259add4b2d0163d54484a28db874a459219ffe98251f",
+      "readable_bytes": 93,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/run-summary-mt-review/baseline/native-2/run_summary.txt",
+      "raw_sha256": "fae59383b9954cb4f7060a4e3a4d8b16c59be01f636c51a1a8c9fbdceefe72b6",
+      "raw_bytes": 29545,
+      "raw_zip_entry": "out/collab/run-summary-mt-review/baseline/native-2/run_summary.txt",
+      "readable": "evidence/066.txt",
+      "readable_sha256": "239775b47c7c42e31755dc0e76aaeaaa19e9152fd447981c0fbf291b0f77ef19",
+      "readable_bytes": 29153,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/run-summary-mt-review/current-helper/source/input.mac",
+      "raw_sha256": "d80d7bc5ceb171b62c4b9f24005bfeca1a82d0389cad21b5ed79845160ff4aa3",
+      "raw_bytes": 968,
+      "raw_zip_entry": "out/collab/run-summary-mt-review/current-helper/source/input.mac",
+      "readable": "evidence/067.mac",
+      "readable_sha256": "c60dbdaccf179822fef46650d2c6d6cd68c42ab33b7c8bfcd3c6b54c1c7713a8",
+      "readable_bytes": 931,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/run-summary-mt-review/current-helper/source/attempts.json",
+      "raw_sha256": "6e2bdb71fb2961d8c3cce1c6484f74cfa1b286416bcec0eb780e2a43722302e3",
+      "raw_bytes": 6021,
+      "raw_zip_entry": "out/collab/run-summary-mt-review/current-helper/source/attempts.json",
+      "readable": "evidence/068.json",
+      "readable_sha256": "77f5318c29bbbf9d35ddc73117a93954d929f70b1a5d690ea192c7f6c97f6429",
+      "readable_bytes": 5786,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/run-summary-mt-review/current-helper/source/attempt-01/hits_t0.csv",
+      "raw_sha256": "21a7a31eec2270a30958613a763dfa4fbe91870e93255e64fde02de33b3844ee",
+      "raw_bytes": 71321,
+      "raw_zip_entry": "out/collab/run-summary-mt-review/current-helper/source/attempt-01/hits_t0.csv",
+      "readable": "evidence/069.csv",
+      "readable_sha256": "e643c5f33a479623c8f01dcb5b25f4ed5cbf4a89cbc737ad4e6cb82082aa95ba",
+      "readable_bytes": 70999,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/run-summary-mt-review/current-helper/source/attempt-01/hits_t0_r1.csv",
+      "raw_sha256": "e6d529e3ee67cb438b34a89f78801a86a6238024a5e621a47851695bb2413807",
+      "raw_bytes": 308132,
+      "raw_zip_entry": "out/collab/run-summary-mt-review/current-helper/source/attempt-01/hits_t0_r1.csv",
+      "readable": "evidence/070.csv",
+      "readable_sha256": "e1bcb854033cc05a55992dfe0dc09432fed067ac36f24d0aba4f5ed7db470dd2",
+      "readable_bytes": 306813,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/run-summary-mt-review/current-helper/source/attempt-01/hits_t1.csv",
+      "raw_sha256": "e161325316b2b40aa31543e48dee029a9bbc2075ce3f49d08450eeb770eeb631",
+      "raw_bytes": 226035,
+      "raw_zip_entry": "out/collab/run-summary-mt-review/current-helper/source/attempt-01/hits_t1.csv",
+      "readable": "evidence/071.csv",
+      "readable_sha256": "0a80c52b5a18b6efb60f521d9d583f5a1b15a972fd4b5a8f32b9f5660d787553",
+      "readable_bytes": 225009,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/run-summary-mt-review/current-helper/source/attempt-01/hits_t1_r1.csv",
+      "raw_sha256": "55d31d9439c9d3ebe27a350e65d80813e5219d9e481f768b49e8c4e3d87ca21b",
+      "raw_bytes": 897102,
+      "raw_zip_entry": "out/collab/run-summary-mt-review/current-helper/source/attempt-01/hits_t1_r1.csv",
+      "readable": "evidence/072.csv",
+      "readable_sha256": "b06a371137849e322e7a7151d64918fe924f52634419a5e8bf869f9150cde3e4",
+      "readable_bytes": 893288,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/run-summary-mt-review/current-helper/source/attempt-01/event_edep_t0.csv",
+      "raw_sha256": "3bfb4ec454811f43c3e327c1d253dc32650311be0054e11ec139b2c1a1533cb0",
+      "raw_bytes": 64,
+      "raw_zip_entry": "out/collab/run-summary-mt-review/current-helper/source/attempt-01/event_edep_t0.csv",
+      "readable": "evidence/073.csv",
+      "readable_sha256": "3ec5837f70b9e5f3d888c89cd4d391a4866206507040a4e4bdca459daf3a7a77",
+      "readable_bytes": 61,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/run-summary-mt-review/current-helper/source/attempt-01/event_edep_t0_r1.csv",
+      "raw_sha256": "bd430591923b9ba2efc325440ab9126b17fb9191b2e1f92e37b43f34a6bf41e5",
+      "raw_bytes": 64,
+      "raw_zip_entry": "out/collab/run-summary-mt-review/current-helper/source/attempt-01/event_edep_t0_r1.csv",
+      "readable": "evidence/074.csv",
+      "readable_sha256": "8eddfc98c399805bf164d159503357dd0af264534b9ebfeecc8149def7d12018",
+      "readable_bytes": 61,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/run-summary-mt-review/current-helper/source/attempt-01/event_edep_t1.csv",
+      "raw_sha256": "f43a67701d44e8147a0a29f7f4d98f5767671d23fbf05fa1d3881bcb78732f42",
+      "raw_bytes": 100,
+      "raw_zip_entry": "out/collab/run-summary-mt-review/current-helper/source/attempt-01/event_edep_t1.csv",
+      "readable": "evidence/075.csv",
+      "readable_sha256": "184d0db9336b05ce8ca6e9ac8df1ddc78b79253ce8417551d8289891a81c321b",
+      "readable_bytes": 93,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/run-summary-mt-review/current-helper/source/attempt-01/event_edep_t1_r1.csv",
+      "raw_sha256": "11323a1a04ec1092370028f25a6fb2b4ba64fec1a06fed6ba69c41969d616bb5",
+      "raw_bytes": 100,
+      "raw_zip_entry": "out/collab/run-summary-mt-review/current-helper/source/attempt-01/event_edep_t1_r1.csv",
+      "readable": "evidence/076.csv",
+      "readable_sha256": "ecc8deb6f273a93b2dbad336c03e91e27a234a9f8bd764a8dfd350a23f424d43",
+      "readable_bytes": 93,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/run-summary-mt-review/current-helper/source/attempt-01/run_summary.txt",
+      "raw_sha256": "6a294a0bd7968bd61aa31cfb6cbcad687211f85e2b195c4f7ab1e825b191fabf",
+      "raw_bytes": 25085,
+      "raw_zip_entry": "out/collab/run-summary-mt-review/current-helper/source/attempt-01/run_summary.txt",
+      "readable": "evidence/077.txt",
+      "readable_sha256": "cd2d6a669806c100c2c18a025dee0fba06f7fa59a71637cb6e01ec353b5fc6eb",
+      "readable_bytes": 24747,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/run-summary-mt-review/current-helper/native/input.mac",
+      "raw_sha256": "4d6e2e884a840c0ee26a77415d8bd53882664b483deed44152b65e822392869d",
+      "raw_bytes": 977,
+      "raw_zip_entry": "out/collab/run-summary-mt-review/current-helper/native/input.mac",
+      "readable": "evidence/078.mac",
+      "readable_sha256": "60df46401e800d9d3f52aad804802cf6e3a4449ba3c320190bfb72bbb8d4f4b0",
+      "readable_bytes": 939,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/run-summary-mt-review/current-helper/native/attempts.json",
+      "raw_sha256": "69ed401d56127cb107fc2e1619252349d5e62193ae7f22afbac3cd5f4d285546",
+      "raw_bytes": 8530,
+      "raw_zip_entry": "out/collab/run-summary-mt-review/current-helper/native/attempts.json",
+      "readable": "evidence/079.json",
+      "readable_sha256": "7706576de3ad688537ab058631550372702f86d2d440217383e1f5aca284627b",
+      "readable_bytes": 8188,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/run-summary-mt-review/current-helper/native/attempt-01/hits_t0.csv",
+      "raw_sha256": "21a7a31eec2270a30958613a763dfa4fbe91870e93255e64fde02de33b3844ee",
+      "raw_bytes": 71321,
+      "raw_zip_entry": "out/collab/run-summary-mt-review/current-helper/native/attempt-01/hits_t0.csv",
+      "readable": "evidence/080.csv",
+      "readable_sha256": "e643c5f33a479623c8f01dcb5b25f4ed5cbf4a89cbc737ad4e6cb82082aa95ba",
+      "readable_bytes": 70999,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/run-summary-mt-review/current-helper/native/attempt-01/hits_t0_r1.csv",
+      "raw_sha256": "4f4c3ef46564762888e81aa18bf0d925095276625bc4e5831b85fdeefce8451e",
+      "raw_bytes": 449085,
+      "raw_zip_entry": "out/collab/run-summary-mt-review/current-helper/native/attempt-01/hits_t0_r1.csv",
+      "readable": "evidence/081.csv",
+      "readable_sha256": "329e49e1384e750295669d862413e93fcaca8e81de2270a2fb0ef5ebc9672c33",
+      "readable_bytes": 447051,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/run-summary-mt-review/current-helper/native/attempt-01/hits_t0_r2.csv",
+      "raw_sha256": "401c687abf7305ca749b676025d2a2b3e45008ee8504da8de649e68ac4fa5dec",
+      "raw_bytes": 166849,
+      "raw_zip_entry": "out/collab/run-summary-mt-review/current-helper/native/attempt-01/hits_t0_r2.csv",
+      "readable": "evidence/082.csv",
+      "readable_sha256": "1c8efa173ed6e4e2edb7f56768ef0aabd4487a862b518eac06ca9b96ff6cf6d1",
+      "readable_bytes": 166143,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/run-summary-mt-review/current-helper/native/attempt-01/hits_t1.csv",
+      "raw_sha256": "e161325316b2b40aa31543e48dee029a9bbc2075ce3f49d08450eeb770eeb631",
+      "raw_bytes": 226035,
+      "raw_zip_entry": "out/collab/run-summary-mt-review/current-helper/native/attempt-01/hits_t1.csv",
+      "readable": "evidence/083.csv",
+      "readable_sha256": "0a80c52b5a18b6efb60f521d9d583f5a1b15a972fd4b5a8f32b9f5660d787553",
+      "readable_bytes": 225009,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/run-summary-mt-review/current-helper/native/attempt-01/hits_t1_r1.csv",
+      "raw_sha256": "9cca5be856c0f5e4216401a18669ba8391b902db1cb101497efa0cacbc69947b",
+      "raw_bytes": 140979,
+      "raw_zip_entry": "out/collab/run-summary-mt-review/current-helper/native/attempt-01/hits_t1_r1.csv",
+      "readable": "evidence/084.csv",
+      "readable_sha256": "f08a34ab298632ac752bbed71c05f69765878e2ac90e6464c164114662279dfd",
+      "readable_bytes": 140338,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/run-summary-mt-review/current-helper/native/attempt-01/hits_t1_r2.csv",
+      "raw_sha256": "2960796a7c675cc07dca05194f4481a027052f56a7d62d04fb71e5309859ee0e",
+      "raw_bytes": 504925,
+      "raw_zip_entry": "out/collab/run-summary-mt-review/current-helper/native/attempt-01/hits_t1_r2.csv",
+      "readable": "evidence/085.csv",
+      "readable_sha256": "285cf8c00a0809225e5cdaf4c47662ad4b7b30d4175fa849823b5c207223fca4",
+      "readable_bytes": 502797,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/run-summary-mt-review/current-helper/native/attempt-01/event_edep_t0.csv",
+      "raw_sha256": "3bfb4ec454811f43c3e327c1d253dc32650311be0054e11ec139b2c1a1533cb0",
+      "raw_bytes": 64,
+      "raw_zip_entry": "out/collab/run-summary-mt-review/current-helper/native/attempt-01/event_edep_t0.csv",
+      "readable": "evidence/086.csv",
+      "readable_sha256": "3ec5837f70b9e5f3d888c89cd4d391a4866206507040a4e4bdca459daf3a7a77",
+      "readable_bytes": 61,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/run-summary-mt-review/current-helper/native/attempt-01/event_edep_t0_r1.csv",
+      "raw_sha256": "874195ddcc7db14350a666e3b702a1728b559ca75d209f3c354937a8969eb03e",
+      "raw_bytes": 124,
+      "raw_zip_entry": "out/collab/run-summary-mt-review/current-helper/native/attempt-01/event_edep_t0_r1.csv",
+      "readable": "evidence/087.csv",
+      "readable_sha256": "396bcb80ca363469ed2bc974a9372f1f6ec7108a94e5cf933e40df1657c901b5",
+      "readable_bytes": 117,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/run-summary-mt-review/current-helper/native/attempt-01/event_edep_t0_r2.csv",
+      "raw_sha256": "4c9cc3706c7fa735239948d550ff4cc01d729729081475d61232025680309b76",
+      "raw_bytes": 64,
+      "raw_zip_entry": "out/collab/run-summary-mt-review/current-helper/native/attempt-01/event_edep_t0_r2.csv",
+      "readable": "evidence/088.csv",
+      "readable_sha256": "b82e74df8968916b4fa7c2470e6996ae741daad69fd19c4d79aeffc7b61e2435",
+      "readable_bytes": 61,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/run-summary-mt-review/current-helper/native/attempt-01/event_edep_t1.csv",
+      "raw_sha256": "f43a67701d44e8147a0a29f7f4d98f5767671d23fbf05fa1d3881bcb78732f42",
+      "raw_bytes": 100,
+      "raw_zip_entry": "out/collab/run-summary-mt-review/current-helper/native/attempt-01/event_edep_t1.csv",
+      "readable": "evidence/089.csv",
+      "readable_sha256": "184d0db9336b05ce8ca6e9ac8df1ddc78b79253ce8417551d8289891a81c321b",
+      "readable_bytes": 93,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/run-summary-mt-review/current-helper/native/attempt-01/event_edep_t1_r1.csv",
+      "raw_sha256": "f1ad4f824257ca09b7992d527c2c7fbdafc10cfbe03ebcb04cf9b2529b684e62",
+      "raw_bytes": 88,
+      "raw_zip_entry": "out/collab/run-summary-mt-review/current-helper/native/attempt-01/event_edep_t1_r1.csv",
+      "readable": "evidence/090.csv",
+      "readable_sha256": "4e9be34d08603dd5add1a8d99b68a8c62b25c12e3e73021bd840cb5e70ed96ca",
+      "readable_bytes": 85,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/run-summary-mt-review/current-helper/native/attempt-01/event_edep_t1_r2.csv",
+      "raw_sha256": "35c263cb49ebd2920df1a910b5f1703e8d0cb01b4eae3351d0c7d2fd3145545a",
+      "raw_bytes": 100,
+      "raw_zip_entry": "out/collab/run-summary-mt-review/current-helper/native/attempt-01/event_edep_t1_r2.csv",
+      "readable": "evidence/091.csv",
+      "readable_sha256": "2db058e30d8649288888feaee7c68f839e8d166ca39e3f18cf297596dbd53a5e",
+      "readable_bytes": 93,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/run-summary-mt-review/current-helper/native/attempt-01/run_summary.txt",
+      "raw_sha256": "21b2f82fe22b4079c533c42e158c3da8d329411f9bfff2a150e0a9eb04f64713",
+      "raw_bytes": 32171,
+      "raw_zip_entry": "out/collab/run-summary-mt-review/current-helper/native/attempt-01/run_summary.txt",
+      "readable": "evidence/092.txt",
+      "readable_sha256": "55a51b76f3f9a2199daa83f8b3cc74527f4225013eb02eda532c2c09bb01ac71",
+      "readable_bytes": 31773,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/run-summary-mt-review/baseline/native.mac",
+      "raw_sha256": "4d6e2e884a840c0ee26a77415d8bd53882664b483deed44152b65e822392869d",
+      "raw_bytes": 977,
+      "raw_zip_entry": "out/collab/run-summary-mt-review/baseline/native.mac",
+      "readable": "evidence/093.mac",
+      "readable_sha256": "60df46401e800d9d3f52aad804802cf6e3a4449ba3c320190bfb72bbb8d4f4b0",
+      "readable_bytes": 939,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/run-summary-mt-review/baseline/config/materials/material.ini",
+      "raw_sha256": "df72faf9fb634931086a7f98db6d1bd93fad37f20c28329eea22f40b9858beb6",
+      "raw_bytes": 190,
+      "raw_zip_entry": "out/collab/run-summary-mt-review/baseline/config/materials/material.ini",
+      "readable": "evidence/094.ini",
+      "readable_sha256": "df72faf9fb634931086a7f98db6d1bd93fad37f20c28329eea22f40b9858beb6",
+      "readable_bytes": 190,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    },
+    {
+      "source": "out/collab/run-summary-mt-review/baseline/config/geometry/hit_smoke_box.ini",
+      "raw_sha256": "22cf29b2fadf3a405651d59b4d1bd17c74c8c441017f6c11b85100c8ad6128cc",
+      "raw_bytes": 581,
+      "raw_zip_entry": "out/collab/run-summary-mt-review/baseline/config/geometry/hit_smoke_box.ini",
+      "readable": "evidence/095.ini",
+      "readable_sha256": "22cf29b2fadf3a405651d59b4d1bd17c74c8c441017f6c11b85100c8ad6128cc",
+      "readable_bytes": 581,
+      "normalization": "UTF-8 without BOM; LF line endings; text content preserved"
+    }
+  ],
+  "not_selected_or_missing": []
+}

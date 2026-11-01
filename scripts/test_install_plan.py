@@ -21,6 +21,8 @@ spec = importlib.util.spec_from_file_location("g4usim_catalog_builder", ROOT / "
 builder = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(builder)
 
+ABSOLUTE_ARCHIVE_MEMBER_FIXTURE = "C:/escape"  # platform-path-fixture: Rejected archive member; never opened
+
 
 def fixture(root):
     archive = root / "runtime.zip"
@@ -74,7 +76,7 @@ def main():
             (lambda value: value["releases"][0]["artifacts"][0].update(size_bytes=True), "invalid_size"),
             (lambda value: value["releases"][0]["artifacts"][0].update(license={}), "license_missing"),
             (lambda value: value["releases"][0]["artifacts"][0]["files"][0].update(path="../escape"), "archive_path"),
-            (lambda value: value["releases"][0]["artifacts"][0]["files"][0].update(path="C:/escape"), "archive_path"),
+            (lambda value: value["releases"][0]["artifacts"][0]["files"][0].update(path=ABSOLUTE_ARCHIVE_MEMBER_FIXTURE), "archive_path"),
             (lambda value: value["releases"][0]["artifacts"][0]["files"][0].update(path="CON.txt"), "archive_path"),
             (lambda value: value["releases"][0].update(dependencies=[{"id": "compiler"}]), "runtime_compiler"),
         ):
