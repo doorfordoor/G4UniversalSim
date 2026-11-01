@@ -1,0 +1,101 @@
+{
+  "schema": "g4usim_deepseek_design_archive_v1",
+  "archive": "raw-design.zip",
+  "archive_bytes": 25641,
+  "archive_sha256": "b7b53d7f0e9c01d28118edddc60481195c5065c240126b867233801fb99c55fc",
+  "files": [
+    {
+      "source": "out/collab/i2-j1-kickoff-20261031/deepseek-request.json",
+      "zip_entry": "out/collab/i2-j1-kickoff-20261031/deepseek-request.json",
+      "bytes": 3382,
+      "sha256": "f54b6da9fad8ef43eca7749aa4d8381131d9d7037c7630ca68e356dfac52746f"
+    },
+    {
+      "source": "out/collab/i2-j1-kickoff-20261031/deepseek-response.json",
+      "zip_entry": "out/collab/i2-j1-kickoff-20261031/deepseek-response.json",
+      "bytes": 8307,
+      "sha256": "2f6b3fcb9144113faf74bf2f188db7992fa8751dad85da1b6fdb7ac7d0e5723c"
+    },
+    {
+      "source": "out/collab/j1-appearance-20261101/request.json",
+      "zip_entry": "out/collab/j1-appearance-20261101/request.json",
+      "bytes": 1175,
+      "sha256": "620d2f2fda8a5b46b243d8b8af0a8d59c55c5dc3b68f2177a8b2c30c2c0432e9"
+    },
+    {
+      "source": "out/collab/j1-appearance-20261101/response.json",
+      "zip_entry": "out/collab/j1-appearance-20261101/response.json",
+      "bytes": 10023,
+      "sha256": "646b114d760b823e8147f9a2abeaa69f3dd51dffc3e07d9073931c50f0608f78"
+    },
+    {
+      "source": "out/collab/i2-j1-kickoff-20261031/kickoff-receipt.json",
+      "zip_entry": "out/collab/i2-j1-kickoff-20261031/kickoff-receipt.json",
+      "bytes": 1217,
+      "sha256": "e945a0c95617fd4f82f0eac9217267b1b0ff164a0d54b55f2950db1235f22636"
+    },
+    {
+      "source": "out/collab/i2-j1-kickoff-20261031/template-colors.json",
+      "zip_entry": "out/collab/i2-j1-kickoff-20261031/template-colors.json",
+      "bytes": 1415,
+      "sha256": "5f813631db455f1d366599d96f6de7d4d4839e7b0004d42c17c67be7154e090d"
+    },
+    {
+      "source": "out/collab/j1-appearance-20261101/design.md",
+      "zip_entry": "out/collab/j1-appearance-20261101/design.md",
+      "bytes": 9272,
+      "sha256": "7323091a40959574e0d5a7d607b3d5f23d666842e6c03d0964a28396905fac23"
+    },
+    {
+      "source": "docs/collab/outbox/20261031-deepseek-j1-kickoff.md",
+      "zip_entry": "docs/collab/outbox/20261031-deepseek-j1-kickoff.md",
+      "bytes": 11140,
+      "sha256": "04f848719a439dbd304758e022b7e5e09473ac9d4731abed46595dd3805cc37c"
+    },
+    {
+      "source": "docs/collab/outbox/20261031-j1-template-source.json",
+      "zip_entry": "docs/collab/outbox/20261031-j1-template-source.json",
+      "bytes": 1415,
+      "sha256": "5f813631db455f1d366599d96f6de7d4d4839e7b0004d42c17c67be7154e090d"
+    }
+  ],
+  "calls": [
+    {
+      "request": "out/collab/i2-j1-kickoff-20261031/deepseek-request.json",
+      "response": "out/collab/i2-j1-kickoff-20261031/deepseek-response.json",
+      "request_model": "deepseek-flash",
+      "response_id": "0ee124c8-ea75-4b41-b2d6-c07c4d028d24",
+      "response_model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 901,
+        "completion_tokens": 2135,
+        "total_tokens": 3036,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 901
+      }
+    },
+    {
+      "request": "out/collab/j1-appearance-20261101/request.json",
+      "response": "out/collab/j1-appearance-20261101/response.json",
+      "request_model": "deepseek-flash",
+      "response_id": "d3bfdf18-e9bc-484f-9128-0c5029d4cd4b",
+      "response_model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 263,
+        "completion_tokens": 2577,
+        "total_tokens": 2840,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 263
+      }
+    }
+  ],
+  "scope": "Authorized bounded design collaboration, not implementation or visual acceptance",
+  "normalization": "none",
+  "secrets": "No secret file/environment read; only prior request/response/design artifacts archived; credential marker scan clear"
+}

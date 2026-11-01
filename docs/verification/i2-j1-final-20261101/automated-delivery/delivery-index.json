@@ -1,0 +1,920 @@
+[
+  {
+    "increment": "20261101T135231Z",
+    "path": "delivery/full-installation-Linux-13085360034/acceptance/evidence/runtime/flow-report.json",
+    "source": "out\\verification\\i2-j1-5fe0a10\\ci\\extracted\\full-installation-Linux-13085360034\\acceptance\\evidence\\runtime\\flow-report.json",
+    "source_sha256": "8cac0db2995b2b39e091ebf566e1ed02f60178c21dbabc0118c43b84bc86a360",
+    "derived_navigation_only": true,
+    "receipt": {
+      "schema": "g4usim_installation_flow_v1",
+      "status": "verified",
+      "profile": "runtime",
+      "scope": "Actual installation/files/runtime on the caller's host; fresh-OS/CI identity is supplied separately",
+      "geant4_version": "11.4.3",
+      "completed_events": 5,
+      "verified_files": 47719
+    }
+  },
+  {
+    "increment": "20261101T135231Z",
+    "path": "delivery/full-installation-Linux-13085360034/acceptance/evidence/sdk/flow-report.json",
+    "source": "out\\verification\\i2-j1-5fe0a10\\ci\\extracted\\full-installation-Linux-13085360034\\acceptance\\evidence\\sdk\\flow-report.json",
+    "source_sha256": "13eeba67dcbca8fe21f267ef7b2cdb5f0b9e46997aa6945a1451af075c7e93df",
+    "derived_navigation_only": true,
+    "receipt": {
+      "schema": "g4usim_installation_flow_v1",
+      "status": "verified",
+      "profile": "sdk",
+      "scope": "Actual installation/files/runtime on the caller's host; fresh-OS/CI identity is supplied separately",
+      "geant4_version": "11.4.3",
+      "verified_files": 68385
+    }
+  },
+  {
+    "increment": "20261101T135231Z",
+    "path": "delivery/full-installation-Linux-13085360034/acceptance/runtime-evidence/flow-report.json",
+    "source": "out\\verification\\i2-j1-5fe0a10\\ci\\extracted\\full-installation-Linux-13085360034\\acceptance\\runtime-evidence\\flow-report.json",
+    "source_sha256": "8cac0db2995b2b39e091ebf566e1ed02f60178c21dbabc0118c43b84bc86a360",
+    "derived_navigation_only": true,
+    "receipt": {
+      "schema": "g4usim_installation_flow_v1",
+      "status": "verified",
+      "profile": "runtime",
+      "scope": "Actual installation/files/runtime on the caller's host; fresh-OS/CI identity is supplied separately",
+      "geant4_version": "11.4.3",
+      "completed_events": 5,
+      "verified_files": 47719
+    }
+  },
+  {
+    "increment": "20261101T135231Z",
+    "path": "delivery/full-installation-Linux-13085360034/acceptance/runtime-evidence/install-receipt.json",
+    "source": "out\\verification\\i2-j1-5fe0a10\\ci\\extracted\\full-installation-Linux-13085360034\\acceptance\\runtime-evidence\\install-receipt.json",
+    "source_sha256": "48f6a4556262884721b5a417388fa62dfc796cf09776283531722693b5810c54",
+    "derived_navigation_only": true,
+    "receipt": {
+      "schema": "g4usim_install_receipt_v1",
+      "status": "published",
+      "profile": "runtime",
+      "version": "1.0.0",
+      "geant4_version": "11.4.3",
+      "platform": "linux",
+      "architecture": "x86_64",
+      "artifacts": [
+        {
+          "id": "application",
+          "source": {
+            "catalog_reference": "artifacts/G4UniversalSim-1.0.0-linux-x86_64-runtime.zip",
+            "kind": "local",
+            "origin": "Actual local Linux build /home/runner/work/_temp/g4usim-delivery/backend; clean-environment receipt /home/runner/work/_temp/g4usim-delivery/acceptance/source/out/package-verification/linux-bqmvu9wz",
+            "path": "/home/runner/work/_temp/g4usim-delivery/acceptance/release/G4UniversalSim-1.0.0-linux-x86_64-g4-11.4.3/install/artifacts/G4UniversalSim-1.0.0-linux-x86_64-runtime.zip"
+          },
+          "sha256": "40e88dfac592ad5d93c6b9cf179bdc15788299690a0316d10d9675cf754bad64",
+          "size_bytes": 606496339,
+          "license": {
+            "expression": "LicenseRef-Bundled-Notices",
+            "path": "THIRD_PARTY_NOTICES.md",
+            "sha256": "0cc0d1fc29c9e567879675182fa8df9c03a61d0cc0534103ebd5b513836ba16e",
+            "source": "Bundled component notices and licenses directory"
+          }
+        },
+        {
+          "id": "geant4-data",
+          "source": {
+            "catalog_reference": "artifacts/geant4-data.zip",
+            "kind": "local",
+            "origin": "Local Geant4 dataset installation selected by actual backend discovery; Actual selected local SDK/data discovery receipt /home/runner/work/_temp/g4usim-delivery/discovery.json",
+            "path": "/home/runner/work/_temp/g4usim-delivery/acceptance/release/G4UniversalSim-1.0.0-linux-x86_64-g4-11.4.3/install/artifacts/geant4-data.zip"
+          },
+          "sha256": "e18c1fbf499d031cd10cd93050b2fd354dc22feee22802f1dc2d88178a6eb536",
+          "size_bytes": 1670619875,
+          "license": {
+            "expression": "LicenseRef-Upstream-Dataset-Notices",
+            "path": "DATASET-NOTICES.txt",
+            "sha256": "43ddcbbb90d70c8e4d86d387ce1953f9bed7f829840a91ac172c3431c7bdd25d",
+            "source": "Actual selected local SDK/data discovery receipt /home/runner/work/_temp/g4usim-delivery/discovery.json"
+          }
+        },
+        {
+          "id": "dependency-notices",
+          "source": {
+            "catalog_reference": "artifacts/dependency-notices.zip",
+            "kind": "local",
+            "origin": "Actual dependency package-cache license texts selected by installed records under /home/runner/work/_temp/g4usim-delivery/bootstrap/geant4",
+            "path": "/home/runner/work/_temp/g4usim-delivery/acceptance/release/G4UniversalSim-1.0.0-linux-x86_64-g4-11.4.3/install/artifacts/dependency-notices.zip"
+          },
+          "sha256": "b86134dc65594d928715364ed0b79d6a0b734ce0b58bb04d5770bbedb48dcb8d",
+          "size_bytes": 438608,
+          "license": {
+            "expression": "LicenseRef-Upstream-Component-Notices",
+            "path": "LICENSE-EVIDENCE.json",
+            "sha256": "441ba6257fef052fc379d0b0e78a0f397087c8bed9058d3f9e81564503daf8d4",
+            "source": "Unmodified upstream texts and exact source package records in this artifact"
+          }
+        }
+      ],
+      "catalog_sha256": "0219118deab4148e8d20522073d6979697f8cf73dc3b7e0de4bf70aeb3879f24"
+    }
+  },
+  {
+    "increment": "20261101T135231Z",
+    "path": "delivery/full-installation-Linux-13085360034/acceptance/runtime-evidence/uninstall-receipt.json",
+    "source": "out\\verification\\i2-j1-5fe0a10\\ci\\extracted\\full-installation-Linux-13085360034\\acceptance\\runtime-evidence\\uninstall-receipt.json",
+    "source_sha256": "72f2ff536de25d108d5db5398fb190c7bcc68759c03a3856f60454ae7e4f4f30",
+    "derived_navigation_only": true,
+    "receipt": {
+      "schema": "g4usim_uninstall_receipt_v1",
+      "status": "uninstalled"
+    }
+  },
+  {
+    "increment": "20261101T135231Z",
+    "path": "delivery/full-installation-Linux-13085360034/acceptance/sdk-evidence/flow-report.json",
+    "source": "out\\verification\\i2-j1-5fe0a10\\ci\\extracted\\full-installation-Linux-13085360034\\acceptance\\sdk-evidence\\flow-report.json",
+    "source_sha256": "13eeba67dcbca8fe21f267ef7b2cdb5f0b9e46997aa6945a1451af075c7e93df",
+    "derived_navigation_only": true,
+    "receipt": {
+      "schema": "g4usim_installation_flow_v1",
+      "status": "verified",
+      "profile": "sdk",
+      "scope": "Actual installation/files/runtime on the caller's host; fresh-OS/CI identity is supplied separately",
+      "geant4_version": "11.4.3",
+      "verified_files": 68385
+    }
+  },
+  {
+    "increment": "20261101T135231Z",
+    "path": "delivery/full-installation-Linux-13085360034/acceptance/sdk-evidence/install-receipt.json",
+    "source": "out\\verification\\i2-j1-5fe0a10\\ci\\extracted\\full-installation-Linux-13085360034\\acceptance\\sdk-evidence\\install-receipt.json",
+    "source_sha256": "147d032dff0562ea48661c49fd7c9e516f42e942b4846616d35b286b29dc2af7",
+    "derived_navigation_only": true,
+    "receipt": {
+      "schema": "g4usim_install_receipt_v1",
+      "status": "published",
+      "profile": "sdk",
+      "version": "1.0.0",
+      "geant4_version": "11.4.3",
+      "platform": "linux",
+      "architecture": "x86_64",
+      "artifacts": [
+        {
+          "id": "application",
+          "source": {
+            "catalog_reference": "artifacts/G4UniversalSim-1.0.0-linux-x86_64-runtime.zip",
+            "kind": "local",
+            "origin": "Actual local Linux build /home/runner/work/_temp/g4usim-delivery/backend; clean-environment receipt /home/runner/work/_temp/g4usim-delivery/acceptance/source/out/package-verification/linux-bqmvu9wz",
+            "path": "/home/runner/work/_temp/g4usim-delivery/acceptance/release/G4UniversalSim-1.0.0-linux-x86_64-g4-11.4.3/install/artifacts/G4UniversalSim-1.0.0-linux-x86_64-runtime.zip"
+          },
+          "sha256": "40e88dfac592ad5d93c6b9cf179bdc15788299690a0316d10d9675cf754bad64",
+          "size_bytes": 606496339,
+          "license": {
+            "expression": "LicenseRef-Bundled-Notices",
+            "path": "THIRD_PARTY_NOTICES.md",
+            "sha256": "0cc0d1fc29c9e567879675182fa8df9c03a61d0cc0534103ebd5b513836ba16e",
+            "source": "Bundled component notices and licenses directory"
+          }
+        },
+        {
+          "id": "geant4-data",
+          "source": {
+            "catalog_reference": "artifacts/geant4-data.zip",
+            "kind": "local",
+            "origin": "Local Geant4 dataset installation selected by actual backend discovery; Actual selected local SDK/data discovery receipt /home/runner/work/_temp/g4usim-delivery/discovery.json",
+            "path": "/home/runner/work/_temp/g4usim-delivery/acceptance/release/G4UniversalSim-1.0.0-linux-x86_64-g4-11.4.3/install/artifacts/geant4-data.zip"
+          },
+          "sha256": "e18c1fbf499d031cd10cd93050b2fd354dc22feee22802f1dc2d88178a6eb536",
+          "size_bytes": 1670619875,
+          "license": {
+            "expression": "LicenseRef-Upstream-Dataset-Notices",
+            "path": "DATASET-NOTICES.txt",
+            "sha256": "43ddcbbb90d70c8e4d86d387ce1953f9bed7f829840a91ac172c3431c7bdd25d",
+            "source": "Actual selected local SDK/data discovery receipt /home/runner/work/_temp/g4usim-delivery/discovery.json"
+          }
+        },
+        {
+          "id": "dependency-notices",
+          "source": {
+            "catalog_reference": "artifacts/dependency-notices.zip",
+            "kind": "local",
+            "origin": "Actual dependency package-cache license texts selected by installed records under /home/runner/work/_temp/g4usim-delivery/bootstrap/geant4",
+            "path": "/home/runner/work/_temp/g4usim-delivery/acceptance/release/G4UniversalSim-1.0.0-linux-x86_64-g4-11.4.3/install/artifacts/dependency-notices.zip"
+          },
+          "sha256": "b86134dc65594d928715364ed0b79d6a0b734ce0b58bb04d5770bbedb48dcb8d",
+          "size_bytes": 438608,
+          "license": {
+            "expression": "LicenseRef-Upstream-Component-Notices",
+            "path": "LICENSE-EVIDENCE.json",
+            "sha256": "441ba6257fef052fc379d0b0e78a0f397087c8bed9058d3f9e81564503daf8d4",
+            "source": "Unmodified upstream texts and exact source package records in this artifact"
+          }
+        },
+        {
+          "id": "development-sdk",
+          "source": {
+            "catalog_reference": "artifacts/G4UniversalSim-1.0.0-linux-x86_64-development-6074d677-sdk.zip",
+            "kind": "local",
+            "origin": "Actual local Geant4 SDK files copied from /home/runner/work/_temp/g4usim-delivery/bootstrap/geant4",
+            "path": "/home/runner/work/_temp/g4usim-delivery/acceptance/release/G4UniversalSim-1.0.0-linux-x86_64-g4-11.4.3/install/artifacts/G4UniversalSim-1.0.0-linux-x86_64-development-6074d677-sdk.zip"
+          },
+          "sha256": "fe55e9414b9e690a4f6c759f9852991e26955083f060d6faf67914357c4fb613",
+          "size_bytes": 464263544,
+          "license": {
+            "expression": "LicenseRef-Bundled-SDK-Notices",
+            "path": "sdk/SDK-NOTICES.md",
+            "sha256": "6645cd14d641275276380e56b5a91c739e30156117f04b9d54a6d5b58722cfbe",
+            "source": "Bundled development component notices and upstream license texts"
+          }
+        }
+      ],
+      "catalog_sha256": "0219118deab4148e8d20522073d6979697f8cf73dc3b7e0de4bf70aeb3879f24"
+    }
+  },
+  {
+    "increment": "20261101T135231Z",
+    "path": "delivery/full-installation-Linux-13085360034/acceptance/sdk-evidence/uninstall-receipt.json",
+    "source": "out\\verification\\i2-j1-5fe0a10\\ci\\extracted\\full-installation-Linux-13085360034\\acceptance\\sdk-evidence\\uninstall-receipt.json",
+    "source_sha256": "e78a1b66ac98254d01dfb3c5522edde624a7bb4560012451d07663a8aa7cd4a1",
+    "derived_navigation_only": true,
+    "receipt": {
+      "schema": "g4usim_uninstall_receipt_v1",
+      "status": "uninstalled"
+    }
+  },
+  {
+    "increment": "20261101T135231Z",
+    "path": "delivery/full-installation-Windows-13084194443/acceptance/evidence/runtime/flow-report.json",
+    "source": "out\\verification\\i2-j1-5fe0a10\\ci\\extracted\\full-installation-Windows-13084194443\\acceptance\\evidence\\runtime\\flow-report.json",
+    "source_sha256": "ce46b3f4edab70e2a7a2c673313c5a08618240db7f193ea9fa74beb6ff945a09",
+    "derived_navigation_only": true,
+    "receipt": {
+      "schema": "g4usim_installation_flow_v1",
+      "status": "verified",
+      "profile": "runtime",
+      "scope": "Actual installation/files/runtime on the caller's host; fresh-OS/CI identity is supplied separately",
+      "geant4_version": "11.4.3",
+      "completed_events": 5,
+      "verified_files": 48225
+    }
+  },
+  {
+    "increment": "20261101T135231Z",
+    "path": "delivery/full-installation-Windows-13084194443/acceptance/evidence/sdk/flow-report.json",
+    "source": "out\\verification\\i2-j1-5fe0a10\\ci\\extracted\\full-installation-Windows-13084194443\\acceptance\\evidence\\sdk\\flow-report.json",
+    "source_sha256": "b3e5300b4f0f945a6399624277b7b4e7dde140e69e99ae851437836dfa8796fd",
+    "derived_navigation_only": true,
+    "receipt": {
+      "schema": "g4usim_installation_flow_v1",
+      "status": "verified",
+      "profile": "sdk",
+      "scope": "Actual installation/files/runtime on the caller's host; fresh-OS/CI identity is supplied separately",
+      "geant4_version": "11.4.3",
+      "verified_files": 53035
+    }
+  },
+  {
+    "increment": "20261101T135231Z",
+    "path": "delivery/full-installation-Windows-13084194443/acceptance/runtime-evidence/flow-report.json",
+    "source": "out\\verification\\i2-j1-5fe0a10\\ci\\extracted\\full-installation-Windows-13084194443\\acceptance\\runtime-evidence\\flow-report.json",
+    "source_sha256": "ce46b3f4edab70e2a7a2c673313c5a08618240db7f193ea9fa74beb6ff945a09",
+    "derived_navigation_only": true,
+    "receipt": {
+      "schema": "g4usim_installation_flow_v1",
+      "status": "verified",
+      "profile": "runtime",
+      "scope": "Actual installation/files/runtime on the caller's host; fresh-OS/CI identity is supplied separately",
+      "geant4_version": "11.4.3",
+      "completed_events": 5,
+      "verified_files": 48225
+    }
+  },
+  {
+    "increment": "20261101T135231Z",
+    "path": "delivery/full-installation-Windows-13084194443/acceptance/runtime-evidence/install-receipt.json",
+    "source": "out\\verification\\i2-j1-5fe0a10\\ci\\extracted\\full-installation-Windows-13084194443\\acceptance\\runtime-evidence\\install-receipt.json",
+    "source_sha256": "e08ef52dc18cb00a875bcc74a1e7ba18e35aae50976e0ebab6b1b1296ac910cf",
+    "derived_navigation_only": true,
+    "receipt": {
+      "schema": "g4usim_install_receipt_v1",
+      "status": "published",
+      "profile": "runtime",
+      "version": "1.0.0",
+      "geant4_version": "11.4.3",
+      "platform": "windows",
+      "architecture": "x86_64",
+      "artifacts": [
+        {
+          "id": "application",
+          "source": {
+            "catalog_reference": "artifacts/G4UniversalSim-1.0.0-win64-runtime.zip",
+            "kind": "local",
+            "origin": "Local build D:\\a\\_temp\\g4usim-delivery\\backend\\Release; validated by packaging/build_package.py",
+            "path": "D:\\a\\_temp\\g4usim-delivery\\acceptance\\release\\G4UniversalSim-1.0.0-win64-g4-11.4.3\\install\\artifacts\\G4UniversalSim-1.0.0-win64-runtime.zip"
+          },
+          "sha256": "5e34667c1cf8a44b32f472587bc06b1c94b45237001d0a4d9dbc2772cd8d1e6e",
+          "size_bytes": 232551572,
+          "license": {
+            "expression": "LicenseRef-Bundled-Notices",
+            "path": "THIRD_PARTY_NOTICES.md",
+            "sha256": "eef40593a6cb1eef578d1b8f524b84fd1bed7834f1a61042b542c1cee9767a3e",
+            "source": "Bundled third-party notices and licenses directory"
+          }
+        },
+        {
+          "id": "geant4-data",
+          "source": {
+            "catalog_reference": "artifacts/geant4-data.zip",
+            "kind": "local",
+            "origin": "Local Geant4 dataset installation selected by actual backend discovery; Actual selected local SDK/data discovery receipt D:\\a\\_temp\\g4usim-delivery\\discovery.json",
+            "path": "D:\\a\\_temp\\g4usim-delivery\\acceptance\\release\\G4UniversalSim-1.0.0-win64-g4-11.4.3\\install\\artifacts\\geant4-data.zip"
+          },
+          "sha256": "74955a5e215febe099bf725a89f6b6ee9c904be4a40e90c8902f8ead380b9f8b",
+          "size_bytes": 1670619860,
+          "license": {
+            "expression": "LicenseRef-Upstream-Dataset-Notices",
+            "path": "DATASET-NOTICES.txt",
+            "sha256": "9a01e6b2177958e2ae32cf7044229a1931554cf901979764d24845ac404ec05d",
+            "source": "Actual selected local SDK/data discovery receipt D:\\a\\_temp\\g4usim-delivery\\discovery.json"
+          }
+        }
+      ],
+      "catalog_sha256": "fce6570183a97304d0c5682708b0731683fa85b8a59a0f60c3b1c59d72591010"
+    }
+  },
+  {
+    "increment": "20261101T135231Z",
+    "path": "delivery/full-installation-Windows-13084194443/acceptance/runtime-evidence/uninstall-receipt.json",
+    "source": "out\\verification\\i2-j1-5fe0a10\\ci\\extracted\\full-installation-Windows-13084194443\\acceptance\\runtime-evidence\\uninstall-receipt.json",
+    "source_sha256": "5ee75a8f31403de85d69c020d1c37e1dc000f3e17f1cb521ac936b1fd724684b",
+    "derived_navigation_only": true,
+    "receipt": {
+      "schema": "g4usim_uninstall_receipt_v1",
+      "status": "uninstalled"
+    }
+  },
+  {
+    "increment": "20261101T135231Z",
+    "path": "delivery/full-installation-Windows-13084194443/acceptance/sdk-evidence/flow-report.json",
+    "source": "out\\verification\\i2-j1-5fe0a10\\ci\\extracted\\full-installation-Windows-13084194443\\acceptance\\sdk-evidence\\flow-report.json",
+    "source_sha256": "b3e5300b4f0f945a6399624277b7b4e7dde140e69e99ae851437836dfa8796fd",
+    "derived_navigation_only": true,
+    "receipt": {
+      "schema": "g4usim_installation_flow_v1",
+      "status": "verified",
+      "profile": "sdk",
+      "scope": "Actual installation/files/runtime on the caller's host; fresh-OS/CI identity is supplied separately",
+      "geant4_version": "11.4.3",
+      "verified_files": 53035
+    }
+  },
+  {
+    "increment": "20261101T135231Z",
+    "path": "delivery/full-installation-Windows-13084194443/acceptance/sdk-evidence/install-receipt.json",
+    "source": "out\\verification\\i2-j1-5fe0a10\\ci\\extracted\\full-installation-Windows-13084194443\\acceptance\\sdk-evidence\\install-receipt.json",
+    "source_sha256": "7352a946a5e9189b9f6d85872a44856267794f9a3b7102b71942d9e5b000d038",
+    "derived_navigation_only": true,
+    "receipt": {
+      "schema": "g4usim_install_receipt_v1",
+      "status": "published",
+      "profile": "sdk",
+      "version": "1.0.0",
+      "geant4_version": "11.4.3",
+      "platform": "windows",
+      "architecture": "x86_64",
+      "artifacts": [
+        {
+          "id": "application",
+          "source": {
+            "catalog_reference": "artifacts/G4UniversalSim-1.0.0-win64-runtime.zip",
+            "kind": "local",
+            "origin": "Local build D:\\a\\_temp\\g4usim-delivery\\backend\\Release; validated by packaging/build_package.py",
+            "path": "D:\\a\\_temp\\g4usim-delivery\\acceptance\\release\\G4UniversalSim-1.0.0-win64-g4-11.4.3\\install\\artifacts\\G4UniversalSim-1.0.0-win64-runtime.zip"
+          },
+          "sha256": "5e34667c1cf8a44b32f472587bc06b1c94b45237001d0a4d9dbc2772cd8d1e6e",
+          "size_bytes": 232551572,
+          "license": {
+            "expression": "LicenseRef-Bundled-Notices",
+            "path": "THIRD_PARTY_NOTICES.md",
+            "sha256": "eef40593a6cb1eef578d1b8f524b84fd1bed7834f1a61042b542c1cee9767a3e",
+            "source": "Bundled third-party notices and licenses directory"
+          }
+        },
+        {
+          "id": "geant4-data",
+          "source": {
+            "catalog_reference": "artifacts/geant4-data.zip",
+            "kind": "local",
+            "origin": "Local Geant4 dataset installation selected by actual backend discovery; Actual selected local SDK/data discovery receipt D:\\a\\_temp\\g4usim-delivery\\discovery.json",
+            "path": "D:\\a\\_temp\\g4usim-delivery\\acceptance\\release\\G4UniversalSim-1.0.0-win64-g4-11.4.3\\install\\artifacts\\geant4-data.zip"
+          },
+          "sha256": "74955a5e215febe099bf725a89f6b6ee9c904be4a40e90c8902f8ead380b9f8b",
+          "size_bytes": 1670619860,
+          "license": {
+            "expression": "LicenseRef-Upstream-Dataset-Notices",
+            "path": "DATASET-NOTICES.txt",
+            "sha256": "9a01e6b2177958e2ae32cf7044229a1931554cf901979764d24845ac404ec05d",
+            "source": "Actual selected local SDK/data discovery receipt D:\\a\\_temp\\g4usim-delivery\\discovery.json"
+          }
+        },
+        {
+          "id": "development-sdk",
+          "source": {
+            "catalog_reference": "artifacts/G4UniversalSim-1.0.0-win64-development-bf9a0e43-sdk.zip",
+            "kind": "local",
+            "origin": "Actual local Geant4 SDK files copied from D:\\a\\_temp\\g4usim-delivery\\bootstrap\\sdk\\geant4-11.4.3-win64",
+            "path": "D:\\a\\_temp\\g4usim-delivery\\acceptance\\release\\G4UniversalSim-1.0.0-win64-g4-11.4.3\\install\\artifacts\\G4UniversalSim-1.0.0-win64-development-bf9a0e43-sdk.zip"
+          },
+          "sha256": "5cf4d8268fa97498e4e2e526875449c88c7316147efb4b200e9ed7dce8ed1d2b",
+          "size_bytes": 46408620,
+          "license": {
+            "expression": "LicenseRef-Bundled-SDK-Notices",
+            "path": "sdk/SDK-NOTICES.md",
+            "sha256": "06205617277db6fc1d7d3c35e9ee6638b788e7149939d62538266c25edccf1a8",
+            "source": "Bundled development component notices and upstream license texts"
+          }
+        }
+      ],
+      "catalog_sha256": "fce6570183a97304d0c5682708b0731683fa85b8a59a0f60c3b1c59d72591010"
+    }
+  },
+  {
+    "increment": "20261101T135231Z",
+    "path": "delivery/full-installation-Windows-13084194443/acceptance/sdk-evidence/uninstall-receipt.json",
+    "source": "out\\verification\\i2-j1-5fe0a10\\ci\\extracted\\full-installation-Windows-13084194443\\acceptance\\sdk-evidence\\uninstall-receipt.json",
+    "source_sha256": "5227a129edab74e265ec2be88aa1c78d4d5d6bb4e2adfc7e5b55654eab416258",
+    "derived_navigation_only": true,
+    "receipt": {
+      "schema": "g4usim_uninstall_receipt_v1",
+      "status": "uninstalled"
+    }
+  },
+  {
+    "increment": "20261101T135231Z",
+    "path": "delivery/full-installation-Windows-13084194443/bootstrap/datasets/fetch-report.json",
+    "source": "out\\verification\\i2-j1-5fe0a10\\ci\\extracted\\full-installation-Windows-13084194443\\bootstrap\\datasets\\fetch-report.json",
+    "source_sha256": "e09f035ef82e2b077e1cf8208849e3ddfe3f26d8a32d9bc1a060bab582a17e01",
+    "derived_navigation_only": true,
+    "receipt": {
+      "schema": "g4usim_ci_geant4_data_fetch_v1",
+      "status": "completed"
+    }
+  },
+  {
+    "increment": "20261101T145126Z",
+    "path": "delivery/full-installation-Linux-13087521493/acceptance/evidence/runtime/flow-report.json",
+    "source": "out\\verification\\i2-j1-03d2c48\\ci\\extracted\\full-installation-Linux-13087521493\\acceptance\\evidence\\runtime\\flow-report.json",
+    "source_sha256": "19522594ce4561f16f941038bd2928800ee1a2956ab548d24fbe5dbb1b28cb3d",
+    "derived_navigation_only": true,
+    "receipt": {
+      "schema": "g4usim_installation_flow_v1",
+      "status": "verified",
+      "profile": "runtime",
+      "scope": "Actual installation/files/runtime on the caller's host; fresh-OS/CI identity is supplied separately",
+      "geant4_version": "11.4.3",
+      "completed_events": 5,
+      "verified_files": 47719
+    }
+  },
+  {
+    "increment": "20261101T145126Z",
+    "path": "delivery/full-installation-Linux-13087521493/acceptance/evidence/sdk/flow-report.json",
+    "source": "out\\verification\\i2-j1-03d2c48\\ci\\extracted\\full-installation-Linux-13087521493\\acceptance\\evidence\\sdk\\flow-report.json",
+    "source_sha256": "b0e4c5383a3c5dc1fbf51de430c4a16c1401e77f47aecd0aada863afa32409ae",
+    "derived_navigation_only": true,
+    "receipt": {
+      "schema": "g4usim_installation_flow_v1",
+      "status": "verified",
+      "profile": "sdk",
+      "scope": "Actual installation/files/runtime on the caller's host; fresh-OS/CI identity is supplied separately",
+      "geant4_version": "11.4.3",
+      "verified_files": 68385
+    }
+  },
+  {
+    "increment": "20261101T145126Z",
+    "path": "delivery/full-installation-Linux-13087521493/acceptance/runtime-evidence/flow-report.json",
+    "source": "out\\verification\\i2-j1-03d2c48\\ci\\extracted\\full-installation-Linux-13087521493\\acceptance\\runtime-evidence\\flow-report.json",
+    "source_sha256": "19522594ce4561f16f941038bd2928800ee1a2956ab548d24fbe5dbb1b28cb3d",
+    "derived_navigation_only": true,
+    "receipt": {
+      "schema": "g4usim_installation_flow_v1",
+      "status": "verified",
+      "profile": "runtime",
+      "scope": "Actual installation/files/runtime on the caller's host; fresh-OS/CI identity is supplied separately",
+      "geant4_version": "11.4.3",
+      "completed_events": 5,
+      "verified_files": 47719
+    }
+  },
+  {
+    "increment": "20261101T145126Z",
+    "path": "delivery/full-installation-Linux-13087521493/acceptance/runtime-evidence/install-receipt.json",
+    "source": "out\\verification\\i2-j1-03d2c48\\ci\\extracted\\full-installation-Linux-13087521493\\acceptance\\runtime-evidence\\install-receipt.json",
+    "source_sha256": "7564ff0492033cd0ea0af990739bc0fc1d9dbebbf06427803dde8d0bc8efc47d",
+    "derived_navigation_only": true,
+    "receipt": {
+      "schema": "g4usim_install_receipt_v1",
+      "status": "published",
+      "profile": "runtime",
+      "version": "1.0.0",
+      "geant4_version": "11.4.3",
+      "platform": "linux",
+      "architecture": "x86_64",
+      "artifacts": [
+        {
+          "id": "application",
+          "source": {
+            "catalog_reference": "artifacts/G4UniversalSim-1.0.0-linux-x86_64-runtime.zip",
+            "kind": "local",
+            "origin": "Actual local Linux build /home/runner/work/_temp/g4usim-delivery/backend; clean-environment receipt /home/runner/work/_temp/g4usim-delivery/acceptance/source/out/package-verification/linux-vs8y_jsd",
+            "path": "/home/runner/work/_temp/g4usim-delivery/acceptance/release/G4UniversalSim-1.0.0-linux-x86_64-g4-11.4.3/install/artifacts/G4UniversalSim-1.0.0-linux-x86_64-runtime.zip"
+          },
+          "sha256": "a5ee66d535b7763687717b1f6a573d35fbf54c0a63913ef96a8636df6aaaf93e",
+          "size_bytes": 606495390,
+          "license": {
+            "expression": "LicenseRef-Bundled-Notices",
+            "path": "THIRD_PARTY_NOTICES.md",
+            "sha256": "0cc0d1fc29c9e567879675182fa8df9c03a61d0cc0534103ebd5b513836ba16e",
+            "source": "Bundled component notices and licenses directory"
+          }
+        },
+        {
+          "id": "geant4-data",
+          "source": {
+            "catalog_reference": "artifacts/geant4-data.zip",
+            "kind": "local",
+            "origin": "Local Geant4 dataset installation selected by actual backend discovery; Actual selected local SDK/data discovery receipt /home/runner/work/_temp/g4usim-delivery/discovery.json",
+            "path": "/home/runner/work/_temp/g4usim-delivery/acceptance/release/G4UniversalSim-1.0.0-linux-x86_64-g4-11.4.3/install/artifacts/geant4-data.zip"
+          },
+          "sha256": "fba644cb88ce73dac5cf1c2c70cf2567e7e521495e8d2015ec39dcef3d464a31",
+          "size_bytes": 1670619875,
+          "license": {
+            "expression": "LicenseRef-Upstream-Dataset-Notices",
+            "path": "DATASET-NOTICES.txt",
+            "sha256": "43ddcbbb90d70c8e4d86d387ce1953f9bed7f829840a91ac172c3431c7bdd25d",
+            "source": "Actual selected local SDK/data discovery receipt /home/runner/work/_temp/g4usim-delivery/discovery.json"
+          }
+        },
+        {
+          "id": "dependency-notices",
+          "source": {
+            "catalog_reference": "artifacts/dependency-notices.zip",
+            "kind": "local",
+            "origin": "Actual dependency package-cache license texts selected by installed records under /home/runner/work/_temp/g4usim-delivery/bootstrap/geant4",
+            "path": "/home/runner/work/_temp/g4usim-delivery/acceptance/release/G4UniversalSim-1.0.0-linux-x86_64-g4-11.4.3/install/artifacts/dependency-notices.zip"
+          },
+          "sha256": "643adf3f65415a69052fe3d16cc42adfe03e155081891d872446434f9519e0c8",
+          "size_bytes": 438608,
+          "license": {
+            "expression": "LicenseRef-Upstream-Component-Notices",
+            "path": "LICENSE-EVIDENCE.json",
+            "sha256": "441ba6257fef052fc379d0b0e78a0f397087c8bed9058d3f9e81564503daf8d4",
+            "source": "Unmodified upstream texts and exact source package records in this artifact"
+          }
+        }
+      ],
+      "catalog_sha256": "e57a45aea168388cde27c85d4a591cff3bf9ed140b323a6a7da1d6d0d4b479d8"
+    }
+  },
+  {
+    "increment": "20261101T145126Z",
+    "path": "delivery/full-installation-Linux-13087521493/acceptance/runtime-evidence/uninstall-receipt.json",
+    "source": "out\\verification\\i2-j1-03d2c48\\ci\\extracted\\full-installation-Linux-13087521493\\acceptance\\runtime-evidence\\uninstall-receipt.json",
+    "source_sha256": "a16f001aa3631de4731b0e1f798cfbab75a511051959b7736a0bb01417a98217",
+    "derived_navigation_only": true,
+    "receipt": {
+      "schema": "g4usim_uninstall_receipt_v1",
+      "status": "uninstalled"
+    }
+  },
+  {
+    "increment": "20261101T145126Z",
+    "path": "delivery/full-installation-Linux-13087521493/acceptance/sdk-evidence/flow-report.json",
+    "source": "out\\verification\\i2-j1-03d2c48\\ci\\extracted\\full-installation-Linux-13087521493\\acceptance\\sdk-evidence\\flow-report.json",
+    "source_sha256": "b0e4c5383a3c5dc1fbf51de430c4a16c1401e77f47aecd0aada863afa32409ae",
+    "derived_navigation_only": true,
+    "receipt": {
+      "schema": "g4usim_installation_flow_v1",
+      "status": "verified",
+      "profile": "sdk",
+      "scope": "Actual installation/files/runtime on the caller's host; fresh-OS/CI identity is supplied separately",
+      "geant4_version": "11.4.3",
+      "verified_files": 68385
+    }
+  },
+  {
+    "increment": "20261101T145126Z",
+    "path": "delivery/full-installation-Linux-13087521493/acceptance/sdk-evidence/install-receipt.json",
+    "source": "out\\verification\\i2-j1-03d2c48\\ci\\extracted\\full-installation-Linux-13087521493\\acceptance\\sdk-evidence\\install-receipt.json",
+    "source_sha256": "a11f41040ecf76ea0e1f567cf31ce905d4309a248ebb2a50362ccc28104cc3c0",
+    "derived_navigation_only": true,
+    "receipt": {
+      "schema": "g4usim_install_receipt_v1",
+      "status": "published",
+      "profile": "sdk",
+      "version": "1.0.0",
+      "geant4_version": "11.4.3",
+      "platform": "linux",
+      "architecture": "x86_64",
+      "artifacts": [
+        {
+          "id": "application",
+          "source": {
+            "catalog_reference": "artifacts/G4UniversalSim-1.0.0-linux-x86_64-runtime.zip",
+            "kind": "local",
+            "origin": "Actual local Linux build /home/runner/work/_temp/g4usim-delivery/backend; clean-environment receipt /home/runner/work/_temp/g4usim-delivery/acceptance/source/out/package-verification/linux-vs8y_jsd",
+            "path": "/home/runner/work/_temp/g4usim-delivery/acceptance/release/G4UniversalSim-1.0.0-linux-x86_64-g4-11.4.3/install/artifacts/G4UniversalSim-1.0.0-linux-x86_64-runtime.zip"
+          },
+          "sha256": "a5ee66d535b7763687717b1f6a573d35fbf54c0a63913ef96a8636df6aaaf93e",
+          "size_bytes": 606495390,
+          "license": {
+            "expression": "LicenseRef-Bundled-Notices",
+            "path": "THIRD_PARTY_NOTICES.md",
+            "sha256": "0cc0d1fc29c9e567879675182fa8df9c03a61d0cc0534103ebd5b513836ba16e",
+            "source": "Bundled component notices and licenses directory"
+          }
+        },
+        {
+          "id": "geant4-data",
+          "source": {
+            "catalog_reference": "artifacts/geant4-data.zip",
+            "kind": "local",
+            "origin": "Local Geant4 dataset installation selected by actual backend discovery; Actual selected local SDK/data discovery receipt /home/runner/work/_temp/g4usim-delivery/discovery.json",
+            "path": "/home/runner/work/_temp/g4usim-delivery/acceptance/release/G4UniversalSim-1.0.0-linux-x86_64-g4-11.4.3/install/artifacts/geant4-data.zip"
+          },
+          "sha256": "fba644cb88ce73dac5cf1c2c70cf2567e7e521495e8d2015ec39dcef3d464a31",
+          "size_bytes": 1670619875,
+          "license": {
+            "expression": "LicenseRef-Upstream-Dataset-Notices",
+            "path": "DATASET-NOTICES.txt",
+            "sha256": "43ddcbbb90d70c8e4d86d387ce1953f9bed7f829840a91ac172c3431c7bdd25d",
+            "source": "Actual selected local SDK/data discovery receipt /home/runner/work/_temp/g4usim-delivery/discovery.json"
+          }
+        },
+        {
+          "id": "dependency-notices",
+          "source": {
+            "catalog_reference": "artifacts/dependency-notices.zip",
+            "kind": "local",
+            "origin": "Actual dependency package-cache license texts selected by installed records under /home/runner/work/_temp/g4usim-delivery/bootstrap/geant4",
+            "path": "/home/runner/work/_temp/g4usim-delivery/acceptance/release/G4UniversalSim-1.0.0-linux-x86_64-g4-11.4.3/install/artifacts/dependency-notices.zip"
+          },
+          "sha256": "643adf3f65415a69052fe3d16cc42adfe03e155081891d872446434f9519e0c8",
+          "size_bytes": 438608,
+          "license": {
+            "expression": "LicenseRef-Upstream-Component-Notices",
+            "path": "LICENSE-EVIDENCE.json",
+            "sha256": "441ba6257fef052fc379d0b0e78a0f397087c8bed9058d3f9e81564503daf8d4",
+            "source": "Unmodified upstream texts and exact source package records in this artifact"
+          }
+        },
+        {
+          "id": "development-sdk",
+          "source": {
+            "catalog_reference": "artifacts/G4UniversalSim-1.0.0-linux-x86_64-development-6074d677-sdk.zip",
+            "kind": "local",
+            "origin": "Actual local Geant4 SDK files copied from /home/runner/work/_temp/g4usim-delivery/bootstrap/geant4",
+            "path": "/home/runner/work/_temp/g4usim-delivery/acceptance/release/G4UniversalSim-1.0.0-linux-x86_64-g4-11.4.3/install/artifacts/G4UniversalSim-1.0.0-linux-x86_64-development-6074d677-sdk.zip"
+          },
+          "sha256": "8eeab707e083274e22409c9dc93a129c26be7aef57192f6c6848cf5016999dd5",
+          "size_bytes": 464264032,
+          "license": {
+            "expression": "LicenseRef-Bundled-SDK-Notices",
+            "path": "sdk/SDK-NOTICES.md",
+            "sha256": "6645cd14d641275276380e56b5a91c739e30156117f04b9d54a6d5b58722cfbe",
+            "source": "Bundled development component notices and upstream license texts"
+          }
+        }
+      ],
+      "catalog_sha256": "e57a45aea168388cde27c85d4a591cff3bf9ed140b323a6a7da1d6d0d4b479d8"
+    }
+  },
+  {
+    "increment": "20261101T145126Z",
+    "path": "delivery/full-installation-Linux-13087521493/acceptance/sdk-evidence/uninstall-receipt.json",
+    "source": "out\\verification\\i2-j1-03d2c48\\ci\\extracted\\full-installation-Linux-13087521493\\acceptance\\sdk-evidence\\uninstall-receipt.json",
+    "source_sha256": "4c445651f1fd15b7a52a1e876c03572f43ba13b8fcea7b326cd430889cea7db3",
+    "derived_navigation_only": true,
+    "receipt": {
+      "schema": "g4usim_uninstall_receipt_v1",
+      "status": "uninstalled"
+    }
+  },
+  {
+    "increment": "20261101T145126Z",
+    "path": "delivery/full-installation-Windows-13087857643/acceptance/evidence/runtime/flow-report.json",
+    "source": "out\\verification\\i2-j1-03d2c48\\ci\\extracted\\full-installation-Windows-13087857643\\acceptance\\evidence\\runtime\\flow-report.json",
+    "source_sha256": "2753cc75b68a8f37b248b8a5e647b548c176e41de063a1b072a263603ec206d9",
+    "derived_navigation_only": true,
+    "receipt": {
+      "schema": "g4usim_installation_flow_v1",
+      "status": "verified",
+      "profile": "runtime",
+      "scope": "Actual installation/files/runtime on the caller's host; fresh-OS/CI identity is supplied separately",
+      "geant4_version": "11.4.3",
+      "completed_events": 5,
+      "verified_files": 48225
+    }
+  },
+  {
+    "increment": "20261101T145126Z",
+    "path": "delivery/full-installation-Windows-13087857643/acceptance/evidence/sdk/flow-report.json",
+    "source": "out\\verification\\i2-j1-03d2c48\\ci\\extracted\\full-installation-Windows-13087857643\\acceptance\\evidence\\sdk\\flow-report.json",
+    "source_sha256": "8d6ecf97b77e16e9b44505fa50fa7045f6cb2abc44a7f7bbe2a864bacbd8e78e",
+    "derived_navigation_only": true,
+    "receipt": {
+      "schema": "g4usim_installation_flow_v1",
+      "status": "verified",
+      "profile": "sdk",
+      "scope": "Actual installation/files/runtime on the caller's host; fresh-OS/CI identity is supplied separately",
+      "geant4_version": "11.4.3",
+      "verified_files": 53035
+    }
+  },
+  {
+    "increment": "20261101T145126Z",
+    "path": "delivery/full-installation-Windows-13087857643/acceptance/runtime-evidence/flow-report.json",
+    "source": "out\\verification\\i2-j1-03d2c48\\ci\\extracted\\full-installation-Windows-13087857643\\acceptance\\runtime-evidence\\flow-report.json",
+    "source_sha256": "2753cc75b68a8f37b248b8a5e647b548c176e41de063a1b072a263603ec206d9",
+    "derived_navigation_only": true,
+    "receipt": {
+      "schema": "g4usim_installation_flow_v1",
+      "status": "verified",
+      "profile": "runtime",
+      "scope": "Actual installation/files/runtime on the caller's host; fresh-OS/CI identity is supplied separately",
+      "geant4_version": "11.4.3",
+      "completed_events": 5,
+      "verified_files": 48225
+    }
+  },
+  {
+    "increment": "20261101T145126Z",
+    "path": "delivery/full-installation-Windows-13087857643/acceptance/runtime-evidence/install-receipt.json",
+    "source": "out\\verification\\i2-j1-03d2c48\\ci\\extracted\\full-installation-Windows-13087857643\\acceptance\\runtime-evidence\\install-receipt.json",
+    "source_sha256": "8bb4b3a1c6a9f0a04ae5d1670d132366d51132150ebfbcb66af5a7437485249c",
+    "derived_navigation_only": true,
+    "receipt": {
+      "schema": "g4usim_install_receipt_v1",
+      "status": "published",
+      "profile": "runtime",
+      "version": "1.0.0",
+      "geant4_version": "11.4.3",
+      "platform": "windows",
+      "architecture": "x86_64",
+      "artifacts": [
+        {
+          "id": "application",
+          "source": {
+            "catalog_reference": "artifacts/G4UniversalSim-1.0.0-win64-runtime.zip",
+            "kind": "local",
+            "origin": "Local build D:\\a\\_temp\\g4usim-delivery\\backend\\Release; validated by packaging/build_package.py",
+            "path": "D:\\a\\_temp\\g4usim-delivery\\acceptance\\release\\G4UniversalSim-1.0.0-win64-g4-11.4.3\\install\\artifacts\\G4UniversalSim-1.0.0-win64-runtime.zip"
+          },
+          "sha256": "d3eeaa08394d26ef0ecbda2dfbfe1d4513e3b092f6aca93e44cd5cc5ef22d999",
+          "size_bytes": 232550314,
+          "license": {
+            "expression": "LicenseRef-Bundled-Notices",
+            "path": "THIRD_PARTY_NOTICES.md",
+            "sha256": "eef40593a6cb1eef578d1b8f524b84fd1bed7834f1a61042b542c1cee9767a3e",
+            "source": "Bundled third-party notices and licenses directory"
+          }
+        },
+        {
+          "id": "geant4-data",
+          "source": {
+            "catalog_reference": "artifacts/geant4-data.zip",
+            "kind": "local",
+            "origin": "Local Geant4 dataset installation selected by actual backend discovery; Actual selected local SDK/data discovery receipt D:\\a\\_temp\\g4usim-delivery\\discovery.json",
+            "path": "D:\\a\\_temp\\g4usim-delivery\\acceptance\\release\\G4UniversalSim-1.0.0-win64-g4-11.4.3\\install\\artifacts\\geant4-data.zip"
+          },
+          "sha256": "d1e6d08e5b53594b037d606a65950622227e1bf7bf5c0946df6cb197339aebd3",
+          "size_bytes": 1670619860,
+          "license": {
+            "expression": "LicenseRef-Upstream-Dataset-Notices",
+            "path": "DATASET-NOTICES.txt",
+            "sha256": "9a01e6b2177958e2ae32cf7044229a1931554cf901979764d24845ac404ec05d",
+            "source": "Actual selected local SDK/data discovery receipt D:\\a\\_temp\\g4usim-delivery\\discovery.json"
+          }
+        }
+      ],
+      "catalog_sha256": "58ac94b8abedc88347b8eba11c2a1bb7a32d9551f40d8c61b7137b3bfcd9766b"
+    }
+  },
+  {
+    "increment": "20261101T145126Z",
+    "path": "delivery/full-installation-Windows-13087857643/acceptance/runtime-evidence/uninstall-receipt.json",
+    "source": "out\\verification\\i2-j1-03d2c48\\ci\\extracted\\full-installation-Windows-13087857643\\acceptance\\runtime-evidence\\uninstall-receipt.json",
+    "source_sha256": "31b817419c5db4ff8caf0ca6703bd5f3f7d47780d7a2ba0828c38121de1df7f9",
+    "derived_navigation_only": true,
+    "receipt": {
+      "schema": "g4usim_uninstall_receipt_v1",
+      "status": "uninstalled"
+    }
+  },
+  {
+    "increment": "20261101T145126Z",
+    "path": "delivery/full-installation-Windows-13087857643/acceptance/sdk-evidence/flow-report.json",
+    "source": "out\\verification\\i2-j1-03d2c48\\ci\\extracted\\full-installation-Windows-13087857643\\acceptance\\sdk-evidence\\flow-report.json",
+    "source_sha256": "8d6ecf97b77e16e9b44505fa50fa7045f6cb2abc44a7f7bbe2a864bacbd8e78e",
+    "derived_navigation_only": true,
+    "receipt": {
+      "schema": "g4usim_installation_flow_v1",
+      "status": "verified",
+      "profile": "sdk",
+      "scope": "Actual installation/files/runtime on the caller's host; fresh-OS/CI identity is supplied separately",
+      "geant4_version": "11.4.3",
+      "verified_files": 53035
+    }
+  },
+  {
+    "increment": "20261101T145126Z",
+    "path": "delivery/full-installation-Windows-13087857643/acceptance/sdk-evidence/install-receipt.json",
+    "source": "out\\verification\\i2-j1-03d2c48\\ci\\extracted\\full-installation-Windows-13087857643\\acceptance\\sdk-evidence\\install-receipt.json",
+    "source_sha256": "4d5c869801fd172e597405495c62ff54faa2af112281b867e73bd3acc4f84cd2",
+    "derived_navigation_only": true,
+    "receipt": {
+      "schema": "g4usim_install_receipt_v1",
+      "status": "published",
+      "profile": "sdk",
+      "version": "1.0.0",
+      "geant4_version": "11.4.3",
+      "platform": "windows",
+      "architecture": "x86_64",
+      "artifacts": [
+        {
+          "id": "application",
+          "source": {
+            "catalog_reference": "artifacts/G4UniversalSim-1.0.0-win64-runtime.zip",
+            "kind": "local",
+            "origin": "Local build D:\\a\\_temp\\g4usim-delivery\\backend\\Release; validated by packaging/build_package.py",
+            "path": "D:\\a\\_temp\\g4usim-delivery\\acceptance\\release\\G4UniversalSim-1.0.0-win64-g4-11.4.3\\install\\artifacts\\G4UniversalSim-1.0.0-win64-runtime.zip"
+          },
+          "sha256": "d3eeaa08394d26ef0ecbda2dfbfe1d4513e3b092f6aca93e44cd5cc5ef22d999",
+          "size_bytes": 232550314,
+          "license": {
+            "expression": "LicenseRef-Bundled-Notices",
+            "path": "THIRD_PARTY_NOTICES.md",
+            "sha256": "eef40593a6cb1eef578d1b8f524b84fd1bed7834f1a61042b542c1cee9767a3e",
+            "source": "Bundled third-party notices and licenses directory"
+          }
+        },
+        {
+          "id": "geant4-data",
+          "source": {
+            "catalog_reference": "artifacts/geant4-data.zip",
+            "kind": "local",
+            "origin": "Local Geant4 dataset installation selected by actual backend discovery; Actual selected local SDK/data discovery receipt D:\\a\\_temp\\g4usim-delivery\\discovery.json",
+            "path": "D:\\a\\_temp\\g4usim-delivery\\acceptance\\release\\G4UniversalSim-1.0.0-win64-g4-11.4.3\\install\\artifacts\\geant4-data.zip"
+          },
+          "sha256": "d1e6d08e5b53594b037d606a65950622227e1bf7bf5c0946df6cb197339aebd3",
+          "size_bytes": 1670619860,
+          "license": {
+            "expression": "LicenseRef-Upstream-Dataset-Notices",
+            "path": "DATASET-NOTICES.txt",
+            "sha256": "9a01e6b2177958e2ae32cf7044229a1931554cf901979764d24845ac404ec05d",
+            "source": "Actual selected local SDK/data discovery receipt D:\\a\\_temp\\g4usim-delivery\\discovery.json"
+          }
+        },
+        {
+          "id": "development-sdk",
+          "source": {
+            "catalog_reference": "artifacts/G4UniversalSim-1.0.0-win64-development-bf9a0e43-sdk.zip",
+            "kind": "local",
+            "origin": "Actual local Geant4 SDK files copied from D:\\a\\_temp\\g4usim-delivery\\bootstrap\\sdk\\geant4-11.4.3-win64",
+            "path": "D:\\a\\_temp\\g4usim-delivery\\acceptance\\release\\G4UniversalSim-1.0.0-win64-g4-11.4.3\\install\\artifacts\\G4UniversalSim-1.0.0-win64-development-bf9a0e43-sdk.zip"
+          },
+          "sha256": "1ad9b096d385a9293b5325cca522555d90146b90915297a848e42c12ec1a486a",
+          "size_bytes": 46409108,
+          "license": {
+            "expression": "LicenseRef-Bundled-SDK-Notices",
+            "path": "sdk/SDK-NOTICES.md",
+            "sha256": "06205617277db6fc1d7d3c35e9ee6638b788e7149939d62538266c25edccf1a8",
+            "source": "Bundled development component notices and upstream license texts"
+          }
+        }
+      ],
+      "catalog_sha256": "58ac94b8abedc88347b8eba11c2a1bb7a32d9551f40d8c61b7137b3bfcd9766b"
+    }
+  },
+  {
+    "increment": "20261101T145126Z",
+    "path": "delivery/full-installation-Windows-13087857643/acceptance/sdk-evidence/uninstall-receipt.json",
+    "source": "out\\verification\\i2-j1-03d2c48\\ci\\extracted\\full-installation-Windows-13087857643\\acceptance\\sdk-evidence\\uninstall-receipt.json",
+    "source_sha256": "f2c19f351394935cd81549e5d233633eabc3e8f87fcae9f004d66160ae1fd81e",
+    "derived_navigation_only": true,
+    "receipt": {
+      "schema": "g4usim_uninstall_receipt_v1",
+      "status": "uninstalled"
+    }
+  },
+  {
+    "increment": "20261101T145126Z",
+    "path": "delivery/full-installation-Windows-13087857643/bootstrap/datasets/fetch-report.json",
+    "source": "out\\verification\\i2-j1-03d2c48\\ci\\extracted\\full-installation-Windows-13087857643\\bootstrap\\datasets\\fetch-report.json",
+    "source_sha256": "e09f035ef82e2b077e1cf8208849e3ddfe3f26d8a32d9bc1a060bab582a17e01",
+    "derived_navigation_only": true,
+    "receipt": {
+      "schema": "g4usim_ci_geant4_data_fetch_v1",
+      "status": "completed"
+    }
+  }
+]

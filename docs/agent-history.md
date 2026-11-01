@@ -637,3 +637,20 @@ I2 新增 Windows 11.4 实际矩阵暴露两类既有测试前提（不是将旧
 官方 Windows 11.4.3 SDK 的真实能力是 GDML OFF。geometry_a5、fields_a7、gdml_bias_identity、gdml_touchable_identity 据实际 --capabilities 选择：ON 保留全部原几何、身份、共享场和容差检查；OFF 执行真实输入/导出拒绝、禁止模拟产物，并明确记录尚未进入run或摘要未产生。OFF 不是跳过后冒绿，更不是 GDML 验证；与 Windows 11.3/Linux 的 ON 证据及断言量分开，不拿较少的拒绝分支冒充功能覆盖。
 
 首轮候选 ba81615 的真实 Actions 失败保留：Windows checkout 因历史验收长路径失败，三个 Windows job 必须在检出前启用 runner 内 Git longpaths；Linux static 发现仅本机存在的审查链接，现归档原字节及 SHA 后修链接。平台路径门禁只豁免明确登记的 fixture 顶层常量单字符串声明，文件/名称/原值/用途注释均须精确匹配；声明外运行路径和注释仍检查，不增加整文件免检。回归 test_platform_path_fixture_policy。Linux frozen desktop 自检通过不代替随后失败的 xcb renderer；实际冻结日志列出的五个缺库须补齐并保留 ldd 诊断。Linux SDK 的首轮失败是不存在的 /usr/bin/cmake，commands 为空，不能称编译失败；工作流须使用实际工具路径，交付入口先登记工具身份，最终 SDK 两种编译探测再分别核验该身份。旧 CI、原 GUI 57/59 和 static 42/43 报告不改写。J1 下原 3D scroll 保留在 dock、页签变为激活入口；config_editors 的结构断言按此适配，原实例、尺寸和按钮判据保留，失败时也先完成正常关闭才销毁。上述修订不关闭阶段。
+
+
+## 2026-11-01 I2/J1 最终验收与测试环境修订
+
+I2/J1 按 docs/collab/inbox/20261031-i2-j1-scope.md 完成既定实现、审查与验收，最终证据集中在 docs/verification/i2-j1-final-20261101/README.md。产品候选 5fe0a1052e33c96d033375d0920f29b15d432dcc；03d2c483afc0082ad464d2d9a1750fd2e4415a3a 只改两个测试，380项产品文件Git对象逐项一致。Windows后端仍报告实际5fe BuildInfo；冻结包、CI、native分别保留其原提交与原字节，不为文档提交伪改身份。源码相同不意味着跨平台二进制相同。
+
+最终测试提交6310969005183e314b05e0b0362450fa6194bea1进一步只修smoke_i2_install的fixture根和失败诊断。03d的Windows M0 GUI在第166行/54入口失败；同源码完整smoke真实C盘长TEMP59通过、8.3短TEMP54失败，实际/期望均为两个候选，仅拼写不同；规范fixture根后短TEMP59通过。当前tracked文件也59/49、strict0，49个原assert谓词和顺序保留，不加等待、不改产品发现/去重，原CI失败不回填。最终M0按631新提交，未改profile及交付按03d/5fe各自实际身份和文件对应关系验收。
+
+Windows临时目录可能有8.3拼写；test_platform_install_layout先规范化fixture根，再比较产品返回的规范路径。真实长短路径及短TEMP反例/修后入口已独审。旧CI失败日志未打印两个操作数，因此“短路径原因”来自独立实证，不冒充原日志已经记载该字符串。
+
+test_effective_gdml是独立Xerces字节捕获组件，不是应用后端GDML能力测试。G4USIM_GDML_CAPTURE_HELPER只允许显式现有文件，选择一次后失踪须失败，不得静默退到编译；未设置时保留邻近helper和编译回退。日志记实际helper路径/字节SHA及当前源SHA，后者单独不证明二进制编译来源；正式构建收据另绑定5份C++源与Xerces输入。新增选择/身份检查保留全部原捕获断言。Windows11.4官方SDK仍GDML OFF，独立helper仅链接Xerces/Threads，不能升级为后端GDML支持。初次独审发现晚消失回退P2，修后确定性反例已关闭，原审查保留。
+
+Windows原生26图、4次host自然退出0/close_drained=true；布局拖动/缩放/浮动/隐藏、三个预设、本机保存重启/复位、B/K/C/系统主题、中英文、125%/150%DPI以及体积/材料颜色和不透明度覆盖均有实际观察。2M和4M真实事件完成，运行中显示动作保持相应编辑快照，不另建run。150%文字fallback与真实PyVista分别记录；未做物理多屏热插拔。SDK/安装、运行完成、渲染画面及物理验证分开计证，未新增物理或性能基准。
+
+历史ba81615 duplicate_history_cli单次断言失败缺原case/count/state；两次定向、正式矩阵及唯一531秒/三轮/36动作追踪未复现，根因未知，不称已经修复。原恰一次与历史保护断言不放宽，后续再现仍按可靠性缺陷处理。负坐标瞬态符合Qt停放，稳定按钮可达性已另验，但没有成功复现原生拖动反例，不把它写成全面通过。所有旧失败、撤回与证据缺口保留。
+
+归档按原SHA无损选取必要原件并脱源复验，历史失败报告依然strict fail。巨大SDK/数据/冻结payload、完整官方ZIP及大CSV没有全部入Git，位置/大小/SHA与遗漏边界明确登记。不能把归档完整性通过改称所有历史测试通过，也不能把本机原件称为永久公开存储。后续J2/F8承接空白创建、完整编辑路径与文案/可访问性，AI任务能力归L1。

@@ -1,0 +1,33 @@
+{
+  "head": "5fe0a1052e33c96d033375d0920f29b15d432dcc",
+  "reports": [
+    {
+      "logical_path": "automated/local/windows113-integration/20261101-213823-a10c064e/report.json",
+      "source": "out\\verification\\i2-j1-5fe0a10\\windows113-integration\\20261101-213823-a10c064e\\report.json",
+      "profile": "integration",
+      "cases": 29,
+      "assertions": 6054,
+      "strict_gate": "pass",
+      "strict_gate_error": null,
+      "triage_integrity": null,
+      "git_head": "5fe0a1052e33c96d033375d0920f29b15d432dcc",
+      "source_fingerprint": "890635b6d521659e43cf735d07f862c6ebd5959e6c5ea68d023d55332a8a930a",
+      "tests_content_fingerprint": "0bb3d22740a51015cc64ee1c6da3f5a58cccfd073f2a8101cebca12af22b75e2"
+    },
+    {
+      "logical_path": "automated/local/windows114-integration/20261101-213741-f6042d63/report.json",
+      "source": "out\\verification\\i2-j1-5fe0a10\\windows114-integration\\20261101-213741-f6042d63\\report.json",
+      "profile": "integration",
+      "cases": 29,
+      "assertions": 6034,
+      "strict_gate": "fail",
+      "strict_gate_error": "report is not release evidence: 1 case(s) did not pass (['effective_gdml']); pass --allow-incomplete only for triage",
+      "triage_integrity": "pass",
+      "git_head": "5fe0a1052e33c96d033375d0920f29b15d432dcc",
+      "source_fingerprint": "890635b6d521659e43cf735d07f862c6ebd5959e6c5ea68d023d55332a8a930a",
+      "tests_content_fingerprint": "0bb3d22740a51015cc64ee1c6da3f5a58cccfd073f2a8101cebca12af22b75e2"
+    }
+  ],
+  "pending_local_profiles": [],
+  "source": "Current strict validate_report, no legacy flags; known failing report only gets additional incomplete triage"
+}

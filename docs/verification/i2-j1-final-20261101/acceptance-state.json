@@ -1,0 +1,309 @@
+{
+  "schema": "g4usim_i2_j1_acceptance_v1",
+  "recorded_utc": "2026-11-01T15:05:59.840470+00:00",
+  "status": "accepted_integration_recorded_separately",
+  "product_head": "5fe0a1052e33c96d033375d0920f29b15d432dcc",
+  "final_test_head": "6310969005183e314b05e0b0362450fa6194bea1",
+  "selected_ci_runs": [
+    {
+      "id": 41317395299,
+      "head": "6310969005183e314b05e0b0362450fa6194bea1",
+      "name": "M0 static and GUI regression",
+      "url": "https://github.com/doorfordoor/G4UniversalSim/actions/runs/41317395299",
+      "status": "completed",
+      "conclusion": "success",
+      "original_metadata": "out\\verification\\i2-j1-6310969\\ci\\terminal-run-41317395299.json",
+      "metadata_sha256": "3cdf3dec17d7e81dd48f4aca8bea8f41bd35e4fe7138dcca002cc45df74386da"
+    },
+    {
+      "id": 41314991413,
+      "head": "03d2c483afc0082ad464d2d9a1750fd2e4415a3a",
+      "name": "Linux build and backend regression",
+      "url": "https://github.com/doorfordoor/G4UniversalSim/actions/runs/41314991413",
+      "status": "completed",
+      "conclusion": "success",
+      "original_metadata": "out\\verification\\i2-j1-03d2c48\\ci\\terminal-run-41314991413.json",
+      "metadata_sha256": "752bfb76e19662f947625d55ca11b8b03f9fc66e522b69bd20881998fa5e5a48"
+    },
+    {
+      "id": 41314991520,
+      "head": "03d2c483afc0082ad464d2d9a1750fd2e4415a3a",
+      "name": "I2 desktop package delivery",
+      "url": "https://github.com/doorfordoor/G4UniversalSim/actions/runs/41314991520",
+      "status": "completed",
+      "conclusion": "success",
+      "original_metadata": "out\\verification\\i2-j1-03d2c48\\ci\\terminal-run-41314991520.json",
+      "metadata_sha256": "59784649a2f70bec8810275dd4b181b9458dfdb9c5240bef346e81a9a83cb41b"
+    },
+    {
+      "id": 41314991412,
+      "head": "03d2c483afc0082ad464d2d9a1750fd2e4415a3a",
+      "name": "I2 native runtime and SDK installation",
+      "url": "https://github.com/doorfordoor/G4UniversalSim/actions/runs/41314991412",
+      "status": "completed",
+      "conclusion": "success",
+      "original_metadata": "out\\verification\\i2-j1-03d2c48\\ci\\terminal-run-41314991412.json",
+      "metadata_sha256": "dfc70b1bc5291d9f203c6df9b093314226736d56216a10d4bcfc50606fcc0afb"
+    }
+  ],
+  "local_reports": [
+    {
+      "scope": "i2-j1-5fe0a10/windows-static",
+      "head": "5fe0a1052e33c96d033375d0920f29b15d432dcc",
+      "cases": 44,
+      "assertions_executed": 3964,
+      "source_fingerprint": "890635b6d521659e43cf735d07f862c6ebd5959e6c5ea68d023d55332a8a930a",
+      "tests_content_fingerprint": "0bb3d22740a51015cc64ee1c6da3f5a58cccfd073f2a8101cebca12af22b75e2",
+      "original_report": "out\\verification\\i2-j1-5fe0a10\\windows-static\\20261101-205231-c62d61cd\\report.json",
+      "report_sha256": "5b72c84e71c6e1b096ad81566c0adb5d7809fd590506dc9f37559ea8b3526c99"
+    },
+    {
+      "scope": "i2-j1-5fe0a10/windows-gui",
+      "head": "5fe0a1052e33c96d033375d0920f29b15d432dcc",
+      "cases": 59,
+      "assertions_executed": 6760,
+      "source_fingerprint": "890635b6d521659e43cf735d07f862c6ebd5959e6c5ea68d023d55332a8a930a",
+      "tests_content_fingerprint": "0bb3d22740a51015cc64ee1c6da3f5a58cccfd073f2a8101cebca12af22b75e2",
+      "original_report": "out\\verification\\i2-j1-5fe0a10\\windows-gui\\20261101-205241-d4aff2d8\\report.json",
+      "report_sha256": "178d2a42b041fe1ed6018d79d6b7b27a72c73cdc348d7204c20dc2b26d5a1e6c"
+    },
+    {
+      "scope": "i2-j1-5fe0a10/windows113-backend",
+      "head": "5fe0a1052e33c96d033375d0920f29b15d432dcc",
+      "cases": 61,
+      "assertions_executed": 76814,
+      "source_fingerprint": "890635b6d521659e43cf735d07f862c6ebd5959e6c5ea68d023d55332a8a930a",
+      "tests_content_fingerprint": "0bb3d22740a51015cc64ee1c6da3f5a58cccfd073f2a8101cebca12af22b75e2",
+      "original_report": "out\\verification\\i2-j1-5fe0a10\\windows113-backend\\20261101-205411-0e9901a5\\report.json",
+      "report_sha256": "2735fc3250511af3ac8db604f5a33ddba848676496a3027c05ece520a5d93536"
+    },
+    {
+      "scope": "i2-j1-5fe0a10/windows113-integration",
+      "head": "5fe0a1052e33c96d033375d0920f29b15d432dcc",
+      "cases": 29,
+      "assertions_executed": 6054,
+      "source_fingerprint": "890635b6d521659e43cf735d07f862c6ebd5959e6c5ea68d023d55332a8a930a",
+      "tests_content_fingerprint": "0bb3d22740a51015cc64ee1c6da3f5a58cccfd073f2a8101cebca12af22b75e2",
+      "original_report": "out\\verification\\i2-j1-5fe0a10\\windows113-integration\\20261101-213823-a10c064e\\report.json",
+      "report_sha256": "193f85ac437775d8c84bd5173d97eea5973c35a70ec12799ca44e498558113de"
+    },
+    {
+      "scope": "i2-j1-5fe0a10/windows114-backend",
+      "head": "5fe0a1052e33c96d033375d0920f29b15d432dcc",
+      "cases": 61,
+      "assertions_executed": 67321,
+      "source_fingerprint": "890635b6d521659e43cf735d07f862c6ebd5959e6c5ea68d023d55332a8a930a",
+      "tests_content_fingerprint": "0bb3d22740a51015cc64ee1c6da3f5a58cccfd073f2a8101cebca12af22b75e2",
+      "original_report": "out\\verification\\i2-j1-5fe0a10\\windows114-backend\\20261101-205411-79e165c8\\report.json",
+      "report_sha256": "c0de0742a3ec2b2cdafbaf7b0d79cf58e489737a3479001c621b76f4607426df"
+    },
+    {
+      "scope": "i2-j1-03d2c48/windows114-integration",
+      "head": "03d2c483afc0082ad464d2d9a1750fd2e4415a3a",
+      "cases": 29,
+      "assertions_executed": 6045,
+      "source_fingerprint": "890635b6d521659e43cf735d07f862c6ebd5959e6c5ea68d023d55332a8a930a",
+      "tests_content_fingerprint": "a19f074ef4dd7fbdaad5a333aea59d7ba5bf627081927055ca6f404a498d0866",
+      "original_report": "out\\verification\\i2-j1-03d2c48\\windows114-integration\\20261101-221315-6389b5dd\\report.json",
+      "report_sha256": "2b6031df0b82040afc5d0b050c4dd62cf2744e18f2cb0a7dc6dc5fb9c49e1a47"
+    }
+  ],
+  "selected_ci_profile_reports": [
+    {
+      "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.43",
+      "profile": "static",
+      "head": "6310969005183e314b05e0b0362450fa6194bea1",
+      "git_dirty": false,
+      "git_status_porcelain": "",
+      "tracked_source_gate": "pass",
+      "untracked_source_files": [],
+      "cases": 44,
+      "assertions_executed": 3966,
+      "tests_content_fingerprint": "c70da3fc9e6b66bcea1483e9527178a1b9b281921b8690648df509199f671deb",
+      "original_report": "out\\verification\\i2-j1-6310969\\ci\\extracted\\m0-report-ubuntu-latest-13087119373\\20261101-144135-4d7ff67f\\report.json",
+      "report_sha256": "665b8bdaab8eb061a751d82690bbe0a3a4d64b1875b9fbfba1c78d86c6ab5a15"
+    },
+    {
+      "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.43",
+      "profile": "gui",
+      "head": "6310969005183e314b05e0b0362450fa6194bea1",
+      "git_dirty": false,
+      "git_status_porcelain": "",
+      "tracked_source_gate": "pass",
+      "untracked_source_files": [],
+      "cases": 59,
+      "assertions_executed": 6739,
+      "tests_content_fingerprint": "c70da3fc9e6b66bcea1483e9527178a1b9b281921b8690648df509199f671deb",
+      "original_report": "out\\verification\\i2-j1-6310969\\ci\\extracted\\m0-report-ubuntu-latest-13087119373\\20261101-144310-866ffdc4\\report.json",
+      "report_sha256": "485ab4beadc3f7dedb4ab8f430e12e6371d2312f2ed262f48792da52e82a1827"
+    },
+    {
+      "platform": "Windows-10-10.0.26100-SP0",
+      "profile": "static",
+      "head": "6310969005183e314b05e0b0362450fa6194bea1",
+      "git_dirty": false,
+      "git_status_porcelain": "",
+      "tracked_source_gate": "pass",
+      "untracked_source_files": [],
+      "cases": 44,
+      "assertions_executed": 3959,
+      "tests_content_fingerprint": "c70da3fc9e6b66bcea1483e9527178a1b9b281921b8690648df509199f671deb",
+      "original_report": "out\\verification\\i2-j1-6310969\\ci\\extracted\\m0-report-windows-latest-13088128041\\20261101-144208-6260dda6\\report.json",
+      "report_sha256": "7df971949de5806c10127bc50db3abf9be0c89eb21a5b6b257c1e3911f74c857"
+    },
+    {
+      "platform": "Windows-10-10.0.26100-SP0",
+      "profile": "gui",
+      "head": "6310969005183e314b05e0b0362450fa6194bea1",
+      "git_dirty": false,
+      "git_status_porcelain": "",
+      "tracked_source_gate": "pass",
+      "untracked_source_files": [],
+      "cases": 59,
+      "assertions_executed": 6739,
+      "tests_content_fingerprint": "c70da3fc9e6b66bcea1483e9527178a1b9b281921b8690648df509199f671deb",
+      "original_report": "out\\verification\\i2-j1-6310969\\ci\\extracted\\m0-report-windows-latest-13088128041\\20261101-144550-80bc5c13\\report.json",
+      "report_sha256": "59dbd5060da518458185c2d323518ea01ab3b98644e5637e56b095f1c1de2e9e"
+    },
+    {
+      "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39",
+      "profile": "backend",
+      "head": "03d2c483afc0082ad464d2d9a1750fd2e4415a3a",
+      "git_dirty": true,
+      "git_status_porcelain": "?? .g4env-11.3.2/\n?? .micromamba/\n?? bin/",
+      "tracked_source_gate": "pass",
+      "untracked_source_files": [],
+      "cases": 61,
+      "assertions_executed": 76820,
+      "tests_content_fingerprint": "a19f074ef4dd7fbdaad5a333aea59d7ba5bf627081927055ca6f404a498d0866",
+      "original_report": "out\\verification\\i2-j1-03d2c48\\ci\\extracted\\linux-evidence-11.3.2-13087921872\\linux-backend\\20261101-142031-b85b3b32\\report.json",
+      "report_sha256": "4115a80ed9994870fc1e52e21b570cf2e4db749765806bc9939aea2677456382"
+    },
+    {
+      "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39",
+      "profile": "gui",
+      "head": "03d2c483afc0082ad464d2d9a1750fd2e4415a3a",
+      "git_dirty": true,
+      "git_status_porcelain": "?? .g4env-11.3.2/\n?? .micromamba/\n?? bin/",
+      "tracked_source_gate": "pass",
+      "untracked_source_files": [],
+      "cases": 59,
+      "assertions_executed": 6739,
+      "tests_content_fingerprint": "a19f074ef4dd7fbdaad5a333aea59d7ba5bf627081927055ca6f404a498d0866",
+      "original_report": "out\\verification\\i2-j1-03d2c48\\ci\\extracted\\linux-evidence-11.3.2-13087921872\\linux-gui\\20261101-141600-27d9f9ea\\report.json",
+      "report_sha256": "fdf42185f92f698ce714254552509b2b3f1e43848d5545efd786c9e7f9821f11"
+    },
+    {
+      "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39",
+      "profile": "integration",
+      "head": "03d2c483afc0082ad464d2d9a1750fd2e4415a3a",
+      "git_dirty": true,
+      "git_status_porcelain": "?? .g4env-11.3.2/\n?? .micromamba/\n?? bin/",
+      "tracked_source_gate": "pass",
+      "untracked_source_files": [],
+      "cases": 29,
+      "assertions_executed": 6035,
+      "tests_content_fingerprint": "a19f074ef4dd7fbdaad5a333aea59d7ba5bf627081927055ca6f404a498d0866",
+      "original_report": "out\\verification\\i2-j1-03d2c48\\ci\\extracted\\linux-evidence-11.3.2-13087921872\\linux-integration\\20261101-143523-ce41a587\\report.json",
+      "report_sha256": "218dccca25449f764fc236da45e7dd1f3cd7064acffe39f132245a0d0c3ba5ed"
+    },
+    {
+      "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39",
+      "profile": "static",
+      "head": "03d2c483afc0082ad464d2d9a1750fd2e4415a3a",
+      "git_dirty": true,
+      "git_status_porcelain": "?? .g4env-11.3.2/\n?? .micromamba/\n?? bin/",
+      "tracked_source_gate": "pass",
+      "untracked_source_files": [],
+      "cases": 44,
+      "assertions_executed": 3966,
+      "tests_content_fingerprint": "a19f074ef4dd7fbdaad5a333aea59d7ba5bf627081927055ca6f404a498d0866",
+      "original_report": "out\\verification\\i2-j1-03d2c48\\ci\\extracted\\linux-evidence-11.3.2-13087921872\\linux-static\\20261101-141435-473d56e4\\report.json",
+      "report_sha256": "2afda74e1ac4d633e1629fdd4f07f7ba9769e8b600f6ae4dcf144b366288c0e5"
+    },
+    {
+      "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39",
+      "profile": "backend",
+      "head": "03d2c483afc0082ad464d2d9a1750fd2e4415a3a",
+      "git_dirty": true,
+      "git_status_porcelain": "?? .g4env-11.4.3/\n?? .micromamba/\n?? bin/",
+      "tracked_source_gate": "pass",
+      "untracked_source_files": [],
+      "cases": 61,
+      "assertions_executed": 67674,
+      "tests_content_fingerprint": "a19f074ef4dd7fbdaad5a333aea59d7ba5bf627081927055ca6f404a498d0866",
+      "original_report": "out\\verification\\i2-j1-03d2c48\\ci\\extracted\\linux-evidence-11.4.3-13087926895\\linux-backend\\20261101-142038-73ddc795\\report.json",
+      "report_sha256": "9821147d634e0bd5b0fd8878c1a55c45b59399c399dfea723893f720473b5e64"
+    },
+    {
+      "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39",
+      "profile": "gui",
+      "head": "03d2c483afc0082ad464d2d9a1750fd2e4415a3a",
+      "git_dirty": true,
+      "git_status_porcelain": "?? .g4env-11.4.3/\n?? .micromamba/\n?? bin/",
+      "tracked_source_gate": "pass",
+      "untracked_source_files": [],
+      "cases": 59,
+      "assertions_executed": 6739,
+      "tests_content_fingerprint": "a19f074ef4dd7fbdaad5a333aea59d7ba5bf627081927055ca6f404a498d0866",
+      "original_report": "out\\verification\\i2-j1-03d2c48\\ci\\extracted\\linux-evidence-11.4.3-13087926895\\linux-gui\\20261101-141602-5d59f966\\report.json",
+      "report_sha256": "91d55d0745de3c56bdb7fae632ae13a11c984fdd013ea079ca9d0544ed921caa"
+    },
+    {
+      "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39",
+      "profile": "integration",
+      "head": "03d2c483afc0082ad464d2d9a1750fd2e4415a3a",
+      "git_dirty": true,
+      "git_status_porcelain": "?? .g4env-11.4.3/\n?? .micromamba/\n?? bin/",
+      "tracked_source_gate": "pass",
+      "untracked_source_files": [],
+      "cases": 29,
+      "assertions_executed": 6035,
+      "tests_content_fingerprint": "a19f074ef4dd7fbdaad5a333aea59d7ba5bf627081927055ca6f404a498d0866",
+      "original_report": "out\\verification\\i2-j1-03d2c48\\ci\\extracted\\linux-evidence-11.4.3-13087926895\\linux-integration\\20261101-143513-c440e9a9\\report.json",
+      "report_sha256": "9d7c3bc095f356de17a57fbe2e487f22491beb6b9b81b5fd71fa2b92012127a0"
+    },
+    {
+      "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39",
+      "profile": "static",
+      "head": "03d2c483afc0082ad464d2d9a1750fd2e4415a3a",
+      "git_dirty": true,
+      "git_status_porcelain": "?? .g4env-11.4.3/\n?? .micromamba/\n?? bin/",
+      "tracked_source_gate": "pass",
+      "untracked_source_files": [],
+      "cases": 44,
+      "assertions_executed": 3966,
+      "tests_content_fingerprint": "a19f074ef4dd7fbdaad5a333aea59d7ba5bf627081927055ca6f404a498d0866",
+      "original_report": "out\\verification\\i2-j1-03d2c48\\ci\\extracted\\linux-evidence-11.4.3-13087926895\\linux-static\\20261101-141435-fe86f483\\report.json",
+      "report_sha256": "61b64854609752c8e58892179276eac5ca88b6eff4f29d09b0ebeaf86d614806"
+    }
+  ],
+  "baseline": {
+    "baseline_cases": 182,
+    "current_cases": 193,
+    "baseline_assertions": 57181,
+    "current_assertions": 93592,
+    "missing_cases": [],
+    "regressions": []
+  },
+  "native": {
+    "screenshots_inspected": 26,
+    "hosts_with_normal_exit": 4,
+    "actual_completed_runs_events": [
+      2000000,
+      4000000
+    ],
+    "archive": "native/README.md",
+    "hardware_scope": "representative 125/150 percent DPI and screen metadata recovery; no physical cross-monitor movement or hotplug test"
+  },
+  "evidence_mapping": "Final test-only fixture change is verified by full Windows/Linux M0 at 6310969. All product files and the inputs of reused backend/integration/runtime/SDK evidence are unchanged. Historical 5fe and 03d failures remain failures, and all original reports retain their own HEAD and fingerprint.",
+  "new_physics_or_performance_validation": false,
+  "known_limitations": [
+    "Unreproduced historical ba81615 duplicate_history_cli failure remains unassigned; no root-cause fix is claimed.",
+    "Windows official Geant4 11.4.3 application GDML is unavailable; the standalone Xerces helper does not change that capability.",
+    "AI panel has no model or task execution; J2 and F8 remain future stages.",
+    "Archive includes selected raw evidence, not all original CI ZIP files, large CSV, SDK or binary payloads."
+  ],
+  "archive_and_document_checks": "identity/document-only-validation.json",
+  "archive_historical_failures_retained": 3
+}

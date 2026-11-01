@@ -1,0 +1,260 @@
+[
+  {
+    "increment": "20261101T135231Z",
+    "original_sources_read": false,
+    "zip_sha256": "932ac744d75e536e4c19c6a5305b12c91298728dba07acade29f479dc9004589",
+    "objects_verified": 553,
+    "entries_verified": 1049,
+    "strict": {
+      "pass_count": 14,
+      "fail_count": 1,
+      "reports": 15
+    },
+    "gates": [
+      {
+        "path": "automated/ci/linux-evidence-11.3.2-13084704256/linux-backend/20261101-125928-92f6a911/report.json",
+        "strict_gate": "pass",
+        "error": null
+      },
+      {
+        "path": "automated/ci/linux-evidence-11.3.2-13084704256/linux-gui/20261101-125607-85f3e973/report.json",
+        "strict_gate": "pass",
+        "error": null
+      },
+      {
+        "path": "automated/ci/linux-evidence-11.3.2-13084704256/linux-integration/20261101-131111-3b77f9cb/report.json",
+        "strict_gate": "pass",
+        "error": null
+      },
+      {
+        "path": "automated/ci/linux-evidence-11.3.2-13084704256/linux-static/20261101-125503-e13b0c57/report.json",
+        "strict_gate": "pass",
+        "error": null
+      },
+      {
+        "path": "automated/ci/linux-evidence-11.4.3-13084634003/linux-backend/20261101-130103-e3aaa1f1/report.json",
+        "strict_gate": "pass",
+        "error": null
+      },
+      {
+        "path": "automated/ci/linux-evidence-11.4.3-13084634003/linux-gui/20261101-125632-9ee6bf7b/report.json",
+        "strict_gate": "pass",
+        "error": null
+      },
+      {
+        "path": "automated/ci/linux-evidence-11.4.3-13084634003/linux-integration/20261101-131535-62268c0d/report.json",
+        "strict_gate": "pass",
+        "error": null
+      },
+      {
+        "path": "automated/ci/linux-evidence-11.4.3-13084634003/linux-static/20261101-125506-17c1518f/report.json",
+        "strict_gate": "pass",
+        "error": null
+      },
+      {
+        "path": "automated/ci/m0-report-ubuntu-latest-13084965283/20261101-125313-c15ed414/report.json",
+        "strict_gate": "pass",
+        "error": null
+      },
+      {
+        "path": "automated/ci/m0-report-ubuntu-latest-13084965283/20261101-125430-05a91b0f/report.json",
+        "strict_gate": "pass",
+        "error": null
+      },
+      {
+        "path": "automated/ci/m0-report-windows-latest-13084033836/20261101-125326-f240d7b7/report.json",
+        "strict_gate": "fail",
+        "error": "report is not release evidence: 1 case(s) did not pass (['platform_install_layout']); pass --allow-incomplete only for triage"
+      },
+      {
+        "path": "automated/local/windows-gui/20261101-205241-d4aff2d8/report.json",
+        "strict_gate": "pass",
+        "error": null
+      },
+      {
+        "path": "automated/local/windows-static/20261101-205231-c62d61cd/report.json",
+        "strict_gate": "pass",
+        "error": null
+      },
+      {
+        "path": "automated/local/windows113-backend/20261101-205411-0e9901a5/report.json",
+        "strict_gate": "pass",
+        "error": null
+      },
+      {
+        "path": "automated/local/windows114-backend/20261101-205411-79e165c8/report.json",
+        "strict_gate": "pass",
+        "error": null
+      }
+    ]
+  },
+  {
+    "increment": "20261101T140648Z",
+    "original_sources_read": false,
+    "zip_sha256": "a7def00f355bc72dc652c4d4e2be3f0f8019540dc707dd64e5b05ad87915f01a",
+    "objects_verified": 61,
+    "entries_verified": 79,
+    "strict": {
+      "pass_count": 1,
+      "fail_count": 1,
+      "reports": 2
+    },
+    "gates": [
+      {
+        "path": "automated/local/windows113-integration/20261101-213823-a10c064e/report.json",
+        "strict_gate": "pass",
+        "error": null
+      },
+      {
+        "path": "automated/local/windows114-integration/20261101-213741-f6042d63/report.json",
+        "strict_gate": "fail",
+        "error": "report is not release evidence: 1 case(s) did not pass (['effective_gdml']); pass --allow-incomplete only for triage"
+      }
+    ]
+  },
+  {
+    "increment": "20261101T143437Z",
+    "original_sources_read": false,
+    "zip_sha256": "b5195610a610ef85e20ca6e09a0c3d79dda4d3416de39f3e65931fe0429c837e",
+    "objects_verified": 239,
+    "entries_verified": 309,
+    "strict": {
+      "pass_count": 5,
+      "fail_count": 1,
+      "reports": 6
+    },
+    "gates": [
+      {
+        "path": "automated/ci/m0-report-ubuntu-latest-13086857761/20261101-141237-4ec5081c/report.json",
+        "strict_gate": "pass",
+        "error": null
+      },
+      {
+        "path": "automated/ci/m0-report-ubuntu-latest-13086857761/20261101-141411-9c3ca475/report.json",
+        "strict_gate": "pass",
+        "error": null
+      },
+      {
+        "path": "automated/ci/m0-report-windows-latest-13086759271/20261101-141313-6abd48e2/report.json",
+        "strict_gate": "pass",
+        "error": null
+      },
+      {
+        "path": "automated/ci/m0-report-windows-latest-13086759271/20261101-141705-b14b231e/report.json",
+        "strict_gate": "fail",
+        "error": "report is not release evidence: 1 case(s) did not pass (['gui_i2_install']); pass --allow-incomplete only for triage"
+      },
+      {
+        "path": "automated/local-repair/5fe0a10/windows114-integration/20261101-221036-53b90de1/report.json",
+        "strict_gate": "pass",
+        "error": null
+      },
+      {
+        "path": "automated/local/windows114-integration/20261101-221315-6389b5dd/report.json",
+        "strict_gate": "pass",
+        "error": null
+      }
+    ]
+  },
+  {
+    "increment": "20261101T145126Z",
+    "original_sources_read": false,
+    "zip_sha256": "e0b35b931892a952715bd62bfc615bfd52e4bc6a7517542819d91ce6d921793a",
+    "objects_verified": 403,
+    "entries_verified": 599,
+    "strict": {
+      "pass_count": 8,
+      "fail_count": 0,
+      "reports": 8
+    },
+    "gates": [
+      {
+        "path": "automated/ci/linux-evidence-11.3.2-13087921872/linux-backend/20261101-142031-b85b3b32/report.json",
+        "strict_gate": "pass",
+        "error": null
+      },
+      {
+        "path": "automated/ci/linux-evidence-11.3.2-13087921872/linux-gui/20261101-141600-27d9f9ea/report.json",
+        "strict_gate": "pass",
+        "error": null
+      },
+      {
+        "path": "automated/ci/linux-evidence-11.3.2-13087921872/linux-integration/20261101-143523-ce41a587/report.json",
+        "strict_gate": "pass",
+        "error": null
+      },
+      {
+        "path": "automated/ci/linux-evidence-11.3.2-13087921872/linux-static/20261101-141435-473d56e4/report.json",
+        "strict_gate": "pass",
+        "error": null
+      },
+      {
+        "path": "automated/ci/linux-evidence-11.4.3-13087926895/linux-backend/20261101-142038-73ddc795/report.json",
+        "strict_gate": "pass",
+        "error": null
+      },
+      {
+        "path": "automated/ci/linux-evidence-11.4.3-13087926895/linux-gui/20261101-141602-5d59f966/report.json",
+        "strict_gate": "pass",
+        "error": null
+      },
+      {
+        "path": "automated/ci/linux-evidence-11.4.3-13087926895/linux-integration/20261101-143513-c440e9a9/report.json",
+        "strict_gate": "pass",
+        "error": null
+      },
+      {
+        "path": "automated/ci/linux-evidence-11.4.3-13087926895/linux-static/20261101-141435-fe86f483/report.json",
+        "strict_gate": "pass",
+        "error": null
+      }
+    ]
+  },
+  {
+    "increment": "20261101T145510Z",
+    "original_sources_read": false,
+    "zip_sha256": "883639e39a004181a010f7d96c73a5a98dbd1201b39b5d0aa3133dc709d31031",
+    "objects_verified": 5,
+    "entries_verified": 5,
+    "strict": {
+      "pass_count": 0,
+      "fail_count": 0,
+      "reports": 0
+    },
+    "gates": []
+  },
+  {
+    "increment": "20261101T151052Z",
+    "original_sources_read": false,
+    "zip_sha256": "d7dd45f8f29be5f9ee591e30b27d76692d801df3b7ddf1fb0d2b3f70da4a4dec",
+    "objects_verified": 164,
+    "entries_verified": 219,
+    "strict": {
+      "pass_count": 4,
+      "fail_count": 0,
+      "reports": 4
+    },
+    "gates": [
+      {
+        "path": "automated/ci/m0-report-ubuntu-latest-13087119373/20261101-144135-4d7ff67f/report.json",
+        "strict_gate": "pass",
+        "error": null
+      },
+      {
+        "path": "automated/ci/m0-report-ubuntu-latest-13087119373/20261101-144310-866ffdc4/report.json",
+        "strict_gate": "pass",
+        "error": null
+      },
+      {
+        "path": "automated/ci/m0-report-windows-latest-13088128041/20261101-144208-6260dda6/report.json",
+        "strict_gate": "pass",
+        "error": null
+      },
+      {
+        "path": "automated/ci/m0-report-windows-latest-13088128041/20261101-144550-80bc5c13/report.json",
+        "strict_gate": "pass",
+        "error": null
+      }
+    ]
+  }
+]

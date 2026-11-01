@@ -1,0 +1,228 @@
+{
+  "schema": "g4usim_minimal_evidence_archive_v1",
+  "created_at": "20261101T145510Z",
+  "head": "03d2c483afc0082ad464d2d9a1750fd2e4415a3a",
+  "archive": {
+    "path": "evidence.zip",
+    "sha256": "883639e39a004181a010f7d96c73a5a98dbd1201b39b5d0aa3133dc709d31031",
+    "bytes": 25352
+  },
+  "entries": [
+    {
+      "path": "automated/ci-metadata/README.md",
+      "archive_member": "objects/84/84ef711fda747cb6434b41bf86f3aa807ebbd23439038ac2bf1eec6989a4f6a1",
+      "source": "out\\verification\\i2-j1-03d2c48\\ci\\README.md",
+      "source_absolute": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\i2-j1-03d2c48\\ci\\README.md",
+      "source_sha256": "84ef711fda747cb6434b41bf86f3aa807ebbd23439038ac2bf1eec6989a4f6a1",
+      "copy_sha256": "84ef711fda747cb6434b41bf86f3aa807ebbd23439038ac2bf1eec6989a4f6a1",
+      "bytes": 5918,
+      "role": "original_ci_metadata_or_job_log"
+    },
+    {
+      "path": "automated/ci-metadata/ci-summary.json",
+      "archive_member": "objects/8c/8cf9fdadb8e1629a7edad55c28160484401f82565601abef2b72cda617b4a2fc",
+      "source": "out\\verification\\i2-j1-03d2c48\\ci\\ci-summary.json",
+      "source_absolute": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\i2-j1-03d2c48\\ci\\ci-summary.json",
+      "source_sha256": "8cf9fdadb8e1629a7edad55c28160484401f82565601abef2b72cda617b4a2fc",
+      "copy_sha256": "8cf9fdadb8e1629a7edad55c28160484401f82565601abef2b72cda617b4a2fc",
+      "bytes": 82881,
+      "role": "original_ci_metadata_or_job_log"
+    },
+    {
+      "path": "automated/ci-metadata/installation-analysis-2.json",
+      "archive_member": "objects/34/34ea2c4d17c24c995aba08644219ecd5e35085d67d1bd6e387de4383dbeb686c",
+      "source": "out\\verification\\i2-j1-03d2c48\\ci\\installation-analysis-2.json",
+      "source_absolute": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\i2-j1-03d2c48\\ci\\installation-analysis-2.json",
+      "source_sha256": "34ea2c4d17c24c995aba08644219ecd5e35085d67d1bd6e387de4383dbeb686c",
+      "copy_sha256": "34ea2c4d17c24c995aba08644219ecd5e35085d67d1bd6e387de4383dbeb686c",
+      "bytes": 5423,
+      "role": "original_ci_metadata_or_job_log"
+    },
+    {
+      "path": "identity/checker-snapshot/check_report_evidence.py",
+      "archive_member": "objects/f9/f9a863e4a20031c46e348f4b0278e4519dda1da07c3fc6825a1f47e123b2e84f",
+      "source": "scripts\\check_report_evidence.py",
+      "source_absolute": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\scripts\\check_report_evidence.py",
+      "source_sha256": "f9a863e4a20031c46e348f4b0278e4519dda1da07c3fc6825a1f47e123b2e84f",
+      "copy_sha256": "f9a863e4a20031c46e348f4b0278e4519dda1da07c3fc6825a1f47e123b2e84f",
+      "bytes": 15228,
+      "role": "checker_or_registry_snapshot_not_product_patch"
+    },
+    {
+      "path": "identity/checker-snapshot/run_m0_tests.py",
+      "archive_member": "objects/3b/3b78ec4dc00dda165931e93f87c003ce705030438b672711aa3bdb4b08021eb1",
+      "source": "scripts\\run_m0_tests.py",
+      "source_absolute": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\scripts\\run_m0_tests.py",
+      "source_sha256": "3b78ec4dc00dda165931e93f87c003ce705030438b672711aa3bdb4b08021eb1",
+      "copy_sha256": "3b78ec4dc00dda165931e93f87c003ce705030438b672711aa3bdb4b08021eb1",
+      "bytes": 36840,
+      "role": "checker_or_registry_snapshot_not_product_patch"
+    }
+  ],
+  "external_original_artifacts": [
+    {
+      "artifact_id": 13086759271,
+      "name": "m0-report-windows-latest",
+      "source": "out\\verification\\i2-j1-03d2c48\\ci\\artifacts\\m0-report-windows-latest-13086759271.zip",
+      "source_absolute": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\i2-j1-03d2c48\\ci\\artifacts\\m0-report-windows-latest-13086759271.zip",
+      "sha256": "f16c27e1e8683ac12aac5142d904e1d79904d47d7abe742222c1b607121170ca",
+      "bytes": 464745,
+      "github_digest": "sha256:f16c27e1e8683ac12aac5142d904e1d79904d47d7abe742222c1b607121170ca",
+      "included": false,
+      "durability": "Local long-term original retained, not fully committed; required judgment evidence selected into candidate"
+    },
+    {
+      "artifact_id": 13086822206,
+      "name": "frozen-desktop-Windows",
+      "source": "out\\verification\\i2-j1-03d2c48\\ci\\artifacts\\frozen-desktop-Windows-13086822206.zip",
+      "source_absolute": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\i2-j1-03d2c48\\ci\\artifacts\\frozen-desktop-Windows-13086822206.zip",
+      "sha256": "446dc916faaa8ebdc2bdd29a78941b03b00091c3d9346d64a35027dc4ad5d78f",
+      "bytes": 27021,
+      "github_digest": "sha256:446dc916faaa8ebdc2bdd29a78941b03b00091c3d9346d64a35027dc4ad5d78f",
+      "included": false,
+      "durability": "Local long-term original retained, not fully committed; required judgment evidence selected into candidate"
+    },
+    {
+      "artifact_id": 13086857761,
+      "name": "m0-report-ubuntu-latest",
+      "source": "out\\verification\\i2-j1-03d2c48\\ci\\artifacts\\m0-report-ubuntu-latest-13086857761.zip",
+      "source_absolute": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\i2-j1-03d2c48\\ci\\artifacts\\m0-report-ubuntu-latest-13086857761.zip",
+      "sha256": "cae4c5077d8e57d1705ade7c763330dfbdb55c3e279d19b09a64a433b6b31dd9",
+      "bytes": 413614,
+      "github_digest": "sha256:cae4c5077d8e57d1705ade7c763330dfbdb55c3e279d19b09a64a433b6b31dd9",
+      "included": false,
+      "durability": "Local long-term original retained, not fully committed; required judgment evidence selected into candidate"
+    },
+    {
+      "artifact_id": 13086867067,
+      "name": "frozen-desktop-Linux",
+      "source": "out\\verification\\i2-j1-03d2c48\\ci\\artifacts\\frozen-desktop-Linux-13086867067.zip",
+      "source_absolute": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\i2-j1-03d2c48\\ci\\artifacts\\frozen-desktop-Linux-13086867067.zip",
+      "sha256": "884c7c1194b6d982a5fca6d2ee82d6e4b127335b94f974461cad536108f972bc",
+      "bytes": 23421,
+      "github_digest": "sha256:884c7c1194b6d982a5fca6d2ee82d6e4b127335b94f974461cad536108f972bc",
+      "included": false,
+      "durability": "Local long-term original retained, not fully committed; required judgment evidence selected into candidate"
+    },
+    {
+      "artifact_id": 13087521493,
+      "name": "full-installation-Linux",
+      "source": "out\\verification\\i2-j1-03d2c48\\ci\\artifacts\\full-installation-Linux-13087521493.zip",
+      "source_absolute": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\i2-j1-03d2c48\\ci\\artifacts\\full-installation-Linux-13087521493.zip",
+      "sha256": "9d97060909d9cdbb3f9afe1d636b0c9e9cf94b5e9ce948ceca03ed04232f4cea",
+      "bytes": 32719526,
+      "github_digest": "sha256:9d97060909d9cdbb3f9afe1d636b0c9e9cf94b5e9ce948ceca03ed04232f4cea",
+      "included": false,
+      "durability": "Local long-term original retained, not fully committed; required judgment evidence selected into candidate"
+    },
+    {
+      "artifact_id": 13087857643,
+      "name": "full-installation-Windows",
+      "source": "out\\verification\\i2-j1-03d2c48\\ci\\artifacts\\full-installation-Windows-13087857643.zip",
+      "source_absolute": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\i2-j1-03d2c48\\ci\\artifacts\\full-installation-Windows-13087857643.zip",
+      "sha256": "20b4c565e35f6e21d21bc2e99a97275a96846445b60e04b9b1a89d2157fd54ea",
+      "bytes": 29397001,
+      "github_digest": "sha256:20b4c565e35f6e21d21bc2e99a97275a96846445b60e04b9b1a89d2157fd54ea",
+      "included": false,
+      "durability": "Local long-term original retained, not fully committed; required judgment evidence selected into candidate"
+    },
+    {
+      "artifact_id": 13087921872,
+      "name": "linux-evidence-11.3.2",
+      "source": "out\\verification\\i2-j1-03d2c48\\ci\\artifacts\\linux-evidence-11.3.2-13087921872.zip",
+      "source_absolute": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\i2-j1-03d2c48\\ci\\artifacts\\linux-evidence-11.3.2-13087921872.zip",
+      "sha256": "a7f956c7d89ef654cd6c9d062163fb69331bbab9d845b8e50c57b7a9aef24ccc",
+      "bytes": 28551073,
+      "github_digest": "sha256:a7f956c7d89ef654cd6c9d062163fb69331bbab9d845b8e50c57b7a9aef24ccc",
+      "included": false,
+      "durability": "Local long-term original retained, not fully committed; required judgment evidence selected into candidate"
+    },
+    {
+      "artifact_id": 13087926895,
+      "name": "linux-evidence-11.4.3",
+      "source": "out\\verification\\i2-j1-03d2c48\\ci\\artifacts\\linux-evidence-11.4.3-13087926895.zip",
+      "source_absolute": "C:\\Users\\123\\.codex\\worktrees\\effective-config\\G4UniversalSim\\out\\verification\\i2-j1-03d2c48\\ci\\artifacts\\linux-evidence-11.4.3-13087926895.zip",
+      "sha256": "a5ed85933c4699006f27d8c5a319a215e7bf4f58190839b6a6dfe22192438212",
+      "bytes": 28227202,
+      "github_digest": "sha256:a5ed85933c4699006f27d8c5a319a215e7bf4f58190839b6a6dfe22192438212",
+      "included": false,
+      "durability": "Local long-term original retained, not fully committed; required judgment evidence selected into candidate"
+    }
+  ],
+  "omissions": [
+    {
+      "source": "out\\verification\\i2-j1-03d2c48\\ci\\extracted\\full-installation-Linux-13087521493\\acceptance\\data-plan.json",
+      "sha256": "2cb8347c194b6738810fbf3bbb2df67e885ee066cd0cc16b6bb1d4e1a18bd500",
+      "bytes": 20562665,
+      "reason": "Redundant complete plan inventory; restart inspection retains runtime/SDK plan, data install receipt retains dataset inventory"
+    },
+    {
+      "source": "out\\verification\\i2-j1-03d2c48\\ci\\extracted\\full-installation-Linux-13087521493\\acceptance\\runtime-evidence\\helper-roundtrip.root",
+      "sha256": "315f8d7d0f3ebf5a7750b2f5c304030c3f718bcbb9dbaca24b2a7c8b21db83fa",
+      "bytes": 2616,
+      "reason": "Binary runtime output excluded; no complete run tree or install payload"
+    },
+    {
+      "source": "out\\verification\\i2-j1-03d2c48\\ci\\extracted\\full-installation-Linux-13087521493\\acceptance\\runtime-evidence\\plan.json",
+      "sha256": "d5c4cbcfafa88377a079591cb1b203b00d808518ed361015e36e3ab6f4c90f8f",
+      "bytes": 22636891,
+      "reason": "Redundant complete plan inventory; restart inspection retains runtime/SDK plan, data install receipt retains dataset inventory"
+    },
+    {
+      "source": "out\\verification\\i2-j1-03d2c48\\ci\\extracted\\full-installation-Linux-13087521493\\acceptance\\runtime-evidence\\result\\g4usim.root",
+      "sha256": "66f128c0167c53ec44f8be6267f125218bc2e9e9b0886b4316b20517d267c983",
+      "bytes": 52654,
+      "reason": "Binary runtime output excluded; no complete run tree or install payload"
+    },
+    {
+      "source": "out\\verification\\i2-j1-03d2c48\\ci\\extracted\\full-installation-Linux-13087521493\\acceptance\\sdk-evidence\\plan.json",
+      "sha256": "162da741a51e260fdec8f0b914a437ee0f156d30a7d3277ba2206d76c70b82bf",
+      "bytes": 33138729,
+      "reason": "Redundant complete plan inventory; restart inspection retains runtime/SDK plan, data install receipt retains dataset inventory"
+    },
+    {
+      "source": "out\\verification\\i2-j1-03d2c48\\ci\\extracted\\full-installation-Windows-13087857643\\acceptance\\data-plan.json",
+      "sha256": "9219b6e423eb869e063f51839713a7f71f9ae58912a6902e3e601f354065bbfb",
+      "bytes": 20562607,
+      "reason": "Redundant complete plan inventory; restart inspection retains runtime/SDK plan, data install receipt retains dataset inventory"
+    },
+    {
+      "source": "out\\verification\\i2-j1-03d2c48\\ci\\extracted\\full-installation-Windows-13087857643\\acceptance\\runtime-evidence\\helper-roundtrip.root",
+      "sha256": "571fad59c41d445c5022b4736ed99d94f8b84c1d8f493a7e4974c7914b354021",
+      "bytes": 2616,
+      "reason": "Binary runtime output excluded; no complete run tree or install payload"
+    },
+    {
+      "source": "out\\verification\\i2-j1-03d2c48\\ci\\extracted\\full-installation-Windows-13087857643\\acceptance\\runtime-evidence\\plan.json",
+      "sha256": "c8ad5c3cdfd518f214571dccc0e25feb6908ea49a55ecfc635ae2b88414ec393",
+      "bytes": 23449451,
+      "reason": "Redundant complete plan inventory; restart inspection retains runtime/SDK plan, data install receipt retains dataset inventory"
+    },
+    {
+      "source": "out\\verification\\i2-j1-03d2c48\\ci\\extracted\\full-installation-Windows-13087857643\\acceptance\\runtime-evidence\\result\\g4usim.root",
+      "sha256": "292bae4073f7446809afc79972e5bac3cf59899440c76bf9dc3b531c8d01103e",
+      "bytes": 52596,
+      "reason": "Binary runtime output excluded; no complete run tree or install payload"
+    },
+    {
+      "source": "out\\verification\\i2-j1-03d2c48\\ci\\extracted\\full-installation-Windows-13087857643\\acceptance\\sdk-evidence\\plan.json",
+      "sha256": "202abcbe2ab0ca345ff7e34713ef05f97db1161f7ec2cfe01099c3deff83e5f4",
+      "bytes": 25862216,
+      "reason": "Redundant complete plan inventory; restart inspection retains runtime/SDK plan, data install receipt retains dataset inventory"
+    }
+  ],
+  "pending_local_profiles": [],
+  "unchanged_prior_entries_reused": 916,
+  "strict_gate_summary": {
+    "pass_count": 0,
+    "fail_count": 0,
+    "reports": 0
+  },
+  "boundaries": [
+    "No native evidence selected; root owns native integration",
+    "No application executables, DLLs, dataset payloads, SDK installation tree or complete run tree",
+    "Official CI ZIPs are local long-term originals, not fully committed; required judgment evidence selected",
+    "Original catalog/license-text payload absent from CI artifact is not recreated; receipt license hashes/origins retained",
+    "Known Windows M0 failure is preserved; later CI must be a separate increment, never overwrite old evidence"
+  ]
+}

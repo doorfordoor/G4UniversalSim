@@ -1,0 +1,49 @@
+{
+  "schema": "g4usim_i2_j1_final_identity_v1",
+  "recorded_utc": "2026-11-01T14:41:07.460879+00:00",
+  "status": "identity_verified_not_stage_acceptance",
+  "validation_head": "6310969005183e314b05e0b0362450fa6194bea1",
+  "previous_validation_head": "5fe0a1052e33c96d033375d0920f29b15d432dcc",
+  "tracked_source_clean": true,
+  "changed_paths": [
+    "gui/smoke_tests/smoke_i2_install.py",
+    "scripts/test_effective_gdml.py",
+    "scripts/test_platform_install_layout.py"
+  ],
+  "product_files_compared": 380,
+  "product_git_blobs_equal": true,
+  "backend_source_fingerprint": "890635b6d521659e43cf735d07f862c6ebd5959e6c5ea68d023d55332a8a930a",
+  "current_tests_content_fingerprint": "c70da3fc9e6b66bcea1483e9527178a1b9b281921b8690648df509199f671deb",
+  "previous_tests_content_fingerprint": "0bb3d22740a51015cc64ee1c6da3f5a58cccfd073f2a8101cebca12af22b75e2",
+  "backends": {
+    "113": {
+      "local_path": "out/build-i2-formal113/Release/G4UniversalSim.exe",
+      "sha256": "51aefb01ffb3537308ea73fdda172ff9735da0a88a944e6251d6859423088be4",
+      "recorded_identity": {
+        "source_fingerprint": "890635b6d521659e43cf735d07f862c6ebd5959e6c5ea68d023d55332a8a930a",
+        "build_git_commit": "5fe0a1052e33c96d033375d0920f29b15d432dcc",
+        "build_git_source_state": "clean",
+        "build_configuration": "Release",
+        "geant4_version_number": 1132
+      }
+    },
+    "114": {
+      "local_path": "out/build-i2-windows114/Release/G4UniversalSim.exe",
+      "sha256": "cd8321257d3e2f222eb7f17771acbbbe5641de1f350f66066d0dea7e8b65053c",
+      "recorded_identity": {
+        "source_fingerprint": "890635b6d521659e43cf735d07f862c6ebd5959e6c5ea68d023d55332a8a930a",
+        "build_git_commit": "5fe0a1052e33c96d033375d0920f29b15d432dcc",
+        "build_git_source_state": "clean",
+        "build_configuration": "Release",
+        "geant4_version_number": 1143
+      }
+    }
+  },
+  "intermediate_validation_head": "03d2c483afc0082ad464d2d9a1750fd2e4415a3a",
+  "intermediate_tests_content_fingerprint": "a19f074ef4dd7fbdaad5a333aea59d7ba5bf627081927055ca6f404a498d0866",
+  "mapping_scope": "Reuse unchanged product evidence from 5fe0a10. Relative to 03d2c48, only the I2 GUI smoke fixture canonicalization and failure diagnostics changed. Old reports keep their identities; the latest M0 Windows/Linux runs verify the full affected GUI profile. Backend/integration/delivery product inputs are unchanged.",
+  "limitations": [
+    "Git content equality does not imply identical cross-platform binaries.",
+    "Source fingerprints and successful tests are not independent physics or performance validation."
+  ]
+}

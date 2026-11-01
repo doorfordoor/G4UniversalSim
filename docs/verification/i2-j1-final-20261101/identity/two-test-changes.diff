@@ -1,0 +1,69 @@
+diff --git a/scripts/test_effective_gdml.py b/scripts/test_effective_gdml.py
+index 91e0695..7ffc2a5 100644
+--- a/scripts/test_effective_gdml.py
++++ b/scripts/test_effective_gdml.py
+@@ -6,6 +6,7 @@ A complete newly-built Geant4 GDML regression remains a separate integration gat
+ """
+ from __future__ import annotations
+ import hashlib
++import json
+ import os
+ from pathlib import Path
+ import shutil
+@@ -18,7 +19,11 @@ HARNESS = (ROOT / "tools/gdmlInputCaptureCheck.cc").read_text(encoding="utf-8")
+ def main():
+     compiler = os.environ.get('CXX') or shutil.which('g++')
+     selected = os.environ.get('G4USIM_EXE')
+-    helper = Path(selected).resolve().with_name('gdmlInputCaptureCheck' + ('.exe' if os.name == 'nt' else '')) if selected else None
++    explicit_helper = os.environ.get('G4USIM_GDML_CAPTURE_HELPER')
++    helper = Path(explicit_helper).resolve() if explicit_helper else (
++        Path(selected).resolve().with_name('gdmlInputCaptureCheck' + ('.exe' if os.name == 'nt' else '')) if selected else None)
++    if explicit_helper:
++        assert helper.is_file(), f'Explicit native Xerces helper does not exist: {helper}'
+     assert (helper and helper.is_file()) or compiler, 'Built GDML capture helper or native Xerces C++ compiler required'
+     with tempfile.TemporaryDirectory(prefix='g4usim-gdml-capture-') as temp:
+         work = Path(temp)
+@@ -36,12 +41,27 @@ def main():
+         command = [compiler,'-std=c++17','-pthread','-DG4USIM_HAVE_GDML','-I'+str(ROOT/'include'),
+                    str(source),str(ROOT/'src/Geometry/GdmlInputCapture.cc'),
+                    str(ROOT/'src/Config/InputProvenance.cc'),'-lxerces-c','-o',str(executable)]
+-        if helper and helper.is_file():
++        selection = 'explicit' if explicit_helper else 'adjacent' if helper and helper.is_file() else 'compiled'
++        if selection != 'compiled':
+             executable = helper
+         else:
+             compiled = subprocess.run(command,capture_output=True,text=True,timeout=120)
+             assert compiled.returncode==0, compiled.stdout+compiled.stderr
++        helper_sha256 = hashlib.sha256(executable.read_bytes()).hexdigest()
++        print('G4USIM_GDML_CAPTURE_EVIDENCE=' + json.dumps({
++            'scope': 'standalone native Xerces exact-byte adapter; not selected application GDML support',
++            'selection': selection,
++            'helper': str(executable), 'helper_sha256': helper_sha256,
++            'selected_application': selected,
++            # These identify current inputs; an external helper's compiled-source
++            # identity must be established by its separate build receipt.
++            'current_source_sha256': {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
++                for name in ('tools/gdmlInputCaptureCheck.cc', 'src/Geometry/GdmlInputCapture.cc',
++                             'include/Geometry/GdmlInputCapture.hh', 'src/Config/InputProvenance.cc',
++                             'include/Config/InputProvenance.hh')},
++        }), flush=True)
+         run = subprocess.run([str(executable),str(work)],capture_output=True,text=True,timeout=30)
++        assert hashlib.sha256(executable.read_bytes()).hexdigest() == helper_sha256, 'Capture helper changed during execution'
+         assert run.returncode==0, run.stdout+run.stderr
+         assert 'PASS native capture' in run.stdout
+         normalized_stdout = run.stdout.replace('\\', '/')
+diff --git a/scripts/test_platform_install_layout.py b/scripts/test_platform_install_layout.py
+index 280b7ec..0b8f666 100644
+--- a/scripts/test_platform_install_layout.py
++++ b/scripts/test_platform_install_layout.py
+@@ -13,7 +13,9 @@ WINDOWS_LAYOUT_FIXTURE = "build_vs2026/Release/G4UniversalSim.exe"  # platform-p
+ 
+ def main():
+     with tempfile.TemporaryDirectory(prefix="g4-install-layout-") as directory:
+-        root = Path(directory)
++        # Windows TEMP may use an 8.3 alias; workspace discovery returns
++        # canonical paths, so compare against the canonical fixture root.
++        root = Path(directory).resolve()
+         native_name = "G4UniversalSim.exe" if sys.platform == "win32" else "G4UniversalSim"
+         other_name = "G4UniversalSim" if sys.platform == "win32" else "G4UniversalSim.exe"
+         binary = root / "bin" / native_name

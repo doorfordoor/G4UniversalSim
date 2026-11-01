@@ -4,6 +4,8 @@
 
 ## 0. 条目索引与历史全文
 
+- 2026-11-01 I2/J1 已完成：6310969仅补测试，380产品文件与5fe0a10相同；Windows/Linux runtime/SDK、冻结工具、正式矩阵与26图/4次正常退出的原生范围已验。布局/3D覆盖不进F5/K1，安装与环境/运行/物理四事实分开。长短TEMP、独立Xerces helper和历史未归因失败边界见 `docs/agent-history.md` 的“I2/J1 最终验收与测试环境修订”及[最终证据](docs/verification/i2-j1-final-20261101/README.md)。
+
 - 2026-11-01 I2/J1 实施候选：安装、环境就绪和模拟成功分别核验；发布包版本与 Geant4 版本独立。冻结程序必须隔离宿主 DLL 搜索路径、核对源码及产物身份，不能凭自检可启动复用旧 GUI。布局沿用单实例与原业务所有者，外观仅视图状态。完整约定、旧失败与撤回见 `docs/agent-history.md` 的“I2/J1 桌面交付实施候选”；当前阶段是否关闭仍看 STATUS/ROADMAP。
 
 - 2026-10-31 K1 验收关闭：资源路径 P1 与永久回归 P2 经独审和 Windows/Linux 正式单例关闭；5644e1e 仅追加回归，350 产品字节保持2914b39，原矩阵与原生证据按原身份沿用。晚变化链接仍须在 resolve 前拒绝；WSL /mnt/c 发布限制及旧失败不抹去。全文见 `docs/agent-history.md` 的“K1 资源路径 P1 与阶段验收关闭”，[最终证据](docs/verification/k1-final-20261031/README.md)。

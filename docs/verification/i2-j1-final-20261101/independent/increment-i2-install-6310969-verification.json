@@ -1,0 +1,18 @@
+{
+  "schema": "g4usim_increment_single_verification_v1",
+  "status": "verified",
+  "files": 69,
+  "archive_bytes": 100716,
+  "archive_sha256": "ead3083664df00f8960a70d9a6ca51d1141ee5114184da42035752681156cb9d",
+  "manifest_sha256": "e56811686872bab7e5b4e6f54d3f92abc6696327e051bf6e03f030949713941f",
+  "readme_sha256": "bf45cd182ec800fe9cf6eaefdc1fd3756ef8554dc89563b081e69fd21acd6c52",
+  "checks": [
+    "every ZIP/source raw byte SHA",
+    "11429/6045 pass and29 archivedlogdigests",
+    "tracked target1/59 pass andrawlogdigest",
+    "baseline182subset193/no per-case regression/93592total",
+    "three actual83scope exits0/1/0",
+    "originalCI54 failure andrawlogdigest retained"
+  ],
+  "scope": "single archive verification pass; no source edits or test reruns"
+}

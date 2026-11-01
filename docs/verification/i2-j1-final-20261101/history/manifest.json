@@ -1,0 +1,92 @@
+{
+  "schema": "g4usim_evidence_slice_v1",
+  "collected_utc": "2026-11-01T14:01:14.770393+00:00",
+  "scope": "history",
+  "normalization": "none; exact original bytes; original absolute paths in source text retain historical meaning",
+  "archive": {
+    "source": "out/verification/i2-j1-final-candidate/history/raw-evidence.zip",
+    "bytes": 861,
+    "sha256": "0ed1fc1b8147700ed4fd28a0debe7b5937319eb05ae9b4cbe869cee43fbe6720"
+  },
+  "files": [
+    {
+      "source": "out/verification/i2-j1-ba81615/windows-gui/20261101-202224-13c33454/gui_duplicate_history_cli.log",
+      "bytes": 2108,
+      "sha256": "591793271f8ab439fca2d4ac6c55dd89a46639185e0e20fb5aa44b53afd1f643",
+      "zip_entry": "out/verification/i2-j1-ba81615/windows-gui/20261101-202224-13c33454/gui_duplicate_history_cli.log"
+    },
+    {
+      "source": "out/verification/i2-j1-ba81615/ci/job-124846661408.log",
+      "bytes": 22685,
+      "sha256": "f794751fadacb6925b599ab67176ae26ea25d6a241f9726a3dd8d0cf5a863da0",
+      "zip_entry": "out/verification/i2-j1-ba81615/ci/job-124846661408.log",
+      "archive_file": "old-ci-failures.zip"
+    },
+    {
+      "source": "out/verification/i2-j1-ba81615/ci/job-124846661583.log",
+      "bytes": 55005,
+      "sha256": "997151b398e53cb7b5942cd4f5de8959d6f3ea96d2d1f8fdfeb28c0a7b89ac85",
+      "zip_entry": "out/verification/i2-j1-ba81615/ci/job-124846661583.log",
+      "archive_file": "old-ci-failures.zip"
+    },
+    {
+      "source": "out/verification/i2-j1-ba81615/ci/job-124846661871.log",
+      "bytes": 54928,
+      "sha256": "f0e2298d16537f459b995d302ddf07f1f94b34082eb324d5141a18ce73b57d64",
+      "zip_entry": "out/verification/i2-j1-ba81615/ci/job-124846661871.log",
+      "archive_file": "old-ci-failures.zip"
+    },
+    {
+      "source": "out/verification/i2-j1-ba81615/ci/job-124846662160.log",
+      "bytes": 112910,
+      "sha256": "23720abca5a14d29250d011ff11a44dd18746c4b5ed57a7da047acdd648e9845",
+      "zip_entry": "out/verification/i2-j1-ba81615/ci/job-124846662160.log",
+      "archive_file": "old-ci-failures.zip"
+    },
+    {
+      "source": "out/verification/i2-j1-ba81615/ci/runs-20261101-203507.json",
+      "bytes": 51438,
+      "sha256": "3b9c55ce6a947ba8262256241dfbf485cb5175c98d21f154b652b371d0893da3",
+      "zip_entry": "out/verification/i2-j1-ba81615/ci/runs-20261101-203507.json",
+      "archive_file": "old-ci-failures.zip"
+    },
+    {
+      "source": "out/collab/xcb-ci-diagnosis/frozen-desktop-linux-diagnostics.zip",
+      "bytes": 21654,
+      "sha256": "1f287d84b4496047e1761973e66a4213b948784669b058a7c0467891392880a7",
+      "zip_entry": "out/collab/xcb-ci-diagnosis/frozen-desktop-linux-diagnostics.zip",
+      "archive_file": "old-ci-failures.zip"
+    },
+    {
+      "source": "out/collab/xcb-ci-diagnosis/missing-libraries.json",
+      "bytes": 646,
+      "sha256": "d20dbc6113599c59e15a4c5320cb1181dbdf927516e2805086841f03fa9a4da4",
+      "zip_entry": "out/collab/xcb-ci-diagnosis/missing-libraries.json",
+      "archive_file": "old-ci-failures.zip"
+    },
+    {
+      "source": "out/collab/xcb-ci-diagnosis/review.md",
+      "bytes": 1979,
+      "sha256": "ac4a21bec97f7f9006bfdd7abecfc12d56b2c4b964c9c5e64411a064a12fdd73",
+      "zip_entry": "out/collab/xcb-ci-diagnosis/review.md",
+      "archive_file": "old-ci-failures.zip"
+    },
+    {
+      "source": "out/collab/xcb-ci-diagnosis/current-pyside-xcb-ldd.log",
+      "bytes": 5227,
+      "sha256": "43747b4cd1d98fb8a7dc13bfb7ddbe5c90052203dcfcf2b9a1654b2504e6cf34",
+      "zip_entry": "out/collab/xcb-ci-diagnosis/current-pyside-xcb-ldd.log",
+      "archive_file": "old-ci-failures.zip"
+    }
+  ],
+  "omitted_files": [],
+  "credential_scan": "No common sk-/Bearer/quoted API-key credential markers found in selected text; no environment/secret file read",
+  "source_originals_unchanged": true,
+  "additional_archives": [
+    {
+      "file": "old-ci-failures.zip",
+      "bytes": 78791,
+      "sha256": "bae59eefdb56f14d65ceac2124d3fe32712aeafa51cf775e24d84cbf2ac1ca21"
+    }
+  ]
+}
