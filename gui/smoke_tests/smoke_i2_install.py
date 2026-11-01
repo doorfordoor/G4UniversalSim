@@ -36,7 +36,8 @@ def main():
     app.setApplicationName("I2 installation test")
     set_application_language(app, "zh_CN")
     with tempfile.TemporaryDirectory(prefix="g4-i2-gui-") as directory:
-        root = Path(directory)
+        # Discovery returns canonical paths, including Windows 8.3 TEMP aliases.
+        root = Path(directory).resolve()
         catalog = fixture(root)
         catalog["releases"][0]["geant4_version"] = "11.4.3"
         facts = {"example": {"status": "not_probed"}}
@@ -163,7 +164,10 @@ def main():
             assert automatic._candidates is None and automatic._rediscovery_pending
             release.set()
             wait(app, lambda: len(observations) == 2 and not automatic.busy)
-            assert {item["executable"] for item in automatic.facts["environments"]} == {old_backend, new_backend}
+            assert {item["executable"] for item in automatic.facts["environments"]} == {old_backend, new_backend}, {
+                "actual": [item["executable"] for item in automatic.facts["environments"]],
+                "expected": [old_backend, new_backend],
+            }
             assert automatic._additional_candidates == [new_backend]
             automatic.close()
         # Closing an active task requests cancellation, then closes after it ends.
