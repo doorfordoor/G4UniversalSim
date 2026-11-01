@@ -30,15 +30,21 @@ import json
 import os
 import re
 import shutil
+import stat
 import subprocess
 import sys
 import tempfile
 import zipfile
+from contextlib import nullcontext
 from pathlib import Path
+
+from windows_freeze import audit_binary_sources, freeze_environment
+import freeze_identity
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "out"
 BUILD = ROOT / "build_vs2026" / "Release"
+CACHE = ROOT / "build_vs2026" / "CMakeCache.txt"
 SYSTEM_DLL = re.compile(r"^(api-ms-|ext-ms-|kernel32|user32|gdi32|advapi32|shell32|ole32|oleaut32|ws2_32|"
                         r"comdlg32|comctl32|crypt32|bcrypt|ntdll|rpcrt4|shlwapi|version|winmm|imm32|"
                         r"secur32|netapi32|userenv|dbghelp|psapi|setupapi|cfgmgr32|iphlpapi|mpr|"
@@ -65,26 +71,32 @@ def visual_studio() -> Path:
 
 
 def geant4_prefix() -> Path:
-    cache = (ROOT / "build_vs2026" / "CMakeCache.txt").read_text(encoding="utf-8", errors="replace")
-    match = re.search(r"^Geant4_DIR:PATH=(.+)$", cache, re.M)
+    cache = CACHE.read_text(encoding="utf-8", errors="replace")
+    match = re.search(r"^Geant4_DIR:[A-Z_]+=(.+)$", cache, re.M)
     if not match:
-        raise SystemExit("Geant4_DIR not found in build_vs2026/CMakeCache.txt")
+        raise SystemExit(f"Geant4_DIR not found in {CACHE}")
     return Path(match.group(1).strip()).parents[2]   # <prefix>/lib/cmake/Geant4
 
 
 def qt5_prefix() -> Path | None:
     """The Qt 5 that Geant4's visualisation/UI libraries were built against (from the CMake cache)."""
-    cache = (ROOT / "build_vs2026" / "CMakeCache.txt").read_text(encoding="utf-8", errors="replace")
+    cache = CACHE.read_text(encoding="utf-8", errors="replace")
     match = re.search(r"^Qt5Core_DIR:PATH=(.+)$", cache, re.M)
     return Path(match.group(1).strip()).parents[2] if match else None   # <qt>/lib/cmake/Qt5Core
 
 
-def check_fingerprint(exe: Path) -> None:
+def check_fingerprint(exe: Path, runtime_paths: list[Path] | None = None) -> None:
     sys.path.insert(0, str(ROOT / "scripts"))
     import run_m0_tests   # noqa: E402  (source fingerprint of the C++ working tree)
-    problem = run_m0_tests.executable_freshness(exe)
-    if problem:
-        raise SystemExit(f"{exe}: {problem}")
+    environment = os.environ.copy()
+    if runtime_paths:
+        environment["PATH"] = os.pathsep.join(map(str, runtime_paths)) + os.pathsep + environment.get("PATH", "")
+    result = subprocess.run([str(exe), "--capabilities"], cwd=exe.parent, env=environment,
+                            capture_output=True, text=True, errors="replace", timeout=30)
+    if result.returncode:
+        raise SystemExit(f"Backend capabilities probe failed (exit {result.returncode}); no fingerprint comparison was possible:\n{result.stderr[-2000:]}")
+    if json.loads(result.stdout).get("source_fingerprint") != run_m0_tests.workspace_source_fingerprint():
+        raise SystemExit(f"{exe}: actual backend source fingerprint differs from this worktree; rebuild")
 
 
 def dependencies(binary: Path, dumpbin: Path) -> list[str]:
@@ -118,12 +130,39 @@ def collect_dlls(binaries: list[Path], search: list[Path], dumpbin: Path) -> dic
 
 def copy_tree(source: Path, target: Path) -> None:
     def ignore(directory: str, names: list[str]) -> set[str]:
-        return {n for n in names if n in SKIP_DIRS or n.endswith((".pyc", ".log"))}
+        historical = {"verification", "collab"} if Path(directory) == ROOT / "docs" else set()
+        return {n for n in names if n in SKIP_DIRS | historical or n.endswith((".pyc", ".log"))}
     shutil.copytree(source, target, ignore=ignore, dirs_exist_ok=True)
+
+
+def clean_output_directory(path: Path) -> None:
+    """Remove only an actual descendant of this checkout's out directory."""
+    # On Windows a junction is a reparse point, not a Python 3.11 symlink.
+    # Reject each lexical ancestor before any recursive deletion, including an
+    # out junction pointing at another directory inside the same checkout.
+    current = path.absolute()
+    output_path = (ROOT / "out").absolute()
+    while current != ROOT.absolute():
+        if not current.is_relative_to(output_path):
+            raise ValueError(f"Output cleanup path escaped the expected directory: {path}")
+        if current.exists() or current.is_symlink():
+            facts = current.lstat()
+            if stat.S_ISLNK(facts.st_mode) or getattr(facts, "st_file_attributes", 0) & 0x400:
+                raise ValueError(f"Output cleanup refuses linked directories: {current}")
+        current = current.parent
+    allowed = output_path.resolve()
+    target = path.resolve()
+    if (allowed != ROOT.resolve() / "out" or target == allowed
+            or not target.is_relative_to(allowed)):
+        raise ValueError(f"Refusing to clean a directory outside this checkout's output tree: {path}")
+    if path.exists():
+        shutil.rmtree(path)
 
 
 def build_gui(work: Path, with_3d: bool) -> Path:
     """PyInstaller onedir build of gui/main.py; returns the folder holding G4UniversalSimGUI.exe."""
+    work.mkdir(parents=True, exist_ok=True)
+    before = freeze_identity.source_identity(ROOT, "gui")
     excludes = [] if with_3d else ["pyvista", "pyvistaqt", "vtk", "vtkmodules"]
     command = [sys.executable, "-m", "PyInstaller", "--noconfirm", "--clean", "--windowed", "--onedir",
                "--name", "G4UniversalSimGUI", "--distpath", str(work / "dist"), "--workpath", str(work / "build"),
@@ -137,10 +176,48 @@ def build_gui(work: Path, with_3d: bool) -> Path:
         command += ["--exclude-module", module]
     command.append(str(ROOT / "gui" / "main.py"))
     log("freezing the GUI with PyInstaller (this takes a few minutes)")
-    result = subprocess.run(command, cwd=work, capture_output=True, text=True, errors="replace")
+    result = subprocess.run(command, cwd=work, capture_output=True, text=True, errors="replace",
+                            env=freeze_environment() if os.name == "nt" else None)
+    (work / "freeze.log").write_text(result.stdout + result.stderr, encoding="utf-8")
     if result.returncode != 0:
-        raise SystemExit("PyInstaller failed:\n" + (result.stdout + result.stderr)[-4000:])
-    return work / "dist" / "G4UniversalSimGUI"
+        raise SystemExit(f"PyInstaller failed; full log {work / 'freeze.log'}:\n" + (result.stdout + result.stderr)[-4000:])
+    if os.name == "nt":
+        audit_binary_sources(work, "G4UniversalSimGUI")
+    after = freeze_identity.source_identity(ROOT, "gui")
+    (work / "source-identity.json").write_text(json.dumps({"schema": "g4usim_gui_freeze_sources_v1",
+        "stable": before == after, "sources_before": before, "sources_after": after}, indent=2), encoding="utf-8")
+    if before != after:
+        raise RuntimeError(f"GUI source changed while freezing; rebuild the stable candidate: {work}")
+    result_path = work / "dist" / "G4UniversalSimGUI"
+    freeze_identity.seal(result_path, kind="gui", sources=after, with_3d=with_3d)
+    return result_path
+
+
+def build_python_helper(work: Path) -> Path:
+    """Bundle actual Python + ROOT reader/writer; no external interpreter needed."""
+    before = freeze_identity.source_identity(ROOT, "python")
+    command = [sys.executable, "-m", "PyInstaller", "--noconfirm", "--clean", "--onedir",
+               "--name", "G4USimPython", "--distpath", str(work / "dist"),
+               "--workpath", str(work / "build"), "--specpath", str(work),
+               "--collect-all", "uproot", "--collect-all", "awkward", "--collect-all", "awkward_cpp", "--collect-all", "numpy",
+               "--hidden-import", "csv", "--hidden-import", "argparse", "--hidden-import", "tempfile",
+               "--hidden-import", "concurrent.futures", "--hidden-import", "importlib.metadata",
+               str(ROOT / "packaging/python_helper.py")]
+    work.mkdir(parents=True, exist_ok=True)
+    log("freezing Python scientific helper")
+    result = subprocess.run(command, cwd=work, capture_output=True, text=True, errors="replace",
+                            env=freeze_environment() if os.name == "nt" else None)
+    (work / "freeze.log").write_text(result.stdout + result.stderr, encoding="utf-8")
+    if result.returncode:
+        raise SystemExit(f"Python helper freeze failed; see {work / 'freeze.log'}")
+    if os.name == "nt":
+        audit_binary_sources(work, "G4USimPython")
+    after = freeze_identity.source_identity(ROOT, "python")
+    if before != after:
+        raise RuntimeError("Python helper source changed while freezing")
+    result_path = work / "dist" / "G4USimPython"
+    freeze_identity.seal(result_path, kind="python", sources=after)
+    return result_path
 
 
 def third_party_notices(package: Path) -> None:
@@ -149,10 +226,12 @@ def third_party_notices(package: Path) -> None:
     shutil.copytree(ROOT / "packaging" / "licenses", licenses)
     lines = ["# Third-party software in this package", "",
              "| Component | Version | License | Files |", "| --- | --- | --- | --- |",
-             "| Geant4 (DLLs in bin/) | 11.3.2 | Geant4 Software License | licenses/Geant4-LICENSE.txt |",
-             "| Apache Xerces-C (bin/) | 3.2.5 | Apache License 2.0 | licenses/Xerces-C-LICENSE.txt, -NOTICE.txt |",
-             "| Microsoft Visual C++ runtime (bin/) | 14.x | Visual Studio redistributable terms | - |",
-             "| Qt 5 (bin/, used by Geant4 visualisation/UI) | 5.15.2 | GNU LGPL v3 | https://www.qt.io/licensing |"]
+             f"| Geant4 (DLLs in bin/) | {geant4_version()} | Geant4 Software License | licenses/Geant4-LICENSE.txt |",
+             "| Microsoft Visual C++ runtime (bin/) | 14.x | Visual Studio redistributable terms | - |"]
+    if any((package / "bin").glob("xerces*.dll")):
+        lines.append("| Apache Xerces-C (bin/) | see bundled DLL version | Apache License 2.0 | licenses/Xerces-C-LICENSE.txt, -NOTICE.txt |")
+    if (package / "bin/Qt5Core.dll").is_file():
+        lines.append("| Qt 5 (bin/, Geant4 visualisation/UI) | see bundled DLL version | GNU LGPL v3 | https://www.qt.io/licensing |")
     for dist in sorted(importlib.metadata.distributions(), key=lambda d: d.metadata["Name"].lower()):
         name = dist.metadata["Name"]
         if name.lower() in {"pip", "setuptools", "pyinstaller", "pyinstaller-hooks-contrib", "altgraph", "pefile",
@@ -175,23 +254,47 @@ def third_party_notices(package: Path) -> None:
     (package / "THIRD_PARTY_NOTICES.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
-def verify(package: Path, data_dir: Path) -> None:
+def geant4_version(prefix: Path | None = None) -> str:
+    prefix = Path(prefix) if prefix is not None else geant4_prefix()
+    config = prefix / "lib/cmake/Geant4/Geant4ConfigVersion.cmake"
+    match = re.search(r'set\(PACKAGE_VERSION\s+"?([^"\s)]+)', config.read_text(encoding="utf-8"))
+    if not match:
+        raise SystemExit(f"Geant4 version not found in {config}")
+    version = match.group(1)
+    header = prefix / "include/Geant4/G4Version.hh"
+    number = re.search(r"^\s*#\s*define\s+G4VERSION_NUMBER\s+(\d+)", header.read_text(encoding="utf-8"), re.M)
+    parts = version.split(".")
+    if len(parts) != 3 or not all(part.isdecimal() for part in parts) or number is None \
+            or int(number.group(1)) != int(parts[0]) * 100 + int(parts[1]) * 10 + int(parts[2]):
+        raise ValueError("Actual Geant4 CMake/header version identity is inconsistent")
+    return version
+
+
+def verify(package: Path, data_dir: Path, *, expected_geant4_version: str | None = None) -> None:
     """Run the packaged backend and GUI with a clean environment."""
     env = {k: v for k, v in os.environ.items() if not k.startswith("G4") and k not in {"GEANT4_DATA_DIR", "XercesC_ROOT"}}
-    system = Path(env.get("SystemRoot", r"C:\Windows"))
+    system = Path(os.environ.get("SystemRoot", r"C:\Windows"))
     env["PATH"] = os.pathsep.join([str(system / "System32"), str(system)])
     exe = package / "bin" / "G4UniversalSim.exe"
     data_file = package / "bin" / "geant4-data.txt"
     template = data_file.read_text(encoding="utf-8")
+    evidence_root = OUT / "package-verification"
+    evidence_root.mkdir(parents=True, exist_ok=True)
+    evidence = Path(tempfile.mkdtemp(prefix="windows-", dir=evidence_root))
     try:
         data_file.write_text(template + str(data_dir) + "\n", encoding="utf-8")
         result = subprocess.run([str(exe), "--check-geant4-data"], capture_output=True, text=True, env=env)
         report = json.loads(result.stdout)
+        (evidence / "data-discovery.json").write_text(result.stdout, encoding="utf-8")
+        if expected_geant4_version is not None:
+            from build_data_artifact import geant4_version_from_discovery
+            if geant4_version_from_discovery(report) != expected_geant4_version:
+                raise SystemExit("Packaged backend and selected Geant4 development prefix versions differ")
         if result.returncode != 0 or not report["required_complete"]:
             raise SystemExit(f"packaged backend cannot resolve the Geant4 data:\n{result.stdout}{result.stderr}")
         log(f"data check: {sum(d['found'] for d in report['datasets'])}/{len(report['datasets'])} datasets via "
             f"{report['geant4_data_dir']}")
-        with tempfile.TemporaryDirectory(prefix="g4usim-package-") as temp:
+        with nullcontext(str(evidence)) as temp:
             run = Path(temp)
             (run / "geo.ini").write_text("[world]\nshape = box\nsize = 1 m, 1 m, 1 m\nmaterial = G4_Galactic\n"
                                         "[volume.Target]\nparent = world\nshape = box\nsize = 10 cm, 10 cm, 1 cm\n"
@@ -206,41 +309,92 @@ def verify(package: Path, data_dir: Path) -> None:
             (run / "run.mac").write_text("/run/initialize\n/run/beamOn 50\n", encoding="utf-8")
             result = subprocess.run([str(exe), "--config", "main.ini", "--macro", "run.mac", "--output", "out"],
                                     cwd=run, capture_output=True, text=True, errors="replace", env=env, timeout=900)
+            (evidence / "backend.log").write_text(result.stdout + result.stderr, encoding="utf-8")
             summary = (run / "out" / "run_summary.txt")
-            if result.returncode != 0 or "status = completed" not in summary.read_text(encoding="utf-8"):
+            sys.path.insert(0, str(ROOT / "gui"))
+            from g4usim_gui.core.run_result import evaluate_run_result
+            outcome = evaluate_run_result(summary, exit_code=result.returncode, summary_fresh=summary.is_file())
+            if outcome.state != "success" or outcome.completed_events != 50:
                 raise SystemExit("packaged backend run failed:\n" + (result.stdout + result.stderr)[-3000:])
             log("packaged backend: 50 neutrons with QGSP_BIC_HP, ROOT + CSV output, completed")
+            helper_name = "G4USimPython.exe" if os.name == "nt" else "G4USimPython"
+            helper = package / "python" / helper_name
+            if helper.is_file():
+                check = subprocess.run([str(helper), str(package / "scripts/compare_root_csv.py"), "--dir", str(run / "out")],
+                                       env=env, capture_output=True, text=True, errors="replace", timeout=180)
+                (evidence / "root-csv.log").write_text(check.stdout + check.stderr, encoding="utf-8")
+                if check.returncode:
+                    raise SystemExit("Packaged Python ROOT/CSV read failed:\n" + (check.stdout + check.stderr)[-3000:])
+                root_probe = run / "helper-root-roundtrip.root"
+                code = "import numpy as np,uproot; p=" + repr(str(root_probe)) + "; f=uproot.recreate(p); f['check']={'value':np.array([1.,2.,3.])}; f.close(); r=uproot.open(p); assert list(r['check']['value'].array(library='np'))==[1.,2.,3.]; r.close(); print('ROOT roundtrip verified')"
+                check = subprocess.run([str(helper), "-c", code], env=env, capture_output=True, text=True, timeout=120)
+                if check.returncode:
+                    raise SystemExit("Packaged Python ROOT write/read failed:\n" + check.stdout + check.stderr)
+                log("packaged Python: actual simulation ROOT/CSV consistency + ROOT write/read roundtrip")
         gui = package / "gui" / "G4UniversalSimGUI.exe"
         if gui.is_file():
-            with tempfile.TemporaryDirectory(prefix="g4usim-gui-") as temp:
+            gui_evidence = evidence / "gui"
+            gui_evidence.mkdir()
+            with nullcontext(str(gui_evidence)) as temp:
                 report_path = Path(temp) / "self_test.json"
-                result = subprocess.run([str(gui), "--self-test", str(report_path)], env=env, timeout=300)
+                gui_env = dict(env, G4USIM_RECOVERY_DIR=str(Path(temp) / "recovery"), QT_QPA_PLATFORM="offscreen")
+                result = subprocess.run([str(gui), "--self-test", str(report_path)], env=gui_env, timeout=300)
                 report = json.loads(report_path.read_text(encoding="utf-8")) if report_path.is_file() else {}
                 if result.returncode != 0 or not report.get("ok") or not report.get("frozen") \
                         or Path(report.get("default_backend", "")) != exe:
                     raise SystemExit(f"frozen GUI self-test failed: {report}")
                 log(f"frozen GUI self-test: {report['pages']} pages, plots={report['plots']}, "
                     f"3D preview={report['preview3d']}, backend found")
+        (evidence / "verification.json").write_text(json.dumps({"status": "verified", "backend_events": 50,
+            "data_required_complete": True, "frozen_gui": gui.is_file(), "package": str(package),
+            "geant4_version": expected_geant4_version, "scope": "Clean PATH/process environment on this Windows host; not a fresh OS image or physics benchmark"}, indent=2) + "\n", encoding="utf-8")
+        log(f"retained verification evidence: {evidence}")
     finally:
         data_file.write_text(template, encoding="utf-8")
 
 
 def main() -> int:
+    global BUILD, CACHE
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--no-3d", action="store_true", help="leave PyVista/VTK out of the GUI (smaller)")
     parser.add_argument("--skip-gui", action="store_true", help="package without the frozen GUI")
     parser.add_argument("--no-installer", action="store_true", help="do not run Inno Setup")
     parser.add_argument("--data-dir", default="", help="Geant4 data folder used for the package checks")
+    parser.add_argument("--build-dir", type=Path, default=ROOT / "build_vs2026", help="Actual CMake build tree")
+    parser.add_argument("--skip-python-helper", action="store_true", help="Explicit partial package without bundled Python")
+    parser.add_argument("--package-name", help="Explicit artifact basename for version/platform variants")
+    parser.add_argument("--reuse-gui", type=Path, help="Explicit previously frozen GUI directory; reverified before publication")
+    parser.add_argument("--reuse-python-helper", type=Path, help="Explicit previously frozen scientific helper; reverified")
     args = parser.parse_args()
+    CACHE = args.build_dir.absolute() / "CMakeCache.txt"
+    BUILD = args.build_dir.absolute() / "Release"
 
-    name = f"G4UniversalSim-{version()}-win64"
+    name = args.package_name or f"G4UniversalSim-{version()}-win64"
+    if name in {".", ".."} or not re.fullmatch(r"[A-Za-z0-9_.-]+", name):
+        parser.error("Package name must be a portable basename")
     package = OUT / "package" / name
+    work = OUT / "package-build"
+    helper_work = OUT / "package-python-build"
+    if (args.reuse_gui and args.skip_gui) or (args.reuse_python_helper and args.skip_python_helper):
+        parser.error("Cannot both skip and reuse the same application")
+    # Validate every reused source before any output cleanup. In particular,
+    # the normal previous work/dist directory is a valid source to preserve.
+    changing = [package]
+    if not args.skip_gui and not args.reuse_gui:
+        changing.append(work)
+    if not args.skip_python_helper and not args.reuse_python_helper:
+        changing.append(helper_work)
+    for source, kind, with_3d in ((args.reuse_gui, "gui", not args.no_3d),
+                                 (args.reuse_python_helper, "python", False)):
+        if source:
+            freeze_identity.reject_overlap(source, changing)
+            freeze_identity.verify(source, root=ROOT, kind=kind, with_3d=with_3d)
     exe = BUILD / "G4UniversalSim.exe"
-    check_fingerprint(exe)
     prefix = geant4_prefix()
-    data_dir = Path(args.data_dir) if args.data_dir else prefix / "share" / "Geant4" / "data"
-    if package.exists():
-        shutil.rmtree(package)
+    selected_qt = qt5_prefix()
+    check_fingerprint(exe, [prefix / "bin"] + ([selected_qt / "bin"] if selected_qt else []))
+    data_dir = Path(args.data_dir).absolute() if args.data_dir else prefix / "share" / "Geant4" / "data"
+    clean_output_directory(package)
     (package / "bin").mkdir(parents=True)
 
     vs = visual_studio()
@@ -265,7 +419,7 @@ def main() -> int:
                 shutil.copy2(path, package / "bin")
     log(f"backend: {len(dlls)} DLLs ({sum(p.stat().st_size for p in dlls.values()) / 1e6:.0f} MB)")
     (package / "bin" / "geant4-data.txt").write_text(
-        "# Folder that holds the Geant4 11.3 datasets (G4EMLOW8.6.1, G4NDL4.7.1, ...), for example\n"
+        f"# Folder holding datasets for Geant4 {geant4_version()}, for example\n"
         "# C:\\Program Files\\Geant4\\share\\Geant4\\data\n"
         "# Used only when neither GEANT4_DATA_DIR nor any G4...DATA variable is set.\n"
         "# Check with: bin\\G4UniversalSim.exe --check-geant4-data\n", encoding="utf-8")
@@ -277,14 +431,19 @@ def main() -> int:
     shutil.copy2(ROOT / "packaging" / "README-package.md", package / "README-package.md")
 
     if not args.skip_gui:
-        work = OUT / "package-build"
-        if work.exists():
-            shutil.rmtree(work)
-        work.mkdir(parents=True)
-        shutil.copytree(build_gui(work, not args.no_3d), package / "gui")
+        if not args.reuse_gui:
+            clean_output_directory(work)
+            work.mkdir(parents=True)
+        shutil.copytree(args.reuse_gui.absolute() if args.reuse_gui else build_gui(work, not args.no_3d), package / "gui")
+        freeze_identity.verify(package / "gui", root=ROOT, kind="gui", with_3d=not args.no_3d)
+    if not args.skip_python_helper:
+        shutil.copytree(args.reuse_python_helper.absolute() if args.reuse_python_helper else build_python_helper(OUT / "package-python-build"), package / "python")
+        freeze_identity.verify(package / "python", root=ROOT, kind="python")
+        shutil.copytree(ROOT / "gui/g4usim_gui", package / "python_modules/g4usim_gui",
+                        ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
     third_party_notices(package)
 
-    verify(package, data_dir)
+    verify(package, data_dir, expected_geant4_version=geant4_version())
     size = sum(p.stat().st_size for p in package.rglob("*") if p.is_file())
     log(f"package folder: {package} ({size / 1e6:.0f} MB)")
 
@@ -295,6 +454,27 @@ def main() -> int:
             if path.is_file():
                 zf.write(path, Path(name) / path.relative_to(package))
     log(f"zip: {archive} ({archive.stat().st_size / 1e6:.0f} MB)")
+
+    # The transaction service publishes directly to the user prefix; its archive
+    # has no extra top-level directory. Keep the traditional portable zip above.
+    from build_install_catalog import catalog_from_archive, portable_sources
+    runtime_archive = OUT / f"{name}-runtime.zip"
+    runtime_archive.unlink(missing_ok=True)
+    with zipfile.ZipFile(runtime_archive, "w", zipfile.ZIP_DEFLATED, compresslevel=6) as output:
+        for path in sorted(package.rglob("*")):
+            if path.is_file():
+                output.write(path, path.relative_to(package))
+    catalog = catalog_from_archive(runtime_archive, profile="runtime", platform="windows", architecture="x86_64",
+                                   version=version(), origin=f"Local build {BUILD}; validated by packaging/build_package.py",
+                                   license_path="THIRD_PARTY_NOTICES.md", license_expression="LicenseRef-Bundled-Notices",
+                                   license_source="Bundled third-party notices and licenses directory",
+                                   entrypoints={"backend": "bin/G4UniversalSim.exe", **({"gui": "gui/G4UniversalSimGUI.exe"} if not args.skip_gui else {}),
+                                                **({"python": "python/G4USimPython.exe"} if not args.skip_python_helper else {})},
+                                   components=["application", "geant4_runtime"] + ([] if args.skip_gui else ["gui"]) +
+                                              ([] if args.skip_python_helper else ["python_tools", "root_read_write"]),
+                                   geant4_version=geant4_version())
+    portable_sources(catalog, OUT)
+    (OUT / f"{name}-runtime.catalog.json").write_text(json.dumps(catalog, ensure_ascii=True, indent=2) + "\n", encoding="utf-8")
 
     if not args.no_installer:
         iscc = shutil.which("ISCC") or next((str(p) for p in (

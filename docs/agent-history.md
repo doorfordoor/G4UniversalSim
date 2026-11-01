@@ -615,3 +615,23 @@ smoke_k1_workflow保留旧39个assert站点，新增前置预览完整相等、�
 `5644e1e` 仅在 `scripts/test_k1_staging_alias.py` 新增精确晚变化回归；原 17 个 assert AST 保留。Windows junction/Linux symlink 使用独占临时夹具，旧 r2 在同一新测试的拒绝断言处失败；当前 clean 正式单例 Windows36/Linux33 入口及严格证据门禁通过。首次 WSL /mnt/c 的 renameat2 EINVAL 原失败保留，Linux 验收为本地文件系统，不把该挂载限制说成已修。
 
 P1 与正式防回归 P2 均获独立关闭结论。350 产品字节与第七冻结2914b39一致，只有专项测试追加；原730次正式矩阵与原生适用性各自保留旧身份，新单例单列，禁止回填旧报告或称全矩阵在新指纹下重跑。K1阶段验收通过，I1已独立完成；正常集成事实以[最终证据](verification/k1-final-20261031/README.md)及其后续收据为准。[补充审查与验证](verification/k1-p1-close-20261031/README.md)。
+
+## 2026-11-01 I2/J1 桌面交付实施候选
+
+本条记录实施约束，不关闭阶段。范围和阶段门禁见 docs/collab/inbox/20261031-i2-j1-scope.md；当前工作在 roadmap/I2-J1-desktop。
+
+I2 安装服务（gui/g4usim_gui/core/environment_install.py）只处理已明确选定的新前缀：计划不下载/执行，产物须有实际大小、SHA、完整文件与许可清单；源目录、暂存目录、发布、恢复和卸载保留路径/链接边界。同一前缀的真实 OS 锁覆盖执行、恢复、核验、SDK 探测和卸载，稳定锁文件不因卸载而删除。发布后清理故障保留 published_with_warning；旧事务无原计划只能清理，不能拼造恢复授权。安装收据、I1 发现、K1 仿真成功与物理验证是四种不同事实。
+
+安装界面在发布后追加候选并重新发现，不自动切换项目或运行。自动来源以 candidates=None 保留，additional_candidates 另存；旧探测忙时排队一次新发现，失败收尾亦能继续，关闭中的迟到回调不启动新工作。包版本和 Geant4 声明版本分开显示；SDK 清单明确要求 CMake/C++ 编译器，文件安装不提升为编译通过。SDK 探测仅显式 host 工具允许真实路径解析并记 requested/resolved/hash，安装树链接拒绝不放宽。回归 test_install_plan、test_install_service、smoke_i2_install、smoke_i1_environment。
+
+外层发布目录含 install/catalog.json 和相邻 artifacts；所有组件必须同平台/架构/应用版本/确切 Geant4 版本。移动目录后按当前清单位置解析来源，不保留构建机绝对路径；数据指针是发布时产生的新字节，和原模板 SHA 分别记录。SDK consumer 的编译/链接/API 执行与完整应用源码的编译/capabilities 也分开标 scope，不称为模拟验证。
+
+Windows 冻结失败的已实证原因是 PyInstaller 从宿主 Poppler 路径选择同名 icuuc.dll，缺少 Qt6Core 需要的符号。packaging/windows_freeze.py 使用所选 Python/SystemRoot 子环境并审计真实二进制来源；不是要求用户修改系统 DLL。gui/main.py 的 --self-test 在 app 导入前失败时写新的失败收据并非零退出，不能覆盖旧收据；普通启动仍传播异常。冻结源码前后须一致，dist 内 g4usim-freeze.json 记录源码和实际 payload 字节；复用 GUI/helper 必须在清理前验证来源、平台、3D 档位、内容与目标互不覆盖，复制后复验。自检通过不能替代源码对应关系。回归 test_frozen_startup，真实冻结入口 test_frozen_desktop。
+
+J1 使用原编辑器、3D、结果和日志控件组成原生 Dock；没有第二事务或进程所有者。布局版本、屏幕信息和 Qt 状态只在本机 QSettings，损坏/失联屏幕回退；布局操作不提交草稿。外观覆盖按体积完整路径/材料身份设置，几何身份变化清除，颜色/不透明度不改变物理或验证资格。降级文本视图不提供无效外观控制；AI 面板明确尚未接入。主题 B/K/C 保留明暗与浅色配色的独立偏好。回归 smoke_workspace_layout、smoke_j1_appearance、F4/F5/K1 关联用例；实窗和真实运行另验。
+
+关闭问题的早期 pre-resolve recovery root 方案及“QStandardPaths 初始化顺序”归因明确撤回：该改动把默认 experiment-records 根换成空恢复目录，掩盖历史任务收尾。源码保持原 None 路径语义。真实边界是 close() 返回 False 时仍有既有业务任务，不能直接 DeferredDelete。自检有界等待既有 owner 完成关闭后才析构；超时写失败并保留存活对象与状态目录。永久回归用真实历史任务屏障分别覆盖默认 None 和显式目录，验证拒绝关闭时不删除，释放任务后正常析构。旧崩溃日志和错误候选保留，不追改为通过。
+
+I2 新增 Windows 11.4 实际矩阵暴露两类既有测试前提（不是将旧失败改成通过）。test_run_summary 的两组8事件/2worker检验不能假定每个worker一定有hits文件；新observer逐次核对全部事件、worker归属、真实primary粒子/能量/位置及跨run状态，仅观测覆盖不足才有界独立重试，语义错误立即失败，最多6次仍未实际见到同次每轮双worker则失败。所有attempt原始输出与源/EXE身份保存；新增静态反例 test_run_summary_mt_observation，原16/24事件、容差和两个worker实际参与要求保留。
+
+官方 Windows 11.4.3 SDK 的真实能力是 GDML OFF。geometry_a5、fields_a7、gdml_bias_identity、gdml_touchable_identity 据实际 --capabilities 选择：ON 保留全部原几何、身份、共享场和容差检查；OFF 执行真实输入/导出拒绝、禁止模拟产物，并明确记录尚未进入run或摘要未产生。OFF 不是跳过后冒绿，更不是 GDML 验证；与 Windows 11.3/Linux 的 ON 证据及断言量分开，不拿较少的拒绝分支冒充功能覆盖。

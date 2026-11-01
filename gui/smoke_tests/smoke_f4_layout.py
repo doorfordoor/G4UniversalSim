@@ -42,6 +42,7 @@ def reach(app, scroll, widget):
     center = widget.mapTo(scroll.widget(), widget.rect().center())
     scroll.verticalScrollBar().setValue(center.y() - scroll.viewport().height() // 2)
     scroll.horizontalScrollBar().setValue(center.x() - scroll.viewport().width() // 2)
+    scroll.horizontalScrollBar().setValue(center.x() - scroll.viewport().width() // 2)
     app.processEvents()
     visible_in_scroll(scroll, widget)
 
@@ -58,6 +59,12 @@ def target_visible_through_ancestors(widget, local_rect, *, full_cell=True):
     assert not clipped.isEmpty(), (target, clipped)
     assert clipped.contains(target.center()), (target, clipped)
     if full_cell:
+        if clipped != target:
+            current = widget
+            while current is not None:
+                print(type(current).__name__, current.objectName(), current.rect(),
+                      current.mapToGlobal(current.rect().topLeft()), flush=True)
+                current = current.parentWidget()
         assert clipped == target, (target, clipped)
 
 
@@ -157,8 +164,13 @@ def main():
             window.page_stack.setCurrentWidget(run)
             app.processEvents()
             for widget in (run.command_preview, run.build_button, run.save_logs_button,
-                           run.diagnostics_panel.table, run.diagnostics_panel.locate_button, run.stdout_view):
+                           run.diagnostics_panel.table, run.diagnostics_panel.locate_button):
                 reach(app, run.content_scroll, widget)
+            # J1 moves this same log instance into the shared dock. Check its
+            # actual visible clipping chain rather than the old run-page scroll.
+            logs = window.workspace_layout.docks['logs']
+            assert logs.isVisible() and logs.isAncestorOf(run.stdout_view)
+            target_visible_through_ancestors(run.stdout_view, run.stdout_view.rect(), full_cell=False)
             assert project.diagnostic_values() == before
             record = next(d for d in run.diagnostics_panel.records if d.location.field == "executable")
             assert window._run_diagnostics.navigate(record)

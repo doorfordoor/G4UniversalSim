@@ -12,6 +12,7 @@ Volume names: the backend calls physical volumes "<name>_PV" and logical ones
 from __future__ import annotations
 
 import re
+import math
 from dataclasses import dataclass, field
 
 Bounds = tuple[float, float, float, float, float, float]
@@ -82,12 +83,24 @@ class ViewState:
     section_axis: str = ""                                    # "", "x", "y", "z"
     section_fraction: float = 0.5                             # 0..1 across the visible bounds
     tracks_shown: bool = False                                # particle tracks drawn: volumes become glass (G6)
+    # Transient view preferences only. Never part of GeometryDocument / F5 inputs.
+    volume_appearance: dict[str, dict] = field(default_factory=dict)  # exact touchable key
+    material_appearance: dict[str, dict] = field(default_factory=dict)
+    geometry_identity: str | None = None
 
-    def set_items(self, items: list[ViewItem]) -> None:
+    def set_items(self, items: list[ViewItem], *, geometry_identity: str | None = None) -> None:
         """New geometry: keep choices that still apply (same volumes/materials), drop the rest."""
+        identity = geometry_identity or repr(items)
+        previous = self.geometry_identity or (repr(self.items) if self.items else None)
+        if previous is not None and previous != identity:
+            # A same-named/path object in another geometry must not inherit overrides.
+            self.reset_appearance()
+        self.geometry_identity = identity
         self.items = items
         names = {item.name for item in items}
         materials = {item.material for item in items}
+        self.volume_appearance = {k: v for k, v in self.volume_appearance.items() if k in {i.key for i in items}}
+        self.material_appearance = {k: v for k, v in self.material_appearance.items() if k in materials}
         self.hidden &= names
         self.hidden_materials &= materials
         if self.isolated not in names:
@@ -123,12 +136,48 @@ class ViewState:
         free = [c for c in PALETTE if c not in result.values()] or list(PALETTE)
         for index, material in enumerate(others):
             result[material] = free[index % len(free)]
+        for material, preference in self.material_appearance.items():
+            if material in result and "colour" in preference:
+                result[material] = preference["colour"]
         return result
+
+    def set_appearance(self, scope: str, target: str, *, colour: str | None = None,
+                       opacity: float | None = None) -> None:
+        """Set explicit properties atomically; volume properties override material properties."""
+        if scope not in ("volume", "material"):
+            raise ValueError("Unknown appearance scope")
+        valid = {i.key if scope == "volume" else i.material for i in self.items}
+        if target not in valid:
+            raise ValueError("Unknown appearance target")
+        value = {}
+        if colour is not None:
+            if not isinstance(colour, str) or re.fullmatch(r"#[0-9a-fA-F]{6}", colour) is None:
+                raise ValueError("Expected #RRGGBB colour")
+            value["colour"] = colour.lower()
+        if opacity is not None:
+            if isinstance(opacity, bool) or not isinstance(opacity, (int, float)) or not math.isfinite(opacity) or not 0 <= opacity <= 1:
+                raise ValueError("Opacity must be finite and between 0 and 1")
+            value["opacity"] = float(opacity)
+        store = self.volume_appearance if scope == "volume" else self.material_appearance
+        store[target] = {**store.get(target, {}), **value}
+
+    def reset_appearance(self, scope: str | None = None, target: str | None = None) -> None:
+        if scope is None:
+            self.volume_appearance.clear()
+            self.material_appearance.clear()
+        elif scope in ("volume", "material"):
+            (self.volume_appearance if scope == "volume" else self.material_appearance).pop(target, None)
+        else:
+            raise ValueError("Unknown appearance scope")
+
+    def explicit_appearance(self, item: ViewItem) -> dict:
+        return {**self.material_appearance.get(item.material, {}), **self.volume_appearance.get(item.key, {})}
 
     def style(self, item: ViewItem) -> dict:
         """Colour, opacity and outline of an item (the widget maps them to VTK properties)."""
         if item.world:
-            return {"colour": None, "opacity": 0.06, "wireframe": True, "selected": False}
+            return {"colour": None, "opacity": 0.25, "wireframe": True, "selected": False,
+                    **self.explicit_appearance(item)}
         selected = item.name == self.selected
         empty = item.material.lower() in EMPTY_MATERIALS
         opacity = 0.12 if empty or item.container else 0.9 if item.sensitive else 0.6
@@ -139,7 +188,7 @@ class ViewState:
         if self.tracks_shown and not selected:
             opacity = min(opacity, self.track_glass_opacity())   # tracks inside volumes stay visible
         return {"colour": self.colours().get(item.material, "#9aa6b2"), "opacity": opacity,
-                "wireframe": False, "selected": selected}
+                "wireframe": False, "selected": selected, **self.explicit_appearance(item)}
 
     def legend(self) -> list[tuple[str, str, int, bool]]:
         """(material, colour, volume copies, shown) for the legend."""

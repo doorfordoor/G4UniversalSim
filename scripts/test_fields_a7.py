@@ -27,6 +27,7 @@ import subprocess
 import sys
 import tempfile
 from pathlib import Path
+from gdml_test_support import gdml_runtime_available, assert_gdml_unavailable_rejection
 
 ROOT = Path(__file__).resolve().parents[1]
 EXE = Path(os.environ.get("G4USIM_EXE", ROOT / "build_vs2026/Release/G4UniversalSim.exe"))
@@ -236,7 +237,16 @@ def shared_gdml_fields(r: Runner) -> None:
         f"[field.B]\nvolumes=ParentB\nelectric=2,0,0 MV/m\n{PRECISION}")
     geometry = "[gdml]\nfile=shared_field.gdml\n"
     files = {"shared_field.gdml": gdml()}
+    gdml_available = gdml_runtime_available(EXE)
     for threads in (1, 2):
+        if not gdml_available:
+            output, log = r.run(fields, 1.0, events=1, files=files, geometry=geometry,
+                                geometry_template="gdml", threads=threads, expect_ok=False,
+                                require_failed_summary=False)
+            assert_gdml_unavailable_rejection(output, log)
+            assert (r.work / "shared_field.gdml").read_text(encoding="utf-8") == files["shared_field.gdml"]
+            (r.work / f"gdml-unavailable-{threads}.log").write_text(log, encoding="utf-8")
+            continue
         _, log = r.run(fields, 1.0, events=1, files=files, geometry=geometry,
                        geometry_template="gdml", threads=threads, expect_ok=False)
         assert "conflicting inherited local fields" in log, log[-3000:]

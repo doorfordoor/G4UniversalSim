@@ -1,4 +1,4 @@
-"""Asynchronous environment selection. No runner, installer or project ownership."""
+"""Asynchronous environment selection; installation uses a separate service."""
 from __future__ import annotations
 
 import copy
@@ -61,10 +61,12 @@ class EnvironmentDialog(QDialog):
                  sdk_roots=(), auto_discover=True):
         super().__init__(parent)
         self._candidates = copy.deepcopy(candidates)
+        self._additional_candidates = []
         self._options = {"timeout": timeout, "env": copy.deepcopy(env), "sdk_roots": tuple(sdk_roots)}
         self._generation = 0
         self._closed = False
         self._busy = False
+        self._rediscovery_pending = False
         self._task = None
         self.facts = None
         self._choice = None
@@ -118,13 +120,15 @@ class EnvironmentDialog(QDialog):
         self.refresh_button = QPushButton(ui_text("Refresh environments"))
         self.browse_button = QPushButton(ui_text("Add backend executable…"))
         self.select_button = QPushButton(ui_text("Use selected environment"))
+        self.install_button = QPushButton(ui_text("Install an environment…"))
         self.close_button = QPushButton(ui_text("Close"))
         self.select_button.setEnabled(False)
         self.refresh_button.clicked.connect(self.refresh)
         self.browse_button.clicked.connect(self.browse)
         self.select_button.clicked.connect(self.choose_selected)
+        self.install_button.clicked.connect(self._open_installation)
         self.close_button.clicked.connect(self.reject)
-        self._buttons = (self.refresh_button, self.browse_button, self.select_button, self.close_button)
+        self._buttons = (self.refresh_button, self.browse_button, self.select_button, self.install_button, self.close_button)
         for button in self._buttons:
             # Let the dialog shrink first; _adapt_layout gives full labels a row
             # whenever two columns no longer fit at the actual font size.
@@ -160,7 +164,10 @@ class EnvironmentDialog(QDialog):
         self.refresh_button.setEnabled(False)
         self.browse_button.setEnabled(False)
         self.status.setText(ui_text("Discovering environments…"))
-        task = _DiscoveryTask(self._generation, copy.deepcopy(self._candidates), self._options.copy())
+        options = self._options.copy()
+        if self._additional_candidates:
+            options["additional_candidates"] = list(self._additional_candidates)
+        task = _DiscoveryTask(self._generation, copy.deepcopy(self._candidates), options)
         task.signals.completed.connect(self._completed, Qt.QueuedConnection)
         task.signals.failed.connect(self._failed, Qt.QueuedConnection)
         self._task = task
@@ -171,6 +178,10 @@ class EnvironmentDialog(QDialog):
         if self._closed or generation != self._generation:
             return
         self._finish()
+        if self._rediscovery_pending:
+            self._rediscovery_pending = False
+            self.refresh()
+            return
         self.facts = facts
         environments = facts["environments"]
         self.table.setRowCount(len(environments))
@@ -190,6 +201,10 @@ class EnvironmentDialog(QDialog):
         if self._closed or generation != self._generation:
             return
         self._finish()
+        if self._rediscovery_pending:
+            self._rediscovery_pending = False
+            self.refresh()
+            return
         self.status.setText(ui_format("Environment discovery failed: {error}", error=error))
 
     def _finish(self):
@@ -289,6 +304,9 @@ class EnvironmentDialog(QDialog):
             self._button_columns = columns
 
     def retranslate_ui(self):
+        installation_dialog = getattr(self, "_installation_dialog", None)
+        if installation_dialog is not None:
+            installation_dialog.retranslate_ui()
         self.setWindowTitle(ui_text("Environment discovery and diagnostics"))
         self.boundary.setText(ui_text(
             "Discovery reports backend and dependency facts. It does not initialize or validate a simulation."))
@@ -296,7 +314,7 @@ class EnvironmentDialog(QDialog):
         self.summary.setAccessibleName(ui_text("Selected environment summary"))
         self.details.setAccessibleName(ui_text("Environment diagnostic facts"))
         for button, text in zip(self._buttons, (
-                "Refresh environments", "Add backend executable…", "Use selected environment", "Close")):
+                "Refresh environments", "Add backend executable…", "Use selected environment", "Install an environment…", "Close")):
             button.setText(ui_text(text))
         self.table.setHorizontalHeaderLabels([ui_text(key) for key in (
             "Backend executable", "Discovery status", "Architecture", "Geant4", "Build compiler")])
@@ -326,22 +344,44 @@ class EnvironmentDialog(QDialog):
         self.environment_selected.emit(copy.deepcopy(self._choice))
         self.accept()
 
+    def _open_installation(self):
+        from g4usim_gui.widgets.install_dialog import InstallDialog
+        existing = getattr(self, "_installation_dialog", None)
+        if existing is not None and existing.isVisible():
+            existing.raise_()
+            return
+        dialog = InstallDialog(self, facts=self.facts)
+        dialog.installation_published.connect(self._installed_candidate)
+        self._installation_dialog = dialog
+        dialog.open()
+
+    def _installed_candidate(self, executable):
+        # Reprobe actual installed bytes through I1; never auto-select or run.
+        if self._candidates is None:
+            if executable not in self._additional_candidates:
+                self._additional_candidates.append(executable)
+        elif isinstance(self._candidates, (list, tuple)):
+            candidates = list(self._candidates)
+            if executable not in candidates:
+                candidates.append(executable)
+            self._candidates = candidates
+        else:
+            candidates = [self._candidates]
+            if executable not in candidates:
+                candidates.append(executable)
+            self._candidates = candidates
+        if self._closed:
+            return
+        if self.busy:
+            self._rediscovery_pending = True
+        else:
+            self.refresh()
+
     @Slot()
     def browse(self):
         path, _ = QFileDialog.getOpenFileName(self, ui_text("Choose backend executable"))
         if path:
-            existing = self._candidates
-            if existing is None:
-                existing = [item["executable"] for item in (self.facts or {}).get("environments", [])]
-            elif isinstance(existing, (str, dict)):
-                existing = [existing]
-            else:
-                try:
-                    existing = list(existing)
-                except TypeError:
-                    existing = [existing]
-            self._candidates = existing + [path]
-            self.refresh()
+            self._installed_candidate(path)
 
     def done(self, result):
         self._closed = True

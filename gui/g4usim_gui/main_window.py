@@ -78,7 +78,10 @@ class MainWindow(ShellMixin, ProjectMixin, RunMixin, ContentMixin, DiagnosticsMi
         setup_recovery = getattr(self, '_setup_recovery', None)
         if setup_recovery is not None:
             setup_recovery()
-        self.statusBar().showMessage(ui_text("Ready"), 5000)
+        self.workspace_layout.restore()
+        self.config_builder_page._preview_activation_ready = True
+        if self.workspace_layout.last_restore == "default":
+            self.statusBar().showMessage(ui_text("Ready"), 5000)
 
     def _connect_signals(self) -> None:
         self.start_page.newSimulationRequested.connect(self.open_new_simulation_wizard)
@@ -198,5 +201,6 @@ class MainWindow(ShellMixin, ProjectMixin, RunMixin, ContentMixin, DiagnosticsMi
         state["lastWorkspaceRoot"] = self.project.workspaceRoot
         state["lastRunsRoot"] = self.project.runsRoot
         save_state(state)
+        self.workspace_layout.save()
         QApplication.instance().removeEventFilter(self._history_filter)
         super().closeEvent(event)

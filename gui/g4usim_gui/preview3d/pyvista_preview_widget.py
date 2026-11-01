@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import math
 import os
+import hashlib
 
 import numpy as np
 
@@ -40,6 +41,7 @@ from g4usim_gui.preview3d.scene_model import PreviewScene, PreviewSource
 from g4usim_gui.preview3d.units import perpendicular_basis
 from g4usim_gui.preview3d.trajectories import TrackFilter, TrajectorySet
 from g4usim_gui.preview3d.view_model import CAMERA_PRESETS, ViewItem, ViewState, backend_items, mark_containers
+from g4usim_gui.preview3d.appearance_controls import AppearanceControls
 
 CLICK_TOLERANCE_PX = 4
 SECTION_LABELS = (("No section", ""), ("Section x", "x"), ("Section y", "y"), ("Section z", "z"))
@@ -138,6 +140,9 @@ class PyVistaPreviewWidget(QWidget):
         legend_title.setProperty("uiRole", "sectionTitle")
         legend_box.addWidget(legend_title)
         legend_box.addWidget(self.legend, 1)
+        self.appearance = AppearanceControls(self.state)
+        self.appearance.changed.connect(self._appearance_changed)
+        legend_box.addWidget(self.appearance)
 
         # particle tracks (roadmap G6): hidden until a trajectory file is loaded
         self.trajectories: TrajectorySet | None = None
@@ -234,15 +239,22 @@ class PyVistaPreviewWidget(QWidget):
         self._fill_legend()
 
     def refresh_language(self) -> None:
+        self.appearance.refresh_language()
         for index, (label, _axis) in enumerate(SECTION_LABELS):
             self.section_axis.setItemText(index, ui_text(label))
         self._show_info()
+
+    def _appearance_changed(self) -> None:
+        self._apply_styles()
+        self._fill_legend()
 
     def clear(self) -> None:
         self._plotter.clear()
         self._meshes, self._actors, self._items, self._actor_keys = {}, {}, {}, {}
         self._track_actors = []
         self.status.clear()
+        self.state.set_items([])
+        self.appearance.refresh_targets()
 
     # --- particle tracks (roadmap G6) ---------------------------------------------------
     def show_trajectories(self, trajectories: TrajectorySet) -> None:
@@ -463,7 +475,13 @@ class PyVistaPreviewWidget(QWidget):
         first = not self._items
         self._source = source
         self._plotter.clear()
-        self.state.set_items(items)
+        identity = hashlib.sha256()
+        for item in items:
+            identity.update(repr(item).encode("utf-8"))
+            identity.update(np.asarray(meshes[item.key].points).tobytes())
+            identity.update(np.asarray(meshes[item.key].faces).tobytes())
+        self.state.set_items(items, geometry_identity=identity.hexdigest())
+        self.appearance.refresh_targets()
         self._meshes = meshes
         self._items = {item.key: item for item in items}
         self._actors, self._actor_keys = {}, {}
@@ -507,8 +525,8 @@ class PyVistaPreviewWidget(QWidget):
             prop = actor.GetProperty()
             if style["wireframe"]:
                 prop.SetRepresentationToWireframe()
-                prop.SetColor(QColor(colors.text_muted).getRgbF()[:3])
-                prop.SetOpacity(0.25)
+                prop.SetColor(QColor(style["colour"] or colors.text_muted).getRgbF()[:3])
+                prop.SetOpacity(style["opacity"])
                 continue
             prop.SetRepresentationToSurface()
             prop.SetColor(QColor(style["colour"]).getRgbF()[:3])
@@ -520,6 +538,9 @@ class PyVistaPreviewWidget(QWidget):
             else:
                 prop.SetEdgeColor(QColor(edge).getRgbF()[:3])
                 prop.SetLineWidth(0.6)
+        # Automatic selection/isolation/track styles are projected into the editor
+        # under its existing signal blocker; this must not create user overrides.
+        self.appearance.refresh_value()
         if render:
             self._plotter.render()
 

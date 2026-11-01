@@ -3,7 +3,7 @@ from __future__ import annotations
 from PySide6.QtCore import Signal
 from PySide6.QtWidgets import QLabel, QPlainTextEdit, QVBoxLayout, QWidget
 
-from g4usim_gui.core.i18n import ui_format
+from g4usim_gui.core.i18n import ui_format, ui_text
 from g4usim_gui.preview3d.backend_mesh import BackendMesh
 from g4usim_gui.preview3d.scene_model import PreviewScene
 
@@ -19,8 +19,15 @@ class FallbackPreviewWidget(QWidget):
         self.text = QPlainTextEdit()
         self.text.setReadOnly(True)
         layout.addWidget(self.banner)
+        self.appearance_unavailable = QLabel()
+        self.appearance_unavailable.setWordWrap(True)
+        layout.addWidget(self.appearance_unavailable)
         layout.addWidget(self.text, 1)
         self._set_banner()
+        self.refresh_language()
+
+    def refresh_language(self) -> None:
+        self.appearance_unavailable.setText(ui_text("Colour and opacity controls require the optional 3D renderer; this view shows text only."))
 
     def _set_banner(self) -> None:
         reason = f"\nReason: {self.reason}" if self.reason else ""

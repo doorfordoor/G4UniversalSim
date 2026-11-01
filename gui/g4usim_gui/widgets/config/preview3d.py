@@ -88,7 +88,7 @@ class Preview3DMixin:
         self.preview3d_reset_button.clicked.connect(lambda: self.preview3d_widget.reset_camera())
         self.preview3d_backend_button.clicked.connect(self.backendGeometryRequested.emit)
         self.preview3d_tracks_button.clicked.connect(self.tracksRequested.emit)
-        self.preview3d_auto_backend.toggled.connect(lambda on: on and self.schedule_backend_geometry(100))
+        self.preview3d_auto_backend.toggled.connect(self._auto_backend_toggled)
         # selection follows between the 3D view and the volume table (G3)
         self.preview3d_widget.volumeSelected.connect(self.select_geometry_row)
         self.geometry_table.itemSelectionChanged.connect(self._on_geometry_row_selected)
@@ -96,21 +96,41 @@ class Preview3DMixin:
         self.preview3d_show_labels.stateChanged.connect(self._update_preview_display_options)
 
     def preview3d_tab_visible(self) -> bool:
+        dock = getattr(self, "_workspace_preview_dock", None)
+        if dock is not None:
+            return dock.isVisible()
         current = self.workspace_tabs.currentWidget()   # the 3D tab's scroll area
         return bool(self.isVisible() and current is not None and current.isAncestorOf(self.preview3d_widget))
 
     def preview3d_tab_index(self) -> int:
+        if hasattr(self, "_workspace_preview_index"):
+            return self._workspace_preview_index
         return next(i for i in range(self.workspace_tabs.count())
                     if self.workspace_tabs.widget(i).isAncestorOf(self.preview3d_widget))
 
     def schedule_backend_geometry(self, delay_ms: int | None = None) -> None:
         """Ask for the Geant4 world a moment after the last change, while the 3D tab is shown."""
-        if not self.preview3d_auto_backend.isChecked() or not self.preview3d_tab_visible():
+        if (self._building or not getattr(self, '_preview_activation_ready', True) or
+                not self.preview3d_auto_backend.isChecked() or not self.preview3d_tab_visible()):
             return
         if delay_ms is not None:
             self._backend_timer.setInterval(delay_ms)
         self._backend_timer.start()
         self._backend_timer.setInterval(1200)
+
+    def preview3d_user_activated(self) -> None:
+        """An explicit navigation/show intent, not a layout visibility change."""
+        self.schedule_backend_geometry(100)
+
+    def preview3d_visibility_changed(self, visible: bool) -> None:
+        if not visible:
+            self._backend_timer.stop()
+
+    def _auto_backend_toggled(self, enabled: bool) -> None:
+        if enabled:
+            self.schedule_backend_geometry(100)
+        else:
+            self._backend_timer.stop()
 
     def _request_auto_backend_geometry(self) -> None:
         if self.preview3d_auto_backend.isChecked() and self.preview3d_tab_visible():

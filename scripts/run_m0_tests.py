@@ -20,7 +20,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE_DIRECTORIES = ("src", "include", "cmake", "gui/g4usim_gui", "gui/smoke_tests", "scripts", "tools")
+SOURCE_DIRECTORIES = ("src", "include", "cmake", "gui/g4usim_gui", "gui/smoke_tests", "scripts", "tools", "packaging")
 SOURCE_SUFFIXES = (".py", ".cc", ".hh", ".h", ".in", ".cmake")
 # Test code, fixtures and schema inputs a green report must be tied to. ``src`` and
 # ``include`` keep their own compiled-source fingerprint; this fingerprint covers what
@@ -28,7 +28,7 @@ SOURCE_SUFFIXES = (".py", ".cc", ".hh", ".h", ".in", ".cmake")
 # yesterday's test script or fixture.
 TEST_CONTENT_DIRECTORIES = (
     "scripts", "tools", "gui/smoke_tests", "gui/g4usim_gui",
-    "config", "scenarios", "schema", "macros", "test", "cmake",
+    "config", "scenarios", "schema", "macros", "test", "cmake", "packaging",
 )
 ASSERT_PROBE = ROOT / "tools" / "test_assert_probe.py"
 ASSERT_MARKER = "G4USIM_ASSERTS="
@@ -53,6 +53,16 @@ class Case:
 
 
 CASES = (
+    Case("platform_install_layout", "scripts/test_platform_install_layout.py", "static"),
+    Case("frozen_startup", "scripts/test_frozen_startup.py", "static"),
+    Case("install_plan", "scripts/test_install_plan.py", "static"),
+    Case("install_service", "scripts/test_install_service.py", "static"),
+    Case("run_summary_mt_observation", "scripts/test_run_summary_mt_observation.py", "static"),
+    Case("ci_geant4_data", "scripts/test_ci_fetch_geant4_data.py", "static"),
+    Case("install_ci_delivery", "scripts/test_install_ci_delivery.py", "static"),
+    Case("gui_i2_install", "gui/smoke_tests/smoke_i2_install.py", "gui", ("qt",)),
+    Case("gui_j1_appearance", "gui/smoke_tests/smoke_j1_appearance.py", "gui", ("qt",)),
+    Case("gui_workspace_layout", "gui/smoke_tests/smoke_workspace_layout.py", "gui", ("qt",)),
     Case("backend_launch", "scripts/test_backend_launch.py", "static"),
     Case("gui_backend_launch", "gui/smoke_tests/smoke_backend_launch.py", "gui", ("qt",)),
     Case("backend_working_directory", "scripts/test_backend_working_directory.py", "integration", ("qt", "exe")),

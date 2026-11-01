@@ -8,6 +8,7 @@ import xml.etree.ElementTree as ET
 import contextlib
 
 import test_geometry_a5 as a5
+from gdml_test_support import gdml_runtime_available, assert_gdml_unavailable_rejection
 
 
 def model(second_name: str) -> str:
@@ -34,6 +35,7 @@ def model(second_name: str) -> str:
 def main():
     exe = Path(os.environ.get("G4USIM_EXE", a5.EXE))
     assert exe.is_file(), exe
+    gdml_available = gdml_runtime_available(exe)
     with contextlib.ExitStack() as stack:
         work = Path(os.environ["G4USIM_TEST_WORK"]).resolve() if os.environ.get("G4USIM_TEST_WORK") else Path(stack.enter_context(tempfile.TemporaryDirectory(prefix="g4usim-gdml-bias-")))
         work.mkdir(parents=True, exist_ok=True)
@@ -41,6 +43,7 @@ def main():
         for second in ("sensor", "Other"):
             gdml = work / f"{second}.gdml"
             gdml.write_text(model(second), encoding="utf-8")
+            original_gdml = gdml.read_bytes()
             selections = ("Sensor,sensor", "sensor,Sensor", "Sensor", "sensor") if second == "sensor" else ("Sensor,Other,Sensor", "Other,Sensor")
             for threads in (1, 2):
                 for entry in ("geometry", "rule"):
@@ -66,6 +69,11 @@ def main():
                                                    cwd=work, capture_output=True, text=True, errors="replace", timeout=120)
                         log = completed.stdout + completed.stderr
                         (work / f"case{count}.log").write_text(log, encoding="utf-8")
+                        if not gdml_available:
+                            assert_gdml_unavailable_rejection(output, log, completed.returncode)
+                            assert not dump.exists(), dump
+                            assert gdml.read_bytes() == original_gdml
+                            continue
                         facts = dict(line.split(" = ", 1) for line in (output / "run_summary.txt").read_text(encoding="utf-8").splitlines() if " = " in line)
                         if second == "sensor":
                             assert completed.returncode != 0, (entry, selection, log[-3000:])
@@ -79,7 +87,10 @@ def main():
                             assert int(facts["biasing_matched_process_rule_count"]) >= 1, facts
                             processes = json.loads(dump.read_text(encoding="utf-8"))
                             assert "biasWrapper(protonInelastic)" in json.dumps(processes), processes
-    print("GDML bias identity restriction: PASS (attachment/process evidence, no physical bias benchmark)")
+    if gdml_available:
+        print("GDML bias identity restriction: PASS (attachment/process evidence, no physical bias benchmark)")
+    else:
+        print("GDML unavailable: bias fixtures explicitly refused; no bias identity/attachment checks claimed")
 
 
 if __name__ == "__main__":

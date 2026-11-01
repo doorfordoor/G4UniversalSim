@@ -9,6 +9,9 @@ import subprocess
 import shutil
 import tempfile
 import time
+import re
+import uuid
+import hashlib
 from pathlib import Path
 
 
@@ -74,6 +77,109 @@ def read_generated_file_schemas(directory: Path) -> dict[str, str]:
 
 def normalize(path: str) -> str:
     return os.path.normcase(os.path.abspath(path))
+
+
+def observe_mt_primaries(directory: Path, expectations: tuple, events_per_run: int = 8) -> dict:
+    """Validate every run/event/actual worker before considering scheduling coverage."""
+    values, generated = read_summary(directory)
+    assert values["status"] == "completed", values
+    assert values["summary_write_status"] == "completed", values
+    assert values["output_failure_status"] == "none", values
+    assert values["macro_execution_status"] == "completed", values
+    assert int(values["run_count"]) == len(expectations), values
+    assert int(values["actual_threads"]) == 2, values
+    assert int(values["planned_event_count"]) == events_per_run * len(expectations), values
+    assert int(values["actual_completed_event_count"]) == events_per_run * len(expectations), values
+    schemas = read_generated_file_schemas(directory)
+    expected = {run_id: (particle, energy) for run_id, particle, energy in expectations}
+    files = {run_id: {"hits": {}, "event_edep": {}} for run_id in expected}
+    for kind in ("hits", "event_edep"):
+        for path in sorted(directory.glob(f"{kind}_t*.csv")):
+            match = re.fullmatch(rf"{kind}_t(\d+)(?:_r(\d+))?\.csv", path.name)
+            assert match is not None, path
+            worker, run_id = int(match[1]), int(match[2] or 0)
+            assert worker in (0, 1) and run_id in expected, path
+            assert str(path.resolve()) in generated, (path, generated)
+            assert schemas[str(path.resolve())] == ("hits_csv_v3" if kind == "hits" else "event_edep_csv_v3"), path
+            files[run_id][kind][worker] = path
+    observations = {}
+    for run_id, (particle, energy) in expected.items():
+        assert int(values[f"run_{run_id}_id"]) == run_id, values
+        assert int(values[f"run_{run_id}_planned_events"]) == events_per_run, values
+        assert int(values[f"run_{run_id}_completed_events"]) == events_per_run, values
+        event_owners, primary_owners, worker_events, primary_records = {}, {}, {}, []
+        for worker, path in files[run_id]["event_edep"].items():
+            worker_events[worker] = set()
+            with path.open(newline="", encoding="utf-8") as stream:
+                for row in csv.DictReader(stream):
+                    event_id = int(row["eventID"])
+                    assert int(row["runID"]) == run_id, (path, row)
+                    assert 0 <= event_id < events_per_run, (path, row)
+                    assert event_id not in event_owners, (path, event_id, event_owners)
+                    event_owners[event_id] = worker
+                    worker_events[worker].add(event_id)
+        for worker, path in files[run_id]["hits"].items():
+            primary_first_steps = {}
+            with path.open(newline="", encoding="utf-8") as stream:
+                for hit in csv.DictReader(stream):
+                    assert int(hit["runID"]) == run_id, (path, hit)
+                    assert 0 <= int(hit["eventID"]) < events_per_run, (path, hit)
+                    if hit["trackID"] == "1" and hit["parentID"] == "0":
+                        primary_first_steps.setdefault(int(hit["eventID"]), hit)
+            for event_id, hit in primary_first_steps.items():
+                assert event_id not in primary_owners, (path, event_id, primary_owners)
+                primary_owners[event_id] = worker
+                assert event_owners.get(event_id) == worker, (path, event_id, event_owners)
+                assert hit["particle"] == particle, (path, event_id, hit)
+                assert abs(float(hit["kineticEnergy_MeV"]) - energy) < 1e-9, (path, event_id, hit)
+                assert abs(float(hit["x0_mm"])) < 1e-9, (path, event_id, hit)
+                assert abs(float(hit["y0_mm"])) < 1e-9, (path, event_id, hit)
+                assert abs(float(hit["z0_mm"]) + 9.0) < 1e-9, (path, event_id, hit)
+                primary_records.append({"worker": worker, "event": event_id, "particle": hit["particle"],
+                                        "energy_MeV": float(hit["kineticEnergy_MeV"]),
+                                        "position_mm": [float(hit[key]) for key in ("x0_mm", "y0_mm", "z0_mm")]})
+            assert set(primary_first_steps) == worker_events.get(worker, set()), (path, primary_first_steps, worker_events)
+        assert set(event_owners) == set(range(events_per_run)), (run_id, event_owners)
+        assert set(primary_owners) == set(range(events_per_run)), (run_id, primary_owners)
+        assert primary_owners == event_owners, (run_id, primary_owners, event_owners)
+        observations[str(run_id)] = {"worker_events": {str(w): sorted(events) for w, events in worker_events.items()},
+                                     "primaries": primary_records,
+                                     "both_workers_observed": set(primary_owners.values()) == {0, 1}}
+    return {"runs": observations, "both_workers_each_run": all(o["both_workers_observed"] for o in observations.values())}
+
+
+def run_mt_primary_observation(executable: Path, macro: Path, evidence: Path, expectations: tuple,
+                               *, max_attempts: int = 6) -> dict:
+    """Retry only valid but insufficient worker observations, never semantic failures."""
+    assert max_attempts > 0
+    evidence.mkdir(parents=True, exist_ok=False)
+    saved_macro = evidence / "input.mac"
+    shutil.copy2(macro, saved_macro)
+    attempts = []
+    for attempt in range(1, max_attempts + 1):
+        output = evidence / f"attempt-{attempt:02d}"
+        output.mkdir()
+        record = {"attempt": attempt, "output": str(output), "cwd": str(TEST_CWD),
+                  "argv": [str(executable), "--macro", str(saved_macro), "--output", str(output), "--threads", "2"]}
+        attempts.append(record)
+        try:
+            log = run(executable, record["argv"][1:])
+            (output / "backend.log").write_text(log, encoding="utf-8")
+            observation = observe_mt_primaries(output, expectations)
+            record.update(status="valid_observation", observation=observation)
+        except Exception as error:
+            record.update(status="failed", error=f"{type(error).__name__}: {error}")
+            (evidence / "attempts.json").write_text(json.dumps(attempts, indent=2), encoding="utf-8")
+            raise
+        (evidence / "attempts.json").write_text(json.dumps(attempts, indent=2), encoding="utf-8")
+        print(json.dumps({"mt_primary_evidence": str(evidence), "attempt": attempt,
+                          "both_workers_each_run": observation["both_workers_each_run"],
+                          "worker_events": {key: value["worker_events"] for key, value in observation["runs"].items()}},
+                         ensure_ascii=True), flush=True)
+        if observation["both_workers_each_run"]:
+            break
+    assert observation["both_workers_each_run"], f"Both workers were not observed in every run after {max_attempts} valid attempts: {evidence}"
+    return observation
 
 
 def main() -> int:
@@ -988,59 +1094,30 @@ def main() -> int:
             ),
             encoding="utf-8",
         )
-        source_sampling_mt_output = temp / "source-sampling-mt-output"
-        run(executable, ["--macro", str(source_sampling_mt_macro),
-                         "--output", str(source_sampling_mt_output), "--threads", "2"])
-        mt_values, _ = read_summary(source_sampling_mt_output)
-        assert mt_values["status"] == "completed", mt_values
-        assert mt_values["run_count"] == "2", mt_values
-        assert mt_values["actual_completed_event_count"] == "16", mt_values
-        for run_id, particle, energy in ((0, "e-", 1.0), (1, "proton", 3.0)):
-            suffix = "" if run_id == 0 else f"_r{run_id}"
-            worker_files = [
-                source_sampling_mt_output / f"hits_t{thread}{suffix}.csv"
-                for thread in (0, 1)
-            ]
-            assert all(file.is_file() for file in worker_files), worker_files
-            primary_first_steps = {}
-            for file in worker_files:
-                with file.open(newline="", encoding="utf-8") as stream:
-                    for hit in csv.DictReader(stream):
-                        if hit["trackID"] == "1" and hit["parentID"] == "0":
-                            event_id = int(hit["eventID"])
-                            primary_first_steps.setdefault(event_id, hit)
-            assert set(primary_first_steps) == set(range(8)), (run_id, primary_first_steps)
-            for event_id, hit in primary_first_steps.items():
-                assert int(hit["runID"]) == run_id, (event_id, hit)
-                assert hit["particle"] == particle, (event_id, hit)
-                assert abs(float(hit["kineticEnergy_MeV"]) - energy) < 1e-9, (event_id, hit)
-                assert abs(float(hit["z0_mm"]) + 9.0) < 1e-9, (event_id, hit)
+        mt_evidence_root = Path(os.environ.get("G4USIM_TEST_EVIDENCE_DIR", str(ROOT / "out/test-evidence"))) / "run-summary-mt" / uuid.uuid4().hex
+        mt_evidence_root.mkdir(parents=True, exist_ok=False)
+        # Retain every actual attempt and its inputs even when the outer test's
+        # temporary directory is removed after failure. No workload increase is
+        # used as a substitute for observing real worker participation.
+        shutil.copytree(temp / "config", mt_evidence_root / "inputs/config")
+        (mt_evidence_root / "identity.json").write_text(json.dumps({
+            "schema": "g4usim_mt_primary_test_evidence_v1", "executable": str(executable),
+            "executable_sha256": hashlib.sha256(executable.read_bytes()).hexdigest(),
+            "events_per_run": 8, "max_attempts": 6,
+            "config_sha256": {path.relative_to(temp).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
+                              for path in sorted((temp / "config").rglob("*")) if path.is_file()},
+        }, indent=2), encoding="utf-8")
+        run_mt_primary_observation(
+            executable, source_sampling_mt_macro, mt_evidence_root / "source-change",
+            ((0, "e-", 1.0), (1, "proton", 3.0)),
+        )
 
-        # After a native GPS energy change, a particle-only AIHL command must
-        # not silently replay the cached mono energy. Verify all three runs
-        # using transported primary first steps from both Geant4 MT workers.
-        interleave_output = temp / "source-native-interleave-output"
-        run(executable, ["--macro", str(source_native_interleave_macro),
-                         "--output", str(interleave_output), "--threads", "2"])
-        interleave_values, _ = read_summary(interleave_output)
-        assert interleave_values["status"] == "completed", interleave_values
-        assert interleave_values["run_count"] == "3", interleave_values
-        assert interleave_values["actual_completed_event_count"] == "24", interleave_values
-        for run_id, particle, energy in ((0, "e-", 1.0), (1, "e-", 2.0), (2, "proton", 2.0)):
-            suffix = "" if run_id == 0 else f"_r{run_id}"
-            workers = [interleave_output / f"hits_t{thread}{suffix}.csv" for thread in (0, 1)]
-            assert all(path.is_file() for path in workers), workers
-            primary_steps = {}
-            for path in workers:
-                with path.open(newline="", encoding="utf-8") as stream:
-                    for hit in csv.DictReader(stream):
-                        if hit["trackID"] == "1" and hit["parentID"] == "0":
-                            primary_steps.setdefault(int(hit["eventID"]), hit)
-            assert set(primary_steps) == set(range(8)), (run_id, primary_steps)
-            for event_id, hit in primary_steps.items():
-                assert int(hit["runID"]) == run_id, (event_id, hit)
-                assert hit["particle"] == particle, (event_id, hit)
-                assert abs(float(hit["kineticEnergy_MeV"]) - energy) < 1e-9, (event_id, hit)
+        # Native GPS energy changes must survive a later particle-only AIHL
+        # command in each real worker across all three runs of one attempt.
+        run_mt_primary_observation(
+            executable, source_native_interleave_macro, mt_evidence_root / "native-interleave",
+            ((0, "e-", 1.0), (1, "e-", 2.0), (2, "proton", 2.0)),
+        )
 
         with (single_output / "event_edep_t0.csv").open(newline="", encoding="utf-8") as stream:
             assert sum(1 for _ in csv.reader(stream)) - 1 == 3

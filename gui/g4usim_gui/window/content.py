@@ -121,23 +121,31 @@ class ContentMixin:
         """Show the world Geant4 builds (roadmap A5/G1); generated mode needs no run package."""
         if not self.can_mutate_workspace('preview'):
             return
-        self._update_project_from_page_without_preview()
         page = self.config_builder_page
-        executable = self.project.executable
+        if auto:
+            # View activation is not an edit/Generate boundary. Read the visible
+            # paths into a detached project and keep raw F5 drafts untouched.
+            project = self.project_page.apply_to_project(copy.deepcopy(self.project))
+        else:
+            self._update_project_from_page_without_preview()
+            project = self.project
+        executable = project.executable
         try:
-            if self.project.runInputMode == "external":
-                inputs = external_inputs(self.project.configPath, executable)
+            if project.runInputMode == "external":
+                inputs = external_inputs(project.configPath, executable)
             else:
                 inputs = generated_inputs(
                     template=page.geometry_settings().template, geometry_config=page.geometry_config.text().strip(),
-                    geometry=page.geometry_document, materials_config=page.materials_config.text().strip(),
-                    materials=page.material_document, executable=executable)
+                    geometry=copy.deepcopy(page.geometry_document) if auto else page.geometry_document,
+                    materials_config=page.materials_config.text().strip(),
+                    materials=copy.deepcopy(page.material_document) if auto else page.material_document,
+                    executable=executable)
         except (ValueError, OSError) as exc:
             if auto:
                 page.refresh_3d_preview()
             page.show_backend_geometry_message(ui_text(str(exc)))
             return
-        self.geometry_controller.request(inputs, executable, self.project.workspaceRoot)
+        self.geometry_controller.request(inputs, executable, project.workspaceRoot)
 
     def load_tracks(self, directory: str = "", *, quiet: bool = False) -> bool:
         """Overlay a run's particle tracks (roadmap G6): the given folder, else the last run's output."""

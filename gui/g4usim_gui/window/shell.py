@@ -10,7 +10,6 @@ from PySide6.QtWidgets import (
     QFrame,
     QHBoxLayout,
     QLabel,
-    QStackedWidget,
     QToolButton,
     QVBoxLayout,
     QWidget,
@@ -20,6 +19,7 @@ from g4usim_gui import __version__
 from g4usim_gui.core import icons
 from g4usim_gui.core.i18n import LanguageCode, apply_language, current_language, ui_format, ui_text
 from g4usim_gui.core.theme import ThemeMode, apply_theme, current_colors
+from g4usim_gui.window.workspace_layout import WorkspacePageStack
 
 
 class ShellMixin:
@@ -194,7 +194,7 @@ class ShellMixin:
         self.language_button.setAccessibleName(self.tr("Language"))
         header_layout.addWidget(self.language_button)
 
-        self.page_stack = QStackedWidget()
+        self.page_stack = WorkspacePageStack()
         self.page_stack.setObjectName("pageViewport")
         for page, _title, _subtitle, _icon in page_specs:
             self.page_stack.addWidget(page)
@@ -209,6 +209,8 @@ class ShellMixin:
         self.tabs = self.page_stack
         self._nav_group.idClicked.connect(self.page_stack.setCurrentIndex)
         self.page_stack.currentChanged.connect(self._on_page_changed)
+        from g4usim_gui.window.workspace_layout import WorkspaceLayout
+        self.workspace_layout = WorkspaceLayout(self)
         self._refresh_icons()
 
     def _refresh_icons(self) -> None:
@@ -265,6 +267,7 @@ class ShellMixin:
         self._create_history_actions()
 
         view_menu = self.menuBar().addMenu(self.tr("View"))
+        self.workspace_layout.add_menu(view_menu)
         theme_menu = view_menu.addMenu(self.tr("Theme"))
         self._theme_action_group = QActionGroup(self)
         self._theme_action_group.setExclusive(True)
@@ -283,6 +286,25 @@ class ShellMixin:
             self._theme_actions[mode] = action
         self.theme_button.setMenu(theme_menu)
 
+        theme_menu.addSeparator()
+        palette_menu = theme_menu.addMenu(self.tr("Light palette"))
+        self._palette_action_group = QActionGroup(self)
+        self._palette_action_group.setExclusive(True)
+        self._palette_actions = {}
+        selected_palette = str(QSettings().value("appearance/light_palette", "B"))
+        if selected_palette not in ("B", "K"):
+            selected_palette = "B"
+        for palette, label in (("B", "B · Lattice"), ("K", "K · Software")):
+            action = palette_menu.addAction(self.tr(label))
+            action.setCheckable(True)
+            action.setChecked(palette == selected_palette)
+            action.triggered.connect(lambda _checked=False, selected=palette: self._set_palette(selected))
+            self._palette_action_group.addAction(action)
+            self._palette_actions[palette] = action
+        dark_palette = theme_menu.addAction(self.tr("Dark palette: C · Night reading"))
+        dark_palette.setEnabled(False)
+        self._set_theme(current_mode, palette=selected_palette)
+
         language_menu = view_menu.addMenu(self.tr("Language"))
         self._language_action_group = QActionGroup(self)
         self._language_action_group.setExclusive(True)
@@ -297,12 +319,20 @@ class ShellMixin:
             self._language_actions[code] = action
         self.language_button.setMenu(language_menu)
 
-    def _set_theme(self, mode: ThemeMode) -> None:
+    def _set_palette(self, palette: str) -> None:
+        if palette not in ("B", "K"):
+            raise ValueError("unknown light palette")
+        app = QApplication.instance()
+        self._set_theme(str(app.property("themeMode") or "light"), palette=palette)
+        QSettings().setValue("appearance/light_palette", palette)
+        self._palette_actions[palette].setChecked(True)
+
+    def _set_theme(self, mode: ThemeMode, *, palette=None) -> None:
         self._clear_diagnostic_highlights()
         app = QApplication.instance()
         if app is None:
             return
-        apply_theme(app, mode)
+        apply_theme(app, mode, palette)
         self._refresh_icons()
         # matplotlib figures, icons and other custom-painted views keep their colours until redrawn
         for page in (self.start_page, self.config_builder_page, self.output_page, self.scenario_page, self.effective_config_page, self.scan_page):
@@ -332,12 +362,16 @@ class ShellMixin:
         if action is not None:
             action.setChecked(True)
         self._on_page_changed(self.page_stack.currentIndex())
+        self.workspace_layout.refresh_language()
         self._set_run_chip(*self._run_chip)
         self.statusBar().clearMessage()   # a message shown before the switch is in the old language
         self.project_context.setText(
             ui_format("Project: {name}", name=self.project.projectName or ui_text("untitled"))
         )
         self.history_changed()
+        environment_dialog = getattr(self, "_environment_dialog", None)
+        if environment_dialog is not None:
+            environment_dialog.retranslate_ui()
 
     def _set_run_chip(self, state: str, role: str) -> None:
         """Header status chip: a dot and the state in words; colour only repeats what the text says."""

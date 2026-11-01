@@ -4,6 +4,8 @@
 
 ## 0. 条目索引与历史全文
 
+- 2026-11-01 I2/J1 实施候选：安装、环境就绪和模拟成功分别核验；发布包版本与 Geant4 版本独立。冻结程序必须隔离宿主 DLL 搜索路径、核对源码及产物身份，不能凭自检可启动复用旧 GUI。布局沿用单实例与原业务所有者，外观仅视图状态。完整约定、旧失败与撤回见 `docs/agent-history.md` 的“I2/J1 桌面交付实施候选”；当前阶段是否关闭仍看 STATUS/ROADMAP。
+
 - 2026-10-31 K1 验收关闭：资源路径 P1 与永久回归 P2 经独审和 Windows/Linux 正式单例关闭；5644e1e 仅追加回归，350 产品字节保持2914b39，原矩阵与原生证据按原身份沿用。晚变化链接仍须在 resolve 前拒绝；WSL /mnt/c 发布限制及旧失败不抹去。全文见 `docs/agent-history.md` 的“K1 资源路径 P1 与阶段验收关闭”，[最终证据](docs/verification/k1-final-20261031/README.md)。
 
 - 2026-10-31 K1 显示契约：成功且非陈旧的生成/运行命令投影覆盖 external 无 package；有效 launch 的实际 argv 优先，兼容计划命令不冒实际事实，目录未知不回填编辑 cwd。pending 按服务逐项显示，不联动其他层。全文见 `docs/agent-history.md`，回归 `smoke_k1_workflow.py`、`smoke_k1_panel.py`。

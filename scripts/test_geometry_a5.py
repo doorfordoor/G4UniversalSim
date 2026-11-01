@@ -21,7 +21,9 @@ Checks:
      volumes exported with /AIHL/geometry/exportGDML and re-imported with
      template = gdml has identical copies, solids, materials, mesh and masses and the
      same per-slice dose (5 sigma); <auxiliary auxtype="SensDet"> marks sensitive
-     volumes; missing files, unknown sensitive volumes and overwrites are rejected;
+     volumes; missing files, unknown sensitive volumes and overwrites are rejected.
+     Builds without GDML instead verify explicit import/export rejection and no
+     exported data; they do not claim the GDML roundtrip checks were executed;
   7. invalid definitions (open/non-manifold STL, replica mismatches, mixed
      parameterised inputs, assembly, A5 shapes as boolean tools) fail before any
      Geant4 geometry object is created.
@@ -626,6 +628,28 @@ def failure_cases(r: Runner) -> None:
     print(f"  {len(cases)} invalid geometries rejected")
 
 
+def gdml_unavailable_cases(r: Runner) -> None:
+    """A build without Xerces/GDML must refuse instead of silently running another geometry."""
+    original = r.work / "unavailable-input.gdml"
+    original.write_text(GDML_SENSDET, encoding="utf-8")
+    original_bytes = original.read_bytes()
+    source = "[source]\nparticle = geantino\nenergy = 1 MeV\nposition = 0,0,0 mm\ndirection = +z\n"
+    output, log = run_gdml(r, f"[gdml]\nfile = {original.name}\n", source, 1, expect_ok=False)
+    assert "GDML" in log and "not available" in log, log[-3000:]
+    assert not list(output.glob("*_t*.csv")), "Rejected GDML import must not run event scoring"
+    assert original.read_bytes() == original_bytes
+    destination = r.work / "unavailable-export.gdml"
+    for target in (destination, original):
+        output, log = r.run(WORLD + volume("B", "shape = box\nsize = 1 mm, 1 mm, 1 mm"),
+                            source, 1, expect_ok=False,
+                            macro_extra=f"/AIHL/geometry/exportGDML {target.as_posix()}\n")
+        assert "GDML" in log and "not available" in log, log[-3000:]
+        assert not list(output.glob("*_t*.csv")), "Rejected GDML export must stop before beamOn"
+        assert not destination.exists()
+        assert original.read_bytes() == original_bytes
+    print("  GDML unavailable: actual import and export rejections verified; no GDML roundtrip claimed")
+
+
 def main() -> int:
     assert EXE.is_file(), f"backend executable missing: {EXE}"
     work = Path(tempfile.mkdtemp(prefix="g4usim_a5_"))
@@ -636,8 +660,16 @@ def main() -> int:
         replica_cases(r)
         parameterised_cases(r)
         export_case(r)
-        gdml_cases(r)
-        gdml_case_sensitive_sd(r)
+        capabilities = subprocess.run([str(EXE), "--capabilities"], capture_output=True,
+                                      text=True, timeout=30, check=True)
+        templates = json.loads(capabilities.stdout)["templates"]
+        gdml = [item for item in templates if item["id"] == "gdml"]
+        assert len(gdml) == 1 and type(gdml[0]["runtime"]) is bool, gdml
+        if gdml[0]["runtime"]:
+            gdml_cases(r)
+            gdml_case_sensitive_sd(r)
+        else:
+            gdml_unavailable_cases(r)
         failure_cases(r)
     finally:
         shutil.rmtree(work, ignore_errors=True)

@@ -1,13 +1,13 @@
-"""Where things are in a source checkout and in an installed package (roadmap D).
+"""Locate a source checkout or a Windows/Linux installation (I2).
 
 Source checkout:  <repo>/gui/g4usim_gui/...   backend in <repo>/build_vs2026/Release
 Installed package (packaging/build_package.py):
     <root>/bin/G4UniversalSim.exe, mergeHistograms.exe, Geant4 DLLs, geant4-data.txt
     <root>/gui/G4UniversalSimGUI.exe            (PyInstaller, frozen)
     <root>/config, scenarios, scripts, test/geometry, docs
-In the frozen GUI sys.executable is the GUI itself, so the Python helper scripts
-(merge, JSON export) need a separate Python 3 (G4USIM_PYTHON or python on PATH), and
-runs go to a user-writable folder instead of the (read-only) install directory.
+In the frozen GUI sys.executable is the GUI itself. I2 packages provide a
+G4USimPython helper for merge/JSON output. Older packages can use an explicit
+G4USIM_PYTHON or a discovered Python; runs remain in a user-writable folder.
 """
 
 from __future__ import annotations
@@ -30,18 +30,36 @@ def application_root() -> Path:
 
 def default_backend_executable() -> str:
     root = application_root()
-    for candidate in (root / "bin" / "G4UniversalSim.exe", root / "build_vs2026" / "Release" / "G4UniversalSim.exe"):
+    name = "G4UniversalSim.exe" if os.name == "nt" else "G4UniversalSim"
+    candidates = [root / "bin" / name]
+    if os.name == "nt":
+        candidates.extend(root / build / "Release" / name for build in ("build_vs2026", "build"))
+    else:
+        candidates.extend(root / build / name for build in ("build_linux", "build"))
+    for candidate in candidates:
         if candidate.is_file():
             return str(candidate)
     return ""
 
 
 def workspace_for_executable(executable: str | Path) -> Path:
-    """Package root for <root>/bin/<exe>, repository root for <repo>/<build>/<config>/<exe>."""
+    """Find the package/repository, including single-config Linux build trees.
+
+    This locates files only. It does not establish backend compatibility or
+    simulation readiness; those are reported by environment discovery.
+    """
     path = Path(executable).resolve()
     if path.parent.name.lower() == "bin":
         return path.parents[1]
-    return path.parents[2] if len(path.parents) > 2 else path.parent
+    for parent in path.parents:
+        if (parent / "CMakeLists.txt").is_file() and (parent / "config").is_dir():
+            return parent
+    directory = path.parent
+    if directory.name.lower() in {"release", "debug", "relwithdebinfo", "minsizerel"}:
+        directory = directory.parent
+    if directory.name.lower().startswith("build"):
+        return directory.parent
+    return path.parent
 
 
 def default_runs_root() -> Path:
@@ -86,6 +104,10 @@ def script_python() -> str | None:
     configured = os.environ.get("G4USIM_PYTHON", "").strip()
     if configured and Path(configured).is_file():
         return configured
+    helper_name = "G4USimPython.exe" if os.name == "nt" else "G4USimPython"
+    helper = application_root() / "python" / helper_name
+    if helper.is_file():
+        return str(helper)
     for name in ("python", "python3", "py"):
         found = shutil.which(name)
         if found and "WindowsApps" not in found:   # skip the Microsoft Store stub

@@ -164,11 +164,11 @@ class EditorHistoryFilter(QObject):
             menu.deleteLater()
             return True
         if kind == QEvent.FocusIn:
-            window._finish_history_merge()
+            window._finish_history_merge(pending_only=True)
             window._history_field = window._editor_key(watched)
         elif kind == QEvent.FocusOut:
             # Delay until Qt commits a table/spin editor, then close its group.
-            QTimer.singleShot(0, window._finish_history_merge)
+            QTimer.singleShot(0, lambda: window._finish_history_merge(pending_only=True))
         elif kind == QEvent.MouseButtonPress and isinstance(watched, (QPushButton, QCheckBox, QComboBox)):
             window._finish_history_merge()
             window._history_field = window._editor_key(watched)
@@ -518,8 +518,13 @@ class TransactionsMixin:
             self.statusBar().showMessage(ui_format('Edit was not applied: {reason}', reason=str(exc)), 8000)
         self.history_changed()
 
-    def _finish_history_merge(self):
-        self.flush_pending_edit()
+    def _finish_history_merge(self, *, pending_only=False):
+        # Native dock activation can refocus an editor without any input. Focus
+        # notifications close the merge group but only collect when an edit
+        # signal has queued a capture. Explicit transaction boundaries retain
+        # the existing unconditional capture. No time-based event suppression.
+        if not pending_only or self._history_timer.isActive():
+            self.flush_pending_edit()
         self._history_merge_epoch += 1
         self._history_field = None
         self._history_merge_timer.stop()

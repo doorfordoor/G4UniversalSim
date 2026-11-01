@@ -12,6 +12,7 @@ import tempfile
 import xml.etree.ElementTree as ET
 
 import test_geometry_a5 as a5
+from gdml_test_support import gdml_runtime_available, assert_gdml_unavailable_rejection
 
 
 def model(kind: str) -> str:
@@ -59,10 +60,11 @@ def model(kind: str) -> str:
     return ET.tostring(tree, encoding="unicode")
 
 
-def run_case(work: Path, kind: str, threads: int) -> None:
+def run_case(work: Path, kind: str, threads: int, *, gdml_available: bool = True) -> None:
     folder = work / f"{kind}_{threads}"
     folder.mkdir()
     (folder / "model.gdml").write_text(model(kind), encoding="utf-8")
+    original_gdml = (folder / "model.gdml").read_bytes()
     geometry = folder / "geometry.ini"
     geometry.write_text("[gdml]\nfile=model.gdml\n", encoding="utf-8")
     source = "".join(f"[source.s{index}]\nparticle=proton\nenergy=2 MeV\nposition_type=point\nposition={x},0,100 mm\ndirection=+z\n" for index, x in enumerate((-30, 30)))
@@ -77,6 +79,10 @@ def run_case(work: Path, kind: str, threads: int) -> None:
                             cwd=folder, capture_output=True, text=True, errors="replace", timeout=120)
     log = result.stdout + result.stderr
     (folder / "run.log").write_text(log, encoding="utf-8")
+    if not gdml_available:
+        assert_gdml_unavailable_rejection(output, log, result.returncode)
+        assert (folder / "model.gdml").read_bytes() == original_gdml
+        return
     summary = output / "run_summary.txt"
     assert summary.is_file(), (kind, threads, result.returncode, log[-3000:])
     facts = dict(line.split(" = ", 1) for line in summary.read_text(encoding="utf-8").splitlines() if " = " in line)
@@ -117,14 +123,16 @@ def run_case(work: Path, kind: str, threads: int) -> None:
 
 
 def main() -> None:
+    gdml_available = gdml_runtime_available(a5.EXE)
     assert a5.EXE.is_file(), a5.EXE
     with contextlib.ExitStack() as stack:
         work = Path(os.environ["G4USIM_TEST_WORK"]).resolve() if os.environ.get("G4USIM_TEST_WORK") else Path(stack.enter_context(tempfile.TemporaryDirectory(prefix="g4usim-gdml-identity-")))
         work.mkdir(parents=True, exist_ok=True)
         for threads in (1, 2):
             for kind in ("duplicate", "separator_collision", "unique_names", "different_copies", "different_parents"):
-                run_case(work, kind, threads)
-    print("GDML touchable identity: PASS")
+                run_case(work, kind, threads, gdml_available=gdml_available)
+    print("GDML touchable identity: PASS" if gdml_available else
+          "GDML unavailable: placement fixtures explicitly refused; no touchable identity checks claimed")
 
 
 if __name__ == "__main__":

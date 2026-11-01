@@ -335,12 +335,13 @@ def probe_environment(executable: str | Path, *, timeout: float = 5.0, cwd: str 
 
 
 def discover_environments(candidates=None, *, timeout: float = 5.0, env=None,
-                          sdk_roots: Iterable[str | Path] = ()) -> dict:
+                          sdk_roots: Iterable[str | Path] = (), additional_candidates=()) -> dict:
     """Ordered, de-duplicated candidates; [] explicitly disables automatic discovery.
 
     A candidate is a path or {executable, label?, env? , sdk_roots?}. Candidate env
     overrides are per child and allow two backends to use different library/data roots.
     None discovers G4USIM_EXE and named G4UniversalSim executables on PATH only.
+    Explicit additions are appended without disabling that automatic discovery.
     """
     timeout = _timeout(timeout)
     effective = _environment(env)
@@ -355,6 +356,7 @@ def discover_environments(candidates=None, *, timeout: float = 5.0, env=None,
                 candidates.append({"executable": path, "source": "PATH"})
     elif isinstance(candidates, (str, Path, Mapping)):
         candidates = [candidates]
+    candidates = list(candidates) + list(additional_candidates)
     environments, seen = [], set()
     for candidate in candidates:
         item = dict(candidate) if isinstance(candidate, Mapping) else {"executable": candidate}

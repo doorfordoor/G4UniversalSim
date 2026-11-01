@@ -8,7 +8,7 @@ import weakref
 from typing import Any
 
 from PySide6.QtCore import QEvent, QObject, QTimer, Qt
-from PySide6.QtWidgets import QApplication, QAbstractSpinBox, QComboBox, QLineEdit, QPlainTextEdit, QScrollArea, QStackedWidget, QStyledItemDelegate, QTabWidget, QTableWidget, QWidget
+from PySide6.QtWidgets import QApplication, QAbstractSpinBox, QComboBox, QDockWidget, QLineEdit, QPlainTextEdit, QScrollArea, QStackedWidget, QStyledItemDelegate, QTabWidget, QTableWidget, QWidget
 from shiboken6 import isValid
 
 from g4usim_gui.core.diagnostics import Diagnostic, EditorLocation, SourceLocation, semantic_snapshot
@@ -52,6 +52,8 @@ def can_reveal_widget(widget: QWidget, *, allow_read_only: bool = False,
         # path; a separately hidden field/group must not be reported as located.
         if parent is not widget and parent.isHidden() and not parent.isWindow():
             revealable = (parent in revealable_ancestors or isinstance(owner, QStackedWidget) or
+                          isinstance(parent, QDockWidget) and parent.property("workspaceDock") is True or
+                          isinstance(owner, QDockWidget) and owner.property("workspaceDock") is True or
                           isinstance(owner, CollapsibleSection) and owner.group is parent)
             if not revealable:
                 return NavigationResult("not_editable", ui_text("This field is not currently visible."))
@@ -70,7 +72,10 @@ def reveal_widget(widget: QWidget, *, allow_read_only: bool = False) -> Navigati
         return result
     parents = _ancestors(widget)
     for parent in reversed(parents):
-        if isinstance(parent, QTabWidget):
+        if isinstance(parent, QDockWidget) and parent.property("workspaceDock") is True:
+            parent.show()
+            parent.raise_()
+        elif isinstance(parent, QTabWidget):
             for index in range(parent.count()):
                 content = parent.widget(index)
                 if content is widget or content.isAncestorOf(widget):

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import tempfile
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Literal
 
@@ -11,6 +11,7 @@ from PySide6.QtWidgets import QApplication
 
 
 ThemeMode = Literal["light", "dark", "system"]
+ThemePalette = Literal["B", "K", "C"]
 
 
 @dataclass(frozen=True)
@@ -85,10 +86,24 @@ DARK = ThemeColors(
 )
 
 
+B = replace(LIGHT, canvas="#ffffff", surface_alt="#f5f9fa", text="#1f2933",
+            text_muted="#5b6975", border="#e1e7eb", accent="#0e7c86",
+            accent_hover="#0a5a62", accent_soft="#dff6f2", selection="#bfefe9")
+K = replace(LIGHT, canvas="#f8f9fa", surface_alt="#edf1f5", text="#212529",
+            text_muted="#5c6670", border="#e1e5ea", accent="#1971c2",
+            accent_hover="#12508f", accent_soft="#e7f5ff", selection="#d0ebff")
+C = replace(DARK, canvas="#111820", surface="#172029", surface_alt="#1c2833",
+            input="#111820", text="#d5dce4", text_muted="#8d9baa", border="#26313d",
+            accent="#8cc8f0", accent_hover="#addbfa", accent_soft="#243d50", selection="#304b60")
+PALETTES = {"B": B, "K": K, "C": C}
+
+
 def current_colors(app: QApplication | None = None) -> ThemeColors:
     """Colours of the theme currently applied to the application."""
     app = app or QApplication.instance()
-    return DARK if app is not None and app.property("resolvedTheme") == "dark" else LIGHT
+    if app is None:
+        return B
+    return PALETTES.get(app.property("resolvedPalette"), C if app.property("resolvedTheme") == "dark" else B)
 
 
 def on_accent(c: ThemeColors) -> str:
@@ -109,9 +124,23 @@ def resolve_theme(app: QApplication, mode: ThemeMode) -> Literal["light", "dark"
     return "dark" if window_color.lightness() < 128 else "light"
 
 
-def apply_theme(app: QApplication, mode: ThemeMode) -> Literal["light", "dark"]:
+def apply_theme(app: QApplication, mode: ThemeMode, palette: ThemePalette | None = None) -> Literal["light", "dark"]:
+    """Apply appearance without changing any project state.
+
+    B/K are the remembered light preference; C is the dark starting palette.
+    Selecting C does not erase B/K, and changing mode never erases that preference.
+    """
+    if mode not in ("light", "dark", "system"):
+        raise ValueError("Unknown theme mode")
+    if palette is not None and palette not in PALETTES:
+        raise ValueError("Unknown theme palette")
+    light_palette = app.property("lightThemePalette") or "B"
+    if palette in ("B", "K"):
+        light_palette = palette
+    app.setProperty("lightThemePalette", light_palette)
     resolved = resolve_theme(app, mode)
-    colors = DARK if resolved == "dark" else LIGHT
+    resolved_palette = "C" if resolved == "dark" else light_palette
+    colors = PALETTES[resolved_palette]
     font = app.font()   # Latin text in Segoe UI, Chinese in Microsoft YaHei UI (other systems: their defaults)
     font.setFamilies(list(dict.fromkeys(["Segoe UI", "Microsoft YaHei UI", *font.families()])))
     app.setFont(font)
@@ -119,6 +148,7 @@ def apply_theme(app: QApplication, mode: ThemeMode) -> Literal["light", "dark"]:
     app.setStyleSheet(build_stylesheet(colors))
     app.setProperty("themeMode", mode)
     app.setProperty("resolvedTheme", resolved)
+    app.setProperty("resolvedPalette", resolved_palette)
     return resolved
 
 
